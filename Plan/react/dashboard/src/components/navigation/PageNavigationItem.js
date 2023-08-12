@@ -35,6 +35,18 @@ const PageNavigationItem = ({page}) => {
                     href: "/query",
                     permission: 'access.query'
                 },
+                {
+                    id: 'errors',
+                    displayName: t("html.label.errors"),
+                    href: "/errors",
+                    permission: 'access.errors'
+                },
+                {
+                    id: 'docs',
+                    displayName: t("html.label.docs"),
+                    href: "/docs",
+                    permission: 'access.docs'
+                },
                 ...networkMetadata.servers
                     .filter(server => !server.proxy)
                     .map(server => {

@@ -9,16 +9,19 @@ import {fetchErrorLogs} from "../../service/metadataService";
 import ErrorPage from "./ErrorPage";
 import ErrorsAccordion from "../../components/accordion/ErrorsAccordion";
 import {Card} from "react-bootstrap";
+import {useAuth} from "../../hooks/authenticationHook";
 
 const ErrorsPage = () => {
-    const {data, loadingError} = useDataRequest(fetchErrorLogs, []);
+    const {hasPermission} = useAuth();
+    const seeErrors = hasPermission('access.errors');
+    const {data, loadingError} = useDataRequest(fetchErrorLogs, [], seeErrors);
 
     if (loadingError) return <ErrorPage error={loadingError}/>;
 
     return (
         <>
             <Sidebar page={'Errors'} items={[]}/>
-            <div className="d-flex flex-column" id="content-wrapper">
+            {seeErrors && <div className="d-flex flex-column" id="content-wrapper">
                 <Header page={<><FontAwesomeIcon icon={faBug}/> Error Logs</>} hideUpdater/>
                 <div id="content" style={{display: 'flex'}}>
                     <main className="container-fluid mt-4">
@@ -30,7 +33,7 @@ const ErrorsPage = () => {
                         <ColorSelectorModal/>
                     </aside>
                 </div>
-            </div>
+            </div>}
         </>
     )
 };

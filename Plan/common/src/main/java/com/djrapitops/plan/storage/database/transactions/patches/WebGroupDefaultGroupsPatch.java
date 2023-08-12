@@ -54,6 +54,7 @@ public class WebGroupDefaultGroupsPatch extends Patch {
                                 WebPermission.ACCESS_PLAYERS,
                                 WebPermission.PAGE_PLAYER,
                                 WebPermission.ACCESS_PLAYER,
+                                WebPermission.ACCESS_RAW_PLAYER_DATA,
                                 WebPermission.ACCESS_SERVER,
                                 WebPermission.ACCESS_NETWORK
                         })
@@ -64,14 +65,16 @@ public class WebGroupDefaultGroupsPatch extends Patch {
                                 WebPermission.ACCESS_QUERY,
                                 WebPermission.ACCESS_PLAYERS,
                                 WebPermission.PAGE_PLAYER,
-                                WebPermission.ACCESS_PLAYER
+                                WebPermission.ACCESS_PLAYER,
+                                WebPermission.ACCESS_RAW_PLAYER_DATA
                         })
                         .map(WebPermission::getPermission)
                         .collect(Collectors.toList()))
         );
         executeOther(new StoreWebGroupTransaction("player", Arrays.stream(new WebPermission[]{
                                 WebPermission.PAGE_PLAYER,
-                                WebPermission.ACCESS_PLAYER_SELF
+                                WebPermission.ACCESS_PLAYER_SELF,
+                                WebPermission.ACCESS_RAW_PLAYER_DATA
                         })
                         .map(WebPermission::getPermission)
                         .collect(Collectors.toList()))

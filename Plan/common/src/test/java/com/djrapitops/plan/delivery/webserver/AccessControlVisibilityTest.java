@@ -34,7 +34,10 @@ import com.djrapitops.plan.storage.database.transactions.events.StoreServerPlaye
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import extension.FullSystemExtension;
 import extension.SeleniumExtension;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -58,7 +61,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * @author AuroraLS3
@@ -184,15 +188,42 @@ class AccessControlVisibilityTest {
         );
     }
 
-    @Test
-    void adminHasAccessToManagePage(Database database, ChromeDriver driver) throws Exception {
-        User user = registerUser(database, WebPermission.MANAGE_GROUPS);
+    static Stream<Arguments> pageLevelVisibleCases() {
+        return Stream.of(
+                Arguments.arguments(WebPermission.MANAGE_GROUPS, "slice_h_0", "manage"),
+                Arguments.arguments(WebPermission.ACCESS_QUERY, "query-button", "query"),
+                Arguments.arguments(WebPermission.ACCESS_PLAYERS, "players-table_wrapper", "players"),
+                Arguments.arguments(WebPermission.ACCESS_ERRORS, "content", "errors"),
+                Arguments.arguments(WebPermission.ACCESS_DOCS, "swagger-ui", "docs")
+        );
+    }
 
-        String address = "https://localhost:" + TEST_PORT_NUMBER + "/manage";
+    @DisplayName("Whole page is visible with permission")
+    @ParameterizedTest(name = "Access with visibility {0} can see element #{1} in /{2}")
+    @MethodSource("pageLevelVisibleCases")
+    void pageVisible(WebPermission permission, String element, String page, Database database, ServerUUID serverUUID, ChromeDriver driver) throws Exception {
+        User user = registerUser(database, permission);
+
+        String address = "https://localhost:" + TEST_PORT_NUMBER + "/" + page;
         driver.get(address);
         login(driver, user);
-        Thread.sleep(250); // Wait for React render
-        assertTrue(driver.findElement(By.id("slice_h_0")).isDisplayed(), "Could not see groups");
+
+        SeleniumExtension.waitForElementToBeVisible(By.id(element), driver);
+        assertDoesNotThrow(() -> driver.findElement(By.id(element)), () -> "Did not see #" + element + " at " + address + " with permission '" + permission.getPermission() + "'");
+    }
+
+    @DisplayName("Whole page is not visible with permission")
+    @ParameterizedTest(name = "Access with no visibility (needs {0}) can't see element #{1} in /{2}")
+    @MethodSource("serverPageElementVisibleCases")
+    void pageNotVisible(WebPermission permission, String element, String page, Database database, ServerUUID serverUUID, ChromeDriver driver) throws Exception {
+        User user = registerUser(database);
+
+        String address = "https://localhost:" + TEST_PORT_NUMBER + "/" + page;
+        driver.get(address);
+        login(driver, user);
+
+        Thread.sleep(250);
+        assertThrows(NoSuchElementException.class, () -> driver.findElement(By.id(element)), () -> "Saw element #" + element + " at " + address + " without permission to");
     }
 
     void login(ChromeDriver driver, User user) {

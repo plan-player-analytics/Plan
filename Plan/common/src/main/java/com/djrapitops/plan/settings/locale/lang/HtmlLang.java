@@ -40,6 +40,8 @@ public enum HtmlLang implements Lang {
     SIDE_MANAGE_GROUPS("html.label.groupPermissions", "Manage Groups"),
     SIDE_MANAGE_GROUP_USERS("html.label.groupUsers", "Manage Group Users"),
     SIDE_MANAGE_USER_GROUPS("html.label.users", "Manage Users"),
+    SIDE_ERRORS("html.label.errors", "Plan Error Logs"),
+    SIDE_DOCS("html.label.docs", "Plan API endpoints"),
     QUERY_MAKE("html.label.query", "Make a query"),
     UNIT_NO_DATA("generic.noData", "No Data"), // Generic
     GRAPH_NO_DATA("html.label.noDataToDisplay", "No Data to Display"),
