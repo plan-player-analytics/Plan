@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.rendering.json;
 
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.datatransfer.extension.ExtensionsDto;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
@@ -56,6 +57,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Predicate;
 
 @Singleton
 public class PlayerJSONCreator {
@@ -96,18 +98,12 @@ public class PlayerJSONCreator {
         return dbSystem.getDatabase().query(SessionQueries.lastSeen(playerUUID));
     }
 
-    public Map<String, Object> createJSONAsMap(UUID playerUUID) {
+    public Map<String, Object> createJSONAsMap(UUID playerUUID, Predicate<WebPermission> hasPermission) {
         Database db = dbSystem.getDatabase();
 
         Map<ServerUUID, String> serverNames = db.query(ServerQueries.fetchServerNames());
-        String[] pieColors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
-
         PlayerContainer player = db.query(new PlayerContainerQuery(playerUUID));
         SessionsMutator sessionsMutator = SessionsMutator.forContainer(player);
-        Map<ServerUUID, WorldTimes> worldTimesPerServer = PerServerMutator.forContainer(player).worldTimesPerServer();
-        List<Map<String, Object>> serverAccordion = new ServerAccordion(player, serverNames, graphs, year, timeAmount, locale.getString(GenericLang.UNKNOWN)).asMaps();
-        List<PlayerKill> kills = player.getValue(PlayerKeys.PLAYER_KILLS).orElse(Collections.emptyList());
-        List<PlayerKill> deaths = player.getValue(PlayerKeys.PLAYER_DEATHS_KILLS).orElse(Collections.emptyList());
 
         PingMutator.forContainer(player).addPingToSessions(sessionsMutator.all());
 
@@ -117,31 +113,52 @@ public class PlayerJSONCreator {
         data.put("timestamp", now);
         data.put("timestamp_f", year.apply(now));
 
-        data.put("info", createInfoJSONMap(player, serverNames));
-        data.put("online_activity", createOnlineActivityJSONMap(sessionsMutator));
-        data.put("kill_data", createPvPPvEMap(player));
+        if (hasPermission.test(WebPermission.PAGE_PLAYER_OVERVIEW)) {
+            data.put("info", createInfoJSONMap(player, serverNames));
+            data.put("online_activity", createOnlineActivityJSONMap(sessionsMutator));
+            data.put("nicknames", player.getValue(PlayerKeys.NICKNAMES)
+                    .map(nicks -> Nickname.fromDataNicknames(nicks, serverNames, year))
+                    .orElse(Collections.emptyList()));
+            data.put("connections", player.getValue(PlayerKeys.GEO_INFO)
+                    .map(geoInfo -> ConnectionInfo.fromGeoInfo(geoInfo, year))
+                    .orElse(Collections.emptyList()));
+            data.put("punchcard_series", graphs.special().punchCard(sessionsMutator).getDots());
+        } else {
+            data.put("info", createLimitedInfoMap(player));
+        }
+        if (hasPermission.test(WebPermission.PAGE_PLAYER_SESSIONS)) {
+            data.put("sessions", sessionsMutator.sort(new DateHolderRecentComparator()).toServerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters));
+            data.put("sessions_per_page", config.get(DisplaySettings.SESSIONS_PER_PAGE));
+            WorldPie worldPie = graphs.pie().worldPie(player.getValue(PlayerKeys.WORLD_TIMES).orElse(new WorldTimes()));
+            data.put("world_pie_series", worldPie.getSlices());
+            data.put("gm_series", worldPie.toHighChartsDrillDownMaps());
+            data.put("first_day", 1); // Monday
+            data.put("calendar_series", graphs.calendar().playerCalendar(player).getEntries());
+        }
+        if (hasPermission.test(WebPermission.PAGE_PLAYER_VERSUS)) {
+            List<PlayerKill> kills = player.getValue(PlayerKeys.PLAYER_KILLS).orElse(Collections.emptyList());
+            List<PlayerKill> deaths = player.getValue(PlayerKeys.PLAYER_DEATHS_KILLS).orElse(Collections.emptyList());
 
-        data.put("nicknames", player.getValue(PlayerKeys.NICKNAMES)
-                .map(nicks -> Nickname.fromDataNicknames(nicks, serverNames, year))
-                .orElse(Collections.emptyList()));
-        data.put("connections", player.getValue(PlayerKeys.GEO_INFO)
-                .map(geoInfo -> ConnectionInfo.fromGeoInfo(geoInfo, year))
-                .orElse(Collections.emptyList()));
-        data.put("player_kills", new PlayerKillMutator(kills).filterNonSelfKills().toJSONAsMap(formatters));
-        data.put("player_deaths", new PlayerKillMutator(deaths).toJSONAsMap(formatters));
-        data.put("sessions", sessionsMutator.sort(new DateHolderRecentComparator()).toServerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters));
-        data.put("sessions_per_page", config.get(DisplaySettings.SESSIONS_PER_PAGE));
-        data.put("servers", serverAccordion);
-        data.put("punchcard_series", graphs.special().punchCard(sessionsMutator).getDots());
-        WorldPie worldPie = graphs.pie().worldPie(player.getValue(PlayerKeys.WORLD_TIMES).orElse(new WorldTimes()));
-        data.put("world_pie_series", worldPie.getSlices());
-        data.put("gm_series", worldPie.toHighChartsDrillDownMaps());
-        data.put("calendar_series", graphs.calendar().playerCalendar(player).getEntries());
-        data.put("server_pie_series", graphs.pie().serverPreferencePie(serverNames, worldTimesPerServer).getSlices());
-        data.put("server_pie_colors", pieColors);
-        data.put("ping_graph", createPingGraphJson(player));
-        data.put("first_day", 1); // Monday
-        data.put("extensions", playerExtensionData(playerUUID));
+            data.put("kill_data", createPvPPvEMap(player));
+            data.put("player_kills", new PlayerKillMutator(kills).filterNonSelfKills().toJSONAsMap(formatters));
+            data.put("player_deaths", new PlayerKillMutator(deaths).toJSONAsMap(formatters));
+        }
+        if (hasPermission.test(WebPermission.PAGE_PLAYER_SERVERS)) {
+            List<Map<String, Object>> serverAccordion = new ServerAccordion(player, serverNames, graphs, year, timeAmount, locale.getString(GenericLang.UNKNOWN)).asMaps();
+            Map<ServerUUID, WorldTimes> worldTimesPerServer = PerServerMutator.forContainer(player).worldTimesPerServer();
+            String[] pieColors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
+
+            data.put("ping_graph", createPingGraphJson(player));
+            data.put("servers", serverAccordion);
+            data.put("server_pie_series", graphs.pie().serverPreferencePie(serverNames, worldTimesPerServer).getSlices());
+            data.put("server_pie_colors", pieColors);
+        }
+        if (hasPermission.test(WebPermission.PAGE_PLAYER_PLUGINS)) {
+            data.put("extensions", playerExtensionData(playerUUID));
+        } else {
+            data.put("extensions", List.of());
+        }
+
         return data;
     }
 
@@ -232,6 +249,15 @@ public class PlayerJSONCreator {
         info.put("registered", player.getValue(PlayerKeys.REGISTERED).map(year).orElse("-"));
         info.put("last_seen", player.getValue(PlayerKeys.LAST_SEEN).map(year).orElse("-"));
         info.put("last_seen_raw_value", player.getValue(PlayerKeys.LAST_SEEN).orElse(0L));
+
+        return info;
+    }
+
+    private Map<String, Object> createLimitedInfoMap(PlayerContainer player) {
+        Map<String, Object> info = new HashMap<>();
+
+        info.put("name", player.getValue(PlayerKeys.NAME).orElse(player.getUnsafe(PlayerKeys.UUID).toString()));
+        info.put("uuid", player.getUnsafe(PlayerKeys.UUID).toString());
 
         return info;
     }

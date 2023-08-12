@@ -226,7 +226,7 @@ class AccessControlVisibilityTest {
     }
 
     @DisplayName("Server element is not visible without permission")
-    @ParameterizedTest(name = "Access to server page with no visibility can't see element #{1} in section /server/uuid/{2} (Needs {0})")
+    @ParameterizedTest(name = "Access to server page with no visibility (needs {0}) can't see element #{1} in section /server/uuid/{2}")
     @MethodSource("serverPageElementVisibleCases")
     void serverPageElementNotVisible(WebPermission permission, String element, String section, Database database, ServerUUID serverUUID, ChromeDriver driver) throws Exception {
         User user = registerUser(database, WebPermission.ACCESS_SERVER);
@@ -261,7 +261,7 @@ class AccessControlVisibilityTest {
     }
 
     @DisplayName("Network element is not visible without permission")
-    @ParameterizedTest(name = "Access to network page with no visibility can't see element #{1} in section /network/{2} (Needs {0})")
+    @ParameterizedTest(name = "Access to network page with no visibility (needs {0}) can't see element #{1} in section /network/{2}")
     @MethodSource("networkPageElementVisibleCases")
     void networkPageElementNotVisible(WebPermission permission, String element, String section, Database database, ChromeDriver driver) throws Exception {
         User user = registerUser(database, WebPermission.ACCESS_NETWORK);
@@ -291,7 +291,7 @@ class AccessControlVisibilityTest {
     }
 
     @DisplayName("Player element is not visible without permission")
-    @ParameterizedTest(name = "Access to player page with no visibility can't see element #{1} in section /player/uuid/{2} (Needs {0})")
+    @ParameterizedTest(name = "Access to player page with no visibility (needs {0}) can't see element #{1} in section /player/uuid/{2}")
     @MethodSource("playerPageVisibleCases")
     void playerPageElementNotVisible(WebPermission permission, String element, String section, Database database, ServerUUID serverUUID, ChromeDriver driver) throws Exception {
         User user = registerUser(database, WebPermission.ACCESS_PLAYER);

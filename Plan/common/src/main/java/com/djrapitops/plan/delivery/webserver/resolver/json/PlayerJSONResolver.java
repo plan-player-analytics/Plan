@@ -44,6 +44,7 @@ import javax.inject.Singleton;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 @Singleton
 @Path("/v1/player")
@@ -98,10 +99,12 @@ public class PlayerJSONResolver implements Resolver {
     private Response getResponse(Request request) {
         UUID playerUUID = identifiers.getPlayerUUID(request); // Can throw BadRequestException
 
-        Optional<Long> etag = Identifiers.getEtag(request);
+        // User needs to be taken into account due to permissions.
+        String userSpecific = request.getUser().map(WebUser::getUsername).orElse("");
+        Optional<String> etag = Identifiers.getStringEtag(request);
         if (etag.isPresent()) {
             long lastSeen = jsonCreator.getLastSeen(playerUUID);
-            if (etag.get() == lastSeen) {
+            if (etag.get().equals(lastSeen + userSpecific)) {
                 return Response.builder()
                         .setStatus(304)
                         .setContent(new byte[0])
@@ -109,7 +112,10 @@ public class PlayerJSONResolver implements Resolver {
             }
         }
 
-        Map<String, Object> jsonAsMap = jsonCreator.createJSONAsMap(playerUUID);
+        Predicate<WebPermission> hasPermission = request.getUser()
+                .map(user -> (Predicate<WebPermission>) user::hasPermission)
+                .orElse(permission -> true); // No user means auth disabled inside resolve
+        Map<String, Object> jsonAsMap = jsonCreator.createJSONAsMap(playerUUID, hasPermission);
         long lastSeenRawValue = Optional.ofNullable(jsonAsMap.get("info"))
                 .map(Map.class::cast)
                 .map(info -> info.get("last_seen_raw_value"))
@@ -120,7 +126,7 @@ public class PlayerJSONResolver implements Resolver {
                 .setJSONContent(jsonAsMap)
                 .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CHECK_ETAG_USER_SPECIFIC)
                 .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(lastSeenRawValue))
-                .setHeader(HttpHeader.ETAG.asString(), lastSeenRawValue)
+                .setHeader(HttpHeader.ETAG.asString(), lastSeenRawValue + userSpecific)
                 .build();
     }
 }
