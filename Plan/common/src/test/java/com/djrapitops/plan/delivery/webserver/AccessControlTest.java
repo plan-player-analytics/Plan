@@ -36,6 +36,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -55,9 +56,10 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -225,7 +227,7 @@ class AccessControlTest {
     @ParameterizedTest(name = "{0}: Permission {1}, expecting {2} with & {3} without permission")
     @MethodSource("testCases")
     void accessControlTest(String resource, WebPermission permission, int expectedWithPermission, int expectedWithout) throws Exception {
-        String cookie = login(address, createUserWithPermission(resource, permission).getUsername());
+        String cookie = login(address, createUserWithPermissions(resource, permission).getUsername());
         int responseCodeWithPermission = access(resource, cookie);
         int responseCodeWithout = access(resource, cookieNoAccess);
 
@@ -237,12 +239,34 @@ class AccessControlTest {
         );
     }
 
-    private User createUserWithPermission(String resource, WebPermission permission) throws ExecutionException, InterruptedException {
+    @DisplayName("Access test player/uuid/raw")
+    @Test
+    void playerRawAccess() throws Exception {
+        String resource = "/player/" + TestConstants.PLAYER_ONE_UUID + "/raw";
+        int expectedWithPermission = 200;
+        int expectedWithout = 403;
+        String cookie = login(address, createUserWithPermissions(resource, WebPermission.ACCESS_PLAYER, WebPermission.ACCESS_RAW_PLAYER_DATA).getUsername());
+        String cookieJustPage = login(address, createUserWithPermissions(resource, WebPermission.ACCESS_PLAYER).getUsername());
+        int responseCodeWithPermission = access(resource, cookie);
+        int responseCodeJustPage = access(resource, cookieJustPage);
+        int responseCodeWithout = access(resource, cookieNoAccess);
+
+        assertAll(
+                () -> assertEquals(expectedWithPermission, responseCodeWithPermission,
+                        () -> "Permission 'access.player', 'access.raw.player.data', Wrong response code for " + resource + ", expected " + expectedWithPermission + " but was " + responseCodeWithPermission),
+                () -> assertEquals(expectedWithout, responseCodeJustPage,
+                        () -> "Just page visibility permissions, Wrong response code for " + resource + ", expected " + expectedWithout + " but was " + responseCodeJustPage),
+                () -> assertEquals(expectedWithout, responseCodeWithout,
+                        () -> "No Permissions, Wrong response code for " + resource + ", expected " + expectedWithout + " but was " + responseCodeWithout)
+        );
+    }
+
+    private User createUserWithPermissions(String resource, WebPermission... permissions) throws ExecutionException, InterruptedException {
         Database db = system.getDatabaseSystem().getDatabase();
 
         String groupName = StringUtils.truncate(resource, 75);
         db.executeTransaction(
-                new StoreWebGroupTransaction(groupName, List.of(permission.getPermission()))
+                new StoreWebGroupTransaction(groupName, Arrays.stream(permissions).map(WebPermission::getPermission).collect(Collectors.toList()))
         ).get();
 
         User user = new User(RandomData.randomString(45), "console", null, PassEncryptUtil.createHash("testPass"), groupName, Collections.emptyList());

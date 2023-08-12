@@ -99,6 +99,7 @@ public enum WebPermission implements Supplier<String>, Lang {
     ACCESS("Controls access to pages"),
     ACCESS_PLAYER("Allows accessing any /player pages"),
     ACCESS_PLAYER_SELF("Allows accessing own /player page"),
+    ACCESS_RAW_PLAYER_DATA("Allows accessing /player/{uuid}/raw json data. Follows 'access.player' permissions."),
     // Restricting to specific servers: access.server.uuid
     ACCESS_SERVER("Allows accessing all /server pages"),
     ACCESS_NETWORK("Allows accessing /network page"),
