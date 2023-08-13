@@ -286,7 +286,7 @@ html:
     generic:
         none: "なし"
     label:
-        active: "よくログインしている"
+      active: "よくログインしている"
         activePlaytime: "アクティブなプレイ時間"
         activityIndex: "活動指数"
         afk: "離席"
@@ -331,7 +331,7 @@ html:
         deaths: "死亡回数"
         disk: "ドライブの容量"
         diskSpace: "ドライブの空き容量"
-        docs: "Plan API endpoints"
+        docs: "Swagger Docs"
         downtime: "ダウンタイム"
         duringLowTps: "TPSの低下までの時間:"
         entities: "エンティティ数"

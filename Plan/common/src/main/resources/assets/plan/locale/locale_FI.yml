@@ -286,7 +286,7 @@ html:
     generic:
         none: "Ei mitään"
     label:
-        active: "Aktiivinen"
+      active: "Aktiivinen"
         activePlaytime: "Aktiivinen peliaika"
         activityIndex: "Aktiivisuus Indeksi"
         afk: "AFK"
@@ -331,7 +331,7 @@ html:
         deaths: "Kuolemat"
         disk: "Levytila"
         diskSpace: "Vapaa Levytila"
-        docs: "Plan API endpoints"
+        docs: "Swagger Docs"
         downtime: "Poissa päältä"
         duringLowTps: "Matalan TPS:n aikana:"
         entities: "Entiteetit"

@@ -286,7 +286,7 @@ html:
     generic:
         none: "None"
     label:
-        active: "활동적인"
+      active: "활동적인"
         activePlaytime: "Active Playtime"
         activityIndex: "활동 색인"
         afk: "AFK"
@@ -331,7 +331,7 @@ html:
         deaths: "죽은 횟수"
         disk: "디스크 공간"
         diskSpace: "여유 디스크 공간"
-        docs: "Plan API endpoints"
+        docs: "Swagger Docs"
         downtime: "다운타임"
         duringLowTps: "낮은 TPS 스파이크 동안:"
         entities: "엔티티"

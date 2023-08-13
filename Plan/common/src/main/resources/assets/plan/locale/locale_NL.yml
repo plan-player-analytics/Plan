@@ -286,7 +286,7 @@ html:
     generic:
         none: "Geen"
     label:
-        active: "Actief"
+      active: "Actief"
         activePlaytime: "Actieve Speeltijd"
         activityIndex: "Activiteitsindex"
         afk: "AFK"
@@ -331,7 +331,7 @@ html:
         deaths: "Sterfgevallen"
         disk: "Schijfruimte"
         diskSpace: "Vrije schijfruimte"
-        docs: "Plan API endpoints"
+        docs: "Swagger Docs"
         downtime: "Uitvaltijd"
         duringLowTps: "Tijdens lage TPS-pieken:"
         entities: "Entiteiten"

@@ -23,6 +23,7 @@ import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieStore;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.DeleteWebGroupTransaction;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,6 +38,7 @@ import jakarta.ws.rs.Path;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Endpoint for adding a group.
@@ -48,10 +50,12 @@ import java.util.Optional;
 public class WebGroupDeleteJSONResolver implements Resolver {
 
     private final DBSystem dbSystem;
+    private final ActiveCookieStore activeCookieStore;
 
     @Inject
-    public WebGroupDeleteJSONResolver(DBSystem dbSystem) {
+    public WebGroupDeleteJSONResolver(DBSystem dbSystem, ActiveCookieStore activeCookieStore) {
         this.dbSystem = dbSystem;
+        this.activeCookieStore = activeCookieStore;
     }
 
     @Override
@@ -83,7 +87,15 @@ public class WebGroupDeleteJSONResolver implements Resolver {
     }
 
     private Response getResponse(String groupName, String moveTo) {
-        dbSystem.getDatabase().executeTransaction(new DeleteWebGroupTransaction(groupName, moveTo));
+        try {
+            dbSystem.getDatabase().executeTransaction(new DeleteWebGroupTransaction(groupName, moveTo))
+                    .get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            throw new IllegalStateException(e);
+        }
+        activeCookieStore.reloadActiveCookies();
 
         return Response.builder()
                 .setStatus(200)

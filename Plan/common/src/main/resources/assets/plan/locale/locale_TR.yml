@@ -286,7 +286,7 @@ html:
     generic:
         none: "Yok"
     label:
-        active: "Aktivite"
+      active: "Aktivite"
         activePlaytime: "Aktif Oyun Süresi"
         activityIndex: "Aktivite göstergesi"
         afk: "AFK"
@@ -331,7 +331,7 @@ html:
         deaths: "Ölümler"
         disk: "Disk Alanı"
         diskSpace: "Boş Disk Alanı"
-        docs: "Plan API endpoints"
+        docs: "Swagger Docs"
         downtime: "Arıza Süresi"
         duringLowTps: "Düşük TPS Artışları Sırasında:"
         entities: "Varlıklar"

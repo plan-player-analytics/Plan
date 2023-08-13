@@ -286,7 +286,7 @@ html:
     generic:
         none: "無"
     label:
-        active: "活躍"
+      active: "活躍"
         activePlaytime: "活躍時間"
         activityIndex: "活躍指數"
         afk: "掛機"
@@ -331,7 +331,7 @@ html:
         deaths: "死亡數"
         disk: "硬碟空間"
         diskSpace: "剩餘硬碟空間"
-        docs: "Plan API endpoints"
+        docs: "Swagger Docs"
         downtime: "關機時間"
         duringLowTps: "持續低 TPS 時間"
         entities: "實體"

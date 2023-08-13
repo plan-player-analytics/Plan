@@ -20,7 +20,7 @@ const ErrorsPage = () => {
 
     return (
         <>
-            <Sidebar page={'Errors'} items={[]}/>
+            <Sidebar items={[]}/>
             {seeErrors && <div className="d-flex flex-column" id="content-wrapper">
                 <Header page={<><FontAwesomeIcon icon={faBug}/> Error Logs</>} hideUpdater/>
                 <div id="content" style={{display: 'flex'}}>

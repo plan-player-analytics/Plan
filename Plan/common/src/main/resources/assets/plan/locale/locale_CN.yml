@@ -286,7 +286,7 @@ html:
     generic:
         none: "无"
     label:
-        active: "活跃"
+      active: "活跃"
         activePlaytime: "活跃时间"
         activityIndex: "活跃指数"
         afk: "挂机"
@@ -331,7 +331,7 @@ html:
         deaths: "死亡数"
         disk: "硬盘空间"
         diskSpace: "剩余硬盘空间"
-        docs: "Plan API endpoints"
+        docs: "Swagger Docs"
         downtime: "停机时间"
         duringLowTps: "持续低 TPS 时间"
         entities: "实体"

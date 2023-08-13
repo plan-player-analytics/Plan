@@ -286,7 +286,7 @@ html:
     generic:
         none: "Vide"
     label:
-        active: "Actif"
+      active: "Actif"
         activePlaytime: "Temps Actif"
         activityIndex: "Indice d'Activité"
         afk: "AFK"
@@ -331,7 +331,7 @@ html:
         deaths: "Morts"
         disk: "Espace Disque"
         diskSpace: "Espace Disque disponible"
-        docs: "Plan API endpoints"
+        docs: "Swagger Docs"
         downtime: "Temps Hors-Ligne"
         duringLowTps: "Pendant les pics de TPS bas :"
         entities: "Entités"

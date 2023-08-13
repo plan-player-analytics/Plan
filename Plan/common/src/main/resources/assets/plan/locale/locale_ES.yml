@@ -286,7 +286,7 @@ html:
     generic:
         none: "Nada"
     label:
-        active: "Activo"
+      active: "Activo"
         activePlaytime: "Tiempo de juego activo"
         activityIndex: "Índice de actividad"
         afk: "AFK"
@@ -331,7 +331,7 @@ html:
         deaths: "Muertes"
         disk: "Espacio del disco"
         diskSpace: "Espacio libre en el disco duro"
-        docs: "Plan API endpoints"
+        docs: "Swagger Docs"
         downtime: "Falta de tiempo"
         duringLowTps: "Durante picos bajos de TPS:"
         entities: "Entidades"

@@ -23,6 +23,7 @@ import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieStore;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.StoreWebGroupTransaction;
 import com.google.gson.Gson;
@@ -41,6 +42,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Endpoint for storing new permissions for a group.
@@ -52,10 +54,12 @@ import java.util.Optional;
 public class WebGroupSaveJSONResolver implements Resolver {
 
     private final DBSystem dbSystem;
+    private final ActiveCookieStore activeCookieStore;
 
     @Inject
-    public WebGroupSaveJSONResolver(DBSystem dbSystem) {
+    public WebGroupSaveJSONResolver(DBSystem dbSystem, ActiveCookieStore activeCookieStore) {
         this.dbSystem = dbSystem;
+        this.activeCookieStore = activeCookieStore;
     }
 
     @Override
@@ -87,7 +91,15 @@ public class WebGroupSaveJSONResolver implements Resolver {
     }
 
     private Response getResponse(String groupName, List<String> permissions) {
-        dbSystem.getDatabase().executeTransaction(new StoreWebGroupTransaction(groupName, permissions));
+        try {
+            dbSystem.getDatabase().executeTransaction(new StoreWebGroupTransaction(groupName, permissions))
+                    .get();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        } catch (ExecutionException e) {
+            throw new IllegalStateException(e);
+        }
+        activeCookieStore.reloadActiveCookies();
 
         return Response.builder()
                 .setStatus(200)

@@ -286,7 +286,7 @@ html:
     generic:
         none: "Žádný"
     label:
-        active: "Aktivní"
+      active: "Aktivní"
         activePlaytime: "Aktivní herní čas"
         activityIndex: "Index aktivity"
         afk: "AFK"
@@ -331,7 +331,7 @@ html:
         deaths: "Smrti"
         disk: "Místo na disku"
         diskSpace: "Volné místo na disku"
-        docs: "Plan API endpoints"
+        docs: "Swagger Docs"
         downtime: "Offline doba"
         duringLowTps: "Při nízkých TPS:"
         entities: "Entity"
