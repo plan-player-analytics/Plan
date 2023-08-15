@@ -118,9 +118,9 @@ class AccessControlVisibilityTest {
     static Stream<Arguments> serverPageElementVisibleCases() {
         return Stream.of(
                 Arguments.arguments(WebPermission.PAGE_SERVER_OVERVIEW_PLAYERS_ONLINE_GRAPH, "players-online-graph", "overview"),
-                Arguments.arguments(WebPermission.PAGE_SERVER_OVERVIEW, "last-7-days", "overview"),
-                Arguments.arguments(WebPermission.PAGE_SERVER_OVERVIEW, "server-as-numbers", "overview"),
-                Arguments.arguments(WebPermission.PAGE_SERVER_OVERVIEW, "week-comparison", "overview"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_OVERVIEW_NUMBERS, "last-7-days", "overview"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_OVERVIEW_NUMBERS, "server-as-numbers", "overview"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_OVERVIEW_NUMBERS, "week-comparison", "overview"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS, "online-activity-graphs", "online-activity"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_DAY_BY_DAY, "day-by-day-nav", "online-activity"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_HOUR_BY_HOUR, "hour-by-hour-nav", "online-activity"),
@@ -214,7 +214,7 @@ class AccessControlVisibilityTest {
 
     @DisplayName("Whole page is not visible with permission")
     @ParameterizedTest(name = "Access with no visibility (needs {0}) can't see element #{1} in /{2}")
-    @MethodSource("serverPageElementVisibleCases")
+    @MethodSource("pageLevelVisibleCases")
     void pageNotVisible(WebPermission permission, String element, String page, Database database, ServerUUID serverUUID, ChromeDriver driver) throws Exception {
         User user = registerUser(database);
 
