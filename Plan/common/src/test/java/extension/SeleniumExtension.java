@@ -48,14 +48,14 @@ public class SeleniumExtension implements ParameterResolver, BeforeAllCallback, 
     }
 
     public static void waitForPageLoadForSeconds(int i, ChromeDriver driver) {
-        Awaitility.await()
+        Awaitility.await("waitForPageLoadForSeconds")
                 .atMost(5, TimeUnit.SECONDS)
                 .until(() -> "complete".equals(driver.executeScript("return document.readyState")));
     }
 
     public static void waitForElementToBeVisible(By by, ChromeDriver driver) {
         SeleniumExtension.waitForPageLoadForSeconds(5, driver);
-        Awaitility.await()
+        Awaitility.await("waitForElementToBeVisible " + by.toString())
                 .atMost(5, TimeUnit.SECONDS)
                 .ignoreException(NoSuchElementException.class)
                 .until(() -> driver.findElement(by).isDisplayed());
