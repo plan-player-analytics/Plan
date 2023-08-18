@@ -138,10 +138,12 @@ const RegisterPage = () => {
         const {data, error} = await fetchRegisterCheck(code);
         if (error) {
             setFailMessage(t('html.register.error.checkFailed') + error)
-        } else if (data && data.success) {
+        } else if (data?.success) {
             navigate('/login?registerSuccess=true');
         } else {
-            setTimeout(() => checkRegistration(code), 5000);
+            setTimeout(() => {
+                checkRegistration(code);
+            }, 5000);
         }
     }
 
@@ -159,11 +161,13 @@ const RegisterPage = () => {
         const {data, error} = await postRegister(username, password);
 
         if (error) {
-            setFailMessage(t('html.register.error.failed') + (error.data && error.data.error ? error.data.error : error.message));
-        } else if (data && data.code) {
+            setFailMessage(t('html.register.error.failed') + (error?.data.error ? error.data.error : error.message));
+        } else if (data?.code) {
             setRegisterCode(data.code);
             setFinalizeRegistrationModalOpen(true);
-            setTimeout(() => checkRegistration(data.code), 10000);
+            setTimeout(() => {
+                checkRegistration(data.code);
+            }, 10000);
         } else {
             setFailMessage(t('html.register.error.failed') + data ? data.error : t('generic.noData'));
         }

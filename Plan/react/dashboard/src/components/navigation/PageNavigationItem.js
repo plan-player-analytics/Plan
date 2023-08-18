@@ -18,7 +18,7 @@ const PageNavigationItem = ({page}) => {
 
     useEffect(() => {
         const networkMetadata = metadata?.networkMetadata;
-        if (networkMetadata && networkMetadata.servers) {
+        if (networkMetadata?.servers) {
             const hasProxy = networkMetadata.servers.filter(server => server.proxy).length
 
             let newItems = [
@@ -27,7 +27,7 @@ const PageNavigationItem = ({page}) => {
                     id: 'manage',
                     displayName: t('html.label.manage'),
                     href: "/manage",
-                    permission: ['manage.groups', 'manage.users']
+                    permission: 'manage.groups'//, 'manage.users']
                 },
                 {
                     id: 'query',

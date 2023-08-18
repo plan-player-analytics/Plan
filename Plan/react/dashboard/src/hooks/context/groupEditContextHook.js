@@ -196,7 +196,6 @@ export const GroupEditContextProvider = ({groupName, children}) => {
                     </>
                 });
             } else {
-                setLastSave(Date.now());
                 setChanged(false);
                 addAlert({
                     timeout: 5000,
@@ -204,6 +203,7 @@ export const GroupEditContextProvider = ({groupName, children}) => {
                     content: <><Fa icon={faCheck}/>{" "}{t('html.label.managePage.alert.saveSuccess')}</>
                 });
             }
+            setLastSave(Date.now());
         }
     }, [lastSave, changed, setChanged, saveRequested, setLastSave, permissions, groupName, addAlert, t]);
 
