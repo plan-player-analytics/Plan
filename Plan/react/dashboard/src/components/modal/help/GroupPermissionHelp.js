@@ -2,49 +2,52 @@ import React from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons";
 import {useMetadata} from "../../../hooks/metadataHook";
+import {Trans} from "react-i18next";
 
 const GroupPermissionHelp = () => {
     const {mainCommand} = useMetadata();
     return (
         <div className={"group-help"}>
-            <p>This view allows you to modify web group permissions.</p>
-            <p>User's web group is determined during <code>/{mainCommand} register</code> by
-                checking if Player has <code>{"plan.webgroup.{group_name}"}</code> permission.</p>
-            <p>You can use <code>/{mainCommand} setgroup {"{username} {group_name}"}</code> to change permission group
-                after
-                registering.</p>
-            <p><FontAwesomeIcon icon={faExclamationTriangle}/> If you ever accidentally delete all groups
-                with <i>manage.groups</i> permission just <code>/{mainCommand} reload</code>.</p>
+            <p><Trans i18nKey="html.label.help.manage.groups.line-1"/></p>
+            <p><Trans i18nKey="html.label.help.manage.groups.line-2" values={{
+                command: <code>/{mainCommand} register</code>,
+                permission: <code>{"plan.webgroup.{group_name}"}</code>
+            }}/></p>
+            <p><Trans i18nKey="html.label.help.manage.groups.line-3"
+                      values={{command: <code>/{mainCommand} setgroup {"{username} {group_name}"}</code>}}/></p>
+            <p><Trans i18nKey="html.label.help.manage.groups.line-4" values={{
+                icon: <FontAwesomeIcon icon={faExclamationTriangle}/>,
+                permission: <i>manage.groups</i>,
+                commands: <code>/{mainCommand} reload</code>
+            }}/></p>
             <hr/>
-            <h3>Permission inheritance</h3>
-            <p>Permissions follow inheritance model, where higher level permission grants all lower ones,
-                eg. <i>page.network</i> also gives <i>page.network.overview</i>, etc.</p>
+            <h3><Trans i18nKey="html.label.help.manage.groups.line-5"/></h3>
+            <p><Trans i18nKey="html.label.help.manage.groups.line-6"
+                      values={{permission1: <i>page.network</i>, permission2: <i>page.network.overview</i>}}/></p>
             <hr/>
-            <h3>Access vs Page -permissions</h3>
-            <p>You need to assign both access and page permissions for users.</p>
+            <h3><Trans i18nKey="html.label.help.manage.groups.line-7"/></h3>
+            <p><Trans i18nKey="html.label.help.manage.groups.line-8"/></p>
             <ul>
                 <li>
-                    <i>access</i> permissions allow user make the request to specific address,
-                    eg. <i>access.network</i> allows request to /network.
+                    <Trans i18nKey="html.label.help.manage.groups.line-9"
+                           values={{permission1: <i>access</i>, permission2: <i>access.network</i>}}/>
                 </li>
-                <li>
-                    <i>page</i> permissions determine what parts of the page are visible.
-                    These permissions also limit requests to the related data endpoints.
-                </li>
-                <li>
-                    <i>access</i> permissions are not required for data: <i>page.network.overview.numbers</i> allows
-                    request to /v1/network/overview even without <i>access.network</i>.
-                </li>
+                <li><Trans i18nKey="html.label.help.manage.groups.line-10" values={{permission: <i>page</i>}}/></li>
+                <li><Trans i18nKey="html.label.help.manage.groups.line-11" values={{
+                    permission1: <i>access</i>,
+                    permission2: <i>page.network.overview.numbers</i>,
+                    permission3: <i>access.network</i>
+                }}/></li>
             </ul>
             <hr/>
-            <h3>Saving changes</h3>
-            <p>When you add a group or delete a group that action is <b>saved immediately after confirm</b> (no undo).
-            </p>
-            <p>When you modify permissions those changes need to be saved by pressing the Save-button</p>
+            <h3><Trans i18nKey="html.label.help.manage.groups.line-12"/></h3>
+            <p><Trans i18nKey="html.label.help.manage.groups.line-13"/></p>
+            <p><Trans i18nKey="html.label.help.manage.groups.line-14"/></p>
             <hr/>
-            <p>Documentation can be found from <a rel="noopener noreferrer" target="_blank"
-                                                  href={"https://github.com/plan-player-analytics/Plan/wiki/Web-permissions"}>https://github.com/plan-player-analytics/Plan/wiki/Web-permissions</a>
-            </p>
+            <p><Trans i18nKey="html.label.help.manage.groups.line-15" values={{
+                link: <a rel="noopener noreferrer" target="_blank"
+                         href={"https://github.com/plan-player-analytics/Plan/wiki/Web-permissions"}>https://github.com/plan-player-analytics/Plan/wiki/Web-permissions</a>
+            }}/></p>
         </div>
     )
 };

@@ -286,7 +286,7 @@ html:
     generic:
         none: "Ei mitään"
     label:
-      active: "Aktiivinen"
+        active: "Aktiivinen"
         activePlaytime: "Aktiivinen peliaika"
         activityIndex: "Aktiivisuus Indeksi"
         afk: "AFK"
@@ -363,6 +363,23 @@ html:
                 labels: "Voit piilottaa/näyttää ryhmän klikkaamalla nimeä käyrän alapuolella"
                 title: "Käyrä"
                 zoom: "Voit katsoa tietoja tarkemmin klikkaamalla ja vetämällä käyrän päällä"
+            manage:
+                groups:
+                    line-1: "This view allows you to modify web group permissions."
+                    line-10: "{{permission}} permissions determine what parts of the page are visible. These permissions also limit requests to the related data endpoints."
+                    line-11: "{{permission1}} permissions are not required for data: {{permission2}} allows request to /v1/network/overview even without {{permission3}}."
+                    line-12: "Saving changes"
+                    line-13: "When you add a group or delete a group that action is saved immediately after confirm (no undo)."
+                    line-14: "When you modify permissions those changes need to be saved by pressing the Save-button"
+                    line-15: "Documentation can be found from {{link}}"
+                    line-2: "User's web group is determined during {{command}} by checking if Player has {{permission}} permission."
+                    line-3: "You can use {{command}} to change permission group after registering."
+                    line-4: "{{icon}} If you ever accidentally delete all groups with {{permission}}} permission just {{command}}."
+                    line-5: "Permission inheritance"
+                    line-6: "Permissions follow inheritance model, where higher level permission grants all lower ones, eg. {{permission1}} also gives {{permission2}}, etc."
+                    line-7: "Access vs Page -permissions"
+                    line-8: "You need to assign both access and page permissions for users."
+                    line-9: "{{permission1}} permissions allow user make the request to specific address, eg. {{permission2}} allows request to /network."
             playtimeUnit: "tuntia"
             retention:
                 calculationStep1: "Ensin tiedot rajataan käyttämällä '<>' valintaa. Pelaajat joiden 'registerDate' osuu aikarajauksen ulkopuolelle eivät tule mukaan laskuihin"
@@ -631,6 +648,7 @@ html:
                 page_network_overview_graphs_day_by_day: "Näkee Päivä Kerrallaan -kaavion"
                 page_network_overview_graphs_hour_by_hour: "Näkee Tunti Kerrallaan -kaavion"
                 page_network_overview_graphs_online: "Näkee Pelaajia paikalla -kaavion"
+                page_network_overview_numbers: "See Network Overview numbers"
                 page_network_performance: "Näkee Verkoston suorituskyky osion"
                 page_network_playerbase: "Näkee Pelaajakunnan katsaus osion"
                 page_network_playerbase_graphs: "Näkee Pelaajakunnan katsaus kaaviot"
@@ -666,6 +684,7 @@ html:
                 page_server_online_activity_graphs_punchcard: "Näkee Reikäkortti kaavion"
                 page_server_online_activity_overview: "Näkee Online Aktiivisuuden numeroina"
                 page_server_overview: "Näkee Palvelimen katsaus osion"
+                page_server_overview_numbers: "See Server Overview numbers"
                 page_server_overview_players_online_graph: "Näkee Pelaajia paikalla -kaavion"
                 page_server_performance: "Näkee Suorituskyky osion"
                 page_server_performance_graphs: "Näkee Suorituskyky kaaviot"
