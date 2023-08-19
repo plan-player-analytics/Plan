@@ -51,6 +51,7 @@ public class TabCompleteCache implements SubSystem {
     private final Set<String> serverIdentifiers;
     private final Set<String> userIdentifiers;
     private final Set<String> backupFileNames;
+    private final Set<String> webGroupIdentifiers;
 
     @Inject
     public TabCompleteCache(
@@ -67,6 +68,7 @@ public class TabCompleteCache implements SubSystem {
         serverIdentifiers = new HashSet<>();
         userIdentifiers = new HashSet<>();
         backupFileNames = new HashSet<>();
+        webGroupIdentifiers = new HashSet<>();
     }
 
     @Override
@@ -76,7 +78,12 @@ public class TabCompleteCache implements SubSystem {
             refreshServerIdentifiers();
             refreshUserIdentifiers();
             refreshBackupFileNames();
+            refreshWebGroupIdentifiers();
         });
+    }
+
+    private void refreshWebGroupIdentifiers() {
+        webGroupIdentifiers.addAll(dbSystem.getDatabase().query(WebUserQueries.fetchGroupNames()));
     }
 
     private void refreshServerIdentifiers() {
@@ -128,6 +135,10 @@ public class TabCompleteCache implements SubSystem {
 
     public List<String> getMatchingBackupFilenames(@Untrusted String searchFor) {
         return findMatches(backupFileNames, searchFor);
+    }
+
+    public List<String> getMatchingWebGroupNames(@Untrusted String searchFor) {
+        return findMatches(webGroupIdentifiers, searchFor);
     }
 
     @NotNull

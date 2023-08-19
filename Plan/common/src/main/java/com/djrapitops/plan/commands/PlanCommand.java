@@ -526,8 +526,17 @@ public class PlanCommand {
                 .description(locale.getString(HelpLang.SET_GROUP))
                 .inDepthDescription(locale.getString(DeepHelpLang.SET_GROUP))
                 .onCommand(registrationCommands::onChangePermissionGroup)
-//                .onTabComplete(this::playerNames) // TODO
+                .onTabComplete(this::webGroupTabComplete)
                 .build();
+    }
+
+    private List<String> webGroupTabComplete(CMDSender sender, @Untrusted Arguments arguments) {
+        Optional<String> groupArgument = arguments.get(1);
+        if (groupArgument.isPresent()) {
+            return tabCompleteCache.getMatchingWebGroupNames(groupArgument.get());
+        }
+        String usernameArgument = arguments.get(0).orElse(null);
+        return tabCompleteCache.getMatchingUserIdentifiers(usernameArgument);
     }
 
     private Subcommand groups() {
