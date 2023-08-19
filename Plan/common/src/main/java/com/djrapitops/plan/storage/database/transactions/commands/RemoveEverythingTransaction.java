@@ -19,6 +19,7 @@ package com.djrapitops.plan.storage.database.transactions.commands;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.transactions.events.StoreJoinAddressTransaction;
 import com.djrapitops.plan.storage.database.transactions.patches.Patch;
+import com.djrapitops.plan.storage.database.transactions.patches.WebGroupDefaultGroupsPatch;
 
 /**
  * Transaction that removes everything from the database.
@@ -46,6 +47,9 @@ public class RemoveEverythingTransaction extends Patch {
         clearTable(UserInfoTable.TABLE_NAME);
         clearTable(UsersTable.TABLE_NAME);
         clearTable(TPSTable.TABLE_NAME);
+        clearTable(WebGroupToPermissionTable.TABLE_NAME);
+        clearTable(WebPermissionTable.TABLE_NAME);
+        clearTable(WebGroupTable.TABLE_NAME);
         clearTable(SecurityTable.TABLE_NAME);
         clearTable(ServerTable.TABLE_NAME);
         clearTable(CookieTable.TABLE_NAME);
@@ -61,6 +65,7 @@ public class RemoveEverythingTransaction extends Patch {
         clearTable(ExtensionIconTable.TABLE_NAME);
 
         executeOther(new StoreJoinAddressTransaction(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP));
+        executeOther(new WebGroupDefaultGroupsPatch());
     }
 
     private void clearTable(String tableName) {

@@ -17,12 +17,16 @@
 package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.delivery.domain.auth.User;
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieExpiryCleanupTask;
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieStore;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
+import com.djrapitops.plan.storage.database.transactions.DeleteWebGroupTransaction;
+import com.djrapitops.plan.storage.database.transactions.GrantWebPermissionToGroupsWithPermissionTransaction;
+import com.djrapitops.plan.storage.database.transactions.StoreMissingWebPermissionsTransaction;
 import com.djrapitops.plan.storage.database.transactions.StoreWebGroupTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveWebUserTransaction;
@@ -40,6 +44,7 @@ import static org.junit.jupiter.api.Assertions.*;
 public interface WebUserQueriesTest extends DatabaseTestPreparer {
 
     String WEB_USERNAME = TestConstants.PLAYER_ONE_NAME;
+    String GROUP_NAME = "test_group";
 
     @Test
     default void userIsRegistered() {
@@ -132,5 +137,95 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
         activeCookieStoreSavesCookies();
         db().executeTransaction(new RemoveEverythingTransaction());
         assertTrue(db().query(WebUserQueries.fetchActiveCookies()).isEmpty());
+    }
+
+    @Test
+    default void webGroupIsAdded() {
+        db().executeTransaction(new StoreWebGroupTransaction(GROUP_NAME, List.of(WebPermission.ACCESS.getPermission())));
+
+        List<String> result = db().query(WebUserQueries.fetchGroupNames());
+        assertTrue(result.contains(GROUP_NAME), () -> GROUP_NAME + " not found from db: " + result);
+
+        List<String> permissionExpected = List.of(WebPermission.ACCESS.getPermission());
+        List<String> permissionResult = db().query(WebUserQueries.fetchGroupPermissions(GROUP_NAME));
+        assertEquals(permissionExpected, permissionResult);
+    }
+
+    @Test
+    default void webGroupPermissionsAreStored() {
+        db().executeTransaction(new StoreWebGroupTransaction(GROUP_NAME, List.of(WebPermission.ACCESS.getPermission())));
+
+        assertTrue(db().query(WebUserQueries.fetchGroupId(GROUP_NAME)).isPresent());
+
+        List<String> permissionExpected = List.of(WebPermission.ACCESS.getPermission());
+        List<String> permissionResult = db().query(WebUserQueries.fetchGroupPermissions(GROUP_NAME));
+        assertEquals(permissionExpected, permissionResult);
+    }
+
+    @Test
+    default void webGroupIsFoundByPermission() {
+        webGroupPermissionsAreStored();
+
+        List<String> groupNames = db().query(WebUserQueries.fetchGroupNamesWithPermission(WebPermission.ACCESS.getPermission()));
+        assertTrue(groupNames.contains(GROUP_NAME));
+    }
+
+    @Test
+    default void customWebPermissionsAreStored() {
+        String customPermission = "test.permission";
+        db().executeTransaction(new StoreWebGroupTransaction(GROUP_NAME, List.of(customPermission)));
+
+        List<String> permissionExpected = List.of(customPermission);
+        List<String> permissionResult = db().query(WebUserQueries.fetchGroupPermissions(GROUP_NAME));
+        assertEquals(permissionExpected, permissionResult);
+
+        assertTrue(db().query(WebUserQueries.fetchPermissionId(customPermission)).isPresent());
+        assertFalse(db().query(WebUserQueries.fetchPermissionIds(List.of(customPermission))).isEmpty());
+    }
+
+    @Test
+    default void webUserGroupIsChanged() throws Exception {
+        userIsRegistered();
+        webGroupIsAdded();
+
+        String passHash = db().query(WebUserQueries.fetchUser(WEB_USERNAME)).orElseThrow(AssertionError::new).getPasswordHash();
+        // Changes web group
+        User expected = new User(WEB_USERNAME, "console", null, passHash, GROUP_NAME, Set.of("access"));
+        db().executeTransaction(new StoreWebUserTransaction(expected)).get();
+
+        User stored = db().query(WebUserQueries.fetchUser(WEB_USERNAME)).orElseThrow(AssertionError::new);
+
+        assertEquals(expected, stored);
+    }
+
+    @Test
+    default void grantNewWebPermissions() {
+        db().executeTransaction(new StoreMissingWebPermissionsTransaction(List.of("grant.permission")));
+        db().executeTransaction(new GrantWebPermissionToGroupsWithPermissionTransaction("grant.permission", WebPermission.MANAGE_GROUPS.getPermission()));
+
+        assertTrue(db().query(WebUserQueries.fetchPermissionId("grant.permission")).isPresent());
+
+        List<String> expected = List.of("admin");
+        List<String> groups = db().query(WebUserQueries.fetchGroupNamesWithPermission("grant.permission"));
+        assertEquals(expected, groups);
+    }
+
+    @Test
+    default void webGroupIsDeleted() {
+        webGroupIsAdded();
+
+        db().executeTransaction(new DeleteWebGroupTransaction(GROUP_NAME, "no_access"));
+
+        assertTrue(db().query(WebUserQueries.fetchGroupId(GROUP_NAME)).isEmpty());
+    }
+
+    @Test
+    default void removeEverythingRemovesCustomGroups() {
+        webGroupIsAdded();
+
+        db().executeTransaction(new RemoveEverythingTransaction());
+
+        assertTrue(db().query(WebUserQueries.fetchGroupId(GROUP_NAME)).isEmpty());
+        assertTrue(db().query(WebUserQueries.fetchGroupId("admin")).isPresent());
     }
 }
