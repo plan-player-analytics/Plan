@@ -197,7 +197,7 @@ public class RegistrationCommands {
     }
 
 
-    public void onLogoutCommand(CMDSender sender, @Untrusted Arguments arguments) {
+    public void onLogoutCommand(@Untrusted Arguments arguments) {
         @Untrusted String loggingOut = arguments.get(0)
                 .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, locale.getString(HelpLang.ARG_USERNAME) + "/*")));
 
@@ -229,7 +229,7 @@ public class RegistrationCommands {
                 .thenRun(() -> sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS)));
     }
 
-    public void onListWebGroups(CMDSender sender, @Untrusted Arguments arguments) {
+    public void onListWebGroups(CMDSender sender) {
         Database database = dbSystem.getDatabase();
         List<String> groupNames = database.query(WebUserQueries.fetchGroupNames());
 

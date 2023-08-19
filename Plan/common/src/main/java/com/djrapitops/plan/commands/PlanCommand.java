@@ -263,7 +263,7 @@ public class PlanCommand {
                 .requiredArgument(locale.getString(HelpLang.ARG_USERNAME), locale.getString(HelpLang.DESC_ARG_USERNAME))
                 .description(locale.getString(HelpLang.LOGOUT))
                 .inDepthDescription(locale.getString(DeepHelpLang.LOGOUT))
-                .onCommand(registrationCommands::onLogoutCommand)
+                .onArgsOnlyCommand(registrationCommands::onLogoutCommand)
                 .onTabComplete(this::webUserNames)
                 .build();
     }
