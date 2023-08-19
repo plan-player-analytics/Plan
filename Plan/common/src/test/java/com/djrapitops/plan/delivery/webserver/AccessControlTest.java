@@ -148,7 +148,12 @@ class AccessControlTest {
                 Arguments.of("/v1/locale/NonexistingLanguage", WebPermission.ACCESS, 404, 404),
                 Arguments.of("/docs/swagger.json", WebPermission.ACCESS_DOCS, 500, 403), // swagger.json not available during tests
                 Arguments.of("/docs", WebPermission.ACCESS_DOCS, 200, 403),
-                Arguments.of("/pageExtensionApi.js", WebPermission.ACCESS, 200, 200)
+                Arguments.of("/pageExtensionApi.js", WebPermission.ACCESS, 200, 200),
+                Arguments.of("/manage", WebPermission.MANAGE_GROUPS, 200, 403),
+                Arguments.of("/v1/groupPermissions?group=admin", WebPermission.MANAGE_GROUPS, 200, 403),
+                Arguments.of("/v1/webGroups", WebPermission.MANAGE_GROUPS, 200, 403),
+                Arguments.of("/v1/deleteGroup?group=admin&moveTo=no_access", WebPermission.MANAGE_GROUPS, 400, 403),
+                Arguments.of("/v1/saveGroupPermissions?group=admin", WebPermission.MANAGE_GROUPS, 400, 403)
         );
     }
 
