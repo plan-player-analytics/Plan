@@ -176,7 +176,7 @@ const ServerPage = () => {
             const fromMetadata = networkMetadata?.servers?.find(server => server.serverUUID === identifier);
             return fromMetadata ? fromMetadata.serverName : identifier;
         } else {
-            return serverName && serverName.startsWith('Server') ? "Plan" : serverName
+            return serverName?.startsWith('Server') ? "Plan" : serverName
         }
     }
     const displayedServerName = getDisplayedServerName();
