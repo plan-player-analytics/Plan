@@ -43,6 +43,8 @@ import java.util.UUID;
 @Singleton
 public class RootPageResolver implements NoAuthResolver {
 
+    private static final String NETWORK_PAGE = "network";
+
     private final ResponseFactory responseFactory;
     private final Lazy<WebServer> webServer;
     private final ServerInfo serverInfo;
@@ -62,7 +64,7 @@ public class RootPageResolver implements NoAuthResolver {
     private Response getResponse(Request request) {
         Server server = serverInfo.getServer();
         if (!webServer.get().isAuthRequired()) {
-            String redirectTo = server.isProxy() ? "network" : "server/" + Html.encodeToURL(server.getIdentifiableName());
+            String redirectTo = server.isProxy() ? NETWORK_PAGE : "server/" + Html.encodeToURL(server.getIdentifiableName());
             return responseFactory.redirectResponse(redirectTo);
         }
 
@@ -70,9 +72,9 @@ public class RootPageResolver implements NoAuthResolver {
                 .orElseThrow(() -> new WebUserAuthException(FailReason.EXPIRED_COOKIE));
 
         if (server.isProxy() && user.hasPermission(WebPermission.ACCESS_NETWORK)) {
-            return responseFactory.redirectResponse("network");
+            return responseFactory.redirectResponse(NETWORK_PAGE);
         } else if (user.hasPermission(WebPermission.ACCESS_SERVER)) {
-            return responseFactory.redirectResponse(server.isProxy() ? "network" : "server/" + Html.encodeToURL(server.getIdentifiableName()));
+            return responseFactory.redirectResponse(server.isProxy() ? NETWORK_PAGE : "server/" + Html.encodeToURL(server.getIdentifiableName()));
         } else if (user.hasPermission(WebPermission.ACCESS_PLAYERS)) {
             return responseFactory.redirectResponse("players");
         } else if (user.hasPermission(WebPermission.ACCESS_PLAYER_SELF)) {

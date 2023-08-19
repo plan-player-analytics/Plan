@@ -43,6 +43,8 @@ import java.util.Optional;
 @Singleton
 public class ServerPageResolver implements Resolver {
 
+    private static final String NETWORK_PAGE = "network";
+
     private final ResponseFactory responseFactory;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
@@ -63,7 +65,7 @@ public class ServerPageResolver implements Resolver {
         @Untrusted String firstPart = request.getPath().getPart(0).orElse("");
         WebUser user = request.getUser().orElse(new WebUser(""));
         boolean forServerPage = "server".equalsIgnoreCase(firstPart) && user.hasPermission(WebPermission.ACCESS_SERVER);
-        boolean forNetworkPage = "network".equalsIgnoreCase(firstPart) && user.hasPermission(WebPermission.ACCESS_NETWORK);
+        boolean forNetworkPage = NETWORK_PAGE.equalsIgnoreCase(firstPart) && user.hasPermission(WebPermission.ACCESS_NETWORK);
         return forServerPage || forNetworkPage;
     }
 
@@ -76,7 +78,7 @@ public class ServerPageResolver implements Resolver {
 
     private Optional<Response> redirectToCurrentServer() {
         String directTo = serverInfo.getServer().isProxy()
-                ? "/network"
+                ? "/" + NETWORK_PAGE
                 : "/server/" + Html.encodeToURL(serverInfo.getServer().getIdentifiableName());
         return Optional.of(responseFactory.redirectResponse(directTo));
     }
@@ -84,7 +86,7 @@ public class ServerPageResolver implements Resolver {
     private Optional<Response> getServerPage(ServerUUID serverUUID, @Untrusted Request request) {
         boolean toNetworkPage = serverInfo.getServer().isProxy() && serverInfo.getServerUUID().equals(serverUUID);
         if (toNetworkPage) {
-            if (request.getPath().getPart(0).map("network"::equals).orElse(false)) {
+            if (request.getPath().getPart(0).map(NETWORK_PAGE::equals).orElse(false)) {
                 return Optional.of(responseFactory.networkPageResponse(request));
             } else {
                 // Accessing /server/Server <Bungee ID> which should be redirected to /network
@@ -96,7 +98,7 @@ public class ServerPageResolver implements Resolver {
 
     private Optional<ServerUUID> getServerUUID(@Untrusted URIPath path) {
         if (serverInfo.getServer().isProxy()
-                && path.getPart(0).map("network"::equals).orElse(false)
+                && path.getPart(0).map(NETWORK_PAGE::equals).orElse(false)
         ) {
             return Optional.of(serverInfo.getServerUUID());
         }
