@@ -215,15 +215,16 @@ class AccessControlVisibilityTest {
     @DisplayName("Whole page is not visible with permission")
     @ParameterizedTest(name = "Access with no visibility (needs {0}) can't see element #{1} in /{2}")
     @MethodSource("pageLevelVisibleCases")
-    void pageNotVisible(WebPermission permission, String element, String page, Database database, ServerUUID serverUUID, ChromeDriver driver) throws Exception {
+    void pageNotVisible(WebPermission permission, String element, String page, Database database, ChromeDriver driver) throws Exception {
         User user = registerUser(database);
 
         String address = "https://localhost:" + TEST_PORT_NUMBER + "/" + page;
         driver.get(address);
         login(driver, user);
 
-        Thread.sleep(250);
-        assertThrows(NoSuchElementException.class, () -> driver.findElement(By.id(element)), () -> "Saw element #" + element + " at " + address + " without permission to");
+        SeleniumExtension.waitForElementToBeVisible(By.id("wrapper"), driver);
+        By id = By.id(element);
+        assertThrows(NoSuchElementException.class, () -> driver.findElement(id), () -> "Saw element #" + element + " at " + address + " without permission to");
     }
 
     void login(ChromeDriver driver, User user) {
@@ -266,8 +267,9 @@ class AccessControlVisibilityTest {
         driver.get(address);
         login(driver, user);
 
-        Thread.sleep(250);
-        assertThrows(NoSuchElementException.class, () -> driver.findElement(By.id(element)), () -> "Saw element #" + element + " at " + address + " without permission to");
+        SeleniumExtension.waitForElementToBeVisible(By.id("wrapper"), driver);
+        By id = By.id(element);
+        assertThrows(NoSuchElementException.class, () -> driver.findElement(id), () -> "Saw element #" + element + " at " + address + " without permission to");
     }
 
     private void registerProxy(Database database) throws ExecutionException, InterruptedException {
@@ -302,8 +304,9 @@ class AccessControlVisibilityTest {
         driver.get(address);
         login(driver, user);
 
-        Thread.sleep(250);
-        assertThrows(NoSuchElementException.class, () -> driver.findElement(By.id(element)), () -> "Saw element #" + element + " at " + address + " without permission to");
+        SeleniumExtension.waitForElementToBeVisible(By.id("wrapper"), driver);
+        By id = By.id(element);
+        assertThrows(NoSuchElementException.class, () -> driver.findElement(id), () -> "Saw element #" + element + " at " + address + " without permission to");
     }
 
     @DisplayName("Player element is visible with permission")
@@ -332,7 +335,8 @@ class AccessControlVisibilityTest {
         driver.get(address);
         login(driver, user);
 
-        Thread.sleep(250);
-        assertThrows(NoSuchElementException.class, () -> driver.findElement(By.id(element)), () -> "Saw element #" + element + " at " + address + " without permission to");
+        SeleniumExtension.waitForElementToBeVisible(By.id("wrapper"), driver);
+        By id = By.id(element);
+        assertThrows(NoSuchElementException.class, () -> driver.findElement(id), () -> "Saw element #" + element + " at " + address + " without permission to");
     }
 }
