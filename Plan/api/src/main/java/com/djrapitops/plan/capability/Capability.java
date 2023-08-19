@@ -90,7 +90,11 @@ enum Capability {
      * {@link com.djrapitops.plan.delivery.web.ResourceService#addJavascriptToResource(String, String, ResourceService.Position, String, String)}
      * {@link com.djrapitops.plan.delivery.web.ResourceService#addStyleToResource(String, String, ResourceService.Position, String, String)}
      */
-    PAGE_EXTENSION_RESOURCES_REGISTER_DIRECT_CUSTOMIZATION;
+    PAGE_EXTENSION_RESOURCES_REGISTER_DIRECT_CUSTOMIZATION,
+    /**
+     * {@link  com.djrapitops.plan.delivery.web.ResolverService#registerPermissions(String...)}
+     */
+    PAGE_EXTENSION_USER_PERMISSIONS;
 
     static Optional<Capability> getByName(String name) {
         if (name == null) {

@@ -203,4 +203,16 @@ public class WebUserQueries {
                 WHERE + WebPermissionTable.PERMISSION + "=?";
         return db -> db.queryList(sql, row -> row.getString(WebGroupTable.NAME), permission);
     }
+
+    public static Query<Optional<Integer>> fetchPermissionId(String permission) {
+        String sql = SELECT + WebPermissionTable.ID + FROM + WebPermissionTable.TABLE_NAME + WHERE + WebPermissionTable.PERMISSION + "=?";
+        return db -> db.queryOptional(sql, row -> row.getInt(WebPermissionTable.ID), permission);
+    }
+
+    public static Query<List<Integer>> fetchGroupIds(List<String> groups) {
+        String sql = SELECT + WebGroupTable.ID +
+                FROM + WebGroupTable.TABLE_NAME +
+                WHERE + WebGroupTable.NAME + " IN (" + Sql.nParameters(groups.size()) + ')';
+        return db -> db.queryList(sql, row -> row.getInt(WebGroupTable.ID), groups);
+    }
 }
