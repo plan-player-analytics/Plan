@@ -46,6 +46,9 @@ public class StoreWebGroupTransaction extends Transaction {
 
     @Override
     protected void performOperations() {
+        executeOther(new StoreMissingWebPermissionsTransaction(permissions));
+        commitMidTransaction();
+
         Optional<Integer> id = query(WebUserQueries.fetchGroupId(name));
         if (id.isPresent()) {
             updateGroup(id.get());
@@ -90,7 +93,6 @@ public class StoreWebGroupTransaction extends Transaction {
     }
 
     private void updateGroup(Integer id) {
-        executeOther(new StoreMissingWebPermissionsTransaction(permissions));
         List<Integer> permissionIds = query(WebUserQueries.fetchPermissionIds(permissions));
         deletePermissionsOfGroup(id);
         insertPermissionIdsOfGroup(id, permissionIds);

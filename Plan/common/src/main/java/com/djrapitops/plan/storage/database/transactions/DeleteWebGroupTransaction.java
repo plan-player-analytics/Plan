@@ -20,6 +20,7 @@ import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.storage.database.sql.tables.SecurityTable;
 import com.djrapitops.plan.storage.database.sql.tables.WebGroupTable;
 import com.djrapitops.plan.storage.database.sql.tables.WebGroupToPermissionTable;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import org.intellij.lang.annotations.Language;
 
 import java.sql.PreparedStatement;
@@ -38,7 +39,7 @@ public class DeleteWebGroupTransaction extends Transaction {
     private final String name;
     private final String moveTo;
 
-    public DeleteWebGroupTransaction(String name, String moveTo) {
+    public DeleteWebGroupTransaction(@Untrusted String name, @Untrusted String moveTo) {
         this.name = name;
         this.moveTo = moveTo;
     }

@@ -20,6 +20,8 @@ import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
+
 /**
  * Represents the plan_web_permission table.
  *
@@ -33,6 +35,7 @@ public class WebPermissionTable {
     public static final String PERMISSION = "permission";
 
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" + PERMISSION + ") VALUES (?)";
+    public static final String SELECT_PERMISSION_ID = SELECT + ID + FROM + TABLE_NAME + WHERE + PERMISSION + "=?";
 
     private WebPermissionTable() {
         /* Static information class */

@@ -31,10 +31,13 @@ import com.djrapitops.plan.storage.database.transactions.StoreWebGroupTransactio
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
+import com.djrapitops.plan.storage.database.transactions.patches.WebGroupDefaultGroupsPatch;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import utilities.TestConstants;
+import utilities.TestErrorLogger;
 import utilities.TestPluginLogger;
 
 import java.util.*;
@@ -47,7 +50,9 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
     String GROUP_NAME = "test_group";
 
     @Test
+    @DisplayName("Web user with group 'admin' is registered")
     default void userIsRegistered() {
+        executeTransactions(new WebGroupDefaultGroupsPatch());
         executeTransactions(new StoreWebGroupTransaction("admin", List.of("page", "access", "manage.groups", "manage.users")));
         User expected = new User(WEB_USERNAME, "console", null, PassEncryptUtil.createHash("testPass"), "admin",
                 new HashSet<>(Arrays.asList("page", "access", "manage.groups", "manage.users")));
@@ -60,12 +65,18 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
     }
 
     @Test
+    @DisplayName("WebUserQueries fetchAllUsers finds multiple users")
     default void multipleWebUsersAreFetchedAppropriately() {
         userIsRegistered();
-        assertEquals(1, db().query(WebUserQueries.fetchAllUsers()).size());
+        User secondUser = new User("2nd-user", "console", null, PassEncryptUtil.createHash("testPass"), "admin",
+                new HashSet<>(Arrays.asList("page", "access", "manage.groups", "manage.users")));
+        db().executeTransaction(new StoreWebUserTransaction(secondUser));
+
+        assertEquals(2, db().query(WebUserQueries.fetchAllUsers()).size());
     }
 
     @Test
+    @DisplayName("RemoveWebUserTransaction deletes user from database")
     default void webUserIsRemoved() {
         userIsRegistered();
         db().executeTransaction(new RemoveWebUserTransaction(WEB_USERNAME));
@@ -73,6 +84,7 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
     }
 
     @Test
+    @DisplayName("RemoveEverythingTransaction deletes user from database")
     default void removeEverythingRemovesWebUser() {
         userIsRegistered();
         db().executeTransaction(new RemoveEverythingTransaction());
@@ -80,6 +92,7 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
     }
 
     @Test
+    @DisplayName("ActiveCookieStore stores cookies it generates in database")
     default void activeCookieStoreSavesCookies() {
         userIsRegistered();
         User user = db().query(WebUserQueries.fetchUser(WEB_USERNAME)).orElseThrow(AssertionError::new);
@@ -94,6 +107,7 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
     }
 
     @Test
+    @DisplayName("ActiveCookieStore deletes outdated cookies in database")
     default void activeCookieStoreDeletesCookies() {
         userIsRegistered();
         User user = db().query(WebUserQueries.fetchUser(WEB_USERNAME)).orElseThrow(AssertionError::new);
@@ -108,6 +122,7 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
     }
 
     @Test
+    @DisplayName("RemoveWebUserTransaction deletes cookies in database")
     default void webUserRemovalDeletesCookies() {
         userIsRegistered();
         User user = db().query(WebUserQueries.fetchUser(WEB_USERNAME)).orElseThrow(AssertionError::new);
@@ -133,6 +148,7 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
     }
 
     @Test
+    @DisplayName("RemoveEverythingTransaction deletes cookies in database")
     default void removeEverythingRemovesCookies() {
         activeCookieStoreSavesCookies();
         db().executeTransaction(new RemoveEverythingTransaction());
@@ -140,6 +156,7 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
     }
 
     @Test
+    @DisplayName("Web group is stored in the database")
     default void webGroupIsAdded() {
         db().executeTransaction(new StoreWebGroupTransaction(GROUP_NAME, List.of(WebPermission.ACCESS.getPermission())));
 
@@ -152,6 +169,7 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
     }
 
     @Test
+    @DisplayName("Web group's permissions is stored in the database")
     default void webGroupPermissionsAreStored() {
         db().executeTransaction(new StoreWebGroupTransaction(GROUP_NAME, List.of(WebPermission.ACCESS.getPermission())));
 
@@ -163,6 +181,7 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
     }
 
     @Test
+    @DisplayName("WebUserQueries fetchGroupNamesWithPermission finds group with specific permission")
     default void webGroupIsFoundByPermission() {
         webGroupPermissionsAreStored();
 
@@ -171,9 +190,10 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
     }
 
     @Test
-    default void customWebPermissionsAreStored() {
+    @DisplayName("Web group's never seen permission 'test.permission' is stored in the database")
+    default void customWebPermissionsAreStored() throws Exception {
         String customPermission = "test.permission";
-        db().executeTransaction(new StoreWebGroupTransaction(GROUP_NAME, List.of(customPermission)));
+        db().executeTransaction(new StoreWebGroupTransaction(GROUP_NAME, List.of(customPermission))).get();
 
         List<String> permissionExpected = List.of(customPermission);
         List<String> permissionResult = db().query(WebUserQueries.fetchGroupPermissions(GROUP_NAME));
@@ -184,6 +204,7 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
     }
 
     @Test
+    @DisplayName("StoreWebUserTransaction updates user's group")
     default void webUserGroupIsChanged() throws Exception {
         userIsRegistered();
         webGroupIsAdded();
@@ -199,9 +220,11 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
     }
 
     @Test
-    default void grantNewWebPermissions() {
-        db().executeTransaction(new StoreMissingWebPermissionsTransaction(List.of("grant.permission")));
-        db().executeTransaction(new GrantWebPermissionToGroupsWithPermissionTransaction("grant.permission", WebPermission.MANAGE_GROUPS.getPermission()));
+    @DisplayName("GrantWebPermissionToGroupsWithPermissionTransaction gives permissions to existing groups")
+    default void grantNewWebPermissions() throws Exception {
+        db().executeTransaction(new WebGroupDefaultGroupsPatch());
+        db().executeTransaction(new StoreMissingWebPermissionsTransaction(List.of("grant.permission"))).get();
+        db().executeTransaction(new GrantWebPermissionToGroupsWithPermissionTransaction("grant.permission", WebPermission.MANAGE_GROUPS.getPermission())).get();
 
         assertTrue(db().query(WebUserQueries.fetchPermissionId("grant.permission")).isPresent());
 
@@ -211,7 +234,9 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
     }
 
     @Test
+    @DisplayName("DeleteWebGroupTransaction deletes a group")
     default void webGroupIsDeleted() {
+        db().executeTransaction(new WebGroupDefaultGroupsPatch());
         webGroupIsAdded();
 
         db().executeTransaction(new DeleteWebGroupTransaction(GROUP_NAME, "no_access"));
@@ -220,12 +245,41 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
     }
 
     @Test
-    default void removeEverythingRemovesCustomGroups() {
+    @DisplayName("DeleteWebGroupTransaction does not delete a group if moveTo group doesn't exist")
+    default void webGroupIsNotDeletedWhenMoveToGroupDoesNotExist() {
+        try {
+            TestErrorLogger.throwErrors(false);
+            webGroupIsAdded();
+
+            db().executeTransaction(new DeleteWebGroupTransaction(GROUP_NAME, "no_access"));
+            Throwable exception = TestErrorLogger.getLatest().orElseThrow(AssertionError::new);
+            assertEquals("com.djrapitops.plan.exceptions.database.DBOpException: Group not found for given name", exception.getMessage());
+
+            assertTrue(db().query(WebUserQueries.fetchGroupId(GROUP_NAME)).isPresent());
+        } finally {
+            TestErrorLogger.throwErrors(true);
+        }
+    }
+
+    @Test
+    @DisplayName("RemoveEverythingTransaction deletes all groups")
+    default void removeEverythingRemovesAllGroups() {
         webGroupIsAdded();
 
         db().executeTransaction(new RemoveEverythingTransaction());
 
         assertTrue(db().query(WebUserQueries.fetchGroupId(GROUP_NAME)).isEmpty());
-        assertTrue(db().query(WebUserQueries.fetchGroupId("admin")).isPresent());
+        assertTrue(db().query(WebUserQueries.fetchGroupId("admin")).isEmpty());
+    }
+
+    @Test
+    @DisplayName("RemoveEverythingTransaction deletes all permissions")
+    default void removeEverythingRemovesAllPermissions() throws Exception {
+        customWebPermissionsAreStored();
+
+        db().executeTransaction(new RemoveEverythingTransaction()).get();
+
+        assertTrue(db().query(WebUserQueries.fetchPermissionId("test.permission")).isEmpty());
+        assertTrue(db().query(WebUserQueries.fetchPermissionId(WebPermission.ACCESS.getPermission())).isEmpty());
     }
 }

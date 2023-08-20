@@ -18,9 +18,11 @@ package com.djrapitops.plan.storage.database.queries.objects;
 
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.utilities.dev.Untrusted;
+import com.djrapitops.plan.utilities.java.Lists;
 import org.intellij.lang.annotations.Language;
 
 import java.sql.ResultSet;
@@ -214,5 +216,27 @@ public class WebUserQueries {
                 FROM + WebGroupTable.TABLE_NAME +
                 WHERE + WebGroupTable.NAME + " IN (" + Sql.nParameters(groups.size()) + ')';
         return db -> db.queryList(sql, row -> row.getInt(WebGroupTable.ID), groups);
+    }
+
+    public static Query<Map<String, List<String>>> fetchAllGroupPermissions() {
+        String sql = SELECT + WebGroupTable.NAME + ',' + WebPermissionTable.PERMISSION +
+                FROM + WebGroupTable.TABLE_NAME + " g" +
+                INNER_JOIN + WebGroupToPermissionTable.TABLE_NAME + " gtp ON g." + WebGroupTable.ID + "=gtp." + WebGroupToPermissionTable.GROUP_ID +
+                INNER_JOIN + WebPermissionTable.TABLE_NAME + " p ON p." + WebPermissionTable.ID + "=gtp." + WebGroupToPermissionTable.PERMISSION_ID;
+        return new QueryAllStatement<>(sql, 100) {
+            @Override
+            public Map<String, List<String>> processResults(ResultSet set) throws SQLException {
+                Map<String, List<String>> groupMap = new HashMap<>();
+                while (set.next()) {
+                    String group = set.getString(WebGroupTable.NAME);
+                    String permission = set.getString(WebPermissionTable.PERMISSION);
+
+                    List<String> permissionList = groupMap.computeIfAbsent(group, Lists::create);
+
+                    permissionList.add(permission);
+                }
+                return groupMap;
+            }
+        };
     }
 }

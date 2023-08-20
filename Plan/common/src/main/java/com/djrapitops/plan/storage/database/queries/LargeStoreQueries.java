@@ -428,4 +428,57 @@ public class LargeStoreQueries {
             }
         };
     }
+
+    public static Executable storeGroupNames(List<String> groups) {
+        if (groups == null || groups.isEmpty()) return Executable.empty();
+
+        return new ExecBatchStatement(WebGroupTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (String group : groups) {
+                    statement.setString(1, group);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+
+    public static Executable storePermissions(List<String> permissions) {
+        if (permissions == null || permissions.isEmpty()) return Executable.empty();
+
+        return new ExecBatchStatement(WebPermissionTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (String permission : permissions) {
+                    statement.setString(1, permission);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable storeGroupPermissionRelations(Map<String, List<String>> groupPermissions) {
+        if (groupPermissions == null || groupPermissions.isEmpty()) return Executable.empty();
+
+        String sql = "INSERT INTO " + WebGroupToPermissionTable.TABLE_NAME + " (" +
+                WebGroupToPermissionTable.GROUP_ID + ',' + WebGroupToPermissionTable.PERMISSION_ID +
+                ") VALUES (" +
+                WebGroupTable.SELECT_GROUP_ID + ',' + WebPermissionTable.SELECT_PERMISSION_ID +
+                ")";
+
+        return new ExecBatchStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (var permissionsOfGroup : groupPermissions.entrySet()) {
+                    String group = permissionsOfGroup.getKey();
+                    for (String permission : permissionsOfGroup.getValue()) {
+                        statement.setString(1, group);
+                        statement.setString(2, permission);
+                        statement.addBatch();
+                    }
+                }
+            }
+        };
+    }
 }

@@ -26,6 +26,7 @@ import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieStore;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.DeleteWebGroupTransaction;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
@@ -78,15 +79,15 @@ public class WebGroupDeleteJSONResolver implements Resolver {
         if (!request.getMethod().equals("DELETE")) {
             throw new BadRequestException("Endpoint needs to be sent a DELETE request.");
         }
-        String groupName = request.getQuery().get("group")
+        @Untrusted String groupName = request.getQuery().get("group")
                 .orElseThrow(() -> new BadRequestException("'group' parameter not given."));
-        String moveTo = request.getQuery().get("moveTo")
+        @Untrusted String moveTo = request.getQuery().get("moveTo")
                 .orElseThrow(() -> new BadRequestException("'moveTo' parameter not given."));
 
         return Optional.of(getResponse(groupName, moveTo));
     }
 
-    private Response getResponse(String groupName, String moveTo) {
+    private Response getResponse(@Untrusted String groupName, @Untrusted String moveTo) {
         try {
             dbSystem.getDatabase().executeTransaction(new DeleteWebGroupTransaction(groupName, moveTo))
                     .get();

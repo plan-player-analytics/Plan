@@ -21,6 +21,7 @@ import com.djrapitops.plan.utilities.logging.ErrorLogger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -36,6 +37,11 @@ public class TestErrorLogger implements ErrorLogger {
 
     public static List<Throwable> getCaught() {
         return caught;
+    }
+
+    public static Optional<Throwable> getLatest() {
+        if (caught.isEmpty()) return Optional.empty();
+        return Optional.of(caught.get(caught.size() - 1));
     }
 
     @Override
