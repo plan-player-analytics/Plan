@@ -26,6 +26,8 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
+ * Adds a permission to any group that already has the other given permission.
+ *
  * @author AuroraLS3
  */
 public class GrantWebPermissionToGroupsWithPermissionTransaction extends Transaction {
