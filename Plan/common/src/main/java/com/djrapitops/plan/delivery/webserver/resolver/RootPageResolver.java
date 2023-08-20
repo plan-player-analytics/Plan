@@ -79,8 +79,16 @@ public class RootPageResolver implements NoAuthResolver {
             return responseFactory.redirectResponse("players");
         } else if (user.hasPermission(WebPermission.ACCESS_PLAYER_SELF)) {
             return responseFactory.redirectResponse("player/" + user.getUUID().map(UUID::toString).orElseGet(user::getName));
+        } else if (user.hasPermission(WebPermission.ACCESS_QUERY)) {
+            return responseFactory.redirectResponse("query");
+        } else if (user.hasPermission(WebPermission.MANAGE_GROUPS)) {
+            return responseFactory.redirectResponse("manage");
+        } else if (user.hasPermission(WebPermission.ACCESS_DOCS)) {
+            return responseFactory.redirectResponse("docs");
+        } else if (user.hasPermission(WebPermission.ACCESS_ERRORS)) {
+            return responseFactory.redirectResponse("errors");
         } else {
-            return responseFactory.forbidden403(user.getName() + " has insufficient permissions to be redirected to any page. Needs one of: 'page.server', 'page.players' or 'page.player.self'");
+            return responseFactory.forbidden403("User has insufficient permissions to be redirected to any page.");
         }
     }
 }
