@@ -17,6 +17,7 @@
 package com.djrapitops.plan.settings.locale;
 
 import com.djrapitops.plan.SubSystem;
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.web.AssetVersions;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -104,6 +105,7 @@ public class LocaleSystem implements SubSystem {
                 HtmlLang.values(),
                 JSLang.values(),
                 PluginLang.values(),
+                WebPermission.values(),
         };
     }
 

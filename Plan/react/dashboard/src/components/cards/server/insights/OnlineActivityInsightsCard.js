@@ -14,7 +14,7 @@ const OnlineActivityInsightsCard = ({data}) => {
     if (!data) return <CardLoader/>;
 
     return (
-        <InsightsFor30DaysCard>
+        <InsightsFor30DaysCard id={'online-activity-insights'}>
             <Datapoint name={t('html.label.onlineOnFirstJoin')} icon={faUserGroup} color="light-green"
                        value={data.players_first_join_avg}
                        trend={<SmallTrend trend={data.players_first_join_avg_trend}/>}/>

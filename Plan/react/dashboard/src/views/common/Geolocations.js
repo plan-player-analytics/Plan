@@ -6,15 +6,21 @@ import PingTableCard from "../../components/cards/common/PingTableCard";
 import LoadIn from "../../components/animation/LoadIn";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 
-const Geolocations = ({className, geolocationData, pingData, geolocationError, pingError}) => {
+const Geolocations = (
+    {className, geolocationData, pingData, geolocationError, pingError, seeGeolocations, seePing}
+) => {
     return (
         <LoadIn>
             <section className={className}>
                 <ExtendableRow id={'row-' + className}>
                     <Col md={12}>
-                        {geolocationError ? <ErrorViewCard error={geolocationError}/> :
-                            <GeolocationsCard data={geolocationData}/>}
-                        {pingError ? <ErrorViewCard error={pingError}/> : <PingTableCard data={pingData}/>}
+                        {seeGeolocations && <>
+                            {geolocationError ? <ErrorViewCard error={geolocationError}/>
+                                : <GeolocationsCard data={geolocationData}/>}
+                        </>}
+                        {seePing && <>
+                            {pingError ? <ErrorViewCard error={pingError}/> : <PingTableCard data={pingData}/>}
+                        </>}
                     </Col>
                 </ExtendableRow>
             </section>

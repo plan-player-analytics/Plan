@@ -89,13 +89,14 @@ public class ActiveCookieStore implements SubSystem {
     @Override
     public void enable() {
         ActiveCookieStore.setCookiesExpireAfter(config.get(WebserverSettings.COOKIES_EXPIRE_AFTER));
-        processing.submitNonCritical(this::loadActiveCookies);
+        processing.submitNonCritical(this::reloadActiveCookies);
     }
 
-    private void loadActiveCookies() {
-        USERS_BY_COOKIE.clear();
+    public void reloadActiveCookies() {
         try {
-            USERS_BY_COOKIE.putAll(dbSystem.getDatabase().query(WebUserQueries.fetchActiveCookies()));
+            Map<String, User> cookies = dbSystem.getDatabase().query(WebUserQueries.fetchActiveCookies());
+            USERS_BY_COOKIE.clear();
+            USERS_BY_COOKIE.putAll(cookies);
             for (Map.Entry<String, Long> entry : dbSystem.getDatabase().query(WebUserQueries.getCookieExpiryTimes()).entrySet()) {
                 long timeToExpiry = Math.max(entry.getValue() - System.currentTimeMillis(), 0L);
                 activeCookieExpiryCleanupTask.addExpiry(entry.getKey(), System.currentTimeMillis() + timeToExpiry);

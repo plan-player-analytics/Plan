@@ -9,22 +9,27 @@ import PlayerbaseInsightsCard from "../../components/cards/server/insights/Playe
 import LoadIn from "../../components/animation/LoadIn";
 import {fetchNetworkPlayerbaseOverview} from "../../service/networkService";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import {useAuth} from "../../hooks/authenticationHook";
 
 const NetworkPlayerbaseOverview = () => {
-    const {data, loadingError} = useDataRequest(fetchNetworkPlayerbaseOverview, []);
+    const {hasPermission} = useAuth();
+
+    const seeOverview = hasPermission('page.network.playerbase.overview');
+    const seeGraphs = hasPermission('page.network.playerbase.graphs');
+    const {data, loadingError} = useDataRequest(fetchNetworkPlayerbaseOverview, [], seeOverview);
 
     return (
         <LoadIn>
             <section className="network-playerbase">
-                <ExtendableRow id={'row-network-playerbase-0'}>
+                {seeGraphs && <ExtendableRow id={'row-network-playerbase-0'}>
                     <Col lg={8}>
                         <PlayerbaseDevelopmentCard identifier={undefined}/>
                     </Col>
                     <Col lg={4}>
                         <CurrentPlayerbaseCard identifier={undefined}/>
                     </Col>
-                </ExtendableRow>
-                <ExtendableRow id={'row-network-playerbase-1'}>
+                </ExtendableRow>}
+                {seeOverview && <ExtendableRow id={'row-network-playerbase-1'}>
                     {loadingError && <ErrorViewCard error={loadingError}/>}
                     {!loadingError && <>
                         <Col lg={8}>
@@ -34,7 +39,7 @@ const NetworkPlayerbaseOverview = () => {
                             <PlayerbaseInsightsCard data={data?.insights}/>
                         </Col>
                     </>}
-                </ExtendableRow>
+                </ExtendableRow>}
             </section>
         </LoadIn>
     )

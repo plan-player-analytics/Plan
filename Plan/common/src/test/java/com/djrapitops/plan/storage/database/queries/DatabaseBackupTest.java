@@ -69,7 +69,7 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
                 Collections.singletonList(new DateObj<>(System.currentTimeMillis(), RandomData.randomInt(-1, 40))))
         );
 
-        User user = new User("test", "console", null, PassEncryptUtil.createHash("testPass"), 0, Collections.emptyList());
+        User user = new User("test", "console", null, PassEncryptUtil.createHash("testPass"), "admin", Collections.emptyList());
         db().executeTransaction(new StoreWebUserTransaction(user));
     }
 
@@ -95,6 +95,8 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
             assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllTPSData());
             assertQueryResultIsEqual(db(), backup, ServerQueries.fetchPlanServerInformation());
             assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchAllUsers());
+            assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchGroupNames());
+            assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchAvailablePermissions());
 
         } finally {
             backup.close();

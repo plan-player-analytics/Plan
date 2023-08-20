@@ -6,10 +6,10 @@ import Scrollable from "../../Scrollable";
 import SessionAccordion from "../../accordion/SessionAccordion";
 import React from "react";
 
-const RecentSessionsCard = ({sessions, isPlayer, isNetwork}) => {
+const RecentSessionsCard = ({id, sessions, isPlayer, isNetwork}) => {
     const {t} = useTranslation();
     return (
-        <Card>
+        <Card id={'session-list'}>
             <Card.Header>
                 <h6 className="col-black" style={{width: '100%'}}>
                     <Fa icon={faCalendar} className="col-teal"/> {t('html.label.recentSessions')}

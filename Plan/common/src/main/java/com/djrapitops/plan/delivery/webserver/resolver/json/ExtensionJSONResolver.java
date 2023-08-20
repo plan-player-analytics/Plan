@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.extension.ExtensionDataDto;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
@@ -71,8 +72,8 @@ public class ExtensionJSONResolver extends JSONResolver {
 
     @Override
     public boolean canAccess(Request request) {
-        WebUser permissions = request.getUser().orElse(new WebUser(""));
-        return permissions.hasPermission("page.server") || permissions.hasPermission("page.network");
+        WebUser user = request.getUser().orElse(new WebUser(""));
+        return user.hasPermission(WebPermission.PAGE_NETWORK_PLUGINS) || user.hasPermission(WebPermission.PAGE_SERVER_PLUGINS);
     }
 
     @GET

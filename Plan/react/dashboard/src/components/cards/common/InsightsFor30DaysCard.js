@@ -4,10 +4,10 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import React from "react";
 import {faLifeRing} from "@fortawesome/free-regular-svg-icons";
 
-const InsightsFor30DaysCard = ({children}) => {
+const InsightsFor30DaysCard = ({id, children}) => {
     const {t} = useTranslation();
     return (
-        <Card>
+        <Card id={id}>
             <Card.Header>
                 <h6 className="col-black">
                     <Fa icon={faLifeRing} className="col-red"/> {t('html.label.insights30days')}

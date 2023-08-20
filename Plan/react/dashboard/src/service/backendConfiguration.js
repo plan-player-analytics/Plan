@@ -23,6 +23,10 @@ export const doSomePostRequest = async (url, statusOptions, body) => {
     return doSomeRequest(url, statusOptions, async () => axios.post(baseAddress + url, body));
 }
 
+export const doSomeDeleteRequest = async (url, statusOptions, body) => {
+    return doSomeRequest(url, statusOptions, async () => axios.delete(baseAddress + url, body));
+}
+
 export const doSomeRequest = async (url, statusOptions, axiosFunction) => {
     let response = undefined;
     try {

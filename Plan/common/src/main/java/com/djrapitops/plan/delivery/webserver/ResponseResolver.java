@@ -60,7 +60,7 @@ import java.util.regex.Pattern;
  */
 @Singleton
 @OpenAPIDefinition(info = @Info(
-        title = "Plan API endpoints",
+        title = "Swagger Docs",
         description = "If authentication is enabled (see response of /v1/whoami) logging in is required for endpoints (/auth/login). Pass 'Cookie' header in the requests after login.",
         contact = @Contact(name = "Github Discussions", url = "https://github.com/plan-player-analytics/Plan/discussions/categories/apis-and-development"),
         license = @License(name = "GNU Lesser General Public License v3.0 (LGPLv3.0)", url = "https://github.com/plan-player-analytics/Plan/blob/master/LICENSE")
@@ -82,6 +82,7 @@ public class ResponseResolver {
     private final ErrorsPageResolver errorsPageResolver;
     private final SwaggerJsonResolver swaggerJsonResolver;
     private final SwaggerPageResolver swaggerPageResolver;
+    private final ManagePageResolver managePageResolver;
     private final ErrorLogger errorLogger;
 
     private final ResolverService resolverService;
@@ -116,7 +117,7 @@ public class ResponseResolver {
             SwaggerJsonResolver swaggerJsonResolver,
             SwaggerPageResolver swaggerPageResolver,
 
-            ErrorLogger errorLogger
+            ManagePageResolver managePageResolver, ErrorLogger errorLogger
     ) {
         this.resolverService = resolverService;
         this.responseFactory = responseFactory;
@@ -138,6 +139,7 @@ public class ResponseResolver {
         this.errorsPageResolver = errorsPageResolver;
         this.swaggerJsonResolver = swaggerJsonResolver;
         this.swaggerPageResolver = swaggerPageResolver;
+        this.managePageResolver = managePageResolver;
         this.errorLogger = errorLogger;
     }
 
@@ -154,7 +156,7 @@ public class ResponseResolver {
         resolverService.registerResolver(plugin, "/player", playerPageResolver);
         resolverService.registerResolver(plugin, "/network", serverPageResolver);
         resolverService.registerResolver(plugin, "/server", serverPageResolver);
-        if (webserverConfiguration.isAuthenticationEnabled()) {
+        if (webServer.get().isAuthRequired()) {
             resolverService.registerResolver(plugin, "/login", loginPageResolver);
             resolverService.registerResolver(plugin, "/register", registerPageResolver);
             resolverService.registerResolver(plugin, "/auth/login", loginResolver);
@@ -162,6 +164,7 @@ public class ResponseResolver {
             if (webserverConfiguration.isRegistrationEnabled()) {
                 resolverService.registerResolver(plugin, "/auth/register", registerResolver);
             }
+            resolverService.registerResolver(plugin, "/manage", managePageResolver);
         }
 
         resolverService.registerResolver(plugin, "/errors", errorsPageResolver);

@@ -17,7 +17,7 @@
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
-import com.djrapitops.plan.delivery.web.resolver.Resolver;
+import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.version.VersionChecker;
@@ -42,7 +42,7 @@ import java.util.Optional;
  * @author Kopo942
  */
 @Path("/v1/version")
-public class VersionJSONResolver implements Resolver {
+public class VersionJSONResolver implements NoAuthResolver {
 
     private final VersionChecker versionChecker;
     private final String currentVersion;
@@ -54,11 +54,6 @@ public class VersionJSONResolver implements Resolver {
     ) {
         this.currentVersion = currentVersion;
         this.versionChecker = versionChecker;
-    }
-
-    @Override
-    public boolean canAccess(Request request) {
-        return true;
     }
 
     @GET

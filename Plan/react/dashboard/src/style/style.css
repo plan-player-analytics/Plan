@@ -1282,6 +1282,14 @@ div#navSrvContainer::-webkit-scrollbar-thumb {
 }
 
 /*
+Fix table colors not applying properly due to bootstrap.
+*/
+.table > :not(caption) > * > * {
+    color: inherit;
+    background-color: inherit;
+}
+
+/*
 Adding a translation, even though it doesn't visually
 impact the page, causes child elements with a
 position of "fixed" to be based on this element
@@ -1448,4 +1456,25 @@ ul.filters {
 
 .extension-table-header {
     cursor: pointer;
+}
+
+.opaque-text {
+    opacity: 0.4;
+}
+
+.opaque-text:hover {
+    opacity: 1;
+}
+
+@keyframes alert-timer {
+    from {
+        width: 100%
+    }
+    to {
+        width: 0
+    }
+}
+
+.group-help i {
+    color: var(--color-plan)
 }

@@ -51,7 +51,7 @@ const RedirectPlaceholder = () => {
 }
 
 const MainPageRedirect = () => {
-    const {authLoaded, authRequired, loggedIn, user} = useAuth();
+    const {authLoaded, authRequired, loggedIn, user, hasPermission} = useAuth();
     const {isProxy, serverName, serverUUID} = useMetadata();
 
     if (staticSite) {
@@ -67,15 +67,15 @@ const MainPageRedirect = () => {
     }
 
     const redirectBasedOnPermissions = () => {
-        if (isProxy && user.permissions.includes('page.network')) {
+        if (isProxy && hasPermission('access.network')) {
             return (<Navigate to={"/network/overview"} replace={true}/>)
-        } else if (user.permissions.includes('page.server')) {
+        } else if (hasPermission('access.server.' + serverUUID)) {
             return (<Navigate to={"/server/" + serverUUID + "/overview"}
                               replace={true}/>)
-        } else if (user.permissions.includes('page.player.other')) {
+        } else if (hasPermission('access.player')) {
             return (<Navigate to={"/players"} replace={true}/>)
-        } else if (user.permissions.includes('page.player.self')) {
-            return (<Navigate to={"/player/" + user.playerUUID} replace={true}/>)
+        } else if (hasPermission('access.player.self')) {
+            return (<Navigate to={"/player/" + (user.playerUUID ? user.playerUUID : user.username)} replace={true}/>)
         }
     };
 

@@ -40,7 +40,12 @@ const ServerSidebar = () => {
 
     useEffect(() => {
         const items = [
-            {name: 'html.label.serverOverview', icon: faInfoCircle, href: "overview"},
+            {
+                name: 'html.label.serverOverview',
+                icon: faInfoCircle,
+                href: "overview",
+                permission: 'page.server.overview'
+            },
             {},
             {name: 'html.label.information'},
             {
@@ -51,11 +56,22 @@ const ServerSidebar = () => {
                         nameShort: 'html.label.overview',
                         name: 'html.label.playersOnlineOverview',
                         icon: faChartArea,
-                        href: "online-activity"
+                        href: "online-activity",
+                        permission: 'page.server.online.activity'
                     },
-                    {name: 'html.label.sessions', icon: faCalendarCheck, href: "sessions"},
-                    {name: 'html.label.pvpPve', icon: faCampground, href: "pvppve"}
-                ]
+                    {
+                        name: 'html.label.sessions',
+                        icon: faCalendarCheck,
+                        href: "sessions",
+                        permission: 'page.server.sessions'
+                    },
+                    {
+                        name: 'html.label.pvpPve',
+                        icon: faCampground,
+                        href: "pvppve",
+                        permission: 'page.server.player.versus'
+                    }
+                ],
             },
             {
                 name: 'html.label.playerbase',
@@ -65,18 +81,44 @@ const ServerSidebar = () => {
                         nameShort: 'html.label.overview',
                         name: 'html.label.playerbaseOverview',
                         icon: faChartLine,
-                        href: "playerbase"
+                        href: "playerbase",
+                        permission: 'page.server.playerbase'
                     },
-                    {name: 'html.label.joinAddresses', icon: faLocationArrow, href: "join-addresses"},
-                    {name: 'html.label.playerRetention', icon: faUsersViewfinder, href: "retention"},
-                    {name: 'html.label.playerList', icon: faUserGroup, href: "players"},
-                    {name: 'html.label.geolocations', icon: faGlobe, href: "geolocations"},
+                    {
+                        name: 'html.label.joinAddresses',
+                        icon: faLocationArrow,
+                        href: "join-addresses",
+                        permission: 'page.server.join.addresses'
+                    },
+                    {
+                        name: 'html.label.playerRetention',
+                        icon: faUsersViewfinder,
+                        href: "retention",
+                        permission: 'page.server.retention'
+                    },
+                    {
+                        name: 'html.label.playerList',
+                        icon: faUserGroup,
+                        href: "players",
+                        permission: 'page.server.players'
+                    },
+                    {
+                        name: 'html.label.geolocations',
+                        icon: faGlobe,
+                        href: "geolocations",
+                        permission: 'page.server.geolocations'
+                    },
                 ]
             },
-            {name: 'html.label.performance', icon: faCogs, href: "performance"},
+            {name: 'html.label.performance', icon: faCogs, href: "performance", permission: 'page.server.performance'},
             {},
-            {name: 'html.label.plugins'},
-            {name: 'html.label.pluginsOverview', icon: faCubes, href: "plugins-overview"}
+            {name: 'html.label.plugins', permission: 'page.server.plugins'},
+            {
+                name: 'html.label.pluginsOverview',
+                icon: faCubes,
+                href: "plugins-overview",
+                permission: 'page.server.plugins'
+            }
         ]
 
         if (extensionData?.extensions) {
@@ -86,7 +128,8 @@ const ServerSidebar = () => {
                     return {
                         name: info.pluginName,
                         icon: [iconTypeToFontAwesomeClass(info.icon.family), info.icon.iconName],
-                        href: `plugins/${encodeURIComponent(info.pluginName)}`
+                        href: `plugins/${encodeURIComponent(info.pluginName)}`,
+                        permission: 'page.network.plugins'
                     }
                 }).forEach(item => items.push(item))
         }
@@ -94,8 +137,8 @@ const ServerSidebar = () => {
         if (!staticSite) {
             items.push(
                 {},
-                {name: 'html.label.links'},
-                {name: 'html.label.query', icon: faSearch, href: "/query"}
+                {name: 'html.label.links', permission: 'access.query'},
+                {name: 'html.label.query', icon: faSearch, href: "/query", permission: 'access.query'}
             );
         }
 
@@ -133,7 +176,7 @@ const ServerPage = () => {
             const fromMetadata = networkMetadata?.servers?.find(server => server.serverUUID === identifier);
             return fromMetadata ? fromMetadata.serverName : identifier;
         } else {
-            return serverName && serverName.startsWith('Server') ? "Plan" : serverName
+            return serverName?.startsWith('Server') ? "Plan" : serverName
         }
     }
     const displayedServerName = getDisplayedServerName();

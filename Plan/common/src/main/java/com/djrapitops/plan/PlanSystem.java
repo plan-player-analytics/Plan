@@ -180,12 +180,12 @@ public class PlanSystem implements SubSystem {
         queryService.register();
 
         enableSystems(
+                processing,
                 files,
                 localeSystem,
                 versionChecker,
                 databaseSystem,
                 webServerSystem,
-                processing,
                 serverInfo,
                 importSystem,
                 exportSystem,

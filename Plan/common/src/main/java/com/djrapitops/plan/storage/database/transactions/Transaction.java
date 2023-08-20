@@ -148,6 +148,15 @@ public abstract class Transaction {
         return rollbackStatusMsg;
     }
 
+    protected void commitMidTransaction() {
+        try {
+            connection.commit();
+            initializeTransaction();
+        } catch (SQLException e) {
+            manageFailure(e);
+        }
+    }
+
     /**
      * Override this method for conditional execution.
      * <p>

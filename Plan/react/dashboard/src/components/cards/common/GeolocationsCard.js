@@ -47,7 +47,7 @@ const GeolocationsCard = ({data}) => {
     }
 
     return (
-        <Card>
+        <Card id={"geolocations"}>
             <Card.Header>
                 <h6 className="col-black">
                     <Fa icon={faGlobe} className="col-green"/> {t('html.label.geolocations')}

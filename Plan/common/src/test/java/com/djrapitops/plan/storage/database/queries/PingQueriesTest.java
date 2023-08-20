@@ -44,12 +44,12 @@ public interface PingQueriesTest extends DatabaseTestPreparer {
     }
 
     @Test
-    default void pingStoreTransactionOutOfOrderDoesNotFailDueToMissingUser() {
+    default void pingStoreTransactionOutOfOrderDoesNotFailDueToMissingUser() throws ExecutionException, InterruptedException {
         DateObj<Integer> saved = RandomData.randomIntDateObject();
         int value = saved.getValue();
         db().executeTransaction(new PingStoreTransaction(player2UUID, serverUUID(),
                 Collections.singletonList(saved)
-        ));
+        )).get();
 
         Map<UUID, List<Ping>> expected = Collections.singletonMap(player2UUID, Collections.singletonList(
                 new Ping(saved.getDate(), serverUUID(), value, value, value)
@@ -59,12 +59,12 @@ public interface PingQueriesTest extends DatabaseTestPreparer {
     }
 
     @Test
-    default void pingStoreTransactionOutOfOrderUpdatesUserInformation() {
+    default void pingStoreTransactionOutOfOrderUpdatesUserInformation() throws ExecutionException, InterruptedException {
         db().executeTransaction(new PingStoreTransaction(player2UUID, serverUUID(),
                 Collections.singletonList(RandomData.randomIntDateObject())
-        ));
+        )).get();
         long registerDate = RandomData.randomTime();
-        db().executeTransaction(new PlayerRegisterTransaction(player2UUID, () -> registerDate, TestConstants.PLAYER_ONE_NAME));
+        db().executeTransaction(new PlayerRegisterTransaction(player2UUID, () -> registerDate, TestConstants.PLAYER_ONE_NAME)).get();
 
         Optional<BaseUser> expected = Optional.of(new BaseUser(player2UUID, TestConstants.PLAYER_ONE_NAME, registerDate, 0));
         Optional<BaseUser> result = db().query(BaseUserQueries.fetchBaseUserOfPlayer(player2UUID));

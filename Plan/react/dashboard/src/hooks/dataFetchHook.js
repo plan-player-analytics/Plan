@@ -4,7 +4,7 @@ import {useDataStore} from "./datastoreHook";
 import {useMetadata} from "./metadataHook";
 import {staticSite} from "../service/backendConfiguration";
 
-export const useDataRequest = (fetchMethod, parameters) => {
+export const useDataRequest = (fetchMethod, parameters, shouldRequest) => {
     const [data, setData] = useState(undefined);
     const [loadingError, setLoadingError] = useState(undefined);
     const {updateRequested, finishUpdate} = useNavigation();
@@ -13,6 +13,10 @@ export const useDataRequest = (fetchMethod, parameters) => {
 
     /*eslint-disable react-hooks/exhaustive-deps */
     useEffect(() => {
+        if (shouldRequest !== undefined && !shouldRequest) {
+            setData(undefined);
+            return;
+        }
         datastore.setAsUpdating(fetchMethod);
         const handleResponse = (json, error, skipOldData, timeout) => {
             if (json) {
@@ -59,7 +63,7 @@ export const useDataRequest = (fetchMethod, parameters) => {
         fetchMethod(updateRequested, ...parameters).then(({data: json, error}) => {
             handleResponse(json, error, false, 1000);
         });
-    }, [fetchMethod, parameters.length, ...parameters, updateRequested, refreshBarrierMs])
+    }, [fetchMethod, parameters.length, ...parameters, updateRequested, refreshBarrierMs, shouldRequest])
     /* eslint-enable react-hooks/exhaustive-deps */
 
     return {data, loadingError};

@@ -7,7 +7,7 @@ import Scrollable from "../../Scrollable";
 import {faClock} from "@fortawesome/free-regular-svg-icons";
 import React from "react";
 
-const NicknamesCard = ({player}) => {
+const NicknamesCard = ({nicknames}) => {
     const {t} = useTranslation();
     const {nightModeEnabled} = useTheme();
     return (
@@ -26,13 +26,18 @@ const NicknamesCard = ({player}) => {
                         <th><Fa icon={faClock}/> {t('html.label.lastSeen')}</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    {player.nicknames.map(nickname => (<tr key={JSON.stringify(nickname)}>
+                    {Boolean(nicknames?.length) && <tbody>
+                    {nicknames.map(nickname => (<tr key={JSON.stringify(nickname)}>
                         <td dangerouslySetInnerHTML={{__html: nickname.nickname}}/>
                         <td>{nickname.server}</td>
                         <td>{nickname.date}</td>
                     </tr>))}
-                    </tbody>
+                    </tbody>}
+                    {!nicknames?.length && <tbody>
+                    <tr>
+                        <td colSpan={2}>{t('generic.noData')}</td>
+                    </tr>
+                    </tbody>}
                 </table>
             </Scrollable>
         </Card>

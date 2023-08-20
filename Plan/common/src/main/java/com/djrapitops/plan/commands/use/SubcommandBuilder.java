@@ -54,6 +54,10 @@ public interface SubcommandBuilder {
         return onCommand((sender, arguments) -> executor.accept(sender));
     }
 
+    default SubcommandBuilder onArgsOnlyCommand(Consumer<Arguments> executor) {
+        return onCommand((sender, arguments) -> executor.accept(arguments));
+    }
+
     SubcommandBuilder onTabComplete(BiFunction<CMDSender, Arguments, List<String>> resolver);
 
     Subcommand build();

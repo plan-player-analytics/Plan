@@ -13,8 +13,10 @@ import {useNavigation} from "../../hooks/navigationHook";
 import {mapPerformanceDataToSeries} from "../../util/graphs";
 import PerformanceGraphsCard from "../../components/cards/network/PerformanceGraphsCard";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import {useAuth} from "../../hooks/authenticationHook";
 
 const NetworkPerformance = () => {
+    const {hasPermission} = useAuth();
     const {t} = useTranslation();
     const {networkMetadata} = useMetadata();
     const {updateRequested} = useNavigation();
@@ -22,6 +24,8 @@ const NetworkPerformance = () => {
     const [serverOptions, setServerOptions] = useState([]);
     const [selectedOptions, setSelectedOptions] = useState([]);
     const [visualizedServers, setVisualizedServers] = useState([]);
+
+    const seePerformance = hasPermission('page.network.performance');
 
     useEffect(() => {
         if (networkMetadata) {
@@ -42,6 +46,7 @@ const NetworkPerformance = () => {
 
     const [performanceData, setPerformanceData] = useState({});
     const loadPerformanceData = useCallback(async () => {
+        if (!seePerformance) return;
         const loaded = {
             servers: [],
             data: [],
@@ -78,7 +83,7 @@ const NetworkPerformance = () => {
         if (error) loaded.errors.push(error);
 
         setPerformanceData({...loaded, overview: data});
-    }, [visualizedServers, serverOptions, setPerformanceData])
+    }, [visualizedServers, serverOptions, setPerformanceData, seePerformance])
 
     useEffect(() => {
         loadPerformanceData();
@@ -88,7 +93,7 @@ const NetworkPerformance = () => {
         (s, i) => s === visualizedServers[i]);
     return (
         <LoadIn>
-            <section className={"network-performance"}>
+            {seePerformance && <section className={"network-performance"}>
                 <ExtendableRow id={'row-network-performance-0'}>
                     <Col>
                         <PerformanceGraphsCard data={performanceData}/>
@@ -112,7 +117,7 @@ const NetworkPerformance = () => {
                         </Card>
                     </Col>
                 </ExtendableRow>
-            </section>
+            </section>}
         </LoadIn>
     )
 };

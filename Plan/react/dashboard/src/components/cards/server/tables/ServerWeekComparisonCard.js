@@ -13,7 +13,7 @@ const ServerWeekComparisonCard = ({data}) => {
     const {t} = useTranslation();
     if (!data) return <CardLoader/>;
     return (
-        <Card>
+        <Card id={"week-comparison"}>
             <Card.Header>
                 <h6 className="col-black">
                     <Fa icon={faExchangeAlt}/> {t('html.label.weekComparison')}

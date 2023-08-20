@@ -243,6 +243,11 @@ public abstract class SQLDB extends AbstractDatabase {
                 new BadJoinAddressDataCorrectionPatch(),
                 new AfterBadJoinAddressDataCorrectionPatch(),
                 new CorrectWrongCharacterEncodingPatch(logger, config),
+                new UpdateWebPermissionsPatch(),
+                new WebGroupDefaultGroupsPatch(),
+                new WebGroupAddMissingAdminGroupPatch(),
+                new LegacyPermissionLevelGroupsPatch(),
+                new SecurityTableGroupPatch()
         };
     }
 

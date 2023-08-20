@@ -43,7 +43,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
-import org.testcontainers.shaded.org.awaitility.Awaitility;
 import utilities.RandomData;
 import utilities.TestConstants;
 import utilities.mocks.PluginMockComponent;
@@ -52,7 +51,6 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -173,9 +171,7 @@ class JSErrorRegressionTest {
 
         for (String href : anchorLinks) {
             driver.get(address);
-            Awaitility.await()
-                    .atMost(3, TimeUnit.SECONDS)
-                    .until(() -> "complete".equals(driver.executeScript("return document.readyState")));
+            SeleniumExtension.waitForPageLoadForSeconds(3, driver);
 
             List<LogEntry> logs = new ArrayList<>();
             logs.addAll(driver.manage().logs().get(LogType.CLIENT).getAll());

@@ -7,11 +7,14 @@ import Loader from "../../components/navigation/Loader";
 import {useTranslation} from "react-i18next";
 import {useServerExtensionContext} from "../../hooks/serverExtensionDataContext";
 import ErrorView from "../ErrorView";
+import {useAuth} from "../../hooks/authenticationHook";
 
 const ServerPluginData = () => {
+    const {hasPermission} = useAuth();
     const {t} = useTranslation();
-    const {extensionData, extensionDataLoadingError} = useServerExtensionContext();
+    const {extensionData, extensionDataLoadingError, proxy} = useServerExtensionContext();
     const extensions = useMemo(() => extensionData?.extensions ? extensionData.extensions.filter(extension => !extension.wide) : [], [extensionData]);
+    const seePlugins = hasPermission(proxy ? 'page.network.plugins' : 'page.server.plugins');
 
     useEffect(() => {
         const masonryRow = document.getElementById('extension-masonry-row');
@@ -28,10 +31,14 @@ const ServerPluginData = () => {
 
     if (extensionDataLoadingError) return <ErrorView error={extensionDataLoadingError}/>;
 
+    if (!seePlugins) {
+        return <></>
+    }
+
     if (!extensions?.length) {
         return (
             <LoadIn>
-                <section className="server_plugin_data">
+                <section className="server_plugin_data" id={"server-plugin-data"}>
                     <Row style={{overflowY: 'hidden'}}>
                         <Col md={12}>
                             <Card>

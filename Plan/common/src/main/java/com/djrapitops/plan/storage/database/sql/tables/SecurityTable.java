@@ -24,6 +24,7 @@ import com.djrapitops.plan.storage.database.sql.building.Sql;
  * Table information about 'plan_security'
  *
  * @author AuroraLS3
+ * @see com.djrapitops.plan.storage.database.transactions.patches.SecurityTableGroupPatch
  */
 public class SecurityTable {
 
@@ -33,13 +34,13 @@ public class SecurityTable {
     public static final String USERNAME = "username";
     public static final String LINKED_TO = "linked_to_uuid";
     public static final String SALT_PASSWORD_HASH = "salted_pass_hash";
-    public static final String PERMISSION_LEVEL = "permission_level";
+    public static final String GROUP_ID = "group_id";
 
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +
             USERNAME + ',' +
             LINKED_TO + ',' +
             SALT_PASSWORD_HASH + ',' +
-            PERMISSION_LEVEL + ") VALUES (?,?,?,?)";
+            GROUP_ID + ") VALUES (?,?,?,(" + WebGroupTable.SELECT_GROUP_ID + "))";
 
     private SecurityTable() {
         /* Static information class */
@@ -51,7 +52,8 @@ public class SecurityTable {
                 .column(USERNAME, Sql.varchar(100)).notNull().unique()
                 .column(LINKED_TO, Sql.varchar(36)).defaultValue("''")
                 .column(SALT_PASSWORD_HASH, Sql.varchar(100)).notNull().unique()
-                .column(PERMISSION_LEVEL, Sql.INT).notNull()
+                .column(GROUP_ID, Sql.INT).notNull()
+                .foreignKey(GROUP_ID, WebGroupTable.TABLE_NAME, WebGroupTable.ID)
                 .toString();
     }
 }

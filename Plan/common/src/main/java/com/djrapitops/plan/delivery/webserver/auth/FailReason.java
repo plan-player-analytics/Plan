@@ -29,7 +29,9 @@ public enum FailReason implements Lang {
     EXPIRED_COOKIE("html.error.auth.expiredCookie", "User cookie has expired"),
     USER_AND_PASS_NOT_SPECIFIED("html.error.auth.emptyForm", "User and Password not specified"),
     USER_DOES_NOT_EXIST("html.error.auth.userNotFound", "User does not exist"),
+    GROUP_DOES_NOT_EXIST("html.error.auth.groupNotFound", "Web Permission Group does not exist"),
     USER_INFORMATION_NOT_FOUND("html.error.auth.registrationFailed", "Registration failed, try again (The code expires after 15 minutes)"),
+    NO_PERMISSION_GROUP("html.error.auth.noPermissionGroup", "Registration failed, player did not have any 'plan.webgroup.{name}' permission"),
     USER_PASS_MISMATCH("html.error.auth.loginFailed", "User and Password did not match"),
     DATABASE_NOT_OPEN("html.error.auth.dbClosed", "Database is not open, check db status with /plan info"),
     ERROR("html.error.auth.generic", "Authentication failed due to error");

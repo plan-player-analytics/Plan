@@ -22,7 +22,7 @@ const SessionInsightsCard = ({identifier}) => {
     const insights = data?.insights;
 
     return (
-        <InsightsFor30DaysCard>
+        <InsightsFor30DaysCard id={'session-insights'}>
             <Datapoint name={t('html.label.mostActiveGamemode')} icon={faGamepad} color="teal" bold
                        value={insights?.most_active_gamemode}
                        valueLabel={insights?.most_active_gamemode_perc}
