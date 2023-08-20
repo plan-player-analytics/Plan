@@ -32,7 +32,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import jakarta.ws.rs.GET;
+import jakarta.ws.rs.DELETE;
 import jakarta.ws.rs.Path;
 
 import javax.inject.Inject;
@@ -63,7 +63,7 @@ public class WebGroupDeleteJSONResolver implements Resolver {
         return request.getUser().map(user -> user.hasPermission(WebPermission.MANAGE_GROUPS)).orElse(false);
     }
 
-    @GET
+    @DELETE
     @Operation(
             description = "Delete a group",
             parameters = {

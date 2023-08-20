@@ -28,12 +28,13 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.StoreWebGroupTransaction;
 import com.google.gson.Gson;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import jakarta.ws.rs.GET;
+import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 
 import javax.inject.Inject;
@@ -67,9 +68,12 @@ public class WebGroupSaveJSONResolver implements Resolver {
         return request.getUser().map(user -> user.hasPermission(WebPermission.MANAGE_GROUPS)).orElse(false);
     }
 
-    @GET
+    @POST
     @Operation(
             description = "Update list of permissions for a group",
+            parameters = {
+                    @Parameter(name = "group", description = "Name of the group", required = true),
+            },
             responses = {
                     @ApiResponse(responseCode = "200", content = @Content(
                             mediaType = MimeType.JSON,
