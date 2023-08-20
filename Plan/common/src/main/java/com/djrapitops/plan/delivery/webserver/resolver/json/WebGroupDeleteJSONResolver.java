@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
-import com.djrapitops.plan.delivery.domain.auth.GroupList;
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
@@ -28,9 +27,9 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.DeleteWebGroupTransaction;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.GET;
@@ -66,11 +65,14 @@ public class WebGroupDeleteJSONResolver implements Resolver {
 
     @GET
     @Operation(
-            description = "Get list of web permission groups",
+            description = "Delete a group",
+            parameters = {
+                    @Parameter(name = "group", description = "Name of the group to delete"),
+                    @Parameter(name = "moveTo", description = "Name of the group to move users of deleted group to")
+            },
             responses = {
-                    @ApiResponse(responseCode = "200", content = @Content(
-                            mediaType = MimeType.JSON,
-                            schema = @Schema(implementation = GroupList.class))),
+                    @ApiResponse(responseCode = "200", content = @Content(mediaType = MimeType.JSON,
+                            examples = @ExampleObject("{\"success\": true}"))),
             },
             requestBody = @RequestBody(content = @Content(examples = @ExampleObject()))
     )
