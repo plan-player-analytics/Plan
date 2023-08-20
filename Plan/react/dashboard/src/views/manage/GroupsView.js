@@ -30,6 +30,7 @@ import {useAlertPopupContext} from "../../hooks/context/alertPopupContext";
 import {DropdownStatusContextProvider, useDropdownStatusContext} from "../../hooks/context/dropdownStatusContextHook";
 import {useNavigation} from "../../hooks/navigationHook";
 import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
+import {useAuth} from "../../hooks/authenticationHook";
 
 const GroupsHeader = ({groupName, icon}) => {
     return (
@@ -370,10 +371,14 @@ const GroupsCard = ({groups, reloadGroupNames}) => {
 }
 
 const GroupsView = () => {
+    const {hasPermission} = useAuth();
+    const seeManageGroups = hasPermission('manage.groups');
+
     const [updateRequested, setUpdateRequested] = useState(Date.now());
     const [data, setData] = useState(undefined);
     const [loadingError, setLoadingError] = useState(undefined);
     const loadGroupNames = useCallback(() => {
+        if (!seeManageGroups) return;
         fetchGroups().then(({data, error}) => {
             setData(data);
             setLoadingError(error);
@@ -392,7 +397,7 @@ const GroupsView = () => {
 
     return (
         <LoadIn>
-            <ConfigurationStorageContextProvider>
+            {seeManageGroups && <ConfigurationStorageContextProvider>
                 <DropdownStatusContextProvider>
                     <Row>
                         <Col md={12}>
@@ -400,7 +405,7 @@ const GroupsView = () => {
                         </Col>
                     </Row>
                 </DropdownStatusContextProvider>
-            </ConfigurationStorageContextProvider>
+            </ConfigurationStorageContextProvider>}
         </LoadIn>
     )
 };

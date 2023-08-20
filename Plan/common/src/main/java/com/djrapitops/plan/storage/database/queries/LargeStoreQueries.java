@@ -30,6 +30,7 @@ import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
 import org.apache.commons.lang3.StringUtils;
+import org.intellij.lang.annotations.Language;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -461,11 +462,12 @@ public class LargeStoreQueries {
     public static Executable storeGroupPermissionRelations(Map<String, List<String>> groupPermissions) {
         if (groupPermissions == null || groupPermissions.isEmpty()) return Executable.empty();
 
+        @Language("SQL")
         String sql = "INSERT INTO " + WebGroupToPermissionTable.TABLE_NAME + " (" +
                 WebGroupToPermissionTable.GROUP_ID + ',' + WebGroupToPermissionTable.PERMISSION_ID +
-                ") VALUES (" +
-                WebGroupTable.SELECT_GROUP_ID + ',' + WebPermissionTable.SELECT_PERMISSION_ID +
-                ")";
+                ") VALUES ((" +
+                WebGroupTable.SELECT_GROUP_ID + "),(" + WebPermissionTable.SELECT_PERMISSION_ID +
+                "))";
 
         return new ExecBatchStatement(sql) {
             @Override

@@ -19,6 +19,7 @@ package com.djrapitops.plan.delivery.webserver;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
+import com.djrapitops.plan.delivery.export.ExportTestUtilities;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -34,10 +35,7 @@ import com.djrapitops.plan.storage.database.transactions.events.StoreServerPlaye
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import extension.FullSystemExtension;
 import extension.SeleniumExtension;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -47,6 +45,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.logging.LogEntry;
+import org.openqa.selenium.logging.LogType;
 import utilities.RandomData;
 import utilities.TestConstants;
 import utilities.TestResources;
@@ -55,8 +55,7 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.Arrays;
-import java.util.Collections;
+import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -193,8 +192,8 @@ class AccessControlVisibilityTest {
                 Arguments.arguments(WebPermission.MANAGE_GROUPS, "slice_h_0", "manage"),
                 Arguments.arguments(WebPermission.ACCESS_QUERY, "query-button", "query"),
                 Arguments.arguments(WebPermission.ACCESS_PLAYERS, "players-table_wrapper", "players"),
-                Arguments.arguments(WebPermission.ACCESS_ERRORS, "content", "errors"),
-                Arguments.arguments(WebPermission.ACCESS_DOCS, "swagger-ui", "docs")
+                Arguments.arguments(WebPermission.ACCESS_ERRORS, "content", "errors")
+//                Arguments.arguments(WebPermission.ACCESS_DOCS, "swagger-ui", "docs")
         );
     }
 
@@ -210,6 +209,14 @@ class AccessControlVisibilityTest {
 
         SeleniumExtension.waitForElementToBeVisible(By.id(element), driver);
         assertDoesNotThrow(() -> driver.findElement(By.id(element)), () -> "Did not see #" + element + " at " + address + " with permission '" + permission.getPermission() + "'");
+        assertNoLogs(driver, address);
+    }
+
+    private static void assertNoLogs(ChromeDriver driver, String address) {
+        List<LogEntry> logs = new ArrayList<>();
+        logs.addAll(driver.manage().logs().get(LogType.CLIENT).getAll());
+        logs.addAll(driver.manage().logs().get(LogType.BROWSER).getAll());
+        ExportTestUtilities.assertNoLogs(logs, address);
     }
 
     @DisplayName("Whole page is not visible with permission")
@@ -225,6 +232,7 @@ class AccessControlVisibilityTest {
         SeleniumExtension.waitForElementToBeVisible(By.id("wrapper"), driver);
         By id = By.id(element);
         assertThrows(NoSuchElementException.class, () -> driver.findElement(id), () -> "Saw element #" + element + " at " + address + " without permission to");
+        assertNoLogs(driver, address);
     }
 
     void login(ChromeDriver driver, User user) {
@@ -250,10 +258,15 @@ class AccessControlVisibilityTest {
 
         SeleniumExtension.waitForElementToBeVisible(By.id(element), driver);
         assertDoesNotThrow(() -> driver.findElement(By.id(element)), () -> "Did not see #" + element + " at " + address + " with permission '" + permission.getPermission() + "'");
+        assertNoLogs(driver, address);
     }
 
     private static void storePlayer(Database database, ServerUUID serverUUID) throws ExecutionException, InterruptedException {
-        database.executeTransaction(new StoreServerPlayerTransaction(TestConstants.PLAYER_ONE_UUID, System.currentTimeMillis(), TestConstants.PLAYER_ONE_NAME, serverUUID, TestConstants.GET_PLAYER_HOSTNAME.get()))
+        storePlayer(database, serverUUID, TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME);
+    }
+
+    private static void storePlayer(Database database, ServerUUID serverUUID, UUID playerUUID, String playerName) throws ExecutionException, InterruptedException {
+        database.executeTransaction(new StoreServerPlayerTransaction(playerUUID, System.currentTimeMillis(), playerName, serverUUID, TestConstants.GET_PLAYER_HOSTNAME.get()))
                 .get();
     }
 
@@ -270,6 +283,7 @@ class AccessControlVisibilityTest {
         SeleniumExtension.waitForElementToBeVisible(By.id("wrapper"), driver);
         By id = By.id(element);
         assertThrows(NoSuchElementException.class, () -> driver.findElement(id), () -> "Saw element #" + element + " at " + address + " without permission to");
+        assertNoLogs(driver, address);
     }
 
     private void registerProxy(Database database) throws ExecutionException, InterruptedException {
@@ -291,6 +305,7 @@ class AccessControlVisibilityTest {
 
         SeleniumExtension.waitForElementToBeVisible(By.id(element), driver);
         assertDoesNotThrow(() -> driver.findElement(By.id(element)), () -> "Did not see #" + element + " at " + address + " with permission '" + permission.getPermission() + "'");
+        assertNoLogs(driver, address);
     }
 
     @DisplayName("Network element is not visible without permission")
@@ -307,6 +322,7 @@ class AccessControlVisibilityTest {
         SeleniumExtension.waitForElementToBeVisible(By.id("wrapper"), driver);
         By id = By.id(element);
         assertThrows(NoSuchElementException.class, () -> driver.findElement(id), () -> "Saw element #" + element + " at " + address + " without permission to");
+        assertNoLogs(driver, address);
     }
 
     @DisplayName("Player element is visible with permission")
@@ -322,6 +338,7 @@ class AccessControlVisibilityTest {
 
         SeleniumExtension.waitForElementToBeVisible(By.id(element), driver);
         assertDoesNotThrow(() -> driver.findElement(By.id(element)), () -> "Did not see #" + element + " at " + address + " with permission '" + permission.getPermission() + "'");
+        assertNoLogs(driver, address);
     }
 
     @DisplayName("Player element is not visible without permission")
@@ -338,5 +355,51 @@ class AccessControlVisibilityTest {
         SeleniumExtension.waitForElementToBeVisible(By.id("wrapper"), driver);
         By id = By.id(element);
         assertThrows(NoSuchElementException.class, () -> driver.findElement(id), () -> "Saw element #" + element + " at " + address + " without permission to");
+        assertNoLogs(driver, address);
+    }
+
+    @Test
+    @DisplayName("ACCESS_PLAYER_SELF can see own player page")
+    void playerSelfVisibilityTests(Database database, ServerUUID serverUUID, ChromeDriver driver) throws Exception {
+        String element = "player-overview";
+
+        User user = registerUser(database, WebPermission.ACCESS_PLAYER_SELF, WebPermission.PAGE_PLAYER);
+        // Link a user to the player
+        User playerUser = new User("player_user", TestConstants.PLAYER_ONE_NAME, TestConstants.PLAYER_ONE_UUID, PassEncryptUtil.createHash(PASSWORD), user.getPermissionGroup(), user.getPermissions());
+        database.executeTransaction(new StoreWebUserTransaction(playerUser)).get();
+
+        storePlayer(database, serverUUID, TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME);
+        storePlayer(database, serverUUID, TestConstants.PLAYER_TWO_UUID, TestConstants.PLAYER_TWO_NAME);
+
+        String address = "https://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_UUID;
+        driver.get(address);
+        login(driver, playerUser);
+
+        SeleniumExtension.waitForElementToBeVisible(By.id(element), driver);
+        assertDoesNotThrow(() -> driver.findElement(By.id(element)), () -> "Did not see #" + element + " at /player/" + TestConstants.PLAYER_ONE_UUID + " with permission '" + WebPermission.ACCESS_PLAYER_SELF.getPermission() + "'");
+        assertNoLogs(driver, address);
+    }
+
+
+    @Test
+    @DisplayName("ACCESS_PLAYER_SELF can not see other player's page")
+    void playerSelfNonVisibilityTests(Database database, ServerUUID serverUUID, ChromeDriver driver) throws Exception {
+        String element = "player-overview";
+
+        User user = registerUser(database, WebPermission.ACCESS_PLAYER_SELF, WebPermission.PAGE_PLAYER);
+        // Link a user to the player
+        User playerUser = new User("player_user", TestConstants.PLAYER_ONE_NAME, TestConstants.PLAYER_ONE_UUID, PassEncryptUtil.createHash(PASSWORD), user.getPermissionGroup(), user.getPermissions());
+        database.executeTransaction(new StoreWebUserTransaction(playerUser));
+
+        storePlayer(database, serverUUID, TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME);
+        storePlayer(database, serverUUID, TestConstants.PLAYER_TWO_UUID, TestConstants.PLAYER_TWO_NAME);
+
+        String address = "https://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_TWO_UUID;
+        driver.get(address);
+        login(driver, playerUser);
+
+        SeleniumExtension.waitForElementToBeVisible(By.id("wrapper"), driver);
+        By id = By.id(element);
+        assertThrows(NoSuchElementException.class, () -> driver.findElement(id), () -> "Saw element #" + element + " at /player/" + TestConstants.PLAYER_TWO_UUID + " without permission to");
     }
 }

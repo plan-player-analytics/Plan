@@ -17,13 +17,15 @@ const HelpModal = React.lazy(() => import("../../components/modal/HelpModal"));
 
 const PlayerPage = () => {
     const {t, i18n} = useTranslation();
+    const {hasChildPermission} = useAuth();
+    const seePlayer = hasChildPermission('access.player')
 
     const {sidebarItems, setSidebarItems} = useNavigation();
 
     const {identifier} = useParams();
     const {currentTab, finishUpdate} = useNavigation();
 
-    const {data: player, loadingError} = useDataRequest(fetchPlayer, [identifier])
+    const {data: player, loadingError} = useDataRequest(fetchPlayer, [identifier], seePlayer)
 
     useEffect(() => {
         if (!player) return;
@@ -40,7 +42,7 @@ const PlayerPage = () => {
             {name: 'html.label.servers', icon: faNetworkWired, href: "servers", permission: 'page.player.servers'}
         ]
 
-        player.extensions.map(extension => {
+        player?.extensions?.map(extension => {
             return {
                 name: `${t('html.label.plugins')} (${extension.serverName})`,
                 icon: faCubes,
@@ -50,7 +52,7 @@ const PlayerPage = () => {
         }).forEach(item => items.push(item));
 
         setSidebarItems(items);
-        window.document.title = `Plan | ${player.info.name}`;
+        window.document.title = `Plan | ${player?.info?.name}`;
 
         finishUpdate(player.timestamp, player.timestamp_f);
     }, [player, t, i18n, finishUpdate, setSidebarItems])
@@ -61,9 +63,9 @@ const PlayerPage = () => {
 
     return player ? (
         <>
-            <Sidebar page={player.info.name} items={sidebarItems}/>
+            <Sidebar page={player?.info?.name} items={sidebarItems}/>
             <div className="d-flex flex-column" id="content-wrapper">
-                <Header page={player.info.name} tab={currentTab}/>
+                <Header page={player?.info?.name} tab={currentTab}/>
                 <div id="content" style={{display: 'flex'}}>
                     <main className="container-fluid mt-4">
                         <Outlet context={{player: player}}/>

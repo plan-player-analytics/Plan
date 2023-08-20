@@ -42,6 +42,7 @@ import jakarta.ws.rs.Path;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -77,12 +78,17 @@ public class GraphsJSONResolver extends JSONResolver {
                 .orElseThrow(() -> new BadRequestException("'type' parameter was not defined."));
         DataID dataID = getDataID(type);
         boolean forServer = request.getQuery().get("server").isPresent();
-        WebPermission requiredPermission = forServer
+
+        List<WebPermission> requiredPermissionOptions = forServer
                 ? getRequiredPermission(dataID)
                 : getRequiredNetworkPermission(dataID);
 
-        if (requiredPermission == null) return true;
-        return request.getUser().orElse(new WebUser("")).hasPermission(requiredPermission);
+        if (requiredPermissionOptions.isEmpty()) return true;
+        WebUser user = request.getUser().orElse(new WebUser(""));
+        for (WebPermission permissionOption : requiredPermissionOptions) {
+            if (user.hasPermission(permissionOption)) return true;
+        }
+        return false;
     }
 
     /**
@@ -200,57 +206,62 @@ public class GraphsJSONResolver extends JSONResolver {
         }
     }
 
-    private WebPermission getRequiredPermission(DataID dataID) {
+    private List<WebPermission> getRequiredPermission(DataID dataID) {
+        switch (dataID) {
+            case GRAPH_PERFORMANCE:
+                return List.of(WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS);
+            case GRAPH_PING:
+            case GRAPH_OPTIMIZED_PERFORMANCE:
+                return List.of(WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS, WebPermission.PAGE_NETWORK_PERFORMANCE);
+            case GRAPH_ONLINE:
+                return List.of(WebPermission.PAGE_SERVER_OVERVIEW_PLAYERS_ONLINE_GRAPH);
+            case GRAPH_UNIQUE_NEW:
+                return List.of(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_DAY_BY_DAY);
+            case GRAPH_HOURLY_UNIQUE_NEW:
+                return List.of(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_HOUR_BY_HOUR);
+            case GRAPH_CALENDAR:
+                return List.of(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_CALENDAR);
+            case GRAPH_PUNCHCARD:
+                return List.of(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_PUNCHCARD);
+            case GRAPH_WORLD_PIE:
+                return List.of(WebPermission.PAGE_SERVER_SESSIONS_WORLD_PIE);
+            case GRAPH_ACTIVITY:
+                return List.of(WebPermission.PAGE_SERVER_PLAYERBASE_GRAPHS);
+            case GRAPH_WORLD_MAP:
+                return List.of(WebPermission.PAGE_SERVER_GEOLOCATIONS_MAP);
+            case GRAPH_HOSTNAME_PIE:
+                return List.of(WebPermission.PAGE_SERVER_JOIN_ADDRESSES_GRAPHS_PIE);
+            case JOIN_ADDRESSES_BY_DAY:
+                return List.of(WebPermission.PAGE_SERVER_JOIN_ADDRESSES_GRAPHS_TIME);
+            default:
+                return List.of();
+        }
+    }
+
+    private List<WebPermission> getRequiredNetworkPermission(DataID dataID) {
         switch (dataID) {
             case GRAPH_PERFORMANCE:
             case GRAPH_OPTIMIZED_PERFORMANCE:
             case GRAPH_PING:
-                return WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS;
-            case GRAPH_ONLINE:
-                return WebPermission.PAGE_SERVER_OVERVIEW_PLAYERS_ONLINE_GRAPH;
-            case GRAPH_UNIQUE_NEW:
-                return WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_DAY_BY_DAY;
-            case GRAPH_HOURLY_UNIQUE_NEW:
-                return WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_HOUR_BY_HOUR;
-            case GRAPH_CALENDAR:
-                return WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_CALENDAR;
-            case GRAPH_PUNCHCARD:
-                return WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_PUNCHCARD;
-            case GRAPH_WORLD_PIE:
-                return WebPermission.PAGE_SERVER_SESSIONS_WORLD_PIE;
+                return List.of(WebPermission.PAGE_NETWORK_PERFORMANCE);
             case GRAPH_ACTIVITY:
-                return WebPermission.PAGE_SERVER_PLAYERBASE_GRAPHS;
-            case GRAPH_WORLD_MAP:
-                return WebPermission.PAGE_SERVER_GEOLOCATIONS_MAP;
-            case GRAPH_HOSTNAME_PIE:
-                return WebPermission.PAGE_SERVER_JOIN_ADDRESSES_GRAPHS_PIE;
-            case JOIN_ADDRESSES_BY_DAY:
-                return WebPermission.PAGE_SERVER_JOIN_ADDRESSES_GRAPHS_TIME;
-            default:
-                return null;
-        }
-    }
-
-    private WebPermission getRequiredNetworkPermission(DataID dataID) {
-        switch (dataID) {
-            case GRAPH_ACTIVITY:
-                return WebPermission.PAGE_NETWORK_PLAYERBASE_GRAPHS;
+                return List.of(WebPermission.PAGE_NETWORK_PLAYERBASE_GRAPHS);
             case GRAPH_UNIQUE_NEW:
-                return WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_DAY_BY_DAY;
+                return List.of(WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_DAY_BY_DAY);
             case GRAPH_HOURLY_UNIQUE_NEW:
-                return WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_HOUR_BY_HOUR;
+                return List.of(WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_HOUR_BY_HOUR);
             case GRAPH_SERVER_PIE:
-                return WebPermission.PAGE_NETWORK_SESSIONS_SERVER_PIE;
+                return List.of(WebPermission.PAGE_NETWORK_SESSIONS_SERVER_PIE);
             case GRAPH_WORLD_MAP:
-                return WebPermission.PAGE_NETWORK_GEOLOCATIONS_MAP;
+                return List.of(WebPermission.PAGE_NETWORK_GEOLOCATIONS_MAP);
             case GRAPH_ONLINE_PROXIES:
-                return WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_ONLINE;
+                return List.of(WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_ONLINE);
             case GRAPH_HOSTNAME_PIE:
-                return WebPermission.PAGE_NETWORK_JOIN_ADDRESSES_GRAPHS_PIE;
+                return List.of(WebPermission.PAGE_NETWORK_JOIN_ADDRESSES_GRAPHS_PIE);
             case JOIN_ADDRESSES_BY_DAY:
-                return WebPermission.PAGE_NETWORK_JOIN_ADDRESSES_GRAPHS_TIME;
+                return List.of(WebPermission.PAGE_NETWORK_JOIN_ADDRESSES_GRAPHS_TIME);
             default:
-                return null;
+                return List.of();
         }
     }
 

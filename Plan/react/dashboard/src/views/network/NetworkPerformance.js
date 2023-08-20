@@ -25,6 +25,8 @@ const NetworkPerformance = () => {
     const [selectedOptions, setSelectedOptions] = useState([]);
     const [visualizedServers, setVisualizedServers] = useState([]);
 
+    const seePerformance = hasPermission('page.network.performance');
+
     useEffect(() => {
         if (networkMetadata) {
             const options = networkMetadata.servers;
@@ -44,6 +46,7 @@ const NetworkPerformance = () => {
 
     const [performanceData, setPerformanceData] = useState({});
     const loadPerformanceData = useCallback(async () => {
+        if (!seePerformance) return;
         const loaded = {
             servers: [],
             data: [],
@@ -90,7 +93,7 @@ const NetworkPerformance = () => {
         (s, i) => s === visualizedServers[i]);
     return (
         <LoadIn>
-            {hasPermission('page.network.performance') && <section className={"network-performance"}>
+            {seePerformance && <section className={"network-performance"}>
                 <ExtendableRow id={'row-network-performance-0'}>
                     <Col>
                         <PerformanceGraphsCard data={performanceData}/>
