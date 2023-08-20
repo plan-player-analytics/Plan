@@ -24,7 +24,6 @@ import com.djrapitops.plan.delivery.rendering.html.icon.Family;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.delivery.rendering.pages.Page;
 import com.djrapitops.plan.delivery.rendering.pages.PageFactory;
-import com.djrapitops.plan.delivery.web.ResourceService;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.ResponseBuilder;
@@ -34,7 +33,6 @@ import com.djrapitops.plan.delivery.web.resource.WebResource;
 import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.ErrorPageLang;
 import com.djrapitops.plan.settings.theme.Theme;
@@ -71,7 +69,6 @@ public class ResponseFactory {
     private static final String STATIC_BUNDLE_FOLDER = "static";
 
     private final PlanFiles files;
-    private final PlanConfig config;
     private final PublicHtmlFiles publicHtmlFiles;
     private final PageFactory pageFactory;
     private final Locale locale;
@@ -92,7 +89,6 @@ public class ResponseFactory {
             Lazy<Addresses> addresses
     ) {
         this.files = files;
-        this.config = config;
         this.publicHtmlFiles = publicHtmlFiles;
         this.pageFactory = pageFactory;
         this.locale = locale;
@@ -101,14 +97,6 @@ public class ResponseFactory {
         this.addresses = addresses;
 
         httpLastModifiedFormatter = formatters.httpLastModifiedLong();
-    }
-
-    /**
-     * @throws UncheckedIOException If reading the resource fails
-     */
-    public WebResource getResource(@Untrusted String resourceName) {
-        return ResourceService.getInstance().getResource("Plan", resourceName,
-                () -> files.getResourceFromJar("web/" + resourceName).asWebResource());
     }
 
     /**
@@ -191,7 +179,7 @@ public class ResponseFactory {
     }
 
     private Response getCachedOrNew(long modified, String fileName, Function<String, Response> newResponseFunction) {
-        WebResource resource = config.isFalse(PluginSettings.LEGACY_FRONTEND) ? getPublicOrJarResource(fileName) : getResource(fileName);
+        WebResource resource = getPublicOrJarResource(fileName);
         Optional<Long> lastModified = resource.getLastModified();
         if (lastModified.isPresent() && modified == lastModified.get()) {
             return browserCachedNotChangedResponse();
@@ -240,7 +228,7 @@ public class ResponseFactory {
 
     public Response javaScriptResponse(@Untrusted String fileName) {
         try {
-            WebResource resource = config.isFalse(PluginSettings.LEGACY_FRONTEND) ? getPublicOrJarResource(fileName) : getResource(fileName);
+            WebResource resource = getPublicOrJarResource(fileName);
             String content = UnaryChain.of(resource.asString())
                     .chain(this::replaceMainAddressPlaceholder)
                     .chain(theme::replaceThemeColors)
@@ -290,7 +278,7 @@ public class ResponseFactory {
 
     public Response cssResponse(@Untrusted String fileName) {
         try {
-            WebResource resource = config.isFalse(PluginSettings.LEGACY_FRONTEND) ? getPublicOrJarResource(fileName) : getResource(fileName);
+            WebResource resource = getPublicOrJarResource(fileName);
             String content = UnaryChain.of(resource.asString())
                     .chain(theme::replaceThemeColors)
                     .chain(contents -> StringUtils.replace(contents, "/static", getBasePath() + "/static"))
@@ -320,7 +308,7 @@ public class ResponseFactory {
 
     public Response imageResponse(@Untrusted String fileName) {
         try {
-            WebResource resource = config.isFalse(PluginSettings.LEGACY_FRONTEND) ? getPublicOrJarResource(fileName) : getResource(fileName);
+            WebResource resource = getPublicOrJarResource(fileName);
             ResponseBuilder responseBuilder = Response.builder()
                     .setMimeType(MimeType.IMAGE)
                     .setContent(resource)
@@ -356,7 +344,7 @@ public class ResponseFactory {
             type = MimeType.FONT_BYTESTREAM;
         }
         try {
-            WebResource resource = config.isFalse(PluginSettings.LEGACY_FRONTEND) ? getPublicOrJarResource(fileName) : getResource(fileName);
+            WebResource resource = getPublicOrJarResource(fileName);
             ResponseBuilder responseBuilder = Response.builder()
                     .setMimeType(type)
                     .setContent(resource);
@@ -422,7 +410,7 @@ public class ResponseFactory {
         try {
             return Response.builder()
                     .setMimeType(MimeType.FAVICON)
-                    .setContent(getResource("favicon.ico"))
+                    .setContent(getPublicOrJarResource("favicon.ico"))
                     .build();
         } catch (UncheckedIOException e) {
             return forInternalError(e, "Could not read favicon");
@@ -431,7 +419,7 @@ public class ResponseFactory {
 
     public Response robotsResponse() {
         try {
-            WebResource resource = getResource("robots.txt");
+            WebResource resource = getPublicOrJarResource("robots.txt");
             Long lastModified = resource.getLastModified().orElseGet(System::currentTimeMillis);
             return Response.builder()
                     .setMimeType("text/plain")
@@ -523,13 +511,9 @@ public class ResponseFactory {
             Database db = dbSystem.getDatabase();
             PlayerContainer player = db.query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
             if (player.getValue(PlayerKeys.REGISTERED).isPresent()) {
-                return forPage(request, pageFactory.playerPage(player));
+                return forPage(request, pageFactory.playerPage());
             } else {
-                if (config.isTrue(PluginSettings.LEGACY_FRONTEND)) {
-                    return playerNotFound404();
-                } else {
-                    return forPage(request, pageFactory.reactPage(), 404);
-                }
+                return forPage(request, pageFactory.reactPage(), 404);
             }
         } catch (IllegalStateException notFoundLegacy) {
             return playerNotFound404();
@@ -574,7 +558,7 @@ public class ResponseFactory {
         try {
             return Response.builder()
                     .setMimeType(MimeType.JSON)
-                    .setContent(getResource(file))
+                    .setContent(getPublicOrJarResource(file))
                     .build();
         } catch (UncheckedIOException e) {
             return forInternalError(e, "Could not read " + file);
