@@ -84,7 +84,7 @@ class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
             @Override
             protected void performOperations() {
                 execute("DROP DATABASE " + dbName);
-                execute("CREATE DATABASE " + dbName);
+                execute("CREATE DATABASE " + dbName + " CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci");
                 execute("USE " + dbName);
             }
         });

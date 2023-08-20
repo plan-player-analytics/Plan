@@ -51,7 +51,10 @@ import utilities.RandomData;
 import utilities.TestConstants;
 import utilities.TestErrorLogger;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -196,10 +199,11 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
         List<ExtensionTableData> tableData = tabData.getTableData();
         assertEquals(1, tableData.size());
-        Table table = tableData.get(0).getTable();
-        List<Object[]> expected = new ArrayList<>();
-        expected.add(new Object[]{"Group", 1});
-        List<Object[]> result = table.getRows();
+        Table expected = Table.builder()
+                .columnOne("a group", Icon.called("circle").build())
+                .columnTwo("Players", Icon.called("user").build())
+                .addRow("Group", 1).build();
+        Table result = tableData.get(0).getTable();
         assertEquals(expected, result);
     }
 
@@ -332,7 +336,8 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
                 .columnOne("first", Icon.called("gavel").build())
                 .columnTwo("second", Icon.called("what").build())
                 .columnThree("third", Icon.called("question").build())
-                .addRow("value", 3, 0.5, 400L)
+                .columnFive("five", Icon.called("").build())
+                .addRow("value", 3, 0.5)
                 .build();
 
         assertEquals(expected, table.getTable());
@@ -364,7 +369,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
                 .columnOne("first", Icon.called("gavel").build())
                 .columnTwo("second", Icon.called("what").build())
                 .columnThree("third", Icon.called("question").build())
-                .addRow("value", 3, 0.5, 400L)
+                .addRow("value", 3, 0.5)
                 .build();
 
         assertEquals(expected, table.getTable());

@@ -90,7 +90,7 @@ public class DBPreparer {
                     execute("SET GLOBAL innodb_fast_shutdown=2");
 
                     execute("DROP DATABASE " + formattedDatabase);
-                    execute("CREATE DATABASE " + formattedDatabase);
+                    execute("CREATE DATABASE " + formattedDatabase + " CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci");
                     execute("USE " + formattedDatabase);
                 }
             });
