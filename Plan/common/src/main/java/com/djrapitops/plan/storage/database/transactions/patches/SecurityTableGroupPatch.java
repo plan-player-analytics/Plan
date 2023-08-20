@@ -24,6 +24,8 @@ import com.djrapitops.plan.storage.database.sql.tables.WebGroupTable;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
+ * Replaces permission_level with group_id to plan_security table.
+ *
  * @author AuroraLS3
  */
 public class SecurityTableGroupPatch extends Patch {
