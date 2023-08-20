@@ -27,6 +27,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -64,6 +65,9 @@ public class WebGroupPermissionJSONResolver implements Resolver {
     @GET
     @Operation(
             description = "Get list of web permissions that have been granted to specific group",
+            parameters = {
+                    @Parameter(name = "group", description = "Name of the group", required = true),
+            },
             responses = {
                     @ApiResponse(responseCode = "200", content = @Content(
                             mediaType = MimeType.JSON,

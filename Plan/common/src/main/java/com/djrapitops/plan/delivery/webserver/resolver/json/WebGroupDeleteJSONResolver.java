@@ -67,8 +67,8 @@ public class WebGroupDeleteJSONResolver implements Resolver {
     @Operation(
             description = "Delete a group",
             parameters = {
-                    @Parameter(name = "group", description = "Name of the group to delete"),
-                    @Parameter(name = "moveTo", description = "Name of the group to move users of deleted group to")
+                    @Parameter(name = "group", description = "Name of the group to delete", required = true),
+                    @Parameter(name = "moveTo", description = "Name of the group to move users of deleted group to", required = true)
             },
             responses = {
                     @ApiResponse(responseCode = "200", content = @Content(mediaType = MimeType.JSON,
