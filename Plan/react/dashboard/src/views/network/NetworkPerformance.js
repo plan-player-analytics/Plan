@@ -83,7 +83,7 @@ const NetworkPerformance = () => {
         if (error) loaded.errors.push(error);
 
         setPerformanceData({...loaded, overview: data});
-    }, [visualizedServers, serverOptions, setPerformanceData])
+    }, [visualizedServers, serverOptions, setPerformanceData, seePerformance])
 
     useEffect(() => {
         loadPerformanceData();

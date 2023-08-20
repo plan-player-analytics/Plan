@@ -383,7 +383,7 @@ const GroupsView = () => {
             setData(data);
             setLoadingError(error);
         });
-    }, [setData, setLoadingError]);
+    }, [setData, setLoadingError, seeManageGroups]);
     useEffect(() => {
         loadGroupNames();
     }, [updateRequested, loadGroupNames]);
