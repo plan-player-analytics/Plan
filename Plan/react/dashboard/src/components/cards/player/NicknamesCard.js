@@ -6,6 +6,7 @@ import {faServer, faSignature} from "@fortawesome/free-solid-svg-icons";
 import Scrollable from "../../Scrollable";
 import {faClock} from "@fortawesome/free-regular-svg-icons";
 import React from "react";
+import ColoredText from "../../text/ColoredText";
 
 const NicknamesCard = ({nicknames}) => {
     const {t} = useTranslation();
@@ -28,7 +29,7 @@ const NicknamesCard = ({nicknames}) => {
                     </thead>
                     {Boolean(nicknames?.length) && <tbody>
                     {nicknames.map(nickname => (<tr key={JSON.stringify(nickname)}>
-                        <td dangerouslySetInnerHTML={{__html: nickname.nickname}}/>
+                        <td><ColoredText text={nickname.nickname}/></td>
                         <td>{nickname.server}</td>
                         <td>{nickname.date}</td>
                     </tr>))}

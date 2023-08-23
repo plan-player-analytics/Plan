@@ -76,9 +76,9 @@ public class TableDto {
                 case DATE_SECOND:
                     return Formatters.getInstance().secondLong().apply(Long.parseLong(value.toString()));
                 case PLAYER_NAME:
-                    return Html.LINK.create("../player/" + Html.encodeToURL(Html.swapColorCodesToSpan(value.toString())));
+                    return Html.LINK.create("../player/" + Html.encodeToURL(value.toString()));
                 default:
-                    return Html.swapColorCodesToSpan(value.toString());
+                    return value.toString();
             }
         } catch (Exception e) {
             return Objects.toString(value);

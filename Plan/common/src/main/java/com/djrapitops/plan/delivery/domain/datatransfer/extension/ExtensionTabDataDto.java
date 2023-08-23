@@ -53,7 +53,7 @@ public class ExtensionTabDataDto {
             tabData.getDouble(key).ifPresent(data -> extensionValues.add(new ExtensionValueDataDto(data.getDescription(), "DOUBLE", data.getFormattedValue(decimalFormatter))));
             tabData.getPercentage(key).ifPresent(data -> extensionValues.add(new ExtensionValueDataDto(data.getDescription(), "PERCENTAGE", data.getFormattedValue(percentageFormatter))));
             tabData.getNumber(key).ifPresent(data -> extensionValues.add(new ExtensionValueDataDto(data.getDescription(), data.getFormatType() == FormatType.NONE ? "NUMBER" : data.getFormatType().name(), data.getFormattedValue(numberFormatters.get(data.getFormatType())))));
-            tabData.getString(key).ifPresent(data -> extensionValues.add(new ExtensionValueDataDto(data.getDescription(), data.isPlayerName() ? "HTML" : "STRING", data.getFormattedValue())));
+            tabData.getString(key).ifPresent(data -> extensionValues.add(new ExtensionValueDataDto(data.getDescription(), data.isPlayerName() ? "LINK" : "STRING", data.getFormattedValue())));
             tabData.getComponent(key).ifPresent(data -> extensionValues.add(new ExtensionValueDataDto(data.getDescription(), "COMPONENT", data.getFormattedValue())));
         }
         return extensionValues;

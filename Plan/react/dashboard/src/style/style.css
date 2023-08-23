@@ -1281,6 +1281,22 @@ div#navSrvContainer::-webkit-scrollbar-thumb {
     text-shadow: 0 0 8px #000;
 }
 
+.italic {
+    font-style: italic;
+}
+
+.bold {
+    font-weight: bolder;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+.strikethrough {
+    text-decoration: line-through;
+}
+
 /*
 Fix table colors not applying properly due to bootstrap.
 */

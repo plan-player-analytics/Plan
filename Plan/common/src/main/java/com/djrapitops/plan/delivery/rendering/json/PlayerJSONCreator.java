@@ -23,7 +23,6 @@ import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.delivery.domain.mutators.*;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
-import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.PingGraph;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.WorldPie;
@@ -51,7 +50,6 @@ import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plan.utilities.java.Lists;
 import com.djrapitops.plan.utilities.java.Maps;
-import org.apache.commons.text.StringEscapeUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -372,7 +370,7 @@ public class PlayerJSONCreator {
             List<Nickname> mapped = new ArrayList<>();
             for (com.djrapitops.plan.delivery.domain.Nickname nickname : nicknames) {
                 mapped.add(new Nickname(
-                        Html.swapColorCodesToSpan(StringEscapeUtils.escapeHtml4(nickname.getName())),
+                        nickname.getName(),
                         serverNames.getOrDefault(nickname.getServerUUID(), nickname.getServerUUID().toString()),
                         dateFormatter.apply(nickname.getDate())
                 ));

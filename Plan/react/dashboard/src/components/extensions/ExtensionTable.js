@@ -5,6 +5,7 @@ import ExtensionIcon, {toExtensionIconHtmlString} from "./ExtensionIcon";
 import DataTablesTable from "../table/DataTablesTable";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSort, faSortDown, faSortUp} from "@fortawesome/free-solid-svg-icons";
+import ColoredText from "../text/ColoredText";
 
 const ExtensionDataTable = ({table}) => {
     const [id] = useState("extension-table-" + new Date().getTime() + "-" + (Math.floor(Math.random() * 100000)));
@@ -81,9 +82,17 @@ const ExtensionColoredTable = ({table}) => {
 
     }, [sortBy, setSortBy, sortReverse, setSortReverse]);
 
+    const mapToCell = (value, j) => {
+        if (String(value?.value).startsWith("<a class=\"link\" href=\"")) {
+            return <td key={JSON.stringify(value)} dangerouslySetInnerHTML={value.value || String(value)}/>;
+        }
+        return <td key={JSON.stringify(value)}>
+            <ColoredText text={value.value || String(value)}/>
+        </td>;
+    };
+
     const rows = table.table.rows.length ? sortRows(table.table.rows, sortBy, sortReverse)
-            .map((row, i) => <tr key={JSON.stringify(row)}>{row.map((value, j) => <td
-                key={JSON.stringify(value)}>{value.value || String(value)}</td>)}</tr>) :
+            .map((row, i) => <tr key={JSON.stringify(row)}>{row.map(mapToCell)}</tr>) :
         <tr>{table.table.columns.map((column, i) =>
             <td key={JSON.stringify(column)}>{i === 0 ? t('generic.noData') : '-'}</td>)}
         </tr>
