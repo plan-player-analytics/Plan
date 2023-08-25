@@ -53,6 +53,10 @@ public class ExtensionStringData implements DescribedExtensionData {
         return playerName;
     }
 
+    public String getValue() {
+        return value;
+    }
+
     public Object getFormattedValue() {
         if (playerName) {
             return Map.of(

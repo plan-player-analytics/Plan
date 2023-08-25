@@ -196,7 +196,7 @@ public class PlayersTableJSONCreator {
         }
 
         // If it's a String add a String, otherwise the player has no value for this extension provider.
-        String stringValue = tabData.getString(key).map(ExtensionStringData::getFormattedValue).orElse("-");
+        String stringValue = tabData.getString(key).map(ExtensionStringData::getValue).orElse("-");
         putDataEntry(dataJson, stringValue, stringValue, key);
     }
 
