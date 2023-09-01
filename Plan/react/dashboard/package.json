@@ -33,7 +33,7 @@
     "react-bootstrap": "^2.8.0",
     "react-bootstrap-range-slider": "^3.0.8",
     "react-dom": "^18.2.0",
-    "react-i18next": "^13.2.0",
+    "react-i18next": "^13.2.1",
     "react-mcjsonchat": "^1.0.0",
     "react-router-dom": "6",
     "react-scripts": "5.0.1",
