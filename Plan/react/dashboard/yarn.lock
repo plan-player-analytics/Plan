@@ -1014,10 +1014,10 @@
     "@babel/helper-validator-option" "^7.16.7"
     "@babel/plugin-transform-typescript" "^7.16.7"
 
-"@babel/runtime-corejs3@^7.10.2", "@babel/runtime-corejs3@^7.20.13", "@babel/runtime-corejs3@^7.20.7", "@babel/runtime-corejs3@^7.22.10":
-  version "7.22.10"
-  resolved "https://registry.yarnpkg.com/@babel/runtime-corejs3/-/runtime-corejs3-7.22.10.tgz#5ecc3d32faa70009f084cc2e087d79e5f5cdcca9"
-  integrity sha512-IcixfV2Jl3UrqZX4c81+7lVg5++2ufYJyAFW3Aux/ZTvY6LVYYhJ9rMgnbX0zGVq6eqfVpnoatTjZdVki/GmWA==
+"@babel/runtime-corejs3@^7.10.2", "@babel/runtime-corejs3@^7.20.13", "@babel/runtime-corejs3@^7.20.7", "@babel/runtime-corejs3@^7.22.11":
+  version "7.22.15"
+  resolved "https://registry.yarnpkg.com/@babel/runtime-corejs3/-/runtime-corejs3-7.22.15.tgz#7aeb9460598a997b0fe74982a5b02fb9e5d264d9"
+  integrity sha512-SAj8oKi8UogVi6eXQXKNPu8qZ78Yzy7zawrlTr0M+IuW/g8Qe9gVDhGcF9h1S69OyACpYoLxEzpjs1M15sI5wQ==
   dependencies:
     core-js-pure "^3.30.2"
     regenerator-runtime "^0.14.0"
@@ -9304,12 +9304,12 @@ swagger-client@^3.20.0:
     traverse "~0.6.6"
     url "~0.11.0"
 
-swagger-ui@^5.4.2:
-  version "5.4.2"
-  resolved "https://registry.yarnpkg.com/swagger-ui/-/swagger-ui-5.4.2.tgz#6ec6370261bdca526d4972f6cc851a358cc19043"
-  integrity sha512-EQtY7Ur53JWfn6GEU64x3xQEpJ2hfg79oplboR+2dhmqUjyeDZNFL5r8zfATjlREdkKI9IqzrcdK7CP5DNaBFg==
+swagger-ui@^5.6.2:
+  version "5.6.2"
+  resolved "https://registry.yarnpkg.com/swagger-ui/-/swagger-ui-5.6.2.tgz#9144497e9e092d51b523e6ba2b79a2f4bfd489ea"
+  integrity sha512-zY1YDUPDBJjIGXaiybD9hCtmiHzZD4+rNmz3rPj8kkSwiQnz+LCqUEXLkYEJ03PSFTsI/p4651j7zoyMCC2lCA==
   dependencies:
-    "@babel/runtime-corejs3" "^7.22.10"
+    "@babel/runtime-corejs3" "^7.22.11"
     "@braintree/sanitize-url" "=6.0.4"
     base64-js "^1.5.1"
     classnames "^2.3.1"
