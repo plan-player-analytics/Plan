@@ -37,6 +37,7 @@ public enum LangCode {
     NL("Nederlands", "Sander0542"),
     RU("русский", "Saph1s, Perhun_Pak, BratishkaErik & stashenko"),
     TR("Türkçe", "TDJisvan, BruilsiozPro & EyuphanMandiraci"),
+    UK("українська мова", "xlanyleeet"),
     PT_BR("Português", "jvmuller"),
     ZH_TW("\u6F22\u8A9E", "\u6d1b\u4f0a & zisunny104");
 
