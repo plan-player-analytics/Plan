@@ -45,7 +45,7 @@ allprojects {
 
     // Fix for UTF-8 files showing with wrong encoding when compiled on Windows machines.
     compileJava { options.encoding = "UTF-8" }
-    tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
+    tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
     javadoc { options.encoding = 'UTF-8' }
 }
 
@@ -148,7 +148,7 @@ subprojects {
         testImplementation.extendsFrom shadow // Include shadowed dependencies in test classpath
     }
     // Test classes available to other modules
-    task testJar(type: Jar) {
+    tasks.register('testJar', Jar) {
         archiveClassifier.set("test")
         from sourceSets.test.output
     }
@@ -176,8 +176,8 @@ subprojects {
         }
     }
 
-    plugins.withType(JacocoPlugin) {
-        tasks["test"].finalizedBy 'jacocoTestReport'
+    plugins.withType(JacocoPlugin).configureEach {
+        tasks.named("test").get().finalizedBy 'jacocoTestReport'
     }
 }
 
