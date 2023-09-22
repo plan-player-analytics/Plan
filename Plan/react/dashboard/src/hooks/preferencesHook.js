@@ -1,31 +1,54 @@
 import {createContext, useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {useAuth} from "./authenticationHook";
+import {fetchPreferences} from "../service/metadataService";
 
 const PreferencesContext = createContext({});
 
 export const PreferencesContextProvider = ({children}) => {
     const [preferences, setPreferences] = useState({});
+    const [defaultPreferences, setDefaultPreferences] = useState({});
     const {authRequired, authLoaded, loggedIn} = useAuth();
 
     const updatePreferences = useCallback(async () => {
-        // TODO load from backend (Includes default preferences alongside regular if logged in)
-        if (authRequired && (!authLoaded || !loggedIn)) {
-            setPreferences({});
+        const {defaultPreferences, preferences} = await fetchPreferences();
+        setDefaultPreferences(defaultPreferences);
+        if (authRequired && authLoaded && loggedIn) {
+            // Preferences are only available if logged in.
+            // Use defaultPreferences when one is not specified.
+            setPreferences({...defaultPreferences, ...preferences});
         } else {
-            let userPref = localStorage.getItem("preferences");
-            if (!userPref) userPref = {};
-            setPreferences(userPref);
+            let userPref = JSON.parse(localStorage.getItem("preferences"));
+            if (!userPref) userPref = {...defaultPreferences};
+            setPreferences({...defaultPreferences, ...userPref});
         }
-    }, [authRequired, authLoaded, loggedIn, setPreferences]);
+    }, [authRequired, authLoaded, loggedIn, setPreferences, setDefaultPreferences]);
+
+    const storePreferences = useCallback(async userPref => {
+        const withDefaultsRemoved = userPref;
+        for (const key of Object.keys(defaultPreferences)) {
+            if (defaultPreferences[key] === withDefaultsRemoved[key]) delete withDefaultsRemoved[key]
+        }
+
+        if (authRequired && authLoaded && loggedIn) {
+            await storePreferences(withDefaultsRemoved);
+        } else {
+            localStorage.setItem("preferences", JSON.stringify(withDefaultsRemoved));
+        }
+    }, [defaultPreferences]);
 
     useEffect(() => {
         updatePreferences();
     }, [updatePreferences, authLoaded, loggedIn]);
 
     const sharedState = useMemo(() => {
-            return {...preferences}
+            return {
+                ...preferences,
+                storePreferences,
+                defaultPreferences,
+                preferencesLoaded: Object.keys(defaultPreferences).length > 0
+            }
         },
-        [preferences]);
+        [preferences, defaultPreferences, storePreferences]);
     return (<PreferencesContext.Provider value={sharedState}>
             {children}
         </PreferencesContext.Provider>
