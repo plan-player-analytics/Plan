@@ -50,7 +50,7 @@ public class PlayersPageExporter extends FileExporter {
     private final ServerInfo serverInfo;
 
     private final ExportPaths exportPaths;
-    private static final String PLAYERS = "players";
+    private static final String PLAYERS_TABLE = "playersTable";
 
     @Inject
     public PlayersPageExporter(
@@ -79,7 +79,7 @@ public class PlayersPageExporter extends FileExporter {
     }
 
     private void exportReactRedirects(Path toDirectory) throws IOException {
-        String[] redirections = {PLAYERS};
+        String[] redirections = {"players"};
         exportReactRedirects(toDirectory, files, config, redirections);
     }
 
@@ -93,16 +93,16 @@ public class PlayersPageExporter extends FileExporter {
                 // Replace ../player in urls to fix player page links
                 StringUtils.replace(response.getAsString(), "../player", toRelativePathFromRoot("player"))
         );
-        exportPaths.put("./v1/players", toRelativePathFromRoot("data/" + jsonResourceName));
+        exportPaths.put("./v1/" + PLAYERS_TABLE, toRelativePathFromRoot("data/" + jsonResourceName));
     }
 
     private String toJSONResourceName() {
-        return StringUtils.replaceEach(PLAYERS, new String[]{"?", "&", "type=", "server="}, new String[]{"-", "_", "", ""});
+        return StringUtils.replaceEach(PLAYERS_TABLE, new String[]{"?", "&", "type=", "server="}, new String[]{"-", "_", "", ""});
     }
 
     private Optional<Response> getJSONResponse() {
         try {
-            return jsonHandler.getResolver().resolve(new Request("GET", "/v1/" + PLAYERS, null, Collections.emptyMap()));
+            return jsonHandler.getResolver().resolve(new Request("GET", "/v1/" + PLAYERS_TABLE, null, Collections.emptyMap()));
         } catch (WebUserAuthException e) {
             // The rest of the exceptions should not be thrown
             throw new IllegalStateException("Unexpected exception thrown: " + e.toString(), e);

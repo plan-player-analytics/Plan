@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.delivery.domain.auth.User;
+import com.djrapitops.plan.delivery.domain.datatransfer.preferences.Preferences;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.GeoInfo;
 import com.djrapitops.plan.gathering.domain.TPS;
@@ -26,10 +27,12 @@ import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.SQLiteDB;
 import com.djrapitops.plan.storage.database.queries.objects.*;
 import com.djrapitops.plan.storage.database.transactions.BackupCopyTransaction;
+import com.djrapitops.plan.storage.database.transactions.StoreWebUserPreferencesTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.*;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.google.common.util.concurrent.MoreExecutors;
+import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import utilities.RandomData;
 import utilities.TestConstants;
@@ -71,6 +74,10 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
 
         User user = new User("test", "console", null, PassEncryptUtil.createHash("testPass"), "admin", Collections.emptyList());
         db().executeTransaction(new StoreWebUserTransaction(user));
+
+        Preferences defaultPreferences = config().getDefaultPreferences();
+        String json = new Gson().toJson(defaultPreferences);
+        db().executeTransaction(new StoreWebUserPreferencesTransaction(json, user.toWebUser()));
     }
 
     @Test
@@ -97,6 +104,7 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
             assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchAllUsers());
             assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchGroupNames());
             assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchAvailablePermissions());
+            assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchAllPreferences());
 
         } finally {
             backup.close();

@@ -90,6 +90,7 @@ class HttpAccessControlTest {
             "/v1/permissions",
             "/v1/saveGroupPermissions",
             "/v1/deleteGroup",
+            "/v1/storePreferences",
             "/manage",
             "/auth/register",
             "/auth/login",

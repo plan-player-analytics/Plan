@@ -18,21 +18,21 @@ package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
+import com.djrapitops.plan.delivery.domain.datatransfer.preferences.Preferences;
+import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieExpiryCleanupTask;
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieStore;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
-import com.djrapitops.plan.storage.database.transactions.DeleteWebGroupTransaction;
-import com.djrapitops.plan.storage.database.transactions.GrantWebPermissionToGroupsWithPermissionTransaction;
-import com.djrapitops.plan.storage.database.transactions.StoreMissingWebPermissionsTransaction;
-import com.djrapitops.plan.storage.database.transactions.StoreWebGroupTransaction;
+import com.djrapitops.plan.storage.database.transactions.*;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.patches.WebGroupDefaultGroupsPatch;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
+import com.google.gson.Gson;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
@@ -281,5 +281,30 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
 
         assertTrue(db().query(WebUserQueries.fetchPermissionId("test.permission")).isEmpty());
         assertTrue(db().query(WebUserQueries.fetchPermissionId(WebPermission.ACCESS.getPermission())).isEmpty());
+    }
+
+    @Test
+    @DisplayName("User preferences are stored")
+    default void userPreferencesAreStored() throws Exception {
+        userIsRegistered();
+
+        WebUser user = db().query(WebUserQueries.fetchUser(WEB_USERNAME)).orElseThrow(AssertionError::new).toWebUser();
+        Preferences defaultPreferences = config().getDefaultPreferences();
+        String json = new Gson().toJson(defaultPreferences);
+        db().executeTransaction(new StoreWebUserPreferencesTransaction(json, user)).get();
+
+        Preferences stored = db().query(WebUserQueries.fetchPreferences(user)).orElseThrow(AssertionError::new);
+        assertEquals(defaultPreferences, stored);
+    }
+
+    @Test
+    @DisplayName("RemoveEverythingTransaction deletes all preferences")
+    default void removeEverythingRemovesAllPreferences() throws Exception {
+        userPreferencesAreStored();
+        WebUser user = db().query(WebUserQueries.fetchUser(WEB_USERNAME)).orElseThrow(AssertionError::new).toWebUser();
+
+        db().executeTransaction(new RemoveEverythingTransaction()).get();
+
+        assertTrue(db().query(WebUserQueries.fetchPreferences(user)).isEmpty());
     }
 }

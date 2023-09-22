@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.formatting;
 
 import com.djrapitops.plan.delivery.domain.DateHolder;
 import com.djrapitops.plan.delivery.formatting.time.*;
+import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.locale.Locale;
 
@@ -158,6 +159,20 @@ public class Formatters {
 
     public Formatter<Long> byteSizeLong() {
         return value -> byteSizeFormatter.apply((double) value);
+    }
+
+    public Formatter<Long> getNumberFormatter(FormatType type) {
+        switch (type) {
+            case DATE_SECOND:
+                return secondLong();
+            case DATE_YEAR:
+                return yearLong();
+            case TIME_MILLISECONDS:
+                return timeAmount();
+            case NONE:
+            default:
+                return Object::toString;
+        }
     }
 
     static class Holder {

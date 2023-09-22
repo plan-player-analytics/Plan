@@ -483,4 +483,21 @@ public class LargeStoreQueries {
             }
         };
     }
+
+    public static Executable storeAllPreferences(Map<String, String> preferencesByUsername) {
+        if (preferencesByUsername.isEmpty()) return Executable.empty();
+
+        return new ExecBatchStatement(WebUserPreferencesTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (var entry : preferencesByUsername.entrySet()) {
+                    String username = entry.getKey();
+                    String preferences = entry.getValue();
+                    statement.setString(1, preferences);
+                    statement.setString(2, username);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
 }

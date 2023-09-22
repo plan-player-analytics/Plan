@@ -130,7 +130,8 @@ public class NetworkPageExporter extends FileExporter {
                 "sessions",
                 "extensionData?server=" + serverUUID,
                 "retention",
-                "joinAddresses"
+                "joinAddresses",
+                "playersTable"
         );
     }
 

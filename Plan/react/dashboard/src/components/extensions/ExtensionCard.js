@@ -47,6 +47,21 @@ const ExtensionTab = ({tab}) => {
     </>);
 }
 
+export const ExtensionValueTableCell = ({data}) => {
+    if (!data) return '-';
+
+    const title = data.description.description;
+    if (data.type === 'STRING') {
+        return (<ColoredText text={data.value}/>);
+    } else if (data.type === 'LINK') {
+        return (<Link to={data.value?.link}><ColoredText text={data.value?.text}/></Link>);
+    } else if (data.type === 'COMPONENT') {
+        return (<MinecraftChat component={JSON.parse(data.value)}/>)
+    } else {
+        return (<span title={title}>{data.value}</span>);
+    }
+}
+
 const ExtensionValue = ({data}) => {
     const color = data.description.icon.colorClass;
     const colorClass = color?.startsWith("col-") ? color : "col-" + color;

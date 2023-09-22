@@ -16,6 +16,10 @@
  */
 package com.djrapitops.plan.settings.config;
 
+import com.djrapitops.plan.delivery.domain.datatransfer.preferences.GraphThresholds;
+import com.djrapitops.plan.delivery.domain.datatransfer.preferences.Preferences;
+import com.djrapitops.plan.delivery.domain.datatransfer.preferences.TimeFormat;
+import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.settings.config.paths.FormatSettings;
 import com.djrapitops.plan.settings.config.paths.key.Setting;
@@ -152,6 +156,36 @@ public class PlanConfig extends Config {
 
     public WorldAliasSettings getWorldAliasSettings() {
         return worldAliasSettings;
+    }
+
+    public Preferences getDefaultPreferences() {
+        return Preferences.builder()
+                .withDateFormatFull(get(FormatSettings.DATE_FULL))
+                .withDateFormatNoSeconds(get(FormatSettings.DATE_NO_SECONDS))
+                .withDateFormatClock(get(FormatSettings.DATE_CLOCK))
+                .withRecentDaysInDateFormat(isTrue(FormatSettings.DATE_RECENT_DAYS))
+                .withDecimalFormat(get(FormatSettings.DECIMALS))
+                .withFirstDay(1) // 1 is Monday
+                .withTimeFormat(TimeFormat.builder()
+                        .withYear(get(FormatSettings.YEAR))
+                        .withYears(get(FormatSettings.YEARS))
+                        .withMonth(get(FormatSettings.MONTH))
+                        .withMonths(get(FormatSettings.MONTHS))
+                        .withDay(get(FormatSettings.DAY))
+                        .withDays(get(FormatSettings.DAYS))
+                        .withHours(get(FormatSettings.HOURS))
+                        .withMinutes(get(FormatSettings.MINUTES))
+                        .withSeconds(get(FormatSettings.SECONDS))
+                        .withZero(get(FormatSettings.ZERO_SECONDS))
+                        .build())
+                .withPlayerHeadImageUrl(get(DisplaySettings.PLAYER_HEAD_IMG_URL))
+                .withTpsThresholds(new GraphThresholds(
+                        get(DisplaySettings.GRAPH_TPS_THRESHOLD_HIGH),
+                        get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED)))
+                .withDiskThresholds(new GraphThresholds(
+                        get(DisplaySettings.GRAPH_DISK_THRESHOLD_HIGH),
+                        get(DisplaySettings.GRAPH_DISK_THRESHOLD_MED)))
+                .build();
     }
 
     @Override

@@ -17,12 +17,16 @@
 package com.djrapitops.plan.storage.database.queries.objects;
 
 import com.djrapitops.plan.delivery.domain.auth.User;
+import com.djrapitops.plan.delivery.domain.datatransfer.preferences.Preferences;
+import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.java.Lists;
+import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import org.intellij.lang.annotations.Language;
 
 import java.sql.ResultSet;
@@ -238,5 +242,26 @@ public class WebUserQueries {
                 return groupMap;
             }
         };
+    }
+
+    public static Query<Optional<Preferences>> fetchPreferences(@Untrusted WebUser user) {
+        return db -> db.queryOptional(WebUserPreferencesTable.SELECT_BY_WEB_USERNAME, WebUserQueries::extractPreferences, user.getUsername());
+    }
+
+    private static Preferences extractPreferences(ResultSet set) throws SQLException {
+        try {
+            String preferences = set.getString(WebUserPreferencesTable.PREFERENCES);
+            return new Gson().fromJson(preferences, Preferences.class);
+        } catch (JsonSyntaxException jsonChangedIncompatibly) {
+            return null;
+        }
+    }
+
+    public static Query<Map<String, String>> fetchAllPreferences() {
+        String sql = SELECT + WebUserPreferencesTable.PREFERENCES + "," + SecurityTable.USERNAME +
+                FROM + WebUserPreferencesTable.TABLE_NAME + " p" +
+                INNER_JOIN + SecurityTable.TABLE_NAME + " s ON s." + SecurityTable.ID + "=p." + WebUserPreferencesTable.WEB_USER_ID;
+        return db -> db.queryMap(sql, (results, to) ->
+                to.put(results.getString(SecurityTable.USERNAME), results.getString(WebUserPreferencesTable.PREFERENCES)));
     }
 }

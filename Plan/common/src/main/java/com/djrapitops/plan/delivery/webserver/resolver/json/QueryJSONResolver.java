@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.domain.DateMap;
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
 import com.djrapitops.plan.delivery.domain.datatransfer.InputQueryDto;
+import com.djrapitops.plan.delivery.domain.datatransfer.PlayerListDto;
 import com.djrapitops.plan.delivery.domain.datatransfer.ViewDto;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
@@ -255,13 +256,13 @@ public class QueryJSONResolver implements Resolver {
         return graphJSONCreator.createActivityGraphJSON(activityData);
     }
 
-    private Map<String, Object> getPlayersTableData(Set<Integer> userIds, List<ServerUUID> serverUUIDs, long after, long before) {
+    private PlayerListDto getPlayersTableData(Set<Integer> userIds, List<ServerUUID> serverUUIDs, long after, long before) {
         Database database = dbSystem.getDatabase();
         return new PlayersTableJSONCreator(
                 database.query(new QueryTablePlayersQuery(userIds, serverUUIDs, after, before, config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD))),
                 database.query(new ExtensionQueryResultTableDataQuery(serverInfo.getServerUUID(), userIds)),
                 config.get(DisplaySettings.OPEN_PLAYER_LINKS_IN_NEW_TAB),
                 formatters, locale
-        ).toJSONMap();
+        ).toPlayerList();
     }
 }

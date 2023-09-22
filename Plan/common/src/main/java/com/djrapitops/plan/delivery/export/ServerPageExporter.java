@@ -141,7 +141,7 @@ public class ServerPageExporter extends FileExporter {
                 "graph?type=joinAddressByDay&server=" + serverUUID,
                 "graph?type=serverCalendar&server=" + serverUUID,
                 "graph?type=punchCard&server=" + serverUUID,
-                "players?server=" + serverUUID,
+                "playersTable?server=" + serverUUID,
                 "kills?server=" + serverUUID,
                 "pingTable?server=" + serverUUID,
                 "sessions?server=" + serverUUID,

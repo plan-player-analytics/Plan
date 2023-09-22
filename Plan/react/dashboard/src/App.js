@@ -18,6 +18,7 @@ import {baseAddress, staticSite} from "./service/backendConfiguration";
 import {PageExtensionContextProvider} from "./hooks/pageExtensionHook";
 import ErrorBoundary from "./components/ErrorBoundary";
 import {AlertPopupContextProvider} from "./hooks/context/alertPopupContext";
+import {PreferencesContextProvider} from "./hooks/preferencesHook";
 
 const PlayerPage = React.lazy(() => import("./views/layout/PlayerPage"));
 const PlayerOverview = React.lazy(() => import("./views/player/PlayerOverview"));
@@ -79,15 +80,17 @@ const GroupsRedirect = () => {
 const ContextProviders = ({children}) => (
     <AuthenticationContextProvider>
         <MetadataContextProvider>
-            <ThemeContextProvider>
-                <NavigationContextProvider>
-                    <AlertPopupContextProvider>
-                        <PageExtensionContextProvider>
-                            {children}
-                        </PageExtensionContextProvider>
-                    </AlertPopupContextProvider>
-                </NavigationContextProvider>
-            </ThemeContextProvider>
+            <PreferencesContextProvider>
+                <ThemeContextProvider>
+                    <NavigationContextProvider>
+                        <AlertPopupContextProvider>
+                            <PageExtensionContextProvider>
+                                {children}
+                            </PageExtensionContextProvider>
+                        </AlertPopupContextProvider>
+                    </NavigationContextProvider>
+                </ThemeContextProvider>
+            </PreferencesContextProvider>
         </MetadataContextProvider>
     </AuthenticationContextProvider>
 )

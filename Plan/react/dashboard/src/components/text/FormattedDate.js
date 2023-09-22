@@ -1,0 +1,40 @@
+import React from 'react';
+import {usePreferences} from "../../hooks/preferencesHook";
+import {SimpleDateFormat} from "../../util/format/SimpleDateFormat";
+import {useMetadata} from "../../hooks/metadataHook";
+import {useTranslation} from "react-i18next";
+
+const FormattedDate = ({date}) => {
+    const {t} = useTranslation();
+    const {} = usePreferences();
+    const pattern = 'MMM d YYYY, HH:mm';
+    const recentDays = true;
+    const recentDaysPattern = 'MMM d YYYY';
+
+    const {timeZoneOffsetHours} = useMetadata();
+    const offset = timeZoneOffsetHours * 60 * 60 * 1000;
+
+    const dayMs = 24 * 60 * 60 * 1000;
+    const timestamp = date + offset;
+    const now = Date.now();
+    const fromStartOfToday = (now + offset) % dayMs;
+
+    let format = pattern;
+    if (recentDays) {
+        if (timestamp > now - fromStartOfToday) {
+            format = format.replace(recentDaysPattern, t('plugin.generic.today'));
+        } else if (timestamp > now - dayMs - fromStartOfToday) {
+            format = format.replace(recentDaysPattern, t('plugin.generic.yesterday'));
+        } else if (timestamp > now - dayMs * 5) {
+            format = format.replace(recentDaysPattern, "EEEE");
+        }
+    }
+
+    const formatted = date !== 0 ? new SimpleDateFormat(format).format(timestamp) : '-';
+
+    return (
+        <>{formatted}</>
+    )
+};
+
+export default FormattedDate

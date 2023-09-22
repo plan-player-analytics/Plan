@@ -17,7 +17,6 @@
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
-import com.djrapitops.plan.delivery.domain.datatransfer.PlayerListDto;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
@@ -35,7 +34,6 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.GET;
@@ -46,20 +44,22 @@ import javax.inject.Singleton;
 import java.util.Optional;
 
 /**
- * Resolves /v1/playersTable JSON requests.
+ * Resolves /v1/players JSON requests.
+ * <p>
+ * Deprecated.
  *
  * @author AuroraLS3
  */
 @Singleton
-@Path("/v1/playersTable")
-public class PlayersTableJSONResolver extends JSONResolver {
+@Path("/v1/players")
+public class PlayersJSONResolver extends JSONResolver {
 
     private final Identifiers identifiers;
     private final AsyncJSONResolverService jsonResolverService;
     private final JSONFactory jsonFactory;
 
     @Inject
-    public PlayersTableJSONResolver(
+    public PlayersJSONResolver(
             Identifiers identifiers,
             AsyncJSONResolverService jsonResolverService,
             JSONFactory jsonFactory
@@ -85,7 +85,7 @@ public class PlayersTableJSONResolver extends JSONResolver {
 
     @GET
     @Operation(
-            description = "Get player table data for /players page or a server",
+            description = "Get player table data for /players page or a server. Deprecated, use /v1/playersTable instead.",
             responses = {
                     @ApiResponse(responseCode = "200", content = @Content(mediaType = MimeType.JSON)),
             },
@@ -94,7 +94,8 @@ public class PlayersTableJSONResolver extends JSONResolver {
                     @ExampleObject("1"),
                     @ExampleObject("1fb39d2a-eb82-4868-b245-1fad17d823b3"),
             }),
-            requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = PlayerListDto.class)))
+            requestBody = @RequestBody(content = @Content(examples = @ExampleObject())),
+            deprecated = true
     )
     @Override
     public Optional<Response> resolve(Request request) {
@@ -111,10 +112,10 @@ public class PlayersTableJSONResolver extends JSONResolver {
         JSONStorage.StoredJSON storedJSON;
         if (request.getQuery().get("server").isPresent()) {
             ServerUUID serverUUID = identifiers.getServerUUID(request); // Can throw BadRequestException
-            storedJSON = jsonResolverService.resolve(timestamp, DataID.PLAYERS_V2, serverUUID, uuid -> jsonFactory.serverPlayersTableJSON(uuid).toPlayerList());
+            storedJSON = jsonResolverService.resolve(timestamp, DataID.PLAYERS, serverUUID, uuid -> jsonFactory.serverPlayersTableJSON(uuid).toJSONMap());
         } else {
             // Assume players page
-            storedJSON = jsonResolverService.resolve(timestamp, DataID.PLAYERS_V2, () -> jsonFactory.networkPlayersTableJSON().toPlayerList());
+            storedJSON = jsonResolverService.resolve(timestamp, DataID.PLAYERS, () -> jsonFactory.networkPlayersTableJSON().toJSONMap());
         }
         return storedJSON;
     }

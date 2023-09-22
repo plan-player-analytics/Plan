@@ -17,6 +17,11 @@
 package com.djrapitops.plan.delivery.rendering.json;
 
 import com.djrapitops.plan.delivery.domain.TablePlayer;
+import com.djrapitops.plan.delivery.domain.datatransfer.PlayerListDto;
+import com.djrapitops.plan.delivery.domain.datatransfer.TablePlayerDto;
+import com.djrapitops.plan.delivery.domain.datatransfer.extension.ExtensionDescriptionDto;
+import com.djrapitops.plan.delivery.domain.datatransfer.extension.ExtensionTabDataDto;
+import com.djrapitops.plan.delivery.domain.datatransfer.extension.ExtensionValueDataDto;
 import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
@@ -33,6 +38,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.StringEscapeUtils;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Utility for creating jQuery Datatables JSON for a Players Table.
@@ -109,11 +115,47 @@ public class PlayersTableJSONCreator {
         }
     }
 
+    @Deprecated
     public Map<String, Object> toJSONMap() {
         return Maps.builder(String.class, Object.class)
                 .put("columns", createColumnHeaders())
                 .put("data", createData())
                 .build();
+    }
+
+    public PlayerListDto toPlayerList() {
+        return new PlayerListDto(toPlayers(), getExtensionDescriptors());
+    }
+
+    private List<TablePlayerDto> toPlayers() {
+        return players.stream()
+                .map(player -> TablePlayerDto.builder()
+                        .withUuid(player.getPlayerUUID())
+                        .withName(player.getName().orElseGet(() -> player.getPlayerUUID().toString()))
+                        .withSessionCount((long) player.getSessionCount().orElse(0))
+                        .withPlaytimeActive(player.getActivePlaytime().orElse(null))
+                        .withLastSeen(player.getLastSeen().orElse(null))
+                        .withRegistered(player.getRegistered().orElse(null))
+                        .withCountry(player.getGeolocation().orElse(null))
+                        .withExtensionValues(mapToExtensionValues(extensionData.get(player.getPlayerUUID())))
+                        .build()
+                ).collect(Collectors.toList());
+    }
+
+    private List<ExtensionDescriptionDto> getExtensionDescriptors() {
+        return extensionDescriptions.stream().map(ExtensionDescriptionDto::new).collect(Collectors.toList());
+    }
+
+    private Map<String, ExtensionValueDataDto> mapToExtensionValues(ExtensionTabData extensionTabData) {
+        if (extensionTabData == null) return Collections.emptyMap();
+
+        Map<String, ExtensionValueDataDto> values = new HashMap<>();
+        List<ExtensionDescription> descriptions = extensionTabData.getDescriptions();
+        for (ExtensionDescription description : descriptions) {
+            String name = description.getName();
+            ExtensionTabDataDto.mapToValue(extensionTabData, name).ifPresent(value -> values.put(name, value));
+        }
+        return values;
     }
 
     private List<Map<String, Object>> createData() {

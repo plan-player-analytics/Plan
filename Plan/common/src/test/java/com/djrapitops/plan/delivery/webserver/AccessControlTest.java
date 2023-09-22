@@ -152,7 +152,9 @@ class AccessControlTest {
                 Arguments.of("/v1/groupPermissions?group=admin", WebPermission.MANAGE_GROUPS, 200, 403),
                 Arguments.of("/v1/webGroups", WebPermission.MANAGE_GROUPS, 200, 403),
                 Arguments.of("/v1/deleteGroup?group=admin&moveTo=no_access", WebPermission.MANAGE_GROUPS, 400, 403),
-                Arguments.of("/v1/saveGroupPermissions?group=admin", WebPermission.MANAGE_GROUPS, 400, 403)
+                Arguments.of("/v1/saveGroupPermissions?group=admin", WebPermission.MANAGE_GROUPS, 400, 403),
+                Arguments.of("/v1/preferences", WebPermission.ACCESS, 200, 200),
+                Arguments.of("/v1/storePreferences", WebPermission.ACCESS, 400, 400)
         );
     }
 

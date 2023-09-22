@@ -96,7 +96,7 @@ public class JSONFactory {
         this.formatters = formatters;
     }
 
-    public Map<String, Object> serverPlayersTableJSON(ServerUUID serverUUID) {
+    public PlayersTableJSONCreator serverPlayersTableJSON(ServerUUID serverUUID) {
         Integer xMostRecentPlayers = config.get(DisplaySettings.PLAYERS_PER_SERVER_PAGE);
         Long playtimeThreshold = config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD);
         boolean openPlayerLinksInNewTab = config.isTrue(DisplaySettings.OPEN_PLAYER_LINKS_IN_NEW_TAB);
@@ -108,10 +108,10 @@ public class JSONFactory {
                 database.query(new ExtensionServerTableDataQuery(serverUUID, xMostRecentPlayers)),
                 openPlayerLinksInNewTab,
                 formatters, locale
-        ).toJSONMap();
+        );
     }
 
-    public Map<String, Object> networkPlayersTableJSON() {
+    public PlayersTableJSONCreator networkPlayersTableJSON() {
         Integer xMostRecentPlayers = config.get(DisplaySettings.PLAYERS_PER_PLAYERS_PAGE);
         Long playtimeThreshold = config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD);
         boolean openPlayerLinksInNewTab = config.isTrue(DisplaySettings.OPEN_PLAYER_LINKS_IN_NEW_TAB);
@@ -147,7 +147,7 @@ public class JSONFactory {
                 openPlayerLinksInNewTab,
                 formatters, locale,
                 true // players page
-        ).toJSONMap();
+        );
     }
 
     public List<RetentionData> playerRetentionAsJSONMap(ServerUUID serverUUID) {

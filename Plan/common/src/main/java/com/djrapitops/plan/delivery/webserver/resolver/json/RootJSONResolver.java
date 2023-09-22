@@ -22,6 +22,8 @@ import com.djrapitops.plan.delivery.web.resolver.CompositeResolver;
 import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.http.WebServer;
+import com.djrapitops.plan.delivery.webserver.resolver.json.metadata.PreferencesJSONResolver;
+import com.djrapitops.plan.delivery.webserver.resolver.json.metadata.StorePreferencesJSONResolver;
 import com.djrapitops.plan.identification.Identifiers;
 import dagger.Lazy;
 
@@ -46,6 +48,7 @@ public class RootJSONResolver {
     private final WebGroupDeleteJSONResolver webGroupDeleteJSONResolver;
 
     private final CompositeResolver.Builder readOnlyResourcesBuilder;
+    private final StorePreferencesJSONResolver storePreferencesJSONResolver;
     private CompositeResolver resolver;
 
     @Inject
@@ -57,6 +60,7 @@ public class RootJSONResolver {
 
             GraphsJSONResolver graphsJSONResolver,
             SessionsJSONResolver sessionsJSONResolver,
+            PlayersJSONResolver playersJSONResolver,
             PlayersTableJSONResolver playersTableJSONResolver,
             ServerOverviewJSONCreator serverOverviewJSONCreator,
             OnlineActivityOverviewJSONCreator onlineActivityOverviewJSONCreator,
@@ -81,6 +85,8 @@ public class RootJSONResolver {
             RetentionJSONResolver retentionJSONResolver,
             PlayerJoinAddressJSONResolver playerJoinAddressJSONResolver,
 
+            PreferencesJSONResolver preferencesJSONResolver,
+            StorePreferencesJSONResolver storePreferencesJSONResolver,
             WebGroupJSONResolver webGroupJSONResolver,
             WebGroupPermissionJSONResolver webGroupPermissionJSONResolver,
             WebPermissionJSONResolver webPermissionJSONResolver,
@@ -91,7 +97,8 @@ public class RootJSONResolver {
         this.asyncJSONResolverService = asyncJSONResolverService;
 
         readOnlyResourcesBuilder = CompositeResolver.builder()
-                .add("players", playersTableJSONResolver)
+                .add("players", playersJSONResolver)
+                .add("playersTable", playersTableJSONResolver)
                 .add("sessions", sessionsJSONResolver)
                 .add("kills", playerKillsJSONResolver)
                 .add("graph", graphsJSONResolver)
@@ -115,7 +122,8 @@ public class RootJSONResolver {
                 .add("whoami", whoAmIJSONResolver)
                 .add("extensionData", extensionJSONResolver)
                 .add("retention", retentionJSONResolver)
-                .add("joinAddresses", playerJoinAddressJSONResolver);
+                .add("joinAddresses", playerJoinAddressJSONResolver)
+                .add("preferences", preferencesJSONResolver);
 
         this.webServer = webServer;
         // These endpoints require authentication to be enabled.
@@ -124,6 +132,7 @@ public class RootJSONResolver {
         this.webPermissionJSONResolver = webPermissionJSONResolver;
         this.webGroupSaveJSONResolver = webGroupSaveJSONResolver;
         this.webGroupDeleteJSONResolver = webGroupDeleteJSONResolver;
+        this.storePreferencesJSONResolver = storePreferencesJSONResolver;
     }
 
     private <T> ServerTabJSONResolver<T> forJSON(DataID dataID, ServerTabJSONCreator<T> tabJSONCreator, WebPermission permission) {
@@ -139,6 +148,7 @@ public class RootJSONResolver {
                         .add("permissions", webPermissionJSONResolver)
                         .add("saveGroupPermissions", webGroupSaveJSONResolver)
                         .add("deleteGroup", webGroupDeleteJSONResolver)
+                        .add("storePreferences", storePreferencesJSONResolver)
                         .build();
             } else {
                 resolver = readOnlyResourcesBuilder.build();

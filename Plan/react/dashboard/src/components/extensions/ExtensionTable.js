@@ -1,7 +1,7 @@
 import React, {useCallback, useState} from 'react';
 import {useTheme} from "../../hooks/themeHook";
 import {useTranslation} from "react-i18next";
-import ExtensionIcon, {toExtensionIconHtmlString} from "./ExtensionIcon";
+import ExtensionIcon from "./ExtensionIcon";
 import DataTablesTable from "../table/DataTablesTable";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSort, faSortDown, faSortUp} from "@fortawesome/free-solid-svg-icons";
@@ -13,18 +13,18 @@ const ExtensionDataTable = ({table}) => {
     const data = {
         columns: table.table.columns.map((column, i) => {
             return {
-                title: toExtensionIconHtmlString(table.table.icons[i]) + ' ' + column,
+                title: <><ExtensionIcon icon={table.table.icons[i]}/> {column}</>,
                 data: {
-                    "_": `col${i}.v`,
-                    display: `col${i}.d`
+                    "_": `col${i}Value`,
+                    display: `col${i}Display`
                 },
             };
         }),
         data: table.table.rows.map((row) => {
             const dataRow = {};
-            row.forEach((cell, j) => dataRow[`col${j}`] = {
-                v: cell['valueUnformatted'] || cell.value || cell,
-                d: cell.value || cell
+            row.forEach((cell, j) => {
+                dataRow[`col${j}Value`] = cell['valueUnformatted'] || cell.value || cell;
+                dataRow[`col${j}Display`] = cell.value || cell;
             });
             return dataRow;
         })
