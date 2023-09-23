@@ -30,8 +30,8 @@ export const fetchNetworkMetadata = async () => {
 }
 
 export const fetchPreferences = async () => {
-    if (staticSite) return;
     let url = '/v1/preferences';
+    if (staticSite) url = '/metadata/preferences.json'
     return doGetRequest(url);
 }
 
