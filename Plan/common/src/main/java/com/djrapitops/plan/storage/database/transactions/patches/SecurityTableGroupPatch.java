@@ -48,16 +48,26 @@ public class SecurityTableGroupPatch extends Patch {
     @Override
     protected void applyPatch() {
         try {
+            boolean hasIdColumn = hasColumn(tableName, SecurityTable.ID)
+                    // Either temp table doesn't exist or it has id column so one can be selected.
+                    && !hasTable(tempTableName) || hasColumn(tempTableName, SecurityTable.ID);
+            if (hasIdColumn) {
+                dropForeignKeys(tableName);
+                ensureNoForeignKeyConstraints(tableName);
+            }
+
             tempOldTable();
             dropTable(tableName);
             execute(SecurityTable.createTableSQL(dbType));
 
             execute("INSERT INTO " + tableName + " (" +
+                    (hasIdColumn ? SecurityTable.ID + ',' : "") +
                     SecurityTable.USERNAME + ',' +
                     SecurityTable.LINKED_TO + ',' +
                     SecurityTable.SALT_PASSWORD_HASH + ',' +
                     SecurityTable.GROUP_ID +
                     ") " + SELECT +
+                    (hasIdColumn ? SecurityTable.ID + ',' : "") +
                     SecurityTable.USERNAME + ',' +
                     SecurityTable.LINKED_TO + ',' +
                     SecurityTable.SALT_PASSWORD_HASH + ',' +

@@ -567,6 +567,10 @@ html:
         sessions: "Oturumlar"
         sortBy: "Sort By"
         stacked: "Stacked"
+        table:
+            showNofM: "Showing {{n}} of {{mn}} entries"
+            showPerPage: "Show per page"
+            visibleColumns: "Visible columns"
         themeSelect: "Tema Seçimi"
         thirdDeadliestWeapon: "3. PvP Silahı"
         thirtyDays: "30 gün"

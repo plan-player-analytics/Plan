@@ -16,25 +16,16 @@
  */
 package com.djrapitops.plan.delivery.export;
 
-import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
-import com.djrapitops.plan.delivery.rendering.pages.Page;
-import com.djrapitops.plan.delivery.rendering.pages.PageFactory;
-import com.djrapitops.plan.delivery.web.ResourceService;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
-import com.djrapitops.plan.delivery.web.resource.WebResource;
 import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.PluginSettings;
-import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.PlayerFetchQueries;
-import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
-import com.djrapitops.plan.storage.file.Resource;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
@@ -56,25 +47,19 @@ public class PlayerPageExporter extends FileExporter {
     private final PlanFiles files;
     private final PlanConfig config;
     private final DBSystem dbSystem;
-    private final PageFactory pageFactory;
     private final RootJSONResolver jsonHandler;
-    private final Theme theme;
 
     @Inject
     public PlayerPageExporter(
             PlanFiles files,
             PlanConfig config,
             DBSystem dbSystem,
-            PageFactory pageFactory,
-            RootJSONResolver jsonHandler,
-            Theme theme
+            RootJSONResolver jsonHandler
     ) {
         this.files = files;
         this.config = config;
         this.dbSystem = dbSystem;
-        this.pageFactory = pageFactory;
         this.jsonHandler = jsonHandler;
-        this.theme = theme;
     }
 
     public static String[] getRedirections(UUID playerUUID) {
@@ -106,33 +91,14 @@ public class PlayerPageExporter extends FileExporter {
         ExportPaths exportPaths = new ExportPaths();
         exportPaths.put("../network", toRelativePathFromRoot("network"));
         exportPaths.put("../server/", toRelativePathFromRoot("server"));
-        exportRequiredResources(exportPaths, toDirectory);
 
         Path playerDirectory = toDirectory.resolve("player/" + toFileName(playerUUID.toString()));
         exportJSON(exportPaths, playerDirectory, playerUUID);
-        exportHtml(exportPaths, playerDirectory, playerUUID);
         exportReactRedirects(toDirectory, playerUUID);
         exportPaths.clear();
     }
 
-    private void exportHtml(ExportPaths exportPaths, Path playerDirectory, UUID playerUUID) throws IOException {
-        if (config.isFalse(PluginSettings.LEGACY_FRONTEND)) return;
-
-        Path to = playerDirectory.resolve("index.html");
-
-        try {
-            Database db = dbSystem.getDatabase();
-            PlayerContainer player = db.query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
-            Page page = pageFactory.playerPage(player);
-            export(to, exportPaths.resolveExportPaths(page.toHtml()));
-        } catch (IllegalStateException notFound) {
-            throw new NotFoundException(notFound.getMessage());
-        }
-    }
-
     private void exportReactRedirects(Path toDirectory, UUID playerUUID) throws IOException {
-        if (config.isTrue(PluginSettings.LEGACY_FRONTEND)) return;
-
         exportReactRedirects(toDirectory, files, config, getRedirections(playerUUID));
     }
 
@@ -160,70 +126,6 @@ public class PlayerPageExporter extends FileExporter {
         } catch (WebUserAuthException e) {
             // The rest of the exceptions should not be thrown
             throw new IllegalStateException("Unexpected exception thrown: " + e, e);
-        }
-    }
-
-    private void exportRequiredResources(ExportPaths exportPaths, Path toDirectory) throws IOException {
-        if (config.isFalse(PluginSettings.LEGACY_FRONTEND)) return;
-
-        // Style
-        exportResources(exportPaths, toDirectory,
-                "../img/Flaticon_circle.png",
-                "../css/sb-admin-2.css",
-                "../css/style.css",
-                "../css/noauth.css",
-                "../vendor/datatables/datatables.min.js",
-                "../vendor/datatables/datatables.min.css",
-                "../vendor/highcharts/modules/map.js",
-                "../vendor/highcharts/mapdata/world.js",
-                "../vendor/highcharts/modules/drilldown.js",
-                "../vendor/highcharts/highcharts.js",
-                "../vendor/highcharts/modules/no-data-to-display.js",
-                "../vendor/fullcalendar/fullcalendar.min.css",
-                "../vendor/momentjs/moment.js",
-                "../vendor/masonry/masonry.pkgd.min.js",
-                "../vendor/fullcalendar/fullcalendar.min.js",
-                "../vendor/fontawesome-free/css/all.min.css",
-                "../vendor/fontawesome-free/webfonts/fa-brands-400.eot",
-                "../vendor/fontawesome-free/webfonts/fa-brands-400.ttf",
-                "../vendor/fontawesome-free/webfonts/fa-brands-400.woff",
-                "../vendor/fontawesome-free/webfonts/fa-brands-400.woff2",
-                "../vendor/fontawesome-free/webfonts/fa-regular-400.eot",
-                "../vendor/fontawesome-free/webfonts/fa-regular-400.ttf",
-                "../vendor/fontawesome-free/webfonts/fa-regular-400.woff",
-                "../vendor/fontawesome-free/webfonts/fa-regular-400.woff2",
-                "../vendor/fontawesome-free/webfonts/fa-solid-900.eot",
-                "../vendor/fontawesome-free/webfonts/fa-solid-900.ttf",
-                "../vendor/fontawesome-free/webfonts/fa-solid-900.woff",
-                "../vendor/fontawesome-free/webfonts/fa-solid-900.woff2",
-                "../js/sb-admin-2.js",
-                "../js/xmlhttprequests.js",
-                "../js/color-selector.js",
-                "../js/sessionAccordion.js",
-                "../js/graphs.js",
-                "../js/player-values.js"
-        );
-    }
-
-    private void exportResources(ExportPaths exportPaths, Path toDirectory, String... resourceNames) throws IOException {
-        for (String resourceName : resourceNames) {
-            String nonRelativePath = toNonRelativePath(resourceName);
-            exportResource(toDirectory, nonRelativePath);
-            exportPaths.put(resourceName, toRelativePathFromRoot(nonRelativePath));
-        }
-    }
-
-    private void exportResource(Path toDirectory, String resourceName) throws IOException {
-        WebResource resource = ResourceService.getInstance().getResource("Plan", resourceName,
-                () -> files.getResourceFromJar("web/" + resourceName).asWebResource());
-        Path to = toDirectory.resolve(resourceName);
-
-        if (resourceName.endsWith(".css") || resourceName.endsWith("color-selector.js")) {
-            export(to, theme.replaceThemeColors(resource.asString()));
-        } else if (Resource.isTextResource(resourceName)) {
-            export(to, resource.asString());
-        } else {
-            export(to, resource);
         }
     }
 

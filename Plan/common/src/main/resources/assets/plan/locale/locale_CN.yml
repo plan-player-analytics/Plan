@@ -567,6 +567,10 @@ html:
         sessions: "会话"
         sortBy: "排序方式"
         stacked: "堆叠"
+        table:
+            showNofM: "Showing {{n}} of {{mn}} entries"
+            showPerPage: "Show per page"
+            visibleColumns: "Visible columns"
         themeSelect: "主题选择"
         thirdDeadliestWeapon: "第三致命的 PVP 武器"
         thirtyDays: "30 天"

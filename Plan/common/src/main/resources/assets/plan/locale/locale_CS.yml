@@ -567,6 +567,10 @@ html:
         sessions: "Relace"
         sortBy: "Seřadit podle"
         stacked: "Zaplnění"
+        table:
+            showNofM: "Showing {{n}} of {{mn}} entries"
+            showPerPage: "Show per page"
+            visibleColumns: "Visible columns"
         themeSelect: "Zvolené téma"
         thirdDeadliestWeapon: "3. PvP Zbraň"
         thirtyDays: "30 dní"

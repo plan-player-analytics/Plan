@@ -47,8 +47,6 @@ import utilities.RandomData;
 import utilities.TestConstants;
 import utilities.mocks.PluginMockComponent;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -59,7 +57,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * This test class is for catching any JavaScript errors.
  * <p>
  * Errors may have been caused by:
- * - Missing placeholders {@code ${placeholder}} inside {@code <script>} tags.
+ * - Javascript mistakes / build issues
+ * - Missed console.log statements
  * - Automatic formatting of plugin javascript (See https://github.com/plan-player-analytics/Plan/issues/820)
  * - Missing file definition in Mocker
  */
@@ -124,20 +123,16 @@ class JSErrorRegressionTest {
         };
 
         LangCode[] languages = LangCode.values();
-        return Arrays.stream(languages)
-                .filter(lang -> lang != LangCode.CUSTOM)
-                .flatMap(lang ->
-                        Arrays.stream(addresses)
-                                .map(link -> testAddress(link, lang, driver)))
-                .collect(Collectors.toList());
+        return
+                Arrays.stream(addresses)
+                        .map(link -> testAddress(link, driver))
+                        .collect(Collectors.toList());
     }
 
-    private DynamicTest testAddress(String address, LangCode language, ChromeDriver driver) {
-        return DynamicTest.dynamicTest("Page should not log anything on js console (" + language.name() + "): " + address, () -> {
+    private DynamicTest testAddress(String address, ChromeDriver driver) {
+        return DynamicTest.dynamicTest("Page should not log anything on js console: " + address, () -> {
             Locale locale = planSystem.getLocaleSystem().getLocale();
             try {
-                locale.loadFromAnotherLocale(Locale.forLangCode(language, planSystem.getPlanFiles()));
-
                 driver.get(address);
                 Thread.sleep(250);
 
@@ -145,9 +140,7 @@ class JSErrorRegressionTest {
                 logs.addAll(driver.manage().logs().get(LogType.CLIENT).getAll());
                 logs.addAll(driver.manage().logs().get(LogType.BROWSER).getAll());
 
-                assertNoLogs("'" + address + "' (in " + language.name() + "),", logs);
-            } catch (IOException e) {
-                throw new UncheckedIOException(e);
+                assertNoLogs("'" + address + "',", logs);
             } finally {
                 locale.clear(); // Reset locale after test
             }

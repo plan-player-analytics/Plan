@@ -80,10 +80,9 @@ class AccessControlTest {
     static Stream<Arguments> testCases() {
         return Stream.of(
                 Arguments.of("/", WebPermission.ACCESS, 302, 403),
+                Arguments.of("/pageExtensionApi.js", WebPermission.ACCESS, 200, 200),
                 Arguments.of("/server", WebPermission.ACCESS_SERVER, 302, 403),
                 Arguments.of("/server/" + TestConstants.SERVER_UUID_STRING + "", WebPermission.ACCESS_SERVER, 200, 403),
-                Arguments.of("/css/style.css", WebPermission.ACCESS, 200, 200),
-                Arguments.of("/js/color-selector.js", WebPermission.ACCESS, 200, 200),
                 Arguments.of("/v1/serverOverview?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_OVERVIEW_NUMBERS, 200, 403),
                 Arguments.of("/v1/onlineOverview?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_OVERVIEW, 200, 403),
                 Arguments.of("/v1/sessionsOverview?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_SESSIONS, 200, 403),
@@ -153,7 +152,9 @@ class AccessControlTest {
                 Arguments.of("/v1/groupPermissions?group=admin", WebPermission.MANAGE_GROUPS, 200, 403),
                 Arguments.of("/v1/webGroups", WebPermission.MANAGE_GROUPS, 200, 403),
                 Arguments.of("/v1/deleteGroup?group=admin&moveTo=no_access", WebPermission.MANAGE_GROUPS, 400, 403),
-                Arguments.of("/v1/saveGroupPermissions?group=admin", WebPermission.MANAGE_GROUPS, 400, 403)
+                Arguments.of("/v1/saveGroupPermissions?group=admin", WebPermission.MANAGE_GROUPS, 400, 403),
+                Arguments.of("/v1/preferences", WebPermission.ACCESS, 200, 200),
+                Arguments.of("/v1/storePreferences", WebPermission.ACCESS, 400, 400)
         );
     }
 

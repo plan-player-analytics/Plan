@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.extension.implementation.results;
 
-import com.djrapitops.plan.delivery.rendering.html.structure.HtmlTable;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.table.Table;
 
@@ -37,10 +36,6 @@ public class ExtensionTableData implements Comparable<ExtensionTableData> {
         this.providerName = providerName;
         this.table = table;
         this.tableColor = tableColor;
-    }
-
-    public HtmlTable getHtmlTable() {
-        return HtmlTable.fromExtensionTable(table, tableColor);
     }
 
     public String getProviderName() {

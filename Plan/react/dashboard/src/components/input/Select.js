@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MultiSelect = ({options, selectedIndex, setSelectedIndex}) => {
+const Select = ({options, selectedIndex, setSelectedIndex}) => {
     const handleChange = (event) => {
         const renderedOptions = Object.values(event.target.selectedOptions)
             .map(htmlElement => htmlElement.text)
@@ -9,7 +9,7 @@ const MultiSelect = ({options, selectedIndex, setSelectedIndex}) => {
     }
 
     return (
-        <select className="form-control"
+        <select className="form-control form-select"
                 onChange={handleChange}>
             {options.map((option, i) => {
                 return (
@@ -21,4 +21,4 @@ const MultiSelect = ({options, selectedIndex, setSelectedIndex}) => {
     )
 };
 
-export default MultiSelect
+export default Select

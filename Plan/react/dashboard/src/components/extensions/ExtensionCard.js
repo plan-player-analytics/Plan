@@ -7,6 +7,8 @@ import ExtensionTable from "./ExtensionTable";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import End from "../layout/End";
 import {MinecraftChat} from "react-mcjsonchat";
+import ColoredText from "../text/ColoredText";
+import {Link} from "react-router-dom";
 
 export const ExtensionCardWrapper = ({extension, children}) => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -45,17 +47,39 @@ const ExtensionTab = ({tab}) => {
     </>);
 }
 
+export const ExtensionValueTableCell = ({data}) => {
+    if (!data) return '-';
+
+    const title = data.description.description;
+    if (data.type === 'STRING') {
+        return (<ColoredText text={data.value}/>);
+    } else if (data.type === 'LINK') {
+        return (<Link to={data.value?.link}><ColoredText text={data.value?.text}/></Link>);
+    } else if (data.type === 'COMPONENT') {
+        return (<MinecraftChat component={JSON.parse(data.value)}/>)
+    } else {
+        return (<span title={title}>{data.value}</span>);
+    }
+}
+
 const ExtensionValue = ({data}) => {
     const color = data.description.icon.colorClass;
-    const colorClass = color && color.startsWith("col-") ? color : "col-" + color;
+    const colorClass = color?.startsWith("col-") ? color : "col-" + color;
     const icon = [data.description.icon.familyClass, data.description.icon.iconName];
     const name = data.description.text;
     const title = data.description.description;
-    if (data.type === 'HTML') {
+    if (data.type === 'STRING') {
         return (
             <p title={title}>
                 {icon && <Fa icon={icon} className={colorClass}/>} {name}
-                {<End><span dangerouslySetInnerHTML={data.value}></span></End>}
+                {<End><ColoredText text={data.value}/></End>}
+            </p>
+        );
+    } else if (data.type === 'LINK') {
+        return (
+            <p title={title}>
+                {icon && <Fa icon={icon} className={colorClass}/>} {name}
+                {<End><Link to={data.value?.link}><ColoredText text={data.value?.text}/></Link></End>}
             </p>
         );
     } else if (data.type === 'COMPONENT') {

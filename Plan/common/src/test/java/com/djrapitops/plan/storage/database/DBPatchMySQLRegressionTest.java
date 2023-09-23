@@ -73,6 +73,15 @@ class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
                 .build(), TEST_PORT_NUMBER);
     }
 
+    @AfterEach
+    void noTempTables() {
+        try {
+            DBPreparer.assertNoTempTables(underTest);
+        } finally {
+            underTest.close();
+        }
+    }
+
     @AfterAll
     static void closeSystem() {
         if (dbPreparer != null) dbPreparer.tearDown();
@@ -84,7 +93,7 @@ class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
             @Override
             protected void performOperations() {
                 execute("DROP DATABASE " + dbName);
-                execute("CREATE DATABASE " + dbName);
+                execute("CREATE DATABASE " + dbName + " CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci");
                 execute("USE " + dbName);
             }
         });
@@ -123,11 +132,6 @@ class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
         underTest.executeTransaction(new CreateTablesTransaction());
 
         insertData(underTest);
-    }
-
-    @AfterEach
-    void closeDatabase() {
-        underTest.close();
     }
 
     @Test

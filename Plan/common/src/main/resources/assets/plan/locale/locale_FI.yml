@@ -567,6 +567,10 @@ html:
         sessions: "Istunnot"
         sortBy: "Järjestä"
         stacked: "Päällekäin"
+        table:
+            showNofM: "Showing {{n}} of {{mn}} entries"
+            showPerPage: "Show per page"
+            visibleColumns: "Visible columns"
         themeSelect: "Teemavalikko"
         thirdDeadliestWeapon: "3. PvP Ase"
         thirtyDays: "30 päivää"

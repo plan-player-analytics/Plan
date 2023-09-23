@@ -1,6 +1,6 @@
 import React from 'react';
 import {useDataRequest} from "../../hooks/dataFetchHook";
-import {fetchPlayers} from "../../service/serverService";
+import {fetchPlayersTable} from "../../service/serverService";
 import ErrorView from "../ErrorView";
 import {Col} from "react-bootstrap";
 import PlayerListCard from "../../components/cards/common/PlayerListCard";
@@ -12,7 +12,7 @@ import {useAuth} from "../../hooks/authenticationHook";
 const AllPlayers = () => {
     const {hasPermission} = useAuth();
     const seePlayers = hasPermission('page.network.players') || hasPermission('access.players')
-    const {data, loadingError} = useDataRequest(fetchPlayers, [null], seePlayers);
+    const {data, loadingError} = useDataRequest(fetchPlayersTable, [null], seePlayers);
 
     if (loadingError) return <ErrorView error={loadingError}/>
 

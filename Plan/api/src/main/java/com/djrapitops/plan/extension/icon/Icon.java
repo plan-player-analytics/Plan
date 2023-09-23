@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.extension.icon;
 
+import java.util.Objects;
+
 /**
  * Object that represents an icon on the website.
  * <p>
@@ -70,6 +72,19 @@ public class Icon {
     public Icon setColor(Color color) {
         this.color = color;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Icon icon = (Icon) o;
+        return type == icon.type && Objects.equals(getName(), icon.getName()) && getColor() == icon.getColor();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, type, getName(), getColor());
     }
 
     @Override
