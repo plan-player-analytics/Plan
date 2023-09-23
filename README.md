@@ -1,4 +1,4 @@
-# ![Player Analytics](http://puu.sh/AXSg7/5f2f78c06c.jpg)
+![Player Analytics](http://puu.sh/AXSg7/5f2f78c06c.jpg)
 
 [![Github Actions](https://github.com/plan-player-analytics/Plan/workflows/CI/badge.svg)](https://github.com/plan-player-analytics/Plan/actions/workflows/ci.yml)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)  
