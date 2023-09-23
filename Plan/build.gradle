@@ -11,13 +11,13 @@ buildscript {
 }
 
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2" apply false
+    id "com.github.johnrengelman.shadow" version "8.1.1" apply false
     id "java"
     id 'java-library'
     id "jacoco"
     id "checkstyle"
-    id "org.sonarqube" version "4.3.0.3225"
-    id 'fabric-loom' version '1.1-SNAPSHOT' apply false
+    id "org.sonarqube" version "4.3.1.3277"
+    id 'fabric-loom' version '1.3-SNAPSHOT' apply false
 }
 
 apply plugin: 'nebula-aggregate-javadocs'
@@ -45,7 +45,7 @@ allprojects {
 
     // Fix for UTF-8 files showing with wrong encoding when compiled on Windows machines.
     compileJava { options.encoding = "UTF-8" }
-    tasks.withType(JavaCompile) { options.encoding = 'UTF-8' }
+    tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
     javadoc { options.encoding = 'UTF-8' }
 }
 
@@ -82,17 +82,17 @@ subprojects {
         redisBungeeProxioDevVersion = "0.7.3"
 
         commonsTextVersion = "1.10.0"
-        commonsCompressVersion = "1.23.0"
+        commonsCompressVersion = "1.24.0"
         commonsCodecVersion = "1.16.0"
         caffeineVersion = "3.1.8"
-        jettyVersion = "11.0.15"
+        jettyVersion = "11.0.16"
         caffeineVersion = "2.9.2"
         mysqlVersion = "8.1.0"
-        mariadbVersion = "3.1.4"
-        sqliteVersion = "3.41.2.1"
+        mariadbVersion = "3.2.0"
+        sqliteVersion = "3.42.0.1"
         adventureVersion = "4.14.0"
         hikariVersion = "5.0.1"
-        slf4jVersion = "2.0.7"
+        slf4jVersion = "2.0.9"
         geoIpVersion = "4.1.0"
         gsonVersion = "2.10.1"
         dependencyDownloadVersion = "1.3.1"
@@ -103,9 +103,9 @@ subprojects {
         nkPlaceholderapiVersion = "1.4-SNAPSHOT"
 
         junitVersion = "5.10.0"
-        mockitoVersion = "5.4.0"
-        testContainersVersion = "1.18.3"
-        swaggerVersion = "2.2.15"
+        mockitoVersion = "5.5.0"
+        testContainersVersion = "1.19.0"
+        swaggerVersion = "2.2.16"
     }
 
     repositories {
@@ -148,7 +148,7 @@ subprojects {
         testImplementation.extendsFrom shadow // Include shadowed dependencies in test classpath
     }
     // Test classes available to other modules
-    task testJar(type: Jar) {
+    tasks.register('testJar', Jar) {
         archiveClassifier.set("test")
         from sourceSets.test.output
     }
@@ -176,8 +176,8 @@ subprojects {
         }
     }
 
-    plugins.withType(JacocoPlugin) {
-        tasks["test"].finalizedBy 'jacocoTestReport'
+    plugins.withType(JacocoPlugin).configureEach {
+        tasks.named("test").get().finalizedBy 'jacocoTestReport'
     }
 }
 

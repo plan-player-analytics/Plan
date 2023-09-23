@@ -105,7 +105,8 @@ public class Contributors {
             new Contributor("ringoXD", LANG),
             new Contributor("yu_solt", LANG),
             new Contributor("lis2a", LANG),
-            new Contributor("ToxiWoxi", CODE)
+            new Contributor("ToxiWoxi", CODE),
+            new Contributor("xlanyleeet", LANG)
     };
 
     private Contributors() {

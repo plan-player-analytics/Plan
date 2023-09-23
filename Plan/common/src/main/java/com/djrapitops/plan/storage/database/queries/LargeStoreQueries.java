@@ -220,7 +220,7 @@ public class LargeStoreQueries {
                         statement.setLong(2, user.getRegistered());
                         statement.setString(3, serverUUID.toString());
                         statement.setBoolean(4, user.isBanned());
-                        statement.setString(5, user.getJoinAddress());
+                        statement.setString(5, StringUtils.truncate(user.getJoinAddress(), JoinAddressTable.JOIN_ADDRESS_MAX_LENGTH));
                         statement.setBoolean(6, user.isOperator());
                         statement.addBatch();
                     }
@@ -290,8 +290,8 @@ public class LargeStoreQueries {
                     statement.setInt(5, session.getMobKillCount());
                     statement.setLong(6, session.getAfkTime());
                     statement.setString(7, session.getServerUUID().toString());
-                    statement.setString(8, session.getExtraData(JoinAddress.class)
-                            .map(JoinAddress::getAddress).orElse(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP));
+                    statement.setString(8, StringUtils.truncate(session.getExtraData(JoinAddress.class)
+                            .map(JoinAddress::getAddress).orElse(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP), JoinAddressTable.JOIN_ADDRESS_MAX_LENGTH));
                     statement.addBatch();
                 }
             }
