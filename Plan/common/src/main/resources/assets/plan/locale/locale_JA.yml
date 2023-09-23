@@ -567,6 +567,10 @@ html:
         sessions: "接続履歴"
         sortBy: "並べ替え"
         stacked: "スタックビュー"
+        table:
+            showNofM: "Showing {{n}} of {{mn}} entries"
+            showPerPage: "Show per page"
+            visibleColumns: "Visible columns"
         themeSelect: "テーマ選択"
         thirdDeadliestWeapon: "3番目にPvPで使用されている武器"
         thirtyDays: "1ヶ月"

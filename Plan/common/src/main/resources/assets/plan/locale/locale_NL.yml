@@ -567,6 +567,10 @@ html:
         sessions: "Sessies"
         sortBy: "Sort By"
         stacked: "Stacked"
+        table:
+            showNofM: "Showing {{n}} of {{mn}} entries"
+            showPerPage: "Show per page"
+            visibleColumns: "Visible columns"
         themeSelect: "Thema selecteren"
         thirdDeadliestWeapon: "3e PvP-wapen"
         thirtyDays: "30 dagen"

@@ -567,6 +567,10 @@ html:
         sessions: "세션 목록"
         sortBy: "Sort By"
         stacked: "Stacked"
+        table:
+            showNofM: "Showing {{n}} of {{mn}} entries"
+            showPerPage: "Show per page"
+            visibleColumns: "Visible columns"
         themeSelect: "테마 선택"
         thirdDeadliestWeapon: "3rd PvP 무기"
         thirtyDays: "30일"

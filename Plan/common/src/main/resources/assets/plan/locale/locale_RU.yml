@@ -567,6 +567,10 @@ html:
         sessions: "Сессии"
         sortBy: "Sort By"
         stacked: "Stacked"
+        table:
+            showNofM: "Showing {{n}} of {{mn}} entries"
+            showPerPage: "Show per page"
+            visibleColumns: "Visible columns"
         themeSelect: "Выбор темы"
         thirdDeadliestWeapon: "3-е PvP оружие"
         thirtyDays: "30 дней"
