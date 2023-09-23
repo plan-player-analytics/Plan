@@ -19,7 +19,6 @@ package com.djrapitops.plan.modules.bukkit;
 import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.addons.placeholderapi.PlaceholderCacheRefreshTask;
 import com.djrapitops.plan.delivery.web.ResourceWriteTask;
-import com.djrapitops.plan.delivery.web.WebAssetVersionCheckTask;
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieExpiryCleanupTask;
 import com.djrapitops.plan.delivery.webserver.cache.JSONFileStorage;
 import com.djrapitops.plan.delivery.webserver.configuration.AddressAllowList;
@@ -93,10 +92,6 @@ public interface BukkitTaskModule {
     @Binds
     @IntoSet
     TaskSystem.Task bindResourceWriteTask(ResourceWriteTask resourceWriteTask);
-
-    @Binds
-    @IntoSet
-    TaskSystem.Task bindWebAssetVersionCheckTask(WebAssetVersionCheckTask webAssetVersionCheckTask);
 
     @Binds
     @IntoSet
