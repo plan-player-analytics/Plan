@@ -10,15 +10,14 @@ export const PreferencesContextProvider = ({children}) => {
     const {authRequired, authLoaded, loggedIn} = useAuth();
 
     const updatePreferences = useCallback(async () => {
-        const {defaultPreferences, preferences} = await fetchPreferences();
+        const {data: {defaultPreferences, preferences}} = await fetchPreferences();
         setDefaultPreferences(defaultPreferences);
         if (authRequired && authLoaded && loggedIn) {
             // Preferences are only available if logged in.
             // Use defaultPreferences when one is not specified.
-            setPreferences({...defaultPreferences, ...preferences});
+            setPreferences({...defaultPreferences, ...(preferences || {})});
         } else {
             let userPref = JSON.parse(localStorage.getItem("preferences"));
-            if (!userPref) userPref = {...defaultPreferences};
             setPreferences({...defaultPreferences, ...userPref});
         }
     }, [authRequired, authLoaded, loggedIn, setPreferences, setDefaultPreferences]);
@@ -34,7 +33,7 @@ export const PreferencesContextProvider = ({children}) => {
         } else {
             localStorage.setItem("preferences", JSON.stringify(withDefaultsRemoved));
         }
-    }, [defaultPreferences]);
+    }, [defaultPreferences, authRequired, authLoaded, loggedIn]);
 
     useEffect(() => {
         updatePreferences();
@@ -45,7 +44,7 @@ export const PreferencesContextProvider = ({children}) => {
                 ...preferences,
                 storePreferences,
                 defaultPreferences,
-                preferencesLoaded: Object.keys(defaultPreferences).length > 0
+                preferencesLoaded: Object.keys(defaultPreferences || {}).length > 0
             }
         },
         [preferences, defaultPreferences, storePreferences]);

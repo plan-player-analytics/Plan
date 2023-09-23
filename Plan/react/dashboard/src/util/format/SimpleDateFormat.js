@@ -52,16 +52,16 @@ SimpleDateFormat.prototype._or = function (a, b) {
 }
 
 SimpleDateFormat.prototype._weekInMonth = function (d) {
-    let first = moment(d).startOf("month").week();
+    let first = moment.utc(d).startOf("month").week();
     const current = d.week();
-    if (first > current) first = first - moment(d).startOf("month").weeksInYear();
+    if (first > current) first = first - moment.utc(d).startOf("month").weeksInYear();
     return current - first + 1;
 }
 
 SimpleDateFormat.prototype._dayOfWeekInMonth = function (d) {
     let c = 1;
-    let m = moment(d);
-    while ((m = moment(m).date(m.date() - 7)).month() === d.month()) c++;
+    let m = moment.utc(d);
+    while ((m = moment.utc(m).date(m.date() - 7)).month() === d.month()) c++;
     return c;
 }
 
@@ -189,11 +189,11 @@ SimpleDateFormat.prototype._padWithZeroes = function (str, length) {
 }
 
 SimpleDateFormat.prototype._months = function (value, letter, localeData) {
-    return localeData.months(moment().month(value));
+    return localeData.months(moment.utc().month(value));
 }
 
 SimpleDateFormat.prototype._monthsShort = function (value, letter, localeData) {
-    return localeData.monthsShort(moment().month(value));
+    return localeData.monthsShort(moment.utc().month(value));
 }
 
 SimpleDateFormat.prototype._defaultPatternsByLocale = {

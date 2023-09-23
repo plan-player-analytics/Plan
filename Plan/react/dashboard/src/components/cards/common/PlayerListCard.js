@@ -10,7 +10,7 @@ import {faCalendarCheck, faCalendarPlus, faClock} from "@fortawesome/free-regula
 import FormattedDate from "../../text/FormattedDate";
 import FormattedTime from "../../text/FormattedTime";
 import ExtensionIcon from "../../extensions/ExtensionIcon";
-import {ExtensionValue, ExtensionValueTableCell} from "../../extensions/ExtensionCard";
+import {ExtensionValueTableCell} from "../../extensions/ExtensionCard";
 
 const getActivityGroup = value => {
     const VERY_ACTIVE = 3.75;
@@ -83,7 +83,7 @@ const PlayerListCard = ({data, title}) => {
                 lastSeenFormatted: <FormattedDate date={player.lastSeen}/>,
                 country: player.country
             };
-            data.extensionDescriptors.map(descriptor => {
+            data.extensionDescriptors.forEach(descriptor => {
                 row[descriptor.name] = <ExtensionValueTableCell data={player.extensionValues[descriptor.name]}/>;
                 row[descriptor.name + "Value"] = JSON.stringify(player.extensionValues[descriptor.name]?.value);
             })
@@ -100,7 +100,7 @@ const PlayerListCard = ({data, title}) => {
     }, [data, t]);
 
     const rowKeyFunction = useCallback((row, column) => {
-        return row.uuid + "-" + JSON.stringify(column);
+        return row.uuid + "-" + (column ? JSON.stringify(column.data) : '');
     }, []);
 
     if (!options) return <CardLoader/>

@@ -3,19 +3,21 @@ import {usePreferences} from "../../hooks/preferencesHook";
 import {formatTimeAmount} from "../../util/format/TimeAmountFormat";
 
 const FormattedTime = ({timeMs}) => {
-    const {} = usePreferences();
+    const {preferencesLoaded, timeFormat} = usePreferences();
+
+    if (!preferencesLoaded) return <></>
 
     const options = {
-        YEAR: '1 year, ',
-        YEARS: '%years% years, ',
-        MONTH: '1 month, ',
-        MONTHS: '%months% months, ',
-        DAY: '1d, ',
-        DAYS: '%days%d, ',
-        HOURS: '%zero%%hours%:',
-        MINUTES: '%zero%%minutes%:',
-        SECONDS: '%zero%%seconds%',
-        ZERO: '0s'
+        YEAR: timeFormat.year,
+        YEARS: timeFormat.years,
+        MONTH: timeFormat.month,
+        MONTHS: timeFormat.months,
+        DAY: timeFormat.day,
+        DAYS: timeFormat.days,
+        HOURS: timeFormat.hours,
+        MINUTES: timeFormat.minutes,
+        SECONDS: timeFormat.seconds,
+        ZERO: timeFormat.zero
     }
     const formatted = formatTimeAmount(options, timeMs);
 

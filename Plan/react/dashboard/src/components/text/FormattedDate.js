@@ -6,18 +6,21 @@ import {useTranslation} from "react-i18next";
 
 const FormattedDate = ({date}) => {
     const {t} = useTranslation();
-    const {} = usePreferences();
-    const pattern = 'MMM d YYYY, HH:mm';
-    const recentDays = true;
+    const {timeZoneOffsetHours} = useMetadata();
+    const {preferencesLoaded, dateFormatNoSeconds, recentDaysInDateFormat} = usePreferences();
+
+    if (!preferencesLoaded) return <></>
+
+    const pattern = dateFormatNoSeconds;
+    const recentDays = recentDaysInDateFormat;
     const recentDaysPattern = 'MMM d YYYY';
 
-    const {timeZoneOffsetHours} = useMetadata();
     const offset = timeZoneOffsetHours * 60 * 60 * 1000;
 
     const dayMs = 24 * 60 * 60 * 1000;
-    const timestamp = date + offset;
+    const timestamp = date - offset;
     const now = Date.now();
-    const fromStartOfToday = (now + offset) % dayMs;
+    const fromStartOfToday = (now - offset) % dayMs;
 
     let format = pattern;
     if (recentDays) {

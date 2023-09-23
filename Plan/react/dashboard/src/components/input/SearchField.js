@@ -4,7 +4,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSearch} from "@fortawesome/free-solid-svg-icons";
 
 const SearchField = ({id, className, setValue, value, placeholder, setAsInvalid, setAsValid, caseSensitive}) => {
-    const [invalid, setInvalid] = useState(false);
+    const [invalid] = useState(false);
 
     const onChange = (event) => {
         const invalid = false;

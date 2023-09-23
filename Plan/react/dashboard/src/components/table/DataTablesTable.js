@@ -16,6 +16,7 @@ import {
 import Toggle from "../input/Toggle";
 import CollapseWithButton from "../layout/CollapseWithButton";
 import {faMinusSquare, faPlusSquare} from "@fortawesome/free-regular-svg-icons";
+import {Trans, useTranslation} from "react-i18next";
 
 const PaginationOption = ({onClick, children, selected}) => (
     <li>
@@ -58,9 +59,33 @@ const SortIcon = ({selected, reversed}) => {
     return <FontAwesomeIcon icon={faSortDesc}/>;
 }
 
+const VisibleColumnsSelector = ({columns, visibleColumnIndexes, toggleColumn}) => {
+    const {t} = useTranslation();
+    return (
+        <CollapseWithButton title={t('html.label.table.visibleColumns')} coverToggle>
+            <Card style={{position: "absolute", zIndex: 3}}>
+                <Card.Body>
+                    <ul style={{listStyle: "none", paddingLeft: "0.25rem", margin: 0}}>
+                        {columns.map((column, i) => {
+                            return <li key={JSON.stringify(column.data)}>
+                                <Toggle value={visibleColumnIndexes.includes(i)}
+                                        onValueChange={() => toggleColumn(i)}>{column.title}</Toggle>
+                            </li>
+                        })}
+                    </ul>
+                </Card.Body>
+            </Card>
+        </CollapseWithButton>
+    )
+}
+
 const DataTablesTable = ({id, rowKeyFunction, options}) => {
+    const {t} = useTranslation();
     const {nightModeEnabled} = useTheme();
+
     const columns = options.columns;
+    const [sortBy, setSortBy] = useState(options.order[0][0] || 0);
+    const [sortReversed, setSortReversed] = useState(options.order[0][1] === 'asc');
     const [visibleColumnIndexes, setVisibleColumnIndexes] = useState(columns.map((_, i) => i));
     const toggleColumn = useCallback(index => {
         if (visibleColumnIndexes.includes(index)) {
@@ -68,14 +93,21 @@ const DataTablesTable = ({id, rowKeyFunction, options}) => {
             const newVisible = visibleColumnIndexes.filter(i => i !== index);
             newVisible.sort((a, b) => a - b);
             setVisibleColumnIndexes(newVisible);
+            if (sortBy === index) {
+                setSortBy(0);
+                setSortReversed(false);
+            } else if (index < sortBy) {
+                setSortBy(sortBy - 1);  // Keep the current sort
+            }
         } else {
             const newVisible = [index, ...visibleColumnIndexes];
             newVisible.sort((a, b) => a - b);
             setVisibleColumnIndexes(newVisible);
+            if (sortBy >= index) {
+                setSortBy(sortBy + 1);  // Keep the current sort
+            }
         }
-        setSortBy(0);
-        setSortReversed(false);
-    }, [visibleColumnIndexes, setVisibleColumnIndexes]);
+    }, [visibleColumnIndexes, setVisibleColumnIndexes, sortBy, setSortBy, setSortReversed]);
     const visibleColumns = visibleColumnIndexes.map(i => columns[i]);
     const invisibleColumns = columns.filter((c, i) => !visibleColumnIndexes.includes(i));
 
@@ -83,8 +115,6 @@ const DataTablesTable = ({id, rowKeyFunction, options}) => {
     const paginationCountOptions = ["10", "25", "100"];
     const paginationCount = Number(paginationCountOptions[selectedPaginationCount]);
 
-    const [sortBy, setSortBy] = useState(options.order[0][0] || 0);
-    const [sortReversed, setSortReversed] = useState(options.order[0][1] === 'asc');
     const sortingFunction = (a, b) => {
         const key = visibleColumns[sortBy].data._ || visibleColumns[sortBy].data;
         const valA = a[key];
@@ -160,7 +190,7 @@ const DataTablesTable = ({id, rowKeyFunction, options}) => {
         <div id={id + "-container"}>
             <div className={"float-start"}>
                 <InputGroup className={"dataTables_length"}>
-                    <label className={"input-group-text"}>Show per page</label>
+                    <label className={"input-group-text"}>{t('html.label.table.showPerPage')}</label>
                     <Select options={paginationCountOptions} selectedIndex={selectedPaginationCount}
                             setSelectedIndex={setSelectedPaginationCount}/>
                 </InputGroup>
@@ -169,20 +199,8 @@ const DataTablesTable = ({id, rowKeyFunction, options}) => {
                 <SearchField className={"dataTables_filter"} value={filter} setValue={setFilter}/>
             </div>
             <div className={"float-start dataTables_columns"}>
-                <CollapseWithButton title={"Visible columns"}>
-                    <Card style={{position: "absolute", zIndex: 3}}>
-                        <Card.Body>
-                            <ul style={{listStyle: "none", paddingLeft: "0.25rem", margin: 0}}>
-                                {columns.map((column, i) => {
-                                    return <li key={JSON.stringify(column.data)}>
-                                        <Toggle value={visibleColumnIndexes.includes(i)}
-                                                onValueChange={() => toggleColumn(i)}>{column.title}</Toggle>
-                                    </li>
-                                })}
-                            </ul>
-                        </Card.Body>
-                    </Card>
-                </CollapseWithButton>
+                <VisibleColumnsSelector columns={columns} visibleColumnIndexes={visibleColumnIndexes}
+                                        toggleColumn={toggleColumn}/>
             </div>
             <table id={id}
                    className={"datatable table table-bordered table-striped" + (nightModeEnabled ? " table-dark" : '')}
@@ -200,11 +218,11 @@ const DataTablesTable = ({id, rowKeyFunction, options}) => {
                 </tr>
                 </thead>
                 <tbody id={id + '-body'}>
-                {rows.map(row => <>
-                    <tr key={rowKeyFunction(row, null)}>
+                {rows.map(row => <React.Fragment key={"frag-" + rowKeyFunction(row, null)}>
+                    <tr key={"row-" + rowKeyFunction(row, null)}>
                         {visibleColumns.map((column, i) => {
                             if (column.data._ !== undefined) {
-                                return <td key={rowKeyFunction(row, column)}>
+                                return <td key={"col-" + rowKeyFunction(row, column)}>
                                     {i === 0 && someColumnsHidden &&
                                         <button style={{paddingRight: "0.5rem"}}
                                                 onClick={() => toggleRow(rowKeyFunction(row, null))}>
@@ -215,7 +233,7 @@ const DataTablesTable = ({id, rowKeyFunction, options}) => {
                                     {row[column.data.display]}
                                 </td>
                             } else {
-                                return <td key={rowKeyFunction(row, column)}>
+                                return <td key={"col-" + rowKeyFunction(row, column)}>
                                     {i === 0 && someColumnsHidden &&
                                         <button style={{paddingRight: "0.5rem"}}
                                                 onClick={() => toggleRow(rowKeyFunction(row, null))}>
@@ -228,23 +246,31 @@ const DataTablesTable = ({id, rowKeyFunction, options}) => {
                             }
                         })}
                     </tr>
-                    {expandedRows.includes(rowKeyFunction(row, null)) && <tr key={"hidden-row"}>
-                        <td colSpan={visibleColumns.length}>
-                            {invisibleColumns.map(column => {
-                                if (column.data._ !== undefined) {
-                                    return <p key={rowKeyFunction(row, column)}>
-                                        <b>{column.title}:</b> {row[column.data.display]}</p>
-                                } else {
-                                    return <p key={rowKeyFunction(row, column)}>
-                                        <b>{column.title}:</b> {row[column.data]}</p>
-                                }
-                            })}
-                        </td>
-                    </tr>}
-                </>)}
+                    {expandedRows.includes(rowKeyFunction(row, null)) &&
+                        <tr key={"hidden-row" + rowKeyFunction(row, null)}>
+                            <td colSpan={visibleColumns.length}>
+                                {invisibleColumns.map(column => {
+                                    if (column.data._ !== undefined) {
+                                        return <p key={"p-" + rowKeyFunction(row, column)}>
+                                            <b>{column.title}:</b> {row[column.data.display]}</p>
+                                    } else {
+                                        return <p key={"p-" + rowKeyFunction(row, column)}>
+                                            <b>{column.title}:</b> {row[column.data]}</p>
+                                    }
+                                })}
+                            </td>
+                        </tr>}
+                </React.Fragment>)}
                 </tbody>
             </table>
-            <p className={"dataTables_info float-start"}>Showing {page * paginationCount + 1}-{page * paginationCount + rows.length} of {matchingData.length} entries</p>
+            <p className={"dataTables_info float-start"}>
+                <Trans i18nKey={"html.label.table.showNofM"}
+                       defaults={"Showing {{n}} of {{m}} entries"}
+                       values={{
+                           n: `${page * paginationCount + 1}-${page * paginationCount + rows.length}`,
+                           m: matchingData.length
+                       }}/>
+            </p>
             <div className={"float-end"}>
                 <Pagination page={page} setPage={setPage} maxPage={maxPage}/>
             </div>
