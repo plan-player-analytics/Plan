@@ -28,6 +28,7 @@ import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import utilities.DBPreparer;
 import utilities.OptionalAssert;
 import utilities.TestConstants;
 import utilities.mocks.PluginMockComponent;
@@ -97,8 +98,12 @@ class DBPatchSQLiteRegressionTest extends DBPatchRegressionTest {
 
     @AfterEach
     void closeDatabase() throws Exception {
-        underTest.close();
-        component.getPlanSystem().disable();
+        try {
+            DBPreparer.assertNoTempTables(underTest);
+        } finally {
+            underTest.close();
+            component.getPlanSystem().disable();
+        }
     }
 
     @Test

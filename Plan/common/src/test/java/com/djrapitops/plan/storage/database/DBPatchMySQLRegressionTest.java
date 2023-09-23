@@ -73,6 +73,15 @@ class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
                 .build(), TEST_PORT_NUMBER);
     }
 
+    @AfterEach
+    void noTempTables() {
+        try {
+            DBPreparer.assertNoTempTables(underTest);
+        } finally {
+            underTest.close();
+        }
+    }
+
     @AfterAll
     static void closeSystem() {
         if (dbPreparer != null) dbPreparer.tearDown();
@@ -123,11 +132,6 @@ class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
         underTest.executeTransaction(new CreateTablesTransaction());
 
         insertData(underTest);
-    }
-
-    @AfterEach
-    void closeDatabase() {
-        underTest.close();
     }
 
     @Test
