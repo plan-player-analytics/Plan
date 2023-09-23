@@ -997,12 +997,15 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.SecurityTable.SALT_PASSWORD_HASH">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/SecurityTable.html#SALT_PASSWORD_HASH">SALT_PASSWORD_HASH</a></code></div>
 <div class="col-last even-row-color"><code>"salted_pass_hash"</code></div>
-<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.SecurityTable.TABLE_NAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/SecurityTable.html#TABLE_NAME">TABLE_NAME</a></code></div>
-<div class="col-last odd-row-color"><code>"plan_security"</code></div>
-<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.SecurityTable.USERNAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/SecurityTable.html#USERNAME">USERNAME</a></code></div>
-<div class="col-last even-row-color"><code>"username"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.SecurityTable.SELECT_ID_BY_USERNAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/SecurityTable.html#SELECT_ID_BY_USERNAME">SELECT_ID_BY_USERNAME</a></code></div>
+<div class="col-last odd-row-color"><code>"SELECT id FROM plan_security WHERE username=?"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.SecurityTable.TABLE_NAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/SecurityTable.html#TABLE_NAME">TABLE_NAME</a></code></div>
+<div class="col-last even-row-color"><code>"plan_security"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.SecurityTable.USERNAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/SecurityTable.html#USERNAME">USERNAME</a></code></div>
+<div class="col-last odd-row-color"><code>"username"</code></div>
 </div>
 </li>
 <li>
@@ -1288,6 +1291,35 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.WebPermissionTable.TABLE_NAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/WebPermissionTable.html#TABLE_NAME">TABLE_NAME</a></code></div>
 <div class="col-last even-row-color"><code>"plan_web_permission"</code></div>
+</div>
+</li>
+<li>
+<div class="caption"><span>com.djrapitops.plan.storage.database.sql.tables.<a href="com/djrapitops/plan/storage/database/sql/tables/WebUserPreferencesTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables">WebUserPreferencesTable</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Constant Field</div>
+<div class="table-header col-last">Value</div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.WebUserPreferencesTable.DELETE_BY_WEB_USERNAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/WebUserPreferencesTable.html#DELETE_BY_WEB_USERNAME">DELETE_BY_WEB_USERNAME</a></code></div>
+<div class="col-last even-row-color"><code>"DELETE FROM plan_web_user_preferences WHERE web_user_id=(SELECT id FROM plan_security WHERE username=?)"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.WebUserPreferencesTable.ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/WebUserPreferencesTable.html#ID">ID</a></code></div>
+<div class="col-last odd-row-color"><code>"id"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.WebUserPreferencesTable.INSERT_STATEMENT">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/WebUserPreferencesTable.html#INSERT_STATEMENT">INSERT_STATEMENT</a></code></div>
+<div class="col-last even-row-color"><code>"INSERT INTO plan_web_user_preferences (preferences,web_user_id) VALUES (?, (SELECT id FROM plan_security WHERE username=?))"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.WebUserPreferencesTable.PREFERENCES">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/WebUserPreferencesTable.html#PREFERENCES">PREFERENCES</a></code></div>
+<div class="col-last odd-row-color"><code>"preferences"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.WebUserPreferencesTable.SELECT_BY_WEB_USERNAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/WebUserPreferencesTable.html#SELECT_BY_WEB_USERNAME">SELECT_BY_WEB_USERNAME</a></code></div>
+<div class="col-last even-row-color"><code>"SELECT preferences FROM plan_web_user_preferences WHERE web_user_id=(SELECT id FROM plan_security WHERE username=?)"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.WebUserPreferencesTable.TABLE_NAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/WebUserPreferencesTable.html#TABLE_NAME">TABLE_NAME</a></code></div>
+<div class="col-last odd-row-color"><code>"plan_web_user_preferences"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.WebUserPreferencesTable.WEB_USER_ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/WebUserPreferencesTable.html#WEB_USER_ID">WEB_USER_ID</a></code></div>
+<div class="col-last even-row-color"><code>"web_user_id"</code></div>
 </div>
 </li>
 <li>

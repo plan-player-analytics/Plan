@@ -19,6 +19,7 @@ com.djrapitops.plan.delivery.domain.container
 com.djrapitops.plan.delivery.domain.datatransfer
 com.djrapitops.plan.delivery.domain.datatransfer.extension
 com.djrapitops.plan.delivery.domain.datatransfer.graphs
+com.djrapitops.plan.delivery.domain.datatransfer.preferences
 com.djrapitops.plan.delivery.domain.keys
 com.djrapitops.plan.delivery.domain.mutators
 com.djrapitops.plan.delivery.export
@@ -26,7 +27,6 @@ com.djrapitops.plan.delivery.formatting
 com.djrapitops.plan.delivery.formatting.time
 com.djrapitops.plan.delivery.rendering.html
 com.djrapitops.plan.delivery.rendering.html.icon
-com.djrapitops.plan.delivery.rendering.html.structure
 com.djrapitops.plan.delivery.rendering.json
 com.djrapitops.plan.delivery.rendering.json.graphs
 com.djrapitops.plan.delivery.rendering.json.graphs.bar
@@ -50,6 +50,7 @@ com.djrapitops.plan.delivery.webserver.http
 com.djrapitops.plan.delivery.webserver.resolver
 com.djrapitops.plan.delivery.webserver.resolver.auth
 com.djrapitops.plan.delivery.webserver.resolver.json
+com.djrapitops.plan.delivery.webserver.resolver.json.metadata
 com.djrapitops.plan.delivery.webserver.resolver.swagger
 com.djrapitops.plan.exceptions
 com.djrapitops.plan.exceptions.database
