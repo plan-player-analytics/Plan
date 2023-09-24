@@ -107,6 +107,7 @@ public class PlayersJSONResolver extends JSONResolver {
         return getCachedOrNewResponse(request, storedJSON);
     }
 
+    @SuppressWarnings("deprecation") // /v1/players is deprecated but kept for backwards compatibility.
     private JSONStorage.StoredJSON getStoredJSON(@Untrusted Request request) {
         Optional<Long> timestamp = Identifiers.getTimestamp(request);
         JSONStorage.StoredJSON storedJSON;

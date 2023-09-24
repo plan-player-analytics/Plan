@@ -115,7 +115,12 @@ public class PlayersTableJSONCreator {
         }
     }
 
-    @Deprecated
+    /**
+     * This method is kept for /v1/players backwards compatibility.
+     *
+     * @deprecated Use {@link PlayersTableJSONCreator#toPlayerList()}.
+     */
+    @Deprecated(since = "5.6")
     public Map<String, Object> toJSONMap() {
         return Maps.builder(String.class, Object.class)
                 .put("columns", createColumnHeaders())

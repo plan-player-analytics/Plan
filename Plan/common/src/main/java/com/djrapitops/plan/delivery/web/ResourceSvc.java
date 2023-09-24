@@ -101,6 +101,7 @@ public class ResourceSvc implements ResourceService {
     }
 
     @Nullable
+    @SuppressWarnings("deprecation") // Legacy method, backwards compatibility
     private static String applyLegacy(Map<Position, StringBuilder> byPosition, String html) {
         StringBuilder toHead = byPosition.get(Position.PRE_CONTENT);
         if (toHead != null) {
