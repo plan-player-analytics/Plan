@@ -2,11 +2,9 @@ import React from "react";
 import {Card, Col} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCalendarCheck, faClock} from "@fortawesome/free-regular-svg-icons";
-import {faBookOpen, faBraille, faCrosshairs, faGlobe, faSkull, faWifi} from "@fortawesome/free-solid-svg-icons";
-import Scrollable from "../../components/Scrollable";
+import {faBookOpen, faBraille, faCrosshairs, faSkull} from "@fortawesome/free-solid-svg-icons";
 import PunchCard from "../../components/graphs/PunchCard";
 import AsNumbersTable from "../../components/table/AsNumbersTable";
-import {useTheme} from "../../hooks/themeHook";
 import {usePlayer} from "../layout/PlayerPage";
 import {useTranslation} from "react-i18next";
 import PlayerOverviewCard from "../../components/cards/player/PlayerOverviewCard";
@@ -14,36 +12,8 @@ import NicknamesCard from "../../components/cards/player/NicknamesCard";
 import {TableRow} from "../../components/table/TableRow";
 import LoadIn from "../../components/animation/LoadIn";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
-
-const ConnectionsCard = ({player}) => {
-    const {t} = useTranslation();
-    const {nightModeEnabled} = useTheme();
-    return (
-        <Card>
-            <Card.Header>
-                <h6 className="col-black">
-                    <Fa icon={faWifi}/> {t('html.label.connectionInfo')}
-                </h6>
-            </Card.Header>
-            <Scrollable>
-                <table className={"table table-striped mb-0" + (nightModeEnabled ? " table-dark" : '')}>
-                    <thead className="bg-green">
-                    <tr>
-                        <th><Fa icon={faGlobe}/> {t('html.label.country')}</th>
-                        <th><Fa icon={faClock}/> {t('html.label.lastConnected')}</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {player.connections.map((connection, i) => (<tr key={JSON.stringify(connection)}>
-                        <td>{connection.geolocation}</td>
-                        <td>{connection.date}</td>
-                    </tr>))}
-                    </tbody>
-                </table>
-            </Scrollable>
-        </Card>
-    )
-}
+import ConnectionsCard from "../../components/cards/player/ConnectionsCard";
+import {useAuth} from "../../hooks/authenticationHook";
 
 const PunchCardCard = ({player}) => {
     const {t} = useTranslation();
@@ -91,23 +61,24 @@ const OnlineActivityCard = ({player}) => {
 }
 
 const PlayerOverview = () => {
+    const {hasPermission} = useAuth();
     const {player} = usePlayer();
 
     return (
         <LoadIn>
-            <section className="player-overview">
+            {hasPermission('page.player.overview') && <section className="player-overview" id={"player-overview"}>
                 <ExtendableRow id={'row-player-overview-0'}>
                     <Col lg={6}>
                         <PlayerOverviewCard player={player}/>
-                        <NicknamesCard player={player}/>
-                        <ConnectionsCard player={player}/>
+                        <NicknamesCard nicknames={player?.nicknames}/>
+                        <ConnectionsCard connections={player?.connections}/>
                     </Col>
                     <Col lg={6}>
                         <PunchCardCard player={player}/>
                         <OnlineActivityCard player={player}/>
                     </Col>
                 </ExtendableRow>
-            </section>
+            </section>}
         </LoadIn>
     )
 }

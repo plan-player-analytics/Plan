@@ -11,6 +11,7 @@ import PvpPveAsNumbersCard from "../../components/cards/player/PvpPveAsNumbersCa
 import PvpKillsTableCard from "../../components/cards/common/PvpKillsTableCard";
 import LoadIn from "../../components/animation/LoadIn";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import {useAuth} from "../../hooks/authenticationHook";
 
 const InsightsCard = ({player}) => {
     const {t} = useTranslation();
@@ -48,10 +49,11 @@ const PvpDeathsTableCard = ({player}) => {
 }
 
 const PlayerPvpPve = () => {
+    const {hasPermission} = useAuth();
     const {player} = usePlayer();
     return (
         <LoadIn>
-            <section className="player-pvp-pve">
+            {hasPermission('page.player.versus') && <section className="player-pvp-pve" id={"player-pvp-pve"}>
                 <ExtendableRow id={'row-player-pvp-pve-0'}>
                     <Col lg={8}>
                         <PvpPveAsNumbersCard player={player}/>
@@ -68,7 +70,7 @@ const PlayerPvpPve = () => {
                         <PvpDeathsTableCard player={player}/>
                     </Col>
                 </ExtendableRow>
-            </section>
+            </section>}
         </LoadIn>
     )
 }

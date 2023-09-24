@@ -13,7 +13,7 @@ const PlayerbaseTrendsCard = ({data}) => {
     const {t} = useTranslation();
     if (!data) return <CardLoader/>;
     return (
-        <Card>
+        <Card id={"playerbase-trends"}>
             <Card.Header>
                 <h6 className="col-black">
                     <Fa icon={faExchangeAlt} className="col-amber"/> {t('html.label.trends30days')}

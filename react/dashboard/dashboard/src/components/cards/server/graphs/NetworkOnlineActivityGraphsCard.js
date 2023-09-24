@@ -11,6 +11,7 @@ import TimeByTimeGraph from "../../../graphs/TimeByTimeGraph";
 import PlayersOnlineGraph from "../../../graphs/PlayersOnlineGraph";
 import {useMetadata} from "../../../../hooks/metadataHook";
 import StackedPlayersOnlineGraph from "../../../graphs/StackedPlayersOnlineGraph";
+import {useAuth} from "../../../../hooks/authenticationHook";
 
 const SingleProxyPlayersOnlineGraph = ({serverUUID}) => {
     const {data, loadingError} = useDataRequest(fetchPlayersOnlineGraph, [serverUUID]);
@@ -48,7 +49,7 @@ const DayByDayTab = () => {
     if (loadingError) return <ErrorViewBody error={loadingError}/>
     if (!data) return <ChartLoader/>;
 
-    return <TimeByTimeGraph data={data}/>
+    return <TimeByTimeGraph id={"day-by-day-graph"} data={data}/>
 }
 
 const HourByHourTab = () => {
@@ -57,24 +58,29 @@ const HourByHourTab = () => {
     if (loadingError) return <ErrorViewBody error={loadingError}/>
     if (!data) return <ChartLoader/>;
 
-    return <TimeByTimeGraph data={data}/>
+    return <TimeByTimeGraph id={"hour-by-hour-graph"} data={data}/>
 }
 
 const NetworkOnlineActivityGraphsCard = () => {
+    const {hasPermission} = useAuth();
     const {t} = useTranslation();
+    const tabs = [
+        {
+            name: t('html.label.networkOnlineActivity'), icon: faChartArea, color: 'blue', href: 'online-activity',
+            element: <PlayersOnlineTab/>,
+            permission: 'page.network.overview.graphs.online'
+        }, {
+            name: t('html.label.dayByDay'), icon: faChartArea, color: 'blue', href: 'day-by-day',
+            element: <DayByDayTab/>,
+            permission: 'page.network.overview.graphs.day.by.day'
+        }, {
+            name: t('html.label.hourByHour'), icon: faChartArea, color: 'blue', href: 'hour-by-hour',
+            element: <HourByHourTab/>,
+            permission: 'page.network.overview.graphs.hour.by.hour'
+        }
+    ].filter(tab => hasPermission(tab.permission));
     return <Card>
-        <CardTabs tabs={[
-            {
-                name: t('html.label.networkOnlineActivity'), icon: faChartArea, color: 'blue', href: 'online-activity',
-                element: <PlayersOnlineTab/>
-            }, {
-                name: t('html.label.dayByDay'), icon: faChartArea, color: 'blue', href: 'day-by-day',
-                element: <DayByDayTab/>
-            }, {
-                name: t('html.label.hourByHour'), icon: faChartArea, color: 'blue', href: 'hour-by-hour',
-                element: <HourByHourTab/>
-            }
-        ]}/>
+        <CardTabs tabs={tabs}/>
     </Card>
 };
 

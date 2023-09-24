@@ -93,6 +93,25 @@ const fetchPlayersNetwork = async (timestamp) => {
     return doGetRequest(url, timestamp);
 }
 
+export const fetchPlayersTable = async (timestamp, identifier) => {
+    if (identifier) {
+        return await fetchPlayersTableServer(timestamp, identifier);
+    } else {
+        return await fetchPlayersTableNetwork(timestamp);
+    }
+}
+const fetchPlayersTableServer = async (timestamp, identifier) => {
+    let url = `/v1/playersTable?server=${identifier}`;
+    if (staticSite) url = `/data/playersTable-${identifier}.json`;
+    return doGetRequest(url, timestamp);
+}
+
+const fetchPlayersTableNetwork = async (timestamp) => {
+    let url = `/v1/playersTable`;
+    if (staticSite) url = `/data/playersTable.json`;
+    return doGetRequest(url, timestamp);
+}
+
 export const fetchPingTable = async (timestamp, identifier) => {
     let url = `/v1/pingTable?server=${identifier}`;
     if (staticSite) url = `/data/pingTable-${identifier}.json`;

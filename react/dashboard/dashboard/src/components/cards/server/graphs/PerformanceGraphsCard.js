@@ -72,7 +72,7 @@ const PerformanceGraphsCard = () => {
         }
     }, [data, setParsedData]);
 
-    return <Card>
+    return <Card id={"performance-graphs"}>
         <CardTabs tabs={[
             {
                 name: t('html.label.all'), icon: faGears, color: 'blue-grey', href: 'all',

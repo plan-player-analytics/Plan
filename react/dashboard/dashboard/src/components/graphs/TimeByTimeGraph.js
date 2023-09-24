@@ -5,7 +5,7 @@ import LineGraph from "./LineGraph";
 import {useTheme} from "../../hooks/themeHook";
 import {withReducedSaturation} from "../../util/colors";
 
-const TimeByTimeGraph = ({data}) => {
+const TimeByTimeGraph = ({id, data}) => {
     const {t} = useTranslation();
     const [series, setSeries] = useState([]);
     const {nightModeEnabled} = useTheme();
@@ -29,7 +29,7 @@ const TimeByTimeGraph = ({data}) => {
     }, [data, t, nightModeEnabled])
 
     return (
-        <LineGraph id="day-by-day-graph" series={series} alreadyOffsetTimezone/>
+        <LineGraph id={id} series={series} alreadyOffsetTimezone/>
     )
 }
 

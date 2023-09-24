@@ -9,21 +9,25 @@ import PerformanceInsightsCard from "../../components/cards/server/insights/Perf
 import {ErrorViewCard} from "../ErrorView";
 import PerformanceAsNumbersCard from "../../components/cards/server/tables/PerformanceAsNumbersCard";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import {useAuth} from "../../hooks/authenticationHook";
 
 const ServerPerformance = () => {
+    const {hasPermission} = useAuth();
     const {identifier} = useParams();
 
-    const {data, loadingError} = useDataRequest(fetchPerformanceOverview, [identifier]);
+    const seeGraphs = hasPermission('page.server.performance.graphs');
+    const seeOverview = hasPermission('page.server.performance.overview');
+    const {data, loadingError} = useDataRequest(fetchPerformanceOverview, [identifier], seeOverview);
 
     return (
         <LoadIn>
             <section className="server-performance">
-                <ExtendableRow id={'row-server-performance-0'}>
+                {seeGraphs && <ExtendableRow id={'row-server-performance-0'}>
                     <Col lg={12}>
                         <PerformanceGraphsCard/>
                     </Col>
-                </ExtendableRow>
-                <ExtendableRow id={'row-server-performance-1'}>
+                </ExtendableRow>}
+                {seeOverview && <ExtendableRow id={'row-server-performance-1'}>
                     <Col lg={8}>
                         {loadingError ? <ErrorViewCard error={loadingError}/> :
                             <PerformanceAsNumbersCard data={data?.numbers}/>}
@@ -32,7 +36,7 @@ const ServerPerformance = () => {
                         {loadingError ? <ErrorViewCard error={loadingError}/> :
                             <PerformanceInsightsCard data={data?.insights}/>}
                     </Col>
-                </ExtendableRow>
+                </ExtendableRow>}
             </section>
         </LoadIn>
     )

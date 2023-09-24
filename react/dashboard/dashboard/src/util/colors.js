@@ -270,7 +270,7 @@ const createNightModeColorCss = () => {
 export const createNightModeCss = () => {
     return `#content-wrapper {background-color:var(--color-night-black)!important;}` +
         `#wrapper {background-image: linear-gradient(to right, var(--color-night-dark-blue) 0%, var(--color-night-dark-blue) 14rem, var(--color-night-black) 14.01rem, var(--color-night-black) 100%);}` +
-        `body,.btn,.bg-transparent-light {color: var(--color-night-text-dark-bg);}` +
+        `body,.btn,.bg-transparent-light {color: var(--color-night-text-dark-bg) !important;}` +
         `.card,.bg-white,.modal-content,.page-loader,.nav-tabs .nav-link:hover,.nav-tabs,hr,form .btn, .btn-outline-secondary{background-color:var(--color-night-dark-blue)!important;border-color:var(--color-night-blue)!important;}` +
         `.bg-white.collapse-inner {border:1px solid;}` +
         `.card-header {background-color:var(--color-night-dark-blue);border-color:var(--color-night-blue);}` +
@@ -284,5 +284,9 @@ export const createNightModeCss = () => {
         `.fc a{color:var(--color-night-text-dark-bg) !important;}` +
         `.fc-button{ background-color: ${withReducedSaturation(colorMap.PLAN.hex)} !important;}` +
         `.loader{border: 4px solid var(--color-plan); background-color: var(--color-plan);}` +
+        `.dropdown-item,.dropdown-header{color: var(--color-night-text-dark-bg) !important;}` +
+        `.dropdown-item:hover{background-color: var(--color-night-blue) !important;}` +
+        `.dropdown-menu{border-color:var(--color-night-blue);color: var(--color-night-blue) !important;}` +
+        `:root {--bs-heading-color:var(--color-night-text-dark-bg); --bs-card-color:var(--color-night-text-dark-bg); --bs-body-color:var(--color-night-text-dark-bg); --bs-body-bg:var(--color-night-dark-grey-blue); --bs-btn-active-border-color:var(--color-night-blue);}` +
         createNightModeColorCss()
 }

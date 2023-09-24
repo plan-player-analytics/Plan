@@ -23,7 +23,7 @@ const PlayerbaseInsightsCard = ({data}) => {
     const {t} = useTranslation();
     if (!data) return <CardLoader/>;
     return (
-        <InsightsFor30DaysCard>
+        <InsightsFor30DaysCard id={"playerbase-insights"}>
             <Datapoint name={<TwoPlayerChange colorBefore={'light-green'}
                                               labelBefore={t('html.label.new')}
                                               colorAfter={'lime'}

@@ -8,7 +8,7 @@ import ServerPvpPveAsNumbersTable from "../../../table/ServerPvpPveAsNumbersTabl
 const PvpPveAsNumbersCard = ({kill_data}) => {
     const {t} = useTranslation();
     return (
-        <Card>
+        <Card id={"pvp-pve-as-numbers"}>
             <Card.Header>
                 <h6 className="col-black">
                     <Fa icon={faCampground} className="col-red"/> {t('html.label.pvpPveAsNumbers')}

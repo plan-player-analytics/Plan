@@ -24,7 +24,27 @@ export const AuthenticationContextProvider = ({children}) => {
     }, [])
 
     const hasPermission = useCallback(permission => {
-        return !authRequired || (loggedIn && user && user.permissions.filter(perm => perm === permission).length);
+        if (Array.isArray(permission)) {
+            for (const permissionOption of permission) {
+                if (hasPermission(permissionOption)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return !authRequired || (loggedIn && user && Boolean(user.permissions.filter(perm => permission.includes(perm)).length));
+    }, [authRequired, loggedIn, user]);
+
+    const hasChildPermission = useCallback(permission => {
+        if (Array.isArray(permission)) {
+            for (const permissionOption of permission) {
+                if (hasChildPermission(permissionOption)) {
+                    return true;
+                }
+            }
+            return false;
+        }
+        return !authRequired || (loggedIn && user && Boolean(user.permissions.filter(perm => perm.includes(permission) || permission.includes(perm)).length));
     }, [authRequired, loggedIn, user]);
 
     const hasPermissionOtherThan = useCallback(permission => {
@@ -43,6 +63,7 @@ export const AuthenticationContextProvider = ({children}) => {
             user,
             loginError,
             hasPermission,
+            hasChildPermission,
             hasPermissionOtherThan,
             updateLoginDetails
         }
@@ -53,6 +74,7 @@ export const AuthenticationContextProvider = ({children}) => {
         user,
         loginError,
         hasPermission,
+        hasChildPermission,
         hasPermissionOtherThan,
         updateLoginDetails
     ])

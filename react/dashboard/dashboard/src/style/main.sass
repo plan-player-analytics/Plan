@@ -22,3 +22,20 @@ p, span, td, .h3, a, button
     h6
       @extend .m-0
       @extend .fw-bold
+
+.alert-popup-area
+  position: absolute
+  top: 0.66rem
+  left: 50%
+  transform: translateX(-50%)
+  display: flex
+  flex-direction: column
+  z-index: 999
+
+  .alert-timer
+    animation: alert-timer linear
+    background-color: rgba(0, 0, 0, 0.2)
+    height: 5px
+    position: absolute
+    bottom: 0
+    margin-left: -1rem

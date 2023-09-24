@@ -6,8 +6,14 @@ const javaReplaced = {
 }
 
 const isCurrentAddress = (address) => {
-    const is = window.location.href.startsWith(address);
-    if (!is) console.warn(`Configured address ${address} did not match start of ${window.location.href}, falling back to relative address. Configure 'Webserver.Alternative_IP' settings to point to your address.`)
+    let is = window.location.href.startsWith(address);
+    const usingProxyHttps = window.location.href.startsWith("https") && !address.startsWith("https");
+    if (usingProxyHttps) {
+        is = window.location.href.replace('https', '').startsWith(address.replace('http'));
+    }
+    if (!is) {
+        console.warn(`Configured address ${address} did not match start of ${window.location.href}, falling back to relative address. Configure 'Webserver.Alternative_IP' settings to point to your address.`)
+    }
     return is;
 }
 
@@ -21,6 +27,10 @@ export const doSomeGetRequest = async (url, updateRequested, statusOptions) => {
 
 export const doSomePostRequest = async (url, statusOptions, body) => {
     return doSomeRequest(url, statusOptions, async () => axios.post(baseAddress + url, body));
+}
+
+export const doSomeDeleteRequest = async (url, statusOptions, body) => {
+    return doSomeRequest(url, statusOptions, async () => axios.delete(baseAddress + url, body));
 }
 
 export const doSomeRequest = async (url, statusOptions, axiosFunction) => {

@@ -11,6 +11,7 @@ import {useTranslation} from "react-i18next";
 import PlayerPingGraph from "../../components/graphs/PlayerPingGraph";
 import LoadIn from "../../components/animation/LoadIn";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import {useAuth} from "../../hooks/authenticationHook";
 
 const PingGraphCard = ({player}) => {
     const {t} = useTranslation();
@@ -68,10 +69,11 @@ const ServerPieCard = ({player}) => {
 
 
 const PlayerServers = () => {
+    const {hasPermission} = useAuth();
     const {player} = usePlayer();
     return (
         <LoadIn>
-            <section className="player-servers">
+            {hasPermission('page.player.servers') && <section className="player-servers" id={"player-servers"}>
                 <ExtendableRow id={'row-player-servers-0'}>
                     <Col lg={12}>
                         <PingGraphCard player={player}/>
@@ -85,7 +87,7 @@ const PlayerServers = () => {
                         <ServerPieCard player={player}/>
                     </Col>
                 </ExtendableRow>
-            </section>
+            </section>}
         </LoadIn>
     )
 }

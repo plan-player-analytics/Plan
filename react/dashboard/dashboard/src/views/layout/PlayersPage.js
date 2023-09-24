@@ -36,7 +36,7 @@ const PlayersPage = () => {
     if (authRequired && !loggedIn) return <MainPageRedirect/>;
     if (error) return <ErrorPage error={error}/>;
 
-    const displayedServerName = isProxy ? networkName : (serverName && serverName.startsWith('Server') ? "Plan" : serverName);
+    const displayedServerName = isProxy ? networkName : (serverName?.startsWith('Server') ? "Plan" : serverName);
     return (
         <>
             <Sidebar items={sidebarItems}/>
