@@ -7,7 +7,7 @@ const javaReplaced = {
 
 const isCurrentAddress = (address) => {
     let is = window.location.href.startsWith(address);
-    const usingProxyHttps = window.location.href.startsWith("https") && address.startsWith("http");
+    const usingProxyHttps = window.location.href.startsWith("https") && !address.startsWith("https");
     if (usingProxyHttps) {
         is = window.location.href.replace('https', '').startsWith(address.replace('http'));
     }
