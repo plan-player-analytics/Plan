@@ -27,7 +27,8 @@ const PageNavigationItem = ({page}) => {
                     id: 'manage',
                     displayName: t('html.label.manage'),
                     href: "/manage",
-                    permission: 'manage.groups'//, 'manage.users']
+                    permission: 'manage.groups',//, 'manage.users']
+                    authRequired: true
                 },
                 {
                     id: 'query',
@@ -70,8 +71,15 @@ const PageNavigationItem = ({page}) => {
             if (page) {
                 newItems.unshift({id: 'page', displayName: page, href: location.pathname, permission: undefined})
             }
+
+            // Filter out items that need authentication
+            newItems = newItems
+                .filter(item => !item.authRequired || (authRequired && item.authRequired))
+
+            // Filter out items without permission
             if (authRequired && loggedIn) {
-                newItems = newItems.filter(item => !item.permission || hasPermission(item.permission))
+                newItems = newItems
+                    .filter(item => !item.permission || hasPermission(item.permission))
             }
             setItems(newItems);
             setCurrentPage(newItems.find(item => location.pathname.startsWith(item.href))?.id);
