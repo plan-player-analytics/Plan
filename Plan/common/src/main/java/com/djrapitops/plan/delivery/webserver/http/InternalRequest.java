@@ -44,7 +44,8 @@ public interface InternalRequest {
         if (accessAddressPolicy == AccessAddressPolicy.X_FORWARDED_FOR_HEADER) {
             @Untrusted String fromHeader = getAccessAddressFromHeader();
             if (fromHeader == null) {
-                webserverConfiguration.getWebserverLogMessages().warnAboutXForwardedForSecurityIssue();
+                // TODO disabled temporarily
+//                webserverConfiguration.getWebserverLogMessages().warnAboutXForwardedForSecurityIssue();
                 return getAccessAddressFromSocketIp();
             } else {
                 return fromHeader;
