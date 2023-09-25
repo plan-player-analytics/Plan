@@ -46,7 +46,7 @@ public class SpigotPingMethod implements PingMethod {
 
     @Override
     public int getPing(Player player) {
-        if (!reasonForUnavailability.isEmpty()) return -1;
+        if (reasonForUnavailability != null) return -1;
 
         try {
             Method getPing = player.getClass().getDeclaredMethod("getPing");
