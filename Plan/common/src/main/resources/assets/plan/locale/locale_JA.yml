@@ -108,7 +108,7 @@ command:
         reloadComplete: "§aリロードが完了しました"
         reloadFailed: "§cプラグインのリロード中に何らかの問題が発生しました、Bukkit/SpigotサーバーかBungeeCordの再起動をお勧めします"
         successWebUserRegister: "§a新規ユーザー「(${0})」の登録に成功しました！"
-        webPermissionLevels: ">\§70: 全てのページにアクセスできます\§71:「/players」と全てのプレイヤーページにアクセスできます\§72: ウェブユーザーと同じユーザー名でプレイヤーページにアクセスできます\§73+:権限を保持していません"
+        webPermissionLevels: ">\§70: 全てのページにアクセスできます\§71:「/players」と全てのプレイヤーページにアクセスできます\§72: Webユーザーと同じユーザー名でプレイヤーページにアクセスできます\§73+:権限を保持していません"
         webUserList: "  §2${0} §7: §f${1}"
     header:
         analysis: "> §2分析結果"
@@ -121,7 +121,7 @@ command:
         serverList: "Minecraft id::名前::uuid::version"
         servers: "> §2サーバー"
         webUserList: "ユーザー名::別プレイヤーとのリンク::権限レベル"
-        webUsers: "> §2${0} ウェブユーザー"
+        webUsers: "> §2${0} Webユーザー"
     help:
         database:
             description: "Planのデータベースを管理します"
@@ -183,7 +183,7 @@ command:
             description: "「プレイヤー」のページのURLを表示します"
             inDepth: "プレイヤー一覧の「/player」ページへのリンクを取得します"
         register:
-            description: "ウェブユーザーを登録します"
+            description: "Webユーザーを登録します"
             inDepth: "引数なしで実行された場合、登録ページへのリンクが取得できます。引数「 --code [コード]」を使用して実行することで登録したユーザーを取得できます。"
         reload:
             description: "「Plan」を再起動します"
@@ -203,11 +203,11 @@ command:
             description: "ユーザーのWeb権限グループを変更します"
             inDepth: "ユーザーのWeb権限グループを既存のWeb権限グループに変更できます。利用可能なグループのリストには「/plan groups」を使用してください。"
         unregister:
-            description: "ウェブページからユーザーを未登録にします"
+            description: "Webページからユーザーを未登録にします"
             inDepth: "別のユーザーの登録を解除します。引数が未指定の場合、ユーザーにリンクされたのプレイヤーの登録を解除します。"
         users:
-            description: "ウェブページの全ユーザーを表示ます"
-            inDepth: "ウェブユーザーの一覧を表で表示します"
+            description: "Webページの全ユーザーを表示ます"
+            inDepth: "Webユーザーの一覧を表で表示します"
     ingame:
         activePlaytime: "  §2アクティブなプレイ時間: §f${0}"
         activityIndex: "  §2活動指数: §f${0} | ${1}"
@@ -846,7 +846,7 @@ plugin:
         waitingDbComplete: "SQLite接続が閉じられました"
         waitingTransactions: "データの破損を防ぐため、未完了のトランザクションを待機します..."
         waitingTransactionsComplete: "トランザクションキューが閉じられました"
-        webserver: "ウェブサーバーが無効になりました"
+        webserver: "Webサーバーが無効になりました"
     enable:
         database: "${0}のデータベースの接続が確立しました"
         enabled: "プレイヤー分析が有効になりました"
@@ -855,15 +855,15 @@ plugin:
             databasePatch: "データベースのパッチ適用に失敗しました、プラグインを無効にする必要があります。バグ報告をお願いします"
             databaseType: "「${0}」はサポートされていないデータベースです"
             geoDBWrite: "ダウンロードした「GeoLite2」の位置情報データベースを保存中に何らかのエラーが発生しました"
-            webServer: "ウェブサーバーの初期化に失敗しました!"
+            webServer: "Webサーバーの初期化に失敗しました!"
         notify:
             badIP: "IP「0.0.0.0」は有効ではないため, config.ymlの「Alternative_IP」の設定を行ってください。誤ったリンクが表示される可能性があります!"
             emptyIP: "server.propertiesの設定で、IPの項目が設定されておらずAlternative IPが使用されていません。そのため誤ったリンクが表示されます!"
             geoDisabled: "位置情報サービスが有効ではありません。 (Data.Geolocations: false)"
             geoInternetRequired: "「Plan」は初回起動時、「GeoLite2」の位置情報データベースをダウンロードするためインターネットアクセスが必要です"
             storeSessions: "前回のシャットダウン時に、保存されていたセッションを保存します"
-            webserverDisabled: "ウェブサーバーの初期化に失敗しました (WebServer.DisableWebServer: true)"
-        webserver: "ウェブサーバーは次のポートで実行されています: ${0} ( ${1} )"
+            webserverDisabled: "Webサーバーの初期化に失敗しました (WebServer.DisableWebServer: true)"
+        webserver: "Webサーバーは次のポートで実行されています: ${0} ( ${1} )"
     generic:
         dbApplyingPatch: "次のパッチを適用しています: ${0}.."
         dbFaultyLaunchOptions: "起動オプションに問題があります,デフォルトのオプションを使用して下さい (${0})"
