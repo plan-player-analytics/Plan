@@ -44,7 +44,7 @@ dependencies {
     shadow 'net.playeranalytics:Extension-Tebex:R2.3'
     shadow 'net.playeranalytics:Extension-Towny:0.99-R1.3'
     shadow 'net.playeranalytics:Extension-Vault:1.7-R1.3'
-    shadow 'net.playeranalytics:Extension-ViaVersion:4.0.1-R1.3'
+    shadow 'net.playeranalytics:Extension-ViaVersion:4.0.1-R1.5'
 }
 
 shadowJar {
