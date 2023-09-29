@@ -9,6 +9,7 @@ import PlayerWorldPieCard from "../../components/cards/player/PlayerWorldPieCard
 import PlayerRecentSessionsCard from "../../components/cards/player/PlayerRecentSessionsCard";
 import LoadIn from "../../components/animation/LoadIn";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import {useAuth} from "../../hooks/authenticationHook";
 
 const SessionCalendarCard = ({player}) => {
     const {t} = useTranslation();
@@ -25,10 +26,11 @@ const SessionCalendarCard = ({player}) => {
 }
 
 const PlayerSessions = () => {
+    const {hasPermission} = useAuth();
     const {player} = usePlayer();
     return (
         <LoadIn>
-            <section className="player-sessions">
+            {hasPermission('page.player.sessions') && <section className="player-sessions" id={"player-sessions"}>
                 <ExtendableRow id={'row-player-sessions-0'}>
                     <Col lg={8}>
                         <SessionCalendarCard player={player}/>
@@ -38,7 +40,7 @@ const PlayerSessions = () => {
                         <PlayerWorldPieCard player={player}/>
                     </Col>
                 </ExtendableRow>
-            </section>
+            </section>}
         </LoadIn>
     )
 }

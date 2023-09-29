@@ -6,7 +6,7 @@ import PingTable from "../../table/PingTable";
 
 const PingTableCard = ({data}) => {
     return (
-        <Card>
+        <Card id={'ping-per-country'}>
             <CardHeader icon={faWifi} color="green" label={'html.label.connectionInfo'}/>
             <PingTable countries={data?.table || []}/>
         </Card>

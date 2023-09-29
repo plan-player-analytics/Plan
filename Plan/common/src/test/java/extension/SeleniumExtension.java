@@ -19,18 +19,17 @@ package extension;
 import org.apache.commons.lang3.SystemUtils;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.extension.*;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
+import org.testcontainers.shaded.org.awaitility.Awaitility;
 import utilities.CIProperties;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 /**
@@ -46,6 +45,20 @@ public class SeleniumExtension implements ParameterResolver, BeforeAllCallback, 
         WebElement body = driver.findElement(By.tagName("body"));
         body.sendKeys(Keys.CONTROL + "t");
         driver.switchTo().window(new ArrayList<>(driver.getWindowHandles()).get(0));
+    }
+
+    public static void waitForPageLoadForSeconds(int i, ChromeDriver driver) {
+        Awaitility.await("waitForPageLoadForSeconds")
+                .atMost(5, TimeUnit.SECONDS)
+                .until(() -> "complete".equals(driver.executeScript("return document.readyState")));
+    }
+
+    public static void waitForElementToBeVisible(By by, ChromeDriver driver) {
+        SeleniumExtension.waitForPageLoadForSeconds(5, driver);
+        Awaitility.await("waitForElementToBeVisible " + by.toString())
+                .atMost(5, TimeUnit.SECONDS)
+                .ignoreException(NoSuchElementException.class)
+                .until(() -> driver.findElement(by).isDisplayed());
     }
 
     @Override

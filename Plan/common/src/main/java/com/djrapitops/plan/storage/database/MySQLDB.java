@@ -18,11 +18,14 @@ package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.exceptions.database.DBInitException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
+import com.djrapitops.plan.exceptions.database.MariaDB11Exception;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
+import com.djrapitops.plan.storage.database.queries.schema.MySQLSchemaQueries;
+import com.djrapitops.plan.storage.database.transactions.init.OperationCriticalTransaction;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
@@ -49,6 +52,8 @@ import java.util.concurrent.TimeUnit;
 public class MySQLDB extends SQLDB {
 
     private static int increment = 1;
+
+    private static boolean useMariaDbDriver = false;
 
     protected HikariDataSource dataSource;
 
@@ -77,9 +82,10 @@ public class MySQLDB extends SQLDB {
     @Override
     protected List<String> getDependencyResource() {
         try {
-            return files.getResourceFromJar("dependencies/mysqlDriver.txt").asLines();
+            String driverFile = useMariaDbDriver ? "dependencies/mariadbDriver.txt" : "dependencies/mysqlDriver.txt";
+            return files.getResourceFromJar(driverFile).asLines();
         } catch (IOException e) {
-            throw new DBInitException("Failed to get MySQL dependency information", e);
+            throw new DBInitException("Failed to get " + (useMariaDbDriver ? "MariaDB" : "MySQL") + " dependency information", e);
         }
     }
 
@@ -89,7 +95,7 @@ public class MySQLDB extends SQLDB {
     @Override
     public void setupDataSource() {
         if (driverClassLoader == null) {
-            logger.info("Downloading MySQL Driver, this may take a while...");
+            logger.info("Downloading " + (useMariaDbDriver ? "MariaDB" : "MySQL") + " Driver, this may take a while...");
             downloadDriver();
         }
 
@@ -100,6 +106,21 @@ public class MySQLDB extends SQLDB {
         currentThread.setContextClassLoader(driverClassLoader);
 
         try {
+            loadDataSource();
+        } catch (MariaDB11Exception e) {
+            // Try to set up again using MariaDB driver
+            driverClassLoader = null;
+            dataSource = null;
+            useMariaDbDriver = true;
+            loadDataSource();
+        }
+
+        // Reset the context classloader back to what it was originally set to, now that the DataSource is created
+        currentThread.setContextClassLoader(previousClassLoader);
+    }
+
+    private void loadDataSource() {
+        try {
             HikariConfig hikariConfig = new HikariConfig();
 
             String host = config.get(DatabaseSettings.MYSQL_HOST);
@@ -107,12 +128,14 @@ public class MySQLDB extends SQLDB {
             String database = config.get(DatabaseSettings.MYSQL_DATABASE);
             String launchOptions = config.get(DatabaseSettings.MYSQL_LAUNCH_OPTIONS);
             // REGEX: match "?", match "word=word&" *-times, match "word=word"
+
             if (launchOptions.isEmpty() || !launchOptions.matches("\\?((([\\w-])+=.+)&)*(([\\w-])+=.+)")) {
                 launchOptions = "?rewriteBatchedStatements=true&useSSL=false";
                 logger.error(locale.getString(PluginLang.DB_MYSQL_LAUNCH_OPTIONS_FAIL, launchOptions));
             }
-            hikariConfig.setDriverClassName("com.mysql.cj.jdbc.Driver");
-            hikariConfig.setJdbcUrl("jdbc:mysql://" + host + ":" + port + "/" + database + launchOptions);
+            hikariConfig.setDriverClassName(useMariaDbDriver ? "org.mariadb.jdbc.Driver" : "com.mysql.cj.jdbc.Driver");
+            String protocol = useMariaDbDriver ? "jdbc:mariadb" : "jdbc:mysql";
+            hikariConfig.setJdbcUrl(protocol + "://" + host + ":" + port + "/" + database + launchOptions);
 
             String username = config.get(DatabaseSettings.MYSQL_USER);
             String password = config.get(DatabaseSettings.MYSQL_PASS);
@@ -127,17 +150,34 @@ public class MySQLDB extends SQLDB {
             hikariConfig.setAutoCommit(false);
             setMaxConnections(hikariConfig);
             hikariConfig.setMaxLifetime(config.get(DatabaseSettings.MAX_LIFETIME));
-            hikariConfig.setLeakDetectionThreshold(TimeUnit.SECONDS.toMillis(29L));
+            hikariConfig.setLeakDetectionThreshold(config.get(DatabaseSettings.MAX_LIFETIME) + TimeUnit.SECONDS.toMillis(4L));
 
             this.dataSource = new HikariDataSource(hikariConfig);
         } catch (HikariPool.PoolInitializationException e) {
+            if (e.getMessage().contains("Unknown system variable 'transaction_isolation'")) {
+                throw new MariaDB11Exception("MySQL driver is incompatible with database that is being used.", e);
+            }
             throw new DBInitException("Failed to set-up HikariCP Datasource: " + e.getMessage(), e);
         } finally {
             unloadMySQLDriver();
         }
 
-        // Reset the context classloader back to what it was originally set to, now that the DataSource is created
-        currentThread.setContextClassLoader(previousClassLoader);
+        if (useMariaDbDriver) {
+            checkMariaDBVersionIncompatibility();
+        }
+    }
+
+    private void checkMariaDBVersionIncompatibility() {
+        executeTransaction(new OperationCriticalTransaction() {
+            @Override
+            protected void performOperations() {
+                query(MySQLSchemaQueries.getVersion())
+                        .filter("11.0.2-MariaDB"::equals)
+                        .ifPresent(badVersion -> {
+                            throw new DBInitException("MariaDB version " + badVersion + " inserts incorrect data due to a bug in query execution order so it is not supported. Upgrade MariaDB to 11.1.1 or newer, or downgrade to MariaDB 10.");
+                        });
+            }
+        });
     }
 
     private void setMaxConnections(HikariConfig hikariConfig) {
@@ -156,7 +196,8 @@ public class MySQLDB extends SQLDB {
             Driver driver = drivers.nextElement();
             Class<?> driverClass = driver.getClass();
             // Checks that it's from our class loader to avoid unloading another plugin's/the server's driver
-            if ("com.mysql.cj.jdbc.Driver".equals(driverClass.getName()) && driverClass.getClassLoader() == driverClassLoader) {
+            String driverName = useMariaDbDriver ? "org.mariadb.jdbc.Driver" : "com.mysql.cj.jdbc.Driver";
+            if (driverName.equals(driverClass.getName()) && driverClass.getClassLoader() == driverClassLoader) {
                 try {
                     DriverManager.deregisterDriver(driver);
                 } catch (SQLException e) {

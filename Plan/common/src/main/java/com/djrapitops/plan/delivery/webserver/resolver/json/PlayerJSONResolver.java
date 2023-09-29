@@ -16,8 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
-import com.djrapitops.plan.delivery.formatting.Formatter;
-import com.djrapitops.plan.delivery.formatting.Formatters;
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.rendering.json.PlayerJSONCreator;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
@@ -25,7 +24,6 @@ import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
-import com.djrapitops.plan.delivery.webserver.CacheStrategy;
 import com.djrapitops.plan.identification.Identifiers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -36,13 +34,13 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
-import org.eclipse.jetty.http.HttpHeader;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 @Singleton
 @Path("/v1/player")
@@ -50,21 +48,18 @@ public class PlayerJSONResolver implements Resolver {
 
     private final Identifiers identifiers;
     private final PlayerJSONCreator jsonCreator;
-    private final Formatter<Long> httpLastModifiedFormatter;
 
     @Inject
-    public PlayerJSONResolver(Identifiers identifiers, Formatters formatters, PlayerJSONCreator jsonCreator) {
+    public PlayerJSONResolver(Identifiers identifiers, PlayerJSONCreator jsonCreator) {
         this.identifiers = identifiers;
         this.jsonCreator = jsonCreator;
-
-        httpLastModifiedFormatter = formatters.httpLastModifiedLong();
     }
 
     @Override
     public boolean canAccess(Request request) {
         WebUser user = request.getUser().orElse(new WebUser(""));
-        if (user.hasPermission("page.player.other")) return true;
-        if (user.hasPermission("page.player.self")) {
+        if (user.hasPermission(WebPermission.ACCESS_PLAYER)) return true;
+        if (user.hasPermission(WebPermission.ACCESS_PLAYER_SELF)) {
             try {
                 UUID webUserUUID = identifiers.getPlayerUUID(user.getName());
                 UUID playerUUID = identifiers.getPlayerUUID(request);
@@ -97,29 +92,13 @@ public class PlayerJSONResolver implements Resolver {
     private Response getResponse(Request request) {
         UUID playerUUID = identifiers.getPlayerUUID(request); // Can throw BadRequestException
 
-        Optional<Long> etag = Identifiers.getEtag(request);
-        if (etag.isPresent()) {
-            long lastSeen = jsonCreator.getLastSeen(playerUUID);
-            if (etag.get() == lastSeen) {
-                return Response.builder()
-                        .setStatus(304)
-                        .setContent(new byte[0])
-                        .build();
-            }
-        }
-
-        Map<String, Object> jsonAsMap = jsonCreator.createJSONAsMap(playerUUID);
-        long lastSeenRawValue = Optional.ofNullable(jsonAsMap.get("info"))
-                .map(Map.class::cast)
-                .map(info -> info.get("last_seen_raw_value"))
-                .map(Long.class::cast)
-                .orElseGet(System::currentTimeMillis);
+        Predicate<WebPermission> hasPermission = request.getUser()
+                .map(user -> (Predicate<WebPermission>) user::hasPermission)
+                .orElse(permission -> true); // No user means auth disabled inside resolve
+        Map<String, Object> jsonAsMap = jsonCreator.createJSONAsMap(playerUUID, hasPermission);
         return Response.builder()
                 .setMimeType(MimeType.JSON)
                 .setJSONContent(jsonAsMap)
-                .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CHECK_ETAG_USER_SPECIFIC)
-                .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(lastSeenRawValue))
-                .setHeader(HttpHeader.ETAG.asString(), lastSeenRawValue)
                 .build();
     }
 }

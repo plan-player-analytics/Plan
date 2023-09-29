@@ -1,25 +1,28 @@
 import React from 'react';
 import {useDataRequest} from "../../hooks/dataFetchHook";
-import {fetchPlayers} from "../../service/serverService";
+import {fetchPlayersTable} from "../../service/serverService";
 import ErrorView from "../ErrorView";
 import {Col} from "react-bootstrap";
 import PlayerListCard from "../../components/cards/common/PlayerListCard";
 import LoadIn from "../../components/animation/LoadIn";
 import {CardLoader} from "../../components/navigation/Loader";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import {useAuth} from "../../hooks/authenticationHook";
 
 const AllPlayers = () => {
-    const {data, loadingError} = useDataRequest(fetchPlayers, [null]);
+    const {hasPermission} = useAuth();
+    const seePlayers = hasPermission('page.network.players') || hasPermission('access.players')
+    const {data, loadingError} = useDataRequest(fetchPlayersTable, [null], seePlayers);
 
     if (loadingError) return <ErrorView error={loadingError}/>
 
     return (
         <LoadIn>
-            <ExtendableRow id={'row-player-list-0'}>
+            {seePlayers && <ExtendableRow id={'row-player-list-0'}>
                 <Col md={12}>
                     {data ? <PlayerListCard data={data}/> : <CardLoader/>}
                 </Col>
-            </ExtendableRow>
+            </ExtendableRow>}
         </LoadIn>
     )
 };

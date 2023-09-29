@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database.transactions.init;
 
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.transactions.events.StoreJoinAddressTransaction;
+import com.djrapitops.plan.storage.database.transactions.patches.SecurityTableIdPatch;
 
 /**
  * Transaction that creates the table schema of Plan database.
@@ -45,10 +46,16 @@ public class CreateTablesTransaction extends OperationCriticalTransaction {
         execute(TPSTable.createTableSQL(dbType));
         execute(WorldTable.createTableSQL(dbType));
         execute(WorldTimesTable.createTableSQL(dbType));
-        execute(SecurityTable.createTableSQL(dbType));
         execute(SettingsTable.createTableSQL(dbType));
         execute(CookieTable.createTableSQL(dbType));
         execute(AccessLogTable.createTableSql(dbType));
+        execute(WebGroupTable.createTableSQL(dbType));
+        execute(WebPermissionTable.createTableSQL(dbType));
+        execute(WebGroupToPermissionTable.createTableSQL(dbType));
+        execute(SecurityTable.createTableSQL(dbType));
+        // Ensure plan_security has id column
+        executeOther(new SecurityTableIdPatch());
+        execute(WebUserPreferencesTable.createTableSQL(dbType));
         execute(WhitelistBounceTable.createTableSQL(dbType));
 
         // DataExtension tables

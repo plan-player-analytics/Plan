@@ -12,7 +12,7 @@ const PvpKillsTableCard = ({player_kills}) => {
     if (!player_kills) return <CardLoader/>;
 
     return (
-        <Card>
+        <Card id={'pvp-kills-table'}>
             <Card.Header>
                 <h6 className="col-black">
                     <Fa icon={faCrosshairs} className="col-red"/> {t('html.label.recentPvpKills')}

@@ -17,6 +17,7 @@ import React from "react";
 import TimeByTimeGraph from "../../../graphs/TimeByTimeGraph";
 import ServerCalendar from "../../../calendar/ServerCalendar";
 import {ChartLoader} from "../../../navigation/Loader";
+import {useAuth} from "../../../../hooks/authenticationHook";
 
 const DayByDayTab = () => {
     const {identifier} = useParams();
@@ -26,7 +27,7 @@ const DayByDayTab = () => {
     if (loadingError) return <ErrorViewBody error={loadingError}/>
     if (!data) return <ChartLoader/>;
 
-    return <TimeByTimeGraph data={data}/>
+    return <TimeByTimeGraph id={"day-by-day-graph"} data={data}/>
 }
 
 const HourByHourTab = () => {
@@ -37,7 +38,7 @@ const HourByHourTab = () => {
     if (loadingError) return <ErrorViewBody error={loadingError}/>
     if (!data) return <ChartLoader/>;
 
-    return <TimeByTimeGraph data={data}/>
+    return <TimeByTimeGraph id={"hour-by-hour-graph"}data={data}/>
 }
 
 const ServerCalendarTab = () => {
@@ -63,23 +64,29 @@ const PunchCardTab = () => {
 }
 
 const OnlineActivityGraphsCard = () => {
+    const {hasPermission} = useAuth();
     const {t} = useTranslation();
-    return <Card>
-        <CardTabs tabs={[
-            {
-                name: t('html.label.dayByDay'), icon: faChartArea, color: 'blue', href: 'day-by-day',
-                element: <DayByDayTab/>
-            }, {
-                name: t('html.label.hourByHour'), icon: faChartArea, color: 'blue', href: 'hour-by-hour',
-                element: <HourByHourTab/>
-            }, {
-                name: t('html.label.serverCalendar'), icon: faCalendar, color: 'teal', href: 'server-calendar',
-                element: <ServerCalendarTab/>
-            }, {
-                name: t('html.label.punchcard30days'), icon: faBraille, color: 'black', href: 'punchcard',
-                element: <PunchCardTab/>
-            },
-        ]}/>
+    const tabs = [
+        {
+            name: t('html.label.dayByDay'), icon: faChartArea, color: 'blue', href: 'day-by-day',
+            element: <DayByDayTab/>,
+            permission: 'page.server.online.activity.graphs.day.by.day'
+        }, {
+            name: t('html.label.hourByHour'), icon: faChartArea, color: 'blue', href: 'hour-by-hour',
+            element: <HourByHourTab/>,
+            permission: 'page.server.online.activity.graphs.hour.by.hour'
+        }, {
+            name: t('html.label.serverCalendar'), icon: faCalendar, color: 'teal', href: 'server-calendar',
+            element: <ServerCalendarTab/>,
+            permission: 'page.server.online.activity.graphs.calendar'
+        }, {
+            name: t('html.label.punchcard30days'), icon: faBraille, color: 'black', href: 'punchcard',
+            element: <PunchCardTab/>,
+            permission: 'page.server.online.activity.graphs.punchcard'
+        },
+    ].filter(tab => hasPermission(tab.permission));
+    return <Card id={"online-activity-graphs"}>
+        <CardTabs tabs={tabs}/>
     </Card>
 }
 

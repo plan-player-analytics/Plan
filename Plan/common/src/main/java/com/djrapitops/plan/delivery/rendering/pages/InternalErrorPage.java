@@ -17,7 +17,6 @@
 package com.djrapitops.plan.delivery.rendering.pages;
 
 import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
-import com.djrapitops.plan.delivery.rendering.html.Contributors;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.exceptions.ExceptionWithContext;
@@ -58,10 +57,7 @@ public class InternalErrorPage implements Page {
         placeholders.put("title", Icon.called("bug") + " 500 Internal Error occurred");
         placeholders.put("titleText", "500 Internal Error occurred");
         placeholders.put("paragraph", createContent());
-        placeholders.put("versionButton", versionChecker.getUpdateButton().orElse(versionChecker.getCurrentVersionButton()));
         placeholders.put("version", versionChecker.getCurrentVersion());
-        placeholders.put("updateModal", versionChecker.getUpdateModal());
-        placeholders.put("contributors", Contributors.generateContributorHtml());
         return placeholders.apply(template);
     }
 

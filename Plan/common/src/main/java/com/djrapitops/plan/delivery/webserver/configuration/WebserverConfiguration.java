@@ -124,4 +124,8 @@ public class WebserverConfiguration {
     public boolean isProxyModeHttps() {
         return "proxy".equals(config.get(WebserverSettings.CERTIFICATE_PATH));
     }
+
+    public boolean isRegistrationEnabled() {
+        return config.isFalse(WebserverSettings.DISABLED_REGISTRATION);
+    }
 }

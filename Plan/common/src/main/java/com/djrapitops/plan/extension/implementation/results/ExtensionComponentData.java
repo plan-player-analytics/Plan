@@ -16,11 +16,6 @@
  */
 package com.djrapitops.plan.extension.implementation.results;
 
-import com.djrapitops.plan.component.Component;
-import com.djrapitops.plan.component.ComponentOperation;
-import com.djrapitops.plan.component.ComponentSvc;
-import com.djrapitops.plan.delivery.rendering.html.Html;
-
 /**
  * Represents component data returned by a ComponentProvider method.
  *
@@ -44,8 +39,4 @@ public class ExtensionComponentData implements DescribedExtensionData {
         return value;
     }
 
-    public String getHtmlValue(ComponentSvc service) {
-        String legacy = service.convert(service.fromJson(value), ComponentOperation.LEGACY, Component.SECTION);
-        return Html.swapColorCodesToSpan(legacy);
-    }
 }

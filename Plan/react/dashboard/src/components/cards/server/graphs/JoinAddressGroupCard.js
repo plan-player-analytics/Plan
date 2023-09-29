@@ -18,7 +18,7 @@ const JoinAddressGroupCard = ({identifier}) => {
     if (!data) return <CardLoader/>;
 
     return (
-        <Card>
+        <Card id={'join-address-groups'}>
             <Card.Header>
                 <h6 className="col-black" style={{width: '100%'}}>
                     <Fa icon={faLocationArrow} className="col-amber"/> {t('html.label.latestJoinAddresses')}

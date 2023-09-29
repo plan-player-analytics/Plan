@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
@@ -71,7 +72,7 @@ public class PlayerKillsJSONResolver extends JSONResolver {
 
     @Override
     public boolean canAccess(Request request) {
-        return request.getUser().orElse(new WebUser("")).hasPermission("page.server");
+        return request.getUser().orElse(new WebUser("")).hasPermission(WebPermission.PAGE_SERVER_PLAYER_VERSUS_KILL_LIST);
     }
 
     @GET

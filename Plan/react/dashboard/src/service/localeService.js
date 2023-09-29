@@ -103,7 +103,8 @@ export const localeService = {
     },
 
     getLanguages: function () {
-        let languages = Object.fromEntries(Object.entries(this.availableLanguages).sort());
+        let languages = Object.fromEntries(Object.entries(this.availableLanguages)
+            .sort((a, b) => a[0].localeCompare(b[0])));
         if ('CUSTOM' in languages) {
             // Move "Custom" to first in list
             delete languages["CUSTOM"]

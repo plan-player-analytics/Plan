@@ -51,6 +51,7 @@ public class ShutdownDataPreservation extends TaskSystem.Task {
     private final DBSystem dbSystem;
     private final PluginLogger logger;
     private final ErrorLogger errorLogger;
+    private final ServerShutdownSave serverShutdownSave;
 
     private final Path storeLocation;
 
@@ -60,7 +61,8 @@ public class ShutdownDataPreservation extends TaskSystem.Task {
             Locale locale,
             DBSystem dbSystem,
             PluginLogger logger,
-            ErrorLogger errorLogger
+            ErrorLogger errorLogger,
+            ServerShutdownSave serverShutdownSave
     ) {
         this.locale = locale;
         this.dbSystem = dbSystem;
@@ -68,6 +70,7 @@ public class ShutdownDataPreservation extends TaskSystem.Task {
         storeLocation = files.getDataDirectory().resolve("unsaved-sessions.csv");
         this.logger = logger;
         this.errorLogger = errorLogger;
+        this.serverShutdownSave = serverShutdownSave;
     }
 
     public void storePreviouslyPreservedSessions() {
@@ -141,7 +144,10 @@ public class ShutdownDataPreservation extends TaskSystem.Task {
     public void preserveSessionsInCache() {
         long now = System.currentTimeMillis();
         List<FinishedSession> finishedSessions = SessionCache.getActiveSessions().stream()
-                .map(session -> session.toFinishedSession(now))
+                .map(session -> {
+                    serverShutdownSave.getAfkTracker().ifPresent(afkTracker -> afkTracker.performedAction(session.getPlayerUUID(), now));
+                    return session.toFinishedSession(now);
+                })
                 .collect(Collectors.toList());
         storeFinishedSessions(finishedSessions);
     }

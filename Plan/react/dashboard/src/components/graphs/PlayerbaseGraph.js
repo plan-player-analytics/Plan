@@ -27,6 +27,7 @@ const PlayerbaseGraph = ({data}) => {
 
         Highcharts.chart(id, {
             chart: {
+                noData: t('html.label.noDataToDisplay'),
                 type: "area"
             },
             xAxis: {

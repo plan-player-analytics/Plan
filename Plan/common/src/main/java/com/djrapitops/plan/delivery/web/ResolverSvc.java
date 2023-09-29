@@ -19,12 +19,16 @@ package com.djrapitops.plan.delivery.web;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.transactions.GrantWebPermissionToGroupsWithPermissionTransaction;
+import com.djrapitops.plan.storage.database.transactions.StoreMissingWebPermissionsTransaction;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Predicate;
 import java.util.regex.Pattern;
 
@@ -38,14 +42,16 @@ public class ResolverSvc implements ResolverService {
 
     private final PlanConfig config;
     private final PluginLogger logger;
+    private final DBSystem dbSystem;
 
     private final List<Container> basicResolvers;
     private final List<Container> regexResolvers;
 
     @Inject
-    public ResolverSvc(PlanConfig config, PluginLogger logger) {
+    public ResolverSvc(PlanConfig config, PluginLogger logger, DBSystem dbSystem) {
         this.config = config;
         this.logger = logger;
+        this.dbSystem = dbSystem;
         basicResolvers = new ArrayList<>();
         regexResolvers = new ArrayList<>();
     }
@@ -70,6 +76,20 @@ public class ResolverSvc implements ResolverService {
         if (config.isTrue(PluginSettings.DEV_MODE)) {
             logger.info("Registered regex resolver '" + pattern.pattern() + "' for plugin " + pluginName);
         }
+    }
+
+    @Override
+    public CompletableFuture<Void> registerPermissions(String... webPermissions) {
+        return dbSystem.getDatabase().executeTransaction(new StoreMissingWebPermissionsTransaction(Arrays.asList(webPermissions)))
+                .thenRun(() -> {});
+    }
+
+    @Override
+    public void registerPermission(String webPermission, String whenHasPermission) {
+        registerPermissions(webPermission)
+                .thenRun(() -> dbSystem.getDatabase().executeTransaction(
+                        new GrantWebPermissionToGroupsWithPermissionTransaction(webPermission, whenHasPermission)
+                ));
     }
 
     @Override

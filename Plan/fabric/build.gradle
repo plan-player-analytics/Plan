@@ -8,10 +8,10 @@ dependencies {
 
     shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
 
-    minecraft "com.mojang:minecraft:1.19.4"
-    mappings "net.fabricmc:yarn:1.19.4+build.1:v2"
-    modImplementation "net.fabricmc:fabric-loader:0.14.17"
-    modImplementation('me.lucko:fabric-permissions-api:0.2-SNAPSHOT')
+    minecraft "com.mojang:minecraft:1.20.2"
+    mappings "net.fabricmc:yarn:1.20.2+build.1:v2"
+    modImplementation "net.fabricmc:fabric-loader:0.14.22"
+    modImplementation('me.lucko:fabric-permissions-api:0.3-SNAPSHOT')
 
     // Fabric API
     Set<String> apiModules = [
@@ -24,10 +24,15 @@ dependencies {
     ]
 
     apiModules.forEach {
-        modImplementation(fabricApi.module(it, "0.76.0+1.19.4"))
+        modImplementation(fabricApi.module(it, "0.89.1+1.20.2"))
     }
 
     testImplementation project(path: ":common", configuration: 'testArtifacts')
+}
+
+loom {
+    // Defining separate refmap file prevents conflicts with plugin mixins
+    mixin.defaultRefmapName.set("plan-fabric-refmap.json")
 }
 
 tasks.withType(JavaCompile).configureEach {

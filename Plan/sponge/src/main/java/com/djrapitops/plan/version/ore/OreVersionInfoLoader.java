@@ -22,11 +22,11 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -79,7 +79,7 @@ public class OreVersionInfoLoader {
             connection.setRequestProperty("User-Agent", "Player Analytics Update Checker");
             connection.connect();
             try (InputStream in = connection.getInputStream()) {
-                JsonArray versions = new JsonParser().parse(readInputFully(in)).getAsJsonObject().get("result").getAsJsonArray();
+                JsonArray versions = JsonParser.parseString(readInputFully(in)).getAsJsonObject().get("result").getAsJsonArray();
 
                 return new Gson().getAdapter(new TypeToken<List<OreVersionDto>>() {}).fromJsonTree(versions);
             }
@@ -98,21 +98,14 @@ public class OreVersionInfoLoader {
             connection.setRequestProperty("User-Agent", "Player Analytics Update Checker");
             connection.connect();
             try (InputStream in = connection.getInputStream()) {
-                return new JsonParser().parse(readInputFully(in)).getAsJsonObject().get("session").getAsString();
+                return JsonParser.parseString(readInputFully(in)).getAsJsonObject().get("session").getAsString();
             }
         } finally {
             connection.disconnect();
         }
     }
 
-    // I want Java 9 already...
     private static String readInputFully(InputStream in) throws IOException {
-        try (ByteArrayOutputStream buf = new ByteArrayOutputStream(512)) {
-            int b;
-            while ((b = in.read()) != -1) {
-                buf.write((byte) b);
-            }
-            return buf.toString();
-        }
+        return new String(in.readAllBytes(), StandardCharsets.UTF_8);
     }
 }

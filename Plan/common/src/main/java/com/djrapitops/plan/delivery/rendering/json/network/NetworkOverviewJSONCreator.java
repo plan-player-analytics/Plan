@@ -27,7 +27,6 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
-import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
@@ -53,7 +52,6 @@ public class NetworkOverviewJSONCreator implements NetworkTabJSONCreator<Map<Str
 
     private final Formatter<Long> day;
     private final PlanConfig config;
-    private final Locale locale;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final ServerSensor<?> serverSensor;
@@ -64,7 +62,6 @@ public class NetworkOverviewJSONCreator implements NetworkTabJSONCreator<Map<Str
     @Inject
     public NetworkOverviewJSONCreator(
             PlanConfig config,
-            Locale locale,
             DBSystem dbSystem,
             ServerInfo serverInfo,
             ServerSensor<?> serverSensor,
@@ -72,7 +69,6 @@ public class NetworkOverviewJSONCreator implements NetworkTabJSONCreator<Map<Str
             Formatters formatters
     ) {
         this.config = config;
-        this.locale = locale;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.serverSensor = serverSensor;
@@ -137,7 +133,7 @@ public class NetworkOverviewJSONCreator implements NetworkTabJSONCreator<Map<Str
         numbers.put("sessions", sessionCount);
         numbers.put("session_length_avg", sessionCount != 0 ? timeAmount.apply(totalPlaytime / sessionCount) : "-");
         numbers.put("current_uptime", serverUptimeCalculator.getServerUptimeMillis(serverUUID).map(timeAmount)
-                .orElse(locale.getString(GenericLang.UNAVAILABLE)));
+                .orElse(GenericLang.UNAVAILABLE.getKey()));
 
         return numbers;
     }

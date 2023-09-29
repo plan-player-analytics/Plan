@@ -30,7 +30,7 @@ import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.mojang.authlib.GameProfile;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.minecraft.network.NetworkState;
+import net.minecraft.network.packet.c2s.handshake.ConnectionIntent;
 import net.minecraft.network.packet.c2s.handshake.HandshakeC2SPacket;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -126,8 +126,8 @@ public class PlayerOnlineListener implements FabricListener {
 
     private void onHandshake(HandshakeC2SPacket packet) {
         try {
-            if (packet.getIntendedState() == NetworkState.LOGIN) {
-                String address = packet.getAddress();
+            if (packet.intendedState() == ConnectionIntent.LOGIN) {
+                String address = packet.address();
                 if (address != null && address.contains("\u0000")) {
                     address = address.substring(0, address.indexOf('\u0000'));
                 }

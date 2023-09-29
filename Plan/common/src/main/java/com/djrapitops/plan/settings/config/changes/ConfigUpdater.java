@@ -174,6 +174,9 @@ public class ConfigUpdater {
                 new ConfigChange.MovedValue("Time.Thresholds.Activity_index.Playtime_threshold", "Time.Thresholds.Activity_index.Playtime_threshold.Time"),
 
                 new ConfigChange.Removed("Plugin.Frontend_BETA"),
+                new ConfigChange.Removed("Plugin.Use_Legacy_Frontend"),
+                new ConfigChange.Removed("Customized_files.Enable_web_dev_mode"),
+                new ConfigChange.Removed("Customized_files.Plan"),
         };
     }
 

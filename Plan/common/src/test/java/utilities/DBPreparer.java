@@ -29,6 +29,8 @@ import com.google.common.util.concurrent.MoreExecutors;
 
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertFalse;
+
 public class DBPreparer {
 
     private final Dependencies dependencies;
@@ -44,17 +46,28 @@ public class DBPreparer {
         return Optional.of(prepareDBByName(dbName));
     }
 
-    private SQLDB prepareDBByName(String dbName) {
-        PlanConfig config = dependencies.config();
-        config.set(WebserverSettings.PORT, testPortNumber);
-        config.set(DatabaseSettings.TYPE, dbName);
-        dependencies.enable();
-
-        DBSystem dbSystem = dependencies.dbSystem();
-        SQLDB db = (SQLDB) dbSystem.getActiveDatabaseByName(dbName);
-        db.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
-        db.init();
-        return db;
+    public static void assertNoTempTables(SQLDB db) {
+        db.executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                assertFalse(hasTable("temp_ips"));
+                assertFalse(hasTable("temp_geoinformation"));
+                assertFalse(hasTable("temp_kills"));
+                assertFalse(hasTable("temp_nicknames"));
+                assertFalse(hasTable("temp_ping"));
+                assertFalse(hasTable("temp_user_info"));
+                assertFalse(hasTable("temp_world_times"));
+                assertFalse(hasTable("temp_sessions"));
+                assertFalse(hasTable("temp_security"));
+                assertFalse(hasTable("temp_security_id_patch"));
+                assertFalse(hasTable("temp_user_info_address_patching"));
+                assertFalse(hasTable("temp_nicks"));
+                assertFalse(hasTable("temp_kills"));
+                assertFalse(hasTable("temp_users"));
+                assertFalse(hasTable("temp_tps"));
+                assertFalse(hasTable("temp_worlds"));
+            }
+        });
     }
 
     public Optional<String> setUpMySQLSettings(PlanConfig config) {
@@ -90,13 +103,27 @@ public class DBPreparer {
                     execute("SET GLOBAL innodb_fast_shutdown=2");
 
                     execute("DROP DATABASE " + formattedDatabase);
-                    execute("CREATE DATABASE " + formattedDatabase);
+                    execute("CREATE DATABASE " + formattedDatabase + " CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci");
                     execute("USE " + formattedDatabase);
                 }
             });
             return Optional.of(mysql);
         }
         return Optional.empty();
+    }
+
+    private SQLDB prepareDBByName(String dbName) {
+        PlanConfig config = dependencies.config();
+        config.set(WebserverSettings.PORT, testPortNumber);
+        config.set(DatabaseSettings.TYPE, dbName);
+        dependencies.enable();
+
+        DBSystem dbSystem = dependencies.dbSystem();
+        SQLDB db = (SQLDB) dbSystem.getActiveDatabaseByName(dbName);
+        db.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
+        db.init();
+        assertNoTempTables(db);
+        return db;
     }
 
     public void tearDown() {

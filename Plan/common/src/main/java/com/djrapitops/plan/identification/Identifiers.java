@@ -93,6 +93,10 @@ public class Identifiers {
                 });
     }
 
+    public static Optional<String> getStringEtag(Request request) {
+        return request.getHeader(HttpHeader.IF_NONE_MATCH.asString());
+    }
+
     /**
      * Obtain UUID of the server.
      *

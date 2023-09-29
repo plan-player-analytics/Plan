@@ -20,7 +20,6 @@ import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.ExportSettings;
-import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
@@ -86,11 +85,6 @@ public class ExportScheduler extends PluginRunnable {
     }
 
     private void scheduleReactExport() {
-        if (config.isTrue(PluginSettings.LEGACY_FRONTEND) ||
-                config.isFalse(ExportSettings.SERVER_PAGE) &&
-                        config.isFalse(ExportSettings.PLAYER_PAGES) &&
-                        config.isFalse(ExportSettings.PLAYERS_PAGE)) {return;}
-
         runnableFactory.create(
                 new ExportTask(exporter, Exporter::exportReact, errorLogger)
         ).runTaskLaterAsynchronously(TimeAmount.toTicks(5, TimeUnit.SECONDS));

@@ -17,7 +17,6 @@
 package com.djrapitops.plan.settings.config;
 
 import com.djrapitops.plan.settings.config.paths.CustomizedFileSettings;
-import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.dev.Untrusted;
@@ -42,10 +41,6 @@ public class ResourceSettings {
     }
 
     public boolean shouldBeCustomized(String plugin, @Untrusted String fileName) {
-        if (config.isTrue(CustomizedFileSettings.WEB_DEV_MODE) && config.isTrue(PluginSettings.LEGACY_FRONTEND)) {
-            return true;
-        }
-
         ConfigNode fileCustomization = getCustomizationConfigNode();
         fileCustomization.setComment(Collections.singletonList("The files are placed in /Plan/web/ if the setting is 'true' when accessed."));
 

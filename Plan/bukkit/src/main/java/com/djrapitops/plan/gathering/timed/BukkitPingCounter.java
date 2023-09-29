@@ -100,6 +100,7 @@ public class BukkitPingCounter extends TaskSystem.Task implements Listener {
 
     private Optional<PingMethod> loadPingMethod() {
         PingMethod[] methods = new PingMethod[]{
+                new SpigotPingMethod(),
                 new PaperPingMethod(),
                 new ReflectiveLatencyFieldMethod(),
                 new ReflectivePingFieldMethod(),

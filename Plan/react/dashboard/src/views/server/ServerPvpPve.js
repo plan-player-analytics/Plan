@@ -9,32 +9,37 @@ import {fetchKills, fetchPvpPve} from "../../service/serverService";
 import ErrorView from "../ErrorView";
 import LoadIn from "../../components/animation/LoadIn";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import {useAuth} from "../../hooks/authenticationHook";
 
 const ServerPvpPve = () => {
+    const {hasPermission} = useAuth();
     const {identifier} = useParams();
 
-    const {data, loadingError} = useDataRequest(fetchPvpPve, [identifier]);
-    const {data: killsData, loadingError: killsLoadingError} = useDataRequest(fetchKills, [identifier]);
+    const seeKillNumbers = hasPermission('page.server.player.versus.overview');
+    const seeKills = hasPermission('page.server.player.versus.kill.list');
+
+    const {data, loadingError} = useDataRequest(fetchPvpPve, [identifier], seeKillNumbers);
+    const {data: killsData, loadingError: killsLoadingError} = useDataRequest(fetchKills, [identifier], seeKills);
 
     if (loadingError) return <ErrorView error={loadingError}/>
     if (killsLoadingError) return <ErrorView error={killsLoadingError}/>
 
     return (
-        <LoadIn show={data && killsData}>
+        <LoadIn>
             <section className="server-pvp-pve">
-                <ExtendableRow id={'row-server-pvp-pve-0'}>
+                {seeKillNumbers && <ExtendableRow id={'row-server-pvp-pve-0'}>
                     <Col lg={8}>
                         <PvpPveAsNumbersCard kill_data={data?.numbers}/>
                     </Col>
                     <Col lg={4}>
                         <PvpPveInsightsCard data={data?.insights}/>
                     </Col>
-                </ExtendableRow>
-                <ExtendableRow id={'row-server-pvp-pve-1'}>
+                </ExtendableRow>}
+                {seeKills && <ExtendableRow id={'row-server-pvp-pve-1'}>
                     <Col lg={8}>
                         <PvpKillsTableCard player_kills={killsData?.player_kills}/>
                     </Col>
-                </ExtendableRow>
+                </ExtendableRow>}
             </section>
         </LoadIn>
     )

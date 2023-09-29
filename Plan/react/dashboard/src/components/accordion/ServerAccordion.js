@@ -12,9 +12,10 @@ import {baseAddress} from "../../service/backendConfiguration";
 import {useAuth} from "../../hooks/authenticationHook";
 
 const ServerHeader = ({server}) => {
+    const {t} = useTranslation();
     return (
         <>
-            <td>{server.server_name}
+            <td>{t(server.server_name)}
                 {server.operator ? <Fa icon={faSuperpowers} title="Operator"/> : ''}
                 {server.banned ? <Fa icon={faGavel} title="Banned"/> : ''}
             </td>

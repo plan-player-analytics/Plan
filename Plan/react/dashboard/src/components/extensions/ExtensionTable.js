@@ -1,10 +1,11 @@
 import React, {useCallback, useState} from 'react';
 import {useTheme} from "../../hooks/themeHook";
 import {useTranslation} from "react-i18next";
-import ExtensionIcon, {toExtensionIconHtmlString} from "./ExtensionIcon";
+import ExtensionIcon from "./ExtensionIcon";
 import DataTablesTable from "../table/DataTablesTable";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSort, faSortDown, faSortUp} from "@fortawesome/free-solid-svg-icons";
+import ColoredText from "../text/ColoredText";
 
 const ExtensionDataTable = ({table}) => {
     const [id] = useState("extension-table-" + new Date().getTime() + "-" + (Math.floor(Math.random() * 100000)));
@@ -12,18 +13,18 @@ const ExtensionDataTable = ({table}) => {
     const data = {
         columns: table.table.columns.map((column, i) => {
             return {
-                title: toExtensionIconHtmlString(table.table.icons[i]) + ' ' + column,
+                title: <><ExtensionIcon icon={table.table.icons[i]}/> {column}</>,
                 data: {
-                    "_": `col${i}.v`,
-                    display: `col${i}.d`
+                    "_": `col${i}Value`,
+                    display: `col${i}Display`
                 },
             };
         }),
         data: table.table.rows.map((row) => {
             const dataRow = {};
-            row.forEach((cell, j) => dataRow[`col${j}`] = {
-                v: cell['valueUnformatted'] || cell.value || cell,
-                d: cell.value || cell
+            row.forEach((cell, j) => {
+                dataRow[`col${j}Value`] = cell['valueUnformatted'] || cell.value || cell;
+                dataRow[`col${j}Display`] = cell.value || cell;
             });
             return dataRow;
         })
@@ -81,9 +82,17 @@ const ExtensionColoredTable = ({table}) => {
 
     }, [sortBy, setSortBy, sortReverse, setSortReverse]);
 
+    const mapToCell = (value, j) => {
+        if (String(value?.value).startsWith("<a class=\"link\" href=\"")) {
+            return <td key={JSON.stringify(value)} dangerouslySetInnerHTML={value.value || String(value)}/>;
+        }
+        return <td key={JSON.stringify(value)}>
+            <ColoredText text={value.value || String(value)}/>
+        </td>;
+    };
+
     const rows = table.table.rows.length ? sortRows(table.table.rows, sortBy, sortReverse)
-            .map((row, i) => <tr key={JSON.stringify(row)}>{row.map((value, j) => <td
-                key={JSON.stringify(value)}>{value.value || String(value)}</td>)}</tr>) :
+            .map((row, i) => <tr key={JSON.stringify(row)}>{row.map(mapToCell)}</tr>) :
         <tr>{table.table.columns.map((column, i) =>
             <td key={JSON.stringify(column)}>{i === 0 ? t('generic.noData') : '-'}</td>)}
         </tr>

@@ -11,7 +11,7 @@ jobs:
 
     services:
       mariadb:
-        image: mariadb:latest
+        image: mariadb:11.1-rc
         ports:
           - 3306
         env:
@@ -19,7 +19,7 @@ jobs:
           MYSQL_PASSWORD: password
           MYSQL_DATABASE: test
           MYSQL_ROOT_PASSWORD: password
-        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+        options: --health-cmd="mariadb-admin ping" --health-interval=5s --health-timeout=2s --health-retries=3
 
     steps:
       - name: 📥 Checkout git repository
@@ -32,7 +32,7 @@ jobs:
           distribution: 'adopt'
           java-version: '17'
       - name: 🚦 Setup Selenium Webdriver
-        uses: nanasess/setup-chromedriver@v1
+        uses: nanasess/setup-chromedriver@v2
       - name: 🚦 Setup Selenium Webdriver settings
         run: |
           export DISPLAY=:99

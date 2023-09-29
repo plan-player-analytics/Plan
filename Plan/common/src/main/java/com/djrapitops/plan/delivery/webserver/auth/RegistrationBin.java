@@ -72,7 +72,7 @@ public class RegistrationBin {
         }
 
         public User toUser(UUID linkedToUUID) {
-            return new User(username, null, linkedToUUID, passwordHash, 100, Collections.emptyList());
+            return new User(username, null, linkedToUUID, passwordHash, null, Collections.emptyList());
         }
     }
 }

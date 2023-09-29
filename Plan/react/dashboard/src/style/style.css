@@ -1281,6 +1281,30 @@ div#navSrvContainer::-webkit-scrollbar-thumb {
     text-shadow: 0 0 8px #000;
 }
 
+.italic {
+    font-style: italic;
+}
+
+.bold {
+    font-weight: bolder;
+}
+
+.underline {
+    text-decoration: underline;
+}
+
+.strikethrough {
+    text-decoration: line-through;
+}
+
+/*
+Fix table colors not applying properly due to bootstrap.
+*/
+.table > :not(caption) > * > * {
+    color: inherit;
+    background-color: inherit;
+}
+
 /*
 Adding a translation, even though it doesn't visually
 impact the page, causes child elements with a
@@ -1345,24 +1369,26 @@ body.sidebar-hidden .navbar-nav {
     cursor: pointer;
 }
 
-.dataTables_length {
-    padding-top: 0.5rem;
-    padding-left: 0.5rem;
+.dataTables_length, .dataTables_filter, .dataTables_paginate {
+    padding: 0.5rem;
+    margin: 0;
 }
 
-.dataTables_filter {
+.dataTables_columns {
     padding-top: 0.5rem;
-    padding-right: 0.5rem;
+    margin: 0;
 }
 
 .dataTables_info {
-    padding-bottom: 0.5rem;
+    padding: 1rem;
     padding-left: 0.5rem;
+    margin: 0;
 }
 
-.dataTables_paginate {
-    padding-bottom: 0.5rem;
-    padding-right: 0.5rem;
+.datatable thead button {
+    width: 100%;
+    margin: 0;
+    text-align: left;
 }
 
 .sidebar .nav-item .collapse {
@@ -1448,4 +1474,25 @@ ul.filters {
 
 .extension-table-header {
     cursor: pointer;
+}
+
+.opaque-text {
+    opacity: 0.4;
+}
+
+.opaque-text:hover {
+    opacity: 1;
+}
+
+@keyframes alert-timer {
+    from {
+        width: 100%
+    }
+    to {
+        width: 0
+    }
+}
+
+.group-help i {
+    color: var(--color-plan)
 }

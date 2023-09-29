@@ -4,8 +4,6 @@ import {Modal} from "react-bootstrap";
 import {faCheckCircle, faDownload} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
 
-// TODO translate
-
 const UpdateAvailableModal = ({open, toggle, versionInfo}) => {
     const {t} = useTranslation();
     return (
@@ -34,17 +32,19 @@ const UpdateAvailableModal = ({open, toggle, versionInfo}) => {
     )
 }
 
+/*eslint no-template-curly-in-string: "off"*/
 const NewestVersionModal = ({open, toggle, versionInfo}) => {
+    const {t} = useTranslation();
     return (
         <Modal id="versionModal" aria-labelledby="versionModalLabel" show={open} onHide={toggle}>
             <Modal.Header>
                 <Modal.Title id="versionModalLabel">
-                    <Fa icon={faCheckCircle}/> You have version {versionInfo.currentVersion}.
+                    <Fa icon={faCheckCircle}/> {t('html.version.current').replace('${0}', versionInfo.currentVersion)}.
                 </Modal.Title>
                 <button aria-label="Close" className="btn-close" type="button" onClick={toggle}/>
             </Modal.Header>
             <Modal.Body>
-                You're using the latest version {versionInfo.currentVersion}. (No updates available)
+                {t('plugin.version.isLatest')}
             </Modal.Body>
             <Modal.Footer>
                 <button className="btn bg-theme" onClick={toggle}>OK</button>

@@ -8,6 +8,7 @@ import {localeService} from "../../service/localeService";
 import {useTranslation} from "react-i18next";
 import {useNavigation} from "../../hooks/navigationHook";
 import {baseAddress, staticSite} from "../../service/backendConfiguration";
+import FormattedDate from "../text/FormattedDate";
 
 const LanguageSelector = () => {
     const languages = localeService.getLanguages();
@@ -57,7 +58,7 @@ const Header = ({page, tab, hideUpdater}) => {
                     </button>}
                     {staticSite && <Fa icon={faClockRotateLeft} title={t('html.label.exported')}/>}
                     {' '}
-                    <span className="refresh-time">{lastUpdate.formatted}</span>
+                    <span className="refresh-time"><FormattedDate date={lastUpdate.date}/></span>
                 </div>
             </>}
 

@@ -3,23 +3,32 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     id "dev.vankka.dependencydownload.plugin" version "$dependencyDownloadVersion"
-    id "com.github.node-gradle.node" version "4.0.0"
-    id "io.swagger.core.v3.swagger-gradle-plugin" version "2.2.9"
+    id "com.github.node-gradle.node" version "7.0.0"
+    id "io.swagger.core.v3.swagger-gradle-plugin" version "2.2.16"
 }
 
 configurations {
     // Runtime downloading scopes
     mysqlDriver
+    mariadbDriver
     sqliteDriver
     ipAddressMatcher
-    testImplementation.extendsFrom mysqlDriver, sqliteDriver, ipAddressMatcher
-    compileOnly.extendsFrom mysqlDriver, sqliteDriver, ipAddressMatcher
+    testImplementation.extendsFrom mysqlDriver, mariadbDriver, sqliteDriver, ipAddressMatcher
+    compileOnly.extendsFrom mysqlDriver, mariadbDriver, sqliteDriver, ipAddressMatcher
 
     swaggerJson // swagger.json configuration
 }
 
 task generateResourceForMySQLDriver(type: GenerateDependencyDownloadResourceTask) {
     var conf = configurations.mysqlDriver
+    configuration = conf
+    file = "assets/plan/dependencies/" + conf.name + ".txt"
+    // Not necessary to include in the resource
+    includeShadowJarRelocations = false
+}
+
+task generateResourceForMariaDBDriver(type: GenerateDependencyDownloadResourceTask) {
+    var conf = configurations.mariadbDriver
     configuration = conf
     file = "assets/plan/dependencies/" + conf.name + ".txt"
     // Not necessary to include in the resource
@@ -47,12 +56,13 @@ dependencies {
     shadow project(":extensions")
 
     shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
-    compileOnly "net.kyori:adventure-api:4.13.1"
+    compileOnly "net.kyori:adventure-api:4.14.0"
     shadow("dev.vankka:dependencydownload-runtime:$dependencyDownloadVersion") {
         // Effectively disables relocating
         exclude module: "jar-relocator"
     }
-    mysqlDriver "mysql:mysql-connector-java:$mysqlVersion"
+    mysqlDriver "com.mysql:mysql-connector-j:$mysqlVersion"
+    mariadbDriver "org.mariadb.jdbc:mariadb-java-client:$mariadbVersion"
     sqliteDriver "org.xerial:sqlite-jdbc:$sqliteVersion"
     ipAddressMatcher "com.github.seancfoley:ipaddress:$ipAddressMatcherVersion"
 
@@ -82,7 +92,7 @@ dependencies {
     testArtifacts project(":extensions:adventure")
     testImplementation project(":extensions:adventure")
     testImplementation "com.google.code.gson:gson:$gsonVersion"
-    testImplementation "org.seleniumhq.selenium:selenium-java:4.9.1"
+    testImplementation "org.seleniumhq.selenium:selenium-java:4.12.1"
     testImplementation "org.testcontainers:testcontainers:$testContainersVersion"
     testImplementation "org.testcontainers:junit-jupiter:$testContainersVersion"
     testImplementation "org.testcontainers:nginx:$testContainersVersion"
@@ -126,6 +136,7 @@ task yarnStart(type: YarnTask) {
 task copyYarnBuildResults {
     inputs.files(fileTree("$rootDir/react/dashboard/build"))
     outputs.dir("$rootDir/common/build/resources/main/assets/plan/web")
+    outputs.dir("$rootDir/common/build/resources/test/assets/plan/web")
 
     dependsOn yarnBundle
     doLast {
@@ -133,6 +144,10 @@ task copyYarnBuildResults {
         copy {
             from "$rootDir/react/dashboard/build"
             into "$rootDir/common/build/resources/main/assets/plan/web"
+        }
+        copy {
+            into "$rootDir/common/build/resources/main/assets/plan/web"
+            into "$rootDir/common/build/resources/test/assets/plan/web"
         }
     }
 }

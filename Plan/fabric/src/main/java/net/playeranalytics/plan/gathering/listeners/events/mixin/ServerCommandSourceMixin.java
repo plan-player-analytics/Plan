@@ -29,6 +29,7 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 @Mixin(ServerCommandSource.class)
 public abstract class ServerCommandSourceMixin implements CMDSender {
@@ -44,7 +45,7 @@ public abstract class ServerCommandSourceMixin implements CMDSender {
     }
 
     @Shadow
-    public abstract void sendFeedback(Text message, boolean broadcastToOps);
+    public abstract void sendFeedback(Supplier<Text> supplier, boolean broadcastToOps);
 
     @Shadow
     @Nullable
@@ -72,7 +73,7 @@ public abstract class ServerCommandSourceMixin implements CMDSender {
 
     @Override
     public void send(String message) {
-        this.sendFeedback(Text.literal(message), false);
+        this.sendFeedback(() -> Text.literal(message), false);
     }
 
     @Override

@@ -12,7 +12,7 @@ import GroupVisualizer from "../../../graphs/GroupVisualizer";
 export const CurrentPlayerbaseCardWithData = ({data, title}) => {
     const {t} = useTranslation();
     return (
-        <Card>
+        <Card id={"playerbase-current"}>
             <Card.Header>
                 <h6 className="col-black" style={{width: '100%'}}>
                     <Fa icon={faUsers} className="col-amber"/> {t(title ? title : 'html.label.currentPlayerbase')}

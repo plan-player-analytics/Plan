@@ -18,7 +18,12 @@ package com.djrapitops.plan.settings.locale;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class LocaleSystemTest {
 
@@ -30,5 +35,19 @@ class LocaleSystemTest {
     @Test
     void noIdentifierCollisions() {
         assertDoesNotThrow(LocaleSystem::getIdentifiers);
+    }
+
+    @Test
+    void noIdentifierParentValues() {
+        Set<String> keys = LocaleSystem.getKeys().keySet();
+        List<String> invalidParentKeys = new ArrayList<>();
+        for (String key : keys) {
+            for (String key2 : keys) {
+                if (!key.equals(key2) && key.contains(key2) && key.replace(key2, "").startsWith(".")) {
+                    invalidParentKeys.add("'" + key2 + "' is the parent of '" + key + "' but has a value\n");
+                }
+            }
+        }
+        assertTrue(invalidParentKeys.isEmpty(), invalidParentKeys::toString);
     }
 }

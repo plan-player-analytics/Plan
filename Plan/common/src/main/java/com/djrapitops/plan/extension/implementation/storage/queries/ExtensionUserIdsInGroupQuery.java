@@ -51,8 +51,8 @@ public class ExtensionUserIdsInGroupQuery extends QueryStatement<Set<Integer>> {
 
     private static String buildSQL(@Untrusted Collection<String> inGroups) {
         return SELECT + DISTINCT + "u." + UsersTable.ID +
-                FROM + ExtensionGroupsTable.TABLE_NAME + " groups" +
-                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.USER_UUID + "=groups." + ExtensionGroupsTable.USER_UUID +
+                FROM + ExtensionGroupsTable.TABLE_NAME + " g" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.USER_UUID + "=g." + ExtensionGroupsTable.USER_UUID +
                 WHERE + ExtensionGroupsTable.PROVIDER_ID + "=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID +
                 AND + ExtensionGroupsTable.GROUP_NAME + " IN (" + nParameters(inGroups.size()) + ")";
     }

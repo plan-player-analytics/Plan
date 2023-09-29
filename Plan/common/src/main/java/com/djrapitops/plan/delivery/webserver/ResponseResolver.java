@@ -26,6 +26,7 @@ import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
+import com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration;
 import com.djrapitops.plan.delivery.webserver.http.WebServer;
 import com.djrapitops.plan.delivery.webserver.resolver.*;
 import com.djrapitops.plan.delivery.webserver.resolver.auth.*;
@@ -59,7 +60,7 @@ import java.util.regex.Pattern;
  */
 @Singleton
 @OpenAPIDefinition(info = @Info(
-        title = "Plan API endpoints",
+        title = "Swagger Docs",
         description = "If authentication is enabled (see response of /v1/whoami) logging in is required for endpoints (/auth/login). Pass 'Cookie' header in the requests after login.",
         contact = @Contact(name = "Github Discussions", url = "https://github.com/plan-player-analytics/Plan/discussions/categories/apis-and-development"),
         license = @License(name = "GNU Lesser General Public License v3.0 (LGPLv3.0)", url = "https://github.com/plan-player-analytics/Plan/blob/master/LICENSE")
@@ -81,11 +82,13 @@ public class ResponseResolver {
     private final ErrorsPageResolver errorsPageResolver;
     private final SwaggerJsonResolver swaggerJsonResolver;
     private final SwaggerPageResolver swaggerPageResolver;
+    private final ManagePageResolver managePageResolver;
     private final ErrorLogger errorLogger;
 
     private final ResolverService resolverService;
     private final ResponseFactory responseFactory;
     private final Lazy<WebServer> webServer;
+    private final WebserverConfiguration webserverConfiguration;
     private final PublicHtmlResolver publicHtmlResolver;
 
     @Inject
@@ -93,6 +96,7 @@ public class ResponseResolver {
             ResolverSvc resolverService,
             ResponseFactory responseFactory,
             Lazy<WebServer> webServer,
+            WebserverConfiguration webserverConfiguration,
 
             QueryPageResolver queryPageResolver,
             PlayersPageResolver playersPageResolver,
@@ -113,11 +117,12 @@ public class ResponseResolver {
             SwaggerJsonResolver swaggerJsonResolver,
             SwaggerPageResolver swaggerPageResolver,
 
-            ErrorLogger errorLogger
+            ManagePageResolver managePageResolver, ErrorLogger errorLogger
     ) {
         this.resolverService = resolverService;
         this.responseFactory = responseFactory;
         this.webServer = webServer;
+        this.webserverConfiguration = webserverConfiguration;
         this.queryPageResolver = queryPageResolver;
         this.playersPageResolver = playersPageResolver;
         this.playerPageResolver = playerPageResolver;
@@ -134,6 +139,7 @@ public class ResponseResolver {
         this.errorsPageResolver = errorsPageResolver;
         this.swaggerJsonResolver = swaggerJsonResolver;
         this.swaggerPageResolver = swaggerPageResolver;
+        this.managePageResolver = managePageResolver;
         this.errorLogger = errorLogger;
     }
 
@@ -150,12 +156,16 @@ public class ResponseResolver {
         resolverService.registerResolver(plugin, "/player", playerPageResolver);
         resolverService.registerResolver(plugin, "/network", serverPageResolver);
         resolverService.registerResolver(plugin, "/server", serverPageResolver);
-
-        resolverService.registerResolver(plugin, "/login", loginPageResolver);
-        resolverService.registerResolver(plugin, "/register", registerPageResolver);
-        resolverService.registerResolver(plugin, "/auth/login", loginResolver);
-        resolverService.registerResolver(plugin, "/auth/logout", logoutResolver);
-        resolverService.registerResolver(plugin, "/auth/register", registerResolver);
+        if (webServer.get().isAuthRequired()) {
+            resolverService.registerResolver(plugin, "/login", loginPageResolver);
+            resolverService.registerResolver(plugin, "/register", registerPageResolver);
+            resolverService.registerResolver(plugin, "/auth/login", loginResolver);
+            resolverService.registerResolver(plugin, "/auth/logout", logoutResolver);
+            if (webserverConfiguration.isRegistrationEnabled()) {
+                resolverService.registerResolver(plugin, "/auth/register", registerResolver);
+            }
+            resolverService.registerResolver(plugin, "/manage", managePageResolver);
+        }
 
         resolverService.registerResolver(plugin, "/errors", errorsPageResolver);
 

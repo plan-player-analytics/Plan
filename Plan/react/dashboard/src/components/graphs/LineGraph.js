@@ -36,6 +36,9 @@ const LineGraph = ({
         Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}})
         Highcharts.setOptions(graphTheming);
         setGraph(Highcharts.stockChart(id, options ? options : {
+            chart: {
+                noData: t('html.label.noDataToDisplay')
+            },
             rangeSelector: {
                 selected: selectedRange !== undefined ? selectedRange : 2,
                 buttons: linegraphButtons
@@ -71,7 +74,7 @@ const LineGraph = ({
         onSetExtremes, setGraph, selectedRange]);
 
     useEffect(() => {
-        if (graph && graph.xAxis && graph.xAxis.length && extremes) {
+        if (graph?.xAxis?.length && extremes) {
             graph.xAxis[0].setExtremes(extremes.min, extremes.max);
         }
     }, [graph, extremes]);

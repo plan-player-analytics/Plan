@@ -88,7 +88,7 @@ class OpenRedirectFuzzTest implements HttpsServerTest {
 
         system.enable();
 
-        User user = new User("test", "console", null, PassEncryptUtil.createHash("testPass"), 0, Collections.emptyList());
+        User user = new User("test", "console", null, PassEncryptUtil.createHash("testPass"), "admin", Collections.emptyList());
         system.getDatabaseSystem().getDatabase().executeTransaction(new StoreWebUserTransaction(user));
 
         loadPayloads();

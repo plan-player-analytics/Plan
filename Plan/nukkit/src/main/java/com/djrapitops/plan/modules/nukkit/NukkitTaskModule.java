@@ -19,7 +19,6 @@ package com.djrapitops.plan.modules.nukkit;
 import cn.nukkit.level.Level;
 import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.delivery.web.ResourceWriteTask;
-import com.djrapitops.plan.delivery.web.WebAssetVersionCheckTask;
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieExpiryCleanupTask;
 import com.djrapitops.plan.delivery.webserver.cache.JSONFileStorage;
 import com.djrapitops.plan.delivery.webserver.configuration.AddressAllowList;
@@ -91,10 +90,6 @@ public interface NukkitTaskModule {
     @Binds
     @IntoSet
     TaskSystem.Task bindResourceWriteTask(ResourceWriteTask resourceWriteTask);
-
-    @Binds
-    @IntoSet
-    TaskSystem.Task bindWebAssetVersionCheckTask(WebAssetVersionCheckTask webAssetVersionCheckTask);
 
     @Binds
     @IntoSet

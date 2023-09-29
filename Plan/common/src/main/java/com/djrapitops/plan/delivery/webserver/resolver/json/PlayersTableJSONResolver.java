@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
+import com.djrapitops.plan.delivery.domain.datatransfer.PlayerListDto;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
@@ -33,6 +35,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.GET;
@@ -43,12 +46,12 @@ import javax.inject.Singleton;
 import java.util.Optional;
 
 /**
- * Resolves /v1/players JSON requests.
+ * Resolves /v1/playersTable JSON requests.
  *
  * @author AuroraLS3
  */
 @Singleton
-@Path("/v1/players")
+@Path("/v1/playersTable")
 public class PlayersTableJSONResolver extends JSONResolver {
 
     private final Identifiers identifiers;
@@ -73,10 +76,11 @@ public class PlayersTableJSONResolver extends JSONResolver {
     public boolean canAccess(Request request) {
         WebUser user = request.getUser().orElse(new WebUser(""));
         if (request.getQuery().get("server").isPresent()) {
-            return user.hasPermission("page.server");
+            return user.hasPermission(WebPermission.PAGE_SERVER_PLAYERS);
         }
         // Assume players page
-        return user.hasPermission("page.players");
+        return user.hasPermission(WebPermission.ACCESS_PLAYERS)
+                || user.hasPermission(WebPermission.ACCESS_NETWORK) && user.hasPermission(WebPermission.PAGE_NETWORK_PLAYERS);
     }
 
     @GET
@@ -90,7 +94,7 @@ public class PlayersTableJSONResolver extends JSONResolver {
                     @ExampleObject("1"),
                     @ExampleObject("1fb39d2a-eb82-4868-b245-1fad17d823b3"),
             }),
-            requestBody = @RequestBody(content = @Content(examples = @ExampleObject()))
+            requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = PlayerListDto.class)))
     )
     @Override
     public Optional<Response> resolve(Request request) {
@@ -107,10 +111,10 @@ public class PlayersTableJSONResolver extends JSONResolver {
         JSONStorage.StoredJSON storedJSON;
         if (request.getQuery().get("server").isPresent()) {
             ServerUUID serverUUID = identifiers.getServerUUID(request); // Can throw BadRequestException
-            storedJSON = jsonResolverService.resolve(timestamp, DataID.PLAYERS, serverUUID, jsonFactory::serverPlayersTableJSON);
+            storedJSON = jsonResolverService.resolve(timestamp, DataID.PLAYERS_V2, serverUUID, uuid -> jsonFactory.serverPlayersTableJSON(uuid).toPlayerList());
         } else {
             // Assume players page
-            storedJSON = jsonResolverService.resolve(timestamp, DataID.PLAYERS, jsonFactory::networkPlayersTableJSON);
+            storedJSON = jsonResolverService.resolve(timestamp, DataID.PLAYERS_V2, () -> jsonFactory.networkPlayersTableJSON().toPlayerList());
         }
         return storedJSON;
     }

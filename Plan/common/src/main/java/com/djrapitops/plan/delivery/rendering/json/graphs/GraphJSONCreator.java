@@ -32,6 +32,7 @@ import com.djrapitops.plan.delivery.rendering.json.graphs.line.LineGraphFactory;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.PingGraph;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.Pie;
+import com.djrapitops.plan.delivery.rendering.json.graphs.pie.PieSlice;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.WorldPie;
 import com.djrapitops.plan.delivery.rendering.json.graphs.special.WorldMap;
 import com.djrapitops.plan.delivery.rendering.json.graphs.stack.StackGraph;
@@ -56,6 +57,7 @@ import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.storage.database.queries.objects.*;
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.utilities.comparators.DateHolderOldestComparator;
+import com.djrapitops.plan.utilities.comparators.PieSliceComparator;
 import com.djrapitops.plan.utilities.java.Lists;
 import com.djrapitops.plan.utilities.java.Maps;
 import net.playeranalytics.plugin.scheduling.TimeAmount;
@@ -434,9 +436,11 @@ public class GraphJSONCreator {
 
         translateUnknown(joinAddresses);
 
+        List<PieSlice> slices = graphs.pie().joinAddressPie(joinAddresses).getSlices();
+        slices.sort(new PieSliceComparator());
         return Maps.builder(String.class, Object.class)
                 .put("colors", pieColors)
-                .put("slices", graphs.pie().joinAddressPie(joinAddresses).getSlices())
+                .put("slices", slices)
                 .build();
     }
 
@@ -446,9 +450,11 @@ public class GraphJSONCreator {
 
         translateUnknown(joinAddresses);
 
+        List<PieSlice> slices = graphs.pie().joinAddressPie(joinAddresses).getSlices();
+        slices.sort(new PieSliceComparator());
         return Maps.builder(String.class, Object.class)
                 .put("colors", pieColors)
-                .put("slices", graphs.pie().joinAddressPie(joinAddresses).getSlices())
+                .put("slices", slices)
                 .build();
     }
 

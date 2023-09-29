@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.mutators.TPSMutator;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
@@ -28,7 +29,6 @@ import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
-import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
@@ -62,7 +62,6 @@ import java.util.stream.Collectors;
 public class NetworkPerformanceJSONResolver implements Resolver {
 
     private final PlanConfig config;
-    private final Locale locale;
     private final DBSystem dbSystem;
 
     private final Formatter<Double> decimals;
@@ -74,13 +73,11 @@ public class NetworkPerformanceJSONResolver implements Resolver {
     @Inject
     public NetworkPerformanceJSONResolver(
             PlanConfig config,
-            Locale locale,
             DBSystem dbSystem,
             Formatters formatters,
             Gson gson
     ) {
         this.config = config;
-        this.locale = locale;
         this.dbSystem = dbSystem;
 
         decimals = formatters.decimals();
@@ -92,7 +89,7 @@ public class NetworkPerformanceJSONResolver implements Resolver {
 
     @Override
     public boolean canAccess(Request request) {
-        return request.getUser().orElse(new WebUser("")).hasPermission("page.network");
+        return request.getUser().orElse(new WebUser("")).hasPermission(WebPermission.PAGE_NETWORK_PERFORMANCE);
     }
 
     @GET
@@ -211,15 +208,15 @@ public class NetworkPerformanceJSONResolver implements Resolver {
     }
 
     private String format(double value) {
-        return value != -1 ? decimals.apply(value) : locale.get(GenericLang.UNAVAILABLE).toString();
+        return value != -1 ? decimals.apply(value) : GenericLang.UNAVAILABLE.getKey();
     }
 
     private String formatBytes(double value) {
-        return value != -1 ? byteSize.apply(value) : locale.get(GenericLang.UNAVAILABLE).toString();
+        return value != -1 ? byteSize.apply(value) : GenericLang.UNAVAILABLE.getKey();
     }
 
     private String formatPercentage(double value) {
-        return value != -1 ? percentage.apply(value / 100.0) : locale.get(GenericLang.UNAVAILABLE).toString();
+        return value != -1 ? percentage.apply(value / 100.0) : GenericLang.UNAVAILABLE.getKey();
     }
 
 }

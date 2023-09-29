@@ -5,18 +5,23 @@ import SessionInsightsCard from "../../components/cards/server/insights/SessionI
 import LoadIn from "../../components/animation/LoadIn";
 import ServerPieCard from "../../components/cards/common/ServerPieCard";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import {useAuth} from "../../hooks/authenticationHook";
 
 const NetworkSessions = () => {
+    const {hasPermission} = useAuth();
+    const seeSessionList = hasPermission('page.network.sessions.list')
+    const seeServerPie = hasPermission('page.network.sessions.server.pie')
+    const seeInsights = hasPermission('page.network.sessions.overview')
     return (
         <LoadIn>
             <section className="network-sessions">
                 <ExtendableRow id={'row-network-sessions-0'}>
-                    <Col lg={8}>
+                    {seeSessionList && <Col lg={8}>
                         <ServerRecentSessionsCard identifier={undefined}/>
-                    </Col>
+                    </Col>}
                     <Col lg={4}>
-                        <ServerPieCard/>
-                        <SessionInsightsCard identifier={undefined}/>
+                        {seeServerPie && <ServerPieCard/>}
+                        {seeInsights && <SessionInsightsCard identifier={undefined}/>}
                     </Col>
                 </ExtendableRow>
             </section>

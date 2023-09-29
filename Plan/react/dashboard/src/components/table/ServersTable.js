@@ -45,7 +45,7 @@ const ServerRow = ({server, onQuickView}) => {
                 </NavLink>
             </td>
             <td>{server.players}</td>
-            <td>{server.online}</td>
+            <td>{t(server.online)}</td>
             <td className="p-1">
                 <button className={'btn bg-light-blue float-right'}
                         title={t('html.label.quickView') + ': ' + server.name}

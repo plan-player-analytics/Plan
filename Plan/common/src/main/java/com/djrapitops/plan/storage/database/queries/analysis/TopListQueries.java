@@ -22,6 +22,7 @@ import com.djrapitops.plan.storage.database.sql.tables.KillsTable;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
+import org.intellij.lang.annotations.Language;
 
 import java.util.Optional;
 
@@ -34,6 +35,7 @@ public class TopListQueries {
     }
 
     public static Query<Optional<TopListEntry<Long>>> fetchNthTop10PlaytimePlayerOn(ServerUUID serverUUID, int n, long after, long before) {
+        @Language("SQL")
         String sql = SELECT + UsersTable.USER_NAME + ", " +
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
                 FROM + SessionsTable.TABLE_NAME + " s" +
@@ -47,10 +49,11 @@ public class TopListQueries {
                 OFFSET + "?";
 
         return db -> db.queryOptional(sql, set -> new TopListEntry<>(set.getString(UsersTable.USER_NAME), set.getLong("playtime")),
-                serverUUID, after, before, n - 1);
+                serverUUID, after, before, n);
     }
 
     public static Query<Optional<TopListEntry<Long>>> fetchNthTop10ActivePlaytimePlayerOn(ServerUUID serverUUID, int n, long after, long before) {
+        @Language("SQL")
         String sql = SELECT + UsersTable.USER_NAME + ", " +
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME + ") as active_playtime" +
                 FROM + SessionsTable.TABLE_NAME + " s" +
@@ -64,10 +67,11 @@ public class TopListQueries {
                 OFFSET + "?";
 
         return db -> db.queryOptional(sql, set -> new TopListEntry<>(set.getString(UsersTable.USER_NAME), set.getLong("active_playtime")),
-                serverUUID, after, before, n - 1);
+                serverUUID, after, before, n);
     }
 
     public static Query<Optional<TopListEntry<Long>>> fetchNthTop10PlayerKillCountOn(ServerUUID serverUUID, int n, long after, long before) {
+        @Language("SQL")
         String sql = SELECT + UsersTable.USER_NAME + ", " +
                 "COUNT(1) as kills" +
                 FROM + KillsTable.TABLE_NAME + " k" +
@@ -81,7 +85,7 @@ public class TopListQueries {
                 OFFSET + "?";
 
         return db -> db.queryOptional(sql, set -> new TopListEntry<>(set.getString(UsersTable.USER_NAME), set.getLong("kills")),
-                serverUUID, after, before, n - 1);
+                serverUUID, after, before, n);
     }
 
     public static class TopListEntry<T> {

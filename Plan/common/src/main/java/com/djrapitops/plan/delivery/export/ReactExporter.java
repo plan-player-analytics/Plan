@@ -84,6 +84,7 @@ public class ReactExporter extends FileExporter {
         exportJson(toDirectory, "metadata");
         exportJson(toDirectory, "version");
         exportJson(toDirectory, "networkMetadata");
+        exportJson(toDirectory, "preferences");
     }
 
     private void exportLocaleJson(Path toDirectory) throws IOException {

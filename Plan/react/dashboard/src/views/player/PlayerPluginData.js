@@ -5,8 +5,10 @@ import {useParams} from "react-router-dom";
 import Masonry from "masonry-layout";
 import {usePlayer} from "../layout/PlayerPage";
 import LoadIn from "../../components/animation/LoadIn";
+import {useAuth} from "../../hooks/authenticationHook";
 
 const PlayerPluginData = () => {
+    const {hasPermission} = useAuth();
     const {player} = usePlayer();
     const {serverName} = useParams();
 
@@ -24,10 +26,14 @@ const PlayerPluginData = () => {
         }
     }, [serverName])
 
+    if (!hasPermission('page.player.plugins')) {
+        return <></>;
+    }
+
     if (!extensions?.extensionData?.length) {
         return (
             <LoadIn>
-                <section className="player_plugin_data">
+                <section className="player_plugin_data" id={"player-plugin-data"}>
                     <Row style={{overflowY: 'hidden'}}>
                         <Col md={12}>
                             <Card>
@@ -44,7 +50,7 @@ const PlayerPluginData = () => {
 
     return (
         <LoadIn>
-            <section className="player_plugin_data">
+            <section className="player_plugin_data" id={"player-plugin-data"}>
                 <Row id="extension-masonry-row"
                      data-masonry='{"percentPosition": true, "itemSelector": ".extension-wrapper"}'
                      style={{overflowY: 'hidden'}}>

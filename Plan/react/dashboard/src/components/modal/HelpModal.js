@@ -7,6 +7,7 @@ import ActivityIndexHelp from "./help/ActivityIndexHelp";
 import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 import NewPlayerRetentionHelp from "./help/NewPlayerRetentionHelp";
 import PlayerRetentionGraphHelp from "./help/PlayerRetentionGraphHelp";
+import GroupPermissionHelp from "./help/GroupPermissionHelp";
 
 const HelpModal = () => {
     const {t} = useTranslation();
@@ -25,6 +26,10 @@ const HelpModal = () => {
         "player-retention-graph": {
             title: t('html.label.playerRetention'),
             body: <PlayerRetentionGraphHelp/>
+        },
+        "group-permissions": {
+            title: t('html.label.managePage.groupHeader'),
+            body: <GroupPermissionHelp/>
         }
     }
 

@@ -114,7 +114,7 @@ public class PlanSystem implements SubSystem {
             SchedulerSvc schedulerService,
             PluginLogger logger,
             ErrorLogger errorLogger,
-            PlanAPI.PlanAPIHolder apiHolder
+            @SuppressWarnings("deprecation") PlanAPI.PlanAPIHolder apiHolder // Deprecated PlanAPI, backwards compatibility
     ) {
         this.files = files;
         this.configSystem = configSystem;
@@ -150,14 +150,6 @@ public class PlanSystem implements SubSystem {
     }
 
     /**
-     * @deprecated Use {@link com.djrapitops.plan.delivery.webserver.Addresses} instead.
-     */
-    @Deprecated(since = "Addresses.java")
-    public String getMainAddress() {
-        return webServerSystem.getAddresses().getMainAddress().orElse(webServerSystem.getAddresses().getFallbackLocalhostAddress());
-    }
-
-    /**
      * Enables only the systems that are required for {@link com.djrapitops.plan.commands.PlanCommand}.
      *
      * @see #enableOtherThanCommands()
@@ -180,12 +172,12 @@ public class PlanSystem implements SubSystem {
         queryService.register();
 
         enableSystems(
+                processing,
                 files,
                 localeSystem,
                 versionChecker,
                 databaseSystem,
                 webServerSystem,
-                processing,
                 serverInfo,
                 importSystem,
                 exportSystem,

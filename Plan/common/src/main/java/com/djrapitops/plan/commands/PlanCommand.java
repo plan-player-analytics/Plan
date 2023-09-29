@@ -20,6 +20,8 @@ import com.djrapitops.plan.commands.subcommands.*;
 import com.djrapitops.plan.commands.use.*;
 import com.djrapitops.plan.gathering.importing.ImportSystem;
 import com.djrapitops.plan.settings.Permissions;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.DeepHelpLang;
 import com.djrapitops.plan.settings.locale.lang.HelpLang;
@@ -51,6 +53,7 @@ public class PlanCommand {
     private final DataUtilityCommands dataUtilityCommands;
 
     private final Locale locale;
+    private final PlanConfig config;
     private final ImportSystem importSystem;
     private final ErrorLogger errorLogger;
 
@@ -69,6 +72,7 @@ public class PlanCommand {
             PluginStatusCommands statusCommands,
             DatabaseCommands databaseCommands,
             DataUtilityCommands dataUtilityCommands,
+            PlanConfig config,
             ErrorLogger errorLogger
     ) {
         this.commandName = commandName;
@@ -82,6 +86,7 @@ public class PlanCommand {
         this.statusCommands = statusCommands;
         this.databaseCommands = databaseCommands;
         this.dataUtilityCommands = dataUtilityCommands;
+        this.config = config;
         this.errorLogger = errorLogger;
     }
 
@@ -110,6 +115,8 @@ public class PlanCommand {
                 .subcommand(unregisterCommand())
                 .subcommand(logoutCommand())
                 .subcommand(webUsersCommand())
+                .subcommand(groups())
+                .subcommand(setGroup())
 
                 .subcommand(acceptCommand())
                 .subcommand(cancelCommand())
@@ -220,6 +227,9 @@ public class PlanCommand {
     }
 
     private Subcommand registerCommand() {
+        if (config.isTrue(WebserverSettings.DISABLED_AUTHENTICATION) || config.isTrue(WebserverSettings.DISABLED_REGISTRATION)) {
+            return null;
+        }
         return Subcommand.builder()
                 .aliases("register")
                 .requirePermission(Permissions.REGISTER_SELF)
@@ -244,13 +254,16 @@ public class PlanCommand {
     }
 
     private Subcommand logoutCommand() {
+        if (config.isTrue(WebserverSettings.DISABLED_AUTHENTICATION)) {
+            return null;
+        }
         return Subcommand.builder()
                 .aliases("logout")
                 .requirePermission(Permissions.LOGOUT_OTHER)
                 .requiredArgument(locale.getString(HelpLang.ARG_USERNAME), locale.getString(HelpLang.DESC_ARG_USERNAME))
                 .description(locale.getString(HelpLang.LOGOUT))
                 .inDepthDescription(locale.getString(DeepHelpLang.LOGOUT))
-                .onCommand(registrationCommands::onLogoutCommand)
+                .onArgsOnlyCommand(registrationCommands::onLogoutCommand)
                 .onTabComplete(this::webUserNames)
                 .build();
     }
@@ -501,6 +514,38 @@ public class PlanCommand {
                 .inDepthDescription(locale.getString(DeepHelpLang.JSON))
                 .onCommand(linkCommands::onJson)
                 .onTabComplete(this::playerNames)
+                .build();
+    }
+
+    private Subcommand setGroup() {
+        return Subcommand.builder()
+                .aliases("setgroup")
+                .requirePermission(Permissions.SET_GROUP)
+                .requiredArgument(locale.getString(HelpLang.ARG_USERNAME), locale.getString(HelpLang.DESC_ARG_USERNAME))
+                .requiredArgument(locale.getString(HelpLang.ARG_GROUP), locale.getString(HelpLang.DESC_ARG_GROUP))
+                .description(locale.getString(HelpLang.SET_GROUP))
+                .inDepthDescription(locale.getString(DeepHelpLang.SET_GROUP))
+                .onCommand(registrationCommands::onChangePermissionGroup)
+                .onTabComplete(this::webGroupTabComplete)
+                .build();
+    }
+
+    private List<String> webGroupTabComplete(CMDSender sender, @Untrusted Arguments arguments) {
+        Optional<String> groupArgument = arguments.get(1);
+        if (groupArgument.isPresent()) {
+            return tabCompleteCache.getMatchingWebGroupNames(groupArgument.get());
+        }
+        String usernameArgument = arguments.get(0).orElse(null);
+        return tabCompleteCache.getMatchingUserIdentifiers(usernameArgument);
+    }
+
+    private Subcommand groups() {
+        return Subcommand.builder()
+                .aliases("groups")
+                .requirePermission(Permissions.SET_GROUP)
+                .description(locale.getString(HelpLang.GROUPS))
+                .inDepthDescription(locale.getString(DeepHelpLang.GROUPS))
+                .onCommand(registrationCommands::onListWebGroups)
                 .build();
     }
 }

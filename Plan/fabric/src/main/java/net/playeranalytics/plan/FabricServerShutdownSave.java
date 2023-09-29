@@ -17,14 +17,17 @@
 package net.playeranalytics.plan;
 
 import com.djrapitops.plan.gathering.ServerShutdownSave;
+import com.djrapitops.plan.gathering.afk.AFKTracker;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
+import net.playeranalytics.plan.gathering.listeners.fabric.FabricAFKListener;
 import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Optional;
 
 /**
  * ServerShutdownSave implementation for Fabric-based servers.
@@ -51,5 +54,10 @@ public class FabricServerShutdownSave extends ServerShutdownSave {
     @Override
     protected boolean checkServerShuttingDownStatus() {
         return !server.isRunning();
+    }
+
+    @Override
+    public Optional<AFKTracker> getAfkTracker() {
+        return Optional.ofNullable(FabricAFKListener.getAfkTracker());
     }
 }

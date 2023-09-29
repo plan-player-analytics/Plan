@@ -19,12 +19,14 @@ package com.djrapitops.plan.storage.database.queries.schema;
 import com.djrapitops.plan.storage.database.queries.HasMoreThanZeroQueryStatement;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import org.intellij.lang.annotations.Language;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -37,6 +39,12 @@ public class MySQLSchemaQueries {
 
     private MySQLSchemaQueries() {
         /* Static method class */
+    }
+
+    public static Query<Optional<String>> getVersion() {
+        @Language("MySQL")
+        String sql = "SELECT VERSION()";
+        return db -> db.queryOptional(sql, row -> row.getString(1));
     }
 
     public static Query<Boolean> doesTableExist(String tableName) {
