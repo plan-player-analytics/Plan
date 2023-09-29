@@ -99,7 +99,7 @@ subprojects {
         ipAddressMatcherVersion = "5.4.0"
 
         bstatsVersion = "3.0.2"
-        placeholderapiVersion = "2.11.3"
+        placeholderapiVersion = "2.11.4"
         nkPlaceholderapiVersion = "1.4-SNAPSHOT"
 
         junitVersion = "5.10.0"
