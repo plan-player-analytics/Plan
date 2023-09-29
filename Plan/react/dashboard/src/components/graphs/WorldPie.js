@@ -39,6 +39,7 @@ const WorldPie = ({id, worldSeries, gmSeries}) => {
         setTimeout(() => {
             const chart = Highcharts.chart(id, {
                 chart: {
+                    noData: t('html.label.noDataToDisplay'),
                     backgroundColor: 'transparent',
                     plotBackgroundColor: 'transparent',
                     plotBorderWidth: null,

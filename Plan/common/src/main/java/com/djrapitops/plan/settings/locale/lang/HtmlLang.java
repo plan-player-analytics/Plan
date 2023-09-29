@@ -268,6 +268,7 @@ public enum HtmlLang implements Lang {
     LABEL_PROJECTION_ORTOGRAPHIC("html.label.geoProjection.ortographic", "Ortographic"),
     LABEL_SERVER_SELECTOR("html.label.serverSelector", "Server selector"),
     LABEL_APPLY("html.label.apply", "Apply"),
+    LABEL_POSSIBLY_OFFLINE("html.label.serverPossiblyOffline", "Possibly offline"),
 
     LABEL_TABLE_VISIBLE_COLUMNS("html.label.table.visibleColumns", "Visible columns"),
     LABEL_TABLE_SHOW_N_OF_M("html.label.table.showNofM", "Showing {{n}} of {{mn}} entries"),

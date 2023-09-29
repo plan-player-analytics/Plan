@@ -158,22 +158,30 @@ public class ActivityIndex {
         return Math.abs(Math.log(other.value) - Math.log(value));
     }
 
-    public static String getGroup(double value) {
+    public static HtmlLang getGroupLang(double value) {
         if (value >= VERY_ACTIVE) {
-            return HtmlLang.INDEX_VERY_ACTIVE.getDefault();
+            return HtmlLang.INDEX_VERY_ACTIVE;
         } else if (value >= ACTIVE) {
-            return HtmlLang.INDEX_ACTIVE.getDefault();
+            return HtmlLang.INDEX_ACTIVE;
         } else if (value >= REGULAR) {
-            return HtmlLang.INDEX_REGULAR.getDefault();
+            return HtmlLang.INDEX_REGULAR;
         } else if (value >= IRREGULAR) {
-            return HtmlLang.INDEX_IRREGULAR.getDefault();
+            return HtmlLang.INDEX_IRREGULAR;
         } else {
-            return HtmlLang.INDEX_INACTIVE.getDefault();
+            return HtmlLang.INDEX_INACTIVE;
         }
+    }
+
+    public static String getGroup(double value) {
+        return getGroupLang(value).getDefault();
     }
 
     public String getGroup() {
         return getGroup(value);
+    }
+
+    public String getGroupLang() {
+        return getGroupLang(value).getKey();
     }
 
     public String getGroup(Locale locale) {

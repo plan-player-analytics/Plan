@@ -29,7 +29,6 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
-import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
@@ -58,7 +57,6 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
 
     private final Formatter<Long> day;
     private final PlanConfig config;
-    private final Locale locale;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final ServerSensor<?> serverSensor;
@@ -72,7 +70,6 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
     @Inject
     public ServerOverviewJSONCreator(
             PlanConfig config,
-            Locale locale,
             DBSystem dbSystem,
             ServerInfo serverInfo,
             ServerSensor<?> serverSensor,
@@ -80,7 +77,6 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
             Formatters formatters
     ) {
         this.config = config;
-        this.locale = locale;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.serverSensor = serverSensor;
@@ -120,7 +116,7 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
         sevenDays.put("new_players_retention_perc", percentage.apply(retentionPercentage7d));
         TPSMutator tpsMutator = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServer(weekAgo, now, serverUUID)));
         double averageTPS = tpsMutator.averageTPS();
-        sevenDays.put("average_tps", averageTPS != -1 ? decimals.apply(averageTPS) : locale.get(GenericLang.UNAVAILABLE).toString());
+        sevenDays.put("average_tps", averageTPS != -1 ? decimals.apply(averageTPS) : GenericLang.UNAVAILABLE.getKey());
         sevenDays.put("low_tps_spikes", tpsMutator.lowTpsSpikeCount(config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED)));
         sevenDays.put("downtime", timeAmount.apply(tpsMutator.serverDownTime()));
 
@@ -153,7 +149,7 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
         numbers.put("mob_kills", db.query(KillQueries.mobKillCount(0L, now, serverUUID)));
         numbers.put("deaths", db.query(KillQueries.deathCount(0L, now, serverUUID)));
         numbers.put("current_uptime", serverUptimeCalculator.getServerUptimeMillis(serverUUID).map(timeAmount)
-                .orElse(locale.getString(GenericLang.UNAVAILABLE)));
+                .orElse(GenericLang.UNAVAILABLE.getKey()));
 
         return numbers;
     }
@@ -163,7 +159,7 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
                 ? serverSensor.getOnlinePlayerCount()
                 : db.query(TPSQueries.fetchLatestTPSEntryForServer(serverUUID))
                 .map(TPS::getPlayers).map(Object::toString)
-                .orElse(locale.get(GenericLang.UNKNOWN).toString());
+                .orElse(GenericLang.UNKNOWN.getKey());
     }
 
     private Map<String, Object> createWeeksMap(ServerUUID serverUUID) {

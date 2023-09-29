@@ -284,15 +284,15 @@ public class JSONFactory {
                     server.put("unique_players", uniquePlayerCounts.getOrDefault(serverUUID, 0));
                     TPSMutator tpsWeek = tpsMonth.filterDataBetween(weekAgo, now);
                     double averageTPS = tpsWeek.averageTPS();
-                    server.put("avg_tps", averageTPS != -1 ? decimals.apply(averageTPS) : locale.get(HtmlLang.UNIT_NO_DATA).toString());
+                    server.put("avg_tps", averageTPS != -1 ? decimals.apply(averageTPS) : HtmlLang.UNIT_NO_DATA.getKey());
                     server.put("low_tps_spikes", tpsWeek.lowTpsSpikeCount(config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED)));
                     server.put("downtime", timeAmount.apply(tpsWeek.serverDownTime()));
                     server.put("current_uptime", serverUptimeCalculator.getServerUptimeMillis(serverUUID).map(timeAmount)
-                            .orElse(locale.getString(GenericLang.UNAVAILABLE)));
+                            .orElse(GenericLang.UNAVAILABLE.getKey()));
 
                     Optional<TPS> online = tpsWeek.getLast();
-                    server.put("online", online.map(point -> point.getDate() >= now - TimeUnit.MINUTES.toMillis(3L) ? point.getPlayers() : "Possibly offline")
-                            .orElse(locale.get(HtmlLang.UNIT_NO_DATA).toString()));
+                    server.put("online", online.map(point -> point.getDate() >= now - TimeUnit.MINUTES.toMillis(3L) ? point.getPlayers() : HtmlLang.LABEL_POSSIBLY_OFFLINE.getKey())
+                            .orElse(HtmlLang.UNIT_NO_DATA.getKey()));
                     servers.add(server);
                 });
         return Collections.singletonMap("servers", servers);

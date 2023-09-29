@@ -38,7 +38,6 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
-import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
@@ -46,7 +45,6 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.PlayerContainerQuery;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
-import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plan.utilities.java.Lists;
 import com.djrapitops.plan.utilities.java.Maps;
@@ -61,7 +59,6 @@ import java.util.function.Predicate;
 public class PlayerJSONCreator {
 
     private final PlanConfig config;
-    private final Locale locale;
     private final Theme theme;
     private final DBSystem dbSystem;
     private final Graphs graphs;
@@ -74,14 +71,12 @@ public class PlayerJSONCreator {
     @Inject
     public PlayerJSONCreator(
             PlanConfig config,
-            Locale locale,
             Theme theme,
             DBSystem dbSystem,
             Formatters formatters,
             Graphs graphs
     ) {
         this.config = config;
-        this.locale = locale;
         this.theme = theme;
         this.dbSystem = dbSystem;
 
@@ -90,10 +85,6 @@ public class PlayerJSONCreator {
         decimals = formatters.decimals();
         year = formatters.yearLong();
         this.graphs = graphs;
-    }
-
-    public long getLastSeen(UUID playerUUID) {
-        return dbSystem.getDatabase().query(SessionQueries.lastSeen(playerUUID));
     }
 
     public Map<String, Object> createJSONAsMap(UUID playerUUID, Predicate<WebPermission> hasPermission) {
@@ -142,7 +133,7 @@ public class PlayerJSONCreator {
             data.put("player_deaths", new PlayerKillMutator(deaths).toJSONAsMap(formatters));
         }
         if (hasPermission.test(WebPermission.PAGE_PLAYER_SERVERS)) {
-            List<Map<String, Object>> serverAccordion = new ServerAccordion(player, serverNames, graphs, year, timeAmount, locale.getString(GenericLang.UNKNOWN)).asMaps();
+            List<Map<String, Object>> serverAccordion = new ServerAccordion(player, serverNames, graphs, year, timeAmount, GenericLang.UNKNOWN.getKey()).asMaps();
             Map<ServerUUID, WorldTimes> worldTimesPerServer = PerServerMutator.forContainer(player).worldTimesPerServer();
             String[] pieColors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
 
@@ -230,8 +221,8 @@ public class PlayerJSONCreator {
         info.put("longest_session_length", timeAmount.apply(sessions.toLongestSessionLength()));
         info.put("session_median", timeAmount.apply(sessions.toMedianSessionLength()));
         info.put("activity_index", decimals.apply(activityIndex.getValue()));
-        info.put("activity_index_group", activityIndex.getGroup());
-        info.put("favorite_server", perServer.favoriteServer().map(favoriteServer -> serverNames.getOrDefault(favoriteServer, favoriteServer.toString())).orElse(locale.getString(GenericLang.UNKNOWN)));
+        info.put("activity_index_group", activityIndex.getGroupLang());
+        info.put("favorite_server", perServer.favoriteServer().map(favoriteServer -> serverNames.getOrDefault(favoriteServer, favoriteServer.toString())).orElse(GenericLang.UNKNOWN.getKey()));
         info.put("latest_join_address", sessions.latestSession()
                 .flatMap(session -> session.getExtraData(JoinAddress.class))
                 .map(JoinAddress::getAddress)
@@ -240,7 +231,7 @@ public class PlayerJSONCreator {
         int worstPing = ping.max();
         int bestPing = ping.min();
 
-        String unavailable = locale.get(GenericLang.UNAVAILABLE).toString();
+        String unavailable = GenericLang.UNAVAILABLE.getKey();
         info.put("average_ping", averagePing != -1.0 ? decimals.apply(averagePing) + " ms" : unavailable);
         info.put("worst_ping", worstPing != -1.0 ? worstPing + " ms" : unavailable);
         info.put("best_ping", bestPing != -1.0 ? bestPing + " ms" : unavailable);

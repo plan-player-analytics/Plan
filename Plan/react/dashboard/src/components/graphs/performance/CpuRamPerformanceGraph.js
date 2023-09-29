@@ -47,6 +47,9 @@ const CpuRamPerformanceGraph = ({id, data, dataSeries}) => {
         Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}})
         Highcharts.setOptions(graphTheming);
         Highcharts.stockChart(id, {
+            chart: {
+                noData: t('html.label.noDataToDisplay')
+            },
             rangeSelector: {
                 selected: 1, // TODO Sync range selectors state
                 buttons: linegraphButtons

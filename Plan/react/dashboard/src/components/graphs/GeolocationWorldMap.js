@@ -1,7 +1,7 @@
 import React, {useEffect} from 'react';
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../hooks/themeHook";
-import Highcharts from 'highcharts/highmaps.js';
+import Highcharts from 'highcharts/highmaps';
 import topology from '@highcharts/map-collection/custom/world.topo.json';
 import Accessibility from "highcharts/modules/accessibility";
 import NoDataDisplay from "highcharts/modules/no-data-to-display";
@@ -46,6 +46,7 @@ const GeolocationWorldMap = ({series, colors, projection}) => {
         Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}});
         Highcharts.mapChart('countryWorldMap', {
             chart: {
+                noData: t('html.label.noDataToDisplay'),
                 map: topology,
                 animation: true
             },

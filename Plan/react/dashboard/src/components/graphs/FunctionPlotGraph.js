@@ -25,6 +25,9 @@ const FunctionPlotGraph = ({
         Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}})
         Highcharts.setOptions(graphTheming);
         Highcharts.chart(id, options ? options : {
+            chart: {
+                noData: t('html.label.noDataToDisplay')
+            },
             yAxis: {
                 plotLines: yPlotLines,
                 plotBands: yPlotBands
