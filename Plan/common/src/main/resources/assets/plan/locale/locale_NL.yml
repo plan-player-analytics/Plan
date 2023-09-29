@@ -880,6 +880,7 @@ plugin:
         unknown: "Onbekend"
         yes: "Ja"
         yesterday: "'Gisteren'"
+    localeReloaded: "Custom locale.yml was modified so it was reloaded and is now in use."
     version:
         checkFail: "Het nieuwste versienummer kan niet worden gecontroleerd"
         checkFailGithub: "Versie-informatie kon niet worden geladen vanuit Github/versions.txt"

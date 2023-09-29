@@ -880,6 +880,7 @@ plugin:
         unknown: "Desconhecido"
         yes: "Sim"
         yesterday: "'Ontem'"
+    localeReloaded: "Custom locale.yml was modified so it was reloaded and is now in use."
     version:
         checkFail: "Falha ao verificar disponibilidade de atualização"
         checkFailGithub: "Informação da versão não pode ser carregada de Github/versions.txt"

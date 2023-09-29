@@ -880,6 +880,7 @@ plugin:
         unknown: "Bilinmeyen"
         yes: "Evet"
         yesterday: "'Dün'"
+    localeReloaded: "Custom locale.yml was modified so it was reloaded and is now in use."
     version:
         checkFail: "En yeni sürüm numarası kontrol edilemedi"
         checkFailGithub: "Sürüm bilgileri Github/versions.txt kısmından indirilemedi"

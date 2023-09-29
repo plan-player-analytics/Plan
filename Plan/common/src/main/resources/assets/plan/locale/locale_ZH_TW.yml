@@ -880,6 +880,7 @@ plugin:
         unknown: "未知"
         yes: "是"
         yesterday: "'昨天'"
+    localeReloaded: "Custom locale.yml was modified so it was reloaded and is now in use."
     version:
         checkFail: "無法檢查最新版本號"
         checkFailGithub: "無法從 Github/versions.txt 載入版本訊息"

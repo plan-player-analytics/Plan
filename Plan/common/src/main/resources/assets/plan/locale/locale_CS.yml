@@ -880,6 +880,7 @@ plugin:
         unknown: "Neznámé"
         yes: "Ano"
         yesterday: "'Včera'"
+    localeReloaded: "Custom locale.yml was modified so it was reloaded and is now in use."
     version:
         checkFail: "Selhalo zjištění čísla nejnovější verze"
         checkFailGithub: "Informace o verzi z Github/versions.txt nemůže být nalezena."

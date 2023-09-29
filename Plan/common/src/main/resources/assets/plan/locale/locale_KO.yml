@@ -880,6 +880,7 @@ plugin:
         unknown: "알 수 없음"
         yes: "예"
         yesterday: "'어제'"
+    localeReloaded: "Custom locale.yml was modified so it was reloaded and is now in use."
     version:
         checkFail: "최신 버전을 확인하지 못했습니다."
         checkFailGithub: "Github/versions.txt 에서 버전 정보를 불러올 수 없습니다."

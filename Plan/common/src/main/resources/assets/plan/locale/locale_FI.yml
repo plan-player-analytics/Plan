@@ -880,6 +880,7 @@ plugin:
         unknown: "Tuntematon"
         yes: "Kyllä"
         yesterday: "'Eilen'"
+    localeReloaded: "Custom locale.yml was modified so it was reloaded and is now in use."
     version:
         checkFail: "Uuden version tarkistus epäonnistui"
         checkFailGithub: "Uuden version tarkistus epäonnistui Github/versions.txt:ta"

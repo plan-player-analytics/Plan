@@ -27,6 +27,7 @@ public enum PluginLang implements Lang {
     ENABLED_DATABASE("plugin.enable.database", "Enable - Database", "${0}-database connection established."),
     API_ADD_RESOURCE_JS("plugin.apiJSAdded", "API - js+", "PageExtension: ${0} added javascript(s) to ${1}, ${2}"),
     API_ADD_RESOURCE_CSS("plugin.apiCSSAdded", "API - css+", "PageExtension: ${0} added stylesheet(s) to ${1}, ${2}"),
+    RELOAD_LOCALE("plugin.localeReloaded", "API - locale reload", "Custom locale.yml was modified so it was reloaded and is now in use."),
 
     ENABLE_NOTIFY_STORING_PRESERVED_SESSIONS("plugin.enable.notify.storeSessions", "Enable - Storing preserved sessions", "Storing sessions that were preserved before previous shutdown."),
     ENABLE_NOTIFY_EMPTY_IP("plugin.enable.notify.emptyIP", "Enable - Notify Empty IP", "IP in server.properties is empty & Alternative_IP is not in use. Incorrect links might be given!"),
@@ -109,7 +110,7 @@ public enum PluginLang implements Lang {
     }
 
     @Override
-    public String getKey() { return key; }
+    public String getKey() {return key;}
 
     @Override
     public String getDefault() {

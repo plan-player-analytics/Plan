@@ -880,6 +880,7 @@ plugin:
         unknown: "Inconnu"
         yes: "Oui"
         yesterday: "'Hier'"
+    localeReloaded: "Custom locale.yml was modified so it was reloaded and is now in use."
     version:
         checkFail: "Impossible de vérifier le dernier numéro de la version"
         checkFailGithub: "Les informations de la version n'ont pas pu être chargées depuis Github/versions.txt"
