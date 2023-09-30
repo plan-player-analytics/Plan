@@ -5,6 +5,7 @@ import {faBug} from "@fortawesome/free-solid-svg-icons";
 import LoadIn from "../components/animation/LoadIn";
 
 export const ErrorViewText = ({error}) => {
+    console.error(error);
     return (
         <>
             <p>{error.message} {error.url && <a href={error.url}>{error.url}</a>}</p>
