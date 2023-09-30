@@ -215,6 +215,7 @@ public enum HtmlLang implements Lang {
     // React
     LABEL_TITLE_SESSION_CALENDAR("html.label.sessionCalendar", "Session Calendar"),
     LABEL_TITLE_SERVER_CALENDAR("html.label.serverCalendar", "Server Calendar"),
+    LABEL_TITLE_NETWORK_CALENDAR("html.label.networkCalendar", "Network Calendar"),
     LABEL_LABEL_JOIN_ADDRESS("html.label.joinAddress", "Join Address"),
     LABEL_LABEL_SESSION_MEDIAN("html.label.medianSessionLength", "Median Session Length"),
     LABEL_LABEL_KDR("html.label.kdr", "KDR"),

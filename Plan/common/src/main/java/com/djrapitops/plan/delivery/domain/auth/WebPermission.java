@@ -35,6 +35,7 @@ public enum WebPermission implements Supplier<String>, Lang {
     PAGE_NETWORK_OVERVIEW_GRAPHS_ONLINE("See Players Online graph"),
     PAGE_NETWORK_OVERVIEW_GRAPHS_DAY_BY_DAY("See Day by Day graph"),
     PAGE_NETWORK_OVERVIEW_GRAPHS_HOUR_BY_HOUR("See Hour by Hour graph"),
+    PAGE_NETWORK_OVERVIEW_GRAPHS_CALENDAR("See Network calendar"),
     PAGE_NETWORK_SERVER_LIST("See list of servers"),
     PAGE_NETWORK_PLAYERBASE("See Playerbase Overview -tab"),
     PAGE_NETWORK_PLAYERBASE_OVERVIEW("See Playerbase Overview numbers"),

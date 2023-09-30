@@ -204,6 +204,12 @@ export const fetchServerCalendarGraph = async (timestamp, identifier) => {
     return doGetRequest(url, timestamp);
 }
 
+export const fetchNetworkCalendarGraph = async (timestamp) => {
+    let url = `/v1/graph?type=serverCalendar`;
+    if (staticSite) url = `/data/graph-serverCalendar.json`;
+    return doGetRequest(url, timestamp);
+}
+
 export const fetchPunchCardGraph = async (timestamp, identifier) => {
     let url = `/v1/graph?type=punchCard&server=${identifier}`;
     if (staticSite) url = `/data/graph-punchCard_${identifier}.json`;

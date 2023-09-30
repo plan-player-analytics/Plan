@@ -155,6 +155,7 @@ class AccessControlVisibilityTest {
                 Arguments.arguments(WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_ONLINE, "online-activity-nav", "overview"),
                 Arguments.arguments(WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_DAY_BY_DAY, "day-by-day-nav", "overview"),
                 Arguments.arguments(WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_HOUR_BY_HOUR, "hour-by-hour-nav", "overview"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_CALENDAR, "network-calendar-nav", "overview"),
                 Arguments.arguments(WebPermission.PAGE_NETWORK_OVERVIEW, "recent-players", "overview"),
                 Arguments.arguments(WebPermission.PAGE_NETWORK_OVERVIEW, "network-as-numbers", "overview"),
                 Arguments.arguments(WebPermission.PAGE_NETWORK_OVERVIEW, "week-comparison", "overview"),

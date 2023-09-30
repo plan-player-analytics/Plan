@@ -310,6 +310,33 @@ public class GraphJSONCreator {
                 ",\"firstDay\":" + 1 + '}';
     }
 
+    public String networkCalendarJSON() {
+        Database db = dbSystem.getDatabase();
+        long now = System.currentTimeMillis();
+        long twoYearsAgo = now - TimeUnit.DAYS.toMillis(730L);
+        int timeZoneOffset = config.getTimeZone().getOffset(now);
+        NavigableMap<Long, Integer> uniquePerDay = db.query(
+                PlayerCountQueries.uniquePlayerCounts(twoYearsAgo, now, timeZoneOffset)
+        );
+        NavigableMap<Long, Integer> newPerDay = db.query(
+                PlayerCountQueries.newPlayerCounts(twoYearsAgo, now, timeZoneOffset)
+        );
+        NavigableMap<Long, Long> playtimePerDay = db.query(
+                SessionQueries.playtimePerDay(twoYearsAgo, now, timeZoneOffset)
+        );
+        NavigableMap<Long, Integer> sessionsPerDay = db.query(
+                SessionQueries.sessionCountPerDay(twoYearsAgo, now, timeZoneOffset)
+        );
+        return "{\"data\":" +
+                graphs.calendar().serverCalendar(
+                        uniquePerDay,
+                        newPerDay,
+                        playtimePerDay,
+                        sessionsPerDay
+                ).toCalendarSeries() +
+                ",\"firstDay\":" + 1 + '}';
+    }
+
     public Map<String, Object> serverWorldPieJSONAsMap(ServerUUID serverUUID) {
         Database db = dbSystem.getDatabase();
         WorldTimes worldTimes = db.query(WorldTimesQueries.fetchServerTotalWorldTimes(serverUUID));

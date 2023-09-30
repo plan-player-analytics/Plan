@@ -250,6 +250,8 @@ public class GraphsJSONResolver extends JSONResolver {
                 return List.of(WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_DAY_BY_DAY);
             case GRAPH_HOURLY_UNIQUE_NEW:
                 return List.of(WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_HOUR_BY_HOUR);
+            case GRAPH_CALENDAR:
+                return List.of(WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_CALENDAR);
             case GRAPH_SERVER_PIE:
                 return List.of(WebPermission.PAGE_NETWORK_SESSIONS_SERVER_PIE);
             case GRAPH_WORLD_MAP:
@@ -313,6 +315,8 @@ public class GraphsJSONResolver extends JSONResolver {
                 return graphJSON.uniqueAndNewGraphJSON();
             case GRAPH_HOURLY_UNIQUE_NEW:
                 return graphJSON.hourlyUniqueAndNewGraphJSON();
+            case GRAPH_CALENDAR:
+                return graphJSON.networkCalendarJSON();
             case GRAPH_SERVER_PIE:
                 return graphJSON.serverPreferencePieJSONAsMap();
             case GRAPH_HOSTNAME_PIE:

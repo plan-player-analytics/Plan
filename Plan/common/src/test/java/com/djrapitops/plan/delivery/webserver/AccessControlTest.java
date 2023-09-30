@@ -115,6 +115,7 @@ class AccessControlTest {
                 Arguments.of("/v1/graph?type=playersOnline&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_OVERVIEW_PLAYERS_ONLINE_GRAPH, 200, 403),
                 Arguments.of("/v1/graph?type=uniqueAndNew", WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_DAY_BY_DAY, 200, 403),
                 Arguments.of("/v1/graph?type=hourlyUniqueAndNew", WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_HOUR_BY_HOUR, 200, 403),
+                Arguments.of("/v1/graph?type=serverCalendar", WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_CALENDAR, 200, 403),
                 Arguments.of("/v1/graph?type=serverPie", WebPermission.PAGE_NETWORK_SESSIONS_SERVER_PIE, 200, 403),
                 Arguments.of("/v1/graph?type=joinAddressPie", WebPermission.PAGE_NETWORK_JOIN_ADDRESSES_GRAPHS_PIE, 200, 403),
                 Arguments.of("/v1/graph?type=activity", WebPermission.PAGE_NETWORK_PLAYERBASE_GRAPHS, 200, 403),

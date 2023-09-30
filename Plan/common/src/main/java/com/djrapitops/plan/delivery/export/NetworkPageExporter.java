@@ -126,6 +126,7 @@ public class NetworkPageExporter extends FileExporter {
                 "graph?type=activity",
                 "graph?type=geolocation",
                 "graph?type=uniqueAndNew",
+                "graph?type=serverCalendar",
                 "network/pingTable",
                 "sessions",
                 "extensionData?server=" + serverUUID,
