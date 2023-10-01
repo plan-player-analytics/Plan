@@ -4,6 +4,7 @@ import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons";
 import {useMetadata} from "../../../hooks/metadataHook";
 import {Trans} from "react-i18next";
 
+/* eslint-disable jsx-a11y/anchor-has-content */
 const GroupPermissionHelp = () => {
     const {mainCommand} = useMetadata();
     return (
@@ -76,5 +77,6 @@ const GroupPermissionHelp = () => {
         </div>
     )
 };
+/* eslint-enable jsx-a11y/anchor-has-content */
 
 export default GroupPermissionHelp
