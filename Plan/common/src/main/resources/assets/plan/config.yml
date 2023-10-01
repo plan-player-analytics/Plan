@@ -20,7 +20,6 @@ Plugin:
     Notify_about_DEV_releases: false
   Configuration:
     Allow_proxy_to_manage_settings: true
-  Use_Legacy_Frontend: false
 # -----------------------------------------------------
 # Supported databases: SQLite, MySQL
 # -----------------------------------------------------
@@ -272,5 +271,3 @@ Plugins:
       - ExampleTown
 Customized_files:
   Path: "web"
-  # Web dev mode enables all customized files and disables webserver resource cache for instant changes on browser refresh.
-  Enable_web_dev_mode: false

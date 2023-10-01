@@ -20,7 +20,6 @@ Plugin:
     # Display update notification on the website
     Check_for_updates: true
     Notify_about_DEV_releases: false
-  Use_Legacy_Frontend: false
 # -----------------------------------------------------
 # Supported databases: MySQL
 # -----------------------------------------------------
@@ -261,5 +260,3 @@ Plugins:
     Secret: "-"
 Customized_files:
   Path: "web"
-  # Web dev mode enables all customized files and disables webserver resource cache for instant changes on browser refresh.
-  Enable_web_dev_mode: false
