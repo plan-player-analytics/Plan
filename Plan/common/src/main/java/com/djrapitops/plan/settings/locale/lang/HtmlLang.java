@@ -340,7 +340,7 @@ public enum HtmlLang implements Lang {
     HELP_GROUPS_7("html.label.help.manage.groups.line-7", "Access vs Page -permissions"),
     HELP_GROUPS_8("html.label.help.manage.groups.line-8", "You need to assign both access and page permissions for users."),
     HELP_GROUPS_9("html.label.help.manage.groups.line-9", "<1>{{permission1}}</1> permissions allow user make the request to specific address, eg. <2>{{permission2}}</2> allows request to /network."),
-    HELP_GROUPS_10("html.label.help.manage.groups.line-10", "{{permission}} permissions determine what parts of the page are visible. These permissions also limit requests to the related data endpoints."),
+    HELP_GROUPS_10("html.label.help.manage.groups.line-10", "<1>{{permission}}</> permissions determine what parts of the page are visible. These permissions also limit requests to the related data endpoints."),
     HELP_GROUPS_11("html.label.help.manage.groups.line-11", "<1>{{permission1}}</1> permissions are not required for data: <2>{{permission2}}</2> allows request to /v1/network/overview even without <3>{{permission3}}</3>."),
     HELP_GROUPS_12("html.label.help.manage.groups.line-12", "Saving changes"),
     HELP_GROUPS_13("html.label.help.manage.groups.line-13", "When you add a group or delete a group that action is saved immediately after confirm (no undo)."),

@@ -366,7 +366,7 @@ html:
             manage:
                 groups:
                     line-1: "This view allows you to modify web group permissions."
-                    line-10: "{{permission}} permissions determine what parts of the page are visible. These permissions also limit requests to the related data endpoints."
+                    line-10: "<1>{{permission}}</> permissions determine what parts of the page are visible. These permissions also limit requests to the related data endpoints."
                     line-11: "<1>{{permission1}}</1> permissions are not required for data: <2>{{permission2}}</2> allows request to /v1/network/overview even without <3>{{permission3}}</3>."
                     line-12: "Saving changes"
                     line-13: "When you add a group or delete a group that action is saved immediately after confirm (no undo)."
@@ -474,6 +474,7 @@ html:
         name: "İsim"
         network: "Ağ"
         networkAsNumbers: "Sayılarla Ağ"
+        networkCalendar: "Network Calendar"
         networkOnlineActivity: "Ağ Çevrimiçi Etkinliği"
         networkOverview: "Ağ Görünümü"
         networkPage: "Ağ sayfası"
@@ -556,6 +557,7 @@ html:
         serverPage: "Sunucu sayfası"
         serverPlaytime: "Sunucu Oynatma Süresi"
         serverPlaytime30days: "30 günlük Sunucu Oynatma Süresi"
+        serverPossiblyOffline: "Possibly offline"
         serverSelector: "Server selector"
         servers: "Sunucular"
         serversTitle: "SUNUCULAR"
@@ -649,6 +651,7 @@ html:
                 page_network_join_addresses_graphs_time: "See Join Addresses over time graph"
                 page_network_overview: "See Network Overview -tab"
                 page_network_overview_graphs: "See Network Overview graphs"
+                page_network_overview_graphs_calendar: "See Network calendar"
                 page_network_overview_graphs_day_by_day: "See Day by Day graph"
                 page_network_overview_graphs_hour_by_hour: "See Hour by Hour graph"
                 page_network_overview_graphs_online: "See Players Online graph"

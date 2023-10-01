@@ -366,7 +366,7 @@ html:
             manage:
                 groups:
                     line-1: "ここでは、Webグループの権限を変更できます。"
-                    line-10: "{{permission}} 権限はページのどの部分を表示するかを決定します。これらの権限は関連するデータエンドポイントへのリクエストも制限します"
+                    line-10: "<1>{{permission}}</1> 権限はページのどの部分を表示するかを決定します。これらの権限は関連するデータエンドポイントへのリクエストも制限します"
                     line-11: "<1>{{permission1}}</1> の権限はデータには必要ありません: <2>{{permission2}}</2> は <3>{{permission3}}</3> がなくても/v1/network/overviewへのリクエストを許可します"
                     line-12: "変更内容を保存"
                     line-13: "グループを追加または削除した場合、そのアクションは確認後すぐに保存されます（取り消しはできません)"
@@ -474,6 +474,7 @@ html:
         name: "名前"
         network: "ネットワーク"
         networkAsNumbers: "ネットワーク数"
+        networkCalendar: "Network Calendar"
         networkOnlineActivity: "ネットワーク内の接続状況"
         networkOverview: "ネットワーク概要"
         networkPage: "ネットワークページ"
@@ -556,6 +557,7 @@ html:
         serverPage: "サーバーページ"
         serverPlaytime: "各サーバーのプレイ時間"
         serverPlaytime30days: "各サーバーでの1ヶ月のプレイ時間"
+        serverPossiblyOffline: "Possibly offline"
         serverSelector: "サーバーセレクター"
         servers: "接続されているサーバー"
         serversTitle: "接続されているサーバー"
@@ -649,6 +651,7 @@ html:
                 page_network_join_addresses_graphs_time: "参加アドレスの経時変化のグラフを表示"
                 page_network_overview: "ネットワークの概要タブを表示"
                 page_network_overview_graphs: "ネットワークの概要グラフを表示"
+                page_network_overview_graphs_calendar: "See Network calendar"
                 page_network_overview_graphs_day_by_day: "日ごとのグラフを表示"
                 page_network_overview_graphs_hour_by_hour: "時間ごとのグラフを表示"
                 page_network_overview_graphs_online: "オンラインプレイヤーのグラフを表示"

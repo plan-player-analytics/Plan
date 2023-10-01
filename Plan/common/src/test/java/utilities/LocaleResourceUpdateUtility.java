@@ -29,6 +29,8 @@ import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 
 /**
+ * This utility allows updating all locale_{code}.yml files with newest language.
+ *
  * @author AuroraLS3
  */
 public class LocaleResourceUpdateUtility {
