@@ -127,6 +127,8 @@ subprojects {
         testImplementation "com.google.dagger:dagger:$daggerVersion"
         testAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 
+        compileOnly "io.swagger.core.v3:swagger-core-jakarta:$swaggerVersion"
+
         // Test Tooling Dependencies
         testImplementation "org.junit.jupiter:junit-jupiter:$junitVersion"      // JUnit 5
         testImplementation "org.mockito:mockito-core:$mockitoVersion"           // Mockito Core
