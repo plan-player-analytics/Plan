@@ -18,6 +18,7 @@ const PunchCard = ({series}) => {
         Highcharts.setOptions(graphTheming);
         setTimeout(() => Highcharts.chart('punchcard', {
             chart: {
+                noData: t('html.label.noDataToDisplay'),
                 backgroundColor: 'transparent',
                 plotBackgroundColor: 'transparent',
                 defaultSeriesType: 'scatter'

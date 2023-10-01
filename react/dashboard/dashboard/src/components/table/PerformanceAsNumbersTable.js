@@ -58,9 +58,9 @@ const PerformanceAsNumbersTable = ({data, servers}) => {
                       ]}/>
             <TableRow icon={faTachometerAlt} color="orange" text={t('html.label.averageTps')}
                       values={[
-                          <>{data.tps_30d} {noTPSOnProxies}</>,
-                          <>{data.tps_7d} {noTPSOnProxies}</>,
-                          <>{data.tps_24h} {noTPSOnProxies}</>
+                          <>{t(data.tps_30d)} {noTPSOnProxies}</>,
+                          <>{t(data.tps_7d)} {noTPSOnProxies}</>,
+                          <>{t(data.tps_24h)} {noTPSOnProxies}</>
                       ]}/>
             <TableRow icon={faTachometerAlt} color="amber" text={t('html.label.averageCpuUsage')}
                       values={[
@@ -76,17 +76,17 @@ const PerformanceAsNumbersTable = ({data, servers}) => {
                       ]}/>
             <TableRow icon={faDragon} color="purple" text={t('html.label.averageEntities')}
                       values={[
-                          <>{data.entities_30d} {noTPSOnProxies}</>,
-                          <>{data.entities_7d} {noTPSOnProxies}</>,
-                          <>{data.entities_24h} {noTPSOnProxies}</>
+                          <>{t(data.entities_30d)} {noTPSOnProxies}</>,
+                          <>{t(data.entities_7d)} {noTPSOnProxies}</>,
+                          <>{t(data.entities_24h)} {noTPSOnProxies}</>
                       ]}/>
             <TableRow icon={faMap} color="blue-grey"
-                      text={<>{t('html.label.averageChunks')}{' '}{data.chunks_30d === 'Unavailable' ?
+                      text={<>{t('html.label.averageChunks')}{' '}{data.chunks_30d === 'plugin.generic.unavailable' ?
                           <Fa icon={faEye} title={t('html.description.noSpongeChunks')}/> : ''}</>}
                       values={[
-                          <>{data.chunks_30d} {noTPSOnProxies}</>,
-                          <>{data.chunks_7d} {noTPSOnProxies}</>,
-                          <>{data.chunks_24h} {noTPSOnProxies}</>
+                          <>{t(data.chunks_30d)} {noTPSOnProxies}</>,
+                          <>{t(data.chunks_7d)} {noTPSOnProxies}</>,
+                          <>{t(data.chunks_24h)} {noTPSOnProxies}</>
                       ]}/>
             <TableRow icon={faHdd} color="green"
                       text={t('html.label.maxFreeDisk')}

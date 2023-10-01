@@ -40,6 +40,7 @@ const JoinAddressGraph = ({id, data, colors, stack}) => {
 
         Highcharts.stockChart(id, {
             chart: {
+                noData: t('html.label.noDataToDisplay'),
                 type: "column"
             },
             rangeSelector: {

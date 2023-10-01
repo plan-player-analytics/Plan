@@ -26,8 +26,8 @@ const ConnectionsCard = ({connections}) => {
                     </tr>
                     </thead>
                     {Boolean(connections?.length) && <tbody>
-                    {connections.map((connection, i) => (<tr key={JSON.stringify(connection)}>
-                        <td>{connection.geolocation}</td>
+                    {connections.map(connection => (<tr key={JSON.stringify(connection)}>
+                        <td>{connection.geolocation.replace('Local Machine', t('html.value.localMachine'))}</td>
                         <td>{connection.date}</td>
                     </tr>))}
                     </tbody>}

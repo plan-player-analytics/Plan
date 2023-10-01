@@ -31,6 +31,7 @@ const GroupPie = ({id, groups, colors, name}) => {
         Highcharts.setOptions(graphTheming);
         Highcharts.chart(id, {
             chart: {
+                noData: t('html.label.noDataToDisplay'),
                 backgroundColor: 'transparent',
                 plotBorderWidth: null,
                 plotShadow: false,

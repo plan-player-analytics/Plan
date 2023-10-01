@@ -4,7 +4,12 @@ import {Card} from "react-bootstrap";
 import CardTabs from "../../../CardTabs";
 import {faChartArea} from "@fortawesome/free-solid-svg-icons";
 import {useDataRequest} from "../../../../hooks/dataFetchHook";
-import {fetchDayByDayGraph, fetchHourByHourGraph, fetchPlayersOnlineGraph} from "../../../../service/serverService";
+import {
+    fetchDayByDayGraph,
+    fetchHourByHourGraph,
+    fetchNetworkCalendarGraph,
+    fetchPlayersOnlineGraph
+} from "../../../../service/serverService";
 import {ErrorViewBody} from "../../../../views/ErrorView";
 import {ChartLoader} from "../../../navigation/Loader";
 import TimeByTimeGraph from "../../../graphs/TimeByTimeGraph";
@@ -12,6 +17,8 @@ import PlayersOnlineGraph from "../../../graphs/PlayersOnlineGraph";
 import {useMetadata} from "../../../../hooks/metadataHook";
 import StackedPlayersOnlineGraph from "../../../graphs/StackedPlayersOnlineGraph";
 import {useAuth} from "../../../../hooks/authenticationHook";
+import {faCalendar} from "@fortawesome/free-regular-svg-icons";
+import ServerCalendar from "../../../calendar/ServerCalendar";
 
 const SingleProxyPlayersOnlineGraph = ({serverUUID}) => {
     const {data, loadingError} = useDataRequest(fetchPlayersOnlineGraph, [serverUUID]);
@@ -61,6 +68,16 @@ const HourByHourTab = () => {
     return <TimeByTimeGraph id={"hour-by-hour-graph"} data={data}/>
 }
 
+const NetworkCalendarTab = () => {
+
+    const {data, loadingError} = useDataRequest(fetchNetworkCalendarGraph, [])
+
+    if (loadingError) return <ErrorViewBody error={loadingError}/>
+    if (!data) return <ChartLoader/>;
+
+    return <ServerCalendar series={data.data} firstDay={data.firstDay}/>
+}
+
 const NetworkOnlineActivityGraphsCard = () => {
     const {hasPermission} = useAuth();
     const {t} = useTranslation();
@@ -77,6 +94,10 @@ const NetworkOnlineActivityGraphsCard = () => {
             name: t('html.label.hourByHour'), icon: faChartArea, color: 'blue', href: 'hour-by-hour',
             element: <HourByHourTab/>,
             permission: 'page.network.overview.graphs.hour.by.hour'
+        }, {
+            name: t('html.label.networkCalendar'), icon: faCalendar, color: 'teal', href: 'network-calendar',
+            element: <NetworkCalendarTab/>,
+            permission: 'page.network.overview.graphs.calendar'
         }
     ].filter(tab => hasPermission(tab.permission));
     return <Card>

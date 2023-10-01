@@ -72,7 +72,7 @@ const AllPerformanceGraph = ({id, data, dataSeries}) => {
         let chartId = chartElement?.getAttribute('data-highcharts-chart');
         const chart = chartId !== undefined ? Highcharts.charts[chartId] : undefined;
 
-        if (chart && chart.yAxis && chart.yAxis.length) {
+        if (chart?.yAxis?.length) {
             const newWidth = window.innerWidth
             chart.yAxis[0].update({labels: {enabled: newWidth >= 900}});
             chart.yAxis[1].update({labels: {enabled: newWidth >= 900}});
@@ -158,6 +158,9 @@ const AllPerformanceGraph = ({id, data, dataSeries}) => {
         Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}})
         Highcharts.setOptions(graphTheming);
         Highcharts.stockChart(id, {
+            chart: {
+                noData: t('html.label.noDataToDisplay')
+            },
             rangeSelector: {
                 selected: 2,
                 buttons: linegraphButtons

@@ -28,6 +28,7 @@ const ServerPie = ({colors, series}) => {
         Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}});
         Highcharts.chart('server-pie', {
             chart: {
+                noData: t('html.label.noDataToDisplay'),
                 backgroundColor: 'transparent',
                 plotBorderWidth: null,
                 plotShadow: false,

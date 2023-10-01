@@ -33,6 +33,7 @@ const StackedPlayersOnlineGraph = ({data}) => {
                 buttons: linegraphButtons
             },
             chart: {
+                noData: t('html.label.noDataToDisplay'),
                 zooming: {
                     type: 'xy'
                 }

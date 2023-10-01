@@ -21,7 +21,10 @@ const GeolocationBarGraph = ({series, color}) => {
         Accessibility(Highcharts);
         Highcharts.setOptions(graphTheming);
         Highcharts.chart("countryBarChart", {
-            chart: {type: 'bar'},
+            chart: {
+                noData: t('html.label.noDataToDisplay'),
+                type: 'bar'
+            },
             title: {text: ''},
             xAxis: {
                 categories: categories,

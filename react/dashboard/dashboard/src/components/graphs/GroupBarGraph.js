@@ -29,7 +29,10 @@ const GroupBarGraph = ({id, groups, colors, horizontal, name}) => {
         Accessibility(Highcharts);
         Highcharts.setOptions(graphTheming);
         Highcharts.chart(id, {
-            chart: {type: horizontal ? 'bar' : 'column'},
+            chart: {
+                noData: t('html.label.noDataToDisplay'),
+                type: horizontal ? 'bar' : 'column'
+            },
             title: {text: ''},
             xAxis: {
                 categories: categories,
