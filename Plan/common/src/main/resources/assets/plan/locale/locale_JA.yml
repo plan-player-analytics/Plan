@@ -568,7 +568,7 @@ html:
         sortBy: "並べ替え"
         stacked: "スタックビュー"
         table:
-            showNofM: "{{mn}} 件中の {{n}} を表示"
+            showNofM: "{{m}} 件中の {{n}} を表示"
             showPerPage: "ページあたりの表示"
             visibleColumns: "表示する項目"
         themeSelect: "テーマ選択"

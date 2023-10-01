@@ -568,7 +568,7 @@ html:
         sortBy: "Сортувати за"
         stacked: "Складено"
         table:
-            showNofM: "Showing {{n}} of {{mn}} entries"
+            showNofM: "Showing {{n}} of {{m}} entries"
             showPerPage: "Show per page"
             visibleColumns: "Visible columns"
         themeSelect: "Вибір теми"

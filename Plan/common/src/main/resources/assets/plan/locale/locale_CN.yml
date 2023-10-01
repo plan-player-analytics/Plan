@@ -568,7 +568,7 @@ html:
         sortBy: "排序方式"
         stacked: "堆叠"
         table:
-            showNofM: "Showing {{n}} of {{mn}} entries"
+            showNofM: "Showing {{n}} of {{m}} entries"
             showPerPage: "Show per page"
             visibleColumns: "Visible columns"
         themeSelect: "主题选择"

@@ -272,7 +272,7 @@ public enum HtmlLang implements Lang {
     LABEL_POSSIBLY_OFFLINE("html.label.serverPossiblyOffline", "Possibly offline"),
 
     LABEL_TABLE_VISIBLE_COLUMNS("html.label.table.visibleColumns", "Visible columns"),
-    LABEL_TABLE_SHOW_N_OF_M("html.label.table.showNofM", "Showing {{n}} of {{mn}} entries"),
+    LABEL_TABLE_SHOW_N_OF_M("html.label.table.showNofM", "Showing {{n}} of {{m}} entries"),
     LABEL_TABLE_SHOW_PER_PAGE("html.label.table.showPerPage", "Show per page"),
 
     LOGIN_LOGIN("html.login.login", "Login"),

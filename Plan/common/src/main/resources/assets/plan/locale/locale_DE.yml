@@ -568,7 +568,7 @@ html:
         sortBy: "Sort By"
         stacked: "Stacked"
         table:
-            showNofM: "Showing {{n}} of {{mn}} entries"
+            showNofM: "Showing {{n}} of {{m}} entries"
             showPerPage: "Show per page"
             visibleColumns: "Visible columns"
         themeSelect: "Thema ausgewählt"
