@@ -135,6 +135,21 @@ public class LocaleSystem implements SubSystem {
 
         LangCode langCode = locale.getLangCode();
         logger.info("Locale: '" + langCode.getName() + "' by " + langCode.getAuthors());
+
+        if (config.isTrue(PluginSettings.LOG_NEW_LOCALE_LINES)) {
+            logDefaultKeys(locale);
+        }
+    }
+
+    private void logDefaultKeys(Locale locale) {
+        Map<String, Lang> keys = getKeys();
+        for (Map.Entry<String, Lang> entry : keys.entrySet()) {
+            String key = entry.getKey();
+            Lang lang = entry.getValue();
+            if (lang.getDefault().equals(locale.getString(lang))) {
+                logger.info("Untranslated line: " + key);
+            }
+        }
     }
 
     public FileWatcher prepareFileWatcher(File localeFile) {
