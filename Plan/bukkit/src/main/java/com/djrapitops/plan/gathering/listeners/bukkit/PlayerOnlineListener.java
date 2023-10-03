@@ -85,12 +85,14 @@ public class PlayerOnlineListener implements Listener {
 
             String address = event.getHostname();
             if (!address.isEmpty()) {
-                address = address.substring(0, address.lastIndexOf(':'));
-                if (address.contains("\u0000")) {
-                    address = address.substring(0, address.indexOf('\u0000'));
-                }
-                if (address.contains("fml")) {
-                    address = address.substring(0, address.lastIndexOf("fml"));
+                if (address.contains(":")) {
+                    address = address.substring(0, address.lastIndexOf(':'));
+                    if (address.contains("\u0000")) {
+                        address = address.substring(0, address.indexOf('\u0000'));
+                    }
+                    if (address.contains("fml")) {
+                        address = address.substring(0, address.lastIndexOf("fml"));
+                    }
                 }
                 joinAddressCache.put(playerUUID, address);
             }
