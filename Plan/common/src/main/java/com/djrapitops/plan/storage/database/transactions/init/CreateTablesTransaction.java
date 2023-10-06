@@ -56,6 +56,7 @@ public class CreateTablesTransaction extends OperationCriticalTransaction {
         // Ensure plan_security has id column
         executeOther(new SecurityTableIdPatch());
         execute(WebUserPreferencesTable.createTableSQL(dbType));
+        execute(PluginVersionTable.createTableSQL(dbType));
 
         // DataExtension tables
         execute(ExtensionIconTable.createTableSQL(dbType));
