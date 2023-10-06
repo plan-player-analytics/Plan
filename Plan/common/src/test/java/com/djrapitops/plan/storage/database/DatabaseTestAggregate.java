@@ -20,6 +20,7 @@ import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionQue
 import com.djrapitops.plan.storage.database.queries.*;
 import com.djrapitops.plan.storage.database.queries.analysis.PlayerRetentionQueriesTest;
 import com.djrapitops.plan.storage.database.queries.analysis.TopListQueriesTest;
+import com.djrapitops.plan.storage.database.queries.objects.PluginMetadataQueriesTest;
 import com.djrapitops.plan.storage.database.transactions.commands.ChangeUserUUIDTransactionTest;
 import com.djrapitops.plan.storage.database.transactions.commands.CombineUserTransactionTest;
 import com.djrapitops.plan.storage.database.transactions.patches.AfterBadJoinAddressDataCorrectionPatchTest;
@@ -45,6 +46,7 @@ public interface DatabaseTestAggregate extends
         ExtensionQueryResultTableDataQueryTest,
         BadJoinAddressDataCorrectionPatchTest,
         AfterBadJoinAddressDataCorrectionPatchTest,
-        PlayerRetentionQueriesTest {
+        PlayerRetentionQueriesTest,
+        PluginMetadataQueriesTest {
     /* Collects all query tests together so its easier to implement database tests */
 }
