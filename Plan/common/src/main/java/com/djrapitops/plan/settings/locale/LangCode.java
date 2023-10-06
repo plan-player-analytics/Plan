@@ -26,7 +26,7 @@ public enum LangCode {
     CUSTOM("Custom", ""),
     EN("English", "AuroraLS3"),
     ES("Español", "Catalina, itaquito, Elguerrero & 4drian3d"),
-    CN("\u6C49\u8BED", "f0rb1d (\u4f5b\u58c1\u706f), qsefthuopq, shaokeyibb, Fur_xia, 10935336, SkipM4 & TheLittle_Yang, jhqwqmc"), // Simplified Chinese
+    CN("\u6C49\u8BED", "f0rb1d (\u4f5b\u58c1\u706f), qsefthuopq, shaokeyibb, Fur_xia, 10935336, SkipM4,  TheLittle_Yang & jhqwqmc"), // Simplified Chinese
     CS("čeština", "Shadowhackercz, QuakyCZ, MrFriggo & WolverStones"),
     DE("Deutsch", "Eyremba, fuzzlemann, Morsmorse, hallo1142 & DubHacker"),
     FI("suomi", "AuroraLS3, KasperiP"),
