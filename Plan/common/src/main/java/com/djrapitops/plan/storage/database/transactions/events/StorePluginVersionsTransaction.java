@@ -64,4 +64,9 @@ public class StorePluginVersionsTransaction extends Transaction {
             }
         });
     }
+
+    // Visible for testing
+    public List<PluginMetadata> getChangeList() {
+        return changeList;
+    }
 }

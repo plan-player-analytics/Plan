@@ -64,7 +64,7 @@ public class InstalledPluginGatheringTask extends TaskSystem.Task {
     public void run() {
         List<PluginMetadata> installedPlugins = serverSensor.getInstalledPlugins();
 
-        ServerUUID serverUUID = serverInfo.getServer().getUuid();
+        ServerUUID serverUUID = serverInfo.getServerUUID();
         List<PluginMetadata> previouslyInstalledPlugins = dbSystem.getDatabase()
                 .query(PluginMetadataQueries.getInstalledPlugins(serverUUID));
 
