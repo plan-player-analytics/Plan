@@ -4,6 +4,7 @@ import {Outlet} from "react-router-dom";
 import {useNavigation} from "../../hooks/navigationHook";
 import {
     faChartLine,
+    faCodeCompare,
     faCogs,
     faCubes,
     faGlobe,
@@ -119,6 +120,12 @@ const NetworkSidebar = () => {
             },
             {},
             {name: 'html.label.plugins', permission: 'page.network.plugins'},
+            {
+                name: 'html.label.pluginHistory',
+                icon: faCodeCompare,
+                href: "plugin-history",
+                permission: undefined // TODO
+            },
             {
                 name: 'html.label.pluginsOverview',
                 icon: faCubes,

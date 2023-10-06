@@ -34,7 +34,7 @@ const PluginCurrentCard = ({data, loadingError}) => {
             title: <><Fa icon={faCalendar}/> {t('html.label.modified')}</>,
             data: {_: "modified", display: "modifiedDisplay"}
         }],
-        data: history.filter(entry => entry.version)
+        data: history.length ? history.filter(entry => entry.version)
             .map(entry => {
                 return {
                     name: entry.name,
@@ -42,7 +42,7 @@ const PluginCurrentCard = ({data, loadingError}) => {
                     modified: entry.modified,
                     modifiedDisplay: <FormattedDate date={entry.modified}/>
                 }
-            })
+            }) : [{name: t('generic.noData'), version: '', 'modified': 0, modifiedDisplay: ''}]
     };
     const options = {
         responsive: true,

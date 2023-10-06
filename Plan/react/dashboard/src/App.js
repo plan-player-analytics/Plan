@@ -51,6 +51,7 @@ const NetworkPlayerRetention = React.lazy(() => import("./views/network/NetworkP
 const NetworkGeolocations = React.lazy(() => import("./views/network/NetworkGeolocations"));
 const NetworkPlayerbaseOverview = React.lazy(() => import("./views/network/NetworkPlayerbaseOverview"));
 const NetworkPerformance = React.lazy(() => import("./views/network/NetworkPerformance"));
+const NetworkPluginHistory = React.lazy(() => import('./views/network/NetworkPluginHistory'));
 
 const PlayersPage = React.lazy(() => import("./views/layout/PlayersPage"));
 const AllPlayers = React.lazy(() => import("./views/players/AllPlayers"));
@@ -185,6 +186,7 @@ function App() {
                                 <Route path="join-addresses" element={<Lazy><NetworkJoinAddresses/></Lazy>}/>
                                 <Route path="players" element={<Lazy><AllPlayers/></Lazy>}/>
                                 <Route path="geolocations" element={<Lazy><NetworkGeolocations/></Lazy>}/>
+                                <Route path="plugin-history" element={<Lazy><NetworkPluginHistory/></Lazy>}/>
                                 <Route path="plugins-overview" element={<Lazy><ServerPluginData/></Lazy>}/>
                                 <Route path="plugins/:plugin" element={<Lazy><ServerWidePluginData/></Lazy>}/>
                                 <Route path="*" element={<ErrorView error={{

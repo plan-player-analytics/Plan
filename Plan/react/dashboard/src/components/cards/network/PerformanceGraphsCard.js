@@ -153,13 +153,16 @@ const PerformanceGraphsCard = ({data}) => {
         setPerformanceSeries(series);
     }, [data, setPerformanceSeries])
 
+    const dataIncludesGameServers = data.servers && Boolean(data.servers.filter(server => !server.proxy).length);
+
     const tabs = useMemo(() => [
         {
             name: t('html.label.playersOnline'), icon: faUser, color: 'light-blue', href: 'players-online',
             element: <Tab data={performanceSeries.players} yAxis={yAxisConfigurations.PLAYERS_ONLINE}/>
         }, {
             name: t('html.label.tps'), icon: faTachometerAlt, color: 'red', href: 'tps',
-            element: <Tab data={performanceSeries.tps} yAxis={yAxisConfigurations.TPS}/>
+            element: <Tab data={performanceSeries.tps} yAxis={yAxisConfigurations.TPS}/>,
+            disabled: !dataIncludesGameServers
         }, {
             name: t('html.label.cpu'), icon: faTachometerAlt, color: 'amber', href: 'cpu',
             element: <Tab data={performanceSeries.cpu} yAxis={yAxisConfigurations.CPU}/>
@@ -168,10 +171,12 @@ const PerformanceGraphsCard = ({data}) => {
             element: <Tab data={performanceSeries.ram} yAxis={yAxisConfigurations.RAM_OR_DISK}/>
         }, {
             name: t('html.label.entities'), icon: faDragon, color: 'purple', href: 'entities',
-            element: <Tab data={performanceSeries.entities} yAxis={yAxisConfigurations.ENTITIES}/>
+            element: <Tab data={performanceSeries.entities} yAxis={yAxisConfigurations.ENTITIES}/>,
+            disabled: !dataIncludesGameServers
         }, {
             name: t('html.label.loadedChunks'), icon: faMap, color: 'blue-grey', href: 'chunks',
-            element: <Tab data={performanceSeries.chunks} yAxis={yAxisConfigurations.CHUNKS}/>
+            element: <Tab data={performanceSeries.chunks} yAxis={yAxisConfigurations.CHUNKS}/>,
+            disabled: !dataIncludesGameServers
         }, {
             name: t('html.label.diskSpace'), icon: faHdd, color: 'green', href: 'disk',
             element: <Tab data={performanceSeries.disk} yAxis={yAxisConfigurations.RAM_OR_DISK}/>

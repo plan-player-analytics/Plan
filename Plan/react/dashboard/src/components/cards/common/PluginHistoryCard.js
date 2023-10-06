@@ -29,14 +29,14 @@ const PluginHistoryCard = ({data, loadingError}) => {
             title: <><Fa icon={faCalendar}/> {t('html.label.modified')}</>,
             data: {_: "modified", display: "modifiedDisplay"}
         }],
-        data: history.map(entry => {
+        data: history.length ? history.map(entry => {
             return {
                 name: entry.name,
                 version: t(entry.version || 'html.label.uninstalled'),
                 modified: entry.modified,
                 modifiedDisplay: <FormattedDate date={entry.modified}/>
             }
-        })
+        }) : [{name: t('generic.noData'), version: '', 'modified': 0, modifiedDisplay: ''}]
     };
     const options = {
         responsive: true,
