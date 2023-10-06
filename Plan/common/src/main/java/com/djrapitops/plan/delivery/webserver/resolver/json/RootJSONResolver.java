@@ -24,6 +24,7 @@ import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.http.WebServer;
 import com.djrapitops.plan.delivery.webserver.resolver.json.metadata.PreferencesJSONResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.json.metadata.StorePreferencesJSONResolver;
+import com.djrapitops.plan.delivery.webserver.resolver.json.plugins.PluginHistoryJSONResolver;
 import com.djrapitops.plan.identification.Identifiers;
 import dagger.Lazy;
 
@@ -84,6 +85,7 @@ public class RootJSONResolver {
             ExtensionJSONResolver extensionJSONResolver,
             RetentionJSONResolver retentionJSONResolver,
             PlayerJoinAddressJSONResolver playerJoinAddressJSONResolver,
+            PluginHistoryJSONResolver pluginHistoryJSONResolver,
 
             PreferencesJSONResolver preferencesJSONResolver,
             StorePreferencesJSONResolver storePreferencesJSONResolver,
@@ -123,6 +125,7 @@ public class RootJSONResolver {
                 .add("extensionData", extensionJSONResolver)
                 .add("retention", retentionJSONResolver)
                 .add("joinAddresses", playerJoinAddressJSONResolver)
+                .add("pluginHistory", pluginHistoryJSONResolver)
                 .add("preferences", preferencesJSONResolver);
 
         this.webServer = webServer;

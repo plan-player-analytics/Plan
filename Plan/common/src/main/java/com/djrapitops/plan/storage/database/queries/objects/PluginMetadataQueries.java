@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries.objects;
 
+import com.djrapitops.plan.delivery.domain.PluginHistoryMetadata;
 import com.djrapitops.plan.gathering.domain.PluginMetadata;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
@@ -23,6 +24,7 @@ import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.PluginVersionTable;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import org.intellij.lang.annotations.Language;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -75,5 +77,22 @@ public class PluginMetadataQueries {
                 return installedPlugins;
             }
         };
+    }
+
+    public static Query<List<PluginHistoryMetadata>> getPluginHistory(ServerUUID serverUUID) {
+        @Language("SQL")
+        String sql = SELECT + "*" + FROM + PluginVersionTable.TABLE_NAME +
+                WHERE + PluginVersionTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                ORDER_BY + PluginVersionTable.MODIFIED + " DESC, " + PluginVersionTable.PLUGIN_NAME;
+        return db -> db.queryList(sql, PluginMetadataQueries::extractHistoryMetadata, serverUUID);
+    }
+
+    @NotNull
+    private static PluginHistoryMetadata extractHistoryMetadata(ResultSet row) throws SQLException {
+        String name = row.getString(PluginVersionTable.PLUGIN_NAME);
+        String version = row.getString(PluginVersionTable.VERSION);
+        if (row.wasNull()) version = null;
+        long modified = row.getLong(PluginVersionTable.MODIFIED);
+        return new PluginHistoryMetadata(name, version, modified);
     }
 }
