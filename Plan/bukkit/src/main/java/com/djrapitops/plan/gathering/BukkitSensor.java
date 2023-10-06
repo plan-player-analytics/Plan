@@ -16,13 +16,16 @@
  */
 package com.djrapitops.plan.gathering;
 
+import com.djrapitops.plan.gathering.domain.PluginMetadata;
 import org.bukkit.Bukkit;
 import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -127,6 +130,14 @@ public class BukkitSensor implements ServerSensor<World> {
     public List<String> getOnlinePlayerNames() {
         return Bukkit.getOnlinePlayers().stream()
                 .map(Player::getName)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PluginMetadata> getInstalledPlugins() {
+        return Arrays.stream(Bukkit.getPluginManager().getPlugins())
+                .map(Plugin::getDescription)
+                .map(description -> new PluginMetadata(description.getName(), description.getVersion()))
                 .collect(Collectors.toList());
     }
 }

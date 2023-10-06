@@ -17,8 +17,10 @@
 package com.djrapitops.plan.gathering;
 
 import com.djrapitops.plan.PlanVelocity;
+import com.djrapitops.plan.gathering.domain.PluginMetadata;
 import com.djrapitops.plan.identification.properties.VelocityRedisCheck;
 import com.djrapitops.plan.identification.properties.VelocityRedisPlayersOnlineSupplier;
+import com.velocitypowered.api.plugin.PluginContainer;
 import com.velocitypowered.api.proxy.Player;
 
 import javax.inject.Inject;
@@ -34,6 +36,7 @@ public class VelocitySensor implements ServerSensor<Object> {
 
     private final IntSupplier onlinePlayerCountSupplier;
     private final Supplier<Collection<Player>> getPlayers;
+    private final Supplier<Collection<PluginContainer>> getPlugins;
 
     @Inject
     public VelocitySensor(PlanVelocity plugin) {
@@ -41,6 +44,7 @@ public class VelocitySensor implements ServerSensor<Object> {
         onlinePlayerCountSupplier = VelocityRedisCheck.isClassAvailable()
                 ? new VelocityRedisPlayersOnlineSupplier()
                 : plugin.getProxy()::getPlayerCount;
+        getPlugins = plugin.getProxy().getPluginManager()::getPlugins;
     }
 
     @Override
@@ -61,5 +65,15 @@ public class VelocitySensor implements ServerSensor<Object> {
     @Override
     public boolean usingRedisBungee() {
         return VelocityRedisCheck.isClassAvailable();
+    }
+
+    @Override
+    public List<PluginMetadata> getInstalledPlugins() {
+        return getPlugins.get().stream()
+                .map(PluginContainer::getDescription)
+                .map(description -> new PluginMetadata(
+                        description.getName().orElse(description.getId()),
+                        description.getVersion().orElse("html.label.installed")))
+                .collect(Collectors.toList());
     }
 }

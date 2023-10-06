@@ -18,7 +18,9 @@ package com.djrapitops.plan.gathering;
 
 import cn.nukkit.Player;
 import cn.nukkit.level.Level;
+import cn.nukkit.plugin.Plugin;
 import com.djrapitops.plan.PlanNukkit;
+import com.djrapitops.plan.gathering.domain.PluginMetadata;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -72,6 +74,15 @@ public class NukkitSensor implements ServerSensor<Level> {
         return plugin.getServer().getOnlinePlayers()
                 .values().stream()
                 .map(Player::getName)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PluginMetadata> getInstalledPlugins() {
+        return plugin.getServer().getPluginManager()
+                .getPlugins().values().stream()
+                .map(Plugin::getDescription)
+                .map(description -> new PluginMetadata(description.getName(), description.getVersion()))
                 .collect(Collectors.toList());
     }
 }

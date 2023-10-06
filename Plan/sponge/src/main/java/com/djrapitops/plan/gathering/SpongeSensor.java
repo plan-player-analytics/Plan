@@ -16,10 +16,12 @@
  */
 package com.djrapitops.plan.gathering;
 
+import com.djrapitops.plan.gathering.domain.PluginMetadata;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.world.chunk.WorldChunk;
 import org.spongepowered.api.world.server.ServerWorld;
+import org.spongepowered.plugin.PluginContainer;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -81,5 +83,15 @@ public class SpongeSensor implements ServerSensor<ServerWorld> {
     @Override
     public List<String> getOnlinePlayerNames() {
         return game.server().onlinePlayers().stream().map(ServerPlayer::name).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PluginMetadata> getInstalledPlugins() {
+        return game.pluginManager().plugins().stream()
+                .map(PluginContainer::metadata)
+                .map(metadata -> new PluginMetadata(
+                        metadata.name().orElse(metadata.id()),
+                        metadata.version().toString()))
+                .collect(Collectors.toList());
     }
 }
