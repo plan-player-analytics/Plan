@@ -270,6 +270,11 @@ public enum HtmlLang implements Lang {
     LABEL_SERVER_SELECTOR("html.label.serverSelector", "Server selector"),
     LABEL_APPLY("html.label.apply", "Apply"),
     LABEL_POSSIBLY_OFFLINE("html.label.serverPossiblyOffline", "Possibly offline"),
+    LABEL_PLUGINS_CURRENTLY_INSTALLED("html.label.currentlyInstalledPlugins", "Currently Installed Plugins"),
+    LABEL_PLUGINS_HISTORY("html.label.pluginHistory", "Plugin History"),
+    LABEL_PLUGINS_VERSION_HISTORY("html.label.pluginVersionHistory", "Plugin Version History"),
+    LABEL_VERSION("html.label.version", "Version"),
+    LABEL_MODIFIED("html.label.modified", "Modified"),
 
     LABEL_TABLE_VISIBLE_COLUMNS("html.label.table.visibleColumns", "Visible columns"),
     LABEL_TABLE_SHOW_N_OF_M("html.label.table.showNofM", "Showing {{n}} of {{m}} entries"),

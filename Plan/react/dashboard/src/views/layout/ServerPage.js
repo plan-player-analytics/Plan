@@ -6,6 +6,7 @@ import {
     faCampground,
     faChartArea,
     faChartLine,
+    faCodeCompare,
     faCogs,
     faCubes,
     faGlobe,
@@ -113,6 +114,12 @@ const ServerSidebar = () => {
             {name: 'html.label.performance', icon: faCogs, href: "performance", permission: 'page.server.performance'},
             {},
             {name: 'html.label.plugins', permission: 'page.server.plugins'},
+            {
+                name: 'html.label.pluginHistory',
+                icon: faCodeCompare,
+                href: "plugin-history",
+                permission: undefined // TODO
+            },
             {
                 name: 'html.label.pluginsOverview',
                 icon: faCubes,
