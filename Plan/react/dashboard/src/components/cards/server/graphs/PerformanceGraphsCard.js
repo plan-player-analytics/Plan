@@ -15,6 +15,7 @@ import WorldPerformanceGraph from "../../../graphs/performance/WorldPerformanceG
 import DiskPerformanceGraph from "../../../graphs/performance/DiskPerformanceGraph";
 import PingGraph from "../../../graphs/performance/PingGraph";
 import {mapPerformanceDataToSeries} from "../../../../util/graphs";
+import {useAuth} from "../../../../hooks/authenticationHook";
 
 const AllGraphTab = ({data, dataSeries, pluginHistorySeries, loadingError}) => {
     if (loadingError) return <ErrorViewBody error={loadingError}/>
@@ -66,6 +67,7 @@ const PingGraphTab = ({identifier}) => {
 
 const PerformanceGraphsCard = () => {
     const {t} = useTranslation();
+    const {authRequired, hasPermission} = useAuth();
 
     const {identifier} = useParams();
     const {data, loadingError} = useDataRequest(fetchOptimizedPerformance, [identifier]);
@@ -73,7 +75,7 @@ const PerformanceGraphsCard = () => {
     const {
         data: pluginHistory,
         loadingError: pluginHistoryLoadingError
-    } = useDataRequest(fetchPluginHistory, [identifier]);
+    } = useDataRequest(fetchPluginHistory, [identifier], authRequired && hasPermission('page.server.plugin.history'));
     const [pluginHistorySeries, setPluginHistorySeries] = useState({});
 
     useEffect(() => {

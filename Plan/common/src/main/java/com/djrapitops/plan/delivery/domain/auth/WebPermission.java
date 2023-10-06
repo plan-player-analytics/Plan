@@ -55,6 +55,7 @@ public enum WebPermission implements Supplier<String>, Lang {
     PAGE_NETWORK_GEOLOCATIONS_PING_PER_COUNTRY("See Ping Per Country table"),
     PAGE_NETWORK_PLAYERS("See Player list -tab"),
     PAGE_NETWORK_PERFORMANCE("See network Performance tab"),
+    PAGE_NETWORK_PLUGIN_HISTORY("See Plugin History across the network"),
     PAGE_NETWORK_PLUGINS("See Plugins tab of Proxy"),
 
     PAGE_SERVER("See all of server page"),
@@ -90,6 +91,7 @@ public enum WebPermission implements Supplier<String>, Lang {
     PAGE_SERVER_PERFORMANCE("See Performance tab"),
     PAGE_SERVER_PERFORMANCE_GRAPHS("See Performance graphs"),
     PAGE_SERVER_PERFORMANCE_OVERVIEW("See Performance numbers"),
+    PAGE_SERVER_PLUGIN_HISTORY("See Plugin History"),
     PAGE_SERVER_PLUGINS("See Plugins -tabs of servers"),
 
     PAGE_PLAYER("See all of player page"),

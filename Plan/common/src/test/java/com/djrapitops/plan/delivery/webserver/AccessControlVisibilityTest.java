@@ -146,6 +146,7 @@ class AccessControlVisibilityTest {
                 Arguments.arguments(WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS, "performance-graphs", "performance"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_PERFORMANCE_OVERVIEW, "performance-as-numbers", "performance"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_PERFORMANCE_OVERVIEW, "performance-insights", "performance"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_PLUGIN_HISTORY, "server-plugin-history", "plugin-history"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_PLUGINS, "server-plugin-data", "plugins-overview")
         );
     }
@@ -174,6 +175,7 @@ class AccessControlVisibilityTest {
                 Arguments.arguments(WebPermission.PAGE_NETWORK_GEOLOCATIONS_MAP, "geolocations", "geolocations"),
                 Arguments.arguments(WebPermission.PAGE_NETWORK_GEOLOCATIONS_PING_PER_COUNTRY, "ping-per-country", "geolocations"),
                 Arguments.arguments(WebPermission.PAGE_NETWORK_PERFORMANCE, "row-network-performance-0", "performance"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_PLUGIN_HISTORY, "network-plugin-history", "plugin-history"),
                 Arguments.arguments(WebPermission.PAGE_NETWORK_PLUGINS, "server-plugin-data", "plugins-overview")
         );
     }

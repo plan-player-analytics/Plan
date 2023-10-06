@@ -50,6 +50,7 @@ public class RootJSONResolver {
 
     private final CompositeResolver.Builder readOnlyResourcesBuilder;
     private final StorePreferencesJSONResolver storePreferencesJSONResolver;
+    private final PluginHistoryJSONResolver pluginHistoryJSONResolver;
     private CompositeResolver resolver;
 
     @Inject
@@ -125,11 +126,11 @@ public class RootJSONResolver {
                 .add("extensionData", extensionJSONResolver)
                 .add("retention", retentionJSONResolver)
                 .add("joinAddresses", playerJoinAddressJSONResolver)
-                .add("pluginHistory", pluginHistoryJSONResolver)
                 .add("preferences", preferencesJSONResolver);
 
         this.webServer = webServer;
         // These endpoints require authentication to be enabled.
+        this.pluginHistoryJSONResolver = pluginHistoryJSONResolver;
         this.webGroupJSONResolver = webGroupJSONResolver;
         this.webGroupPermissionJSONResolver = webGroupPermissionJSONResolver;
         this.webPermissionJSONResolver = webPermissionJSONResolver;
@@ -152,6 +153,7 @@ public class RootJSONResolver {
                         .add("saveGroupPermissions", webGroupSaveJSONResolver)
                         .add("deleteGroup", webGroupDeleteJSONResolver)
                         .add("storePreferences", storePreferencesJSONResolver)
+                        .add("pluginHistory", pluginHistoryJSONResolver)
                         .build();
             } else {
                 resolver = readOnlyResourcesBuilder.build();

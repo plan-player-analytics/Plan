@@ -10,14 +10,15 @@ import {fetchPluginHistory} from "../../service/serverService";
 import PluginCurrentCard from "../../components/cards/common/PluginCurrentCard";
 
 const ServerPluginHistory = () => {
-    const {hasPermission} = useAuth();
+    const {authRequired, hasPermission} = useAuth();
     const {identifier} = useParams();
 
-    const {data, loadingError} = useDataRequest(fetchPluginHistory, [identifier]);
+    const seeHistory = authRequired && hasPermission('page.server.plugin.history');
+    const {data, loadingError} = useDataRequest(fetchPluginHistory, [identifier], seeHistory);
     return (
         <LoadIn>
-            <section className="server-plugin-versions">
-                <ExtendableRow id={'row-server-plugin-versions-0'}>
+            {seeHistory && <section className="server-plugin-history">
+                <ExtendableRow id={'row-server-plugin-history-0'}>
                     <Col md={6}>
                         <PluginCurrentCard data={data} loadingError={loadingError}/>
                     </Col>
@@ -25,7 +26,7 @@ const ServerPluginHistory = () => {
                         <PluginHistoryCard data={data} loadingError={loadingError}/>
                     </Col>
                 </ExtendableRow>
-            </section>
+            </section>}
         </LoadIn>
     )
 }

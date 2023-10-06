@@ -36,11 +36,12 @@ const HelpModal = React.lazy(() => import("../../components/modal/HelpModal"));
 
 const ServerSidebar = () => {
     const {t, i18n} = useTranslation();
+    const {authRequired} = useAuth();
     const {sidebarItems, setSidebarItems} = useNavigation();
     const {extensionData} = useServerExtensionContext();
 
     useEffect(() => {
-        const items = [
+        let items = [
             {
                 name: 'html.label.serverOverview',
                 icon: faInfoCircle,
@@ -118,7 +119,8 @@ const ServerSidebar = () => {
                 name: 'html.label.pluginHistory',
                 icon: faCodeCompare,
                 href: "plugin-history",
-                permission: undefined // TODO
+                permission: 'page.server.plugin.history',
+                authRequired: true
             },
             {
                 name: 'html.label.pluginsOverview',
@@ -149,9 +151,12 @@ const ServerSidebar = () => {
             );
         }
 
+        // Filter out items that need authentication
+        items = items
+            .filter(item => !item.authRequired || (authRequired && item.authRequired))
         setSidebarItems(items);
         window.document.title = `Plan | Server Analysis`;
-    }, [t, i18n, extensionData, setSidebarItems])
+    }, [t, i18n, extensionData, setSidebarItems, authRequired])
 
     return (
         <Sidebar items={sidebarItems}/>

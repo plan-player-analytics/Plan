@@ -16,7 +16,9 @@ import {faServer} from "@fortawesome/free-solid-svg-icons";
 
 const NetworkPluginHistory = () => {
     const {t} = useTranslation();
-    const {hasPermission} = useAuth();
+    const {authRequired, hasPermission} = useAuth();
+
+    const seeHistory = authRequired && hasPermission('page.network.plugin.history');
 
     const {networkMetadata} = useMetadata();
     const [serverOptions, setServerOptions] = useState([]);
@@ -39,12 +41,12 @@ const NetworkPluginHistory = () => {
         }
     }, [selectedOption, serverOptions])
 
-    let {data, loadingError} = useDataRequest(fetchPluginHistory, [identifier], Boolean(identifier));
+    let {data, loadingError} = useDataRequest(fetchPluginHistory, [identifier], Boolean(identifier) && seeHistory);
     if (!identifier) data = {history: []};
     return (
         <LoadIn>
-            <section className="network-plugin-versions">
-                <ExtendableRow id={'row-netowork-plugin-versions-0'}>
+            {seeHistory && <section className="network-plugin-history">
+                <ExtendableRow id={'row-network-plugin-history-0'}>
                     <Col md={4} className={"mb-4"}>
                         <InputGroup>
                             <InputGroupText><FontAwesomeIcon icon={faServer}/> {t('html.label.serverSelector')}
@@ -54,7 +56,7 @@ const NetworkPluginHistory = () => {
                         </InputGroup>
                     </Col>
                 </ExtendableRow>
-                <ExtendableRow id={'row-netowork-plugin-versions-1'}>
+                <ExtendableRow id={'row-network-plugin-history-1'}>
                     <Col md={6}>
                         <PluginCurrentCard data={data} loadingError={loadingError}/>
                     </Col>
@@ -62,7 +64,7 @@ const NetworkPluginHistory = () => {
                         <PluginHistoryCard data={data} loadingError={loadingError}/>
                     </Col>
                 </ExtendableRow>
-            </section>
+            </section>}
         </LoadIn>
     )
 }

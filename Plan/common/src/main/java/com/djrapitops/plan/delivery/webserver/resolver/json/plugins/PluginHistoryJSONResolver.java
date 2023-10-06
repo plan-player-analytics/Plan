@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.webserver.resolver.json.plugins;
 
 import com.djrapitops.plan.delivery.domain.PluginHistoryMetadata;
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.PluginHistoryDto;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
@@ -63,7 +64,10 @@ public class PluginHistoryJSONResolver implements Resolver {
 
     @Override
     public boolean canAccess(Request request) {
-        return true; // TODO Access control
+        return request.getUser()
+                .map(user -> user.hasPermission(WebPermission.PAGE_NETWORK_PLUGIN_HISTORY)
+                        || user.hasPermission(WebPermission.PAGE_SERVER_PLUGIN_HISTORY))
+                .orElse(false);
     }
 
     @Override

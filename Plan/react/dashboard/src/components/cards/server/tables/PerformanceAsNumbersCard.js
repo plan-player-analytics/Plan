@@ -16,7 +16,7 @@ const PerformanceAsNumbersCard = ({data, servers}) => {
         : (noData7d ? <p className={"alert alert-warning mb-0"}>{t('html.description.noData7d')}</p>
             : (noData24h ? <p className={"alert alert-warning mb-0"}>{t('html.description.noData24h')}</p>
                 : ''));
-    const dataIncludesGameServers = servers && Boolean(servers.filter(server => !server.proxy).length);
+    const dataIncludesGameServers = !servers || Boolean(servers.filter(server => !server.proxy).length);
 
     return (
         <Card id={"performance-as-numbers"}>

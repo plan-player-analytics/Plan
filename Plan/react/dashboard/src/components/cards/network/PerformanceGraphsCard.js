@@ -153,7 +153,7 @@ const PerformanceGraphsCard = ({data}) => {
         setPerformanceSeries(series);
     }, [data, setPerformanceSeries])
 
-    const dataIncludesGameServers = data.servers && Boolean(data.servers.filter(server => !server.proxy).length);
+    const dataIncludesGameServers = useMemo(() => data.servers && Boolean(data.servers.filter(server => !server.proxy).length), [data]);
 
     const tabs = useMemo(() => [
         {
@@ -185,7 +185,7 @@ const PerformanceGraphsCard = ({data}) => {
             element: networkMetadata ? <PingTab identifier={networkMetadata.currentServer.serverUUID}/> :
                 <ChartLoader/>
         },
-    ], [performanceSeries, networkMetadata, t]);
+    ], [performanceSeries, networkMetadata, t, dataIncludesGameServers]);
 
     if (!data || !Object.values(data).length) return <CardLoader/>
     if (data.errors.length) {

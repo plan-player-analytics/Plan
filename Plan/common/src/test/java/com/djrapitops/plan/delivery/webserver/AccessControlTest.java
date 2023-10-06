@@ -155,7 +155,9 @@ class AccessControlTest {
                 Arguments.of("/v1/deleteGroup?group=admin&moveTo=no_access", WebPermission.MANAGE_GROUPS, 400, 403),
                 Arguments.of("/v1/saveGroupPermissions?group=admin", WebPermission.MANAGE_GROUPS, 400, 403),
                 Arguments.of("/v1/preferences", WebPermission.ACCESS, 200, 200),
-                Arguments.of("/v1/storePreferences", WebPermission.ACCESS, 400, 400)
+                Arguments.of("/v1/storePreferences", WebPermission.ACCESS, 400, 400),
+                Arguments.of("/v1/pluginHistory?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_NETWORK_PLUGIN_HISTORY, 200, 403),
+                Arguments.of("/v1/pluginHistory?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_PLUGIN_HISTORY, 200, 403)
         );
     }
 
