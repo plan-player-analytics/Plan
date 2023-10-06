@@ -275,6 +275,8 @@ public enum HtmlLang implements Lang {
     LABEL_PLUGINS_VERSION_HISTORY("html.label.pluginVersionHistory", "Plugin Version History"),
     LABEL_VERSION("html.label.version", "Version"),
     LABEL_MODIFIED("html.label.modified", "Modified"),
+    LABEL_INSTALLED("html.label.installed", "Installed"),
+    LABEL_UNINSTALLED("html.label.uninstalled", "Uninstalled"),
 
     LABEL_TABLE_VISIBLE_COLUMNS("html.label.table.visibleColumns", "Visible columns"),
     LABEL_TABLE_SHOW_N_OF_M("html.label.table.showNofM", "Showing {{n}} of {{m}} entries"),

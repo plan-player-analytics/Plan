@@ -32,7 +32,7 @@ const PluginHistoryCard = ({data, loadingError}) => {
         data: history.map(entry => {
             return {
                 name: entry.name,
-                version: t(entry.version),
+                version: t(entry.version || 'html.label.uninstalled'),
                 modified: entry.modified,
                 modifiedDisplay: <FormattedDate date={entry.modified}/>
             }

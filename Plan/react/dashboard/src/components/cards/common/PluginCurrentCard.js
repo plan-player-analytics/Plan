@@ -34,14 +34,15 @@ const PluginCurrentCard = ({data, loadingError}) => {
             title: <><Fa icon={faCalendar}/> {t('html.label.modified')}</>,
             data: {_: "modified", display: "modifiedDisplay"}
         }],
-        data: history.map(entry => {
-            return {
-                name: entry.name,
-                version: t(entry.version),
-                modified: entry.modified,
-                modifiedDisplay: <FormattedDate date={entry.modified}/>
-            }
-        })
+        data: history.filter(entry => entry.version)
+            .map(entry => {
+                return {
+                    name: entry.name,
+                    version: t(entry.version),
+                    modified: entry.modified,
+                    modifiedDisplay: <FormattedDate date={entry.modified}/>
+                }
+            })
     };
     const options = {
         responsive: true,
