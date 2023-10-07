@@ -44,7 +44,7 @@ public class VelocitySensor implements ServerSensor<Object> {
         onlinePlayerCountSupplier = VelocityRedisCheck.isClassAvailable()
                 ? new VelocityRedisPlayersOnlineSupplier()
                 : plugin.getProxy()::getPlayerCount;
-        getPlugins = plugin.getProxy().getPluginManager()::getPlugins;
+        getPlugins = () -> plugin.getProxy().getPluginManager().getPlugins();
     }
 
     @Override
