@@ -45,7 +45,7 @@ const NetworkPluginHistory = () => {
     if (!identifier) data = {history: []};
     return (
         <LoadIn>
-            {seeHistory && <section className="network-plugin-history">
+            {seeHistory && <section id="network-plugin-history">
                 <ExtendableRow id={'row-network-plugin-history-0'}>
                     <Col md={4} className={"mb-4"}>
                         <InputGroup>

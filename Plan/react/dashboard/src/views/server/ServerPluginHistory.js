@@ -17,7 +17,7 @@ const ServerPluginHistory = () => {
     const {data, loadingError} = useDataRequest(fetchPluginHistory, [identifier], seeHistory);
     return (
         <LoadIn>
-            {seeHistory && <section className="server-plugin-history">
+            {seeHistory && <section id="server-plugin-history">
                 <ExtendableRow id={'row-server-plugin-history-0'}>
                     <Col md={6}>
                         <PluginCurrentCard data={data} loadingError={loadingError}/>

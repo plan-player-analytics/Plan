@@ -223,7 +223,7 @@ class AccessControlVisibilityTest {
     }
 
     @DisplayName("Whole page is not visible with permission")
-    @ParameterizedTest(name = "Access with no visibility (needs {0}) can't see element #{1} in /{2}")
+    @ParameterizedTest(name = "Access with no visibility needs {0} can't see element #{1} in /{2}")
     @MethodSource("pageLevelVisibleCases")
     void pageNotVisible(WebPermission permission, String element, String page, Database database, ChromeDriver driver) throws Exception {
         User user = registerUser(database);
@@ -274,7 +274,7 @@ class AccessControlVisibilityTest {
     }
 
     @DisplayName("Server element is not visible without permission")
-    @ParameterizedTest(name = "Access to server page with no visibility (needs {0}) can't see element #{1} in section /server/uuid/{2}")
+    @ParameterizedTest(name = "Access to server page with no visibility needs {0} can't see element #{1} in section /server/uuid/{2}")
     @MethodSource("serverPageElementVisibleCases")
     void serverPageElementNotVisible(WebPermission permission, String element, String section, Database database, ServerUUID serverUUID, ChromeDriver driver) throws Exception {
         User user = registerUser(database, WebPermission.ACCESS_SERVER);
@@ -312,7 +312,7 @@ class AccessControlVisibilityTest {
     }
 
     @DisplayName("Network element is not visible without permission")
-    @ParameterizedTest(name = "Access to network page with no visibility (needs {0}) can't see element #{1} in section /network/{2}")
+    @ParameterizedTest(name = "Access to network page with no visibility needs {0} can't see element #{1} in section /network/{2}")
     @MethodSource("networkPageElementVisibleCases")
     void networkPageElementNotVisible(WebPermission permission, String element, String section, Database database, ChromeDriver driver) throws Exception {
         User user = registerUser(database, WebPermission.ACCESS_NETWORK);
@@ -345,7 +345,7 @@ class AccessControlVisibilityTest {
     }
 
     @DisplayName("Player element is not visible without permission")
-    @ParameterizedTest(name = "Access to player page with no visibility (needs {0}) can't see element #{1} in section /player/uuid/{2}")
+    @ParameterizedTest(name = "Access to player page with no visibility needs {0} can't see element #{1} in section /player/uuid/{2}")
     @MethodSource("playerPageVisibleCases")
     void playerPageElementNotVisible(WebPermission permission, String element, String section, Database database, ServerUUID serverUUID, ChromeDriver driver) throws Exception {
         User user = registerUser(database, WebPermission.ACCESS_PLAYER);
