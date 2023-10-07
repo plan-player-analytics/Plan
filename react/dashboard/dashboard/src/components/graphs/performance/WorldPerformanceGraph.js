@@ -9,7 +9,7 @@ import {withReducedSaturation} from "../../../util/colors";
 import Accessibility from "highcharts/modules/accessibility";
 import {useMetadata} from "../../../hooks/metadataHook";
 
-const WorldPerformanceGraph = ({id, data, dataSeries}) => {
+const WorldPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
     const {t} = useTranslation();
     const {graphTheming, nightModeEnabled} = useTheme();
     const {timeZoneOffsetMinutes} = useMetadata();
@@ -89,9 +89,9 @@ const WorldPerformanceGraph = ({id, data, dataSeries}) => {
             time: {
                 timezoneOffset: timeZoneOffsetMinutes
             },
-            series: [series.playersOnline, series.entities, series.chunks]
+            series: [series.playersOnline, series.entities, series.chunks, pluginHistorySeries]
         });
-    }, [data, dataSeries, graphTheming, nightModeEnabled, id, t, timeZoneOffsetMinutes])
+    }, [data, dataSeries, graphTheming, nightModeEnabled, id, t, timeZoneOffsetMinutes, pluginHistorySeries])
 
     return (
         <div className="chart-area" style={{height: "450px"}} id={id}>

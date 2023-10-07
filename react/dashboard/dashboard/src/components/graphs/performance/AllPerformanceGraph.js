@@ -62,7 +62,7 @@ const yAxis = [
     }
 ]
 
-const AllPerformanceGraph = ({id, data, dataSeries}) => {
+const AllPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
     const {t} = useTranslation();
     const {graphTheming, nightModeEnabled} = useTheme();
     const {timeZoneOffsetMinutes} = useMetadata();
@@ -178,9 +178,9 @@ const AllPerformanceGraph = ({id, data, dataSeries}) => {
             time: {
                 timezoneOffset: timeZoneOffsetMinutes
             },
-            series: [series.playersOnline, series.tps, series.cpu, series.ram, series.entities, series.chunks]
+            series: [series.playersOnline, series.tps, series.cpu, series.ram, series.entities, series.chunks, pluginHistorySeries]
         });
-    }, [data, dataSeries, graphTheming, nightModeEnabled, id, t, timeZoneOffsetMinutes])
+    }, [data, dataSeries, graphTheming, nightModeEnabled, id, t, timeZoneOffsetMinutes, pluginHistorySeries])
 
     return (
         <div className="chart-area" style={{height: "450px"}} id={id}>

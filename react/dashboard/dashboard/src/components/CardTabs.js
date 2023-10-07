@@ -2,11 +2,12 @@ import React, {useEffect, useState} from "react";
 import {useLocation, useNavigate} from "react-router-dom";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 
-const TabButton = ({id, name, href, icon, color, active}) => {
+const TabButton = ({id, name, href, icon, color, active, disabled}) => {
     const navigate = useNavigate();
     return (
-        <li className="nav-item" id={id}>
-            <button className={"nav-link col-black" + (active ? ' active' : '')} aria-selected={active} role="tab"
+        <li className={"nav-item" + (disabled ? ' disabled' : '')} id={id}>
+            <button disabled={disabled} className={"nav-link col-black" + (active ? ' active' : '')}
+                    aria-selected={active} role="tab"
                     onClick={() => navigate('#' + href, {replace: true})}>
                 <Fa icon={icon} className={'col-' + color}/> {name}
             </button>
@@ -26,6 +27,7 @@ const TabButtons = ({tabs, selectedTab}) => {
                     icon={tab.icon}
                     color={tab.color}
                     active={tab.href === selectedTab}
+                    disabled={tab.disabled}
                 />
             ))}
         </ul>

@@ -9,7 +9,7 @@ import {withReducedSaturation} from "../../../util/colors";
 import Accessibility from "highcharts/modules/accessibility";
 import {useMetadata} from "../../../hooks/metadataHook";
 
-const CpuRamPerformanceGraph = ({id, data, dataSeries}) => {
+const CpuRamPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
     const {t} = useTranslation();
     const {graphTheming, nightModeEnabled} = useTheme();
     const {timeZoneOffsetMinutes} = useMetadata();
@@ -90,9 +90,9 @@ const CpuRamPerformanceGraph = ({id, data, dataSeries}) => {
             time: {
                 timezoneOffset: timeZoneOffsetMinutes
             },
-            series: [series.playersOnline, series.cpu, series.ram]
+            series: [series.playersOnline, series.cpu, series.ram, pluginHistorySeries]
         });
-    }, [data, dataSeries, graphTheming, nightModeEnabled, id, t, timeZoneOffsetMinutes])
+    }, [data, dataSeries, graphTheming, nightModeEnabled, id, t, timeZoneOffsetMinutes, pluginHistorySeries])
 
     return (
         <div className="chart-area" style={{height: "450px"}} id={id}>

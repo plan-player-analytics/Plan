@@ -4,6 +4,7 @@ import {Outlet} from "react-router-dom";
 import {useNavigation} from "../../hooks/navigationHook";
 import {
     faChartLine,
+    faCodeCompare,
     faCogs,
     faCubes,
     faGlobe,
@@ -32,13 +33,14 @@ const HelpModal = React.lazy(() => import("../../components/modal/HelpModal"));
 
 const NetworkSidebar = () => {
     const {t, i18n} = useTranslation();
+    const {authRequired} = useAuth();
     const {sidebarItems, setSidebarItems} = useNavigation();
     const {networkMetadata} = useMetadata();
     const {extensionData} = useServerExtensionContext();
 
     useEffect(() => {
         const servers = networkMetadata?.servers || [];
-        const items = [
+        let items = [
             {
                 name: 'html.label.networkOverview',
                 icon: faInfoCircle,
@@ -120,6 +122,13 @@ const NetworkSidebar = () => {
             {},
             {name: 'html.label.plugins', permission: 'page.network.plugins'},
             {
+                name: 'html.label.pluginHistory',
+                icon: faCodeCompare,
+                href: "plugin-history",
+                permission: 'page.network.plugin.history',
+                authRequired: true
+            },
+            {
                 name: 'html.label.pluginsOverview',
                 icon: faCubes,
                 href: "plugins-overview",
@@ -147,10 +156,13 @@ const NetworkSidebar = () => {
                 {name: 'html.label.query', icon: faSearch, href: "/query", permission: 'access.query'}
             );
         }
+        // Filter out items that need authentication
+        items = items
+            .filter(item => !item.authRequired || (authRequired && item.authRequired))
 
         setSidebarItems(items);
         window.document.title = `Plan | Network`;
-    }, [t, i18n, extensionData, setSidebarItems, networkMetadata])
+    }, [t, i18n, extensionData, setSidebarItems, networkMetadata, authRequired])
 
     return (
         <Sidebar items={sidebarItems}/>

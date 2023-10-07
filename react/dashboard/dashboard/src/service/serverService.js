@@ -333,3 +333,9 @@ const fetchNetworkPlayerJoinAddresses = async (timestamp) => {
     if (staticSite) url = `/data/joinAddresses.json`;
     return doGetRequest(url, timestamp);
 }
+
+export const fetchPluginHistory = async (timestamp, identifier) => {
+    let url = `/v1/pluginHistory?server=${identifier}`;
+    if (staticSite) url = `/data/pluginHistory-${identifier}.json`;
+    return doGetRequest(url, timestamp);
+}

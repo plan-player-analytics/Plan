@@ -9,7 +9,7 @@ import {withReducedSaturation} from "../../../util/colors";
 import Accessibility from "highcharts/modules/accessibility";
 import {useMetadata} from "../../../hooks/metadataHook";
 
-const DiskPerformanceGraph = ({id, data, dataSeries}) => {
+const DiskPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
     const {t} = useTranslation();
     const {graphTheming, nightModeEnabled} = useTheme();
     const {timeZoneOffsetMinutes} = useMetadata();
@@ -71,9 +71,9 @@ const DiskPerformanceGraph = ({id, data, dataSeries}) => {
             time: {
                 timezoneOffset: timeZoneOffsetMinutes
             },
-            series: [series.disk]
+            series: [series.disk, pluginHistorySeries]
         });
-    }, [data, dataSeries, graphTheming, nightModeEnabled, id, t, timeZoneOffsetMinutes])
+    }, [data, dataSeries, graphTheming, nightModeEnabled, id, t, timeZoneOffsetMinutes, pluginHistorySeries])
 
     return (
         <div className="chart-area" style={{height: "450px"}} id={id}>
