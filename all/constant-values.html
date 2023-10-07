@@ -977,6 +977,41 @@ loadScripts(document, 'script');</script>
 </div>
 </li>
 <li>
+<div class="caption"><span>com.djrapitops.plan.storage.database.sql.tables.<a href="com/djrapitops/plan/storage/database/sql/tables/PluginVersionTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables">PluginVersionTable</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Constant Field</div>
+<div class="table-header col-last">Value</div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.PluginVersionTable.ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/PluginVersionTable.html#ID">ID</a></code></div>
+<div class="col-last even-row-color"><code>"id"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.PluginVersionTable.INSERT_STATEMENT">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/PluginVersionTable.html#INSERT_STATEMENT">INSERT_STATEMENT</a></code></div>
+<div class="col-last odd-row-color"><code>"INSERT INTO plan_plugin_versions (server_id,plugin_name,version,modified) VALUES ((SELECT plan_servers.id FROM plan_servers WHERE plan_servers.uuid=? LIMIT 1), ?, ?, ?)"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.PluginVersionTable.MAX_NAME_LENGTH">public&nbsp;static&nbsp;final&nbsp;int</code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/PluginVersionTable.html#MAX_NAME_LENGTH">MAX_NAME_LENGTH</a></code></div>
+<div class="col-last even-row-color"><code>100</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.PluginVersionTable.MAX_VERSION_LENGTH">public&nbsp;static&nbsp;final&nbsp;int</code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/PluginVersionTable.html#MAX_VERSION_LENGTH">MAX_VERSION_LENGTH</a></code></div>
+<div class="col-last odd-row-color"><code>255</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.PluginVersionTable.MODIFIED">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/PluginVersionTable.html#MODIFIED">MODIFIED</a></code></div>
+<div class="col-last even-row-color"><code>"modified"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.PluginVersionTable.PLUGIN_NAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/PluginVersionTable.html#PLUGIN_NAME">PLUGIN_NAME</a></code></div>
+<div class="col-last odd-row-color"><code>"plugin_name"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.PluginVersionTable.SERVER_ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/PluginVersionTable.html#SERVER_ID">SERVER_ID</a></code></div>
+<div class="col-last even-row-color"><code>"server_id"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.PluginVersionTable.TABLE_NAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/PluginVersionTable.html#TABLE_NAME">TABLE_NAME</a></code></div>
+<div class="col-last odd-row-color"><code>"plan_plugin_versions"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.PluginVersionTable.VERSION">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/PluginVersionTable.html#VERSION">VERSION</a></code></div>
+<div class="col-last even-row-color"><code>"version"</code></div>
+</div>
+</li>
+<li>
 <div class="caption"><span>com.djrapitops.plan.storage.database.sql.tables.<a href="com/djrapitops/plan/storage/database/sql/tables/SecurityTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables">SecurityTable</a></span></div>
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
