@@ -1496,3 +1496,7 @@ ul.filters {
 .group-help i {
     color: var(--color-plan)
 }
+
+.nav-item.disabled {
+    opacity: 30%;
+}

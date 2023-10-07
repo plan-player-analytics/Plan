@@ -24,6 +24,7 @@ import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.http.WebServer;
 import com.djrapitops.plan.delivery.webserver.resolver.json.metadata.PreferencesJSONResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.json.metadata.StorePreferencesJSONResolver;
+import com.djrapitops.plan.delivery.webserver.resolver.json.plugins.PluginHistoryJSONResolver;
 import com.djrapitops.plan.identification.Identifiers;
 import dagger.Lazy;
 
@@ -49,6 +50,7 @@ public class RootJSONResolver {
 
     private final CompositeResolver.Builder readOnlyResourcesBuilder;
     private final StorePreferencesJSONResolver storePreferencesJSONResolver;
+    private final PluginHistoryJSONResolver pluginHistoryJSONResolver;
     private CompositeResolver resolver;
 
     @Inject
@@ -84,6 +86,7 @@ public class RootJSONResolver {
             ExtensionJSONResolver extensionJSONResolver,
             RetentionJSONResolver retentionJSONResolver,
             PlayerJoinAddressJSONResolver playerJoinAddressJSONResolver,
+            PluginHistoryJSONResolver pluginHistoryJSONResolver,
 
             PreferencesJSONResolver preferencesJSONResolver,
             StorePreferencesJSONResolver storePreferencesJSONResolver,
@@ -127,6 +130,7 @@ public class RootJSONResolver {
 
         this.webServer = webServer;
         // These endpoints require authentication to be enabled.
+        this.pluginHistoryJSONResolver = pluginHistoryJSONResolver;
         this.webGroupJSONResolver = webGroupJSONResolver;
         this.webGroupPermissionJSONResolver = webGroupPermissionJSONResolver;
         this.webPermissionJSONResolver = webPermissionJSONResolver;
@@ -149,6 +153,7 @@ public class RootJSONResolver {
                         .add("saveGroupPermissions", webGroupSaveJSONResolver)
                         .add("deleteGroup", webGroupDeleteJSONResolver)
                         .add("storePreferences", storePreferencesJSONResolver)
+                        .add("pluginHistory", pluginHistoryJSONResolver)
                         .build();
             } else {
                 resolver = readOnlyResourcesBuilder.build();

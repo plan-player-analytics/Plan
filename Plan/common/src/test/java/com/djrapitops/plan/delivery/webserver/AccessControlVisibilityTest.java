@@ -146,6 +146,7 @@ class AccessControlVisibilityTest {
                 Arguments.arguments(WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS, "performance-graphs", "performance"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_PERFORMANCE_OVERVIEW, "performance-as-numbers", "performance"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_PERFORMANCE_OVERVIEW, "performance-insights", "performance"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_PLUGIN_HISTORY, "server-plugin-history", "plugin-history"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_PLUGINS, "server-plugin-data", "plugins-overview")
         );
     }
@@ -174,6 +175,7 @@ class AccessControlVisibilityTest {
                 Arguments.arguments(WebPermission.PAGE_NETWORK_GEOLOCATIONS_MAP, "geolocations", "geolocations"),
                 Arguments.arguments(WebPermission.PAGE_NETWORK_GEOLOCATIONS_PING_PER_COUNTRY, "ping-per-country", "geolocations"),
                 Arguments.arguments(WebPermission.PAGE_NETWORK_PERFORMANCE, "row-network-performance-0", "performance"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_PLUGIN_HISTORY, "network-plugin-history", "plugin-history"),
                 Arguments.arguments(WebPermission.PAGE_NETWORK_PLUGINS, "server-plugin-data", "plugins-overview")
         );
     }
@@ -221,7 +223,7 @@ class AccessControlVisibilityTest {
     }
 
     @DisplayName("Whole page is not visible with permission")
-    @ParameterizedTest(name = "Access with no visibility (needs {0}) can't see element #{1} in /{2}")
+    @ParameterizedTest(name = "Access with no visibility needs {0} can't see element #{1} in /{2}")
     @MethodSource("pageLevelVisibleCases")
     void pageNotVisible(WebPermission permission, String element, String page, Database database, ChromeDriver driver) throws Exception {
         User user = registerUser(database);
@@ -272,7 +274,7 @@ class AccessControlVisibilityTest {
     }
 
     @DisplayName("Server element is not visible without permission")
-    @ParameterizedTest(name = "Access to server page with no visibility (needs {0}) can't see element #{1} in section /server/uuid/{2}")
+    @ParameterizedTest(name = "Access to server page with no visibility needs {0} can't see element #{1} in section /server/uuid/{2}")
     @MethodSource("serverPageElementVisibleCases")
     void serverPageElementNotVisible(WebPermission permission, String element, String section, Database database, ServerUUID serverUUID, ChromeDriver driver) throws Exception {
         User user = registerUser(database, WebPermission.ACCESS_SERVER);
@@ -310,7 +312,7 @@ class AccessControlVisibilityTest {
     }
 
     @DisplayName("Network element is not visible without permission")
-    @ParameterizedTest(name = "Access to network page with no visibility (needs {0}) can't see element #{1} in section /network/{2}")
+    @ParameterizedTest(name = "Access to network page with no visibility needs {0} can't see element #{1} in section /network/{2}")
     @MethodSource("networkPageElementVisibleCases")
     void networkPageElementNotVisible(WebPermission permission, String element, String section, Database database, ChromeDriver driver) throws Exception {
         User user = registerUser(database, WebPermission.ACCESS_NETWORK);
@@ -343,7 +345,7 @@ class AccessControlVisibilityTest {
     }
 
     @DisplayName("Player element is not visible without permission")
-    @ParameterizedTest(name = "Access to player page with no visibility (needs {0}) can't see element #{1} in section /player/uuid/{2}")
+    @ParameterizedTest(name = "Access to player page with no visibility needs {0} can't see element #{1} in section /player/uuid/{2}")
     @MethodSource("playerPageVisibleCases")
     void playerPageElementNotVisible(WebPermission permission, String element, String section, Database database, ServerUUID serverUUID, ChromeDriver driver) throws Exception {
         User user = registerUser(database, WebPermission.ACCESS_PLAYER);

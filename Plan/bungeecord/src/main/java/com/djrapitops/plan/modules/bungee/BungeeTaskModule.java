@@ -23,6 +23,7 @@ import com.djrapitops.plan.delivery.webserver.cache.JSONFileStorage;
 import com.djrapitops.plan.delivery.webserver.configuration.AddressAllowList;
 import com.djrapitops.plan.extension.ExtensionServerDataUpdater;
 import com.djrapitops.plan.gathering.timed.BungeePingCounter;
+import com.djrapitops.plan.gathering.timed.InstalledPluginGatheringTask;
 import com.djrapitops.plan.gathering.timed.ProxyTPSCounter;
 import com.djrapitops.plan.gathering.timed.SystemUsageBuffer;
 import com.djrapitops.plan.settings.upkeep.NetworkConfigStoreTask;
@@ -87,4 +88,8 @@ public interface BungeeTaskModule {
     @Binds
     @IntoSet
     TaskSystem.Task bindAddressAllowListUpdateTask(AddressAllowList addressAllowList);
+
+    @Binds
+    @IntoSet
+    TaskSystem.Task bindInstalledPluginGatheringTask(InstalledPluginGatheringTask installedPluginGatheringTask);
 }
