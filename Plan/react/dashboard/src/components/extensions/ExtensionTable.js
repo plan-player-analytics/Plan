@@ -84,7 +84,7 @@ const ExtensionColoredTable = ({table}) => {
 
     const mapToCell = (value, j) => {
         if (String(value?.value).startsWith("<a class=\"link\" href=\"")) {
-            return <td key={JSON.stringify(value)} dangerouslySetInnerHTML={value.value || String(value)}/>;
+            return <td key={JSON.stringify(value)} dangerouslySetInnerHTML={{__html: value.value || String(value)}}/>;
         }
         return <td key={JSON.stringify(value)}>
             <ColoredText text={value.value || String(value)}/>
