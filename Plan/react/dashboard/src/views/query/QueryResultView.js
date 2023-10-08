@@ -78,7 +78,7 @@ const QueryResultView = () => {
                         <QueryPath/>
                         <PlayerListCard
                             data={result.data.players}
-                            title={getViewTitle(result)}
+                            title={getViewTitle(result, t)}
                         />
                     </Col>
                 </Row>

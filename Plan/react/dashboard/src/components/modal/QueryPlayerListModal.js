@@ -2,10 +2,11 @@ import React from 'react';
 import {useTranslation} from "react-i18next";
 import {Modal} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import {faSearch} from "@fortawesome/free-solid-svg-icons";
+import {faArrowRight, faSearch} from "@fortawesome/free-solid-svg-icons";
 import PlayerListCard from "../cards/common/PlayerListCard";
 import {getViewTitle} from "../../views/query/QueryResultView";
 import {ChartLoader} from "../navigation/Loader";
+import {Link} from "react-router-dom";
 
 const QueryPlayerListModal = ({open, toggle, queryData}) => {
     const {t} = useTranslation();
@@ -22,6 +23,10 @@ const QueryPlayerListModal = ({open, toggle, queryData}) => {
                 <PlayerListCard justList data={queryData?.data?.players || {players: [], extensionDescriptors: []}}
                                 orderBy={2}/>}
             <Modal.Footer>
+                {Boolean(queryData?.data?.players.players.length) && <Link className="btn bg-theme"
+                      to={"/query/result?timestamp=" + queryData?.timestamp}>
+                    {t('html.query.label.showFullQuery')} <Fa icon={faArrowRight}/>
+                </Link>}
                 <button className="btn bg-theme" onClick={toggle}>OK</button>
             </Modal.Footer>
         </Modal>

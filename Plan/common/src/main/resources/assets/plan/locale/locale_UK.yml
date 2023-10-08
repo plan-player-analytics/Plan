@@ -791,6 +791,7 @@ html:
                 many: "з використанням даних {number} серверів"
                 single: "з використанням даних 1 сервера"
                 two: "з використанням даних 2 серверів"
+            showFullQuery: "Show Full Query"
             to: ">в</label>"
             view: "Показувати результат"
         performQuery: "Виконати запит!"

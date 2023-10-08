@@ -791,6 +791,7 @@ html:
                 many: "použít data {number} serverů"
                 single: "použít data 1 serveru"
                 two: "použít data 2 serverů"
+            showFullQuery: "Show Full Query"
             to: ">do</label>"
             view: "Zobrazit pohled"
         performQuery: "Provést dotaz!"

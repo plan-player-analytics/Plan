@@ -946,6 +946,12 @@ div#navSrvContainer::-webkit-scrollbar-thumb {
     color: var(--color-text-dark-bg);
 }
 
+.bg-theme.btn:hover, body.theme .fc-toolbar-chunk .btn.btn-primary:hover, .fc-button:hover {
+    background-color: color-mix(in srgb, var(--color-theme) 90%, black) !important;
+    --bs-btn-disabled-bg: var(--color-theme);
+    color: color-mix(in srgb, var(--color-text-dark-bg) 85%, black) !important;
+}
+
 .bg-success {
     background-color: var(--color-success) !important;
 }

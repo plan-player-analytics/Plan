@@ -791,6 +791,7 @@ html:
                 many: "使用 {number} 台服务器的数据。"
                 single: "使用 1 台服务器的数据"
                 two: "使用 2 台服务器的数据"
+            showFullQuery: "Show Full Query"
             to: ">到 </label>"
             view: "日期范围"
         performQuery: "执行查询！"

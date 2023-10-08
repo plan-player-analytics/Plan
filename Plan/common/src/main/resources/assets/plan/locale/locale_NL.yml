@@ -791,6 +791,7 @@ html:
                 many: "using data of {number} servers"
                 single: "using data of 1 server"
                 two: "using data of 2 servers"
+            showFullQuery: "Show Full Query"
             to: ">naar</label>"
             view: "Toon een weergave"
         performQuery: "Query Uitvoeren!"

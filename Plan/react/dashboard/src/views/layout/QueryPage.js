@@ -12,6 +12,8 @@ import {QueryResultContextProvider} from "../../hooks/queryResultContext";
 import {useAuth} from "../../hooks/authenticationHook";
 import MainPageRedirect from "../../components/navigation/MainPageRedirect";
 
+const HelpModal = React.lazy(() => import("../../components/modal/HelpModal"));
+
 const QueryPage = () => {
     const {t, i18n} = useTranslation();
     const {isProxy, networkName, serverName} = useMetadata();
@@ -49,6 +51,7 @@ const QueryPage = () => {
                         </main>
                         <aside>
                             <ColorSelectorModal/>
+                            <React.Suspense fallback={""}><HelpModal/></React.Suspense>
                         </aside>
                     </div>
                 </div>

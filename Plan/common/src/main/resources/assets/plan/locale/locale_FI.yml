@@ -791,6 +791,7 @@ html:
                 many: "käyttäen {number} palvelimen tietoja"
                 single: "käyttäen yhden palvelimen"
                 two: "käyttäen 2 palvelimen tietoja"
+            showFullQuery: "Show Full Query"
             to: ">tänne</label>"
             view: "Näytä näkymä"
         performQuery: "Tee kysely!"

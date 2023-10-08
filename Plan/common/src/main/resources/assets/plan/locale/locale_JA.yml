@@ -791,6 +791,7 @@ html:
                 many: "{number}つのサーバーのデータを使用しています"
                 single: "1つのサーバーのデータを使用しています"
                 two: "2つのサーバーのデータを使用しています"
+            showFullQuery: "Show Full Query"
             to: ">に</label>"
             view: "ビューを表示"
         performQuery: "クエリを実行!"
