@@ -218,6 +218,11 @@ const DataTablesTable = ({id, rowKeyFunction, options}) => {
                 </tr>
                 </thead>
                 <tbody id={id + '-body'}>
+                {!rows.length && <tr>
+                    {visibleColumns.map((column, i) => <td key={"col-" + rowKeyFunction(0, column)}>
+                        {i === 0 && t('html.label.noDataToDisplay')}
+                    </td>)}
+                </tr>}
                 {rows.map(row => <React.Fragment key={"frag-" + rowKeyFunction(row, null)}>
                     <tr key={"row-" + rowKeyFunction(row, null)}>
                         {visibleColumns.map((column, i) => {

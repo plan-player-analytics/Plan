@@ -13,11 +13,15 @@ import {Card} from "react-bootstrap";
 import CardTabs from "../../../CardTabs";
 import {faBraille, faChartArea} from "@fortawesome/free-solid-svg-icons";
 import {faCalendar} from "@fortawesome/free-regular-svg-icons";
-import React from "react";
+import React, {useCallback, useState} from "react";
 import TimeByTimeGraph from "../../../graphs/TimeByTimeGraph";
 import ServerCalendar from "../../../calendar/ServerCalendar";
 import {ChartLoader} from "../../../navigation/Loader";
 import {useAuth} from "../../../../hooks/authenticationHook";
+import Highcharts from "highcharts/highstock";
+import {postQuery} from "../../../../service/queryService";
+import QueryPlayerListModal from "../../../modal/QueryPlayerListModal";
+import {useMetadata} from "../../../../hooks/metadataHook";
 
 const DayByDayTab = () => {
     const {identifier} = useParams();
@@ -38,18 +42,54 @@ const HourByHourTab = () => {
     if (loadingError) return <ErrorViewBody error={loadingError}/>
     if (!data) return <ChartLoader/>;
 
-    return <TimeByTimeGraph id={"hour-by-hour-graph"}data={data}/>
+    return <TimeByTimeGraph id={"hour-by-hour-graph"} data={data}/>
 }
 
 const ServerCalendarTab = () => {
     const {identifier} = useParams();
+    const {data, loadingError} = useDataRequest(fetchServerCalendarGraph, [identifier]);
+    const {networkMetadata} = useMetadata();
 
-    const {data, loadingError} = useDataRequest(fetchServerCalendarGraph, [identifier])
+    const [modalOpen, setModalOpen] = useState(false);
+    const [queryData, setQueryData] = useState(undefined);
+
+    const closeModal = useCallback(() => {
+        setModalOpen(false);
+    }, [setModalOpen]);
+
+    const onSelect = useCallback(async selectionInfo => {
+        const start = Highcharts.dateFormat('%d/%m/%Y', selectionInfo.start);
+        const end = Highcharts.dateFormat('%d/%m/%Y', selectionInfo.end);
+        const query = {
+            filters: [{
+                kind: "playedBetween",
+                parameters: {
+                    afterDate: start, afterTime: "00:00",
+                    beforeDate: end, beforeTime: "00:00"
+                }
+            }],
+            view: {
+                afterDate: start, afterTime: "00:00",
+                beforeDate: end, beforeTime: "00:00",
+                servers: networkMetadata?.servers.filter(server => server.serverUUID === identifier) || []
+            }
+        }
+        setQueryData(undefined);
+        setModalOpen(true);
+        const data = await postQuery(query);
+        const loaded = data?.data;
+        if (loaded) {
+            setQueryData(loaded);
+        }
+    }, [setQueryData, setModalOpen, networkMetadata, identifier]);
 
     if (loadingError) return <ErrorViewBody error={loadingError}/>
     if (!data) return <ChartLoader/>;
 
-    return <ServerCalendar series={data.data} firstDay={data.firstDay}/>
+    return <>
+        <ServerCalendar series={data.data} firstDay={data.firstDay} onSelect={onSelect}/>
+        <QueryPlayerListModal open={modalOpen} toggle={closeModal} queryData={queryData}/>
+    </>
 }
 
 const PunchCardTab = () => {

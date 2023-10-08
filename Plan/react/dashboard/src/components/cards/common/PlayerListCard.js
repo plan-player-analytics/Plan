@@ -30,7 +30,7 @@ const getActivityGroup = value => {
     }
 }
 
-const PlayerListCard = ({data, title}) => {
+const PlayerListCard = ({data, title, justList, orderBy}) => {
     const {t} = useTranslation();
     const [options, setOptions] = useState(undefined);
 
@@ -95,15 +95,21 @@ const PlayerListCard = ({data, title}) => {
             deferRender: true,
             columns: columns,
             data: rows,
-            order: [[5, "desc"]]
+            order: [[orderBy !== undefined ? orderBy : 5, "desc"]]
         });
-    }, [data, t]);
+    }, [data, orderBy, t]);
 
     const rowKeyFunction = useCallback((row, column) => {
         return row.uuid + "-" + (column ? JSON.stringify(column.data) : '');
     }, []);
 
     if (!options) return <CardLoader/>
+
+    if (justList) {
+        return (
+            <DataTablesTable id={"players-table"} rowKeyFunction={rowKeyFunction} options={options}/>
+        );
+    }
 
     return (
         <Card>

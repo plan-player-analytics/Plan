@@ -1,12 +1,13 @@
 import React from "react";
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
+import interactionPlugin from '@fullcalendar/interaction'
 
-const ServerCalendar = ({series, firstDay}) => {
+const ServerCalendar = ({series, firstDay, onSelect}) => {
     return (
         <div id={'server-calendar'}>
             <FullCalendar
-                plugins={[dayGridPlugin]}
+                plugins={[interactionPlugin, dayGridPlugin]}
                 timeZone="UTC"
                 themeSystem='bootstrap'
                 eventColor='#2196F3'
@@ -21,6 +22,10 @@ const ServerCalendar = ({series, firstDay}) => {
                     center: '',
                     right: 'dayGridMonth dayGridWeek dayGridDay today prev next'
                 }}
+                editable={Boolean(onSelect)}
+                selectable={Boolean(onSelect)}
+                select={onSelect}
+                unselectAuto={true}
                 events={(_fetchInfo, successCallback) => successCallback(series)}
             />
         </div>
