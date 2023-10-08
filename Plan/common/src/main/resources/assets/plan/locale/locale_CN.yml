@@ -257,6 +257,7 @@ html:
         noServers: "数据库中找不到服务器"
         noServersLong: '看起来 Plan 没有安装在任何游戏服务器上或者游戏服务器未连接到相同的数据库。 群组网络教程请参见：<a href="https://github.com/plan-player-analytics/Plan/wiki">wiki</a>'
         noSpongeChunks: "区块数据在 Sponge 服务端不可用"
+        noUptimeCalculation: "Server is offline, or has never restarted with Plan installed."
         performanceNoGameServers: "TPS、实体或块数据不是从代理服务器收集的，因为它们没有游戏滴答循环。"
         predictedNewPlayerRetention: "这个数值是基于之前的玩家数据预测的"
     error:
@@ -668,6 +669,7 @@ html:
                 page_network_playerbase_graphs: "查看玩家基础图表"
                 page_network_playerbase_overview: "查看玩家基础数字"
                 page_network_players: "查看玩家列表选项卡"
+                page_network_plugin_history: "See Plugin History across the network"
                 page_network_plugins: "查看代理的插件选项卡"
                 page_network_retention: "查看玩家保留选项卡"
                 page_network_server_list: "查看服务器列表"
@@ -710,6 +712,7 @@ html:
                 page_server_playerbase_graphs: "查看服务器玩家基础图表"
                 page_server_playerbase_overview: "查看服务器玩家基础数字"
                 page_server_players: "查看服务器玩家列表选项卡"
+                page_server_plugin_history: "See Plugin History"
                 page_server_plugins: "查看服务器的插件选项卡"
                 page_server_retention: "查看玩家保留选项卡"
                 page_server_sessions: "查看服务器会话选项卡"

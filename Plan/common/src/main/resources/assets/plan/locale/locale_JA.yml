@@ -257,6 +257,7 @@ html:
         noServers: "データーベース内に登録されたサーバーが見つかりません"
         noServersLong: 'プランがどのゲーム サーバーにもインストールされていないか、同じデータベースに接続されていないようです。ネットワーク チュートリアルについては、<a href="https://github.com/plan-player-analytics/Plan/wiki">Wiki</a>を参考にしてください'
         noSpongeChunks: "Spongeではチャンクを利用できません"
+        noUptimeCalculation: "Server is offline, or has never restarted with Plan installed."
         performanceNoGameServers: "TPS、エンティティ、またはチャンクデータは、ゲーム ティックループがないため、プロキシサーバーから収集されません"
         predictedNewPlayerRetention: "これは以前のプレーヤーから基づいた予測値です"
     error:
@@ -668,6 +669,7 @@ html:
                 page_network_playerbase_graphs: "プレイヤー層のグラフを表示"
                 page_network_playerbase_overview: "プレイヤー層の概要番号を表示"
                 page_network_players: "プレイヤーリストタブを表示"
+                page_network_plugin_history: "See Plugin History across the network"
                 page_network_plugins: "プロキシーのプラグインタブを表示"
                 page_network_retention: "プレイヤー維持のタブを表示"
                 page_network_server_list: "サーバーリストを表示"
@@ -710,6 +712,7 @@ html:
                 page_server_playerbase_graphs: "プレイヤー層概要グラフを表示"
                 page_server_playerbase_overview: "プレイヤー層概要番号を表示"
                 page_server_players: "プレイヤーリストタブを表示"
+                page_server_plugin_history: "See Plugin History"
                 page_server_plugins: "サーバーのプラグインタブを表示"
                 page_server_retention: "プレイヤーの維持タブを表示"
                 page_server_sessions: "セッションタブを表示"

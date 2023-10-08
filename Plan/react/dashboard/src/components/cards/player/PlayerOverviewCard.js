@@ -115,7 +115,7 @@ const PlayerOverviewCard = ({player}) => {
                         <Datapoint
                             icon={faUser} color="amber"
                             name={<>{t('html.label.activityIndex')} <span>
-                                <button onClick={openHelp}><Fa className={"col-black"}
+                                <button onClick={openHelp}><Fa className={"col-blue"}
                                                                icon={faQuestionCircle}/>
                                 </button></span></>}
                             value={player.info.activity_index} bold

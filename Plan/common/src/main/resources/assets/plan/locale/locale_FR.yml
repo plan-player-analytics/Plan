@@ -257,6 +257,7 @@ html:
         noServers: "Il n'y a pas de serveur dans la base de données."
         noServersLong: 'Il semblerait que Plan ne soit installé sur aucun des serveurs de jeu ou qu'il ne soit pas connecté à la même base de données. Voir <a href="https://github.com/plan-player-analytics/Plan/wiki">wiki</a> pour un tutoriel sur la mise en place d'un Réseau.'
         noSpongeChunks: "Chunks indisponibles sur Sponge"
+        noUptimeCalculation: "Server is offline, or has never restarted with Plan installed."
         performanceNoGameServers: "TPS, Entity or Chunk data is not gathered from proxy servers since they don't have game tick loop."
         predictedNewPlayerRetention: "Cette valeur est une prédiction basée sur les anciennes données du joueur."
     error:
@@ -668,6 +669,7 @@ html:
                 page_network_playerbase_graphs: "See Playerbase Overview graphs"
                 page_network_playerbase_overview: "See Playerbase Overview numbers"
                 page_network_players: "See Player list -tab"
+                page_network_plugin_history: "See Plugin History across the network"
                 page_network_plugins: "See Plugins tab of Proxy"
                 page_network_retention: "See Player Retention -tab"
                 page_network_server_list: "See list of servers"
@@ -710,6 +712,7 @@ html:
                 page_server_playerbase_graphs: "See Playerbase Overview graphs"
                 page_server_playerbase_overview: "See Playerbase Overview numbers"
                 page_server_players: "See Player list -tab"
+                page_server_plugin_history: "See Plugin History"
                 page_server_plugins: "See Plugins -tabs of servers"
                 page_server_retention: "See Player Retention -tab"
                 page_server_sessions: "See Sessions tab"

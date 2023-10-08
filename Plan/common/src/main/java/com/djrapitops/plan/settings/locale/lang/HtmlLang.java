@@ -426,6 +426,7 @@ public enum HtmlLang implements Lang {
     MANAGE_ALERT_SAVE_FAIL("html.label.managePage.alert.saveFail", "Failed to save changes: {{error}}"),
     MANAGE_ALERT_SAVE_SUCCESS("html.label.managePage.alert.saveSuccess", "Changes saved successfully!"),
 
+    INFO_NO_UPTIME("html.description.noUptimeCalculation", "Server is offline, or has never restarted with Plan installed."),
     WARNING_NO_GAME_SERVERS("html.description.noGameServers", "Some data requires Plan to be installed on game servers."),
     WARNING_PERFORMANCE_NO_GAME_SERVERS("html.description.performanceNoGameServers", "TPS, Entity or Chunk data is not gathered from proxy servers since they don't have game tick loop."),
     WARNING_NO_GEOLOCATIONS("html.description.noGeolocations", "Geolocation gathering needs to be enabled in the config (Accept GeoLite2 EULA)."),

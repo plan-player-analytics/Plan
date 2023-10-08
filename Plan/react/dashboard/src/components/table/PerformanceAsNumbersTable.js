@@ -37,7 +37,7 @@ const PerformanceAsNumbersTable = ({data, servers}) => {
                           data.low_tps_spikes_24h
                       ]}/>
             <TableRow icon={faPowerOff} color="red"
-                      text={t(data.avg_server_downtime_30d ? 'html.label.serverDowntime' : 'html.label.totalServerDowntime') + ' (' + t('generic.noData') + ')'}
+                      text={t(data.avg_server_downtime_30d ? 'html.label.serverDowntime' : 'html.label.totalServerDowntime') + ' (' + t('plugin.generic.noData') + ')'}
                       values={[
                           data.server_downtime_30d,
                           data.server_downtime_7d,

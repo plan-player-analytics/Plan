@@ -257,6 +257,7 @@ html:
         noServers: "У базі даних не знайдено жодного сервера"
         noServersLong: 'Схоже, що Plan не встановлено на жодному ігровому сервері або не підключено до тієї самої бази даних. Дивіться <a href="https://github.com/plan-player-analytics/Plan/wiki">вікі</a> для допомоги.'
         noSpongeChunks: "Чанки не доступні на Sponge"
+        noUptimeCalculation: "Server is offline, or has never restarted with Plan installed."
         performanceNoGameServers: "Дані TPS, Entity або Chunk не збираються з проксі-серверів, оскільки вони не мають ігрового циклу."
         predictedNewPlayerRetention: "Це значення є прогнозом на основі попередніх гравців"
     error:
@@ -668,6 +669,7 @@ html:
                 page_network_playerbase_graphs: "See Playerbase Overview graphs"
                 page_network_playerbase_overview: "See Playerbase Overview numbers"
                 page_network_players: "See Player list -tab"
+                page_network_plugin_history: "See Plugin History across the network"
                 page_network_plugins: "See Plugins tab of Proxy"
                 page_network_retention: "See Player Retention -tab"
                 page_network_server_list: "See list of servers"
@@ -710,6 +712,7 @@ html:
                 page_server_playerbase_graphs: "See Playerbase Overview graphs"
                 page_server_playerbase_overview: "See Playerbase Overview numbers"
                 page_server_players: "See Player list -tab"
+                page_server_plugin_history: "See Plugin History"
                 page_server_plugins: "See Plugins -tabs of servers"
                 page_server_retention: "See Player Retention -tab"
                 page_server_sessions: "See Sessions tab"
