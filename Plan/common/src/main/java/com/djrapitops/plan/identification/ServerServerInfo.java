@@ -90,7 +90,7 @@ public class ServerServerInfo extends ServerInfo {
     }
 
     private void updateStorage() {
-        String address = addresses.getAccessAddress().orElseGet(addresses::getFallbackLocalhostAddress);
+        String address = getAddress();
         String name = config.get(PluginSettings.SERVER_NAME);
 
         server.setName(name);
@@ -99,6 +99,11 @@ public class ServerServerInfo extends ServerInfo {
         fromDatabase.save(server);
         server = fromDatabase.load(server.getUuid()).orElse(server);
         fromFile.save(server);
+    }
+
+    private String getAddress() {
+        return addresses.getAccessAddress()
+                .orElse(addresses.isWebserverEnabled() ? addresses.getFallbackLocalhostAddress() : null);
     }
 
     private Server registerNew() {
@@ -117,7 +122,7 @@ public class ServerServerInfo extends ServerInfo {
     }
 
     private Server createServerObject(ServerUUID serverUUID) {
-        String webAddress = addresses.getAccessAddress().orElseGet(addresses::getFallbackLocalhostAddress);
+        String webAddress = getAddress();
         String name = config.get(PluginSettings.SERVER_NAME);
         return new Server(serverUUID, name, webAddress, currentVersion);
     }

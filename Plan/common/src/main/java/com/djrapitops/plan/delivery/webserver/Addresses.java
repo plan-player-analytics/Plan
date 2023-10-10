@@ -105,7 +105,7 @@ public class Addresses {
     }
 
     public Optional<String> getProxyServerAddress() {
-        return dbSystem.getDatabase().query(ServerQueries.fetchProxyServers())
+        return dbSystem.getDatabase().query(ServerQueries.fetchPlanServerInformationCollection())
                 .stream()
                 .map(Server::getWebAddress)
                 .filter(this::isValidAddress)
@@ -113,7 +113,12 @@ public class Addresses {
     }
 
     private boolean isValidAddress(String address) {
-        return address != null && !address.isEmpty() && !"0.0.0.0".equals(address);
+        return address != null
+                && !address.isEmpty()
+                && !"0.0.0.0".equals(address)
+                && !"https://www.example.address".equals(address)
+                && !"http://www.example.address".equals(address)
+                && !"http://localhost:0".equals(address);
     }
 
     public Optional<String> getServerPropertyIP() {
