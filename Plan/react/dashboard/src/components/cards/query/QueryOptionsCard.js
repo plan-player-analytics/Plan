@@ -121,7 +121,8 @@ const QueryOptionsCard = () => {
                 afterTime: fromTime ? fromTime : options.view.afterTime,
                 beforeDate: toDate ? toDate : options.view.beforeDate,
                 beforeTime: toTime ? toTime : options.view.beforeTime,
-                servers: selectedServers.map(index => options.view.servers[index])
+                servers: selectedServers.map(index => options.view.servers[index]),
+                wantedData: ["players", "activity", "geolocations", "sessions"]
             },
             filters
         }

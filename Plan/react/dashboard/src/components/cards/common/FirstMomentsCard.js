@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Card} from "react-bootstrap";
 import CardHeader from "../CardHeader";
 import {faChevronLeft, faChevronRight, faHandHoldingHeart} from "@fortawesome/free-solid-svg-icons";
-import {fetchFirstMoments} from "../../../service/serverService";
+import {fetchFirstMoments, fetchPlayersOnlineGraph} from "../../../service/serverService";
 import {CardLoader} from "../../navigation/Loader";
 import XRangeGraph from "../../graphs/XRangeGraph";
 import {Link} from "react-router-dom";
@@ -10,50 +10,65 @@ import {tooltip} from "../../../util/graphs";
 import {useTranslation} from "react-i18next";
 import Graph from "../../graphs/Graph";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {useDataRequest} from "../../../hooks/dataFetchHook";
+import {useMetadata} from "../../../hooks/metadataHook";
+import {ErrorViewBody} from "../../../views/ErrorView";
+import FormattedTime from "../../text/FormattedTime";
+
+const dayMs = 24 * 60 * 60 * 1000;
 
 const FirstMomentsCard = ({identifier}) => {
     const {t} = useTranslation();
+    const {timeZoneOffsetMinutes, networkMetadata} = useMetadata();
 
-    const [data, setData] = useState(undefined);
+    const [selectedDay, setSelectedDay] = useState(1648760400000); //Date.now())
+
+    const {data: playersOnline, loadingError} = useDataRequest(fetchPlayersOnlineGraph, [identifier]);
     const [sessionPlots, setSessionPlots] = useState([]);
 
     const loadData = useCallback(async () => {
-        const loaded = await fetchFirstMoments(0, 0, identifier);
-        setData(loaded);
+        const startOfDay = selectedDay - (selectedDay + timeZoneOffsetMinutes * 60 * 1000) % dayMs;
+        const endOfDay = startOfDay + dayMs;
+        const {
+            data: loaded,
+            error
+        } = await fetchFirstMoments(startOfDay, endOfDay, networkMetadata?.servers.find(s => s.serverUUID === identifier));
+        console.log(loaded);
         const sessionsByPlayer = {};
-        for (const session of loaded.sessions) {
-            const player = session.player_name;
-            if (!sessionsByPlayer[player]) sessionsByPlayer[player] = [];
-            sessionsByPlayer[player].push(session);
+        if (loaded?.data) {
+            for (const session of loaded.data.sessionList) {
+                const player = session.player_name;
+                if (!sessionsByPlayer[player]) sessionsByPlayer[player] = [];
+                sessionsByPlayer[player].push(session);
+            }
         }
         const sessionPlots = [];
         let i = 1;
         for (const entry of Object.entries(sessionsByPlayer)) {
             sessionPlots.push({
-                name: "Player " + i,
+                name: entry[1][0].player_name,
                 uuid: entry[1][0].player_uuid,
                 points: entry[1].map(session => {
-                    const dayMs = 24 * 60 * 60 * 1000;
-                    const addStart = Math.floor(Math.random() * dayMs);
-                    const start = Date.now() - (Date.now() % dayMs) + addStart;
-                    const end = start + Math.floor(Math.random() * (dayMs - addStart));
+                    const start = session.startMillis;
+                    const end = session.endMillis;
                     return {x: start, x2: end, color: session.first_session ? '#4caf50' : '#4ab4de'};
-                }).sort((a, b) => a.x - b.x > 0 ? 1 : -1)
+                }).sort((a, b) => a.x - b.x > 0 ? 1 : -1),
+                playtime: entry[1].reduce((partialSum, session) => partialSum + session.endMillis - session.startMillis, 0)
             })
             i++;
         }
         setSessionPlots(sessionPlots.sort((a, b) => a.points[0].x - b.points[0].x > 0 ? 1 : -1));
-    }, [setData, setSessionPlots, identifier]);
+    }, [selectedDay, setSessionPlots, identifier]);
     useEffect(() => {
         loadData()
     }, [loadData]);
 
 
     const playersOnlineOptions = useMemo(() => {
-        if (!data || !sessionPlots) return {};
+        if (!playersOnline || !sessionPlots?.length) return {};
 
-        const startOfDay = sessionPlots ? (sessionPlots[0].points[0].x - sessionPlots[0].points[0].x % (24 * 60 * 60 * 1000)) : 0;
-        const endOfDay = startOfDay + (24 * 60 * 60 * 1000);
+        const startOfDay = selectedDay + timeZoneOffsetMinutes;
+        const endOfDay = startOfDay + dayMs;
         return {
             yAxis: {
                 title: {
@@ -80,22 +95,25 @@ const FirstMomentsCard = ({identifier}) => {
                 name: t('html.label.playersOnline'),
                 type: 'spline',
                 tooltip: tooltip.zeroDecimals,
-                data: data ? data.graphs[0].points : [],
+                data: playersOnline ? playersOnline.playersOnline : [],
                 color: "#90b7f3",
                 yAxis: 0
             }]
         }
-    }, [data, t, sessionPlots]);
+    }, [playersOnline, t, sessionPlots]);
 
-    if (!data) return <CardLoader/>
+    if (!sessionPlots) return <CardLoader/>;
 
     return (
         <Card>
             <CardHeader icon={faHandHoldingHeart} color="light-green" label={"First moments"}>
                 <div className={"float-end"}>
-                    <span style={{marginRight: '0.5rem'}}>on 2023-04-10</span>
-                    <button style={{marginRight: '0.5rem'}}><FontAwesomeIcon icon={faChevronLeft}/></button>
-                    <button><FontAwesomeIcon icon={faChevronRight}/></button>
+                    <span style={{marginRight: '0.5rem'}}>on {new Date(selectedDay).toISOString().split("T")[0]}</span>
+                    <button style={{marginRight: '0.5rem'}} onClick={() => setSelectedDay(selectedDay - dayMs)}>
+                        <FontAwesomeIcon icon={faChevronLeft}/></button>
+                    <button onClick={() => setSelectedDay(selectedDay + dayMs)}>
+                        <FontAwesomeIcon icon={faChevronRight}/>
+                    </button>
                 </div>
             </CardHeader>
             {/*<ExtendableCardBody id={"card-body-first-moments"} style={{marginTop: "-0.5rem"}}>*/}
@@ -105,25 +123,28 @@ const FirstMomentsCard = ({identifier}) => {
                 <table className={"table table-striped"}>
                     <thead>
                     <tr style={{position: 'sticky', top: 0, backgroundColor: "white", zIndex: 1}}>
+                        <td>Players Online</td>
+                        <td>
+                            {loadingError && <ErrorViewBody error={loadingError}/>}
+                            {!loadingError &&
+                                <Graph id={"players-online-graph"} options={playersOnlineOptions} className={''}
+                                       style={{height: "100px"}}/>}
+                        </td>
+                        <td>-</td>
+                    </tr>
+                    <tr style={{position: 'sticky', top: "7.8rem", backgroundColor: "white", zIndex: 1}}>
                         <th>Player</th>
                         <th>Sessions</th>
                         <th>Playtime</th>
-                    </tr>
-                    <tr style={{position: 'sticky', top: "3rem", backgroundColor: "white", zIndex: 1}}>
-                        <td>Players Online</td>
-                        <td>
-                            <Graph id={"players-online-graph"} options={playersOnlineOptions} className={''}
-                                   style={{height: "100px"}}/>
-                        </td>
-                        <td>-</td>
                     </tr>
                     </thead>
                     <tbody>
                     {sessionPlots.map((plot, i) => <tr key={plot.name}>
                         <td><Link to={`/player/${plot.uuid}`}>{plot.name}</Link></td>
-                        <td style={{padding: 0}}><XRangeGraph id={'xrange-' + i} pointsByAxis={[plot]} height={"60px"}/>
+                        <td style={{padding: 0}}><XRangeGraph id={`xrange-${plot.uuid}`} pointsByAxis={[plot]}
+                                                              height={"60px"}/>
                         </td>
-                        <td>0s</td>
+                        <td><FormattedTime timeMs={plot.playtime}/></td>
                     </tr>)}
                     </tbody>
                 </table>

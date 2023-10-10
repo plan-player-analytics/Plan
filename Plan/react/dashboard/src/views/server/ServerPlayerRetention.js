@@ -5,6 +5,7 @@ import LoadIn from "../../components/animation/LoadIn";
 import PlayerRetentionGraphCard from "../../components/cards/common/PlayerRetentionGraphCard";
 import {useParams} from "react-router-dom";
 import {useAuth} from "../../hooks/authenticationHook";
+import FirstMomentsCard from "../../components/cards/common/FirstMomentsCard";
 
 const ServerPlayerRetention = () => {
     const {hasPermission} = useAuth();
@@ -19,6 +20,11 @@ const ServerPlayerRetention = () => {
                         <PlayerRetentionGraphCard identifier={identifier}/>
                     </Col>
                 </ExtendableRow>}
+                <ExtendableRow id={'row-server-retention-1'}>
+                    <Col lg={12}>
+                        <FirstMomentsCard identifier={identifier}/>
+                    </Col>
+                </ExtendableRow>
             </section>
         </LoadIn>
     )

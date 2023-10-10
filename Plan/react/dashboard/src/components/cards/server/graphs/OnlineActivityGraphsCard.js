@@ -71,7 +71,8 @@ const ServerCalendarTab = () => {
             view: {
                 afterDate: start, afterTime: "00:00",
                 beforeDate: end, beforeTime: "00:00",
-                servers: networkMetadata?.servers.filter(server => server.serverUUID === identifier) || []
+                servers: networkMetadata?.servers.filter(server => server.serverUUID === identifier) || [],
+                wantedData: ["players"]
             }
         }
         setQueryData(undefined);

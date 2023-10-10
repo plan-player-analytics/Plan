@@ -22,10 +22,12 @@ import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
 import com.djrapitops.plan.delivery.domain.datatransfer.InputQueryDto;
 import com.djrapitops.plan.delivery.domain.datatransfer.PlayerListDto;
 import com.djrapitops.plan.delivery.domain.datatransfer.ViewDto;
+import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.PlayersTableJSONCreator;
 import com.djrapitops.plan.delivery.rendering.json.graphs.GraphJSONCreator;
+import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
@@ -35,6 +37,7 @@ import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.RequestBodyConverter;
 import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionQueryResultTableDataQuery;
+import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -81,6 +84,7 @@ public class QueryJSONResolver implements Resolver {
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final JSONStorage jsonStorage;
+    private final Graphs graphs;
     private final GraphJSONCreator graphJSONCreator;
     private final Locale locale;
     private final Formatters formatters;
@@ -91,7 +95,9 @@ public class QueryJSONResolver implements Resolver {
             QueryFilters filters,
             PlanConfig config,
             DBSystem dbSystem,
-            ServerInfo serverInfo, JSONStorage jsonStorage,
+            ServerInfo serverInfo,
+            JSONStorage jsonStorage,
+            Graphs graphs,
             GraphJSONCreator graphJSONCreator,
             Locale locale,
             Formatters formatters,
@@ -102,6 +108,7 @@ public class QueryJSONResolver implements Resolver {
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.jsonStorage = jsonStorage;
+        this.graphs = graphs;
         this.graphJSONCreator = graphJSONCreator;
         this.locale = locale;
         this.formatters = formatters;
@@ -111,7 +118,9 @@ public class QueryJSONResolver implements Resolver {
     @Override
     public boolean canAccess(Request request) {
         WebUser user = request.getUser().orElse(new WebUser(""));
-        return user.hasPermission(WebPermission.ACCESS_QUERY);
+        return user.hasPermission(WebPermission.ACCESS_QUERY)
+                || user.hasPermission(WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_CALENDAR)
+                || user.hasPermission(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_CALENDAR);
     }
 
     @GET
@@ -213,12 +222,21 @@ public class QueryJSONResolver implements Resolver {
         long before = view.getBeforeEpochMs();
         List<ServerUUID> serverUUIDs = view.getServerUUIDs();
 
-        return Maps.builder(String.class, Object.class)
-                .put("players", getPlayersTableData(userIds, serverUUIDs, after, before))
-                .put("activity", getActivityGraphData(userIds, serverUUIDs, after, before))
-                .put("geolocation", getGeolocationData(userIds))
-                .put("sessions", getSessionSummaryData(userIds, serverUUIDs, after, before))
-                .build();
+        Maps.Builder<String, Object> data = Maps.builder(String.class, Object.class);
+
+        if (view.isWanted("players")) data.put("players", getPlayersTableData(userIds, serverUUIDs, after, before));
+        if (view.isWanted("activity")) data.put("activity", getActivityGraphData(userIds, serverUUIDs, after, before));
+        if (view.isWanted("geolocation")) data.put("geolocation", getGeolocationData(userIds));
+        if (view.isWanted("sessions")) data.put("sessions", getSessionSummaryData(userIds, serverUUIDs, after, before));
+        if (view.isWanted("sessionList")) data.put("sessionList", getSessionList(userIds, serverUUIDs, after, before));
+
+        return data.build();
+    }
+
+    private List<Map<String, Object>> getSessionList(Set<Integer> userIds, List<ServerUUID> serverUUIDs, long after, long before) {
+        Database database = dbSystem.getDatabase();
+        List<FinishedSession> sessions = database.query(SessionQueries.fetchQuerySessions(userIds, serverUUIDs, after, before));
+        return new SessionsMutator(sessions).toPlayerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters);
     }
 
     private Map<String, String> getSessionSummaryData(Set<Integer> userIds, List<ServerUUID> serverUUIDs, long after, long before) {

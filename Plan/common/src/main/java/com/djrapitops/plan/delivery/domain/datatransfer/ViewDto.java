@@ -24,8 +24,10 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
@@ -41,6 +43,7 @@ public class ViewDto {
     private final String beforeDate;
     private final String beforeTime;
     private final List<ServerDto> servers;
+    private final Set<String> wantedData;
 
     public ViewDto(Formatters formatters, List<ServerDto> servers) {
         this.servers = servers;
@@ -55,6 +58,8 @@ public class ViewDto {
         this.afterTime = after[1];
         this.beforeDate = before[0];
         this.beforeTime = before[1];
+
+        this.wantedData = new HashSet<>();
     }
 
     public long getAfterEpochMs() throws ParseException {
@@ -70,6 +75,10 @@ public class ViewDto {
                 .map(ServerDto::getServerUUID)
                 .map(ServerUUID::fromString)
                 .collect(Collectors.toList());
+    }
+
+    public boolean isWanted(String key) {
+        return wantedData == null || wantedData.isEmpty() || wantedData.contains(key);
     }
 
     @Override

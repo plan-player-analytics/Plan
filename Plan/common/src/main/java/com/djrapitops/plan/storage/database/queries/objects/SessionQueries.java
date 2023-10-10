@@ -946,6 +946,33 @@ public class SessionQueries {
         };
     }
 
+    public static Query<List<FinishedSession>> fetchQuerySessions(Set<Integer> userIds, List<ServerUUID> serverUUIDs, long after, long before) {
+        String uuidsInSet = " IN (" + new TextStringBuilder().appendWithSeparators(userIds, ",") + ")";
+        String selectServerIds = SELECT + ServerTable.ID +
+                FROM + ServerTable.TABLE_NAME +
+                WHERE + ServerTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')";
+
+        String sql = SELECT_SESSIONS_STATEMENT +
+                WHERE + SessionsTable.SESSION_START + ">?" +
+                AND + SessionsTable.SESSION_END + "<?" +
+                AND + "s." + SessionsTable.USER_ID + uuidsInSet +
+                (serverUUIDs.isEmpty() ? "" : AND + "s." + SessionsTable.SERVER_ID + " IN (" + selectServerIds + ")") +
+                ORDER_BY_SESSION_START_DESC;
+
+        return new QueryStatement<>(sql, 2000) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, after);
+                statement.setLong(2, before);
+            }
+
+            @Override
+            public List<FinishedSession> processResults(ResultSet set) throws SQLException {
+                return extractDataFromSessionSelectStatement(set);
+            }
+        };
+    }
+
     public static Query<Map<String, Long>> summaryOfPlayers(Set<Integer> userIds, List<ServerUUID> serverUUIDs, long after, long before) {
         String uuidsInSet = " IN (" + new TextStringBuilder().appendWithSeparators(userIds, ",") + ")";
         String selectServerIds = SELECT + ServerTable.ID +

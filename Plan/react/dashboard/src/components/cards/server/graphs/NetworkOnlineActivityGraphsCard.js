@@ -94,7 +94,8 @@ const NetworkCalendarTab = () => {
             view: {
                 afterDate: start, afterTime: "00:00",
                 beforeDate: end, beforeTime: "00:00",
-                servers: []
+                servers: [],
+                wantedData: ["players"]
             }
         }
         setQueryData(undefined);

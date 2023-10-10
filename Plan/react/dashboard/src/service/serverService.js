@@ -1,5 +1,6 @@
 import {doGetRequest, staticSite} from "./backendConfiguration";
-import {firstMoments} from "./mockData";
+import Highcharts from "highcharts/highstock";
+import {postQuery} from "./queryService";
 
 export const fetchServerIdentity = async (timestamp, identifier) => {
     let url = `/v1/serverIdentity?server=${identifier}`;
@@ -341,6 +342,23 @@ export const fetchPluginHistory = async (timestamp, identifier) => {
     return doGetRequest(url, timestamp);
 }
 
-export const fetchFirstMoments = async (timestamp, after, before, identifier) => {
-    return firstMoments;
+export const fetchFirstMoments = async (after, before, server) => {
+    const start = Highcharts.dateFormat('%d/%m/%Y', after);
+    const end = Highcharts.dateFormat('%d/%m/%Y', before);
+    const query = {
+        filters: [{
+            kind: "registeredBetween",
+            parameters: {
+                afterDate: start, afterTime: "00:00",
+                beforeDate: end, beforeTime: "00:00"
+            }
+        }],
+        view: {
+            afterDate: start, afterTime: "00:00",
+            beforeDate: end, beforeTime: "00:00",
+            servers: server ? [server] : [],
+            wantedData: ["sessionList"]
+        }
+    }
+    return await postQuery(query);
 }
