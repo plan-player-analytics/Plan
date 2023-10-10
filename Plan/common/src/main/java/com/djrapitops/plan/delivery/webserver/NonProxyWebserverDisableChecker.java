@@ -20,6 +20,8 @@ import com.djrapitops.plan.delivery.webserver.http.WebServer;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.server.PluginLogger;
@@ -34,6 +36,7 @@ import java.io.IOException;
 public class NonProxyWebserverDisableChecker implements Runnable {
 
     private final PlanConfig config;
+    private final Locale locale;
     private final Addresses addresses;
     private final WebServerSystem webServerSystem;
     private final PluginLogger logger;
@@ -41,12 +44,14 @@ public class NonProxyWebserverDisableChecker implements Runnable {
 
     public NonProxyWebserverDisableChecker(
             PlanConfig config,
+            Locale locale,
             Addresses addresses,
             WebServerSystem webServerSystem,
             PluginLogger logger,
             ErrorLogger errorLogger
     ) {
         this.config = config;
+        this.locale = locale;
         this.addresses = addresses;
         this.webServerSystem = webServerSystem;
         this.logger = logger;
@@ -58,7 +63,7 @@ public class NonProxyWebserverDisableChecker implements Runnable {
         if (config.isFalse(PluginSettings.PROXY_COPY_CONFIG)) return;
 
         addresses.getProxyServerAddress().ifPresent(address -> {
-            logger.info("Proxy server detected in the database - Proxy Webserver address is '" + address + "'.");
+            logger.info(locale.getString(PluginLang.ENABLE_NOTIFY_PROXY_ADDRESS, address));
             WebServer webServer = webServerSystem.getWebServer();
 
             if (webServer.isEnabled()) {
@@ -68,12 +73,12 @@ public class NonProxyWebserverDisableChecker implements Runnable {
     }
 
     private void disableWebserver(WebServer webServer) {
-        logger.warn("Disabling Webserver on this server - You can override this behavior by setting '" + PluginSettings.PROXY_COPY_CONFIG.getPath() + "' to false.");
+        logger.warn(locale.getString(PluginLang.ENABLE_NOTIFY_PROXY_DISABLED_WEBSERVER, PluginSettings.PROXY_COPY_CONFIG.getPath()));
         webServer.disable();
         try {
             config.set(WebserverSettings.DISABLED, true);
             config.save();
-            logger.warn("Note: Set '" + WebserverSettings.DISABLED.getPath() + "' to true");
+            logger.warn(locale.getString(PluginLang.ENABLE_NOTIFY_SETTING_CHANGE, WebserverSettings.DISABLED.getPath(), "true"));
         } catch (IOException e) {
             errorLogger.warn(e, ErrorContext.builder()
                     .whatToDo("Set '" + WebserverSettings.DISABLED.getPath() + "' to true manually.")

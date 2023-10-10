@@ -72,7 +72,7 @@ public class Addresses {
     }
 
     public Optional<String> getMainAddress() {
-        Optional<String> proxyServerAddress = getProxyServerAddress();
+        Optional<String> proxyServerAddress = getAnyValidServerAddress();
         return proxyServerAddress.isPresent() ? proxyServerAddress : getAccessAddress();
     }
 
@@ -105,6 +105,14 @@ public class Addresses {
     }
 
     public Optional<String> getProxyServerAddress() {
+        return dbSystem.getDatabase().query(ServerQueries.fetchProxyServers())
+                .stream()
+                .map(Server::getWebAddress)
+                .filter(this::isValidAddress)
+                .findAny();
+    }
+
+    public Optional<String> getAnyValidServerAddress() {
         return dbSystem.getDatabase().query(ServerQueries.fetchPlanServerInformationCollection())
                 .stream()
                 .map(Server::getWebAddress)

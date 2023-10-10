@@ -189,7 +189,7 @@ public class PlanSystem implements SubSystem {
         // Disables Webserver if Proxy is detected in the database
         if (serverInfo.getServer().isNotProxy()) {
             processing.submitNonCritical(new NonProxyWebserverDisableChecker(
-                    configSystem.getConfig(), webServerSystem.getAddresses(), webServerSystem, logger, errorLogger
+                    configSystem.getConfig(), localeSystem.getLocale(), webServerSystem.getAddresses(), webServerSystem, logger, errorLogger
             ));
         }
 
