@@ -101,7 +101,7 @@ const PlayerListCard = ({data, title, justList, orderBy}) => {
             data: rows,
             order: [[orderBy !== undefined ? orderBy : 5, "desc"]]
         });
-    }, [data, orderBy, t, formatDecimals, decimalFormat]);
+    }, [data, orderBy, t, decimalFormat]);
 
     const rowKeyFunction = useCallback((row, column) => {
         return row.uuid + "-" + (column ? JSON.stringify(column.data) : '');

@@ -489,7 +489,7 @@ public class GraphJSONCreator {
         Integer unknown = joinAddresses.get(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
         if (unknown != null) {
             joinAddresses.remove(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
-            joinAddresses.put(locale.getString(GenericLang.UNKNOWN).toLowerCase(), unknown);
+            joinAddresses.put(GenericLang.UNKNOWN.getKey(), unknown);
         }
     }
 

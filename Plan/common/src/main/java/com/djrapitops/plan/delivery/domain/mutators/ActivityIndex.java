@@ -90,6 +90,16 @@ public class ActivityIndex {
         return getGroups(null);
     }
 
+    public static String[] getDefaultGroupLangKeys() {
+        return new String[]{
+                HtmlLang.INDEX_VERY_ACTIVE.getKey(),
+                HtmlLang.INDEX_ACTIVE.getKey(),
+                HtmlLang.INDEX_REGULAR.getKey(),
+                HtmlLang.INDEX_IRREGULAR.getKey(),
+                HtmlLang.INDEX_INACTIVE.getKey()
+        };
+    }
+
     public static String[] getGroups(Locale locale) {
         if (locale == null) {
             return new String[]{
