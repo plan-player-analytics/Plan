@@ -67,11 +67,11 @@ const BetweenDatesFilter = ({index, label, filter, removeFilter, setFilterOption
                                     setAsInvalid={setAsInvalid} setAsValid={setAsValid}
                     />
                 </Col>
-                <Col md={"auto"} sm={12} className={"my-1 my-md-auto"}>
+                {removeFilter && <Col md={"auto"} sm={12} className={"my-1 my-md-auto"}>
                     <button className="filter-remover btn btn-outline-secondary float-end"
                             onClick={removeFilter}><FontAwesomeIcon icon={faTrashAlt}/>
                     </button>
-                </Col>
+                </Col>}
             </Row>
         </div>
     )

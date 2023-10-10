@@ -28,11 +28,11 @@ const MultipleChoiceFilter = ({index, label, filter, removeFilter, setFilterOpti
                                  setSelectedIndexes={setSelectedIndexes}
                                  selectedIndexes={selectedIndexes}/>
                 </Col>
-                <Col md={"auto"}>
+                {removeFilter && <Col md={"auto"}>
                     <button className="filter-remover btn btn-outline-secondary float-end"
                             onClick={removeFilter}><FontAwesomeIcon icon={faTrashAlt}/>
                     </button>
-                </Col>
+                </Col>}
             </Row>
         </div>
     )

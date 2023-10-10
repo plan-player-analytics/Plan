@@ -3,9 +3,12 @@ import MultipleChoiceFilter from "./MultipleChoiceFilter";
 import {useTranslation} from "react-i18next";
 import PluginGroupsFilter from "./PluginGroupsFilter";
 import BetweenDatesFilter from "./BetweenDatesFilter";
+import Loader from "../../../navigation/Loader";
 
 const Filter = ({index, filter, setFilterOptions, removeFilter, setAsInvalid, setAsValid}) => {
     const {t} = useTranslation();
+
+    if (!filter) return <Loader/>;
 
     if (filter.kind.startsWith("pluginGroups-")) {
         return <PluginGroupsFilter index={index} filter={filter}

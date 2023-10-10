@@ -8,10 +8,12 @@ import Accessibility from "highcharts/modules/accessibility"
 import {useTranslation} from "react-i18next";
 
 const Graph = ({
-                       id,
-                       options,
-                       tall,
-                   }) => {
+                   id,
+                   options,
+                   className,
+                   style,
+                   tall,
+               }) => {
     const {t} = useTranslation()
     const {graphTheming, nightModeEnabled} = useTheme();
 
@@ -26,10 +28,11 @@ const Graph = ({
     }, [options, id, t,
         graphTheming, nightModeEnabled]);
 
-    const style = tall ? {height: "450px"} : undefined;
+    const tallStyle = tall ? {height: "450px"} : undefined;
+    const givenStyle = style ? style : tallStyle;
 
     return (
-        <div className="chart-area" style={style} id={id}>
+        <div className={className || "chart-area"} style={givenStyle} id={id}>
             <span className="loader"/>
         </div>
     )

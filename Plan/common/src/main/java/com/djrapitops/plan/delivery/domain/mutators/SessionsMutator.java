@@ -282,7 +282,9 @@ public class SessionsMutator {
             sessionMap.put("name", nameFunction.apply(sessionMap));
             sessionMap.put("start", formatters.yearLong().apply(session.getStart()) +
                     (session.getExtraData(ActiveSession.class).isPresent() ? " (Online)" : ""));
+            sessionMap.put("startMillis", session.getStart());
             sessionMap.put("end", formatters.yearLong().apply(session.getEnd()));
+            sessionMap.put("endMillis", session.getEnd());
             sessionMap.put("most_used_world", worldAliasSettings.getLongestWorldPlayed(session));
             sessionMap.put("length", formatters.timeAmount().apply(session.getLength()));
             sessionMap.put("afk_time", formatters.timeAmount().apply(session.getAfkTime()));

@@ -1,4 +1,5 @@
 import {doGetRequest, staticSite} from "./backendConfiguration";
+import {firstMoments} from "./mockData";
 
 export const fetchServerIdentity = async (timestamp, identifier) => {
     let url = `/v1/serverIdentity?server=${identifier}`;
@@ -338,4 +339,8 @@ export const fetchPluginHistory = async (timestamp, identifier) => {
     let url = `/v1/pluginHistory?server=${identifier}`;
     if (staticSite) url = `/data/pluginHistory-${identifier}.json`;
     return doGetRequest(url, timestamp);
+}
+
+export const fetchFirstMoments = async (timestamp, after, before, identifier) => {
+    return firstMoments;
 }

@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {Card} from "react-bootstrap";
 import {usePageExtension} from "../../../hooks/pageExtensionHook";
 
-const ExtendableCardBody = ({id, className, children}) => {
+const ExtendableCardBody = ({id, className, style, children}) => {
     const [elementsBefore, setElementsBefore] = useState([]);
     const [elementsAfter, setElementsAfter] = useState([]);
     const {onRender, onUnmount, context} = usePageExtension();
@@ -27,7 +27,7 @@ const ExtendableCardBody = ({id, className, children}) => {
     return (
         <>
             <div dangerouslySetInnerHTML={{__html: elementsBefore.join('')}}/>
-            <Card.Body id={id} className={className ? "extendable " + className : "extendable"}>
+            <Card.Body id={id} className={className ? "extendable " + className : "extendable"} style={style}>
                 {children}
             </Card.Body>
             <div dangerouslySetInnerHTML={{__html: elementsAfter.join('')}}/>

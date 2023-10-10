@@ -427,6 +427,8 @@ public enum HtmlLang implements Lang {
     MANAGE_ALERT_SAVE_FAIL("html.label.managePage.alert.saveFail", "Failed to save changes: {{error}}"),
     MANAGE_ALERT_SAVE_SUCCESS("html.label.managePage.alert.saveSuccess", "Changes saved successfully!"),
 
+    FIRST_MOMENTS("html.label.firstMoments", "First Moments"),
+
     INFO_NO_UPTIME("html.description.noUptimeCalculation", "Server is offline, or has never restarted with Plan installed."),
     WARNING_NO_GAME_SERVERS("html.description.noGameServers", "Some data requires Plan to be installed on game servers."),
     WARNING_PERFORMANCE_NO_GAME_SERVERS("html.description.performanceNoGameServers", "TPS, Entity or Chunk data is not gathered from proxy servers since they don't have game tick loop."),
