@@ -137,6 +137,7 @@ public class PlayersTableJSONCreator {
                 .map(player -> TablePlayerDto.builder()
                         .withUuid(player.getPlayerUUID())
                         .withName(player.getName().orElseGet(() -> player.getPlayerUUID().toString()))
+                        .withActivityIndex(player.getCurrentActivityIndex().map(ActivityIndex::getValue).orElse(0.0))
                         .withSessionCount((long) player.getSessionCount().orElse(0))
                         .withPlaytimeActive(player.getActivePlaytime().orElse(null))
                         .withLastSeen(player.getLastSeen().orElse(null))

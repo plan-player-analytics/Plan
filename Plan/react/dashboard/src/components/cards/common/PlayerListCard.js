@@ -11,6 +11,8 @@ import FormattedDate from "../../text/FormattedDate";
 import FormattedTime from "../../text/FormattedTime";
 import ExtensionIcon from "../../extensions/ExtensionIcon";
 import {ExtensionValueTableCell} from "../../extensions/ExtensionCard";
+import {usePreferences} from "../../../hooks/preferencesHook";
+import {formatDecimals} from "../../../util/formatters";
 
 const getActivityGroup = value => {
     const VERY_ACTIVE = 3.75;
@@ -32,6 +34,8 @@ const getActivityGroup = value => {
 
 const PlayerListCard = ({data, title, justList, orderBy}) => {
     const {t} = useTranslation();
+    const {preferencesLoaded, decimalFormat} = usePreferences();
+
     const [options, setOptions] = useState(undefined);
 
     useEffect(() => {
@@ -73,7 +77,7 @@ const PlayerListCard = ({data, title, justList, orderBy}) => {
                 uuid: player.playerUUID,
                 link: <Link to={"/player/" + player.playerUUID}>{player.playerName}</Link>,
                 activityIndex: player.activityIndex,
-                activityIndexAndGroup: player.activityIndex + " (" + t(getActivityGroup(player.activityIndex)) + ")",
+                activityIndexAndGroup: formatDecimals(player.activityIndex, decimalFormat) + " (" + t(getActivityGroup(player.activityIndex)) + ")",
                 activePlaytime: player.playtimeActive,
                 activePlaytimeFormatted: <FormattedTime timeMs={player.playtimeActive}/>,
                 sessions: player.sessionCount,
@@ -97,13 +101,14 @@ const PlayerListCard = ({data, title, justList, orderBy}) => {
             data: rows,
             order: [[orderBy !== undefined ? orderBy : 5, "desc"]]
         });
-    }, [data, orderBy, t]);
+    }, [data, orderBy, t, formatDecimals, decimalFormat]);
 
     const rowKeyFunction = useCallback((row, column) => {
         return row.uuid + "-" + (column ? JSON.stringify(column.data) : '');
     }, []);
 
-    if (!options) return <CardLoader/>
+    if (!preferencesLoaded) return <></>;
+    if (!options) return <CardLoader/>;
 
     if (justList) {
         return (

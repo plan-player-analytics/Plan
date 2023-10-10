@@ -23,3 +23,10 @@ export const formatTimeAmount = (ms) => {
 
     return out;
 }
+
+export const formatDecimals = (value, formatPattern) => {
+    if (!formatPattern) return value;
+    const split = formatPattern.split('.');
+    if (split.length <= 1) return value.toFixed(0);
+    return value.toFixed(split[1].length);
+}

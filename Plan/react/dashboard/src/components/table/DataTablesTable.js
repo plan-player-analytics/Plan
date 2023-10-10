@@ -122,7 +122,7 @@ const DataTablesTable = ({id, rowKeyFunction, options}) => {
         if (valA === undefined && valB === undefined) return 0;
         if (valA === undefined) return sortReversed ? 1 : -1;
         if (valB === undefined) return sortReversed ? 1 : -1;
-        if (Number.isSafeInteger(valA) && Number.isSafeInteger(valB)) {
+        if (typeof valA === 'number' && typeof valB === 'number') {
             return sortReversed ? valA - valB : valB - valA;
         }
         return sortReversed ? valB.localeCompare(valA) : valA.localeCompare(valB);
