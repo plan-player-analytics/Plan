@@ -60,7 +60,7 @@ const ServerAsNumbersCard = ({data}) => {
                 <Datapoint name={t('html.label.sessions')}
                            color={'teal'} icon={faCalendarCheck}
                            value={data.sessions} bold/>
-                {data.player_kills && <hr/>}
+                {data.player_kills !== undefined && <hr/>}
                 <Datapoint name={t('html.label.playerKills')}
                            color={'red'} icon={faCrosshairs}
                            value={data.player_kills} bold/>
