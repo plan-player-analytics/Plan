@@ -201,7 +201,9 @@ public class PlayersTableJSONCreator {
 
         Html link = openPlayerPageInNewTab ? Html.LINK_EXTERNAL : Html.LINK;
 
-        putDataEntry(dataJson, link.create(url, StringUtils.replace(StringEscapeUtils.escapeHtml4(name), "\\", "\\\\") /* Backslashes escaped to prevent json errors */), "name");
+        /* Backslashes escaped to prevent json errors */
+        String escapedName = StringUtils.replace(StringEscapeUtils.escapeHtml4(name), "\\", "\\\\");
+        putDataEntry(dataJson, link.create(url, escapedName, escapedName), "name");
         putDataEntry(dataJson, activityIndex.getValue(), activityString, "index");
         putDataEntry(dataJson, activePlaytime, numberFormatters.get(FormatType.TIME_MILLISECONDS).apply(activePlaytime), "activePlaytime");
         putDataEntry(dataJson, loginTimes, "sessions");

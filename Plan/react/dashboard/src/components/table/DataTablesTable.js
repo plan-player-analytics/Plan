@@ -79,7 +79,7 @@ const VisibleColumnsSelector = ({columns, visibleColumnIndexes, toggleColumn}) =
     )
 }
 
-const DataTablesTable = ({id, rowKeyFunction, options}) => {
+const DataTablesTable = ({id, rowKeyFunction, options, colorClass}) => {
     const {t} = useTranslation();
     const {nightModeEnabled} = useTheme();
 
@@ -88,22 +88,23 @@ const DataTablesTable = ({id, rowKeyFunction, options}) => {
     const [sortReversed, setSortReversed] = useState(options.order[0][1] === 'asc');
     const [visibleColumnIndexes, setVisibleColumnIndexes] = useState(columns.map((_, i) => i));
     const toggleColumn = useCallback(index => {
+        const currentSortIndex = visibleColumnIndexes[sortBy];
         if (visibleColumnIndexes.includes(index)) {
             if (visibleColumnIndexes.length === 1) return;
             const newVisible = visibleColumnIndexes.filter(i => i !== index);
             newVisible.sort((a, b) => a - b);
             setVisibleColumnIndexes(newVisible);
-            if (sortBy === index) {
+            if (currentSortIndex === index) {
                 setSortBy(0);
                 setSortReversed(false);
-            } else if (index < sortBy) {
+            } else if (index <= currentSortIndex) {
                 setSortBy(sortBy - 1);  // Keep the current sort
             }
         } else {
             const newVisible = [index, ...visibleColumnIndexes];
             newVisible.sort((a, b) => a - b);
             setVisibleColumnIndexes(newVisible);
-            if (sortBy >= index) {
+            if (currentSortIndex >= index) {
                 setSortBy(sortBy + 1);  // Keep the current sort
             }
         }
@@ -198,14 +199,14 @@ const DataTablesTable = ({id, rowKeyFunction, options}) => {
             <div className={"float-end"}>
                 <SearchField className={"dataTables_filter"} value={filter} setValue={setFilter}/>
             </div>
-            <div className={"float-start dataTables_columns"}>
+            {columns.length > 2 && <div className={"float-start dataTables_columns"}>
                 <VisibleColumnsSelector columns={columns} visibleColumnIndexes={visibleColumnIndexes}
                                         toggleColumn={toggleColumn}/>
-            </div>
+            </div>}
             <table id={id}
                    className={"datatable table table-bordered table-striped" + (nightModeEnabled ? " table-dark" : '')}
                    style={{width: "100%"}}>
-                <thead id={id + '-head'}>
+                <thead id={id + '-head'} className={colorClass}>
                 <tr>
                     {visibleColumns.map((column, i) => <th key={JSON.stringify(column.data)}>
                         <button onClick={() => changeSort(i)}>
@@ -268,7 +269,7 @@ const DataTablesTable = ({id, rowKeyFunction, options}) => {
                 </React.Fragment>)}
                 </tbody>
             </table>
-            <p className={"dataTables_info float-start"}>
+            <p className={"dataTables_info float-start"} style={{maxWidth: "40%", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>
                 <Trans i18nKey={"html.label.table.showNofM"}
                        defaults={"Showing {{n}} of {{m}} entries"}
                        values={{
@@ -276,7 +277,7 @@ const DataTablesTable = ({id, rowKeyFunction, options}) => {
                            m: matchingData.length
                        }}/>
             </p>
-            <div className={"float-end"}>
+            <div className={"float-end"} style={{maxWidth: "60%"}}>
                 <Pagination page={page} setPage={setPage} maxPage={maxPage}/>
             </div>
         </div>

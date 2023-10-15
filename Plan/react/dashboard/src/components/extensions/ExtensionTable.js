@@ -1,14 +1,20 @@
-import React, {useCallback, useState} from 'react';
-import {useTheme} from "../../hooks/themeHook";
-import {useTranslation} from "react-i18next";
+import React, {useState} from 'react';
 import ExtensionIcon from "./ExtensionIcon";
 import DataTablesTable from "../table/DataTablesTable";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faSort, faSortDown, faSortUp} from "@fortawesome/free-solid-svg-icons";
 import ColoredText from "../text/ColoredText";
+import {baseAddress} from "../../service/backendConfiguration";
 
 const ExtensionDataTable = ({table}) => {
     const [id] = useState("extension-table-" + new Date().getTime() + "-" + (Math.floor(Math.random() * 100000)));
+
+    const mapToCell = (value, j) => {
+        if (String(value).startsWith("<a class=\"link\" href=\"")) {
+            let linkHtml = value || String(value);
+            linkHtml = linkHtml.replace("../", baseAddress + '/');
+            return <span dangerouslySetInnerHTML={{__html: linkHtml}}/>;
+        }
+        return <ColoredText text={value || String(value)}/>
+    };
 
     const data = {
         columns: table.table.columns.map((column, i) => {
@@ -24,7 +30,7 @@ const ExtensionDataTable = ({table}) => {
             const dataRow = {};
             row.forEach((cell, j) => {
                 dataRow[`col${j}Value`] = cell['valueUnformatted'] || cell.value || cell;
-                dataRow[`col${j}Display`] = cell.value || cell;
+                dataRow[`col${j}Display`] = mapToCell(cell.value || cell, j);
             });
             return dataRow;
         })
@@ -37,96 +43,17 @@ const ExtensionDataTable = ({table}) => {
         pagingType: "numbers",
         order: [[1, "desc"]]
     }
-    return (
-        <DataTablesTable id={id} options={options}/>
-    )
-}
-
-const sortComparator = (columnIndex) => (rowA, rowB) => {
-    const a = rowA[columnIndex].valueUnformatted;
-    const b = rowB[columnIndex].valueUnformatted;
-    if (a === b) return 0;
-    if (isNaN(Number(a)) || isNaN(Number(b))) {
-        return String(a).toLowerCase().localeCompare(String(b).toLowerCase());
-    } else {
-        const numA = Number(a);
-        const numB = Number(b);
-        if (numA < numB) return -1;
-        if (numA > numB) return 1;
-        return 0;
+    const rowKeyFunction = (row, column) => {
+        return JSON.stringify(Object.entries(row).filter(e => e[0].includes('Value'))) + "-" + JSON.stringify(column?.data?._);
     }
-}
-
-const sortRows = (rows, sortIndex, sortReversed) => {
-    if (sortIndex === undefined) return rows;
-
-    const comparator = sortComparator(sortIndex);
-    const sorted = rows.sort(comparator);
-    if (sortReversed) return rows.reverse();
-    return sorted;
-}
-
-const ExtensionColoredTable = ({table}) => {
-    const {nightModeEnabled} = useTheme();
-    const {t} = useTranslation();
-
-    const [sortBy, setSortBy] = useState(undefined);
-    const [sortReverse, setSortReverse] = useState(false);
-    const changeSort = useCallback(index => {
-        if (index === sortBy) {
-            setSortReverse(!sortReverse);
-        } else {
-            setSortBy(index);
-            setSortReverse(false);
-        }
-
-    }, [sortBy, setSortBy, sortReverse, setSortReverse]);
-
-    const mapToCell = (value, j) => {
-        if (String(value?.value).startsWith("<a class=\"link\" href=\"")) {
-            return <td key={JSON.stringify(value)} dangerouslySetInnerHTML={{__html: value.value || String(value)}}/>;
-        }
-        return <td key={JSON.stringify(value)}>
-            <ColoredText text={value.value || String(value)}/>
-        </td>;
-    };
-
-    const rows = table.table.rows.length ? sortRows(table.table.rows, sortBy, sortReverse)
-            .map((row, i) => <tr key={JSON.stringify(row)}>{row.map(mapToCell)}</tr>) :
-        <tr>{table.table.columns.map((column, i) =>
-            <td key={JSON.stringify(column)}>{i === 0 ? t('generic.noData') : '-'}</td>)}
-        </tr>
 
     return (
-        <table className={"table table-striped" + (nightModeEnabled ? " table-dark" : '')}>
-            <thead className={table.tableColorClass}>
-            <tr>
-                {table.table.columns.map((column, i) => <th className={'extension-table-header'}
-                                                            key={JSON.stringify(column)} onClick={() => changeSort(i)}>
-                    <ExtensionIcon icon={table.table.icons[i]}/>
-                    &nbsp;
-                    {column}
-                    &nbsp;
-                    <FontAwesomeIcon className={sortBy === i ? '' : 'opacity-50'}
-                                     icon={sortBy === i ? (sortReverse ? faSortDown : faSortUp) : faSort}/>
-                </th>)}
-            </tr>
-            </thead>
-            <tbody>
-            {rows}
-            </tbody>
-        </table>
+        <DataTablesTable id={id} options={options} rowKeyFunction={rowKeyFunction} colorClass={table.tableColorClass}/>
     )
 }
 
 const ExtensionTable = ({table}) => {
-    const tableLength = table.table.rows.length;
-
-    if (tableLength > 10) {
-        return <ExtensionDataTable table={table}/>
-    } else {
-        return <ExtensionColoredTable table={table}/>
-    }
+    return <ExtensionDataTable table={table}/>;
 }
 
 export default ExtensionTable
