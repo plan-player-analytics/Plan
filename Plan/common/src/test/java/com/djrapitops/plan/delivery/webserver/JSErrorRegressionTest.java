@@ -195,7 +195,7 @@ class JSErrorRegressionTest {
     private void assertNoLogs(String testName, List<LogEntry> logs) {
         assertTrue(logs.isEmpty(), () -> testName + "Browser console included " + logs.size() + " logs: " + logs.stream()
                 .map(log -> "\n" + log.getLevel().getName() + " " + log.getMessage())
-                .filter(log -> !log.contains("fonts.gstatic.com"))
+                .filter(log -> !log.contains("fonts.gstatic.com") && !log.contains("fonts.googleapis.com"))
                 .toList());
     }
 }
