@@ -82,6 +82,8 @@ dependencies {
         // json-simple has junit (a test dependency) compile scoped
         exclude group: "junit", module: "junit"
     }
+    implementation "org.jasypt:jasypt:$jasyptVersion:lite"
+
 
     // Swagger annotations
     implementation "jakarta.ws.rs:jakarta.ws.rs-api:3.1.0"
