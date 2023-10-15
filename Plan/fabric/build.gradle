@@ -43,7 +43,7 @@ processResources {
     inputs.property "version", project.ext.fullVersion
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.ext.fullVersion
+        expand "version": project.ext.fullVersionSemantic
     }
 }
 

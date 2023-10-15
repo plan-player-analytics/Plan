@@ -42,6 +42,7 @@ allprojects {
     ext.minorVersion = '6'
     ext.buildVersion = buildVersion
     ext.fullVersion = project.ext.majorVersion + '.' + project.ext.minorVersion + ' build ' + project.ext.buildVersion
+    ext.fullVersionSemantic = project.ext.majorVersion + '.' + project.ext.minorVersion + '+build.' + project.ext.buildVersion
 
     // Fix for UTF-8 files showing with wrong encoding when compiled on Windows machines.
     compileJava { options.encoding = "UTF-8" }
@@ -49,7 +50,7 @@ allprojects {
     javadoc { options.encoding = 'UTF-8' }
 }
 
-logger.lifecycle("Building artifact for version $fullVersion")
+logger.lifecycle("Building artifact for version $fullVersion / $fullVersionSemantic")
 
 subprojects {
     // Build plugins
