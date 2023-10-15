@@ -124,6 +124,7 @@ public enum HtmlLang implements Lang {
     TITLE_SERVER("html.label.server", "Server"), // Can cause issue with datatables.js
     TITLE_MOST_PLAYED_WORLD("html.label.mostPlayedWorld", "Most played World"),
     TEXT_CLICK_TO_EXPAND("html.text.clickToExpand", "Click to expand"),
+    TEXT_CLICK_AND_DRAG("html.text.clickAndDrag", "Click and Drag for more"),
     TITLE_SERVER_PLAYTIME_30("html.label.serverPlaytime30days", "Server Playtime for 30 days"),
     TITLE_INSIGHTS("html.label.insights30days", "Insights for 30 days"),
     LABEL_AFK_TIME("html.label.afkTime", "AFK Time"),

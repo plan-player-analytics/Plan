@@ -2,10 +2,22 @@ import React from "react";
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
+import {useTranslation} from "react-i18next";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faHandPointer} from "@fortawesome/free-regular-svg-icons";
 
 const ServerCalendar = ({series, firstDay, onSelect}) => {
+    const {t} = useTranslation();
+
+    const explainerStyle = {
+        position: "absolute",
+        top: "0.5rem",
+        right: "1rem"
+    };
+
     return (
         <div id={'server-calendar'}>
+            <p style={explainerStyle}><FontAwesomeIcon icon={faHandPointer}/> {t('html.text.clickAndDrag')}</p>
             <FullCalendar
                 plugins={[interactionPlugin, dayGridPlugin]}
                 timeZone="UTC"

@@ -824,6 +824,7 @@ html:
         success: "Registered a new user successfully! You can now login."
         usernameTip: "Username can be up to 50 characters."
     text:
+        clickAndDrag: "Click and Drag for more"
         clickToExpand: "Click to expand"
         comparing15days: "Comparing 15 days"
         comparing30daysAgo: "Comparing 30d ago to Now"

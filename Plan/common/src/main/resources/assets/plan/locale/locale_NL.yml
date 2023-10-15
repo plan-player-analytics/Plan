@@ -824,6 +824,7 @@ html:
         success: "Registered a new user successfully! You can now login."
         usernameTip: "Gebruikersnaam mag maximaal 50 tekens bevatten."
     text:
+        clickAndDrag: "Click and Drag for more"
         clickToExpand: "Klik om uit te breiden"
         comparing15days: "15 dagen vergelijken"
         comparing30daysAgo: "30 dagen tot nu vergelijken"

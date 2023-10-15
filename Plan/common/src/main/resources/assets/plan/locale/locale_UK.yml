@@ -824,6 +824,7 @@ html:
         success: "Ви успішно зареєстрували нового користувача! Тепер ви можете увійти в систему."
         usernameTip: "Нікнейм має бути не довшим за 50 символів."
     text:
+        clickAndDrag: "Click and Drag for more"
         clickToExpand: "Натисніть, щоб розгорнути"
         comparing15days: "Порівняння 15 днів"
         comparing30daysAgo: "Порівняння 30 днів тому і зараз"

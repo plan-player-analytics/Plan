@@ -824,6 +824,7 @@ html:
         success: "新規ユーザー登録が完了しました!ログインできるようになりました。"
         usernameTip: "ユーザー名は50文字以内で指定します"
     text:
+        clickAndDrag: "Click and Drag for more"
         clickToExpand: "クリックして展開"
         comparing15days: "直近15日との比較"
         comparing30daysAgo: "30日前との比較"

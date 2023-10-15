@@ -824,6 +824,7 @@ html:
         success: "新用户注册成功！你现在可以登录了。"
         usernameTip: "用户名最多可以包含 50 个字符。"
     text:
+        clickAndDrag: "Click and Drag for more"
         clickToExpand: "点击展开"
         comparing15days: "对比 15 天的情况"
         comparing30daysAgo: "对比 30 天前和现在的情况"

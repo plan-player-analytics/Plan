@@ -824,6 +824,7 @@ html:
         success: "Registered a new user successfully! You can now login."
         usernameTip: "Username can be up to 50 characters."
     text:
+        clickAndDrag: "Click and Drag for more"
         clickToExpand: "확장하려면 클릭"
         comparing15days: "지난 15일 비교"
         comparing30daysAgo: "지난 30일 비교"
