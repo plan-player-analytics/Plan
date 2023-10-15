@@ -111,7 +111,9 @@ public class QueryJSONResolver implements Resolver {
     @Override
     public boolean canAccess(Request request) {
         WebUser user = request.getUser().orElse(new WebUser(""));
-        return user.hasPermission(WebPermission.ACCESS_QUERY);
+        return user.hasPermission(WebPermission.ACCESS_QUERY)
+                || user.hasPermission(WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_CALENDAR)
+                || user.hasPermission(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_CALENDAR);
     }
 
     @GET
