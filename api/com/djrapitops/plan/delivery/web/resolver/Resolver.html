@@ -121,6 +121,11 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Implement request resolution.</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#usedWebPermissions()" class="member-name-link">usedWebPermissions</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="block">Override this to tell Plan what web permissions this endpoint uses.</div>
+</div>
 </div>
 </div>
 </div>
@@ -151,6 +156,32 @@ loadScripts(document, 'script');</script>
 <dd>
 <ul class="see-list-long">
 <li><a href="request/Request.html#getUser()"><code>for WebUser that has access permissions.</code></a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="usedWebPermissions()">
+<h3>usedWebPermissions</h3>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">usedWebPermissions</span>()</div>
+<div class="block">Override this to tell Plan what web permissions this endpoint uses.
+ <p>
+ This allows:
+ <ul>
+     <li>Plan to store these permissions in the permission list</li>
+     <li>Users can grant/deny the permission for a group</li>
+     <li>Plan can show what endpoints specific permission gives access to</li>
+ </ul>
+ <p>
+ Requires PAGE_EXTENSION_USER_PERMISSIONS capability</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>Set of permissions eg. [plugin.custom.permission, plugin.custom.permission.child.node]</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="see-list">
+<li><a href="../../../capability/CapabilityService.html" title="interface in com.djrapitops.plan.capability"><code>for Capability checks</code></a></li>
 </ul>
 </dd>
 </dl>
