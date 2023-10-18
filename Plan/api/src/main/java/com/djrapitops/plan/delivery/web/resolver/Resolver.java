@@ -19,7 +19,9 @@ package com.djrapitops.plan.delivery.web.resolver;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Interface for resolving requests of Plan webserver.
@@ -39,6 +41,25 @@ public interface Resolver {
      * @see Request#getUser() for {@link WebUser} that has access permissions.
      */
     boolean canAccess(Request request);
+
+    /**
+     * Override this to tell Plan what web permissions this endpoint uses.
+     * <p>
+     * This allows:
+     * <ul>
+     *     <li>Plan to store these permissions in the permission list</li>
+     *     <li>Users can grant/deny the permission for a group</li>
+     *     <li>Plan can show what endpoints specific permission gives access to</li>
+     * </ul>
+     * <p>
+     * Requires PAGE_EXTENSION_USER_PERMISSIONS capability
+     *
+     * @return Set of permissions eg. [plugin.custom.permission, plugin.custom.permission.child.node]
+     * @see com.djrapitops.plan.capability.CapabilityService for Capability checks
+     */
+    default Set<String> usedWebPermissions() {
+        return new HashSet<>();
+    }
 
     /**
      * Implement request resolution.

@@ -64,6 +64,8 @@ public class ResolverSvc implements ResolverService {
     public void registerResolver(String pluginName, String start, Resolver resolver) {
         basicResolvers.add(new Container(pluginName, checking -> checking.startsWith(start), resolver, start));
         Collections.sort(basicResolvers);
+        Set<String> usedWebPermissions = resolver.usedWebPermissions();
+        dbSystem.getDatabase().executeTransaction(new StoreMissingWebPermissionsTransaction(usedWebPermissions));
         if (config.isTrue(PluginSettings.DEV_MODE)) {
             logger.info("Registered basic resolver '" + start + "' for plugin " + pluginName);
         }
