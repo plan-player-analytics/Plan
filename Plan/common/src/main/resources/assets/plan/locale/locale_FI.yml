@@ -824,6 +824,7 @@ html:
         success: "Käyttäjä rekisteröitiin onnistuneesti! Voit nyt kirjautua."
         usernameTip: "Käyttäjänimi voi olla enintään 50 merkkiä."
     text:
+        click: "Click for more"
         clickAndDrag: "Click and Drag for more"
         clickToExpand: "Klikkaa laajentaaksesi"
         comparing15days: "Verrataan 15 päivää"

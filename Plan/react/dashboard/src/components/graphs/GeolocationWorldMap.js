@@ -28,7 +28,7 @@ const getProjection = option => {
     }
 }
 
-const GeolocationWorldMap = ({series, colors, projection}) => {
+const GeolocationWorldMap = ({series, colors, projection, onClickCountry}) => {
     const {t} = useTranslation();
     const {nightModeEnabled, graphTheming} = useTheme();
 
@@ -37,7 +37,12 @@ const GeolocationWorldMap = ({series, colors, projection}) => {
             name: t('html.label.players'),
             type: 'map',
             data: series,
-            joinBy: ['iso-a3', 'code']
+            joinBy: ['iso-a3', 'code'],
+            point: {
+                events: {
+                    click: onClickCountry
+                }
+            }
         };
 
         NoDataDisplay(Highcharts);
@@ -71,7 +76,7 @@ const GeolocationWorldMap = ({series, colors, projection}) => {
             },
             series: [mapSeries]
         })
-    }, [colors, series, graphTheming, nightModeEnabled, t, projection]);
+    }, [colors, series, graphTheming, nightModeEnabled, t, projection, onClickCountry]);
 
     return (<div id="countryWorldMap"/>);
 };

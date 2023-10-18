@@ -824,6 +824,7 @@ html:
         success: "Registered a new user successfully! You can now login."
         usernameTip: "Ник должен быть не длиннее 50 символов."
     text:
+        click: "Click for more"
         clickAndDrag: "Click and Drag for more"
         clickToExpand: "Нажмите, чтобы развернуть"
         comparing15days: "Сравнение 15 дней"

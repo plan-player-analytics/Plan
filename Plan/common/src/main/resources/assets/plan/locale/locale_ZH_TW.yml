@@ -824,6 +824,7 @@ html:
         success: "Registered a new user successfully! You can now login."
         usernameTip: "使用者名稱最多可以包含 50 個字符。"
     text:
+        click: "Click for more"
         clickAndDrag: "Click and Drag for more"
         clickToExpand: "點擊展開"
         comparing15days: "對比 15 天的情況"

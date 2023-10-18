@@ -824,6 +824,7 @@ html:
         success: "Registered a new user successfully! You can now login."
         usernameTip: "Kullanıcı adı 50 karaktere kadar olabilir."
     text:
+        click: "Click for more"
         clickAndDrag: "Click and Drag for more"
         clickToExpand: "Genişletmek için tıklayın"
         comparing15days: "15 gün karşılaştırılıyor"

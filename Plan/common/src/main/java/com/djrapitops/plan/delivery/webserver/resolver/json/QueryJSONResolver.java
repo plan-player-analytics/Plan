@@ -113,7 +113,9 @@ public class QueryJSONResolver implements Resolver {
         WebUser user = request.getUser().orElse(new WebUser(""));
         return user.hasPermission(WebPermission.ACCESS_QUERY)
                 || user.hasPermission(WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_CALENDAR)
-                || user.hasPermission(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_CALENDAR);
+                || user.hasPermission(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_CALENDAR)
+                || user.hasPermission(WebPermission.PAGE_NETWORK_GEOLOCATIONS_MAP)
+                || user.hasPermission(WebPermission.PAGE_SERVER_GEOLOCATIONS_MAP);
     }
 
     @GET

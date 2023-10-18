@@ -8,13 +8,13 @@ import {getViewTitle} from "../../views/query/QueryResultView";
 import {ChartLoader} from "../navigation/Loader";
 import {Link} from "react-router-dom";
 
-const QueryPlayerListModal = ({open, toggle, queryData}) => {
+const QueryPlayerListModal = ({open, toggle, queryData, title}) => {
     const {t} = useTranslation();
     return (
         <Modal id="queryModal" aria-labelledby="queryModalLabel" show={open} onHide={toggle} size="xl">
             <Modal.Header>
                 <Modal.Title id="queryModalLabel">
-                    <Fa icon={faSearch}/> {queryData ? getViewTitle(queryData, t, true) : t('html.query.title.text').replace('<', '')}
+                    <Fa icon={faSearch}/> {queryData ? title || getViewTitle(queryData, t, true) : t('html.query.title.text').replace('<', '')}
                 </Modal.Title>
                 <button aria-label="Close" className="btn-close" type="button" onClick={toggle}/>
             </Modal.Header>

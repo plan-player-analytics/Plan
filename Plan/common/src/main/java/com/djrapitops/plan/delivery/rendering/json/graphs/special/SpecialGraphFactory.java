@@ -78,4 +78,9 @@ public class SpecialGraphFactory {
         }
     }
 
+    public Map<String, String> getGeocodes() {
+        if (geoCodes == null) prepareGeocodes();
+        return geoCodes;
+    }
+
 }

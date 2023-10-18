@@ -7,7 +7,7 @@ import LoadIn from "../../components/animation/LoadIn";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 
 const Geolocations = (
-    {className, geolocationData, pingData, geolocationError, pingError, seeGeolocations, seePing}
+    {className, identifier, geolocationData, pingData, geolocationError, pingError, seeGeolocations, seePing}
 ) => {
     return (
         <LoadIn>
@@ -16,7 +16,8 @@ const Geolocations = (
                     <Col md={12}>
                         {seeGeolocations && <>
                             {geolocationError ? <ErrorViewCard error={geolocationError}/>
-                                : <GeolocationsCard data={geolocationData}/>}
+                                : <GeolocationsCard identifier={identifier}
+                                                    data={geolocationData}/>}
                         </>}
                         {seePing && <>
                             {pingError ? <ErrorViewCard error={pingError}/> : <PingTableCard data={pingData}/>}
