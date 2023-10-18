@@ -7,9 +7,11 @@ import PlayerListCard from "../cards/common/PlayerListCard";
 import {getViewTitle} from "../../views/query/QueryResultView";
 import {ChartLoader} from "../navigation/Loader";
 import {Link} from "react-router-dom";
+import {useAuth} from "../../hooks/authenticationHook";
 
 const QueryPlayerListModal = ({open, toggle, queryData, title}) => {
     const {t} = useTranslation();
+    const {hasPermission} = useAuth();
     return (
         <Modal id="queryModal" aria-labelledby="queryModalLabel" show={open} onHide={toggle} size="xl">
             <Modal.Header>
@@ -23,7 +25,7 @@ const QueryPlayerListModal = ({open, toggle, queryData, title}) => {
                 <PlayerListCard justList data={queryData?.data?.players || {players: [], extensionDescriptors: []}}
                                 orderBy={2}/>}
             <Modal.Footer>
-                {Boolean(queryData?.data?.players.players.length) && <Link className="btn bg-theme"
+                {hasPermission('access.query') && Boolean(queryData?.data?.players.players.length) && <Link className="btn bg-theme"
                       to={"/query/result?timestamp=" + queryData?.timestamp}>
                     {t('html.query.label.showFullQuery')} <Fa icon={faArrowRight}/>
                 </Link>}
