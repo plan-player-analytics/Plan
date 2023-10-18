@@ -2,7 +2,7 @@ import {useTranslation} from "react-i18next";
 import {Card} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import React, {useCallback, useEffect, useState} from "react";
-import {faCheck, faGlobe, faUser, faUserPlus, faUsers} from "@fortawesome/free-solid-svg-icons";
+import {faCheck, faGlobe, faSignal, faUser, faUserPlus, faUsers} from "@fortawesome/free-solid-svg-icons";
 import DataTablesTable from "../../table/DataTablesTable";
 import {CardLoader} from "../../navigation/Loader";
 import {Link} from "react-router-dom";
@@ -62,6 +62,15 @@ const PlayerListCard = ({data, title, justList, orderBy}) => {
         }, {
             title: <><Fa icon={faGlobe}/> {t('html.label.country')}</>,
             data: "country"
+        }, {
+            title: <><Fa icon={faSignal}/> {t('html.label.averagePing')}</>,
+            data: {_: "pingAverage", display: "pingAverageFormatted"}
+        }, {
+            title: <><Fa icon={faSignal}/> {t('html.label.bestPing')}</>,
+            data: {_: "pingMin", display: "pingMinFormatted"}
+        }, {
+            title: <><Fa icon={faSignal}/> {t('html.label.worstPing')}</>,
+            data: {_: "pingMax", display: "pingMaxFormatted"}
         }];
 
         columns.push(...data.extensionDescriptors.map(descriptor => {
@@ -85,7 +94,13 @@ const PlayerListCard = ({data, title, justList, orderBy}) => {
                 registeredFormatted: <FormattedDate date={player.registered}/>,
                 lastSeen: player.lastSeen,
                 lastSeenFormatted: <FormattedDate date={player.lastSeen}/>,
-                country: player.country
+                country: player.country,
+                pingAverage: player.pingAverage,
+                pingAverageFormatted: formatDecimals(player.pingAverage, decimalFormat) + "ms",
+                pingMax: player.pingMax,
+                pingMaxFormatted: player.pingMax + "ms",
+                pingMin: player.pingMin,
+                pingMinFormatted: player.pingMin + "ms"
             };
             data.extensionDescriptors.forEach(descriptor => {
                 row[descriptor.name] = <ExtensionValueTableCell data={player.extensionValues[descriptor.name]}/>;

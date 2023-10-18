@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database.queries.objects.playertable;
 
 import com.djrapitops.plan.delivery.domain.TablePlayer;
 import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
+import com.djrapitops.plan.gathering.domain.Ping;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
@@ -81,6 +82,15 @@ public class ServerTablePlayersQuery implements Query<List<TablePlayer>> {
                 WHERE + "s." + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 GROUP_BY + "s." + SessionsTable.USER_ID;
 
+        String selectPingData = SELECT +
+                "p." + PingTable.USER_ID + ',' +
+                "AVG(p." + PingTable.AVG_PING + ") as " + PingTable.AVG_PING + "," +
+                "MAX(p." + PingTable.MAX_PING + ") as " + PingTable.MAX_PING + "," +
+                "MIN(p." + PingTable.MIN_PING + ") as " + PingTable.MIN_PING +
+                FROM + PingTable.TABLE_NAME + " p" +
+                WHERE + "p." + PingTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                GROUP_BY + "p." + PingTable.USER_ID;
+
         String selectBaseUsers = SELECT +
                 "u." + UsersTable.USER_UUID + ',' +
                 "u." + UsersTable.USER_NAME + ',' +
@@ -90,12 +100,16 @@ public class ServerTablePlayersQuery implements Query<List<TablePlayer>> {
                 "ses.last_seen," +
                 "ses.count," +
                 "ses.active_playtime," +
-                "act.activity_index" +
+                "act.activity_index," +
+                "pi.min_ping," +
+                "pi.max_ping," +
+                "pi.avg_ping" +
                 FROM + UsersTable.TABLE_NAME + " u" +
                 INNER_JOIN + UserInfoTable.TABLE_NAME + " on u." + UsersTable.ID + "=" + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_ID +
                 LEFT_JOIN + '(' + selectLatestGeolocations + ") geo on geo." + GeoInfoTable.USER_ID + "=u." + UsersTable.ID +
                 LEFT_JOIN + '(' + selectSessionData + ") ses on ses." + SessionsTable.USER_ID + "=u." + UsersTable.ID +
                 LEFT_JOIN + '(' + ActivityIndexQueries.selectActivityIndexSQL() + ") act on u." + UsersTable.ID + "=act." + UserInfoTable.USER_ID +
+                LEFT_JOIN + '(' + selectPingData + ") pi on pi." + PingTable.USER_ID + "=u." + UsersTable.ID +
                 WHERE + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 ORDER_BY + "ses.last_seen DESC LIMIT ?";
 
@@ -105,7 +119,8 @@ public class ServerTablePlayersQuery implements Query<List<TablePlayer>> {
                 statement.setString(1, serverUUID.toString()); // Session query
                 ActivityIndexQueries.setSelectActivityIndexSQLParameters(statement, 2, activeMsThreshold, serverUUID, date);
                 statement.setString(13, serverUUID.toString()); // Session query
-                statement.setInt(14, xMostRecentPlayers);
+                statement.setString(14, serverUUID.toString()); // Ping query
+                statement.setInt(15, xMostRecentPlayers);
             }
 
             @Override
@@ -120,7 +135,11 @@ public class ServerTablePlayersQuery implements Query<List<TablePlayer>> {
                             .lastSeen(set.getLong("last_seen"))
                             .sessionCount(set.getInt("count"))
                             .activePlaytime(set.getLong("active_playtime"))
-                            .activityIndex(new ActivityIndex(set.getDouble("activity_index"), date));
+                            .activityIndex(new ActivityIndex(set.getDouble("activity_index"), date))
+                            .ping(new Ping(0L, serverUUID,
+                                    set.getInt(PingTable.MIN_PING),
+                                    set.getInt(PingTable.MAX_PING),
+                                    set.getDouble(PingTable.AVG_PING)));
                     if (set.getBoolean(UserInfoTable.BANNED)) {
                         player.banned();
                     }
