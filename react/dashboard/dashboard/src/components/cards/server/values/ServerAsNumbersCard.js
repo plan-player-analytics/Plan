@@ -1,21 +1,14 @@
 import {useTranslation} from "react-i18next";
 import {Card} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import {
-    faBookOpen,
-    faChartLine,
-    faCrosshairs,
-    faPowerOff,
-    faSkull,
-    faUser,
-    faUsers
-} from "@fortawesome/free-solid-svg-icons";
+import {faBookOpen, faChartLine, faCrosshairs, faSkull, faUser, faUsers} from "@fortawesome/free-solid-svg-icons";
 import Datapoint from "../../../Datapoint";
 import {faCalendarCheck, faClock} from "@fortawesome/free-regular-svg-icons";
 import React from "react";
 import {CardLoader} from "../../../navigation/Loader";
 import ExtendableCardBody from "../../../layout/extension/ExtendableCardBody";
 import {useMetadata} from "../../../../hooks/metadataHook";
+import CurrentUptime from "../../../datapoint/CurrentUptime";
 
 const ServerAsNumbersCard = ({data}) => {
     const {t} = useTranslation();
@@ -34,9 +27,7 @@ const ServerAsNumbersCard = ({data}) => {
             </Card.Header>
             <ExtendableCardBody
                 id={data.player_kills !== undefined ? 'card-body-server-as-numbers' : 'card-body-network-as-numbers'}>
-                <Datapoint name={t('html.label.currentUptime')}
-                           color={'light-green'} icon={faPowerOff}
-                           value={data.current_uptime}/>
+                <CurrentUptime uptime={data.current_uptime}/>
                 <hr/>
                 <Datapoint name={t('html.label.totalPlayers')}
                            color={'black'} icon={faUsers}
@@ -69,7 +60,7 @@ const ServerAsNumbersCard = ({data}) => {
                 <Datapoint name={t('html.label.sessions')}
                            color={'teal'} icon={faCalendarCheck}
                            value={data.sessions} bold/>
-                {data.player_kills && <hr/>}
+                {data.player_kills !== undefined && <hr/>}
                 <Datapoint name={t('html.label.playerKills')}
                            color={'red'} icon={faCrosshairs}
                            value={data.player_kills} bold/>

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useState} from 'react';
 import {useTranslation} from "react-i18next";
 import {Card} from "react-bootstrap";
 import CardTabs from "../../../CardTabs";
@@ -19,6 +19,9 @@ import StackedPlayersOnlineGraph from "../../../graphs/StackedPlayersOnlineGraph
 import {useAuth} from "../../../../hooks/authenticationHook";
 import {faCalendar} from "@fortawesome/free-regular-svg-icons";
 import ServerCalendar from "../../../calendar/ServerCalendar";
+import {postQuery} from "../../../../service/queryService";
+import Highcharts from "highcharts/highstock";
+import QueryPlayerListModal from "../../../modal/QueryPlayerListModal";
 
 const SingleProxyPlayersOnlineGraph = ({serverUUID}) => {
     const {data, loadingError} = useDataRequest(fetchPlayersOnlineGraph, [serverUUID]);
@@ -69,13 +72,47 @@ const HourByHourTab = () => {
 }
 
 const NetworkCalendarTab = () => {
+    const {data, loadingError} = useDataRequest(fetchNetworkCalendarGraph, []);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [queryData, setQueryData] = useState(undefined);
 
-    const {data, loadingError} = useDataRequest(fetchNetworkCalendarGraph, [])
+    const closeModal = useCallback(() => {
+        setModalOpen(false);
+    }, [setModalOpen]);
+
+    const onSelect = useCallback(async selectionInfo => {
+        const start = Highcharts.dateFormat('%d/%m/%Y', selectionInfo.start);
+        const end = Highcharts.dateFormat('%d/%m/%Y', selectionInfo.end);
+        const query = {
+            filters: [{
+                kind: "playedBetween",
+                parameters: {
+                    afterDate: start, afterTime: "00:00",
+                    beforeDate: end, beforeTime: "00:00"
+                }
+            }],
+            view: {
+                afterDate: start, afterTime: "00:00",
+                beforeDate: end, beforeTime: "00:00",
+                servers: []
+            }
+        }
+        setQueryData(undefined);
+        setModalOpen(true);
+        const data = await postQuery(query);
+        const loaded = data?.data;
+        if (loaded) {
+            setQueryData(loaded);
+        }
+    }, [setQueryData, setModalOpen]);
 
     if (loadingError) return <ErrorViewBody error={loadingError}/>
     if (!data) return <ChartLoader/>;
 
-    return <ServerCalendar series={data.data} firstDay={data.firstDay}/>
+    return <>
+        <ServerCalendar series={data.data} firstDay={data.firstDay} onSelect={onSelect}/>
+        <QueryPlayerListModal open={modalOpen} toggle={closeModal} queryData={queryData}/>
+    </>
 }
 
 const NetworkOnlineActivityGraphsCard = () => {

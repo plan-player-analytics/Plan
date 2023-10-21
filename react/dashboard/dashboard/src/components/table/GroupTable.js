@@ -5,9 +5,10 @@ import {withReducedSaturation} from "../../util/colors";
 import Scrollable from "../Scrollable";
 
 const GroupRow = ({group, color}) => {
+    const {t} = useTranslation();
     return (
         <tr>
-            <td style={{color}}>{group.name}</td>
+            <td style={{color}}>{t(group.name)}</td>
             <td>{group.y}</td>
         </tr>
     )

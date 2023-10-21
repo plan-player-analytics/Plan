@@ -16,6 +16,7 @@ const ServerGeolocations = () => {
 
     return (
         <Geolocations className={"server-geolocations"}
+                      identifier={identifier}
                       geolocationData={data} geolocationError={loadingError} seeGeolocations={seeGeolocations}
                       pingData={pingData} pingError={pingLoadingError} seePing={seePing}
         />

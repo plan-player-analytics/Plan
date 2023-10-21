@@ -6,6 +6,23 @@ import Highcharts from "highcharts/highstock";
 import {withReducedSaturation} from "../../util/colors";
 import Accessibility from "highcharts/modules/accessibility";
 
+export const getTranslateLabelForActivityGroup = value => {
+    switch (value) {
+        case "Very Active":
+            return 'html.label.veryActive'
+        case "Active":
+            return 'html.label.active'
+        case "Regular":
+            return 'html.label.indexRegular'
+        case "Irregular":
+            return 'html.label.irregular'
+        case "Inactive":
+            return 'html.label.indexInactive'
+        default:
+            return 'plugin.generic.unknown'
+    }
+}
+
 const PlayerbaseGraph = ({data}) => {
     const {t} = useTranslation()
     const {nightModeEnabled, graphTheming} = useTheme();
@@ -23,7 +40,12 @@ const PlayerbaseGraph = ({data}) => {
         Highcharts.setOptions(graphTheming);
 
         const labels = data?.activity_labels;
-        const series = data?.activity_series;
+        const series = data?.activity_series.map(dataSet => {
+            return {
+                ...dataSet,
+                name: t(dataSet.name)
+            }
+        });
 
         Highcharts.chart(id, {
             chart: {

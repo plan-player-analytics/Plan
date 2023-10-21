@@ -11,6 +11,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
 import Datapoint from "../../Datapoint";
+import CurrentUptime from "../../datapoint/CurrentUptime";
 
 const QuickViewDataCard = ({server}) => {
     const {t} = useTranslation()
@@ -19,8 +20,7 @@ const QuickViewDataCard = ({server}) => {
         <Card>
             <CardHeader icon={faBookOpen} color={'light-green'} label={server.name + ' ' + t('html.label.asNumbers')}/>
             <Card.Body>
-                <Datapoint icon={faPowerOff} color={'light-green'} name={t('html.label.currentUptime')}
-                           value={server.current_uptime}/>
+                <CurrentUptime uptime={server.current_uptime}/>
                 <Datapoint name={t('html.label.lastPeak') + ' (' + server.last_peak_date + ')'}
                            color={'blue'} icon={faChartLine}
                            value={server.last_peak_players} valueLabel={t('html.unit.players')} bold/>

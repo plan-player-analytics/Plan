@@ -30,7 +30,7 @@ const PingTable = ({countries}) => {
                 </tr>
                 </thead>
                 <tbody>
-                {countries.length ? countries.map((country, i) => <PingRow key={i} country={country}/>) : <tr>
+                {countries.length ? countries.map(country => <PingRow key={country?.country} country={country}/>) : <tr>
                     <td>{t('generic.noData')}</td>
                     <td>-</td>
                     <td>-</td>

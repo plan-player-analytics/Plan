@@ -9,7 +9,7 @@ const FormattedDate = ({date}) => {
     const {timeZoneOffsetHours} = useMetadata();
     const {preferencesLoaded, dateFormatNoSeconds, recentDaysInDateFormat} = usePreferences();
 
-    if (!preferencesLoaded) return <></>
+    if (!preferencesLoaded || date === undefined || date === null) return <></>
 
     const pattern = dateFormatNoSeconds;
     const recentDays = recentDaysInDateFormat;

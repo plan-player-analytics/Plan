@@ -34,8 +34,10 @@ const JoinAddressGraph = ({id, data, colors, stack}) => {
 
         const labels = dates;
         const series = Object.entries(valuesByAddress).map((entry, i) => {
-            if (i >= colors.length) return {name: entry[0], data: entry[1]};
-            return {name: entry[0], data: entry[1], color: getColor(i)};
+            let name = entry[0];
+            if (name === 'plugin.generic.unknown') name = t('plugin.generic.unknown')
+            if (i >= colors.length) return {name: name, data: entry[1]};
+            return {name: name, data: entry[1], color: getColor(i)};
         });
 
         Highcharts.stockChart(id, {

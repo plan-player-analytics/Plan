@@ -13,6 +13,27 @@ import GeolocationsCard from "../../components/cards/common/GeolocationsCard";
 import SessionsWithinViewCard from "../../components/cards/query/SessionsWithinViewCard";
 import {useNavigation} from "../../hooks/navigationHook";
 
+const serverCount = (count, t) => {
+    if (count === 0) {
+        return t('html.query.label.servers.all');
+    } else if (count === 1) {
+        return t('html.query.label.servers.single');
+    } else if (count === 2) {
+        return t('html.query.label.servers.two');
+    } else {
+        return t('html.query.label.servers.many').replace('{number}', count);
+    }
+}
+
+export const getViewTitle = (result, t, showTime) => {
+    if (!result) return '';
+
+    return 'View: ' + result.view.afterDate + (showTime ? ', ' + result.view.afterTime : '') +
+        " - " + result.view.beforeDate + (showTime ? ', ' + result.view.beforeTime : '') + ', ' +
+        serverCount(result.view.servers.length, t) +
+        (result.view.servers.length ? ': ' + result.view.servers.map(server => server.serverName).join(', ') : '')
+}
+
 const QueryResultView = () => {
     const {t} = useTranslation();
     const navigate = useNavigate();
@@ -49,11 +70,6 @@ const QueryResultView = () => {
         return <></>
     }
 
-    const getViewTitle = () => {
-        return 'View: ' + result.view.afterDate + " - " + result.view.beforeDate + ', ' +
-            (result.view.servers.len ? 'using data of servers: ' + result.view.servers.map(server => server.name).join(', ') : "using data of all servers")
-    }
-
     return (
         <LoadIn>
             <section className={"query-results-view"}>
@@ -62,7 +78,7 @@ const QueryResultView = () => {
                         <QueryPath/>
                         <PlayerListCard
                             data={result.data.players}
-                            title={getViewTitle()}
+                            title={getViewTitle(result, t)}
                         />
                     </Col>
                 </Row>

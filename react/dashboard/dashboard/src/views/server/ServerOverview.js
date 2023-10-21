@@ -1,7 +1,14 @@
 import React from "react";
 
-import {Card, Col} from "react-bootstrap";
-import {faExclamationCircle, faPowerOff, faTachometerAlt, faUser, faUsers} from "@fortawesome/free-solid-svg-icons";
+import {Alert, Card, Col} from "react-bootstrap";
+import {
+    faExclamationCircle,
+    faInfoCircle,
+    faPowerOff,
+    faTachometerAlt,
+    faUser,
+    faUsers
+} from "@fortawesome/free-solid-svg-icons";
 import Datapoint from "../../components/Datapoint";
 import {useTranslation} from "react-i18next";
 import {useParams} from "react-router-dom";
@@ -15,11 +22,14 @@ import LoadIn from "../../components/animation/LoadIn";
 import {CardLoader} from "../../components/navigation/Loader";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 import {useAuth} from "../../hooks/authenticationHook";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 const Last7DaysCard = ({data}) => {
     const {t} = useTranslation();
 
     if (!data) return <CardLoader/>;
+
+    const noData = data.average_tps === 'plugin.generic.unavailable'
 
     return (
         <Card id={"last-7-days"}>
@@ -28,6 +38,9 @@ const Last7DaysCard = ({data}) => {
                     {t('html.label.last7days')}
                 </h6>
             </Card.Header>
+            {noData && <Alert className='alert-warning mb-0'>
+                <FontAwesomeIcon icon={faInfoCircle}/> {t('html.description.noData7d')}
+            </Alert>}
             <Card.Body>
                 <Datapoint name={t('html.label.uniquePlayers')}
                            color={'blue'} icon={faUsers}
