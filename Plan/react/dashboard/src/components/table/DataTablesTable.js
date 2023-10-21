@@ -123,7 +123,9 @@ const DataTablesTable = ({id, rowKeyFunction, options, colorClass}) => {
         if (valA === undefined && valB === undefined) return 0;
         if (valA === undefined) return sortReversed ? 1 : -1;
         if (valB === undefined) return sortReversed ? 1 : -1;
-        if (typeof valA === 'number' && typeof valB === 'number') {
+        const isNumberA = typeof valA === 'number' || !isNaN(valA);
+        const isNumberB = typeof valB === 'number' || !isNaN(valB);
+        if (isNumberA && isNumberB) {
             return sortReversed ? valA - valB : valB - valA;
         }
         return sortReversed ? valB.localeCompare(valA) : valA.localeCompare(valB);
@@ -269,7 +271,8 @@ const DataTablesTable = ({id, rowKeyFunction, options, colorClass}) => {
                 </React.Fragment>)}
                 </tbody>
             </table>
-            <p className={"dataTables_info float-start"} style={{maxWidth: "40%", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>
+            <p className={"dataTables_info float-start"}
+               style={{maxWidth: "40%", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>
                 <Trans i18nKey={"html.label.table.showNofM"}
                        defaults={"Showing {{n}} of {{m}} entries"}
                        values={{
