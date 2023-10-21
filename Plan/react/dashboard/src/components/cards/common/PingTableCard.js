@@ -3,12 +3,14 @@ import {Card} from "react-bootstrap";
 import CardHeader from "../CardHeader";
 import {faWifi} from "@fortawesome/free-solid-svg-icons";
 import PingTable from "../../table/PingTable";
+import {ChartLoader} from "../../navigation/Loader";
 
 const PingTableCard = ({data}) => {
     return (
         <Card id={'ping-per-country'}>
             <CardHeader icon={faWifi} color="green" label={'html.label.connectionInfo'}/>
-            <PingTable countries={data?.table || []}/>
+            {data && <PingTable countries={data?.table || []}/>}
+            {!data && <ChartLoader/>}
         </Card>
     )
 };
