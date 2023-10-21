@@ -139,17 +139,68 @@ public class QueryJSONResolver implements Resolver {
     }
 
     private Response getResponse(@Untrusted Request request) {
-        Optional<Response> cachedResult = checkForCachedResult(request);
+        Optional<WebUser> user = request.getUser();
+        boolean canAccessCache = user.map(u -> u.hasPermission(WebPermission.ACCESS_QUERY)).orElse(true);
+        Optional<Response> cachedResult = canAccessCache ? checkForCachedResult(request) : Optional.empty();
         if (cachedResult.isPresent()) return cachedResult.get();
 
         InputQueryDto inputQuery = parseInputQuery(request);
         @Untrusted List<InputFilterDto> queries = inputQuery.getFilters();
+
+        // Check user has permission for the filter if login is enabled.
+        if (user.isPresent()) {
+            Optional<Response> errorResponse = checkFilterPermissions(queries, user.get());
+            if (errorResponse.isPresent()) {
+                return errorResponse.get();
+            }
+        }
 
         Filter.Result result = filters.apply(queries);
         List<Filter.ResultPath> resultPath = result.getInverseResultPath();
         Collections.reverse(resultPath);
 
         return buildAndStoreResponse(inputQuery, result, resultPath);
+    }
+
+    private Optional<Response> checkFilterPermissions(List<InputFilterDto> queries, WebUser user) {
+        for (InputFilterDto filter : queries) {
+            @Untrusted String filterKind = filter.getKind();
+            if (!isFilterAllowed(user, filterKind)) {
+                return Optional.of(Response.builder()
+                        .setStatus(403)
+                        .setJSONContent("{\"error\": \"You don't have permission to use one of the given filters\"}")
+                        .build());
+            }
+        }
+        return Optional.empty();
+    }
+
+    private boolean isFilterAllowed(WebUser user, @Untrusted String filterKind) {
+        for (WebPermission allowed : getAllowingPermissions(filterKind)) {
+            if (user.hasPermission(allowed)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private WebPermission[] getAllowingPermissions(@Untrusted String filterKind) {
+        switch (filterKind) {
+            case "playedBetween":
+                return new WebPermission[]{
+                        WebPermission.ACCESS_QUERY,
+                        WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_CALENDAR,
+                        WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_CALENDAR
+                };
+            case "geolocations":
+                return new WebPermission[]{
+                        WebPermission.ACCESS_QUERY,
+                        WebPermission.PAGE_NETWORK_GEOLOCATIONS_MAP,
+                        WebPermission.PAGE_SERVER_GEOLOCATIONS_MAP
+                };
+            default:
+                return new WebPermission[]{WebPermission.ACCESS_QUERY};
+        }
     }
 
     private InputQueryDto parseInputQuery(@Untrusted Request request) {
