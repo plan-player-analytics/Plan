@@ -68,7 +68,6 @@ public class ReactExporter extends FileExporter {
 
     public void exportReactFiles(Path toDirectory) throws IOException {
         exportIndexHtml(toDirectory);
-        exportAsset(toDirectory, "asset-manifest.json");
         exportAsset(toDirectory, "favicon.ico");
         exportAsset(toDirectory, "logo192.png");
         exportAsset(toDirectory, "logo512.png");
@@ -104,7 +103,7 @@ public class ReactExporter extends FileExporter {
             Path to = toDirectory.resolve(path);
             Resource resource = files.getResourceFromJar("web/" + path);
             // Make static asset loading work with subdirectory addresses
-            if (path.endsWith(".css") || "asset-manifest.json".equals(path)) {
+            if (path.endsWith(".css")) {
                 String contents = resource.asString();
                 String withReplacedStatic = StringUtils.replace(contents, "/static", getBasePath() + "/static");
                 export(to, withReplacedStatic);
