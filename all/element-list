@@ -52,6 +52,8 @@ com.djrapitops.plan.delivery.webserver.resolver.auth
 com.djrapitops.plan.delivery.webserver.resolver.json
 com.djrapitops.plan.delivery.webserver.resolver.json.metadata
 com.djrapitops.plan.delivery.webserver.resolver.json.plugins
+com.djrapitops.plan.delivery.webserver.resolver.json.query
+com.djrapitops.plan.delivery.webserver.resolver.json.webgroup
 com.djrapitops.plan.delivery.webserver.resolver.swagger
 com.djrapitops.plan.exceptions
 com.djrapitops.plan.exceptions.database
@@ -123,11 +125,14 @@ com.djrapitops.plan.storage.database.queries.objects.playertable
 com.djrapitops.plan.storage.database.queries.schema
 com.djrapitops.plan.storage.database.sql.building
 com.djrapitops.plan.storage.database.sql.tables
+com.djrapitops.plan.storage.database.sql.tables.extension
+com.djrapitops.plan.storage.database.sql.tables.webuser
 com.djrapitops.plan.storage.database.transactions
 com.djrapitops.plan.storage.database.transactions.commands
 com.djrapitops.plan.storage.database.transactions.events
 com.djrapitops.plan.storage.database.transactions.init
 com.djrapitops.plan.storage.database.transactions.patches
+com.djrapitops.plan.storage.database.transactions.webuser
 com.djrapitops.plan.storage.file
 com.djrapitops.plan.storage.upkeep
 com.djrapitops.plan.unrelocate.org.slf4j
