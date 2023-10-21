@@ -120,6 +120,7 @@ node {
 task yarnBundle(type: YarnTask) {
     inputs.files(fileTree("$rootDir/react/dashboard/src"))
     inputs.file("$rootDir/react/dashboard/package.json")
+    inputs.file("$rootDir/react/dashboard/vite.config.js")
 
     outputs.dir("$rootDir/react/dashboard/build")
 

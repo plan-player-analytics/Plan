@@ -37,7 +37,7 @@ import java.util.Optional;
 @Singleton
 public class StaticResourceResolver implements NoAuthResolver {
 
-    private static final String PART_REGEX = "(vendor|css|js|img|static)";
+    private static final String PART_REGEX = "(static)";
     public static final String PATH_REGEX = "^.*/" + PART_REGEX + "/.*";
 
     private final ResponseFactory responseFactory;

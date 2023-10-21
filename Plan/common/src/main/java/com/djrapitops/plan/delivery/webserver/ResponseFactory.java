@@ -244,7 +244,7 @@ public class ResponseFactory {
             if (fileName.contains(STATIC_BUNDLE_FOLDER)) {
                 resource.getLastModified().ifPresent(lastModified -> responseBuilder
                         // Can't cache main bundle in browser since base path might change
-                        .setHeader(HttpHeader.CACHE_CONTROL.asString(), fileName.contains("main") ? CacheStrategy.CHECK_ETAG : CacheStrategy.CACHE_IN_BROWSER)
+                        .setHeader(HttpHeader.CACHE_CONTROL.asString(), fileName.contains("index") ? CacheStrategy.CHECK_ETAG : CacheStrategy.CACHE_IN_BROWSER)
                         .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(lastModified))
                         .setHeader(HttpHeader.ETAG.asString(), lastModified));
             }
