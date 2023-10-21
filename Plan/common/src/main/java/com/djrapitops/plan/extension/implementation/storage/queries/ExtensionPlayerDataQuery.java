@@ -27,7 +27,10 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
-import com.djrapitops.plan.storage.database.sql.tables.*;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionIconTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPlayerValueTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionProviderTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionTabTable;
 import com.djrapitops.plan.utilities.java.Lists;
 
 import java.sql.PreparedStatement;

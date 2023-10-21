@@ -18,8 +18,8 @@ package com.djrapitops.plan.storage.database.transactions.patches;
 
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerTableValueTable;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionServerTableValueTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPlayerTableValueTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionServerTableValueTable;
 
 /**
  * Increases the length of Strings in extension tables to 250 to avoid cutoffs and exceptions.

@@ -17,26 +17,26 @@
 package com.djrapitops.plan.storage.database.transactions.patches;
 
 import com.djrapitops.plan.storage.database.sql.building.Sql;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerValueTable;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionServerValueTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPlayerValueTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionServerValueTable;
 
 public class ComponentColumnToExtensionDataPatch extends Patch {
 
-    private static final String serverTable = ExtensionServerValueTable.TABLE_NAME;
-    private static final String serverColumn = ExtensionServerValueTable.COMPONENT_VALUE;
-    private static final String playerTable = ExtensionPlayerValueTable.TABLE_NAME;
-    private static final String playerColumn = ExtensionPlayerValueTable.COMPONENT_VALUE;
-    private static final int length = 500;
+    private static final String SERVER_TABLE = ExtensionServerValueTable.TABLE_NAME;
+    private static final String SERVER_COLUMN = ExtensionServerValueTable.COMPONENT_VALUE;
+    private static final String PLAYER_TABLE = ExtensionPlayerValueTable.TABLE_NAME;
+    private static final String PLAYER_COLUMN = ExtensionPlayerValueTable.COMPONENT_VALUE;
+    private static final int LENGTH = 500;
 
     @Override
     public boolean hasBeenApplied() {
-        return hasColumn(serverTable, serverColumn)
-                && hasColumn(playerTable, playerColumn);
+        return hasColumn(SERVER_TABLE, SERVER_COLUMN)
+                && hasColumn(PLAYER_TABLE, PLAYER_COLUMN);
     }
 
     @Override
     protected void applyPatch() {
-        addColumn(serverTable, serverColumn + " " + Sql.varchar(length));
-        addColumn(playerTable, playerColumn + " " + Sql.varchar(length));
+        addColumn(SERVER_TABLE, SERVER_COLUMN + " " + Sql.varchar(LENGTH));
+        addColumn(PLAYER_TABLE, PLAYER_COLUMN + " " + Sql.varchar(LENGTH));
     }
 }

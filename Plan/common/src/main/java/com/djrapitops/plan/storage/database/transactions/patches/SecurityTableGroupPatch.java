@@ -18,8 +18,8 @@ package com.djrapitops.plan.storage.database.transactions.patches;
 
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.storage.database.DBType;
-import com.djrapitops.plan.storage.database.sql.tables.SecurityTable;
-import com.djrapitops.plan.storage.database.sql.tables.WebGroupTable;
+import com.djrapitops.plan.storage.database.sql.tables.webuser.SecurityTable;
+import com.djrapitops.plan.storage.database.sql.tables.webuser.WebGroupTable;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 

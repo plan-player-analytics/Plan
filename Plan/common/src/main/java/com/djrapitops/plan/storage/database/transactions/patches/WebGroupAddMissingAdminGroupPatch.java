@@ -18,7 +18,7 @@ package com.djrapitops.plan.storage.database.transactions.patches;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
-import com.djrapitops.plan.storage.database.transactions.StoreWebGroupTransaction;
+import com.djrapitops.plan.storage.database.transactions.webuser.StoreWebGroupTransaction;
 
 import java.util.Arrays;
 import java.util.stream.Collectors;

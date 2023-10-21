@@ -22,9 +22,12 @@ import com.djrapitops.plan.delivery.web.resolver.CompositeResolver;
 import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.http.WebServer;
-import com.djrapitops.plan.delivery.webserver.resolver.json.metadata.PreferencesJSONResolver;
-import com.djrapitops.plan.delivery.webserver.resolver.json.metadata.StorePreferencesJSONResolver;
+import com.djrapitops.plan.delivery.webserver.resolver.json.metadata.*;
+import com.djrapitops.plan.delivery.webserver.resolver.json.plugins.ExtensionJSONResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.json.plugins.PluginHistoryJSONResolver;
+import com.djrapitops.plan.delivery.webserver.resolver.json.query.FiltersJSONResolver;
+import com.djrapitops.plan.delivery.webserver.resolver.json.query.QueryJSONResolver;
+import com.djrapitops.plan.delivery.webserver.resolver.json.webgroup.*;
 import com.djrapitops.plan.identification.Identifiers;
 import dagger.Lazy;
 

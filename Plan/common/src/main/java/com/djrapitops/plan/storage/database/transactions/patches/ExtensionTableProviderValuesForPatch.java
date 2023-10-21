@@ -17,11 +17,11 @@
 package com.djrapitops.plan.storage.database.transactions.patches;
 
 import com.djrapitops.plan.storage.database.sql.building.Sql;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionServerTableValueTable;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionTableProviderTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionServerTableValueTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionTableProviderTable;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
-import static com.djrapitops.plan.storage.database.sql.tables.ExtensionTableProviderTable.*;
+import static com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionTableProviderTable.*;
 
 /**
  * Adds values_for field to plan_extension_tables

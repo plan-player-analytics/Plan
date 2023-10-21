@@ -18,6 +18,9 @@ package com.djrapitops.plan.storage.database.transactions.commands;
 
 import com.djrapitops.plan.storage.database.queries.PlayerFetchQueries;
 import com.djrapitops.plan.storage.database.sql.tables.*;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionGroupsTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPlayerTableValueTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPlayerValueTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 

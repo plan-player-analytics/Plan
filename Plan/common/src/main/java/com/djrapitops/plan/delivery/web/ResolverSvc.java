@@ -20,8 +20,8 @@ import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.transactions.GrantWebPermissionToGroupsWithPermissionTransaction;
-import com.djrapitops.plan.storage.database.transactions.StoreMissingWebPermissionsTransaction;
+import com.djrapitops.plan.storage.database.transactions.webuser.GrantWebPermissionToGroupsWithPermissionTransaction;
+import com.djrapitops.plan.storage.database.transactions.webuser.StoreMissingWebPermissionsTransaction;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import net.playeranalytics.plugin.server.PluginLogger;
 

@@ -30,8 +30,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
-import static com.djrapitops.plan.storage.database.sql.tables.ExtensionServerTableValueTable.ID;
-import static com.djrapitops.plan.storage.database.sql.tables.ExtensionServerTableValueTable.*;
+import static com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionServerTableValueTable.ID;
+import static com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionServerTableValueTable.*;
 
 public class ServerTableRowPatch extends Patch {
 

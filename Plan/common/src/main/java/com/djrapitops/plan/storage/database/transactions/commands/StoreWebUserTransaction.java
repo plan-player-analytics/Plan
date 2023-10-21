@@ -18,11 +18,11 @@ package com.djrapitops.plan.storage.database.transactions.commands;
 
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
-import com.djrapitops.plan.storage.database.sql.tables.SecurityTable;
-import com.djrapitops.plan.storage.database.sql.tables.WebGroupTable;
+import com.djrapitops.plan.storage.database.sql.tables.webuser.SecurityTable;
+import com.djrapitops.plan.storage.database.sql.tables.webuser.WebGroupTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
-import com.djrapitops.plan.storage.database.transactions.StoreWebGroupTransaction;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.storage.database.transactions.webuser.StoreWebGroupTransaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

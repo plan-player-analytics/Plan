@@ -24,8 +24,8 @@ import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.extension.table.TableColumnFormat;
 import com.djrapitops.plan.identification.ServerUUID;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionPluginTable;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionTabTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPluginTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionTabTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
 import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
@@ -36,7 +36,7 @@ import java.sql.Types;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.AND;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
-import static com.djrapitops.plan.storage.database.sql.tables.ExtensionTableProviderTable.*;
+import static com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionTableProviderTable.*;
 
 /**
  * Transaction to store information about a Table.

@@ -17,10 +17,10 @@
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
 import com.djrapitops.plan.storage.database.DBType;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionServerTableValueTable;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionServerValueTable;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionTableProviderTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionProviderTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionServerTableValueTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionServerValueTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionTableProviderTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
 import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;

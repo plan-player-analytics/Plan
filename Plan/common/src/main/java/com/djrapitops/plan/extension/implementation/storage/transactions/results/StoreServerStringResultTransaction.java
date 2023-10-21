@@ -21,7 +21,7 @@ import com.djrapitops.plan.extension.implementation.builder.ComponentDataValue;
 import com.djrapitops.plan.extension.implementation.builder.StringDataValue;
 import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.identification.ServerUUID;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionProviderTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
 import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
@@ -31,7 +31,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
-import static com.djrapitops.plan.storage.database.sql.tables.ExtensionServerValueTable.*;
+import static com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionServerValueTable.*;
 
 /**
  * Transaction to store Extension String data for a server.
