@@ -31,20 +31,6 @@ jobs:
         with:
           distribution: 'adopt'
           java-version: '17'
-      - name: 🚦 Setup Selenium Webdriver
-        uses: nanasess/setup-chromedriver@v2
-      - name: 🚦 Setup Selenium Webdriver settings
-        run: |
-          export DISPLAY=:99
-          chromedriver --url-base=/wd/hub &
-          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
-      - name: 📶 Verify MariaDB connection 
-        env:
-          PORT: ${{ job.services.mariadb.ports[3306] }}
-        run: |
-          while ! mysqladmin ping -h"127.0.0.1" -P"$PORT" --silent; do
-            sleep 1
-          done
       - name: 💼 Load Gradle Cache
         uses: actions/cache@v3
         with:
@@ -77,6 +63,20 @@ jobs:
         with:
           name: PlanFabric-${{ env.versionString }}-${{ env.git_hash }}.jar
           path: ${{ env.artifactPath }}/PlanFabric-${{ env.snapshotVersion }}.jar
+      - name: 🚦 Setup Selenium Webdriver
+        uses: nanasess/setup-chromedriver@v2
+      - name: 🚦 Setup Selenium Webdriver settings
+        run: |
+          export DISPLAY=:99
+          chromedriver --url-base=/wd/hub &
+          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
+      - name: 📶 Verify MariaDB connection 
+        env:
+          PORT: ${{ job.services.mariadb.ports[3306] }}
+        run: |
+          while ! mysqladmin ping -h"127.0.0.1" -P"$PORT" --silent; do
+            sleep 1
+          done
       - name: 🩺 Test 
         env:
           MYSQL_DB: test
