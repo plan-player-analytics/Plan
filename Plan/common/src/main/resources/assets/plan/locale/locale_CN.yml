@@ -245,7 +245,7 @@ html:
         nightMode: "夜间模式"
     calendar:
         new: "新："
-        unique: "独立："
+        unique: "注册："
     description:
         newPlayerRetention: "这个数值是基于之前的玩家数据预测的。"
         noData24h: "服务器超过24小时未发送数据."
@@ -606,8 +606,8 @@ html:
         trend: "趋势"
         trends30days: "30 天趋势"
         uninstalled: "Uninstalled"
-        uniquePlayers: "独立玩家"
-        uniquePlayers7days: "独立玩家（7天）"
+        uniquePlayers: "注册玩家"
+        uniquePlayers7days: "注册玩家（7天）"
         unit:
             percentage: "百分比"
             playerCount: "玩家数量"
