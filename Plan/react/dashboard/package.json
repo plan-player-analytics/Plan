@@ -31,7 +31,7 @@
     "masonry-layout": "^4.2.2",
     "moment": "^2.29.4",
     "react": "^18.2.0",
-    "react-bootstrap": "^2.9.0",
+    "react-bootstrap": "^2.9.1",
     "react-bootstrap-range-slider": "^3.0.8",
     "react-dom": "^18.2.0",
     "react-i18next": "^13.3.1",
