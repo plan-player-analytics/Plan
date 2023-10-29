@@ -8646,10 +8646,10 @@ react-bootstrap-range-slider@^3.0.8:
     classnames "^2.3.1"
     prop-types "^15.7.2"
 
-react-bootstrap@^2.9.0:
-  version "2.9.0"
-  resolved "https://registry.yarnpkg.com/react-bootstrap/-/react-bootstrap-2.9.0.tgz#10493a3bb7c0429fee886f5571b195ece6c436f0"
-  integrity sha512-dGh6fGjqR9MBzPOp2KbXJznt1Zy6SWepXYUdxMT18Zu/wJ73HCU8JNZe9dfzjmVssZYsJH9N3HHE4wAtQvNz7g==
+react-bootstrap@^2.9.1:
+  version "2.9.1"
+  resolved "https://registry.yarnpkg.com/react-bootstrap/-/react-bootstrap-2.9.1.tgz#c1ab48ae2b2cfe6d5ac957c2042eb36fcafdb1d2"
+  integrity sha512-ezgmh/ARCYp18LbZEqPp0ppvy+ytCmycDORqc8vXSKYV3cer4VH7OReV8uMOoKXmYzivJTxgzGHalGrHamryHA==
   dependencies:
     "@babel/runtime" "^7.22.5"
     "@restart/hooks" "^0.4.9"
