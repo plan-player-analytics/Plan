@@ -106,7 +106,7 @@ public class ExportTestUtilities {
 
         assertFalse(driver.findElement(By.tagName("body")).getText().contains("Bad Gateway"), "502 Bad Gateway, nginx could not reach Plan");
 
-        Awaitility.await()
+        Awaitility.await("waitForElementToBeVisible .load-in")
                 .atMost(Duration.of(10, ChronoUnit.SECONDS))
                 .until(() -> getMainPageElement(driver).map(WebElement::isDisplayed).orElse(false));
 

@@ -10,7 +10,13 @@ export default defineConfig({
     ],
     build: {
         outDir: 'build',
-        assetsDir: 'static'
+        assetsDir: 'static',
+        rollupOptions: {
+            treeshake: {
+                // Fixes an issue where backendConfiguration.staticSite if-blocks would get removed
+                correctVarValueBeforeDeclaration: true
+            }
+        }
     },
     server: {
         host: 'localhost',
