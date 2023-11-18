@@ -1174,10 +1174,10 @@
     core-js-pure "^3.30.2"
     regenerator-runtime "^0.14.0"
 
-"@babel/runtime@^7.11.2", "@babel/runtime@^7.12.1", "@babel/runtime@^7.12.5", "@babel/runtime@^7.16.3", "@babel/runtime@^7.20.7", "@babel/runtime@^7.21.0", "@babel/runtime@^7.21.5", "@babel/runtime@^7.22.15", "@babel/runtime@^7.22.5", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.3", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
-  version "7.22.15"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.22.15.tgz#38f46494ccf6cf020bd4eed7124b425e83e523b8"
-  integrity sha512-T0O+aa+4w0u06iNmapipJXMV4HoUir03hpx3/YqXXhu9xim3w+dVphjFWl1OH8NbZHw5Lbm9k45drDkgq2VNNA==
+"@babel/runtime@^7.11.2", "@babel/runtime@^7.12.1", "@babel/runtime@^7.12.5", "@babel/runtime@^7.16.3", "@babel/runtime@^7.20.7", "@babel/runtime@^7.21.0", "@babel/runtime@^7.21.5", "@babel/runtime@^7.22.15", "@babel/runtime@^7.22.5", "@babel/runtime@^7.23.2", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.3", "@babel/runtime@^7.8.4", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
+  version "7.23.2"
+  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.23.2.tgz#062b0ac103261d68a966c4c7baf2ae3e62ec3885"
+  integrity sha512-mM8eg4yl5D6i3lu2QKPuPH4FArvJ8KhTofbE7jwMUv9KX5mBvwPAqnV3MlyBNqdp9RyRKP6Yck8TrfYrPvX3bg==
   dependencies:
     regenerator-runtime "^0.14.0"
 
@@ -5888,12 +5888,12 @@ i18next-resources-to-backend@1.1.4:
   dependencies:
     "@babel/runtime" "^7.21.5"
 
-i18next@^23.6.0:
-  version "23.6.0"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-23.6.0.tgz#c6e996cfd3fef0bf60be3b7c581c35338dba5a71"
-  integrity sha512-z0Cxr0MGkt+kli306WS4nNNM++9cgt2b2VCMprY92j+AIab/oclgPxdwtTZVLP1zn5t5uo8M6uLsZmYrcjr3HA==
+i18next@^23.7.6:
+  version "23.7.6"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-23.7.6.tgz#7328e76c899052d5d33d930164612dd21e575f74"
+  integrity sha512-O66BhXBw0fH4bEJMA0/klQKPEbcwAp5wjXEL803pdAynNbg2f4qhLIYlNHJyE7icrL6XmSZKPYaaXwy11kJ6YQ==
   dependencies:
-    "@babel/runtime" "^7.22.5"
+    "@babel/runtime" "^7.23.2"
 
 iconv-lite@0.4.24:
   version "0.4.24"
