@@ -9958,10 +9958,10 @@ swagger-client@^3.24.5:
     traverse "~0.6.6"
     undici "^5.24.0"
 
-swagger-ui@^5.10.0:
-  version "5.10.0"
-  resolved "https://registry.yarnpkg.com/swagger-ui/-/swagger-ui-5.10.0.tgz#4e1b38a54f0a8e4b333a3001614284c7652b5133"
-  integrity sha512-eAKTmBjk1dF9JscUjnatughEoAosZvPbwVoVsZbjqHhZhkszCbS3u+fgGVrBa31BqFhXJ1qolx+t7X2Lijkuyw==
+swagger-ui@^5.10.3:
+  version "5.10.3"
+  resolved "https://registry.yarnpkg.com/swagger-ui/-/swagger-ui-5.10.3.tgz#dace90ee873becf1353eb4809b88961a19b0be0a"
+  integrity sha512-VDkEn29Q3y2r5Uzr1GXQLwXCXtxB3GJmBAUSbLgQYJyHpWb8DhOMmV4izJ7MGa0K1BeHcp7cYLbn4Si8r1tang==
   dependencies:
     "@babel/runtime-corejs3" "^7.23.2"
     "@braintree/sanitize-url" "=6.0.4"
