@@ -427,8 +427,8 @@ html:
         kdr: "KDR"
         killed: "被击杀数"
         last24hours: "过去 24 小时"
-        last30 天之前: "过去 30 天"
-        last7 天之前: "过去 7 天"
+        last30days: "过去 30 天"
+        last7days: "过去 7 天"
         lastConnected: "最后连接时间"
         lastPeak: "上次在线峰值"
         lastSeen: "最后在线时间"
@@ -441,7 +441,7 @@ html:
         loneNewbieJoins: "单独新玩家加入"
         longestSession: "最长会话时间"
         lowTpsSpikes: "低 TPS 时间"
-        lowTpsSpikes7 天之前: "低 TPS 时间（7天）"
+        lowTpsSpikes7days: "低 TPS 时间（7天）"
         manage: "管理"
         managePage:
             addGroup:
