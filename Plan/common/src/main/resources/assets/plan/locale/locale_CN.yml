@@ -419,7 +419,7 @@ html:
         indexRegular: "经常上线"
         information: "信息"
         insights: "洞察"
-        insights30 天之前: "30 天分析"
+        insights30days: "30 天分析"
         installed: "已安装"
         irregular: "偶尔上线"
         joinAddress: "加入地址"
