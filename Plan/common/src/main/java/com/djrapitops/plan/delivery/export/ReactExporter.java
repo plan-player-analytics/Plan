@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.export;
 
+import com.djrapitops.plan.delivery.rendering.BundleAddressCorrection;
 import com.djrapitops.plan.delivery.web.AssetVersions;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
@@ -52,18 +53,21 @@ public class ReactExporter extends FileExporter {
     private final PlanConfig config;
     private final RootJSONResolver jsonHandler;
     private final AssetVersions assetVersions;
+    private final BundleAddressCorrection bundleAddressCorrection;
 
     @Inject
     public ReactExporter(
             PlanFiles files,
             PlanConfig config,
             RootJSONResolver jsonHandler,
-            AssetVersions assetVersions
+            AssetVersions assetVersions,
+            BundleAddressCorrection bundleAddressCorrection
     ) {
         this.files = files;
         this.config = config;
         this.jsonHandler = jsonHandler;
         this.assetVersions = assetVersions;
+        this.bundleAddressCorrection = bundleAddressCorrection;
     }
 
     public void exportReactFiles(Path toDirectory) throws IOException {
@@ -105,15 +109,16 @@ public class ReactExporter extends FileExporter {
             // Make static asset loading work with subdirectory addresses
             if (path.endsWith(".css")) {
                 String contents = resource.asString();
-                String withReplacedStatic = StringUtils.replace(contents, "/static", getBasePath() + "/static");
-                export(to, withReplacedStatic);
+                String withReplaced = bundleAddressCorrection.correctAddressForExport(contents, path);
+                export(to, withReplaced);
             } else if (path.endsWith(".js")) {
                 String withReplacedConstants = StringUtils.replaceEach(
                         resource.asString(),
-                        new String[]{"PLAN_BASE_ADDRESS", "PLAN_EXPORTED_VERSION", ".p=\"/\""},
-                        new String[]{config.get(WebserverSettings.EXTERNAL_LINK), "true", ".p=\"" + getBasePath() + "/\""}
+                        new String[]{"PLAN_BASE_ADDRESS", "PLAN_EXPORTED_VERSION"},
+                        new String[]{config.get(WebserverSettings.EXTERNAL_LINK), "true"}
                 );
-                export(to, withReplacedConstants);
+                String withReplaced = bundleAddressCorrection.correctAddressForExport(withReplacedConstants, path);
+                export(to, withReplaced);
             } else {
                 export(to, resource);
             }
@@ -140,23 +145,9 @@ public class ReactExporter extends FileExporter {
     private void exportIndexHtml(Path toDirectory) throws IOException {
         String contents = files.getResourceFromJar("web/index.html")
                 .asString();
-        String basePath = getBasePath();
-        contents = StringUtils.replaceEach(contents,
-                new String[]{"/static", "/pageExtensionApi.js"},
-                new String[]{basePath + "/static", basePath + "/pageExtensionApi.js"});
+        contents = bundleAddressCorrection.correctAddressForExport(contents, "index.html");
 
         export(toDirectory.resolve("index.html"), contents);
-    }
-
-    private String getBasePath() {
-        String basePath = config.get(WebserverSettings.EXTERNAL_LINK)
-                .replace("http://", "")
-                .replace("https://", "");
-        if (StringUtils.contains(basePath, '/')) {
-            return basePath.substring(StringUtils.indexOf(basePath, '/'));
-        } else {
-            return "";
-        }
     }
 
     private void exportAsset(Path toDirectory, String asset) throws IOException {

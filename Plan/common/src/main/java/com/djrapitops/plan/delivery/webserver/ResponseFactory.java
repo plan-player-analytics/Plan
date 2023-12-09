@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
+import com.djrapitops.plan.delivery.rendering.BundleAddressCorrection;
 import com.djrapitops.plan.delivery.rendering.html.icon.Family;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.delivery.rendering.pages.Page;
@@ -75,6 +76,7 @@ public class ResponseFactory {
     private final DBSystem dbSystem;
     private final Theme theme;
     private final Lazy<Addresses> addresses;
+    private final Lazy<BundleAddressCorrection> bundleAddressCorrection;
     private final Formatter<Long> httpLastModifiedFormatter;
 
     @Inject
@@ -86,7 +88,8 @@ public class ResponseFactory {
             DBSystem dbSystem,
             Formatters formatters,
             Theme theme,
-            Lazy<Addresses> addresses
+            Lazy<Addresses> addresses,
+            Lazy<BundleAddressCorrection> bundleAddressCorrection
     ) {
         this.files = files;
         this.publicHtmlFiles = publicHtmlFiles;
@@ -97,6 +100,7 @@ public class ResponseFactory {
         this.addresses = addresses;
 
         httpLastModifiedFormatter = formatters.httpLastModifiedLong();
+        this.bundleAddressCorrection = bundleAddressCorrection;
     }
 
     /**
@@ -232,9 +236,7 @@ public class ResponseFactory {
             String content = UnaryChain.of(resource.asString())
                     .chain(this::replaceMainAddressPlaceholder)
                     .chain(theme::replaceThemeColors)
-                    .chain(contents -> StringUtils.replace(contents,
-                            ".p=\"/\"",
-                            ".p=\"" + getBasePath() + "/\""))
+                    .chain(contents -> bundleAddressCorrection.get().correctAddressForWebserver(contents, fileName))
                     .apply();
             ResponseBuilder responseBuilder = Response.builder()
                     .setMimeType(MimeType.JS)
@@ -254,12 +256,6 @@ public class ResponseFactory {
         }
     }
 
-    private String getBasePath() {
-        String address = addresses.get().getMainAddress()
-                .orElseGet(addresses.get()::getFallbackLocalhostAddress);
-        return addresses.get().getBasePath(address);
-    }
-
     private String replaceMainAddressPlaceholder(String resource) {
         String address = addresses.get().getAccessAddress()
                 .orElseGet(addresses.get()::getFallbackLocalhostAddress);
@@ -275,7 +271,7 @@ public class ResponseFactory {
             WebResource resource = getPublicOrJarResource(fileName);
             String content = UnaryChain.of(resource.asString())
                     .chain(theme::replaceThemeColors)
-                    .chain(contents -> StringUtils.replace(contents, "/static", getBasePath() + "/static"))
+                    .chain(contents -> bundleAddressCorrection.get().correctAddressForWebserver(contents, fileName))
                     .apply();
 
             ResponseBuilder responseBuilder = Response.builder()

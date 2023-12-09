@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.delivery.rendering.pages;
 
+import com.djrapitops.plan.delivery.rendering.BundleAddressCorrection;
 import com.djrapitops.plan.delivery.web.resource.WebResource;
-import org.apache.commons.lang3.StringUtils;
 
 /**
  * Represents React index.html.
@@ -26,20 +26,17 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class ReactPage implements Page {
 
-    private final String basePath;
+    private final BundleAddressCorrection bundleAddressCorrection;
     private final WebResource reactHtml;
 
-    public ReactPage(String basePath, WebResource reactHtml) {
-        this.basePath = basePath;
+    public ReactPage(BundleAddressCorrection bundleAddressCorrection, WebResource reactHtml) {
+        this.bundleAddressCorrection = bundleAddressCorrection;
         this.reactHtml = reactHtml;
     }
 
     @Override
     public String toHtml() {
-        return StringUtils.replaceEach(
-                reactHtml.asString(),
-                new String[]{"/static", "/pageExtensionApi.js"},
-                new String[]{basePath + "/static", basePath + "/pageExtensionApi.js"});
+        return bundleAddressCorrection.correctAddressForWebserver(reactHtml.asString(), "index.html");
     }
 
     @Override
