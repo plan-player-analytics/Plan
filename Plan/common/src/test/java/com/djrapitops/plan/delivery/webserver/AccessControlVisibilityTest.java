@@ -28,6 +28,7 @@ import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreServerPlayerTransaction;
@@ -47,6 +48,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
+import org.testcontainers.shaded.org.awaitility.Awaitility;
 import utilities.RandomData;
 import utilities.TestConstants;
 import utilities.TestResources;
@@ -57,6 +59,7 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -291,8 +294,11 @@ class AccessControlVisibilityTest {
 
     private void registerProxy(Database database) throws ExecutionException, InterruptedException {
         database.executeTransaction(new StoreServerInformationTransaction(
-                new Server(TestConstants.SERVER_TWO_UUID, "Proxy", "https://localhost", TestConstants.VERSION)
+                new Server(null, TestConstants.SERVER_TWO_UUID, "Proxy", "https://localhost", true, TestConstants.VERSION)
         )).get();
+        Awaitility.await("Proxy was not registered")
+                .atMost(5, TimeUnit.SECONDS)
+                .until(() -> !database.query(ServerQueries.fetchProxyServers()).isEmpty());
     }
 
     @DisplayName("Network element is visible with permission")

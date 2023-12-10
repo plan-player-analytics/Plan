@@ -1,6 +1,6 @@
-const moment = require('moment');
+import moment from 'moment';
 
-const SimpleDateFormat = function (pattern) {
+export const SimpleDateFormat = function (pattern) {
     this.pattern = pattern;
     this.regex = /('.*')|(G+|y+|Y+|M+|L+|w+|W+|D+|d+|F+|E+|u+|a+|H+|k+|K+|h+|m+|s+|S+|Z+|X+)|([a-zA-Z]+)|([^a-zA-Z']+)/;
 
@@ -358,5 +358,3 @@ SimpleDateFormat.prototype._defaultPatternsByLocale = {
     "in_ID": "dd/MM/yy H:mm",
     "en_GB": "dd/MM/yy HH:mm",
 }
-
-module.exports.SimpleDateFormat = SimpleDateFormat;
