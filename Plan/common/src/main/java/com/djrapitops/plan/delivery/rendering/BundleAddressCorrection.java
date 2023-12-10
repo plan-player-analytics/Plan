@@ -77,7 +77,7 @@ public class BundleAddressCorrection {
             return correctAddressInCss(content, basePath);
         } else if (fileName.endsWith(".js")) {
             return correctAddressInJavascript(content, basePath);
-        } else if (fileName.equals("index.html")) {
+        } else if ("index.html".equals(fileName)) {
             return correctAddressInHtml(content, basePath);
         }
         return content;
@@ -111,7 +111,8 @@ public class BundleAddressCorrection {
             boolean atUrlRoot = basePath.isEmpty();
 
             // This handles /static and static representation
-            String startingSlash = addressStart.startsWith("/") ? "/" : "";
+            boolean startsWithSlash = addressStart.startsWith("/");
+            String startingSlash = startsWithSlash ? "/" : "";
             // This handles basePath containing a slash after subdirectory, such as /plan/ instead of /plan
             String endingSlash = basePath.endsWith("/") ? "" : "/";
 
@@ -123,6 +124,11 @@ public class BundleAddressCorrection {
             String relativeReplacement = atUrlRoot
                     ? "./"
                     : basePath + endingSlash + "static/";
+
+            // Replaces basePath starting slash if the replaced thing does not start with slash
+            if (!startsWithSlash && staticReplacement.startsWith("/")) {
+                staticReplacement = staticReplacement.substring(1);
+            }
 
             // Replacement examples when basepath is empty, "/plan" or "/plan/"
             // "./Filename-hash.js"       -> "./Filename-hash.js" or "/plan/static/Filename-hash.js"
