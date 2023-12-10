@@ -25,6 +25,7 @@ com.djrapitops.plan.delivery.domain.mutators
 com.djrapitops.plan.delivery.export
 com.djrapitops.plan.delivery.formatting
 com.djrapitops.plan.delivery.formatting.time
+com.djrapitops.plan.delivery.rendering
 com.djrapitops.plan.delivery.rendering.html
 com.djrapitops.plan.delivery.rendering.html.icon
 com.djrapitops.plan.delivery.rendering.json
