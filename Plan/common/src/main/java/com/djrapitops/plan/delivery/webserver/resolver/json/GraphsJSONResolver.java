@@ -214,7 +214,7 @@ public class GraphsJSONResolver extends JSONResolver {
             case GRAPH_OPTIMIZED_PERFORMANCE:
                 return List.of(WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS, WebPermission.PAGE_NETWORK_PERFORMANCE);
             case GRAPH_ONLINE:
-                return List.of(WebPermission.PAGE_SERVER_OVERVIEW_PLAYERS_ONLINE_GRAPH);
+                return List.of(WebPermission.PAGE_SERVER_OVERVIEW_PLAYERS_ONLINE_GRAPH, WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_ONLINE);
             case GRAPH_UNIQUE_NEW:
                 return List.of(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_DAY_BY_DAY);
             case GRAPH_HOURLY_UNIQUE_NEW:
