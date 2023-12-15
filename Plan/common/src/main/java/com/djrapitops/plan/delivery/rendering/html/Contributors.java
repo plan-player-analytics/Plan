@@ -36,6 +36,7 @@ public class Contributors {
             new Contributor("Antonok", CODE),
             new Contributor("Argetan", CODE),
             new Contributor("Aurelien", CODE, LANG),
+            new Contributor("Binero", CODE),
             new Contributor("BrainStone", CODE),
             new Contributor("Catalina", LANG),
             new Contributor("Elguerrero", LANG),
