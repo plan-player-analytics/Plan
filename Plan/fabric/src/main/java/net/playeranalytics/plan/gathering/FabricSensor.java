@@ -48,7 +48,7 @@ public class FabricSensor implements ServerSensor<ServerWorld> {
         //Returns the ticks per second of the last 100 ticks
         double totalTickLength = 0;
         int count = 0;
-        for (long tickLength : server.lastTickLengths) {
+        for (long tickLength : server.getTickTimes()) {
             if (tickLength == 0) continue; // Ignore uninitialized values in array
             totalTickLength += Math.max(tickLength, TimeUnit.MILLISECONDS.toNanos(50));
             count++;

@@ -58,7 +58,7 @@ public abstract class ServerCommandSourceMixin implements CMDSender {
 
     @Override
     public Optional<String> getPlayerName() {
-        return getPlayer().map(ServerPlayerEntity::getEntityName);
+        return getPlayer().map(ServerPlayerEntity::getNameForScoreboard);
     }
 
     @Override
