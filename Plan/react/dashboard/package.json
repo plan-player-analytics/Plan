@@ -40,7 +40,7 @@
     "react-router-dom": "6",
     "sass": "^1.69.6",
     "source-map-explorer": "^2.5.2",
-    "swagger-ui": "^5.10.3",
+    "swagger-ui": "^5.10.5",
     "web-vitals": "^3.0.2"
   },
   "scripts": {
