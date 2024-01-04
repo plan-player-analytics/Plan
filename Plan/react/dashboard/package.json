@@ -25,7 +25,7 @@
     "axios": "^1.6.3",
     "bootstrap": "^5.3.2",
     "highcharts": "^10.3.3",
-    "i18next": "^23.7.8",
+    "i18next": "^23.7.12",
     "i18next-chained-backend": "^4.6.2",
     "i18next-http-backend": "^2.4.2",
     "i18next-localstorage-backend": "^4.2.0",
