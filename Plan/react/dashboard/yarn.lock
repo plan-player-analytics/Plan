@@ -560,10 +560,10 @@
   dependencies:
     prop-types "^15.8.1"
 
-"@fullcalendar/bootstrap@^6.1.9":
-  version "6.1.9"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/bootstrap/-/bootstrap-6.1.9.tgz#53a45ff0fc1090155caa99d94a6065b77dbe7813"
-  integrity sha512-NcXc6uH2cqeB3YaCHDut6Krjl9tSN0zbH/PFuKpslbA4FMZOPKtxbF5uh9Vs+B7HyCY4sBrKzPAQWGAcYf1exQ==
+"@fullcalendar/bootstrap@^6.1.10":
+  version "6.1.10"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/bootstrap/-/bootstrap-6.1.10.tgz#747b434f40c1a319628c4223a3e714684117e24f"
+  integrity sha512-WCvF0HvQUAmLuW4wSZYx9QNb1bAIQjYvex7b0BOlgP36NQvaVPBVZk+Mwkk+56KytwmOilZ3/eWG5ilnxfXiUw==
 
 "@fullcalendar/core@^6.1.10":
   version "6.1.10"
