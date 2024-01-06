@@ -42,8 +42,6 @@ import java.util.stream.Collectors;
 
 /**
  * Utility for creating jQuery Datatables JSON for a Players Table.
- * <p>
- * See https://www.datatables.net/manual/data/orthogonal-data#HTML-5 for sort kinds
  *
  * @author AuroraLS3
  */

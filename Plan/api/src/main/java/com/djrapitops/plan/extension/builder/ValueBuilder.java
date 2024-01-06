@@ -18,7 +18,10 @@ package com.djrapitops.plan.extension.builder;
 
 import com.djrapitops.plan.component.Component;
 import com.djrapitops.plan.extension.FormatType;
-import com.djrapitops.plan.extension.annotation.*;
+import com.djrapitops.plan.extension.annotation.BooleanProvider;
+import com.djrapitops.plan.extension.annotation.Conditional;
+import com.djrapitops.plan.extension.annotation.StringProvider;
+import com.djrapitops.plan.extension.annotation.Tab;
 import com.djrapitops.plan.extension.extractor.ExtensionMethod;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
@@ -64,7 +67,7 @@ public interface ValueBuilder {
     /**
      * Icon displayed next to the value.
      * <p>
-     * See https://fontawesome.com/icons (select 'free')) for icons
+     * See <a href="https://fontawesome.com/icons">FontAwesome</a> (select 'free')) for icons
      *
      * @param iconName   Name of the icon
      * @param iconFamily Family of the icon
@@ -78,7 +81,7 @@ public interface ValueBuilder {
     /**
      * Icon displayed next to the value.
      * <p>
-     * See https://fontawesome.com/icons (select 'free')) for icons
+     * See <a href="https://fontawesome.com/icons">FontAwesome</a> (select 'free')) for icons
      *
      * @param icon Icon built using the methods in {@link Icon}.
      * @return This builder.

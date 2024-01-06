@@ -31,7 +31,7 @@ import java.util.Set;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
- * Removes invalid data caused by https://github.com/plan-player-analytics/Plan/issues/1355.
+ * Removes invalid data caused by <a href="https://github.com/plan-player-analytics/Plan/issues/1355">issue #1355</a>.
  *
  * @author AuroraLS3
  */

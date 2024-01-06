@@ -33,7 +33,7 @@ public class ResponseBuilder {
     /**
      * Set MIME Type of the Response.
      *
-     * @param mimeType MIME type of the Response https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types
+     * @param mimeType MIME type of the Response <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types">Documentation</a>
      * @return this builder.
      * @see MimeType for common MIME types.
      */
@@ -46,7 +46,7 @@ public class ResponseBuilder {
      * <p>
      * Default status code is 200 (OK) if not set.
      *
-     * @param code 1xx, 2xx, 3xx, 4xx, 5xx, https://developer.mozilla.org/en-US/docs/Web/HTTP/Status
+     * @param code 1xx, 2xx, 3xx, 4xx, 5xx, <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Status">Documentation</a>
      * @return this builder.
      */
     public ResponseBuilder setStatus(int code) {
@@ -57,7 +57,7 @@ public class ResponseBuilder {
     /**
      * Set HTTP Response header.
      *
-     * @param header Key of the header. https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
+     * @param header Key of the header. <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers">Documentation</a>
      * @param value  Value for the header.
      * @return this builder.
      */
@@ -75,7 +75,7 @@ public class ResponseBuilder {
      * Utility method for building redirects.
      *
      * @param url URL to redirect the client to with 302 Found.
-     * @return https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Location
+     * @return <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Location">Documentation</a>
      */
     public ResponseBuilder redirectTo(String url) {
         return setStatus(302).setHeader("Location", url).setContent(new byte[0]);

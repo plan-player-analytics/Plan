@@ -30,7 +30,7 @@ import java.util.Base64;
 /**
  * Password Encryption utility.
  * <p>
- * https://github.com/defuse/password-hashing/blob/master/PasswordStorage.java
+ * <a href="https://github.com/defuse/password-hashing/blob/master/PasswordStorage.java">Based on this code</a>
  *
  * @author Defuse
  */

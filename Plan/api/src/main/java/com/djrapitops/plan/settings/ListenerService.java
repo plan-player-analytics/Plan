@@ -51,6 +51,9 @@ public interface ListenerService {
      */
     void registerListenerForPlan(Object listener);
 
+    /**
+     * Singleton holder for listeners.
+     */
     class Holder {
         static final AtomicReference<ListenerService> service = new AtomicReference<>();
 

@@ -46,15 +46,16 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  * <p>
  * Activity for a single week is calculated using {@code A(t) = (1 / (pi/2 * (t/T) + 1))}.
  * A(t) is based on function f(x) = 1 / (x + 1), which has property f(0) = 1, decreasing from there, but not in a straight line.
- * You can see the function plotted here https://www.wolframalpha.com/input/?i=1+%2F+(x%2B1)+from+-1+to+2
+ * You can see the function plotted <a href="https://www.wolframalpha.com/input/?i=1+%2F+(x%2B1)+from+-1+to+2">here</a>
  * <p>
  * To fine tune the curve pi/2 is used since it felt like a good curve.
  * <p>
  * Activity index A is calculated by using the formula:
  * {@code A = 5 - 5 * [A(t1) + A(t2) + A(t3)] / 3}
  * <p>
+ * <a href="https://www.wolframalpha.com/input/?i=plot+y+%3D+5+-+5+*+(1+%2F+(pi%2F2+*+x%2B1))+and+y+%3D1+and+y+%3D+2+and+y+%3D+3+and+y+%3D+3.75+from+-0.5+to+3">
  * Plot for A and limits
- * https://www.wolframalpha.com/input/?i=plot+y+%3D+5+-+5+*+(1+%2F+(pi%2F2+*+x%2B1))+and+y+%3D1+and+y+%3D+2+and+y+%3D+3+and+y+%3D+3.75+from+-0.5+to+3
+ * </a>
  * <p>
  * New Limits for A would thus be
  * {@code < 1: Inactive}

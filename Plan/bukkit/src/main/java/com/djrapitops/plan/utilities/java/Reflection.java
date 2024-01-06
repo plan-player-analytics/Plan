@@ -32,7 +32,7 @@ import java.lang.reflect.Field;
  * An utility class that simplifies reflection in Bukkit plugins.
  * <p>
  * Modified Reflection utility from LagMonitor plugin.
- * https://github.com/games647/LagMonitor/blob/master/src/main/java/com/github/games647/lagmonitor/traffic/Reflection.java
+ * <a href="https://github.com/games647/LagMonitor/blob/master/src/main/java/com/github/games647/lagmonitor/traffic/Reflection.java">original code</a>
  *
  * @author Kristian
  */

@@ -49,9 +49,6 @@ import java.util.concurrent.TimeUnit;
 
 /**
  * Task that handles player ping calculation on Nukkit based servers.
- * <p>
- * Modified PingManager from LagMonitor plugin.
- * https://github.com/games647/LagMonitor/blob/master/src/main/java/com/github/games647/lagmonitor/task/PingManager.java
  *
  * @author games647
  */

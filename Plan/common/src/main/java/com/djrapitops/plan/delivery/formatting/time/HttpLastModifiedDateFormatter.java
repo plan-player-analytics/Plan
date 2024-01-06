@@ -24,7 +24,7 @@ import java.util.TimeZone;
 
 /**
  * Formats timestamps to the Last-Modified header time format.
- * https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified
+ * <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/Last-Modified">Documentation for the header</a>
  *
  * @author AuroraLS3
  */

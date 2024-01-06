@@ -34,9 +34,6 @@ import java.util.stream.Collectors;
 
 /**
  * Represents a single node in a configuration file
- * <p>
- * Based on
- * https://github.com/AuroraLS3/Abstract-Plugin-Framework/blob/72e221d3571ef200727713d10d3684c51e9f469d/AbstractPluginFramework/api/src/main/java/com/djrapitops/plugin/config/ConfigNode.java
  *
  * @author AuroraLS3
  */

@@ -72,10 +72,21 @@ public interface Resolver {
      */
     Optional<Response> resolve(Request request);
 
+    /**
+     * Creates a new {@link ResponseBuilder} for a {@link Response}.
+     *
+     * @return a new builder.
+     */
     default ResponseBuilder newResponseBuilder() {
         return Response.builder();
     }
 
+    /**
+     * Used to check if the resolver requires authentication to be used.
+     *
+     * @param request Incoming request that you can use to figure out if authentication is required.
+     * @return true if you want 401 to be given when user has not logged in.
+     */
     default boolean requiresAuth(Request request) {
         return true;
     }
