@@ -83,6 +83,7 @@ loadScripts(document, 'script');</script>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">FunctionalResolverWrapper</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
 implements <a href="Resolver.html" title="interface in com.djrapitops.plan.delivery.web.resolver">Resolver</a></span></div>
+<div class="block">Utility class for constructing a <a href="Resolver.html" title="interface in com.djrapitops.plan.delivery.web.resolver"><code>Resolver</code></a> with Functional Interfaces.</div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -96,7 +97,9 @@ implements <a href="Resolver.html" title="interface in com.djrapitops.plan.deliv
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.function.Function,java.util.function.Predicate)" class="member-name-link">FunctionalResolverWrapper</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;<a href="request/Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">Request</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="Response.html" title="class in com.djrapitops.plan.delivery.web.resolver">Response</a>&gt;&gt;&nbsp;resolver,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;<a href="request/Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">Request</a>&gt;&nbsp;accessCheck)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Default constructor.</div>
+</div>
 </div>
 </section>
 </li>
@@ -146,6 +149,12 @@ implements <a href="Resolver.html" title="interface in com.djrapitops.plan.deliv
 <h3>FunctionalResolverWrapper</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">FunctionalResolverWrapper</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;<a href="request/Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">Request</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="Response.html" title="class in com.djrapitops.plan.delivery.web.resolver">Response</a>&gt;&gt;&nbsp;resolver,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/function/Predicate.html" title="class or interface in java.util.function" class="external-link">Predicate</a>&lt;<a href="request/Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">Request</a>&gt;&nbsp;accessCheck)</span></div>
+<div class="block">Default constructor.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>resolver</code> - Function that solves the <a href="request/Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request"><code>Request</code></a> into an Optional <a href="Response.html" title="class in com.djrapitops.plan.delivery.web.resolver"><code>Response</code></a>.</dd>
+<dd><code>accessCheck</code> - Predicate that checks if <a href="request/Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request"><code>Request</code></a> is allowed or if 403 Forbidden should be given.</dd>
+</dl>
 </section>
 </li>
 </ul>

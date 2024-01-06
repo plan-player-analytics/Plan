@@ -99,11 +99,15 @@ implements <a href="CommonQueries.html" title="interface in com.djrapitops.plan.
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#doesDBHaveTable(java.lang.String)" class="member-name-link">doesDBHaveTable</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;table)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Check that schema has table you are using in your queries.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#doesDBHaveTableColumn(java.lang.String,java.lang.String)" class="member-name-link">doesDBHaveTableColumn</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;table,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;column)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Check that schema table has a column you are using in your queries.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fetchActivityIndexOf(java.util.UUID,long)" class="member-name-link">fetchActivityIndexOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID,
  long&nbsp;epochMs)</code></div>
@@ -123,7 +127,9 @@ implements <a href="CommonQueries.html" title="interface in com.djrapitops.plan.
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fetchNameOf(java.util.UUID)" class="member-name-link">fetchNameOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Fetch name of a player by UUID.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fetchPlaytime(java.util.UUID,java.util.UUID,long,long)" class="member-name-link">fetchPlaytime</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;serverUUID,
@@ -134,10 +140,14 @@ implements <a href="CommonQueries.html" title="interface in com.djrapitops.plan.
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fetchServerUUIDs()" class="member-name-link">fetchServerUUIDs</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the UUIDs of all servers Plan has registered.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fetchUUIDOf(java.lang.String)" class="member-name-link">fetchUUIDOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;playerName)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Fetch UUID of a player by name.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getActivityGroupForIndex(double)" class="member-name-link">getActivityGroupForIndex</a><wbr>(double&nbsp;activityIndex)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -224,9 +234,13 @@ implements <a href="CommonQueries.html" title="interface in com.djrapitops.plan.
 <section class="detail" id="fetchServerUUIDs()">
 <h3>fetchServerUUIDs</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&gt;</span>&nbsp;<span class="element-name">fetchServerUUIDs</span>()</div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="CommonQueries.html#fetchServerUUIDs()">CommonQueries</a></code></span></div>
+<div class="block">Get the UUIDs of all servers Plan has registered.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="CommonQueries.html#fetchServerUUIDs()">fetchServerUUIDs</a></code>&nbsp;in interface&nbsp;<code><a href="CommonQueries.html" title="interface in com.djrapitops.plan.query">CommonQueries</a></code></dd>
+<dt>Returns:</dt>
+<dd>Set of Server UUIDs</dd>
 </dl>
 </section>
 </li>
@@ -234,9 +248,15 @@ implements <a href="CommonQueries.html" title="interface in com.djrapitops.plan.
 <section class="detail" id="fetchUUIDOf(java.lang.String)">
 <h3>fetchUUIDOf</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&gt;</span>&nbsp;<span class="element-name">fetchUUIDOf</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;playerName)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="CommonQueries.html#fetchUUIDOf(java.lang.String)">CommonQueries</a></code></span></div>
+<div class="block">Fetch UUID of a player by name.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="CommonQueries.html#fetchUUIDOf(java.lang.String)">fetchUUIDOf</a></code>&nbsp;in interface&nbsp;<code><a href="CommonQueries.html" title="interface in com.djrapitops.plan.query">CommonQueries</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>playerName</code> - Name of the player</dd>
+<dt>Returns:</dt>
+<dd>UUID if it is found by Plan or empty if not found.</dd>
 </dl>
 </section>
 </li>
@@ -244,9 +264,15 @@ implements <a href="CommonQueries.html" title="interface in com.djrapitops.plan.
 <section class="detail" id="fetchNameOf(java.util.UUID)">
 <h3>fetchNameOf</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">fetchNameOf</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="CommonQueries.html#fetchNameOf(java.util.UUID)">CommonQueries</a></code></span></div>
+<div class="block">Fetch name of a player by UUID.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="CommonQueries.html#fetchNameOf(java.util.UUID)">fetchNameOf</a></code>&nbsp;in interface&nbsp;<code><a href="CommonQueries.html" title="interface in com.djrapitops.plan.query">CommonQueries</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>playerUUID</code> - UUID of the player</dd>
+<dt>Returns:</dt>
+<dd>Name if it is known by Plan or empty if not.</dd>
 </dl>
 </section>
 </li>
@@ -254,9 +280,15 @@ implements <a href="CommonQueries.html" title="interface in com.djrapitops.plan.
 <section class="detail" id="doesDBHaveTable(java.lang.String)">
 <h3>doesDBHaveTable</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">doesDBHaveTable</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;table)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="CommonQueries.html#doesDBHaveTable(java.lang.String)">CommonQueries</a></code></span></div>
+<div class="block">Check that schema has table you are using in your queries.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="CommonQueries.html#doesDBHaveTable(java.lang.String)">doesDBHaveTable</a></code>&nbsp;in interface&nbsp;<code><a href="CommonQueries.html" title="interface in com.djrapitops.plan.query">CommonQueries</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>table</code> - Name of the table, e.g. plan_users.</dd>
+<dt>Returns:</dt>
+<dd>true if table exists.</dd>
 </dl>
 </section>
 </li>
@@ -265,9 +297,16 @@ implements <a href="CommonQueries.html" title="interface in com.djrapitops.plan.
 <h3>doesDBHaveTableColumn</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">doesDBHaveTableColumn</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;table,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;column)</span></div>
+<div class="block"><span class="descfrm-type-label">Description copied from interface:&nbsp;<code><a href="CommonQueries.html#doesDBHaveTableColumn(java.lang.String,java.lang.String)">CommonQueries</a></code></span></div>
+<div class="block">Check that schema table has a column you are using in your queries.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="CommonQueries.html#doesDBHaveTableColumn(java.lang.String,java.lang.String)">doesDBHaveTableColumn</a></code>&nbsp;in interface&nbsp;<code><a href="CommonQueries.html" title="interface in com.djrapitops.plan.query">CommonQueries</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>table</code> - Name of the table, e.g. plan_users.</dd>
+<dd><code>column</code> - Name of the column, e.g. id</dd>
+<dt>Returns:</dt>
+<dd>true if table and column exist.</dd>
 </dl>
 </section>
 </li>

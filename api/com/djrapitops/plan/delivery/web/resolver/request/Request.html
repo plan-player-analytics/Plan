@@ -189,7 +189,7 @@ loadScripts(document, 'script');</script>
 <dd><code>path</code> - Requested path /example/target</dd>
 <dd><code>query</code> - Request parameters ?param=value etc</dd>
 <dd><code>user</code> - Web user doing the request (if authenticated)</dd>
-<dd><code>headers</code> - Request headers https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers</dd>
+<dd><code>headers</code> - Request headers <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers">Documentation</a></dd>
 <dd><code>requestBody</code> - Raw body as bytes, if present</dd>
 </dl>
 </section>
@@ -202,6 +202,13 @@ loadScripts(document, 'script');</script>
  <a href="WebUser.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">WebUser</a>&nbsp;user,
  <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;headers)</span></div>
 <div class="block">Special constructor that figures out URIPath and URIQuery from "/path/and?query=params" and has no request body.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>method</code> - HTTP requst method</dd>
+<dd><code>target</code> - The requested path and query, e.g. "/path/and?query=params"</dd>
+<dd><code>user</code> - User that made the request</dd>
+<dd><code>headers</code> - HTTP request headers</dd>
+</dl>
 </section>
 </li>
 </ul>
@@ -274,7 +281,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Get a header in the request.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>key</code> - https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers</dd>
+<dd><code>key</code> - <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers">Documentation</a></dd>
 <dt>Returns:</dt>
 <dd>Value if it is present in the request.</dd>
 </dl>
