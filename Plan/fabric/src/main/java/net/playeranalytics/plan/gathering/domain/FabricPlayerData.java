@@ -45,7 +45,7 @@ public class FabricPlayerData implements PlatformPlayerData {
 
     @Override
     public String getName() {
-        return player.getEntityName();
+        return player.getNameForScoreboard();
     }
 
     @Override
