@@ -3,13 +3,16 @@ import {usePreferences} from "../../hooks/preferencesHook";
 import {SimpleDateFormat} from "../../util/format/SimpleDateFormat";
 import {useMetadata} from "../../hooks/metadataHook";
 import {useTranslation} from "react-i18next";
+import {isNumber} from "../../util/isNumber.js";
 
 const FormattedDate = ({date}) => {
+    console.log(date);
     const {t} = useTranslation();
     const {timeZoneOffsetHours} = useMetadata();
     const {preferencesLoaded, dateFormatNoSeconds, recentDaysInDateFormat} = usePreferences();
 
-    if (!preferencesLoaded || date === undefined || date === null) return <></>
+    if (!preferencesLoaded || date === undefined || date === null) return <></>;
+    if (!isNumber(date)) return date;
 
     const pattern = dateFormatNoSeconds;
     const recentDays = recentDaysInDateFormat;

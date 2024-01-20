@@ -9,6 +9,8 @@ import {CardLoader} from "../../../navigation/Loader";
 import ExtendableCardBody from "../../../layout/extension/ExtendableCardBody";
 import {useMetadata} from "../../../../hooks/metadataHook";
 import CurrentUptime from "../../../datapoint/CurrentUptime";
+import FormattedTime from "../../../text/FormattedTime.jsx";
+import FormattedDate from "../../../text/FormattedDate.jsx";
 
 const ServerAsNumbersCard = ({data}) => {
     const {t} = useTranslation();
@@ -40,23 +42,23 @@ const ServerAsNumbersCard = ({data}) => {
                            value={data.online_players} bold/>
                 {showPeaks && <>
                     <hr/>
-                    <Datapoint name={t('html.label.lastPeak') + ' (' + data.last_peak_date + ')'}
+                    <Datapoint name={<>{t('html.label.lastPeak')} (<FormattedDate date={data.last_peak_date}/>)</>}
                                color={'blue'} icon={faChartLine}
                                value={data.last_peak_players} valueLabel={t('html.unit.players')} bold/>
-                    <Datapoint name={t('html.label.bestPeak') + ' (' + data.best_peak_date + ')'}
+                    <Datapoint name={<>{t('html.label.bestPeak')} (<FormattedDate date={data.best_peak_date}/>)</>}
                                color={'light-green'} icon={faChartLine}
                                value={data.best_peak_players} valueLabel={t('html.unit.players')} bold/>
                 </>}
                 <hr/>
                 <Datapoint name={t('html.label.totalPlaytime')}
                            color={'green'} icon={faClock}
-                           value={data.playtime}/>
+                           value={<FormattedTime timeMs={data.playtime}/>}/>
                 <Datapoint name={t('html.label.averagePlaytime') + ' ' + t('html.label.perPlayer')}
                            color={'green'} icon={faClock}
-                           value={data.player_playtime}/>
+                           value={<FormattedTime timeMs={data.player_playtime}/>}/>
                 <Datapoint name={t('html.label.averageSessionLength')}
                            color={'teal'} icon={faClock}
-                           value={data.session_length_avg}/>
+                           value={<FormattedTime timeMs={data.session_length_avg}/>}/>
                 <Datapoint name={t('html.label.sessions')}
                            color={'teal'} icon={faCalendarCheck}
                            value={data.sessions} bold/>

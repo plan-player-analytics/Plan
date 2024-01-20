@@ -1,11 +1,13 @@
 import React from 'react';
 import {usePreferences} from "../../hooks/preferencesHook";
 import {formatTimeAmount} from "../../util/format/TimeAmountFormat";
+import {isNumber} from "../../util/isNumber.js";
 
 const FormattedTime = ({timeMs}) => {
     const {preferencesLoaded, timeFormat} = usePreferences();
 
-    if (!preferencesLoaded) return <></>
+    if (!preferencesLoaded) return <></>;
+    if (!isNumber(timeMs)) return timeMs;
 
     const options = {
         YEAR: timeFormat.year,
@@ -25,5 +27,11 @@ const FormattedTime = ({timeMs}) => {
         <>{formatted}</>
     )
 };
+
+export const formatTimeFunction = time => {
+    return (
+        <FormattedTime timeMs={time}/>
+    );
+}
 
 export default FormattedTime

@@ -23,6 +23,7 @@ import {CardLoader} from "../../components/navigation/Loader";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 import {useAuth} from "../../hooks/authenticationHook";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import FormattedTime from "../../components/text/FormattedTime.jsx";
 
 const Last7DaysCard = ({data}) => {
     const {t} = useTranslation();
@@ -64,7 +65,7 @@ const Last7DaysCard = ({data}) => {
                            value={data.low_tps_spikes} bold/>
                 <Datapoint name={t('html.label.downtime')}
                            color={'red'} icon={faPowerOff}
-                           value={data.downtime}/>
+                           value={<FormattedTime timeMs={data.downtime}/>}/>
             </Card.Body>
         </Card>
     )
