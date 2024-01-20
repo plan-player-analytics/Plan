@@ -6,7 +6,6 @@ import {useTranslation} from "react-i18next";
 import {isNumber} from "../../util/isNumber.js";
 
 const FormattedDate = ({date}) => {
-    console.log(date);
     const {t} = useTranslation();
     const {timeZoneOffsetHours} = useMetadata();
     const {preferencesLoaded, dateFormatNoSeconds, recentDaysInDateFormat} = usePreferences();
