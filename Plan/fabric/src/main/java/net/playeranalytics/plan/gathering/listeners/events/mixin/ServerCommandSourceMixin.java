@@ -22,7 +22,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.playeranalytics.plan.commands.CommandManager;
+import net.playeranalytics.plan.commands.FabricCommandManager;
 import net.playeranalytics.plan.commands.use.FabricMessageBuilder;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -64,7 +64,7 @@ public abstract class ServerCommandSourceMixin implements CMDSender {
 
     @Override
     public boolean hasPermission(String permission) {
-        return CommandManager.checkPermission((ServerCommandSource) (Object) this, permission);
+        return FabricCommandManager.checkPermission((ServerCommandSource) (Object) this, permission);
     }
 
     @Override

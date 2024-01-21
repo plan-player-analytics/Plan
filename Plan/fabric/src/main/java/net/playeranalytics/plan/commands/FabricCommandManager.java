@@ -32,6 +32,7 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.command.CommandSource;
+import net.minecraft.server.command.CommandManager;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.text.Text;
 import net.playeranalytics.plan.PlanFabric;
@@ -39,7 +40,7 @@ import net.playeranalytics.plugin.scheduling.RunnableFactory;
 
 import java.util.concurrent.CompletableFuture;
 
-public class CommandManager {
+public class FabricCommandManager {
 
     private final CommandDispatcher<ServerCommandSource> dispatcher;
     private RunnableFactory runnableFactory;
@@ -47,7 +48,7 @@ public class CommandManager {
     private final PlanFabric plugin;
     private final ErrorLogger errorLogger;
 
-    public CommandManager(CommandDispatcher<ServerCommandSource> dispatcher, PlanFabric plugin, ErrorLogger errorLogger) {
+    public FabricCommandManager(CommandDispatcher<ServerCommandSource> dispatcher, PlanFabric plugin, ErrorLogger errorLogger) {
         this.dispatcher = dispatcher;
         this.plugin = plugin;
         this.errorLogger = errorLogger;
@@ -135,20 +136,18 @@ public class CommandManager {
     }
 
     private LiteralArgumentBuilder<ServerCommandSource> buildCommand(Subcommand subcommand, String alias) {
-        RequiredArgumentBuilder<ServerCommandSource, String> arguments = RequiredArgumentBuilder.argument("arguments", StringArgumentType.greedyString());
-        arguments.suggests((context, builder) -> arguments(subcommand, context, builder));
-        arguments.executes(ctx -> execute(ctx, subcommand));
-        LiteralArgumentBuilder<ServerCommandSource> literal = LiteralArgumentBuilder.literal(alias);
-        literal.executes(ctx -> execute(ctx, subcommand));
-        literal.requires(src -> {
-            for (String permission : subcommand.getRequiredPermissions()) {
-                if (!checkPermission(src, permission)) return false;
-            }
-            return true;
-        });
-
-        literal.then(arguments);
-        return literal;
+        RequiredArgumentBuilder<ServerCommandSource, String> arguments = CommandManager.argument("arguments", StringArgumentType.greedyString());
+        arguments = arguments.suggests((context, builder) -> arguments(subcommand, context, builder))
+                .executes(ctx -> execute(ctx, subcommand));
+        LiteralArgumentBuilder<ServerCommandSource> builder = CommandManager.literal(alias);
+        return builder
+                .executes(ctx -> execute(ctx, subcommand))
+                .requires(src -> {
+                    for (String permission : subcommand.getRequiredPermissions()) {
+                        if (!checkPermission(src, permission)) return false;
+                    }
+                    return true;
+                }).then(arguments);
     }
 
 }
