@@ -38,6 +38,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 import static com.djrapitops.plan.utilities.MiscUtils.*;
 
@@ -220,14 +221,14 @@ public class ServerPlaceHolders implements Placeholders {
         for (int i = 0; i < 10; i++) {
             for (TopCategoryQuery<Long> query : queries) {
                 final int nth = i;
-                placeholders.registerStatic(String.format("top_%s_%s_%s", query.getCategory(), query.getTimeSpan(), nth),
+                placeholders.registerStatic(String.format("top_%s_%s_%s", query.getCategory(), query.getTimeSpan(), nth + 1),
                         parameters -> database.query(query.getQuery(nth, parameters))
                                 .map(TopListQueries.TopListEntry::getPlayerName)
                                 .orElse("-"));
-                placeholders.registerStatic(String.format("top_%s_%s_%s_value", query.getCategory(), query.getTimeSpan(), nth),
+                placeholders.registerStatic(String.format("top_%s_%s_%s_value", query.getCategory(), query.getTimeSpan(), nth + 1),
                         parameters -> database.query(query.getQuery(nth, parameters))
                                 .map(TopListQueries.TopListEntry::getValue)
-                                .map(formatters.timeAmount())
+                                .map(query.getCategory().equals("player_kills") ? Function.identity() : formatters.timeAmount())
                                 .orElse("-"));
             }
         }
