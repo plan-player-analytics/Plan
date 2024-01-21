@@ -19,6 +19,7 @@ package com.djrapitops.plan.delivery.export;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.exceptions.ExportException;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import extension.FullSystemExtension;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -28,12 +29,12 @@ import org.junit.jupiter.api.function.Executable;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertAll;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(FullSystemExtension.class)
 class ReactExporterTest {
@@ -50,6 +51,7 @@ class ReactExporterTest {
 
     @Test
     void allReactFilesAreExported(PlanConfig config, Exporter exporter) throws ExportException, IOException {
+        config.set(ExportSettings.SERVER_PAGE, true);
         Path exportPath = config.getPageExportPath();
         exporter.exportReact();
 
@@ -64,5 +66,27 @@ class ReactExporterTest {
         assertAll(filesToExport.stream()
                 .map(path -> (Executable) () -> assertTrue(filesExported.contains(path)))
                 .toList());
+    }
+
+    @Test
+    void noReactFilesAreExported(PlanConfig config, Exporter exporter) throws ExportException, IOException {
+        config.set(ExportSettings.PLAYER_PAGES, false);
+        config.set(ExportSettings.SERVER_PAGE, false);
+        config.set(ExportSettings.PLAYERS_PAGE, false);
+        Path exportPath = config.getPageExportPath();
+        Files.deleteIfExists(exportPath);
+
+        exporter.exportReact();
+
+        assertFalse(Files.exists(exportPath), () -> {
+            try {
+                return "Some files got exported: " + Files.list(exportPath)
+                        .map(path -> path.relativize(exportPath))
+                        .map(s -> s + "\n")
+                        .toList();
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        });
     }
 }
