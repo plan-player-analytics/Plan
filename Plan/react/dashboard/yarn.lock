@@ -1782,6 +1782,11 @@ expand-template@^2.0.3:
   resolved "https://registry.yarnpkg.com/expand-template/-/expand-template-2.0.3.tgz#6e14b3fcee0f3a6340ecb57d2e8918692052a47c"
   integrity sha512-XYfuKMvj4O35f/pOXLObndIRvyQ+/+6AhODh+OKWj9S9498pHHn/IMszH+gt0fBCRWMNfk1ZSp5x3AifmnI2vg==
 
+export-to-csv@^1.2.2:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/export-to-csv/-/export-to-csv-1.2.2.tgz#24f09a2dba34aff65f8f97402a869e88232b8f58"
+  integrity sha512-d9BxkLlyxeyFU1yhQKGjnnEQj2fh6PjyDVGyiI/uj7PD/oe7Lo1551B1lTaQeXHGPRX2DHuk6i3JMZB6ncJApQ==
+
 fast-json-patch@^3.0.0-1:
   version "3.1.1"
   resolved "https://registry.yarnpkg.com/fast-json-patch/-/fast-json-patch-3.1.1.tgz#85064ea1b1ebf97a3f7ad01e23f9337e72c66947"

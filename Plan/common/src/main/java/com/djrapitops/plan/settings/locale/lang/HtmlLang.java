@@ -283,6 +283,7 @@ public enum HtmlLang implements Lang {
     LABEL_TABLE_VISIBLE_COLUMNS("html.label.table.visibleColumns", "Visible columns"),
     LABEL_TABLE_SHOW_N_OF_M("html.label.table.showNofM", "Showing {{n}} of {{m}} entries"),
     LABEL_TABLE_SHOW_PER_PAGE("html.label.table.showPerPage", "Show per page"),
+    LABEL_EXPORT("html.label.export", "Export"),
 
     LOGIN_LOGIN("html.login.login", "Login"),
     LOGIN_LOGOUT("html.login.logout", "Logout"),

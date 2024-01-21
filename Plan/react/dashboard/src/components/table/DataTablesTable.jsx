@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTheme} from "../../hooks/themeHook";
-import {Card, InputGroup} from "react-bootstrap";
+import {Card, Dropdown, InputGroup} from "react-bootstrap";
 import Select from "../input/Select";
 import SearchField from "../input/SearchField";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
@@ -17,6 +17,7 @@ import Toggle from "../input/Toggle";
 import CollapseWithButton from "../layout/CollapseWithButton";
 import {faMinusSquare, faPlusSquare} from "@fortawesome/free-regular-svg-icons";
 import {Trans, useTranslation} from "react-i18next";
+import {download, generateCsv, mkConfig} from "export-to-csv";
 
 const PaginationOption = ({onClick, children, selected}) => (
     <li>
@@ -76,6 +77,51 @@ const VisibleColumnsSelector = ({columns, visibleColumnIndexes, toggleColumn}) =
                 </Card.Body>
             </Card>
         </CollapseWithButton>
+    )
+}
+
+const ExportMenu = ({matchingData}) => {
+    const {t} = useTranslation();
+    const [generating, setGenerating] = useState(false);
+
+    const hasData = matchingData.length > 0;
+
+    const exportCSV = useCallback(async () => {
+        setGenerating(true);
+
+        const rows = matchingData.map(row => {
+            const mapped = {};
+            for (let entry of Object.entries(row)) {
+                if (entry[1] === undefined || entry[1]["$$typeof"] === undefined) {
+                    mapped[entry[0]] = entry[1];
+                }
+            }
+            return mapped;
+        })
+
+        const csvConfig = mkConfig({
+            useKeysAsHeaders: true,
+            filename: "data-" + new Date().toISOString().replaceAll(":", '').substring(0, 17)
+        });
+        const csvOutput = generateCsv(csvConfig)(rows);
+        await download(csvConfig)(csvOutput);
+        setGenerating(false)
+    }, [matchingData, setGenerating])
+
+    return (
+        <>{hasData &&
+            <Dropdown>
+                <Dropdown.Toggle variant={""} id="dropdown-basic">
+                    {generating &&
+                        <FontAwesomeIcon icon={"gear"} className={"fa-spin"} title={t('html.label.export')}/>}
+                    {!generating && <FontAwesomeIcon icon={"file-export"} title={t('html.label.export')}/>}
+                </Dropdown.Toggle>
+                <Dropdown.Menu>
+                    <Dropdown.Item onClick={exportCSV}><FontAwesomeIcon
+                        icon={"file-export"}/> {t('html.label.export')} CSV</Dropdown.Item>
+                </Dropdown.Menu>
+            </Dropdown>
+        }</>
     )
 }
 
@@ -205,6 +251,9 @@ const DataTablesTable = ({id, rowKeyFunction, options, colorClass}) => {
                 <VisibleColumnsSelector columns={columns} visibleColumnIndexes={visibleColumnIndexes}
                                         toggleColumn={toggleColumn}/>
             </div>}
+            <div className={"float-end dataTables_columns"}>
+                <ExportMenu matchingData={matchingData} columns={columns}/>
+            </div>
             <table id={id}
                    className={"datatable table table-bordered table-striped" + (nightModeEnabled ? " table-dark" : '')}
                    style={{width: "100%"}}>

@@ -5,13 +5,11 @@ import {useMetadata} from "../../hooks/metadataHook";
 import {useTranslation} from "react-i18next";
 import {isNumber} from "../../util/isNumber.js";
 
-const FormattedDate = ({date}) => {
-    const {t} = useTranslation();
+export const useDatePreferences = () => {
     const {timeZoneOffsetHours} = useMetadata();
     const {preferencesLoaded, dateFormatNoSeconds, recentDaysInDateFormat} = usePreferences();
 
-    if (!preferencesLoaded || date === undefined || date === null) return <></>;
-    if (!isNumber(date)) return date;
+    if (!preferencesLoaded) return {};
 
     const pattern = dateFormatNoSeconds;
     const recentDays = recentDaysInDateFormat;
@@ -19,6 +17,10 @@ const FormattedDate = ({date}) => {
 
     const offset = timeZoneOffsetHours * 60 * 60 * 1000;
 
+    return {pattern, recentDays, recentDaysPattern, offset};
+}
+
+export function formatDate(date, offset, pattern, recentDays, recentDaysPattern, t) {
     const dayMs = 24 * 60 * 60 * 1000;
     const timestamp = date - offset;
     const now = Date.now();
@@ -35,11 +37,18 @@ const FormattedDate = ({date}) => {
         }
     }
 
-    const formatted = date !== 0 ? new SimpleDateFormat(format).format(timestamp) : '-';
+    return date !== 0 ? new SimpleDateFormat(format).format(timestamp) : '-'
+}
 
-    return (
-        <>{formatted}</>
-    )
+const FormattedDate = ({date}) => {
+    const {t} = useTranslation();
+
+    const {pattern, recentDays, recentDaysPattern, offset} = useDatePreferences();
+
+    if (!pattern || date === undefined || date === null) return <></>;
+    if (!isNumber(date)) return date;
+
+    return formatDate(date, offset, pattern, recentDays, recentDaysPattern, t);
 };
 
 export default FormattedDate

@@ -3,13 +3,12 @@ import {usePreferences} from "../../hooks/preferencesHook";
 import {formatTimeAmount} from "../../util/format/TimeAmountFormat";
 import {isNumber} from "../../util/isNumber.js";
 
-const FormattedTime = ({timeMs}) => {
+export const useTimePreferences = () => {
     const {preferencesLoaded, timeFormat} = usePreferences();
 
-    if (!preferencesLoaded) return <></>;
-    if (!isNumber(timeMs)) return timeMs;
+    if (!preferencesLoaded) return undefined;
 
-    const options = {
+    return {
         YEAR: timeFormat.year,
         YEARS: timeFormat.years,
         MONTH: timeFormat.month,
@@ -21,11 +20,14 @@ const FormattedTime = ({timeMs}) => {
         SECONDS: timeFormat.seconds,
         ZERO: timeFormat.zero
     }
-    const formatted = formatTimeAmount(options, timeMs);
+}
 
-    return (
-        <>{formatted}</>
-    )
+const FormattedTime = ({timeMs}) => {
+    const options = useTimePreferences()
+
+    if (!options) return <></>;
+    if (!isNumber(timeMs)) return timeMs;
+    return formatTimeAmount(options, timeMs);
 };
 
 export const formatTimeFunction = time => {

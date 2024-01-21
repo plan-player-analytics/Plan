@@ -7,12 +7,13 @@ import DataTablesTable from "../../table/DataTablesTable";
 import {CardLoader} from "../../navigation/Loader";
 import {Link} from "react-router-dom";
 import {faCalendarCheck, faCalendarPlus, faClock} from "@fortawesome/free-regular-svg-icons";
-import FormattedDate from "../../text/FormattedDate";
-import FormattedTime from "../../text/FormattedTime";
+import {formatDate, useDatePreferences} from "../../text/FormattedDate";
+import {useTimePreferences} from "../../text/FormattedTime";
 import ExtensionIcon from "../../extensions/ExtensionIcon";
 import {ExtensionValueTableCell} from "../../extensions/ExtensionCard";
 import {usePreferences} from "../../../hooks/preferencesHook";
 import {formatDecimals} from "../../../util/formatters";
+import {formatTimeAmount} from "../../../util/format/TimeAmountFormat.js";
 
 const getActivityGroup = value => {
     const VERY_ACTIVE = 3.75;
@@ -37,6 +38,9 @@ const PlayerListCard = ({data, title, justList, orderBy}) => {
     const {preferencesLoaded, decimalFormat} = usePreferences();
 
     const [options, setOptions] = useState(undefined);
+
+    const timePreferences = useTimePreferences();
+    const datePreferences = useDatePreferences();
 
     useEffect(() => {
         if (!data) return;
@@ -80,20 +84,25 @@ const PlayerListCard = ({data, title, justList, orderBy}) => {
             }
         }));
 
+        const formatDateEasy = date => {
+            return formatDate(date, datePreferences.offset, datePreferences.pattern, false, datePreferences.recentDaysPattern, t);
+        }
+
         const rows = data.players.map(player => {
             const row = {
                 name: player.playerName,
                 uuid: player.playerUUID,
                 link: <Link to={"/player/" + player.playerUUID}>{player.playerName}</Link>,
                 activityIndex: player.activityIndex,
+                activityGroup: t(getActivityGroup(player.activityIndex)),
                 activityIndexAndGroup: formatDecimals(player.activityIndex, decimalFormat) + " (" + t(getActivityGroup(player.activityIndex)) + ")",
                 activePlaytime: player.playtimeActive,
-                activePlaytimeFormatted: <FormattedTime timeMs={player.playtimeActive}/>,
+                activePlaytimeFormatted: formatTimeAmount(timePreferences, player.playtimeActive),
                 sessions: player.sessionCount,
                 registered: player.registered,
-                registeredFormatted: <FormattedDate date={player.registered}/>,
+                registeredFormatted: formatDateEasy(player.registered),
                 lastSeen: player.lastSeen,
-                lastSeenFormatted: <FormattedDate date={player.lastSeen}/>,
+                lastSeenFormatted: formatDateEasy(player.lastSeen),
                 country: player.country,
                 pingAverage: player.pingAverage,
                 pingAverageFormatted: formatDecimals(player.pingAverage, decimalFormat) + "ms",
