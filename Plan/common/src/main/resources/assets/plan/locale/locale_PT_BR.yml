@@ -338,6 +338,7 @@ html:
         duringLowTps: "During Low TPS Spikes:"
         entities: "Entidades"
         errors: "Plan Error Logs"
+        export: "Export"
         exported: "Data export time"
         favoriteServer: "Servidor Favorito"
         firstSession: "First session"

@@ -338,6 +338,7 @@ html:
         duringLowTps: "TPSの低下までの時間:"
         entities: "エンティティ数"
         errors: "Planエラーログ"
+        export: "Export"
         exported: "データエクスポート時間"
         favoriteServer: "お気に入りのサーバー"
         firstSession: "初参加"

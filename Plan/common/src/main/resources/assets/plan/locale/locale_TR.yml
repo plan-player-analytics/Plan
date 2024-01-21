@@ -338,6 +338,7 @@ html:
         duringLowTps: "Düşük TPS Artışları Sırasında:"
         entities: "Varlıklar"
         errors: "Plan Error Logs"
+        export: "Export"
         exported: "Data export time"
         favoriteServer: "Favori Sunucu"
         firstSession: "İlk seans"
