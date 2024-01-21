@@ -771,7 +771,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/commands/use/Subcommand.ArgumentDescriptor.html#%3Cinit%3E(java.lang.String,java.lang.String,boolean)" class="member-name-link">ArgumentDescriptor(String, String, boolean)</a> - Constructor for class com.djrapitops.plan.commands.use.<a href="com/djrapitops/plan/commands/use/Subcommand.ArgumentDescriptor.html" title="class in com.djrapitops.plan.commands.use">Subcommand.ArgumentDescriptor</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/playeranalytics/plan/commands/CommandManager.html#arguments(com.djrapitops.plan.commands.use.Subcommand,com.mojang.brigadier.context.CommandContext,com.mojang.brigadier.suggestion.SuggestionsBuilder)" class="member-name-link">arguments(Subcommand, CommandContext&lt;ServerCommandSource&gt;, SuggestionsBuilder)</a> - Method in class net.playeranalytics.plan.commands.<a href="net/playeranalytics/plan/commands/CommandManager.html" title="class in net.playeranalytics.plan.commands">CommandManager</a></dt>
+<dt><a href="net/playeranalytics/plan/commands/FabricCommandManager.html#arguments(com.djrapitops.plan.commands.use.Subcommand,com.mojang.brigadier.context.CommandContext,com.mojang.brigadier.suggestion.SuggestionsBuilder)" class="member-name-link">arguments(Subcommand, CommandContext&lt;ServerCommandSource&gt;, SuggestionsBuilder)</a> - Method in class net.playeranalytics.plan.commands.<a href="net/playeranalytics/plan/commands/FabricCommandManager.html" title="class in net.playeranalytics.plan.commands">FabricCommandManager</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/commands/use/Arguments.html" class="type-name-link" title="class in com.djrapitops.plan.commands.use">Arguments</a> - Class in <a href="com/djrapitops/plan/commands/use/package-summary.html">com.djrapitops.plan.commands.use</a></dt>
 <dd>
@@ -2255,7 +2255,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/web/ResourceSvc.html#checkParams(java.lang.String,java.lang.String,com.djrapitops.plan.delivery.web.ResourceService.Position,java.lang.String%5B%5D)" class="member-name-link">checkParams(String, String, ResourceService.Position, String[])</a> - Method in class com.djrapitops.plan.delivery.web.<a href="com/djrapitops/plan/delivery/web/ResourceSvc.html" title="class in com.djrapitops.plan.delivery.web">ResourceSvc</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/playeranalytics/plan/commands/CommandManager.html#checkPermission(net.minecraft.server.command.ServerCommandSource,java.lang.String)" class="member-name-link">checkPermission(ServerCommandSource, String)</a> - Static method in class net.playeranalytics.plan.commands.<a href="net/playeranalytics/plan/commands/CommandManager.html" title="class in net.playeranalytics.plan.commands">CommandManager</a></dt>
+<dt><a href="net/playeranalytics/plan/commands/FabricCommandManager.html#checkPermission(net.minecraft.server.command.ServerCommandSource,java.lang.String)" class="member-name-link">checkPermission(ServerCommandSource, String)</a> - Static method in class net.playeranalytics.plan.commands.<a href="net/playeranalytics/plan/commands/FabricCommandManager.html" title="class in net.playeranalytics.plan.commands">FabricCommandManager</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/BukkitServerShutdownSave.html#checkServerShuttingDownStatus()" class="member-name-link">checkServerShuttingDownStatus()</a> - Method in class com.djrapitops.plan.<a href="com/djrapitops/plan/BukkitServerShutdownSave.html" title="class in com.djrapitops.plan">BukkitServerShutdownSave</a></dt>
 <dd>&nbsp;</dd>
@@ -2861,10 +2861,6 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block"><a href="com/djrapitops/plan/settings/locale/lang/Lang.html" title="interface in com.djrapitops.plan.settings.locale.lang"><code>Lang</code></a> implementation for general command language.</div>
 </dd>
-<dt><a href="net/playeranalytics/plan/commands/CommandManager.html" class="type-name-link" title="class in net.playeranalytics.plan.commands">CommandManager</a> - Class in <a href="net/playeranalytics/plan/commands/package-summary.html">net.playeranalytics.plan.commands</a></dt>
-<dd>&nbsp;</dd>
-<dt><a href="net/playeranalytics/plan/commands/CommandManager.html#%3Cinit%3E(com.mojang.brigadier.CommandDispatcher,net.playeranalytics.plan.PlanFabric,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">CommandManager(CommandDispatcher&lt;ServerCommandSource&gt;, PlanFabric, ErrorLogger)</a> - Constructor for class net.playeranalytics.plan.commands.<a href="net/playeranalytics/plan/commands/CommandManager.html" title="class in net.playeranalytics.plan.commands">CommandManager</a></dt>
-<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/patches/CommandUsageTableRemovalPatch.html" class="type-name-link" title="class in com.djrapitops.plan.storage.database.transactions.patches">CommandUsageTableRemovalPatch</a> - Class in <a href="com/djrapitops/plan/storage/database/transactions/patches/package-summary.html">com.djrapitops.plan.storage.database.transactions.patches</a></dt>
 <dd>
 <div class="block">Patch that removes plan_commandusages table.</div>
@@ -5484,6 +5480,10 @@ loadScripts(document, 'script');</script>
 <dt><a href="net/playeranalytics/plan/gathering/listeners/fabric/FabricAFKListener.html" class="type-name-link" title="class in net.playeranalytics.plan.gathering.listeners.fabric">FabricAFKListener</a> - Class in <a href="net/playeranalytics/plan/gathering/listeners/fabric/package-summary.html">net.playeranalytics.plan.gathering.listeners.fabric</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/playeranalytics/plan/gathering/listeners/fabric/FabricAFKListener.html#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">FabricAFKListener(PlanConfig, ErrorLogger)</a> - Constructor for class net.playeranalytics.plan.gathering.listeners.fabric.<a href="net/playeranalytics/plan/gathering/listeners/fabric/FabricAFKListener.html" title="class in net.playeranalytics.plan.gathering.listeners.fabric">FabricAFKListener</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/playeranalytics/plan/commands/FabricCommandManager.html" class="type-name-link" title="class in net.playeranalytics.plan.commands">FabricCommandManager</a> - Class in <a href="net/playeranalytics/plan/commands/package-summary.html">net.playeranalytics.plan.commands</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/playeranalytics/plan/commands/FabricCommandManager.html#%3Cinit%3E(com.mojang.brigadier.CommandDispatcher,net.playeranalytics.plan.PlanFabric,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">FabricCommandManager(CommandDispatcher&lt;ServerCommandSource&gt;, PlanFabric, ErrorLogger)</a> - Constructor for class net.playeranalytics.plan.commands.<a href="net/playeranalytics/plan/commands/FabricCommandManager.html" title="class in net.playeranalytics.plan.commands">FabricCommandManager</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/settings/FabricConfigSystem.html" class="type-name-link" title="class in com.djrapitops.plan.settings">FabricConfigSystem</a> - Class in <a href="com/djrapitops/plan/settings/package-summary.html">com.djrapitops.plan.settings</a></dt>
 <dd>
@@ -10805,7 +10805,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/extension/implementation/ProviderInformation.html#isPercentage()" class="member-name-link">isPercentage()</a> - Method in class com.djrapitops.plan.extension.implementation.<a href="com/djrapitops/plan/extension/implementation/ProviderInformation.html" title="class in com.djrapitops.plan.extension.implementation">ProviderInformation</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/playeranalytics/plan/commands/CommandManager.html#isPermissionsApiAvailable()" class="member-name-link">isPermissionsApiAvailable()</a> - Static method in class net.playeranalytics.plan.commands.<a href="net/playeranalytics/plan/commands/CommandManager.html" title="class in net.playeranalytics.plan.commands">CommandManager</a></dt>
+<dt><a href="net/playeranalytics/plan/commands/FabricCommandManager.html#isPermissionsApiAvailable()" class="member-name-link">isPermissionsApiAvailable()</a> - Static method in class net.playeranalytics.plan.commands.<a href="net/playeranalytics/plan/commands/FabricCommandManager.html" title="class in net.playeranalytics.plan.commands">FabricCommandManager</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/api/events/PlanBukkitEnableEvent.html#isPlanSystemEnabled()" class="member-name-link">isPlanSystemEnabled()</a> - Method in class com.djrapitops.plan.api.events.<a href="com/djrapitops/plan/api/events/PlanBukkitEnableEvent.html" title="class in com.djrapitops.plan.api.events">PlanBukkitEnableEvent</a></dt>
 <dd>&nbsp;</dd>
@@ -15330,7 +15330,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/djrapitops/plan/extension/implementation/ExtensionRegister.html#registerBuiltInExtensions(java.util.Set)" class="member-name-link">registerBuiltInExtensions(Set&lt;String&gt;)</a> - Method in class com.djrapitops.plan.extension.implementation.<a href="com/djrapitops/plan/extension/implementation/ExtensionRegister.html" title="class in com.djrapitops.plan.extension.implementation">ExtensionRegister</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/playeranalytics/plan/commands/CommandManager.html#registerChild(com.djrapitops.plan.commands.use.Subcommand,com.mojang.brigadier.builder.ArgumentBuilder)" class="member-name-link">registerChild(Subcommand, ArgumentBuilder&lt;ServerCommandSource, ?&gt;)</a> - Method in class net.playeranalytics.plan.commands.<a href="net/playeranalytics/plan/commands/CommandManager.html" title="class in net.playeranalytics.plan.commands">CommandManager</a></dt>
+<dt><a href="net/playeranalytics/plan/commands/FabricCommandManager.html#registerChild(com.djrapitops.plan.commands.use.Subcommand,com.mojang.brigadier.builder.ArgumentBuilder)" class="member-name-link">registerChild(Subcommand, ArgumentBuilder&lt;ServerCommandSource, ?&gt;)</a> - Method in class net.playeranalytics.plan.commands.<a href="net/playeranalytics/plan/commands/FabricCommandManager.html" title="class in net.playeranalytics.plan.commands">FabricCommandManager</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/Plan.html#registerCommand(com.djrapitops.plan.commands.use.Subcommand)" class="member-name-link">registerCommand(Subcommand)</a> - Method in class com.djrapitops.plan.<a href="com/djrapitops/plan/Plan.html" title="class in com.djrapitops.plan">Plan</a></dt>
 <dd>&nbsp;</dd>
@@ -15488,7 +15488,7 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/djrapitops/plan/delivery/web/ResolverSvc.html#registerResolverForMatches(java.lang.String,java.util.regex.Pattern,com.djrapitops.plan.delivery.web.resolver.Resolver)" class="member-name-link">registerResolverForMatches(String, Pattern, Resolver)</a> - Method in class com.djrapitops.plan.delivery.web.<a href="com/djrapitops/plan/delivery/web/ResolverSvc.html" title="class in com.djrapitops.plan.delivery.web">ResolverSvc</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="net/playeranalytics/plan/commands/CommandManager.html#registerRoot(com.djrapitops.plan.commands.use.Subcommand,net.playeranalytics.plugin.scheduling.RunnableFactory)" class="member-name-link">registerRoot(Subcommand, RunnableFactory)</a> - Method in class net.playeranalytics.plan.commands.<a href="net/playeranalytics/plan/commands/CommandManager.html" title="class in net.playeranalytics.plan.commands">CommandManager</a></dt>
+<dt><a href="net/playeranalytics/plan/commands/FabricCommandManager.html#registerRoot(com.djrapitops.plan.commands.use.Subcommand,net.playeranalytics.plugin.scheduling.RunnableFactory)" class="member-name-link">registerRoot(Subcommand, RunnableFactory)</a> - Method in class net.playeranalytics.plan.commands.<a href="net/playeranalytics/plan/commands/FabricCommandManager.html" title="class in net.playeranalytics.plan.commands">FabricCommandManager</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/DataService.html#registerSink(java.lang.Class,java.lang.Class,java.util.function.BiConsumer)" class="member-name-link">registerSink(Class&lt;K&gt;, Class&lt;T&gt;, BiConsumer&lt;K, T&gt;)</a> - Method in interface com.djrapitops.plan.<a href="com/djrapitops/plan/DataService.html" title="interface in com.djrapitops.plan">DataService</a></dt>
 <dd>&nbsp;</dd>
