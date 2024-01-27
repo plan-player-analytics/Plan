@@ -40,7 +40,7 @@ public class TopListQueries {
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
                 FROM + SessionsTable.TABLE_NAME + " s" +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + "=s." + SessionsTable.USER_ID +
-                WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                WHERE + "(? IS NULL OR " + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID + ')' +
                 AND + SessionsTable.SESSION_START + ">?" +
                 AND + SessionsTable.SESSION_END + "<?" +
                 GROUP_BY + UsersTable.USER_NAME +
@@ -49,7 +49,7 @@ public class TopListQueries {
                 OFFSET + "?";
 
         return db -> db.queryOptional(sql, set -> new TopListEntry<>(set.getString(UsersTable.USER_NAME), set.getLong("playtime")),
-                serverUUID, after, before, n);
+                serverUUID, serverUUID, after, before, n);
     }
 
     public static Query<Optional<TopListEntry<Long>>> fetchNthTop10ActivePlaytimePlayerOn(ServerUUID serverUUID, int n, long after, long before) {
@@ -58,7 +58,7 @@ public class TopListQueries {
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME + ") as active_playtime" +
                 FROM + SessionsTable.TABLE_NAME + " s" +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + "=s." + SessionsTable.USER_ID +
-                WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                WHERE + "(? IS NULL OR " + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID + ')' +
                 AND + SessionsTable.SESSION_START + ">?" +
                 AND + SessionsTable.SESSION_END + "<?" +
                 GROUP_BY + UsersTable.USER_NAME +
@@ -67,7 +67,7 @@ public class TopListQueries {
                 OFFSET + "?";
 
         return db -> db.queryOptional(sql, set -> new TopListEntry<>(set.getString(UsersTable.USER_NAME), set.getLong("active_playtime")),
-                serverUUID, after, before, n);
+                serverUUID, serverUUID, after, before, n);
     }
 
     public static Query<Optional<TopListEntry<Long>>> fetchNthTop10PlayerKillCountOn(ServerUUID serverUUID, int n, long after, long before) {

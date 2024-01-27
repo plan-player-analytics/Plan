@@ -215,7 +215,9 @@ public class ServerPlaceHolders implements Placeholders {
     private void registerDynamicCategoryPlaceholders(PlanPlaceholders placeholders, Database database) {
         List<TopCategoryQuery<Long>> queries = new ArrayList<>();
         queries.addAll(createCategoryQueriesForAllTimespans("playtime", (index, timespan, parameters) -> TopListQueries.fetchNthTop10PlaytimePlayerOn(getServerUUID(parameters), index, System.currentTimeMillis() - timespan, System.currentTimeMillis())));
+        queries.addAll(createCategoryQueriesForAllTimespans("network_playtime", (index, timespan, parameters) -> TopListQueries.fetchNthTop10PlaytimePlayerOn(null, index, System.currentTimeMillis() - timespan, System.currentTimeMillis())));
         queries.addAll(createCategoryQueriesForAllTimespans("active_playtime", (index, timespan, parameters) -> TopListQueries.fetchNthTop10ActivePlaytimePlayerOn(getServerUUID(parameters), index, System.currentTimeMillis() - timespan, System.currentTimeMillis())));
+        queries.addAll(createCategoryQueriesForAllTimespans("network_active_playtime", (index, timespan, parameters) -> TopListQueries.fetchNthTop10ActivePlaytimePlayerOn(null, index, System.currentTimeMillis() - timespan, System.currentTimeMillis())));
         queries.addAll(createCategoryQueriesForAllTimespans("player_kills", (index, timespan, parameters) -> TopListQueries.fetchNthTop10PlayerKillCountOn(getServerUUID(parameters), index, System.currentTimeMillis() - timespan, System.currentTimeMillis())));
 
         for (int i = 0; i < 10; i++) {

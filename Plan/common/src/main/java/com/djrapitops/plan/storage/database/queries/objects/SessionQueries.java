@@ -917,6 +917,16 @@ public class SessionQueries {
         };
     }
 
+    public static Query<Long> activePlaytime(long after, long before) {
+        String sql = SELECT + "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME +
+                ") as playtime" +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.SESSION_END + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?";
+        return db -> db.queryOptional(sql, set -> set.getLong("playtime"), after, before)
+                .orElse(0L);
+    }
+
     public static Query<Set<Integer>> userIdsOfPlayedBetween(long after, long before, List<ServerUUID> serverUUIDs) {
         String selectServerIds = SELECT + ServerTable.ID +
                 FROM + ServerTable.TABLE_NAME +
