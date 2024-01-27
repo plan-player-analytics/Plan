@@ -107,6 +107,8 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
                 "MIN(p." + PingTable.MIN_PING + ") as " + PingTable.MIN_PING +
                 FROM + PingTable.TABLE_NAME + " p" +
                 WHERE + "p." + PingTable.USER_ID + userIdsInSet +
+                AND + "p." + PingTable.DATE + ">=" + afterDate +
+                AND + "p." + PingTable.DATE + "<=" + beforeDate +
                 (serverUUIDs.isEmpty() ? "" : AND + "p." + PingTable.SERVER_ID + " IN (" + selectServerIds + ")") +
                 GROUP_BY + "p." + PingTable.USER_ID;
 
