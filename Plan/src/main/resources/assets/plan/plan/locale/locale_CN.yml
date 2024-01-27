@@ -338,6 +338,7 @@ html:
         duringLowTps: "持续低 TPS 时间"
         entities: "实体"
         errors: "Plan 错误日志"
+        export: "Export"
         exported: "数据导出时间"
         favoriteServer: "最喜欢的服务器"
         firstSession: "第一次会话"

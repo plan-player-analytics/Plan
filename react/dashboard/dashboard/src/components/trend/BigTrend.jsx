@@ -9,17 +9,20 @@ const TrendDownGood = ({value}) => <span className="badge bg-success"><Fa icon={
 const TrendSame = ({value}) => <span className="badge bg-warning"><Fa icon={faCaretRight}/>{value}</span>;
 
 
-const BigTrend = ({trend}) => {
+const BigTrend = ({trend, format}) => {
     if (!trend) {
         return <TrendSame value={'?'}/>;
     }
+
+    const value = format ? format(trend.text) : trend.text;
+
     switch (trend.direction) {
         case '+':
-            return (trend.reversed ? <TrendUpBad value={trend.text}/> : <TrendUpGood value={trend.text}/>);
+            return (trend.reversed ? <TrendUpBad value={trend.text}/> : <TrendUpGood value={value}/>);
         case '-':
-            return (trend.reversed ? <TrendDownGood value={trend.text}/> : <TrendDownBad value={trend.text}/>);
+            return (trend.reversed ? <TrendDownGood value={trend.text}/> : <TrendDownBad value={value}/>);
         default:
-            return <TrendSame value={trend.text}/>;
+            return <TrendSame value={value}/>;
     }
 }
 

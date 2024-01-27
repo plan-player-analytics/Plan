@@ -338,6 +338,7 @@ html:
         duringLowTps: "持續低 TPS 時間"
         entities: "實體"
         errors: "Plan Error Logs"
+        export: "Export"
         exported: "Data export time"
         favoriteServer: "最喜愛的伺服器"
         firstSession: "第一此會話"

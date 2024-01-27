@@ -1506,3 +1506,13 @@ ul.filters {
 .nav-item.disabled {
     opacity: 30%;
 }
+
+.link {
+    color: var(--bs-link-color);
+    opacity: var(--bs-link-opacity);
+    text-decoration: underline;
+}
+
+.link:hover {
+    color: var(--bs-link-hover-color)
+}

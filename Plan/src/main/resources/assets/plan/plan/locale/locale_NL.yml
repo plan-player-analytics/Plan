@@ -338,6 +338,7 @@ html:
         duringLowTps: "Tijdens lage TPS-pieken:"
         entities: "Entiteiten"
         errors: "Plan Error Logs"
+        export: "Export"
         exported: "Data export time"
         favoriteServer: "Favoeriete Server"
         firstSession: "Eerste sessie"

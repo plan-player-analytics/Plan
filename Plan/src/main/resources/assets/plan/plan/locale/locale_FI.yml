@@ -338,6 +338,7 @@ html:
         duringLowTps: "Matalan TPS:n aikana:"
         entities: "Entiteetit"
         errors: "Plan Virhelokit"
+        export: "Export"
         exported: "Tietojen vientiaika"
         favoriteServer: "Lempipalvelin"
         firstSession: "Ensimmäinen sessio"

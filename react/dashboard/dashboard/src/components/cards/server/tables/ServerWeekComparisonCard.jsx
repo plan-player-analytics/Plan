@@ -8,6 +8,8 @@ import {faCalendarCheck, faClock} from "@fortawesome/free-regular-svg-icons";
 import React from "react";
 import {TableRow} from "../../../table/TableRow";
 import {CardLoader} from "../../../navigation/Loader";
+import FormattedDay from "../../../text/FormattedDay.jsx";
+import FormattedTime, {formatTimeFunction} from "../../../text/FormattedTime.jsx";
 
 const ServerWeekComparisonCard = ({data}) => {
     const {t} = useTranslation();
@@ -20,11 +22,18 @@ const ServerWeekComparisonCard = ({data}) => {
                 </h6>
             </Card.Header>
             <ComparisonTable comparisonHeader={t('html.label.comparing7days')}
-                             headers={[data.start + ' - ' + data.midpoint, data.midpoint + ' - ' + data.end, t('html.label.trend')]}>
-                <TableRow icon={faUsers} color="blue" text={t('html.label.uniquePlayers')}
-                          values={[data.unique_before, data.unique_after,
+                             headers={[
+                                 <><FormattedDay date={data.start}/> - <FormattedDay date={data.midpoint}/></>,
+                                 <><FormattedDay date={data.midpoint}/> - <FormattedDay date={data.end}/></>,
+                                 t('html.label.trend')]}>
+                <TableRow icon={faUsers} color="blue"
+                          text={t('html.label.uniquePlayers')}
+                          values={[
+                              data.unique_before,
+                              data.unique_after,
                               <BigTrend key={JSON.stringify(data.unique_trend)}
-                                        trend={data.unique_trend}/>]}/>
+                                        trend={data.unique_trend}/>
+                          ]}/>
                 <TableRow icon={faUsers} color="light-green" text={t('html.label.newPlayers')}
                           values={[data.new_before, data.new_after,
                               <BigTrend key={JSON.stringify(data.new_trend)}
@@ -35,14 +44,20 @@ const ServerWeekComparisonCard = ({data}) => {
                                         trend={data.regular_trend}/>]}/>
                 <TableRow icon={faClock} color="green"
                           text={t('html.label.averagePlaytime') + ' ' + t('html.label.perPlayer')}
-                          values={[data.average_playtime_before, data.average_playtime_after,
+                          values={[
+                              <FormattedTime key={"before-ms"} timeMs={data.average_playtime_before}/>,
+                              <FormattedTime key={"after-ms"} timeMs={data.average_playtime_after}/>,
                               <BigTrend key={JSON.stringify(data.average_playtime_trend)}
-                                        trend={data.average_playtime_trend}/>]}/>
-                <TableRow icon={faClock} color="teal"
-                          text={t('html.label.averageSessionLength')}
-                          values={[data.session_length_average_before, data.session_length_average_after,
-                              <BigTrend key={JSON.stringify(data.session_length_average_trend)}
-                                        trend={data.session_length_average_trend}/>]}/>
+                                        trend={data.average_playtime_trend}
+                                        format={formatTimeFunction}/>]}/>
+                {data.session_length_average_before !== undefined && <TableRow
+                    icon={faClock} color="teal"
+                    text={t('html.label.averageSessionLength')}
+                    values={[<FormattedTime key={"before-ms"} timeMs={data.session_length_average_before}/>,
+                        <FormattedTime key={"after-ms"} timeMs={data.session_length_average_after}/>,
+                        <BigTrend key={JSON.stringify(data.session_length_average_trend)}
+                                  trend={data.session_length_average_trend}
+                                  format={formatTimeFunction}/>]}/>}
                 <TableRow icon={faCalendarCheck} color="teal" text={t('html.label.sessions')}
                           values={[data.sessions_before, data.sessions_after,
                               <BigTrend key={JSON.stringify(data.sessions_trend)}

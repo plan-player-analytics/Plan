@@ -338,6 +338,7 @@ html:
         duringLowTps: "낮은 TPS 스파이크 동안:"
         entities: "엔티티"
         errors: "Plan Error Logs"
+        export: "Export"
         exported: "Data export time"
         favoriteServer: "즐겨찾는 서버"
         firstSession: "첫 번째 세션"

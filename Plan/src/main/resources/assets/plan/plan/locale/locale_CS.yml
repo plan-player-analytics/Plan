@@ -338,6 +338,7 @@ html:
         duringLowTps: "Při nízkých TPS:"
         entities: "Entity"
         errors: "Plan Error Logs"
+        export: "Export"
         exported: "Doba exportu dat"
         favoriteServer: "Oblíbený server"
         firstSession: "První relace"
