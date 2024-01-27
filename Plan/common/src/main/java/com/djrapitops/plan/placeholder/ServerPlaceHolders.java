@@ -22,9 +22,13 @@ import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.queries.analysis.ActivityIndexQueries;
+import com.djrapitops.plan.storage.database.queries.analysis.NetworkActivityIndexQueries;
 import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.storage.database.queries.analysis.TopListQueries;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
@@ -50,16 +54,19 @@ import static com.djrapitops.plan.utilities.MiscUtils.*;
 @Singleton
 public class ServerPlaceHolders implements Placeholders {
 
+    private final PlanConfig config;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final Formatters formatters;
 
     @Inject
     public ServerPlaceHolders(
+            PlanConfig config,
             DBSystem dbSystem,
             ServerInfo serverInfo,
             Formatters formatters
     ) {
+        this.config = config;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.formatters = formatters;
@@ -199,6 +206,11 @@ public class ServerPlaceHolders implements Placeholders {
 
         placeholders.registerStatic("server_uuid",
                 serverInfo::getServerUUID);
+
+        placeholders.registerStatic("regular_players",
+                parameters -> database.query(ActivityIndexQueries.fetchRegularPlayerCount(System.currentTimeMillis(), getServerUUID(parameters), config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD))));
+        placeholders.registerStatic("network_regular_players",
+                () -> database.query(NetworkActivityIndexQueries.fetchRegularPlayerCount(System.currentTimeMillis(), config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD))));
 
         registerDynamicCategoryPlaceholders(placeholders, database);
     }
