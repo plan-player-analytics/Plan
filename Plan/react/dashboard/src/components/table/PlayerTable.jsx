@@ -11,7 +11,7 @@ import {Link} from "react-router-dom";
 import {formatDecimals} from "../../util/formatters.js";
 import {formatTimeAmount} from "../../util/format/TimeAmountFormat.js";
 import {ExtensionValueTableCell} from "../extensions/ExtensionCard.jsx";
-import {CardLoader} from "../navigation/Loader.jsx";
+import {ChartLoader} from "../navigation/Loader.jsx";
 import DataTablesTable from "./DataTablesTable.jsx";
 
 const getActivityGroup = value => {
@@ -131,7 +131,7 @@ const PlayerTable = ({data, orderBy}) => {
     }, []);
 
     if (!preferencesLoaded) return <></>;
-    if (!options) return <CardLoader/>;
+    if (!options) return <ChartLoader/>;
 
     return (
         <DataTablesTable id={"players-table"} rowKeyFunction={rowKeyFunction} options={options}/>
