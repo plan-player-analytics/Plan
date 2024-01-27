@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {useNavigation} from "./navigationHook";
 import {useDataStore} from "./datastoreHook";
 import {useMetadata} from "./metadataHook";
@@ -23,7 +23,7 @@ export const useDataRequest = (fetchMethod, parameters, shouldRequest) => {
                 const timestamp = json.timestamp;
                 if (!staticSite && timestamp) {
                     // Data has timestamp, the data may come from cache
-                    const acceptedTimestamp = timestamp + (refreshBarrierMs ? refreshBarrierMs : 15000);
+                    const acceptedTimestamp = timestamp + (refreshBarrierMs || 15000);
                     if (acceptedTimestamp < updateRequested) {
                         // Request again, received data was too old
                         setTimeout(() => {
@@ -66,5 +66,7 @@ export const useDataRequest = (fetchMethod, parameters, shouldRequest) => {
     }, [fetchMethod, parameters.length, ...parameters, updateRequested, refreshBarrierMs, shouldRequest])
     /* eslint-enable react-hooks/exhaustive-deps */
 
-    return {data, loadingError};
+    return useMemo(() => {
+        return {data, loadingError}
+    }, [data, loadingError]);
 }

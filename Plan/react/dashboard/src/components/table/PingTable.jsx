@@ -1,44 +1,53 @@
 import React from "react";
-import {useTheme} from "../../hooks/themeHook";
 import {useTranslation} from "react-i18next";
-import Scrollable from "../Scrollable";
-
-const PingRow = ({country}) => {
-    return (
-        <tr>
-            <td>{country.country}</td>
-            <td>{country.avg_ping}</td>
-            <td>{country.min_ping}</td>
-            <td>{country.max_ping}</td>
-        </tr>
-    );
-}
+import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
+import {faGlobe, faSignal} from "@fortawesome/free-solid-svg-icons";
+import {formatDecimals} from "../../util/formatters.js";
+import {usePreferences} from "../../hooks/preferencesHook.jsx";
+import DataTablesTable from "./DataTablesTable.jsx";
 
 const PingTable = ({countries}) => {
     const {t} = useTranslation();
-    const {nightModeEnabled} = useTheme();
+    const {preferencesLoaded, decimalFormat} = usePreferences();
+
+    const columns = [{
+        title: <><Fa icon={faGlobe}/> {t('html.label.country')}</>,
+        data: "country"
+    }, {
+        title: <><Fa icon={faSignal}/> {t('html.label.averagePing')}</>,
+        data: {_: "pingAverage", display: "pingAverageFormatted"}
+    }, {
+        title: <><Fa icon={faSignal}/> {t('html.label.bestPing')}</>,
+        data: {_: "pingMin", display: "pingMinFormatted"}
+    }, {
+        title: <><Fa icon={faSignal}/> {t('html.label.worstPing')}</>,
+        data: {_: "pingMax", display: "pingMaxFormatted"}
+    }];
+
+    const rows = countries.map(country => {
+        return {
+            country: country.country,
+            pingAverage: country.avg_ping,
+            pingAverageFormatted: formatDecimals(country.avg_ping, decimalFormat) + " ms",
+            pingMax: country.max_ping,
+            pingMaxFormatted: country.max_ping + " ms",
+            pingMin: country.min_ping,
+            pingMinFormatted: country.min_ping + " ms"
+        };
+    });
+    const options = {
+        responsive: true,
+        deferRender: true,
+        columns: columns,
+        data: rows,
+        paginationCount: 2,
+        order: [[0, "desc"]]
+    }
+
+    if (!preferencesLoaded) return <></>;
 
     return (
-        <Scrollable>
-            <table className={"table mb-0" + (nightModeEnabled ? " table-dark" : '')}>
-                <thead className="bg-amber" style={{position: "sticky", top: 0}}>
-                <tr>
-                    <th>{t('html.label.country')}</th>
-                    <th>{t('html.label.averagePing')}</th>
-                    <th>{t('html.label.bestPing')}</th>
-                    <th>{t('html.label.worstPing')}</th>
-                </tr>
-                </thead>
-                <tbody>
-                {countries.length ? countries.map(country => <PingRow key={country?.country} country={country}/>) : <tr>
-                    <td>{t('generic.noData')}</td>
-                    <td>-</td>
-                    <td>-</td>
-                    <td>-</td>
-                </tr>}
-                </tbody>
-            </table>
-        </Scrollable>
+        <DataTablesTable id={"ping-table"} options={options} colorClass={"bg-amber"}/>
     )
 };
 

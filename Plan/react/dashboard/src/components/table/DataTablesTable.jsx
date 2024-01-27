@@ -104,7 +104,7 @@ const ExportMenu = ({matchingData}) => {
             filename: "data-" + new Date().toISOString().replaceAll(":", '').substring(0, 17)
         });
         const csvOutput = generateCsv(csvConfig)(rows);
-        await download(csvConfig)(csvOutput);
+        download(csvConfig)(csvOutput);
         setGenerating(false)
     }, [matchingData, setGenerating])
 
@@ -125,7 +125,7 @@ const ExportMenu = ({matchingData}) => {
     )
 }
 
-const DataTablesTable = ({id, rowKeyFunction, options, colorClass}) => {
+const DataTablesTable = ({id, rowKeyFunction, options, colorClass, expandComponent}) => {
     const {t} = useTranslation();
     const {nightModeEnabled} = useTheme();
 
@@ -158,7 +158,7 @@ const DataTablesTable = ({id, rowKeyFunction, options, colorClass}) => {
     const visibleColumns = visibleColumnIndexes.map(i => columns[i]);
     const invisibleColumns = columns.filter((c, i) => !visibleColumnIndexes.includes(i));
 
-    const [selectedPaginationCount, setSelectedPaginationCount] = useState(0)
+    const [selectedPaginationCount, setSelectedPaginationCount] = useState(options.paginationCount || 0)
     const paginationCountOptions = ["10", "25", "100"];
     const paginationCount = Number(paginationCountOptions[selectedPaginationCount]);
 
@@ -233,7 +233,7 @@ const DataTablesTable = ({id, rowKeyFunction, options, colorClass}) => {
         return () => window.removeEventListener('resize', onResize);
     }, [onResize]);
 
-    const someColumnsHidden = columns.length !== visibleColumns.length;
+    const someColumnsHidden = expandComponent || columns.length !== visibleColumns.length;
 
     return (
         <div id={id + "-container"}>
@@ -306,6 +306,7 @@ const DataTablesTable = ({id, rowKeyFunction, options, colorClass}) => {
                     {expandedRows.includes(rowKeyFunction(row, null)) &&
                         <tr key={"hidden-row" + rowKeyFunction(row, null)}>
                             <td colSpan={visibleColumns.length}>
+                                {expandComponent && expandComponent({row})}
                                 {invisibleColumns.map(column => {
                                     if (column.data._ !== undefined) {
                                         return <p key={"p-" + rowKeyFunction(row, column)}>

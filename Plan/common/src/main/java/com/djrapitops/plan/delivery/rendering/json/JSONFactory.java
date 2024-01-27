@@ -320,9 +320,9 @@ public class JSONFactory {
 
             tableEntries.add(Maps.builder(String.class, Object.class)
                     .put("country", geolocation)
-                    .put("avg_ping", formatters.decimals().apply(ping.getAverage()) + " ms")
-                    .put("min_ping", ping.getMin() + " ms")
-                    .put("max_ping", ping.getMax() + " ms")
+                    .put("avg_ping", ping.getAverage())
+                    .put("min_ping", ping.getMin())
+                    .put("max_ping", ping.getMax())
                     .build());
         }
         return tableEntries;

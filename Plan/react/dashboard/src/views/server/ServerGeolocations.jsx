@@ -12,7 +12,7 @@ const ServerGeolocations = () => {
     const seeGeolocations = hasPermission('page.server.geolocations.map');
     const seePing = hasPermission('page.server.geolocations.ping.per.country');
     const {data, loadingError} = useDataRequest(fetchGeolocations, [identifier], seeGeolocations);
-    const {pingData, pingLoadingError} = useDataRequest(fetchPingTable, [identifier], seePing);
+    const {data: pingData, loadingError: pingLoadingError} = useDataRequest(fetchPingTable, [identifier], seePing);
 
     return (
         <Geolocations className={"server-geolocations"}
