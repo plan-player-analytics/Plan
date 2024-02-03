@@ -17,6 +17,7 @@
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
 import com.djrapitops.plan.storage.database.DBType;
+import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.*;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
@@ -69,17 +70,19 @@ public class RemoveUnsatisfiedConditionalPlayerResultsTransaction extends Throwa
         String selectSatisfiedPositiveConditions = SELECT +
                 ExtensionProviderTable.PROVIDED_CONDITION + ',' +
                 ExtensionProviderTable.PLUGIN_ID + ',' +
-                ExtensionPlayerTableValueTable.USER_UUID +
+                "u." + UsersTable.ID + " as user_id" +
                 FROM + providerTable +
                 INNER_JOIN + playerValueTable + " on " + providerTable + '.' + ExtensionProviderTable.ID + "=" + ExtensionPlayerValueTable.PROVIDER_ID +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.USER_UUID + "=" + playerValueTable + "." + ExtensionPlayerTableValueTable.USER_UUID +
                 WHERE + ExtensionPlayerValueTable.BOOLEAN_VALUE + "=?" +
                 AND + ExtensionProviderTable.PROVIDED_CONDITION + IS_NOT_NULL;
         String selectSatisfiedNegativeConditions = SELECT +
                 reversedCondition + " as " + ExtensionProviderTable.PROVIDED_CONDITION + ',' +
                 ExtensionProviderTable.PLUGIN_ID + ',' +
-                ExtensionPlayerTableValueTable.USER_UUID +
+                "u." + UsersTable.ID + " as user_id" +
                 FROM + providerTable +
                 INNER_JOIN + playerValueTable + " on " + providerTable + '.' + ExtensionProviderTable.ID + "=" + ExtensionPlayerValueTable.PROVIDER_ID +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.USER_UUID + "=" + playerValueTable + "." + ExtensionPlayerTableValueTable.USER_UUID +
                 WHERE + ExtensionPlayerValueTable.BOOLEAN_VALUE + "=?" +
                 AND + ExtensionProviderTable.PROVIDED_CONDITION + IS_NOT_NULL;
 
@@ -99,14 +102,12 @@ public class RemoveUnsatisfiedConditionalPlayerResultsTransaction extends Throwa
         String selectUnsatisfiedValueIDs = SELECT + playerValueTable + '.' + ExtensionPlayerValueTable.ID +
                 FROM + providerTable +
                 INNER_JOIN + playerValueTable + " on " + providerTable + '.' + ExtensionProviderTable.ID + "=" + ExtensionPlayerValueTable.PROVIDER_ID +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.USER_UUID + "=" + playerValueTable + "." + ExtensionPlayerTableValueTable.USER_UUID +
                 LEFT_JOIN + selectSatisfiedConditions + // Left join to preserve values that don't have their condition fulfilled
                 " on (" + // Join when uuid and plugin_id match and condition for the group provider is satisfied
-                playerValueTable + '.' + ExtensionPlayerValueTable.USER_UUID +
-                "=q1." + ExtensionPlayerValueTable.USER_UUID +
-                AND + ExtensionProviderTable.CONDITION +
-                "=q1." + ExtensionProviderTable.PROVIDED_CONDITION +
-                AND + providerTable + '.' + ExtensionProviderTable.PLUGIN_ID +
-                "=q1." + ExtensionProviderTable.PLUGIN_ID +
+                "u." + UsersTable.ID + "=q1.user_id" +
+                AND + ExtensionProviderTable.CONDITION + "=q1." + ExtensionProviderTable.PROVIDED_CONDITION +
+                AND + providerTable + '.' + ExtensionProviderTable.PLUGIN_ID + "=q1." + ExtensionProviderTable.PLUGIN_ID +
                 ')' +
                 WHERE + "q1." + ExtensionProviderTable.PROVIDED_CONDITION + IS_NULL + // Conditions that were not in the satisfied condition query
                 AND + ExtensionProviderTable.CONDITION + IS_NOT_NULL; // Ignore values that don't need condition
@@ -162,11 +163,11 @@ public class RemoveUnsatisfiedConditionalPlayerResultsTransaction extends Throwa
         // selectSatisfiedConditions lists 'provided_condition' Strings
         String selectUnsatisfiedIDs = SELECT + groupTable + '.' + ID +
                 FROM + groupTable +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.USER_UUID + "=" + groupTable + "." + ExtensionGroupsTable.USER_UUID +
                 INNER_JOIN + providerTable + " on " + providerTable + '.' + ID + '=' + groupTable + '.' + ExtensionGroupsTable.PROVIDER_ID +
                 LEFT_JOIN + selectSatisfiedConditions + // Left join to preserve values that don't have their condition fulfilled
                 " on (" + // Join when uuid and plugin_id match and condition for the group provider is satisfied
-                groupTable + '.' + P_UUID +
-                "=q1." + P_UUID +
+                "u." + UsersTable.ID + "=q1.user_id" +
                 AND + ExtensionProviderTable.CONDITION +
                 "=q1." + ExtensionProviderTable.PROVIDED_CONDITION +
                 AND + providerTable + '.' + ExtensionProviderTable.PLUGIN_ID +

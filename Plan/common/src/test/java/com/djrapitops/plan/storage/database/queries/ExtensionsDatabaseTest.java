@@ -209,6 +209,8 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void unsatisfiedPlayerConditionalResultsAreCleaned() {
+        db().executeTransaction(new PlayerRegisterTransaction(playerUUID, System::currentTimeMillis, TestConstants.PLAYER_ONE_NAME));
+
         ExtensionSvc extensionService = extensionService();
 
         extensionService.register(new ConditionalExtension());
