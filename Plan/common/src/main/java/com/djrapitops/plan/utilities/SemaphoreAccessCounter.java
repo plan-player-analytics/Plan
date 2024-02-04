@@ -17,15 +17,10 @@
 package com.djrapitops.plan.utilities;
 
 import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,7 +32,6 @@ public class SemaphoreAccessCounter {
     private final AtomicInteger accessCounter;
     private final Object lockObject;
     private final Collection<String> holds = Collections.newSetFromMap(new ConcurrentHashMap<>());
-    private AtomicBoolean logHolds = null;
 
     public SemaphoreAccessCounter(PlanConfig config) {
         this.config = config;
@@ -60,20 +54,18 @@ public class SemaphoreAccessCounter {
                 previousWasAccess = true;
             }
         }
+        if (accessors.isEmpty()) accessors.addAll(Arrays.asList(Thread.currentThread().getStackTrace()));
         return accessors.toString();
     }
 
     public void enter() {
         accessCounter.incrementAndGet();
-
-        if (logHolds == null) logHolds = new AtomicBoolean(config.isTrue(PluginSettings.DEV_MODE));
-        if (logHolds.get()) holds.add(getAccessingThing());
+        holds.add(getAccessingThing());
     }
 
     public void exit() {
         synchronized (lockObject) {
-            if (logHolds == null) logHolds = new AtomicBoolean(config.isTrue(PluginSettings.DEV_MODE));
-            if (logHolds.get()) holds.remove(getAccessingThing());
+            holds.remove(getAccessingThing());
 
             int value = accessCounter.decrementAndGet();
             if (value == 0) {
@@ -96,15 +88,13 @@ public class SemaphoreAccessCounter {
     }
 
     private void logAccess() {
-        if (logHolds != null && logHolds.get()) {
-            Logger logger = Logger.getLogger("Plan");
-            if (logger == null) logger = Logger.getGlobal();
+        Logger logger = Logger.getLogger("Plan");
+        if (logger == null) logger = Logger.getGlobal();
 
-            if (logger.isLoggable(Level.INFO) && !holds.isEmpty()) {
-                logger.log(Level.INFO, "DEBUG - Following call sites are holding connection:");
-                for (String hold : holds) {
-                    logger.log(Level.INFO, String.format("DEBUG - %s", hold));
-                }
+        if (logger.isLoggable(Level.INFO) && !holds.isEmpty()) {
+            logger.log(Level.INFO, "Waiting for these connections to finish:");
+            for (String hold : holds) {
+                logger.log(Level.INFO, hold);
             }
         }
     }
