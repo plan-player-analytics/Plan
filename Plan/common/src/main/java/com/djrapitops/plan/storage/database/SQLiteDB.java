@@ -201,11 +201,21 @@ public class SQLiteDB extends SQLDB {
 
     @Override
     public void close() {
-        super.close();
+        if (getState() == State.OPEN) setState(State.CLOSING);
+        boolean transactionQueueClosed = attemptToCloseTransactionExecutor();
+        if (transactionQueueClosed) logger.info(locale.getString(PluginLang.DISABLED_WAITING_TRANSACTIONS_COMPLETE));
+
+        unloadDriverClassloader();
+        setState(State.CLOSED);
+
         stopConnectionPingTask();
 
         logger.info(locale.getString(PluginLang.DISABLED_WAITING_SQLITE));
         connectionLock.waitUntilNothingAccessing();
+
+        // Transaction queue can't be force-closed before all connections have terminated.
+        if (!transactionQueueClosed) forceCloseTransactionExecutor();
+
         if (connection != null) {
             MiscUtils.close(connection);
         }
