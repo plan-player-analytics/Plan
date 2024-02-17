@@ -122,9 +122,15 @@ class ShutdownSaveTest {
         Optional<Future<?>> future = underTest.performSave();
         assertTrue(future.isEmpty());
 
-        database.init();
         assertTrue(database.query(SessionQueries.fetchAllSessions()).isEmpty());
+    }
+
+    @Test
+    void sessionsAreNotSavedIfDatabaseIsClosed() {
+        shutdownStatus = true;
         database.close();
+        Optional<Future<?>> future = underTest.performSave();
+        assertTrue(future.isEmpty());
     }
 
     @Test
@@ -134,9 +140,7 @@ class ShutdownSaveTest {
         assertTrue(save.isPresent());
         save.get().get(); // Wait for save to be done, test fails without.
 
-        database.init();
         assertFalse(database.query(SessionQueries.fetchAllSessions()).isEmpty());
-        database.close();
     }
 
     private void placeSessionToCache() {
