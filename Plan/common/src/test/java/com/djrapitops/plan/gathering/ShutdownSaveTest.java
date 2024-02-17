@@ -119,7 +119,8 @@ class ShutdownSaveTest {
     @Test
     void sessionsAreNotSavedOnReload() {
         shutdownStatus = false;
-        underTest.performSave();
+        Optional<Future<?>> future = underTest.performSave();
+        assertTrue(future.isEmpty());
 
         database.init();
         assertTrue(database.query(SessionQueries.fetchAllSessions()).isEmpty());
@@ -127,10 +128,11 @@ class ShutdownSaveTest {
     }
 
     @Test
-    void sessionsAreSavedOnServerShutdown() {
+    void sessionsAreSavedOnServerShutdown() throws Exception {
         shutdownStatus = true;
         Optional<Future<?>> save = underTest.performSave();
         assertTrue(save.isPresent());
+        save.get().get(); // Wait for save to be done, test fails without.
 
         database.init();
         assertFalse(database.query(SessionQueries.fetchAllSessions()).isEmpty());
