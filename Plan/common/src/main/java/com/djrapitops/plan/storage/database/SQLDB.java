@@ -84,6 +84,7 @@ public abstract class SQLDB extends AbstractDatabase {
 
     private Supplier<ExecutorService> transactionExecutorServiceProvider;
     private ExecutorService transactionExecutor;
+    private static final ThreadLocal<StackTraceElement[]> TRANSACTION_ORIGIN = new ThreadLocal<>();
 
     private final AtomicInteger transactionQueueSize = new AtomicInteger(0);
     private final AtomicBoolean dropUnimportantTransactions = new AtomicBoolean(false);
@@ -345,13 +346,17 @@ public abstract class SQLDB extends AbstractDatabase {
         return accessLock.performDatabaseOperation(() -> query.executeQuery(this), transaction);
     }
 
+    public static ThreadLocal<StackTraceElement[]> getTransactionOrigin() {
+        return TRANSACTION_ORIGIN;
+    }
+
     @Override
     public CompletableFuture<?> executeTransaction(Transaction transaction) {
         if (getState() == State.CLOSED) {
             throw new DBClosedException("Transaction tried to execute although database is closed.");
         }
 
-        Exception origin = new Exception();
+        StackTraceElement[] origin = Thread.currentThread().getStackTrace();
 
         if (determineIfShouldDropUnimportantTransactions(transactionQueueSize.incrementAndGet())
                 && transaction instanceof ThrowawayTransaction) {
@@ -361,6 +366,7 @@ public abstract class SQLDB extends AbstractDatabase {
 
         return CompletableFuture.supplyAsync(() -> {
             try {
+                TRANSACTION_ORIGIN.set(origin);
                 if (getState() == State.CLOSED) return CompletableFuture.completedFuture(null);
 
                 accessLock.performDatabaseOperation(() -> {
@@ -369,6 +375,7 @@ public abstract class SQLDB extends AbstractDatabase {
                 return CompletableFuture.completedFuture(null);
             } finally {
                 transactionQueueSize.decrementAndGet();
+                TRANSACTION_ORIGIN.remove();
             }
         }, getTransactionExecutor()).exceptionally(errorHandler(transaction, origin));
     }
@@ -389,7 +396,7 @@ public abstract class SQLDB extends AbstractDatabase {
         return dropTransactions;
     }
 
-    private Function<Throwable, CompletableFuture<Object>> errorHandler(Transaction transaction, Exception origin) {
+    private Function<Throwable, CompletableFuture<Object>> errorHandler(Transaction transaction, StackTraceElement[] origin) {
         return throwable -> {
             if (throwable == null) {
                 return CompletableFuture.completedFuture(null);

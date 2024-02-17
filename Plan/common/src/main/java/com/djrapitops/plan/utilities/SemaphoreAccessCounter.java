@@ -16,7 +16,8 @@
  */
 package com.djrapitops.plan.utilities;
 
-import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.storage.database.SQLDB;
+import com.djrapitops.plan.utilities.java.ThrowableUtils;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -27,14 +28,11 @@ import java.util.logging.Logger;
 
 public class SemaphoreAccessCounter {
 
-    private final PlanConfig config;
-
     private final AtomicInteger accessCounter;
     private final Object lockObject;
     private final Collection<String> holds = Collections.newSetFromMap(new ConcurrentHashMap<>());
 
-    public SemaphoreAccessCounter(PlanConfig config) {
-        this.config = config;
+    public SemaphoreAccessCounter() {
         accessCounter = new AtomicInteger(0);
         lockObject = new Object();
     }
@@ -43,7 +41,11 @@ public class SemaphoreAccessCounter {
     private static String getAccessingThing() {
         boolean previousWasAccess = false;
         List<StackTraceElement> accessors = new ArrayList<>();
-        for (StackTraceElement e : Thread.currentThread().getStackTrace()) {
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        StackTraceElement[] origin = SQLDB.getTransactionOrigin().get();
+        StackTraceElement[] callSite = ThrowableUtils.combineStackTrace(origin, stackTrace);
+
+        for (StackTraceElement e : callSite) {
             if (previousWasAccess) {
                 accessors.add(e);
                 previousWasAccess = false;
@@ -54,7 +56,7 @@ public class SemaphoreAccessCounter {
                 previousWasAccess = true;
             }
         }
-        if (accessors.isEmpty()) accessors.addAll(Arrays.asList(Thread.currentThread().getStackTrace()));
+        if (accessors.isEmpty()) accessors.addAll(Arrays.asList(callSite));
         return accessors.toString();
     }
 

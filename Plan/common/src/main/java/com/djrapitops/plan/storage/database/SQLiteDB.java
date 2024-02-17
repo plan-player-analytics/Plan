@@ -76,7 +76,7 @@ public class SQLiteDB extends SQLDB {
         super(() -> serverInfo.get().getServerUUID(), locale, config, files, runnableFactory, logger, errorLogger);
         dbName = databaseFile.getName();
         this.databaseFile = databaseFile;
-        connectionLock = new SemaphoreAccessCounter(config);
+        connectionLock = new SemaphoreAccessCounter();
     }
 
     @Override
