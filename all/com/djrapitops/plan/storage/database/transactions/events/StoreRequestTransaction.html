@@ -73,13 +73,15 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance"><a href="../Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">com.djrapitops.plan.storage.database.transactions.Transaction</a>
+<div class="inheritance"><a href="../ThrowawayTransaction.html" title="class in com.djrapitops.plan.storage.database.transactions">com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction</a>
 <div class="inheritance">com.djrapitops.plan.storage.database.transactions.events.StoreRequestTransaction</div>
+</div>
 </div>
 </div>
 <section class="class-description" id="class-description">
 <hr>
 <div class="type-signature"><span class="modifiers">public class </span><span class="element-name type-name-label">StoreRequestTransaction</span>
-<span class="extends-implements">extends <a href="../Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a></span></div>
+<span class="extends-implements">extends <a href="../ThrowawayTransaction.html" title="class in com.djrapitops.plan.storage.database.transactions">ThrowawayTransaction</a></span></div>
 </section>
 <section class="summary">
 <ul class="summary-list">
@@ -100,10 +102,11 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration,com.djrapitops.plan.delivery.webserver.http.InternalRequest,com.djrapitops.plan.delivery.web.resolver.request.Request,com.djrapitops.plan.delivery.web.resolver.Response)" class="member-name-link">StoreRequestTransaction</a><wbr>(<a href="../../../../delivery/webserver/configuration/WebserverConfiguration.html" title="class in com.djrapitops.plan.delivery.webserver.configuration">WebserverConfiguration</a>&nbsp;webserverConfiguration,
- <a href="../../../../delivery/webserver/http/InternalRequest.html" title="interface in com.djrapitops.plan.delivery.webserver.http">InternalRequest</a>&nbsp;internalRequest,
- <a href="../../../../delivery/web/resolver/request/Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">Request</a>&nbsp;request,
- <a href="../../../../delivery/web/resolver/Response.html" title="class in com.djrapitops.plan.delivery.web.resolver">Response</a>&nbsp;response)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(long,java.lang.String,java.lang.String,java.lang.String,int)" class="member-name-link">StoreRequestTransaction</a><wbr>(long&nbsp;timestamp,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;accessAddress,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;method,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;url,
+ int&nbsp;responseCode)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -113,23 +116,30 @@ loadScripts(document, 'script');</script>
 <section class="method-summary" id="method-summary">
 <h2>Method Summary</h2>
 <div id="method-summary-table">
-<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
+<div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab1" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab1', 3)" class="table-tab">Static Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
 <div id="method-summary-table.tabpanel" role="tabpanel">
 <div class="summary-table three-column-summary" aria-labelledby="method-summary-table-tab0">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#performOperations()" class="member-name-link">performOperations</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTruncatedURI(com.djrapitops.plan.delivery.web.resolver.request.Request,com.djrapitops.plan.delivery.webserver.http.InternalRequest)" class="member-name-link">getTruncatedURI</a><wbr>(<a href="../../../../delivery/web/resolver/request/Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">Request</a>&nbsp;request,
+ <a href="../../../../delivery/webserver/http/InternalRequest.html" title="interface in com.djrapitops.plan.delivery.webserver.http">InternalRequest</a>&nbsp;internalRequest)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#performOperations()" class="member-name-link">performOperations</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Implement this method for transaction execution.</div>
 </div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
+<h3 id="methods-inherited-from-class-com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction">Methods inherited from class&nbsp;com.djrapitops.plan.storage.database.transactions.<a href="../ThrowawayTransaction.html" title="class in com.djrapitops.plan.storage.database.transactions">ThrowawayTransaction</a></h3>
+<code><a href="../ThrowawayTransaction.html#shouldBeExecuted()">shouldBeExecuted</a></code></div>
+<div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.djrapitops.plan.storage.database.transactions.Transaction">Methods inherited from class&nbsp;com.djrapitops.plan.storage.database.transactions.<a href="../Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a></h3>
-<code><a href="../Transaction.html#commitMidTransaction()">commitMidTransaction</a>, <a href="../Transaction.html#dbIsNotUnderHeavyLoad()">dbIsNotUnderHeavyLoad</a>, <a href="../Transaction.html#execute(com.djrapitops.plan.storage.database.transactions.Executable)">execute</a>, <a href="../Transaction.html#execute(java.lang.String)">execute</a>, <a href="../Transaction.html#executeOther(com.djrapitops.plan.storage.database.transactions.Transaction)">executeOther</a>, <a href="../Transaction.html#executeReturningId(com.djrapitops.plan.storage.database.transactions.ExecStatement)">executeReturningId</a>, <a href="../Transaction.html#executeSwallowingExceptions(java.lang.String...)">executeSwallowingExceptions</a>, <a href="../Transaction.html#executeTransaction(com.djrapitops.plan.storage.database.SQLDB)">executeTransaction</a>, <a href="../Transaction.html#getDBState()">getDBState</a>, <a href="../Transaction.html#getName()">getName</a>, <a href="../Transaction.html#getServerUUID()">getServerUUID</a>, <a href="../Transaction.html#hasTable(java.lang.String)">hasTable</a>, <a href="../Transaction.html#query(com.djrapitops.plan.storage.database.queries.Query)">query</a>, <a href="../Transaction.html#shouldBeExecuted()">shouldBeExecuted</a>, <a href="../Transaction.html#toString()">toString</a>, <a href="../Transaction.html#wasSuccessful()">wasSuccessful</a></code></div>
+<code><a href="../Transaction.html#commitMidTransaction()">commitMidTransaction</a>, <a href="../Transaction.html#dbIsNotUnderHeavyLoad()">dbIsNotUnderHeavyLoad</a>, <a href="../Transaction.html#execute(com.djrapitops.plan.storage.database.transactions.Executable)">execute</a>, <a href="../Transaction.html#execute(java.lang.String)">execute</a>, <a href="../Transaction.html#executeOther(com.djrapitops.plan.storage.database.transactions.Transaction)">executeOther</a>, <a href="../Transaction.html#executeReturningId(com.djrapitops.plan.storage.database.transactions.ExecStatement)">executeReturningId</a>, <a href="../Transaction.html#executeSwallowingExceptions(java.lang.String...)">executeSwallowingExceptions</a>, <a href="../Transaction.html#executeTransaction(com.djrapitops.plan.storage.database.SQLDB)">executeTransaction</a>, <a href="../Transaction.html#getDBState()">getDBState</a>, <a href="../Transaction.html#getName()">getName</a>, <a href="../Transaction.html#getServerUUID()">getServerUUID</a>, <a href="../Transaction.html#hasTable(java.lang.String)">hasTable</a>, <a href="../Transaction.html#query(com.djrapitops.plan.storage.database.queries.Query)">query</a>, <a href="../Transaction.html#toString()">toString</a>, <a href="../Transaction.html#wasSuccessful()">wasSuccessful</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;java.lang.<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -145,12 +155,13 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration,com.djrapitops.plan.delivery.webserver.http.InternalRequest,com.djrapitops.plan.delivery.web.resolver.request.Request,com.djrapitops.plan.delivery.web.resolver.Response)">
+<section class="detail" id="&lt;init&gt;(long,java.lang.String,java.lang.String,java.lang.String,int)">
 <h3>StoreRequestTransaction</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">StoreRequestTransaction</span><wbr><span class="parameters">(<a href="../../../../delivery/webserver/configuration/WebserverConfiguration.html" title="class in com.djrapitops.plan.delivery.webserver.configuration">WebserverConfiguration</a>&nbsp;webserverConfiguration,
- <a href="../../../../delivery/webserver/http/InternalRequest.html" title="interface in com.djrapitops.plan.delivery.webserver.http">InternalRequest</a>&nbsp;internalRequest,
- <a href="../../../../delivery/web/resolver/request/Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">Request</a>&nbsp;request,
- <a href="../../../../delivery/web/resolver/Response.html" title="class in com.djrapitops.plan.delivery.web.resolver">Response</a>&nbsp;response)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">StoreRequestTransaction</span><wbr><span class="parameters">(long&nbsp;timestamp,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;accessAddress,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;method,
+ <a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;url,
+ int&nbsp;responseCode)</span></div>
 </section>
 </li>
 </ul>
@@ -161,6 +172,13 @@ loadScripts(document, 'script');</script>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="getTruncatedURI(com.djrapitops.plan.delivery.web.resolver.request.Request,com.djrapitops.plan.delivery.webserver.http.InternalRequest)">
+<h3>getTruncatedURI</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getTruncatedURI</span><wbr><span class="parameters">(<a href="../../../../delivery/web/resolver/request/Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">Request</a>&nbsp;request,
+ <a href="../../../../delivery/webserver/http/InternalRequest.html" title="interface in com.djrapitops.plan.delivery.webserver.http">InternalRequest</a>&nbsp;internalRequest)</span></div>
+</section>
+</li>
 <li>
 <section class="detail" id="performOperations()">
 <h3>performOperations</h3>
