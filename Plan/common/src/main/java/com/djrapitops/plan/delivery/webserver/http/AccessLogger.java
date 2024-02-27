@@ -75,8 +75,14 @@ public class AccessLogger {
             }
         }
         try {
+            long timestamp = internalRequest.getTimestamp();
+            String accessAddress = internalRequest.getAccessAddress(webserverConfiguration);
+            String method = internalRequest.getMethod();
+            method = method != null ? method : "?";
+            String url = StoreRequestTransaction.getTruncatedURI(request, internalRequest);
+            int responseCode = response.getCode();
             dbSystem.getDatabase().executeTransaction(
-                    new StoreRequestTransaction(webserverConfiguration, internalRequest, request, response)
+                    new StoreRequestTransaction(timestamp, accessAddress, method, url, responseCode)
             );
         } catch (CompletionException | DBOpException e) {
             errorLogger.warn(e, ErrorContext.builder()
