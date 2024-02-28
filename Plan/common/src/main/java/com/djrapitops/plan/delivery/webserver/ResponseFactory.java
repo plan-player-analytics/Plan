@@ -475,6 +475,14 @@ public class ResponseFactory {
                 .build();
     }
 
+    public Response failedRateLimit403() {
+        return Response.builder()
+                .setMimeType(MimeType.HTML)
+                .setContent("<h1>403 Forbidden</h1><p>You are being rate-limited.</p>")
+                .setStatus(403)
+                .build();
+    }
+
     public Response ipWhitelist403(@Untrusted String accessor) {
         return Response.builder()
                 .setMimeType(MimeType.HTML)

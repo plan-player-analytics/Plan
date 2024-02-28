@@ -19,6 +19,7 @@ package com.djrapitops.plan.delivery.webserver.http;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.webserver.PassBruteForceGuard;
+import com.djrapitops.plan.delivery.webserver.RateLimitGuard;
 import com.djrapitops.plan.delivery.webserver.ResponseFactory;
 import com.djrapitops.plan.delivery.webserver.ResponseResolver;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
@@ -40,13 +41,15 @@ public class RequestHandler {
     private final ResponseResolver responseResolver;
 
     private final PassBruteForceGuard bruteForceGuard;
+    private final RateLimitGuard rateLimitGuard;
     private final AccessLogger accessLogger;
 
     @Inject
-    public RequestHandler(WebserverConfiguration webserverConfiguration, ResponseFactory responseFactory, ResponseResolver responseResolver, AccessLogger accessLogger) {
+    public RequestHandler(WebserverConfiguration webserverConfiguration, ResponseFactory responseFactory, ResponseResolver responseResolver, RateLimitGuard rateLimitGuard, AccessLogger accessLogger) {
         this.webserverConfiguration = webserverConfiguration;
         this.responseFactory = responseFactory;
         this.responseResolver = responseResolver;
+        this.rateLimitGuard = rateLimitGuard;
         this.accessLogger = accessLogger;
 
         bruteForceGuard = new PassBruteForceGuard();
@@ -64,11 +67,17 @@ public class RequestHandler {
                     .warnAboutWhitelistBlock(accessAddress, internalRequest.getRequestedURIString());
             response = responseFactory.ipWhitelist403(accessAddress);
         } else {
-            try {
-                request = internalRequest.toRequest();
-                response = attemptToResolve(request, accessAddress);
-            } catch (WebUserAuthException thrownByAuthentication) {
-                response = processFailedAuthentication(internalRequest, accessAddress, thrownByAuthentication);
+            String requestedPath = internalRequest.getRequestedPath();
+            rateLimitGuard.increaseAttemptCount(requestedPath, accessAddress);
+            if (rateLimitGuard.shouldPreventRequest(accessAddress)) {
+                response = responseFactory.failedRateLimit403();
+            } else {
+                try {
+                    request = internalRequest.toRequest();
+                    response = attemptToResolve(request, accessAddress);
+                } catch (WebUserAuthException thrownByAuthentication) {
+                    response = processFailedAuthentication(internalRequest, accessAddress, thrownByAuthentication);
+                }
             }
         }
 
