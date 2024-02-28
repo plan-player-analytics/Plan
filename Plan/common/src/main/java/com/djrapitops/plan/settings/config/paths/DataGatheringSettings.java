@@ -18,6 +18,7 @@ package com.djrapitops.plan.settings.config.paths;
 
 import com.djrapitops.plan.settings.config.paths.key.BooleanSetting;
 import com.djrapitops.plan.settings.config.paths.key.Setting;
+import com.djrapitops.plan.settings.config.paths.key.StringSetting;
 
 /**
  * {@link Setting} values that are in "Data_gathering" section.
@@ -28,6 +29,7 @@ public class DataGatheringSettings {
 
     public static final Setting<Boolean> GEOLOCATIONS = new BooleanSetting("Data_gathering.Geolocations");
     public static final Setting<Boolean> ACCEPT_GEOLITE2_EULA = new BooleanSetting("Data_gathering.Accept_GeoLite2_EULA");
+    public static final Setting<String> GEOLOCATION_DOWNLOAD_URL = new StringSetting("Data_gathering.Geolocation_Download_URL");
     public static final Setting<Boolean> PING = new BooleanSetting("Data_gathering.Ping");
     public static final Setting<Boolean> DISK_SPACE = new BooleanSetting("Data_gathering.Disk_space");
     public static final Setting<Boolean> LOG_UNKNOWN_COMMANDS = new BooleanSetting("Data_gathering.Commands.Log_unknown");

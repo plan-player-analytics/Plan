@@ -70,6 +70,7 @@ class GeolocationTest {
     void setUpCache(PlanFiles files, ConfigSystem configSystem, PlanConfig config) {
         config.set(DataGatheringSettings.GEOLOCATIONS, true);
         config.set(DataGatheringSettings.ACCEPT_GEOLITE2_EULA, true);
+        config.set(DataGatheringSettings.GEOLOCATION_DOWNLOAD_URL, "https://geodb.playeranalytics.net/GeoLite2-Country.mmdb");
 
         GeoLite2Geolocator geoLite2Geolocator = new GeoLite2Geolocator(files, config);
         PluginLogger logger = new TestPluginLogger();
