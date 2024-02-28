@@ -4271,6 +4271,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/PassBruteForceGuard.Disabled.html#%3Cinit%3E()" class="member-name-link">Disabled()</a> - Constructor for class com.djrapitops.plan.delivery.webserver.<a href="com/djrapitops/plan/delivery/webserver/PassBruteForceGuard.Disabled.html" title="class in com.djrapitops.plan.delivery.webserver">PassBruteForceGuard.Disabled</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/RateLimitGuard.Disabled.html#%3Cinit%3E()" class="member-name-link">Disabled()</a> - Constructor for class com.djrapitops.plan.delivery.webserver.<a href="com/djrapitops/plan/delivery/webserver/RateLimitGuard.Disabled.html" title="class in com.djrapitops.plan.delivery.webserver">RateLimitGuard.Disabled</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/settings/locale/lang/PluginLang.html#DISABLED" class="member-name-link">DISABLED</a> - Enum constant in enum class com.djrapitops.plan.settings.locale.lang.<a href="com/djrapitops/plan/settings/locale/lang/PluginLang.html" title="enum class in com.djrapitops.plan.settings.locale.lang">PluginLang</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/settings/config/paths/WebserverSettings.html#DISABLED" class="member-name-link">DISABLED</a> - Static variable in class com.djrapitops.plan.settings.config.paths.<a href="com/djrapitops/plan/settings/config/paths/WebserverSettings.html" title="class in com.djrapitops.plan.settings.config.paths">WebserverSettings</a></dt>
@@ -5634,6 +5636,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/settings/locale/lang/CommandLang.html#FAIL_WEB_USER_NOT_EXISTS" class="member-name-link">FAIL_WEB_USER_NOT_EXISTS</a> - Enum constant in enum class com.djrapitops.plan.settings.locale.lang.<a href="com/djrapitops/plan/settings/locale/lang/CommandLang.html" title="enum class in com.djrapitops.plan.settings.locale.lang">CommandLang</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/ResponseFactory.html#failedLoginAttempts403()" class="member-name-link">failedLoginAttempts403()</a> - Method in class com.djrapitops.plan.delivery.webserver.<a href="com/djrapitops/plan/delivery/webserver/ResponseFactory.html" title="class in com.djrapitops.plan.delivery.webserver">ResponseFactory</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/ResponseFactory.html#failedRateLimit403()" class="member-name-link">failedRateLimit403()</a> - Method in class com.djrapitops.plan.delivery.webserver.<a href="com/djrapitops/plan/delivery/webserver/ResponseFactory.html" title="class in com.djrapitops.plan.delivery.webserver">ResponseFactory</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/auth/FailReason.html" class="type-name-link" title="enum class in com.djrapitops.plan.delivery.webserver.auth">FailReason</a> - Enum Class in <a href="com/djrapitops/plan/delivery/webserver/auth/package-summary.html">com.djrapitops.plan.delivery.webserver.auth</a></dt>
 <dd>
@@ -8486,6 +8490,10 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Get the raw body, if present.</div>
 </dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/http/InternalRequest.html#getRequestedPath()" class="member-name-link">getRequestedPath()</a> - Method in interface com.djrapitops.plan.delivery.webserver.http.<a href="com/djrapitops/plan/delivery/webserver/http/InternalRequest.html" title="interface in com.djrapitops.plan.delivery.webserver.http">InternalRequest</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/http/JettyInternalRequest.html#getRequestedPath()" class="member-name-link">getRequestedPath()</a> - Method in class com.djrapitops.plan.delivery.webserver.http.<a href="com/djrapitops/plan/delivery/webserver/http/JettyInternalRequest.html" title="class in com.djrapitops.plan.delivery.webserver.http">JettyInternalRequest</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/http/InternalRequest.html#getRequestedURIString()" class="member-name-link">getRequestedURIString()</a> - Method in interface com.djrapitops.plan.delivery.webserver.http.<a href="com/djrapitops/plan/delivery/webserver/http/InternalRequest.html" title="interface in com.djrapitops.plan.delivery.webserver.http">InternalRequest</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/http/JettyInternalRequest.html#getRequestedURIString()" class="member-name-link">getRequestedURIString()</a> - Method in class com.djrapitops.plan.delivery.webserver.http.<a href="com/djrapitops/plan/delivery/webserver/http/JettyInternalRequest.html" title="class in com.djrapitops.plan.delivery.webserver.http">JettyInternalRequest</a></dt>
@@ -10340,6 +10348,10 @@ loadScripts(document, 'script');</script>
 <div class="block">Abstract representation of an ImportSystem.</div>
 </dd>
 <dt><a href="com/djrapitops/plan/gathering/importing/ImportSystem.html#%3Cinit%3E(java.util.Set)" class="member-name-link">ImportSystem(Set&lt;Importer&gt;)</a> - Constructor for class com.djrapitops.plan.gathering.importing.<a href="com/djrapitops/plan/gathering/importing/ImportSystem.html" title="class in com.djrapitops.plan.gathering.importing">ImportSystem</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/RateLimitGuard.html#increaseAttemptCount(java.lang.String,java.lang.String)" class="member-name-link">increaseAttemptCount(String, String)</a> - Method in class com.djrapitops.plan.delivery.webserver.<a href="com/djrapitops/plan/delivery/webserver/RateLimitGuard.html" title="class in com.djrapitops.plan.delivery.webserver">RateLimitGuard</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/RateLimitGuard.Disabled.html#increaseAttemptCount(java.lang.String,java.lang.String)" class="member-name-link">increaseAttemptCount(String, String)</a> - Method in class com.djrapitops.plan.delivery.webserver.<a href="com/djrapitops/plan/delivery/webserver/RateLimitGuard.Disabled.html" title="class in com.djrapitops.plan.delivery.webserver">RateLimitGuard.Disabled</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/PassBruteForceGuard.html#increaseAttemptCountOnFailedLogin(java.lang.String)" class="member-name-link">increaseAttemptCountOnFailedLogin(String)</a> - Method in class com.djrapitops.plan.delivery.webserver.<a href="com/djrapitops/plan/delivery/webserver/PassBruteForceGuard.html" title="class in com.djrapitops.plan.delivery.webserver">PassBruteForceGuard</a></dt>
 <dd>&nbsp;</dd>
@@ -15086,6 +15098,14 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/identification/ServerUUID.html#randomUUID()" class="member-name-link">randomUUID()</a> - Static method in class com.djrapitops.plan.identification.<a href="com/djrapitops/plan/identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/RateLimitGuard.html" class="type-name-link" title="class in com.djrapitops.plan.delivery.webserver">RateLimitGuard</a> - Class in <a href="com/djrapitops/plan/delivery/webserver/package-summary.html">com.djrapitops.plan.delivery.webserver</a></dt>
+<dd>
+<div class="block">Simple guard against DDoS attacks to single endpoint.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/RateLimitGuard.html#%3Cinit%3E()" class="member-name-link">RateLimitGuard()</a> - Constructor for class com.djrapitops.plan.delivery.webserver.<a href="com/djrapitops/plan/delivery/webserver/RateLimitGuard.html" title="class in com.djrapitops.plan.delivery.webserver">RateLimitGuard</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/RateLimitGuard.Disabled.html" class="type-name-link" title="class in com.djrapitops.plan.delivery.webserver">RateLimitGuard.Disabled</a> - Class in <a href="com/djrapitops/plan/delivery/webserver/package-summary.html">com.djrapitops.plan.delivery.webserver</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/domain/container/RawDataContainer.html" class="type-name-link" title="class in com.djrapitops.plan.delivery.domain.container">RawDataContainer</a> - Class in <a href="com/djrapitops/plan/delivery/domain/container/package-summary.html">com.djrapitops.plan.delivery.domain.container</a></dt>
 <dd>
 <div class="block">DataContainer that stores everything as raw object value.</div>
@@ -15756,7 +15776,11 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/PassBruteForceGuard.html#resetAttemptCount(java.lang.String)" class="member-name-link">resetAttemptCount(String)</a> - Method in class com.djrapitops.plan.delivery.webserver.<a href="com/djrapitops/plan/delivery/webserver/PassBruteForceGuard.html" title="class in com.djrapitops.plan.delivery.webserver">PassBruteForceGuard</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/RateLimitGuard.html#resetAttemptCount(java.lang.String)" class="member-name-link">resetAttemptCount(String)</a> - Method in class com.djrapitops.plan.delivery.webserver.<a href="com/djrapitops/plan/delivery/webserver/RateLimitGuard.html" title="class in com.djrapitops.plan.delivery.webserver">RateLimitGuard</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/PassBruteForceGuard.Disabled.html#resetAttemptCount(java.lang.String)" class="member-name-link">resetAttemptCount(String)</a> - Method in class com.djrapitops.plan.delivery.webserver.<a href="com/djrapitops/plan/delivery/webserver/PassBruteForceGuard.Disabled.html" title="class in com.djrapitops.plan.delivery.webserver">PassBruteForceGuard.Disabled</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/RateLimitGuard.Disabled.html#resetAttemptCount(java.lang.String)" class="member-name-link">resetAttemptCount(String)</a> - Method in class com.djrapitops.plan.delivery.webserver.<a href="com/djrapitops/plan/delivery/webserver/RateLimitGuard.Disabled.html" title="class in com.djrapitops.plan.delivery.webserver">RateLimitGuard.Disabled</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/TimeKeeper.html#resetState(java.lang.String)" class="member-name-link">resetState(String)</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/TimeKeeper.html" title="class in com.djrapitops.plan.gathering.domain">TimeKeeper</a></dt>
 <dd>&nbsp;</dd>
@@ -17100,7 +17124,11 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/PassBruteForceGuard.html#shouldPreventRequest(java.lang.String)" class="member-name-link">shouldPreventRequest(String)</a> - Method in class com.djrapitops.plan.delivery.webserver.<a href="com/djrapitops/plan/delivery/webserver/PassBruteForceGuard.html" title="class in com.djrapitops.plan.delivery.webserver">PassBruteForceGuard</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/RateLimitGuard.html#shouldPreventRequest(java.lang.String)" class="member-name-link">shouldPreventRequest(String)</a> - Method in class com.djrapitops.plan.delivery.webserver.<a href="com/djrapitops/plan/delivery/webserver/RateLimitGuard.html" title="class in com.djrapitops.plan.delivery.webserver">RateLimitGuard</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/PassBruteForceGuard.Disabled.html#shouldPreventRequest(java.lang.String)" class="member-name-link">shouldPreventRequest(String)</a> - Method in class com.djrapitops.plan.delivery.webserver.<a href="com/djrapitops/plan/delivery/webserver/PassBruteForceGuard.Disabled.html" title="class in com.djrapitops.plan.delivery.webserver">PassBruteForceGuard.Disabled</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/RateLimitGuard.Disabled.html#shouldPreventRequest(java.lang.String)" class="member-name-link">shouldPreventRequest(String)</a> - Method in class com.djrapitops.plan.delivery.webserver.<a href="com/djrapitops/plan/delivery/webserver/RateLimitGuard.Disabled.html" title="class in com.djrapitops.plan.delivery.webserver">RateLimitGuard.Disabled</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/extension/implementation/providers/gathering/DataValueGatherer.html#shouldSkipEvent(com.djrapitops.plan.extension.CallEvents)" class="member-name-link">shouldSkipEvent(CallEvents)</a> - Method in class com.djrapitops.plan.extension.implementation.providers.gathering.<a href="com/djrapitops/plan/extension/implementation/providers/gathering/DataValueGatherer.html" title="class in com.djrapitops.plan.extension.implementation.providers.gathering">DataValueGatherer</a></dt>
 <dd>&nbsp;</dd>
