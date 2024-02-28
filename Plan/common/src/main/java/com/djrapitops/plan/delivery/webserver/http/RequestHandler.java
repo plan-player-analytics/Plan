@@ -57,27 +57,28 @@ public class RequestHandler {
 
     public Response getResponse(InternalRequest internalRequest) {
         @Untrusted String accessAddress = internalRequest.getAccessAddress(webserverConfiguration);
+        @Untrusted String requestedPath = internalRequest.getRequestedPath();
+        rateLimitGuard.increaseAttemptCount(requestedPath, accessAddress);
 
+        boolean blocked = false;
         Response response;
         @Untrusted Request request = null;
         if (bruteForceGuard.shouldPreventRequest(accessAddress)) {
             response = responseFactory.failedLoginAttempts403();
+            blocked = true;
+        } else if (rateLimitGuard.shouldPreventRequest(accessAddress)) {
+            response = responseFactory.failedRateLimit403();
+            blocked = true;
         } else if (!webserverConfiguration.getAllowedIpList().isAllowed(accessAddress)) {
             webserverConfiguration.getWebserverLogMessages()
                     .warnAboutWhitelistBlock(accessAddress, internalRequest.getRequestedURIString());
             response = responseFactory.ipWhitelist403(accessAddress);
         } else {
-            String requestedPath = internalRequest.getRequestedPath();
-            rateLimitGuard.increaseAttemptCount(requestedPath, accessAddress);
-            if (rateLimitGuard.shouldPreventRequest(accessAddress)) {
-                response = responseFactory.failedRateLimit403();
-            } else {
-                try {
-                    request = internalRequest.toRequest();
-                    response = attemptToResolve(request, accessAddress);
-                } catch (WebUserAuthException thrownByAuthentication) {
-                    response = processFailedAuthentication(internalRequest, accessAddress, thrownByAuthentication);
-                }
+            try {
+                request = internalRequest.toRequest();
+                response = attemptToResolve(request, accessAddress);
+            } catch (WebUserAuthException thrownByAuthentication) {
+                response = processFailedAuthentication(internalRequest, accessAddress, thrownByAuthentication);
             }
         }
 
@@ -86,7 +87,9 @@ public class RequestHandler {
         response.getHeaders().putIfAbsent("Access-Control-Allow-Credentials", "true");
         response.getHeaders().putIfAbsent("X-Robots-Tag", "noindex, nofollow");
 
-        accessLogger.log(internalRequest, request, response);
+        if (!blocked) {
+            accessLogger.log(internalRequest, request, response);
+        }
 
         return response;
     }
