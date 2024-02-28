@@ -45,14 +45,14 @@ public class RequestHandler {
     private final AccessLogger accessLogger;
 
     @Inject
-    public RequestHandler(WebserverConfiguration webserverConfiguration, ResponseFactory responseFactory, ResponseResolver responseResolver, RateLimitGuard rateLimitGuard, AccessLogger accessLogger) {
+    public RequestHandler(WebserverConfiguration webserverConfiguration, ResponseFactory responseFactory, ResponseResolver responseResolver, AccessLogger accessLogger) {
         this.webserverConfiguration = webserverConfiguration;
         this.responseFactory = responseFactory;
         this.responseResolver = responseResolver;
-        this.rateLimitGuard = rateLimitGuard;
         this.accessLogger = accessLogger;
 
         bruteForceGuard = new PassBruteForceGuard();
+        rateLimitGuard = new RateLimitGuard();
     }
 
     public Response getResponse(InternalRequest internalRequest) {
