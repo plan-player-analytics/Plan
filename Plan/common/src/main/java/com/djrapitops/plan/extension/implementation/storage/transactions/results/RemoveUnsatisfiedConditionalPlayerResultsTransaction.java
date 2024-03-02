@@ -38,7 +38,9 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  * - Delete all player values with IDs that are returned by the left join query after filtering
  *
  * @author AuroraLS3
+ * @deprecated Cleanup is now done as part of {@link StorePlayerBooleanResultTransaction}.
  */
+@Deprecated(since = "2024-03-02")
 public class RemoveUnsatisfiedConditionalPlayerResultsTransaction extends ThrowawayTransaction {
 
     private final String providerTable;

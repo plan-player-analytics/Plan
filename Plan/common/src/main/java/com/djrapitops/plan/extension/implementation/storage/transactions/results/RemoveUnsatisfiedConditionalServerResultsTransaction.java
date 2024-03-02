@@ -41,7 +41,9 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  * - Delete all server values with IDs that are returned by the left join query after filtering
  *
  * @author AuroraLS3
+ * @deprecated Cleanup is now done in {@link StoreServerBooleanResultTransaction}.
  */
+@Deprecated(since = "2024-03-02")
 public class RemoveUnsatisfiedConditionalServerResultsTransaction extends ThrowawayTransaction {
 
     private final String providerTable;
@@ -55,7 +57,7 @@ public class RemoveUnsatisfiedConditionalServerResultsTransaction extends Throwa
         tableTable = ExtensionTableProviderTable.TABLE_NAME;
         serverTableValueTable = ExtensionServerTableValueTable.TABLE_NAME;
     }
-    
+
     @Override
     protected void performOperations() {
         String selectSatisfiedConditions = getSatisfiedConditionsSQL();

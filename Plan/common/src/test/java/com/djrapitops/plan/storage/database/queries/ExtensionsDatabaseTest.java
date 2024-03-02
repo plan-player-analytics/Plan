@@ -30,8 +30,6 @@ import com.djrapitops.plan.extension.implementation.results.*;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerTableDataQuery;
-import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalPlayerResultsTransaction;
-import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalServerResultsTransaction;
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
@@ -225,7 +223,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         ConditionalExtension.condition = false;
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
-        db().executeTransaction(new RemoveUnsatisfiedConditionalPlayerResultsTransaction());
+//        db().executeTransaction(new RemoveUnsatisfiedConditionalPlayerResultsTransaction());
 
         // Check that the wanted data exists
         checkThatPlayerDataExists(ConditionalExtension.condition);
@@ -234,7 +232,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         ConditionalExtension.condition = false;
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
-        db().executeTransaction(new RemoveUnsatisfiedConditionalPlayerResultsTransaction());
+//        db().executeTransaction(new RemoveUnsatisfiedConditionalPlayerResultsTransaction());
 
         // Check that the wanted data exists
         checkThatPlayerDataExists(ConditionalExtension.condition);
@@ -278,7 +276,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         ConditionalExtension.condition = false;
         extensionService.updateServerValues(CallEvents.MANUAL);
 
-        db().executeTransaction(new RemoveUnsatisfiedConditionalServerResultsTransaction());
+//        db().executeTransaction(new RemoveUnsatisfiedConditionalServerResultsTransaction());
 
         // Check that the wanted data exists
         checkThatServerDataExists(ConditionalExtension.condition);
@@ -287,7 +285,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         ConditionalExtension.condition = false;
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
-        db().executeTransaction(new RemoveUnsatisfiedConditionalServerResultsTransaction());
+//        db().executeTransaction(new RemoveUnsatisfiedConditionalServerResultsTransaction());
 
         // Check that the wanted data exists
         checkThatServerDataExists(ConditionalExtension.condition);
