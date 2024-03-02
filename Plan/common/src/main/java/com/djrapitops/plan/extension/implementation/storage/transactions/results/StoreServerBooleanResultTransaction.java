@@ -112,6 +112,7 @@ public class StoreServerBooleanResultTransaction extends ThrowawayTransaction {
 
     private Executable deleteUnsatisfiedConditionalResults() {
         List<Integer> providerIds = selectUnfulfilledProviderIds();
+        if (providerIds.isEmpty()) return Executable.empty();
 
         @Language("SQL") String deleteUnsatisfiedValues = "DELETE FROM plan_extension_server_values " +
                 "WHERE provider_id IN (" + Sql.nParameters(providerIds.size()) + ")";
@@ -143,6 +144,7 @@ public class StoreServerBooleanResultTransaction extends ThrowawayTransaction {
 
     private Executable deleteUnsatisfiedConditionalTables() {
         List<Integer> tableIds = selectUnfulfilledTableIds();
+        if (tableIds.isEmpty()) return Executable.empty();
 
         @Language("SQL") String deleteUnsatisfiedValues = "DELETE FROM plan_extension_server_table_values " +
                 "WHERE table_id IN (" + Sql.nParameters(tableIds.size()) + ")";

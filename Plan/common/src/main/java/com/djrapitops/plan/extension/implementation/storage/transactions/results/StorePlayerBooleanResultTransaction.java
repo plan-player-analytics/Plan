@@ -70,8 +70,10 @@ public class StorePlayerBooleanResultTransaction extends ThrowawayTransaction {
         execute(storeValue());
         commitMidTransaction();
         List<Integer> providerIds = selectUnfulfilledProviderIds();
-        execute(deleteUnsatisfiedConditionalResults(providerIds));
-        execute(deleteUnsatisfiedConditionalGroups(providerIds));
+        if (!providerIds.isEmpty()) {
+            execute(deleteUnsatisfiedConditionalResults(providerIds));
+            execute(deleteUnsatisfiedConditionalGroups(providerIds));
+        }
         execute(deleteUnsatisfiedConditionalTables());
     }
 
@@ -163,6 +165,7 @@ public class StorePlayerBooleanResultTransaction extends ThrowawayTransaction {
 
     private Executable deleteUnsatisfiedConditionalTables() {
         List<Integer> tableIds = selectUnfulfilledTableIds();
+        if (tableIds.isEmpty()) return Executable.empty();
 
         @Language("SQL") String deleteUnsatisfiedValues = "DELETE FROM plan_extension_user_table_values " +
                 "WHERE uuid=? " +
