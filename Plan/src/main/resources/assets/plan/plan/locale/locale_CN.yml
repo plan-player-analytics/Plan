@@ -184,7 +184,7 @@ command:
             inDepth: "获得一个指向 /players page（全体玩家页面） 的链接，以查看玩家列表。"
         register:
             description: "注册一个网页用户"
-            inDepth: "直接使用会获得注册页面的链接。添加 --code[注册代码] 参数可以注册一个账户。"
+            inDepth: "直接使用会获得注册页面的链接。添加 --code [注册代码] 参数可以注册一个账户。"
         reload:
             description: "重启 Plan"
             inDepth: "禁用然后重新启用本插件，会重新加载配置中的设置。"
@@ -338,7 +338,7 @@ html:
         duringLowTps: "持续低 TPS 时间"
         entities: "实体"
         errors: "Plan 错误日志"
-        export: "Export"
+        export: "导出"
         exported: "数据导出时间"
         favoriteServer: "最喜欢的服务器"
         firstSession: "第一次会话"

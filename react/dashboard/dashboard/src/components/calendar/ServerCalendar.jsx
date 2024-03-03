@@ -34,7 +34,7 @@ const ServerCalendar = ({series, firstDay, onSelect}) => {
                     center: '',
                     right: 'dayGridMonth dayGridWeek dayGridDay today prev next'
                 }}
-                editable={Boolean(onSelect)}
+                editable={false}
                 selectable={Boolean(onSelect)}
                 select={onSelect}
                 unselectAuto={true}
