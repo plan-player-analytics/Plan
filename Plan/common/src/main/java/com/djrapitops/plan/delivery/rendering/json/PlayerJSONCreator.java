@@ -154,9 +154,9 @@ public class PlayerJSONCreator {
     private Map<String, Object> createPingGraphJson(PlayerContainer player) {
         PingGraph pingGraph = graphs.line().pingGraph(player.getUnsafe(PlayerKeys.PING));
         return Maps.builder(String.class, Object.class)
-                .put("min_ping_series", pingGraph.getMinGraph().getPoints())
-                .put("avg_ping_series", pingGraph.getAvgGraph().getPoints())
-                .put("max_ping_series", pingGraph.getMaxGraph().getPoints())
+                .put("min_ping_series", pingGraph.getMinGraph().getPointArrays())
+                .put("avg_ping_series", pingGraph.getAvgGraph().getPointArrays())
+                .put("max_ping_series", pingGraph.getMaxGraph().getPointArrays())
                 .put("colors", Maps.builder(String.class, String.class)
                         .put("min", theme.getValue(ThemeVal.GRAPH_MIN_PING))
                         .put("avg", theme.getValue(ThemeVal.GRAPH_AVG_PING))

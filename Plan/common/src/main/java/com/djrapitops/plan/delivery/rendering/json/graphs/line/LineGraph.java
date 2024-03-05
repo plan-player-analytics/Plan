@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.rendering.json.graphs.HighChart;
 
 import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * This is a LineGraph for any set of Points, thus it is Abstract.
@@ -78,6 +79,10 @@ public class LineGraph implements HighChart {
             return MutatorFunctions.addMissing(points, gapStrategy);
         }
         return points;
+    }
+
+    public List<Number[]> getPointArrays() {
+        return getPoints().stream().map(Point::toArray).collect(Collectors.toList());
     }
 
     private void addMissingPoints(StringBuilder arrayBuilder, Long lastX, long date) {

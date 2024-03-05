@@ -537,7 +537,7 @@ public class GraphJSONCreator {
         List<ServerSpecificLineGraph> proxyGraphs = new ArrayList<>();
         for (Server proxy : db.query(ServerQueries.fetchProxyServers())) {
             ServerUUID proxyUUID = proxy.getUuid();
-            List<Double[]> points = Lists.map(
+            List<Number[]> points = Lists.map(
                     db.query(TPSQueries.fetchPlayersOnlineOfServer(halfYearAgo, now, proxyUUID)),
                     point -> Point.fromDateObj(point).toArray()
             );

@@ -28,15 +28,15 @@ import java.util.Objects;
  */
 public class ServerSpecificLineGraph {
 
-    private final List<Double[]> points;
+    private final List<Number[]> points;
     private final ServerDto server;
 
-    public ServerSpecificLineGraph(List<Double[]> points, ServerDto server) {
+    public ServerSpecificLineGraph(List<Number[]> points, ServerDto server) {
         this.points = points;
         this.server = server;
     }
 
-    public List<Double[]> getPoints() {
+    public List<Number[]> getPoints() {
         return points;
     }
 
