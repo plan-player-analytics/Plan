@@ -201,7 +201,7 @@ class AccessControlTest {
                 address,
                 TestConstants.VERSION)));
 
-        Caller caller = system.getExtensionService().register(new ExtensionsDatabaseTest.PlayerExtension())
+        Caller caller = system.getApiServices().getExtensionService().register(new ExtensionsDatabaseTest.PlayerExtension())
                 .orElseThrow(AssertionError::new);
         caller.updatePlayerData(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME);
 
