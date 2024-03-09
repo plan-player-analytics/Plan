@@ -110,8 +110,6 @@ public class DBCleanTask extends TaskSystem.Task {
                         config.get(TimeSettings.DELETE_PING_DATA_AFTER)
                 ));
                 database.executeTransaction(new RemoveDuplicateUserInfoTransaction());
-//                database.executeTransaction(new RemoveUnsatisfiedConditionalPlayerResultsTransaction());
-//                database.executeTransaction(new RemoveUnsatisfiedConditionalServerResultsTransaction());
                 int removed = cleanOldPlayers(database);
                 if (removed > 0) {
                     logger.info(locale.getString(PluginLang.DB_NOTIFY_CLEAN, removed));
