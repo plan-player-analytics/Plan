@@ -233,8 +233,12 @@ artifacts {
 }
 
 processResources {
-    dependsOn copyYarnBuildResults
-    dependsOn determineAssetModifications
+    // Skips Yarn build on Jitpack since Jitpack doesn't offer gclib version compatible with Node 20
+    // Jitpack build is used mainly for java dependencies.
+    if (!project.hasProperty("isJitpack")) {
+        dependsOn copyYarnBuildResults
+        dependsOn determineAssetModifications
+    }
     dependsOn generateResourceForMySQLDriver
     dependsOn generateResourceForSQLiteDriver
     dependsOn generateResourceForIpAddressMatcher
