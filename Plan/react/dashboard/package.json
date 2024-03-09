@@ -24,7 +24,7 @@
     "@testing-library/user-event": "^14.5.2",
     "axios": "^1.6.7",
     "bootstrap": "^5.3.3",
-    "export-to-csv": "^1.2.3",
+    "export-to-csv": "^1.2.4",
     "highcharts": "^10.3.3",
     "i18next": "^23.10.0",
     "i18next-chained-backend": "^4.6.2",
