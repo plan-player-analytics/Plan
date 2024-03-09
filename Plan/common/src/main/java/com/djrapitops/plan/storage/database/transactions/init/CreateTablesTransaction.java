@@ -59,7 +59,7 @@ public class CreateTablesTransaction extends OperationCriticalTransaction {
         executeOther(new SecurityTableIdPatch());
         execute(WebUserPreferencesTable.createTableSQL(dbType));
         execute(PluginVersionTable.createTableSQL(dbType));
-        execute(WhitelistBounceTable.createTableSQL(dbType));
+        execute(AllowlistBounceTable.createTableSQL(dbType));
 
         // DataExtension tables
         execute(ExtensionIconTable.createTableSQL(dbType));

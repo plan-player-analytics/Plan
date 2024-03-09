@@ -27,7 +27,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.BanStatusTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.KickStoreTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.StoreWhitelistBounceTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreAllowlistBounceTransaction;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import org.spongepowered.api.Game;
@@ -96,8 +96,8 @@ public class PlayerOnlineListener {
         if (game.server().isWhitelistEnabled()) {
             game.server().serviceProvider().whitelistService().isWhitelisted(profile)
                     .thenAccept(whitelisted -> {
-                        if (!whitelisted) {
-                            dbSystem.getDatabase().executeTransaction(new StoreWhitelistBounceTransaction(
+                        if (Boolean.FALSE.equals(whitelisted)) {
+                            dbSystem.getDatabase().executeTransaction(new StoreAllowlistBounceTransaction(
                                     playerUUID,
                                     event.profile().name().orElse(event.user().uniqueId().toString()),
                                     serverUUID,

@@ -17,7 +17,7 @@
 package com.djrapitops.plan.storage.database.transactions.events;
 
 import com.djrapitops.plan.identification.ServerUUID;
-import com.djrapitops.plan.storage.database.sql.tables.WhitelistBounceTable;
+import com.djrapitops.plan.storage.database.sql.tables.AllowlistBounceTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.utilities.dev.Untrusted;
@@ -27,11 +27,11 @@ import java.sql.SQLException;
 import java.util.UUID;
 
 /**
- * Stores a bounced whitelist login.
+ * Stores a bounced allowlist login.
  *
  * @author AuroraLS3
  */
-public class StoreWhitelistBounceTransaction extends Transaction {
+public class StoreAllowlistBounceTransaction extends Transaction {
 
     private final UUID playerUUID;
     @Untrusted
@@ -39,7 +39,7 @@ public class StoreWhitelistBounceTransaction extends Transaction {
     private final ServerUUID serverUUID;
     private final long time;
 
-    public StoreWhitelistBounceTransaction(UUID playerUUID, @Untrusted String playerName, ServerUUID serverUUID, long time) {
+    public StoreAllowlistBounceTransaction(UUID playerUUID, @Untrusted String playerName, ServerUUID serverUUID, long time) {
         this.playerUUID = playerUUID;
         this.playerName = playerName;
         this.serverUUID = serverUUID;
@@ -48,7 +48,7 @@ public class StoreWhitelistBounceTransaction extends Transaction {
 
     @Override
     protected void performOperations() {
-        boolean updated = execute(new ExecStatement(WhitelistBounceTable.INCREMENT_TIMES_STATEMENT) {
+        boolean updated = execute(new ExecStatement(AllowlistBounceTable.INCREMENT_TIMES_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, time);
@@ -57,7 +57,7 @@ public class StoreWhitelistBounceTransaction extends Transaction {
             }
         });
         if (!updated) {
-            execute(new ExecStatement(WhitelistBounceTable.INSERT_STATEMENT) {
+            execute(new ExecStatement(AllowlistBounceTable.INSERT_STATEMENT) {
                 @Override
                 public void prepare(PreparedStatement statement) throws SQLException {
                     statement.setString(1, playerUUID.toString());

@@ -22,13 +22,13 @@ import com.djrapitops.plan.storage.database.sql.building.Sql;
 import org.intellij.lang.annotations.Language;
 
 /**
- * Represents plan_whitelist_bounce table.
+ * Represents plan_allowlist_bounce table.
  *
  * @author AuroraLS3
  */
-public class WhitelistBounceTable {
+public class AllowlistBounceTable {
 
-    public static final String TABLE_NAME = "plan_whitelist_bounce";
+    public static final String TABLE_NAME = "plan_allowlist_bounce";
 
     public static final String ID = "id";
     public static final String UUID = "uuid";
@@ -52,7 +52,7 @@ public class WhitelistBounceTable {
             " WHERE " + UUID + "=?" +
             " AND " + SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID;
 
-    private WhitelistBounceTable() {
+    private AllowlistBounceTable() {
         /* Static information class */
     }
 

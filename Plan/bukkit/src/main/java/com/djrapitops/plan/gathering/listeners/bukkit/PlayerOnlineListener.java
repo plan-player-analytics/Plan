@@ -28,7 +28,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.BanStatusTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.KickStoreTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.StoreWhitelistBounceTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreAllowlistBounceTransaction;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import org.bukkit.event.EventHandler;
@@ -86,7 +86,7 @@ public class PlayerOnlineListener implements Listener {
             boolean notWhitelisted = PlayerLoginEvent.Result.KICK_WHITELIST == event.getResult();
 
             if (notWhitelisted) {
-                dbSystem.getDatabase().executeTransaction(new StoreWhitelistBounceTransaction(playerUUID, event.getPlayer().getName(), serverUUID, System.currentTimeMillis()));
+                dbSystem.getDatabase().executeTransaction(new StoreAllowlistBounceTransaction(playerUUID, event.getPlayer().getName(), serverUUID, System.currentTimeMillis()));
             }
 
             String address = event.getHostname();
