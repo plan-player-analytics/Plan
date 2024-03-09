@@ -61,6 +61,6 @@ public enum DataID {
 
     public String of(ServerUUID serverUUID) {
         if (serverUUID == null) return name();
-        return name() + '-' + serverUUID;
+        return name() + "_" + serverUUID;
     }
 }

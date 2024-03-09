@@ -28,7 +28,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 /**
  * Adds a is_proxy field to remove technical debt assuming name field "BungeeCord" being the proxy.
  * <p>
- * See https://github.com/plan-player-analytics/Plan/issues/1678 for more details
+ * See <a href="https://github.com/plan-player-analytics/Plan/issues/1678">issue #1678</a> for more details
  *
  * @author AuroraLS3
  */

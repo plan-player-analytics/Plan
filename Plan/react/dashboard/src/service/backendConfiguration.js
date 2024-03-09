@@ -1,6 +1,7 @@
 import axios from "axios";
 
-const javaReplaced = {
+// Using var here intentionally to avoid rollup tree-shake removing the if-blocks using these variables.
+var javaReplaced = {
     isStatic: "PLAN_EXPORTED_VERSION",
     address: "PLAN_BASE_ADDRESS"
 }
@@ -17,8 +18,9 @@ const isCurrentAddress = (address) => {
     return is;
 }
 
-export const baseAddress = javaReplaced.address.startsWith('PLAN_') || !isCurrentAddress(javaReplaced.address) ? "" : javaReplaced.address;
-export const staticSite = javaReplaced.isStatic === 'true';
+// Using var here intentionally to avoid rollup tree-shake removing the if-blocks using these variables.
+export var baseAddress = javaReplaced.address.startsWith('PLAN_') || !isCurrentAddress(javaReplaced.address) ? "" : javaReplaced.address;
+export var staticSite = javaReplaced.isStatic === 'true';
 
 export const doSomeGetRequest = async (url, updateRequested, statusOptions) => {
     return doSomeRequest(url, statusOptions, async () => axios.get(baseAddress + url,

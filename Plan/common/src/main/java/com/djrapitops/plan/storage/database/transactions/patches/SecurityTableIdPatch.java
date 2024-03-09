@@ -18,7 +18,7 @@ package com.djrapitops.plan.storage.database.transactions.patches;
 
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
-import com.djrapitops.plan.storage.database.sql.tables.SecurityTable;
+import com.djrapitops.plan.storage.database.sql.tables.webuser.SecurityTable;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 

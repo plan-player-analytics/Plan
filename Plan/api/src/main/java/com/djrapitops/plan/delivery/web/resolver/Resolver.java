@@ -19,7 +19,9 @@ package com.djrapitops.plan.delivery.web.resolver;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 
+import java.util.HashSet;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Interface for resolving requests of Plan webserver.
@@ -41,6 +43,25 @@ public interface Resolver {
     boolean canAccess(Request request);
 
     /**
+     * Override this to tell Plan what web permissions this endpoint uses.
+     * <p>
+     * This allows:
+     * <ul>
+     *     <li>Plan to store these permissions in the permission list</li>
+     *     <li>Users can grant/deny the permission for a group</li>
+     *     <li>Plan can show what endpoints specific permission gives access to</li>
+     * </ul>
+     * <p>
+     * Requires PAGE_EXTENSION_USER_PERMISSIONS capability
+     *
+     * @return Set of permissions eg. [plugin.custom.permission, plugin.custom.permission.child.node]
+     * @see com.djrapitops.plan.capability.CapabilityService for Capability checks
+     */
+    default Set<String> usedWebPermissions() {
+        return new HashSet<>();
+    }
+
+    /**
      * Implement request resolution.
      *
      * @param request HTTP request, contains all information necessary to resolve the request.
@@ -51,10 +72,21 @@ public interface Resolver {
      */
     Optional<Response> resolve(Request request);
 
+    /**
+     * Creates a new {@link ResponseBuilder} for a {@link Response}.
+     *
+     * @return a new builder.
+     */
     default ResponseBuilder newResponseBuilder() {
         return Response.builder();
     }
 
+    /**
+     * Used to check if the resolver requires authentication to be used.
+     *
+     * @param request Incoming request that you can use to figure out if authentication is required.
+     * @return true if you want 401 to be given when user has not logged in.
+     */
     default boolean requiresAuth(Request request) {
         return true;
     }

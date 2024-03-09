@@ -23,7 +23,7 @@ import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.transactions.StoreWebUserPreferencesTransaction;
+import com.djrapitops.plan.storage.database.transactions.webuser.StoreWebUserPreferencesTransaction;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;

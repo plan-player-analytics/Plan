@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.domain;
 
 import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
 import com.djrapitops.plan.gathering.domain.BaseUser;
+import com.djrapitops.plan.gathering.domain.Ping;
 
 import java.util.Objects;
 import java.util.Optional;
@@ -38,6 +39,7 @@ public class TablePlayer implements Comparable<TablePlayer> {
     private Long registered;
     private Long lastSeen;
     private String geolocation;
+    private Ping ping;
 
     private boolean banned = false;
 
@@ -87,6 +89,10 @@ public class TablePlayer implements Comparable<TablePlayer> {
         return Optional.ofNullable(geolocation);
     }
 
+    public Ping getPing() {
+        return ping;
+    }
+
     public boolean isBanned() {
         return banned;
     }
@@ -111,12 +117,13 @@ public class TablePlayer implements Comparable<TablePlayer> {
                 lastSeen.equals(that.lastSeen) &&
                 name.equals(that.name) &&
                 activityIndex.equals(that.activityIndex) &&
-                geolocation.equals(that.geolocation);
+                geolocation.equals(that.geolocation) &&
+                ping.equals(that.ping);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, activityIndex, activePlaytime, sessionCount, registered, lastSeen, geolocation);
+        return Objects.hash(name, activityIndex, activePlaytime, sessionCount, registered, lastSeen, geolocation, ping);
     }
 
     @Override
@@ -130,6 +137,7 @@ public class TablePlayer implements Comparable<TablePlayer> {
                 ", registered=" + registered +
                 ", lastSeen=" + lastSeen +
                 ", geolocation='" + geolocation + '\'' +
+                ", ping='" + ping + '\'' +
                 ", banned=" + banned +
                 '}';
     }
@@ -187,6 +195,11 @@ public class TablePlayer implements Comparable<TablePlayer> {
 
         public Builder geolocation(String geolocation) {
             player.geolocation = geolocation;
+            return this;
+        }
+
+        public Builder ping(Ping ping) {
+            player.ping = ping;
             return this;
         }
 

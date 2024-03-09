@@ -64,9 +64,9 @@ public interface DatabaseTestPreparer {
         return system().getDeliveryUtilities();
     }
 
-    default ExtensionSvc extensionService() {return system().getExtensionService();}
+    default ExtensionSvc extensionService() {return system().getApiServices().getExtensionService();}
 
-    default ComponentSvc componentService() {return system().getComponentService();}
+    default ComponentSvc componentService() {return system().getApiServices().getComponentService();}
 
     QueryFilters queryFilters();
 

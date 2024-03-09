@@ -17,7 +17,7 @@
 package com.djrapitops.plan.storage.database.transactions.patches;
 
 import com.djrapitops.plan.storage.database.sql.building.Sql;
-import com.djrapitops.plan.storage.database.sql.tables.SecurityTable;
+import com.djrapitops.plan.storage.database.sql.tables.webuser.SecurityTable;
 
 /**
  * Adds linked_to_uuid field to plan_security table that stores web users.

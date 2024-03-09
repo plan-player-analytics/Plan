@@ -452,6 +452,46 @@ public class SessionQueries {
         };
     }
 
+    /**
+     * Query session count for each day within range across the whole network.
+     *
+     * @param after          After epoch ms
+     * @param before         Before epoch ms
+     * @param timeZoneOffset Offset in ms to determine start of day.
+     * @return Map - Epoch ms (Start of day at 0 AM, no offset) : Session count of that day
+     */
+    public static Query<NavigableMap<Long, Integer>> sessionCountPerDay(long after, long before, long timeZoneOffset) {
+        return database -> {
+            Sql sql = database.getSql();
+            String selectSessionsPerDay = SELECT +
+                    sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + SessionsTable.SESSION_START + "+?)/1000"))) +
+                    "*1000 as date," +
+                    "COUNT(1) as session_count" +
+                    FROM + SessionsTable.TABLE_NAME +
+                    WHERE + SessionsTable.SESSION_END + "<=?" +
+                    AND + SessionsTable.SESSION_START + ">=?" +
+                    GROUP_BY + "date";
+
+            return database.query(new QueryStatement<NavigableMap<Long, Integer>>(selectSessionsPerDay, 100) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, timeZoneOffset);
+                    statement.setLong(2, before);
+                    statement.setLong(3, after);
+                }
+
+                @Override
+                public NavigableMap<Long, Integer> processResults(ResultSet set) throws SQLException {
+                    NavigableMap<Long, Integer> uniquePerDay = new TreeMap<>();
+                    while (set.next()) {
+                        uniquePerDay.put(set.getLong("date"), set.getInt("session_count"));
+                    }
+                    return uniquePerDay;
+                }
+            });
+        };
+    }
+
     public static Query<Long> playtime(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
                 FROM + SessionsTable.TABLE_NAME +
@@ -548,6 +588,46 @@ public class SessionQueries {
                     statement.setLong(2, before);
                     statement.setLong(3, after);
                     statement.setString(4, serverUUID.toString());
+                }
+
+                @Override
+                public NavigableMap<Long, Long> processResults(ResultSet set) throws SQLException {
+                    NavigableMap<Long, Long> uniquePerDay = new TreeMap<>();
+                    while (set.next()) {
+                        uniquePerDay.put(set.getLong("date"), set.getLong("playtime"));
+                    }
+                    return uniquePerDay;
+                }
+            });
+        };
+    }
+
+    /**
+     * Query playtime for each day within range across the whole network.
+     *
+     * @param after          After epoch ms
+     * @param before         Before epoch ms
+     * @param timeZoneOffset Offset in ms to determine start of day.
+     * @return Map - Epoch ms (Start of day at 0 AM, no offset) : Playtime of that day
+     */
+    public static Query<NavigableMap<Long, Long>> playtimePerDay(long after, long before, long timeZoneOffset) {
+        return database -> {
+            Sql sql = database.getSql();
+            String selectPlaytimePerDay = SELECT +
+                    sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + SessionsTable.SESSION_START + "+?)/1000"))) +
+                    "*1000 as date," +
+                    "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
+                    FROM + SessionsTable.TABLE_NAME +
+                    WHERE + SessionsTable.SESSION_END + "<=?" +
+                    AND + SessionsTable.SESSION_START + ">=?" +
+                    GROUP_BY + "date";
+
+            return database.query(new QueryStatement<NavigableMap<Long, Long>>(selectPlaytimePerDay, 100) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, timeZoneOffset);
+                    statement.setLong(2, before);
+                    statement.setLong(3, after);
                 }
 
                 @Override
@@ -835,6 +915,16 @@ public class SessionQueries {
                 return set.next() ? set.getLong("playtime") : 0L;
             }
         };
+    }
+
+    public static Query<Long> activePlaytime(long after, long before) {
+        String sql = SELECT + "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME +
+                ") as playtime" +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.SESSION_END + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?";
+        return db -> db.queryOptional(sql, set -> set.getLong("playtime"), after, before)
+                .orElse(0L);
     }
 
     public static Query<Set<Integer>> userIdsOfPlayedBetween(long after, long before, List<ServerUUID> serverUUIDs) {

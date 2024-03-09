@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.gathering;
 
+import com.djrapitops.plan.gathering.domain.PluginMetadata;
+
 import java.util.Collections;
 import java.util.List;
 
@@ -63,5 +65,9 @@ public interface ServerSensor<W> {
 
     default boolean usingRedisBungee() {
         return false;
+    }
+
+    default List<PluginMetadata> getInstalledPlugins() {
+        return List.of();
     }
 }

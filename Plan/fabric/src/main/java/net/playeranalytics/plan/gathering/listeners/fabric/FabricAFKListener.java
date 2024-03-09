@@ -24,7 +24,7 @@ import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.playeranalytics.plan.commands.CommandManager;
+import net.playeranalytics.plan.commands.FabricCommandManager;
 import net.playeranalytics.plan.gathering.listeners.FabricListener;
 import net.playeranalytics.plan.gathering.listeners.events.PlanFabricEvents;
 
@@ -83,7 +83,7 @@ public class FabricAFKListener implements FabricListener {
     }
 
     private boolean checkPermission(ServerPlayerEntity player, String permission) {
-        if (CommandManager.isPermissionsApiAvailable()) {
+        if (FabricCommandManager.isPermissionsApiAvailable()) {
             return Permissions.check(player, permission);
         } else {
             return false;

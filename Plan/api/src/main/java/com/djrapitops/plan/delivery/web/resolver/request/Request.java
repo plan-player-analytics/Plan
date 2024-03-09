@@ -43,7 +43,7 @@ public final class Request {
      * @param path        Requested path /example/target
      * @param query       Request parameters ?param=value etc
      * @param user        Web user doing the request (if authenticated)
-     * @param headers     Request headers https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
+     * @param headers     Request headers <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers">Documentation</a>
      * @param requestBody Raw body as bytes, if present
      */
     public Request(String method, URIPath path, URIQuery query, WebUser user, Map<String, String> headers, byte[] requestBody) {
@@ -57,6 +57,11 @@ public final class Request {
 
     /**
      * Special constructor that figures out URIPath and URIQuery from "/path/and?query=params" and has no request body.
+     *
+     * @param method  HTTP requst method
+     * @param target  The requested path and query, e.g. "/path/and?query=params"
+     * @param user    User that made the request
+     * @param headers HTTP request headers
      */
     public Request(String method, String target, WebUser user, Map<String, String> headers) {
         this.method = method;
@@ -121,7 +126,7 @@ public final class Request {
     /**
      * Get a header in the request.
      *
-     * @param key https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers
+     * @param key <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers">Documentation</a>
      * @return Value if it is present in the request.
      */
     public Optional<String> getHeader(String key) {

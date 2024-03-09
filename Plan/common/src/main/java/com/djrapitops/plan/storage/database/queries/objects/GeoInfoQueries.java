@@ -33,6 +33,7 @@ import org.apache.commons.text.TextStringBuilder;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -172,8 +173,8 @@ public class GeoInfoQueries {
         String sql = SELECT + "u." + UsersTable.ID +
                 FROM + GeoInfoTable.TABLE_NAME + " g" +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on u.id=g." + GeoInfoTable.USER_ID +
-                WHERE + GeoInfoTable.GEOLOCATION +
+                WHERE + "LOWER(" + GeoInfoTable.GEOLOCATION + ")" +
                 " IN (" + Sql.nParameters(selected.size()) + ")";
-        return db -> db.querySet(sql, RowExtractors.getInt(UsersTable.ID), selected);
+        return db -> db.querySet(sql, RowExtractors.getInt(UsersTable.ID), selected.stream().map(String::toLowerCase).collect(Collectors.toList()));
     }
 }

@@ -1,0 +1,148 @@
+import {useParams} from "react-router-dom";
+import {useDataRequest} from "../../../../hooks/dataFetchHook";
+import {fetchOptimizedPerformance, fetchPingGraph, fetchPluginHistory} from "../../../../service/serverService";
+import {ErrorViewBody} from "../../../../views/ErrorView";
+import {useTranslation} from "react-i18next";
+import {Card} from "react-bootstrap";
+import CardTabs from "../../../CardTabs";
+import {faGears, faHdd, faMap, faMicrochip, faSignal, faTachometerAlt} from "@fortawesome/free-solid-svg-icons";
+import React, {useEffect, useState} from "react";
+import {ChartLoader} from "../../../navigation/Loader";
+import AllPerformanceGraph from "../../../graphs/performance/AllPerformanceGraph";
+import TpsPerformanceGraph from "../../../graphs/performance/TpsPerformanceGraph";
+import CpuRamPerformanceGraph from "../../../graphs/performance/CpuRamPerformanceGraph";
+import WorldPerformanceGraph from "../../../graphs/performance/WorldPerformanceGraph";
+import DiskPerformanceGraph from "../../../graphs/performance/DiskPerformanceGraph";
+import PingGraph from "../../../graphs/performance/PingGraph";
+import {mapPerformanceDataToSeries} from "../../../../util/graphs";
+import {useAuth} from "../../../../hooks/authenticationHook";
+
+const AllGraphTab = ({data, dataSeries, pluginHistorySeries, loadingError}) => {
+    if (loadingError) return <ErrorViewBody error={loadingError}/>
+    if (!dataSeries) return <ChartLoader style={{height: "450px"}}/>;
+
+    return <AllPerformanceGraph id="server-performance-all-chart" data={data} dataSeries={dataSeries}
+                                pluginHistorySeries={pluginHistorySeries}/>
+}
+
+const TpsGraphTab = ({data, dataSeries, pluginHistorySeries, loadingError}) => {
+    if (loadingError) return <ErrorViewBody error={loadingError}/>
+    if (!dataSeries) return <ChartLoader style={{height: "450px"}}/>;
+
+    return <TpsPerformanceGraph id="server-performance-tps-chart" data={data} dataSeries={dataSeries}
+                                pluginHistorySeries={pluginHistorySeries}/>
+}
+
+const CpuRamGraphTab = ({data, dataSeries, pluginHistorySeries, loadingError}) => {
+    if (loadingError) return <ErrorViewBody error={loadingError}/>
+    if (!dataSeries) return <ChartLoader style={{height: "450px"}}/>;
+
+    return <CpuRamPerformanceGraph id="server-performance-cpuram-chart" data={data} dataSeries={dataSeries}
+                                   pluginHistorySeries={pluginHistorySeries}/>
+}
+
+const WorldGraphTab = ({data, dataSeries, pluginHistorySeries, loadingError}) => {
+    if (loadingError) return <ErrorViewBody error={loadingError}/>
+    if (!dataSeries) return <ChartLoader style={{height: "450px"}}/>;
+
+    return <WorldPerformanceGraph id="server-performance-world-chart" data={data} dataSeries={dataSeries}
+                                  pluginHistorySeries={pluginHistorySeries}/>
+}
+
+const DiskGraphTab = ({data, dataSeries, pluginHistorySeries, loadingError}) => {
+    if (loadingError) return <ErrorViewBody error={loadingError}/>
+    if (!dataSeries) return <ChartLoader style={{height: "450px"}}/>;
+
+    return <DiskPerformanceGraph id="server-performance-disk-chart" data={data} dataSeries={dataSeries}
+                                 pluginHistorySeries={pluginHistorySeries}/>
+}
+
+const PingGraphTab = ({identifier}) => {
+    const {data, loadingError} = useDataRequest(fetchPingGraph, [identifier]);
+    if (loadingError) return <ErrorViewBody error={loadingError}/>
+    if (!data) return <ChartLoader style={{height: "450px"}}/>;
+
+    return <PingGraph id="server-performance-ping-chart" data={data}/>;
+}
+
+const PerformanceGraphsCard = () => {
+    const {t} = useTranslation();
+    const {authRequired, hasPermission} = useAuth();
+
+    const {identifier} = useParams();
+    const {data, loadingError} = useDataRequest(fetchOptimizedPerformance, [identifier]);
+    const [parsedData, setParsedData] = useState(undefined);
+    const {
+        data: pluginHistory,
+        loadingError: pluginHistoryLoadingError
+    } = useDataRequest(fetchPluginHistory, [identifier], authRequired && hasPermission('page.server.plugin.history'));
+    const [pluginHistorySeries, setPluginHistorySeries] = useState({});
+
+    useEffect(() => {
+        if (data) {
+            mapPerformanceDataToSeries(data.values).then(parsed => setParsedData(parsed))
+        }
+    }, [data, setParsedData]);
+    useEffect(() => {
+        // https://stackoverflow.com/a/34890276/20825073
+        const groupBy = function (xs, key) {
+            return xs.reduce(function (rv, x) {
+                (rv[x[key]] = rv[x[key]] || []).push(x);
+                return rv;
+            }, {});
+        };
+
+        if (pluginHistory) {
+            const grouped = groupBy(pluginHistory.history.reverse(), 'modified');
+            setPluginHistorySeries({
+                type: 'flags',
+                accessibility: {
+                    exposeAsGroupOnly: true,
+                    description: t('html.label.pluginVersionHistory')
+                },
+                tooltip: {headerFormat: ''},
+                data: Object.entries(grouped).map(entry => {
+                    const installedLines = entry[1].filter(p => p.version).map(plugin => plugin.name + ': ' + plugin.version).join(', <br>');
+                    const uninstalledLines = entry[1].filter(p => !p.version).map(plugin => plugin.name).join(', <br>');
+                    return {
+                        x: entry[0],
+                        title: entry[1].length,
+                        text: (installedLines.length ? '<b>' + t('html.label.installed') + '</b><br>' + installedLines : '') +
+                            (uninstalledLines.length ? '<b>' + t('html.label.uninstalled') + '</b><br>' + uninstalledLines : '')
+                    }
+                })
+            })
+        }
+    }, [pluginHistory, setPluginHistorySeries, t]);
+
+    return <Card id={"performance-graphs"}>
+        <CardTabs tabs={[
+            {
+                name: t('html.label.all'), icon: faGears, color: 'blue-grey', href: 'all',
+                element: <AllGraphTab data={data} dataSeries={parsedData} pluginHistorySeries={pluginHistorySeries}
+                                      loadingError={loadingError || pluginHistoryLoadingError}/>
+            }, {
+                name: t('html.label.tps'), icon: faTachometerAlt, color: 'red', href: 'tps',
+                element: <TpsGraphTab data={data} dataSeries={parsedData} pluginHistorySeries={pluginHistorySeries}
+                                      loadingError={loadingError || pluginHistoryLoadingError}/>
+            }, {
+                name: t('html.label.cpuRam'), icon: faMicrochip, color: 'light-green', href: 'cpu-ram',
+                element: <CpuRamGraphTab data={data} dataSeries={parsedData} pluginHistorySeries={pluginHistorySeries}
+                                         loadingError={loadingError || pluginHistoryLoadingError}/>
+            }, {
+                name: t('html.label.world'), icon: faMap, color: 'purple', href: 'world-load',
+                element: <WorldGraphTab data={data} dataSeries={parsedData} pluginHistorySeries={pluginHistorySeries}
+                                        loadingError={loadingError || pluginHistoryLoadingError}/>
+            }, {
+                name: t('html.label.ping'), icon: faSignal, color: 'amber', href: 'ping',
+                element: <PingGraphTab identifier={identifier}/>
+            }, {
+                name: t('html.label.diskSpace'), icon: faHdd, color: 'green', href: 'disk',
+                element: <DiskGraphTab data={data} dataSeries={parsedData} pluginHistorySeries={pluginHistorySeries}
+                                       loadingError={loadingError || pluginHistoryLoadingError}/>
+            },
+        ]}/>
+    </Card>
+}
+
+export default PerformanceGraphsCard;

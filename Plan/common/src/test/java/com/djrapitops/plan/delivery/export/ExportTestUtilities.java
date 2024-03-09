@@ -73,7 +73,10 @@ public class ExportTestUtilities {
     public static void assertNoLogsExceptFaviconError(List<LogEntry> logs) {
         List<String> loggedLines = logs.stream()
                 .map(log -> "\n" + log.getLevel().getName() + " " + log.getMessage())
-                .filter(log -> !log.contains("favicon.ico") && !log.contains("manifest.json") && !log.contains("fonts.gstatic.com"))
+                .filter(log -> !log.contains("favicon.ico")
+                        && !log.contains("manifest.json")
+                        && !log.contains("fonts.gstatic.com")
+                        && !log.contains("fonts.googleapis.com"))
                 .toList();
         assertTrue(loggedLines.isEmpty(), () -> "Browser console included " + loggedLines.size() + " logs: " + loggedLines);
     }
@@ -103,7 +106,7 @@ public class ExportTestUtilities {
 
         assertFalse(driver.findElement(By.tagName("body")).getText().contains("Bad Gateway"), "502 Bad Gateway, nginx could not reach Plan");
 
-        Awaitility.await()
+        Awaitility.await("waitForElementToBeVisible .load-in")
                 .atMost(Duration.of(10, ChronoUnit.SECONDS))
                 .until(() -> getMainPageElement(driver).map(WebElement::isDisplayed).orElse(false));
 

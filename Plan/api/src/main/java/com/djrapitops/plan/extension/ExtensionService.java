@@ -81,6 +81,9 @@ public interface ExtensionService {
      */
     void unregister(DataExtension extension);
 
+    /**
+     * Singleton holder for {@link ExtensionService}.
+     */
     class Holder {
         static final AtomicReference<ExtensionService> service = new AtomicReference<>();
 

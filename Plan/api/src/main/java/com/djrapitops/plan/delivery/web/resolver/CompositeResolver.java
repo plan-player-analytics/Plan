@@ -46,6 +46,11 @@ public final class CompositeResolver implements Resolver {
         this.resolvers = new ArrayList<>();
     }
 
+    /**
+     * Create a new builder for a .
+     *
+     * @return a builder.
+     */
     public static CompositeResolver.Builder builder() {
         return new Builder();
     }
@@ -100,6 +105,9 @@ public final class CompositeResolver implements Resolver {
         return getResolver(forThis.getPath()).map(resolver -> resolver.requiresAuth(forThis)).orElse(true);
     }
 
+    /**
+     * Builder class for {@link CompositeResolver}.
+     */
     public static class Builder {
         private final CompositeResolver composite;
 
@@ -132,6 +140,11 @@ public final class CompositeResolver implements Resolver {
             return this;
         }
 
+        /**
+         * Build the final result after adding all resolvers.
+         *
+         * @return The {@link CompositeResolver}
+         */
         public CompositeResolver build() {
             return composite;
         }

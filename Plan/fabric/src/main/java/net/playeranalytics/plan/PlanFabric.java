@@ -32,7 +32,7 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
-import net.playeranalytics.plan.commands.CommandManager;
+import net.playeranalytics.plan.commands.FabricCommandManager;
 import net.playeranalytics.plan.identification.properties.FabricServerProperties;
 import net.playeranalytics.plugin.FabricPlatformLayer;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
@@ -55,7 +55,7 @@ import java.util.concurrent.TimeoutException;
 public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
 
     private MinecraftDedicatedServer server;
-    private CommandManager commandManager;
+    private FabricCommandManager fabricCommandManager;
 
     private PlanSystem system;
     private Locale locale;
@@ -83,7 +83,7 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
 
     @Override
     public void registerCommand(Subcommand command) {
-        commandManager.registerRoot(command, runnableFactory);
+        fabricCommandManager.registerRoot(command, runnableFactory);
     }
 
     @Override
@@ -100,6 +100,7 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
             errorLogger = component.errorLogger();
             serverShutdownSave = component.serverShutdownSave();
             locale = system.getLocaleSystem().getLocale();
+            registerCommand(component.planCommand().build());
             system.enable();
 
             pluginLogger.info(locale.getString(PluginLang.ENABLED));
@@ -118,7 +119,6 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
             pluginLogger.error("This error should be reported at https://github.com/plan-player-analytics/Plan/issues");
             onDisable();
         }
-        registerCommand(component.planCommand().build());
         if (system != null) {
             system.getProcessing().submitNonCritical(() -> system.getListenerSystem().callEnableEvent(this));
         }
@@ -167,7 +167,7 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
             onEnable();
         });
 
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> commandManager = new CommandManager(dispatcher, this, errorLogger));
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> fabricCommandManager = new FabricCommandManager(dispatcher, this, errorLogger));
 
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> onDisable());
     }

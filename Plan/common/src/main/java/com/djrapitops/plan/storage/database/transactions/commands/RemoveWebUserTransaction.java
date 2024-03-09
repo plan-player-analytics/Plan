@@ -17,7 +17,7 @@
 package com.djrapitops.plan.storage.database.transactions.commands;
 
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieStore;
-import com.djrapitops.plan.storage.database.sql.tables.SecurityTable;
+import com.djrapitops.plan.storage.database.sql.tables.webuser.SecurityTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 

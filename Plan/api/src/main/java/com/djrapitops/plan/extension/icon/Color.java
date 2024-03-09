@@ -47,6 +47,12 @@ public enum Color {
     BLACK,
     NONE;
 
+    /**
+     * Get a color by the enum name without exception.
+     *
+     * @param name Color#name()
+     * @return Optional if the color is found by that name, empty if not found.
+     */
     public static Optional<Color> getByName(String name) {
         if (name == null) {
             return Optional.empty();
@@ -56,4 +62,5 @@ public enum Color {
         } catch (IllegalArgumentException e) {
             return Optional.empty();
         }
-    }}
+    }
+}

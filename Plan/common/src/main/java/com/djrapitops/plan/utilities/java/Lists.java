@@ -81,7 +81,7 @@ public class Lists {
      * @param mapper   Function to change object of type A to type B
      * @param <A>      Type of the old list objects
      * @param <B>      Type of the new list objects
-     * @return List with elements in original that keep returned true for.
+     * @return Set with elements in original that keep returned true for.
      */
     public static <A, B> Set<B> mapUnique(Collection<A> original, Function<A, B> mapper) {
         Set<B> mapped = new HashSet<>();

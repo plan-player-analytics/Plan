@@ -147,8 +147,9 @@ public class ResponseResolver {
         String plugin = "Plan";
         resolverService.registerResolver(plugin, "/robots.txt", fileResolver(responseFactory::robotsResponse));
         resolverService.registerResolver(plugin, "/manifest.json", fileResolver(() -> responseFactory.jsonFileResponse("manifest.json")));
-        resolverService.registerResolver(plugin, "/asset-manifest.json", fileResolver(() -> responseFactory.jsonFileResponse("asset-manifest.json")));
         resolverService.registerResolver(plugin, "/favicon.ico", fileResolver(responseFactory::faviconResponse));
+        resolverService.registerResolver(plugin, "/logo192.png", fileResolver(() -> responseFactory.imageResponse("logo192.png")));
+        resolverService.registerResolver(plugin, "/logo512.png", fileResolver(() -> responseFactory.imageResponse("logo512.png")));
         resolverService.registerResolver(plugin, "/pageExtensionApi.js", fileResolver(() -> responseFactory.javaScriptResponse("pageExtensionApi.js")));
 
         resolverService.registerResolver(plugin, "/query", queryPageResolver);

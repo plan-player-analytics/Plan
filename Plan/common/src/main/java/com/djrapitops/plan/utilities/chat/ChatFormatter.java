@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Formats chat messages in different ways.
  * <p>
- * Original code: https://hastebin.com/uziyajirag.avrasm
+ * <a href="https://hastebin.com/uziyajirag.avrasm">Original code</a>
  */
 public class ChatFormatter {
     private static final int CENTER_PX = 154;

@@ -18,8 +18,6 @@ package com.djrapitops.plan.storage.upkeep;
 
 import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.exceptions.database.DBOpException;
-import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalPlayerResultsTransaction;
-import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalServerResultsTransaction;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.query.QuerySvc;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -112,8 +110,6 @@ public class DBCleanTask extends TaskSystem.Task {
                         config.get(TimeSettings.DELETE_PING_DATA_AFTER)
                 ));
                 database.executeTransaction(new RemoveDuplicateUserInfoTransaction());
-                database.executeTransaction(new RemoveUnsatisfiedConditionalPlayerResultsTransaction());
-                database.executeTransaction(new RemoveUnsatisfiedConditionalServerResultsTransaction());
                 int removed = cleanOldPlayers(database);
                 if (removed > 0) {
                     logger.info(locale.getString(PluginLang.DB_NOTIFY_CLEAN, removed));
@@ -161,15 +157,21 @@ public class DBCleanTask extends TaskSystem.Task {
 
     // VisibleForTesting
     public int cleanOldPlayers(Database database) {
-        long now = System.currentTimeMillis();
-        long keepActiveAfter = now - config.get(TimeSettings.DELETE_INACTIVE_PLAYERS_AFTER);
+        // Only clean if this is a proxy server or no proxy servers are installed.
+        if (serverInfo.getServer().isProxy() || database.query(ServerQueries.fetchProxyServers()).isEmpty()) {
+            long now = System.currentTimeMillis();
+            long keepActiveAfter = now - config.get(TimeSettings.DELETE_INACTIVE_PLAYERS_AFTER);
 
-        List<UUID> inactivePlayers = database.query(fetchInactivePlayerUUIDs(keepActiveAfter));
-        for (UUID playerUUID : inactivePlayers) {
-            queryService.playerRemoved(playerUUID);
-            database.executeTransaction(new RemovePlayerTransaction(playerUUID));
+            List<UUID> inactivePlayers = database.query(fetchInactivePlayerUUIDs(keepActiveAfter));
+            for (UUID playerUUID : inactivePlayers) {
+                queryService.playerRemoved(playerUUID);
+                database.executeTransaction(new RemovePlayerTransaction(playerUUID));
+            }
+            return inactivePlayers.size();
         }
-        return inactivePlayers.size();
+
+        // Skip cleaning on game servers if proxy server is installed.
+        return 0;
     }
 
     private Query<List<UUID>> fetchInactivePlayerUUIDs(long keepActiveAfter) {

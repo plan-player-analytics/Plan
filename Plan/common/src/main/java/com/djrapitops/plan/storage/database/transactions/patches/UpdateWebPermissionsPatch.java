@@ -18,7 +18,7 @@ package com.djrapitops.plan.storage.database.transactions.patches;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
-import com.djrapitops.plan.storage.database.sql.tables.WebPermissionTable;
+import com.djrapitops.plan.storage.database.sql.tables.webuser.WebPermissionTable;
 import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
 
 import java.sql.PreparedStatement;

@@ -57,7 +57,7 @@ public class PieGraphFactory {
 
     public Pie activityPie(Map<String, Integer> activityData) {
         String[] colors = theme.getPieColors(ThemeVal.GRAPH_ACTIVITY_PIE);
-        return new ActivityPie(activityData, colors, ActivityIndex.getGroups(locale));
+        return new ActivityPie(activityData, colors, ActivityIndex.getDefaultGroupLangKeys());
     }
 
     public Pie serverPreferencePie(Map<ServerUUID, String> serverNames, Map<ServerUUID, WorldTimes> serverWorldTimes) {

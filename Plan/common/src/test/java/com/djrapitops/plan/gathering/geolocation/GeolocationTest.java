@@ -16,34 +16,31 @@
  */
 package com.djrapitops.plan.gathering.geolocation;
 
+import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.processing.Processing;
+import com.djrapitops.plan.settings.ConfigSystem;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import extension.FullSystemExtension;
 import net.playeranalytics.plugin.server.PluginLogger;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.io.TempDir;
-import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import utilities.TestErrorLogger;
 import utilities.TestPluginLogger;
 import utilities.mocks.TestProcessing;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.lenient;
-import static org.mockito.Mockito.when;
 
 /**
  * Tests for Geolocation functionality.
@@ -51,25 +48,15 @@ import static org.mockito.Mockito.when;
  * @author AuroraLS3
  * @author Fuzzlemann
  */
-@ExtendWith(MockitoExtension.class)
+@ExtendWith({MockitoExtension.class, FullSystemExtension.class})
 class GeolocationTest {
 
     private static final Map<String, String> TEST_DATA = new HashMap<>();
-    private static File IP_STORE;
-    private static Path tempDir;
-
-    @Mock
-    public PlanFiles files;
-    @Mock
-    public PlanConfig config;
 
     private GeolocationCache underTest;
 
     @BeforeAll
-    static void setUpTestData(@TempDir Path tempDir) {
-        GeolocationTest.tempDir = tempDir;
-        IP_STORE = GeolocationTest.tempDir.resolve("GeoLite2-Country.mmdb").toFile();
-
+    static void setUpTestData() {
         TEST_DATA.put("156.53.159.86", "United States"); // Oregon, US
         TEST_DATA.put("208.67.222.222", "United States"); // California, US
         TEST_DATA.put("208.67.220.220", "United States"); // California, US
@@ -80,28 +67,28 @@ class GeolocationTest {
     }
 
     @BeforeEach
-    void setUpCache() {
-        when(config.isTrue(DataGatheringSettings.GEOLOCATIONS)).thenReturn(true);
-        lenient().when(config.isTrue(DataGatheringSettings.ACCEPT_GEOLITE2_EULA)).thenReturn(true);
-        when(files.getFileFromPluginFolder("GeoLite2-Country.mmdb")).thenReturn(IP_STORE);
-        when(files.getFileFromPluginFolder("GeoIP.dat")).thenReturn(tempDir.resolve("Non-file").toFile());
-
-        assertTrue(config.isTrue(DataGatheringSettings.GEOLOCATIONS));
+    void setUpCache(PlanFiles files, ConfigSystem configSystem, PlanConfig config) {
+        config.set(DataGatheringSettings.GEOLOCATIONS, true);
+        config.set(DataGatheringSettings.ACCEPT_GEOLITE2_EULA, true);
+        config.set(DataGatheringSettings.GEOLOCATION_DOWNLOAD_URL, "https://geodb.playeranalytics.net/GeoLite2-Country.mmdb");
 
         GeoLite2Geolocator geoLite2Geolocator = new GeoLite2Geolocator(files, config);
         PluginLogger logger = new TestPluginLogger();
         Processing processing = new TestProcessing(Locale::new, logger, new TestErrorLogger());
 
         underTest = new GeolocationCache(new Locale(), config, geoLite2Geolocator, logger, processing);
+        files.enable();
+        configSystem.enable();
         underTest.enable();
 
         assertTrue(underTest.canGeolocate());
     }
 
     @AfterEach
-    void tearDownCache() throws IOException {
+    void tearDownCache(PlanSystem system, PlanFiles files) throws IOException {
+        Files.deleteIfExists(files.getFileFromPluginFolder("GeoLite2-Country.mmdb").toPath());
         underTest.disable();
-        Files.deleteIfExists(IP_STORE.toPath());
+        system.disable();
     }
 
     @Test

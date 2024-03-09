@@ -18,7 +18,7 @@ package com.djrapitops.plan.extension.implementation.storage.queries;
 
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.HasMoreThanZeroQueryStatement;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionPluginTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPluginTable;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;

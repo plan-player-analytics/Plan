@@ -89,7 +89,7 @@ public interface ComponentService {
      * Converts the given input into a {@link Component}.
      * Input example {@code §ctext}.
      *
-     * @param legacy the input legacy
+     * @param legacy    the input legacy
      * @param character the character to use as the color prefix, usually {@code §}.
      * @return a {@link Component}
      * @see #fromLegacy(String)
@@ -115,7 +115,7 @@ public interface ComponentService {
      * Input example: {@code &#rrggbbtext}.
      *
      * @param adventureLegacy the input adventure legacy
-     * @param character the character to use as the color prefix, usually {@code &}.
+     * @param character       the character to use as the color prefix, usually {@code &}.
      * @return a {@link Component}
      * @see #fromAdventureLegacy(String)
      * @see Component#SECTION
@@ -139,7 +139,7 @@ public interface ComponentService {
      * Input example: {@code §x§r§r§g§g§b§btext}.
      *
      * @param bungeeLegacy the input bungee legacy
-     * @param character the character to use as the color prefix, usually {@code §}.
+     * @param character    the character to use as the color prefix, usually {@code §}.
      * @return a {@link Component}
      * @see Component#SECTION
      * @see Component#AMPERSAND
@@ -164,6 +164,9 @@ public interface ComponentService {
      */
     Component fromJson(String json);
 
+    /**
+     * Singleton holder for ComponentService.
+     */
     class Holder {
         static final AtomicReference<ComponentService> service = new AtomicReference<>();
 

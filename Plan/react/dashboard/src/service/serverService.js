@@ -204,6 +204,12 @@ export const fetchServerCalendarGraph = async (timestamp, identifier) => {
     return doGetRequest(url, timestamp);
 }
 
+export const fetchNetworkCalendarGraph = async (timestamp) => {
+    let url = `/v1/graph?type=serverCalendar`;
+    if (staticSite) url = `/data/graph-serverCalendar.json`;
+    return doGetRequest(url, timestamp);
+}
+
 export const fetchPunchCardGraph = async (timestamp, identifier) => {
     let url = `/v1/graph?type=punchCard&server=${identifier}`;
     if (staticSite) url = `/data/graph-punchCard_${identifier}.json`;
@@ -325,5 +331,11 @@ const fetchServerPlayerJoinAddresses = async (timestamp, identifier) => {
 const fetchNetworkPlayerJoinAddresses = async (timestamp) => {
     let url = `/v1/joinAddresses`;
     if (staticSite) url = `/data/joinAddresses.json`;
+    return doGetRequest(url, timestamp);
+}
+
+export const fetchPluginHistory = async (timestamp, identifier) => {
+    let url = `/v1/pluginHistory?server=${identifier}`;
+    if (staticSite) url = `/data/pluginHistory-${identifier}.json`;
     return doGetRequest(url, timestamp);
 }

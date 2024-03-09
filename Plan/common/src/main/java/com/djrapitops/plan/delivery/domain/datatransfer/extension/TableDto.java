@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.extension.table.TableColumnFormat;
+import org.apache.commons.text.StringEscapeUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -76,7 +77,7 @@ public class TableDto {
                 case DATE_SECOND:
                     return Formatters.getInstance().secondLong().apply(Long.parseLong(value.toString()));
                 case PLAYER_NAME:
-                    return Html.LINK.create("../player/" + Html.encodeToURL(value.toString()));
+                    return Html.LINK.create("../player/" + Html.encodeToURL(value.toString()), StringEscapeUtils.escapeHtml4(value.toString()));
                 default:
                     return value.toString();
             }

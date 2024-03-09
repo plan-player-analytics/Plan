@@ -42,8 +42,6 @@ import java.util.stream.Collectors;
 
 /**
  * Utility for creating jQuery Datatables JSON for a Players Table.
- * <p>
- * See https://www.datatables.net/manual/data/orthogonal-data#HTML-5 for sort kinds
  *
  * @author AuroraLS3
  */
@@ -137,12 +135,14 @@ public class PlayersTableJSONCreator {
                 .map(player -> TablePlayerDto.builder()
                         .withUuid(player.getPlayerUUID())
                         .withName(player.getName().orElseGet(() -> player.getPlayerUUID().toString()))
+                        .withActivityIndex(player.getCurrentActivityIndex().map(ActivityIndex::getValue).orElse(0.0))
                         .withSessionCount((long) player.getSessionCount().orElse(0))
                         .withPlaytimeActive(player.getActivePlaytime().orElse(null))
                         .withLastSeen(player.getLastSeen().orElse(null))
                         .withRegistered(player.getRegistered().orElse(null))
                         .withCountry(player.getGeolocation().orElse(null))
                         .withExtensionValues(mapToExtensionValues(extensionData.get(player.getPlayerUUID())))
+                        .withPing(player.getPing())
                         .build()
                 ).collect(Collectors.toList());
     }
@@ -200,7 +200,9 @@ public class PlayersTableJSONCreator {
 
         Html link = openPlayerPageInNewTab ? Html.LINK_EXTERNAL : Html.LINK;
 
-        putDataEntry(dataJson, link.create(url, StringUtils.replace(StringEscapeUtils.escapeHtml4(name), "\\", "\\\\") /* Backslashes escaped to prevent json errors */), "name");
+        /* Backslashes escaped to prevent json errors */
+        String escapedName = StringUtils.replace(StringEscapeUtils.escapeHtml4(name), "\\", "\\\\");
+        putDataEntry(dataJson, link.create(url, escapedName, escapedName), "name");
         putDataEntry(dataJson, activityIndex.getValue(), activityString, "index");
         putDataEntry(dataJson, activePlaytime, numberFormatters.get(FormatType.TIME_MILLISECONDS).apply(activePlaytime), "activePlaytime");
         putDataEntry(dataJson, loginTimes, "sessions");

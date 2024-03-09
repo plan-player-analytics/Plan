@@ -3,8 +3,8 @@ import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     id "dev.vankka.dependencydownload.plugin" version "$dependencyDownloadVersion"
-    id "com.github.node-gradle.node" version "7.0.0"
-    id "io.swagger.core.v3.swagger-gradle-plugin" version "2.2.16"
+    id "com.github.node-gradle.node" version "7.0.2"
+    id "io.swagger.core.v3.swagger-gradle-plugin" version "2.2.20"
 }
 
 configurations {
@@ -64,6 +64,7 @@ dependencies {
     mysqlDriver "com.mysql:mysql-connector-j:$mysqlVersion"
     mariadbDriver "org.mariadb.jdbc:mariadb-java-client:$mariadbVersion"
     sqliteDriver "org.xerial:sqlite-jdbc:$sqliteVersion"
+    sqliteDriver "org.slf4j:slf4j-nop:1.7.36"
     ipAddressMatcher "com.github.seancfoley:ipaddress:$ipAddressMatcherVersion"
 
     shadow "org.apache.commons:commons-text:$commonsTextVersion"
@@ -82,6 +83,8 @@ dependencies {
         // json-simple has junit (a test dependency) compile scoped
         exclude group: "junit", module: "junit"
     }
+    implementation "org.jasypt:jasypt:$jasyptVersion:lite"
+
 
     // Swagger annotations
     implementation "jakarta.ws.rs:jakarta.ws.rs-api:3.1.0"
@@ -92,7 +95,7 @@ dependencies {
     testArtifacts project(":extensions:adventure")
     testImplementation project(":extensions:adventure")
     testImplementation "com.google.code.gson:gson:$gsonVersion"
-    testImplementation "org.seleniumhq.selenium:selenium-java:4.12.1"
+    testImplementation "org.seleniumhq.selenium:selenium-java:4.18.1"
     testImplementation "org.testcontainers:testcontainers:$testContainersVersion"
     testImplementation "org.testcontainers:junit-jupiter:$testContainersVersion"
     testImplementation "org.testcontainers:nginx:$testContainersVersion"
@@ -111,13 +114,14 @@ task updateVersion(type: Copy) {
 
 node {
     download = true
-    version = "16.14.2"
+    version = "20.9.0"
     nodeProjectDir = file("$rootDir/react/dashboard")
 }
 
 task yarnBundle(type: YarnTask) {
     inputs.files(fileTree("$rootDir/react/dashboard/src"))
     inputs.file("$rootDir/react/dashboard/package.json")
+    inputs.file("$rootDir/react/dashboard/vite.config.js")
 
     outputs.dir("$rootDir/react/dashboard/build")
 
@@ -229,8 +233,12 @@ artifacts {
 }
 
 processResources {
-    dependsOn copyYarnBuildResults
-    dependsOn determineAssetModifications
+    // Skips Yarn build on Jitpack since Jitpack doesn't offer gclib version compatible with Node 20
+    // Jitpack build is used mainly for java dependencies.
+    if (!project.hasProperty("isJitpack")) {
+        dependsOn copyYarnBuildResults
+        dependsOn determineAssetModifications
+    }
     dependsOn generateResourceForMySQLDriver
     dependsOn generateResourceForSQLiteDriver
     dependsOn generateResourceForIpAddressMatcher

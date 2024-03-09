@@ -14,13 +14,13 @@ Plugin:
   Logging:
     Locale: default
     Create_new_locale_file_on_next_enable: false
+    Log_untranslated_locale_keys: false
     Dev: false
     Delete_logs_after_days: 7
   Update_notifications:
     # Display update notification on the website
     Check_for_updates: true
     Notify_about_DEV_releases: false
-  Use_Legacy_Frontend: false
 # -----------------------------------------------------
 # Supported databases: MySQL
 # -----------------------------------------------------
@@ -109,6 +109,9 @@ Data_gathering:
   # Please accept the EULA to download GeoLite2 IP-Country Database
   # https://www.maxmind.com/en/geolite2/eula
   Accept_GeoLite2_EULA: false
+  # This can be changed to your own MaxMind URL if you have license https://dev.maxmind.com/geoip/updating-databases?lang=en#directly-downloading-databases
+  # e.g. https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&license_key=YOUR_KEY&suffix=tar.gz
+  Geolocation_Download_URL: "https://geodb.playeranalytics.net/GeoLite2-Country.mmdb"
   Ping: true
   Disk_space: true
   # Does not affect already gathered data
@@ -261,5 +264,3 @@ Plugins:
     Secret: "-"
 Customized_files:
   Path: "web"
-  # Web dev mode enables all customized files and disables webserver resource cache for instant changes on browser refresh.
-  Enable_web_dev_mode: false

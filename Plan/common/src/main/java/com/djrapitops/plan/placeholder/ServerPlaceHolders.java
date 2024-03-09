@@ -22,9 +22,13 @@ import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.queries.analysis.ActivityIndexQueries;
+import com.djrapitops.plan.storage.database.queries.analysis.NetworkActivityIndexQueries;
 import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.storage.database.queries.analysis.TopListQueries;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
@@ -38,6 +42,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 import static com.djrapitops.plan.utilities.MiscUtils.*;
 
@@ -49,16 +54,19 @@ import static com.djrapitops.plan.utilities.MiscUtils.*;
 @Singleton
 public class ServerPlaceHolders implements Placeholders {
 
+    private final PlanConfig config;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final Formatters formatters;
 
     @Inject
     public ServerPlaceHolders(
+            PlanConfig config,
             DBSystem dbSystem,
             ServerInfo serverInfo,
             Formatters formatters
     ) {
+        this.config = config;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.formatters = formatters;
@@ -199,6 +207,11 @@ public class ServerPlaceHolders implements Placeholders {
         placeholders.registerStatic("server_uuid",
                 serverInfo::getServerUUID);
 
+        placeholders.registerStatic("regular_players",
+                parameters -> database.query(ActivityIndexQueries.fetchRegularPlayerCount(System.currentTimeMillis(), getServerUUID(parameters), config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD))));
+        placeholders.registerStatic("network_regular_players",
+                () -> database.query(NetworkActivityIndexQueries.fetchRegularPlayerCount(System.currentTimeMillis(), config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD))));
+
         registerDynamicCategoryPlaceholders(placeholders, database);
     }
 
@@ -214,20 +227,22 @@ public class ServerPlaceHolders implements Placeholders {
     private void registerDynamicCategoryPlaceholders(PlanPlaceholders placeholders, Database database) {
         List<TopCategoryQuery<Long>> queries = new ArrayList<>();
         queries.addAll(createCategoryQueriesForAllTimespans("playtime", (index, timespan, parameters) -> TopListQueries.fetchNthTop10PlaytimePlayerOn(getServerUUID(parameters), index, System.currentTimeMillis() - timespan, System.currentTimeMillis())));
+        queries.addAll(createCategoryQueriesForAllTimespans("network_playtime", (index, timespan, parameters) -> TopListQueries.fetchNthTop10PlaytimePlayerOn(null, index, System.currentTimeMillis() - timespan, System.currentTimeMillis())));
         queries.addAll(createCategoryQueriesForAllTimespans("active_playtime", (index, timespan, parameters) -> TopListQueries.fetchNthTop10ActivePlaytimePlayerOn(getServerUUID(parameters), index, System.currentTimeMillis() - timespan, System.currentTimeMillis())));
+        queries.addAll(createCategoryQueriesForAllTimespans("network_active_playtime", (index, timespan, parameters) -> TopListQueries.fetchNthTop10ActivePlaytimePlayerOn(null, index, System.currentTimeMillis() - timespan, System.currentTimeMillis())));
         queries.addAll(createCategoryQueriesForAllTimespans("player_kills", (index, timespan, parameters) -> TopListQueries.fetchNthTop10PlayerKillCountOn(getServerUUID(parameters), index, System.currentTimeMillis() - timespan, System.currentTimeMillis())));
 
         for (int i = 0; i < 10; i++) {
             for (TopCategoryQuery<Long> query : queries) {
                 final int nth = i;
-                placeholders.registerStatic(String.format("top_%s_%s_%s", query.getCategory(), query.getTimeSpan(), nth),
+                placeholders.registerStatic(String.format("top_%s_%s_%s", query.getCategory(), query.getTimeSpan(), nth + 1),
                         parameters -> database.query(query.getQuery(nth, parameters))
                                 .map(TopListQueries.TopListEntry::getPlayerName)
                                 .orElse("-"));
-                placeholders.registerStatic(String.format("top_%s_%s_%s_value", query.getCategory(), query.getTimeSpan(), nth),
+                placeholders.registerStatic(String.format("top_%s_%s_%s_value", query.getCategory(), query.getTimeSpan(), nth + 1),
                         parameters -> database.query(query.getQuery(nth, parameters))
                                 .map(TopListQueries.TopListEntry::getValue)
-                                .map(formatters.timeAmount())
+                                .map(query.getCategory().equals("player_kills") ? Function.identity() : formatters.timeAmount())
                                 .orElse("-"));
             }
         }

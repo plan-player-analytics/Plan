@@ -166,6 +166,12 @@ public class Exporter extends FileExporter {
     }
 
     public void exportReact() throws ExportException {
+        if (config.isFalse(ExportSettings.PLAYER_PAGES)
+                && config.isFalse(ExportSettings.SERVER_PAGE)
+                && config.isFalse(ExportSettings.PLAYERS_PAGE)) {
+            return;
+        }
+
         Path toDirectory = config.getPageExportPath();
 
         try {

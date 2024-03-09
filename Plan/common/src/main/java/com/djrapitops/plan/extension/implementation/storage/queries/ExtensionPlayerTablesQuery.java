@@ -27,10 +27,10 @@ import com.djrapitops.plan.extension.table.TableColumnFormat;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionIconTable;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerTableValueTable;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionTabTable;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionTableProviderTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionIconTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPlayerTableValueTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionTabTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionTableProviderTable;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;

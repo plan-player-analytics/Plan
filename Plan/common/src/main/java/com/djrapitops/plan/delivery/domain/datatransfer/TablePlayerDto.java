@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.domain.datatransfer;
 
 import com.djrapitops.plan.delivery.domain.datatransfer.extension.ExtensionValueDataDto;
+import com.djrapitops.plan.gathering.domain.Ping;
 
 import java.util.Map;
 import java.util.UUID;
@@ -36,6 +37,9 @@ public class TablePlayerDto {
     private Long lastSeen;
     private Long registered;
     private String country;
+    private Double pingAverage;
+    private Integer pingMax;
+    private Integer pingMin;
 
     private Map<String, ExtensionValueDataDto> extensionValues;
 
@@ -119,6 +123,30 @@ public class TablePlayerDto {
         this.playerUUID = playerUUID;
     }
 
+    public Double getPingAverage() {
+        return pingAverage;
+    }
+
+    public void setPingAverage(Double pingAverage) {
+        this.pingAverage = pingAverage;
+    }
+
+    public Integer getPingMax() {
+        return pingMax;
+    }
+
+    public void setPingMax(Integer pingMax) {
+        this.pingMax = pingMax;
+    }
+
+    public Integer getPingMin() {
+        return pingMin;
+    }
+
+    public void setPingMin(Integer pingMin) {
+        this.pingMin = pingMin;
+    }
+
     public static final class TablePlayerDtoBuilder {
         private final TablePlayerDto tablePlayerDto;
 
@@ -166,6 +194,15 @@ public class TablePlayerDto {
 
         public TablePlayerDtoBuilder withExtensionValues(Map<String, ExtensionValueDataDto> extensionValues) {
             tablePlayerDto.setExtensionValues(extensionValues);
+            return this;
+        }
+
+        public TablePlayerDtoBuilder withPing(Ping ping) {
+            if (ping != null) {
+                tablePlayerDto.setPingAverage(ping.getAverage());
+                tablePlayerDto.setPingMax(ping.getMax());
+                tablePlayerDto.setPingMin(ping.getMin());
+            }
             return this;
         }
 

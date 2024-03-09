@@ -17,25 +17,17 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.api.PlanAPI;
-import com.djrapitops.plan.component.ComponentSvc;
 import com.djrapitops.plan.delivery.DeliveryUtilities;
 import com.djrapitops.plan.delivery.export.ExportSystem;
 import com.djrapitops.plan.delivery.formatting.Formatters;
-import com.djrapitops.plan.delivery.web.ResolverSvc;
-import com.djrapitops.plan.delivery.web.ResourceSvc;
 import com.djrapitops.plan.delivery.webserver.NonProxyWebserverDisableChecker;
 import com.djrapitops.plan.delivery.webserver.WebServerSystem;
-import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.gathering.cache.CacheSystem;
 import com.djrapitops.plan.gathering.importing.ImportSystem;
 import com.djrapitops.plan.gathering.listeners.ListenerSystem;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
-import com.djrapitops.plan.query.QuerySvc;
 import com.djrapitops.plan.settings.ConfigSystem;
-import com.djrapitops.plan.settings.ListenerSvc;
-import com.djrapitops.plan.settings.SchedulerSvc;
-import com.djrapitops.plan.settings.SettingsSvc;
 import com.djrapitops.plan.settings.locale.LocaleSystem;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.file.PlanFiles;
@@ -77,14 +69,7 @@ public class PlanSystem implements SubSystem {
     private final ImportSystem importSystem;
     private final ExportSystem exportSystem;
     private final DeliveryUtilities deliveryUtilities;
-    private final ComponentSvc componentService;
-    private final ResolverSvc resolverService;
-    private final ResourceSvc resourceService;
-    private final ExtensionSvc extensionService;
-    private final QuerySvc queryService;
-    private final ListenerSvc listenerService;
-    private final SettingsSvc settingsService;
-    private final SchedulerSvc schedulerService;
+    private final ApiServices apiServices;
     private final PluginLogger logger;
     private final ErrorLogger errorLogger;
 
@@ -104,16 +89,9 @@ public class PlanSystem implements SubSystem {
             ImportSystem importSystem,
             ExportSystem exportSystem,
             DeliveryUtilities deliveryUtilities,
-            ComponentSvc componentService,
-            ResolverSvc resolverService,
-            ResourceSvc resourceService,
-            ExtensionSvc extensionService,
-            QuerySvc queryService,
-            ListenerSvc listenerService,
-            SettingsSvc settingsService,
-            SchedulerSvc schedulerService,
             PluginLogger logger,
             ErrorLogger errorLogger,
+            ApiServices apiServices, // API v5
             @SuppressWarnings("deprecation") PlanAPI.PlanAPIHolder apiHolder // Deprecated PlanAPI, backwards compatibility
     ) {
         this.files = files;
@@ -130,16 +108,9 @@ public class PlanSystem implements SubSystem {
         this.importSystem = importSystem;
         this.exportSystem = exportSystem;
         this.deliveryUtilities = deliveryUtilities;
-        this.componentService = componentService;
-        this.resolverService = resolverService;
-        this.resourceService = resourceService;
-        this.extensionService = extensionService;
-        this.queryService = queryService;
-        this.listenerService = listenerService;
-        this.settingsService = settingsService;
-        this.schedulerService = schedulerService;
         this.logger = logger;
         this.errorLogger = errorLogger;
+        this.apiServices = apiServices;
 
         logger.info("§2");
         logger.info("§2           ██▌");
@@ -162,14 +133,7 @@ public class PlanSystem implements SubSystem {
      * Enables the rest of the systems that are not enabled in {@link #enableForCommands()}.
      */
     public void enableOtherThanCommands() {
-        extensionService.register();
-        componentService.register();
-        resolverService.register();
-        resourceService.register();
-        listenerService.register();
-        settingsService.register();
-        schedulerService.register();
-        queryService.register();
+        apiServices.register();
 
         enableSystems(
                 processing,
@@ -189,11 +153,11 @@ public class PlanSystem implements SubSystem {
         // Disables Webserver if Proxy is detected in the database
         if (serverInfo.getServer().isNotProxy()) {
             processing.submitNonCritical(new NonProxyWebserverDisableChecker(
-                    configSystem.getConfig(), webServerSystem.getAddresses(), webServerSystem, logger, errorLogger
+                    configSystem.getConfig(), localeSystem.getLocale(), webServerSystem.getAddresses(), webServerSystem, logger, errorLogger
             ));
         }
 
-        extensionService.registerExtensions();
+        apiServices.registerExtensions();
         enabled = true;
 
         String javaVersion = System.getProperty("java.specification.version");
@@ -223,7 +187,7 @@ public class PlanSystem implements SubSystem {
         enabled = false;
         Formatters.clearSingleton();
 
-        extensionService.disableUpdates();
+        apiServices.disableExtensionDataUpdates();
 
         disableSystems(
                 taskSystem,
@@ -316,12 +280,8 @@ public class PlanSystem implements SubSystem {
         return enabled;
     }
 
-    public ExtensionSvc getExtensionService() {
-        return extensionService;
-    }
-
-    public ComponentSvc getComponentService() {
-        return componentService;
+    public ApiServices getApiServices() {
+        return apiServices;
     }
 
     public static long getServerEnableTime() {

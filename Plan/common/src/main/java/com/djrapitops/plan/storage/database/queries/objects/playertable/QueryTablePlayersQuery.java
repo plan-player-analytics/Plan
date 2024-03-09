@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database.queries.objects.playertable;
 
 import com.djrapitops.plan.delivery.domain.TablePlayer;
 import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
+import com.djrapitops.plan.gathering.domain.Ping;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
@@ -100,6 +101,17 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
                 AND + "ub." + UserInfoTable.USER_ID + userIdsInSet +
                 (serverUUIDs.isEmpty() ? "" : AND + "ub." + UserInfoTable.SERVER_ID + " IN (" + selectServerIds + ")");
 
+        String selectPingData = SELECT + "p." + PingTable.USER_ID + ',' +
+                "AVG(p." + PingTable.AVG_PING + ") as " + PingTable.AVG_PING + "," +
+                "MAX(p." + PingTable.MAX_PING + ") as " + PingTable.MAX_PING + "," +
+                "MIN(p." + PingTable.MIN_PING + ") as " + PingTable.MIN_PING +
+                FROM + PingTable.TABLE_NAME + " p" +
+                WHERE + "p." + PingTable.USER_ID + userIdsInSet +
+                AND + "p." + PingTable.DATE + ">=" + afterDate +
+                AND + "p." + PingTable.DATE + "<=" + beforeDate +
+                (serverUUIDs.isEmpty() ? "" : AND + "p." + PingTable.SERVER_ID + " IN (" + selectServerIds + ")") +
+                GROUP_BY + "p." + PingTable.USER_ID;
+
         String selectBaseUsers = SELECT +
                 "u." + UsersTable.USER_UUID + ',' +
                 "u." + UsersTable.USER_NAME + ',' +
@@ -109,12 +121,16 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
                 "ses.last_seen," +
                 "ses.count," +
                 "ses.active_playtime," +
-                "act.activity_index" +
+                "act.activity_index," +
+                "pi.min_ping," +
+                "pi.max_ping," +
+                "pi.avg_ping" +
                 FROM + UsersTable.TABLE_NAME + " u" +
                 LEFT_JOIN + '(' + selectBanned + ") ban on ban." + UserInfoTable.USER_ID + "=u." + UsersTable.ID +
                 LEFT_JOIN + '(' + selectLatestGeolocations + ") geo on geo." + GeoInfoTable.USER_ID + "=u." + UsersTable.ID +
                 LEFT_JOIN + '(' + selectSessionData + ") ses on ses." + SessionsTable.USER_ID + "=u." + UsersTable.ID +
                 LEFT_JOIN + '(' + NetworkActivityIndexQueries.selectActivityIndexSQL() + ") act on u." + UsersTable.ID + "=act." + UserInfoTable.USER_ID +
+                LEFT_JOIN + '(' + selectPingData + ") pi on pi." + PingTable.USER_ID + "=u." + UsersTable.ID +
                 WHERE + "u." + UsersTable.ID + userIdsInSet +
                 ORDER_BY + "ses.last_seen DESC";
 
@@ -139,7 +155,11 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
                             .lastSeen(set.getLong("last_seen"))
                             .sessionCount(set.getInt("count"))
                             .activePlaytime(set.getLong("active_playtime"))
-                            .activityIndex(new ActivityIndex(set.getDouble("activity_index"), beforeDate));
+                            .activityIndex(new ActivityIndex(set.getDouble("activity_index"), beforeDate))
+                            .ping(new Ping(0L, null,
+                                    set.getInt(PingTable.MIN_PING),
+                                    set.getInt(PingTable.MAX_PING),
+                                    set.getDouble(PingTable.AVG_PING)));
                     if (set.getString("banned") != null) {
                         player.banned();
                     }

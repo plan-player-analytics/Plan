@@ -16,11 +16,11 @@
  */
 package com.djrapitops.plan.delivery.rendering.pages;
 
+import com.djrapitops.plan.delivery.rendering.BundleAddressCorrection;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.delivery.web.ResourceService;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resource.WebResource;
-import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.theme.Theme;
@@ -50,7 +50,7 @@ public class PageFactory {
     private final Lazy<PublicHtmlFiles> publicHtmlFiles;
     private final Lazy<Theme> theme;
     private final Lazy<DBSystem> dbSystem;
-    private final Lazy<Addresses> addresses;
+    private final Lazy<BundleAddressCorrection> bundleAddressCorrection;
     private static final String ERROR_HTML_FILE = "error.html";
 
     @Inject
@@ -61,14 +61,14 @@ public class PageFactory {
             Lazy<Theme> theme,
             Lazy<DBSystem> dbSystem,
             Lazy<ServerInfo> serverInfo,
-            Lazy<Addresses> addresses
+            Lazy<BundleAddressCorrection> bundleAddressCorrection
     ) {
         this.versionChecker = versionChecker;
         this.files = files;
         this.publicHtmlFiles = publicHtmlFiles;
         this.theme = theme;
         this.dbSystem = dbSystem;
-        this.addresses = addresses;
+        this.bundleAddressCorrection = bundleAddressCorrection;
     }
 
     public Page playersPage() throws IOException {
@@ -81,16 +81,10 @@ public class PageFactory {
             WebResource resource = ResourceService.getInstance().getResource(
                     "Plan", fileName, () -> getPublicHtmlOrJarResource(fileName)
             );
-            return new ReactPage(getBasePath(), resource);
+            return new ReactPage(bundleAddressCorrection.get(), resource);
         } catch (UncheckedIOException readFail) {
             throw readFail.getCause();
         }
-    }
-
-    private String getBasePath() {
-        String address = addresses.get().getMainAddress()
-                .orElseGet(addresses.get()::getFallbackLocalhostAddress);
-        return addresses.get().getBasePath(address);
     }
 
     /**

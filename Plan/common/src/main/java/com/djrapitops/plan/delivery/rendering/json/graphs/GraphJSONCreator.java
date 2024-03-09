@@ -310,6 +310,33 @@ public class GraphJSONCreator {
                 ",\"firstDay\":" + 1 + '}';
     }
 
+    public String networkCalendarJSON() {
+        Database db = dbSystem.getDatabase();
+        long now = System.currentTimeMillis();
+        long twoYearsAgo = now - TimeUnit.DAYS.toMillis(730L);
+        int timeZoneOffset = config.getTimeZone().getOffset(now);
+        NavigableMap<Long, Integer> uniquePerDay = db.query(
+                PlayerCountQueries.uniquePlayerCounts(twoYearsAgo, now, timeZoneOffset)
+        );
+        NavigableMap<Long, Integer> newPerDay = db.query(
+                PlayerCountQueries.newPlayerCounts(twoYearsAgo, now, timeZoneOffset)
+        );
+        NavigableMap<Long, Long> playtimePerDay = db.query(
+                SessionQueries.playtimePerDay(twoYearsAgo, now, timeZoneOffset)
+        );
+        NavigableMap<Long, Integer> sessionsPerDay = db.query(
+                SessionQueries.sessionCountPerDay(twoYearsAgo, now, timeZoneOffset)
+        );
+        return "{\"data\":" +
+                graphs.calendar().serverCalendar(
+                        uniquePerDay,
+                        newPerDay,
+                        playtimePerDay,
+                        sessionsPerDay
+                ).toCalendarSeries() +
+                ",\"firstDay\":" + 1 + '}';
+    }
+
     public Map<String, Object> serverWorldPieJSONAsMap(ServerUUID serverUUID) {
         Database db = dbSystem.getDatabase();
         WorldTimes worldTimes = db.query(WorldTimesQueries.fetchServerTotalWorldTimes(serverUUID));
@@ -462,7 +489,7 @@ public class GraphJSONCreator {
         Integer unknown = joinAddresses.get(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
         if (unknown != null) {
             joinAddresses.remove(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
-            joinAddresses.put(locale.getString(GenericLang.UNKNOWN).toLowerCase(), unknown);
+            joinAddresses.put(GenericLang.UNKNOWN.getKey(), unknown);
         }
     }
 
@@ -510,7 +537,7 @@ public class GraphJSONCreator {
         List<ServerSpecificLineGraph> proxyGraphs = new ArrayList<>();
         for (Server proxy : db.query(ServerQueries.fetchProxyServers())) {
             ServerUUID proxyUUID = proxy.getUuid();
-            List<Double[]> points = Lists.map(
+            List<Number[]> points = Lists.map(
                     db.query(TPSQueries.fetchPlayersOnlineOfServer(halfYearAgo, now, proxyUUID)),
                     point -> Point.fromDateObj(point).toArray()
             );

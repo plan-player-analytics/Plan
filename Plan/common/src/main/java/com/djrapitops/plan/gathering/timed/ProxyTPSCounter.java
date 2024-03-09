@@ -39,7 +39,7 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class ProxyTPSCounter extends TPSCounter {
 
-    private final ServerSensor<Object> serverSensor;
+    private final ServerSensor<?> serverSensor;
     private final SystemUsageBuffer systemUsage;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
@@ -49,7 +49,7 @@ public class ProxyTPSCounter extends TPSCounter {
 
     @Inject
     public ProxyTPSCounter(
-            ServerSensor<Object> serverSensor,
+            ServerSensor<?> serverSensor,
             SystemUsageBuffer systemUsage,
             DBSystem dbSystem,
             ServerInfo serverInfo,

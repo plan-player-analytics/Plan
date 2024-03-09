@@ -17,9 +17,11 @@
 package com.djrapitops.plan.gathering;
 
 import com.djrapitops.plan.PlanBungee;
+import com.djrapitops.plan.gathering.domain.PluginMetadata;
 import com.djrapitops.plan.identification.properties.RedisCheck;
 import com.djrapitops.plan.identification.properties.RedisPlayersOnlineSupplier;
 import net.md_5.bungee.api.connection.ProxiedPlayer;
+import net.md_5.bungee.api.plugin.Plugin;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -35,11 +37,13 @@ public class BungeeSensor implements ServerSensor<Object> {
     private final IntSupplier onlinePlayerCountSupplier;
     private final IntSupplier onlinePlayerCountBungee;
     private final Supplier<Collection<ProxiedPlayer>> getPlayers;
+    private final Supplier<Collection<Plugin>> getPlugins;
 
     @Inject
     public BungeeSensor(PlanBungee plugin) {
         getPlayers = plugin.getProxy()::getPlayers;
         onlinePlayerCountBungee = plugin.getProxy()::getOnlineCount;
+        getPlugins = plugin.getProxy().getPluginManager()::getPlugins;
         onlinePlayerCountSupplier = RedisCheck.isClassAvailable() ? new RedisPlayersOnlineSupplier() : onlinePlayerCountBungee;
     }
 
@@ -62,5 +66,13 @@ public class BungeeSensor implements ServerSensor<Object> {
     @Override
     public boolean usingRedisBungee() {
         return RedisCheck.isClassAvailable();
+    }
+
+    @Override
+    public List<PluginMetadata> getInstalledPlugins() {
+        return getPlugins.get().stream()
+                .map(Plugin::getDescription)
+                .map(description -> new PluginMetadata(description.getName(), description.getVersion()))
+                .collect(Collectors.toList());
     }
 }

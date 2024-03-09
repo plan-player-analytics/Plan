@@ -20,8 +20,8 @@ import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.transactions.GrantWebPermissionToGroupsWithPermissionTransaction;
-import com.djrapitops.plan.storage.database.transactions.StoreMissingWebPermissionsTransaction;
+import com.djrapitops.plan.storage.database.transactions.webuser.GrantWebPermissionToGroupsWithPermissionTransaction;
+import com.djrapitops.plan.storage.database.transactions.webuser.StoreMissingWebPermissionsTransaction;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import net.playeranalytics.plugin.server.PluginLogger;
 
@@ -64,6 +64,8 @@ public class ResolverSvc implements ResolverService {
     public void registerResolver(String pluginName, String start, Resolver resolver) {
         basicResolvers.add(new Container(pluginName, checking -> checking.startsWith(start), resolver, start));
         Collections.sort(basicResolvers);
+        Set<String> usedWebPermissions = resolver.usedWebPermissions();
+        dbSystem.getDatabase().executeTransaction(new StoreMissingWebPermissionsTransaction(usedWebPermissions));
         if (config.isTrue(PluginSettings.DEV_MODE)) {
             logger.info("Registered basic resolver '" + start + "' for plugin " + pluginName);
         }

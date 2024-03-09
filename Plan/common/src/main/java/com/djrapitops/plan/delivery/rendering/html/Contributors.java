@@ -36,6 +36,7 @@ public class Contributors {
             new Contributor("Antonok", CODE),
             new Contributor("Argetan", CODE),
             new Contributor("Aurelien", CODE, LANG),
+            new Contributor("Binero", CODE),
             new Contributor("BrainStone", CODE),
             new Contributor("Catalina", LANG),
             new Contributor("Elguerrero", LANG),
@@ -107,7 +108,10 @@ public class Contributors {
             new Contributor("lis2a", LANG),
             new Contributor("ToxiWoxi", CODE),
             new Contributor("xlanyleeet", LANG),
-            new Contributor("Jumala9163", LANG)
+            new Contributor("Jumala9163", LANG),
+            new Contributor("Dreeam-qwq", CODE),
+            new Contributor("jhqwqmc", LANG),
+            new Contributor("liuzhen932", LANG)
     };
 
     private Contributors() {

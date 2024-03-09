@@ -25,6 +25,7 @@ import com.djrapitops.plan.delivery.webserver.configuration.AddressAllowList;
 import com.djrapitops.plan.extension.ExtensionServerDataUpdater;
 import com.djrapitops.plan.gathering.ShutdownDataPreservation;
 import com.djrapitops.plan.gathering.ShutdownHook;
+import com.djrapitops.plan.gathering.timed.InstalledPluginGatheringTask;
 import com.djrapitops.plan.gathering.timed.NukkitPingCounter;
 import com.djrapitops.plan.gathering.timed.ServerTPSCounter;
 import com.djrapitops.plan.gathering.timed.SystemUsageBuffer;
@@ -98,4 +99,8 @@ public interface NukkitTaskModule {
     @Binds
     @IntoSet
     TaskSystem.Task bindAddressAllowListUpdateTask(AddressAllowList addressAllowList);
+
+    @Binds
+    @IntoSet
+    TaskSystem.Task bindInstalledPluginGatheringTask(InstalledPluginGatheringTask installedPluginGatheringTask);
 }

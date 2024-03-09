@@ -19,7 +19,7 @@ package com.djrapitops.plan.extension.implementation.storage.transactions.result
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.identification.ServerUUID;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionProviderTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
 import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
@@ -30,9 +30,9 @@ import java.util.UUID;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.AND;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
-import static com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerValueTable.*;
-import static com.djrapitops.plan.storage.database.sql.tables.ExtensionServerValueTable.DOUBLE_VALUE;
-import static com.djrapitops.plan.storage.database.sql.tables.ExtensionServerValueTable.PERCENTAGE_VALUE;
+import static com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPlayerValueTable.*;
+import static com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionServerValueTable.DOUBLE_VALUE;
+import static com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionServerValueTable.PERCENTAGE_VALUE;
 
 /**
  * Transaction to store method result of.

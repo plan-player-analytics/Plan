@@ -21,6 +21,7 @@ import io.netty.channel.local.LocalAddress;
 import io.netty.channel.unix.DomainSocketAddress;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 
 import java.net.*;
 import java.util.Optional;
@@ -45,12 +46,12 @@ public class FabricPlayerData implements PlatformPlayerData {
 
     @Override
     public String getName() {
-        return player.getEntityName();
+        return player.getGameProfile().getName();
     }
 
     @Override
     public Optional<String> getDisplayName() {
-        return Optional.of(player.getDisplayName().getString());
+        return Optional.ofNullable(player.getDisplayName()).map(Text::getString);
     }
 
     @Override

@@ -18,7 +18,7 @@ package com.djrapitops.plan.storage.database.transactions.patches;
 
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 
-import static com.djrapitops.plan.storage.database.sql.tables.ExtensionTableProviderTable.*;
+import static com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionTableProviderTable.*;
 
 /**
  * Adds format_1 to _5 fields to plan_extension_tables table.

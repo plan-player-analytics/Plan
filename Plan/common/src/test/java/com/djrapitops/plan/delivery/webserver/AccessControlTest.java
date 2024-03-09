@@ -27,11 +27,11 @@ import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.ExtensionsDatabaseTest;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
-import com.djrapitops.plan.storage.database.transactions.StoreWebGroupTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
+import com.djrapitops.plan.storage.database.transactions.webuser.StoreWebGroupTransaction;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
-import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -70,12 +70,14 @@ import static org.junit.jupiter.api.Assertions.*;
 class AccessControlTest {
 
     private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
+    private static final String QUERY_VIEW_SIMPLE = "%7B%22afterDate%22%3A%2201%2F01%2F1970%22%2C%22afterTime%22%3A%2200%3A00%22%2C%22beforeDate%22%3A%2201%2F01%2F2024%22%2C%22beforeTime%22%3A%2200%3A00%22%2C%22servers%22%3A%5B%5D%7D";
 
     private static final HTTPConnector CONNECTOR = new HTTPConnector();
 
     private static PlanSystem system;
     private static String address;
     private static String cookieNoAccess;
+
 
     static Stream<Arguments> testCases() {
         return Stream.of(
@@ -115,6 +117,7 @@ class AccessControlTest {
                 Arguments.of("/v1/graph?type=playersOnline&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_OVERVIEW_PLAYERS_ONLINE_GRAPH, 200, 403),
                 Arguments.of("/v1/graph?type=uniqueAndNew", WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_DAY_BY_DAY, 200, 403),
                 Arguments.of("/v1/graph?type=hourlyUniqueAndNew", WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_HOUR_BY_HOUR, 200, 403),
+                Arguments.of("/v1/graph?type=serverCalendar", WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_CALENDAR, 200, 403),
                 Arguments.of("/v1/graph?type=serverPie", WebPermission.PAGE_NETWORK_SESSIONS_SERVER_PIE, 200, 403),
                 Arguments.of("/v1/graph?type=joinAddressPie", WebPermission.PAGE_NETWORK_JOIN_ADDRESSES_GRAPHS_PIE, 200, 403),
                 Arguments.of("/v1/graph?type=activity", WebPermission.PAGE_NETWORK_PLAYERBASE_GRAPHS, 200, 403),
@@ -132,6 +135,10 @@ class AccessControlTest {
                 Arguments.of("/v1/filters", WebPermission.ACCESS_QUERY, 200, 403),
                 Arguments.of("/v1/query", WebPermission.ACCESS_QUERY, 400, 403),
                 Arguments.of("/v1/query?q=%5B%5D&view=%7B%22afterDate%22%3A%2224%2F10%2F2022%22%2C%22afterTime%22%3A%2218%3A21%22%2C%22beforeDate%22%3A%2223%2F11%2F2022%22%2C%22beforeTime%22%3A%2217%3A21%22%2C%22servers%22%3A%5B%0A%7B%22serverUUID%22%3A%22" + TestConstants.SERVER_UUID_STRING + "%22%2C%22serverName%22%3A%22" + TestConstants.SERVER_NAME + "%22%2C%22proxy%22%3Afalse%7D%5D%7D", WebPermission.ACCESS_QUERY, 200, 403),
+                Arguments.of("/v1/query?q=%5B%7B%22kind%22%3A%22playedBetween%22%2C%22parameters%22%3A%7B%22afterDate%22%3A%2201%2F01%2F1970%22%2C%22afterTime%22%3A%2200%3A00%22%2C%22beforeDate%22%3A%2201%2F01%2F2024%22%2C%22beforeTime%22%3A%2200%3A00%22%7D%7D%5D&view=" + QUERY_VIEW_SIMPLE, WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_CALENDAR, 200, 403),
+                Arguments.of("/v1/query?q=%5B%7B%22kind%22%3A%22playedBetween%22%2C%22parameters%22%3A%7B%22afterDate%22%3A%2201%2F01%2F1970%22%2C%22afterTime%22%3A%2200%3A00%22%2C%22beforeDate%22%3A%2201%2F01%2F2024%22%2C%22beforeTime%22%3A%2200%3A00%22%7D%7D%5D&view=" + QUERY_VIEW_SIMPLE, WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_CALENDAR, 200, 403),
+                Arguments.of("/v1/query?q=%5B%7B%22kind%22%3A%22geolocations%22%2C%22parameters%22%3A%7B%22selected%22%3A%22%5B%5C%22FIN%5C%22%5D%22%7D%7D%5D&view=" + QUERY_VIEW_SIMPLE, WebPermission.PAGE_NETWORK_GEOLOCATIONS_MAP, 200, 403),
+                Arguments.of("/v1/query?q=%5B%7B%22kind%22%3A%22geolocations%22%2C%22parameters%22%3A%7B%22selected%22%3A%22%5B%5C%22FIN%5C%22%5D%22%7D%7D%5D&view=" + QUERY_VIEW_SIMPLE, WebPermission.PAGE_SERVER_GEOLOCATIONS_MAP, 200, 403),
                 Arguments.of("/v1/errors", WebPermission.ACCESS_ERRORS, 200, 403),
                 Arguments.of("/errors", WebPermission.ACCESS_ERRORS, 200, 403),
                 Arguments.of("/v1/network/listServers", WebPermission.PAGE_NETWORK_PERFORMANCE, 200, 403),
@@ -154,7 +161,9 @@ class AccessControlTest {
                 Arguments.of("/v1/deleteGroup?group=admin&moveTo=no_access", WebPermission.MANAGE_GROUPS, 400, 403),
                 Arguments.of("/v1/saveGroupPermissions?group=admin", WebPermission.MANAGE_GROUPS, 400, 403),
                 Arguments.of("/v1/preferences", WebPermission.ACCESS, 200, 200),
-                Arguments.of("/v1/storePreferences", WebPermission.ACCESS, 400, 400)
+                Arguments.of("/v1/storePreferences", WebPermission.ACCESS, 400, 400),
+                Arguments.of("/v1/pluginHistory?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_NETWORK_PLUGIN_HISTORY, 200, 403),
+                Arguments.of("/v1/pluginHistory?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_PLUGIN_HISTORY, 200, 403)
         );
     }
 
@@ -192,7 +201,7 @@ class AccessControlTest {
                 address,
                 TestConstants.VERSION)));
 
-        Caller caller = system.getExtensionService().register(new ExtensionsDatabaseTest.PlayerExtension())
+        Caller caller = system.getApiServices().getExtensionService().register(new ExtensionsDatabaseTest.PlayerExtension())
                 .orElseThrow(AssertionError::new);
         caller.updatePlayerData(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME);
 

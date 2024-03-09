@@ -70,7 +70,7 @@ class HttpAccessControlTest {
                 ADDRESS,
                 TestConstants.VERSION)));
 
-        Caller caller = system.getExtensionService().register(new ExtensionsDatabaseTest.PlayerExtension())
+        Caller caller = system.getApiServices().getExtensionService().register(new ExtensionsDatabaseTest.PlayerExtension())
                 .orElseThrow(AssertionError::new);
         caller.updatePlayerData(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME);
 
@@ -91,6 +91,7 @@ class HttpAccessControlTest {
             "/v1/saveGroupPermissions",
             "/v1/deleteGroup",
             "/v1/storePreferences",
+            "/v1/pluginHistory?server=" + TestConstants.SERVER_UUID_STRING,
             "/manage",
             "/auth/register",
             "/auth/login",

@@ -126,7 +126,7 @@ public interface QueryService {
     CommonQueries getCommonQueries();
 
     /**
-     * See https://docs.oracle.com/javase/8/docs/api/java/util/function/package-summary.html
+     * See <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/package-summary.html">Functional Interfaces</a>
      */
     @FunctionalInterface
     interface ThrowingConsumer<T> {
@@ -134,7 +134,7 @@ public interface QueryService {
     }
 
     /**
-     * See https://docs.oracle.com/javase/8/docs/api/java/util/function/package-summary.html
+     * See <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/package-summary.html">Functional Interfaces</a>
      */
     @FunctionalInterface
     interface ThrowingFunction<T, R> {
@@ -142,7 +142,7 @@ public interface QueryService {
     }
 
     /**
-     * See https://docs.oracle.com/javase/8/docs/api/java/util/function/package-summary.html
+     * See <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/package-summary.html">Functional Interfaces</a>
      */
     @FunctionalInterface
     interface VoidFunction {

@@ -30,6 +30,11 @@ package com.djrapitops.plan.extension;
  */
 public interface Group {
 
+    /**
+     * Get the name of the group.
+     *
+     * @return Name of the group given by a {@link com.djrapitops.plan.extension.annotation.GroupProvider}, e.g. "Miner"
+     */
     String getGroupName();
 
 }

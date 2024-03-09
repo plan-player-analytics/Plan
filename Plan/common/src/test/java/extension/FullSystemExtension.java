@@ -22,6 +22,7 @@ import com.djrapitops.plan.delivery.DeliveryUtilities;
 import com.djrapitops.plan.delivery.export.Exporter;
 import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.settings.ConfigSystem;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.Database;
@@ -60,6 +61,7 @@ public class FullSystemExtension implements ParameterResolver, BeforeAllCallback
                 .put(PlanSystem.class, () -> planSystem)
                 .put(PlanFiles.class, () -> planSystem.getPlanFiles())
                 .put(PlanConfig.class, () -> planSystem.getConfigSystem().getConfig())
+                .put(ConfigSystem.class, () -> planSystem.getConfigSystem())
                 .put(ServerUUID.class, () -> planSystem.getServerInfo().getServerUUID())
                 .put(PlanPluginComponent.class, () -> {
                     try {

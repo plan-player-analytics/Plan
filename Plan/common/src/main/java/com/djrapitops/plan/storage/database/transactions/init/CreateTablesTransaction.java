@@ -17,6 +17,8 @@
 package com.djrapitops.plan.storage.database.transactions.init;
 
 import com.djrapitops.plan.storage.database.sql.tables.*;
+import com.djrapitops.plan.storage.database.sql.tables.extension.*;
+import com.djrapitops.plan.storage.database.sql.tables.webuser.*;
 import com.djrapitops.plan.storage.database.transactions.events.StoreJoinAddressTransaction;
 import com.djrapitops.plan.storage.database.transactions.patches.SecurityTableIdPatch;
 
@@ -56,6 +58,7 @@ public class CreateTablesTransaction extends OperationCriticalTransaction {
         // Ensure plan_security has id column
         executeOther(new SecurityTableIdPatch());
         execute(WebUserPreferencesTable.createTableSQL(dbType));
+        execute(PluginVersionTable.createTableSQL(dbType));
         execute(WhitelistBounceTable.createTableSQL(dbType));
 
         // DataExtension tables

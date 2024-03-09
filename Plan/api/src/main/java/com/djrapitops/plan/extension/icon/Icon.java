@@ -21,7 +21,7 @@ import java.util.Objects;
 /**
  * Object that represents an icon on the website.
  * <p>
- * See https://fontawesome.com/icons (select 'free')) for icons and their {@link Family}.
+ * See <a href="https://fontawesome.com/icons">FontAwesome</a> (select 'free')) for icons and their {@link Family}.
  *
  * @author AuroraLS3
  */
@@ -92,6 +92,9 @@ public class Icon {
         return "Icon{" + type.name() + ", '" + name + '\'' + ", " + color.name() + '}';
     }
 
+    /**
+     * Builder for an {@link Icon}.
+     */
     public static class Builder {
 
         private final Icon icon;
