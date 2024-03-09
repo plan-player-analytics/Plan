@@ -26,7 +26,7 @@ import com.maxmind.geoip2.model.CountryResponse;
 import com.maxmind.geoip2.record.Country;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
-import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.IOUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -119,7 +119,7 @@ public class GeoLite2Geolocator implements Geolocator {
     private void findAndCopyFromTar(TarArchiveInputStream tarIn, FileOutputStream fos) throws IOException {
         // Breadth first search
         Queue<TarArchiveEntry> entries = new ArrayDeque<>();
-        entries.add(tarIn.getNextTarEntry());
+        entries.add(tarIn.getNextEntry());
         while (!entries.isEmpty()) {
             TarArchiveEntry entry = entries.poll();
             if (entry.isDirectory()) {
@@ -132,7 +132,7 @@ public class GeoLite2Geolocator implements Geolocator {
                 break; // Found it
             }
 
-            TarArchiveEntry next = tarIn.getNextTarEntry();
+            TarArchiveEntry next = tarIn.getNextEntry();
             if (next != null) entries.add(next);
         }
     }

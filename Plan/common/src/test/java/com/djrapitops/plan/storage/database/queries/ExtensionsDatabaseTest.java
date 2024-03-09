@@ -223,16 +223,12 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         ConditionalExtension.condition = false;
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
-//        db().executeTransaction(new RemoveUnsatisfiedConditionalPlayerResultsTransaction());
-
         // Check that the wanted data exists
         checkThatPlayerDataExists(ConditionalExtension.condition);
 
         // Reverse condition
         ConditionalExtension.condition = false;
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
-
-//        db().executeTransaction(new RemoveUnsatisfiedConditionalPlayerResultsTransaction());
 
         // Check that the wanted data exists
         checkThatPlayerDataExists(ConditionalExtension.condition);
@@ -276,16 +272,12 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         ConditionalExtension.condition = false;
         extensionService.updateServerValues(CallEvents.MANUAL);
 
-//        db().executeTransaction(new RemoveUnsatisfiedConditionalServerResultsTransaction());
-
         // Check that the wanted data exists
         checkThatServerDataExists(ConditionalExtension.condition);
 
         // Reverse condition
         ConditionalExtension.condition = false;
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
-
-//        db().executeTransaction(new RemoveUnsatisfiedConditionalServerResultsTransaction());
 
         // Check that the wanted data exists
         checkThatServerDataExists(ConditionalExtension.condition);
