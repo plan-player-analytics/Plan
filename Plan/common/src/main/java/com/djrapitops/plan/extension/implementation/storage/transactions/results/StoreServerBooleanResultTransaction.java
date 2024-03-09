@@ -131,13 +131,13 @@ public class StoreServerBooleanResultTransaction extends ThrowawayTransaction {
         // Need to select:
         // Provider IDs where condition of this provider is met
         @Language("SQL") String selectUnsatisfiedProviderIds = "SELECT unfulfilled.id " +
-                "FROM plan_extension_providers stored " +
+                "FROM plan_extension_providers indb " +
                 "JOIN plan_extension_providers unfulfilled ON unfulfilled.condition_name=" +
                 // This gives the unfulfilled condition, eg. if value is true not_condition is unfulfilled.
-                (value ? "CONCAT('not_', " : "") + "stored.provided_condition" + (value ? ")" : "") +
-                " AND stored.plugin_id=unfulfilled.plugin_id" +
-                " WHERE stored.id=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID +
-                " AND stored.provided_condition IS NOT NULL";
+                (value ? "CONCAT('not_', " : "") + "indb.provided_condition" + (value ? ")" : "") +
+                " AND indb.plugin_id=unfulfilled.plugin_id" +
+                " WHERE indb.id=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID +
+                " AND indb.provided_condition IS NOT NULL";
 
         return extractIds(selectUnsatisfiedProviderIds);
     }
@@ -163,13 +163,13 @@ public class StoreServerBooleanResultTransaction extends ThrowawayTransaction {
         // Need to select:
         // Provider IDs where condition of this provider is met
         @Language("SQL") String selectUnsatisfiedProviderIds = "SELECT unfulfilled.id " +
-                "FROM plan_extension_providers stored " +
+                "FROM plan_extension_providers indb " +
                 "JOIN plan_extension_tables unfulfilled ON unfulfilled.condition_name=" +
                 // This gives the unfulfilled condition, eg. if value is true not_condition is unfulfilled.
-                (value ? "CONCAT('not_', " : "") + "stored.provided_condition" + (value ? ")" : "") +
-                " AND stored.plugin_id=unfulfilled.plugin_id" +
-                " WHERE stored.id=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID +
-                " AND stored.provided_condition IS NOT NULL";
+                (value ? "CONCAT('not_', " : "") + "indb.provided_condition" + (value ? ")" : "") +
+                " AND indb.plugin_id=unfulfilled.plugin_id" +
+                " WHERE indb.id=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID +
+                " AND indb.provided_condition IS NOT NULL";
 
         return extractIds(selectUnsatisfiedProviderIds);
     }
