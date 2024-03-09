@@ -33,7 +33,7 @@ import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTr
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.google.gson.Gson;
 import extension.FullSystemExtension;
-import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;

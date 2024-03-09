@@ -17,7 +17,7 @@
 package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.delivery.webserver.http.WebServer;
-import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.IOUtils;
 import org.junit.jupiter.api.Test;
 import utilities.HTTPConnector;
 
@@ -73,13 +73,13 @@ interface HttpsServerTest {
                 default -> throw new IllegalStateException(address + "| Wrong response code " + responseCode);
             }
         } finally {
-            connection.disconnect();
+            if (connection != null) connection.disconnect();
         }
     }
 
     default String login(String address) throws IOException, KeyManagementException, NoSuchAlgorithmException {
         HttpURLConnection connection = null;
-        String cookie = "";
+        String cookie;
         try {
             connection = connector.getConnection("POST", address + "/auth/login");
             connection.setDoOutput(true);
