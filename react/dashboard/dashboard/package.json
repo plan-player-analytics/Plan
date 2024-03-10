@@ -24,7 +24,7 @@
     "@testing-library/user-event": "^14.5.2",
     "axios": "^1.6.7",
     "bootstrap": "^5.3.3",
-    "export-to-csv": "^1.2.3",
+    "export-to-csv": "^1.2.4",
     "highcharts": "^10.3.3",
     "i18next": "^23.10.0",
     "i18next-chained-backend": "^4.6.2",
@@ -36,12 +36,12 @@
     "react-bootstrap": "^2.10.1",
     "react-bootstrap-range-slider": "^3.0.8",
     "react-dom": "^18.2.0",
-    "react-i18next": "^14.0.5",
+    "react-i18next": "^14.1.0",
     "react-mcjsonchat": "^1.0.0",
     "react-router-dom": "6",
     "sass": "^1.71.1",
     "source-map-explorer": "^2.5.2",
-    "swagger-ui": "^5.11.8",
+    "swagger-ui": "^5.11.10",
     "web-vitals": "^3.0.2"
   },
   "scripts": {
@@ -69,6 +69,6 @@
   },
   "devDependencies": {
     "@vitejs/plugin-react": "^4.2.1",
-    "vite": "^5.1.4"
+    "vite": "^5.1.5"
   }
 }

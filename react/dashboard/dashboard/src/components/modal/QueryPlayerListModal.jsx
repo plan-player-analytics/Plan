@@ -25,10 +25,11 @@ const QueryPlayerListModal = ({open, toggle, queryData, title}) => {
                 <PlayerTable data={queryData?.data?.players || {players: [], extensionDescriptors: []}}
                              orderBy={2}/>}
             <Modal.Footer>
-                {hasPermission('access.query') && Boolean(queryData?.data?.players.players.length) && <Link className="btn bg-theme"
-                      to={"/query/result?timestamp=" + queryData?.timestamp}>
-                    {t('html.query.label.showFullQuery')} <Fa icon={faArrowRight}/>
-                </Link>}
+                {hasPermission('access.query') && Boolean(queryData?.data?.players.players.length) &&
+                    <Link className="btn bg-theme"
+                          to={"/query/result?timestamp=" + queryData?.timestamp}>
+                        {t('html.query.label.showFullQuery')} <Fa icon={faArrowRight}/>
+                    </Link>}
                 <button className="btn bg-theme" onClick={toggle}>OK</button>
             </Modal.Footer>
         </Modal>

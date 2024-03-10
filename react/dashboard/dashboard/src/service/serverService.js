@@ -100,6 +100,7 @@ export const fetchPlayersTable = async (timestamp, identifier) => {
         return await fetchPlayersTableNetwork(timestamp);
     }
 }
+
 const fetchPlayersTableServer = async (timestamp, identifier) => {
     let url = `/v1/playersTable?server=${identifier}`;
     if (staticSite) url = `/data/playersTable-${identifier}.json`;
@@ -109,6 +110,12 @@ const fetchPlayersTableServer = async (timestamp, identifier) => {
 const fetchPlayersTableNetwork = async (timestamp) => {
     let url = `/v1/playersTable`;
     if (staticSite) url = `/data/playersTable.json`;
+    return doGetRequest(url, timestamp);
+}
+
+export const fetchAllowlistBounces = async (timestamp, identifier) => {
+    let url = `/v1/gameAllowlistBounces?server=${identifier}`;
+    if (staticSite) url = `/data/gameAllowlistBounces-${identifier}.json`;
     return doGetRequest(url, timestamp);
 }
 

@@ -9,6 +9,7 @@ import {
     faCodeCompare,
     faCogs,
     faCubes,
+    faFilterCircleXmark,
     faGlobe,
     faInfoCircle,
     faLocationArrow,
@@ -72,6 +73,12 @@ const ServerSidebar = () => {
                         icon: faCampground,
                         href: "pvppve",
                         permission: 'page.server.player.versus'
+                    },
+                    {
+                        name: 'html.label.allowlist',
+                        icon: faFilterCircleXmark,
+                        href: "allowlist",
+                        permission: 'page.server.allowlist.bounce'
                     }
                 ],
             },
