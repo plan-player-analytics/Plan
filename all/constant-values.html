@@ -372,6 +372,41 @@ loadScripts(document, 'script');</script>
 </div>
 </li>
 <li>
+<div class="caption"><span>com.djrapitops.plan.storage.database.sql.tables.<a href="com/djrapitops/plan/storage/database/sql/tables/AllowlistBounceTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables">AllowlistBounceTable</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Constant Field</div>
+<div class="table-header col-last">Value</div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.AllowlistBounceTable.ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/AllowlistBounceTable.html#ID">ID</a></code></div>
+<div class="col-last even-row-color"><code>"id"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.AllowlistBounceTable.INCREMENT_TIMES_STATEMENT">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/AllowlistBounceTable.html#INCREMENT_TIMES_STATEMENT">INCREMENT_TIMES_STATEMENT</a></code></div>
+<div class="col-last odd-row-color"><code>"UPDATE plan_allowlist_bounce SET times=times+1, last_bounce=? WHERE uuid=? AND server_id=(SELECT plan_servers.id FROM plan_servers WHERE plan_servers.uuid=? LIMIT 1)"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.AllowlistBounceTable.INSERT_STATEMENT">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/AllowlistBounceTable.html#INSERT_STATEMENT">INSERT_STATEMENT</a></code></div>
+<div class="col-last even-row-color"><code>"INSERT INTO plan_allowlist_bounce (uuid,name,server_id,times,last_bounce) VALUES (?,?,(SELECT plan_servers.id FROM plan_servers WHERE plan_servers.uuid=? LIMIT 1),?,?)"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.AllowlistBounceTable.LAST_BOUNCE">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/AllowlistBounceTable.html#LAST_BOUNCE">LAST_BOUNCE</a></code></div>
+<div class="col-last odd-row-color"><code>"last_bounce"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.AllowlistBounceTable.SERVER_ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/AllowlistBounceTable.html#SERVER_ID">SERVER_ID</a></code></div>
+<div class="col-last even-row-color"><code>"server_id"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.AllowlistBounceTable.TABLE_NAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/AllowlistBounceTable.html#TABLE_NAME">TABLE_NAME</a></code></div>
+<div class="col-last odd-row-color"><code>"plan_allowlist_bounce"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.AllowlistBounceTable.TIMES">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/AllowlistBounceTable.html#TIMES">TIMES</a></code></div>
+<div class="col-last even-row-color"><code>"times"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.AllowlistBounceTable.USER_NAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/AllowlistBounceTable.html#USER_NAME">USER_NAME</a></code></div>
+<div class="col-last odd-row-color"><code>"name"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.AllowlistBounceTable.UUID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/17/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/AllowlistBounceTable.html#UUID">UUID</a></code></div>
+<div class="col-last even-row-color"><code>"uuid"</code></div>
+</div>
+</li>
+<li>
 <div class="caption"><span>com.djrapitops.plan.storage.database.sql.tables.<a href="com/djrapitops/plan/storage/database/sql/tables/CookieTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables">CookieTable</a></span></div>
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
