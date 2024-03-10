@@ -285,6 +285,15 @@ public enum HtmlLang implements Lang {
     LABEL_TABLE_SHOW_PER_PAGE("html.label.table.showPerPage", "Show per page"),
     LABEL_EXPORT("html.label.export", "Export"),
 
+    LABEL_ALLOWLIST("html.label.allowlist", "Allowlist"),
+    LABEL_ALLOWLIST_BOUNCES("html.label.allowlistBounces", "Allowlist Bounces"),
+    LABEL_ATTEMPTS("html.label.attempts", "Attempts"),
+    LABEL_LAST_KNOWN_ATTEMPT("html.label.lastKnownAttempt", "Last Known Attempt"),
+    LABEL_PREVIOUS_ATTEMPT("html.label.lastBlocked", "Last Blocked"),
+    LABEL_LAST_ALLOWED_LOGIN("html.label.lastAllowed", "Last Allowed"),
+    LABEL_BLOCKED("html.label.blocked", "Blocked"),
+    LABEL_ALLOWED("html.label.allowed", "Allowed"),
+
     LOGIN_LOGIN("html.login.login", "Login"),
     LOGIN_LOGOUT("html.login.logout", "Logout"),
     LOGIN_USERNAME("html.login.username", "Username"),

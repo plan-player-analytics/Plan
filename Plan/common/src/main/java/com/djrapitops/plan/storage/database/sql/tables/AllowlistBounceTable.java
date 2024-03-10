@@ -63,6 +63,7 @@ public class AllowlistBounceTable {
                 .column(USER_NAME, Sql.varchar(36)).notNull()
                 .column(SERVER_ID, Sql.INT).notNull()
                 .column(TIMES, Sql.INT).notNull().defaultValue("0")
+                .column(LAST_BOUNCE, Sql.LONG).notNull()
                 .foreignKey(SERVER_ID, ServerTable.TABLE_NAME, ServerTable.ID)
                 .toString();
     }

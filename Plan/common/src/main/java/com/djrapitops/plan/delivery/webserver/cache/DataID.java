@@ -57,6 +57,7 @@ public enum DataID {
     JOIN_ADDRESSES_BY_DAY,
     PLAYER_RETENTION,
     PLAYER_JOIN_ADDRESSES,
+    PLAYER_ALLOWLIST_BOUNCES,
     ;
 
     public String of(ServerUUID serverUUID) {

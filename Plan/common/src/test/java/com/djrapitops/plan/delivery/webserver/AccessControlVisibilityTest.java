@@ -136,6 +136,7 @@ class AccessControlVisibilityTest {
                 Arguments.arguments(WebPermission.PAGE_SERVER_PLAYER_VERSUS_OVERVIEW, "pvp-pve-as-numbers", "pvppve"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_PLAYER_VERSUS_OVERVIEW, "pvp-pve-insights", "pvppve"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_PLAYER_VERSUS_KILL_LIST, "pvp-kills-table", "pvppve"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_ALLOWLIST_BOUNCE, "allowlist-bounce-table", "allowlist"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_PLAYERBASE_OVERVIEW, "playerbase-trends", "playerbase"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_PLAYERBASE_OVERVIEW, "playerbase-insights", "playerbase"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_PLAYERBASE_GRAPHS, "playerbase-graph", "playerbase"),

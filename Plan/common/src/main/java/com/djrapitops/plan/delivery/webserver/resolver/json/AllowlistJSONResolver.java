@@ -108,7 +108,7 @@ public class AllowlistJSONResolver extends JSONResolver {
 
         ServerUUID serverUUID = identifiers.getServerUUID(request);
         Database database = dbSystem.getDatabase();
-        return jsonResolverService.resolve(timestamp, DataID.PLAYER_RETENTION, serverUUID,
+        return jsonResolverService.resolve(timestamp, DataID.PLAYER_ALLOWLIST_BOUNCES, serverUUID,
                 theUUID -> Map.of(
                         "allowlist_bounces", database.query(AllowlistQueries.getBounces(serverUUID)),
                         "last_seen_by_uuid", database.query(SessionQueries.getLastSeen(serverUUID))
