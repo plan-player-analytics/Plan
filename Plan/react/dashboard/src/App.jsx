@@ -32,6 +32,7 @@ const ServerOverview = React.lazy(() => import("./views/server/ServerOverview"))
 const OnlineActivity = React.lazy(() => import("./views/server/OnlineActivity"));
 const ServerSessions = React.lazy(() => import("./views/server/ServerSessions"));
 const ServerPvpPve = React.lazy(() => import("./views/server/ServerPvpPve"));
+const ServerAllowList = React.lazy(() => import("./views/server/ServerAllowList"));
 const PlayerbaseOverview = React.lazy(() => import("./views/server/PlayerbaseOverview"));
 const ServerPlayers = React.lazy(() => import("./views/server/ServerPlayers"));
 const ServerGeolocations = React.lazy(() => import("./views/server/ServerGeolocations"));
@@ -159,6 +160,7 @@ function App() {
                                 <Route path="online-activity" element={<Lazy><OnlineActivity/></Lazy>}/>
                                 <Route path="sessions" element={<Lazy><ServerSessions/></Lazy>}/>
                                 <Route path="pvppve" element={<Lazy><ServerPvpPve/></Lazy>}/>
+                                <Route path="allowlist" element={<Lazy><ServerAllowList/></Lazy>}/>
                                 <Route path="playerbase" element={<Lazy><PlayerbaseOverview/></Lazy>}/>
                                 <Route path="join-addresses" element={<Lazy><ServerJoinAddresses/></Lazy>}/>
                                 <Route path="retention" element={<Lazy><ServerPlayerRetention/></Lazy>}/>

@@ -93,6 +93,7 @@ public enum WebPermission implements Supplier<String>, Lang {
     PAGE_SERVER_PERFORMANCE_OVERVIEW("See Performance numbers"),
     PAGE_SERVER_PLUGIN_HISTORY("See Plugin History"),
     PAGE_SERVER_PLUGINS("See Plugins -tabs of servers"),
+    PAGE_SERVER_ALLOWLIST_BOUNCE("See list of Game allowlist bounces"),
 
     PAGE_PLAYER("See all of player page"),
     PAGE_PLAYER_OVERVIEW("See Player Overview -tab"),

@@ -1014,4 +1014,16 @@ public class SessionQueries {
             }
         };
     }
+
+    public static Query<Map<UUID, Long>> lastSeen(ServerUUID serverUUID) {
+        String sql = SELECT + UsersTable.USER_UUID + ", MAX(" + SessionsTable.SESSION_END + ") as last_seen" +
+                FROM + SessionsTable.TABLE_NAME + " s" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u ON u." + UsersTable.ID + "=s." + SessionsTable.USER_ID +
+                WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                GROUP_BY + UsersTable.USER_UUID;
+        return db -> db.queryMap(sql, (set, to) -> to.put(
+                UUID.fromString(set.getString(UsersTable.USER_UUID)),
+                set.getLong("last_seen")
+        ), serverUUID);
+    }
 }

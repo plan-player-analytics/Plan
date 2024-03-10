@@ -147,6 +147,10 @@ public abstract class SQLDB extends AbstractDatabase {
         }
     }
 
+    public static ThreadLocal<StackTraceElement[]> getTransactionOrigin() {
+        return TRANSACTION_ORIGIN;
+    }
+
     @Override
     public void init() {
         List<Runnable> unfinishedTransactions = forceCloseTransactionExecutor();
@@ -185,22 +189,6 @@ public abstract class SQLDB extends AbstractDatabase {
             Thread.currentThread().interrupt();
         }
         return true;
-    }
-
-    protected List<Runnable> forceCloseTransactionExecutor() {
-        if (transactionExecutor == null || transactionExecutor.isShutdown() || transactionExecutor.isTerminated()) {
-            return Collections.emptyList();
-        }
-        try {
-            List<Runnable> unfinished = transactionExecutor.shutdownNow();
-            int unfinishedCount = unfinished.size();
-            if (unfinishedCount > 0) {
-                logger.warn(unfinishedCount + " unfinished database transactions were not executed.");
-            }
-            return unfinished;
-        } finally {
-            logger.info(locale.getString(PluginLang.DISABLED_WAITING_TRANSACTIONS_COMPLETE));
-        }
     }
 
     Patch[] patches() {
@@ -313,6 +301,22 @@ public abstract class SQLDB extends AbstractDatabase {
      */
     public abstract void setupDataSource();
 
+    protected List<Runnable> forceCloseTransactionExecutor() {
+        if (transactionExecutor == null || transactionExecutor.isShutdown() || transactionExecutor.isTerminated()) {
+            return Collections.emptyList();
+        }
+        try {
+            List<Runnable> unfinished = transactionExecutor.shutdownNow();
+            int unfinishedCount = unfinished.size();
+            if (unfinishedCount > 0) {
+                logger.warn(unfinishedCount + " unfinished database transactions were not executed.");
+            }
+            return unfinished;
+        } finally {
+            logger.info(locale.getString(PluginLang.DISABLED_WAITING_TRANSACTIONS_COMPLETE));
+        }
+    }
+
     @Override
     public void close() {
         // SQLiteDB Overrides this, so any additions to this should also be reflected there.
@@ -324,13 +328,6 @@ public abstract class SQLDB extends AbstractDatabase {
         }
         unloadDriverClassloader();
         setState(State.CLOSED);
-    }
-
-    protected void unloadDriverClassloader() {
-        // Unloading class loader using close() causes issues when reloading.
-        // It is better to leak this memory than crash the plugin on reload.
-
-        driverClassLoader = null;
     }
 
     public abstract Connection getConnection() throws SQLException;
@@ -346,8 +343,11 @@ public abstract class SQLDB extends AbstractDatabase {
         return accessLock.performDatabaseOperation(() -> query.executeQuery(this), transaction);
     }
 
-    public static ThreadLocal<StackTraceElement[]> getTransactionOrigin() {
-        return TRANSACTION_ORIGIN;
+    protected void unloadDriverClassloader() {
+        // Unloading class loader using close() causes issues when reloading.
+        // It is better to leak this memory than crash the plugin on reload.
+
+        driverClassLoader = null;
     }
 
     @Override
