@@ -57,11 +57,11 @@ const AllowlistBounceTable = ({bounces, lastSeen}) => {
         order: [[1, "desc"]]
     }
 
-    if (!preferencesLoaded) return <></>;
-
     const rowKeyFunction = useCallback((row, column) => {
         return row.player + "-" + (column ? JSON.stringify(column.data) : '');
     }, []);
+
+    if (!preferencesLoaded) return <></>;
 
     return (
         <DataTablesTable id={"allowlist-bounce-table"} options={options} colorClass={"bg-orange"}

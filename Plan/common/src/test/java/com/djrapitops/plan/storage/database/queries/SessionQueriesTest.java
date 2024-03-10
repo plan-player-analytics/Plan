@@ -37,6 +37,7 @@ import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythi
 import com.djrapitops.plan.storage.database.transactions.events.*;
 import com.djrapitops.plan.utilities.java.Maps;
 import net.playeranalytics.plugin.scheduling.TimeAmount;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import utilities.RandomData;
@@ -484,5 +485,22 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
                 .build();
         Map<String, Long> results = db().query(SessionQueries.playtimePerServer(Long.MIN_VALUE, Long.MAX_VALUE));
         assertEquals(expected, results);
+    }
+
+    @Test
+    @DisplayName("Last seen query by server uuid groups last seen by player")
+    default void lastSeenByServerIsGroupedByPlayer() {
+        prepareForSessionSave();
+        List<FinishedSession> player1Sessions = RandomData.randomSessions(serverUUID(), worlds, playerUUID, player2UUID);
+        List<FinishedSession> player2Sessions = RandomData.randomSessions(serverUUID(), worlds, player2UUID, playerUUID);
+        player1Sessions.forEach(session -> db().executeTransaction(new StoreSessionTransaction(session)));
+        player2Sessions.forEach(session -> db().executeTransaction(new StoreSessionTransaction(session)));
+
+        long lastSeenP1 = new SessionsMutator(player1Sessions).toLastSeen();
+        long lastSeenP2 = new SessionsMutator(player2Sessions).toLastSeen();
+
+        Map<UUID, Long> expected = Map.of(playerUUID, lastSeenP1, player2UUID, lastSeenP2);
+        Map<UUID, Long> result = db().query(SessionQueries.lastSeen(serverUUID()));
+        assertEquals(expected, result);
     }
 }

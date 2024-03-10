@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.domain.datatransfer;
 
 import com.djrapitops.plan.utilities.dev.Untrusted;
 
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -56,4 +57,26 @@ public class AllowlistBounce {
         return lastTime;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        AllowlistBounce bounce = (AllowlistBounce) o;
+        return getCount() == bounce.getCount() && getLastTime() == bounce.getLastTime() && Objects.equals(getPlayerUUID(), bounce.getPlayerUUID()) && Objects.equals(getPlayerName(), bounce.getPlayerName());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(getPlayerUUID(), getPlayerName(), getCount(), getLastTime());
+    }
+
+    @Override
+    public String toString() {
+        return "AllowlistBounce{" +
+                "playerUUID=" + playerUUID +
+                ", playerName='" + playerName + '\'' +
+                ", count=" + count +
+                ", lastTime=" + lastTime +
+                '}';
+    }
 }

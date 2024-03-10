@@ -1015,7 +1015,7 @@ public class SessionQueries {
         };
     }
 
-    public static Query<Map<UUID, Long>> getLastSeen(ServerUUID serverUUID) {
+    public static Query<Map<UUID, Long>> lastSeen(ServerUUID serverUUID) {
         String sql = SELECT + UsersTable.USER_UUID + ", MAX(" + SessionsTable.SESSION_END + ") as last_seen" +
                 FROM + SessionsTable.TABLE_NAME + " s" +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u ON u." + UsersTable.ID + "=s." + SessionsTable.USER_ID +
