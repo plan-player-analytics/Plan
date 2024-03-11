@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.sql.building;
 
+import com.djrapitops.plan.storage.database.DBType;
 import org.apache.commons.text.TextStringBuilder;
 
 import java.sql.PreparedStatement;
@@ -94,6 +95,15 @@ public abstract class Sql {
         } else {
             statement.setNull(index, Types.VARCHAR);
         }
+    }
+
+    public static String concat(DBType dbType, String one, String two) {
+        if (dbType == DBType.MYSQL) {
+            return "CONCAT(" + one + ',' + two + ")";
+        } else if (dbType == DBType.SQLITE) {
+            return one + " || " + two;
+        }
+        return one + two;
     }
 
     public abstract String epochSecondToDate(String sql);

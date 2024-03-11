@@ -134,7 +134,7 @@ public class StoreServerBooleanResultTransaction extends ThrowawayTransaction {
                 "FROM plan_extension_providers indb " +
                 "JOIN plan_extension_providers unfulfilled ON unfulfilled.condition_name=" +
                 // This gives the unfulfilled condition, eg. if value is true not_condition is unfulfilled.
-                (value ? "CONCAT('not_', " : "") + "indb.provided_condition" + (value ? ")" : "") +
+                (value ? Sql.concat(dbType, "'not_'", "indb.provided_condition") : "indb.provided_condition") +
                 " AND indb.plugin_id=unfulfilled.plugin_id" +
                 " WHERE indb.id=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID +
                 " AND indb.provided_condition IS NOT NULL";
@@ -166,7 +166,7 @@ public class StoreServerBooleanResultTransaction extends ThrowawayTransaction {
                 "FROM plan_extension_providers indb " +
                 "JOIN plan_extension_tables unfulfilled ON unfulfilled.condition_name=" +
                 // This gives the unfulfilled condition, eg. if value is true not_condition is unfulfilled.
-                (value ? "CONCAT('not_', " : "") + "indb.provided_condition" + (value ? ")" : "") +
+                (value ? Sql.concat(dbType, "'not_'", "indb.provided_condition") : "indb.provided_condition") +
                 " AND indb.plugin_id=unfulfilled.plugin_id" +
                 " WHERE indb.id=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID +
                 " AND indb.provided_condition IS NOT NULL";
