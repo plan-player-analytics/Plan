@@ -270,7 +270,7 @@ public class DataUtilityCommands {
                 locale.getString(CommandLang.INGAME_REGISTERED, timestamp.apply(() -> registered)) + '\n' +
                 locale.getString(CommandLang.INGAME_LAST_SEEN, timestamp.apply(() -> lastSeen)) + '\n' +
                 locale.getString(CommandLang.INGAME_GEOLOCATION, geolocation) + '\n' +
-                locale.getString(HtmlLang.TITLE_LATEST_JOIN_ADDRESSES, latestJoinAddress) + '\n' +
+                "  §2" + locale.getString(HtmlLang.LABEL_LABEL_JOIN_ADDRESS) + ": §f" + latestJoinAddress + '\n' +
                 locale.getString(CommandLang.INGAME_TIMES_KICKED, player.getValue(PlayerKeys.KICK_COUNT).orElse(0)) + '\n' +
                 '\n' +
                 locale.getString(CommandLang.INGAME_PLAYTIME, length.apply(sessionsMutator.toPlaytime())) + '\n' +
