@@ -794,6 +794,7 @@ html:
         generic:
             are: "`are`"
         label:
+            editQuery: "Edit Query"
             from: ">from</label>"
             makeAnother: "Make another query"
             servers:

@@ -17,6 +17,7 @@ import FilterDropdown from "./FilterDropdown";
 import FilterList from "./FilterList";
 import {useQueryResultContext} from "../../../hooks/queryResultContext";
 import {useNavigate} from "react-router-dom";
+import {useNavigation} from "../../../hooks/navigationHook.jsx";
 
 const parseTime = (dateString, timeString) => {
     const d = dateString.match(
@@ -37,7 +38,8 @@ const parseTime = (dateString, timeString) => {
 const QueryOptionsCard = () => {
     const {t} = useTranslation();
     const navigate = useNavigate()
-    const {setResult} = useQueryResultContext();
+    const {result, setResult} = useQueryResultContext();
+    const {setCurrentTab} = useNavigation();
 
     const [loadingResults, setLoadingResults] = useState(false);
 
@@ -52,6 +54,7 @@ const QueryOptionsCard = () => {
 
     // View & filter data
     const {data: options, loadingError} = useDataRequest(fetchFilters, []);
+
     const [graphData, setGraphData] = useState(undefined);
     useEffect(() => {
         if (options) {
@@ -71,24 +74,22 @@ const QueryOptionsCard = () => {
         if (invalidFields.length || !options) return;
         if (!fromDate && !fromTime && !toDate && !toTime) return;
 
-        const newMin = parseTime(
-            fromDate ? fromDate : options.view.afterDate,
-            fromTime ? fromTime : options.view.afterTime
-        );
-        const newMax = parseTime(
-            toDate ? toDate : options.view.beforeDate,
-            toTime ? toTime : options.view.beforeTime
-        );
         setExtremes({
-            min: newMin,
-            max: newMax
+            min: parseTime(
+                fromDate || options.view.afterDate,
+                fromTime || options.view.afterTime
+            ),
+            max: parseTime(
+                toDate || options.view.beforeDate,
+                toTime || options.view.beforeTime
+            )
         });
     }, [invalidFields, options]);
     /* eslint-enable react-hooks/exhaustive-deps */
-    useEffect(updateExtremes, [invalidFields, updateExtremes]);
+    useEffect(updateExtremes, [updateExtremes]);
 
     const onSetExtremes = useCallback((event) => {
-        if (event && event.trigger) {
+        if (event?.trigger) {
             const afterDate = Highcharts.dateFormat('%d/%m/%Y', event.min);
             const afterTime = Highcharts.dateFormat('%H:%M', event.min);
             const beforeDate = Highcharts.dateFormat('%d/%m/%Y', event.max);
@@ -99,6 +100,33 @@ const QueryOptionsCard = () => {
             setToTime(beforeTime);
         }
     }, [setFromTime, setFromDate, setToTime, setToDate]);
+
+    useEffect(() => {
+        if (!options || !result) return;
+
+        setSelectedServers(result.view.servers.map(server => options.view.servers.findIndex(s => s.serverUUID === server.serverUUID)).filter(i => i !== -1))
+
+        setFromDate(result.view.afterDate);
+        setFromTime(result.view.afterTime);
+        setToDate(result.view.beforeDate);
+        setToTime(result.view.beforeTime);
+
+        const existingFilters = result.filters;
+        existingFilters.forEach(f => f.options = options.filters.find(fo => fo.kind === f.kind).options);
+        setFilters(existingFilters);
+
+        setExtremes({
+            min: parseTime(
+                result.view.afterDate || options.view.afterDate,
+                result.view.afterTime || options.view.afterTime
+            ),
+            max: parseTime(
+                result.view.beforeDate || options.view.beforeDate,
+                result.view.beforeTime || options.view.beforeTime
+            )
+        });
+        setCurrentTab('html.query.label.editQuery')
+    }, [options, result, setFromDate, setFromTime, setToDate, setToTime, setFilters, setSelectedServers, setExtremes]);
 
     const getServerSelectorMessage = () => {
         const selected = selectedServers.length;
@@ -117,10 +145,10 @@ const QueryOptionsCard = () => {
     const performQuery = async () => {
         const inputDto = {
             view: {
-                afterDate: fromDate ? fromDate : options.view.afterDate,
-                afterTime: fromTime ? fromTime : options.view.afterTime,
-                beforeDate: toDate ? toDate : options.view.beforeDate,
-                beforeTime: toTime ? toTime : options.view.beforeTime,
+                afterDate: fromDate || options.view.afterDate,
+                afterTime: fromTime || options.view.afterTime,
+                beforeDate: toDate || options.view.beforeDate,
+                beforeTime: toTime || options.view.beforeTime,
                 servers: selectedServers.map(index => options.view.servers[index])
             },
             filters

@@ -336,6 +336,7 @@ public enum HtmlLang implements Lang {
     QUERY_SERVERS_TWO("html.query.label.servers.two", "using data of 2 servers"),
     QUERY_SERVERS_MANY("html.query.label.servers.many", "using data of {number} servers"),
     QUERY_SHOW_FULL_QUERY("html.query.label.showFullQuery", "Show Full Query"),
+    QUERY_EDIT_QUERY("html.query.label.editQuery", "Edit Query"),
 
     HELP_TEST_RESULT("html.label.help.testResult", "Test result"),
     HELP_TEST_IT_OUT("html.label.help.testPrompt", "Test it out:"),

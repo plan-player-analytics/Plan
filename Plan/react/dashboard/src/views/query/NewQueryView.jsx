@@ -12,7 +12,7 @@ const NewQueryView = () => {
             {hasPermission('access.query') && <section className={"query-options-view"}>
                 <Row>
                     <Col md={12}>
-                        <QueryPath/>
+                        <QueryPath newQuery/>
                         <QueryOptionsCard/>
                     </Col>
                 </Row>

@@ -794,6 +794,7 @@ html:
         generic:
             are: "`vardır`"
         label:
+            editQuery: "Edit Query"
             from: ">dan</label>"
             makeAnother: "Başka bir sorgu yap"
             servers:

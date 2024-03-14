@@ -3,13 +3,14 @@ import {useQueryResultContext} from "../../hooks/queryResultContext";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFilter} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
+import {Link} from "react-router-dom";
 
-const QueryPath = () => {
+const QueryPath = ({newQuery}) => {
     const {t} = useTranslation();
     const {result} = useQueryResultContext();
-    const hasResults = result && result.data;
+    const hasResults = Boolean(result?.data);
     const path = result?.path;
-    if (!path || !path.length) return <></>;
+    if (!path?.length || (newQuery && hasResults)) return <></>;
 
 
     const getReadableFilterName = kind => {
@@ -48,6 +49,7 @@ const QueryPath = () => {
 
     return (
         <aside id={"result-path"} className={"alert shadow " + (hasResults ? "alert-success" : "alert-warning")}>
+            {!newQuery && <Link className={"link float-end"} to={"/query/new"}>{t('html.query.label.editQuery')}</Link>}
             {path.map((step, i) => <p key={step.kind + step.size}
                                       style={{marginBottom: 0, marginLeft: i * 0.7 + "rem"}}>
                 <FontAwesomeIcon

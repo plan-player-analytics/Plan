@@ -794,6 +794,7 @@ html:
         generic:
             are: "`是`"
         label:
+            editQuery: "Edit Query"
             from: ">從 </label>"
             makeAnother: "進行另一個查詢"
             servers:
