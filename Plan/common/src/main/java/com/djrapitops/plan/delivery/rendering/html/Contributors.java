@@ -111,7 +111,8 @@ public class Contributors {
             new Contributor("Jumala9163", LANG),
             new Contributor("Dreeam-qwq", CODE),
             new Contributor("jhqwqmc", LANG),
-            new Contributor("liuzhen932", LANG)
+            new Contributor("liuzhen932", LANG),
+            new Contributor("Sniper_TVmc", LANG),
     };
 
     private Contributors() {

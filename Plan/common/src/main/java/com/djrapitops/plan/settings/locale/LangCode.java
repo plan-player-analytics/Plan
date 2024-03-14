@@ -30,7 +30,7 @@ public enum LangCode {
     CS("\u010de\u0161tina", "Shadowhackercz, QuakyCZ, MrFriggo & WolverStones"),
     DE("Deutsch", "Eyremba, fuzzlemann, Morsmorse, hallo1142 & DubHacker"),
     FI("suomi", "AuroraLS3, KasperiP"),
-    FR("français", "CyanTech, Aurelien & Nogapra"),
+    FR("français", "CyanTech, Aurelien, Nogapra & Sniper_TVmc"),
     IT("Italiano", "Malachiel & Mastory_Md5"),
     JA("\u65E5\u672C\u8A9E", "yukieji, inductor, lis2a, yu_solt , Jumala9163 & ringoXD"),
     KO("\uD55C\uAD6D\uC5B4", "Guinness_Akihiko"),
