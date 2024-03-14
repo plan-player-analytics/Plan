@@ -102,9 +102,9 @@ const QueryOptionsCard = () => {
     }, [setFromTime, setFromDate, setToTime, setToDate]);
 
     useEffect(() => {
-        if (!options || !result) return;
+        if (!options?.view || !result?.view) return;
 
-        setSelectedServers(result.view.servers.map(server => options.view.servers.findIndex(s => s.serverUUID === server.serverUUID)).filter(i => i !== -1))
+        setSelectedServers(result.view.servers?.map(server => options.view.servers?.findIndex(s => s.serverUUID === server.serverUUID))?.filter(i => i !== -1) || [])
 
         setFromDate(result.view.afterDate);
         setFromTime(result.view.afterTime);
