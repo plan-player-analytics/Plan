@@ -22,7 +22,7 @@ dependencies {
     shadow 'net.playeranalytics:Extension-Jobs:4.16.3-R1.1'
     shadow 'net.playeranalytics:Extension-KingdomsX:1.12.6.3.1-R1.4'
     shadow 'net.playeranalytics:Extension-Lands:6.35.0-R1.2'
-    shadow 'net.playeranalytics:Extension-LibertyBans:1.1.0-R1.4'
+    shadow 'net.playeranalytics:Extension-LibertyBans:1.1.0-R1.5'
     shadow 'net.playeranalytics:Extension-Litebans:0.4.1-R1.5'
     shadow 'net.playeranalytics:Extension-LogBlock:1.16.1.2-R1.9'
     shadow 'net.playeranalytics:Extension-LuckPerms:5.0-R1.6'
