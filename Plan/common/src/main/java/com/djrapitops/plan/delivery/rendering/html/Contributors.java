@@ -113,6 +113,7 @@ public class Contributors {
             new Contributor("jhqwqmc", LANG),
             new Contributor("liuzhen932", LANG),
             new Contributor("Sniper_TVmc", LANG),
+            new Contributor("mcmdev", CODE),
     };
 
     private Contributors() {
