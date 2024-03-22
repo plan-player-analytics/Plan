@@ -639,10 +639,10 @@
   dependencies:
     dequal "^2.0.2"
 
-"@restart/ui@^1.6.6":
-  version "1.6.6"
-  resolved "https://registry.yarnpkg.com/@restart/ui/-/ui-1.6.6.tgz#3481e2eaf15d7cae55bb2f518624e10d19c75800"
-  integrity sha512-eC3puKuWE1SRYbojWHXnvCNHGgf3uzHCb6JOhnF4OXPibOIPEkR1sqDSkL643ydigxwh+ruCa1CmYHlzk7ikKA==
+"@restart/ui@^1.6.8":
+  version "1.6.8"
+  resolved "https://registry.yarnpkg.com/@restart/ui/-/ui-1.6.8.tgz#61b73503d4690e2f0f58992d4d6ae1e89c276791"
+  integrity sha512-6ndCv3oZ7r9vuP1Ok9KH55TM1/UkdBnP/fSraW0DFDMbPMzWKhVKeFAIEUCRCSdzayjZDcFYK6xbMlipN9dmMA==
   dependencies:
     "@babel/runtime" "^7.21.0"
     "@popperjs/core" "^2.11.6"
@@ -2655,14 +2655,14 @@ react-bootstrap-range-slider@^3.0.8:
     classnames "^2.3.1"
     prop-types "^15.7.2"
 
-react-bootstrap@^2.10.1:
-  version "2.10.1"
-  resolved "https://registry.yarnpkg.com/react-bootstrap/-/react-bootstrap-2.10.1.tgz#48ee28fcd7973ddc0d0ce2161a918785fba4ab2c"
-  integrity sha512-J3OpRZIvCTQK+Tg/jOkRUvpYLHMdGeU9KqFUBQrV0d/Qr/3nsINpiOJyZMWnM5SJ3ctZdhPA6eCIKpEJR3Ellg==
+react-bootstrap@^2.10.2:
+  version "2.10.2"
+  resolved "https://registry.yarnpkg.com/react-bootstrap/-/react-bootstrap-2.10.2.tgz#3b609eb0170e31b3d9ace297d3a016c202a42642"
+  integrity sha512-UvB7mRqQjivdZNxJNEA2yOQRB7L9N43nBnKc33K47+cH90/ujmnMwatTCwQLu83gLhrzAl8fsa6Lqig/KLghaA==
   dependencies:
     "@babel/runtime" "^7.22.5"
     "@restart/hooks" "^0.4.9"
-    "@restart/ui" "^1.6.6"
+    "@restart/ui" "^1.6.8"
     "@types/react-transition-group" "^4.4.6"
     classnames "^2.3.2"
     dom-helpers "^5.2.1"
