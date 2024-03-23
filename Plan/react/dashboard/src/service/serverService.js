@@ -281,22 +281,22 @@ const fetchJoinAddressPieNetwork = async (timestamp) => {
     return doGetRequest(url, timestamp);
 }
 
-export const fetchJoinAddressByDay = async (timestamp, identifier) => {
+export const fetchJoinAddressByDay = async (timestamp, addresses, identifier) => {
     if (identifier) {
-        return await fetchJoinAddressByDayServer(timestamp, identifier);
+        return await fetchJoinAddressByDayServer(timestamp, addresses, identifier);
     } else {
-        return await fetchJoinAddressByDayNetwork(timestamp);
+        return await fetchJoinAddressByDayNetwork(timestamp, addresses);
     }
 }
 
-const fetchJoinAddressByDayServer = async (timestamp, identifier) => {
-    let url = `/v1/graph?type=joinAddressByDay&server=${identifier}`;
+const fetchJoinAddressByDayServer = async (timestamp, addresses, identifier) => {
+    let url = `/v1/graph?type=joinAddressByDay&server=${identifier}&addresses=${addresses.join(',')}`;
     if (staticSite) url = `/data/graph-joinAddressByDay_${identifier}.json`;
     return doGetRequest(url, timestamp);
 }
 
-const fetchJoinAddressByDayNetwork = async (timestamp) => {
-    let url = `/v1/graph?type=joinAddressByDay`;
+const fetchJoinAddressByDayNetwork = async (timestamp, addresses) => {
+    let url = `/v1/graph?type=joinAddressByDay&addresses=${addresses.join(',')}`;
     if (staticSite) url = `/data/graph-joinAddressByDay.json`;
     return doGetRequest(url, timestamp);
 }

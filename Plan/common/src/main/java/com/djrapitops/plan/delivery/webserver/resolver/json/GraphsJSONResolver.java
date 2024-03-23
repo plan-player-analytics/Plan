@@ -39,11 +39,16 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * Resolves /v1/graph JSON requests.
@@ -156,15 +161,22 @@ public class GraphsJSONResolver extends JSONResolver {
         JSONStorage.StoredJSON storedJSON;
         if (request.getQuery().get("server").isPresent()) {
             ServerUUID serverUUID = identifiers.getServerUUID(request); // Can throw BadRequestException
-            storedJSON = jsonResolverService.resolve(
-                    timestamp, dataID, serverUUID,
-                    theServerUUID -> generateGraphDataJSONOfType(dataID, theServerUUID, request.getQuery())
-            );
+            Function<ServerUUID, Object> generationFunction = theServerUUID -> generateGraphDataJSONOfType(dataID, theServerUUID, request.getQuery());
+            if (dataID.isCacheable()) {
+                storedJSON = jsonResolverService.resolve(timestamp, dataID, serverUUID, generationFunction);
+            } else {
+                storedJSON = JSONStorage.StoredJSON.fromObject(generationFunction.apply(serverUUID), System.currentTimeMillis());
+            }
         } else {
             // Assume network
-            storedJSON = jsonResolverService.resolve(
-                    timestamp, dataID, () -> generateGraphDataJSONOfType(dataID, request.getQuery())
-            );
+            Supplier<Object> generationFunction = () -> generateGraphDataJSONOfType(dataID, request.getQuery());
+            if (dataID.isCacheable()) {
+                storedJSON = jsonResolverService.resolve(
+                        timestamp, dataID, generationFunction
+                );
+            } else {
+                storedJSON = JSONStorage.StoredJSON.fromObject(generationFunction.get(), System.currentTimeMillis());
+            }
         }
         return storedJSON;
     }
@@ -294,16 +306,21 @@ public class GraphsJSONResolver extends JSONResolver {
             case GRAPH_PUNCHCARD:
                 return graphJSON.punchCardJSONAsMap(serverUUID);
             case JOIN_ADDRESSES_BY_DAY:
-                try {
-                    return graphJSON.joinAddressesByDay(serverUUID,
-                            query.get("after").map(Long::parseLong).orElse(0L),
-                            query.get("before").map(Long::parseLong).orElse(System.currentTimeMillis())
-                    );
-                } catch (@Untrusted NumberFormatException e) {
-                    throw new BadRequestException("'after' or 'before' is not a epoch millisecond (number)");
-                }
+                return joinAddressGraph(serverUUID, query);
             default:
                 throw new BadRequestException("Graph type not supported with server-parameter (" + id.name() + ")");
+        }
+    }
+
+    private Map<String, Object> joinAddressGraph(ServerUUID serverUUID, @Untrusted URIQuery query) {
+        try {
+            Long after = query.get("after").map(Long::parseLong).orElse(0L);
+            Long before = query.get("before").map(Long::parseLong).orElse(System.currentTimeMillis());
+            @Untrusted List<String> addressFilter = query.get("addresses").map(s -> StringUtils.split(s, ','))
+                    .map(Arrays::asList).orElse(List.of());
+            return graphJSON.joinAddressesByDay(serverUUID, after, before, addressFilter);
+        } catch (@Untrusted NumberFormatException e) {
+            throw new BadRequestException("'after' or 'before' is not a epoch millisecond (number)");
         }
     }
 
@@ -326,16 +343,21 @@ public class GraphsJSONResolver extends JSONResolver {
             case GRAPH_ONLINE_PROXIES:
                 return graphJSON.proxyPlayersOnlineGraphs();
             case JOIN_ADDRESSES_BY_DAY:
-                try {
-                    return graphJSON.joinAddressesByDay(
-                            query.get("after").map(Long::parseLong).orElse(0L),
-                            query.get("before").map(Long::parseLong).orElse(System.currentTimeMillis())
-                    );
-                } catch (@Untrusted NumberFormatException e) {
-                    throw new BadRequestException("'after' or 'before' is not a epoch millisecond (number)");
-                }
+                return joinAddressGraph(query);
             default:
                 throw new BadRequestException("Graph type not supported without server-parameter (" + id.name() + ")");
+        }
+    }
+
+    private Map<String, Object> joinAddressGraph(URIQuery query) {
+        try {
+            Long after = query.get("after").map(Long::parseLong).orElse(0L);
+            Long before = query.get("before").map(Long::parseLong).orElse(System.currentTimeMillis());
+            @Untrusted List<String> addressFilter = query.get("addresses").map(s -> StringUtils.split(s, ','))
+                    .map(Arrays::asList).orElse(List.of());
+            return graphJSON.joinAddressesByDay(after, before, addressFilter);
+        } catch (@Untrusted NumberFormatException e) {
+            throw new BadRequestException("'after' or 'before' is not a epoch millisecond (number)");
         }
     }
 }

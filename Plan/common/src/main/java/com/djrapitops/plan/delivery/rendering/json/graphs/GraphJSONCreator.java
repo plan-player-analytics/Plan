@@ -58,6 +58,7 @@ import com.djrapitops.plan.storage.database.queries.objects.*;
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.utilities.comparators.DateHolderOldestComparator;
 import com.djrapitops.plan.utilities.comparators.PieSliceComparator;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.java.Lists;
 import com.djrapitops.plan.utilities.java.Maps;
 import net.playeranalytics.plugin.scheduling.TimeAmount;
@@ -493,16 +494,16 @@ public class GraphJSONCreator {
         }
     }
 
-    public Map<String, Object> joinAddressesByDay(ServerUUID serverUUID, long after, long before) {
+    public Map<String, Object> joinAddressesByDay(ServerUUID serverUUID, long after, long before, @Untrusted List<String> addressFilter) {
         String[] pieColors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
-        List<DateObj<Map<String, Integer>>> joinAddresses = dbSystem.getDatabase().query(JoinAddressQueries.joinAddressesPerDay(serverUUID, config.getTimeZone().getOffset(System.currentTimeMillis()), after, before));
+        List<DateObj<Map<String, Integer>>> joinAddresses = dbSystem.getDatabase().query(JoinAddressQueries.joinAddressesPerDay(serverUUID, config.getTimeZone().getOffset(System.currentTimeMillis()), after, before, addressFilter));
 
         return mapToJson(pieColors, joinAddresses);
     }
 
-    public Map<String, Object> joinAddressesByDay(long after, long before) {
+    public Map<String, Object> joinAddressesByDay(long after, long before, @Untrusted List<String> addressFilter) {
         String[] pieColors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
-        List<DateObj<Map<String, Integer>>> joinAddresses = dbSystem.getDatabase().query(JoinAddressQueries.joinAddressesPerDay(config.getTimeZone().getOffset(System.currentTimeMillis()), after, before));
+        List<DateObj<Map<String, Integer>>> joinAddresses = dbSystem.getDatabase().query(JoinAddressQueries.joinAddressesPerDay(config.getTimeZone().getOffset(System.currentTimeMillis()), after, before, addressFilter));
 
         return mapToJson(pieColors, joinAddresses);
     }

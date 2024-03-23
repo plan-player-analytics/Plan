@@ -10,15 +10,14 @@ import {faChartColumn} from "@fortawesome/free-solid-svg-icons";
 import JoinAddressGraph from "../../../graphs/JoinAddressGraph";
 import Toggle from "../../../input/Toggle";
 
-const JoinAddressGraphCard = ({identifier}) => {
+const JoinAddressGraphCard = ({id, identifier, addresses}) => {
     const {t} = useTranslation();
     const [stack, setStack] = useState(true);
 
-    const {data, loadingError} = useDataRequest(fetchJoinAddressByDay, [identifier]);
+    const {data, loadingError} = useDataRequest(fetchJoinAddressByDay, [addresses || [], identifier]);
 
     if (loadingError) return <ErrorViewCard error={loadingError}/>
     if (!data) return <CardLoader/>;
-
 
     return (
         <Card>

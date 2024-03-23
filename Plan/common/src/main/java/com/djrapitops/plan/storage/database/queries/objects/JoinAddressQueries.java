@@ -28,6 +28,7 @@ import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import com.djrapitops.plan.utilities.dev.Untrusted;
+import org.apache.commons.text.TextStringBuilder;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -162,21 +163,27 @@ public class JoinAddressQueries {
         return db -> db.querySet(sql, RowExtractors.getInt(SessionsTable.USER_ID), joinAddresses.toArray());
     }
 
-    public static Query<List<DateObj<Map<String, Integer>>>> joinAddressesPerDay(ServerUUID serverUUID, long timezoneOffset, long after, long before) {
+    public static Query<List<DateObj<Map<String, Integer>>>> joinAddressesPerDay(ServerUUID serverUUID, long timezoneOffset, long after, long before, @Untrusted List<String> addressFilter) {
         return db -> {
             Sql sql = db.getSql();
+
+            List<Integer> ids = db.query(joinAddressIds(addressFilter));
+            if (ids != null && ids.isEmpty()) return List.of();
 
             String selectAddresses = SELECT +
                     sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + SessionsTable.SESSION_START + "+?)/1000"))) +
                     "*1000 as date," +
-                    JoinAddressTable.JOIN_ADDRESS +
+                    JoinAddressTable.JOIN_ADDRESS + ',' +
+                    SessionsTable.USER_ID +
                     ", COUNT(1) as count" +
                     FROM + SessionsTable.TABLE_NAME + " s" +
                     LEFT_JOIN + JoinAddressTable.TABLE_NAME + " j on s." + SessionsTable.JOIN_ADDRESS_ID + "=j." + JoinAddressTable.ID +
                     WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                     AND + SessionsTable.SESSION_START + ">?" +
                     AND + SessionsTable.SESSION_START + "<=?" +
-                    GROUP_BY + "date,j." + JoinAddressTable.JOIN_ADDRESS;
+                    (ids == null ? "" : AND + "j." + JoinAddressTable.ID +
+                            " IN (" + new TextStringBuilder().appendWithSeparators(ids, ",").build() + ")") +
+                    GROUP_BY + "date,j." + JoinAddressTable.JOIN_ADDRESS + ',' + SessionsTable.USER_ID;
 
             return db.query(new QueryStatement<>(selectAddresses, 1000) {
                 @Override
@@ -193,9 +200,9 @@ public class JoinAddressQueries {
                     while (set.next()) {
                         long date = set.getLong("date");
                         String joinAddress = set.getString(JoinAddressTable.JOIN_ADDRESS);
-                        int count = set.getInt("count");
                         Map<String, Integer> joinAddresses = addressesByDate.computeIfAbsent(date, k -> new TreeMap<>());
-                        joinAddresses.put(joinAddress, count);
+                        // We ignore the count and get the number of players instead of sessions
+                        joinAddresses.compute(joinAddress, (key, oldValue) -> oldValue != null ? oldValue + 1 : 1);
                     }
 
                     return addressesByDate.entrySet()
@@ -206,20 +213,37 @@ public class JoinAddressQueries {
         };
     }
 
-    public static Query<List<DateObj<Map<String, Integer>>>> joinAddressesPerDay(long timezoneOffset, long after, long before) {
+    public static Query<List<Integer>> joinAddressIds(@Untrusted List<String> addresses) {
+        return db -> {
+            if (addresses.isEmpty()) return null;
+
+            String selectJoinAddressIds = SELECT + JoinAddressTable.ID +
+                    FROM + JoinAddressTable.TABLE_NAME +
+                    WHERE + JoinAddressTable.JOIN_ADDRESS + " IN (" + Sql.nParameters(addresses.size()) + ")";
+            return db.queryList(selectJoinAddressIds, set -> set.getInt(JoinAddressTable.ID), addresses);
+        };
+    }
+
+    public static Query<List<DateObj<Map<String, Integer>>>> joinAddressesPerDay(long timezoneOffset, long after, long before, @Untrusted List<String> addressFilter) {
         return db -> {
             Sql sql = db.getSql();
+
+            List<Integer> ids = db.query(joinAddressIds(addressFilter));
+            if (ids != null && ids.isEmpty()) return List.of();
 
             String selectAddresses = SELECT +
                     sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + SessionsTable.SESSION_START + "+?)/1000"))) +
                     "*1000 as date," +
-                    JoinAddressTable.JOIN_ADDRESS +
+                    JoinAddressTable.JOIN_ADDRESS + ',' +
+                    SessionsTable.USER_ID +
                     ", COUNT(1) as count" +
                     FROM + SessionsTable.TABLE_NAME + " s" +
                     LEFT_JOIN + JoinAddressTable.TABLE_NAME + " j on s." + SessionsTable.JOIN_ADDRESS_ID + "=j." + JoinAddressTable.ID +
                     WHERE + SessionsTable.SESSION_START + ">?" +
                     AND + SessionsTable.SESSION_START + "<=?" +
-                    GROUP_BY + "date,j." + JoinAddressTable.JOIN_ADDRESS;
+                    (ids == null ? "" : AND + "j." + JoinAddressTable.ID +
+                            " IN (" + new TextStringBuilder().appendWithSeparators(ids, ",").build() + ")") +
+                    GROUP_BY + "date,j." + JoinAddressTable.JOIN_ADDRESS + ',' + SessionsTable.USER_ID;
 
             return db.query(new QueryStatement<>(selectAddresses, 1000) {
                 @Override
@@ -235,9 +259,9 @@ public class JoinAddressQueries {
                     while (set.next()) {
                         long date = set.getLong("date");
                         String joinAddress = set.getString(JoinAddressTable.JOIN_ADDRESS);
-                        int count = set.getInt("count");
                         Map<String, Integer> joinAddresses = addressesByDate.computeIfAbsent(date, k -> new TreeMap<>());
-                        joinAddresses.put(joinAddress, count);
+                        // We ignore the count and get the number of players instead of sessions
+                        joinAddresses.compute(joinAddress, (key, oldValue) -> oldValue != null ? oldValue + 1 : 1);
                     }
 
                     return addressesByDate.entrySet()

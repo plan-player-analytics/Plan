@@ -74,6 +74,10 @@ public interface JSONStorage extends SubSystem {
             this.timestamp = timestamp;
         }
 
+        public static StoredJSON fromObject(Object json, long timestamp) {
+            return new StoredJSON(new Gson().toJson(json), timestamp);
+        }
+
         public String getJson() {
             return json;
         }
