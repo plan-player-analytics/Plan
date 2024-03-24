@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
+import com.djrapitops.plan.delivery.domain.datatransfer.PlayerJoinAddresses;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
@@ -34,6 +35,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.GET;
@@ -42,7 +44,6 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Collections;
 import java.util.Optional;
 
 /**
@@ -79,7 +80,7 @@ public class PlayerJoinAddressJSONResolver extends JSONResolver {
     @Operation(
             description = "Get join address information of players for server or network",
             responses = {
-                    @ApiResponse(responseCode = "200", content = @Content(mediaType = MimeType.JSON)),
+                    @ApiResponse(responseCode = "200", content = @Content(mediaType = MimeType.JSON, schema = @Schema(implementation = PlayerJoinAddresses.class))),
                     @ApiResponse(responseCode = "400", description = "If 'server' parameter is not an existing server")
             },
             parameters = @Parameter(in = ParameterIn.QUERY, name = "server", description = "Server identifier to get data for (optional)", examples = {
@@ -105,12 +106,12 @@ public class PlayerJoinAddressJSONResolver extends JSONResolver {
         if (request.getQuery().get("server").isPresent()) {
             ServerUUID serverUUID = identifiers.getServerUUID(request);
             return jsonResolverService.resolve(timestamp, DataID.PLAYER_JOIN_ADDRESSES, serverUUID,
-                    theUUID -> Collections.singletonMap("join_address_by_player", jsonFactory.playerJoinAddresses(theUUID))
+                    serverUUID1 -> jsonFactory.playerJoinAddresses(serverUUID1, request.getQuery().get("listOnly").isEmpty())
             );
         }
         // Assume network
         return jsonResolverService.resolve(timestamp, DataID.PLAYER_JOIN_ADDRESSES,
-                () -> Collections.singletonMap("join_address_by_player", jsonFactory.playerJoinAddresses())
+                () -> jsonFactory.playerJoinAddresses(request.getQuery().get("listOnly").isEmpty())
         );
     }
 }

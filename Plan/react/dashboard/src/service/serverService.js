@@ -321,22 +321,22 @@ const fetchNetworkRetentionData = async (timestamp) => {
     return doGetRequest(url, timestamp);
 }
 
-export const fetchPlayerJoinAddresses = async (timestamp, identifier) => {
+export const fetchPlayerJoinAddresses = async (timestamp, identifier, justList) => {
     if (identifier) {
-        return await fetchServerPlayerJoinAddresses(timestamp, identifier);
+        return await fetchServerPlayerJoinAddresses(timestamp, identifier, justList);
     } else {
-        return await fetchNetworkPlayerJoinAddresses(timestamp);
+        return await fetchNetworkPlayerJoinAddresses(timestamp, justList);
     }
 }
 
-const fetchServerPlayerJoinAddresses = async (timestamp, identifier) => {
-    let url = `/v1/joinAddresses?server=${identifier}`;
+const fetchServerPlayerJoinAddresses = async (timestamp, identifier, justList) => {
+    let url = `/v1/joinAddresses?server=${identifier}${justList ? "&listOnly=true" : ""}`;
     if (staticSite) url = `/data/joinAddresses-${identifier}.json`;
     return doGetRequest(url, timestamp);
 }
 
-const fetchNetworkPlayerJoinAddresses = async (timestamp) => {
-    let url = `/v1/joinAddresses`;
+const fetchNetworkPlayerJoinAddresses = async (timestamp, justList) => {
+    let url = `/v1/joinAddresses${justList ? "?listOnly=true" : ""}`;
     if (staticSite) url = `/data/joinAddresses.json`;
     return doGetRequest(url, timestamp);
 }

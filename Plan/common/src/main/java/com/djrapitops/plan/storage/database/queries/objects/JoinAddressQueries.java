@@ -142,9 +142,41 @@ public class JoinAddressQueries {
         };
     }
 
+    public static QueryStatement<List<String>> allJoinAddresses(ServerUUID serverUUID) {
+        String sql = SELECT + DISTINCT + JoinAddressTable.JOIN_ADDRESS +
+                FROM + JoinAddressTable.TABLE_NAME + " j" +
+                INNER_JOIN + SessionsTable.TABLE_NAME + " s ON s." + SessionsTable.JOIN_ADDRESS_ID + "=j." + JoinAddressTable.ID +
+                WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                ORDER_BY + JoinAddressTable.JOIN_ADDRESS + " ASC";
+
+        return new QueryStatement<>(sql, 100) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, serverUUID.toString());
+            }
+
+            @Override
+            public List<String> processResults(ResultSet set) throws SQLException {
+                List<String> joinAddresses = new ArrayList<>();
+                while (set.next()) joinAddresses.add(set.getString(JoinAddressTable.JOIN_ADDRESS));
+                return joinAddresses;
+            }
+        };
+    }
+
     public static Query<List<String>> uniqueJoinAddresses() {
         return db -> {
             List<String> addresses = db.query(allJoinAddresses());
+            if (!addresses.contains(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP)) {
+                addresses.add(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
+            }
+            return addresses;
+        };
+    }
+
+    public static Query<List<String>> uniqueJoinAddresses(ServerUUID serverUUID) {
+        return db -> {
+            List<String> addresses = db.query(allJoinAddresses(serverUUID));
             if (!addresses.contains(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP)) {
                 addresses.add(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
             }

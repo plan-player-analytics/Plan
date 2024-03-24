@@ -209,7 +209,7 @@ const PlayerRetentionGraphCard = ({identifier}) => {
     useEffect(() => {
         if (!data || !joinAddressData) return;
 
-        createSeries(data.player_retention, joinAddressData.join_address_by_player).then(series => setSeries(series.flat()));
+        createSeries(data.player_retention, joinAddressData.joinAddressByPlayer).then(series => setSeries(series.flat()));
     }, [data, joinAddressData, createSeries, setSeries]);
 
     useEffect(() => {
