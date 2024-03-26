@@ -58,7 +58,7 @@ const Header = ({page, tab, hideUpdater}) => {
                     </button>}
                     {staticSite && <Fa icon={faClockRotateLeft} title={t('html.label.exported')}/>}
                     {' '}
-                    <span className="refresh-time"><FormattedDate date={lastUpdate.date}/></span>
+                    <span className="refresh-time"><FormattedDate date={lastUpdate.date} react/></span>
                 </div>
             </>}
 

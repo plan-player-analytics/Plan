@@ -40,13 +40,19 @@ export function formatDate(date, offset, pattern, recentDays, recentDaysPattern,
     return date !== 0 ? new SimpleDateFormat(format).format(timestamp) : '-'
 }
 
-const FormattedDate = ({date}) => {
+const FormattedDate = ({date, react}) => {
     const {t} = useTranslation();
 
     const {pattern, recentDays, recentDaysPattern, offset} = useDatePreferences();
 
     if (!pattern || date === undefined || date === null) return <></>;
     if (!isNumber(date)) return date;
+
+    if (react) {
+        return <span title={formatDate(date, offset, pattern, false, null, t)}>
+            {formatDate(date, offset, pattern, recentDays, recentDaysPattern, t)}
+        </span>
+    }
 
     return formatDate(date, offset, pattern, recentDays, recentDaysPattern, t);
 };
