@@ -2,24 +2,42 @@ import {createContext, useCallback, useContext, useEffect, useMemo, useState} fr
 import {randomUuid} from "../../util/uuid.js";
 import {fetchPlayerJoinAddresses} from "../../service/serverService.js";
 import {useNavigation} from "../navigationHook.jsx";
+import {usePreferences} from "../preferencesHook.jsx";
 
 const JoinAddressListContext = createContext({});
 
 export const JoinAddressListContextProvider = ({identifier, children}) => {
     const {updateRequested} = useNavigation();
+    const {preferencesLoaded, getKeyedPreference, setSomePreferences} = usePreferences();
     const [list, setList] = useState([]);
 
+    const updateList = useCallback(newValue => {
+        setList(newValue);
+        const userPreferences = {}
+        userPreferences["join-addresses-" + identifier] = newValue;
+        setSomePreferences(userPreferences);
+    }, [setList])
+
+    useEffect(() => {
+        if (preferencesLoaded && !list.length) {
+            const value = getKeyedPreference("join-addresses-" + identifier);
+            if (value?.length) {
+                setList(value)
+            }
+        }
+    }, [list, setList, preferencesLoaded, getKeyedPreference]);
+
     const add = useCallback(() => {
-        setList([...list, {name: "Address group " + (list.length + 1), addresses: [], uuid: randomUuid()}])
-    }, [list, setList]);
+        updateList([...list, {name: "Address group " + (list.length + 1), addresses: [], uuid: randomUuid()}])
+    }, [updateList, list]);
     const remove = useCallback(index => {
-        setList(list.filter((f, i) => i !== index));
-    }, [setList, list]);
+        updateList(list.filter((f, i) => i !== index));
+    }, [updateList, list]);
     const replace = useCallback((replacement, index) => {
         const newList = [...list];
         newList[index] = replacement;
-        setList(newList)
-    }, [setList, list]);
+        updateList(newList)
+    }, [updateList, list]);
 
     const [allAddresses, setAllAddresses] = useState([]);
     const loadAddresses = useCallback(async () => {
@@ -32,7 +50,7 @@ export const JoinAddressListContextProvider = ({identifier, children}) => {
 
     const sharedState = useMemo(() => {
         return {list, add, remove, replace, allAddresses};
-    }, [list, add, remove, replace]);
+    }, [list, add, remove, replace, allAddresses]);
     return (<JoinAddressListContext.Provider value={sharedState}>
             {children}
         </JoinAddressListContext.Provider>

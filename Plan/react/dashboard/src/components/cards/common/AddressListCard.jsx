@@ -13,6 +13,12 @@ const AddressListCard = ({n, group, editGroup, allAddresses, remove}) => {
     const [editingName, setEditingName] = useState(false);
     const [name, setName] = useState(group.name);
 
+    useEffect(() => {
+        if (!selectedIndexes.length && allAddresses?.length && group?.addresses?.length) {
+            setSelectedIndexes(group.addresses.map(address => allAddresses.indexOf(address)))
+        }
+    }, [selectedIndexes, group, allAddresses])
+
     const isUpToDate = group.addresses === allAddresses.filter((a, i) => selectedIndexes.includes(i));
     const applySelected = useCallback(() => {
         editGroup({...group, addresses: allAddresses.filter((a, i) => selectedIndexes.includes(i))})
@@ -28,10 +34,14 @@ const AddressListCard = ({n, group, editGroup, allAddresses, remove}) => {
         <Card>
             <CardHeader icon={faList} color={"amber"} label={
                 editingName ?
-                    <Form.Control style={{maxWidth: "75%", marginTop: "-1rem", marginBottom: "-1rem"}} value={name}
-                                  onChange={e => setName(e.target.value)}/> : group.name
+                    <Form.Control
+                        style={{position: "absolute", top: "0.5rem", left: "2.5rem", width: "calc(100% - 3rem)"}}
+                        value={name}
+                        onChange={e => setName(e.target.value)}/> : group.name
             }>
-                <button style={{marginLeft: "0.5rem"}} onClick={() => setEditingName(!editingName)}>
+                <button
+                    style={editingName ? {position: "absolute", right: "1rem", top: "1.2rem"} : {marginLeft: "0.5rem"}}
+                    onClick={() => setEditingName(!editingName)}>
                     <FontAwesomeIcon icon={editingName ? faCheck : faPencil}/>
                 </button>
             </CardHeader>
