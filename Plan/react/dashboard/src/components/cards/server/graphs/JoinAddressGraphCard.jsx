@@ -26,7 +26,7 @@ const JoinAddressGraphCard = ({identifier}) => {
 
         let colors = ['#4ab4de'];
         const dataByGroup = [];
-        for (const group of list) {
+        for (const group of list.filter(group => group.addresses.length)) {
             const {data, error} = await fetchJoinAddressByDay(updateRequested, group.addresses, identifier);
             if (error) {
                 setLoadingError(error);

@@ -19,7 +19,6 @@ const AddressListCard = ({n, group, editGroup, allAddresses, remove}) => {
         }
     }, [selectedIndexes, group, allAddresses])
 
-    const isUpToDate = group.addresses === allAddresses.filter((a, i) => selectedIndexes.includes(i));
     const applySelected = useCallback(() => {
         editGroup({...group, addresses: allAddresses.filter((a, i) => selectedIndexes.includes(i))})
     }, [editGroup, group, allAddresses, selectedIndexes]);
@@ -30,6 +29,8 @@ const AddressListCard = ({n, group, editGroup, allAddresses, remove}) => {
         if (!editingName && name !== group.name) editName(name);
     }, [editName, editingName, name])
 
+    const selectedAddresses = allAddresses.filter((a, i) => selectedIndexes.includes(i));
+    const isUpToDate = !selectedIndexes.length || selectedAddresses.length === group.addresses.length && selectedAddresses.every((a, i) => a === group.addresses[i]);
     return (
         <Card>
             <CardHeader icon={faList} color={"amber"} label={
