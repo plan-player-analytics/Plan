@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.transactions.patches;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
+import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.storage.database.sql.tables.webuser.WebPermissionTable;
 import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
@@ -55,6 +56,18 @@ public class UpdateWebPermissionsPatch extends Patch {
 
     @Override
     protected void applyPatch() {
+        try {
+            storeMissing();
+        } catch (DBOpException failed) {
+            if (failed.isDuplicateKeyViolation()) {
+                retry(failed);
+            } else {
+                throw failed;
+            }
+        }
+    }
+
+    private void storeMissing() {
         execute(new ExecBatchStatement(WebPermissionTable.INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -64,5 +77,15 @@ public class UpdateWebPermissionsPatch extends Patch {
                 }
             }
         });
+    }
+
+    private void retry(DBOpException failed) {
+        try {
+            if (hasBeenApplied()) return;
+            storeMissing();
+        } catch (DBOpException anotherFail) {
+            anotherFail.addSuppressed(failed);
+            throw anotherFail;
+        }
     }
 }
