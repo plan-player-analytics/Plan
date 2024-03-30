@@ -50,7 +50,7 @@ public class StoreMissingWebPermissionsTransaction extends Transaction {
                 missingPermissions.add(permission);
             }
         }
-        execute(new ExecBatchStatement(WebPermissionTable.INSERT_STATEMENT) {
+        execute(new ExecBatchStatement(WebPermissionTable.safeInsertSQL(dbType)) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (String permission : missingPermissions) {
