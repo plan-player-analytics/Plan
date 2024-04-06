@@ -23,6 +23,7 @@ import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.web.resolver.request.URIQuery;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
@@ -70,10 +71,20 @@ public class PlayerJoinAddressJSONResolver extends JSONResolver {
     @Override
     public boolean canAccess(@Untrusted Request request) {
         WebUser user = request.getUser().orElse(new WebUser(""));
-        if (request.getQuery().get("server").isPresent()) {
-            return user.hasPermission(WebPermission.PAGE_SERVER_RETENTION);
+        @Untrusted URIQuery query = request.getQuery();
+        Optional<String> listOnly = query.get("listOnly");
+        if (query.get("server").isPresent()) {
+            if (listOnly.isEmpty()) {
+                return user.hasPermission(WebPermission.PAGE_SERVER_RETENTION);
+            } else {
+                return user.hasPermission(WebPermission.PAGE_SERVER_JOIN_ADDRESSES_GRAPHS_TIME);
+            }
         }
-        return user.hasPermission(WebPermission.PAGE_NETWORK_RETENTION);
+        if (listOnly.isEmpty()) {
+            return user.hasPermission(WebPermission.PAGE_NETWORK_RETENTION);
+        } else {
+            return user.hasPermission(WebPermission.PAGE_NETWORK_JOIN_ADDRESSES_GRAPHS_TIME);
+        }
     }
 
     @GET

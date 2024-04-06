@@ -19,6 +19,9 @@ package com.djrapitops.plan.delivery.domain.auth;
 import com.djrapitops.plan.settings.locale.lang.Lang;
 import org.apache.commons.lang3.StringUtils;
 
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 /**
@@ -47,7 +50,8 @@ public enum WebPermission implements Supplier<String>, Lang {
     PAGE_NETWORK_SESSIONS_LIST("See list of sessions"),
     PAGE_NETWORK_JOIN_ADDRESSES("See Join Addresses -tab"),
     PAGE_NETWORK_JOIN_ADDRESSES_GRAPHS("See Join Address graphs"),
-    PAGE_NETWORK_JOIN_ADDRESSES_GRAPHS_PIE("See Latest Join Addresses graph"),
+    @Deprecated
+    PAGE_NETWORK_JOIN_ADDRESSES_GRAPHS_PIE("See Latest Join Addresses graph", true),
     PAGE_NETWORK_JOIN_ADDRESSES_GRAPHS_TIME("See Join Addresses over time graph"),
     PAGE_NETWORK_RETENTION("See Player Retention -tab"),
     PAGE_NETWORK_GEOLOCATIONS("See Geolocations tab"),
@@ -82,7 +86,8 @@ public enum WebPermission implements Supplier<String>, Lang {
     PAGE_SERVER_SESSIONS_LIST("See list of sessions"),
     PAGE_SERVER_JOIN_ADDRESSES("See Join Addresses -tab"),
     PAGE_SERVER_JOIN_ADDRESSES_GRAPHS("See Join Address graphs"),
-    PAGE_SERVER_JOIN_ADDRESSES_GRAPHS_PIE("See Latest Join Addresses graph"),
+    @Deprecated
+    PAGE_SERVER_JOIN_ADDRESSES_GRAPHS_PIE("See Latest Join Addresses graph", true),
     PAGE_SERVER_JOIN_ADDRESSES_GRAPHS_TIME("See Join Addresses over time graph"),
     PAGE_SERVER_RETENTION("See Player Retention -tab"),
     PAGE_SERVER_GEOLOCATIONS("See Geolocations tab"),
@@ -155,5 +160,24 @@ public enum WebPermission implements Supplier<String>, Lang {
     @Override
     public String getDefault() {
         return description;
+    }
+
+    public static WebPermission[] nonDeprecatedValues() {
+        return Arrays.stream(values())
+                .filter(Predicate.not(WebPermission::isDeprecated))
+                .toArray(WebPermission[]::new);
+    }
+
+    public static Optional<WebPermission> findByPermission(String permission) {
+        String name = StringUtils.upperCase(permission).replace('.', '_');
+        try {
+            return Optional.of(valueOf(name));
+        } catch (IllegalArgumentException noSuchEnum) {
+            return Optional.empty();
+        }
+    }
+
+    public static boolean isDeprecated(String permission) {
+        return findByPermission(permission).map(WebPermission::isDeprecated).orElse(false);
     }
 }
