@@ -261,13 +261,15 @@ const PlayerRetentionGraphCard = ({identifier}) => {
             },
             tooltip: selectedAxis === 'date' || selectedAxis === 'deltas' ? {
                 enabled: true,
+                shared: series.length <= 10,
                 valueDecimals: 2,
-                pointFormat: (selectedGroupBy !== 'none' ? '{series.name} - ' : '') + '<b>{point.y} ' + (selectedYAxis === 'percentage' ? '%' : t('html.label.players')) + '</b>'
+                pointFormat: (selectedGroupBy !== 'none' ? '{series.name} - ' : '') + '<b>{point.y} ' + (selectedYAxis === 'percentage' ? '%' : t('html.label.players')) + '</b><br>'
             } : {
                 enabled: true,
+                shared: series.length <= 10,
                 valueDecimals: 2,
                 headerFormat: '{point.x} ' + windowName + '<br>',
-                pointFormat: (selectedGroupBy !== 'none' ? '{series.name} - ' : '') + '<b>{point.y} ' + (selectedYAxis === 'percentage' ? '%' : t('html.label.players')) + '</b>'
+                pointFormat: (selectedGroupBy !== 'none' ? '{series.name} - ' : '') + '<b>{point.y} ' + (selectedYAxis === 'percentage' ? '%' : t('html.label.players')) + '</b><br>'
             },
             series: series
         })
