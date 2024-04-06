@@ -10,7 +10,7 @@ const PlayerRetention = ({id, seeRetention, identifier}) => {
     const [selectedGroupBy, setSelectedGroupBy] = useState('none');
     return (
         <LoadIn>
-            {seeRetention && <section className={id}>
+            {seeRetention && <section id={id} className={id}>
                 <JoinAddressListContextProvider identifier={identifier} loadIndividualAddresses>
                     <ExtendableRow id={`row-${id}-0`}>
                         <Col lg={12}>

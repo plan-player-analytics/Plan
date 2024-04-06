@@ -12,7 +12,7 @@ const JoinAddresses = ({id, permission, identifier}) => {
 
     return (
         <LoadIn>
-            {seeTime && <section className={id}>
+            {seeTime && <section id={id} className={id}>
                 <ExtendableRow id={`row-${id}-0`}>
                     <Col lg={12}>
                         <JoinAddressGraphCard identifier={identifier}/>
