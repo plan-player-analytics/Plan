@@ -4,6 +4,7 @@ import JoinAddressGraphCard from "../server/graphs/JoinAddressGraphCard.jsx";
 import {Col} from "react-bootstrap";
 import React from "react";
 import AddressGroupSelectorRow from "./AddressGroupSelectorRow.jsx";
+import {JoinAddressListContextProvider} from "../../../hooks/context/joinAddressListContextHook.jsx";
 
 const JoinAddresses = ({id, seeTime, identifier}) => {
     return (
