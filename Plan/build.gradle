@@ -84,7 +84,7 @@ subprojects {
         redisBungeeProxioDevVersion = "0.7.3"
 
         commonsTextVersion = "1.11.0"
-        commonsCompressVersion = "1.26.0"
+        commonsCompressVersion = "1.26.1"
         commonsCodecVersion = "1.16.1"
         caffeineVersion = "3.1.8"
         jettyVersion = "11.0.20"
@@ -108,7 +108,7 @@ subprojects {
         junitVersion = "5.10.2"
         mockitoVersion = "5.11.0"
         testContainersVersion = "1.19.7"
-        swaggerVersion = "2.2.20"
+        swaggerVersion = "2.2.21"
     }
 
     repositories {

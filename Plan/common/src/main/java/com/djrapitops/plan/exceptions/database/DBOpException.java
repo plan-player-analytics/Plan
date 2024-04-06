@@ -30,6 +30,7 @@ import java.util.Optional;
 public class DBOpException extends IllegalStateException implements ExceptionWithContext {
 
     public static final String CONSTRAINT_VIOLATION = "Constraint Violation";
+    public static final String DUPLICATE_KEY = "Duplicate key";
     private final ErrorContext context;
 
     public DBOpException(String message) {
@@ -77,7 +78,7 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
             case 1022:
             case 23001:
             case 23505:
-                context.related("Duplicate key")
+                context.related(DUPLICATE_KEY)
                         .whatToDo("Report this, duplicate key exists in SQL.");
                 break;
             // Constraint violation
@@ -164,5 +165,10 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
                 && context.getRelated().contains(DBOpException.CONSTRAINT_VIOLATION)
                 && getCause() != null
                 && getCause().getMessage().contains("user_id");
+    }
+
+    public boolean isDuplicateKeyViolation() {
+        return context != null
+                && context.getRelated().contains(DBOpException.CONSTRAINT_VIOLATION);
     }
 }

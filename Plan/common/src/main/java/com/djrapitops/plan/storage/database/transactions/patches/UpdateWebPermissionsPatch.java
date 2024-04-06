@@ -55,7 +55,11 @@ public class UpdateWebPermissionsPatch extends Patch {
 
     @Override
     protected void applyPatch() {
-        execute(new ExecBatchStatement(WebPermissionTable.INSERT_STATEMENT) {
+        storeMissing();
+    }
+
+    private void storeMissing() {
+        execute(new ExecBatchStatement(WebPermissionTable.safeInsertSQL(dbType)) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (String permission : missingPermissions) {
