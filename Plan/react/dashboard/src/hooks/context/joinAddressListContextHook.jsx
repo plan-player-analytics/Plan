@@ -46,11 +46,11 @@ export const JoinAddressListContextProvider = ({identifier, children, loadIndivi
     }, [updateList, list]);
 
     const [allAddresses, setAllAddresses] = useState([]);
-    const [playerAddresses, setPlayerAddresses] = useState([]);
+    const [playerAddresses, setPlayerAddresses] = useState(undefined);
     const loadAddresses = useCallback(async () => {
         const {data, error} = await fetchPlayerJoinAddresses(updateRequested, identifier, !loadIndividualAddresses);
         setAllAddresses(data?.joinAddresses || [error]);
-        setPlayerAddresses(data?.joinAddressByPlayer || {});
+        setPlayerAddresses(data?.joinAddressByPlayer);
     }, [setAllAddresses, identifier, updateRequested]);
     useEffect(() => {
         loadAddresses();
