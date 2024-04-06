@@ -3,10 +3,12 @@ import {randomUuid} from "../../util/uuid.js";
 import {fetchPlayerJoinAddresses} from "../../service/serverService.js";
 import {useNavigation} from "../navigationHook.jsx";
 import {usePreferences} from "../preferencesHook.jsx";
+import {useTranslation} from "react-i18next";
 
 const JoinAddressListContext = createContext({});
 
 export const JoinAddressListContextProvider = ({identifier, children}) => {
+    const {t} = useTranslation();
     const {updateRequested} = useNavigation();
     const {preferencesLoaded, getKeyedPreference, setSomePreferences} = usePreferences();
     const [list, setList] = useState([]);
@@ -28,7 +30,11 @@ export const JoinAddressListContextProvider = ({identifier, children}) => {
     }, [list, setList, preferencesLoaded, getKeyedPreference]);
 
     const add = useCallback(() => {
-        updateList([...list, {name: "Address group " + (list.length + 1), addresses: [], uuid: randomUuid()}])
+        updateList([...list, {
+            name: t('html.label.addressGroup').replace("{{n}}", list.length + 1),
+            addresses: [],
+            uuid: randomUuid()
+        }])
     }, [updateList, list]);
     const remove = useCallback(index => {
         updateList(list.filter((f, i) => i !== index));

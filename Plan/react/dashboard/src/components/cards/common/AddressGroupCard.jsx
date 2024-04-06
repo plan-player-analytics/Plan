@@ -7,7 +7,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import MultiSelect from "../../input/MultiSelect.jsx";
 import {faTrashAlt} from "@fortawesome/free-regular-svg-icons";
 
-const AddressListCard = ({n, group, editGroup, allAddresses, remove}) => {
+const AddressGroupCard = ({n, group, editGroup, allAddresses, remove}) => {
     const {t} = useTranslation();
     const [selectedIndexes, setSelectedIndexes] = useState([]);
     const [editingName, setEditingName] = useState(false);
@@ -15,7 +15,9 @@ const AddressListCard = ({n, group, editGroup, allAddresses, remove}) => {
 
     useEffect(() => {
         if (!selectedIndexes.length && allAddresses?.length && group?.addresses?.length) {
-            setSelectedIndexes(group.addresses.map(address => allAddresses.indexOf(address)))
+            setSelectedIndexes(group.addresses
+                .map(address => allAddresses.indexOf(address))
+                .filter(index => index !== -1)) // Make sure addresses are not selected that no longer exist
         }
     }, [selectedIndexes, group, allAddresses])
 
@@ -61,4 +63,4 @@ const AddressListCard = ({n, group, editGroup, allAddresses, remove}) => {
         </Card>
     )
 }
-export default AddressListCard;
+export default AddressGroupCard;
