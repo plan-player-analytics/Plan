@@ -255,15 +255,6 @@ public interface JoinAddressQueriesTest extends DatabaseTestPreparer {
     }
 
     @Test
-    default void serverJoinAddressQueryHasNoNullValues() {
-        joinAddressCanBeUnknown();
-
-        Map<String, Integer> expected = Collections.singletonMap(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP, 1);
-        Map<String, Integer> result = db().query(JoinAddressQueries.latestJoinAddresses(serverUUID()));
-        assertEquals(expected, result);
-    }
-
-    @Test
     default void joinAddressQueryHasDistinctPlayers() {
         joinAddressCanBeUnknown();
 

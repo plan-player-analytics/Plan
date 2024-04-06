@@ -122,7 +122,6 @@ public class GraphsJSONResolver extends JSONResolver {
                             @ExampleObject("aggregatedPing"),
                             @ExampleObject("punchCard"),
                             @ExampleObject("serverPie"),
-                            @ExampleObject("joinAddressPie"),
                             @ExampleObject("joinAddressByDay"),
                     }),
                     @Parameter(in = ParameterIn.QUERY, name = "server", description = "Server identifier to get data for", examples = {
@@ -209,8 +208,6 @@ public class GraphsJSONResolver extends JSONResolver {
                 return DataID.GRAPH_PUNCHCARD;
             case "serverPie":
                 return DataID.GRAPH_SERVER_PIE;
-            case "joinAddressPie":
-                return DataID.GRAPH_HOSTNAME_PIE;
             case "joinAddressByDay":
                 return DataID.JOIN_ADDRESSES_BY_DAY;
             default:
@@ -241,8 +238,6 @@ public class GraphsJSONResolver extends JSONResolver {
                 return List.of(WebPermission.PAGE_SERVER_PLAYERBASE_GRAPHS);
             case GRAPH_WORLD_MAP:
                 return List.of(WebPermission.PAGE_SERVER_GEOLOCATIONS_MAP);
-            case GRAPH_HOSTNAME_PIE:
-                return List.of(WebPermission.PAGE_SERVER_JOIN_ADDRESSES_GRAPHS_PIE);
             case JOIN_ADDRESSES_BY_DAY:
                 return List.of(WebPermission.PAGE_SERVER_JOIN_ADDRESSES_GRAPHS_TIME);
             default:
@@ -270,8 +265,6 @@ public class GraphsJSONResolver extends JSONResolver {
                 return List.of(WebPermission.PAGE_NETWORK_GEOLOCATIONS_MAP);
             case GRAPH_ONLINE_PROXIES:
                 return List.of(WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_ONLINE);
-            case GRAPH_HOSTNAME_PIE:
-                return List.of(WebPermission.PAGE_NETWORK_JOIN_ADDRESSES_GRAPHS_PIE);
             case JOIN_ADDRESSES_BY_DAY:
                 return List.of(WebPermission.PAGE_NETWORK_JOIN_ADDRESSES_GRAPHS_TIME);
             default:
@@ -295,8 +288,6 @@ public class GraphsJSONResolver extends JSONResolver {
                 return graphJSON.serverCalendarJSON(serverUUID);
             case GRAPH_WORLD_PIE:
                 return graphJSON.serverWorldPieJSONAsMap(serverUUID);
-            case GRAPH_HOSTNAME_PIE:
-                return graphJSON.playerHostnamePieJSONAsMap(serverUUID);
             case GRAPH_ACTIVITY:
                 return graphJSON.activityGraphsJSONAsMap(serverUUID);
             case GRAPH_WORLD_MAP:
@@ -336,8 +327,6 @@ public class GraphsJSONResolver extends JSONResolver {
                 return graphJSON.networkCalendarJSON();
             case GRAPH_SERVER_PIE:
                 return graphJSON.serverPreferencePieJSONAsMap();
-            case GRAPH_HOSTNAME_PIE:
-                return graphJSON.playerHostnamePieJSONAsMap();
             case GRAPH_WORLD_MAP:
                 return graphJSON.geolocationGraphsJSONAsMap();
             case GRAPH_ONLINE_PROXIES:

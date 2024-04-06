@@ -11,7 +11,7 @@ const AddressGroupSelectorRow = () => {
     const {list, add, remove, replace, allAddresses} = useJoinAddressListContext();
 
     return (
-        <Row>
+        <Row id={"address-selector"}>
             {list.map((group, i) =>
                 <Col lg={2} key={group.uuid}>
                     <AddressGroupCard n={i + 1}

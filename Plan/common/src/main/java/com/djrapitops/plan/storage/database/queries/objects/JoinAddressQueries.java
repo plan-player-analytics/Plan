@@ -29,6 +29,7 @@ import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import org.apache.commons.text.TextStringBuilder;
+import org.jetbrains.annotations.VisibleForTesting;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -44,6 +45,7 @@ public class JoinAddressQueries {
         /* Static method class */
     }
 
+    @VisibleForTesting
     public static Query<Map<String, Integer>> latestJoinAddresses() {
         String selectLatestJoinAddresses = SELECT +
                 "COUNT(1) as total," +
@@ -67,6 +69,7 @@ public class JoinAddressQueries {
         joinAddresses.put(UUID.fromString(set.getString(UsersTable.USER_UUID)), set.getString(JoinAddressTable.JOIN_ADDRESS));
     }
 
+    @VisibleForTesting
     public static Query<Map<String, Integer>> latestJoinAddresses(ServerUUID serverUUID) {
         String selectLatestSessionStarts = SELECT + SessionsTable.USER_ID + ",MAX(" + SessionsTable.SESSION_START + ") as max_start" +
                 FROM + SessionsTable.TABLE_NAME + " max_s" +

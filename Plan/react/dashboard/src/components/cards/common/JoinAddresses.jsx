@@ -12,14 +12,14 @@ const JoinAddresses = ({id, permission, identifier}) => {
 
     return (
         <LoadIn>
-            <section className={id}>
+            {seeTime && <section className={id}>
                 <ExtendableRow id={`row-${id}-0`}>
                     <Col lg={12}>
-                        {seeTime && <JoinAddressGraphCard identifier={identifier}/>}
+                        <JoinAddressGraphCard identifier={identifier}/>
                     </Col>
                 </ExtendableRow>
                 <AddressGroupSelectorRow/>
-            </section>
+            </section>}
         </LoadIn>
     )
 }

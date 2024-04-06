@@ -68,10 +68,6 @@ public class PieGraphFactory {
         return new ServerPreferencePie(playtimeByServerName);
     }
 
-    public Pie joinAddressPie(Map<String, Integer> joinAddresses) {
-        return new JoinAddressPie(joinAddresses);
-    }
-
     public WorldPie worldPie(WorldTimes worldTimes) {
         WorldAliasSettings worldAliasSettings = config.getWorldAliasSettings();
         Map<String, Long> playtimePerAlias = worldAliasSettings.getPlaytimePerAlias(worldTimes);
