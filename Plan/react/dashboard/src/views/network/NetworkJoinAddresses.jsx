@@ -1,13 +1,12 @@
 import React from 'react';
 import JoinAddresses from "../../components/cards/common/JoinAddresses.jsx";
-import {JoinAddressListContextProvider} from "../../hooks/context/joinAddressListContextHook.jsx";
+import {useAuth} from "../../hooks/authenticationHook.jsx";
 
 const NetworkJoinAddresses = () => {
+    const {hasPermission} = useAuth();
+    const seeTime = hasPermission('page.network.join.addresses.graphs.time');
     return (
-        <JoinAddressListContextProvider identifier={null}>
-            <JoinAddresses id={'network-join-addresses'} identifier={null}
-                           permission={'page.network.join.addresses.graphs.time'}/>
-        </JoinAddressListContextProvider>
+        <JoinAddresses id={'network-join-addresses'} identifier={null} seeTime={seeTime}/>
     )
 };
 

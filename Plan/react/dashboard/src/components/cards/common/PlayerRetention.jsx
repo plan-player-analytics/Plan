@@ -11,7 +11,8 @@ const PlayerRetention = ({id, seeRetention, identifier}) => {
     return (
         <LoadIn>
             {seeRetention && <section id={id} className={id}>
-                <JoinAddressListContextProvider identifier={identifier} loadIndividualAddresses>
+                <JoinAddressListContextProvider identifier={identifier} isAllowed={seeRetention}
+                                                loadIndividualAddresses>
                     <ExtendableRow id={`row-${id}-0`}>
                         <Col lg={12}>
                             <PlayerRetentionGraphCard identifier={identifier}

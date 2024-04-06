@@ -7,7 +7,7 @@ import {useTranslation} from "react-i18next";
 
 const JoinAddressListContext = createContext({});
 
-export const JoinAddressListContextProvider = ({identifier, children, loadIndividualAddresses}) => {
+export const JoinAddressListContextProvider = ({identifier, children, loadIndividualAddresses, isAllowed}) => {
     const {t} = useTranslation();
     const {updateRequested} = useNavigation();
     const {preferencesLoaded, getKeyedPreference, setSomePreferences} = usePreferences();
@@ -48,10 +48,11 @@ export const JoinAddressListContextProvider = ({identifier, children, loadIndivi
     const [allAddresses, setAllAddresses] = useState([]);
     const [playerAddresses, setPlayerAddresses] = useState(undefined);
     const loadAddresses = useCallback(async () => {
+        if (!isAllowed) return;
         const {data, error} = await fetchPlayerJoinAddresses(updateRequested, identifier, !loadIndividualAddresses);
         setAllAddresses(data?.joinAddresses || [error]);
         setPlayerAddresses(data?.joinAddressByPlayer);
-    }, [setAllAddresses, identifier, updateRequested]);
+    }, [setAllAddresses, identifier, updateRequested, isAllowed]);
     useEffect(() => {
         loadAddresses();
     }, [loadAddresses]);

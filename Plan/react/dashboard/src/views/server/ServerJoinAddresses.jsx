@@ -1,15 +1,14 @@
 import React from 'react';
 import {useParams} from "react-router-dom";
-import {JoinAddressListContextProvider} from "../../hooks/context/joinAddressListContextHook.jsx";
 import JoinAddresses from "../../components/cards/common/JoinAddresses.jsx";
+import {useAuth} from "../../hooks/authenticationHook.jsx";
 
 const ServerJoinAddresses = () => {
     const {identifier} = useParams();
+    const {hasPermission} = useAuth();
+    const seeTime = hasPermission('page.server.join.addresses.graphs.time');
     return (
-        <JoinAddressListContextProvider identifier={identifier}>
-            <JoinAddresses id={'server-join-addresses'} identifier={identifier}
-                           permission={'page.server.join.addresses.graphs.time'}/>
-        </JoinAddressListContextProvider>
+        <JoinAddresses id={'server-join-addresses'} identifier={identifier} seeTime={seeTime}/>
     )
 };
 
