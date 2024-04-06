@@ -261,26 +261,6 @@ export const fetchPingGraph = async (timestamp, identifier) => {
     return doGetRequest(url, timestamp);
 }
 
-export const fetchJoinAddressPie = async (timestamp, identifier) => {
-    if (identifier) {
-        return await fetchJoinAddressPieServer(timestamp, identifier);
-    } else {
-        return await fetchJoinAddressPieNetwork(timestamp);
-    }
-}
-
-const fetchJoinAddressPieServer = async (timestamp, identifier) => {
-    let url = `/v1/graph?type=joinAddressPie&server=${identifier}`;
-    if (staticSite) url = `/data/graph-joinAddressPie_${identifier}.json`;
-    return doGetRequest(url, timestamp);
-}
-
-const fetchJoinAddressPieNetwork = async (timestamp) => {
-    let url = `/v1/graph?type=joinAddressPie`;
-    if (staticSite) url = `/data/graph-joinAddressPie.json`;
-    return doGetRequest(url, timestamp);
-}
-
 export const fetchJoinAddressByDay = async (timestamp, addresses, identifier) => {
     if (identifier) {
         return await fetchJoinAddressByDayServer(timestamp, addresses, identifier);
