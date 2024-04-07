@@ -32,7 +32,6 @@ import com.djrapitops.plan.delivery.rendering.json.graphs.line.LineGraphFactory;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.PingGraph;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.Pie;
-import com.djrapitops.plan.delivery.rendering.json.graphs.pie.PieSlice;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.WorldPie;
 import com.djrapitops.plan.delivery.rendering.json.graphs.special.WorldMap;
 import com.djrapitops.plan.delivery.rendering.json.graphs.stack.StackGraph;
@@ -57,7 +56,7 @@ import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.storage.database.queries.objects.*;
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.utilities.comparators.DateHolderOldestComparator;
-import com.djrapitops.plan.utilities.comparators.PieSliceComparator;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.java.Lists;
 import com.djrapitops.plan.utilities.java.Maps;
 import net.playeranalytics.plugin.scheduling.TimeAmount;
@@ -457,34 +456,6 @@ public class GraphJSONCreator {
                 .build();
     }
 
-    public Map<String, Object> playerHostnamePieJSONAsMap() {
-        String[] pieColors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
-        Map<String, Integer> joinAddresses = dbSystem.getDatabase().query(JoinAddressQueries.latestJoinAddresses());
-
-        translateUnknown(joinAddresses);
-
-        List<PieSlice> slices = graphs.pie().joinAddressPie(joinAddresses).getSlices();
-        slices.sort(new PieSliceComparator());
-        return Maps.builder(String.class, Object.class)
-                .put("colors", pieColors)
-                .put("slices", slices)
-                .build();
-    }
-
-    public Map<String, Object> playerHostnamePieJSONAsMap(ServerUUID serverUUID) {
-        String[] pieColors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
-        Map<String, Integer> joinAddresses = dbSystem.getDatabase().query(JoinAddressQueries.latestJoinAddresses(serverUUID));
-
-        translateUnknown(joinAddresses);
-
-        List<PieSlice> slices = graphs.pie().joinAddressPie(joinAddresses).getSlices();
-        slices.sort(new PieSliceComparator());
-        return Maps.builder(String.class, Object.class)
-                .put("colors", pieColors)
-                .put("slices", slices)
-                .build();
-    }
-
     public void translateUnknown(Map<String, Integer> joinAddresses) {
         Integer unknown = joinAddresses.get(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
         if (unknown != null) {
@@ -493,16 +464,16 @@ public class GraphJSONCreator {
         }
     }
 
-    public Map<String, Object> joinAddressesByDay(ServerUUID serverUUID, long after, long before) {
+    public Map<String, Object> joinAddressesByDay(ServerUUID serverUUID, long after, long before, @Untrusted List<String> addressFilter) {
         String[] pieColors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
-        List<DateObj<Map<String, Integer>>> joinAddresses = dbSystem.getDatabase().query(JoinAddressQueries.joinAddressesPerDay(serverUUID, config.getTimeZone().getOffset(System.currentTimeMillis()), after, before));
+        List<DateObj<Map<String, Integer>>> joinAddresses = dbSystem.getDatabase().query(JoinAddressQueries.joinAddressesPerDay(serverUUID, config.getTimeZone().getOffset(System.currentTimeMillis()), after, before, addressFilter));
 
         return mapToJson(pieColors, joinAddresses);
     }
 
-    public Map<String, Object> joinAddressesByDay(long after, long before) {
+    public Map<String, Object> joinAddressesByDay(long after, long before, @Untrusted List<String> addressFilter) {
         String[] pieColors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
-        List<DateObj<Map<String, Integer>>> joinAddresses = dbSystem.getDatabase().query(JoinAddressQueries.joinAddressesPerDay(config.getTimeZone().getOffset(System.currentTimeMillis()), after, before));
+        List<DateObj<Map<String, Integer>>> joinAddresses = dbSystem.getDatabase().query(JoinAddressQueries.joinAddressesPerDay(config.getTimeZone().getOffset(System.currentTimeMillis()), after, before, addressFilter));
 
         return mapToJson(pieColors, joinAddresses);
     }

@@ -16,8 +16,10 @@
  */
 package com.djrapitops.plan.storage.database.queries;
 
+import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.event.JoinAddress;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.queries.objects.BaseUserQueries;
@@ -27,12 +29,14 @@ import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.*;
 import org.apache.commons.lang3.StringUtils;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import utilities.RandomData;
 import utilities.TestConstants;
 import utilities.TestData;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -121,6 +125,55 @@ public interface JoinAddressQueriesTest extends DatabaseTestPreparer {
     }
 
     @Test
+    @DisplayName("Join address by day is filtered by addresses")
+    default void joinAddressListIsFilteredByAddress() {
+        db().executeTransaction(TestData.storeServers());
+
+        db().executeTransaction(new StoreWorldNameTransaction(TestConstants.SERVER_TWO_UUID, worlds[0]));
+        db().executeTransaction(new StoreWorldNameTransaction(TestConstants.SERVER_TWO_UUID, worlds[1]));
+        FinishedSession session = RandomData.randomSession(TestConstants.SERVER_TWO_UUID, worlds, playerUUID, player2UUID);
+        String expectedAddress = TestConstants.GET_PLAYER_HOSTNAME.get();
+        session.getExtraData().put(JoinAddress.class, new JoinAddress(expectedAddress));
+        db().executeTransaction(new StoreSessionTransaction(session));
+
+        List<DateObj<Map<String, Integer>>> result = db().query(JoinAddressQueries.joinAddressesPerDay(0, 0, System.currentTimeMillis(), List.of("nonexistent.com")));
+        assertEquals(List.of(), result);
+
+        long startOfDay = session.getDate() - session.getDate() % TimeUnit.DAYS.toMillis(1);
+
+        List<DateObj<Map<String, Integer>>> result2 = db().query(JoinAddressQueries.joinAddressesPerDay(0, 0, System.currentTimeMillis(), List.of(expectedAddress)));
+        assertEquals(List.of(new DateObj<>(startOfDay, Map.of(expectedAddress, 1))), result2);
+
+        List<DateObj<Map<String, Integer>>> result3 = db().query(JoinAddressQueries.joinAddressesPerDay(0, 0, System.currentTimeMillis(), List.of()));
+        assertEquals(List.of(new DateObj<>(startOfDay, Map.of(expectedAddress, 1))), result3);
+    }
+
+    @Test
+    @DisplayName("Server join address by day is filtered by addresses")
+    default void serverJoinAddressListIsFilteredByAddress() {
+        db().executeTransaction(TestData.storeServers());
+
+        ServerUUID serverTwoUuid = TestConstants.SERVER_TWO_UUID;
+        db().executeTransaction(new StoreWorldNameTransaction(serverTwoUuid, worlds[0]));
+        db().executeTransaction(new StoreWorldNameTransaction(serverTwoUuid, worlds[1]));
+        FinishedSession session = RandomData.randomSession(serverTwoUuid, worlds, playerUUID, player2UUID);
+        String expectedAddress = TestConstants.GET_PLAYER_HOSTNAME.get();
+        session.getExtraData().put(JoinAddress.class, new JoinAddress(expectedAddress));
+        db().executeTransaction(new StoreSessionTransaction(session));
+
+        List<DateObj<Map<String, Integer>>> result = db().query(JoinAddressQueries.joinAddressesPerDay(serverTwoUuid, 0, 0, System.currentTimeMillis(), List.of("nonexistent.com")));
+        assertEquals(List.of(), result);
+
+        long startOfDay = session.getDate() - session.getDate() % TimeUnit.DAYS.toMillis(1);
+
+        List<DateObj<Map<String, Integer>>> result2 = db().query(JoinAddressQueries.joinAddressesPerDay(serverTwoUuid, 0, 0, System.currentTimeMillis(), List.of(expectedAddress)));
+        assertEquals(List.of(new DateObj<>(startOfDay, Map.of(expectedAddress, 1))), result2);
+
+        List<DateObj<Map<String, Integer>>> result3 = db().query(JoinAddressQueries.joinAddressesPerDay(serverTwoUuid, 0, 0, System.currentTimeMillis(), List.of()));
+        assertEquals(List.of(new DateObj<>(startOfDay, Map.of(expectedAddress, 1))), result3);
+    }
+
+    @Test
     default void joinAddressIsTruncated() {
         db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
         db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[1]));
@@ -198,15 +251,6 @@ public interface JoinAddressQueriesTest extends DatabaseTestPreparer {
 
         Map<String, Integer> expected = Collections.singletonMap(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP, 1);
         Map<String, Integer> result = db().query(JoinAddressQueries.latestJoinAddresses());
-        assertEquals(expected, result);
-    }
-
-    @Test
-    default void serverJoinAddressQueryHasNoNullValues() {
-        joinAddressCanBeUnknown();
-
-        Map<String, Integer> expected = Collections.singletonMap(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP, 1);
-        Map<String, Integer> result = db().query(JoinAddressQueries.latestJoinAddresses(serverUUID()));
         assertEquals(expected, result);
     }
 

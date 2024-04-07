@@ -219,6 +219,8 @@ public enum HtmlLang implements Lang {
     LABEL_TITLE_SERVER_CALENDAR("html.label.serverCalendar", "Server Calendar"),
     LABEL_TITLE_NETWORK_CALENDAR("html.label.networkCalendar", "Network Calendar"),
     LABEL_LABEL_JOIN_ADDRESS("html.label.joinAddress", "Join Address"),
+    LABEL_ADD_JOIN_ADDRESS_GROUP("html.label.addJoinAddressGroup", "Add address group"),
+    LABEL_ADDRESS_GROUP("html.label.addressGroup", "Address group {{n}}"),
     LABEL_LABEL_SESSION_MEDIAN("html.label.medianSessionLength", "Median Session Length"),
     LABEL_LABEL_KDR("html.label.kdr", "KDR"),
     LABEL_TITLE_INSIGHTS("html.label.insights", "Insights"),

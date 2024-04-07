@@ -37,6 +37,8 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 /**
  * Endpoint for getting list of available Plan web permissions.
@@ -75,7 +77,10 @@ public class WebPermissionJSONResolver implements Resolver {
     }
 
     private Response getResponse() {
-        List<String> permissions = dbSystem.getDatabase().query(WebUserQueries.fetchAvailablePermissions());
+        List<String> permissions = dbSystem.getDatabase().query(WebUserQueries.fetchAvailablePermissions())
+                .stream()
+                .filter(Predicate.not(WebPermission::isDeprecated))
+                .collect(Collectors.toList());
 
         WebPermissionList permissionList = new WebPermissionList(permissions);
         return Response.builder()

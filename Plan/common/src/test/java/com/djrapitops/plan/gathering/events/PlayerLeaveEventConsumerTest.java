@@ -264,13 +264,5 @@ class PlayerLeaveEventConsumerTest {
         List<String> expected = List.of("PLAY.UPPERCASE.COM", "play.uppercase.com", JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
         List<String> result = database.query(JoinAddressQueries.allJoinAddresses());
         assertEquals(expected, result);
-
-        Map<String, Integer> expectedMap = Map.of("PLAY.UPPERCASE.COM", 1);
-        Map<String, Integer> resultMap = database.query(JoinAddressQueries.latestJoinAddresses(serverUUID));
-        assertEquals(expectedMap, resultMap);
-
-        expectedMap = Map.of("PLAY.UPPERCASE.COM", 1);
-        resultMap = database.query(JoinAddressQueries.latestJoinAddresses());
-        assertEquals(expectedMap, resultMap);
     }
 }
