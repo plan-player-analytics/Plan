@@ -173,7 +173,6 @@ const PlayerRetentionGraphCard = ({identifier, selectedGroupBy, setSelectedGroup
                         if (!grouped[joinAddressGroup]) grouped[joinAddressGroup] = [];
                         grouped[joinAddressGroup].push(point);
                     }
-
                     break;
                 case 'none':
                 default:

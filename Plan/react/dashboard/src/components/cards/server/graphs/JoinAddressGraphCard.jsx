@@ -10,6 +10,7 @@ import JoinAddressGraph from "../../../graphs/JoinAddressGraph";
 import Toggle from "../../../input/Toggle";
 import {useJoinAddressListContext} from "../../../../hooks/context/joinAddressListContextHook.jsx";
 import {useNavigation} from "../../../../hooks/navigationHook.jsx";
+import {staticSite} from "../../../../service/backendConfiguration.js";
 
 const JoinAddressGraphCard = ({identifier}) => {
     const {t} = useTranslation();
@@ -22,11 +23,12 @@ const JoinAddressGraphCard = ({identifier}) => {
     const [data, setData] = useState(undefined);
     const [loadingError, setLoadingError] = useState(undefined);
     const loadAddresses = useCallback(async () => {
-        if (noSelectedAddresses) return;
+        if (!staticSite && noSelectedAddresses) return;
 
         let colors = ['#4ab4de'];
         const dataByGroup = [];
-        for (const group of list.filter(group => group.addresses.length)) {
+        const addressGroups = staticSite ? [{addresses: [], name: ""}] : list.filter(group => group.addresses.length);
+        for (const group of addressGroups) {
             const {data, error} = await fetchJoinAddressByDay(updateRequested, group.addresses, identifier);
             if (error) {
                 setLoadingError(error);
@@ -36,31 +38,36 @@ const JoinAddressGraphCard = ({identifier}) => {
             dataByGroup.push({...group, data: data?.join_addresses_by_date || []});
         }
 
-        // First group points from endpoint into frontend based groups
-        const points = {};
-        for (const group of dataByGroup) {
-            const groupName = group.name;
-            for (const point of group.data || []) {
-                if (!points[point.date]) points[point.date] = [];
+        if (!staticSite) {
+            // First group points from endpoint into frontend based groups
+            const points = {};
+            for (const group of dataByGroup) {
+                const groupName = group.name;
+                for (const point of group.data || []) {
+                    if (!points[point.date]) points[point.date] = [];
 
-                const count = point.joinAddresses.map(j => j.count).reduce((partialSum, a) => partialSum + a, 0);
-                points[point.date].push({date: point.date, joinAddresses: [{joinAddress: groupName, count}]})
-            }
-        }
-
-        // expected output: [{date: number, addresses: [{joinAddress: "name", count: number}]}]
-        const flattened = Object.entries(points)
-            .sort((a, b) => Number(b.date) - Number(a.date))
-            .map(([date, pointList]) => {
-                return {
-                    date: Number(date), joinAddresses: pointList.map(point => point.joinAddresses).flat()
+                    const count = point.joinAddresses.map(j => j.count).reduce((partialSum, a) => partialSum + a, 0);
+                    points[point.date].push({date: point.date, joinAddresses: [{joinAddress: groupName, count}]})
                 }
-            });
+            }
 
-        setData({
-            join_addresses_by_date: flattened,
-            colors
-        });
+            // expected output: [{date: number, addresses: [{joinAddress: "name", count: number}]}]
+            const flattened = Object.entries(points)
+                .sort((a, b) => Number(b.date) - Number(a.date))
+                .map(([date, pointList]) => {
+                    return {
+                        date: Number(date), joinAddresses: pointList.map(point => point.joinAddresses).flat()
+                    }
+                });
+
+            setData({
+                join_addresses_by_date: flattened,
+                colors
+            });
+        } else {
+            // On exported site we get all addresses individually
+            setData({join_addresses_by_date: dataByGroup[0].data, colors})
+        }
     }, [setData, setLoadingError, identifier, updateRequested, list]);
 
     useEffect(() => {
