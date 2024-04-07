@@ -100,6 +100,7 @@ public class ServerPageExporter extends FileExporter {
                 server + serverUUID + "/playerbase",
                 server + serverUUID + "/join-addresses",
                 server + serverUUID + "/retention",
+                server + serverUUID + "/allowlist",
                 server + serverUUID + "/players",
                 server + serverUUID + "/geolocations",
                 server + serverUUID + "/performance",
@@ -147,7 +148,8 @@ public class ServerPageExporter extends FileExporter {
                 "extensionData?server=" + serverUUID,
                 "serverIdentity?server=" + serverUUID,
                 "retention?server=" + serverUUID,
-                "joinAddresses?server=" + serverUUID
+                "joinAddresses?server=" + serverUUID,
+                "gameAllowlistBounces?server=" + serverUUID
         );
     }
 
