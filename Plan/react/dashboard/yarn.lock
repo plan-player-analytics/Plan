@@ -315,15 +315,7 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.22.5"
 
-"@babel/runtime-corejs3@^7.20.7", "@babel/runtime-corejs3@^7.22.15":
-  version "7.24.0"
-  resolved "https://registry.yarnpkg.com/@babel/runtime-corejs3/-/runtime-corejs3-7.24.0.tgz#34243e29e369a762dd2a356fee65c3767973828a"
-  integrity sha512-HxiRMOncx3ly6f3fcZ1GVKf+/EROcI9qwPgmij8Czqy6Okm/0T37T4y2ZIlLUuEUFjtM7NRsfdCO8Y3tAiJZew==
-  dependencies:
-    core-js-pure "^3.30.2"
-    regenerator-runtime "^0.14.0"
-
-"@babel/runtime-corejs3@^7.24.1":
+"@babel/runtime-corejs3@^7.20.7", "@babel/runtime-corejs3@^7.22.15", "@babel/runtime-corejs3@^7.24.4":
   version "7.24.4"
   resolved "https://registry.yarnpkg.com/@babel/runtime-corejs3/-/runtime-corejs3-7.24.4.tgz#b9ebe728087cfbb22bbaccc6f9a70d69834124a0"
   integrity sha512-VOQOexSilscN24VEY810G/PqtpFvx/z6UqDIjIWbDe2368HhDLkYN5TYwaEz/+eRCUkhJ2WaNLLmQAlxzfWj4w==
@@ -1705,10 +1697,10 @@ dom-helpers@^5.0.1, dom-helpers@^5.2.0, dom-helpers@^5.2.1:
     "@babel/runtime" "^7.8.7"
     csstype "^3.0.2"
 
-dompurify@=3.0.11:
-  version "3.0.11"
-  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-3.0.11.tgz#c163f5816eaac6aeef35dae2b77fca0504564efe"
-  integrity sha512-Fan4uMuyB26gFV3ovPoEoQbxRRPfTu3CvImyZnhGq5fsIEO+gEFLp45ISFt+kQBWsK5ulDdT0oV28jS1UrwQLg==
+dompurify@=3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/dompurify/-/dompurify-3.1.0.tgz#8c6b9fe986969a33aa4686bd829cbe8e14dd9445"
+  integrity sha512-yoU4rhgPKCo+p5UrWWWNKiIq+ToGqmVVhk0PmMYBK4kRsR3/qhemNFL8f6CFmBd4gMwm3F4T7HBoydP5uY07fA==
 
 drange@^1.0.2:
   version "1.1.1"
@@ -3129,10 +3121,10 @@ supports-color@^7.1.0:
   dependencies:
     has-flag "^4.0.0"
 
-swagger-client@^3.26.4:
-  version "3.26.6"
-  resolved "https://registry.yarnpkg.com/swagger-client/-/swagger-client-3.26.6.tgz#d272ef5aeb3fd278f5c9c4b94ec98a9703cba92c"
-  integrity sha512-PYYca8BsamZaOjlKr5ombOTeDje1ddiYAKGstpmAU3iU+mBKgqHiw5G2J77SC9+chKU5y0aJzmQX4hNu3p2y5A==
+swagger-client@^3.26.5:
+  version "3.26.8"
+  resolved "https://registry.yarnpkg.com/swagger-client/-/swagger-client-3.26.8.tgz#2947cb8b6ae1d6689c3f3ac948e9d9aa610ae792"
+  integrity sha512-NzvHWpWLeNVJAFrH+cRyzCzYrKNYG5AuaTDwaL/sqHRDMxjj8SN9Ua84EbfsUqrUnI50sW270dgQphp0TorAcg==
   dependencies:
     "@babel/runtime-corejs3" "^7.22.15"
     "@swagger-api/apidom-core" ">=0.99.0 <1.0.0"
@@ -3150,18 +3142,18 @@ swagger-client@^3.26.4:
     qs "^6.10.2"
     traverse "~0.6.6"
 
-swagger-ui@^5.13.0:
-  version "5.13.0"
-  resolved "https://registry.yarnpkg.com/swagger-ui/-/swagger-ui-5.13.0.tgz#700e40ca8d32eb18cbb67667a6fc0e0d151f328c"
-  integrity sha512-ul9ui69CTxb9+P4Ek3njwHnQqLeYfK0AMBvIDAwIrz4YV7DJqZR9hCy4ZDlMBzIacbaDMwnwqeIULlOPJTia1g==
+swagger-ui@^5.15.1:
+  version "5.15.1"
+  resolved "https://registry.yarnpkg.com/swagger-ui/-/swagger-ui-5.15.1.tgz#77f2ca43288be556c31cd7fd4b64cc9ae35dca0e"
+  integrity sha512-XABHvYHp/JpCyaLFbm2dzbOhcQ3TYPDBmICMAjlgy2Ngdng9tN4sc8/rJLPBOqTF7hobqUVlYDL2FuMT5NdmpQ==
   dependencies:
-    "@babel/runtime-corejs3" "^7.24.1"
+    "@babel/runtime-corejs3" "^7.24.4"
     "@braintree/sanitize-url" "=7.0.1"
     base64-js "^1.5.1"
     classnames "^2.5.1"
     css.escape "1.5.1"
     deep-extend "0.6.0"
-    dompurify "=3.0.11"
+    dompurify "=3.1.0"
     ieee754 "^1.2.1"
     immutable "^3.x.x"
     js-file-download "^0.4.12"
@@ -3186,7 +3178,7 @@ swagger-ui@^5.13.0:
     reselect "^5.1.0"
     serialize-error "^8.1.0"
     sha.js "^2.4.11"
-    swagger-client "^3.26.4"
+    swagger-client "^3.26.5"
     url-parse "^1.5.10"
     xml "=1.0.1"
     xml-but-prettier "^1.0.1"
