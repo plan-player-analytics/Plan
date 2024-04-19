@@ -30,8 +30,6 @@ import com.djrapitops.plan.extension.implementation.results.*;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerTableDataQuery;
-import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalPlayerResultsTransaction;
-import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalServerResultsTransaction;
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
@@ -209,6 +207,8 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @Test
     default void unsatisfiedPlayerConditionalResultsAreCleaned() {
+        db().executeTransaction(new PlayerRegisterTransaction(playerUUID, System::currentTimeMillis, TestConstants.PLAYER_ONE_NAME));
+
         ExtensionSvc extensionService = extensionService();
 
         extensionService.register(new ConditionalExtension());
@@ -223,8 +223,6 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         ConditionalExtension.condition = false;
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
-        db().executeTransaction(new RemoveUnsatisfiedConditionalPlayerResultsTransaction());
-
         // Check that the wanted data exists
         checkThatPlayerDataExists(ConditionalExtension.condition);
 
@@ -232,10 +230,60 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         ConditionalExtension.condition = false;
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
-        db().executeTransaction(new RemoveUnsatisfiedConditionalPlayerResultsTransaction());
-
         // Check that the wanted data exists
         checkThatPlayerDataExists(ConditionalExtension.condition);
+    }
+
+    @Test
+    default void unsatisfiedPlayerConditionalResultsAreCleanedCompletely() {
+        db().executeTransaction(new PlayerRegisterTransaction(playerUUID, System::currentTimeMillis, TestConstants.PLAYER_ONE_NAME));
+
+        ExtensionSvc extensionService = extensionService();
+
+        extensionService.register(new RemovingConditionalExtension());
+
+        RemovingConditionalExtension.condition = true;
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
+
+        List<ExtensionData> ofServer = db().query(new ExtensionPlayerDataQuery(playerUUID)).get(serverUUID());
+        assertTrue(ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty(), "There was no data left");
+        ExtensionTabData tabData = ofServer.get(0).getTabs().get(0);
+        assertEquals(RemovingConditionalExtension.condition, tabData.getString("conditionalValue").isPresent());
+
+        // Reverse condition
+        RemovingConditionalExtension.condition = false;
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
+
+        ofServer = db().query(new ExtensionPlayerDataQuery(playerUUID)).get(serverUUID());
+        assertTrue(ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty(), "There was no data left");
+        tabData = ofServer.get(0).getTabs().get(0);
+        assertEquals(RemovingConditionalExtension.condition, tabData.getString("conditionalValue").isPresent());
+    }
+
+    @Test
+    default void unsatisfiedServerConditionalResultsAreCleanedCompletely() {
+        db().executeTransaction(new PlayerRegisterTransaction(playerUUID, System::currentTimeMillis, TestConstants.PLAYER_ONE_NAME));
+
+        ExtensionSvc extensionService = extensionService();
+
+        extensionService.register(new RemovingConditionalExtension());
+
+        RemovingConditionalExtension.condition = true;
+        extensionService.updateServerValues(CallEvents.MANUAL);
+
+        List<ExtensionData> ofServer = db().query(new ExtensionServerDataQuery(serverUUID()));
+        assertTrue(ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty(), "There was no data left");
+        ExtensionTabData tabData = ofServer.get(0).getTabs().get(0);
+        assertEquals(RemovingConditionalExtension.condition, tabData.getString("conditionalValue").isPresent());
+
+        // Reverse condition
+        RemovingConditionalExtension.condition = false;
+        extensionService.updateServerValues(CallEvents.MANUAL);
+
+        ofServer = db().query(new ExtensionServerDataQuery(serverUUID()));
+        assertTrue(ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty(), "There was no data left");
+        tabData = ofServer.get(0).getTabs().get(0);
+        assertEquals(RemovingConditionalExtension.condition, tabData.getString("conditionalValue").isPresent());
     }
 
     default void checkThatPlayerDataExists(boolean condition) {
@@ -276,16 +324,12 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         ConditionalExtension.condition = false;
         extensionService.updateServerValues(CallEvents.MANUAL);
 
-        db().executeTransaction(new RemoveUnsatisfiedConditionalServerResultsTransaction());
-
         // Check that the wanted data exists
         checkThatServerDataExists(ConditionalExtension.condition);
 
         // Reverse condition
         ConditionalExtension.condition = false;
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
-
-        db().executeTransaction(new RemoveUnsatisfiedConditionalServerResultsTransaction());
 
         // Check that the wanted data exists
         checkThatServerDataExists(ConditionalExtension.condition);
@@ -442,6 +486,34 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         @StringProvider(text = "Unconditional")
         public String unconditional() {
             return "unconditional";
+        }
+    }
+
+    @PluginInfo(name = "ConditionalExtension")
+    class RemovingConditionalExtension implements DataExtension {
+
+        static boolean condition = true;
+
+        @BooleanProvider(text = "a boolean", conditionName = "condition")
+        public boolean isCondition(UUID playerUUID) {
+            return condition;
+        }
+
+        @StringProvider(text = "Conditional Value")
+        @Conditional("condition")
+        public String conditionalValue(UUID playerUUID) {
+            return "Conditional";
+        }
+
+        @BooleanProvider(text = "a boolean", conditionName = "condition")
+        public boolean isCondition() {
+            return condition;
+        }
+
+        @StringProvider(text = "Conditional Value")
+        @Conditional("condition")
+        public String conditionalValue() {
+            return "Conditional";
         }
     }
 

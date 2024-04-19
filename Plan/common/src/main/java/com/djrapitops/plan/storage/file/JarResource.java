@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.storage.file;
 
-import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.IOUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;

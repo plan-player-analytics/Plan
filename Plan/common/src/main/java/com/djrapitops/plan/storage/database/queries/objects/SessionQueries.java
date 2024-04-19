@@ -917,6 +917,16 @@ public class SessionQueries {
         };
     }
 
+    public static Query<Long> activePlaytime(long after, long before) {
+        String sql = SELECT + "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME +
+                ") as playtime" +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.SESSION_END + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?";
+        return db -> db.queryOptional(sql, set -> set.getLong("playtime"), after, before)
+                .orElse(0L);
+    }
+
     public static Query<Set<Integer>> userIdsOfPlayedBetween(long after, long before, List<ServerUUID> serverUUIDs) {
         String selectServerIds = SELECT + ServerTable.ID +
                 FROM + ServerTable.TABLE_NAME +
@@ -1003,5 +1013,17 @@ public class SessionQueries {
                 return set.next() ? set.getLong("m") : -1L;
             }
         };
+    }
+
+    public static Query<Map<UUID, Long>> lastSeen(ServerUUID serverUUID) {
+        String sql = SELECT + UsersTable.USER_UUID + ", MAX(" + SessionsTable.SESSION_END + ") as last_seen" +
+                FROM + SessionsTable.TABLE_NAME + " s" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u ON u." + UsersTable.ID + "=s." + SessionsTable.USER_ID +
+                WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                GROUP_BY + UsersTable.USER_UUID;
+        return db -> db.queryMap(sql, (set, to) -> to.put(
+                UUID.fromString(set.getString(UsersTable.USER_UUID)),
+                set.getLong("last_seen")
+        ), serverUUID);
     }
 }

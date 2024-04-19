@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.sql.building;
 
+import com.djrapitops.plan.storage.database.DBType;
 import org.apache.commons.text.TextStringBuilder;
 
 import java.sql.PreparedStatement;
@@ -96,6 +97,15 @@ public abstract class Sql {
         }
     }
 
+    public static String concat(DBType dbType, String one, String two) {
+        if (dbType == DBType.MYSQL) {
+            return "CONCAT(" + one + ',' + two + ")";
+        } else if (dbType == DBType.SQLITE) {
+            return one + " || " + two;
+        }
+        return one + two;
+    }
+
     public abstract String epochSecondToDate(String sql);
 
     public abstract String dateToEpochSecond(String sql);
@@ -107,6 +117,8 @@ public abstract class Sql {
     public abstract String dateToDayOfWeek(String sql);
 
     public abstract String dateToHour(String sql);
+
+    public abstract String insertOrIgnore();
 
     // https://dev.mysql.com/doc/refman/5.7/en/date-and-time-functions.html
     public static class MySQL extends Sql {
@@ -139,6 +151,11 @@ public abstract class Sql {
         @Override
         public String dateToHour(String sql) {
             return "HOUR(" + sql + ") % 24";
+        }
+
+        @Override
+        public String insertOrIgnore() {
+            return "INSERT IGNORE INTO ";
         }
     }
 
@@ -173,6 +190,11 @@ public abstract class Sql {
         @Override
         public String dateToHour(String sql) {
             return "strftime('%H'," + sql + ')';
+        }
+
+        @Override
+        public String insertOrIgnore() {
+            return "INSERT OR IGNORE INTO ";
         }
     }
 }

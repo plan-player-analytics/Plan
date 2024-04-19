@@ -114,7 +114,7 @@ public class FiltersJSONResolver implements Resolver {
                 )).build();
     }
 
-    private List<Double[]> fetchViewGraphPoints() {
+    private List<Number[]> fetchViewGraphPoints() {
         List<DateObj<Integer>> data = dbSystem.getDatabase().query(TPSQueries.fetchViewPreviewGraphData(serverInfo.getServerUUID()));
         Long earliestStart = dbSystem.getDatabase().query(SessionQueries.earliestSessionStart());
         data.add(0, new DateObj<>(earliestStart, 1));
@@ -136,9 +136,9 @@ public class FiltersJSONResolver implements Resolver {
     class FilterResponseDto {
         final List<FilterDto> filters;
         final ViewDto view;
-        final List<Double[]> viewPoints;
+        final List<Number[]> viewPoints;
 
-        public FilterResponseDto(Map<String, Filter> filtersByKind, ViewDto view, List<Double[]> viewPoints) {
+        public FilterResponseDto(Map<String, Filter> filtersByKind, ViewDto view, List<Number[]> viewPoints) {
             this.viewPoints = viewPoints;
             this.filters = new ArrayList<>();
             for (Map.Entry<String, Filter> entry : filtersByKind.entrySet()) {

@@ -24,6 +24,7 @@ import com.djrapitops.plan.storage.database.sql.building.Insert;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.building.Update;
 import org.apache.commons.text.TextStringBuilder;
+import org.intellij.lang.annotations.Language;
 
 import java.util.Collection;
 
@@ -61,6 +62,7 @@ public class ServerTable {
             .where(SERVER_UUID + "=?")
             .toString();
 
+    @Language("SQL")
     public static final String SELECT_SERVER_ID =
             '(' + SELECT + TABLE_NAME + '.' + ID +
                     FROM + TABLE_NAME +

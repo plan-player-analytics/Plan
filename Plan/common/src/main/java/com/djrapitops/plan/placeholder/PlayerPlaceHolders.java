@@ -27,6 +27,7 @@ import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.GeoInfo;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
+import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -154,6 +155,14 @@ public class PlayerPlaceHolders implements Placeholders {
                 player -> GeoInfoMutator.forContainer(player)
                         .mostRecent()
                         .map(GeoInfo::getGeolocation)
+                        .orElse(locale.getString(GenericLang.UNKNOWN))
+        );
+
+        placeholders.register("player_join_address",
+                player -> SessionsMutator.forContainer(player)
+                        .latestSession()
+                        .flatMap(session -> session.getExtraData(JoinAddress.class))
+                        .map(JoinAddress::getAddress)
                         .orElse(locale.getString(GenericLang.UNKNOWN))
         );
 

@@ -6,4 +6,4 @@ before_install:
    - apt-get install -y nodejs
 install:
   - cd Plan
-  - ./gradlew shadowJar publishToMavenLocal
+  - ./gradlew -PisJitpack shadowJar publishToMavenLocal

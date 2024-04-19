@@ -100,6 +100,7 @@ export const fetchPlayersTable = async (timestamp, identifier) => {
         return await fetchPlayersTableNetwork(timestamp);
     }
 }
+
 const fetchPlayersTableServer = async (timestamp, identifier) => {
     let url = `/v1/playersTable?server=${identifier}`;
     if (staticSite) url = `/data/playersTable-${identifier}.json`;
@@ -109,6 +110,12 @@ const fetchPlayersTableServer = async (timestamp, identifier) => {
 const fetchPlayersTableNetwork = async (timestamp) => {
     let url = `/v1/playersTable`;
     if (staticSite) url = `/data/playersTable.json`;
+    return doGetRequest(url, timestamp);
+}
+
+export const fetchAllowlistBounces = async (timestamp, identifier) => {
+    let url = `/v1/gameAllowlistBounces?server=${identifier}`;
+    if (staticSite) url = `/data/gameAllowlistBounces-${identifier}.json`;
     return doGetRequest(url, timestamp);
 }
 
@@ -254,42 +261,22 @@ export const fetchPingGraph = async (timestamp, identifier) => {
     return doGetRequest(url, timestamp);
 }
 
-export const fetchJoinAddressPie = async (timestamp, identifier) => {
+export const fetchJoinAddressByDay = async (timestamp, addresses, identifier) => {
     if (identifier) {
-        return await fetchJoinAddressPieServer(timestamp, identifier);
+        return await fetchJoinAddressByDayServer(timestamp, addresses, identifier);
     } else {
-        return await fetchJoinAddressPieNetwork(timestamp);
+        return await fetchJoinAddressByDayNetwork(timestamp, addresses);
     }
 }
 
-const fetchJoinAddressPieServer = async (timestamp, identifier) => {
-    let url = `/v1/graph?type=joinAddressPie&server=${identifier}`;
-    if (staticSite) url = `/data/graph-joinAddressPie_${identifier}.json`;
-    return doGetRequest(url, timestamp);
-}
-
-const fetchJoinAddressPieNetwork = async (timestamp) => {
-    let url = `/v1/graph?type=joinAddressPie`;
-    if (staticSite) url = `/data/graph-joinAddressPie.json`;
-    return doGetRequest(url, timestamp);
-}
-
-export const fetchJoinAddressByDay = async (timestamp, identifier) => {
-    if (identifier) {
-        return await fetchJoinAddressByDayServer(timestamp, identifier);
-    } else {
-        return await fetchJoinAddressByDayNetwork(timestamp);
-    }
-}
-
-const fetchJoinAddressByDayServer = async (timestamp, identifier) => {
-    let url = `/v1/graph?type=joinAddressByDay&server=${identifier}`;
+const fetchJoinAddressByDayServer = async (timestamp, addresses, identifier) => {
+    let url = `/v1/graph?type=joinAddressByDay&server=${identifier}&addresses=${addresses.join(',')}`;
     if (staticSite) url = `/data/graph-joinAddressByDay_${identifier}.json`;
     return doGetRequest(url, timestamp);
 }
 
-const fetchJoinAddressByDayNetwork = async (timestamp) => {
-    let url = `/v1/graph?type=joinAddressByDay`;
+const fetchJoinAddressByDayNetwork = async (timestamp, addresses) => {
+    let url = `/v1/graph?type=joinAddressByDay&addresses=${addresses.join(',')}`;
     if (staticSite) url = `/data/graph-joinAddressByDay.json`;
     return doGetRequest(url, timestamp);
 }
@@ -314,22 +301,22 @@ const fetchNetworkRetentionData = async (timestamp) => {
     return doGetRequest(url, timestamp);
 }
 
-export const fetchPlayerJoinAddresses = async (timestamp, identifier) => {
+export const fetchPlayerJoinAddresses = async (timestamp, identifier, justList) => {
     if (identifier) {
-        return await fetchServerPlayerJoinAddresses(timestamp, identifier);
+        return await fetchServerPlayerJoinAddresses(timestamp, identifier, justList);
     } else {
-        return await fetchNetworkPlayerJoinAddresses(timestamp);
+        return await fetchNetworkPlayerJoinAddresses(timestamp, justList);
     }
 }
 
-const fetchServerPlayerJoinAddresses = async (timestamp, identifier) => {
-    let url = `/v1/joinAddresses?server=${identifier}`;
+const fetchServerPlayerJoinAddresses = async (timestamp, identifier, justList) => {
+    let url = `/v1/joinAddresses?server=${identifier}${justList ? "&listOnly=true" : ""}`;
     if (staticSite) url = `/data/joinAddresses-${identifier}.json`;
     return doGetRequest(url, timestamp);
 }
 
-const fetchNetworkPlayerJoinAddresses = async (timestamp) => {
-    let url = `/v1/joinAddresses`;
+const fetchNetworkPlayerJoinAddresses = async (timestamp, justList) => {
+    let url = `/v1/joinAddresses${justList ? "?listOnly=true" : ""}`;
     if (staticSite) url = `/data/joinAddresses.json`;
     return doGetRequest(url, timestamp);
 }

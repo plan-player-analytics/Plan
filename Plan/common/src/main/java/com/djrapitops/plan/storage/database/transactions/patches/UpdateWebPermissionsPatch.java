@@ -39,7 +39,7 @@ public class UpdateWebPermissionsPatch extends Patch {
 
     @Override
     public boolean hasBeenApplied() {
-        List<String> defaultPermissions = Arrays.stream(WebPermission.values())
+        List<String> defaultPermissions = Arrays.stream(WebPermission.nonDeprecatedValues())
                 .map(WebPermission::getPermission)
                 .collect(Collectors.toList());
         List<String> storedPermissions = query(WebUserQueries.fetchAvailablePermissions());
@@ -55,7 +55,11 @@ public class UpdateWebPermissionsPatch extends Patch {
 
     @Override
     protected void applyPatch() {
-        execute(new ExecBatchStatement(WebPermissionTable.INSERT_STATEMENT) {
+        storeMissing();
+    }
+
+    private void storeMissing() {
+        execute(new ExecBatchStatement(WebPermissionTable.safeInsertSQL(dbType)) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (String permission : missingPermissions) {

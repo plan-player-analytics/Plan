@@ -41,6 +41,10 @@ public class WebPermissionTable {
         /* Static information class */
     }
 
+    public static String safeInsertSQL(DBType dbType) {
+        return dbType.getSql().insertOrIgnore() + TABLE_NAME + " (" + PERMISSION + ") VALUES (?)";
+    }
+
     public static String createTableSQL(DBType dbType) {
         return CreateTableBuilder.create(TABLE_NAME, dbType)
                 .column(ID, Sql.INT).primaryKey()

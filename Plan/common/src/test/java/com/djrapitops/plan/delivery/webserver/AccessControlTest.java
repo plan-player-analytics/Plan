@@ -31,7 +31,7 @@ import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTr
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.storage.database.transactions.webuser.StoreWebGroupTransaction;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
-import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -95,7 +95,6 @@ class AccessControlTest {
                 Arguments.of("/v1/graph?type=aggregatedPing&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS, 200, 403),
                 Arguments.of("/v1/graph?type=worldPie&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_SESSIONS_WORLD_PIE, 200, 403),
                 Arguments.of("/v1/graph?type=activity&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_PLAYERBASE_GRAPHS, 200, 403),
-                Arguments.of("/v1/graph?type=joinAddressPie&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_JOIN_ADDRESSES_GRAPHS_PIE, 200, 403),
                 Arguments.of("/v1/graph?type=geolocation&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_GEOLOCATIONS_MAP, 200, 403),
                 Arguments.of("/v1/graph?type=uniqueAndNew&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_DAY_BY_DAY, 200, 403),
                 Arguments.of("/v1/graph?type=hourlyUniqueAndNew&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_HOUR_BY_HOUR, 200, 403),
@@ -107,7 +106,10 @@ class AccessControlTest {
                 Arguments.of("/v1/pingTable?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_GEOLOCATIONS_PING_PER_COUNTRY, 200, 403),
                 Arguments.of("/v1/sessions?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_SESSIONS_LIST, 200, 403),
                 Arguments.of("/v1/retention?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_RETENTION, 200, 403),
+                Arguments.of("/v1/joinAddresses", WebPermission.PAGE_NETWORK_RETENTION, 200, 403),
+                Arguments.of("/v1/joinAddresses?listOnly=true", WebPermission.PAGE_NETWORK_JOIN_ADDRESSES_GRAPHS_TIME, 200, 403),
                 Arguments.of("/v1/joinAddresses?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_RETENTION, 200, 403),
+                Arguments.of("/v1/joinAddresses?server=" + TestConstants.SERVER_UUID_STRING + "&listOnly=true", WebPermission.PAGE_SERVER_JOIN_ADDRESSES_GRAPHS_TIME, 200, 403),
                 Arguments.of("/network", WebPermission.ACCESS_NETWORK, 302, 403),
                 Arguments.of("/v1/network/overview", WebPermission.PAGE_NETWORK_OVERVIEW_NUMBERS, 200, 403),
                 Arguments.of("/v1/network/servers", WebPermission.PAGE_NETWORK_SERVER_LIST, 200, 403),
@@ -119,7 +121,6 @@ class AccessControlTest {
                 Arguments.of("/v1/graph?type=hourlyUniqueAndNew", WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_HOUR_BY_HOUR, 200, 403),
                 Arguments.of("/v1/graph?type=serverCalendar", WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_CALENDAR, 200, 403),
                 Arguments.of("/v1/graph?type=serverPie", WebPermission.PAGE_NETWORK_SESSIONS_SERVER_PIE, 200, 403),
-                Arguments.of("/v1/graph?type=joinAddressPie", WebPermission.PAGE_NETWORK_JOIN_ADDRESSES_GRAPHS_PIE, 200, 403),
                 Arguments.of("/v1/graph?type=activity", WebPermission.PAGE_NETWORK_PLAYERBASE_GRAPHS, 200, 403),
                 Arguments.of("/v1/graph?type=geolocation", WebPermission.PAGE_NETWORK_GEOLOCATIONS_MAP, 200, 403),
                 Arguments.of("/v1/network/pingTable", WebPermission.PAGE_NETWORK_GEOLOCATIONS_PING_PER_COUNTRY, 200, 403),
@@ -163,7 +164,8 @@ class AccessControlTest {
                 Arguments.of("/v1/preferences", WebPermission.ACCESS, 200, 200),
                 Arguments.of("/v1/storePreferences", WebPermission.ACCESS, 400, 400),
                 Arguments.of("/v1/pluginHistory?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_NETWORK_PLUGIN_HISTORY, 200, 403),
-                Arguments.of("/v1/pluginHistory?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_PLUGIN_HISTORY, 200, 403)
+                Arguments.of("/v1/pluginHistory?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_PLUGIN_HISTORY, 200, 403),
+                Arguments.of("/v1/gameAllowlistBounces?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_ALLOWLIST_BOUNCE, 200, 403)
         );
     }
 
@@ -201,7 +203,7 @@ class AccessControlTest {
                 address,
                 TestConstants.VERSION)));
 
-        Caller caller = system.getExtensionService().register(new ExtensionsDatabaseTest.PlayerExtension())
+        Caller caller = system.getApiServices().getExtensionService().register(new ExtensionsDatabaseTest.PlayerExtension())
                 .orElseThrow(AssertionError::new);
         caller.updatePlayerData(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME);
 

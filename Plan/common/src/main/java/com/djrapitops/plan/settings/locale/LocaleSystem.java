@@ -108,7 +108,7 @@ public class LocaleSystem implements SubSystem {
                 HtmlLang.values(),
                 JSLang.values(),
                 PluginLang.values(),
-                WebPermission.values(),
+                WebPermission.nonDeprecatedValues(),
         };
     }
 

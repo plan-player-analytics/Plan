@@ -1,6 +1,6 @@
 import React from 'react';
 
-const MultiSelect = ({options, selectedIndexes, setSelectedIndexes}) => {
+const MultiSelect = ({options, selectedIndexes, setSelectedIndexes, className}) => {
     const handleChange = (event) => {
         const renderedOptions = Object.values(event.target.selectedOptions)
             .map(htmlElement => htmlElement.text)
@@ -9,7 +9,7 @@ const MultiSelect = ({options, selectedIndexes, setSelectedIndexes}) => {
     }
 
     return (
-        <select className="form-control" multiple
+        <select className={"form-control " + className} multiple
                 onChange={handleChange}>
             {options.map((option, i) => {
                 return (

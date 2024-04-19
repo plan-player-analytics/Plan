@@ -28,11 +28,11 @@ export function formatDate(date, offset, pattern, recentDays, recentDaysPattern,
 
     let format = pattern;
     if (recentDays) {
-        if (timestamp > now - fromStartOfToday) {
+        if (timestamp > now - offset - fromStartOfToday) {
             format = format.replace(recentDaysPattern, t('plugin.generic.today'));
-        } else if (timestamp > now - dayMs - fromStartOfToday) {
+        } else if (timestamp > now - offset - dayMs - fromStartOfToday) {
             format = format.replace(recentDaysPattern, t('plugin.generic.yesterday'));
-        } else if (timestamp > now - dayMs * 5) {
+        } else if (timestamp > now - offset - dayMs * 5) {
             format = format.replace(recentDaysPattern, "EEEE");
         }
     }
@@ -40,13 +40,19 @@ export function formatDate(date, offset, pattern, recentDays, recentDaysPattern,
     return date !== 0 ? new SimpleDateFormat(format).format(timestamp) : '-'
 }
 
-const FormattedDate = ({date}) => {
+const FormattedDate = ({date, react}) => {
     const {t} = useTranslation();
 
     const {pattern, recentDays, recentDaysPattern, offset} = useDatePreferences();
 
     if (!pattern || date === undefined || date === null) return <></>;
     if (!isNumber(date)) return date;
+
+    if (react) {
+        return <span title={formatDate(date, offset, pattern, false, null, t)}>
+            {formatDate(date, offset, pattern, recentDays, recentDaysPattern, t)}
+        </span>
+    }
 
     return formatDate(date, offset, pattern, recentDays, recentDaysPattern, t);
 };

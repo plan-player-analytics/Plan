@@ -75,7 +75,7 @@ public class Point {
                 "y=" + y + '}';
     }
 
-    public Double[] toArray() {
-        return new Double[]{x, y};
+    public Number[] toArray() {
+        return new Number[]{x, y};
     }
 }

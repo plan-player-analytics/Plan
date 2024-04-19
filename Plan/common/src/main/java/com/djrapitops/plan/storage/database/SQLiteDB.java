@@ -59,7 +59,7 @@ public class SQLiteDB extends SQLDB {
      * one thread closing the connection while another is executing a statement as
      * that might lead to a SIGSEGV signal JVM crash.
      */
-    private final SemaphoreAccessCounter connectionLock = new SemaphoreAccessCounter();
+    private final SemaphoreAccessCounter connectionLock;
 
     private Constructor<?> connectionConstructor;
 
@@ -76,6 +76,7 @@ public class SQLiteDB extends SQLDB {
         super(() -> serverInfo.get().getServerUUID(), locale, config, files, runnableFactory, logger, errorLogger);
         dbName = databaseFile.getName();
         this.databaseFile = databaseFile;
+        connectionLock = new SemaphoreAccessCounter();
     }
 
     @Override
@@ -200,11 +201,21 @@ public class SQLiteDB extends SQLDB {
 
     @Override
     public void close() {
-        super.close();
+        if (getState() == State.OPEN) setState(State.CLOSING);
+        boolean transactionQueueClosed = attemptToCloseTransactionExecutor();
+        if (transactionQueueClosed) logger.info(locale.getString(PluginLang.DISABLED_WAITING_TRANSACTIONS_COMPLETE));
+
+        unloadDriverClassloader();
+        setState(State.CLOSED);
+
         stopConnectionPingTask();
 
         logger.info(locale.getString(PluginLang.DISABLED_WAITING_SQLITE));
         connectionLock.waitUntilNothingAccessing();
+
+        // Transaction queue can't be force-closed before all connections have terminated.
+        if (!transactionQueueClosed) forceCloseTransactionExecutor();
+
         if (connection != null) {
             MiscUtils.close(connection);
         }

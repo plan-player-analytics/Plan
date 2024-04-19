@@ -219,6 +219,8 @@ public enum HtmlLang implements Lang {
     LABEL_TITLE_SERVER_CALENDAR("html.label.serverCalendar", "Server Calendar"),
     LABEL_TITLE_NETWORK_CALENDAR("html.label.networkCalendar", "Network Calendar"),
     LABEL_LABEL_JOIN_ADDRESS("html.label.joinAddress", "Join Address"),
+    LABEL_ADD_JOIN_ADDRESS_GROUP("html.label.addJoinAddressGroup", "Add address group"),
+    LABEL_ADDRESS_GROUP("html.label.addressGroup", "Address group {{n}}"),
     LABEL_LABEL_SESSION_MEDIAN("html.label.medianSessionLength", "Median Session Length"),
     LABEL_LABEL_KDR("html.label.kdr", "KDR"),
     LABEL_TITLE_INSIGHTS("html.label.insights", "Insights"),
@@ -285,6 +287,15 @@ public enum HtmlLang implements Lang {
     LABEL_TABLE_SHOW_PER_PAGE("html.label.table.showPerPage", "Show per page"),
     LABEL_EXPORT("html.label.export", "Export"),
 
+    LABEL_ALLOWLIST("html.label.allowlist", "Allowlist"),
+    LABEL_ALLOWLIST_BOUNCES("html.label.allowlistBounces", "Allowlist Bounces"),
+    LABEL_ATTEMPTS("html.label.attempts", "Attempts"),
+    LABEL_LAST_KNOWN_ATTEMPT("html.label.lastKnownAttempt", "Last Known Attempt"),
+    LABEL_PREVIOUS_ATTEMPT("html.label.lastBlocked", "Last Blocked"),
+    LABEL_LAST_ALLOWED_LOGIN("html.label.lastAllowed", "Last Allowed"),
+    LABEL_BLOCKED("html.label.blocked", "Blocked"),
+    LABEL_ALLOWED("html.label.allowed", "Allowed"),
+
     LOGIN_LOGIN("html.login.login", "Login"),
     LOGIN_LOGOUT("html.login.logout", "Logout"),
     LOGIN_USERNAME("html.login.username", "Username"),
@@ -327,6 +338,7 @@ public enum HtmlLang implements Lang {
     QUERY_SERVERS_TWO("html.query.label.servers.two", "using data of 2 servers"),
     QUERY_SERVERS_MANY("html.query.label.servers.many", "using data of {number} servers"),
     QUERY_SHOW_FULL_QUERY("html.query.label.showFullQuery", "Show Full Query"),
+    QUERY_EDIT_QUERY("html.query.label.editQuery", "Edit Query"),
 
     HELP_TEST_RESULT("html.label.help.testResult", "Test result"),
     HELP_TEST_IT_OUT("html.label.help.testPrompt", "Test it out:"),

@@ -29,6 +29,7 @@ import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.exceptions.ExportException;
 import com.djrapitops.plan.gathering.domain.GeoInfo;
+import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.gathering.importing.ImportSystem;
 import com.djrapitops.plan.gathering.importing.importers.Importer;
 import com.djrapitops.plan.identification.Identifiers;
@@ -42,6 +43,7 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CommandLang;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.settings.locale.lang.HelpLang;
+import com.djrapitops.plan.settings.locale.lang.HtmlLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
@@ -258,12 +260,17 @@ public class DataUtilityCommands {
         Optional<GeoInfo> mostRecentGeoInfo = new GeoInfoMutator(geoInfo).mostRecent();
         String geolocation = mostRecentGeoInfo.isPresent() ? mostRecentGeoInfo.get().getGeolocation() : "-";
         SessionsMutator sessionsMutator = SessionsMutator.forContainer(player);
+        String latestJoinAddress = sessionsMutator.latestSession()
+                .flatMap(session -> session.getExtraData(JoinAddress.class))
+                .map(JoinAddress::getAddress)
+                .orElse("-");
 
         String table = locale.getString(CommandLang.HEADER_INSPECT, playerName) + '\n' +
                 locale.getString(CommandLang.INGAME_ACTIVITY_INDEX, activityIndex.getFormattedValue(formatters.decimals()), activityIndex.getGroup()) + '\n' +
                 locale.getString(CommandLang.INGAME_REGISTERED, timestamp.apply(() -> registered)) + '\n' +
                 locale.getString(CommandLang.INGAME_LAST_SEEN, timestamp.apply(() -> lastSeen)) + '\n' +
                 locale.getString(CommandLang.INGAME_GEOLOCATION, geolocation) + '\n' +
+                "  §2" + locale.getString(HtmlLang.LABEL_LABEL_JOIN_ADDRESS) + ": §f" + latestJoinAddress + '\n' +
                 locale.getString(CommandLang.INGAME_TIMES_KICKED, player.getValue(PlayerKeys.KICK_COUNT).orElse(0)) + '\n' +
                 '\n' +
                 locale.getString(CommandLang.INGAME_PLAYTIME, length.apply(sessionsMutator.toPlaytime())) + '\n' +

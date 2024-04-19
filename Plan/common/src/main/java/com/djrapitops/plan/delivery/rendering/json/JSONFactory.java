@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.rendering.json;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.delivery.domain.RetentionData;
+import com.djrapitops.plan.delivery.domain.datatransfer.PlayerJoinAddresses;
 import com.djrapitops.plan.delivery.domain.datatransfer.ServerDto;
 import com.djrapitops.plan.delivery.domain.mutators.PlayerKillMutator;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
@@ -160,14 +161,25 @@ public class JSONFactory {
         return db.query(PlayerRetentionQueries.fetchRetentionData());
     }
 
-    public Map<UUID, String> playerJoinAddresses(ServerUUID serverUUID) {
+    public PlayerJoinAddresses playerJoinAddresses(ServerUUID serverUUID, boolean includeByPlayerMap) {
         Database db = dbSystem.getDatabase();
-        return db.query(JoinAddressQueries.latestJoinAddressesOfPlayers(serverUUID));
+        if (includeByPlayerMap) {
+            Map<UUID, String> addresses = db.query(JoinAddressQueries.latestJoinAddressesOfPlayers(serverUUID));
+            return new PlayerJoinAddresses(
+                    addresses.values().stream().distinct().sorted().collect(Collectors.toList()),
+                    addresses
+            );
+        } else {
+            return new PlayerJoinAddresses(db.query(JoinAddressQueries.uniqueJoinAddresses(serverUUID)), null);
+        }
     }
 
-    public Map<UUID, String> playerJoinAddresses() {
+    public PlayerJoinAddresses playerJoinAddresses(boolean includeByPlayerMap) {
         Database db = dbSystem.getDatabase();
-        return db.query(JoinAddressQueries.latestJoinAddressesOfPlayers());
+        return new PlayerJoinAddresses(
+                db.query(JoinAddressQueries.uniqueJoinAddresses()),
+                includeByPlayerMap ? db.query(JoinAddressQueries.latestJoinAddressesOfPlayers()) : null
+        );
     }
 
     public List<Map<String, Object>> serverSessionsAsJSONMap(ServerUUID serverUUID) {
@@ -320,9 +332,9 @@ public class JSONFactory {
 
             tableEntries.add(Maps.builder(String.class, Object.class)
                     .put("country", geolocation)
-                    .put("avg_ping", formatters.decimals().apply(ping.getAverage()) + " ms")
-                    .put("min_ping", ping.getMin() + " ms")
-                    .put("max_ping", ping.getMax() + " ms")
+                    .put("avg_ping", ping.getAverage())
+                    .put("min_ping", ping.getMin())
+                    .put("max_ping", ping.getMax())
                     .build());
         }
         return tableEntries;

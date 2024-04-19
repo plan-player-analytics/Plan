@@ -9,7 +9,12 @@ const MultipleChoiceFilter = ({index, label, filter, removeFilter, setFilterOpti
     const {t} = useTranslation();
     const select = index === 0 ? t('html.query.filter.generic.start') : t('html.query.filter.generic.and');
 
-    const [selectedIndexes, setSelectedIndexes] = useState([]);
+    const parameterSelected = filter.parameters?.selected
+        ? JSON.parse(filter.parameters.selected)
+            .map(option => filter.options.options.indexOf(option))
+        : undefined;
+
+    const [selectedIndexes, setSelectedIndexes] = useState(parameterSelected || []);
     useEffect(() => {
         setFilterOptions({
             ...filter,

@@ -57,7 +57,7 @@ public class InstalledPluginGatheringTask extends TaskSystem.Task {
     @Override
     public void register(RunnableFactory runnableFactory) {
         runnableFactory.create(this)
-                .runTaskLater(20, TimeUnit.SECONDS);
+                .runTaskLaterAsynchronously(20, TimeUnit.SECONDS);
     }
 
     @Override

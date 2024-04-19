@@ -19,6 +19,7 @@ package com.djrapitops.plan.delivery.webserver.http;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.webserver.PassBruteForceGuard;
+import com.djrapitops.plan.delivery.webserver.RateLimitGuard;
 import com.djrapitops.plan.delivery.webserver.ResponseFactory;
 import com.djrapitops.plan.delivery.webserver.ResponseResolver;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
@@ -40,6 +41,7 @@ public class RequestHandler {
     private final ResponseResolver responseResolver;
 
     private final PassBruteForceGuard bruteForceGuard;
+    private final RateLimitGuard rateLimitGuard;
     private final AccessLogger accessLogger;
 
     @Inject
@@ -50,15 +52,23 @@ public class RequestHandler {
         this.accessLogger = accessLogger;
 
         bruteForceGuard = new PassBruteForceGuard();
+        rateLimitGuard = new RateLimitGuard();
     }
 
     public Response getResponse(InternalRequest internalRequest) {
         @Untrusted String accessAddress = internalRequest.getAccessAddress(webserverConfiguration);
+        @Untrusted String requestedPath = internalRequest.getRequestedPath();
+        rateLimitGuard.increaseAttemptCount(requestedPath, accessAddress);
 
+        boolean blocked = false;
         Response response;
         @Untrusted Request request = null;
         if (bruteForceGuard.shouldPreventRequest(accessAddress)) {
             response = responseFactory.failedLoginAttempts403();
+            blocked = true;
+        } else if (rateLimitGuard.shouldPreventRequest(accessAddress)) {
+            response = responseFactory.failedRateLimit403();
+            blocked = true;
         } else if (!webserverConfiguration.getAllowedIpList().isAllowed(accessAddress)) {
             webserverConfiguration.getWebserverLogMessages()
                     .warnAboutWhitelistBlock(accessAddress, internalRequest.getRequestedURIString());
@@ -77,7 +87,9 @@ public class RequestHandler {
         response.getHeaders().putIfAbsent("Access-Control-Allow-Credentials", "true");
         response.getHeaders().putIfAbsent("X-Robots-Tag", "noindex, nofollow");
 
-        accessLogger.log(internalRequest, request, response);
+        if (!blocked) {
+            accessLogger.log(internalRequest, request, response);
+        }
 
         return response;
     }

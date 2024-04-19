@@ -49,7 +49,7 @@ public class SeleniumExtension implements ParameterResolver, BeforeAllCallback, 
 
     public static void waitForPageLoadForSeconds(int i, ChromeDriver driver) {
         Awaitility.await("waitForPageLoadForSeconds")
-                .atMost(5, TimeUnit.SECONDS)
+                .atMost(i, TimeUnit.SECONDS)
                 .until(() -> "complete".equals(driver.executeScript("return document.readyState")));
     }
 
@@ -92,7 +92,7 @@ public class SeleniumExtension implements ParameterResolver, BeforeAllCallback, 
         // Using environment variable assumes linux
         if (System.getenv(CIProperties.CHROME_DRIVER) != null) {
             chromeOptions.setBinary("/usr/bin/google-chrome-stable");
-            chromeOptions.setHeadless(true);
+            chromeOptions.addArguments("--headless=new");
         }
 
         return new ChromeDriver(chromeOptions);
