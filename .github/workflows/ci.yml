@@ -30,7 +30,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           distribution: 'adopt'
-          java-version: '17'
+          java-version: '21'
       - name: 💼 Load Gradle Cache
         uses: actions/cache@v3
         with:
