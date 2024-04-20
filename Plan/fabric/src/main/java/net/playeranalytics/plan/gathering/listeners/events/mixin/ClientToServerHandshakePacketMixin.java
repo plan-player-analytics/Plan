@@ -27,7 +27,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(ServerHandshakeNetworkHandler.class)
 public class ClientToServerHandshakePacketMixin {
 
-    @Inject(method = "onHandshake", at = @At(value = "INVOKE", ordinal = 0, target = "Lnet/minecraft/network/ClientConnection;setPacketListener(Lnet/minecraft/network/listener/PacketListener;)V"))
+    @Inject(method = "onHandshake", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerHandshakeNetworkHandler;login(Lnet/minecraft/network/packet/c2s/handshake/HandshakeC2SPacket;Z)V"))
     public void onClientHandshakeFromNetwork(HandshakeC2SPacket packet, CallbackInfo ci) {
         PlanFabricEvents.ON_HANDSHAKE.invoker().onHandshake(packet);
     }

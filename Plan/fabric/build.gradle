@@ -8,10 +8,10 @@ dependencies {
 
     shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
 
-    minecraft "com.mojang:minecraft:1.20.4"
-    mappings "net.fabricmc:yarn:1.20.4+build.3:v2"
-    modImplementation "net.fabricmc:fabric-loader:0.15.2"
-    modImplementation('me.lucko:fabric-permissions-api:0.3-SNAPSHOT')
+    minecraft "com.mojang:minecraft:1.20.5-rc2"
+    mappings "net.fabricmc:yarn:1.20.5-rc2+build.1:v2"
+    modImplementation "net.fabricmc:fabric-loader:0.15.10"
+    modImplementation('me.lucko:fabric-permissions-api:0.3.1')
 
     // Fabric API
     Set<String> apiModules = [
@@ -24,7 +24,7 @@ dependencies {
     ]
 
     apiModules.forEach {
-        modImplementation(fabricApi.module(it, "0.91.2+1.20.4"))
+        modImplementation(fabricApi.module(it, "0.97.3+1.20.5"))
     }
 
     testImplementation project(path: ":common", configuration: 'testArtifacts')
@@ -36,7 +36,7 @@ loom {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.release.set(17)
+    options.release.set(21)
 }
 
 processResources {
