@@ -12,10 +12,10 @@ const BetweenDatesFilter = ({index, label, filter, removeFilter, setFilterOption
 
     const options = filter.options;
 
-    const [fromDate, setFromDate] = useState(options.after[0]);
-    const [fromTime, setFromTime] = useState(options.after[1]);
-    const [toDate, setToDate] = useState(options.before[0]);
-    const [toTime, setToTime] = useState(options.before[1]);
+    const [fromDate, setFromDate] = useState(filter.parameters?.afterDate || options.after[0]);
+    const [fromTime, setFromTime] = useState(filter.parameters?.afterTime || options.after[1]);
+    const [toDate, setToDate] = useState(filter.parameters?.beforeDate || options.before[0]);
+    const [toTime, setToTime] = useState(filter.parameters?.beforeTime || options.before[1]);
     useEffect(() => {
         setFilterOptions({
             ...filter,

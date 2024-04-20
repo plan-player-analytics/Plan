@@ -290,6 +290,8 @@ html:
         active: "Aktiivinen"
         activePlaytime: "Aktiivinen peliaika"
         activityIndex: "Aktiivisuus Indeksi"
+        addJoinAddressGroup: "Add address group"
+        addressGroup: "Address group {{n}}"
         afk: "AFK"
         afkTime: "Aika AFK:ina"
         all: "Kaikki"
@@ -664,7 +666,6 @@ html:
                 page_network_geolocations_ping_per_country: "Näkee Viive per Maa -taulun"
                 page_network_join_addresses: "Näkee Liittymäosoitteet osion"
                 page_network_join_addresses_graphs: "Näkee Liittymisosoite kaaviot"
-                page_network_join_addresses_graphs_pie: "Näkee kaavion Viimeisimmistä liittymisosoitteista"
                 page_network_join_addresses_graphs_time: "Näkee kaavion Liittymisosoitteista ajan yli"
                 page_network_overview: "Näkee Verkoston katsaus osion"
                 page_network_overview_graphs: "Näkee Verkoston katsaus kaaviot"
@@ -700,7 +701,6 @@ html:
                 page_server_geolocations_ping_per_country: "Näkee Viive per Maa -taulun"
                 page_server_join_addresses: "Näkee Liittymäosoitteet osion"
                 page_server_join_addresses_graphs: "Näkee Liittymisosoite kaaviot"
-                page_server_join_addresses_graphs_pie: "Näkee kaavion Viimeisimmistä liittymisosoitteista"
                 page_server_join_addresses_graphs_time: "Näkee kaavion Liittymisosoitteista ajan yli"
                 page_server_online_activity: "Näkee Online Aktiivisuus osion"
                 page_server_online_activity_graphs: "Näkee Online Aktiivisuus kaaviot"
@@ -794,6 +794,7 @@ html:
         generic:
             are: "`ovat`"
         label:
+            editQuery: "Edit Query"
             from: ">tästä</label>"
             makeAnother: "Tee toinen kysely"
             servers:

@@ -290,6 +290,8 @@ html:
         active: "Активний"
         activePlaytime: "Активний час гри"
         activityIndex: "Індекс активності"
+        addJoinAddressGroup: "Add address group"
+        addressGroup: "Address group {{n}}"
         afk: "AFK"
         afkTime: "Час AFK"
         all: "Всі"
@@ -664,7 +666,6 @@ html:
                 page_network_geolocations_ping_per_country: "See Ping Per Country table"
                 page_network_join_addresses: "See Join Addresses -tab"
                 page_network_join_addresses_graphs: "See Join Address graphs"
-                page_network_join_addresses_graphs_pie: "See Latest Join Addresses graph"
                 page_network_join_addresses_graphs_time: "See Join Addresses over time graph"
                 page_network_overview: "See Network Overview -tab"
                 page_network_overview_graphs: "See Network Overview graphs"
@@ -700,7 +701,6 @@ html:
                 page_server_geolocations_ping_per_country: "See Ping Per Country table"
                 page_server_join_addresses: "See Join Addresses -tab"
                 page_server_join_addresses_graphs: "See Join Address graphs"
-                page_server_join_addresses_graphs_pie: "See Latest Join Addresses graph"
                 page_server_join_addresses_graphs_time: "See Join Addresses over time graph"
                 page_server_online_activity: "See Online Activity -tab"
                 page_server_online_activity_graphs: "See Online Activity graphs"
@@ -794,6 +794,7 @@ html:
         generic:
             are: "``"
         label:
+            editQuery: "Edit Query"
             from: ">з</label>"
             makeAnother: "Зробити інший запит"
             servers:

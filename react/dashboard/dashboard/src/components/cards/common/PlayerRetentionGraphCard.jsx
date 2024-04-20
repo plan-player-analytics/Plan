@@ -17,6 +17,7 @@ import {useTheme} from "../../../hooks/themeHook";
 import {useNavigation} from "../../../hooks/navigationHook";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
+import {useJoinAddressListContext} from "../../../hooks/context/joinAddressListContextHook.jsx";
 
 const dayMs = 24 * 3600000;
 const getWeek = (date) => {
@@ -26,7 +27,7 @@ const getWeek = (date) => {
     return Math.ceil(dayOfYear / 7)
 };
 
-const PlayerRetentionGraphCard = ({identifier}) => {
+const PlayerRetentionGraphCard = ({identifier, selectedGroupBy, setSelectedGroupBy}) => {
     const {t} = useTranslation();
     const {nightModeEnabled} = useTheme();
     const {setHelpModalTopic} = useNavigation();
@@ -39,6 +40,8 @@ const PlayerRetentionGraphCard = ({identifier}) => {
         data: joinAddressData,
         loadingError: joinAddressLoadingError
     } = useDataRequest(fetchPlayerJoinAddresses, [identifier]);
+
+    const {list, playerAddresses} = useJoinAddressListContext();
 
     const [selectedWindow, setSelectedWindow] = useState('days');
     const windowOptions = useMemo(() => [
@@ -57,7 +60,7 @@ const PlayerRetentionGraphCard = ({identifier}) => {
         {name: 'registered-2y', displayName: t('html.label.retention.inLast730d'), start: time - 2 * 365 * dayMs},
         {name: 'registered-ever', displayName: t('html.label.retention.inAnytime'), start: 0},
     ], [t, time]);
-    const [selectedGroupBy, setSelectedGroupBy] = useState('none');
+    // State moved to higher level for join address group selection
     const groupByOptions = useMemo(() => [
         {name: 'none', displayName: t('html.label.retention.groupByNone')},
         {name: 'days', displayName: t('html.label.time.day')},
@@ -165,8 +168,11 @@ const PlayerRetentionGraphCard = ({identifier}) => {
                     break;
                 case 'joinAddress':
                     const joinAddress = joinAddressData[point.playerUUID];
-                    if (!grouped[joinAddress]) grouped[joinAddress] = [];
-                    grouped[joinAddress].push(point);
+                    const joinAddressGroups = list.filter(g => g.addresses.includes(joinAddress)).map(g => g.name);
+                    for (const joinAddressGroup of joinAddressGroups) {
+                        if (!grouped[joinAddressGroup]) grouped[joinAddressGroup] = [];
+                        grouped[joinAddressGroup].push(point);
+                    }
                     break;
                 case 'none':
                 default:
@@ -175,7 +181,7 @@ const PlayerRetentionGraphCard = ({identifier}) => {
             }
         }
         return grouped;
-    }, [groupByOptions, selectedGroupBy]);
+    }, [groupByOptions, selectedGroupBy, list]);
 
     const createSeries = useCallback(async (retentionData, joinAddressData) => {
 
@@ -207,10 +213,10 @@ const PlayerRetentionGraphCard = ({identifier}) => {
     }, [nightModeEnabled, mapToData, groupOptions, selectedGroup, selectedYAxis, group]);
 
     useEffect(() => {
-        if (!data || !joinAddressData) return;
+        if (!data || !playerAddresses) return;
 
-        createSeries(data.player_retention, joinAddressData.join_address_by_player).then(series => setSeries(series.flat()));
-    }, [data, joinAddressData, createSeries, setSeries]);
+        createSeries(data.player_retention, playerAddresses).then(series => setSeries(series.flat()));
+    }, [data, playerAddresses, createSeries, setSeries]);
 
     useEffect(() => {
         const windowName = windowOptions.find(option => option.name === selectedWindow).displayName;
@@ -261,13 +267,15 @@ const PlayerRetentionGraphCard = ({identifier}) => {
             },
             tooltip: selectedAxis === 'date' || selectedAxis === 'deltas' ? {
                 enabled: true,
+                shared: series.length <= 10,
                 valueDecimals: 2,
-                pointFormat: (selectedGroupBy !== 'none' ? '{series.name} - ' : '') + '<b>{point.y} ' + (selectedYAxis === 'percentage' ? '%' : t('html.label.players')) + '</b>'
+                pointFormat: (selectedGroupBy !== 'none' ? '{series.name} - ' : '') + '<b>{point.y} ' + (selectedYAxis === 'percentage' ? '%' : t('html.label.players')) + '</b><br>'
             } : {
                 enabled: true,
+                shared: series.length <= 10,
                 valueDecimals: 2,
                 headerFormat: '{point.x} ' + windowName + '<br>',
-                pointFormat: (selectedGroupBy !== 'none' ? '{series.name} - ' : '') + '<b>{point.y} ' + (selectedYAxis === 'percentage' ? '%' : t('html.label.players')) + '</b>'
+                pointFormat: (selectedGroupBy !== 'none' ? '{series.name} - ' : '') + '<b>{point.y} ' + (selectedYAxis === 'percentage' ? '%' : t('html.label.players')) + '</b><br>'
             },
             series: series
         })

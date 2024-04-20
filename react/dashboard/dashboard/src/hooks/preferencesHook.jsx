@@ -33,7 +33,15 @@ export const PreferencesContextProvider = ({children}) => {
         } else {
             localStorage.setItem("preferences", JSON.stringify(withDefaultsRemoved));
         }
-    }, [defaultPreferences, authRequired, authLoaded, loggedIn]);
+        setPreferences({...defaultPreferences, ...(withDefaultsRemoved || {})});
+    }, [defaultPreferences, authRequired, authLoaded, loggedIn, setPreferences]);
+
+    const setSomePreferences = useCallback(userPref => {
+        storePreferences({...preferences, ...userPref});
+    }, [storePreferences, preferences]);
+    const getKeyedPreference = useCallback(key => {
+        return preferences[key];
+    }, [preferences]);
 
     useEffect(() => {
         updatePreferences();
@@ -42,12 +50,13 @@ export const PreferencesContextProvider = ({children}) => {
     const sharedState = useMemo(() => {
             return {
                 ...preferences,
-                storePreferences,
+                getKeyedPreference,
+                setSomePreferences,
                 defaultPreferences,
                 preferencesLoaded: Object.keys(defaultPreferences || {}).length > 0
             }
         },
-        [preferences, defaultPreferences, storePreferences]);
+        [preferences, defaultPreferences, storePreferences, getKeyedPreference, setSomePreferences]);
     return (<PreferencesContext.Provider value={sharedState}>
             {children}
         </PreferencesContext.Provider>

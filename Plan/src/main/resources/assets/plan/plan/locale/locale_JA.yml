@@ -290,6 +290,8 @@ html:
         active: "よくログインしている"
         activePlaytime: "アクティブなプレイ時間"
         activityIndex: "活動指数"
+        addJoinAddressGroup: "Add address group"
+        addressGroup: "Address group {{n}}"
         afk: "離席"
         afkTime: "離席時間"
         all: "全て"
@@ -664,7 +666,6 @@ html:
                 page_network_geolocations_ping_per_country: "国ごとのPing表を表示"
                 page_network_join_addresses: "参加アドレスタブを表示"
                 page_network_join_addresses_graphs: "参加アドレスのグラフを表示"
-                page_network_join_addresses_graphs_pie: "最後に参加したアドレスのグラフを表示"
                 page_network_join_addresses_graphs_time: "参加アドレスの経時変化のグラフを表示"
                 page_network_overview: "ネットワークの概要タブを表示"
                 page_network_overview_graphs: "ネットワークの概要グラフを表示"
@@ -700,7 +701,6 @@ html:
                 page_server_geolocations_ping_per_country: "国ごとのPing表を表示"
                 page_server_join_addresses: "参加アドレスタブを表示"
                 page_server_join_addresses_graphs: "参加アドレスグラフを表示"
-                page_server_join_addresses_graphs_pie: "最後に参加したアドレスのグラフを表示"
                 page_server_join_addresses_graphs_time: "参加アドレスの経時変化のグラフを表示"
                 page_server_online_activity: "オンラインアクティビティタブを表示"
                 page_server_online_activity_graphs: "オンラインアクティビティグラフを表示"
@@ -794,6 +794,7 @@ html:
         generic:
             are: "`それは`"
         label:
+            editQuery: "Edit Query"
             from: ">から</label>"
             makeAnother: "別のクエリを作る"
             servers:
