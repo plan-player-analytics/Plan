@@ -200,6 +200,14 @@ public class ConfigNode {
         return key;
     }
 
+    private String getEnvironmentVariableKey() {
+        String deepKey = parent != null ? parent.getKey(true) + "." + key : "";
+        if (deepKey.startsWith(".")) {
+            deepKey = deepKey.substring(1);
+        }
+        return "PLAN_" + StringUtils.replaceChars(StringUtils.upperCase(deepKey), '.', '_');
+    }
+
     public void sort() {
         Collections.sort(nodeOrder);
     }
@@ -255,32 +263,51 @@ public class ConfigNode {
         this.comment = comment;
     }
 
+    private String getEnvironmentVariable() {
+        String key = getEnvironmentVariableKey();
+        String variable = System.getenv(key);
+        Map<String, String> env = System.getenv();
+        return variable;
+    }
+
     public List<String> getStringList() {
+        String environmentVariable = getEnvironmentVariable();
+        if (environmentVariable != null) return new ConfigValueParser.StringListParser().compose(environmentVariable);
         return value == null ? Collections.emptyList()
                 : new ConfigValueParser.StringListParser().compose(value);
     }
 
     public Integer getInteger() {
+        String environmentVariable = getEnvironmentVariable();
+        if (environmentVariable != null) return new ConfigValueParser.IntegerParser().compose(environmentVariable);
         return value == null ? null
                 : new ConfigValueParser.IntegerParser().compose(value);
     }
 
     public Long getLong() {
+        String environmentVariable = getEnvironmentVariable();
+        if (environmentVariable != null) return new ConfigValueParser.LongParser().compose(environmentVariable);
         return value == null ? null
                 : new ConfigValueParser.LongParser().compose(value);
     }
 
     public String getString() {
+        String environmentVariable = getEnvironmentVariable();
+        if (environmentVariable != null) return new ConfigValueParser.StringParser().compose(environmentVariable);
         return value == null ? null
                 : new ConfigValueParser.StringParser().compose(value);
     }
 
     public Double getDouble() {
+        String environmentVariable = getEnvironmentVariable();
+        if (environmentVariable != null) return new ConfigValueParser.DoubleParser().compose(environmentVariable);
         return value == null ? null
                 : new ConfigValueParser.DoubleParser().compose(value);
     }
 
     public boolean getBoolean() {
+        String environmentVariable = getEnvironmentVariable();
+        if (environmentVariable != null) return new ConfigValueParser.BooleanParser().compose(environmentVariable);
         return new ConfigValueParser.BooleanParser().compose(value);
     }
 
