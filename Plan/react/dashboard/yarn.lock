@@ -315,15 +315,7 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.22.5"
 
-"@babel/runtime-corejs3@^7.20.7", "@babel/runtime-corejs3@^7.22.15":
-  version "7.24.0"
-  resolved "https://registry.yarnpkg.com/@babel/runtime-corejs3/-/runtime-corejs3-7.24.0.tgz#34243e29e369a762dd2a356fee65c3767973828a"
-  integrity sha512-HxiRMOncx3ly6f3fcZ1GVKf+/EROcI9qwPgmij8Czqy6Okm/0T37T4y2ZIlLUuEUFjtM7NRsfdCO8Y3tAiJZew==
-  dependencies:
-    core-js-pure "^3.30.2"
-    regenerator-runtime "^0.14.0"
-
-"@babel/runtime-corejs3@^7.24.4":
+"@babel/runtime-corejs3@^7.20.7", "@babel/runtime-corejs3@^7.22.15", "@babel/runtime-corejs3@^7.24.4":
   version "7.24.4"
   resolved "https://registry.yarnpkg.com/@babel/runtime-corejs3/-/runtime-corejs3-7.24.4.tgz#b9ebe728087cfbb22bbaccc6f9a70d69834124a0"
   integrity sha512-VOQOexSilscN24VEY810G/PqtpFvx/z6UqDIjIWbDe2368HhDLkYN5TYwaEz/+eRCUkhJ2WaNLLmQAlxzfWj4w==
@@ -3129,10 +3121,10 @@ supports-color@^7.1.0:
   dependencies:
     has-flag "^4.0.0"
 
-swagger-client@^3.27.0:
-  version "3.27.0"
-  resolved "https://registry.yarnpkg.com/swagger-client/-/swagger-client-3.27.0.tgz#555e1990448f1fe83164adb9a6120380abef3c43"
-  integrity sha512-DyuHrUzHxysUbhsCgPfsWKH3EULDwjD7jkRl0SHvXAd6gtZS3e3RHUZjDBA4cbrcgDiIuC7Ju/YIOkE+rKCutw==
+swagger-client@^3.27.2:
+  version "3.27.2"
+  resolved "https://registry.yarnpkg.com/swagger-client/-/swagger-client-3.27.2.tgz#bd09ceb990936f3a7364741be39d53766e7ae627"
+  integrity sha512-7dVtvyCXmpHXmv5xgS5DyAyxN17l75qmxN8BCNb/z3sj+kYDsxwJeJP3X6enPyxtZsMZFDMxC+EtiFbml7pS6Q==
   dependencies:
     "@babel/runtime-corejs3" "^7.22.15"
     "@swagger-api/apidom-core" ">=0.99.1 <1.0.0"
@@ -3148,12 +3140,12 @@ swagger-client@^3.27.0:
     node-abort-controller "^3.1.1"
     node-fetch-commonjs "^3.3.2"
     qs "^6.10.2"
-    traverse "~0.6.6"
+    traverse "=0.6.8"
 
-swagger-ui@^5.16.1:
-  version "5.16.2"
-  resolved "https://registry.yarnpkg.com/swagger-ui/-/swagger-ui-5.16.2.tgz#5cd9def8a75b8d34fee6813b248fcd86f5be6e90"
-  integrity sha512-SfedFxGvqu9HtkAXpMEkF7jyTFG7cX4GhxBKxm2BaYMp30IlBE6aQAdwsTmatRw6X2fm9LQeUQJK7OuVVrBVRQ==
+swagger-ui@^5.17.2:
+  version "5.17.2"
+  resolved "https://registry.yarnpkg.com/swagger-ui/-/swagger-ui-5.17.2.tgz#a7461634c5ff2da9d5ebddf883513b6687946b83"
+  integrity sha512-OKlPpaKmlK6rWFAZky/zl07xhLwcFqMlOlBfPTL7ZCSZw7/BEB+UYip6n86pcD3cdfMp2qB5Siur8POouMxLKQ==
   dependencies:
     "@babel/runtime-corejs3" "^7.24.4"
     "@braintree/sanitize-url" "=7.0.1"
@@ -3186,7 +3178,7 @@ swagger-ui@^5.16.1:
     reselect "^5.1.0"
     serialize-error "^8.1.0"
     sha.js "^2.4.11"
-    swagger-client "^3.27.0"
+    swagger-client "^3.27.2"
     url-parse "^1.5.10"
     xml "=1.0.1"
     xml-but-prettier "^1.0.1"
@@ -3250,10 +3242,10 @@ tr46@~0.0.3:
   resolved "https://registry.yarnpkg.com/tr46/-/tr46-0.0.3.tgz#8184fd347dac9cdc185992f3a6622e14b9d9ab6a"
   integrity sha1-gYT9NH2snNwYWZLzpmIuFLnZq2o=
 
-traverse@~0.6.6:
-  version "0.6.6"
-  resolved "https://registry.yarnpkg.com/traverse/-/traverse-0.6.6.tgz#cbdf560fd7b9af632502fed40f918c157ea97137"
-  integrity sha512-kdf4JKs8lbARxWdp7RKdNzoJBhGUcIalSYibuGyHJbmk40pOysQ0+QPvlkCOICOivDWU2IJo2rkrxyTK2AH4fw==
+traverse@=0.6.8:
+  version "0.6.8"
+  resolved "https://registry.yarnpkg.com/traverse/-/traverse-0.6.8.tgz#5e5e0c41878b57e4b73ad2f3d1e36a715ea4ab15"
+  integrity sha512-aXJDbk6SnumuaZSANd21XAo15ucCDE38H4fkqiGsc3MhCK+wOlZvLP9cB/TvpHT0mOyWgC4Z8EwRlzqYSUzdsA==
 
 tree-sitter-json@=0.20.2:
   version "0.20.2"
