@@ -120,6 +120,7 @@ Data_gathering:
     Log_aliases_as_main_command: true
   # Does not affect already gathered data
   Preserve_join_address_case: false
+  Preserve_invalid_join_addresses: false
 # -----------------------------------------------------
 # Supported time units: MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS
 # -----------------------------------------------------

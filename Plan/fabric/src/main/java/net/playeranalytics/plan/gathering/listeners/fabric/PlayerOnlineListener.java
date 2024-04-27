@@ -16,6 +16,7 @@
  */
 package net.playeranalytics.plan.gathering.listeners.fabric;
 
+import com.djrapitops.plan.gathering.JoinAddressValidator;
 import com.djrapitops.plan.gathering.cache.JoinAddressCache;
 import com.djrapitops.plan.gathering.domain.event.PlayerJoin;
 import com.djrapitops.plan.gathering.domain.event.PlayerLeave;
@@ -51,6 +52,7 @@ public class PlayerOnlineListener implements FabricListener {
     private final PlayerJoinEventConsumer joinEventConsumer;
     private final PlayerLeaveEventConsumer leaveEventConsumer;
     private final JoinAddressCache joinAddressCache;
+    private final JoinAddressValidator joinAddressValidator;
 
     private final ServerInfo serverInfo;
     private final DBSystem dbSystem;
@@ -66,7 +68,9 @@ public class PlayerOnlineListener implements FabricListener {
     public PlayerOnlineListener(
             PlayerJoinEventConsumer joinEventConsumer,
             PlayerLeaveEventConsumer leaveEventConsumer,
-            JoinAddressCache joinAddressCache, ServerInfo serverInfo,
+            JoinAddressCache joinAddressCache,
+            JoinAddressValidator joinAddressValidator,
+            ServerInfo serverInfo,
             DBSystem dbSystem,
             ErrorLogger errorLogger,
             MinecraftDedicatedServer server
@@ -74,6 +78,7 @@ public class PlayerOnlineListener implements FabricListener {
         this.joinEventConsumer = joinEventConsumer;
         this.leaveEventConsumer = leaveEventConsumer;
         this.joinAddressCache = joinAddressCache;
+        this.joinAddressValidator = joinAddressValidator;
         this.serverInfo = serverInfo;
         this.dbSystem = dbSystem;
         this.errorLogger = errorLogger;
@@ -127,10 +132,7 @@ public class PlayerOnlineListener implements FabricListener {
     private void onHandshake(HandshakeC2SPacket packet) {
         try {
             if (packet.intendedState() == ConnectionIntent.LOGIN) {
-                String address = packet.address();
-                if (address != null && address.contains("\u0000")) {
-                    address = address.substring(0, address.indexOf('\u0000'));
-                }
+                String address = joinAddressValidator.sanitize(packet.address());
                 joinAddress.set(address);
             }
         } catch (Exception e) {
@@ -143,7 +145,10 @@ public class PlayerOnlineListener implements FabricListener {
             UUID playerUUID = profile.getId();
             ServerUUID serverUUID = serverInfo.getServerUUID();
 
-            joinAddressCache.put(playerUUID, joinAddress.get());
+            String playerJoinAddress = joinAddress.get();
+            if (joinAddressValidator.isValid(playerJoinAddress)) {
+                joinAddressCache.put(playerUUID, playerJoinAddress);
+            }
 
             dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID, banned));
         } catch (Exception e) {

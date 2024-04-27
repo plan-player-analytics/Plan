@@ -116,6 +116,7 @@ Data_gathering:
   Disk_space: true
   # Does not affect already gathered data
   Preserve_join_address_case: false
+  Preserve_invalid_join_addresses: false
 # -----------------------------------------------------
 # Supported time units: MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS
 # -----------------------------------------------------
