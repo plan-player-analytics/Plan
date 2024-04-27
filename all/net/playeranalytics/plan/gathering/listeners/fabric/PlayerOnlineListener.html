@@ -109,9 +109,10 @@ implements <a href="../FabricListener.html" title="interface in net.playeranalyt
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.gathering.events.PlayerJoinEventConsumer,com.djrapitops.plan.gathering.events.PlayerLeaveEventConsumer,com.djrapitops.plan.gathering.cache.JoinAddressCache,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.utilities.logging.ErrorLogger,net.minecraft.server.dedicated.MinecraftDedicatedServer)" class="member-name-link">PlayerOnlineListener</a><wbr>(<a href="../../../../../../com/djrapitops/plan/gathering/events/PlayerJoinEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerJoinEventConsumer</a>&nbsp;joinEventConsumer,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.gathering.events.PlayerJoinEventConsumer,com.djrapitops.plan.gathering.events.PlayerLeaveEventConsumer,com.djrapitops.plan.gathering.cache.JoinAddressCache,com.djrapitops.plan.gathering.JoinAddressValidator,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.utilities.logging.ErrorLogger,net.minecraft.server.dedicated.MinecraftDedicatedServer)" class="member-name-link">PlayerOnlineListener</a><wbr>(<a href="../../../../../../com/djrapitops/plan/gathering/events/PlayerJoinEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerJoinEventConsumer</a>&nbsp;joinEventConsumer,
  <a href="../../../../../../com/djrapitops/plan/gathering/events/PlayerLeaveEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerLeaveEventConsumer</a>&nbsp;leaveEventConsumer,
  <a href="../../../../../../com/djrapitops/plan/gathering/cache/JoinAddressCache.html" title="class in com.djrapitops.plan.gathering.cache">JoinAddressCache</a>&nbsp;joinAddressCache,
+ <a href="../../../../../../com/djrapitops/plan/gathering/JoinAddressValidator.html" title="class in com.djrapitops.plan.gathering">JoinAddressValidator</a>&nbsp;joinAddressValidator,
  <a href="../../../../../../com/djrapitops/plan/identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
  <a href="../../../../../../com/djrapitops/plan/storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
  <a href="../../../../../../com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger,
@@ -126,8 +127,8 @@ implements <a href="../FabricListener.html" title="interface in net.playeranalyt
 <h2>Method Summary</h2>
 <div id="method-summary-table">
 <div class="table-tabs" role="tablist" aria-orientation="horizontal"><button id="method-summary-table-tab0" role="tab" aria-selected="true" aria-controls="method-summary-table.tabpanel" tabindex="0" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table', 3)" class="active-table-tab">All Methods</button><button id="method-summary-table-tab2" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab2', 3)" class="table-tab">Instance Methods</button><button id="method-summary-table-tab4" role="tab" aria-selected="false" aria-controls="method-summary-table.tabpanel" tabindex="-1" onkeydown="switchTab(event)" onclick="show('method-summary-table', 'method-summary-table-tab4', 3)" class="table-tab">Concrete Methods</button></div>
-<div id="method-summary-table.tabpanel" role="tabpanel">
-<div class="summary-table three-column-summary" aria-labelledby="method-summary-table-tab0">
+<div id="method-summary-table.tabpanel" role="tabpanel" aria-labelledby="method-summary-table-tab0">
+<div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
@@ -178,12 +179,13 @@ implements <a href="../FabricListener.html" title="interface in net.playeranalyt
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.gathering.events.PlayerJoinEventConsumer,com.djrapitops.plan.gathering.events.PlayerLeaveEventConsumer,com.djrapitops.plan.gathering.cache.JoinAddressCache,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.utilities.logging.ErrorLogger,net.minecraft.server.dedicated.MinecraftDedicatedServer)">
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.gathering.events.PlayerJoinEventConsumer,com.djrapitops.plan.gathering.events.PlayerLeaveEventConsumer,com.djrapitops.plan.gathering.cache.JoinAddressCache,com.djrapitops.plan.gathering.JoinAddressValidator,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.utilities.logging.ErrorLogger,net.minecraft.server.dedicated.MinecraftDedicatedServer)">
 <h3>PlayerOnlineListener</h3>
 <div class="member-signature"><span class="annotations">@Inject
 </span><span class="modifiers">public</span>&nbsp;<span class="element-name">PlayerOnlineListener</span><wbr><span class="parameters">(<a href="../../../../../../com/djrapitops/plan/gathering/events/PlayerJoinEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerJoinEventConsumer</a>&nbsp;joinEventConsumer,
  <a href="../../../../../../com/djrapitops/plan/gathering/events/PlayerLeaveEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerLeaveEventConsumer</a>&nbsp;leaveEventConsumer,
  <a href="../../../../../../com/djrapitops/plan/gathering/cache/JoinAddressCache.html" title="class in com.djrapitops.plan.gathering.cache">JoinAddressCache</a>&nbsp;joinAddressCache,
+ <a href="../../../../../../com/djrapitops/plan/gathering/JoinAddressValidator.html" title="class in com.djrapitops.plan.gathering">JoinAddressValidator</a>&nbsp;joinAddressValidator,
  <a href="../../../../../../com/djrapitops/plan/identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
  <a href="../../../../../../com/djrapitops/plan/storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
  <a href="../../../../../../com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger,
