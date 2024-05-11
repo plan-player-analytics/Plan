@@ -51,6 +51,8 @@ public class CorrectWrongCharacterEncodingPatch extends Patch {
         if (dbType != DBType.MYSQL) return true;
 
         correctionSqlQueries = query(getBadTableCorrectionQueries());
+        // Fix for MariaDB mysql.user table being a view
+        correctionSqlQueries.removeIf(sql -> sql.startsWith("ALTER TABLE `user`"));
         return correctionSqlQueries.isEmpty();
     }
 
