@@ -28,7 +28,6 @@ import com.djrapitops.plan.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.utilities.java.ThreadContextClassLoaderSwap;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.BukkitPlatformLayer;
-import net.playeranalytics.plugin.FoliaPlatformLayer;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.server.PluginLogger;
@@ -63,10 +62,18 @@ public class Plan extends JavaPlugin implements PlanPlugin {
 
     @Override
     public void onLoad() {
-        if (!isFolia()) {
-            abstractionLayer = new BukkitPlatformLayer(this);
+        if (isJava17OrLater() && isFolia()) {
+            try {
+                // Attempt to load and use the Folia library for Java 17
+                // net.playeranalytics.plugin.FoliaPlatformLayer
+                Class<?> foliaPlatformLayer = Class.forName("net.playeranalytics.plugin.FoliaPlatformLayer");
+                abstractionLayer = (PlatformAbstractionLayer) foliaPlatformLayer.getConstructor(PlanPlugin.class).newInstance(this);
+            } catch (Exception e) {
+                this.getLogger().log(Level.SEVERE, "Failed to load FoliaPlatformLayer", e);
+                abstractionLayer = new BukkitPlatformLayer(this);
+            }
         } else {
-            abstractionLayer = new FoliaPlatformLayer(this);
+            abstractionLayer = new BukkitPlatformLayer(this);
         }
         pluginLogger = abstractionLayer.getPluginLogger();
         runnableFactory = abstractionLayer.getRunnableFactory();
@@ -184,6 +191,11 @@ public class Plan extends JavaPlugin implements PlanPlugin {
         } catch (ClassNotFoundException e) {
             return false;
         }
+    }
+
+    private static boolean isJava17OrLater() {
+        String version = System.getProperty("java.version");
+        return version.startsWith("17") || version.compareTo("17") > 0;
     }
 
     @Override
