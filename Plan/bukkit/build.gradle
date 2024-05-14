@@ -4,12 +4,18 @@ repositories {
     }
 }
 
+compileJava {
+    options.encoding = "UTF-8"
+    options.release = 17
+}
+
 dependencies {
     implementation project(":api")
     implementation project(":common")
 
     shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
     shadow "net.playeranalytics:platform-abstraction-layer-bukkit:$palVersion"
+    shadow "net.playeranalytics:platform-abstraction-layer-folia:$palVersion"
     shadow "org.bstats:bstats-bukkit:$bstatsVersion"
     compileOnly "me.clip:placeholderapi:$placeholderapiVersion"
 

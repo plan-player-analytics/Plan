@@ -28,6 +28,7 @@ import com.djrapitops.plan.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.utilities.java.ThreadContextClassLoaderSwap;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.BukkitPlatformLayer;
+import net.playeranalytics.plugin.FoliaPlatformLayer;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.server.PluginLogger;
@@ -62,7 +63,11 @@ public class Plan extends JavaPlugin implements PlanPlugin {
 
     @Override
     public void onLoad() {
-        abstractionLayer = new BukkitPlatformLayer(this);
+        if (!isFolia()) {
+            abstractionLayer = new BukkitPlatformLayer(this);
+        } else {
+            abstractionLayer = new FoliaPlatformLayer(this);
+        }
         pluginLogger = abstractionLayer.getPluginLogger();
         runnableFactory = abstractionLayer.getRunnableFactory();
     }
@@ -167,7 +172,18 @@ public class Plan extends JavaPlugin implements PlanPlugin {
 
     public void cancelAllTasks() {
         runnableFactory.cancelAllKnownTasks();
-        Bukkit.getScheduler().cancelTasks(this);
+        if (!isFolia()) {
+            Bukkit.getScheduler().cancelTasks(this);
+        }
+    }
+
+    private static boolean isFolia() {
+        try {
+            Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
     }
 
     @Override
