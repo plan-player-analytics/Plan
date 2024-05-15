@@ -36,6 +36,7 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.lang.reflect.Constructor;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -64,10 +65,9 @@ public class Plan extends JavaPlugin implements PlanPlugin {
     public void onLoad() {
         if (isJava17OrLater() && isFolia()) {
             try {
-                // Attempt to load and use the Folia library for Java 17
-                // net.playeranalytics.plugin.FoliaPlatformLayer
+                // Attempt to load and use the Folia library for Java 17+
                 Class<?> foliaPlatformLayer = Class.forName("net.playeranalytics.plugin.FoliaPlatformLayer");
-                abstractionLayer = (PlatformAbstractionLayer) foliaPlatformLayer.getConstructor(PlanPlugin.class).newInstance(this);
+                abstractionLayer = (PlatformAbstractionLayer) foliaPlatformLayer.getConstructor(JavaPlugin.class).newInstance(this);
             } catch (Exception e) {
                 this.getLogger().log(Level.SEVERE, "Failed to load FoliaPlatformLayer", e);
                 abstractionLayer = new BukkitPlatformLayer(this);

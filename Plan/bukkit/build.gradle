@@ -4,13 +4,20 @@ repositories {
     }
 }
 
+java {
+    // This is required to prevent the shadow plugin from
+    // adding the folia platform abstraction layer to the
+    // runtime classpath
+    disableAutoTargetJvm()
+}
+
 dependencies {
     implementation project(":api")
     implementation project(":common")
 
     shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
     shadow "net.playeranalytics:platform-abstraction-layer-bukkit:$palVersion"
-    // shadow "net.playeranalytics:platform-abstraction-layer-folia:$palVersion"
+    shadow "net.playeranalytics:platform-abstraction-layer-folia:$palVersion"   // will be used in runtime to compatible Java 11 and 17+
     shadow "org.bstats:bstats-bukkit:$bstatsVersion"
     compileOnly "me.clip:placeholderapi:$placeholderapiVersion"
 
