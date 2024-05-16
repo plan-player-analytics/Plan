@@ -1,0 +1,11 @@
+compileJava {
+    options.release = 17
+}
+
+dependencies {
+    shadow "net.playeranalytics:platform-abstraction-layer-folia:$palVersion"
+}
+
+shadowJar {
+    configurations = [project.configurations.shadow]
+}
