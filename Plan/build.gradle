@@ -87,7 +87,7 @@ subprojects {
         commonsCompressVersion = "1.26.1"
         commonsCodecVersion = "1.16.1"
         caffeineVersion = "3.1.8"
-        jettyVersion = "11.0.20"
+        jettyVersion = "11.0.21"
         caffeineVersion = "2.9.2"
         mysqlVersion = "8.3.0"
         mariadbVersion = "3.3.3"
