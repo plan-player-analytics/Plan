@@ -7,7 +7,7 @@ javadoc {
 }
 
 dependencies {
-    shadow "net.playeranalytics:platform-abstraction-layer-folia:$palVersion"
+    runtimeOnly "net.playeranalytics:platform-abstraction-layer-folia:$palVersion"
 }
 
 shadowJar {
