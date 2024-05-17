@@ -2,10 +2,6 @@ compileJava {
     options.release = 17
 }
 
-javadoc {
-    enabled = false
-}
-
 dependencies {
     runtimeOnly "net.playeranalytics:platform-abstraction-layer-folia:$palVersion"
 }
