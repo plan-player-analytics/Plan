@@ -15,7 +15,7 @@ dependencies {
     shadow "org.bstats:bstats-sponge:$bstatsVersion"
 
     annotationProcessor "org.spongepowered:spongeapi:$spongeVersion"
-    compileOnly "org.spongepowered:mixin:0.8.5"
+    compileOnly "org.spongepowered:mixin:0.8.6"
 
     testImplementation "org.spongepowered:spongeapi:$spongeVersion"
     testImplementation project(path: ":common", configuration: 'testArtifacts')

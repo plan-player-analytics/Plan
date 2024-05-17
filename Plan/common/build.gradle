@@ -4,7 +4,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 plugins {
     id "dev.vankka.dependencydownload.plugin" version "$dependencyDownloadVersion"
     id "com.github.node-gradle.node" version "7.0.2"
-    id "io.swagger.core.v3.swagger-gradle-plugin" version "2.2.21"
+    id "io.swagger.core.v3.swagger-gradle-plugin" version "2.2.22"
 }
 
 configurations {
@@ -56,7 +56,7 @@ dependencies {
     shadow project(":extensions")
 
     shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
-    compileOnly "net.kyori:adventure-api:4.14.0"
+    compileOnly "net.kyori:adventure-api:$adventureVersion"
     shadow("dev.vankka:dependencydownload-runtime:$dependencyDownloadVersion") {
         // Effectively disables relocating
         exclude module: "jar-relocator"
@@ -87,7 +87,7 @@ dependencies {
 
 
     // Swagger annotations
-    implementation "jakarta.ws.rs:jakarta.ws.rs-api:3.1.0"
+    implementation "jakarta.ws.rs:jakarta.ws.rs-api:4.0.0"
     implementation "io.swagger.core.v3:swagger-core-jakarta:$swaggerVersion"
     implementation "io.swagger.core.v3:swagger-jaxrs2-jakarta:$swaggerVersion"
 
@@ -95,7 +95,7 @@ dependencies {
     testArtifacts project(":extensions:adventure")
     testImplementation project(":extensions:adventure")
     testImplementation "com.google.code.gson:gson:$gsonVersion"
-    testImplementation "org.seleniumhq.selenium:selenium-java:4.19.1"
+    testImplementation "org.seleniumhq.selenium:selenium-java:$seleniumVersion"
     testImplementation "org.testcontainers:testcontainers:$testContainersVersion"
     testImplementation "org.testcontainers:junit-jupiter:$testContainersVersion"
     testImplementation "org.testcontainers:nginx:$testContainersVersion"
