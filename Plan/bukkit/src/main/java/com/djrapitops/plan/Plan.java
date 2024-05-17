@@ -63,7 +63,7 @@ public class Plan extends JavaPlugin implements PlanPlugin {
 
     @Override
     public void onLoad() {
-        if (isJava17OrLater() && isFolia()) {
+        if (isFolia()) {
             try {
                 // Attempt to load and use the Folia library for Java 17+
                 Class<?> foliaPlatformLayer = Class.forName("net.playeranalytics.plugin.FoliaPlatformLayer");
@@ -191,11 +191,6 @@ public class Plan extends JavaPlugin implements PlanPlugin {
         } catch (ClassNotFoundException e) {
             return false;
         }
-    }
-
-    private static boolean isJava17OrLater() {
-        String version = System.getProperty("java.version");
-        return version.startsWith("17") || version.compareTo("17") > 0;
     }
 
     @Override

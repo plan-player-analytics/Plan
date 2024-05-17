@@ -36,10 +36,10 @@ def buildVersion = determineBuildVersion()
 allprojects {
 
     group "com.djrapitops"
-    version "5.7-SNAPSHOT"
+    version "5.6-SNAPSHOT"
 
     ext.majorVersion = '5'
-    ext.minorVersion = '7'
+    ext.minorVersion = '6'
     ext.buildVersion = buildVersion
     ext.fullVersion = project.ext.majorVersion + '.' + project.ext.minorVersion + ' build ' + project.ext.buildVersion
     ext.fullVersionFilename = project.ext.majorVersion + '.' + project.ext.minorVersion + '-build-' + project.ext.buildVersion
@@ -112,7 +112,6 @@ subprojects {
     }
 
     repositories {
-        mavenLocal()
         mavenCentral()
         google()
         maven { url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" } // Spigot
