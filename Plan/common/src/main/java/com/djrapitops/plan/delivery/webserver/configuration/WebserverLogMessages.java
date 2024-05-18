@@ -72,7 +72,7 @@ public class WebserverLogMessages {
     }
 
     public void warnWebserverDisabledByConfig() {
-        logger.warn(locale.getString(PluginLang.ENABLE_NOTIFY_WEB_SERVER_DISABLED));
+        logger.info(locale.getString(PluginLang.ENABLE_NOTIFY_WEB_SERVER_DISABLED));
     }
 
     public void keystoreNotFoundError(InvalidPathException error, String keyStorePath) {
