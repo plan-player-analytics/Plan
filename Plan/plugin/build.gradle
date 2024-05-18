@@ -8,6 +8,7 @@ dependencies {
     shadow project(path: ":sponge")
     shadow project(path: ":bungeecord")
     shadow project(path: ":velocity")
+    shadow project(path: ":folia")
     testImplementation project(path: ":common", configuration: 'testArtifacts')
     testImplementation project(path: ":bukkit", configuration: 'testArtifacts')
     testImplementation project(path: ":nukkit", configuration: 'testArtifacts')

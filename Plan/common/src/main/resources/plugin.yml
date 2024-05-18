@@ -3,6 +3,7 @@ author: AuroraLS3
 main: com.djrapitops.plan.Plan
 version: @version@
 api-version: 1.13
+folia-supported: true
 softdepend:
   - AAC
   - ASkyBlock

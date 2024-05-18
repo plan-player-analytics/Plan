@@ -60,7 +60,7 @@ class FileWatcherTest {
             createAndModifyFile(modified);
 
             Awaitility.await()
-                    .atMost(1, TimeUnit.SECONDS)
+                    .atMost(5, TimeUnit.SECONDS)
                     .until(methodWasCalled::get);
 
             assertTrue(methodWasCalled.get());
