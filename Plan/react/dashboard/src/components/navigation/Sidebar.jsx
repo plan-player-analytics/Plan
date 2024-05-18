@@ -32,7 +32,7 @@ const InnerItem = ({href, icon, name, nameShort, color, external, collapseSideba
     if (external) {
         return (
             <a href={href} className="collapse-item nav-button">
-                <Fa icon={icon} className={color ? "col-" + color : undefined}/>
+                <Fa icon={icon} className={color ? "col-" + color : ""}/>
                 <span>{nameShort ? nameShort : name}</span>
             </a>
         )
@@ -41,7 +41,7 @@ const InnerItem = ({href, icon, name, nameShort, color, external, collapseSideba
     return <NavLink to={href} onClick={collapseSidebar} className={({isActive}) => {
         return isActive ? "collapse-item nav-button active" : "collapse-item nav-button"
     }}>
-        <Fa icon={icon} className={color ? "col-" + color : undefined}/> <span>{nameShort ? nameShort : name}</span>
+        <Fa icon={icon} className={color ? "col-" + color : ""}/> <span>{nameShort ? nameShort : name}</span>
     </NavLink>
 }
 
@@ -65,7 +65,7 @@ export const Item = ({item, inner, collapseSidebar}) => {
         return (
             <li className={"nav-item nav-button"}>
                 <a href={baseAddress + href} className="nav-link">
-                    <Fa icon={icon} className={color ? "col-" + color : undefined}/>
+                    <Fa icon={icon} className={color ? "col-" + color : ""}/>
                     <span>{t(nameShort ? nameShort : name)}</span>
                 </a>
             </li>
@@ -77,7 +77,7 @@ export const Item = ({item, inner, collapseSidebar}) => {
             <NavLink to={href} onClick={collapseSidebar} className={({isActive}) => {
                 return isActive ? "nav-link active" : "nav-link"
             }}>
-                <Fa icon={icon} className={color ? "col-" + color : undefined}/> <span>{t(name)}</span>
+                <Fa icon={icon} className={color ? "col-" + color : ""}/> <span>{t(name)}</span>
             </NavLink>
         </li>
     );
@@ -142,7 +142,7 @@ const SidebarCollapse = ({item, open, setOpen, collapseSidebar}) => {
                     aria-expanded={open}
                     data-bs-toggle="collapse"
             >
-                <Fa icon={item.icon} className={item?.color ? "col-" + item?.color : undefined}/>
+                <Fa icon={item.icon} className={item?.color ? "col-" + item?.color : ""}/>
                 <span>{t(item.name)}</span>
             </button>
             <Collapse in={open}>
