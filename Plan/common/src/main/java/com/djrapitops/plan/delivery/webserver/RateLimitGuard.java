@@ -40,14 +40,7 @@ public class RateLimitGuard {
             .expireAfterWrite(120, TimeUnit.SECONDS)
             .build();
 
-    public boolean shouldPreventRequest(@Untrusted String accessor) {
-        Integer attempts = requests.getIfPresent(accessor);
-        if (attempts == null) return false;
-        // Too many attempts, forbid further attempts.
-        return attempts >= ATTEMPT_LIMIT;
-    }
-
-    public void increaseAttemptCount(@Untrusted String requestPath, @Untrusted String accessor) {
+    public boolean shouldPreventRequest(@Untrusted String requestPath, @Untrusted String accessor) {
         String previous = lastRequestPath.getIfPresent(accessor);
         if (!Objects.equals(previous, requestPath)) {
             resetAttemptCount(accessor);
@@ -60,22 +53,22 @@ public class RateLimitGuard {
 
         lastRequestPath.put(accessor, requestPath);
         requests.put(accessor, attempts + 1);
+
+        // Too many attempts, forbid further attempts.
+        return attempts + 1 >= ATTEMPT_LIMIT;
     }
 
     public void resetAttemptCount(@Untrusted String accessor) {
         // previous request changed
-        requests.cleanUp();
         requests.invalidate(accessor);
+        requests.cleanUp();
     }
 
     public static class Disabled extends RateLimitGuard {
         @Override
-        public boolean shouldPreventRequest(String accessor) {
+        public boolean shouldPreventRequest(@Untrusted String requestedPath, String accessor) {
             return false;
         }
-
-        @Override
-        public void increaseAttemptCount(String requestPath, String accessor) { /* Disabled */ }
 
         @Override
         public void resetAttemptCount(String accessor) { /* Disabled */ }

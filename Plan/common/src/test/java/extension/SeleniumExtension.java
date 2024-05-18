@@ -57,7 +57,8 @@ public class SeleniumExtension implements ParameterResolver, BeforeAllCallback, 
         SeleniumExtension.waitForPageLoadForSeconds(5, driver);
         Awaitility.await("waitForElementToBeVisible " + by.toString())
                 .atMost(5, TimeUnit.SECONDS)
-                .ignoreException(NoSuchElementException.class)
+                .ignoreExceptionsMatching(throwable -> throwable instanceof NoSuchElementException
+                        || throwable instanceof StaleElementReferenceException)
                 .until(() -> driver.findElement(by).isDisplayed());
     }
 

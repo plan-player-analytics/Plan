@@ -30,6 +30,7 @@ import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
+import com.djrapitops.plan.storage.database.transactions.commands.RemoveWebGroupsTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreServerPlayerTransaction;
 import com.djrapitops.plan.storage.database.transactions.webuser.StoreWebGroupTransaction;
@@ -94,6 +95,8 @@ class AccessControlVisibilityTest {
 
     @AfterEach
     void tearDownTest(WebDriver driver) {
+        String address = "https://localhost:" + TEST_PORT_NUMBER + "/auth/logout";
+        driver.get(address);
         SeleniumExtension.newTab(driver);
         driver.manage().deleteAllCookies();
     }
@@ -206,6 +209,8 @@ class AccessControlVisibilityTest {
     @ParameterizedTest(name = "Access with visibility {0} can see element #{1} in /{2}")
     @MethodSource("pageLevelVisibleCases")
     void pageVisible(WebPermission permission, String element, String page, Database database, ServerUUID serverUUID, ChromeDriver driver) throws Exception {
+        // TODO Remove after fixing manage/groups making bazillion calls to /v1/permissions
+        database.executeTransaction(new RemoveWebGroupsTransaction()).get();
         User user = registerUser(database, permission);
 
         String address = "https://localhost:" + TEST_PORT_NUMBER + "/" + page;
@@ -285,7 +290,7 @@ class AccessControlVisibilityTest {
         driver.get(address);
         login(driver, user);
 
-        SeleniumExtension.waitForElementToBeVisible(By.id("wrapper"), driver);
+        SeleniumExtension.waitForElementToBeVisible(By.className("login-username"), driver);
         By id = By.id(element);
         assertThrows(NoSuchElementException.class, () -> driver.findElement(id), () -> "Saw element #" + element + " at " + address + " without permission to");
         assertNoLogs(driver, address);
@@ -327,7 +332,7 @@ class AccessControlVisibilityTest {
         driver.get(address);
         login(driver, user);
 
-        SeleniumExtension.waitForElementToBeVisible(By.id("wrapper"), driver);
+        SeleniumExtension.waitForElementToBeVisible(By.className("login-username"), driver);
         By id = By.id(element);
         assertThrows(NoSuchElementException.class, () -> driver.findElement(id), () -> "Saw element #" + element + " at " + address + " without permission to");
         assertNoLogs(driver, address);
@@ -360,7 +365,7 @@ class AccessControlVisibilityTest {
         driver.get(address);
         login(driver, user);
 
-        SeleniumExtension.waitForElementToBeVisible(By.id("wrapper"), driver);
+        SeleniumExtension.waitForElementToBeVisible(By.className("login-username"), driver);
         By id = By.id(element);
         assertThrows(NoSuchElementException.class, () -> driver.findElement(id), () -> "Saw element #" + element + " at " + address + " without permission to");
         assertNoLogs(driver, address);
@@ -406,7 +411,7 @@ class AccessControlVisibilityTest {
         driver.get(address);
         login(driver, playerUser);
 
-        SeleniumExtension.waitForElementToBeVisible(By.id("wrapper"), driver);
+        SeleniumExtension.waitForElementToBeVisible(By.className("login-username"), driver);
         By id = By.id(element);
         assertThrows(NoSuchElementException.class, () -> driver.findElement(id), () -> "Saw element #" + element + " at /player/" + TestConstants.PLAYER_TWO_UUID + " without permission to");
     }
