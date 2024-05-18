@@ -85,14 +85,14 @@ subprojects {
 
         commonsTextVersion = "1.12.0"
         commonsCompressVersion = "1.26.1"
-        commonsCodecVersion = "1.16.1"
+        commonsCodecVersion = "1.17.0"
         caffeineVersion = "3.1.8"
-        jettyVersion = "11.0.20"
+        jettyVersion = "11.0.21"
         caffeineVersion = "2.9.2"
-        mysqlVersion = "8.3.0"
+        mysqlVersion = "8.4.0"
         mariadbVersion = "3.3.3"
         sqliteVersion = "3.42.0.1"
-        adventureVersion = "4.14.0"
+        adventureVersion = "4.17.0"
         hikariVersion = "5.1.0"
         slf4jVersion = "2.0.13"
         geoIpVersion = "4.2.0"
@@ -106,9 +106,10 @@ subprojects {
         nkPlaceholderapiVersion = "1.4-SNAPSHOT"
 
         junitVersion = "5.10.2"
-        mockitoVersion = "5.11.0"
-        testContainersVersion = "1.19.7"
-        swaggerVersion = "2.2.21"
+        mockitoVersion = "5.12.0"
+        seleniumVersion = "4.21.0"
+        testContainersVersion = "1.19.8"
+        swaggerVersion = "2.2.22"
     }
 
     repositories {

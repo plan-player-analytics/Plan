@@ -58,7 +58,6 @@ public class RequestHandler {
     public Response getResponse(InternalRequest internalRequest) {
         @Untrusted String accessAddress = internalRequest.getAccessAddress(webserverConfiguration);
         @Untrusted String requestedPath = internalRequest.getRequestedPath();
-        rateLimitGuard.increaseAttemptCount(requestedPath, accessAddress);
 
         boolean blocked = false;
         Response response;
@@ -66,7 +65,7 @@ public class RequestHandler {
         if (bruteForceGuard.shouldPreventRequest(accessAddress)) {
             response = responseFactory.failedLoginAttempts403();
             blocked = true;
-        } else if (rateLimitGuard.shouldPreventRequest(accessAddress)) {
+        } else if (rateLimitGuard.shouldPreventRequest(requestedPath, accessAddress)) {
             response = responseFactory.failedRateLimit403();
             blocked = true;
         } else if (!webserverConfiguration.getAllowedIpList().isAllowed(accessAddress)) {
