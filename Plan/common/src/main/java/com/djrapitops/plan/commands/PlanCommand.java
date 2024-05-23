@@ -140,13 +140,21 @@ public class PlanCommand {
     }
 
     public List<String> serverNames(CMDSender sender, @Untrusted Arguments arguments) {
-        @Untrusted String asString = arguments.concatenate(" ");
-        return tabCompleteCache.getMatchingServerIdentifiers(asString);
+        if (sender.hasPermission(Permissions.SERVER)) {
+            @Untrusted String asString = arguments.concatenate(" ");
+            return tabCompleteCache.getMatchingServerIdentifiers(asString);
+        }
+        return List.of();
     }
 
     private List<String> playerNames(CMDSender sender, @Untrusted Arguments arguments) {
-        @Untrusted String asString = arguments.concatenate(" ");
-        return tabCompleteCache.getMatchingPlayerIdentifiers(asString);
+        if (sender.hasPermission(Permissions.PLAYER_OTHER)) {
+            @Untrusted String asString = arguments.concatenate(" ");
+            return tabCompleteCache.getMatchingPlayerIdentifiers(asString);
+        } else if (sender.hasPermission(Permissions.PLAYER_SELF)) {
+            return sender.getPlayerName().map(List::of).orElse(List.of());
+        }
+        return List.of();
     }
 
     private Subcommand serverCommand() {
@@ -403,6 +411,9 @@ public class PlanCommand {
     }
 
     private List<String> getBackupFilenames(CMDSender sender, @Untrusted Arguments arguments) {
+        if (!sender.hasPermission(Permissions.DATA_RESTORE)) {
+            return List.of();
+        }
         if (arguments.get(1).isPresent()) {
             return DBType.names();
         }
@@ -531,6 +542,9 @@ public class PlanCommand {
     }
 
     private List<String> webGroupTabComplete(CMDSender sender, @Untrusted Arguments arguments) {
+        if (!sender.hasPermission(Permissions.SET_GROUP)) {
+            return List.of();
+        }
         Optional<String> groupArgument = arguments.get(1);
         if (groupArgument.isPresent()) {
             return tabCompleteCache.getMatchingWebGroupNames(groupArgument.get());
