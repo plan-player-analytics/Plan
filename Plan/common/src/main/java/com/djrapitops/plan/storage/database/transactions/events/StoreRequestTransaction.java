@@ -57,7 +57,7 @@ public class StoreRequestTransaction extends ThrowawayTransaction {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, timestamp);
-                statement.setString(2, accessAddress);
+                statement.setString(2, StringUtils.truncate(accessAddress, 45));
                 statement.setString(3, method);
                 statement.setString(4, url);
                 statement.setInt(5, responseCode);
