@@ -25,6 +25,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -47,6 +48,7 @@ public class JoinAddressValidator {
     private void prepareFilteredAddresses() {
         if (filteredAddresses == null) {
             filteredAddresses = config.get(DataGatheringSettings.FILTER_JOIN_ADDRESSES);
+            if (filteredAddresses == null) filteredAddresses = new ArrayList<>();
         }
     }
 
