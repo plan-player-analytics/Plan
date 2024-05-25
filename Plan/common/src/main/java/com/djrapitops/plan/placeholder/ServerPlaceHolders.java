@@ -19,6 +19,7 @@ package com.djrapitops.plan.placeholder;
 import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
+import com.djrapitops.plan.gathering.ServerUptimeCalculator;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
@@ -58,18 +59,20 @@ public class ServerPlaceHolders implements Placeholders {
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final Formatters formatters;
+    private final ServerUptimeCalculator serverUptimeCalculator;
 
     @Inject
     public ServerPlaceHolders(
             PlanConfig config,
             DBSystem dbSystem,
             ServerInfo serverInfo,
-            Formatters formatters
+            Formatters formatters, ServerUptimeCalculator serverUptimeCalculator
     ) {
         this.config = config;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.formatters = formatters;
+        this.serverUptimeCalculator = serverUptimeCalculator;
     }
 
     @Override
@@ -203,6 +206,11 @@ public class ServerPlaceHolders implements Placeholders {
 
         placeholders.registerStatic("server_name",
                 () -> serverInfo.getServer().getName());
+
+        placeholders.registerStatic("server_uptime",
+                parameters -> serverUptimeCalculator.getServerUptimeMillis(getServerUUID(parameters))
+                        .map(String::valueOf)
+                        .orElse("-"));
 
         placeholders.registerStatic("server_uuid",
                 serverInfo::getServerUUID);
