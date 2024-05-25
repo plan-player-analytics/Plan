@@ -114,9 +114,14 @@ Data_gathering:
   Geolocation_Download_URL: "https://geodb.playeranalytics.net/GeoLite2-Country.mmdb"
   Ping: true
   Disk_space: true
-  # Does not affect already gathered data
-  Preserve_join_address_case: false
-  Preserve_invalid_join_addresses: false
+  Join_addresses:
+    Enabled: true
+    # Does not affect already gathered data
+    Preserve_case: false
+    Preserve_invalid: false
+    # Replaces these join addresses with unknown
+    Filter_out_from_data:
+      - "play.example.com"
 # -----------------------------------------------------
 # Supported time units: MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS
 # -----------------------------------------------------

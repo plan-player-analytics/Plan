@@ -478,19 +478,51 @@ public class GraphJSONCreator {
         return mapToJson(pieColors, joinAddresses);
     }
 
+    private static void removeFilteredAddresses(List<JoinAddressCount> addresses, List<String> filteredJoinAddresses) {
+        if (filteredJoinAddresses.isEmpty() || filteredJoinAddresses.equals(List.of("play.example.com"))) return;
+
+        List<JoinAddressCount> addressesToRemove = addresses.stream()
+                .filter(address -> filteredJoinAddresses.contains(address.getJoinAddress()))
+                .collect(Collectors.toList());
+
+        if (!addressesToRemove.isEmpty()) {
+            Optional<JoinAddressCount> foundUnknownAddressCount = addresses.stream()
+                    .filter(address -> address.getJoinAddress().equals(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP))
+                    .findFirst();
+            JoinAddressCount unknownAddressCount;
+            if (foundUnknownAddressCount.isEmpty()) {
+                unknownAddressCount = new JoinAddressCount(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP, 0);
+                addresses.add(unknownAddressCount);
+            } else {
+                unknownAddressCount = foundUnknownAddressCount.get();
+            }
+
+            for (JoinAddressCount toRemove : addressesToRemove) {
+                unknownAddressCount.setCount(unknownAddressCount.getCount() + toRemove.getCount());
+                addresses.remove(toRemove);
+            }
+        }
+    }
+
     private Map<String, Object> mapToJson(String[] pieColors, List<DateObj<Map<String, Integer>>> joinAddresses) {
         for (DateObj<Map<String, Integer>> addressesByDate : joinAddresses) {
             translateUnknown(addressesByDate.getValue());
         }
 
+        List<String> filteredJoinAddresses = config.get(DataGatheringSettings.FILTER_JOIN_ADDRESSES);
+
         List<JoinAddressCounts> joinAddressCounts = joinAddresses.stream()
-                .map(addressesOnDay -> new JoinAddressCounts(
-                        addressesOnDay.getDate(),
-                        addressesOnDay.getValue().entrySet()
-                                .stream()
-                                .map(JoinAddressCount::new)
-                                .sorted()
-                                .collect(Collectors.toList())))
+                .map(addressesOnDay -> {
+                    List<JoinAddressCount> addresses = addressesOnDay.getValue().entrySet()
+                            .stream()
+                            .map(JoinAddressCount::new)
+                            .sorted()
+                            .collect(Collectors.toList());
+
+                    removeFilteredAddresses(addresses, filteredJoinAddresses);
+
+                    return new JoinAddressCounts(addressesOnDay.getDate(), addresses);
+                })
                 .sorted(new DateHolderOldestComparator())
                 .collect(Collectors.toList());
 

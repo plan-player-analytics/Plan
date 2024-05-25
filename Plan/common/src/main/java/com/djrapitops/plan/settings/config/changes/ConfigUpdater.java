@@ -177,6 +177,9 @@ public class ConfigUpdater {
                 new ConfigChange.Removed("Plugin.Use_Legacy_Frontend"),
                 new ConfigChange.Removed("Customized_files.Enable_web_dev_mode"),
                 new ConfigChange.Removed("Customized_files.Plan"),
+
+                new ConfigChange.Moved("Data_gathering.Preserve_join_address_case", "Data_gathering.Join_addresses.Preserve_case"),
+                new ConfigChange.Moved("Data_gathering.Preserve_invalid_join_addresses", "Data_gathering.Join_addresses.Preserve_invalid"),
         };
     }
 

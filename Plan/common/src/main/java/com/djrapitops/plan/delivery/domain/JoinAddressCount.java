@@ -28,7 +28,7 @@ import java.util.Objects;
  */
 public class JoinAddressCount implements Comparable<JoinAddressCount> {
 
-    private final int count;
+    private int count;
     private String joinAddress;
 
     public JoinAddressCount(Map.Entry<String, Integer> entry) {
@@ -50,6 +50,10 @@ public class JoinAddressCount implements Comparable<JoinAddressCount> {
 
     public int getCount() {
         return count;
+    }
+
+    public void setCount(int count) {
+        this.count = count;
     }
 
     @Override
