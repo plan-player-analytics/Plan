@@ -118,8 +118,14 @@ Data_gathering:
   Commands:
     Log_unknown: false
     Log_aliases_as_main_command: true
-  # Does not affect already gathered data
-  Preserve_join_address_case: false
+  Join_addresses:
+    Enabled: true
+    # Does not affect already gathered data
+    Preserve_case: false
+    Preserve_invalid: false
+    # Replaces these join addresses with unknown
+    Filter_out_from_data:
+      - "play.example.com"
 # -----------------------------------------------------
 # Supported time units: MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS
 # -----------------------------------------------------

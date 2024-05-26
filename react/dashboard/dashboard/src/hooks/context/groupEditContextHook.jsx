@@ -51,6 +51,7 @@ export const GroupEditContextProvider = ({groupName, children}) => {
 
     const [allPermissions, setAllPermissions] = useState([]);
     useEffect(() => {
+        // TODO Make this only happen once when opening groups page
         fetchAvailablePermissions().then(response => {
             setAllPermissions(response?.data?.permissions);
         });

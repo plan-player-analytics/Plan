@@ -907,7 +907,7 @@ plugin:
         no: "否"
         today: "'今天'"
         unavailable: "不可用"
-        unknown: "位置"
+        unknown: "未知"
         yes: "是"
         yesterday: "'昨天'"
     localeReloaded: "自定义 locale.yml 已被修改，因此已重新加载并且现在正在使用。"
