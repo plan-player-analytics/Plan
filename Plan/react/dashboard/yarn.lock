@@ -622,10 +622,10 @@
   resolved "https://registry.yarnpkg.com/@fullcalendar/interaction/-/interaction-6.1.11.tgz#baa3beec8f5c489fb6904973b175a5f4797abdf3"
   integrity sha512-ynOKjzuPwEAMgTQ6R/Z2zvzIIqG4p8/Qmnhi1q0vzPZZxSIYx3rlZuvpEK2WGBZZ1XEafDOP/LGfbWoNZe+qdg==
 
-"@fullcalendar/react@^6.1.11":
-  version "6.1.11"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/react/-/react-6.1.11.tgz#93c81ace6c0559092112ef90d2e8ceb6d62a9a58"
-  integrity sha512-Og0Tv0OiglTFp+b++yRyEhAeWnAmKkMLQ3iS0eJE1KDEov6QqGkoO+dUG4x8zp2w55IJqzik/a9iHi0s3oQDbA==
+"@fullcalendar/react@^6.1.13":
+  version "6.1.13"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/react/-/react-6.1.13.tgz#046031fd66304cccf46c3b3f033db11f8b7e17fa"
+  integrity sha512-/H1VZKNMB05uiPPMi5qDxlzOxjYBwjKiUFYpH+SLeIH7MiHXZQa1IVMTVxBHxs9+uUkb41vXuQICK8nYYeavgg==
 
 "@highcharts/map-collection@^2.1.0":
   version "2.1.0"
