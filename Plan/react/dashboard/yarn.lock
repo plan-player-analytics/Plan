@@ -3144,10 +3144,10 @@ swagger-client@^3.28.1:
     ramda-adjunct "^5.0.0"
     traverse "=0.6.8"
 
-swagger-ui@^5.17.12:
-  version "5.17.12"
-  resolved "https://registry.yarnpkg.com/swagger-ui/-/swagger-ui-5.17.12.tgz#2a7849c17ffdbcf7a2edcc8a6dfa930af6d4b1c0"
-  integrity sha512-7m/O1iIhv+YSrdru9332W2Oyvj/n6626FuNjxY83jqvgOA5frgGTRT0KoFQZjH3AaKlwDdl9wef5gARuICNB5Q==
+swagger-ui@^5.17.14:
+  version "5.17.14"
+  resolved "https://registry.yarnpkg.com/swagger-ui/-/swagger-ui-5.17.14.tgz#e5abca35005b3b972ed9abd6772e0698d0003afc"
+  integrity sha512-z9pOymwowrgkoMKNsRSN6QjOyYrMAnc4iohEebnS/ELT5jjdB13Lu4f3Bl4+o2Mw5B6QOyo4vibr/A/Vb7UbMQ==
   dependencies:
     "@babel/runtime-corejs3" "^7.24.5"
     "@braintree/sanitize-url" "=7.0.2"
