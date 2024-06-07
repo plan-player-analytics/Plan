@@ -627,10 +627,10 @@
   resolved "https://registry.yarnpkg.com/@fullcalendar/react/-/react-6.1.11.tgz#93c81ace6c0559092112ef90d2e8ceb6d62a9a58"
   integrity sha512-Og0Tv0OiglTFp+b++yRyEhAeWnAmKkMLQ3iS0eJE1KDEov6QqGkoO+dUG4x8zp2w55IJqzik/a9iHi0s3oQDbA==
 
-"@highcharts/map-collection@^2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@highcharts/map-collection/-/map-collection-2.1.0.tgz#a3e40a4d73586028f22c758ebfed0161986320f3"
-  integrity sha512-oS7ELhgvltY7OVPG4EFHHcdLRSKu2Fwvg2B9eXRo/Get4rZPUoLwv5i+bUcPb5JYLxzhHVNniuw01yMJAnXJ8g==
+"@highcharts/map-collection@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@highcharts/map-collection/-/map-collection-2.2.0.tgz#4bb7de57f61cd6f68fc769c5b3be822598937303"
+  integrity sha512-qX4ZtjvZtCCsVFClMN2/Xh4RO3MrfSLydMXAfTwprT4w4oRNM7wQaKFP1ZU0ZvOZ9xX8eFK3wWp9Yck/PUnE9g==
 
 "@jridgewell/gen-mapping@^0.3.0":
   version "0.3.3"
