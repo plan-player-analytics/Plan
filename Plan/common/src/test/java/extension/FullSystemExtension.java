@@ -20,11 +20,13 @@ import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.delivery.DeliveryUtilities;
 import com.djrapitops.plan.delivery.export.Exporter;
+import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.ConfigSystem;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
+import com.djrapitops.plan.settings.locale.LocaleSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.file.PublicHtmlFiles;
@@ -57,6 +59,8 @@ public class FullSystemExtension implements ParameterResolver, BeforeAllCallback
     private final Map<Class, Supplier> parameterResolvers;
 
     public FullSystemExtension() {
+        // You can't use method references here because planSystem is null when this method is initialized.
+
         this.parameterResolvers = Maps.builder(Class.class, Supplier.class)
                 .put(PlanSystem.class, () -> planSystem)
                 .put(PlanFiles.class, () -> planSystem.getPlanFiles())
@@ -79,6 +83,8 @@ public class FullSystemExtension implements ParameterResolver, BeforeAllCallback
                 })
                 .put(Database.class, () -> planSystem.getDatabaseSystem().getDatabase())
                 .put(DeliveryUtilities.class, () -> planSystem.getDeliveryUtilities())
+                .put(Formatters.class, () -> planSystem.getDeliveryUtilities().getFormatters())
+                .put(LocaleSystem.class, () -> planSystem.getLocaleSystem())
                 .put(Addresses.class, () -> planSystem.getDeliveryUtilities().getAddresses())
                 .put(PublicHtmlFiles.class, () -> planSystem.getDeliveryUtilities().getPublicHtmlFiles())
                 .put(Webserver.class, () -> planSystem.getWebServerSystem().getWebServer())

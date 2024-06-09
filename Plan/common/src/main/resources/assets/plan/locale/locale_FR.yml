@@ -905,7 +905,7 @@ plugin:
         loadedServerInfo: "Identifiant de serveur chargé : ${0}"
         loadingServerInfo: "Chargement des informations d'identification du serveur"
         no: "Non"
-        today: "Aujourd'hui"
+        today: "'Aujourd''hui'"
         unavailable: "Indisponible"
         unknown: "Inconnu"
         yes: "Oui"
