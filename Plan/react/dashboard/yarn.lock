@@ -1417,10 +1417,10 @@
   resolved "https://registry.yarnpkg.com/@types/warning/-/warning-3.0.0.tgz#0d2501268ad8f9962b740d387c4654f5f8e23e52"
   integrity sha1-DSUBJorY+ZYrdA04fEZU9fjiPlI=
 
-"@vitejs/plugin-react@^4.3.0":
-  version "4.3.0"
-  resolved "https://registry.yarnpkg.com/@vitejs/plugin-react/-/plugin-react-4.3.0.tgz#f20ec2369a92d8abaaefa60da8b7157819d20481"
-  integrity sha512-KcEbMsn4Dpk+LIbHMj7gDPRKaTMStxxWRkRmxsg/jVdFdJCZWt1SchZcf0M4t8lIKdwwMsEyzhrcOXRrDPtOBw==
+"@vitejs/plugin-react@^4.3.1":
+  version "4.3.1"
+  resolved "https://registry.yarnpkg.com/@vitejs/plugin-react/-/plugin-react-4.3.1.tgz#d0be6594051ded8957df555ff07a991fb618b48e"
+  integrity sha512-m/V2syj5CuVnaxcUJOQRel/Wr31FFXRFlnOoq1TVtkCxsY5veGMTEmpWHndrhB2U8ScHtCQB1e+4hWYExQc6Lg==
   dependencies:
     "@babel/core" "^7.24.5"
     "@babel/plugin-transform-react-jsx-self" "^7.24.5"
