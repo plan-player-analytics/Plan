@@ -55,6 +55,9 @@ public class BukkitCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (command.getRequiredPermissions().stream().anyMatch(permission -> !sender.hasPermission(permission))) {
+            return true;
+        }
         runnableFactory.create(() -> {
             try {
                 command.getExecutor().accept(getSender(sender), new Arguments(args));
@@ -70,6 +73,9 @@ public class BukkitCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
+        if (command.getRequiredPermissions().stream().anyMatch(permission -> !sender.hasPermission(permission))) {
+            return Collections.emptyList();
+        }
         try {
             return command.getArgumentResolver().apply(getSender(sender), new Arguments(args));
         } catch (Exception e) {

@@ -43,6 +43,9 @@ public class VelocityCommand implements SimpleCommand {
     public void execute(final Invocation invocation) {
         CommandSource source = invocation.source();
         String[] args = invocation.arguments();
+        if (command.getRequiredPermissions().stream().anyMatch(permission -> !source.hasPermission(permission))) {
+            return;
+        }
         runnableFactory.create(() -> {
             try {
                 command.getExecutor().accept(getSender(source), new Arguments(args));
@@ -67,6 +70,9 @@ public class VelocityCommand implements SimpleCommand {
     public List<String> suggest(final Invocation invocation) {
         CommandSource source = invocation.source();
         String[] currentArgs = invocation.arguments();
+        if (command.getRequiredPermissions().stream().anyMatch(permission -> !source.hasPermission(permission))) {
+            return Collections.emptyList();
+        }
         try {
             return command.getArgumentResolver().apply(getSender(source), new Arguments(currentArgs));
         } catch (Exception e) {

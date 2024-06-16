@@ -22,6 +22,7 @@ package com.djrapitops.plan.settings;
  * @author AuroraLS3
  */
 public enum Permissions {
+    USE_COMMAND("plan.command"),
     SERVER("plan.server"),
     SERVERS("plan.servers"),
     NETWORK("plan.network"),
