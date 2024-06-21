@@ -33,7 +33,7 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
- * Uses ipaddress library to support multiple formats of IP address ranges.
+ * Uses ipaddress library to support multiple valueFormats of IP address ranges.
  *
  * @author AuroraLS3
  */

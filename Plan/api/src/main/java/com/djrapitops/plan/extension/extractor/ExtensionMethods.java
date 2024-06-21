@@ -34,6 +34,8 @@ public class ExtensionMethods {
     private final List<ExtensionMethod> tableProviders;
     private final List<ExtensionMethod> groupProviders;
     private final List<ExtensionMethod> dataBuilderProviders;
+    private final List<ExtensionMethod> graphPointProviders;
+    private final List<ExtensionMethod> graphHistoryPointsProviders;
 
     public ExtensionMethods() {
         booleanProviders = new ArrayList<>();
@@ -45,6 +47,8 @@ public class ExtensionMethods {
         tableProviders = new ArrayList<>();
         groupProviders = new ArrayList<>();
         dataBuilderProviders = new ArrayList<>();
+        graphPointProviders = new ArrayList<>();
+        graphHistoryPointsProviders = new ArrayList<>();
     }
 
     public List<ExtensionMethod> getBooleanProviders() {
@@ -83,6 +87,14 @@ public class ExtensionMethods {
         return dataBuilderProviders;
     }
 
+    public List<ExtensionMethod> getGraphPointProviders() {
+        return graphPointProviders;
+    }
+
+    public List<ExtensionMethod> getGraphHistoryPointsProviders() {
+        return graphHistoryPointsProviders;
+    }
+
     public void addBooleanMethod(ExtensionMethod method) {
         booleanProviders.add(method);
     }
@@ -119,6 +131,14 @@ public class ExtensionMethods {
         dataBuilderProviders.add(method);
     }
 
+    public void addGraphPointProviderMethod(ExtensionMethod method) {
+        graphPointProviders.add(method);
+    }
+
+    public void addGraphHistoryPointsProviderMethod(ExtensionMethod method) {
+        graphHistoryPointsProviders.add(method);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -132,12 +152,14 @@ public class ExtensionMethods {
                 && Objects.equals(componentProviders, that.componentProviders)
                 && Objects.equals(tableProviders, that.tableProviders)
                 && Objects.equals(groupProviders, that.groupProviders)
-                && Objects.equals(dataBuilderProviders, that.dataBuilderProviders);
+                && Objects.equals(dataBuilderProviders, that.dataBuilderProviders)
+                && Objects.equals(graphPointProviders, that.graphPointProviders)
+                && Objects.equals(graphHistoryPointsProviders, that.graphHistoryPointsProviders);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(booleanProviders, numberProviders, doubleProviders, percentageProviders, stringProviders, componentProviders, tableProviders, groupProviders, dataBuilderProviders);
+        return Objects.hash(booleanProviders, numberProviders, doubleProviders, percentageProviders, stringProviders, componentProviders, tableProviders, groupProviders, dataBuilderProviders, graphPointProviders, graphHistoryPointsProviders);
     }
 
     @Override
@@ -152,6 +174,8 @@ public class ExtensionMethods {
                 ", tableProviders=" + tableProviders +
                 ", groupProviders=" + groupProviders +
                 ", dataBuilderProviders=" + dataBuilderProviders +
+                ", graphPointProviders=" + graphPointProviders +
+                ", graphHistoryPointsProviders=" + graphHistoryPointsProviders +
                 '}';
     }
 
@@ -164,6 +188,8 @@ public class ExtensionMethods {
                 && componentProviders.isEmpty()
                 && tableProviders.isEmpty()
                 && groupProviders.isEmpty()
-                && dataBuilderProviders.isEmpty();
+                && dataBuilderProviders.isEmpty()
+                && graphPointProviders.isEmpty()
+                && graphHistoryPointsProviders.isEmpty();
     }
 }

@@ -123,7 +123,7 @@ public class QueryJSONResolver implements Resolver {
             description = "Perform a query or get cached results. Use q to do new query, timestamp to see cached query.",
             responses = {
                     @ApiResponse(responseCode = "200", content = @Content(mediaType = MimeType.JSON)),
-                    @ApiResponse(responseCode = "400 (invalid view)", description = "If 'view' date formats does not match afterDate dd/mm/yyyy, afterTime hh:mm, beforeDate dd/mm/yyyy, beforeTime hh:mm"),
+                    @ApiResponse(responseCode = "400 (invalid view)", description = "If 'view' date valueFormats does not match afterDate dd/mm/yyyy, afterTime hh:mm, beforeDate dd/mm/yyyy, beforeTime hh:mm"),
                     @ApiResponse(responseCode = "400 (no query)", description = "If request body is empty and 'q' request parameter is not given"),
                     @ApiResponse(responseCode = "400 (invalid query)", description = "If request body is empty and 'q' json request parameter doesn't contain 'view' property"),
             },

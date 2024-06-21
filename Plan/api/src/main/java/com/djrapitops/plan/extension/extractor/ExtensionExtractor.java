@@ -21,6 +21,7 @@ import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.Group;
 import com.djrapitops.plan.extension.annotation.*;
 import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
+import com.djrapitops.plan.extension.graph.DataPoint;
 import com.djrapitops.plan.extension.table.Table;
 
 import java.lang.annotation.Annotation;
@@ -162,6 +163,13 @@ public final class ExtensionExtractor {
                 validateMethod(method, annotation);
                 methods.get(method.getParameterType()).addDataBuilderMethod(method);
             });
+            method.getAnnotation(GraphPointProvider.class).ifPresent(annotation -> {
+                validateMethod(method, annotation);
+                methods.get(method.getParameterType()).addGraphPointProviderMethod(method);
+            });
+            method.getAnnotation(GraphHistoryPointsProvider.class).ifPresent(annotation -> {
+                methods.get(method.getParameterType()).addGraphPointProviderMethod(method);
+            });
 
             method.getAnnotation(Conditional.class).ifPresent(annotation -> conditionalMethods.add(method.getMethod()));
             method.getAnnotation(Tab.class).ifPresent(tabAnnotations::add);
@@ -170,6 +178,24 @@ public final class ExtensionExtractor {
         if (methods.values().stream().allMatch(ExtensionMethods::isEmpty)) {
             throw new IllegalArgumentException(extensionName + " class had no methods annotated with a Provider annotation");
         }
+        Map<ExtensionMethod.ParameterType, List<String>> graphProviderMethodNames = methods.values().stream().map(ExtensionMethods::getGraphPointProviders)
+                .flatMap(Collection::stream)
+                .collect(Collectors.groupingBy(ExtensionMethod::getParameterType,
+                        Collectors.mapping(ExtensionMethod::getMethodName,
+                                Collectors.toList())));
+        methods.values().stream()
+                .map(ExtensionMethods::getGraphHistoryPointsProviders)
+                .flatMap(Collection::stream)
+                .forEach(method -> {
+                            String referencedMethod = method.getAnnotation(GraphHistoryPointsProvider.class)
+                                    .map(GraphHistoryPointsProvider::methodName).orElse(null);
+                            boolean referencedMethodExists = graphProviderMethodNames.get(method.getParameterType())
+                                    .contains(referencedMethod);
+                            if (!referencedMethodExists) {
+                                throw new IllegalArgumentException(extensionName + " class had no methods called '" + referencedMethod + "' but GraphHistoryPointsProvider " + method.getMethodName() + " refers to it.");
+                            }
+                        }
+                );
 
         validateConditionals();
     }
@@ -313,6 +339,27 @@ public final class ExtensionExtractor {
 
         validateReturnType(method, ExtensionDataBuilder.class);
         validateMethodArguments(method, false, UUID.class, String.class, Group.class);
+    }
+
+    private void validateMethod(ExtensionMethod extensionMethod, GraphPointProvider annotation) {
+        Method method = extensionMethod.getMethod();
+
+        validateReturnType(method, DataPoint.class);
+        validateMethodAnnotationPropertyLength(annotation.displayName(), "displayName", 50, method);
+        validateMethodArguments(method, false, UUID.class, String.class, Group.class);
+        validateGraphStacking(method, annotation);
+    }
+
+    private void validateGraphStacking(Method method, GraphPointProvider annotation) {
+        boolean supportsStacking = annotation.supportsStacking();
+        boolean moreUnits = new HashSet<>(Arrays.asList(annotation.unitNames())).size() > 1;
+        boolean moreFormats = new HashSet<>(Arrays.asList(annotation.valueFormats())).size() > 1;
+        if (supportsStacking && moreUnits) {
+            warnings.add(extensionName + "." + method.getName() + " is set to supportsStacking: true, but unitNames has more than 1 unique unit. Stacking will be disabled.");
+        }
+        if (supportsStacking && moreFormats) {
+            warnings.add(extensionName + "." + method.getName() + " is set to supportsStacking: true, but moreFormats has more than 1 unique format. Stacking will be disabled.");
+        }
     }
 
     private void validateConditionals() {

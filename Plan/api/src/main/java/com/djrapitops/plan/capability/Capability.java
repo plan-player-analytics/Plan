@@ -94,7 +94,11 @@ enum Capability {
     /**
      * {@link  com.djrapitops.plan.delivery.web.ResolverService#registerPermissions(String...)}
      */
-    PAGE_EXTENSION_USER_PERMISSIONS;
+    PAGE_EXTENSION_USER_PERMISSIONS,
+    /**
+     * {@link com.djrapitops.plan.extension.annotation.GraphPointProvider}.
+     */
+    DATA_EXTENSION_GRAPH_API;
 
     static Optional<Capability> getByName(String name) {
         if (name == null) {

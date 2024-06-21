@@ -171,7 +171,7 @@ public class StoreTableProviderTransaction extends ThrowawayTransaction {
                 ExtensionTabTable.STATEMENT_SELECT_TAB_ID + ',' +
                 ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID + ',' +
                 "?,?,?,?,?," + // 5 icons
-                "?,?,?,?,?," + // 5 formats
+                "?,?,?,?,?," + // 5 valueFormats
                 "?)";
 
         return new ExecStatement(sql) {
