@@ -26,6 +26,7 @@ import com.djrapitops.plan.extension.builder.DataValue;
 import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
 import com.djrapitops.plan.extension.extractor.ExtensionMethod;
 import com.djrapitops.plan.extension.extractor.ExtensionMethods;
+import com.djrapitops.plan.extension.graph.DataPoint;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.ExtensionWrapper;
@@ -162,6 +163,22 @@ public class DataValueGatherer {
         for (ExtensionMethod provider : methods.getDataBuilderProviders()) {
             if (brokenMethods.contains(provider)) continue;
             addDataFromAnotherBuilder(dataBuilder, parameters, provider);
+        }
+        for (ExtensionMethod provider : methods.getGraphHistoryPointsProviders()) {
+            if (brokenMethods.contains(provider)) continue;
+            dataBuilder.addValue(DataPoint[].class, tryToBuildDataPoints(dataBuilder, parameters, provider));
+        }
+    }
+
+    private DataValue<DataPoint[]> tryToBuildDataPoints(ExtensionDataBuilder dataBuilder, Parameters parameters, ExtensionMethod provider) {
+        GraphHistoryPointsProvider annotation = provider.getExistingAnnotation(GraphHistoryPointsProvider.class);
+        try {
+            return dataBuilder.valueBuilder(provider.getMethodName())
+                    .methodName(provider)
+                    .buildGraphHistoryPoints(() -> callMethod(provider, parameters, DataPoint[].class), annotation.methodName(), annotation.strategy());
+        } catch (IllegalArgumentException e) {
+            logFailure(e, getPluginName(), provider.getMethodName());
+            return null;
         }
     }
 
@@ -382,6 +399,8 @@ public class DataValueGatherer {
                         .ifPresent(data -> storePlayerGroups(parameters, conditions, data));
                 pair.getValue(Table.class).flatMap(data -> data.getMetadata(TableDataValue.class))
                         .ifPresent(data -> storePlayerTable(parameters, conditions, data));
+                pair.getValue(DataPoint[].class).flatMap(data -> data.getMetadata(GraphHistoryPoints.class))
+                        .ifPresent(data -> {/*TODO #2544 - Store data after the metadata tables are already done.*/});
             } catch (DataExtensionMethodCallException methodError) {
                 logFailure(methodError);
             } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
@@ -406,6 +425,8 @@ public class DataValueGatherer {
                         .ifPresent(data -> storeComponent(parameters, conditions, data));
                 pair.getValue(Table.class).flatMap(data -> data.getMetadata(TableDataValue.class))
                         .ifPresent(data -> storeTable(parameters, conditions, data));
+                pair.getValue(DataPoint[].class).flatMap(data -> data.getMetadata(GraphHistoryPoints.class))
+                        .ifPresent(data -> {/*TODO #2544 - Store data after the metadata tables are already done.*/});
             } catch (DataExtensionMethodCallException methodError) {
                 logFailure(methodError);
             } catch (RejectedExecutionException ignore) {

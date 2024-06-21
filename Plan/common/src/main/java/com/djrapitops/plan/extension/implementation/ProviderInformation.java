@@ -18,6 +18,7 @@ package com.djrapitops.plan.extension.implementation;
 
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.annotation.Conditional;
+import com.djrapitops.plan.extension.graph.HistoryStrategy;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.results.ExtensionDescription;
@@ -44,6 +45,7 @@ public class ProviderInformation extends ExtensionDescription {
     private final Color tableColor;         // can be null, TableProvider
     private final boolean percentage;       // affects where doubles are stored
     private final boolean component;        // affects where strings are stored
+    private final HistoryStrategy appendStrategy;
 
     private ProviderInformation(ProviderInformation.Builder builder) {
         super(
@@ -64,6 +66,7 @@ public class ProviderInformation extends ExtensionDescription {
         tableColor = builder.tableColor;
         percentage = builder.percentage;
         component = builder.component;
+        appendStrategy = builder.appendStrategy;
     }
 
     public static ProviderInformation.Builder builder(String pluginName) {
@@ -108,6 +111,10 @@ public class ProviderInformation extends ExtensionDescription {
         } else {
             return Optional.of(getTruncatedConditionName());
         }
+    }
+
+    public Optional<HistoryStrategy> getAppendStrategy() {
+        return Optional.ofNullable(appendStrategy);
     }
 
     private String getTruncatedConditionName() {
@@ -159,6 +166,7 @@ public class ProviderInformation extends ExtensionDescription {
         private Color tableColor;             // can be null, TableProvider
         private boolean percentage;           // affects where doubles are stored
         private boolean component;            // affects where strings are stored
+        private HistoryStrategy appendStrategy;
 
         public Builder(String pluginName) {
             this.pluginName = pluginName;
@@ -241,6 +249,11 @@ public class ProviderInformation extends ExtensionDescription {
 
         public ProviderInformation build() {
             return new ProviderInformation(this);
+        }
+
+        public Builder setAppendStrategy(HistoryStrategy appendStrategy) {
+            this.appendStrategy = appendStrategy;
+            return this;
         }
     }
 }

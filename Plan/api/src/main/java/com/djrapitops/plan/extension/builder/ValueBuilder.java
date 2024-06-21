@@ -23,6 +23,8 @@ import com.djrapitops.plan.extension.annotation.Conditional;
 import com.djrapitops.plan.extension.annotation.StringProvider;
 import com.djrapitops.plan.extension.annotation.Tab;
 import com.djrapitops.plan.extension.extractor.ExtensionMethod;
+import com.djrapitops.plan.extension.graph.DataPoint;
+import com.djrapitops.plan.extension.graph.HistoryStrategy;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
@@ -287,6 +289,11 @@ public interface ValueBuilder {
      * {@link ValueBuilder#buildGroup(String[])}
      */
     DataValue<String[]> buildGroup(Supplier<String[]> groups);
+
+    /**
+     * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
+     */
+    DataValue<DataPoint[]> buildGraphHistoryPoints(Supplier<DataPoint[]> historyData, String methodName, HistoryStrategy appendStrategy);
 
     /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
