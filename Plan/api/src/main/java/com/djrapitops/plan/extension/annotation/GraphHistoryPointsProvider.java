@@ -18,8 +18,13 @@ package com.djrapitops.plan.extension.annotation;
 
 import com.djrapitops.plan.extension.graph.HistoryStrategy;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 /**
- * This annotation allows you to return a {@code List<DataPoint>} for an existing {@link GraphPointProvider}.
+ * This annotation allows you to return a {@code DataPoint[]} for an existing {@link GraphPointProvider}.
  * <p>
  * This method will be called according to {@link com.djrapitops.plan.extension.CallEvents}.
  * <p>
@@ -30,8 +35,12 @@ import com.djrapitops.plan.extension.graph.HistoryStrategy;
  * <p>
  * Requires capability DATA_EXTENSION_GRAPH_API.
  *
+ * Does not support {@link Conditional}.
+ *
  * @author AuroraLS3
  */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
 public @interface GraphHistoryPointsProvider {
 
     /**

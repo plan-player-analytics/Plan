@@ -20,6 +20,10 @@ import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.graph.Aggregates;
 import com.djrapitops.plan.extension.graph.XAxisType;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -32,9 +36,13 @@ import java.util.concurrent.TimeUnit;
  * You have a lot of control over how the graph is displayed with the metadata methods specific to this annotation.
  * <p>
  * Requires capability DATA_EXTENSION_GRAPH_API.
+ * <p>
+ * Does not support {@link Conditional}.
  *
  * @author AuroraLS3
  */
+@Retention(RetentionPolicy.RUNTIME)
+@Target(ElementType.METHOD)
 public @interface GraphPointProvider {
 
     /**

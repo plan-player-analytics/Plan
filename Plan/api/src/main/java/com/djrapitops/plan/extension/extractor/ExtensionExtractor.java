@@ -168,7 +168,8 @@ public final class ExtensionExtractor {
                 methods.get(method.getParameterType()).addGraphPointProviderMethod(method);
             });
             method.getAnnotation(GraphHistoryPointsProvider.class).ifPresent(annotation -> {
-                methods.get(method.getParameterType()).addGraphPointProviderMethod(method);
+                validateMethod(method);
+                methods.get(method.getParameterType()).addGraphHistoryPointsProviderMethod(method);
             });
 
             method.getAnnotation(Conditional.class).ifPresent(annotation -> conditionalMethods.add(method.getMethod()));
@@ -178,6 +179,11 @@ public final class ExtensionExtractor {
         if (methods.values().stream().allMatch(ExtensionMethods::isEmpty)) {
             throw new IllegalArgumentException(extensionName + " class had no methods annotated with a Provider annotation");
         }
+        validateGraphPointProviderMethodsExistForHistoryProviders();
+        validateConditionals();
+    }
+
+    private void validateGraphPointProviderMethodsExistForHistoryProviders() {
         Map<ExtensionMethod.ParameterType, List<String>> graphProviderMethodNames = methods.values().stream().map(ExtensionMethods::getGraphPointProviders)
                 .flatMap(Collection::stream)
                 .collect(Collectors.groupingBy(ExtensionMethod::getParameterType,
@@ -189,15 +195,14 @@ public final class ExtensionExtractor {
                 .forEach(method -> {
                             String referencedMethod = method.getAnnotation(GraphHistoryPointsProvider.class)
                                     .map(GraphHistoryPointsProvider::methodName).orElse(null);
-                            boolean referencedMethodExists = graphProviderMethodNames.get(method.getParameterType())
+                    boolean referencedMethodExists = graphProviderMethodNames
+                            .getOrDefault(method.getParameterType(), Collections.emptyList())
                                     .contains(referencedMethod);
                             if (!referencedMethodExists) {
-                                throw new IllegalArgumentException(extensionName + " class had no methods called '" + referencedMethod + "' but GraphHistoryPointsProvider " + method.getMethodName() + " refers to it.");
+                                throw new IllegalArgumentException(extensionName + " class had no methods called '" + referencedMethod + "' but GraphHistoryPointsProvider method '" + method.getMethodName() + "' refers to it.");
                             }
                         }
                 );
-
-        validateConditionals();
     }
 
     private <T> void validateReturnType(Method method, Class<T> expectedType) {
@@ -215,6 +220,12 @@ public final class ExtensionExtractor {
     private void validateMethodAnnotationPropertyLength(String property, String name, int maxLength, Method method) {
         if (property.length() > maxLength) {
             warnings.add(extensionName + "." + method.getName() + " '" + name + "' was over " + maxLength + " characters.");
+        }
+    }
+
+    private void validateMethodAnnotationPropertyRegex(String property, String name, String pattern, String explanation, Method method) {
+        if (!property.matches(pattern)) {
+            warnings.add(extensionName + "." + method.getName() + " '" + name + "', given '" + property + "' did not match regex '" + pattern + "' (" + explanation + ").");
         }
     }
 
@@ -346,8 +357,17 @@ public final class ExtensionExtractor {
 
         validateReturnType(method, DataPoint.class);
         validateMethodAnnotationPropertyLength(annotation.displayName(), "displayName", 50, method);
+        Arrays.stream(annotation.unitNames()).forEach(unitName -> validateMethodAnnotationPropertyLength(unitName, "unitNames", 50, method));
+        Arrays.stream(annotation.seriesColors()).forEach(color -> validateMethodAnnotationPropertyRegex(color, "seriesColors", "^#(?:[0-9a-fA-F]{3}){1,2}$", "hex code e.g. #aaaaaa", method));
         validateMethodArguments(method, false, UUID.class, String.class, Group.class);
         validateGraphStacking(method, annotation);
+    }
+
+    private void validateMethod(ExtensionMethod extensionMethod) {
+        Method method = extensionMethod.getMethod();
+
+        validateReturnType(method, DataPoint[].class);
+        validateMethodArguments(method, false, UUID.class, String.class, Group.class);
     }
 
     private void validateGraphStacking(Method method, GraphPointProvider annotation) {
@@ -368,12 +388,19 @@ public final class ExtensionExtractor {
             if (!hasAnyOf(conditionalMethod,
                     BooleanProvider.class, DoubleProvider.class, NumberProvider.class,
                     PercentageProvider.class, StringProvider.class, ComponentProvider.class,
-                    TableProvider.class, GroupProvider.class, DataBuilderProvider.class
+                    TableProvider.class, GroupProvider.class, DataBuilderProvider.class,
+                    GraphPointProvider.class, GraphHistoryPointsProvider.class
             )) {
                 throw new IllegalArgumentException(extensionName + "." + conditionalMethod.getName() + " did not have any associated Provider for Conditional.");
             }
             if (hasAnyOf(conditionalMethod, DataBuilderProvider.class)) {
                 throw new IllegalArgumentException(extensionName + "." + conditionalMethod.getName() + " had Conditional, but DataBuilderProvider does not support it!");
+            }
+            if (hasAnyOf(conditionalMethod, GraphPointProvider.class)) {
+                throw new IllegalArgumentException(extensionName + "." + conditionalMethod.getName() + " had Conditional, but GraphPointProvider does not support it!");
+            }
+            if (hasAnyOf(conditionalMethod, GraphHistoryPointsProvider.class)) {
+                throw new IllegalArgumentException(extensionName + "." + conditionalMethod.getName() + " had Conditional, but GraphHistoryPointsProvider does not support it!");
             }
         }
     }

@@ -18,9 +18,11 @@ package com.djrapitops.plan.extension.extractor;
 
 import com.djrapitops.plan.component.Component;
 import com.djrapitops.plan.extension.DataExtension;
+import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.Group;
 import com.djrapitops.plan.extension.annotation.*;
 import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
+import com.djrapitops.plan.extension.graph.DataPoint;
 import com.djrapitops.plan.extension.table.Table;
 import org.junit.jupiter.api.Test;
 
@@ -28,20 +30,19 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests for different validations of ExtensionExtractor.
  * <p>
- * This Test class contains only INVALID implementations of the DataExtension API.
+ * This Test class contains mostly INVALID implementations of the DataExtension API.
  *
  * @author AuroraLS3
  */
 class ExtensionExtractorTest {
 
     @Test
-    void pluginInfoIsRequired() {
+    void pluginInfoIsRequiredDuringValidation() {
         class Extension implements DataExtension {}
 
         ExtensionExtractor underTest = new ExtensionExtractor(new Extension());
@@ -49,7 +50,7 @@ class ExtensionExtractorTest {
     }
 
     @Test
-    void pluginInfoIsRequired2() {
+    void pluginInfoIsRequiredForPluginName() {
         class Extension implements DataExtension {}
 
         assertEquals("Extension did not have @PluginInfo annotation!", assertThrows(IllegalArgumentException.class, new Extension()::getPluginName).getMessage());
@@ -569,6 +570,202 @@ class ExtensionExtractorTest {
         ExtensionExtractor underTest = new ExtensionExtractor(extension);
         assertEquals(
                 "Extension.method had Conditional, but DataBuilderProvider does not support it!",
+                assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
+        );
+    }
+
+    @Test
+    void graphPointProviderReturnsDataPoint() {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @GraphPointProvider(displayName = "bad")
+            public Object method() {
+                return null;
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+        assertEquals(
+                "Extension.method has invalid return type. was: java.lang.Object, expected: com.djrapitops.plan.extension.graph.DataPoint",
+                assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
+        );
+    }
+
+    @Test
+    void graphPointProviderDoesNotSupportConditional() {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @Conditional("bad")
+            @GraphPointProvider(displayName = "ok")
+            public DataPoint method() {
+                return null;
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+        assertEquals(
+                "Extension.method had Conditional, but GraphPointProvider does not support it!",
+                assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
+        );
+    }
+
+    @Test
+    void graphHistoryPointsProviderDoesNotSupportConditional() {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @GraphPointProvider(displayName = "ok")
+            public DataPoint method() {
+                return null;
+            }
+
+            @Conditional("bad")
+            @GraphHistoryPointsProvider(methodName = "method")
+            public DataPoint[] method2() {
+                return null;
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+        assertEquals(
+                "Extension.method2 had Conditional, but GraphHistoryPointsProvider does not support it!",
+                assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
+        );
+    }
+
+    @Test
+    void graphPointProviderTooLongName() {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @GraphPointProvider(displayName = "aaaaaAAAAAbbbbbBBBBBcccccCCCCCdddddDDDDDeeeeeEEEEEfffffFFFF")
+            public DataPoint method() {
+                return null;
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+        assertEquals(
+                "Warnings: [Extension.method 'displayName' was over 50 characters.]",
+                assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
+        );
+    }
+
+    @Test
+    void graphPointProviderTooLongUnitName() {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @GraphPointProvider(displayName = "bad", unitNames = {"aaaaaAAAAAbbbbbBBBBBcccccCCCCCdddddDDDDDeeeeeEEEEEfffffFFFF"})
+            public DataPoint method() {
+                return null;
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+        assertEquals(
+                "Warnings: [Extension.method 'unitNames' was over 50 characters.]",
+                assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
+        );
+    }
+
+    @Test
+    void graphPointProviderInvalidHex() {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @GraphPointProvider(displayName = "bad", seriesColors = {"bad"})
+            public DataPoint method() {
+                return null;
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+        assertEquals(
+                "Warnings: [Extension.method 'seriesColors', given 'bad' did not match regex '^#(?:[0-9a-fA-F]{3}){1,2}$' (hex code e.g. #aaaaaa).]",
+                assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
+        );
+    }
+
+    @Test
+    void graphPointProviderStackingMismatchUnits() {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @GraphPointProvider(displayName = "bad", unitNames = {"Foo", "Bar"}, supportsStacking = true)
+            public DataPoint method() {
+                return null;
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+        assertEquals(
+                "Warnings: [Extension.method is set to supportsStacking: true, but unitNames has more than 1 unique unit. Stacking will be disabled.]",
+                assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
+        );
+    }
+
+    @Test
+    void graphPointProviderStackingMismatchFormats() {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @GraphPointProvider(displayName = "bad", valueFormats = {FormatType.DATE_SECOND, FormatType.NONE}, supportsStacking = true)
+            public DataPoint method() {
+                return null;
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+        assertEquals(
+                "Warnings: [Extension.method is set to supportsStacking: true, but moreFormats has more than 1 unique format. Stacking will be disabled.]",
+                assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
+        );
+    }
+
+    @Test
+    void graphPointProviderValidHex() {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @GraphPointProvider(displayName = "validHex", seriesColors = {"#333", "#abcdef", "#ABC839"})
+            public DataPoint method() {
+                return null;
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+        assertDoesNotThrow(underTest::validateAnnotations);
+    }
+
+    @Test
+    void graphHistoryPointsProviderReturnsDataPointArray() {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @GraphPointProvider(displayName = "ok")
+            public DataPoint method() {
+                return null;
+            }
+
+            @GraphHistoryPointsProvider(methodName = "method")
+            public Object method2() {
+                return null;
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+        assertEquals(
+                "Extension.method2 has invalid return type. was: java.lang.Object, expected: [Lcom.djrapitops.plan.extension.graph.DataPoint; (an array)",
+                assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
+        );
+    }
+
+    @Test
+    void graphHistoryPointsProviderMissingMethod() {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @GraphHistoryPointsProvider(methodName = "method")
+            public DataPoint[] method() {
+                return null;
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+        assertEquals(
+                "Extension class had no methods called 'method' but GraphHistoryPointsProvider method 'method' refers to it.",
                 assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
         );
     }
