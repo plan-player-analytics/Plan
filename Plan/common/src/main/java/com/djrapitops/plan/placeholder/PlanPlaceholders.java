@@ -24,6 +24,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.utilities.dev.Untrusted;
+import net.playeranalytics.plugin.server.PluginLogger;
 import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
@@ -54,15 +55,18 @@ public final class PlanPlaceholders {
 
     private final DBSystem dbSystem;
     private final Identifiers identifiers;
+    private final PluginLogger logger;
 
     @Inject
     public PlanPlaceholders(
             DBSystem dbSystem,
             Set<Placeholders> placeholderRegistries,
-            Identifiers identifiers
+            Identifiers identifiers,
+            PluginLogger logger
     ) {
         this.dbSystem = dbSystem;
         this.identifiers = identifiers;
+        this.logger = logger;
 
         this.playerPlaceholders = new HashMap<>();
         this.staticPlaceholders = new HashMap<>();
@@ -118,7 +122,8 @@ public final class PlanPlaceholders {
             if (dbSystem.getDatabase().getState() == Database.State.CLOSED) {
                 return "Plan Bug #3020, please report";
             }
-            throw e;
+            logger.warn("Failed to get data for placeholder '" + placeholder + "', " + e.getMessage(), e);
+            return "db error";
         }
     }
 
