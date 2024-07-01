@@ -63,6 +63,7 @@ public class CorrectWrongCharacterEncodingPatch extends Patch {
         String selectTablesWithWrongCharset = "SELECT CONCAT('ALTER TABLE `',  table_name, '` CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;')\n" +
                 "FROM information_schema.TABLES AS T, information_schema.`COLLATION_CHARACTER_SET_APPLICABILITY` AS C\n" +
                 "WHERE C.collation_name = T.table_collation\n" +
+                "AND T.table_name LIKE 'plan\\_%'\n" +
                 "AND T.table_schema = '" + databaseName + "'\n" +
                 "AND\n" +
                 "(\n" +
@@ -74,6 +75,7 @@ public class CorrectWrongCharacterEncodingPatch extends Patch {
         String selectColumnsWithWrongCharset = "SELECT CONCAT('ALTER TABLE `', table_name, '` MODIFY `', column_name, '` ', DATA_TYPE, '(', CHARACTER_MAXIMUM_LENGTH, ') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci', (CASE WHEN IS_NULLABLE = 'NO' THEN ' NOT NULL' ELSE '' END), ';')\n" +
                 "FROM information_schema.COLUMNS \n" +
                 "WHERE TABLE_SCHEMA = '" + databaseName + "'\n" +
+                "AND table_name LIKE 'plan\\_%'\n" +
                 "AND DATA_TYPE = 'varchar'\n" +
                 "AND\n" +
                 "(\n" +
