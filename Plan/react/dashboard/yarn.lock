@@ -2097,10 +2097,10 @@ hastscript@^6.0.0:
     property-information "^5.0.0"
     space-separated-tokens "^1.0.0"
 
-highcharts@^11.4.3:
-  version "11.4.3"
-  resolved "https://registry.yarnpkg.com/highcharts/-/highcharts-11.4.3.tgz#a6cd961e0a7d4bf749ff32db41a90125a6ab4673"
-  integrity sha512-rMmvYvcdwyUVfnRPfiZ0PnW6TgVhoS0FTBI8fc4Fp8l8ocoC9dMecvxS6E6tm7h7LrnSGoEo3b/0IRHuLatD2w==
+highcharts@^11.4.5:
+  version "11.4.5"
+  resolved "https://registry.yarnpkg.com/highcharts/-/highcharts-11.4.5.tgz#a46dd1f54d093f31f0ea631207ff329fd61abbcb"
+  integrity sha512-jUkojddxLFhyfZ+naLsRtYv/NjXEptcZ0/8bqSSS2aoz9sU80rb4LBJlYfyRFHBGw5sMkUqeaXsv66J49O8n7A==
 
 highlight.js@^10.4.1, highlight.js@~10.7.0:
   version "10.7.3"
