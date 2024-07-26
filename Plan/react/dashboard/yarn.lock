@@ -358,14 +358,7 @@
     core-js-pure "^3.30.2"
     regenerator-runtime "^0.14.0"
 
-"@babel/runtime@^7.12.5", "@babel/runtime@^7.21.0", "@babel/runtime@^7.22.15", "@babel/runtime@^7.23.2", "@babel/runtime@^7.23.9", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.3", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
-  version "7.23.9"
-  resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.23.9.tgz#47791a15e4603bb5f905bc0753801cf21d6345f7"
-  integrity sha512-0CX6F+BI2s9dkUqr08KFrAIZgNFj75rdBU/DjCyYLIaV/quFjkk6T+EJ2LkZHyZTbEV4L5p97mNkUsHl2wLFAw==
-  dependencies:
-    regenerator-runtime "^0.14.0"
-
-"@babel/runtime@^7.24.7":
+"@babel/runtime@^7.12.5", "@babel/runtime@^7.21.0", "@babel/runtime@^7.22.15", "@babel/runtime@^7.23.2", "@babel/runtime@^7.23.9", "@babel/runtime@^7.24.7", "@babel/runtime@^7.3.1", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.3", "@babel/runtime@^7.8.7", "@babel/runtime@^7.9.2":
   version "7.24.7"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.24.7.tgz#f4f0d5530e8dbdf59b3451b9b3e594b6ba082e12"
   integrity sha512-UwgBRMjJP+xv857DCngvqXI3Iq6J4v0wXmwc6sapg+zyhbwmQX67LUEFrkK5tbyJ30jGuG3ZvWpBiB9LCy1kWw==
@@ -2142,10 +2135,10 @@ i18next-localstorage-backend@^4.2.0:
   dependencies:
     "@babel/runtime" "^7.22.15"
 
-i18next@^23.11.5:
-  version "23.11.5"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-23.11.5.tgz#d71eb717a7e65498d87d0594f2664237f9e361ef"
-  integrity sha512-41pvpVbW9rhZPk5xjCX2TPJi2861LEig/YRhUkY+1FQ2IQPS0bKUDYnEqY8XPPbB48h1uIwLnP9iiEfuSl20CA==
+i18next@^23.12.2:
+  version "23.12.2"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-23.12.2.tgz#c5b44bb95e4d4a5908a51577fa06c63dc2f650a4"
+  integrity sha512-XIeh5V+bi8SJSWGL3jqbTEBW5oD6rbP5L+E7dVQh1MNTxxYef0x15rhJVcRb7oiuq4jLtgy2SD8eFlf6P2cmqg==
   dependencies:
     "@babel/runtime" "^7.23.2"
 
