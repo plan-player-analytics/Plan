@@ -94,7 +94,7 @@ subprojects {
         sqliteVersion = "3.42.0.1"
         adventureVersion = "4.17.0"
         hikariVersion = "5.1.0"
-        slf4jVersion = "2.0.13"
+        slf4jVersion = "2.0.15"
         geoIpVersion = "4.2.0"
         gsonVersion = "2.11.0"
         dependencyDownloadVersion = "1.3.1"
