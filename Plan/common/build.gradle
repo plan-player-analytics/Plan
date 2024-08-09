@@ -64,7 +64,7 @@ dependencies {
     mysqlDriver "com.mysql:mysql-connector-j:$mysqlVersion"
     mariadbDriver "org.mariadb.jdbc:mariadb-java-client:$mariadbVersion"
     sqliteDriver "org.xerial:sqlite-jdbc:$sqliteVersion"
-    sqliteDriver "org.slf4j:slf4j-nop:1.7.36"
+    sqliteDriver "org.slf4j:slf4j-nop:2.0.15"
     ipAddressMatcher "com.github.seancfoley:ipaddress:$ipAddressMatcherVersion"
 
     shadow "org.apache.commons:commons-text:$commonsTextVersion"
