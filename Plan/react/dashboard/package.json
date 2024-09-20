@@ -36,7 +36,7 @@
     "react-bootstrap": "^2.10.4",
     "react-bootstrap-range-slider": "^3.0.8",
     "react-dom": "^18.3.1",
-    "react-i18next": "^15.0.0",
+    "react-i18next": "^15.0.2",
     "react-mcjsonchat": "^1.0.0",
     "react-router-dom": "^6.26.0",
     "sass": "^1.77.8",
