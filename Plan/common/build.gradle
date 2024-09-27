@@ -4,7 +4,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 plugins {
     id "dev.vankka.dependencydownload.plugin" version "$dependencyDownloadVersion"
     id "com.github.node-gradle.node" version "7.0.2"
-    id "io.swagger.core.v3.swagger-gradle-plugin" version "2.2.22"
+    id "io.swagger.core.v3.swagger-gradle-plugin" version "2.2.24"
 }
 
 configurations {
