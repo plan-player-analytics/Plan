@@ -114,7 +114,8 @@ public class Contributors {
             new Contributor("liuzhen932", LANG),
             new Contributor("Sniper_TVmc", LANG),
             new Contributor("mcmdev", CODE),
-            new Contributor("ZhangYuheng", CODE)
+            new Contributor("ZhangYuheng", CODE),
+            new Contributor("Zaemong", LANG)
     };
 
     private Contributors() {
