@@ -81,7 +81,7 @@ subprojects {
         bungeeVersion = "1.16-R0.4"
         velocityVersion = "3.0.0-SNAPSHOT"
         redisBungeeVersion = "0.3.8-SNAPSHOT"
-        redisBungeeProxioDevVersion = "0.7.3"
+        redisBungeeProxioDevVersion = "0.12.5"
 
         commonsTextVersion = "1.12.0"
         commonsCompressVersion = "1.26.2"
