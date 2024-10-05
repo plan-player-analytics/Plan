@@ -18,6 +18,7 @@ package com.djrapitops.plan.extension.extractor;
 
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.Group;
+import org.apache.commons.lang3.StringUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -74,7 +75,7 @@ public class ExtensionMethod {
     }
 
     public String getMethodName() {
-        return getMethod().getName();
+        return StringUtils.truncate(getMethod().getName(), 50);
     }
 
     /**

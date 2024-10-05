@@ -16,8 +16,10 @@
  */
 package com.djrapitops.plan.storage.database.transactions.commands;
 
+import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveGraphTablesTransaction;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.sql.tables.extension.*;
+import com.djrapitops.plan.storage.database.sql.tables.extension.graph.*;
 import com.djrapitops.plan.storage.database.sql.tables.webuser.*;
 import com.djrapitops.plan.storage.database.transactions.events.StoreJoinAddressTransaction;
 import com.djrapitops.plan.storage.database.transactions.patches.Patch;
@@ -66,6 +68,17 @@ public class RemoveEverythingTransaction extends Patch {
         clearTable(ExtensionTabTable.TABLE_NAME);
         clearTable(ExtensionPluginTable.TABLE_NAME);
         clearTable(ExtensionIconTable.TABLE_NAME);
+
+        executeOther(new RemoveGraphTablesTransaction());
+        clearTable(ExtensionGraphUnitTable.ToProviderTable.TABLE_NAME);
+        clearTable(ExtensionGraphFormatTable.ToProviderTable.TABLE_NAME);
+        clearTable(ExtensionGraphColorTable.ToProviderTable.TABLE_NAME);
+        clearTable(ExtensionGraphAggregateTypeTable.ToProviderTable.TABLE_NAME);
+        clearTable(ExtensionGraphUnitTable.TABLE_NAME);
+        clearTable(ExtensionGraphFormatTable.TABLE_NAME);
+        clearTable(ExtensionGraphColorTable.TABLE_NAME);
+        clearTable(ExtensionGraphAggregateTypeTable.TABLE_NAME);
+        clearTable(ExtensionGraphMetadataTable.TABLE_NAME);
 
         executeOther(new StoreJoinAddressTransaction(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP));
     }

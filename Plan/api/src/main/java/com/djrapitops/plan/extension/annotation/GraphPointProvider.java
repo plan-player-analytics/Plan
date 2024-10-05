@@ -69,24 +69,6 @@ public @interface GraphPointProvider {
     XAxisType xAxisType() default XAxisType.DATE_MILLIS;
 
     /**
-     * Should the x-axis of the graph be visualized so that it starts and stops at specific value, growing if necessary.
-     *
-     * @return false by default
-     * @see GraphPointProvider#xAxisSoftMin()
-     * @see GraphPointProvider#xAxisSoftMax()
-     */
-    boolean xAxisSoftLimits() default false;
-
-    /**
-     * Should the y-axis of the graph be visualized so that it starts and stops at specific value, growing if necessary.
-     *
-     * @return false by default
-     * @see GraphPointProvider#yAxisSoftMin()
-     * @see GraphPointProvider#yAxisSoftMax()
-     */
-    boolean yAxisSoftLimits() default false;
-
-    /**
      * Minimum for x-axis, growing if necessary.
      *
      * @return 0 by default.
@@ -137,7 +119,7 @@ public @interface GraphPointProvider {
     /**
      * Hex color string of each series.
      * <p>
-     * Allows you to control color of your data.
+     * Allows you to control color of your data. You need to return hex codes at most 7 chars in length.
      * <p>
      * If this is left unspecified, a predefined color series used in visualization will be used.
      *
@@ -177,6 +159,8 @@ public @interface GraphPointProvider {
      * Define any aggregate functions the value series supports.
      * <p>
      * Automatic aggregate numbers (As if using {@link NumberProvider}) will be added to the same {@link Tab} if these are defined.
+     *
+     * If the graph has multiple series (multiple y values) there will be no aggregates.
      *
      * @return None by default.
      */

@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database.transactions.init;
 
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.sql.tables.extension.*;
+import com.djrapitops.plan.storage.database.sql.tables.extension.graph.*;
 import com.djrapitops.plan.storage.database.sql.tables.webuser.*;
 import com.djrapitops.plan.storage.database.transactions.events.StoreJoinAddressTransaction;
 import com.djrapitops.plan.storage.database.transactions.patches.SecurityTableIdPatch;
@@ -72,5 +73,10 @@ public class CreateTablesTransaction extends OperationCriticalTransaction {
         execute(ExtensionPlayerTableValueTable.createTableSQL(dbType));
         execute(ExtensionServerTableValueTable.createTableSQL(dbType));
         execute(ExtensionGroupsTable.createTableSQL(dbType));
+        execute(ExtensionGraphMetadataTable.createTableSQL(dbType));
+        execute(ExtensionGraphUnitTable.createTableSQL(dbType));
+        execute(ExtensionGraphFormatTable.createTableSQL(dbType));
+        execute(ExtensionGraphColorTable.createTableSQL(dbType));
+        execute(ExtensionGraphAggregateTypeTable.createTableSQL(dbType));
     }
 }

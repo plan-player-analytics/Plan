@@ -21,6 +21,7 @@ import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.annotation.BooleanProvider;
 import com.djrapitops.plan.extension.annotation.Conditional;
+import com.djrapitops.plan.extension.annotation.GraphPointProvider;
 import com.djrapitops.plan.extension.annotation.PluginInfo;
 import com.djrapitops.plan.extension.builder.DataValue;
 import com.djrapitops.plan.extension.builder.ValueBuilder;
@@ -133,6 +134,10 @@ public class ExtValueBuilder implements ValueBuilder {
 
     private ProviderInformation getPercentageProviderInformation() {
         return getProviderInformation(true, false, null);
+    }
+
+    public ProviderInformation buildProviderInfo(@SuppressWarnings("unused") GraphPointProvider annotation) {
+        return getProviderInformation();
     }
 
     private ProviderInformation getProviderInformation(boolean percentage, boolean component, String providedCondition) {

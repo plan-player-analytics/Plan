@@ -23,6 +23,7 @@ import com.djrapitops.plan.extension.implementation.ExtensionRegister;
 import com.djrapitops.plan.extension.implementation.ExtensionWrapper;
 import com.djrapitops.plan.extension.implementation.builder.ExtDataBuilder;
 import com.djrapitops.plan.extension.implementation.providers.gathering.DataValueGatherer;
+import com.djrapitops.plan.extension.implementation.providers.gathering.GraphSamplers;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.UUIDUtility;
 import com.djrapitops.plan.processing.Processing;
@@ -56,6 +57,7 @@ public class ExtensionSvc implements ExtensionService {
     private final ServerInfo serverInfo;
     private final Processing processing;
     private final ExtensionRegister extensionRegister;
+    private final GraphSamplers graphSamplers;
     private final UUIDUtility uuidUtility;
     private final PluginLogger logger;
     private final ErrorLogger errorLogger;
@@ -71,6 +73,7 @@ public class ExtensionSvc implements ExtensionService {
             ServerInfo serverInfo,
             Processing processing,
             ExtensionRegister extensionRegister,
+            GraphSamplers graphSamplers,
             UUIDUtility uuidUtility,
             PluginLogger logger,
             ErrorLogger errorLogger
@@ -81,6 +84,7 @@ public class ExtensionSvc implements ExtensionService {
         this.serverInfo = serverInfo;
         this.processing = processing;
         this.extensionRegister = extensionRegister;
+        this.graphSamplers = graphSamplers;
         this.uuidUtility = uuidUtility;
         this.logger = logger;
         this.errorLogger = errorLogger;
@@ -123,6 +127,8 @@ public class ExtensionSvc implements ExtensionService {
         DataValueGatherer gatherer = new DataValueGatherer(extension, dbSystem, componentService, serverInfo, errorLogger);
         gatherer.storeExtensionInformation();
         extensionGatherers.put(pluginName, gatherer);
+        graphSamplers.registerGraphSamplers(extension);
+        graphSamplers.storePlayerGraphMetadata(extension);
 
         processing.submitNonCritical(() -> updateServerValues(gatherer, CallEvents.SERVER_EXTENSION_REGISTER));
 

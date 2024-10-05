@@ -25,13 +25,37 @@ package com.djrapitops.plan.extension.graph;
  */
 public enum Aggregates {
 
+    /**
+     * SUM that can be filtered by time value x, eg. last 30 days
+     */
     SUM_OVER_TIME,
+    /**
+     * MEAN (average) that can be filtered by time value x, eg. last 30 days
+     */
     MEAN_OVER_TIME,
+    /**
+     * MIN that can be filtered by time value x, eg. last 30 days
+     */
     MIN_OVER_TIME,
+    /**
+     * MAX that can be filtered by time value x, eg. last 30 days
+     */
     MAX_OVER_TIME,
+    /**
+     * Cumulative SUM over all points
+     */
     SUM_TOTAL,
+    /**
+     * MEAN (average) over all points
+     */
     MEAN_TOTAL,
+    /**
+     * Minimum seen point.
+     */
     MIN_TOTAL,
+    /**
+     * Maximum seen point.
+     */
     MAX_TOTAL,
 
 }

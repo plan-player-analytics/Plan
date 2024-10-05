@@ -16,11 +16,13 @@
  */
 package com.djrapitops.plan.storage.database.transactions.commands;
 
+import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionGraphQueries;
 import com.djrapitops.plan.storage.database.queries.PlayerFetchQueries;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionGroupsTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPlayerTableValueTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPlayerValueTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.graph.ExtensionGraphMetadataTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
@@ -59,6 +61,8 @@ public class RemovePlayerTransaction extends ThrowawayTransaction {
         deleteFromUserIdTable(SessionsTable.TABLE_NAME);
         deleteFromUserIdTable(PingTable.TABLE_NAME);
         deleteFromUserIdTable(UserInfoTable.TABLE_NAME);
+        query(ExtensionGraphQueries.findGraphTableNames(ExtensionGraphMetadataTable.TableType.PLAYER))
+                .forEach(this::deleteFromUserIdTable);
         deleteFromTable(UsersTable.TABLE_NAME);
 
         deleteFromTable(ExtensionPlayerTableValueTable.TABLE_NAME);

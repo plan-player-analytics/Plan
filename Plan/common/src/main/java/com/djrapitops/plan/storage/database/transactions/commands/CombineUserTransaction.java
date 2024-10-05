@@ -16,8 +16,10 @@
  */
 package com.djrapitops.plan.storage.database.transactions.commands;
 
+import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionGraphQueries;
 import com.djrapitops.plan.storage.database.queries.objects.BaseUserQueries;
 import com.djrapitops.plan.storage.database.sql.tables.*;
+import com.djrapitops.plan.storage.database.sql.tables.extension.graph.ExtensionGraphMetadataTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
 
@@ -52,6 +54,8 @@ public class CombineUserTransaction extends ChangeUserUUIDTransaction {
         execute(updateUserId(PingTable.TABLE_NAME, PingTable.USER_ID, oldId, newId));
         execute(updateUserId(SessionsTable.TABLE_NAME, SessionsTable.USER_ID, oldId, newId));
         execute(updateUserId(WorldTimesTable.TABLE_NAME, WorldTimesTable.USER_ID, oldId, newId));
+        query(ExtensionGraphQueries.findGraphTableNames(ExtensionGraphMetadataTable.TableType.PLAYER))
+                .forEach(tableName -> execute(updateUserId(tableName, "user_id", oldId, newId)));
 
         execute(updateUserInfo(newId, oldId));
         execute(DELETE_FROM + UserInfoTable.TABLE_NAME + WHERE + UserInfoTable.USER_ID + "=" + oldId);

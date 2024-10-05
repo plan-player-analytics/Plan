@@ -16,11 +16,13 @@
  */
 package com.djrapitops.plan.storage.database.transactions.init;
 
+import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionGraphQueries;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.ExtensionSettings;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.extension.*;
+import com.djrapitops.plan.storage.database.sql.tables.extension.graph.*;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
@@ -51,7 +53,10 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
 
     @Override
     protected void performOperations() {
-        for (Integer providerID : query(inactiveProviderIDsQuery())) {
+        Collection<Integer> inactiveProviderIds = query(inactiveProviderIDsQuery());
+        query(ExtensionGraphQueries.findGraphTableNames(inactiveProviderIds))
+                .forEach(tableName -> execute("DROP TABLE IF EXISTS " + tableName));
+        for (Integer providerID : inactiveProviderIds) {
             removeValues(providerID);
         }
         for (Integer providerID : query(inactiveTableProviderIDsQuery())) {
@@ -64,14 +69,14 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
         for (String table : new String[]{
                 ExtensionPlayerValueTable.TABLE_NAME,
                 ExtensionServerValueTable.TABLE_NAME,
-                ExtensionGroupsTable.TABLE_NAME
+                ExtensionGroupsTable.TABLE_NAME,
+                ExtensionGraphUnitTable.ToProviderTable.TABLE_NAME,
+                ExtensionGraphFormatTable.ToProviderTable.TABLE_NAME,
+                ExtensionGraphColorTable.ToProviderTable.TABLE_NAME,
+                ExtensionGraphAggregateTypeTable.ToProviderTable.TABLE_NAME,
+                ExtensionGraphMetadataTable.TABLE_NAME
         }) {
-            execute(new ExecStatement(DELETE_FROM + table + WHERE + "provider_id=?") {
-                @Override
-                public void prepare(PreparedStatement statement) throws SQLException {
-                    statement.setInt(1, providerID);
-                }
-            });
+            execute(DELETE_FROM + table + WHERE + "provider_id=" + providerID);
         }
     }
 
@@ -80,12 +85,7 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
                 ExtensionPlayerTableValueTable.TABLE_NAME,
                 ExtensionServerTableValueTable.TABLE_NAME
         }) {
-            execute(new ExecStatement(DELETE_FROM + table + WHERE + "table_id=?") {
-                @Override
-                public void prepare(PreparedStatement statement) throws SQLException {
-                    statement.setInt(1, providerID);
-                }
-            });
+            execute(DELETE_FROM + table + WHERE + "table_id=" + providerID);
         }
     }
 
