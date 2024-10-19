@@ -115,6 +115,10 @@ subprojects {
     repositories {
         mavenCentral()
         google()
+        //FIXME Temporary fix for providing the dependency in local development environment
+        maven {
+            url 'file://C:/Users//yanni/.m2/repository'
+        }
         maven { url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" } // Spigot
         maven { url = "https://papermc.io/repo/repository/maven-public/" } // Paper
         maven { url = "https://repo.spongepowered.org/repository/maven-public/" } // Sponge

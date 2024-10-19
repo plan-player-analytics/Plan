@@ -17,6 +17,7 @@ softdepend:
   - DKCoins
   - DKBans
   - Essentials
+  - CMI
   - Factions
   - FastLogin
   - GriefPrevention
