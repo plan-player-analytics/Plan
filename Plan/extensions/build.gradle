@@ -11,6 +11,7 @@ dependencies {
     shadow 'net.playeranalytics:Extension-DKBans:2.1.2-R1.3'
     shadow 'net.playeranalytics:Extension-DKCoins:3.0.5-R1.1'
     shadow 'net.playeranalytics:Extension-EssentialsX:2.15.0-R2.0'
+    shadow 'net.playeranalytics:Extension-CMI:9.7.4.1'
     shadow 'net.playeranalytics:Extension-Factions:2.14.0-R1.1'
     shadow 'net.playeranalytics:Extension-FactionsUUID:1.6.9.5-U0.5.25-R1.1'
     shadow 'net.playeranalytics:Extension-FastLogin:R1.3'
