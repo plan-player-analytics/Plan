@@ -93,7 +93,7 @@ subprojects {
         mariadbVersion = "3.4.1"
         sqliteVersion = "3.42.0.1"
         adventureVersion = "4.17.0"
-        hikariVersion = "5.1.0"
+        hikariVersion = "6.1.0"
         slf4jVersion = "2.0.13"
         geoIpVersion = "4.2.0"
         gsonVersion = "2.11.0"
