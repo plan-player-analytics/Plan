@@ -89,11 +89,17 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
         return versionChecker.getCurrentVersion();
     }
 
+    private static boolean isServerThread() {
+        String threadName = Thread.currentThread().getName();
+        return "Server thread".equalsIgnoreCase(threadName) // Spigot
+                || threadName != null && threadName.contains("Region Scheduler Thread"); // Folia
+    }
+
     @Override
     public String onRequest(OfflinePlayer player, @Untrusted String params) {
         try {
             UUID uuid = player != null ? player.getUniqueId() : null;
-            if ("Server thread".equalsIgnoreCase(Thread.currentThread().getName())) {
+            if (isServerThread()) {
                 return getCached(params, uuid);
             }
 
