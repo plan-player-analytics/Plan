@@ -252,6 +252,11 @@ public class ServerPlaceHolders implements Placeholders {
                                 .map(TopListQueries.TopListEntry::getValue)
                                 .map(query.getCategory().equals("player_kills") ? Function.identity() : formatters.timeAmount())
                                 .orElse("-"));
+                placeholders.registerStatic(String.format("top_%s_%s_%s_value_raw", query.getCategory(), query.getTimeSpan(), nth + 1),
+                        parameters -> database.query(query.getQuery(nth, parameters))
+                                .map(TopListQueries.TopListEntry::getValue)
+                                .map(String::valueOf)
+                                .orElse("-"));
             }
         }
     }
