@@ -17,28 +17,34 @@
 package com.djrapitops.plan.gathering.geolocation;
 
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.ConfigSystem;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import extension.FullSystemExtension;
 import net.playeranalytics.plugin.server.PluginLogger;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
 import utilities.TestErrorLogger;
 import utilities.TestPluginLogger;
+import utilities.TestResources;
 import utilities.mocks.TestProcessing;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.StringReader;
+import java.net.URISyntaxException;
 import java.nio.file.Files;
-import java.util.HashMap;
-import java.util.Map;
+import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
+import java.util.*;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -116,6 +122,40 @@ class GeolocationTest {
 
             assertSame(countrySecondCall, countryThirdCall);
             assertEquals(expIp, countryThirdCall);
+        }
+    }
+
+    // Test utility for reading https://cable.ayra.ch/ip/data/countries.json for getting first IP of each country
+    // Have to manually remove 3 first ones and the IPv6 addresses at the end.
+    public static void main(String[] args) throws URISyntaxException, IOException {
+        File testResourceFile = TestResources.getTestResourceFile("countries.json", GeolocationTest.class);
+        String read = Files.readString(testResourceFile.toPath());
+        Map<String, Map<String, List<String>>> contents = new Gson().fromJson(new StringReader(read), new TypeToken<>() {}.getType());
+        List<String> singleIpPerCountry = contents.values().stream()
+                .map(Map::values)
+                .map(set -> set.stream().findFirst())
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(list -> list.get(0))
+                .map(string -> string.split("/")[0])
+                .toList();
+        Path write = new File("src/test/resources/countries-reduced.txt").toPath();
+        Files.write(write, singleIpPerCountry, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
+    }
+
+    @TestFactory
+    @DisplayName("Country has geocode")
+    Collection<DynamicTest> everyCountryHasCodeInGeocodesJson(Graphs graphs) throws URISyntaxException, IOException {
+        Map<String, String> geocodes = graphs.special().getGeocodes();
+        File testResourceFile = TestResources.getTestResourceFile("countries-reduced.txt", GeolocationTest.class);
+        try (Stream<String> lines = Files.lines(testResourceFile.toPath())) {
+            return lines
+                    .map(underTest::getCountry)
+                    .distinct()
+                    .map(country -> DynamicTest.dynamicTest(country, () -> {
+                        assertTrue(geocodes.containsKey(country.toLowerCase()),
+                                () -> "Country '" + country + "' had no geocode associated with it.");
+                    })).toList();
         }
     }
 }
