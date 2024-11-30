@@ -44,11 +44,6 @@
             <property name="max" value="50"/>
         </module>
 
-        <module name="MethodLength">
-            <!-- This value is high. Notable: InspectPage: 138 -->
-            <property name="max" value="150"/>
-        </module>
-
         <!-- Java Style -->
         <module name="ArrayTypeStyle"/>
         <module name="AvoidNestedBlocks"/>
