@@ -31,6 +31,7 @@ import net.playeranalytics.extension.discordsrv.DiscordSRVExtensionFactory;
 import net.playeranalytics.extension.dkbans.DKBansExtensionFactory;
 import net.playeranalytics.extension.dkcoins.DKCoinsExtensionFactory;
 import net.playeranalytics.extension.essentials.EssentialsExtensionFactory;
+import net.playeranalytics.extension.cmi.CMIExtensionFactory;
 import net.playeranalytics.extension.factions.FactionsExtensionFactory;
 import net.playeranalytics.extension.factionsuuid.FactionsUUIDExtensionFactory;
 import net.playeranalytics.extension.fastlogin.FastLoginExtensionFactory;
@@ -112,6 +113,7 @@ public class ExtensionRegister {
         register(new DKCoinsExtensionFactory(), DKCoinsExtensionFactory::createExtension, DKCoinsExtensionFactory::registerListener);
         register(new EssentialsExtensionFactory(), EssentialsExtensionFactory::createExtension, EssentialsExtensionFactory::registerUpdateListeners);
         register(new EssentialsExtensionFactory(), EssentialsExtensionFactory::createEcoExtension, EssentialsExtensionFactory::registerEconomyUpdateListeners);
+        register(new CMIExtensionFactory(), CMIExtensionFactory::createCMIExtension, CMIExtensionFactory::registerCMIUpdateListeners);
         register(new FactionsExtensionFactory(), FactionsExtensionFactory::createExtension);
         register(new FactionsUUIDExtensionFactory(), FactionsUUIDExtensionFactory::createExtension, FactionsUUIDExtensionFactory::registerExpansion);
         register(new FastLoginExtensionFactory(), FastLoginExtensionFactory::createExtension);
