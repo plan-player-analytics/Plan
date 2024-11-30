@@ -1744,10 +1744,10 @@ hastscript@^6.0.0:
     property-information "^5.0.0"
     space-separated-tokens "^1.0.0"
 
-highcharts@^11.4.8:
-  version "11.4.8"
-  resolved "https://registry.yarnpkg.com/highcharts/-/highcharts-11.4.8.tgz#252e71b81c24ec9f99e756b76dbebd7546e18dda"
-  integrity sha512-5Tke9LuzZszC4osaFisxLIcw7xgNGz4Sy3Jc9pRMV+ydm6sYqsPYdU8ELOgpzGNrbrRNDRBtveoR5xS3SzneEA==
+highcharts@^12.0.1:
+  version "12.0.1"
+  resolved "https://registry.yarnpkg.com/highcharts/-/highcharts-12.0.1.tgz#a8c45938a510fc23ca5380dbfec5f82cd0eee5c9"
+  integrity sha512-86pku0cZnHfEu6uqbbEpU50XKHcAFFXeD4pYvxlVBRDLRDlxpT0WuClgJBuBJZof1ZjFUh1D7IxUxFgt9Epb7Q==
 
 highlight.js@^10.4.1, highlight.js@~10.7.0:
   version "10.7.3"
@@ -2306,7 +2306,7 @@ react-debounce-input@=3.3.0:
     loose-envify "^1.1.0"
     scheduler "^0.23.2"
 
-react-i18next@^15.1.12:
+react-i18next@^15.1.3:
   version "15.1.3"
   resolved "https://registry.yarnpkg.com/react-i18next/-/react-i18next-15.1.3.tgz#172c3905038ea4f90699a19949a0084b5641c94f"
   integrity sha512-J11oA30FbM3NZegUZjn8ySK903z6PLBz/ZuBYyT1JMR0QPrW6PFXvl1WoUhortdGi9dM0m48/zJQlPskVZXgVw==
