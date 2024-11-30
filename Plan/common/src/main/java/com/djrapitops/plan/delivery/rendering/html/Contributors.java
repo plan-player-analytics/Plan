@@ -115,6 +115,7 @@ public class Contributors {
             new Contributor("Sniper_TVmc", LANG),
             new Contributor("mcmdev", CODE),
             new Contributor("ZhangYuheng", CODE),
+            new Contributor("Zaemong", LANG),
             new Contributor("YannicHock", CODE)
     };
 
