@@ -8,11 +8,13 @@ import {useTheme} from "../../../hooks/themeHook";
 import {withReducedSaturation} from "../../../util/colors";
 import Accessibility from "highcharts/modules/accessibility";
 import {useMetadata} from "../../../hooks/metadataHook";
+import {useAuth} from "../../../hooks/authenticationHook.jsx";
 
 const TpsPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
     const {t} = useTranslation();
     const {graphTheming, nightModeEnabled} = useTheme();
     const {timeZoneOffsetMinutes} = useMetadata();
+    const {hasPermission} = useAuth();
 
     useEffect(() => {
         const zones = {
@@ -30,14 +32,15 @@ const TpsPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
 
         const spline = 'spline'
         const series = {
-            playersOnline: {
+            playersOnline: hasPermission('page.server.performance.graphs.players.online') ? {
                 name: t('html.label.playersOnline'),
                 type: 'areaspline',
                 tooltip: tooltip.zeroDecimals,
                 data: dataSeries.playersOnline,
                 color: data.colors.playersOnline,
                 yAxis: 0
-            }, tps: {
+            } : {},
+            tps: hasPermission('page.server.performance.graphs.tps') ? {
                 name: t('html.label.tps'),
                 type: spline,
                 color: nightModeEnabled ? withReducedSaturation(data.colors.high) : data.colors.high,
@@ -45,7 +48,7 @@ const TpsPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
                 tooltip: tooltip.twoDecimals,
                 data: dataSeries.tps,
                 yAxis: 1
-            }
+            } : {}
         };
 
         NoDataDisplay(Highcharts);

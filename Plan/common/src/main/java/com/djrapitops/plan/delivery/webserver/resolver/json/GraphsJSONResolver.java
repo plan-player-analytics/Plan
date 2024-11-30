@@ -218,10 +218,29 @@ public class GraphsJSONResolver extends JSONResolver {
     private List<WebPermission> getRequiredPermission(DataID dataID) {
         switch (dataID) {
             case GRAPH_PERFORMANCE:
-                return List.of(WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS);
+                return List.of(WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS,
+                        WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS_PLAYERS_ONLINE,
+                        WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS_TPS,
+                        WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS_CPU,
+                        WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS_RAM,
+                        WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS_CHUNKS,
+                        WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS_DISK
+                );
             case GRAPH_PING:
+                return List.of(WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS,
+                        WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS_PING,
+                        WebPermission.PAGE_NETWORK_PERFORMANCE
+                );
             case GRAPH_OPTIMIZED_PERFORMANCE:
-                return List.of(WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS, WebPermission.PAGE_NETWORK_PERFORMANCE);
+                return List.of(WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS,
+                        WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS_PLAYERS_ONLINE,
+                        WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS_TPS,
+                        WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS_CPU,
+                        WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS_RAM,
+                        WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS_CHUNKS,
+                        WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS_DISK,
+                        WebPermission.PAGE_NETWORK_PERFORMANCE
+                );
             case GRAPH_ONLINE:
                 return List.of(WebPermission.PAGE_SERVER_OVERVIEW_PLAYERS_ONLINE_GRAPH, WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_ONLINE);
             case GRAPH_UNIQUE_NEW:

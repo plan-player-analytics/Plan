@@ -67,7 +67,7 @@ const PingGraphTab = ({identifier}) => {
 
 const PerformanceGraphsCard = () => {
     const {t} = useTranslation();
-    const {authRequired, hasPermission} = useAuth();
+    const {authRequired, hasPermission, hasChildPermission} = useAuth();
 
     const {identifier} = useParams();
     const {data, loadingError} = useDataRequest(fetchOptimizedPerformance, [identifier]);
@@ -115,33 +115,40 @@ const PerformanceGraphsCard = () => {
         }
     }, [pluginHistory, setPluginHistorySeries, t]);
 
+    const tabs = [
+        {
+            name: t('html.label.all'), icon: faGears, color: 'blue-grey', href: 'all',
+            element: <AllGraphTab data={data} dataSeries={parsedData} pluginHistorySeries={pluginHistorySeries}
+                                  loadingError={loadingError || pluginHistoryLoadingError}/>,
+            permission: 'page.server.performance.graphs'
+        }, {
+            name: t('html.label.tps'), icon: faTachometerAlt, color: 'red', href: 'tps',
+            element: <TpsGraphTab data={data} dataSeries={parsedData} pluginHistorySeries={pluginHistorySeries}
+                                  loadingError={loadingError || pluginHistoryLoadingError}/>,
+            permission: 'page.server.performance.graphs.tps'
+        }, {
+            name: t('html.label.cpuRam'), icon: faMicrochip, color: 'light-green', href: 'cpu-ram',
+            element: <CpuRamGraphTab data={data} dataSeries={parsedData} pluginHistorySeries={pluginHistorySeries}
+                                     loadingError={loadingError || pluginHistoryLoadingError}/>,
+            permission: ['page.server.performance.graphs.cpu', 'page.server.performance.graphs.ram']
+        }, {
+            name: t('html.label.world'), icon: faMap, color: 'purple', href: 'world-load',
+            element: <WorldGraphTab data={data} dataSeries={parsedData} pluginHistorySeries={pluginHistorySeries}
+                                    loadingError={loadingError || pluginHistoryLoadingError}/>,
+            permission: ['page.server.performance.graphs.entities', 'page.server.performance.graphs.chunks']
+        }, {
+            name: t('html.label.ping'), icon: faSignal, color: 'amber', href: 'ping',
+            element: <PingGraphTab identifier={identifier}/>,
+            permission: 'page.server.performance.graphs.ping'
+        }, {
+            name: t('html.label.diskSpace'), icon: faHdd, color: 'green', href: 'disk',
+            element: <DiskGraphTab data={data} dataSeries={parsedData} pluginHistorySeries={pluginHistorySeries}
+                                   loadingError={loadingError || pluginHistoryLoadingError}/>,
+            permission: 'page.server.performance.graphs.disk'
+        },
+    ].filter(tab => hasChildPermission(tab.permission));
     return <Card id={"performance-graphs"}>
-        <CardTabs tabs={[
-            {
-                name: t('html.label.all'), icon: faGears, color: 'blue-grey', href: 'all',
-                element: <AllGraphTab data={data} dataSeries={parsedData} pluginHistorySeries={pluginHistorySeries}
-                                      loadingError={loadingError || pluginHistoryLoadingError}/>
-            }, {
-                name: t('html.label.tps'), icon: faTachometerAlt, color: 'red', href: 'tps',
-                element: <TpsGraphTab data={data} dataSeries={parsedData} pluginHistorySeries={pluginHistorySeries}
-                                      loadingError={loadingError || pluginHistoryLoadingError}/>
-            }, {
-                name: t('html.label.cpuRam'), icon: faMicrochip, color: 'light-green', href: 'cpu-ram',
-                element: <CpuRamGraphTab data={data} dataSeries={parsedData} pluginHistorySeries={pluginHistorySeries}
-                                         loadingError={loadingError || pluginHistoryLoadingError}/>
-            }, {
-                name: t('html.label.world'), icon: faMap, color: 'purple', href: 'world-load',
-                element: <WorldGraphTab data={data} dataSeries={parsedData} pluginHistorySeries={pluginHistorySeries}
-                                        loadingError={loadingError || pluginHistoryLoadingError}/>
-            }, {
-                name: t('html.label.ping'), icon: faSignal, color: 'amber', href: 'ping',
-                element: <PingGraphTab identifier={identifier}/>
-            }, {
-                name: t('html.label.diskSpace'), icon: faHdd, color: 'green', href: 'disk',
-                element: <DiskGraphTab data={data} dataSeries={parsedData} pluginHistorySeries={pluginHistorySeries}
-                                       loadingError={loadingError || pluginHistoryLoadingError}/>
-            },
-        ]}/>
+        <CardTabs tabs={tabs}/>
     </Card>
 }
 
