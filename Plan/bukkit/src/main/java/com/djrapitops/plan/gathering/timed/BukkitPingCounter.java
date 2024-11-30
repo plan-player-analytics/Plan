@@ -87,7 +87,7 @@ public class BukkitPingCounter extends TaskSystem.Task implements Listener {
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         startRecording = new ConcurrentHashMap<>();
-        playerHistory = new HashMap<>();
+        playerHistory = new ConcurrentHashMap<>();
 
         Optional<PingMethod> loaded = loadPingMethod();
         if (loaded.isPresent()) {
