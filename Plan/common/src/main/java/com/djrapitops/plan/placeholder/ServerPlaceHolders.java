@@ -17,6 +17,8 @@
 package com.djrapitops.plan.placeholder;
 
 import com.djrapitops.plan.commands.use.Arguments;
+import com.djrapitops.plan.delivery.domain.DateObj;
+import com.djrapitops.plan.delivery.domain.mutators.DateObjMutator;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.gathering.ServerUptimeCalculator;
@@ -84,6 +86,22 @@ public class ServerPlaceHolders implements Placeholders {
 
         Database database = dbSystem.getDatabase();
 
+        placeholders.registerStatic("network_players_online",
+                parameters -> {
+                    DateObj<Long> count = new DateObj<>(System.currentTimeMillis(), 0L);
+                    for (Server proxy : database.query(ServerQueries.fetchProxyServers())) {
+                        ServerUUID proxyUUID = proxy.getUuid();
+                        new DateObjMutator<>(database.query(TPSQueries.fetchPlayersOnlineOfServer(fiveMinAgo(), now(), proxyUUID)))
+                                .mostRecent()
+                                .ifPresent(playersOnline -> {
+                                    if (Math.abs(count.getDate() - playersOnline.getDate()) > TimeUnit.MINUTES.toMillis(2L)) {
+                                        count.setValue(count.getValue() + playersOnline.getValue());
+                                    }
+                                });
+                    }
+                    return count.getValue();
+                });
+
         placeholders.registerStatic("server_players_registered_total",
                 parameters -> database.query(PlayerCountQueries.newPlayerCount(0, now(), getServerUUID(parameters))));
 
@@ -131,6 +149,14 @@ public class ServerPlaceHolders implements Placeholders {
 
         placeholders.registerStatic("network_players_unique_month",
                 parameters -> database.query(PlayerCountQueries.uniquePlayerCount(monthAgo(), now())));
+
+        placeholders.registerStatic("server_players_online",
+                parameters -> new DateObjMutator<>(
+                        database.query(TPSQueries.fetchPlayersOnlineOfServer(fiveMinAgo(), now(), getServerUUID(parameters))))
+                        .mostRecent()
+                        .map(DateObj::getValue)
+                        .map(String::valueOf)
+                        .orElse("-"));
 
         placeholders.registerStatic("server_tps_day",
                 parameters -> decimals.apply(database.query(TPSQueries.averageTPS(dayAgo(), now(), getServerUUID(parameters)))));
@@ -270,7 +296,7 @@ public class ServerPlaceHolders implements Placeholders {
         );
     }
 
-    interface QueryCreator<T> {
+    public interface QueryCreator<T> {
         Query<Optional<TopListQueries.TopListEntry<T>>> apply(Integer number, Long timespan, @Untrusted Arguments parameters);
     }
 

@@ -26,7 +26,7 @@ import java.util.Objects;
 public class DateObj<T> implements DateHolder {
 
     private final long date;
-    private final T value;
+    private T value;
 
     public DateObj(long date, T value) {
         this.date = date;
@@ -40,6 +40,10 @@ public class DateObj<T> implements DateHolder {
 
     public T getValue() {
         return value;
+    }
+
+    public void setValue(T value) {
+        this.value = value;
     }
 
     @Override
