@@ -51,7 +51,7 @@ import java.nio.file.Path;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.djrapitops.plan.delivery.export.ExportTestUtilities.assertNoLogs;
 
 /**
  * This test class is for catching any JavaScript errors.
@@ -140,7 +140,7 @@ class JSErrorRegressionTest {
                 logs.addAll(driver.manage().logs().get(LogType.CLIENT).getAll());
                 logs.addAll(driver.manage().logs().get(LogType.BROWSER).getAll());
 
-                assertNoLogs("'" + address + "',", logs);
+                assertNoLogs(logs, address);
             } finally {
                 locale.clear(); // Reset locale after test
             }
@@ -170,7 +170,7 @@ class JSErrorRegressionTest {
             logs.addAll(driver.manage().logs().get(LogType.CLIENT).getAll());
             logs.addAll(driver.manage().logs().get(LogType.BROWSER).getAll());
 
-            assertNoLogs("Page link '" + address + "'->'" + href + "' issue: ", logs);
+            assertNoLogs(logs, "Page link '" + address + "'->'" + href + "'");
             System.out.println("'" + address + "' has link to " + href);
         }
     }
@@ -189,13 +189,5 @@ class JSErrorRegressionTest {
         } catch (StaleElementReferenceException e) {
             return getLinks(driver, attempt + 1);
         }
-    }
-
-
-    private void assertNoLogs(String testName, List<LogEntry> logs) {
-        assertTrue(logs.isEmpty(), () -> testName + "Browser console included " + logs.size() + " logs: " + logs.stream()
-                .map(log -> "\n" + log.getLevel().getName() + " " + log.getMessage())
-                .filter(log -> !log.contains("fonts.gstatic.com") && !log.contains("fonts.googleapis.com"))
-                .toList());
     }
 }
