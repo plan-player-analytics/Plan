@@ -8,38 +8,42 @@ import {useTheme} from "../../../hooks/themeHook";
 import {withReducedSaturation} from "../../../util/colors";
 import Accessibility from "highcharts/modules/accessibility";
 import {useMetadata} from "../../../hooks/metadataHook";
+import {useAuth} from "../../../hooks/authenticationHook.jsx";
 
 const WorldPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
     const {t} = useTranslation();
     const {graphTheming, nightModeEnabled} = useTheme();
     const {timeZoneOffsetMinutes} = useMetadata();
+    const {hasPermission} = useAuth();
 
     useEffect(() => {
         const spline = 'spline'
 
         const series = {
-            playersOnline: {
+            playersOnline: hasPermission('page.server.performance.graphs.players.online') ? {
                 name: t('html.label.playersOnline'),
                 type: 'areaspline',
                 tooltip: tooltip.zeroDecimals,
                 data: dataSeries.playersOnline,
                 color: data.colors.playersOnline,
                 yAxis: 0
-            }, entities: {
+            } : {},
+            entities: hasPermission('page.server.performance.graphs.entities') ? {
                 name: t('html.label.loadedEntities'),
                 type: spline,
                 tooltip: tooltip.zeroDecimals,
                 data: dataSeries.entities,
                 color: nightModeEnabled ? withReducedSaturation(data.colors.entities) : data.colors.entities,
                 yAxis: 1
-            }, chunks: {
+            } : {},
+            chunks: hasPermission('page.server.performance.graphs.chunks') ? {
                 name: t('html.label.loadedChunks'),
                 type: spline,
                 tooltip: tooltip.zeroDecimals,
                 data: dataSeries.chunks,
                 color: nightModeEnabled ? withReducedSaturation(data.colors.chunks) : data.colors.chunks,
                 yAxis: 2
-            }
+            } : {}
         };
 
         NoDataDisplay(Highcharts);

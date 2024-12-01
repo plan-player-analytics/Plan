@@ -12,10 +12,10 @@ import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 import {useAuth} from "../../hooks/authenticationHook";
 
 const ServerPerformance = () => {
-    const {hasPermission} = useAuth();
+    const {hasPermission, hasChildPermission} = useAuth();
     const {identifier} = useParams();
 
-    const seeGraphs = hasPermission('page.server.performance.graphs');
+    const seeGraphs = hasChildPermission('page.server.performance.graphs');
     const seeOverview = hasPermission('page.server.performance.overview');
     const {data, loadingError} = useDataRequest(fetchPerformanceOverview, [identifier], seeOverview);
 

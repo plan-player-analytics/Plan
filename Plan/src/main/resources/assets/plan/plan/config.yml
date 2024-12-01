@@ -157,7 +157,7 @@ Time:
       Unit: DAYS
     # Includes players online, tps and performance time series
     Remove_time_series_data_after:
-      Time: 90
+      Time: 3650
       Unit: DAYS
     Remove_ping_data_after:
       Time: 14

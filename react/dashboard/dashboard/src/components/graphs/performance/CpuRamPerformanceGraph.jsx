@@ -8,38 +8,42 @@ import {useTheme} from "../../../hooks/themeHook";
 import {withReducedSaturation} from "../../../util/colors";
 import Accessibility from "highcharts/modules/accessibility";
 import {useMetadata} from "../../../hooks/metadataHook";
+import {useAuth} from "../../../hooks/authenticationHook.jsx";
 
 const CpuRamPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
     const {t} = useTranslation();
     const {graphTheming, nightModeEnabled} = useTheme();
     const {timeZoneOffsetMinutes} = useMetadata();
+    const {hasPermission} = useAuth();
 
     useEffect(() => {
         const spline = 'spline'
 
         const series = {
-            playersOnline: {
+            playersOnline: hasPermission('page.server.performance.graphs.players.online') ? {
                 name: t('html.label.playersOnline'),
                 type: 'areaspline',
                 tooltip: tooltip.zeroDecimals,
                 data: dataSeries.playersOnline,
                 color: data.colors.playersOnline,
                 yAxis: 0
-            }, cpu: {
+            } : {},
+            cpu: hasPermission('page.server.performance.graphs.cpu') ? {
                 name: t('html.label.cpu'),
                 type: spline,
                 tooltip: tooltip.twoDecimals,
                 data: dataSeries.cpu,
                 color: nightModeEnabled ? withReducedSaturation(data.colors.cpu) : data.colors.cpu,
                 yAxis: 1
-            }, ram: {
+            } : {},
+            ram: hasPermission('page.server.performance.graphs.ram') ? {
                 name: t('html.label.ram'),
                 type: spline,
                 tooltip: tooltip.zeroDecimals,
                 data: dataSeries.ram,
                 color: nightModeEnabled ? withReducedSaturation(data.colors.ram) : data.colors.ram,
                 yAxis: 2
-            }
+            } : {}
         };
 
         NoDataDisplay(Highcharts);
