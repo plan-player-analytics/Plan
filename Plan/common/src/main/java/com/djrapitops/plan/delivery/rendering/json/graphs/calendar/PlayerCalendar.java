@@ -72,9 +72,8 @@ public class PlayerCalendar {
         List<CalendarEntry> entries = new ArrayList<>();
 
         entries.add(CalendarEntry
-                .of(locale.getString(HtmlLang.LABEL_REGISTERED) + ": " + year.apply(registered),
-                        registered
-                ).withColor(theme.getValue(ThemeVal.LIGHT_GREEN))
+                .of(HtmlLang.LABEL_REGISTERED.getKey(), registered, registered + timeZone.getOffset(registered))
+                .withColor(theme.getValue(ThemeVal.LIGHT_GREEN))
         );
 
         Map<String, List<FinishedSession>> sessionsByDay = getSessionsByDay();
@@ -87,30 +86,30 @@ public class PlayerCalendar {
             long playtime = sessions.stream().mapToLong(FinishedSession::getLength).sum();
 
             entries.add(CalendarEntry
-                    .of(locale.getString(HtmlLang.LABEL_PLAYTIME) + ": " + timeAmount.apply(playtime), day)
+                    .of(HtmlLang.LABEL_PLAYTIME.getKey(), playtime, day)
                     .withColor(theme.getValue(ThemeVal.GREEN))
             );
-            entries.add(CalendarEntry.of(locale.getString(HtmlLang.SIDE_SESSIONS) + ": " + sessionCount, day));
+            entries.add(CalendarEntry.of(HtmlLang.SIDE_SESSIONS.getKey(), sessionCount, day)
+                    .withColor(theme.getValue(ThemeVal.TEAL)));
         }
 
         long fiveMinutes = TimeUnit.MINUTES.toMillis(5L);
 
         for (FinishedSession session : allSessions) {
-            String length = timeAmount.apply(session.getLength());
             long start = session.getStart();
             long end = session.getEnd();
 
             entries.add(CalendarEntry
-                    .of(length + " " + locale.getString(HtmlLang.SESSION),
-                            start + timeZone.getOffset(start))
+                    .of(HtmlLang.SESSION.getKey(), session.getLength(), start + timeZone.getOffset(start))
                     .withEnd(end + timeZone.getOffset(end))
+                    .withColor(theme.getValue(ThemeVal.TEAL))
             );
 
             for (PlayerKill kill : session.getExtraData(PlayerKills.class).map(PlayerKills::asList).orElseGet(ArrayList::new)) {
                 long time = kill.getDate();
                 String victim = kill.getVictim().getName();
                 entries.add(CalendarEntry
-                        .of(locale.getString(HtmlLang.KILLED) + ": " + victim, time)
+                        .of(HtmlLang.KILLED.getKey(), victim, time)
                         .withEnd(time + fiveMinutes)
                         .withColor(theme.getValue(ThemeVal.RED))
                 );

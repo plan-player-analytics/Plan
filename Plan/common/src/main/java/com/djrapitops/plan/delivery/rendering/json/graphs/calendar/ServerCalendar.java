@@ -17,14 +17,11 @@
 package com.djrapitops.plan.delivery.rendering.json.graphs.calendar;
 
 import com.djrapitops.plan.delivery.formatting.Formatter;
-import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.HtmlLang;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 
-import java.util.Map;
-import java.util.NavigableMap;
-import java.util.SortedMap;
+import java.util.*;
 
 /**
  * Utility for creating FullCalendar calendar event array on Player page.
@@ -39,9 +36,7 @@ public class ServerCalendar {
     private final SortedMap<Long, Long> playtimePerDay;
 
     private final Formatter<Long> iso8601TZIndependent;
-    private final Formatter<Long> timeAmount;
     private final Theme theme;
-    private final Locale locale;
 
     ServerCalendar(
             SortedMap<Long, Integer> uniquePerDay,
@@ -49,37 +44,26 @@ public class ServerCalendar {
             SortedMap<Long, Long> playtimePerDay,
             NavigableMap<Long, Integer> sessionsPerDay,
             Formatter<Long> iso8601TZIndependent,
-            Formatter<Long> timeAmount,
-            Theme theme,
-            Locale locale
+            Theme theme
     ) {
         this.uniquePerDay = uniquePerDay;
         this.newPerDay = newPerDay;
         this.iso8601TZIndependent = iso8601TZIndependent;
-        this.timeAmount = timeAmount;
         this.sessionsPerDay = sessionsPerDay;
         this.playtimePerDay = playtimePerDay;
         this.theme = theme;
-        this.locale = locale;
     }
 
-    public String toCalendarSeries() {
-        StringBuilder series = new StringBuilder("[");
-
-        series.append("{\"title\": \"badcode\",\"start\":0}");
-        appendTimeZoneOffsetData(series);
-
-        return series.append("]").toString();
+    public List<CalendarEntry> getEntries() {
+        List<CalendarEntry> entries = new ArrayList<>();
+        appendUniquePlayers(entries);
+        appendNewPlayers(entries);
+        appendSessionCounts(entries);
+        appendPlaytime(entries);
+        return entries;
     }
 
-    private void appendTimeZoneOffsetData(StringBuilder series) {
-        appendUniquePlayers(series);
-        appendNewPlayers(series);
-        appendSessionCounts(series);
-        appendPlaytime(series);
-    }
-
-    private void appendNewPlayers(StringBuilder series) {
+    private void appendNewPlayers(List<CalendarEntry> entries) {
         for (Map.Entry<Long, Integer> entry : newPerDay.entrySet()) {
             int newPlayers = entry.getValue();
             if (newPlayers <= 0) {
@@ -89,14 +73,12 @@ public class ServerCalendar {
             Long key = entry.getKey();
             String day = iso8601TZIndependent.apply(key);
 
-            series.append(",{\"title\": \"").append(locale.get(HtmlLang.NEW_CALENDAR)).append(" ").append(newPlayers)
-                    .append("\",\"start\":\"").append(day)
-                    .append("\",\"color\": \"").append(theme.getValue(ThemeVal.LIGHT_GREEN)).append('"')
-                    .append("}");
+            entries.add(CalendarEntry.of(HtmlLang.NEW_CALENDAR.getKey(), newPlayers, day)
+                    .withColor(theme.getValue(ThemeVal.LIGHT_GREEN)));
         }
     }
 
-    private void appendUniquePlayers(StringBuilder series) {
+    private void appendUniquePlayers(List<CalendarEntry> entries) {
         for (Map.Entry<Long, Integer> entry : uniquePerDay.entrySet()) {
             long uniquePlayers = entry.getValue();
             if (uniquePlayers <= 0) {
@@ -106,14 +88,11 @@ public class ServerCalendar {
             Long key = entry.getKey();
             String day = iso8601TZIndependent.apply(key);
 
-            series.append(",{\"title\": \"").append(locale.get(HtmlLang.UNIQUE_CALENDAR)).append(" ").append(uniquePlayers)
-                    .append("\",\"start\":\"").append(day)
-                    .append("\"}");
-
+            entries.add(CalendarEntry.of(HtmlLang.UNIQUE_CALENDAR.getKey(), uniquePlayers, day));
         }
     }
 
-    private void appendPlaytime(StringBuilder series) {
+    private void appendPlaytime(List<CalendarEntry> entries) {
         for (Map.Entry<Long, Long> entry : playtimePerDay.entrySet()) {
             long playtime = entry.getValue();
             if (playtime <= 0) {
@@ -122,14 +101,12 @@ public class ServerCalendar {
             Long key = entry.getKey();
             String day = iso8601TZIndependent.apply(key);
 
-            series.append(",{\"title\": \"").append(locale.get(HtmlLang.LABEL_PLAYTIME)).append(": ").append(timeAmount.apply(playtime))
-                    .append("\",\"start\":\"").append(day)
-                    .append("\",\"color\": \"").append(theme.getValue(ThemeVal.GREEN)).append('"')
-                    .append("}");
+            entries.add(CalendarEntry.of(HtmlLang.LABEL_PLAYTIME.getKey(), playtime, day)
+                    .withColor(theme.getValue(ThemeVal.GREEN)));
         }
     }
 
-    private void appendSessionCounts(StringBuilder series) {
+    private void appendSessionCounts(List<CalendarEntry> entries) {
         for (Map.Entry<Long, Integer> entry : sessionsPerDay.entrySet()) {
             int sessionCount = entry.getValue();
             if (sessionCount <= 0) {
@@ -138,10 +115,8 @@ public class ServerCalendar {
             Long key = entry.getKey();
             String day = iso8601TZIndependent.apply(key);
 
-            series.append(",{\"title\": \"").append(locale.get(HtmlLang.SIDE_SESSIONS)).append(": ").append(sessionCount)
-                    .append("\",\"start\":\"").append(day)
-                    .append("\",\"color\": \"").append(theme.getValue(ThemeVal.TEAL)).append('"')
-                    .append("}");
+            entries.add(CalendarEntry.of(HtmlLang.SIDE_SESSIONS.getKey(), sessionCount, day)
+                    .withColor(theme.getValue(ThemeVal.TEAL)));
         }
     }
 }

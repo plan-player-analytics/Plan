@@ -282,7 +282,7 @@ public class GraphJSONCreator {
         return createUniqueAndNewJSON(lineGraphs, uniquePerDay, newPerDay, TimeUnit.HOURS.toMillis(1L));
     }
 
-    public String serverCalendarJSON(ServerUUID serverUUID) {
+    public Map<String, Object> serverCalendarJSON(ServerUUID serverUUID) {
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();
         long twoYearsAgo = now - TimeUnit.DAYS.toMillis(730L);
@@ -299,17 +299,17 @@ public class GraphJSONCreator {
         NavigableMap<Long, Integer> sessionsPerDay = db.query(
                 SessionQueries.sessionCountPerDay(twoYearsAgo, now, timeZoneOffset, serverUUID)
         );
-        return "{\"data\":" +
+        return Map.of("data",
                 graphs.calendar().serverCalendar(
                         uniquePerDay,
                         newPerDay,
                         playtimePerDay,
                         sessionsPerDay
-                ).toCalendarSeries() +
-                ",\"firstDay\":" + 1 + '}';
+                ).getEntries(),
+                "firstDay", 1);
     }
 
-    public String networkCalendarJSON() {
+    public Map<String, Object> networkCalendarJSON() {
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();
         long twoYearsAgo = now - TimeUnit.DAYS.toMillis(730L);
@@ -326,14 +326,14 @@ public class GraphJSONCreator {
         NavigableMap<Long, Integer> sessionsPerDay = db.query(
                 SessionQueries.sessionCountPerDay(twoYearsAgo, now, timeZoneOffset)
         );
-        return "{\"data\":" +
+        return Map.of("data",
                 graphs.calendar().serverCalendar(
                         uniquePerDay,
                         newPerDay,
                         playtimePerDay,
                         sessionsPerDay
-                ).toCalendarSeries() +
-                ",\"firstDay\":" + 1 + '}';
+                ).getEntries(),
+                "firstDay", 1);
     }
 
     public Map<String, Object> serverWorldPieJSONAsMap(ServerUUID serverUUID) {

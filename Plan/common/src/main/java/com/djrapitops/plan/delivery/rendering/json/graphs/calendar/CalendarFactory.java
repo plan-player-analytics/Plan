@@ -68,7 +68,7 @@ public class CalendarFactory {
     ) {
         return new ServerCalendar(
                 uniquePerDay, newPerDay, playtimePerDay, sessionsPerDay,
-                formatters.iso8601NoClockTZIndependentLong(), formatters.timeAmount(), theme, locale
+                formatters.iso8601NoClockTZIndependentLong(), theme
         );
     }
 }
