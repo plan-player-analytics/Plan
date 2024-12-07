@@ -94,6 +94,7 @@ public class SeleniumExtension implements ParameterResolver, BeforeAllCallback, 
         if (System.getenv(CIProperties.CHROME_DRIVER) != null) {
             chromeOptions.setBinary("/usr/bin/google-chrome-stable");
             chromeOptions.addArguments("--headless=new");
+            chromeOptions.addArguments("--dns-prefetch-disable");
         }
 
         return new ChromeDriver(chromeOptions);
