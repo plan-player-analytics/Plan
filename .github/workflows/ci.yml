@@ -77,6 +77,10 @@ jobs:
           while ! mysqladmin ping -h"127.0.0.1" -P"$PORT" --silent; do
             sleep 1
           done
+      - name: 📶 Setup DNS to avoid ERR_NETWORK_CHANGED
+        run: |
+          sudo resolvectl dns eth0 1.1.1.1
+          sudo resolvectl domain eth0 "~."
       - name: 🩺 Test 
         env:
           MYSQL_DB: test
