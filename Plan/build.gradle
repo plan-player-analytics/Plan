@@ -89,7 +89,7 @@ subprojects {
         caffeineVersion = "3.1.8"
         jettyVersion = "11.0.24"
         caffeineVersion = "2.9.2"
-        mysqlVersion = "8.4.0"
+        mysqlVersion = "9.1.0"
         mariadbVersion = "3.5.1"
         sqliteVersion = "3.47.1.0"
         adventureVersion = "4.17.0"
