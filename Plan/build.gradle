@@ -109,7 +109,7 @@ subprojects {
         mockitoVersion = "5.14.2"
         seleniumVersion = "4.27.0"
         testContainersVersion = "1.20.4"
-        swaggerVersion = "2.2.26"
+        swaggerVersion = "2.2.27"
     }
 
     repositories {
