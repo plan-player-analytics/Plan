@@ -11,13 +11,12 @@ buildscript {
 }
 
 plugins {
-    id "com.github.johnrengelman.shadow" version "8.1.1" apply false
-    id "java"
     id 'java-library'
     id "jacoco"
     id "checkstyle"
     id "org.sonarqube" version "6.0.1.5171"
-    id 'fabric-loom' version '1.6-SNAPSHOT' apply false
+    id "com.gradleup.shadow" version "8.3.5" apply false
+    id 'fabric-loom' version '1.9-SNAPSHOT' apply false
 }
 
 apply plugin: 'nebula-aggregate-javadocs'
@@ -55,10 +54,9 @@ logger.lifecycle("Building artifact for version $fullVersion / $fullVersionFilen
 
 subprojects {
     // Build plugins
-    apply plugin: "com.github.johnrengelman.shadow"
-    apply plugin: "java"
     apply plugin: "java-library"
     apply plugin: "maven-publish"
+    apply plugin: "com.gradleup.shadow"
 
     // Report plugins
     apply plugin: "checkstyle"
@@ -116,7 +114,7 @@ subprojects {
         mavenCentral()
         google()
         maven { url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" } // Spigot
-        maven { url = "https://papermc.io/repo/repository/maven-public/" } // Paper
+        maven { url = "https://repo.papermc.io/repository/maven-public/" } // Paper
         maven { url = "https://repo.spongepowered.org/repository/maven-public/" } // Sponge
         maven { url = "https://oss.sonatype.org/content/repositories/snapshots" } // BungeeCord
         maven { url = "https://repo.playeranalytics.net/releases" } // Plan

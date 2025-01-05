@@ -16,10 +16,10 @@ dependencies {
 
     compileOnly "com.velocitypowered:velocity-api:$velocityVersion"
     annotationProcessor "com.velocitypowered:velocity-api:$velocityVersion"
-    compileOnly "com.github.ProxioDev.RedisBungee:RedisBungee-API:$redisBungeeProxioDevVersion"
+    compileOnly "com.github.ProxioDev.ValioBungee:RedisBungee-API:$redisBungeeProxioDevVersion"
 
     testImplementation "com.velocitypowered:velocity-api:$velocityVersion"
-    testImplementation "com.github.ProxioDev.RedisBungee:RedisBungee-API:$redisBungeeProxioDevVersion"
+    testImplementation "com.github.ProxioDev.ValioBungee:RedisBungee-API:$redisBungeeProxioDevVersion"
     testImplementation project(path: ":common", configuration: 'testArtifacts')
 }
 
