@@ -11,12 +11,12 @@ buildscript {
 }
 
 plugins {
-    id "com.github.johnrengelman.shadow" version "8.1.1" apply false
     id 'java-library'
     id "jacoco"
     id "checkstyle"
     id "org.sonarqube" version "6.0.1.5171"
     id 'fabric-loom' version '1.6-SNAPSHOT' apply false
+    id "com.gradleup.shadow" version "8.3.5" apply false
 }
 
 apply plugin: 'nebula-aggregate-javadocs'
@@ -54,9 +54,9 @@ logger.lifecycle("Building artifact for version $fullVersion / $fullVersionFilen
 
 subprojects {
     // Build plugins
-    apply plugin: "com.github.johnrengelman.shadow"
     apply plugin: "java-library"
     apply plugin: "maven-publish"
+    apply plugin: "com.gradleup.shadow"
 
     // Report plugins
     apply plugin: "checkstyle"
