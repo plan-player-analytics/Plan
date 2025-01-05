@@ -24,6 +24,6 @@
     "fabric-message-api-v1": "*"
   },
   "suggests": {
-    "fabric-permissions-api-v0": "*"
+    "fabric-permissions-api-v0": "^0.3.3"
   }
 }
