@@ -5,7 +5,7 @@ dependencies {
 }
 
 compileJava {
-    options.release = 8
+    options.release = 11
 }
 
 ext.apiVersion = '5.6-R0.1'
