@@ -104,7 +104,7 @@ subprojects {
         nkPlaceholderapiVersion = "1.4-SNAPSHOT"
 
         junitVersion = "5.11.4"
-        mockitoVersion = "5.14.2"
+        mockitoVersion = "5.15.2"
         seleniumVersion = "4.27.0"
         testContainersVersion = "1.20.4"
         swaggerVersion = "2.2.27"
