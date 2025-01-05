@@ -8,10 +8,11 @@ dependencies {
 
     shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
 
-    minecraft "com.mojang:minecraft:1.20.5-rc2"
-    mappings "net.fabricmc:yarn:1.20.5-rc2+build.1:v2"
-    modImplementation "net.fabricmc:fabric-loader:0.15.10"
-    modImplementation('me.lucko:fabric-permissions-api:0.3.1')
+    // https://wiki.fabricmc.net/tutorial:migratemappings
+    minecraft "com.mojang:minecraft:1.21.3"
+    mappings "net.fabricmc:yarn:1.21.3+build.2:v2"
+    modImplementation "net.fabricmc:fabric-loader:0.16.9"
+    modImplementation('me.lucko:fabric-permissions-api:0.3.3')
 
     // Fabric API
     Set<String> apiModules = [
@@ -24,7 +25,7 @@ dependencies {
     ]
 
     apiModules.forEach {
-        modImplementation(fabricApi.module(it, "0.97.3+1.20.5"))
+        modImplementation(fabricApi.module(it, "0.114.0+1.21.3"))
     }
 
     testImplementation project(path: ":common", configuration: 'testArtifacts')

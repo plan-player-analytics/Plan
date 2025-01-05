@@ -119,7 +119,7 @@ jobs:
           changelog: ${{ github.event.release.body }}
           changelog_type: markdown
           display_name: ${{ github.event.release.name }}
-          game_versions: "2:Java 17,75125:1.20,Fabric"
+          game_versions: "Java 21,1.21.3,Fabric"
           release_type: release
           relations: fabric-api:requiredDependency,luckperms:optionalDependency
       - name: Upload prerelease to CurseForge 🚀
@@ -133,6 +133,6 @@ jobs:
           changelog: ${{ github.event.release.body }}
           changelog_type: markdown
           display_name: ${{ github.event.release.name }}
-          game_versions: "2:Java 17,75125:1.20,Fabric"
+          game_versions: "Java 21,1.21.3,Fabric"
           release_type: beta
           relations: fabric-api:requiredDependency,luckperms:optionalDependency
