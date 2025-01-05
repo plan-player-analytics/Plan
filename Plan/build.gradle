@@ -15,8 +15,8 @@ plugins {
     id "jacoco"
     id "checkstyle"
     id "org.sonarqube" version "6.0.1.5171"
-    id 'fabric-loom' version '1.6-SNAPSHOT' apply false
     id "com.gradleup.shadow" version "8.3.5" apply false
+    id 'fabric-loom' version '1.9-SNAPSHOT' apply false
 }
 
 apply plugin: 'nebula-aggregate-javadocs'
