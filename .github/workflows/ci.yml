@@ -1,10 +1,22 @@
 
 name: CI
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
 
 jobs:
   test:
+    if: > 
+      (
+        (github.event_name == 'push')
+        || (github.event_name == 'pull_request' && github.repository != github.event.pull_request.head.repo.full_name && contains(fromJSON('["opened", "reopened", "synchronize"]'), github.event.action))
+      )
+
     name: Test, Build & Upload
 
     runs-on: ubuntu-latest
@@ -22,14 +34,23 @@ jobs:
         options: --health-cmd="mariadb-admin ping" --health-interval=5s --health-timeout=2s --health-retries=3
 
     steps:
-      - name: 📥 Checkout git repository
+      - if: ${{ github.event_name == 'push' }}
+        name: 📥 Checkout git repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
+
+      - if: ${{ github.event_name == 'pull_request' }}
+        name: 📥 Checkout git repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
       - name: ☕ Setup JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'adopt'
+          distribution: 'temurin'
           java-version: '21'
       - name: 💼 Setup Gradle
         uses: gradle/actions/setup-gradle@v4
