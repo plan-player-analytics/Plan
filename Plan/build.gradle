@@ -12,7 +12,6 @@ buildscript {
 
 plugins {
     id "com.github.johnrengelman.shadow" version "8.1.1" apply false
-    id "java"
     id 'java-library'
     id "jacoco"
     id "checkstyle"
@@ -56,7 +55,6 @@ logger.lifecycle("Building artifact for version $fullVersion / $fullVersionFilen
 subprojects {
     // Build plugins
     apply plugin: "com.github.johnrengelman.shadow"
-    apply plugin: "java"
     apply plugin: "java-library"
     apply plugin: "maven-publish"
 
