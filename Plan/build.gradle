@@ -116,7 +116,7 @@ subprojects {
         mavenCentral()
         google()
         maven { url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" } // Spigot
-        maven { url = "https://papermc.io/repo/repository/maven-public/" } // Paper
+        maven { url = "https://repo.papermc.io/repository/maven-public/" } // Paper
         maven { url = "https://repo.spongepowered.org/repository/maven-public/" } // Sponge
         maven { url = "https://oss.sonatype.org/content/repositories/snapshots" } // BungeeCord
         maven { url = "https://repo.playeranalytics.net/releases" } // Plan
