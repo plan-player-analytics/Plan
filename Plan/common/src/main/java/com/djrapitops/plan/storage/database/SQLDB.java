@@ -243,7 +243,8 @@ public abstract class SQLDB extends AbstractDatabase {
                 new WebGroupDefaultGroupsPatch(),
                 new WebGroupAddMissingAdminGroupPatch(),
                 new LegacyPermissionLevelGroupsPatch(),
-                new SecurityTableGroupPatch()
+                new SecurityTableGroupPatch(),
+                new ExtensionStringValueLengthPatch(),
         };
     }
 
