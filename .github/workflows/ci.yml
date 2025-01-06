@@ -91,10 +91,12 @@ jobs:
           while ! mysqladmin ping -h"127.0.0.1" -P"$PORT" --silent; do
             sleep 1
           done
-      - name: 📶 Setup DNS to avoid ERR_NETWORK_CHANGED
+      - name: 📶 Setup to avoid ERR_NETWORK_CHANGED
         run: |
           sudo resolvectl dns eth0 1.1.1.1
           sudo resolvectl domain eth0 "~."
+          sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
+          sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
       - name: 🩺 Test 
         env:
           MYSQL_DB: test
@@ -136,7 +138,7 @@ jobs:
           ./gradlew sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=player-analytics-plan
       - name: 🩺 SonarCloud - React
         if: "${{ env.SONAR_TOKEN != '' }}"
-        uses: SonarSource/sonarcloud-github-action@master
+        uses: SonarSource/sonarqube-scan-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
