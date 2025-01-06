@@ -19,6 +19,7 @@ package com.djrapitops.plan.delivery.formatting.time;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 
 import java.text.SimpleDateFormat;
+import java.util.TimeZone;
 
 /**
  * Formatter for a timestamp in ISO-8601 format without the clock, without applying timezone offset.
@@ -34,6 +35,7 @@ public class ISO8601NoClockTZIndependentFormatter implements Formatter<Long> {
 
     private String format(Long date) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        dateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
 
         return dateFormat.format(date);
     }

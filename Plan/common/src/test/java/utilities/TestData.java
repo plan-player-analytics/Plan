@@ -94,6 +94,18 @@ public class TestData {
         return sessions;
     }
 
+    public static FinishedSession createSession(UUID uuid, ServerUUID serverUUID, long start) {
+        String[] gms = GMTimes.getGMKeyArray();
+
+        ActiveSession sessionOne = new ActiveSession(uuid, serverUUID, start, serverWorldNames[0], gms[0]);
+
+        UUID otherUUID = uuid.equals(playerUUID) ? player2UUID : playerUUID;
+        sessionOne.addPlayerKill(TestData.getPlayerKill(uuid, otherUUID, serverUUID, "Iron Sword", 1234750L));
+        sessionOne.addPlayerKill(TestData.getPlayerKill(uuid, otherUUID, serverUUID, "Gold Sword", 1234800L));
+
+        return sessionOne.toFinishedSession(start + 500L);
+    }
+
     public static Transaction storeServers() {
         return new Transaction() {
             @Override

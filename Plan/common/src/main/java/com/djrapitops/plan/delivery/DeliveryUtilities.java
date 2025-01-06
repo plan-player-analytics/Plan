@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery;
 
 import com.djrapitops.plan.delivery.formatting.Formatters;
+import com.djrapitops.plan.delivery.rendering.json.graphs.GraphJSONCreator;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
 import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.storage.file.PublicHtmlFiles;
@@ -32,18 +33,20 @@ public class DeliveryUtilities {
     private final Lazy<Formatters> formatters;
     private final Lazy<Graphs> graphs;
     private final Lazy<PublicHtmlFiles> publicHtmlFiles;
+    private final Lazy<GraphJSONCreator> graphJSONCreator;
 
     @Inject
     public DeliveryUtilities(
             Lazy<Addresses> addresses,
             Lazy<Formatters> formatters,
             Lazy<Graphs> graphs,
-            Lazy<PublicHtmlFiles> publicHtmlFiles
+            Lazy<PublicHtmlFiles> publicHtmlFiles, Lazy<GraphJSONCreator> graphJSONCreator
     ) {
         this.addresses = addresses;
         this.formatters = formatters;
         this.graphs = graphs;
         this.publicHtmlFiles = publicHtmlFiles;
+        this.graphJSONCreator = graphJSONCreator;
     }
 
     public Addresses getAddresses() {
@@ -62,4 +65,7 @@ public class DeliveryUtilities {
         return publicHtmlFiles.get();
     }
 
+    public GraphJSONCreator getGraphJSONCreator() {
+        return graphJSONCreator.get();
+    }
 }
