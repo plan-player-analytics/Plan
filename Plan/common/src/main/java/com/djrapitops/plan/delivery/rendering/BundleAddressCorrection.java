@@ -39,7 +39,7 @@ import java.util.regex.Pattern;
 public class BundleAddressCorrection {
 
     private static final String STATIC = "static";
-    private static final Pattern JAVASCRIPT_ADDRESS_PATTERN = Pattern.compile("\"(\\./|/?static)(.+?)\\.(json|js|css)\"");
+    private static final Pattern JAVASCRIPT_ADDRESS_PATTERN = Pattern.compile("\"(\\./|/?static)(.+?)\\.(json|js|css|png)\"");
 
     private final PlanConfig config;
     private final Addresses addresses;
