@@ -5,6 +5,8 @@ import interactionPlugin from '@fullcalendar/interaction'
 import {useTranslation} from "react-i18next";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faHandPointer} from "@fortawesome/free-regular-svg-icons";
+import {useTimePreferences} from "../text/FormattedTime.jsx";
+import {formatTimeAmount} from "../../util/format/TimeAmountFormat.js";
 
 const ServerCalendar = ({series, firstDay, onSelect}) => {
     const {t} = useTranslation();
@@ -14,6 +16,28 @@ const ServerCalendar = ({series, firstDay, onSelect}) => {
         top: "0.5rem",
         right: "1rem"
     };
+    const timePreferences = useTimePreferences();
+
+    const formatTitle = entry => {
+        switch (entry.title) {
+            case 'html.label.playtime':
+                return t(entry.title) + ": " + formatTimeAmount(timePreferences, entry.value)
+            case 'html.calendar.unique':
+            case 'html.calendar.new':
+                return t(entry.title) + " " + entry.value
+            default:
+                return t(entry.title) + ": " + entry.value;
+        }
+    }
+
+    const actualSeries = series.map(entry => {
+        return {
+            title: formatTitle(entry),
+            start: entry.start,
+            end: entry.end,
+            color: entry.color
+        }
+    });
 
     return (
         <div id={'server-calendar'}>
@@ -38,7 +62,7 @@ const ServerCalendar = ({series, firstDay, onSelect}) => {
                 selectable={Boolean(onSelect)}
                 select={onSelect}
                 unselectAuto={true}
-                events={(_fetchInfo, successCallback) => successCallback(series)}
+                events={(_fetchInfo, successCallback) => successCallback(actualSeries)}
             />
         </div>
     )
