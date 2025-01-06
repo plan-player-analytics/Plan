@@ -39,7 +39,7 @@
     "react-i18next": "^15.4.0",
     "react-mcjsonchat": "^1.0.0",
     "react-router-dom": "^6.26.0",
-    "sass": "^1.83.0",
+    "sass": "^1.83.1",
     "source-map-explorer": "^2.5.2",
     "swagger-ui": "^5.18.2",
     "web-vitals": "^4.2.4"
