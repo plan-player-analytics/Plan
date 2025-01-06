@@ -60,7 +60,7 @@ public class PingStoreTransaction extends Transaction {
             execute(DataStoreQueries.storePing(playerUUID, serverUUID, ping));
         } catch (DBOpException failed) {
             if (userInsertError != null) failed.addSuppressed(userInsertError);
-            if (failed.isUserIdConstraintViolation()) {
+            if (failed.isUserIdConstraintViolation() || failed.isDuplicateKeyViolation()) {
                 retry(ping, failed);
             } else {
                 throw failed;

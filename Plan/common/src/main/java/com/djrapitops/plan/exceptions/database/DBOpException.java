@@ -169,6 +169,6 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
 
     public boolean isDuplicateKeyViolation() {
         return context != null
-                && context.getRelated().contains(DBOpException.CONSTRAINT_VIOLATION);
+                && context.getRelated().contains(DBOpException.DUPLICATE_KEY);
     }
 }
