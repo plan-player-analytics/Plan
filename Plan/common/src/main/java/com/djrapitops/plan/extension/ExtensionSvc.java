@@ -19,6 +19,7 @@ package com.djrapitops.plan.extension;
 import com.djrapitops.plan.component.ComponentSvc;
 import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
 import com.djrapitops.plan.extension.implementation.CallerImplementation;
+import com.djrapitops.plan.extension.implementation.ExtensionMethodErrorTracker;
 import com.djrapitops.plan.extension.implementation.ExtensionRegister;
 import com.djrapitops.plan.extension.implementation.ExtensionWrapper;
 import com.djrapitops.plan.extension.implementation.builder.ExtDataBuilder;
@@ -168,6 +169,11 @@ public class ExtensionSvc implements ExtensionService {
     public void updatePlayerValues(UUID playerUUID, String playerName, CallEvents event) {
         if (!enabled.get()) return; // Plugin is disabling
         for (DataValueGatherer gatherer : extensionGatherers.values()) {
+            if (event == CallEvents.PLAYER_JOIN) {
+                graphSamplers.registerPlayerGraphSamplers(gatherer.getExtension(), playerUUID, playerName);
+            } else if (event == CallEvents.PLAYER_LEAVE) {
+                graphSamplers.unregisterPlayerSamplers(playerUUID);
+            }
             updatePlayerValues(gatherer, playerUUID, playerName, event);
         }
     }
@@ -203,5 +209,6 @@ public class ExtensionSvc implements ExtensionService {
 
     public void disableUpdates() {
         enabled.set(false);
+        ExtensionMethodErrorTracker.clear();
     }
 }

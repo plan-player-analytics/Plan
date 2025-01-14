@@ -88,6 +88,10 @@ public class DataValueGatherer {
         this.brokenMethods = new HashSet<>();
     }
 
+    public ExtensionWrapper getExtension() {
+        return extension;
+    }
+
     public boolean shouldSkipEvent(CallEvents event) {
         if (event == CallEvents.MANUAL) {
             return false;

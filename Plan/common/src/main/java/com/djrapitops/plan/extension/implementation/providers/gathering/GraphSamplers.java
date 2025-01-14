@@ -35,8 +35,8 @@ import net.playeranalytics.plugin.scheduling.RunnableFactory;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * This is a utility class for managing extension graph sampling.
@@ -50,6 +50,8 @@ public class GraphSamplers {
     private final DBSystem dbSystem;
     private final RunnableFactory runnableFactory;
     private final ErrorLogger errorLogger;
+
+    private final Map<UUID, Set<PlayerGraphSampler>> activePlayerGraphSamplers = new ConcurrentHashMap<>();
 
     @Inject
     public GraphSamplers(ServerInfo serverInfo, DBSystem dbSystem, RunnableFactory runnableFactory, ErrorLogger errorLogger) {
@@ -96,5 +98,31 @@ public class GraphSamplers {
         for (ExtensionMethod graphPointProvider : methods.get(ExtensionMethod.ParameterType.PLAYER_STRING).getGraphPointProviders()) {
             storeGraphMetadata(extension, graphPointProvider);
         }
+    }
+
+    public void registerPlayerGraphSamplers(ExtensionWrapper extension, UUID playerUUID, String playerName) {
+        Parameters parameters = Parameters.player(serverInfo.getServerUUID(), playerUUID, playerName);
+        Map<ExtensionMethod.ParameterType, ExtensionMethods> methods = extension.getMethods();
+        for (ExtensionMethod graphPointProvider : methods.get(ExtensionMethod.ParameterType.PLAYER_UUID).getGraphPointProviders()) {
+            PlayerGraphSampler sampler = new PlayerGraphSampler(extension, graphPointProvider, dbSystem, parameters,
+                    new ProviderIdentifier(serverInfo.getServerUUID(), extension.getPluginName(), graphPointProvider.getMethodName()), errorLogger);
+            activePlayerGraphSamplers.computeIfAbsent(playerUUID, u -> Collections.newSetFromMap(new ConcurrentHashMap<>()))
+                    .add(sampler);
+            sampler.register(runnableFactory);
+        }
+        for (ExtensionMethod graphPointProvider : methods.get(ExtensionMethod.ParameterType.PLAYER_STRING).getGraphPointProviders()) {
+            PlayerGraphSampler sampler = new PlayerGraphSampler(extension, graphPointProvider, dbSystem, parameters,
+                    new ProviderIdentifier(serverInfo.getServerUUID(), extension.getPluginName(), graphPointProvider.getMethodName()), errorLogger);
+            activePlayerGraphSamplers.computeIfAbsent(playerUUID, u -> Collections.newSetFromMap(new ConcurrentHashMap<>()))
+                    .add(sampler);
+            sampler.register(runnableFactory);
+        }
+    }
+
+    public void unregisterPlayerSamplers(UUID playerUUID) {
+        Set<PlayerGraphSampler> samplers = activePlayerGraphSamplers.getOrDefault(playerUUID, Set.of());
+        samplers.forEach(PlayerGraphSampler::unregister);
+        samplers.clear();
+        activePlayerGraphSamplers.remove(playerUUID);
     }
 }

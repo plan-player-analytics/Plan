@@ -21,6 +21,7 @@ import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
 import com.djrapitops.plan.extension.annotation.GraphPointProvider;
 import com.djrapitops.plan.extension.extractor.ExtensionMethod;
 import com.djrapitops.plan.extension.graph.DataPoint;
+import com.djrapitops.plan.extension.implementation.ExtensionMethodErrorTracker;
 import com.djrapitops.plan.extension.implementation.ExtensionWrapper;
 import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
 import com.djrapitops.plan.extension.implementation.providers.Parameters;
@@ -40,11 +41,11 @@ public class PlayerGraphSampler extends TaskSystem.Task {
     private final DBSystem dbSystem;
     private final ExtensionMethod provider;
     private final GraphPointProvider annotation;
-    private final Parameters.PlayerParameters parameters;
+    private final Parameters parameters;
     private final ProviderIdentifier providerIdentifier;
     private final ErrorLogger errorLogger;
 
-    public PlayerGraphSampler(ExtensionWrapper extension, ExtensionMethod provider, DBSystem dbSystem, Parameters.PlayerParameters parameters, ProviderIdentifier providerIdentifier, ErrorLogger errorLogger) {
+    public PlayerGraphSampler(ExtensionWrapper extension, ExtensionMethod provider, DBSystem dbSystem, Parameters parameters, ProviderIdentifier providerIdentifier, ErrorLogger errorLogger) {
         this.extension = extension;
         this.provider = provider;
         annotation = provider.getExistingAnnotation(GraphPointProvider.class);
@@ -61,6 +62,8 @@ public class PlayerGraphSampler extends TaskSystem.Task {
 
     @Override
     public void register(RunnableFactory runnableFactory) {
+        if (ExtensionMethodErrorTracker.isDisabled(extension, provider)) return;
+
         runnableFactory.create(this)
                 .runTaskTimerAsynchronously(0, annotation.sampleInterval(), annotation.sampleIntervalUnit());
     }
@@ -80,7 +83,7 @@ public class PlayerGraphSampler extends TaskSystem.Task {
                     .related(providerIdentifier)
                     .whatToDo("Player Graph sampler for " + providerIdentifier.getPluginName() + "." + providerIdentifier.getProviderName() + " ran into error and was disabled. You can disable the plugin from Plan config and report this.")
                     .build());
-            // TODO #2544 Prevent further registrations of the player graph sampler.
+            ExtensionMethodErrorTracker.errored(extension, provider);
             cancel();
         }
     }
