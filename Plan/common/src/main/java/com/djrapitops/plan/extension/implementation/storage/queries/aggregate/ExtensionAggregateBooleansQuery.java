@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.extension.implementation.storage.queries;
+package com.djrapitops.plan.extension.implementation.storage.queries.aggregate;
 
 import com.djrapitops.plan.extension.ElementOrder;
 import com.djrapitops.plan.extension.icon.Color;
@@ -25,6 +25,7 @@ import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionDescription;
 import com.djrapitops.plan.extension.implementation.results.ExtensionDoubleData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
+import com.djrapitops.plan.extension.implementation.storage.queries.QueriedTabData;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;

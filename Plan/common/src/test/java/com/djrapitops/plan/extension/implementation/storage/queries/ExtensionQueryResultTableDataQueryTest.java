@@ -19,6 +19,7 @@ package com.djrapitops.plan.extension.implementation.storage.queries;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
+import com.djrapitops.plan.extension.implementation.storage.queries.playertable.ExtensionQueryResultTableDataQuery;
 import com.djrapitops.plan.gathering.domain.DataMap;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.identification.ServerUUID;

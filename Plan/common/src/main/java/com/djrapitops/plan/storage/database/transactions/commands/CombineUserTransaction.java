@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.transactions.commands;
 
-import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionGraphQueries;
+import com.djrapitops.plan.extension.implementation.storage.queries.graph.ExtensionGraphQueries;
 import com.djrapitops.plan.storage.database.queries.objects.BaseUserQueries;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.sql.tables.extension.graph.ExtensionGraphMetadataTable;

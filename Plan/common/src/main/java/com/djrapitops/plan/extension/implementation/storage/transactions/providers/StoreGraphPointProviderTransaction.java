@@ -57,7 +57,6 @@ public class StoreGraphPointProviderTransaction extends Transaction {
             ExtensionMethod method,
             ProviderInformation info,
             ServerUUID serverUUID
-
     ) {
         this.annotation = annotation;
         this.method = method;
@@ -274,14 +273,15 @@ public class StoreGraphPointProviderTransaction extends Transaction {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setBoolean(1, ExtensionExtractor.actuallySupportsStacking(annotation));
-                statement.setInt(2, annotation.yAxisSoftMax());
-                statement.setInt(3, annotation.yAxisSoftMin());
-                statement.setInt(4, annotation.xAxisSoftMax());
-                statement.setInt(5, annotation.xAxisSoftMin());
-                statement.setString(6, ExtensionGraphMetadataTable.getTableName(info.getPluginName(), method.getMethodName()));
-                statement.setInt(7, getTableType().getType());
-                ExtensionTabTable.set3TabValuesToStatement(statement, 8, info.getTab().orElse(null), info.getPluginName(), serverUUID);
-                ExtensionProviderTable.set3PluginValuesToStatement(statement, 11, info.getName(), info.getPluginName(), serverUUID);
+                statement.setString(2, annotation.xAxisType().name());
+                statement.setInt(3, annotation.yAxisSoftMax());
+                statement.setInt(4, annotation.yAxisSoftMin());
+                statement.setInt(5, annotation.xAxisSoftMax());
+                statement.setInt(6, annotation.xAxisSoftMin());
+                statement.setString(7, ExtensionGraphMetadataTable.getTableName(info.getPluginName(), method.getMethodName()));
+                statement.setInt(8, getTableType().getType());
+                ExtensionTabTable.set3TabValuesToStatement(statement, 9, info.getTab().orElse(null), info.getPluginName(), serverUUID);
+                ExtensionProviderTable.set3PluginValuesToStatement(statement, 12, info.getName(), info.getPluginName(), serverUUID);
             }
         };
     }

@@ -47,6 +47,7 @@ public class ExtensionGraphMetadataTable {
     public static final String PROVIDER_ID = "provider_id";
     public static final String TAB_ID = "tab_id";
     public static final String SUPPORTS_STACKING = "supports_stacking";
+    public static final String X_AXIS_TYPE = "x_axis_type";
     public static final String Y_AXIS_SOFT_MAX = "y_axis_soft_max";
     public static final String Y_AXIS_SOFT_MIN = "y_axis_soft_min";
     public static final String X_AXIS_SOFT_MAX = "x_axis_soft_max";
@@ -57,6 +58,7 @@ public class ExtensionGraphMetadataTable {
     @Language("SQL")
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +
             SUPPORTS_STACKING + ',' +
+            X_AXIS_TYPE + ',' +
             Y_AXIS_SOFT_MAX + ',' +
             Y_AXIS_SOFT_MIN + ',' +
             X_AXIS_SOFT_MAX + ',' +
@@ -65,13 +67,14 @@ public class ExtensionGraphMetadataTable {
             TABLE_TYPE + ',' +
             TAB_ID + ',' +
             PROVIDER_ID +
-            ") VALUES (?, ?, ?, ?, ?, ?, ?," +
+            ") VALUES (?, ?, ?, ?, ?, ?, ?, ?," +
             ExtensionTabTable.STATEMENT_SELECT_TAB_ID + ',' +
             ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID +
             ")";
     @Language("SQL")
     public static final String UPDATE_STATEMENT = "UPDATE " + TABLE_NAME + " SET " +
             SUPPORTS_STACKING + "=?," +
+            X_AXIS_TYPE + "=?," +
             Y_AXIS_SOFT_MAX + "=?," +
             Y_AXIS_SOFT_MIN + "=?," +
             X_AXIS_SOFT_MAX + "=?," +
@@ -101,6 +104,7 @@ public class ExtensionGraphMetadataTable {
                 .column(PROVIDER_ID, Sql.INT).notNull()
                 .column(TAB_ID, Sql.INT)
                 .column(SUPPORTS_STACKING, Sql.BOOL).notNull()
+                .column(X_AXIS_TYPE, Sql.varchar(25)).notNull()
                 .column(Y_AXIS_SOFT_MAX, Sql.LONG).notNull()
                 .column(Y_AXIS_SOFT_MIN, Sql.LONG).notNull()
                 .column(X_AXIS_SOFT_MAX, Sql.LONG).notNull()

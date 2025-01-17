@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.extension.implementation.storage.queries;
+package com.djrapitops.plan.extension.implementation.storage.queries.aggregate;
 
 import com.djrapitops.plan.extension.ElementOrder;
 import com.djrapitops.plan.extension.icon.Color;
@@ -25,6 +25,7 @@ import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionDescription;
 import com.djrapitops.plan.extension.implementation.results.ExtensionDoubleData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
+import com.djrapitops.plan.extension.implementation.storage.queries.QueriedTabData;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
@@ -40,36 +41,44 @@ import java.util.Optional;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
- * Query for selecting average for each percentage value provided for players.
+ * Query for selecting average and total for each double value provided for players.
  * <p>
  * Returns Map: PluginID - {@link ExtensionData.Builder}.
  * <p>
  * How it is done:
- * 1. Query averages
+ * 1. Query averages and totals
  * 2. Join with provider information query
  * 3. Map into ExtensionData objects by PluginID, one per ID
  *
  * @author AuroraLS3
  */
-public class ExtensionAggregatePercentagesQuery implements Query<Map<Integer, ExtensionData.Builder>> {
+public class ExtensionAggregateDoublesQuery implements Query<Map<Integer, ExtensionData.Builder>> {
 
     private final ServerUUID serverUUID;
 
-    public ExtensionAggregatePercentagesQuery(ServerUUID serverUUID) {
+    public ExtensionAggregateDoublesQuery(ServerUUID serverUUID) {
         this.serverUUID = serverUUID;
     }
 
     @Override
     public Map<Integer, ExtensionData.Builder> executeQuery(SQLDB db) {
-        String selectPercentageAverage = SELECT +
+        String selectDoubleAverage = SELECT +
                 ExtensionPlayerValueTable.PROVIDER_ID +
-                ",AVG(" + ExtensionPlayerValueTable.PERCENTAGE_VALUE + ") as average" +
+                ",AVG(" + ExtensionPlayerValueTable.DOUBLE_VALUE + ") as average" +
                 FROM + ExtensionPlayerValueTable.TABLE_NAME +
-                WHERE + ExtensionPlayerValueTable.PERCENTAGE_VALUE + IS_NOT_NULL +
+                WHERE + ExtensionPlayerValueTable.DOUBLE_VALUE + IS_NOT_NULL +
+                GROUP_BY + ExtensionPlayerValueTable.PROVIDER_ID;
+
+        String selectDoubleTotal = SELECT +
+                ExtensionPlayerValueTable.PROVIDER_ID +
+                ",SUM(" + ExtensionPlayerValueTable.DOUBLE_VALUE + ") as total" +
+                FROM + ExtensionPlayerValueTable.TABLE_NAME +
+                WHERE + ExtensionPlayerValueTable.DOUBLE_VALUE + IS_NOT_NULL +
                 GROUP_BY + ExtensionPlayerValueTable.PROVIDER_ID;
 
         String sql = SELECT +
-                "b1.average as average," +
+                "b1.total as total," +
+                "b2.average as average," +
                 "p1." + ExtensionProviderTable.PLUGIN_ID + " as plugin_id," +
                 "p1." + ExtensionProviderTable.PROVIDER_NAME + " as provider_name," +
                 "p1." + ExtensionProviderTable.TEXT + " as text," +
@@ -85,9 +94,10 @@ public class ExtensionAggregatePercentagesQuery implements Query<Map<Integer, Ex
                 "i2." + ExtensionIconTable.ICON_NAME + " as tab_icon_name," +
                 "i2." + ExtensionIconTable.FAMILY + " as tab_icon_family," +
                 "i2." + ExtensionIconTable.COLOR + " as tab_icon_color" +
-                FROM + '(' + selectPercentageAverage + ") b1" +
+                FROM + '(' + selectDoubleTotal + ") b1" +
                 INNER_JOIN + ExtensionProviderTable.TABLE_NAME + " p1 on p1." + ExtensionProviderTable.ID + "=b1." + ExtensionPlayerValueTable.PROVIDER_ID +
                 INNER_JOIN + ExtensionPluginTable.TABLE_NAME + " e1 on p1." + ExtensionProviderTable.PLUGIN_ID + "=e1." + ExtensionPluginTable.ID +
+                LEFT_JOIN + '(' + selectDoubleAverage + ") b2 on b2." + ExtensionPlayerValueTable.PROVIDER_ID + "=b1." + ExtensionPlayerValueTable.PROVIDER_ID +
                 LEFT_JOIN + ExtensionTabTable.TABLE_NAME + " t1 on t1." + ExtensionTabTable.ID + "=p1." + ExtensionProviderTable.TAB_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i1 on i1." + ExtensionIconTable.ID + "=p1." + ExtensionProviderTable.ICON_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i2 on i2." + ExtensionIconTable.ID + "=t1." + ExtensionTabTable.ICON_ID +
@@ -140,7 +150,8 @@ public class ExtensionAggregatePercentagesQuery implements Query<Map<Integer, Ex
     }
 
     private void extractAndPutDataTo(ExtensionTabData.Builder extensionTab, ExtensionDescription description, ResultSet set) throws SQLException {
-        extensionTab.putPercentageData(new ExtensionDoubleData(modifiedDescription(description, "_avg", "Average "), set.getDouble("average")));
+        extensionTab.putDoubleData(new ExtensionDoubleData(modifiedDescription(description, "_avg", "Average "), set.getDouble("average")));
+        extensionTab.putDoubleData(new ExtensionDoubleData(modifiedDescription(description, "_total", "Total "), set.getDouble("total")));
     }
 
     private ExtensionDescription modifiedDescription(ExtensionDescription description, String appendToName, String appendToText) {

@@ -14,17 +14,19 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.extension.implementation.storage.queries;
+package com.djrapitops.plan.extension.implementation.storage.queries.aggregate;
 
 import com.djrapitops.plan.extension.ElementOrder;
+import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionDescription;
-import com.djrapitops.plan.extension.implementation.results.ExtensionDoubleData;
+import com.djrapitops.plan.extension.implementation.results.ExtensionNumberData;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
+import com.djrapitops.plan.extension.implementation.storage.queries.QueriedTabData;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
@@ -40,7 +42,7 @@ import java.util.Optional;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
- * Query for selecting average and total for each double value provided for players.
+ * Query for selecting average and total for each number value provided for players.
  * <p>
  * Returns Map: PluginID - {@link ExtensionData.Builder}.
  * <p>
@@ -51,28 +53,28 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  *
  * @author AuroraLS3
  */
-public class ExtensionAggregateDoublesQuery implements Query<Map<Integer, ExtensionData.Builder>> {
+public class ExtensionAggregateNumbersQuery implements Query<Map<Integer, ExtensionData.Builder>> {
 
     private final ServerUUID serverUUID;
 
-    public ExtensionAggregateDoublesQuery(ServerUUID serverUUID) {
+    public ExtensionAggregateNumbersQuery(ServerUUID serverUUID) {
         this.serverUUID = serverUUID;
     }
 
     @Override
     public Map<Integer, ExtensionData.Builder> executeQuery(SQLDB db) {
-        String selectDoubleAverage = SELECT +
+        String selectNumberAverage = SELECT +
                 ExtensionPlayerValueTable.PROVIDER_ID +
-                ",AVG(" + ExtensionPlayerValueTable.DOUBLE_VALUE + ") as average" +
+                ",AVG(" + ExtensionPlayerValueTable.LONG_VALUE + ") as average" +
                 FROM + ExtensionPlayerValueTable.TABLE_NAME +
-                WHERE + ExtensionPlayerValueTable.DOUBLE_VALUE + IS_NOT_NULL +
+                WHERE + ExtensionPlayerValueTable.LONG_VALUE + IS_NOT_NULL +
                 GROUP_BY + ExtensionPlayerValueTable.PROVIDER_ID;
 
-        String selectDoubleTotal = SELECT +
+        String selectNumberTotal = SELECT +
                 ExtensionPlayerValueTable.PROVIDER_ID +
-                ",SUM(" + ExtensionPlayerValueTable.DOUBLE_VALUE + ") as total" +
+                ",SUM(" + ExtensionPlayerValueTable.LONG_VALUE + ") as total" +
                 FROM + ExtensionPlayerValueTable.TABLE_NAME +
-                WHERE + ExtensionPlayerValueTable.DOUBLE_VALUE + IS_NOT_NULL +
+                WHERE + ExtensionPlayerValueTable.LONG_VALUE + IS_NOT_NULL +
                 GROUP_BY + ExtensionPlayerValueTable.PROVIDER_ID;
 
         String sql = SELECT +
@@ -83,6 +85,7 @@ public class ExtensionAggregateDoublesQuery implements Query<Map<Integer, Extens
                 "p1." + ExtensionProviderTable.TEXT + " as text," +
                 "p1." + ExtensionProviderTable.DESCRIPTION + " as description," +
                 "p1." + ExtensionProviderTable.PRIORITY + " as provider_priority," +
+                "p1." + ExtensionProviderTable.FORMAT_TYPE + " as format_type," +
                 "p1." + ExtensionProviderTable.IS_PLAYER_NAME + " as is_player_name," +
                 "t1." + ExtensionTabTable.TAB_NAME + " as tab_name," +
                 "t1." + ExtensionTabTable.TAB_PRIORITY + " as tab_priority," +
@@ -93,21 +96,25 @@ public class ExtensionAggregateDoublesQuery implements Query<Map<Integer, Extens
                 "i2." + ExtensionIconTable.ICON_NAME + " as tab_icon_name," +
                 "i2." + ExtensionIconTable.FAMILY + " as tab_icon_family," +
                 "i2." + ExtensionIconTable.COLOR + " as tab_icon_color" +
-                FROM + '(' + selectDoubleTotal + ") b1" +
+                FROM + '(' + selectNumberTotal + ") b1" +
                 INNER_JOIN + ExtensionProviderTable.TABLE_NAME + " p1 on p1." + ExtensionProviderTable.ID + "=b1." + ExtensionPlayerValueTable.PROVIDER_ID +
                 INNER_JOIN + ExtensionPluginTable.TABLE_NAME + " e1 on p1." + ExtensionProviderTable.PLUGIN_ID + "=e1." + ExtensionPluginTable.ID +
-                LEFT_JOIN + '(' + selectDoubleAverage + ") b2 on b2." + ExtensionPlayerValueTable.PROVIDER_ID + "=b1." + ExtensionPlayerValueTable.PROVIDER_ID +
+                LEFT_JOIN + '(' + selectNumberAverage + ") b2 on b2." + ExtensionPlayerValueTable.PROVIDER_ID + "=b1." + ExtensionPlayerValueTable.PROVIDER_ID +
                 LEFT_JOIN + ExtensionTabTable.TABLE_NAME + " t1 on t1." + ExtensionTabTable.ID + "=p1." + ExtensionProviderTable.TAB_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i1 on i1." + ExtensionIconTable.ID + "=p1." + ExtensionProviderTable.ICON_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i2 on i2." + ExtensionIconTable.ID + "=t1." + ExtensionTabTable.ICON_ID +
                 WHERE + ExtensionPluginTable.SERVER_UUID + "=?" +
-                AND + "p1." + ExtensionProviderTable.HIDDEN + "=?";
+                AND + "p1." + ExtensionProviderTable.HIDDEN + "=?" +
+                AND + "p1." + ExtensionProviderTable.FORMAT_TYPE + "!=?" +
+                AND + "p1." + ExtensionProviderTable.FORMAT_TYPE + "!=?";
 
         return db.query(new QueryStatement<>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
                 statement.setBoolean(2, false); // Don't select hidden values
+                statement.setString(3, FormatType.DATE_YEAR.name());
+                statement.setString(4, FormatType.DATE_SECOND.name());
             }
 
             @Override
@@ -149,8 +156,9 @@ public class ExtensionAggregateDoublesQuery implements Query<Map<Integer, Extens
     }
 
     private void extractAndPutDataTo(ExtensionTabData.Builder extensionTab, ExtensionDescription description, ResultSet set) throws SQLException {
-        extensionTab.putDoubleData(new ExtensionDoubleData(modifiedDescription(description, "_avg", "Average "), set.getDouble("average")));
-        extensionTab.putDoubleData(new ExtensionDoubleData(modifiedDescription(description, "_total", "Total "), set.getDouble("total")));
+        FormatType formatType = FormatType.getByName(set.getString(ExtensionProviderTable.FORMAT_TYPE)).orElse(FormatType.NONE);
+        extensionTab.putNumberData(new ExtensionNumberData(modifiedDescription(description, "_avg", "Average "), formatType, (long) set.getDouble("average")));
+        extensionTab.putNumberData(new ExtensionNumberData(modifiedDescription(description, "_total", "Total "), formatType, (long) set.getDouble("total")));
     }
 
     private ExtensionDescription modifiedDescription(ExtensionDescription description, String appendToName, String appendToText) {

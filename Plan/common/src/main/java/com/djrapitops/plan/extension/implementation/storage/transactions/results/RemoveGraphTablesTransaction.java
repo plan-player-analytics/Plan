@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
-import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionGraphQueries;
+import com.djrapitops.plan.extension.implementation.storage.queries.graph.ExtensionGraphQueries;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 
 import java.util.List;

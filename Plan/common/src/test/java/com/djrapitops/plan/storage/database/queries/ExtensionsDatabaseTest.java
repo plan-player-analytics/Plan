@@ -29,7 +29,7 @@ import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.results.*;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
-import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerTableDataQuery;
+import com.djrapitops.plan.extension.implementation.storage.queries.table.ExtensionServerTableDataQuery;
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.gathering.domain.WorldTimes;

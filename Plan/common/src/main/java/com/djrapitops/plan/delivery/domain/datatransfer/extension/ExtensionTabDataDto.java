@@ -26,6 +26,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+// TODO #2544 Add Table names to ExtensionTabDto
 public class ExtensionTabDataDto {
 
     private final TabInformationDto tabInformation; // Can be null in case where no tab was defined for provider.
