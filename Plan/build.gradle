@@ -166,7 +166,7 @@ subprojects {
     }
 
     checkstyle {
-        toolVersion "8.44"
+        toolVersion "10.21.1"
         getConfigDirectory().set file("$rootProject.projectDir/config/checkstyle")
     }
 

@@ -35,8 +35,7 @@ public class SecurityTableIdPatch extends Patch {
 
     @Override
     public boolean hasBeenApplied() {
-        return (hasColumn(TABLE_NAME, SecurityTable.ID))
-                && !hasTable(TEMP_TABLE_NAME);
+        return hasColumn(TABLE_NAME, SecurityTable.ID) && !hasTable(TEMP_TABLE_NAME);
     }
 
     @Override
