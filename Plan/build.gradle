@@ -11,9 +11,6 @@ buildscript {
 }
 
 plugins {
-    id 'java-library'
-    id "jacoco"
-    id "checkstyle"
     id "org.sonarqube" version "6.0.1.5171"
     id "com.gradleup.shadow" version "8.3.5" apply false
     id 'fabric-loom' version '1.9-SNAPSHOT' apply false
@@ -21,33 +18,25 @@ plugins {
 
 apply plugin: 'nebula-aggregate-javadocs'
 
-def determineBuildVersion = {
-    def buildInfo = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'rev-list', '--count', 'HEAD'
-        standardOutput = buildInfo
-    }
-    // Magic number: git rev-list --count cdb13e3b663b18e3938ad5efc60d165fa9301f6e
-    return Integer.parseInt(buildInfo.toString().replaceAll("[^0-9]", "")) - 3529
-}
-def buildVersion = determineBuildVersion()
 
 allprojects {
+    group = "com.djrapitops"
+    version = "5.6-SNAPSHOT"
 
-    group "com.djrapitops"
-    version "5.6-SNAPSHOT"
+    ext {
+        majorVersion = '5'
+        minorVersion = '6'
+        buildVersion = providers.provider {
+            def command = "git rev-list --count HEAD"
+            def buildInfo = command.execute().text.trim()
+            // Magic number: git rev-list --count cdb13e3b663b18e3938ad5efc60d165fa9301f6e
+            return Integer.parseInt(buildInfo.toString().replaceAll("[^0-9]", "")) - 3529
+        }.get()
 
-    ext.majorVersion = '5'
-    ext.minorVersion = '6'
-    ext.buildVersion = buildVersion
-    ext.fullVersion = project.ext.majorVersion + '.' + project.ext.minorVersion + ' build ' + project.ext.buildVersion
-    ext.fullVersionFilename = project.ext.majorVersion + '.' + project.ext.minorVersion + '-build-' + project.ext.buildVersion
-    ext.fullVersionSemantic = project.ext.majorVersion + '.' + project.ext.minorVersion + '+build.' + project.ext.buildVersion
-
-    // Fix for UTF-8 files showing with wrong encoding when compiled on Windows machines.
-    compileJava { options.encoding = "UTF-8" }
-    tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
-    javadoc { options.encoding = 'UTF-8' }
+        fullVersion = majorVersion + '.' + minorVersion + ' build ' + buildVersion
+        fullVersionFilename = majorVersion + '.' + minorVersion + '-build-' + buildVersion
+        fullVersionSemantic = majorVersion + '.' + minorVersion + '+build.' + buildVersion
+    }
 }
 
 logger.lifecycle("Building artifact for version $fullVersion / $fullVersionFilename / $fullVersionSemantic")
@@ -62,8 +51,16 @@ subprojects {
     apply plugin: "checkstyle"
     apply plugin: "jacoco"
 
-    compileJava {
-        options.release = 11
+    // Fix for UTF-8 files showing with wrong encoding when compiled on Windows machines.
+    tasks {
+        withType(JavaCompile).configureEach {
+            options.release = 17
+            options.encoding = "UTF-8"
+        }
+
+        withType(Javadoc).configureEach {
+            options.encoding = "UTF-8"
+        }
     }
 
     ext {
@@ -201,7 +198,7 @@ tasks.register('snapshotVersion') {
         def file = textFile.get().asFile
         file.delete()
         file.createNewFile()
-        file << "$project.version"
+        file << "$version"
     }
 }
 
@@ -213,7 +210,7 @@ tasks.register('jarNameVersion') {
         def file = textFile.get().asFile
         file.delete()
         file.createNewFile()
-        file << "$project.majorVersion.$project.minorVersion-build-$project.buildVersion"
+        file << "$majorVersion.$minorVersion-build-$buildVersion"
     }
 }
 
@@ -225,6 +222,6 @@ tasks.register('humanReadableVersion') {
         def file = textFile.get().asFile
         file.delete()
         file.createNewFile()
-        file << "$project.fullVersion"
+        file << "$fullVersion"
     }
 }
