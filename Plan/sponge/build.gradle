@@ -1,3 +1,4 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import org.spongepowered.gradle.plugin.config.PluginLoaders
 import org.spongepowered.gradle.vanilla.repository.MinecraftPlatform
 
@@ -76,7 +77,7 @@ compileJava {
     options.release = 11
 }
 
-shadowJar {
+tasks.named("shadowJar", ShadowJar) {
     configurations = [project.configurations.shadow]
 
     relocate "org.bstats", "net.playeranalytics.bstats.utilities.metrics"

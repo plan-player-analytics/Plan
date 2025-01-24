@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 dependencies {
     implementation project(path: ":api")
     shadow 'net.playeranalytics:Extension-AAC:4.4.2-R1.1'
@@ -48,7 +50,7 @@ dependencies {
     shadow 'net.playeranalytics:Extension-ViaVersion:4.0.1-R1.5'
 }
 
-shadowJar {
+tasks.named("shadowJar", ShadowJar) {
     configurations = [project.configurations.shadow]
 
     // TODO Missing test scope in every Extension pom.xml causes junit to be shadowed.

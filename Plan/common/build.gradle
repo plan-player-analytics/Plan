@@ -1,3 +1,4 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import dev.vankka.dependencydownload.task.GenerateDependencyDownloadResourceTask
 import org.apache.tools.ant.filters.ReplaceTokens
 
@@ -19,7 +20,7 @@ configurations {
     swaggerJson // swagger.json configuration
 }
 
-task generateResourceForMySQLDriver(type: GenerateDependencyDownloadResourceTask) {
+tasks.register('generateResourceForMySQLDriver', GenerateDependencyDownloadResourceTask) {
     var conf = configurations.mysqlDriver
     configuration = conf
     file = "assets/plan/dependencies/" + conf.name + ".txt"
@@ -27,7 +28,7 @@ task generateResourceForMySQLDriver(type: GenerateDependencyDownloadResourceTask
     includeShadowJarRelocations = false
 }
 
-task generateResourceForMariaDBDriver(type: GenerateDependencyDownloadResourceTask) {
+tasks.register('generateResourceForMariaDBDriver', GenerateDependencyDownloadResourceTask) {
     var conf = configurations.mariadbDriver
     configuration = conf
     file = "assets/plan/dependencies/" + conf.name + ".txt"
@@ -35,7 +36,7 @@ task generateResourceForMariaDBDriver(type: GenerateDependencyDownloadResourceTa
     includeShadowJarRelocations = false
 }
 
-task generateResourceForSQLiteDriver(type: GenerateDependencyDownloadResourceTask) {
+tasks.register('generateResourceForSQLiteDriver', GenerateDependencyDownloadResourceTask) {
     var conf = configurations.sqliteDriver
     configuration = conf
     file = "assets/plan/dependencies/" + conf.name + ".txt"
@@ -43,7 +44,7 @@ task generateResourceForSQLiteDriver(type: GenerateDependencyDownloadResourceTas
     includeShadowJarRelocations = false
 }
 
-task generateResourceForIpAddressMatcher(type: GenerateDependencyDownloadResourceTask) {
+tasks.register('generateResourceForIpAddressMatcher', GenerateDependencyDownloadResourceTask) {
     var conf = configurations.ipAddressMatcher
     configuration = conf
     file = "assets/plan/dependencies/" + conf.name + ".txt"
@@ -110,7 +111,7 @@ test {
     environment "PLAN_TEST_NODE_STRINGLIST", "- Test\n- Another"
 }
 
-task updateVersion(type: Copy) {
+tasks.register('updateVersion', Copy) {
     from('src/main/resources') {
         include 'plugin.yml'
         include 'bungee.yml'
@@ -127,31 +128,31 @@ node {
     nodeProjectDir = file("$rootDir/react/dashboard")
 }
 
-task yarnBundle(type: YarnTask) {
+tasks.register('bundle', YarnTask) {
+    dependsOn yarn
     inputs.files(fileTree("$rootDir/react/dashboard/src"))
     inputs.file("$rootDir/react/dashboard/package.json")
     inputs.file("$rootDir/react/dashboard/vite.config.js")
 
     outputs.dir("$rootDir/react/dashboard/build")
 
-    dependsOn yarn_install
     args = ['run', 'build']
 }
 
-task yarnStart(type: YarnTask) {
+tasks.register('yarnStart', YarnTask) {
     logging.captureStandardOutput LogLevel.INFO
     inputs.file("$rootDir/react/dashboard/package.json")
 
-    dependsOn yarn_install
+    dependsOn yarn
     args = ['run', 'start']
 }
 
-task copyYarnBuildResults {
+tasks.register('copyYarnBuildResults') {
     inputs.files(fileTree("$rootDir/react/dashboard/build"))
     outputs.dir("$rootDir/common/build/resources/main/assets/plan/web")
     outputs.dir("$rootDir/common/build/resources/test/assets/plan/web")
 
-    dependsOn yarnBundle
+    dependsOn bundle
     doLast {
         mkdir "$rootDir/common/build/resources/main/assets/plan/web"
         copy {
@@ -165,8 +166,8 @@ task copyYarnBuildResults {
     }
 }
 
-task determineAssetModifications {
-    dependsOn yarnBundle
+tasks.register('determineAssetModifications') {
+    dependsOn bundle
     inputs.files(fileTree("$rootDir/react/dashboard/build"))
     inputs.files(fileTree(dir: 'src/main/resources/assets/plan/web'))
     inputs.files(fileTree(dir: 'src/main/resources/assets/plan/locale'))
@@ -232,7 +233,7 @@ resolve { // Swagger json generation task
     ]
     outputDir = file('build/generated-resources/swagger/assets/plan/web/')
 }
-task swaggerJsonJar(type: Jar) {
+tasks.register('swaggerJsonJar', Jar) {
     dependsOn resolve
     archiveClassifier.set("resolve")
     from 'build/generated-resources/swagger'
@@ -256,6 +257,6 @@ processResources {
     from 'build/sources/resources'
 }
 
-shadowJar {
+tasks.named("shadowJar", ShadowJar) {
     configurations = [project.configurations.shadow]
 }

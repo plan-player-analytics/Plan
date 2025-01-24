@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 dependencies {
     shadow project(path: ":api")
     shadow project(path: ":extensions")
@@ -24,7 +26,7 @@ jar {
     ])
 }
 
-shadowJar {
+tasks.named("shadowJar", ShadowJar) {
     dependsOn processResources
     configurations = [project.configurations.shadow]
 

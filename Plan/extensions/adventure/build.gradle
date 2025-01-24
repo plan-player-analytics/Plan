@@ -1,3 +1,5 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 // :extensions:adventure is used to avoid relocating 'net.kyori.adventure.*'
 // as it is used & provided natively on some platforms
 
@@ -9,7 +11,7 @@ dependencies {
     shadow "net.kyori:adventure-text-minimessage:$adventureVersion"
 }
 
-shadowJar {
+tasks.named("shadowJar", ShadowJar) {
     relocate 'net.kyori', 'plan.net.kyori'
 
     // Exclude some stuff included from the root build.gradle
