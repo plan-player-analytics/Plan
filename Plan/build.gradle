@@ -193,43 +193,38 @@ sonarqube {
     }
 }
 
-abstract class PrintSnapshotVersionTask extends DefaultTask {
-    @TaskAction
-    def print() {
-        def versionsDir = project.file("$project.buildDir/versions")
-        def textFile = project.file("$project.buildDir/versions/snapshot.txt")
-        versionsDir.mkdirs()
-        Files.deleteIfExists(textFile.toPath())
-        textFile.createNewFile()
-        textFile << "$project.version"
+tasks.register('snapshotVersion') {
+    def versionsDir = layout.buildDirectory.dir("versions")
+    def textFile = layout.buildDirectory.file("versions/snapshot.txt")
+    doLast {
+        versionsDir.get().asFile.mkdirs()
+        def file = textFile.get().asFile
+        file.delete()
+        file.createNewFile()
+        file << "$project.version"
     }
 }
 
-abstract class PrintJarNameVersionTask extends DefaultTask {
-    @TaskAction
-    def print() {
-        def versionsDir = project.file("$project.buildDir/versions")
-        def textFile = project.file("$project.buildDir/versions/jar.txt")
-        versionsDir.mkdirs()
-        Files.deleteIfExists(textFile.toPath())
-        textFile.createNewFile()
-        textFile << "$project.majorVersion.$project.minorVersion-build-$project.buildVersion"
+tasks.register('jarNameVersion') {
+    def versionsDir = layout.buildDirectory.dir("versions")
+    def textFile = layout.buildDirectory.file("versions/jar.txt")
+    doLast {
+        versionsDir.get().asFile.mkdirs()
+        def file = textFile.get().asFile
+        file.delete()
+        file.createNewFile()
+        file << "$project.majorVersion.$project.minorVersion-build-$project.buildVersion"
     }
 }
 
-abstract class PrintHumanReadableVersionTask extends DefaultTask {
-    @TaskAction
-    def print() {
-        def versionsDir = project.file("$project.buildDir/versions")
-        def textFile = project.file("$project.buildDir/versions/human.txt")
-        versionsDir.mkdirs()
-        Files.deleteIfExists(textFile.toPath())
-        textFile.createNewFile()
-        textFile << "$project.fullVersion"
+tasks.register('humanReadableVersion') {
+    def versionsDir = layout.buildDirectory.dir("versions")
+    def textFile = layout.buildDirectory.file("versions/human.txt")
+    doLast {
+        versionsDir.get().asFile.mkdirs()
+        def file = textFile.get().asFile
+        file.delete()
+        file.createNewFile()
+        file << "$project.fullVersion"
     }
 }
-
-// Create a task using the task type
-tasks.register('snapshotVersion', PrintSnapshotVersionTask)
-tasks.register('jarNameVersion', PrintJarNameVersionTask)
-tasks.register('humanReadableVersion', PrintHumanReadableVersionTask)
