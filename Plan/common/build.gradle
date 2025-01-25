@@ -121,7 +121,6 @@ dependencies {
 }
 
 test {
-    ignoreFailures = true
     environment "PLAN_TEST_NODE_STRING", "String"
     environment "PLAN_TEST_NODE_BOOLEAN", "true"
     environment "PLAN_TEST_NODE_INTEGER", "5"

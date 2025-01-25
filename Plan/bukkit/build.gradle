@@ -19,7 +19,3 @@ dependencies {
     testImplementation(project(":extensions:adventure"))
     testImplementation "com.destroystokyo.paper:paper-api:$paperVersion"
 }
-
-test {
-    ignoreFailures = true
-}
