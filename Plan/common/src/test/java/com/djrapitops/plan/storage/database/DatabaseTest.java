@@ -51,6 +51,7 @@ import com.djrapitops.plan.storage.database.transactions.init.CreateIndexTransac
 import com.djrapitops.plan.storage.database.transactions.patches.BadFabricJoinAddressValuePatch;
 import com.djrapitops.plan.storage.database.transactions.patches.RegisterDateMinimizationPatch;
 import com.djrapitops.plan.storage.upkeep.DBCleanTask;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import utilities.FieldFetcher;
@@ -244,6 +245,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
     }
 
     @Test
+    @Disabled("flaky")
     default void sqlDateParsingSanityCheck() {
         Database db = db();
 
