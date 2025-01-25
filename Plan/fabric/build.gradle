@@ -1,10 +1,18 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import net.fabricmc.loom.task.RemapJarTask
 
 apply plugin: 'fabric-loom'
 apply plugin: "com.gradleup.shadow"
 
+logger.lifecycle("Building artifact for version $fullVersion / $fullVersionFilename / $fullVersionSemantic")
+
+configurations {
+    shade
+    implementation.extendsFrom shade
+}
+
 dependencies {
-    implementation project(":common")
+    shade project(":common")
     // todo
     // implementation project(path: ":common", configuration: "swaggerJson")
 
@@ -52,8 +60,7 @@ processResources {
 }
 
 tasks.named("shadowJar", ShadowJar) {
-    exclude('net.fabricmc:*')
-    exclude('/mappings/')
+    configurations = [project.configurations.shade]
 
     // Exclude these files
     exclude "**/*.svg"
@@ -116,15 +123,12 @@ tasks.named("shadowJar", ShadowJar) {
     mergeServiceFiles()
 }
 
-remapJar {
+tasks.register("remappedShadowJar", RemapJarTask) {
     dependsOn tasks.shadowJar
-    mustRunAfter tasks.shadowJar
-    inputFile = shadowJar.archiveFile.get()
+    input = tasks.shadowJar.archiveFile
     addNestedDependencies = true
-
     destinationDirectory.set(file("$rootDir/builds/"))
     archiveBaseName.set('PlanFabric')
-    archiveClassifier.set('')
 }
 
-shadowJar.finalizedBy(remapJar)
+tasks.assemble.dependsOn tasks.remappedShadowJar
