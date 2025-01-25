@@ -19,11 +19,15 @@ package com.djrapitops.plan.settings.locale;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.nio.file.FileSystems;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
@@ -52,7 +56,7 @@ class LangCodeTest {
 
     @Test
     @DisplayName("All locale files have matching LangCode")
-    void allFilesHaveLangCode() throws URISyntaxException {
+    void allFilesHaveLangCode() throws URISyntaxException, IOException {
         Set<String> fileNames = Arrays.stream(LangCode.values())
                 .filter(Predicate.not(LangCode.CUSTOM::equals))
                 .map(LangCode::getFileName)
@@ -60,15 +64,21 @@ class LangCodeTest {
 
         URL resource = getClass().getClassLoader().getResource("assets/plan/locale");
         assertNotNull(resource, "assets/plan/locale folder has gone missing for some reason - It's needed to access locales");
-        File localeFolder = new File(resource.toURI());
 
-        File[] localeFiles = localeFolder.listFiles();
-        assertNotNull(localeFiles);
-        assertAll(Arrays.stream(localeFiles)
-                .map(File::getName)
-                .map(fileName -> () ->
-                        assertTrue(fileNames.contains(fileName), () -> "'" + fileName + "' was not found from assets/plan/locale/")
-                ));
+        try (var fileSystem = FileSystems.newFileSystem(resource.toURI(), Map.of())) {
+            Path path = fileSystem.getPath("assets/plan/locale");
+            try (var paths = Files.walk(path)) {
+                List<String> localeFiles = paths
+                        .filter(Files::isRegularFile)
+                        .map(p -> p.getFileName().toString())
+                        .toList();
+
+                assertAll(localeFiles.stream()
+                        .map(fileName -> () ->
+                                assertTrue(fileNames.contains(fileName), () -> "'" + fileName + "' was not found from assets/plan/locale/")
+                        ));
+            }
+        }
     }
 
 }
