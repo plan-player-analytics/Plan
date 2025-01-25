@@ -1,14 +1,14 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 apply plugin: 'fabric-loom'
+apply plugin: "com.gradleup.shadow"
 
 dependencies {
-    shadow project(path: ":api")
-    shadow project(path: ":extensions")
-    shadow project(path: ":common")
-    shadow project(path: ":common", configuration: "swaggerJson")
+    implementation project(":common")
+    // todo
+    // implementation project(path: ":common", configuration: "swaggerJson")
 
-    shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
+    implementation "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
 
     // https://wiki.fabricmc.net/tutorial:migratemappings
     minecraft "com.mojang:minecraft:1.21.3"
@@ -30,7 +30,8 @@ dependencies {
         modImplementation(fabricApi.module(it, "0.114.0+1.21.3"))
     }
 
-    testImplementation project(path: ":common", configuration: 'testArtifacts')
+    testImplementation(testFixtures(project(":common")))
+    testImplementation(project(":extensions:adventure"))
 }
 
 loom {
@@ -51,10 +52,6 @@ processResources {
 }
 
 tasks.named("shadowJar", ShadowJar) {
-    configurations = [project.configurations.shadow]
-
-    from findProject(':extensions:adventure').tasks.shadowJar.archiveFile
-
     exclude('net.fabricmc:*')
     exclude('/mappings/')
 

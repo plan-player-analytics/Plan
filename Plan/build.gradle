@@ -1,5 +1,3 @@
-import java.nio.file.Files
-
 // Aggregate Javadocs
 buildscript {
     repositories {
@@ -11,17 +9,32 @@ buildscript {
 }
 
 plugins {
+    id("base")
     id "org.sonarqube" version "6.0.1.5171"
-    id "com.gradleup.shadow" version "8.3.5" apply false
+    id "com.gradleup.shadow" version "9.0.0-beta6" apply false
     id 'fabric-loom' version '1.9-SNAPSHOT' apply false
 }
 
 apply plugin: 'nebula-aggregate-javadocs'
 
+clean {
+    delete "builds/"
+}
 
-allprojects {
+subprojects {
     group = "com.djrapitops"
     version = "5.6-SNAPSHOT"
+    // Build plugins
+    apply plugin: "java-library"
+    apply plugin: "maven-publish"
+
+    // Report plugins
+    apply plugin: "checkstyle"
+    apply plugin: "jacoco"
+
+    compileJava {
+        options.release = 11
+    }
 
     ext {
         majorVersion = '5'
@@ -36,37 +49,10 @@ allprojects {
         fullVersion = majorVersion + '.' + minorVersion + ' build ' + buildVersion
         fullVersionFilename = majorVersion + '.' + minorVersion + '-build-' + buildVersion
         fullVersionSemantic = majorVersion + '.' + minorVersion + '+build.' + buildVersion
-    }
-}
 
-logger.lifecycle("Building artifact for version $fullVersion / $fullVersionFilename / $fullVersionSemantic")
-
-subprojects {
-    // Build plugins
-    apply plugin: "java-library"
-    apply plugin: "maven-publish"
-    apply plugin: "com.gradleup.shadow"
-
-    // Report plugins
-    apply plugin: "checkstyle"
-    apply plugin: "jacoco"
-
-    // Fix for UTF-8 files showing with wrong encoding when compiled on Windows machines.
-    tasks {
-        withType(JavaCompile).configureEach {
-            options.release = 17
-            options.encoding = "UTF-8"
-        }
-
-        withType(Javadoc).configureEach {
-            options.encoding = "UTF-8"
-        }
-    }
-
-    ext {
         daggerVersion = "2.55"
 
-        palVersion = "5.2.0"
+        palVersion = "5.2.0-TEST" // TODO bump
 
         bukkitVersion = "1.13.2-R0.1-SNAPSHOT"
         spigotVersion = "1.13.2-R0.1-SNAPSHOT"
@@ -104,10 +90,13 @@ subprojects {
         mockitoVersion = "5.15.2"
         seleniumVersion = "4.27.0"
         testContainersVersion = "1.20.4"
+        awaitilityVersion = "4.2.2"
         swaggerVersion = "2.2.28"
+        guavaVersion = "33.4.0-jre"
     }
 
     repositories {
+        mavenLocal()
         mavenCentral()
         google()
         maven { url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" } // Spigot
@@ -121,52 +110,45 @@ subprojects {
 
     dependencies {
         // Dependency Injection used across the project
-        shadow "com.google.dagger:dagger:$daggerVersion"
+        implementation "com.google.dagger:dagger:$daggerVersion"
         annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
-        testImplementation "com.google.dagger:dagger:$daggerVersion"
-        testAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
-
-        compileOnly "io.swagger.core.v3:swagger-core-jakarta:$swaggerVersion"
 
         // Test Tooling Dependencies
-        testImplementation "org.junit.jupiter:junit-jupiter:$junitVersion"      // JUnit 5
-        testImplementation "org.mockito:mockito-core:$mockitoVersion"           // Mockito Core
-        testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"  // Mockito JUnit 5 Extension
-        testImplementation "com.jayway.awaitility:awaitility:1.7.0"
+
         // Awaitility (Concurrent wait conditions)
 
         // Testing dependencies required by Plan
-        testImplementation "org.xerial:sqlite-jdbc:$sqliteVersion" // SQLite
-        testImplementation "com.mysql:mysql-connector-j:$mysqlVersion" // MySQL
-        testImplementation "org.mariadb.jdbc:mariadb-java-client:$mariadbVersion" // MariaDB
+
     }
 
-    configurations {
+    /*configurations {
         // Include shadowed dependencies in compile classpath of dependent modules
-        api.extendsFrom shadow
+        // TODO move to plugin?
+        // api.extendsFrom shadow
 
         testArtifacts.extendsFrom testRuntimeOnly // Test classes available to other modules
-        testImplementation.extendsFrom shadow // Include shadowed dependencies in test classpath
-    }
-    // Test classes available to other modules
+        // testImplementation.extendsFrom shadow // Include shadowed dependencies in test classpath
+    }*/
+    /*// Test classes available to other modules
     tasks.register('testJar', Jar) {
         archiveClassifier.set("test")
         from sourceSets.test.output
     }
     artifacts {
         testArtifacts testJar
-    }
+    }*/
 
     test {
         useJUnitPlatform()
         testLogging {
             events "passed", "failed", "skipped"
-            exceptionFormat "full"
+            exceptionFormat = "full"
         }
+        finalizedBy jacocoTestReport
     }
 
     checkstyle {
-        toolVersion "10.21.1"
+        toolVersion = "10.21.1"
         getConfigDirectory().set file("$rootProject.projectDir/config/checkstyle")
     }
 
@@ -177,8 +159,51 @@ subprojects {
         }
     }
 
-    plugins.withType(JacocoPlugin).configureEach {
-        tasks.named("test").get().finalizedBy 'jacocoTestReport'
+    tasks {
+        // Fix for UTF-8 files showing with wrong encoding when compiled on Windows machines.
+        withType(JavaCompile).configureEach {
+            options.encoding = "UTF-8"
+        }
+
+        withType(Javadoc).configureEach {
+            options.encoding = "UTF-8"
+        }
+
+        register('snapshotVersion') {
+            def versionsDir = layout.buildDirectory.dir("versions")
+            def textFile = layout.buildDirectory.file("versions/snapshot.txt")
+            doLast {
+                versionsDir.get().asFile.mkdirs()
+                def file = textFile.get().asFile
+                file.delete()
+                file.createNewFile()
+                file << "$version"
+            }
+        }
+
+        register('jarNameVersion') {
+            def versionsDir = layout.buildDirectory.dir("versions")
+            def textFile = layout.buildDirectory.file("versions/jar.txt")
+            doLast {
+                versionsDir.get().asFile.mkdirs()
+                def file = textFile.get().asFile
+                file.delete()
+                file.createNewFile()
+                file << "$majorVersion.$minorVersion-build-$buildVersion"
+            }
+        }
+
+        register('humanReadableVersion') {
+            def versionsDir = layout.buildDirectory.dir("versions")
+            def textFile = layout.buildDirectory.file("versions/human.txt")
+            doLast {
+                versionsDir.get().asFile.mkdirs()
+                def file = textFile.get().asFile
+                file.delete()
+                file.createNewFile()
+                file << "$fullVersion"
+            }
+        }
     }
 }
 
@@ -187,41 +212,5 @@ sonarqube {
         property "sonar.projectName", "Player Analytics"
         property "sonar.projectKey", "com.djrapitops:Plan"
         property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
-    }
-}
-
-tasks.register('snapshotVersion') {
-    def versionsDir = layout.buildDirectory.dir("versions")
-    def textFile = layout.buildDirectory.file("versions/snapshot.txt")
-    doLast {
-        versionsDir.get().asFile.mkdirs()
-        def file = textFile.get().asFile
-        file.delete()
-        file.createNewFile()
-        file << "$version"
-    }
-}
-
-tasks.register('jarNameVersion') {
-    def versionsDir = layout.buildDirectory.dir("versions")
-    def textFile = layout.buildDirectory.file("versions/jar.txt")
-    doLast {
-        versionsDir.get().asFile.mkdirs()
-        def file = textFile.get().asFile
-        file.delete()
-        file.createNewFile()
-        file << "$majorVersion.$minorVersion-build-$buildVersion"
-    }
-}
-
-tasks.register('humanReadableVersion') {
-    def versionsDir = layout.buildDirectory.dir("versions")
-    def textFile = layout.buildDirectory.file("versions/human.txt")
-    doLast {
-        versionsDir.get().asFile.mkdirs()
-        def file = textFile.get().asFile
-        file.delete()
-        file.createNewFile()
-        file << "$fullVersion"
     }
 }

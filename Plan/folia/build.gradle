@@ -1,13 +1,7 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-
 tasks.withType(JavaCompile).configureEach {
     options.release.set(17)
 }
 
 dependencies {
     runtimeOnly "net.playeranalytics:platform-abstraction-layer-folia:$palVersion"
-}
-
-tasks.named("shadowJar", ShadowJar) {
-    configurations = [project.configurations.shadow]
 }

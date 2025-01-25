@@ -4,12 +4,11 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 // as it is used & provided natively on some platforms
 
 dependencies {
-    compileOnly project(':api')
     compileOnly project(':common')
-    shadow "net.kyori:adventure-text-serializer-gson:$adventureVersion"
-    shadow "net.kyori:adventure-text-serializer-legacy:$adventureVersion"
-    shadow "net.kyori:adventure-text-minimessage:$adventureVersion"
-}
+    implementation "net.kyori:adventure-text-serializer-gson:$adventureVersion"
+    implementation "net.kyori:adventure-text-serializer-legacy:$adventureVersion"
+    implementation "net.kyori:adventure-text-minimessage:$adventureVersion"
+}/*
 
 tasks.named("shadowJar", ShadowJar) {
     relocate 'net.kyori', 'plan.net.kyori'
@@ -17,4 +16,4 @@ tasks.named("shadowJar", ShadowJar) {
     // Exclude some stuff included from the root build.gradle
     exclude 'dagger/**'
     exclude 'javax/inject/**'
-}
+}*/

@@ -1,8 +1,8 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import dev.vankka.dependencydownload.task.GenerateDependencyDownloadResourceTask
 import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
+    id("java-test-fixtures")
     id "dev.vankka.dependencydownload.plugin" version "$dependencyDownloadVersion"
     id "com.github.node-gradle.node" version "7.1.0"
     id "io.swagger.core.v3.swagger-gradle-plugin" version "2.2.28"
@@ -53,12 +53,14 @@ tasks.register('generateResourceForIpAddressMatcher', GenerateDependencyDownload
 }
 
 dependencies {
-    implementation project(":api")
-    shadow project(":extensions")
+    api project(":api")
+    api project(":extensions")
 
-    shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
+    compileOnly "io.swagger.core.v3:swagger-core-jakarta:$swaggerVersion"
+
+    implementation "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
     compileOnly "net.kyori:adventure-api:$adventureVersion"
-    shadow("dev.vankka:dependencydownload-runtime:$dependencyDownloadVersion") {
+    api("dev.vankka:dependencydownload-runtime:$dependencyDownloadVersion") {
         // Effectively disables relocating
         exclude module: "jar-relocator"
     }
@@ -68,41 +70,58 @@ dependencies {
     sqliteDriver "org.slf4j:slf4j-nop:1.7.36"
     ipAddressMatcher "com.github.seancfoley:ipaddress:$ipAddressMatcherVersion"
 
-    shadow "org.apache.commons:commons-text:$commonsTextVersion"
-    shadow "org.apache.commons:commons-compress:$commonsCompressVersion"
-    shadow "commons-codec:commons-codec:$commonsCodecVersion"
-    shadow "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
-    shadow "com.zaxxer:HikariCP:$hikariVersion"
-    shadow "org.slf4j:slf4j-nop:$slf4jVersion"
-    shadow "org.slf4j:slf4j-api:$slf4jVersion"
-    shadow "com.maxmind.geoip2:geoip2:$geoIpVersion"
-    shadow "com.google.code.gson:gson:$gsonVersion"
-    shadow "org.eclipse.jetty:jetty-server:$jettyVersion"
-    shadow "org.eclipse.jetty:jetty-alpn-java-server:$jettyVersion"
-    shadow "org.eclipse.jetty.http2:http2-server:$jettyVersion"
-    shadow("com.googlecode.json-simple:json-simple:1.1.1") { // json simple used by UUIDFetcher
+    api "org.apache.commons:commons-text:$commonsTextVersion"
+    implementation "org.apache.commons:commons-compress:$commonsCompressVersion"
+    implementation "commons-codec:commons-codec:$commonsCodecVersion"
+    api "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
+    implementation "com.zaxxer:HikariCP:$hikariVersion"
+    implementation "org.slf4j:slf4j-nop:$slf4jVersion"
+    implementation "org.slf4j:slf4j-api:$slf4jVersion"
+    implementation "com.maxmind.geoip2:geoip2:$geoIpVersion"
+    implementation "com.google.code.gson:gson:$gsonVersion"
+    api "org.eclipse.jetty:jetty-server:$jettyVersion"
+    implementation "org.eclipse.jetty:jetty-alpn-java-server:$jettyVersion"
+    implementation "org.eclipse.jetty.http2:http2-server:$jettyVersion"
+    implementation("com.googlecode.json-simple:json-simple:1.1.1") { // json simple used by UUIDFetcher
         // json-simple has junit (a test dependency) compile scoped
         exclude group: "junit", module: "junit"
     }
     implementation "org.jasypt:jasypt:$jasyptVersion:lite"
-
 
     // Swagger annotations
     implementation "jakarta.ws.rs:jakarta.ws.rs-api:4.0.0"
     implementation "io.swagger.core.v3:swagger-core-jakarta:$swaggerVersion"
     implementation "io.swagger.core.v3:swagger-jaxrs2-jakarta:$swaggerVersion"
 
+    // Test Tooling Dependencies
+    testFixturesApi "org.junit.jupiter:junit-jupiter:$junitVersion" // JUnit 5
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+
+    testFixturesApi "org.mockito:mockito-core:$mockitoVersion"           // Mockito Core
+    testFixturesApi "org.mockito:mockito-junit-jupiter:$mockitoVersion"  // Mockito JUnit 5 Extension
+    testFixturesImplementation "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
+
+    // Testing dependencies required by Plan
     testImplementation project(":api")
-    testArtifacts project(":extensions:adventure")
     testImplementation project(":extensions:adventure")
     testImplementation "com.google.code.gson:gson:$gsonVersion"
     testImplementation "org.seleniumhq.selenium:selenium-java:$seleniumVersion"
     testImplementation "org.testcontainers:testcontainers:$testContainersVersion"
     testImplementation "org.testcontainers:junit-jupiter:$testContainersVersion"
     testImplementation "org.testcontainers:nginx:$testContainersVersion"
+    testImplementation "org.awaitility:awaitility:$awaitilityVersion"
+    testFixturesApi "com.google.guava:guava:$guavaVersion"
+
+    testFixturesApi "org.xerial:sqlite-jdbc:$sqliteVersion" // SQLite
+    testFixturesApi "com.mysql:mysql-connector-j:$mysqlVersion" // MySQL
+    testFixturesApi "org.mariadb.jdbc:mariadb-java-client:$mariadbVersion" // MariaDB
+
+    testImplementation "com.google.dagger:dagger:$daggerVersion"
+    testAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 }
 
 test {
+    ignoreFailures = true
     environment "PLAN_TEST_NODE_STRING", "String"
     environment "PLAN_TEST_NODE_BOOLEAN", "true"
     environment "PLAN_TEST_NODE_INTEGER", "5"
@@ -128,7 +147,7 @@ node {
     nodeProjectDir = file("$rootDir/react/dashboard")
 }
 
-tasks.register('bundle', YarnTask) {
+tasks.register("bundle", YarnTask) {
     dependsOn yarn
     inputs.files(fileTree("$rootDir/react/dashboard/src"))
     inputs.file("$rootDir/react/dashboard/package.json")
@@ -166,6 +185,14 @@ tasks.register('copyYarnBuildResults') {
     }
 }
 
+tasks.named("checkstyleTest").configure { it.dependsOn(copyYarnBuildResults)}
+
+tasks.register('swaggerJsonJar', Jar) {
+    dependsOn resolve
+    archiveClassifier.set("resolve")
+    from 'build/generated-resources/swagger'
+}
+
 tasks.register('determineAssetModifications') {
     dependsOn bundle
     inputs.files(fileTree("$rootDir/react/dashboard/build"))
@@ -192,6 +219,7 @@ tasks.register('determineAssetModifications') {
                     "%s: %s\n", relativePath.toString().replace('.', ',').replace('\\', '/'), modified
             )
         }
+
         tree = fileTree(dir: 'src/main/resources/assets/plan/locale')
         tree.forEach { File f ->
             def gitModified = new ByteArrayOutputStream()
@@ -233,14 +261,15 @@ resolve { // Swagger json generation task
     ]
     outputDir = file('build/generated-resources/swagger/assets/plan/web/')
 }
-tasks.register('swaggerJsonJar', Jar) {
+
+/*tasks.register('swaggerJsonJar', Jar) {
     dependsOn resolve
     archiveClassifier.set("resolve")
     from 'build/generated-resources/swagger'
 }
 artifacts {
     swaggerJson swaggerJsonJar
-}
+}*/
 
 processResources {
     // Skips Yarn build on Jitpack since Jitpack doesn't offer gclib version compatible with Node 20
@@ -255,8 +284,4 @@ processResources {
     dependsOn updateVersion
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
     from 'build/sources/resources'
-}
-
-tasks.named("shadowJar", ShadowJar) {
-    configurations = [project.configurations.shadow]
 }

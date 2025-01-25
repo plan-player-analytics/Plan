@@ -1,22 +1,21 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
+apply plugin: "com.gradleup.shadow"
+
+logger.lifecycle("Building artifact for version $fullVersion / $fullVersionFilename / $fullVersionSemantic")
+
 dependencies {
-    shadow project(path: ":api")
-    shadow project(path: ":extensions")
-    shadow project(path: ":common")
-    shadow project(path: ":common", configuration: "swaggerJson")
-    shadow project(path: ":bukkit")
-    shadow project(path: ":nukkit")
-    shadow project(path: ":sponge")
-    shadow project(path: ":bungeecord")
-    shadow project(path: ":velocity")
-    shadow project(path: ":folia")
-    testImplementation project(path: ":common", configuration: 'testArtifacts')
-    testImplementation project(path: ":bukkit", configuration: 'testArtifacts')
-    testImplementation project(path: ":nukkit", configuration: 'testArtifacts')
-    testImplementation project(path: ":sponge", configuration: 'testArtifacts')
-    testImplementation project(path: ":bungeecord", configuration: 'testArtifacts')
-    testImplementation project(path: ":velocity", configuration: 'testArtifacts')
+    implementation project(":api")
+    implementation project(":extensions")
+    implementation project(":common")
+    // todo
+    // implementation project(path: ":common", configuration: "swaggerJson")
+    implementation project(":bukkit")
+    implementation project(":nukkit")
+    implementation project(":sponge")
+    implementation project(":bungeecord")
+    implementation project(":velocity")
+    // implementation project(":folia")
 }
 
 jar {
@@ -28,9 +27,9 @@ jar {
 
 tasks.named("shadowJar", ShadowJar) {
     dependsOn processResources
-    configurations = [project.configurations.shadow]
 
-    from findProject(':extensions:adventure').tasks.shadowJar.archiveFile
+    // todo need this?
+    // from findProject(':extensions:adventure').tasks.shadowJar.archiveFile
 
     // Exclude these files
     exclude "**/*.svg"

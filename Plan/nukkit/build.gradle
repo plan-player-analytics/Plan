@@ -1,24 +1,18 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-
 repositories {
     maven { url = "https://repo.opencollab.dev/maven-snapshots/" } // Nukkit snapshot
     maven { url = "https://repo.opencollab.dev/maven-releases/" } // Nukkit release
 }
 
 dependencies {
-    implementation project(":api")
     implementation project(":common")
 
-    shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
-    shadow "net.playeranalytics:platform-abstraction-layer-nukkit:$palVersion"
+    implementation "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
+    implementation "net.playeranalytics:platform-abstraction-layer-nukkit:$palVersion"
 
     compileOnly "cn.nukkit:nukkit:$nukkitVersion"
     compileOnly "com.creeperface.nukkit.placeholderapi:PlaceholderAPI:$nkPlaceholderapiVersion"
 
     testImplementation "cn.nukkit:nukkit:$nukkitVersion"
-    testImplementation project(path: ":common", configuration: 'testArtifacts')
-}
-
-tasks.named("shadowJar", ShadowJar) {
-    configurations = [project.configurations.shadow]
+    testImplementation(testFixtures(project(":common")))
+    testImplementation(project(":extensions:adventure"))
 }
