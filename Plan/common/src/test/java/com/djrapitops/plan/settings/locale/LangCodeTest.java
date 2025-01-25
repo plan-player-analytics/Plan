@@ -20,6 +20,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.Arrays;
@@ -40,11 +41,13 @@ class LangCodeTest {
         );
     }
 
-    private void assertFileExists(LangCode langCode) throws URISyntaxException {
+    private void assertFileExists(LangCode langCode) throws IOException {
         URL resource = getClass().getClassLoader().getResource("assets/plan/locale/" + langCode.getFileName());
         assertNotNull(resource, () -> "Resource assets/plan/locale/" + langCode.getFileName() + " does not exist, but it is needed for LangCode." + langCode.name());
-        File file = new File(resource.toURI());
-        assertTrue(file.exists(), () -> "File: " + file.getAbsolutePath() + " does not exist, but it is needed for LangCode." + langCode.name());
+
+        try (var res = getClass().getClassLoader().getResourceAsStream("assets/plan/locale/" + langCode.getFileName())) {
+            assertNotNull(res, () -> "Resource stream assets/plan/locale/" + langCode.getFileName() + " does not exist, but it is needed for LangCode." + langCode.name());
+        }
     }
 
     @Test
