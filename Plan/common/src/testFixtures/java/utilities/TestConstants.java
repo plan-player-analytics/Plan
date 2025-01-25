@@ -28,8 +28,6 @@ import java.util.function.Supplier;
  */
 public class TestConstants {
 
-
-
     private TestConstants() {
         /* Static variable class */
     }
