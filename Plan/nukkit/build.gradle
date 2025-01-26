@@ -15,3 +15,11 @@ dependencies {
     testImplementation(testFixtures(project(":common")))
     testImplementation(project(":extensions:adventure"))
 }
+
+processResources {
+    inputs.property("version", fullVersion)
+
+    filesMatching("nukkit.yml") {
+        expand("version": fullVersion)
+    }
+}

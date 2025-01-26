@@ -1,5 +1,4 @@
 import dev.vankka.dependencydownload.task.GenerateDependencyDownloadResourceTask
-import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
     id("java-test-fixtures")
@@ -124,17 +123,6 @@ test {
     environment "PLAN_TEST_NODE_DOUBLE", "0.5"
     environment "PLAN_TEST_NODE_LONG", "9223372036854775807"
     environment "PLAN_TEST_NODE_STRINGLIST", "- Test\n- Another"
-}
-
-tasks.register("updateVersion", Copy) {
-    from("src/main/resources") {
-        include "plugin.yml"
-        include "bungee.yml"
-        include "nukkit.yml"
-        include "fabric.mod.json"
-    }
-    into "build/sources/resources/"
-    filter(ReplaceTokens, tokens: [version: "" + fullVersion])
 }
 
 node {
@@ -277,7 +265,6 @@ processResources {
     dependsOn generateResourceForMySQLDriver
     dependsOn generateResourceForSQLiteDriver
     dependsOn generateResourceForIpAddressMatcher
-    dependsOn updateVersion
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
     from "build/sources/resources"
 }

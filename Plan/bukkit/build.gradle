@@ -19,3 +19,11 @@ dependencies {
     testImplementation(project(":extensions:adventure"))
     testImplementation "com.destroystokyo.paper:paper-api:$paperVersion"
 }
+
+processResources {
+    inputs.property("version", fullVersion)
+
+    filesMatching("plugin.yml") {
+        expand("version": fullVersion)
+    }
+}

@@ -12,3 +12,11 @@ dependencies {
     testImplementation(testFixtures(project(":common")))
     testImplementation(project(":extensions:adventure"))
 }
+
+processResources {
+    inputs.property("version", fullVersion)
+
+    filesMatching("bungee.yml") {
+        expand("version": fullVersion)
+    }
+}
