@@ -20,20 +20,9 @@ clean {
     delete "builds/"
 }
 
-subprojects {
+allprojects {
     group = "com.djrapitops"
     version = "5.6-SNAPSHOT"
-    // Build plugins
-    apply plugin: "java-library"
-    apply plugin: "maven-publish"
-
-    // Report plugins
-    apply plugin: "checkstyle"
-    apply plugin: "jacoco"
-
-    compileJava {
-        options.release = 11
-    }
 
     ext {
         majorVersion = "5"
@@ -48,7 +37,23 @@ subprojects {
         fullVersion = majorVersion + "." + minorVersion + " build " + buildVersion
         fullVersionFilename = majorVersion + "." + minorVersion + "-build-" + buildVersion
         fullVersionSemantic = majorVersion + "." + minorVersion + "+build." + buildVersion
+    }
+}
 
+subprojects {
+    // Build plugins
+    apply plugin: "java-library"
+    apply plugin: "maven-publish"
+
+    // Report plugins
+    apply plugin: "checkstyle"
+    apply plugin: "jacoco"
+
+    compileJava {
+        options.release = 11
+    }
+
+    ext {
         daggerVersion = "2.55"
 
         palVersion = "5.3.0"
@@ -133,52 +138,14 @@ subprojects {
         }
     }
 
-    tasks {
-        // Fix for UTF-8 files showing with wrong encoding when compiled on Windows machines.
-        withType(JavaCompile).configureEach {
-            options.encoding = "UTF-8"
-            options.fork = true
-        }
+    // Fix for UTF-8 files showing with wrong encoding when compiled on Windows machines.
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = "UTF-8"
+        options.fork = true
+    }
 
-        withType(Javadoc).configureEach {
-            options.encoding = "UTF-8"
-        }
-
-        register("snapshotVersion") {
-            def versionsDir = layout.buildDirectory.dir("versions")
-            def textFile = layout.buildDirectory.file("versions/snapshot.txt")
-            doLast {
-                versionsDir.get().asFile.mkdirs()
-                def file = textFile.get().asFile
-                file.delete()
-                file.createNewFile()
-                file << "$version"
-            }
-        }
-
-        register("jarNameVersion") {
-            def versionsDir = layout.buildDirectory.dir("versions")
-            def textFile = layout.buildDirectory.file("versions/jar.txt")
-            doLast {
-                versionsDir.get().asFile.mkdirs()
-                def file = textFile.get().asFile
-                file.delete()
-                file.createNewFile()
-                file << "$majorVersion.$minorVersion-build-$buildVersion"
-            }
-        }
-
-        register("humanReadableVersion") {
-            def versionsDir = layout.buildDirectory.dir("versions")
-            def textFile = layout.buildDirectory.file("versions/human.txt")
-            doLast {
-                versionsDir.get().asFile.mkdirs()
-                def file = textFile.get().asFile
-                file.delete()
-                file.createNewFile()
-                file << "$fullVersion"
-            }
-        }
+    tasks.withType(Javadoc).configureEach {
+        options.encoding = "UTF-8"
     }
 }
 
@@ -187,5 +154,35 @@ sonarqube {
         property "sonar.projectName", "Player Analytics"
         property "sonar.projectKey", "com.djrapitops:Plan"
         property "sonar.coverage.jacoco.xmlReportPaths", "build/reports/jacoco/test/jacocoTestReport.xml"
+    }
+}
+
+tasks.register("snapshotVersion") {
+    def textFile = layout.buildDirectory.file("versions/snapshot.txt")
+    doLast {
+        textFile.get().asFile.with {
+            parentFile.mkdirs()
+            write(version as String)
+        }
+    }
+}
+
+tasks.register("jarNameVersion") {
+    def textFile = layout.buildDirectory.file("versions/jar.txt")
+    doLast {
+        textFile.get().asFile.with {
+            parentFile.mkdirs()
+            write("$majorVersion.$minorVersion-build-$buildVersion")
+        }
+    }
+}
+
+tasks.register("humanReadableVersion") {
+    def textFile = layout.buildDirectory.file("versions/human.txt")
+    doLast {
+        textFile.get().asFile.with {
+            parentFile.mkdirs()
+            write(fullVersion)
+        }
     }
 }
