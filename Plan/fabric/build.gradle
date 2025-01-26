@@ -12,6 +12,9 @@ configurations {
 dependencies {
     shade project(":common")
 
+    // Shadow configuration required to only relocate adventure calls in ComponentConverter, not whole plugin
+    shade project(path: ":extensions:adventure", configuration: "shadow")
+
     implementation "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
 
     // https://wiki.fabricmc.net/tutorial:migratemappings
