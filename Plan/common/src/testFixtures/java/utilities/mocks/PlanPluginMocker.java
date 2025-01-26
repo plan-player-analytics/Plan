@@ -43,13 +43,13 @@ public class PlanPluginMocker {
     private PlanPluginMocker mockPlugin() {
         planMock = Mockito.mock(PlanPlugin.class);
 
-        Mockito.doReturn(new ColorScheme("§1", "§2", "§3")).when(planMock).getColorScheme();
+        doReturn(new ColorScheme("§1", "§2", "§3")).when(planMock).getColorScheme();
 
         return this;
     }
 
     public PlanPluginMocker withDataFolder(File tempFolder) {
-        Mockito.doReturn(tempFolder).when(planMock).getDataFolder();
+        doReturn(tempFolder).when(planMock).getDataFolder();
         return this;
     }
 
