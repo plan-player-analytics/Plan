@@ -51,7 +51,7 @@ subprojects {
 
         daggerVersion = "2.55"
 
-        palVersion = "5.2.0-TEST" // TODO bump
+        palVersion = "5.2.0" // TODO bump
 
         bukkitVersion = "1.13.2-R0.1-SNAPSHOT"
         spigotVersion = "1.13.2-R0.1-SNAPSHOT"
@@ -95,7 +95,6 @@ subprojects {
     }
 
     repositories {
-        mavenLocal()
         mavenCentral()
         google()
         maven { url = "https://hub.spigotmc.org/nexus/content/repositories/snapshots/" } // Spigot
