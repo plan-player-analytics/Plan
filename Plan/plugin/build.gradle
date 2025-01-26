@@ -13,7 +13,6 @@ dependencies {
     implementation project(":sponge")
     implementation project(":bungeecord")
     implementation project(":velocity")
-    implementation project(path: ":common", configuration: "swaggerJson")
 
     // Shadow configuration required to depend on Folia due to newer Java version
     implementation project(path: ":folia", configuration: "shadow")

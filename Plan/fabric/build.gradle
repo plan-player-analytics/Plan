@@ -11,8 +11,6 @@ configurations {
 
 dependencies {
     shade project(":common")
-    // todo
-    // implementation project(path: ":common", configuration: "swaggerJson")
 
     implementation "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
 
@@ -73,12 +71,12 @@ tasks.named("shadowJar", ShadowJar) {
     exclude "mozilla/**/*"
 
     // Exclude extra dependencies
-    exclude "org/apache/http/**/*" // Unnecessary http client depended on by geolite2 implementation
-    exclude "org/junit/**/*" // see extensions/build.gradle
-    exclude "org/opentest4j/**/*" // see extensions/build.gradle
     exclude "org/checkerframework/**/*" // Dagger compiler
     exclude "com/google/common/**/*"
     exclude "com/google/thirdparty/**/*"
+    exclude "com/google/auto/**/*"
+
+    exclude "org.javassist:.*"
     // Exclude swagger
     exclude "org/yaml/**/*"
     exclude "nonapi/**/*"
@@ -93,30 +91,36 @@ tasks.named("shadowJar", ShadowJar) {
 
     relocate("org.apache", "plan.org.apache") {
         exclude "org/apache/logging/**"
+        exclude "org/apache/maven/**" // This needs to be unrelocated for Sponge
     }
-    relocate "dagger", "plan.dagger"
+
     // Don't relocate MySQL or SQLite since they are loaded with a isolated class loader
     // relocate "org.sqlite", "plan.org.sqlite"
     // relocate "com.mysql", "plan.com.mysql"
     // relocate "com.google.protobuf", "plan.com.mysql.cj.x.google.protobuf"
-    relocate "javax.inject", "plan.javax.inject"
-    relocate "com.github.benmanes", "plan.com.github.benmanes"
-    relocate "dev.vankka.dependencydownload", "plan.dev.vankka.dependencydownload"
 
+    relocate "dagger", "plan.dagger"
+    relocate "javax.inject", "plan.javax.inject"
+    relocate "jakarta.inject", "plan.jakarta.inject"
+    relocate "org.jspecify", "plan.org.jspecify"
+
+    relocate "dev.vankka.dependencydownload", "plan.dev.vankka.dependencydownload"
+    relocate "com.github.benmanes", "plan.com.github.benmanes"
     relocate "com.maxmind", "plan.com.maxmind"
     relocate "com.fasterxml", "plan.com.fasterxml"
     relocate "com.zaxxer", "plan.com.zaxxer"
     relocate "com.google.gson", "plan.com.google.gson"
     relocate "com.google.errorprone", "plan.com.google.errorprone"
     relocate "org.bstats", "plan.org.bstats"
+    relocate "org.intellij.lang.annotations", "plan.org.intellij.lang.annotations"
+    relocate "org.jasypt", "plan.org.jasypt"
+    relocate "org.jetbrains.annotations", "plan.org.jetbrains.annotations"
+    relocate "org.json.simple", "plan.org.json.simple"
+    relocate "org.slf4j", "plan.org.slf4j"
 
     relocate "org.eclipse.jetty", "plan.org.eclipse.jetty"
     relocate "jakarta.servlet", "plan.jakarta.servlet"
     relocate "javax.servlet", "plan.javax.servlet"
-
-    relocate "org.slf4j", "plan.org.slf4j"
-
-    relocate "org.json.simple", "plan.org.json.simple"
 
     mergeServiceFiles()
 }

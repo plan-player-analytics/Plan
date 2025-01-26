@@ -245,16 +245,12 @@ resolve { // Swagger json generation task
             "com.djrapitops.plan.delivery.webserver.resolver.auth",
             "com.djrapitops.plan.delivery.webserver.resolver.json",
     ]
-    outputDir = file("build/generated-resources/swagger/assets/plan/web/")
+    outputDir = "build/generated-resources/swagger/assets/plan/web"
 }
 
-tasks.register("swaggerJsonJar", Jar) {
+jar {
     dependsOn resolve
-    archiveClassifier.set("resolve")
     from "build/generated-resources/swagger"
-}
-artifacts {
-    swaggerJson swaggerJsonJar
 }
 
 processResources {
