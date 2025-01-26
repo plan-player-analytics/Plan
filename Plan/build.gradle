@@ -51,7 +51,7 @@ subprojects {
 
         daggerVersion = "2.55"
 
-        palVersion = "5.2.0" // TODO bump
+        palVersion = "5.3.0"
 
         bukkitVersion = "1.13.2-R0.1-SNAPSHOT"
         spigotVersion = "1.13.2-R0.1-SNAPSHOT"
