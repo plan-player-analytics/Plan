@@ -1,6 +1,5 @@
 dependencies {
     implementation project(path: ":api")
-
     implementation "net.playeranalytics:Extension-AAC:4.4.2-R1.1"
     implementation "net.playeranalytics:Extension-AdvancedAchievements:6.4.0-R1.1"
     implementation "net.playeranalytics:Extension-AdvancedBan:2.1.5-R2.0"
