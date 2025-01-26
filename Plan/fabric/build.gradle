@@ -125,7 +125,7 @@ tasks.named("shadowJar", ShadowJar) {
     mergeServiceFiles()
 }
 
-tasks.register("remappedShadowJar", RemapJarTask) {
+tasks.register("remapShadowJar", RemapJarTask) {
     dependsOn tasks.shadowJar
     input = tasks.shadowJar.archiveFile
     addNestedDependencies = true
@@ -133,4 +133,4 @@ tasks.register("remappedShadowJar", RemapJarTask) {
     archiveBaseName.set("PlanFabric")
 }
 
-tasks.assemble.dependsOn tasks.remappedShadowJar
+tasks.assemble.dependsOn tasks.remapShadowJar

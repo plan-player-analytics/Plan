@@ -57,7 +57,7 @@ jobs:
       - name: 🛠 Build jars 
         run: |
           cd Plan
-          ./gradlew shadowJar
+          ./gradlew build -x test
       - name: ⚙ Get versions
         run: |
           cd Plan

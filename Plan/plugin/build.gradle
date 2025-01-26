@@ -104,11 +104,9 @@ tasks.named("shadowJar", ShadowJar) {
     archiveClassifier.set("")
 
     mergeServiceFiles()
-
-    build {
-        dependsOn tasks.named("shadowJar")
-    }
 }
+
+tasks.assemble.dependsOn tasks.shadowJar
 
 publishing {
     publications {
