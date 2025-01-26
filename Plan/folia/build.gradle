@@ -1,3 +1,5 @@
+apply plugin: "com.gradleup.shadow"
+
 tasks.withType(JavaCompile).configureEach {
     options.release.set(17)
 }

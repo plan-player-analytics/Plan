@@ -3,8 +3,8 @@ plugins {
 }
 
 blossom {
-    replaceTokenIn('src/main/java/com/djrapitops/plan/PlanVelocity.java')
-    replaceToken('@version@', "$fullVersion")
+    replaceTokenIn("src/main/java/com/djrapitops/plan/PlanVelocity.java")
+    replaceToken("@version@", "$fullVersion")
 }
 
 dependencies {

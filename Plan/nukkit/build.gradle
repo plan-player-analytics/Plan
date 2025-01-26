@@ -6,7 +6,6 @@ repositories {
 dependencies {
     implementation project(":common")
 
-    implementation "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
     implementation "net.playeranalytics:platform-abstraction-layer-nukkit:$palVersion"
 
     compileOnly "cn.nukkit:nukkit:$nukkitVersion"

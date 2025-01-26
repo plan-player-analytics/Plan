@@ -20,7 +20,7 @@ configurations {
     swaggerJson // swagger.json configuration
 }
 
-tasks.register('generateResourceForMySQLDriver', GenerateDependencyDownloadResourceTask) {
+tasks.register("generateResourceForMySQLDriver", GenerateDependencyDownloadResourceTask) {
     var conf = configurations.mysqlDriver
     configuration = conf
     file = "assets/plan/dependencies/" + conf.name + ".txt"
@@ -28,7 +28,7 @@ tasks.register('generateResourceForMySQLDriver', GenerateDependencyDownloadResou
     includeShadowJarRelocations = false
 }
 
-tasks.register('generateResourceForMariaDBDriver', GenerateDependencyDownloadResourceTask) {
+tasks.register("generateResourceForMariaDBDriver", GenerateDependencyDownloadResourceTask) {
     var conf = configurations.mariadbDriver
     configuration = conf
     file = "assets/plan/dependencies/" + conf.name + ".txt"
@@ -36,7 +36,7 @@ tasks.register('generateResourceForMariaDBDriver', GenerateDependencyDownloadRes
     includeShadowJarRelocations = false
 }
 
-tasks.register('generateResourceForSQLiteDriver', GenerateDependencyDownloadResourceTask) {
+tasks.register("generateResourceForSQLiteDriver", GenerateDependencyDownloadResourceTask) {
     var conf = configurations.sqliteDriver
     configuration = conf
     file = "assets/plan/dependencies/" + conf.name + ".txt"
@@ -44,7 +44,7 @@ tasks.register('generateResourceForSQLiteDriver', GenerateDependencyDownloadReso
     includeShadowJarRelocations = false
 }
 
-tasks.register('generateResourceForIpAddressMatcher', GenerateDependencyDownloadResourceTask) {
+tasks.register("generateResourceForIpAddressMatcher", GenerateDependencyDownloadResourceTask) {
     var conf = configurations.ipAddressMatcher
     configuration = conf
     file = "assets/plan/dependencies/" + conf.name + ".txt"
@@ -55,12 +55,10 @@ tasks.register('generateResourceForIpAddressMatcher', GenerateDependencyDownload
 dependencies {
     api project(":api")
     api project(":extensions")
-
-    compileOnly "io.swagger.core.v3:swagger-core-jakarta:$swaggerVersion"
-
     implementation "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
+
     compileOnly "net.kyori:adventure-api:$adventureVersion"
-    api("dev.vankka:dependencydownload-runtime:$dependencyDownloadVersion") {
+    implementation("dev.vankka:dependencydownload-runtime:$dependencyDownloadVersion") {
         // Effectively disables relocating
         exclude module: "jar-relocator"
     }
@@ -70,31 +68,30 @@ dependencies {
     sqliteDriver "org.slf4j:slf4j-nop:1.7.36"
     ipAddressMatcher "com.github.seancfoley:ipaddress:$ipAddressMatcherVersion"
 
+    compileOnlyApi "org.jetbrains:annotations:$jetbrainsAnnotationsVersion"
     api "org.apache.commons:commons-text:$commonsTextVersion"
-    implementation "org.apache.commons:commons-compress:$commonsCompressVersion"
-    implementation "commons-codec:commons-codec:$commonsCodecVersion"
+    api "org.apache.commons:commons-compress:$commonsCompressVersion"
+    api "commons-codec:commons-codec:$commonsCodecVersion"
     api "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
     implementation "com.zaxxer:HikariCP:$hikariVersion"
     implementation "org.slf4j:slf4j-nop:$slf4jVersion"
     implementation "org.slf4j:slf4j-api:$slf4jVersion"
     implementation "com.maxmind.geoip2:geoip2:$geoIpVersion"
-    implementation "com.google.code.gson:gson:$gsonVersion"
+    api "com.google.code.gson:gson:$gsonVersion"
     api "org.eclipse.jetty:jetty-server:$jettyVersion"
     implementation "org.eclipse.jetty:jetty-alpn-java-server:$jettyVersion"
     implementation "org.eclipse.jetty.http2:http2-server:$jettyVersion"
-    implementation("com.googlecode.json-simple:json-simple:1.1.1") { // json simple used by UUIDFetcher
-        // json-simple has junit (a test dependency) compile scoped
-        exclude group: "junit", module: "junit"
-    }
     implementation "org.jasypt:jasypt:$jasyptVersion:lite"
 
     // Swagger annotations
     implementation "jakarta.ws.rs:jakarta.ws.rs-api:4.0.0"
+    api "io.swagger.core.v3:swagger-annotations:$swaggerVersion"
     implementation "io.swagger.core.v3:swagger-core-jakarta:$swaggerVersion"
     implementation "io.swagger.core.v3:swagger-jaxrs2-jakarta:$swaggerVersion"
 
+
     // Test Tooling Dependencies
-    testFixturesApi "org.junit.jupiter:junit-jupiter:$junitVersion" // JUnit 5
+    testFixturesApi "org.junit.jupiter:junit-jupiter:$junitVersion"      // JUnit 5
     testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 
     testFixturesApi "org.mockito:mockito-core:$mockitoVersion"           // Mockito Core
@@ -129,15 +126,15 @@ test {
     environment "PLAN_TEST_NODE_STRINGLIST", "- Test\n- Another"
 }
 
-tasks.register('updateVersion', Copy) {
-    from('src/main/resources') {
-        include 'plugin.yml'
-        include 'bungee.yml'
-        include 'nukkit.yml'
-        include 'fabric.mod.json'
+tasks.register("updateVersion", Copy) {
+    from("src/main/resources") {
+        include "plugin.yml"
+        include "bungee.yml"
+        include "nukkit.yml"
+        include "fabric.mod.json"
     }
-    into 'build/sources/resources/'
-    filter(ReplaceTokens, tokens: [version: '' + project.ext.fullVersion])
+    into "build/sources/resources/"
+    filter(ReplaceTokens, tokens: [version: "" + fullVersion])
 }
 
 node {
@@ -154,18 +151,18 @@ tasks.register("bundle", YarnTask) {
 
     outputs.dir("$rootDir/react/dashboard/build")
 
-    args = ['run', 'build']
+    args = ["run", "build"]
 }
 
-tasks.register('yarnStart', YarnTask) {
+tasks.register("yarnStart", YarnTask) {
     logging.captureStandardOutput LogLevel.INFO
     inputs.file("$rootDir/react/dashboard/package.json")
 
     dependsOn yarn
-    args = ['run', 'start']
+    args = ["run", "start"]
 }
 
-tasks.register('copyYarnBuildResults') {
+tasks.register("copyYarnBuildResults") {
     inputs.files(fileTree("$rootDir/react/dashboard/build"))
     outputs.dir("$rootDir/common/build/resources/main/assets/plan/web")
     outputs.dir("$rootDir/common/build/resources/test/assets/plan/web")
@@ -184,30 +181,30 @@ tasks.register('copyYarnBuildResults') {
     }
 }
 
-tasks.named("checkstyleTest").configure { it.dependsOn(copyYarnBuildResults)}
-
-tasks.register('swaggerJsonJar', Jar) {
-    dependsOn resolve
-    archiveClassifier.set("resolve")
-    from 'build/generated-resources/swagger'
+tasks.withType(Test.class).configureEach {
+    forkEvery = 100
 }
 
-tasks.register('determineAssetModifications') {
+tasks.named("checkstyleTest").configure {
+    it.dependsOn(copyYarnBuildResults)
+}
+
+tasks.register("determineAssetModifications") {
     dependsOn bundle
     inputs.files(fileTree("$rootDir/react/dashboard/build"))
-    inputs.files(fileTree(dir: 'src/main/resources/assets/plan/web'))
-    inputs.files(fileTree(dir: 'src/main/resources/assets/plan/locale'))
+    inputs.files(fileTree(dir: "src/main/resources/assets/plan/web"))
+    inputs.files(fileTree(dir: "src/main/resources/assets/plan/locale"))
     outputs.file("build/resources/main/assets/plan/AssetVersion.yml")
 
     doLast {
         mkdir "build/resources/main/assets/plan"
         def versionFile = file("build/resources/main/assets/plan/AssetVersion.yml")
         versionFile.text = "" // Clear previous build
-        ConfigurableFileTree tree = fileTree(dir: 'src/main/resources/assets/plan/web')
+        ConfigurableFileTree tree = fileTree(dir: "src/main/resources/assets/plan/web")
         tree.forEach { File f ->
             def gitModified = new ByteArrayOutputStream()
             exec {
-                commandLine 'git', 'log', '-1', '--pretty=%ct', f.toString()
+                commandLine "git", "log", "-1", "--pretty=%ct", f.toString()
                 standardOutput = gitModified
             }
             def gitModifiedAsString = gitModified.toString().strip()
@@ -215,15 +212,15 @@ tasks.register('determineAssetModifications') {
             def modified = gitModifiedAsString.isEmpty() ? System.currentTimeMillis() : Long.parseLong(gitModifiedAsString) * 1000
             def relativePath = tree.getDir().toPath().relativize(f.toPath()) // File path relative to the tree
             versionFile.text += String.format(
-                    "%s: %s\n", relativePath.toString().replace('.', ',').replace('\\', '/'), modified
+                    "%s: %s\n", relativePath.toString().replace(".", ",").replace("\\", "/"), modified
             )
         }
 
-        tree = fileTree(dir: 'src/main/resources/assets/plan/locale')
+        tree = fileTree(dir: "src/main/resources/assets/plan/locale")
         tree.forEach { File f ->
             def gitModified = new ByteArrayOutputStream()
             exec {
-                commandLine 'git', 'log', '-1', '--pretty=%ct', f.toString()
+                commandLine "git", "log", "-1", "--pretty=%ct", f.toString()
                 standardOutput = gitModified
             }
             def gitModifiedAsString = gitModified.toString().strip()
@@ -231,7 +228,7 @@ tasks.register('determineAssetModifications') {
             def modified = gitModifiedAsString.isEmpty() ? System.currentTimeMillis() : Long.parseLong(gitModifiedAsString) * 1000
             def relativePath = tree.getDir().toPath().relativize(f.toPath()) // File path relative to the tree
             versionFile.text += String.format(
-                    "%s: %s\n", relativePath.toString().replace('.', ',').replace('\\', '/'), modified
+                    "%s: %s\n", relativePath.toString().replace(".", ",").replace("\\", "/"), modified
             )
         }
 
@@ -241,34 +238,34 @@ tasks.register('determineAssetModifications') {
             def modified = System.currentTimeMillis()
             def relativePath = tree.getDir().toPath().relativize(f.toPath()) // File path relative to the tree
             versionFile.text += String.format(
-                    "%s: %s\n", relativePath.toString().replace('.', ',').replace('\\', '/'), modified
+                    "%s: %s\n", relativePath.toString().replace(".", ",").replace("\\", "/"), modified
             )
         }
     }
 }
 
 resolve { // Swagger json generation task
-    outputFileName = 'swagger'
-    outputFormat = 'JSON'
-    prettyPrint = 'TRUE'
+    outputFileName = "swagger"
+    outputFormat = "JSON"
+    prettyPrint = "TRUE"
     classpath = sourceSets.main.runtimeClasspath
     buildClasspath = classpath
     resourcePackages = [
-            'com.djrapitops.plan.delivery.webserver',
-            'com.djrapitops.plan.delivery.webserver.resolver.auth',
-            'com.djrapitops.plan.delivery.webserver.resolver.json',
+            "com.djrapitops.plan.delivery.webserver",
+            "com.djrapitops.plan.delivery.webserver.resolver.auth",
+            "com.djrapitops.plan.delivery.webserver.resolver.json",
     ]
-    outputDir = file('build/generated-resources/swagger/assets/plan/web/')
+    outputDir = file("build/generated-resources/swagger/assets/plan/web/")
 }
 
-/*tasks.register('swaggerJsonJar', Jar) {
+tasks.register("swaggerJsonJar", Jar) {
     dependsOn resolve
     archiveClassifier.set("resolve")
-    from 'build/generated-resources/swagger'
+    from "build/generated-resources/swagger"
 }
 artifacts {
     swaggerJson swaggerJsonJar
-}*/
+}
 
 processResources {
     // Skips Yarn build on Jitpack since Jitpack doesn't offer gclib version compatible with Node 20
@@ -282,5 +279,5 @@ processResources {
     dependsOn generateResourceForIpAddressMatcher
     dependsOn updateVersion
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
-    from 'build/sources/resources'
+    from "build/sources/resources"
 }

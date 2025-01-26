@@ -1,10 +1,9 @@
-// Aggregate Javadocs
 buildscript {
     repositories {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.netflix.nebula:gradle-aggregate-javadocs-plugin:3.0.+'
+        classpath "com.netflix.nebula:gradle-aggregate-javadocs-plugin:3.0.+"
     }
 }
 
@@ -12,10 +11,10 @@ plugins {
     id("base")
     id "org.sonarqube" version "6.0.1.5171"
     id "com.gradleup.shadow" version "9.0.0-beta6" apply false
-    id 'fabric-loom' version '1.9-SNAPSHOT' apply false
+    id "fabric-loom" version "1.9-SNAPSHOT" apply false
 }
 
-apply plugin: 'nebula-aggregate-javadocs'
+apply plugin: "nebula-aggregate-javadocs"
 
 clean {
     delete "builds/"
@@ -37,8 +36,8 @@ subprojects {
     }
 
     ext {
-        majorVersion = '5'
-        minorVersion = '6'
+        majorVersion = "5"
+        minorVersion = "6"
         buildVersion = providers.provider {
             def command = "git rev-list --count HEAD"
             def buildInfo = command.execute().text.trim()
@@ -46,9 +45,9 @@ subprojects {
             return Integer.parseInt(buildInfo.toString().replaceAll("[^0-9]", "")) - 3529
         }.get()
 
-        fullVersion = majorVersion + '.' + minorVersion + ' build ' + buildVersion
-        fullVersionFilename = majorVersion + '.' + minorVersion + '-build-' + buildVersion
-        fullVersionSemantic = majorVersion + '.' + minorVersion + '+build.' + buildVersion
+        fullVersion = majorVersion + "." + minorVersion + " build " + buildVersion
+        fullVersionFilename = majorVersion + "." + minorVersion + "-build-" + buildVersion
+        fullVersionSemantic = majorVersion + "." + minorVersion + "+build." + buildVersion
 
         daggerVersion = "2.55"
 
@@ -68,8 +67,8 @@ subprojects {
         commonsCompressVersion = "1.27.1"
         commonsCodecVersion = "1.17.2"
         caffeineVersion = "3.1.8"
+        jetbrainsAnnotationsVersion = "24.0.0"
         jettyVersion = "11.0.24"
-        caffeineVersion = "2.9.2"
         mysqlVersion = "9.1.0"
         mariadbVersion = "3.5.1"
         sqliteVersion = "3.48.0.0"
@@ -112,31 +111,7 @@ subprojects {
         // Dependency Injection used across the project
         implementation "com.google.dagger:dagger:$daggerVersion"
         annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
-
-        // Test Tooling Dependencies
-
-        // Awaitility (Concurrent wait conditions)
-
-        // Testing dependencies required by Plan
-
     }
-
-    /*configurations {
-        // Include shadowed dependencies in compile classpath of dependent modules
-        // TODO move to plugin?
-        // api.extendsFrom shadow
-
-        testArtifacts.extendsFrom testRuntimeOnly // Test classes available to other modules
-        // testImplementation.extendsFrom shadow // Include shadowed dependencies in test classpath
-    }*/
-    /*// Test classes available to other modules
-    tasks.register('testJar', Jar) {
-        archiveClassifier.set("test")
-        from sourceSets.test.output
-    }
-    artifacts {
-        testArtifacts testJar
-    }*/
 
     test {
         useJUnitPlatform()
@@ -163,13 +138,14 @@ subprojects {
         // Fix for UTF-8 files showing with wrong encoding when compiled on Windows machines.
         withType(JavaCompile).configureEach {
             options.encoding = "UTF-8"
+            options.fork = true
         }
 
         withType(Javadoc).configureEach {
             options.encoding = "UTF-8"
         }
 
-        register('snapshotVersion') {
+        register("snapshotVersion") {
             def versionsDir = layout.buildDirectory.dir("versions")
             def textFile = layout.buildDirectory.file("versions/snapshot.txt")
             doLast {
@@ -181,7 +157,7 @@ subprojects {
             }
         }
 
-        register('jarNameVersion') {
+        register("jarNameVersion") {
             def versionsDir = layout.buildDirectory.dir("versions")
             def textFile = layout.buildDirectory.file("versions/jar.txt")
             doLast {
@@ -193,7 +169,7 @@ subprojects {
             }
         }
 
-        register('humanReadableVersion') {
+        register("humanReadableVersion") {
             def versionsDir = layout.buildDirectory.dir("versions")
             def textFile = layout.buildDirectory.file("versions/human.txt")
             doLast {

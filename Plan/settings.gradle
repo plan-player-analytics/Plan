@@ -1,11 +1,11 @@
 pluginManagement {
     repositories {
         maven {
-            name = 'Fabric'
-            url = 'https://maven.fabricmc.net/'
+            name = "Fabric"
+            url = "https://maven.fabricmc.net/"
         }
         maven {
-            name = 'Sponge'
+            name = "Sponge"
             url = "https://repo.spongepowered.org/repository/maven-public/"
         }
         mavenCentral()
@@ -13,17 +13,16 @@ pluginManagement {
     }
 }
 
-rootProject.name = 'Plan'
+rootProject.name = "Plan"
 
-include 'api'
-include 'common'
-include 'bukkit'
-include 'sponge'
-include 'nukkit'
-include 'bungeecord'
-include 'velocity'
-include 'plugin'
-include 'extensions'
-include 'extensions:adventure'
-include 'fabric'
-include 'folia'
+include "api"
+include "common"
+include "bukkit"
+include "sponge"
+include "nukkit"
+include "bungeecord"
+include "velocity"
+include "extensions:adventure"
+include "folia"
+include "fabric"
+include "plugin"
