@@ -151,6 +151,7 @@ tasks.register("yarnStart", YarnTask) {
 }
 
 tasks.register("copyYarnBuildResults") {
+    onlyIf("not running in Jitpack") { !project.hasProperty("isJitpack") }
     inputs.files(fileTree("$rootDir/react/dashboard/build"))
     outputs.dir("$rootDir/common/build/resources/main/assets/plan/web")
     outputs.dir("$rootDir/common/build/resources/test/assets/plan/web")
@@ -178,6 +179,7 @@ tasks.named("checkstyleTest").configure {
 }
 
 tasks.register("determineAssetModifications") {
+    onlyIf("not running in Jitpack") { !project.hasProperty("isJitpack") }
     dependsOn bundle
     inputs.files(fileTree("$rootDir/react/dashboard/build"))
     inputs.files(fileTree(dir: "src/main/resources/assets/plan/web"))
@@ -256,12 +258,10 @@ artifacts {
 }
 
 processResources {
-    // Skips Yarn build on Jitpack since Jitpack doesn't offer gclib version compatible with Node 20
+    // Tasks skip Yarn build on Jitpack since Jitpack doesn't offer gclib version compatible with Node 20
     // Jitpack build is used mainly for java dependencies.
-    if (!project.hasProperty("isJitpack")) {
-        dependsOn copyYarnBuildResults
-        dependsOn determineAssetModifications
-    }
+    dependsOn copyYarnBuildResults
+    dependsOn determineAssetModifications
     dependsOn generateResourceForMySQLDriver
     dependsOn generateResourceForSQLiteDriver
     dependsOn generateResourceForIpAddressMatcher
