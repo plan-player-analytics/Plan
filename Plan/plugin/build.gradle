@@ -88,9 +88,7 @@ tasks.named("shadowJar", ShadowJar) {
     relocate "com.google.gson", "plan.com.google.gson"
     relocate "com.google.errorprone", "plan.com.google.errorprone"
     relocate "org.bstats", "plan.org.bstats"
-    relocate "org.intellij.lang.annotations", "plan.org.intellij.lang.annotations"
     relocate "org.jasypt", "plan.org.jasypt"
-    relocate "org.jetbrains.annotations", "plan.org.jetbrains.annotations"
 
     relocate "org.eclipse.jetty", "plan.org.eclipse.jetty"
     relocate "jakarta.servlet", "plan.jakarta.servlet"
