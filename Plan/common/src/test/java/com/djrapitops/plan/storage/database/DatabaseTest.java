@@ -245,7 +245,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
     }
 
     @Test
-    @Disabled("flaky")
+    @Disabled("flaky") // TODO fix sql date parsing sanity check test
     default void sqlDateParsingSanityCheck() {
         Database db = db();
 
