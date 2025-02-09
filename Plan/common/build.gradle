@@ -151,6 +151,8 @@ tasks.register("yarnStart", YarnTask) {
 }
 
 tasks.register("copyYarnBuildResults") {
+    // Skip Yarn build on Jitpack since Jitpack doesn't offer gclib version compatible with Node 20
+    // Jitpack build is used mainly for java dependencies.
     onlyIf("not running in Jitpack") { !project.hasProperty("isJitpack") }
     inputs.files(fileTree("$rootDir/react/dashboard/build"))
     outputs.dir("$rootDir/common/build/resources/main/assets/plan/web")
@@ -175,10 +177,14 @@ tasks.withType(Test.class).configureEach {
 }
 
 tasks.named("checkstyleTest").configure {
+    // FAILURE: Task ':common:checkstyleTest' uses this output of task ':common:copyYarnBuildResults'
+    // without declaring an explicit or implicit dependency.
     it.dependsOn(copyYarnBuildResults)
 }
 
 tasks.register("determineAssetModifications") {
+    // Skip Yarn build on Jitpack since Jitpack doesn't offer gclib version compatible with Node 20
+    // Jitpack build is used mainly for java dependencies.
     onlyIf("not running in Jitpack") { !project.hasProperty("isJitpack") }
     dependsOn bundle
     inputs.files(fileTree("$rootDir/react/dashboard/build"))
@@ -254,8 +260,6 @@ jar {
 }
 
 processResources {
-    // Tasks skip Yarn build on Jitpack since Jitpack doesn't offer gclib version compatible with Node 20
-    // Jitpack build is used mainly for java dependencies.
     dependsOn copyYarnBuildResults
     dependsOn determineAssetModifications
     dependsOn generateResourceForMySQLDriver
