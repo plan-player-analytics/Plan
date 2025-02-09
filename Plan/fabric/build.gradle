@@ -105,7 +105,6 @@ tasks.named("shadowJar", ShadowJar) {
     relocate "dagger", "plan.dagger"
     relocate "javax.inject", "plan.javax.inject"
     relocate "jakarta.inject", "plan.jakarta.inject"
-    relocate "org.jspecify", "plan.org.jspecify"
 
     relocate "dev.vankka.dependencydownload", "plan.dev.vankka.dependencydownload"
     relocate "com.github.benmanes", "plan.com.github.benmanes"

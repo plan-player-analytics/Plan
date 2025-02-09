@@ -113,8 +113,12 @@ subprojects {
 
     dependencies {
         // Dependency Injection used across the project
-        implementation "com.google.dagger:dagger:$daggerVersion"
-        annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+        implementation("com.google.dagger:dagger:$daggerVersion") {
+            exclude group: "org.jspecify", module: "jspecify"
+        }
+        annotationProcessor("com.google.dagger:dagger-compiler:$daggerVersion") {
+            exclude group: "org.jspecify", module: "jspecify"
+        }
     }
 
     test {
