@@ -1,57 +1,16 @@
 name: Plan
 author: AuroraLS3
-main: com.djrapitops.plan.Plan
-version: @version@
-api-version: 1.13
-folia-supported: true
-softdepend:
-  - AAC
-  - ASkyBlock
-  - AdvancedAchievements
-  - AdvancedBan
-  - AuthMe
-  - BanManager
-  - BentoBox
-  - CoreProtect
-  - DiscordSRV
-  - DKCoins
-  - DKBans
-  - Essentials
-  - CMI
-  - Factions
-  - FastLogin
-  - GriefPrevention
-  - GriefPreventionPlus
-  - Jobs
-  - Kingdoms
-  - LiteBans
-  - LogBlock
-  - LuckPerms
-  - MarriageMaster
-  - mcMMO
-  - MinigamesLib
-  - MyPet
-  - nuVotifier
-  - PlaceholderAPI
-  - ProtectionStones
-  - ProtocolSupport
-  - Quests
-  - React
-  - RedProtect
-  - SuperbVote
-  - Towny
-  - Vault
-  - ViaVersion
-  - Votifier
+main: com.djrapitops.plan.PlanNukkit
+version: "${version}"
+api: ["1.0.5"]
+softdepend: ["PlaceholderAPI"]
 
 commands:
   plan:
-    usage: /plan
-    permission: plan.command
+    usage: /plan help
+    description: base command
 
 permissions:
-  plan.command:
-    default: true
   plan.server:
     default: op
   plan.servers:
@@ -75,8 +34,6 @@ permissions:
   plan.unregister.self:
     default: true
   plan.unregister.other:
-    default: op
-  plan.logout.other:
     default: op
   plan.info:
     default: op

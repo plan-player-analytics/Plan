@@ -1,34 +1,44 @@
-apply plugin: 'fabric-loom'
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import net.fabricmc.loom.task.RemapJarTask
+
+apply plugin: "fabric-loom"
+apply plugin: "com.gradleup.shadow"
+
+configurations {
+    shade
+    implementation.extendsFrom shade
+}
 
 dependencies {
-    shadow project(path: ":api")
-    shadow project(path: ":extensions")
-    shadow project(path: ":common")
-    shadow project(path: ":common", configuration: "swaggerJson")
+    shade project(":common")
 
-    shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
+    // Shadow configuration required to only relocate adventure calls in ComponentConverter, not whole plugin
+    shade project(path: ":extensions:adventure", configuration: "shadow")
+
+    implementation "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
 
     // https://wiki.fabricmc.net/tutorial:migratemappings
     minecraft "com.mojang:minecraft:1.21.3"
     mappings "net.fabricmc:yarn:1.21.3+build.2:v2"
     modImplementation "net.fabricmc:fabric-loader:0.16.9"
-    modImplementation('me.lucko:fabric-permissions-api:0.3.3')
+    modImplementation("me.lucko:fabric-permissions-api:0.3.3")
 
     // Fabric API
     Set<String> apiModules = [
-            'fabric-api-base',
-            'fabric-command-api-v2',
-            'fabric-entity-events-v1',
-            'fabric-lifecycle-events-v1',
-            'fabric-networking-api-v1',
-            'fabric-message-api-v1'
+            "fabric-api-base",
+            "fabric-command-api-v2",
+            "fabric-entity-events-v1",
+            "fabric-lifecycle-events-v1",
+            "fabric-networking-api-v1",
+            "fabric-message-api-v1"
     ]
 
     apiModules.forEach {
         modImplementation(fabricApi.module(it, "0.114.0+1.21.3"))
     }
 
-    testImplementation project(path: ":common", configuration: 'testArtifacts')
+    testImplementation(testFixtures(project(":common")))
+    testImplementation(project(":extensions:adventure"))
 }
 
 loom {
@@ -41,20 +51,15 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 processResources {
-    inputs.property "version", project.ext.fullVersion
+    inputs.property "version", fullVersion
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.ext.fullVersionSemantic
+        expand "version": fullVersionSemantic
     }
 }
 
-shadowJar {
-    configurations = [project.configurations.shadow]
-
-    from findProject(':extensions:adventure').tasks.shadowJar.archiveFile
-
-    exclude('net.fabricmc:*')
-    exclude('/mappings/')
+tasks.named("shadowJar", ShadowJar) {
+    configurations = [project.configurations.shade]
 
     // Exclude these files
     exclude "**/*.svg"
@@ -65,16 +70,16 @@ shadowJar {
 
     exclude "**/module-info.class"
     exclude "module-info.class"
-    exclude 'META-INF/versions/' // Causes Sponge to crash
-    exclude 'mozilla/**/*'
+    exclude "META-INF/versions/" // Causes Sponge to crash
+    exclude "mozilla/**/*"
 
     // Exclude extra dependencies
-    exclude 'org/apache/http/**/*' // Unnecessary http client depended on by geolite2 implementation
-    exclude "org/junit/**/*" // see extensions/build.gradle
-    exclude "org/opentest4j/**/*" // see extensions/build.gradle
     exclude "org/checkerframework/**/*" // Dagger compiler
     exclude "com/google/common/**/*"
     exclude "com/google/thirdparty/**/*"
+    exclude "com/google/auto/**/*"
+
+    exclude "org.javassist:.*"
     // Exclude swagger
     exclude "org/yaml/**/*"
     exclude "nonapi/**/*"
@@ -87,45 +92,45 @@ shadowJar {
     exclude "jakarta/xml/**/*"
     exclude "javassist/**/*"
 
-    relocate('org.apache', 'plan.org.apache') {
-        exclude 'org/apache/logging/**'
+    relocate("org.apache", "plan.org.apache") {
+        exclude "org/apache/logging/**"
+        exclude "org/apache/maven/**" // This needs to be unrelocated for Sponge
     }
-    relocate 'dagger', 'plan.dagger'
+
     // Don't relocate MySQL or SQLite since they are loaded with a isolated class loader
-    // relocate 'org.sqlite', 'plan.org.sqlite'
-    // relocate 'com.mysql', 'plan.com.mysql'
-    // relocate 'com.google.protobuf', 'plan.com.mysql.cj.x.google.protobuf'
-    relocate 'javax.inject', 'plan.javax.inject'
-    relocate 'com.github.benmanes', 'plan.com.github.benmanes'
-    relocate 'dev.vankka.dependencydownload', 'plan.dev.vankka.dependencydownload'
+    // relocate "org.sqlite", "plan.org.sqlite"
+    // relocate "com.mysql", "plan.com.mysql"
+    // relocate "com.google.protobuf", "plan.com.mysql.cj.x.google.protobuf"
 
-    relocate 'com.maxmind', 'plan.com.maxmind'
-    relocate 'com.fasterxml', 'plan.com.fasterxml'
-    relocate 'com.zaxxer', 'plan.com.zaxxer'
-    relocate 'com.google.gson', 'plan.com.google.gson'
-    relocate 'com.google.errorprone', 'plan.com.google.errorprone'
-    relocate 'org.bstats', 'plan.org.bstats'
+    relocate "dagger", "plan.dagger"
+    relocate "javax.inject", "plan.javax.inject"
+    relocate "jakarta.inject", "plan.jakarta.inject"
 
-    relocate 'org.eclipse.jetty', 'plan.org.eclipse.jetty'
-    relocate 'jakarta.servlet', 'plan.jakarta.servlet'
-    relocate 'javax.servlet', 'plan.javax.servlet'
+    relocate "dev.vankka.dependencydownload", "plan.dev.vankka.dependencydownload"
+    relocate "com.github.benmanes", "plan.com.github.benmanes"
+    relocate "com.maxmind", "plan.com.maxmind"
+    relocate "com.fasterxml", "plan.com.fasterxml"
+    relocate "com.zaxxer", "plan.com.zaxxer"
+    relocate "com.google.gson", "plan.com.google.gson"
+    relocate "com.google.errorprone", "plan.com.google.errorprone"
+    relocate "org.bstats", "plan.org.bstats"
+    relocate "org.jasypt", "plan.org.jasypt"
+    relocate "org.json.simple", "plan.org.json.simple"
+    relocate "org.slf4j", "plan.org.slf4j"
 
-    relocate 'org.slf4j', 'plan.org.slf4j'
-
-    relocate 'org.json.simple', 'plan.org.json.simple'
+    relocate "org.eclipse.jetty", "plan.org.eclipse.jetty"
+    relocate "jakarta.servlet", "plan.jakarta.servlet"
+    relocate "javax.servlet", "plan.javax.servlet"
 
     mergeServiceFiles()
 }
 
-remapJar {
+tasks.register("remapShadowJar", RemapJarTask) {
     dependsOn tasks.shadowJar
-    mustRunAfter tasks.shadowJar
-    inputFile = shadowJar.archiveFile.get()
+    input = tasks.shadowJar.archiveFile
     addNestedDependencies = true
-
     destinationDirectory.set(file("$rootDir/builds/"))
-    archiveBaseName.set('PlanFabric')
-    archiveClassifier.set('')
+    archiveBaseName.set("PlanFabric")
 }
 
-shadowJar.finalizedBy(remapJar)
+tasks.assemble.dependsOn tasks.remapShadowJar

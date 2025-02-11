@@ -47,7 +47,7 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.testcontainers.shaded.org.awaitility.Awaitility;
+import org.awaitility.Awaitility;
 import utilities.TestConstants;
 import utilities.dagger.PlanPluginComponent;
 import utilities.mocks.objects.TestPlayerData;

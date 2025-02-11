@@ -3,16 +3,14 @@ plugins {
 }
 
 blossom {
-    replaceTokenIn('src/main/java/com/djrapitops/plan/PlanVelocity.java')
-    replaceToken('@version@', "$fullVersion")
+    replaceTokenIn("src/main/java/com/djrapitops/plan/PlanVelocity.java")
+    replaceToken("@version@", "$fullVersion")
 }
 
 dependencies {
-    implementation project(":api")
     implementation project(":common")
 
-    shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
-    shadow "net.playeranalytics:platform-abstraction-layer-velocity:$palVersion"
+    implementation "net.playeranalytics:platform-abstraction-layer-velocity:$palVersion"
 
     compileOnly "com.velocitypowered:velocity-api:$velocityVersion"
     annotationProcessor "com.velocitypowered:velocity-api:$velocityVersion"
@@ -20,10 +18,6 @@ dependencies {
 
     testImplementation "com.velocitypowered:velocity-api:$velocityVersion"
     testImplementation "com.github.ProxioDev.ValioBungee:RedisBungee-API:$redisBungeeProxioDevVersion"
-    testImplementation project(path: ":common", configuration: 'testArtifacts')
-}
-
-shadowJar {
-    configurations = [project.configurations.shadow]
-    relocate 'org.bstats', 'net.playeranalytics.bstats.utilities.metrics'
+    testImplementation(testFixtures(project(":common")))
+    testImplementation(project(":extensions:adventure"))
 }

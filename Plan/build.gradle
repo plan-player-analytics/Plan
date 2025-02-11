@@ -1,62 +1,49 @@
-import java.nio.file.Files
-
-// Aggregate Javadocs
 buildscript {
     repositories {
         mavenCentral()
     }
     dependencies {
-        classpath 'com.netflix.nebula:gradle-aggregate-javadocs-plugin:3.0.+'
+        classpath "com.netflix.nebula:gradle-aggregate-javadocs-plugin:3.0.+"
     }
 }
 
 plugins {
-    id 'java-library'
-    id "jacoco"
-    id "checkstyle"
+    id("base")
     id "org.sonarqube" version "6.0.1.5171"
-    id "com.gradleup.shadow" version "8.3.5" apply false
-    id 'fabric-loom' version '1.9-SNAPSHOT' apply false
+    id "com.gradleup.shadow" version "9.0.0-beta6" apply false
+    id "fabric-loom" version "1.9-SNAPSHOT" apply false
 }
 
-apply plugin: 'nebula-aggregate-javadocs'
+apply plugin: "nebula-aggregate-javadocs"
 
-def determineBuildVersion = {
-    def buildInfo = new ByteArrayOutputStream()
-    exec {
-        commandLine 'git', 'rev-list', '--count', 'HEAD'
-        standardOutput = buildInfo
-    }
-    // Magic number: git rev-list --count cdb13e3b663b18e3938ad5efc60d165fa9301f6e
-    return Integer.parseInt(buildInfo.toString().replaceAll("[^0-9]", "")) - 3529
+clean {
+    delete "builds/"
 }
-def buildVersion = determineBuildVersion()
 
 allprojects {
+    group = "com.djrapitops"
+    version = "5.6-SNAPSHOT"
 
-    group "com.djrapitops"
-    version "5.6-SNAPSHOT"
+    ext {
+        majorVersion = "5"
+        minorVersion = "6"
+        buildVersion = providers.provider {
+            def command = "git rev-list --count HEAD"
+            def buildInfo = command.execute().text.trim()
+            // Magic number: git rev-list --count cdb13e3b663b18e3938ad5efc60d165fa9301f6e
+            return Integer.parseInt(buildInfo.toString().replaceAll("[^0-9]", "")) - 3529
+        }.get()
 
-    ext.majorVersion = '5'
-    ext.minorVersion = '6'
-    ext.buildVersion = buildVersion
-    ext.fullVersion = project.ext.majorVersion + '.' + project.ext.minorVersion + ' build ' + project.ext.buildVersion
-    ext.fullVersionFilename = project.ext.majorVersion + '.' + project.ext.minorVersion + '-build-' + project.ext.buildVersion
-    ext.fullVersionSemantic = project.ext.majorVersion + '.' + project.ext.minorVersion + '+build.' + project.ext.buildVersion
-
-    // Fix for UTF-8 files showing with wrong encoding when compiled on Windows machines.
-    compileJava { options.encoding = "UTF-8" }
-    tasks.withType(JavaCompile).configureEach { options.encoding = 'UTF-8' }
-    javadoc { options.encoding = 'UTF-8' }
+        fullVersion = majorVersion + "." + minorVersion + " build " + buildVersion
+        fullVersionFilename = majorVersion + "." + minorVersion + "-build-" + buildVersion
+        fullVersionSemantic = majorVersion + "." + minorVersion + "+build." + buildVersion
+    }
 }
-
-logger.lifecycle("Building artifact for version $fullVersion / $fullVersionFilename / $fullVersionSemantic")
 
 subprojects {
     // Build plugins
     apply plugin: "java-library"
     apply plugin: "maven-publish"
-    apply plugin: "com.gradleup.shadow"
 
     // Report plugins
     apply plugin: "checkstyle"
@@ -69,7 +56,7 @@ subprojects {
     ext {
         daggerVersion = "2.55"
 
-        palVersion = "5.2.0"
+        palVersion = "5.3.0"
 
         bukkitVersion = "1.13.2-R0.1-SNAPSHOT"
         spigotVersion = "1.13.2-R0.1-SNAPSHOT"
@@ -85,8 +72,8 @@ subprojects {
         commonsCompressVersion = "1.27.1"
         commonsCodecVersion = "1.17.2"
         caffeineVersion = "3.1.8"
+        jetbrainsAnnotationsVersion = "24.0.0"
         jettyVersion = "11.0.24"
-        caffeineVersion = "2.9.2"
         mysqlVersion = "9.1.0"
         mariadbVersion = "3.5.1"
         sqliteVersion = "3.42.0.1"
@@ -107,7 +94,9 @@ subprojects {
         mockitoVersion = "5.15.2"
         seleniumVersion = "4.27.0"
         testContainersVersion = "1.20.4"
+        awaitilityVersion = "4.2.2"
         swaggerVersion = "2.2.28"
+        guavaVersion = "33.4.0-jre"
     }
 
     repositories {
@@ -124,52 +113,25 @@ subprojects {
 
     dependencies {
         // Dependency Injection used across the project
-        shadow "com.google.dagger:dagger:$daggerVersion"
-        annotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
-        testImplementation "com.google.dagger:dagger:$daggerVersion"
-        testAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
-
-        compileOnly "io.swagger.core.v3:swagger-core-jakarta:$swaggerVersion"
-
-        // Test Tooling Dependencies
-        testImplementation "org.junit.jupiter:junit-jupiter:$junitVersion"      // JUnit 5
-        testImplementation "org.mockito:mockito-core:$mockitoVersion"           // Mockito Core
-        testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"  // Mockito JUnit 5 Extension
-        testImplementation "com.jayway.awaitility:awaitility:1.7.0"
-        // Awaitility (Concurrent wait conditions)
-
-        // Testing dependencies required by Plan
-        testImplementation "org.xerial:sqlite-jdbc:$sqliteVersion" // SQLite
-        testImplementation "com.mysql:mysql-connector-j:$mysqlVersion" // MySQL
-        testImplementation "org.mariadb.jdbc:mariadb-java-client:$mariadbVersion" // MariaDB
-    }
-
-    configurations {
-        // Include shadowed dependencies in compile classpath of dependent modules
-        api.extendsFrom shadow
-
-        testArtifacts.extendsFrom testRuntimeOnly // Test classes available to other modules
-        testImplementation.extendsFrom shadow // Include shadowed dependencies in test classpath
-    }
-    // Test classes available to other modules
-    tasks.register('testJar', Jar) {
-        archiveClassifier.set("test")
-        from sourceSets.test.output
-    }
-    artifacts {
-        testArtifacts testJar
+        implementation("com.google.dagger:dagger:$daggerVersion") {
+            exclude group: "org.jspecify", module: "jspecify"
+        }
+        annotationProcessor("com.google.dagger:dagger-compiler:$daggerVersion") {
+            exclude group: "org.jspecify", module: "jspecify"
+        }
     }
 
     test {
         useJUnitPlatform()
         testLogging {
             events "passed", "failed", "skipped"
-            exceptionFormat "full"
+            exceptionFormat = "full"
         }
+        finalizedBy jacocoTestReport
     }
 
     checkstyle {
-        toolVersion "8.44"
+        toolVersion = "10.21.1"
         getConfigDirectory().set file("$rootProject.projectDir/config/checkstyle")
     }
 
@@ -180,8 +142,14 @@ subprojects {
         }
     }
 
-    plugins.withType(JacocoPlugin).configureEach {
-        tasks.named("test").get().finalizedBy 'jacocoTestReport'
+    // Fix for UTF-8 files showing with wrong encoding when compiled on Windows machines.
+    tasks.withType(JavaCompile).configureEach {
+        options.encoding = "UTF-8"
+        options.fork = true
+    }
+
+    tasks.withType(Javadoc).configureEach {
+        options.encoding = "UTF-8"
     }
 }
 
@@ -193,43 +161,32 @@ sonarqube {
     }
 }
 
-abstract class PrintSnapshotVersionTask extends DefaultTask {
-    @TaskAction
-    def print() {
-        def versionsDir = project.file("$project.buildDir/versions")
-        def textFile = project.file("$project.buildDir/versions/snapshot.txt")
-        versionsDir.mkdirs()
-        Files.deleteIfExists(textFile.toPath())
-        textFile.createNewFile()
-        textFile << "$project.version"
+tasks.register("snapshotVersion") {
+    def textFile = layout.buildDirectory.file("versions/snapshot.txt")
+    doLast {
+        textFile.get().asFile.with {
+            parentFile.mkdirs()
+            write(version as String)
+        }
     }
 }
 
-abstract class PrintJarNameVersionTask extends DefaultTask {
-    @TaskAction
-    def print() {
-        def versionsDir = project.file("$project.buildDir/versions")
-        def textFile = project.file("$project.buildDir/versions/jar.txt")
-        versionsDir.mkdirs()
-        Files.deleteIfExists(textFile.toPath())
-        textFile.createNewFile()
-        textFile << "$project.majorVersion.$project.minorVersion-build-$project.buildVersion"
+tasks.register("jarNameVersion") {
+    def textFile = layout.buildDirectory.file("versions/jar.txt")
+    doLast {
+        textFile.get().asFile.with {
+            parentFile.mkdirs()
+            write("$majorVersion.$minorVersion-build-$buildVersion")
+        }
     }
 }
 
-abstract class PrintHumanReadableVersionTask extends DefaultTask {
-    @TaskAction
-    def print() {
-        def versionsDir = project.file("$project.buildDir/versions")
-        def textFile = project.file("$project.buildDir/versions/human.txt")
-        versionsDir.mkdirs()
-        Files.deleteIfExists(textFile.toPath())
-        textFile.createNewFile()
-        textFile << "$project.fullVersion"
+tasks.register("humanReadableVersion") {
+    def textFile = layout.buildDirectory.file("versions/human.txt")
+    doLast {
+        textFile.get().asFile.with {
+            parentFile.mkdirs()
+            write(fullVersion)
+        }
     }
 }
-
-// Create a task using the task type
-tasks.register('snapshotVersion', PrintSnapshotVersionTask)
-tasks.register('jarNameVersion', PrintJarNameVersionTask)
-tasks.register('humanReadableVersion', PrintHumanReadableVersionTask)

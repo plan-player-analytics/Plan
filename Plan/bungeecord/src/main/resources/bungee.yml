@@ -1,7 +1,7 @@
 name: Plan
 author: AuroraLS3
 main: com.djrapitops.plan.PlanBungee
-version: @version@
+version: ${version}
 softDepends:
 - AdvancedBan
 - LiteBans

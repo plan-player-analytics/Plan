@@ -26,7 +26,7 @@ import org.openqa.selenium.devtools.DevTools;
 import org.openqa.selenium.devtools.v130.emulation.Emulation;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
-import org.testcontainers.shaded.org.awaitility.Awaitility;
+import org.awaitility.Awaitility;
 import utilities.CIProperties;
 
 import java.io.File;

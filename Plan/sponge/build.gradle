@@ -7,18 +7,18 @@ plugins {
 }
 
 dependencies {
-    implementation project(":api")
     implementation project(":common")
 
-    shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
-    shadow "net.playeranalytics:platform-abstraction-layer-sponge:$palVersion"
-    shadow "org.bstats:bstats-sponge:$bstatsVersion"
+    implementation "net.playeranalytics:platform-abstraction-layer-sponge:$palVersion"
+    implementation "org.bstats:bstats-sponge:$bstatsVersion"
+    implementation "com.google.code.gson:gson:$gsonVersion"
 
     annotationProcessor "org.spongepowered:spongeapi:$spongeVersion"
     compileOnly "org.spongepowered:mixin:0.8.7"
 
     testImplementation "org.spongepowered:spongeapi:$spongeVersion"
-    testImplementation project(path: ":common", configuration: 'testArtifacts')
+    testImplementation(testFixtures(project(":common")))
+    testImplementation(project(":extensions:adventure"))
 }
 
 sponge {
@@ -74,10 +74,4 @@ minecraft {
 
 compileJava {
     options.release = 11
-}
-
-shadowJar {
-    configurations = [project.configurations.shadow]
-
-    relocate "org.bstats", "net.playeranalytics.bstats.utilities.metrics"
 }
