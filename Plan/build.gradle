@@ -74,7 +74,7 @@ subprojects {
         caffeineVersion = "3.2.0"
         jetbrainsAnnotationsVersion = "26.0.2"
         jettyVersion = "11.0.24"
-        mysqlVersion = "9.1.0"
+        mysqlVersion = "9.2.0"
         mariadbVersion = "3.5.2"
         sqliteVersion = "3.42.0.1"
         adventureVersion = "4.18.0"
