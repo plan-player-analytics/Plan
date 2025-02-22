@@ -17,16 +17,14 @@
 package extension;
 
 import org.apache.commons.lang3.SystemUtils;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.extension.*;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.devtools.DevTools;
-import org.openqa.selenium.devtools.v130.emulation.Emulation;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.logging.LoggingPreferences;
-import org.awaitility.Awaitility;
 import utilities.CIProperties;
 
 import java.io.File;
@@ -100,13 +98,6 @@ public class SeleniumExtension implements ParameterResolver, BeforeAllCallback, 
         }
 
         return new ChromeDriver(chromeOptions);
-    }
-
-    public static void setTimeZone(ChromeDriver chromeDriver, String timeZone) {
-        try (DevTools devTools = chromeDriver.getDevTools()) {
-            devTools.createSession();
-            devTools.send(Emulation.setTimezoneOverride(timeZone));
-        }
     }
 
     private LoggingPreferences getLoggingPreferences() {
