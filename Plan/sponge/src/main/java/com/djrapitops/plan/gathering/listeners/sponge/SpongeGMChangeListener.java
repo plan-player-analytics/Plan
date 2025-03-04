@@ -123,7 +123,7 @@ public class SpongeGMChangeListener {
         long time = System.currentTimeMillis();
 
         String gameModeText = gameMode.key(RegistryTypes.GAME_MODE).value().toUpperCase();
-        String worldName = Sponge.game().server().worldManager().worldDirectory(player.world().key())
+        String worldName = Optional.ofNullable(Sponge.game().server().worldManager().worldDirectory(player.world().key()))
                 .map(path -> path.getFileName().toString()).orElse("Unknown");
 
         dbSystem.getDatabase().executeTransaction(new StoreWorldNameTransaction(serverInfo.getServerUUID(), worldName));

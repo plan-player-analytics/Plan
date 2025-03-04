@@ -68,10 +68,10 @@ sponge {
 }
 
 minecraft {
-    version("1.16.5")
+    version("1.21.3")
     platform(MinecraftPlatform.SERVER)
 }
 
-compileJava {
-    options.release = 11
+tasks.withType(JavaCompile).configureEach {
+    options.release.set(21)
 }
