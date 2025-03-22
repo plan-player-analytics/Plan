@@ -39,6 +39,7 @@ tasks.named("shadowJar", ShadowJar) {
     exclude "**/module-info.class"
     exclude "module-info.class"
     exclude "META-INF/versions/" // Causes Sponge to crash
+    exclude "META-INF/services/net.kyori.**" // Causes ResolutionException on Sponge due to export to net.kyori module
     exclude "mozilla/**/*"
 
     // Exclude extra dependencies
