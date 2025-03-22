@@ -21,13 +21,6 @@ dependencies {
     implementation project(path: ":extensions:adventure", configuration: "shadow")
 }
 
-jar {
-    // Add the sponge mixin into the manifest
-    manifest.attributes([
-            "MixinConfigs": "plan-sponge.mixins.json"
-    ])
-}
-
 tasks.named("shadowJar", ShadowJar) {
     // Exclude these files
     exclude "**/*.svg"

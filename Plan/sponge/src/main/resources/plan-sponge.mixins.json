@@ -1,8 +1,0 @@
-{
-  "required": true,
-  "package": "com.djrapitops.plan.gathering.mixin",
-  "minVersion": "0.7.11",
-  "mixins": [
-    "GameModeChangeMixin"
-  ]
-}
