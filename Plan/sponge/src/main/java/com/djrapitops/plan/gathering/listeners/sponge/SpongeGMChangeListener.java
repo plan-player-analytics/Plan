@@ -22,23 +22,21 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.WorldAliasSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
-import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.GameType;
-import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.data.DataTransactionResult;
+import org.spongepowered.api.data.Keys;
+import org.spongepowered.api.data.value.Value;
 import org.spongepowered.api.entity.living.player.gamemode.GameMode;
-import org.spongepowered.api.entity.living.player.gamemode.GameModes;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
+import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.Order;
+import org.spongepowered.api.event.data.ChangeDataHolderEvent;
 import org.spongepowered.api.registry.RegistryTypes;
 
 import javax.inject.Inject;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 /**
  * Listener for GameMode change on Sponge.
@@ -46,8 +44,6 @@ import java.util.function.Consumer;
  * @author AuroraLS3
  */
 public class SpongeGMChangeListener {
-
-    public static final List<Consumer<Event>> EVENT_CONSUMERS = new ArrayList<>(); // Available to the mixin
 
     private final WorldAliasSettings worldAliasSettings;
     private final ServerInfo serverInfo;
@@ -65,65 +61,31 @@ public class SpongeGMChangeListener {
         this.serverInfo = serverInfo;
         this.dbSystem = dbSystem;
         this.errorLogger = errorLogger;
-        EVENT_CONSUMERS.add(this::onMixin);
     }
 
-    public static class Event {
-        private final Player player;
-        private final GameType gameType;
-
-        public Event(Player player, GameType gameType) {
-            this.player = player;
-            this.gameType = gameType;
-        }
-    }
-
-    private void onMixin(Event event) {
-        ServerPlayer serverPlayer = Sponge.game().server()
-                .player(event.player.getUUID())
-                .orElse(null);
-        if (serverPlayer == null) {
-            // uh oh
-            errorLogger.error(
-                    new RuntimeException("GameMode changed for player but no ServerPlayer was found"),
-                    ErrorContext.builder()
-                        .related(event.player, event.player.getGameProfile().getName())
-                        .whatToDo("Report this, the gamemode change mixin might be broken")
-                        .build()
-            );
+    @Listener(order = Order.POST)
+    public void onGMChange(ChangeDataHolderEvent.ValueChange event) {
+        ServerPlayer player = event.targetHolder() instanceof ServerPlayer serverPlayer ? serverPlayer : null;
+        if (player == null) {
             return;
         }
 
-        GameMode gameMode = GameModes.registry().value(ResourceKey.sponge(event.gameType.getName()));
-        actOnGMChangeEvent(serverPlayer, gameMode);
+        DataTransactionResult result = event.endResult();
+        Optional<Value.Immutable<GameMode>> gameModeValue = result.successfulValue(Keys.GAME_MODE);
+        if (gameModeValue.isEmpty()) {
+            return;
+        }
+
+        GameMode newMode = gameModeValue.get().get();
+        actOnGMChangeEvent(player, newMode);
     }
-
-    // This listener can replace the mixin if this pr is merged:
-    // https://github.com/SpongePowered/Sponge/pull/3563
-
-//    @Listener(order = Order.POST)
-//    public void onGMChange(ChangeDataHolderEvent.ValueChange event) {
-//        ServerPlayer player = event.targetHolder() instanceof ServerPlayer ? (ServerPlayer) event.targetHolder() : null;
-//        if (player == null) {
-//            return;
-//        }
-//
-//        DataTransactionResult result = event.endResult();
-//        Optional<Value.Immutable<GameMode>> gameModeValue = result.successfulValue(Keys.GAME_MODE);
-//        if (gameModeValue.isEmpty()) {
-//            return;
-//        }
-//
-//        GameMode newMode = gameModeValue.get().get();
-//        actOnGMChangeEvent(player, newMode);
-//    }
 
     private void actOnGMChangeEvent(ServerPlayer player, GameMode gameMode) {
         UUID uuid = player.uniqueId();
         long time = System.currentTimeMillis();
 
         String gameModeText = gameMode.key(RegistryTypes.GAME_MODE).value().toUpperCase();
-        String worldName = Sponge.game().server().worldManager().worldDirectory(player.world().key())
+        String worldName = Optional.ofNullable(Sponge.game().server().worldManager().worldDirectory(player.world().key()))
                 .map(path -> path.getFileName().toString()).orElse("Unknown");
 
         dbSystem.getDatabase().executeTransaction(new StoreWorldNameTransaction(serverInfo.getServerUUID(), worldName));

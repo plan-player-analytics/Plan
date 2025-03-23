@@ -21,13 +21,6 @@ dependencies {
     implementation project(path: ":extensions:adventure", configuration: "shadow")
 }
 
-jar {
-    // Add the sponge mixin into the manifest
-    manifest.attributes([
-            "MixinConfigs": "plan-sponge.mixins.json"
-    ])
-}
-
 tasks.named("shadowJar", ShadowJar) {
     // Exclude these files
     exclude "**/*.svg"
@@ -39,6 +32,7 @@ tasks.named("shadowJar", ShadowJar) {
     exclude "**/module-info.class"
     exclude "module-info.class"
     exclude "META-INF/versions/" // Causes Sponge to crash
+    exclude "META-INF/services/net.kyori.**" // Causes ResolutionException on Sponge due to export to net.kyori module
     exclude "mozilla/**/*"
 
     // Exclude extra dependencies

@@ -39,6 +39,8 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.network.ServerSideConnectionEvent;
+import org.spongepowered.api.network.ServerConnectionState;
+import org.spongepowered.api.profile.GameProfile;
 
 import javax.inject.Inject;
 import java.util.*;
@@ -129,13 +131,16 @@ public class SpongePingCounter extends TaskSystem.Task {
         playerHistory.put(uuid, new ArrayList<>());
     }
 
-    public void removePlayer(Player player) {
-        playerHistory.remove(player.uniqueId());
-        startRecording.remove(player.uniqueId());
+    public void removePlayer(UUID uuid) {
+        playerHistory.remove(uuid);
+        startRecording.remove(uuid);
     }
 
     private int getPing(ServerPlayer player) {
-        return player.connection().latency();
+        return player.connection().state()
+                .filter(state -> state instanceof ServerConnectionState.Game)
+                .map(state -> (ServerConnectionState.Game) state)
+                .map(ServerConnectionState.Game::latency).orElse(0);
     }
 
     @Listener
@@ -150,7 +155,7 @@ public class SpongePingCounter extends TaskSystem.Task {
 
     @Listener
     public void onPlayerQuit(ServerSideConnectionEvent.Disconnect quitEvent) {
-        removePlayer(quitEvent.player());
+        quitEvent.profile().map(GameProfile::uuid).ifPresent(this::removePlayer);
     }
 
     public void clear() {

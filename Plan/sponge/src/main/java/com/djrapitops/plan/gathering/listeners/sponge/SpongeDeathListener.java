@@ -38,7 +38,7 @@ import org.spongepowered.api.entity.living.animal.Wolf;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.Projectile;
 import org.spongepowered.api.event.Listener;
-import org.spongepowered.api.event.cause.entity.damage.source.EntityDamageSource;
+import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
@@ -83,7 +83,7 @@ public class SpongeDeathListener {
         }
 
         try {
-            List<EntityDamageSource> causes = event.cause().allOf(EntityDamageSource.class);
+            List<DamageSource> causes = event.cause().allOf(DamageSource.class);
             Optional<Player> foundKiller = findKiller(causes, 0);
             if (foundKiller.isEmpty()) {
                 return;
@@ -107,28 +107,38 @@ public class SpongeDeathListener {
         return new PlayerKill.Victim(victim.uniqueId(), victim.name());
     }
 
-    public Optional<Player> findKiller(List<EntityDamageSource> causes, int depth) {
+    public Optional<Player> findKiller(List<DamageSource> causes, int depth) {
         if (causes.isEmpty() || causes.size() < depth) {
             return Optional.empty();
         }
 
-        EntityDamageSource damageSource = causes.get(depth);
-        Entity killerEntity = damageSource.source();
+        DamageSource damageSource = causes.get(depth);
+        Optional<Entity> source = damageSource.source();
+        if (source.isEmpty()) source = damageSource.indirectSource();
+        if (source.isEmpty()) return Optional.empty();
 
-        if (killerEntity instanceof Player) return Optional.of((Player) killerEntity);
-        if (killerEntity instanceof Wolf) return getOwner((Wolf) killerEntity);
-        if (killerEntity instanceof Projectile) return getShooter((Projectile) killerEntity);
-        if (killerEntity instanceof EndCrystal) return findKiller(causes, depth + 1);
-        return Optional.empty();
+        Entity killerEntity = source.get();
+
+        return switch (killerEntity) {
+            case Player player -> Optional.of(player);
+            case Wolf wolf -> getOwner(wolf);
+            case Projectile projectile -> getShooter(projectile);
+            case EndCrystal endCrystal -> findKiller(causes, depth + 1);
+            default -> Optional.empty();
+        };
     }
 
     public String findWeapon(DestructEntityEvent.Death death) {
-        Optional<EntityDamageSource> damagedBy = death.cause().first(EntityDamageSource.class);
+        Optional<DamageSource> damagedBy = death.cause().first(DamageSource.class);
         if (damagedBy.isPresent()) {
-            EntityDamageSource damageSource = damagedBy.get();
-            Entity killerEntity = damageSource.source();
+            DamageSource damageSource = damagedBy.get();
+            Optional<Entity> source = damageSource.source();
+            if (source.isEmpty()) source = damageSource.indirectSource();
+            if (source.isEmpty()) return "Unknown";
 
-            if (killerEntity instanceof Player) return getItemInHand((Player) killerEntity);
+            Entity killerEntity = source.get();
+
+            if (killerEntity instanceof Player player) return getItemInHand(player);
             if (killerEntity instanceof Wolf) return "Wolf";
 
             Optional<ResourceKey> entityType = killerEntity.type().findKey(RegistryTypes.ENTITY_TYPE);
@@ -148,14 +158,14 @@ public class SpongeDeathListener {
 
     private Optional<Player> getShooter(Projectile projectile) {
         ProjectileSource source = projectile.shooter().map(Value::get).orElse(null);
-        if (source instanceof Player) {
-            return Optional.of((Player) source);
+        if (source instanceof Player player) {
+            return Optional.of(player);
         }
 
         return Optional.empty();
     }
 
     private Optional<Player> getOwner(Wolf wolf) {
-        return wolf.tamer().flatMap(uuid -> Sponge.game().server().player(uuid.get()));
+        return wolf.owner().flatMap(uuid -> Sponge.game().server().player(uuid.get()));
     }
 }
