@@ -90,7 +90,6 @@ com.djrapitops.plan.gathering.listeners.bungee
 com.djrapitops.plan.gathering.listeners.nukkit
 com.djrapitops.plan.gathering.listeners.sponge
 com.djrapitops.plan.gathering.listeners.velocity
-com.djrapitops.plan.gathering.mixin
 com.djrapitops.plan.gathering.timed
 com.djrapitops.plan.identification
 com.djrapitops.plan.identification.properties
