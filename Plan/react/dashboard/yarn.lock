@@ -207,7 +207,7 @@
   dependencies:
     "@babel/helper-plugin-utils" "^7.25.9"
 
-"@babel/runtime-corejs3@^7.20.7", "@babel/runtime-corejs3@^7.22.15", "@babel/runtime-corejs3@^7.26.10", "@babel/runtime-corejs3@^7.26.7":
+"@babel/runtime-corejs3@^7.20.7", "@babel/runtime-corejs3@^7.22.15", "@babel/runtime-corejs3@^7.26.10":
   version "7.26.10"
   resolved "https://registry.yarnpkg.com/@babel/runtime-corejs3/-/runtime-corejs3-7.26.10.tgz#5a3185ca2813f8de8ae68622572086edf5cf51f2"
   integrity sha512-uITFQYO68pMEYR46AHgQoyBg7KPPJDAbGn4jUTIRgCFJIp88MIBUianVOplhZDEec07bp9zIyr4Kp0FCyQzmWg==
@@ -2830,10 +2830,10 @@ supports-color@^7.1.0:
   dependencies:
     has-flag "^4.0.0"
 
-swagger-client@^3.34.1:
-  version "3.34.3"
-  resolved "https://registry.yarnpkg.com/swagger-client/-/swagger-client-3.34.3.tgz#1571514a901ee55313f598ca2491359ca99c2938"
-  integrity sha512-Hm0k/pX6tCL06slq3WYvTkAufYhe3FvHjls88/qXBwlgz/IEy5lleylv7rIguwjSQoQFSg8DPkLz/uczN/qfkA==
+swagger-client@^3.34.4:
+  version "3.34.4"
+  resolved "https://registry.yarnpkg.com/swagger-client/-/swagger-client-3.34.4.tgz#034cb241af39b988ca10c39e7add2596c480075d"
+  integrity sha512-Qvtu8DtARAx5GwefA0eV1WRLa4Q9bhczrtNAsiBMOx3HkxAOczy1APQhrcblJdLys0xEGQ4xYizYFXfIL9BhpA==
   dependencies:
     "@babel/runtime-corejs3" "^7.22.15"
     "@scarf/scarf" "=1.4.0"
@@ -2854,12 +2854,12 @@ swagger-client@^3.34.1:
     ramda "^0.30.1"
     ramda-adjunct "^5.1.0"
 
-swagger-ui@^5.20.1:
-  version "5.20.1"
-  resolved "https://registry.yarnpkg.com/swagger-ui/-/swagger-ui-5.20.1.tgz#0d7bd19b3dad9cca463cdbda28312ae592b54350"
-  integrity sha512-ZgAnhAAW7ZFsfYaBc8rhOCNIohI7vDNrL66ZLa5Slt1YQsj99b7FajOXED27U+RtBiiQqXWspjDw8W6F1qvu2Q==
+swagger-ui@^5.20.2:
+  version "5.20.2"
+  resolved "https://registry.yarnpkg.com/swagger-ui/-/swagger-ui-5.20.2.tgz#555f19b92a02bc7077d73b2890d09093396eb95c"
+  integrity sha512-lwbSN5RGo1RM1nzI308XjKdCOJnrza+a/jzmeLu0u2FQyFX2BbhvE4utWZrkla30cLHWMtVjQEkOhI0LgC/lrg==
   dependencies:
-    "@babel/runtime-corejs3" "^7.26.7"
+    "@babel/runtime-corejs3" "^7.26.10"
     "@scarf/scarf" "=1.4.0"
     base64-js "^1.5.1"
     classnames "^2.5.1"
@@ -2889,7 +2889,7 @@ swagger-ui@^5.20.1:
     reselect "^5.1.1"
     serialize-error "^8.1.0"
     sha.js "^2.4.11"
-    swagger-client "^3.34.1"
+    swagger-client "^3.34.4"
     url-parse "^1.5.10"
     xml "=1.0.1"
     xml-but-prettier "^1.0.1"
