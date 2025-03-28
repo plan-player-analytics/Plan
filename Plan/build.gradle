@@ -63,7 +63,7 @@ subprojects {
         paperVersion = "1.13.2-R0.1-SNAPSHOT"
         spongeVersion = "13.0.0"
         nukkitVersion = "1.0-SNAPSHOT"
-        bungeeVersion = "1.16-R0.4"
+        bungeeVersion = "1.21-R0.1"
         velocityVersion = "3.0.0-SNAPSHOT"
         redisBungeeVersion = "0.3.8-SNAPSHOT"
         redisBungeeProxioDevVersion = "0.7.3"
