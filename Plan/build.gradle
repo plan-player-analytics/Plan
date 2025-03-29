@@ -119,6 +119,9 @@ subprojects {
         annotationProcessor("com.google.dagger:dagger-compiler:$daggerVersion") {
             exclude group: "org.jspecify", module: "jspecify"
         }
+
+        // Required for JUnit to discover tests in modules.
+        testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     }
 
     test {
