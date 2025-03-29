@@ -90,7 +90,7 @@ subprojects {
         placeholderapiVersion = "2.11.5"
         nkPlaceholderapiVersion = "1.4-SNAPSHOT"
 
-        junitVersion = "5.11.4"
+        junitVersion = "5.12.1"
         mockitoVersion = "5.16.1"
         seleniumVersion = "4.30.0"
         testContainersVersion = "1.20.6"
@@ -119,6 +119,9 @@ subprojects {
         annotationProcessor("com.google.dagger:dagger-compiler:$daggerVersion") {
             exclude group: "org.jspecify", module: "jspecify"
         }
+
+        // Required for JUnit to discover tests in modules.
+        testRuntimeOnly("org.junit.platform:junit-platform-launcher")
     }
 
     test {
