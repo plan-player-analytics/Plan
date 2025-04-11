@@ -422,10 +422,10 @@
   dependencies:
     prop-types "^15.8.1"
 
-"@fullcalendar/bootstrap@^6.1.15":
-  version "6.1.15"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/bootstrap/-/bootstrap-6.1.15.tgz#798219a0e01f97c1a361b7c3ec32ffb0e0239186"
-  integrity sha512-mlUmwtatxtMwWRrpDJgurBBE0L8aD3DFk24LqugSI5zhQIGp0fTm0QI7oiVczbyQKQCCi/nxl1aDNOCKES0xxw==
+"@fullcalendar/bootstrap@^6.1.17":
+  version "6.1.17"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/bootstrap/-/bootstrap-6.1.17.tgz#dc7fc0ce15387ce36d4fc20ef2ffb409e7408fb4"
+  integrity sha512-8oGlepD17TEx+D7HqCKCoH1P19yDDbMaLBjuV3fW3XsYCqVZ3uGHcXSVHr7Jw/GzWB05vKiU/+CVXFmApltrsQ==
 
 "@fullcalendar/core@^6.1.17":
   version "6.1.17"
