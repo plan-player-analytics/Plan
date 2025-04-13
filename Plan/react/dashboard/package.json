@@ -13,7 +13,7 @@
     "@fortawesome/free-regular-svg-icons": "^6.7.2",
     "@fortawesome/free-solid-svg-icons": "^6.7.2",
     "@fortawesome/react-fontawesome": "^0.2.2",
-    "@fullcalendar/bootstrap": "^6.1.15",
+    "@fullcalendar/bootstrap": "^6.1.17",
     "@fullcalendar/core": "^6.1.17",
     "@fullcalendar/daygrid": "^6.1.15",
     "@fullcalendar/interaction": "^6.1.17",
