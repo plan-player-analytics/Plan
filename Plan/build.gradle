@@ -77,7 +77,7 @@ subprojects {
         mysqlVersion = "9.2.0"
         mariadbVersion = "3.5.3"
         sqliteVersion = "3.42.0.1"
-        adventureVersion = "4.19.0"
+        adventureVersion = "4.20.0"
         hikariVersion = "6.3.0"
         slf4jVersion = "2.0.17"
         geoIpVersion = "4.2.1"
