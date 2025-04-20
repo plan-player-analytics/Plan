@@ -280,6 +280,7 @@ export const createNightModeCss = () => {
         `.fc-today {background:var(--color-night-grey-blue) !important}` +
         `.fc-popover-body,.fc-popover-header{background-color: var(--color-night-dark-blue) !important;color: var(--color-night-text-dark-bg) !important;}` +
         `select,input,.dataTables_paginate .page-item:not(.active) a,.input-group-text,.input-group-text > * {background-color:var(--color-night-dark-blue) !important;border-color:var(--color-night-blue) !important;color: var(--color-night-text-dark-bg) !important;}` +
+        `input.form-check-input:checked {background-color:var(--color-night-blue) !important;border-color:var(--color-night-blue) !important;color: var(--color-night-text-dark-bg) !important;}` +
         `.topbar-divider,.fc td,.fc tr,.fc th, .fc table, .modal-header,.modal-body,.modal-footer{border-color:var(--color-night-blue) !important;}` +
         `.fc a{color:var(--color-night-text-dark-bg) !important;}` +
         `.fc-button{ background-color: ${withReducedSaturation(colorMap.PLAN.hex)} !important;}` +
@@ -287,6 +288,7 @@ export const createNightModeCss = () => {
         `.dropdown-item,.dropdown-header{color: var(--color-night-text-dark-bg) !important;}` +
         `.dropdown-item:hover{background-color: var(--color-night-blue) !important;}` +
         `.dropdown-menu{border-color:var(--color-night-blue);color: var(--color-night-blue) !important;}` +
+        `.col-theme{--color-theme: var(--color-night-text-dark-bg)}` +
         `:root {--bs-heading-color:var(--color-night-text-dark-bg); --bs-card-color:var(--color-night-text-dark-bg); --bs-body-color:var(--color-night-text-dark-bg); --bs-body-bg:var(--color-night-dark-grey-blue); --bs-btn-active-border-color:var(--color-night-blue);}` +
         createNightModeColorCss()
 }

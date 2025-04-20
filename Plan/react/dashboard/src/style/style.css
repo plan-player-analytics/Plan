@@ -1220,6 +1220,10 @@ div#navSrvContainer::-webkit-scrollbar-thumb {
     color: var(--color-theme);
 }
 
+button.col-theme:hover, a.col-theme:hover {
+    color: color-mix(in srgb, var(--color-theme) 60%, black)
+}
+
 /* Minecraft color codes */
 .black {
     color: #000000;
