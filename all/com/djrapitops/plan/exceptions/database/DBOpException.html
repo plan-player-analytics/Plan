@@ -136,6 +136,9 @@ implements <a href="../ExceptionWithContext.html" title="interface in com.djrapi
 <div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#DUPLICATE_KEY" class="member-name-link">DUPLICATE_KEY</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="#MODIFIED_SINCE_LAST_READ" class="member-name-link">MODIFIED_SINCE_LAST_READ</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -181,8 +184,11 @@ implements <a href="../ExceptionWithContext.html" title="interface in com.djrapi
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isDuplicateKeyViolation()" class="member-name-link">isDuplicateKeyViolation</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isUserIdConstraintViolation()" class="member-name-link">isUserIdConstraintViolation</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isModifiedSinceLastReadViolation()" class="member-name-link">isModifiedSinceLastReadViolation</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isUserIdConstraintViolation()" class="member-name-link">isUserIdConstraintViolation</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -226,6 +232,20 @@ implements <a href="../ExceptionWithContext.html" title="interface in com.djrapi
 <dd>
 <ul class="tag-list">
 <li><a href="../../../../../constant-values.html#com.djrapitops.plan.exceptions.database.DBOpException.DUPLICATE_KEY">Constant Field Values</a></li>
+</ul>
+</dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="MODIFIED_SINCE_LAST_READ">
+<h3>MODIFIED_SINCE_LAST_READ</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">MODIFIED_SINCE_LAST_READ</span></div>
+<dl class="notes">
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="../../../../../constant-values.html#com.djrapitops.plan.exceptions.database.DBOpException.MODIFIED_SINCE_LAST_READ">Constant Field Values</a></li>
 </ul>
 </dd>
 </dl>
@@ -295,6 +315,12 @@ implements <a href="../ExceptionWithContext.html" title="interface in com.djrapi
 <section class="detail" id="isDuplicateKeyViolation()">
 <h3>isDuplicateKeyViolation</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isDuplicateKeyViolation</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="isModifiedSinceLastReadViolation()">
+<h3>isModifiedSinceLastReadViolation</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isModifiedSinceLastReadViolation</span>()</div>
 </section>
 </li>
 </ul>
