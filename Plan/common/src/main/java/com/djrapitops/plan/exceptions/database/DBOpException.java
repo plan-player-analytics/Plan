@@ -128,6 +128,9 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
             case 1213:
                 context.related("Deadlock");
                 break;
+            case 1205:
+                context.related("Lock wait timeout exceeded.");
+                break;
             case 1267:
             case 1366:
             case 1115:

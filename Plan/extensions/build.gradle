@@ -23,7 +23,7 @@ dependencies {
     implementation "net.playeranalytics:Extension-Jobs:5.2.2.3-R1.0"
     implementation "net.playeranalytics:Extension-KingdomsX:1.12.6.3.1-R1.4"
     implementation "net.playeranalytics:Extension-Lands:6.35.0-R1.2"
-    implementation "net.playeranalytics:Extension-LibertyBans:1.1.0-R1.5"
+    implementation "net.playeranalytics:Extension-LibertyBans:1.1.0-R1.6"
     implementation "net.playeranalytics:Extension-Litebans:0.4.1-R1.5"
     implementation "net.playeranalytics:Extension-LogBlock:1.16.1.2-R1.9"
     implementation "net.playeranalytics:Extension-LuckPerms:5.0-R1.6"
