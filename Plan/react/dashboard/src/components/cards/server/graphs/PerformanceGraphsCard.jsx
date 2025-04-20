@@ -100,6 +100,7 @@ const PerformanceGraphsCard = () => {
                     exposeAsGroupOnly: true,
                     description: t('html.label.pluginVersionHistory')
                 },
+                name: t('html.label.pluginHistory'),
                 tooltip: {headerFormat: ''},
                 data: Object.entries(grouped).map(entry => {
                     const installedLines = entry[1].filter(p => p.version).map(plugin => plugin.name + ': ' + plugin.version).join(', <br>');
