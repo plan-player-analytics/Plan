@@ -31,6 +31,7 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
 
     public static final String CONSTRAINT_VIOLATION = "Constraint Violation";
     public static final String DUPLICATE_KEY = "Duplicate key";
+    public static final String MODIFIED_SINCE_LAST_READ = "Modified since last read";
     private final ErrorContext context;
 
     public DBOpException(String message) {
@@ -147,6 +148,9 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
                 context.related("column byte length exceeded")
                         .whatToDo("Update your MySQL, column key size was exceeded (max key length is 767 bytes in 5.6) - MySQL 5.7 increases the limit.");
                 break;
+            case 1020: // MySQL error 'Record has changed since last read in table'
+                context.related(MODIFIED_SINCE_LAST_READ);
+                break;
             default:
                 context.related("Unknown SQL Error code");
         }
@@ -170,5 +174,10 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
     public boolean isDuplicateKeyViolation() {
         return context != null
                 && context.getRelated().contains(DBOpException.DUPLICATE_KEY);
+    }
+
+    public boolean isModifiedSinceLastReadViolation() {
+        return context != null
+                && context.getRelated().contains(DBOpException.MODIFIED_SINCE_LAST_READ);
     }
 }
