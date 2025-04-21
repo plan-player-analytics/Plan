@@ -17,6 +17,7 @@
 package extension;
 
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.commands.PlanCommand;
 import com.djrapitops.plan.delivery.DeliveryUtilities;
 import com.djrapitops.plan.delivery.export.Exporter;
@@ -24,6 +25,7 @@ import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
 import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.delivery.webserver.http.WebServer;
+import com.djrapitops.plan.gathering.ServerSensor;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.ConfigSystem;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -91,6 +93,8 @@ public class FullSystemExtension implements ParameterResolver, BeforeAllCallback
                 .put(WebServer.class, () -> planSystem.getWebServerSystem().getWebServer())
                 .put(Exporter.class, () -> planSystem.getExportSystem().getExporter())
                 .put(Graphs.class, () -> planSystem.getDeliveryUtilities().getGraphs())
+                .put(TaskSystem.class, () -> planSystem.getTaskSystem())
+                .put(ServerSensor.class, () -> planSystem.getGatheringUtilities().getServerSensor())
                 .build();
     }
 

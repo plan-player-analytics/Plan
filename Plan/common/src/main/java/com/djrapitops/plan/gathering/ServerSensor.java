@@ -20,6 +20,7 @@ import com.djrapitops.plan.gathering.domain.PluginMetadata;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 /**
  * Allows sensing values from different server platforms.
@@ -70,4 +71,8 @@ public interface ServerSensor<W> {
     default List<PluginMetadata> getInstalledPlugins() {
         return List.of();
     }
+
+    default boolean supportsBans() {return false;}
+
+    default boolean isBanned(UUID playerUUID) {return false;}
 }

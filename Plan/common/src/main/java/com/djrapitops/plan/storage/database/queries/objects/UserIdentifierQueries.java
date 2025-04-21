@@ -238,4 +238,19 @@ public class UserIdentifierQueries {
             }
         };
     }
+
+    public static Query<Integer> fetchMaxUserId(ServerUUID serverUUID) {
+        String sql = SELECT + "MAX(" + UserInfoTable.USER_ID + ")" + FROM + UserInfoTable.TABLE_NAME + WHERE + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID;
+        return db -> db.queryOptional(sql, row -> row.getInt(1), serverUUID).orElse(0);
+    }
+
+    public static Query<List<UUID>> fetchUUIDsStartingFromId(Integer userId, ServerUUID serverUUID, int limit) {
+        String sql = SELECT + UsersTable.USER_UUID +
+                FROM + UserInfoTable.TABLE_NAME + " ui" +
+                LEFT_JOIN + UsersTable.TABLE_NAME + " u ON u." + UsersTable.ID + "=ui." + UserInfoTable.USER_ID +
+                WHERE + UserInfoTable.USER_ID + ">=" + userId +
+                AND + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                LIMIT + limit;
+        return db -> db.queryList(sql, row -> UUID.fromString(row.getString(UsersTable.USER_UUID)), serverUUID);
+    }
 }

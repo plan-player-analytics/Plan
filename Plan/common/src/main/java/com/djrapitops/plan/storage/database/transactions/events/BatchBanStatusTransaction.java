@@ -21,38 +21,30 @@ import com.djrapitops.plan.storage.database.sql.building.Update;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
-import com.djrapitops.plan.storage.database.transactions.ExecStatement;
+import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.UUID;
-import java.util.function.BooleanSupplier;
 
 /**
  * Transaction to update a player's ban status.
  *
  * @author AuroraLS3
  */
-public class BanStatusTransaction extends Transaction {
+public class BatchBanStatusTransaction extends Transaction {
 
-    private final UUID playerUUID;
+    private final List<UUID> bannedPlayerUUIDs;
+    private final List<UUID> unbannedPlayerUUIDs;
     private final ServerUUID serverUUID;
 
-    private Boolean banned;
-    private BooleanSupplier banStatus;
-
-    public BanStatusTransaction(UUID playerUUID, ServerUUID serverUUID, boolean banned) {
-        this.playerUUID = playerUUID;
+    public BatchBanStatusTransaction(List<UUID> bannedPlayerUUIDs, List<UUID> unbannedPlayerUUIDs, ServerUUID serverUUID) {
+        this.bannedPlayerUUIDs = bannedPlayerUUIDs;
+        this.unbannedPlayerUUIDs = unbannedPlayerUUIDs;
         this.serverUUID = serverUUID;
-        this.banned = banned;
-    }
-
-    public BanStatusTransaction(UUID playerUUID, ServerUUID serverUUID, BooleanSupplier banStatus) {
-        this.playerUUID = playerUUID;
-        this.serverUUID = serverUUID;
-        this.banStatus = banStatus;
     }
 
     @Override
@@ -66,12 +58,21 @@ public class BanStatusTransaction extends Transaction {
                 .and(UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID)
                 .toString();
 
-        return new ExecStatement(sql) {
+        return new ExecBatchStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setBoolean(1, banned != null ? banned : banStatus.getAsBoolean());
-                statement.setString(2, playerUUID.toString());
-                statement.setString(3, serverUUID.toString());
+                for (UUID bannedPlayerUUID : bannedPlayerUUIDs) {
+                    statement.setBoolean(1, true);
+                    statement.setString(2, bannedPlayerUUID.toString());
+                    statement.setString(3, serverUUID.toString());
+                    statement.addBatch();
+                }
+                for (UUID unbannedPlayerUUID : unbannedPlayerUUIDs) {
+                    statement.setBoolean(1, false);
+                    statement.setString(2, unbannedPlayerUUID.toString());
+                    statement.setString(3, serverUUID.toString());
+                    statement.addBatch();
+                }
             }
         };
     }
