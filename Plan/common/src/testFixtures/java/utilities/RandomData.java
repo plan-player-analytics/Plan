@@ -60,7 +60,7 @@ public class RandomData {
     }
 
     public static String randomString(int size) {
-        return new RandomStringGenerator.Builder().withinRange('a', 'Z').get()
+        return new RandomStringGenerator.Builder().withinRange('A', 'z').get()
                 .generate(size);
     }
 
