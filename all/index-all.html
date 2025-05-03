@@ -1142,6 +1142,10 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/events/BanStatusTransaction.html#%3Cinit%3E(java.util.UUID,com.djrapitops.plan.identification.ServerUUID,java.util.function.BooleanSupplier)" class="member-name-link">BanStatusTransaction(UUID, ServerUUID, BooleanSupplier)</a> - Constructor for class com.djrapitops.plan.storage.database.transactions.events.<a href="com/djrapitops/plan/storage/database/transactions/events/BanStatusTransaction.html" title="class in com.djrapitops.plan.storage.database.transactions.events">BanStatusTransaction</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/timed/BanStatusUpkeepTask.html" class="type-name-link" title="class in com.djrapitops.plan.gathering.timed">BanStatusUpkeepTask</a> - Class in <a href="com/djrapitops/plan/gathering/timed/package-summary.html">com.djrapitops.plan.gathering.timed</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/timed/BanStatusUpkeepTask.html#%3Cinit%3E(com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.gathering.ServerSensor)" class="member-name-link">BanStatusUpkeepTask(DBSystem, ServerInfo, ServerSensor&lt;?&gt;)</a> - Constructor for class com.djrapitops.plan.gathering.timed.<a href="com/djrapitops/plan/gathering/timed/BanStatusUpkeepTask.html" title="class in com.djrapitops.plan.gathering.timed">BanStatusUpkeepTask</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/rendering/json/graphs/Graphs.html#bar()" class="member-name-link">bar()</a> - Method in class com.djrapitops.plan.delivery.rendering.json.graphs.<a href="com/djrapitops/plan/delivery/rendering/json/graphs/Graphs.html" title="class in com.djrapitops.plan.delivery.rendering.json.graphs">Graphs</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/rendering/json/graphs/bar/Bar.html" class="type-name-link" title="class in com.djrapitops.plan.delivery.rendering.json.graphs.bar">Bar</a> - Class in <a href="com/djrapitops/plan/delivery/rendering/json/graphs/bar/package-summary.html">com.djrapitops.plan.delivery.rendering.json.graphs.bar</a></dt>
@@ -1176,6 +1180,12 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Queries for <a href="com/djrapitops/plan/gathering/domain/BaseUser.html" title="class in com.djrapitops.plan.gathering.domain"><code>BaseUser</code></a> objects.</div>
 </dd>
+<dt><a href="com/djrapitops/plan/storage/database/transactions/events/BatchBanStatusTransaction.html" class="type-name-link" title="class in com.djrapitops.plan.storage.database.transactions.events">BatchBanStatusTransaction</a> - Class in <a href="com/djrapitops/plan/storage/database/transactions/events/package-summary.html">com.djrapitops.plan.storage.database.transactions.events</a></dt>
+<dd>
+<div class="block">Transaction to update a player's ban status.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/storage/database/transactions/events/BatchBanStatusTransaction.html#%3Cinit%3E(java.util.List,java.util.List,com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">BatchBanStatusTransaction(List&lt;UUID&gt;, List&lt;UUID&gt;, ServerUUID)</a> - Constructor for class com.djrapitops.plan.storage.database.transactions.events.<a href="com/djrapitops/plan/storage/database/transactions/events/BatchBanStatusTransaction.html" title="class in com.djrapitops.plan.storage.database.transactions.events">BatchBanStatusTransaction</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/events/PlayerLeaveEventConsumer.html#beforeLeave(com.djrapitops.plan.gathering.domain.event.PlayerLeave)" class="member-name-link">beforeLeave(PlayerLeave)</a> - Method in class com.djrapitops.plan.gathering.events.<a href="com/djrapitops/plan/gathering/events/PlayerLeaveEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerLeaveEventConsumer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/listeners/velocity/PlayerOnlineListener.html#beforeLogout(com.velocitypowered.api.event.connection.DisconnectEvent)" class="member-name-link">beforeLogout(DisconnectEvent)</a> - Method in class com.djrapitops.plan.gathering.listeners.velocity.<a href="com/djrapitops/plan/gathering/listeners/velocity/PlayerOnlineListener.html" title="class in com.djrapitops.plan.gathering.listeners.velocity">PlayerOnlineListener</a></dt>
@@ -1221,6 +1231,12 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/modules/velocity/VelocityTaskModule.html#bindAddressAllowListUpdateTask(com.djrapitops.plan.delivery.webserver.configuration.AddressAllowList)" class="member-name-link">bindAddressAllowListUpdateTask(AddressAllowList)</a> - Method in interface com.djrapitops.plan.modules.velocity.<a href="com/djrapitops/plan/modules/velocity/VelocityTaskModule.html" title="interface in com.djrapitops.plan.modules.velocity">VelocityTaskModule</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/playeranalytics/plan/modules/fabric/FabricTaskModule.html#bindAddressAllowListUpdateTask(com.djrapitops.plan.delivery.webserver.configuration.AddressAllowList)" class="member-name-link">bindAddressAllowListUpdateTask(AddressAllowList)</a> - Method in interface net.playeranalytics.plan.modules.fabric.<a href="net/playeranalytics/plan/modules/fabric/FabricTaskModule.html" title="interface in net.playeranalytics.plan.modules.fabric">FabricTaskModule</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/modules/bukkit/BukkitTaskModule.html#bindBanStatusUpkeepTask(com.djrapitops.plan.gathering.timed.BanStatusUpkeepTask)" class="member-name-link">bindBanStatusUpkeepTask(BanStatusUpkeepTask)</a> - Method in interface com.djrapitops.plan.modules.bukkit.<a href="com/djrapitops/plan/modules/bukkit/BukkitTaskModule.html" title="interface in com.djrapitops.plan.modules.bukkit">BukkitTaskModule</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/modules/nukkit/NukkitTaskModule.html#bindBanStatusUpkeepTask(com.djrapitops.plan.gathering.timed.BanStatusUpkeepTask)" class="member-name-link">bindBanStatusUpkeepTask(BanStatusUpkeepTask)</a> - Method in interface com.djrapitops.plan.modules.nukkit.<a href="com/djrapitops/plan/modules/nukkit/NukkitTaskModule.html" title="interface in com.djrapitops.plan.modules.nukkit">NukkitTaskModule</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/modules/sponge/SpongeTaskModule.html#bindBanStatusUpkeepTask(com.djrapitops.plan.gathering.timed.BanStatusUpkeepTask)" class="member-name-link">bindBanStatusUpkeepTask(BanStatusUpkeepTask)</a> - Method in interface com.djrapitops.plan.modules.sponge.<a href="com/djrapitops/plan/modules/sponge/SpongeTaskModule.html" title="interface in com.djrapitops.plan.modules.sponge">SpongeTaskModule</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/modules/bukkit/BukkitTaskModule.html#bindConfigStoreTask(com.djrapitops.plan.settings.upkeep.ConfigStoreTask)" class="member-name-link">bindConfigStoreTask(ConfigStoreTask)</a> - Method in interface com.djrapitops.plan.modules.bukkit.<a href="com/djrapitops/plan/modules/bukkit/BukkitTaskModule.html" title="interface in com.djrapitops.plan.modules.bukkit">BukkitTaskModule</a></dt>
 <dd>&nbsp;</dd>
@@ -5875,6 +5891,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/queries/objects/UserIdentifierQueries.html#fetchMatchingPlayerNames(java.lang.String)" class="member-name-link">fetchMatchingPlayerNames(String)</a> - Static method in class com.djrapitops.plan.storage.database.queries.objects.<a href="com/djrapitops/plan/storage/database/queries/objects/UserIdentifierQueries.html" title="class in com.djrapitops.plan.storage.database.queries.objects">UserIdentifierQueries</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/storage/database/queries/objects/UserIdentifierQueries.html#fetchMaxUserId(com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">fetchMaxUserId(ServerUUID)</a> - Static method in class com.djrapitops.plan.storage.database.queries.objects.<a href="com/djrapitops/plan/storage/database/queries/objects/UserIdentifierQueries.html" title="class in com.djrapitops.plan.storage.database.queries.objects">UserIdentifierQueries</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/query/CommonQueries.html#fetchNameOf(java.util.UUID)" class="member-name-link">fetchNameOf(UUID)</a> - Method in interface com.djrapitops.plan.query.<a href="com/djrapitops/plan/query/CommonQueries.html" title="interface in com.djrapitops.plan.query">CommonQueries</a></dt>
 <dd>
 <div class="block">Fetch name of a player by UUID.</div>
@@ -6057,6 +6075,8 @@ loadScripts(document, 'script');</script>
 <div class="block">Fetch UUID of a player by name.</div>
 </dd>
 <dt><a href="com/djrapitops/plan/query/CommonQueriesImplementation.html#fetchUUIDOf(java.lang.String)" class="member-name-link">fetchUUIDOf(String)</a> - Method in class com.djrapitops.plan.query.<a href="com/djrapitops/plan/query/CommonQueriesImplementation.html" title="class in com.djrapitops.plan.query">CommonQueriesImplementation</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/storage/database/queries/objects/UserIdentifierQueries.html#fetchUUIDsStartingFromId(java.lang.Integer,com.djrapitops.plan.identification.ServerUUID,int)" class="member-name-link">fetchUUIDsStartingFromId(Integer, ServerUUID, int)</a> - Static method in class com.djrapitops.plan.storage.database.queries.objects.<a href="com/djrapitops/plan/storage/database/queries/objects/UserIdentifierQueries.html" title="class in com.djrapitops.plan.storage.database.queries.objects">UserIdentifierQueries</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/queries/objects/TPSQueries.html#fetchViewPreviewGraphData(com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">fetchViewPreviewGraphData(ServerUUID)</a> - Static method in class com.djrapitops.plan.storage.database.queries.objects.<a href="com/djrapitops/plan/storage/database/queries/objects/TPSQueries.html" title="class in com.djrapitops.plan.storage.database.queries.objects">TPSQueries</a></dt>
 <dd>&nbsp;</dd>
@@ -6496,6 +6516,12 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Create a GapStrategy.</div>
 </dd>
+<dt><a href="com/djrapitops/plan/gathering/GatheringUtilities.html" class="type-name-link" title="class in com.djrapitops.plan.gathering">GatheringUtilities</a> - Class in <a href="com/djrapitops/plan/gathering/package-summary.html">com.djrapitops.plan.gathering</a></dt>
+<dd>
+<div class="block">Dagger object for accessing some gathering utilities.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/gathering/GatheringUtilities.html#%3Cinit%3E(dagger.Lazy)" class="member-name-link">GatheringUtilities(Lazy&lt;ServerSensor&lt;?&gt;&gt;)</a> - Constructor for class com.djrapitops.plan.gathering.<a href="com/djrapitops/plan/gathering/GatheringUtilities.html" title="class in com.djrapitops.plan.gathering">GatheringUtilities</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/auth/ActiveCookieStore.html#generateNewCookie(com.djrapitops.plan.delivery.domain.auth.User)" class="member-name-link">generateNewCookie(User)</a> - Method in class com.djrapitops.plan.delivery.webserver.auth.<a href="com/djrapitops/plan/delivery/webserver/auth/ActiveCookieStore.html" title="class in com.djrapitops.plan.delivery.webserver.auth">ActiveCookieStore</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/identification/ServerInfo.html#generateNewUUID()" class="member-name-link">generateNewUUID()</a> - Method in class com.djrapitops.plan.identification.<a href="com/djrapitops/plan/identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a></dt>
@@ -7421,6 +7447,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/PlanSponge.html#getGame()" class="member-name-link">getGame()</a> - Method in class com.djrapitops.plan.<a href="com/djrapitops/plan/PlanSponge.html" title="class in com.djrapitops.plan">PlanSponge</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/PlayerMetadata.html#getGameMode()" class="member-name-link">getGameMode()</a> - Method in class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/PlayerMetadata.html" title="class in com.djrapitops.plan.gathering.domain">PlayerMetadata</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/PlanSystem.html#getGatheringUtilities()" class="member-name-link">getGatheringUtilities()</a> - Method in class com.djrapitops.plan.<a href="com/djrapitops/plan/PlanSystem.html" title="class in com.djrapitops.plan">PlanSystem</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/domain/keys/Type.html#getGenericsClass()" class="member-name-link">getGenericsClass()</a> - Method in class com.djrapitops.plan.delivery.domain.keys.<a href="com/djrapitops/plan/delivery/domain/keys/Type.html" title="class in com.djrapitops.plan.delivery.domain.keys">Type</a></dt>
 <dd>&nbsp;</dd>
@@ -8733,6 +8761,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/identification/ServerInfo.html#getServerProperties()" class="member-name-link">getServerProperties()</a> - Method in class com.djrapitops.plan.identification.<a href="com/djrapitops/plan/identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/Addresses.html#getServerPropertyIP()" class="member-name-link">getServerPropertyIP()</a> - Method in class com.djrapitops.plan.delivery.webserver.<a href="com/djrapitops/plan/delivery/webserver/Addresses.html" title="class in com.djrapitops.plan.delivery.webserver">Addresses</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/GatheringUtilities.html#getServerSensor()" class="member-name-link">getServerSensor()</a> - Method in class com.djrapitops.plan.gathering.<a href="com/djrapitops/plan/gathering/GatheringUtilities.html" title="class in com.djrapitops.plan.gathering">GatheringUtilities</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/ServerUptimeCalculator.html#getServerUptimeMillis(com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">getServerUptimeMillis(ServerUUID)</a> - Method in class com.djrapitops.plan.gathering.<a href="com/djrapitops/plan/gathering/ServerUptimeCalculator.html" title="class in com.djrapitops.plan.gathering">ServerUptimeCalculator</a></dt>
 <dd>&nbsp;</dd>
@@ -10817,6 +10847,14 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="deprecation-block"><span class="deprecated-label">Deprecated.</span></div>
 &nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/BukkitSensor.html#isBanned(java.util.UUID)" class="member-name-link">isBanned(UUID)</a> - Method in class com.djrapitops.plan.gathering.<a href="com/djrapitops/plan/gathering/BukkitSensor.html" title="class in com.djrapitops.plan.gathering">BukkitSensor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/NukkitSensor.html#isBanned(java.util.UUID)" class="member-name-link">isBanned(UUID)</a> - Method in class com.djrapitops.plan.gathering.<a href="com/djrapitops/plan/gathering/NukkitSensor.html" title="class in com.djrapitops.plan.gathering">NukkitSensor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/ServerSensor.html#isBanned(java.util.UUID)" class="member-name-link">isBanned(UUID)</a> - Method in interface com.djrapitops.plan.gathering.<a href="com/djrapitops/plan/gathering/ServerSensor.html" title="interface in com.djrapitops.plan.gathering">ServerSensor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/SpongeSensor.html#isBanned(java.util.UUID)" class="member-name-link">isBanned(UUID)</a> - Method in class com.djrapitops.plan.gathering.<a href="com/djrapitops/plan/gathering/SpongeSensor.html" title="class in com.djrapitops.plan.gathering">SpongeSensor</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/cache/DataID.html#isCacheable()" class="member-name-link">isCacheable()</a> - Method in enum class com.djrapitops.plan.delivery.webserver.cache.<a href="com/djrapitops/plan/delivery/webserver/cache/DataID.html" title="enum class in com.djrapitops.plan.delivery.webserver.cache">DataID</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/identification/properties/RedisCheck.html#isClassAvailable()" class="member-name-link">isClassAvailable()</a> - Static method in class com.djrapitops.plan.identification.properties.<a href="com/djrapitops/plan/identification/properties/RedisCheck.html" title="class in com.djrapitops.plan.identification.properties">RedisCheck</a></dt>
@@ -13697,6 +13735,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/events/BanStatusTransaction.html#performOperations()" class="member-name-link">performOperations()</a> - Method in class com.djrapitops.plan.storage.database.transactions.events.<a href="com/djrapitops/plan/storage/database/transactions/events/BanStatusTransaction.html" title="class in com.djrapitops.plan.storage.database.transactions.events">BanStatusTransaction</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/storage/database/transactions/events/BatchBanStatusTransaction.html#performOperations()" class="member-name-link">performOperations()</a> - Method in class com.djrapitops.plan.storage.database.transactions.events.<a href="com/djrapitops/plan/storage/database/transactions/events/BatchBanStatusTransaction.html" title="class in com.djrapitops.plan.storage.database.transactions.events">BatchBanStatusTransaction</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/events/CookieChangeTransaction.html#performOperations()" class="member-name-link">performOperations()</a> - Method in class com.djrapitops.plan.storage.database.transactions.events.<a href="com/djrapitops/plan/storage/database/transactions/events/CookieChangeTransaction.html" title="class in com.djrapitops.plan.storage.database.transactions.events">CookieChangeTransaction</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/events/KickStoreTransaction.html#performOperations()" class="member-name-link">performOperations()</a> - Method in class com.djrapitops.plan.storage.database.transactions.events.<a href="com/djrapitops/plan/storage/database/transactions/events/KickStoreTransaction.html" title="class in com.djrapitops.plan.storage.database.transactions.events">KickStoreTransaction</a></dt>
@@ -14127,7 +14167,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">PlanSystem contains everything Plan needs to run.</div>
 </dd>
-<dt><a href="com/djrapitops/plan/PlanSystem.html#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.ConfigSystem,com.djrapitops.plan.version.VersionChecker,com.djrapitops.plan.settings.locale.LocaleSystem,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.gathering.cache.CacheSystem,com.djrapitops.plan.gathering.listeners.ListenerSystem,com.djrapitops.plan.TaskSystem,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.delivery.webserver.WebServerSystem,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.gathering.importing.ImportSystem,com.djrapitops.plan.delivery.export.ExportSystem,com.djrapitops.plan.delivery.DeliveryUtilities,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.ApiServices,com.djrapitops.plan.api.PlanAPI.PlanAPIHolder)" class="member-name-link">PlanSystem(PlanFiles, ConfigSystem, VersionChecker, LocaleSystem, DBSystem, CacheSystem, ListenerSystem, TaskSystem, ServerInfo, WebServerSystem, Processing, ImportSystem, ExportSystem, DeliveryUtilities, PluginLogger, ErrorLogger, ApiServices, PlanAPI.PlanAPIHolder)</a> - Constructor for class com.djrapitops.plan.<a href="com/djrapitops/plan/PlanSystem.html" title="class in com.djrapitops.plan">PlanSystem</a></dt>
+<dt><a href="com/djrapitops/plan/PlanSystem.html#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.ConfigSystem,com.djrapitops.plan.version.VersionChecker,com.djrapitops.plan.settings.locale.LocaleSystem,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.gathering.cache.CacheSystem,com.djrapitops.plan.gathering.listeners.ListenerSystem,com.djrapitops.plan.TaskSystem,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.delivery.webserver.WebServerSystem,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.gathering.importing.ImportSystem,com.djrapitops.plan.delivery.export.ExportSystem,com.djrapitops.plan.delivery.DeliveryUtilities,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.ApiServices,com.djrapitops.plan.api.PlanAPI.PlanAPIHolder,com.djrapitops.plan.gathering.GatheringUtilities)" class="member-name-link">PlanSystem(PlanFiles, ConfigSystem, VersionChecker, LocaleSystem, DBSystem, CacheSystem, ListenerSystem, TaskSystem, ServerInfo, WebServerSystem, Processing, ImportSystem, ExportSystem, DeliveryUtilities, PluginLogger, ErrorLogger, ApiServices, PlanAPI.PlanAPIHolder, GatheringUtilities)</a> - Constructor for class com.djrapitops.plan.<a href="com/djrapitops/plan/PlanSystem.html" title="class in com.djrapitops.plan">PlanSystem</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/PlanVelocity.html" class="type-name-link" title="class in com.djrapitops.plan">PlanVelocity</a> - Class in <a href="com/djrapitops/plan/package-summary.html">com.djrapitops.plan</a></dt>
 <dd>
@@ -15480,6 +15520,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/ShutdownHook.Registrar.html#register(net.playeranalytics.plugin.scheduling.RunnableFactory)" class="member-name-link">register(RunnableFactory)</a> - Method in class com.djrapitops.plan.gathering.<a href="com/djrapitops/plan/gathering/ShutdownHook.Registrar.html" title="class in com.djrapitops.plan.gathering">ShutdownHook.Registrar</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/timed/BanStatusUpkeepTask.html#register(net.playeranalytics.plugin.scheduling.RunnableFactory)" class="member-name-link">register(RunnableFactory)</a> - Method in class com.djrapitops.plan.gathering.timed.<a href="com/djrapitops/plan/gathering/timed/BanStatusUpkeepTask.html" title="class in com.djrapitops.plan.gathering.timed">BanStatusUpkeepTask</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/timed/BukkitPingCounter.html#register(net.playeranalytics.plugin.scheduling.RunnableFactory)" class="member-name-link">register(RunnableFactory)</a> - Method in class com.djrapitops.plan.gathering.timed.<a href="com/djrapitops/plan/gathering/timed/BukkitPingCounter.html" title="class in com.djrapitops.plan.gathering.timed">BukkitPingCounter</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/timed/BungeePingCounter.html#register(net.playeranalytics.plugin.scheduling.RunnableFactory)" class="member-name-link">register(RunnableFactory)</a> - Method in class com.djrapitops.plan.gathering.timed.<a href="com/djrapitops/plan/gathering/timed/BungeePingCounter.html" title="class in com.djrapitops.plan.gathering.timed">BungeePingCounter</a></dt>
@@ -16313,6 +16355,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/gathering/ShutdownHook.Registrar.html#run()" class="member-name-link">run()</a> - Method in class com.djrapitops.plan.gathering.<a href="com/djrapitops/plan/gathering/ShutdownHook.Registrar.html" title="class in com.djrapitops.plan.gathering">ShutdownHook.Registrar</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/ShutdownHook.html#run()" class="member-name-link">run()</a> - Method in class com.djrapitops.plan.gathering.<a href="com/djrapitops/plan/gathering/ShutdownHook.html" title="class in com.djrapitops.plan.gathering">ShutdownHook</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/timed/BanStatusUpkeepTask.html#run()" class="member-name-link">run()</a> - Method in class com.djrapitops.plan.gathering.timed.<a href="com/djrapitops/plan/gathering/timed/BanStatusUpkeepTask.html" title="class in com.djrapitops.plan.gathering.timed">BanStatusUpkeepTask</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/timed/BukkitPingCounter.html#run()" class="member-name-link">run()</a> - Method in class com.djrapitops.plan.gathering.timed.<a href="com/djrapitops/plan/gathering/timed/BukkitPingCounter.html" title="class in com.djrapitops.plan.gathering.timed">BukkitPingCounter</a></dt>
 <dd>&nbsp;</dd>
@@ -18113,6 +18157,14 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/delivery/domain/container/RawDataContainer.html#supports(com.djrapitops.plan.delivery.domain.keys.Key)" class="member-name-link">supports(Key&lt;T&gt;)</a> - Method in class com.djrapitops.plan.delivery.domain.container.<a href="com/djrapitops/plan/delivery/domain/container/RawDataContainer.html" title="class in com.djrapitops.plan.delivery.domain.container">RawDataContainer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/domain/container/SupplierDataContainer.html#supports(com.djrapitops.plan.delivery.domain.keys.Key)" class="member-name-link">supports(Key&lt;T&gt;)</a> - Method in class com.djrapitops.plan.delivery.domain.container.<a href="com/djrapitops/plan/delivery/domain/container/SupplierDataContainer.html" title="class in com.djrapitops.plan.delivery.domain.container">SupplierDataContainer</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/BukkitSensor.html#supportsBans()" class="member-name-link">supportsBans()</a> - Method in class com.djrapitops.plan.gathering.<a href="com/djrapitops/plan/gathering/BukkitSensor.html" title="class in com.djrapitops.plan.gathering">BukkitSensor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/NukkitSensor.html#supportsBans()" class="member-name-link">supportsBans()</a> - Method in class com.djrapitops.plan.gathering.<a href="com/djrapitops/plan/gathering/NukkitSensor.html" title="class in com.djrapitops.plan.gathering">NukkitSensor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/ServerSensor.html#supportsBans()" class="member-name-link">supportsBans()</a> - Method in interface com.djrapitops.plan.gathering.<a href="com/djrapitops/plan/gathering/ServerSensor.html" title="interface in com.djrapitops.plan.gathering">ServerSensor</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/SpongeSensor.html#supportsBans()" class="member-name-link">supportsBans()</a> - Method in class com.djrapitops.plan.gathering.<a href="com/djrapitops/plan/gathering/SpongeSensor.html" title="class in com.djrapitops.plan.gathering">SpongeSensor</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/command/use/BungeePlayerCMDSender.html#supportsChatEvents()" class="member-name-link">supportsChatEvents()</a> - Method in class com.djrapitops.plan.command.use.<a href="com/djrapitops/plan/command/use/BungeePlayerCMDSender.html" title="class in com.djrapitops.plan.command.use">BungeePlayerCMDSender</a></dt>
 <dd>&nbsp;</dd>

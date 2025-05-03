@@ -112,7 +112,7 @@ implements <a href="SubSystem.html" title="interface in com.djrapitops.plan">Sub
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.ConfigSystem,com.djrapitops.plan.version.VersionChecker,com.djrapitops.plan.settings.locale.LocaleSystem,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.gathering.cache.CacheSystem,com.djrapitops.plan.gathering.listeners.ListenerSystem,com.djrapitops.plan.TaskSystem,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.delivery.webserver.WebServerSystem,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.gathering.importing.ImportSystem,com.djrapitops.plan.delivery.export.ExportSystem,com.djrapitops.plan.delivery.DeliveryUtilities,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.ApiServices,com.djrapitops.plan.api.PlanAPI.PlanAPIHolder)" class="member-name-link">PlanSystem</a><wbr>(<a href="storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.ConfigSystem,com.djrapitops.plan.version.VersionChecker,com.djrapitops.plan.settings.locale.LocaleSystem,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.gathering.cache.CacheSystem,com.djrapitops.plan.gathering.listeners.ListenerSystem,com.djrapitops.plan.TaskSystem,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.delivery.webserver.WebServerSystem,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.gathering.importing.ImportSystem,com.djrapitops.plan.delivery.export.ExportSystem,com.djrapitops.plan.delivery.DeliveryUtilities,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.ApiServices,com.djrapitops.plan.api.PlanAPI.PlanAPIHolder,com.djrapitops.plan.gathering.GatheringUtilities)" class="member-name-link">PlanSystem</a><wbr>(<a href="storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
  <a href="settings/ConfigSystem.html" title="class in com.djrapitops.plan.settings">ConfigSystem</a>&nbsp;configSystem,
  <a href="version/VersionChecker.html" title="class in com.djrapitops.plan.version">VersionChecker</a>&nbsp;versionChecker,
  <a href="settings/locale/LocaleSystem.html" title="class in com.djrapitops.plan.settings.locale">LocaleSystem</a>&nbsp;localeSystem,
@@ -129,7 +129,8 @@ implements <a href="SubSystem.html" title="interface in com.djrapitops.plan">Sub
  net.playeranalytics.plugin.server.PluginLogger&nbsp;logger,
  <a href="utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger,
  <a href="ApiServices.html" title="class in com.djrapitops.plan">ApiServices</a>&nbsp;apiServices,
- <a href="api/PlanAPI.PlanAPIHolder.html" title="class in com.djrapitops.plan.api">PlanAPI.PlanAPIHolder</a>&nbsp;apiHolder)</code></div>
+ <a href="api/PlanAPI.PlanAPIHolder.html" title="class in com.djrapitops.plan.api">PlanAPI.PlanAPIHolder</a>&nbsp;apiHolder,
+ <a href="gathering/GatheringUtilities.html" title="class in com.djrapitops.plan.gathering">GatheringUtilities</a>&nbsp;gatheringUtilities)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -183,39 +184,42 @@ implements <a href="SubSystem.html" title="interface in com.djrapitops.plan">Sub
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="delivery/export/ExportSystem.html" title="class in com.djrapitops.plan.delivery.export">ExportSystem</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getExportSystem()" class="member-name-link">getExportSystem</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="gathering/importing/ImportSystem.html" title="class in com.djrapitops.plan.gathering.importing">ImportSystem</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getImportSystem()" class="member-name-link">getImportSystem</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="gathering/GatheringUtilities.html" title="class in com.djrapitops.plan.gathering">GatheringUtilities</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getGatheringUtilities()" class="member-name-link">getGatheringUtilities</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="gathering/listeners/ListenerSystem.html" title="class in com.djrapitops.plan.gathering.listeners">ListenerSystem</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getListenerSystem()" class="member-name-link">getListenerSystem</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="gathering/importing/ImportSystem.html" title="class in com.djrapitops.plan.gathering.importing">ImportSystem</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getImportSystem()" class="member-name-link">getImportSystem</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="settings/locale/LocaleSystem.html" title="class in com.djrapitops.plan.settings.locale">LocaleSystem</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLocaleSystem()" class="member-name-link">getLocaleSystem</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="gathering/listeners/ListenerSystem.html" title="class in com.djrapitops.plan.gathering.listeners">ListenerSystem</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getListenerSystem()" class="member-name-link">getListenerSystem</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPlanFiles()" class="member-name-link">getPlanFiles</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="settings/locale/LocaleSystem.html" title="class in com.djrapitops.plan.settings.locale">LocaleSystem</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLocaleSystem()" class="member-name-link">getLocaleSystem</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getProcessing()" class="member-name-link">getProcessing</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPlanFiles()" class="member-name-link">getPlanFiles</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static long</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getServerEnableTime()" class="member-name-link">getServerEnableTime</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getServerInfo()" class="member-name-link">getServerInfo</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="TaskSystem.html" title="class in com.djrapitops.plan">TaskSystem</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTaskSystem()" class="member-name-link">getTaskSystem</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getProcessing()" class="member-name-link">getProcessing</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="version/VersionChecker.html" title="class in com.djrapitops.plan.version">VersionChecker</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getVersionChecker()" class="member-name-link">getVersionChecker</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="delivery/webserver/WebServerSystem.html" title="class in com.djrapitops.plan.delivery.webserver">WebServerSystem</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWebServerSystem()" class="member-name-link">getWebServerSystem</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static long</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getServerEnableTime()" class="member-name-link">getServerEnableTime</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getServerInfo()" class="member-name-link">getServerInfo</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEnabled()" class="member-name-link">isEnabled</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="TaskSystem.html" title="class in com.djrapitops.plan">TaskSystem</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTaskSystem()" class="member-name-link">getTaskSystem</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="version/VersionChecker.html" title="class in com.djrapitops.plan.version">VersionChecker</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getVersionChecker()" class="member-name-link">getVersionChecker</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="delivery/webserver/WebServerSystem.html" title="class in com.djrapitops.plan.delivery.webserver">WebServerSystem</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWebServerSystem()" class="member-name-link">getWebServerSystem</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEnabled()" class="member-name-link">isEnabled</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -234,7 +238,7 @@ implements <a href="SubSystem.html" title="interface in com.djrapitops.plan">Sub
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.ConfigSystem,com.djrapitops.plan.version.VersionChecker,com.djrapitops.plan.settings.locale.LocaleSystem,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.gathering.cache.CacheSystem,com.djrapitops.plan.gathering.listeners.ListenerSystem,com.djrapitops.plan.TaskSystem,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.delivery.webserver.WebServerSystem,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.gathering.importing.ImportSystem,com.djrapitops.plan.delivery.export.ExportSystem,com.djrapitops.plan.delivery.DeliveryUtilities,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.ApiServices,com.djrapitops.plan.api.PlanAPI.PlanAPIHolder)">
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.ConfigSystem,com.djrapitops.plan.version.VersionChecker,com.djrapitops.plan.settings.locale.LocaleSystem,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.gathering.cache.CacheSystem,com.djrapitops.plan.gathering.listeners.ListenerSystem,com.djrapitops.plan.TaskSystem,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.delivery.webserver.WebServerSystem,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.gathering.importing.ImportSystem,com.djrapitops.plan.delivery.export.ExportSystem,com.djrapitops.plan.delivery.DeliveryUtilities,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.ApiServices,com.djrapitops.plan.api.PlanAPI.PlanAPIHolder,com.djrapitops.plan.gathering.GatheringUtilities)">
 <h3>PlanSystem</h3>
 <div class="member-signature"><span class="annotations">@Inject
 </span><span class="modifiers">public</span>&nbsp;<span class="element-name">PlanSystem</span><wbr><span class="parameters">(<a href="storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
@@ -254,7 +258,8 @@ implements <a href="SubSystem.html" title="interface in com.djrapitops.plan">Sub
  net.playeranalytics.plugin.server.PluginLogger&nbsp;logger,
  <a href="utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger,
  <a href="ApiServices.html" title="class in com.djrapitops.plan">ApiServices</a>&nbsp;apiServices,
- <a href="api/PlanAPI.PlanAPIHolder.html" title="class in com.djrapitops.plan.api">PlanAPI.PlanAPIHolder</a>&nbsp;apiHolder)</span></div>
+ <a href="api/PlanAPI.PlanAPIHolder.html" title="class in com.djrapitops.plan.api">PlanAPI.PlanAPIHolder</a>&nbsp;apiHolder,
+ <a href="gathering/GatheringUtilities.html" title="class in com.djrapitops.plan.gathering">GatheringUtilities</a>&nbsp;gatheringUtilities)</span></div>
 </section>
 </li>
 </ul>
@@ -393,6 +398,12 @@ implements <a href="SubSystem.html" title="interface in com.djrapitops.plan">Sub
 <section class="detail" id="getDeliveryUtilities()">
 <h3>getDeliveryUtilities</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="delivery/DeliveryUtilities.html" title="class in com.djrapitops.plan.delivery">DeliveryUtilities</a></span>&nbsp;<span class="element-name">getDeliveryUtilities</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getGatheringUtilities()">
+<h3>getGatheringUtilities</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="gathering/GatheringUtilities.html" title="class in com.djrapitops.plan.gathering">GatheringUtilities</a></span>&nbsp;<span class="element-name">getGatheringUtilities</span>()</div>
 </section>
 </li>
 <li>
