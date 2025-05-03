@@ -61,7 +61,9 @@ public class RandomData {
 
     public static String randomString(int size) {
         return new RandomStringGenerator.Builder().withinRange('A', 'z').get()
-                .generate(size);
+                .generate(size)
+                .replace(';', '_')
+                .replace('\\', '_');
     }
 
     public static List<Nickname> randomNicknames(ServerUUID serverUUID) {
