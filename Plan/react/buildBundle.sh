@@ -1,4 +1,4 @@
 #!/usr/bin/env bash
 
 cd ..
-./gradlew :common:yarnBundle
+./gradlew :common:bundle
