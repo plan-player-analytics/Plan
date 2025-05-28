@@ -127,7 +127,7 @@ test {
 
 node {
     download = true
-    version = "20.9.0"
+    version = "24.1.0"
     nodeProjectDir = file("$rootDir/react/dashboard")
 }
 
