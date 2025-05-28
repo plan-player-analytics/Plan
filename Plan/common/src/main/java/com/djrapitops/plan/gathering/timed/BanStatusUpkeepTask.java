@@ -71,6 +71,7 @@ public class BanStatusUpkeepTask extends TaskSystem.Task {
         ServerUUID serverUUID = serverInfo.getServerUUID();
         Database database = dbSystem.getDatabase();
         Integer maxId = database.query(UserIdentifierQueries.fetchMaxUserId(serverUUID));
+        if (maxId == 0) return null;
         if (currentId == null) {
             currentId = ThreadLocalRandom.current().nextInt(maxId);
         }
