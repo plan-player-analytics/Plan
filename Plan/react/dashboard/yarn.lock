@@ -495,10 +495,10 @@
   resolved "https://registry.yarnpkg.com/@fullcalendar/react/-/react-6.1.17.tgz#30bf6e2da0d840bf432bcfd23b67dc3be71f6518"
   integrity sha512-AA8soHhlfRH5dUeqHnfAtzDiXa2vrgWocJSK/F5qzw/pOxc9MqpuoS/nQBROWtHHg6yQUg3DoGqOOhi7dmylXQ==
 
-"@highcharts/map-collection@^2.3.0":
-  version "2.3.0"
-  resolved "https://registry.yarnpkg.com/@highcharts/map-collection/-/map-collection-2.3.0.tgz#de3be04bb530d72ecd6adf6453480899a0fa44c5"
-  integrity sha512-lknEzFw9u8BA+8J7Y1cDP0N0FxZKSJgKwTn+e8vHsBH1Xj5RYNmPJeac/3Tse0JDgKfsCT43ZHG95W9xZbSTWw==
+"@highcharts/map-collection@^2.3.1":
+  version "2.3.1"
+  resolved "https://registry.yarnpkg.com/@highcharts/map-collection/-/map-collection-2.3.1.tgz#2c9d96560b3921cd935ad1c947de55c2b0de2dc9"
+  integrity sha512-49+nZrHNxIBpCxhSkaKw3zBEuEoxkI4cXDbl+IvEG9UNAR7G6+S8xtXh4V86zpxZP16SLes31JM7tasx5lScGA==
 
 "@jridgewell/gen-mapping@^0.3.5":
   version "0.3.5"
