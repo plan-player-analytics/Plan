@@ -41,7 +41,7 @@
     "react-router-dom": "^6.26.0",
     "sass": "^1.89.0",
     "source-map-explorer": "^2.5.2",
-    "swagger-ui": "^5.21.0",
+    "swagger-ui": "^5.24.0",
     "web-vitals": "^4.2.4"
   },
   "scripts": {
