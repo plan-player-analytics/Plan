@@ -139,6 +139,10 @@ export const hslToHsv = ([h, s, l]) => {
     return [h, hsvS, hsvV];
 }
 
+export const hsvToHex = (hsv) => {
+    return rgbToHexString(hsvToRgb(hsv));
+}
+
 export const hsvToRgb = ([h, s, v]) => {
     let r, g, b;
 
@@ -200,6 +204,16 @@ export const randomHSVColor = (i) => {
     return [hue, saturation, value]
 }
 
+export const rgmStringToArray = (rgbString) => {
+    const colors = rgbString.substring(4, rgbString.length - 1);
+    const split = colors.split(',');
+    return [
+        Number.parseInt(split[0].trim()),
+        Number.parseInt(split[1].trim()),
+        Number.parseInt(split[2].trim())
+    ];
+}
+
 export const rgbToHexString = ([r, g, b]) => {
     return '#' + rgbToHex(r) + rgbToHex(g) + rgbToHex(b);
 }
@@ -258,6 +272,104 @@ export const withReducedSaturation = (hex, reduceSaturationPercentage) => {
     return 'hsl(' + h * 360 + ',' + s * 100 * saturationReduction + '%,' + l * 95 + '%)';
 }
 
+export const calculateCssHexColor = (cssColor) => {
+    const colorCalculationElement = document.createElement('div');
+    colorCalculationElement.style.display = 'none';
+    colorCalculationElement.style.color = cssColor;
+    document.body.appendChild(colorCalculationElement);
+    const rgbString = window.getComputedStyle(colorCalculationElement, null).getPropertyValue("color");
+    const hex = rgbToHexString(rgmStringToArray(rgbString));
+    document.body.removeChild(colorCalculationElement);
+    return hex;
+}
+
+export const calculateCssColors = (cssSelector) => {
+    const colors = {
+        color: null,
+        backgroundColor: null,
+        borderColor: null
+    };
+
+    // Search through all document stylesheets
+    for (const stylesheet of document.styleSheets) {
+        try {
+            // Skip if we can't access the rules (e.g., cross-origin stylesheets)
+            if (!stylesheet.cssRules) continue;
+
+            // Look through all rules in the stylesheet
+            for (const rule of stylesheet.cssRules) {
+                if (rule instanceof CSSStyleRule && rule.selectorText === cssSelector) {
+                    const style = rule.style;
+
+                    // Get color if set
+                    if (style.color) {
+                        colors.color = style.color;
+                    }
+
+                    // Get background-color if set
+                    if (style.backgroundColor) {
+                        colors.backgroundColor = style.backgroundColor;
+                    }
+
+                    // Get border-color if set
+                    if (style.borderColor) {
+                        colors.borderColor = style.borderColor;
+                    }
+                }
+            }
+        } catch (e) {
+            // Skip stylesheets we can't access
+
+        }
+    }
+
+    return colors;
+}
+
+export const extractUniqueSelectors = (cssString) => {
+    // Remove line breaks and extra spaces to simplify parsing
+    const normalizedCss = cssString.replace(/\n/g, ' ').replace(/\s+/g, ' ');
+
+    // Match all CSS selectors before curly braces, handling multiple selectors separated by commas
+    const selectorMatches = normalizedCss.match(/[^}]+?{/g) || [];
+
+    // List of pseudo-classes we want to keep
+    const keepPseudoClasses = [':hover', ':checked', ':active', ':focus'];
+
+    // Process each selector group
+    const allSelectors = selectorMatches
+        .map(match => {
+            // Remove the trailing curly brace and trim
+            const selectorGroup = match.slice(0, -1).trim();
+            // Split by comma and trim each selector
+            return selectorGroup.split(',').map(s => s.trim());
+        })
+        .flat();
+
+    // Remove unwanted selectors and deduplicate
+    const uniqueSelectors = [...new Set(allSelectors)]
+        .filter(selector => {
+            if (!selector ||
+                selector === ':root' ||
+                selector.includes('@') ||  // Remove any @media or other @ rules
+                selector.includes('::') || // Remove pseudo-elements
+                selector === '*'          // Remove universal selector
+            ) {
+                return false;
+            }
+
+            // Check if selector contains any pseudo-class
+            if (selector.includes(':')) {
+                // Only keep selector if it contains one of our wanted pseudo-classes
+                return keepPseudoClasses.some(pseudo => selector.includes(pseudo));
+            }
+
+            return true;
+        });
+
+    return uniqueSelectors;
+}
+
 const createNightModeColorCss = () => {
     return ':root {' + getColors()
         .filter(color => color.name !== 'white' && color.name !== 'black' && color.name !== 'plan')
@@ -292,3 +404,23 @@ export const createNightModeCss = () => {
         `:root {--bs-heading-color:var(--color-night-text-dark-bg); --bs-card-color:var(--color-night-text-dark-bg); --bs-body-color:var(--color-night-text-dark-bg); --bs-body-bg:var(--color-night-dark-grey-blue); --bs-btn-active-border-color:var(--color-night-blue);}` +
         createNightModeColorCss()
 }
+
+export const getContrastColor = (hexcolor) => {
+    const hex = hexcolor.replace('#', '');
+    if (hex.length === 6) {
+        const r = parseInt(hex.substring(0, 2), 16);
+        const g = parseInt(hex.substring(2, 4), 16);
+        const b = parseInt(hex.substring(4, 6), 16);
+        const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+        return luminance > 0.5 ? '#000000' : '#ffffff';
+    } else {
+        const rLetter = hex.substring(0, 1);
+        const gLetter = hex.substring(1, 2);
+        const bLetter = hex.substring(2, 3);
+        const r = parseInt(rLetter + rLetter, 16);
+        const g = parseInt(gLetter + gLetter, 16);
+        const b = parseInt(bLetter + bLetter, 16);
+        const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+        return luminance > 0.5 ? '#000000' : '#ffffff';
+    }
+};

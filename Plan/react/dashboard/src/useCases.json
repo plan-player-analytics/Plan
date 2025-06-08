@@ -1,0 +1,182 @@
+{
+  "theme": "var(--col-plan)",
+  "themeText": "var(--col-theme)",
+  "layout": {
+    "sidebar": "var(--col-theme)",
+    "background": "var(--col-white-grey)",
+    "divider": "var(--col-cement-grey)",
+    "loader": {
+      "border": "var(--col-plan)",
+      "background": "var(--col-plan)"
+    },
+    "helpIcon": "var(--col-light-blue)"
+  },
+  "sidebar": {
+    "navigationItem": {
+      "background": "var(--col-theme)",
+      "text": "var(--col-text-dark)",
+      "hover": "var(--col-theme)",
+      "active": {
+        "background": "var(--col-theme)"
+      }
+    },
+    "collapsibleSection": {
+      "background": "var(--col-white)",
+      "text": "var(--col-text-light)",
+      "hover": "var(--col-pale-grey)",
+      "border": "var(--col-pale-grey)"
+    }
+  },
+  "cards": {
+    "background": "var(--col-white)",
+    "border": "var(--col-cement-grey)",
+    "header": {
+      "background": "var(--col-white-grey)",
+      "border": "var(--col-cement-grey)"
+    }
+  },
+  "infoBox": {
+    "info": "var(--col-alert-success)",
+    "infoText": "var(--col-alert-success-text)",
+    "notice": "var(--col-alert-warning)",
+    "noticeText": "var(--col-alert-warning-text)",
+    "error": "var(--col-alert-danger)",
+    "errorText": "var(--col-alert-danger-text)"
+  },
+  "calendar": {
+    "today": "var(--col-white)",
+    "popover": {
+      "body": "var(--col-white)",
+      "header": "var(--col-white)",
+      "text": "var(--col-text-light)"
+    },
+    "borders": "var(--col-cement-grey)",
+    "links": "var(--col-text-light)",
+    "button": "var(--col-theme)"
+  },
+  "forms": {
+    "buttons": {
+      "activeButton": "var(--col-theme)",
+      "secondaryButton": "var(--col-white)",
+      "secondaryButtonBorder": "var(--col-secondary)"
+    },
+    "input": {
+      "background": "var(--col-white)",
+      "border": "var(--col-cement-grey)",
+      "text": "var(--col-text-light)"
+    },
+    "select": {
+      "background": "var(--col-white)",
+      "border": "var(--col-cement-grey)",
+      "text": "var(--col-text-light)"
+    },
+    "checkbox": {
+      "checked": {
+        "background": "var(--col-theme)",
+        "border": "var(--col-cement-grey)"
+      }
+    },
+    "dropdown": {
+      "item": {
+        "text": "var(--col-text-light)",
+        "hover": "var(--col-white-grey)"
+      },
+      "header": "var(--col-text-light)",
+      "border": "var(--col-cement-grey)"
+    }
+  },
+  "graphs": {
+    "punchCard": "var(--col-ink)",
+    "playersOnline": "var(--col-bright-blue)",
+    "tps": {
+      "high": "var(--col-green)",
+      "medium": "var(--col-tps-yellow)",
+      "low": "var(--col-red)"
+    },
+    "cpu": "var(--col-cpu-yellow)",
+    "ram": "var(--col-ram-green)",
+    "chunks": "var(--col-chunk-brown)",
+    "entities": "var(--col-entity-purple)",
+    "worldMap": {
+      "high": "var(--col-green)",
+      "low": "var(--col-map-green)"
+    },
+    "ping": {
+      "max": "var(--col-amber)",
+      "avg": "var(--col-warning)",
+      "min": "var(--col-ping-amber)"
+    }
+  },
+  "data": {
+    "servers": "var(--col-light-green)",
+    "trend": {
+      "better": "var(--col-success)",
+      "same": "var(--col-warning)",
+      "worse": "var(--col-danger)"
+    },
+    "play": {
+      "playtime": "var(--col-green)",
+      "playtimeActive": "var(--col-green)",
+      "playtimeAfk": "var(--col-grey)",
+      "sessions": "var(--col-teal)",
+      "sessionLength": "var(--col-teal)",
+      "gamemode": "var(--col-teal)",
+      "firstSeen": "var(--col-light-green)",
+      "lastSeen": "var(--col-teal)"
+    },
+    "players": {
+      "count": "var(--col-black)",
+      "online": "var(--col-blue)",
+      "unique": "var(--col-light-blue)",
+      "new": "var(--col-light-green)",
+      "activityIndex": "var(--col-amber)",
+      "veryActive": "var(--col-green)",
+      "active": "var(--col-light-green)",
+      "regular": "var(--col-lime)",
+      "irregular": "var(--col-amber)",
+      "inactive": "var(--col-blue-grey)"
+    },
+    "playerPeakLast": "var(--col-light-blue)",
+    "playerPeakAllTime": "var(--col-light-green)",
+    "performance": {
+      "uptime": "var(--col-light-green)",
+      "downtime": "var(--col-red)",
+      "tps": "var(--col-red)",
+      "tpsLowSpikes": "var(--col-red)",
+      "tpsAverage": "var(--col-orange)",
+      "cpu": "var(--col-amber)",
+      "ram": "var(--col-light-green)",
+      "entities": "var(--col-purple)",
+      "chunks": "var(--col-blue-grey)",
+      "disk": "var(--col-green)",
+      "ping": "var(--col-amber)"
+    },
+    "calculated": {
+      "insights": "var(--col-red)",
+      "joinAddresses": "var(--col-amber)",
+      "retention": "var(--col-indigo)",
+      "retentionNewPlayers": "var(--col-light-green)",
+      "geolocation": "var(--col-green)",
+      "allowList": "var(--col-orange)",
+      "pluginVersions": "var(--col-indigo)"
+    },
+    "playerVersus": {
+      "playerKills": "var(--col-red)",
+      "mobKills": "var(--col-green)",
+      "deaths": "var(--col-black)",
+      "top-3": {
+        "first": "var(--col-amber)",
+        "second": "var(--col-grey)",
+        "third": "var(--col-brown)"
+      }
+    },
+    "playerStatus": {
+      "online": "var(--col-green)",
+      "offline": "var(--col-red)",
+      "banned": "var(--col-red)",
+      "operator": "var(--col-blue)",
+      "kicks": "var(--col-brown)",
+      "nicknames": "var(--col-purple)"
+    }
+  }
+} 

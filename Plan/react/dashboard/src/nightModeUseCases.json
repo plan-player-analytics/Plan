@@ -1,0 +1,73 @@
+{
+  "theme": "var(--col-night-grey-blue)",
+  "themeText": "var(--col-plan)",
+  "layout": {
+    "background": "var(--col-night-black)",
+    "divider": "var(--col-night-blue)"
+  },
+  "sidebar": {
+    "navigationItem": {
+      "background": "var(--col-night-dark-blue)",
+      "text": "var(--col-night-text)",
+      "hover": "var(--col-night-dark-grey-blue)",
+      "active": {
+        "background": "var(--col-night-dark-blue)"
+      }
+    },
+    "collapsibleSection": {
+      "background": "var(--col-theme)",
+      "text": "var(--col-night-text)",
+      "hover": "var(--col-night-dark-grey-blue)",
+      "border": "var(--col-night-blue)"
+    }
+  },
+  "cards": {
+    "background": "var(--col-night-dark-blue)",
+    "border": "var(--col-night-blue)",
+    "header": {
+      "background": "var(--col-night-dark-blue)",
+      "border": "var(--col-night-blue)"
+    }
+  },
+  "forms": {
+    "buttons": {
+      "secondaryButton": "var(--col-night-grey-blue)",
+      "secondaryButtonBorder": "var(--col-night-blue)"
+    },
+    "input": {
+      "background": "var(--col-night-dark-blue)",
+      "border": "var(--col-night-blue)",
+      "text": "var(--col-night-text)"
+    },
+    "select": {
+      "background": "var(--col-night-dark-blue)",
+      "border": "var(--col-night-blue)",
+      "text": "var(--col-night-text)"
+    },
+    "checkbox": {
+      "checked": {
+        "background": "var(--col-night-blue)",
+        "border": "var(--col-night-blue)"
+      }
+    },
+    "dropdown": {
+      "item": {
+        "text": "var(--col-night-text)",
+        "hover": "var(--col-night-blue)"
+      },
+      "header": "var(--col-night-text)",
+      "border": "var(--col-night-blue)"
+    }
+  },
+  "calendar": {
+    "today": "var(--col-night-grey-blue)",
+    "popover": {
+      "body": "var(--col-night-dark-blue)",
+      "header": "var(--col-night-dark-blue)",
+      "text": "var(--col-night-text)"
+    },
+    "borders": "var(--col-night-blue)",
+    "links": "var(--col-night-text)",
+    "button": "var(--col-plan)"
+  }
+} 

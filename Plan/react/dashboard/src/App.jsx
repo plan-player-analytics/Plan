@@ -69,6 +69,7 @@ const RegisterPage = React.lazy(() => import("./views/layout/RegisterPage"));
 const ErrorPage = React.lazy(() => import("./views/layout/ErrorPage"));
 const ErrorsPage = React.lazy(() => import("./views/layout/ErrorsPage"));
 const SwaggerView = React.lazy(() => import("./views/SwaggerView"));
+const ThemeEditorPage = React.lazy(() => import("./views/layout/ThemeEditorPage"));
 
 const OverviewRedirect = () => {
     return (<Navigate to={"overview"} replace={true}/>)
@@ -208,6 +209,7 @@ function App() {
                             </Route>}
                             {!staticSite && <Route path="/errors" element={<Lazy><ErrorsPage/></Lazy>}/>}
                             {!staticSite && <Route path="/docs" element={<Lazy><SwaggerView/></Lazy>}/>}
+                            <Route path="/theme-editor" element={<Lazy><ThemeEditorPage/></Lazy>}/>
                             <Route path="*" element={<Lazy><ErrorPage error={{
                                 message: 'Page not found, please correct the address',
                                 title: 'No such page',
