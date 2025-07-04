@@ -38,7 +38,7 @@
     "react-dom": "^18.3.1",
     "react-i18next": "^15.5.3",
     "react-mcjsonchat": "^1.0.0",
-    "react-router-dom": "^6.26.0",
+    "react-router-dom": "^7.6.3",
     "sass": "^1.89.2",
     "source-map-explorer": "^2.5.2",
     "swagger-ui": "^5.25.2",
