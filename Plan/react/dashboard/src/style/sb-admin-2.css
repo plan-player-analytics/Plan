@@ -1366,13 +1366,13 @@ select.form-control:focus::-ms-value {
 }
 
 .alert-success {
-    color: #0f6848;
-    background-color: #d2f4e8;
-    border-color: #bff0de;
+    color: var(--color-info-box-info-text);
+    background-color: var(--color-info-box-info);
+    border-color: color-mix(in hsl, var(--color-info-box-info), var(--color-info-box-info-text) 10%);
 }
 
 .alert-success hr {
-    border-top-color: #aaebd3;
+    border-top-color: color-mix(in hsl, var(--color-info-box-info), var(--color-info-box-info-text) 10%);
 }
 
 .alert-success .alert-link {
@@ -1390,35 +1390,35 @@ select.form-control:focus::-ms-value {
 }
 
 .alert-info .alert-link {
-    color: #113b42;
+    color: color-mix(in hsl, var(--color-info-box-info-text), #000 10%);
 }
 
 .alert-warning {
-    color: #806520;
-    background-color: #fdf3d8;
-    border-color: #fceec9;
+    color: var(--color-info-box-notice-text);
+    background-color: var(--color-info-box-notice);
+    border-color: color-mix(in hsl, var(--color-info-box-notice), var(--color-info-box-notice-text) 10%);
 }
 
 .alert-warning hr {
-    border-top-color: #fbe6b1;
+    border-top-color: color-mix(in hsl, var(--color-info-box-notice), var(--color-info-box-notice-text) 10%);
 }
 
 .alert-warning .alert-link {
-    color: #574516;
+    color: color-mix(in hsl, var(--color-info-box-notice-text), #000 10%);
 }
 
 .alert-danger {
-    color: #78261f;
-    background-color: #fadbd8;
-    border-color: #f8ccc8;
+    color: var(--color-info-box-error-text);
+    background-color: var(--color-info-box-error);
+    border-color: color-mix(in hsl, var(--color-info-box-error), var(--color-info-box-error-text) 10%);
 }
 
 .alert-danger hr {
-    border-top-color: #f5b7b1;
+    border-top-color: color-mix(in hsl, var(--color-info-box-error), var(--color-info-box-error-text) 10%);
 }
 
 .alert-danger .alert-link {
-    color: #4f1915;
+    color: color-mix(in hsl, var(--color-info-box-error-text), #000 10%);
 }
 
 .alert-light {
@@ -1856,7 +1856,8 @@ a.text-dark:hover, a.text-dark:focus {
 }
 
 #wrapper #content-wrapper {
-    background-color: #f8f9fc;
+    background-color: var(--color-layout-background);
+    color: var(--color-text);
     width: 100%;
 }
 

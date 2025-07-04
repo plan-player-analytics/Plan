@@ -84,3 +84,38 @@ p, span, td, .h3, a, button
   &.night-mode
     .color-box-wrapper
       background-color: var(--color-night-dark-blue)
+
+.theme-editor
+  .example-section
+    position: static
+    bottom: 0
+    background-color: var(--color-layout-background)
+    border-top: 2px solid var(--color-layout-divider)
+    padding: 1rem
+    width: 100%
+    height: 100%
+
+    transition: color 0.2s, background-color 0.2s, border-color 0.2s
+
+    *
+      transition: color 0.2s, background-color 0.2s, border-color 0.2s
+
+    .example
+      min-height: 40vh
+      max-height: 40vh
+      overflow-y: auto
+
+    .dropdown-toggle
+      width: 100%
+      display: flex
+
+    > .dropdown-toggle:focus
+      border: none
+      outline: none
+      box-shadow: none
+
+    > .dropdown-toggle::after
+      position: absolute
+      right: 2rem
+      top: 2rem
+      font-size: 2rem

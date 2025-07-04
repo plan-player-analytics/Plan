@@ -5,6 +5,7 @@
   "layout": {
     "background": "var(--color-night-black)",
     "divider": "var(--color-night-blue)",
+    "title": "var(--color-text)",
     "loader": {
       "border": "var(--color-plan)",
       "background": "var(--color-plan)"

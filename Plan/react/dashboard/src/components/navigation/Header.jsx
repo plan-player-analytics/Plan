@@ -42,7 +42,7 @@ const Header = ({page, tab, hideUpdater}) => {
     return (
         <nav className="nav-header nav mt-3 align-items-center justify-content-between container-fluid">
             <div className="d-sm-flex">
-                <h1 className="h3 mb-0 text-gray-800">
+                <h1 className="h3 mb-0 header">
                     <button onClick={toggleSidebar}>
                         <Fa icon={faBars} className={"sidebar-toggler"}/>
                     </button>

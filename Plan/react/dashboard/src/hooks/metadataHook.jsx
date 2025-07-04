@@ -43,10 +43,12 @@ export const MetadataContextProvider = ({children}) => {
         updateMetadata();
     }, [updateMetadata, authLoaded, loggedIn]);
 
+    const displayedServerName = metadata.isProxy ? metadata.networkName : (metadata.serverName?.startsWith('Server') ? "Plan" : metadata.serverNameserverName);
+
     const sharedState = useMemo(() => {
-            return {...metadata, getPlayerHeadImageUrl, datastore}
+            return {...metadata, getPlayerHeadImageUrl, datastore, displayedServerName}
         },
-        [metadata, getPlayerHeadImageUrl, datastore]);
+        [metadata, getPlayerHeadImageUrl, datastore, displayedServerName]);
     return (<MetadataContext.Provider value={sharedState}>
             {children}
         </MetadataContext.Provider>

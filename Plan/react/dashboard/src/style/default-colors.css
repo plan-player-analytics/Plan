@@ -83,6 +83,7 @@
     --color-pie-9: #329262;
     --color-pie-10: #5574A6;
     --color-layout-background: var(--color-white-grey);
+    --color-layout-title: var(--color-light-slate);
     --color-layout-divider: var(--color-black-10-percent);
     --color-layout-loader-border: var(--color-plan);
     --color-layout-loader-background: var(--color-plan);
@@ -211,6 +212,10 @@
 .navigation-item {
     background-color: var(--color-sidebar-navigation-item-background);
     color: var(--color-sidebar-navigation-item-icon);
+}
+
+.header {
+    color: var(--color-layout-title);
 }
 
 /* Calendar overrides */

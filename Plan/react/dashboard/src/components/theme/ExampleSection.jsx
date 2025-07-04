@@ -1,6 +1,6 @@
 import {SidebarUseCase} from "./usecase/SidebarUseCase.jsx";
 import InfoBoxUseCase from "./usecase/InfoBoxUseCase.jsx";
-import {CardLoader} from "../navigation/Loader.jsx";
+import {ChartLoader} from "../navigation/Loader.jsx";
 import TrendUseCase from "./usecase/TrendUseCase.jsx";
 import CardUseCase from "./usecase/CardUseCase.jsx";
 import CalendarUseCase from "./usecase/CalendarUseCase.jsx";
@@ -14,6 +14,7 @@ import DataPlayerVersusUseCase from "./usecase/DataPlayerVersusUseCase.jsx";
 import DataPlayerStatusUseCase from "./usecase/DataPlayerStatusUseCase.jsx";
 import React from "react";
 import {useTranslation} from "react-i18next";
+import CollapseWithButton from "../layout/CollapseWithButton.jsx";
 
 const findExample = (path, examples) => {
     if (!path || !path.length) return undefined;
@@ -22,12 +23,14 @@ const findExample = (path, examples) => {
     return findExample(path.split('.').slice(0, -1).join('.'), examples);
 }
 
-const ExampleSection = ({displayedItem}) => {
+const ExampleSection = ({displayedItem, className}) => {
     const {t} = useTranslation();
     const examples = {
         "sidebar": <SidebarUseCase/>,
+        "layout.background": <SidebarUseCase/>,
+        "layout.title": <SidebarUseCase/>,
         "infoBox": <InfoBoxUseCase/>,
-        "layout.loader": <CardLoader/>,
+        "layout.loader": <ChartLoader/>,
         "data.trend": <TrendUseCase/>,
         "cards": <CardUseCase/>,
         "layout.helpIcon": <CardUseCase/>,
@@ -46,10 +49,14 @@ const ExampleSection = ({displayedItem}) => {
     const example = findExample(displayedItem, examples);
 
     return (
-        <div className={"p-4 mb-4"}
+        <div className={"example-section " + className}
              style={{position: 'sticky', top: '0'}}>
-            <h5 className="mb-3">{t('html.label.themeEditor.example')}</h5>
-            {example}
+            <CollapseWithButton title={<h5
+                className={"col-text"}>{t('html.label.themeEditor.example')}{example ? <>{' '}&middot; {displayedItem}</> : ''}</h5>}>
+                {example && <div className={"example"}>
+                    {example}
+                </div>}
+            </CollapseWithButton>
         </div>
     )
 }

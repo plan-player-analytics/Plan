@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
-const CollapseWithButton = ({title, children, coverToggle}) => {
-    const [collapsed, setCollapsed] = useState(true);
+const CollapseWithButton = ({title, children, coverToggle, open}) => {
+    const [collapsed, setCollapsed] = useState(!open);
 
     const toggle = () => {
         setCollapsed(!collapsed);

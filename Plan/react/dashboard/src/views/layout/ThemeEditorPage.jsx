@@ -52,11 +52,12 @@ const UseCase = ({path, value, onChange, onHoverChange, colors, isNightMode, bas
     return (
         <>
             {typeof value === 'object' && !Array.isArray(value) && path.length > 0 && (
-                <tr onMouseOver={() => onHoverChange(id, 'enter', isNightMode)}
-                    onMouseOut={() => onHoverChange(id, 'exit', isNightMode)}>
+                <tr>
                     <td colSpan={2}>
                         {level === 0 && <hr/>}
-                        <h6 className={'mt-2 mb-3'} style={{marginLeft: level * 20, fontWeight: "bold"}}>
+                        <h6 className={'mt-2 mb-3'} style={{marginLeft: level * 20, fontWeight: "bold"}}
+                            onMouseOver={() => onHoverChange(id, 'enter', isNightMode)}
+                            onMouseOut={() => onHoverChange(id, 'exit', isNightMode)}>
                             {formatLabel(path[path.length - 1])}
                         </h6>
                     </td>
@@ -220,10 +221,10 @@ const ThemeEditorPage = () => {
                 <Header page={title} hideUpdater/>
                 <div id="content" style={{display: 'flex'}}>
                     <main className="container-fluid mt-4">
-                        <Card className="shadow mb-4">
+                        <Card className="shadow mb-4 theme-editor">
                             <CardHeader icon={faPalette} color="primary" label={title}/>
                             <Card.Body>
-                                <Row>
+                                <Row onMouseEnter={() => onHoverChange(undefined, 'enter', false)}>
                                     <Col xs={12}>
                                         <ColorEditContextProvider
                                             colors={nightColors}
@@ -249,7 +250,7 @@ const ThemeEditorPage = () => {
                                 <Row>
                                     <Col xs={12}>
                                         <Row>
-                                            <Col xl={5} lg={12} md={12} sm={12} xs={12}>
+                                            <Col>
                                                 <UseCaseSection
                                                     useCases={currentUseCases}
                                                     colors={colors}
@@ -257,10 +258,7 @@ const ThemeEditorPage = () => {
                                                     onHoverChange={onHoverChange}
                                                 />
                                             </Col>
-                                            <Col xs={2} className={nightHover ? ' night-mode-colors' : ''}>
-                                                <ExampleSection displayedItem={hoveredItem}/>
-                                            </Col>
-                                            <Col xl={5} lg={12} md={12} sm={12} xs={12}>
+                                            <Col>
                                                 <UseCaseSection
                                                     useCases={currentNightModeUseCases}
                                                     colors={nightColors}
@@ -274,6 +272,8 @@ const ThemeEditorPage = () => {
                                     </Col>
                                 </Row>
                             </Card.Body>
+                            <ExampleSection displayedItem={hoveredItem}
+                                            className={nightHover ? ' night-mode-colors' : ''}/>
                         </Card>
                     </main>
                     <aside>

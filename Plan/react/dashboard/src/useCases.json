@@ -4,6 +4,7 @@
   "text": "var(--color-text-light)",
   "layout": {
     "background": "var(--color-white-grey)",
+    "title": "var(--color-light-slate)",
     "divider": "var(--color-black-10-percent)",
     "helpIcon": "var(--color-light-blue)",
     "loader": {
