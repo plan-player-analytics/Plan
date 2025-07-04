@@ -1,5 +1,6 @@
 import './style/main.sass';
 import './style/sb-admin-2.css'
+import './style/default-colors.css';
 import './style/style.css';
 import './style/mobile.css';
 import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';

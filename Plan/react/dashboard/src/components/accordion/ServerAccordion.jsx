@@ -33,45 +33,46 @@ const ServerBody = ({i, server}) => {
     return (
         <Row>
             <Col lg={6}>
-                {server.operator ? <Datapoint icon={faSuperpowers} color="blue" name={t('html.label.operator')}/> : ''}
-                {server.banned ? <Datapoint icon={faGavel} color="red" name={t('html.label.banned')}/> : ''}
+                {server.operator ?
+                    <Datapoint icon={faSuperpowers} color="operator" name={t('html.label.operator')}/> : ''}
+                {server.banned ? <Datapoint icon={faGavel} color="banned" name={t('html.label.banned')}/> : ''}
                 {server.operator || server.banned ? <br/> : ''}
                 <Datapoint
-                    icon={faCalendarCheck} color={"teal"}
+                    icon={faCalendarCheck} color={"sessions"}
                     name={t('html.label.sessions')} value={server.session_count} bold
                 />
                 <Datapoint
-                    icon={faClock} color={"green"}
+                    icon={faClock} color={"playtime"}
                     name={t('html.label.playtime')} value={server.playtime} bold
                 />
                 <Datapoint
-                    icon={faClock} color={"grey"}
+                    icon={faClock} color={"playtime-afk"}
                     name={t('html.label.afkTime')} value={server.afk_time} bold
                 />
                 <Datapoint
-                    icon={faClock} color={"teal"}
+                    icon={faClock} color={"sessions"}
                     name={t('html.label.longestSession')} value={server.longest_session_length} bold
                 />
                 <Datapoint
-                    icon={faClock} color={"teal"}
+                    icon={faClock} color={"sessions"}
                     name={t('html.label.sessionMedian')} value={server.session_median} bold
                 />
                 <br/>
                 <Datapoint
-                    icon={faLocationArrow} color={"amber"}
+                    icon={faLocationArrow} color={"join-addresses"}
                     name={t('html.label.joinAddress')} value={server.join_address}
                 />
                 <br/>
                 <Datapoint
-                    icon={faCrosshairs} color="red"
+                    icon={faCrosshairs} color="player-kills"
                     name={t('html.label.playerKills')} value={server.player_kills} bold
                 />
                 <Datapoint
-                    icon={faCrosshairs} color="green"
+                    icon={faCrosshairs} color="mob-kills"
                     name={t('html.label.mobKills')} value={server.mob_kills} bold
                 />
                 <Datapoint
-                    icon={faSkull} color="black"
+                    icon={faSkull} color="deaths"
                     name={t('html.label.deaths')} value={server.deaths} bold
                 />
                 <hr/>
@@ -82,7 +83,7 @@ const ServerBody = ({i, server}) => {
                           gmSeries={server.gm_series}/>
 
                 {hasPermission('page.server') && <a href={`${baseAddress}/server/${server.server_uuid}`}
-                                                    className="float-end btn bg-light-green me-2">
+                                                    className="float-end btn bg-servers me-2">
                     <Fa icon={faServer}/> {t('html.label.serverPage')}
                 </a>}
             </div>
@@ -102,7 +103,7 @@ const ServerAccordion = ({servers}) => {
             return {
                 body: <ServerBody server={server}/>,
                 header: <ServerHeader server={server}/>,
-                color: 'light-green',
+                color: 'servers',
                 outline: true
             }
         })}/>

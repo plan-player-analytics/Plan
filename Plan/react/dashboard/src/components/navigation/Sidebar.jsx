@@ -147,7 +147,7 @@ const SidebarCollapse = ({item, open, setOpen, collapseSidebar}) => {
             </button>
             <Collapse in={open}>
                 <div id={item.name + "-collapse"}>
-                    <div className="bg-white py-2 collapse-inner rounded">
+                    <div className="sidebar-collapse py-2 collapse-inner rounded">
                         {item.contents
                             .filter(content => content !== undefined)
                             .map(content =>
@@ -188,12 +188,12 @@ const renderItem = (item, i, openCollapse, setOpenCollapse, t, windowWidth, coll
     return <hr key={i} className="sidebar-divider"/>
 }
 
-const Sidebar = ({page, items}) => {
+const Sidebar = ({page, items, openItemIndex}) => {
     const {t} = useTranslation();
     const {currentTab, sidebarExpanded, setSidebarExpanded} = useNavigation();
     const {authRequired, hasPermission, hasChildPermission} = useAuth();
 
-    const [openCollapse, setOpenCollapse] = useState(undefined);
+    const [openCollapse, setOpenCollapse] = useState(openItemIndex);
     const toggleCollapse = collapse => {
         setOpenCollapse(openCollapse === collapse ? undefined : collapse);
     }
@@ -250,7 +250,7 @@ const Sidebar = ({page, items}) => {
     return (
         <>
             {sidebarExpanded &&
-                <ul className={"navbar-nav sidebar sidebar-dark accordion bg-theme"} id="accordionSidebar">
+                <ul className={"navbar-nav sidebar sidebar-dark accordion"} id="accordionSidebar">
                     <Logo/>
                     <PageNavigationItem page={page}/>
                     <Divider showMargin={items.length && !items[0].contents && items[0].href === undefined}/>

@@ -124,7 +124,7 @@ const PageNavigationItem = ({page}) => {
         <li className={"nav-item nav-button nav-link"}
             style={{padding: "1rem"}}>
             <InputGroup>
-                <div className="input-group-text bg-theme col-white"
+                <div className="input-group-text navigation-item"
                      style={{paddingLeft: "0.5rem", paddingRight: "0.5rem"}}><Fa icon={faCompass}/></div>
                 <select onChange={onSelect}
                         aria-label="Page selector"

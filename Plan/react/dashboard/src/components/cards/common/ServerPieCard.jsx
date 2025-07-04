@@ -19,7 +19,7 @@ const ServerPieCard = () => {
 
     return (
         <Card>
-            <CardHeader icon={faNetworkWired} color={'teal'} label={'html.label.serverPlaytime30days'}/>
+            <CardHeader icon={faNetworkWired} color={'sessions'} label={'html.label.serverPlaytime30days'}/>
             <ServerPie series={series} colors={colors}/>
         </Card>
     )

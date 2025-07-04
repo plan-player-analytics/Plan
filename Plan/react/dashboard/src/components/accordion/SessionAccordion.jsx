@@ -29,36 +29,36 @@ const SessionBody = ({i, session}) => {
         <Row>
             <Col lg={6}>
                 <Datapoint
-                    icon={faClock} color={"teal"}
+                    icon={faClock} color={"sessions"}
                     name={t('html.label.sessionEnded')} value={session.end} bold
                 />
                 <Datapoint
-                    icon={faClock} color={"teal"}
+                    icon={faClock} color={"sessions"}
                     name={t('html.label.length')} value={session.length} bold
                 />
                 <Datapoint
-                    icon={faClock} color={"grey"}
+                    icon={faClock} color={"playtime-afk"}
                     name={t('html.label.afkTime')} value={session.afk_time} bold
                 />
                 <Datapoint
-                    icon={faServer} color={"green"}
+                    icon={faServer} color={"servers"}
                     name={t('html.label.server')} value={session.server_name} bold
                 />
                 {session.avg_ping ? <Datapoint
-                    icon={faSignal} color={"amber"}
+                    icon={faSignal} color={"ping"}
                     name={t('html.label.averagePing')} value={session.avg_ping} bold
                 /> : ''}
                 <br/>
                 <Datapoint
-                    icon={faCrosshairs} color="red"
+                    icon={faCrosshairs} color="player-kills"
                     name={t('html.label.playerKills')} value={session.player_kills.length} bold
                 />
                 <Datapoint
-                    icon={faCrosshairs} color="green"
+                    icon={faCrosshairs} color="mob-kills"
                     name={t('html.label.mobKills')} value={session.mob_kills} bold
                 />
                 <Datapoint
-                    icon={faSkull} color="black"
+                    icon={faSkull} color="deaths"
                     name={t('html.label.deaths')} value={session.deaths} bold
                 />
                 <hr/>
@@ -69,11 +69,11 @@ const SessionBody = ({i, session}) => {
                           worldSeries={session.world_series}
                           gmSeries={session.gm_series}/>
                 <a href={`${baseAddress}/player/${session.player_uuid}`}
-                   className="float-end btn bg-blue">
+                   className="float-end btn bg-players-online">
                     <Fa icon={faUser}/> {t('html.label.playerPage')}
                 </a>
                 {session.network_server ? <a href={`${baseAddress}/server/${session.server_uuid}`}
-                                             className="float-end btn bg-light-green me-2">
+                                             className="float-end btn bg-servers me-2">
                     <Fa icon={faServer}/> {t('html.label.serverPage')}
                 </a> : ''}
             </div>
@@ -108,7 +108,7 @@ const SessionAccordion = (
             return {
                 body: <SessionBody session={session}/>,
                 header: <SessionHeader session={session}/>,
-                color: 'teal',
+                color: 'sessions',
                 outline: !session.start.includes("Online")
             }
         })}/>

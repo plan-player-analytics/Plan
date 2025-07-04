@@ -35,7 +35,7 @@ const AddressGroupCard = ({n, group, editGroup, allAddresses, remove}) => {
     const isUpToDate = !selectedIndexes.length || selectedAddresses.length === group.addresses.length && selectedAddresses.every((a, i) => a === group.addresses[i]);
     return (
         <Card>
-            <CardHeader icon={faList} color={"amber"} label={
+            <CardHeader icon={faList} color={"join-addresses"} label={
                 editingName ?
                     <Form.Control
                         style={{position: "absolute", top: "0.5rem", left: "2.5rem", width: "calc(100% - 3rem)"}}

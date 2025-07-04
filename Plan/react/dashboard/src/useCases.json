@@ -1,182 +1,179 @@
 {
-  "theme": "var(--col-plan)",
-  "themeText": "var(--col-theme)",
+  "theme": "var(--color-plan)",
+  "themeText": "var(--color-theme)",
+  "text": "var(--color-text-light)",
   "layout": {
-    "sidebar": "var(--col-theme)",
-    "background": "var(--col-white-grey)",
-    "divider": "var(--col-cement-grey)",
+    "background": "var(--color-white-grey)",
+    "divider": "var(--color-black-10-percent)",
+    "helpIcon": "var(--color-light-blue)",
     "loader": {
-      "border": "var(--col-plan)",
-      "background": "var(--col-plan)"
-    },
-    "helpIcon": "var(--col-light-blue)"
+      "border": "var(--color-theme)",
+      "background": "var(--color-theme)"
+    }
   },
   "sidebar": {
-    "navigationItem": {
-      "background": "var(--col-theme)",
-      "text": "var(--col-text-dark)",
-      "hover": "var(--col-theme)",
-      "active": {
-        "background": "var(--col-theme)"
-      }
-    },
+    "background": "var(--color-theme)",
+    "text": "var(--color-white-50-percent)",
+    "textHover": "var(--color-text-dark)",
+    "divider": "var(--color-white-15-percent)",
     "collapsibleSection": {
-      "background": "var(--col-white)",
-      "text": "var(--col-text-light)",
-      "hover": "var(--col-pale-grey)",
-      "border": "var(--col-pale-grey)"
+      "background": "var(--color-white)",
+      "text": "var(--color-text)",
+      "hover": "var(--color-pale-grey)",
+      "border": "var(--color-pale-grey)"
+    },
+    "navigationItem": {
+      "background": "var(--color-theme)",
+      "icon": "var(--color-text-dark)"
     }
   },
   "cards": {
-    "background": "var(--col-white)",
-    "border": "var(--col-cement-grey)",
+    "background": "var(--color-white)",
+    "border": "var(--color-cement-grey)",
     "header": {
-      "background": "var(--col-white-grey)",
-      "border": "var(--col-cement-grey)"
+      "background": "var(--color-white-grey)",
+      "border": "var(--color-cement-grey)"
     }
   },
   "infoBox": {
-    "info": "var(--col-alert-success)",
-    "infoText": "var(--col-alert-success-text)",
-    "notice": "var(--col-alert-warning)",
-    "noticeText": "var(--col-alert-warning-text)",
-    "error": "var(--col-alert-danger)",
-    "errorText": "var(--col-alert-danger-text)"
+    "info": "var(--color-alert-success)",
+    "infoText": "var(--color-alert-success-text)",
+    "notice": "var(--color-alert-warning)",
+    "noticeText": "var(--color-alert-warning-text)",
+    "error": "var(--color-alert-danger)",
+    "errorText": "var(--color-alert-danger-text)"
   },
   "calendar": {
-    "today": "var(--col-white)",
+    "button": "var(--color-theme)",
+    "today": "var(--color-yellow-15-percent)",
+    "border": "var(--color-cement-grey)",
     "popover": {
-      "body": "var(--col-white)",
-      "header": "var(--col-white)",
-      "text": "var(--col-text-light)"
-    },
-    "borders": "var(--col-cement-grey)",
-    "links": "var(--col-text-light)",
-    "button": "var(--col-theme)"
+      "body": "var(--color-white)"
+    }
   },
   "forms": {
     "buttons": {
-      "activeButton": "var(--col-theme)",
-      "secondaryButton": "var(--col-white)",
-      "secondaryButtonBorder": "var(--col-secondary)"
+      "activeButton": "var(--color-theme)",
+      "secondaryButton": "var(--color-white)",
+      "secondaryButtonBorder": "var(--color-secondary)"
     },
     "input": {
-      "background": "var(--col-white)",
-      "border": "var(--col-cement-grey)",
-      "text": "var(--col-text-light)"
+      "background": "var(--color-white)",
+      "border": "var(--color-cement-grey)",
+      "text": "var(--color-text)"
     },
     "select": {
-      "background": "var(--col-white)",
-      "border": "var(--col-cement-grey)",
-      "text": "var(--col-text-light)"
+      "background": "var(--color-white)",
+      "border": "var(--color-cement-grey)",
+      "text": "var(--color-text)"
     },
     "checkbox": {
       "checked": {
-        "background": "var(--col-theme)",
-        "border": "var(--col-cement-grey)"
+        "background": "var(--color-theme)",
+        "border": "var(--color-cement-grey)"
       }
     },
     "dropdown": {
       "item": {
-        "text": "var(--col-text-light)",
-        "hover": "var(--col-white-grey)"
+        "text": "var(--color-text)",
+        "hover": "var(--color-white-grey)"
       },
-      "header": "var(--col-text-light)",
-      "border": "var(--col-cement-grey)"
+      "header": "var(--color-text)",
+      "border": "var(--color-cement-grey)"
     }
   },
   "graphs": {
-    "punchCard": "var(--col-ink)",
-    "playersOnline": "var(--col-bright-blue)",
+    "punchCard": "var(--color-ink)",
+    "playersOnline": "var(--color-bright-blue)",
     "tps": {
-      "high": "var(--col-green)",
-      "medium": "var(--col-tps-yellow)",
-      "low": "var(--col-red)"
+      "high": "var(--color-green)",
+      "medium": "var(--color-tps-yellow)",
+      "low": "var(--color-red)"
     },
-    "cpu": "var(--col-cpu-yellow)",
-    "ram": "var(--col-ram-green)",
-    "chunks": "var(--col-chunk-brown)",
-    "entities": "var(--col-entity-purple)",
+    "cpu": "var(--color-cpu-yellow)",
+    "ram": "var(--color-ram-green)",
+    "chunks": "var(--color-chunk-brown)",
+    "entities": "var(--color-entity-purple)",
     "worldMap": {
-      "high": "var(--col-green)",
-      "low": "var(--col-map-green)"
+      "high": "var(--color-green)",
+      "low": "var(--color-map-green)"
     },
     "ping": {
-      "max": "var(--col-amber)",
-      "avg": "var(--col-warning)",
-      "min": "var(--col-ping-amber)"
+      "max": "var(--color-amber)",
+      "avg": "var(--color-warning)",
+      "min": "var(--color-ping-amber)"
     }
   },
   "data": {
-    "servers": "var(--col-light-green)",
+    "servers": "var(--color-light-green)",
     "trend": {
-      "better": "var(--col-success)",
-      "same": "var(--col-warning)",
-      "worse": "var(--col-danger)"
+      "better": "var(--color-success)",
+      "same": "var(--color-warning)",
+      "worse": "var(--color-danger)"
     },
     "play": {
-      "playtime": "var(--col-green)",
-      "playtimeActive": "var(--col-green)",
-      "playtimeAfk": "var(--col-grey)",
-      "sessions": "var(--col-teal)",
-      "sessionLength": "var(--col-teal)",
-      "gamemode": "var(--col-teal)",
-      "firstSeen": "var(--col-light-green)",
-      "lastSeen": "var(--col-teal)"
+      "playtime": "var(--color-green)",
+      "playtimeActive": "var(--color-green)",
+      "playtimeAfk": "var(--color-grey)",
+      "sessions": "var(--color-teal)",
+      "sessionLength": "var(--color-teal)",
+      "gamemode": "var(--color-teal)",
+      "firstSeen": "var(--color-light-green)",
+      "lastSeen": "var(--color-teal)"
     },
     "players": {
-      "count": "var(--col-black)",
-      "online": "var(--col-blue)",
-      "unique": "var(--col-light-blue)",
-      "new": "var(--col-light-green)",
-      "activityIndex": "var(--col-amber)",
-      "veryActive": "var(--col-green)",
-      "active": "var(--col-light-green)",
-      "regular": "var(--col-lime)",
-      "irregular": "var(--col-amber)",
-      "inactive": "var(--col-blue-grey)"
+      "count": "var(--color-black)",
+      "online": "var(--color-blue)",
+      "unique": "var(--color-light-blue)",
+      "new": "var(--color-light-green)",
+      "activityIndex": "var(--color-amber)",
+      "veryActive": "var(--color-green)",
+      "active": "var(--color-light-green)",
+      "regular": "var(--color-lime)",
+      "irregular": "var(--color-amber)",
+      "inactive": "var(--color-blue-grey)"
     },
-    "playerPeakLast": "var(--col-light-blue)",
-    "playerPeakAllTime": "var(--col-light-green)",
+    "playerPeakLast": "var(--color-light-blue)",
+    "playerPeakAllTime": "var(--color-light-green)",
     "performance": {
-      "uptime": "var(--col-light-green)",
-      "downtime": "var(--col-red)",
-      "tps": "var(--col-red)",
-      "tpsLowSpikes": "var(--col-red)",
-      "tpsAverage": "var(--col-orange)",
-      "cpu": "var(--col-amber)",
-      "ram": "var(--col-light-green)",
-      "entities": "var(--col-purple)",
-      "chunks": "var(--col-blue-grey)",
-      "disk": "var(--col-green)",
-      "ping": "var(--col-amber)"
+      "uptime": "var(--color-light-green)",
+      "downtime": "var(--color-red)",
+      "tps": "var(--color-red)",
+      "tpsLowSpikes": "var(--color-red)",
+      "tpsAverage": "var(--color-orange)",
+      "cpu": "var(--color-amber)",
+      "ram": "var(--color-light-green)",
+      "entities": "var(--color-purple)",
+      "chunks": "var(--color-blue-grey)",
+      "disk": "var(--color-green)",
+      "ping": "var(--color-amber)"
     },
     "calculated": {
-      "insights": "var(--col-red)",
-      "joinAddresses": "var(--col-amber)",
-      "retention": "var(--col-indigo)",
-      "retentionNewPlayers": "var(--col-light-green)",
-      "geolocation": "var(--col-green)",
-      "allowList": "var(--col-orange)",
-      "pluginVersions": "var(--col-indigo)"
+      "insights": "var(--color-red)",
+      "joinAddresses": "var(--color-amber)",
+      "retention": "var(--color-indigo)",
+      "retentionNewPlayers": "var(--color-light-green)",
+      "geolocation": "var(--color-green)",
+      "allowList": "var(--color-orange)",
+      "pluginVersions": "var(--color-indigo)"
     },
     "playerVersus": {
-      "playerKills": "var(--col-red)",
-      "mobKills": "var(--col-green)",
-      "deaths": "var(--col-black)",
+      "playerKills": "var(--color-red)",
+      "mobKills": "var(--color-green)",
+      "deaths": "var(--color-black)",
       "top-3": {
-        "first": "var(--col-amber)",
-        "second": "var(--col-grey)",
-        "third": "var(--col-brown)"
+        "first": "var(--color-amber)",
+        "second": "var(--color-grey)",
+        "third": "var(--color-brown)"
       }
     },
     "playerStatus": {
-      "online": "var(--col-green)",
-      "offline": "var(--col-red)",
-      "banned": "var(--col-red)",
-      "operator": "var(--col-blue)",
-      "kicks": "var(--col-brown)",
-      "nicknames": "var(--col-purple)"
+      "online": "var(--color-green)",
+      "offline": "var(--color-red)",
+      "banned": "var(--color-red)",
+      "operator": "var(--color-blue)",
+      "kicks": "var(--color-brown)",
+      "nicknames": "var(--color-purple)"
     }
   }
 } 

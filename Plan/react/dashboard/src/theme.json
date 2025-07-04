@@ -1,13 +1,13 @@
 {
   "defaultTheme": "plan",
   "nightText": {
-    "default": "var(--col-text-dark)",
-    "buttons": "var(--col-text-dark)",
-    "transparentLight": "var(--col-text-dark)",
-    "headings": "var(--col-text-dark)",
-    "cardText": "var(--col-text-dark)",
-    "bodyText": "var(--col-text-dark)",
-    "placeholder": "var(--col-text-dark)"
+    "default": "var(--color-text-dark)",
+    "buttons": "var(--color-text-dark)",
+    "transparentLight": "var(--color-text-dark)",
+    "headings": "var(--color-text-dark)",
+    "cardText": "var(--color-text-dark)",
+    "bodyText": "var(--color-text-dark)",
+    "placeholder": "var(--color-text-dark)"
   },
   "colors": {
     "white": "#ffffff",
@@ -16,6 +16,10 @@
     "text-light-disabled": "#858796",
     "text-dark": "#fff",
     "text-dark-disabled": "#ccc",
+    "white-50-percent": "rgba(255, 255, 255, 0.5)",
+    "white-15-percent": "rgba(255,255,255,0.15)",
+    "black-10-percent": "rgba(0, 0, 0, 0.1)",
+    "yellow-15-percent": "rgba(255, 220, 40, 0.15)",
     "plan": "#368F17",
     "red": "#F44336",
     "pink": "#E91E63",

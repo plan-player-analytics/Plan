@@ -1,73 +1,74 @@
 {
-  "theme": "var(--col-night-grey-blue)",
-  "themeText": "var(--col-plan)",
+  "theme": "var(--color-night-dark-blue)",
+  "themeText": "var(--color-plan)",
+  "text": "var(--color-night-text)",
   "layout": {
-    "background": "var(--col-night-black)",
-    "divider": "var(--col-night-blue)"
+    "background": "var(--color-night-black)",
+    "divider": "var(--color-night-blue)",
+    "loader": {
+      "border": "var(--color-plan)",
+      "background": "var(--color-plan)"
+    }
   },
   "sidebar": {
+    "divider": "var(--color-night-blue)",
     "navigationItem": {
-      "background": "var(--col-night-dark-blue)",
-      "text": "var(--col-night-text)",
-      "hover": "var(--col-night-dark-grey-blue)",
-      "active": {
-        "background": "var(--col-night-dark-blue)"
-      }
+      "icon": "var(--color-night-text)"
     },
     "collapsibleSection": {
-      "background": "var(--col-theme)",
-      "text": "var(--col-night-text)",
-      "hover": "var(--col-night-dark-grey-blue)",
-      "border": "var(--col-night-blue)"
+      "background": "var(--color-theme)",
+      "hover": "var(--color-night-dark-grey-blue)",
+      "border": "var(--color-night-blue)"
     }
   },
   "cards": {
-    "background": "var(--col-night-dark-blue)",
-    "border": "var(--col-night-blue)",
+    "background": "var(--color-night-dark-blue)",
+    "border": "var(--color-night-blue)",
     "header": {
-      "background": "var(--col-night-dark-blue)",
-      "border": "var(--col-night-blue)"
+      "background": "var(--color-night-dark-blue)",
+      "border": "var(--color-night-blue)"
     }
   },
   "forms": {
     "buttons": {
-      "secondaryButton": "var(--col-night-grey-blue)",
-      "secondaryButtonBorder": "var(--col-night-blue)"
+      "secondaryButton": "var(--color-night-grey-blue)",
+      "secondaryButtonBorder": "var(--color-night-blue)"
     },
     "input": {
-      "background": "var(--col-night-dark-blue)",
-      "border": "var(--col-night-blue)",
-      "text": "var(--col-night-text)"
+      "background": "var(--color-night-dark-blue)",
+      "border": "var(--color-night-blue)"
     },
     "select": {
-      "background": "var(--col-night-dark-blue)",
-      "border": "var(--col-night-blue)",
-      "text": "var(--col-night-text)"
+      "background": "var(--color-night-dark-blue)",
+      "border": "var(--color-night-blue)"
     },
     "checkbox": {
       "checked": {
-        "background": "var(--col-night-blue)",
-        "border": "var(--col-night-blue)"
+        "background": "var(--color-night-blue)",
+        "border": "var(--color-night-blue)"
       }
     },
     "dropdown": {
       "item": {
-        "text": "var(--col-night-text)",
-        "hover": "var(--col-night-blue)"
+        "hover": "var(--color-night-blue)"
       },
-      "header": "var(--col-night-text)",
-      "border": "var(--col-night-blue)"
+      "border": "var(--color-night-blue)"
     }
   },
   "calendar": {
-    "today": "var(--col-night-grey-blue)",
+    "today": "var(--color-night-grey-blue)",
+    "border": "var(--color-night-blue)",
+    "button": "var(--color-plan)",
     "popover": {
-      "body": "var(--col-night-dark-blue)",
-      "header": "var(--col-night-dark-blue)",
-      "text": "var(--col-night-text)"
+      "body": "var(--color-night-dark-blue)"
+    }
+  },
+  "data": {
+    "players": {
+      "count": "var(--color-text)"
     },
-    "borders": "var(--col-night-blue)",
-    "links": "var(--col-night-text)",
-    "button": "var(--col-plan)"
+    "playerVersus": {
+      "deaths": "var(--color-text)"
+    }
   }
 } 

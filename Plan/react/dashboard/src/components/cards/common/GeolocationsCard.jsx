@@ -93,7 +93,7 @@ const GeolocationsCard = ({identifier, data}) => {
         <Card id={"geolocations"}>
             <QueryPlayerListModal open={modalOpen} toggle={closeModal} queryData={queryData}
                                   title={"View " + t('html.query.filter.generic.start') + t('html.query.filter.country.text') + ': ' + country}/>
-            <CardHeader icon={faGlobe} color={"green"} label={'html.label.geolocations'}>
+            <CardHeader icon={faGlobe} color={"geolocation"} label={'html.label.geolocations'}>
                 <ProjectionDropDown projection={projection} setProjection={setProjection}/>
                 <p style={{margin: 0, fontWeight: "normal"}} className={"float-end"}>
                     <FontAwesomeIcon icon={faHandPointer}/> {t('html.text.click')}

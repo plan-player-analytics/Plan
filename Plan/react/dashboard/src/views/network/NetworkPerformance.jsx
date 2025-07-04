@@ -106,7 +106,7 @@ const NetworkPerformance = () => {
                     </Col>
                     <Col md={4}>
                         <Card>
-                            <CardHeader icon={faServer} color={'light-green'} label={t('html.label.serverSelector')}/>
+                            <CardHeader icon={faServer} color={'servers'} label={t('html.label.serverSelector')}/>
                             <MultiSelect options={serverOptions.map(server => server.serverName)}
                                          selectedIndexes={selectedOptions}
                                          setSelectedIndexes={setSelectedOptions}/>

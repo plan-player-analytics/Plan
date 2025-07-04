@@ -9,8 +9,8 @@ const InsightsFor30DaysCard = ({id, children}) => {
     return (
         <Card id={id}>
             <Card.Header>
-                <h6 className="col-black">
-                    <Fa icon={faLifeRing} className="col-red"/> {t('html.label.insights30days')}
+                <h6 className="col-text">
+                    <Fa icon={faLifeRing} className="col-insights"/> {t('html.label.insights30days')}
                 </h6>
             </Card.Header>
             <Card.Body>

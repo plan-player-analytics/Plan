@@ -143,8 +143,8 @@ const ExtensionCard = ({extension}) => {
         <ul className="nav nav-tabs tab-nav-right" role="tablist">
             {extension.onlyGenericTab ? '' :
                 extension.tabs.map((tab, i) => <li key={JSON.stringify(tab)} role="presentation"
-                                                   className="nav-item col-black">
-                    <button className={"nav-link col-black"
+                                                   className="nav-item col-text">
+                    <button className={"nav-link col-text"
                         + (openTabIndex === i ? ' active' : '')} onClick={() => toggleTabIndex(i)}>
                         <ExtensionIcon icon={tab.tabInformation.icon}/> {tab.tabInformation.tabName}
                     </button>

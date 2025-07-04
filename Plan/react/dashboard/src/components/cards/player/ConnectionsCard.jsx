@@ -13,13 +13,13 @@ const ConnectionsCard = ({connections}) => {
     return (
         <Card>
             <Card.Header>
-                <h6 className="col-black">
+                <h6 className="col-text">
                     <Fa icon={faWifi}/> {t('html.label.connectionInfo')}
                 </h6>
             </Card.Header>
             <Scrollable>
                 <table className={"table table-striped mb-0" + (nightModeEnabled ? " table-dark" : '')}>
-                    <thead className="bg-green">
+                    <thead className="bg-geolocation">
                     <tr>
                         <th><Fa icon={faGlobe}/> {t('html.label.country')}</th>
                         <th><Fa icon={faClock}/> {t('html.label.lastConnected')}</th>

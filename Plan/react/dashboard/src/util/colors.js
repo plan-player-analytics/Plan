@@ -1,3 +1,5 @@
+import {getColorArrayConverter, getColorConverter} from "./Color.js";
+
 const colorMap = {
     PLAN: {
         name: "plan",
@@ -123,13 +125,23 @@ export const colorClassToBgClass = colorClass => {
     return "bg-" + colorClassToColorName(colorClass);
 }
 
-export const hsxStringToArray = (hsvString) => {
-    const color = hsvString.substring(4, hsvString.length - 1);
+export const hsxStringToArray = (hsxString) => {
+    const color = hsxString.substring(4, hsxString.length - 1);
     const split = color.split(',');
     const h = Number(split[0]);
     const s = Number(split[1].substring(0, split[1].length - 1));
     const x = Number(split[2].substring(0, split[2].length - 1));
     return [h, s, x];
+}
+
+export const hslaStringToArray = (hslaString) => {
+    const color = hslaString.substring(4, hslaString.length - 1);
+    const split = color.split(',');
+    const h = Number(split[0]);
+    const s = Number(split[1].substring(0, split[1].length - 1));
+    const l = Number(split[2].substring(0, split[2].length - 1));
+    const a = Number(split[3].substring(0, split[3].length - 1));
+    return [h, s, l, a];
 }
 
 export const hslToHsv = ([h, s, l]) => {
@@ -146,7 +158,7 @@ export const hsvToHex = (hsv) => {
 export const hsvToRgb = ([h, s, v]) => {
     let r, g, b;
 
-    if (s > 1) {
+    if (h > 1 || s > 1 || v > 1) {
         h = h / 360;
         s = s / 100;
         v = v / 100;
@@ -204,13 +216,24 @@ export const randomHSVColor = (i) => {
     return [hue, saturation, value]
 }
 
-export const rgmStringToArray = (rgbString) => {
+export const rgbStringToArray = (rgbString) => {
     const colors = rgbString.substring(4, rgbString.length - 1);
     const split = colors.split(',');
     return [
-        Number.parseInt(split[0].trim()),
-        Number.parseInt(split[1].trim()),
-        Number.parseInt(split[2].trim())
+        Number(split[0].trim()),
+        Number(split[1].trim()),
+        Number(split[2].trim())
+    ];
+}
+
+export const rgbaStringToArray = (rgbaString) => {
+    const colors = rgbaString.substring(5, rgbaString.length - 1);
+    const split = colors.split(',');
+    return [
+        Number(split[0].trim()),
+        Number(split[1].trim()),
+        Number(split[2].trim()),
+        Number(split[3].trim())
     ];
 }
 
@@ -223,10 +246,22 @@ const rgbToHex = (component) => {
 }
 
 export const hexToRgb = (hexString) => {
-    const r = parseInt(hexString.substring(1, 3), 16);
-    const g = parseInt(hexString.substring(3, 5), 16);
-    const b = parseInt(hexString.substring(5, 7), 16);
-    return [r, g, b];
+    const hex = hexString.replace('#', '');
+    if (hex.length === 6) {
+        const r = parseInt(hex.substring(0, 2), 16);
+        const g = parseInt(hex.substring(2, 4), 16);
+        const b = parseInt(hex.substring(4, 6), 16);
+        return [r, g, b];
+    } else {
+        // 3 digit hex
+        const rLetter = hex.substring(0, 1);
+        const gLetter = hex.substring(1, 2);
+        const bLetter = hex.substring(2, 3);
+        const r = parseInt(rLetter + rLetter, 16);
+        const g = parseInt(gLetter + gLetter, 16);
+        const b = parseInt(bLetter + bLetter, 16);
+        return [r, g, b];
+    }
 }
 
 // https://css-tricks.com/converting-color-spaces-in-javascript/
@@ -272,13 +307,38 @@ export const withReducedSaturation = (hex, reduceSaturationPercentage) => {
     return 'hsl(' + h * 360 + ',' + s * 100 * saturationReduction + '%,' + l * 95 + '%)';
 }
 
+export const withReducedSaturationRgba = (rgba, reduceSaturationPercentage) => {
+    const saturationReduction = reduceSaturationPercentage ? reduceSaturationPercentage : 0.70;
+
+    const [h, s, l] = getColorArrayConverter(rgba, 'rgba').toHslArray();
+    if (isNaN(h)) console.log(rgba, [h, s, l]);
+
+    return 'hsl(' + h * 360 + ',' + s * 100 * saturationReduction + '%,' + l * 95 + '%)';
+}
+
+export const rgbToString = ([r, g, b]) => {
+    return `rgb(${r}, ${g}, ${b})`;
+}
+
+export const rgbaToString = ([r, g, b, a]) => {
+    return `rgba(${r}, ${g}, ${b}, ${a})`;
+}
+
+export const hslToString = ([h, s, l]) => {
+    return `hsl(${h}, ${s}%, ${l}%)`;
+}
+
+export const hsvToString = ([h, s, v]) => {
+    return `hsv(${h}, ${s}%, ${v}%)`;
+}
+
 export const calculateCssHexColor = (cssColor) => {
     const colorCalculationElement = document.createElement('div');
     colorCalculationElement.style.display = 'none';
     colorCalculationElement.style.color = cssColor;
     document.body.appendChild(colorCalculationElement);
     const rgbString = window.getComputedStyle(colorCalculationElement, null).getPropertyValue("color");
-    const hex = rgbToHexString(rgmStringToArray(rgbString));
+    const hex = rgbToHexString(rgbStringToArray(rgbString));
     document.body.removeChild(colorCalculationElement);
     return hex;
 }
@@ -405,22 +465,9 @@ export const createNightModeCss = () => {
         createNightModeColorCss()
 }
 
-export const getContrastColor = (hexcolor) => {
-    const hex = hexcolor.replace('#', '');
-    if (hex.length === 6) {
-        const r = parseInt(hex.substring(0, 2), 16);
-        const g = parseInt(hex.substring(2, 4), 16);
-        const b = parseInt(hex.substring(4, 6), 16);
-        const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-        return luminance > 0.5 ? '#000000' : '#ffffff';
-    } else {
-        const rLetter = hex.substring(0, 1);
-        const gLetter = hex.substring(1, 2);
-        const bLetter = hex.substring(2, 3);
-        const r = parseInt(rLetter + rLetter, 16);
-        const g = parseInt(gLetter + gLetter, 16);
-        const b = parseInt(bLetter + bLetter, 16);
-        const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-        return luminance > 0.5 ? '#000000' : '#ffffff';
-    }
+export const getContrastColor = (color) => {
+    const converter = getColorConverter(color);
+    if (!converter) return undefined;
+    const luminance = converter.toLuminance();
+    return luminance < 0.5 ? '#ffffff' : '#000000';
 };

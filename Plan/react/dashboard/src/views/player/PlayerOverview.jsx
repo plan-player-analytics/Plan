@@ -20,7 +20,7 @@ const PunchCardCard = ({player}) => {
     return (
         <Card>
             <Card.Header>
-                <h6 className="col-black">
+                <h6 className="col-text">
                     <Fa icon={faBraille}/> {t('html.label.punchcard')}
                 </h6>
             </Card.Header>
@@ -34,26 +34,26 @@ const OnlineActivityCard = ({player}) => {
     return (
         <Card>
             <Card.Header>
-                <h6 className="col-black">
+                <h6 className="col-text">
                     <Fa icon={faBookOpen}/> {t('html.label.onlineActivity')}
                 </h6>
             </Card.Header>
             <AsNumbersTable headers={[t('html.label.last30days'), t('html.label.last7days')]}>
-                <TableRow icon={faClock} color="green" text={t('html.label.playtime')}
+                <TableRow icon={faClock} color="playtime" text={t('html.label.playtime')}
                           values={[player.online_activity.playtime_30d, player.online_activity.playtime_7d]}/>
-                <TableRow icon={faClock} color="green" text={t('html.label.activePlaytime')}
+                <TableRow icon={faClock} color="playtime-active" text={t('html.label.activePlaytime')}
                           values={[player.online_activity.active_playtime_30d, player.online_activity.active_playtime_7d]}/>
-                <TableRow icon={faClock} color="gray" text={t('html.label.afk')}
+                <TableRow icon={faClock} color="playtime-afk" text={t('html.label.afk')}
                           values={[player.online_activity.afk_time_30d, player.online_activity.afk_time_7d]}/>
-                <TableRow icon={faClock} color="teal" text={t('html.label.medianSessionLength')}
+                <TableRow icon={faClock} color="sessions" text={t('html.label.medianSessionLength')}
                           values={[player.online_activity.median_session_length_30d, player.online_activity.median_session_length_7d]}/>
-                <TableRow icon={faCalendarCheck} color="teal" text={t('html.label.sessions')}
+                <TableRow icon={faCalendarCheck} color="sessions" text={t('html.label.sessions')}
                           values={[player.online_activity.session_count_30d, player.online_activity.session_count_7d]}/>
-                <TableRow icon={faCrosshairs} color="red" text={t('html.label.playerKills')}
+                <TableRow icon={faCrosshairs} color="player-kills" text={t('html.label.playerKills')}
                           values={[player.online_activity.player_kill_count_30d, player.online_activity.player_kill_count_7d]}/>
-                <TableRow icon={faCrosshairs} color="green" text={t('html.label.mobKills')}
+                <TableRow icon={faCrosshairs} color="mob-kills" text={t('html.label.mobKills')}
                           values={[player.online_activity.mob_kill_count_30d, player.online_activity.mob_kill_count_7d]}/>
-                <TableRow icon={faSkull} color="black" text={t('html.label.deaths')}
+                <TableRow icon={faSkull} color="deaths" text={t('html.label.deaths')}
                           values={[player.online_activity.death_count_30d, player.online_activity.death_count_7d]}/>
             </AsNumbersTable>
         </Card>

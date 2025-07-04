@@ -18,26 +18,26 @@ const QuickViewDataCard = ({server}) => {
 
     return (
         <Card>
-            <CardHeader icon={faBookOpen} color={'light-green'} label={server.name + ' ' + t('html.label.asNumbers')}/>
+            <CardHeader icon={faBookOpen} color={'servers'} label={server.name + ' ' + t('html.label.asNumbers')}/>
             <Card.Body>
                 <CurrentUptime uptime={server.current_uptime}/>
                 <Datapoint name={t('html.label.lastPeak') + ' (' + server.last_peak_date + ')'}
-                           color={'blue'} icon={faChartLine}
+                           color={'player-peak-last'} icon={faChartLine}
                            value={server.last_peak_players} valueLabel={t('html.unit.players')} bold/>
                 <Datapoint name={t('html.label.bestPeak') + ' (' + server.best_peak_date + ')'}
-                           color={'light-green'} icon={faChartLine}
+                           color={'player-peak-all-time'} icon={faChartLine}
                            value={server.best_peak_players} valueLabel={t('html.unit.players')} bold/>
                 <hr/>
                 <p><b>{t('html.label.last7days')}</b></p>
-                <Datapoint icon={faUsers} color={'light-blue'} name={t('html.label.uniquePlayers')}
+                <Datapoint icon={faUsers} color={'players-unique'} name={t('html.label.uniquePlayers')}
                            value={server.unique_players}/>
-                <Datapoint icon={faUsers} color={'light-green'} name={t('html.label.newPlayers')}
+                <Datapoint icon={faUsers} color={'players-new'} name={t('html.label.newPlayers')}
                            value={server.new_players}/>
-                <Datapoint icon={faTachometerAlt} color={'orange'} name={t('html.label.averageTps')}
+                <Datapoint icon={faTachometerAlt} color={'tps-average'} name={t('html.label.averageTps')}
                            value={server.avg_tps}/>
-                <Datapoint icon={faExclamationCircle} color={'red'} name={t('html.label.lowTpsSpikes')}
+                <Datapoint icon={faExclamationCircle} color={'tps-low-spikes'} name={t('html.label.lowTpsSpikes')}
                            value={server.low_tps_spikes}/>
-                <Datapoint icon={faPowerOff} color={'red'} name={t('html.label.downtime')}
+                <Datapoint icon={faPowerOff} color={'downtime'} name={t('html.label.downtime')}
                            value={server.downtime}/>
             </Card.Body>
         </Card>

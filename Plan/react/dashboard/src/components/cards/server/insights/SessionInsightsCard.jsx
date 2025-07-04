@@ -23,18 +23,18 @@ const SessionInsightsCard = ({identifier}) => {
 
     return (
         <InsightsFor30DaysCard id={'session-insights'}>
-            <Datapoint name={t('html.label.mostActiveGamemode')} icon={faGamepad} color="teal" bold
+            <Datapoint name={t('html.label.mostActiveGamemode')} icon={faGamepad} color="gamemode" bold
                        value={insights?.most_active_gamemode}
                        valueLabel={insights?.most_active_gamemode_perc}
             />
-            <Datapoint name={t('html.label.serverOccupied')} icon={faUsers} color="teal"
+            <Datapoint name={t('html.label.serverOccupied')} icon={faUsers} color="sessions"
                        value={insights?.server_occupied ? '~' + insights.server_occupied : undefined}
                        valueLabel={insights?.server_occupied_perc}
             />
-            <Datapoint name={t('html.label.playtime')} icon={faClock} color="green"
+            <Datapoint name={t('html.label.playtime')} icon={faClock} color="playtime"
                        value={insights?.total_playtime}
             />
-            <Datapoint name={t('html.label.afkTime')} icon={faClock} color="grey"
+            <Datapoint name={t('html.label.afkTime')} icon={faClock} color="playtime-afk"
                        value={insights?.afk_time} valueLabel={insights?.afk_time_perc}
             />
         </InsightsFor30DaysCard>

@@ -14,13 +14,13 @@ const NicknamesCard = ({nicknames}) => {
     return (
         <Card>
             <Card.Header>
-                <h6 className="col-black">
+                <h6 className="col-text">
                     <Fa icon={faSignature}/> {t('html.label.seenNicknames')}
                 </h6>
             </Card.Header>
             <Scrollable>
                 <table className={"table table-striped mb-0" + (nightModeEnabled ? " table-dark" : '')}>
-                    <thead className="bg-purple">
+                    <thead className="bg-nicknames">
                     <tr>
                         <th><Fa icon={faSignature}/> {t('html.label.nickname')}</th>
                         <th><Fa icon={faServer}/> {t('html.label.server')}</th>

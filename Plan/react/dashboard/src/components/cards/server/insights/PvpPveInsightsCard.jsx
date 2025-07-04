@@ -12,11 +12,11 @@ const PvpPveInsightsCard = ({data}) => {
 
     return (
         <InsightsFor30DaysCard id={"pvp-pve-insights"}>
-            <Datapoint name={t('html.label.deadliestWeapon')} icon={faKhanda} color="amber"
+            <Datapoint name={t('html.label.deadliestWeapon')} icon={faKhanda} color="top-3-first"
                        value={data.weapon_1st}/>
-            <Datapoint name={t('html.label.secondDeadliestWeapon')} icon={faKhanda} color="gray"
+            <Datapoint name={t('html.label.secondDeadliestWeapon')} icon={faKhanda} color="top-3-second"
                        value={data.weapon_2nd}/>
-            <Datapoint name={t('html.label.thirdDeadliestWeapon')} icon={faKhanda} color="brown"
+            <Datapoint name={t('html.label.thirdDeadliestWeapon')} icon={faKhanda} color="top-3-third"
                        value={data.weapon_3rd}/>
         </InsightsFor30DaysCard>
     )

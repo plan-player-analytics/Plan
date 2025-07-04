@@ -1,0 +1,750 @@
+:root {
+    --color-white: #ffffff;
+    --color-white-15-percent: rgba(255, 255, 255, 0.15);
+    --color-white-50-percent: rgba(255, 255, 255, 0.5);
+    --color-black: #555555;
+    --color-black-10-percent: rgba(0, 0, 0, 0.1);
+    --color-text-light: #333;
+    --color-text-light-disabled: #858796;
+    --color-text-dark: #fff;
+    --color-text-dark-disabled: #ccc;
+    --color-plan: #368F17;
+    --color-red: #F44336;
+    --color-pink: #E91E63;
+    --color-purple: #9C27B0;
+    --color-deep-purple: #673AB7;
+    --color-indigo: #3F51B5;
+    --color-blue: #2196F3;
+    --color-light-blue: #03A9F4;
+    --color-cyan: #00BCD4;
+    --color-teal: #009688;
+    --color-green: #4CAF50;
+    --color-light-green: #8BC34A;
+    --color-lime: #CDDC39;
+    --color-yellow: #ffe821;
+    --color-amber: #FFC107;
+    --color-orange: #FF9800;
+    --color-deep-orange: #FF5722;
+    --color-brown: #795548;
+    --color-blue-grey: #607D8B;
+    --color-tps-yellow: #e5cc12;
+    --color-cpu-yellow: #e0d264;
+    --color-chunk-brown: #b58310;
+    --color-ram-green: #7dcc24;
+    --color-entity-purple: #ac69ef;
+    --color-success: #1CC88A;
+    --color-warning: #F6C23E;
+    --color-danger: #e74A3B;
+    --color-alert-success: #d2f4e8;
+    --color-alert-warning: #fdf3d8;
+    --color-alert-danger: #fadbd8;
+    --color-bright-blue: #1E90FF;
+    --color-ping-amber: #ffd54f;
+    --color-map-green: #EEFFEE;
+    --color-yellow-15-percent: rgba(255, 220, 40, 0.15);
+    --color-alert-success-text: #0f6848;
+    --color-alert-warning-text: #806520;
+    --color-alert-danger-text: #78261f;
+    --color-secondary: #6c757d;
+    --color-cool-grey: #6e707e;
+    --color-ink: #222222;
+    --color-dark-slate: #212529;
+    --color-medium-slate: #3a3b45;
+    --color-light-slate: #5a5c69;
+    --color-grey: #9E9E9E;
+    --color-light-grey: #dddddd;
+    --color-white-grey: #f8f9fc;
+    --color-pale-grey: #eaecf4;
+    --color-cement-grey: #e3e6f0;
+    --color-stone-grey: #d1d3e2;
+
+    --color-night-black: #282a36;
+    --color-night-dark-blue: #44475a;
+    --color-night-blue: #6272a4;
+    --color-night-grey-blue: #646e8c;
+    --color-night-dark-grey-blue: #606270;
+    --color-night-text-dark-bg: #eee8d5;
+
+    --color-theme: var(--color-plan);
+    --color-theme-text: var(--color-theme);
+    --color-night: var(--color-night-dark-blue);
+    --color-night-text: #eee8d5;
+
+    --color-text: var(--color-black);
+
+    --color-pie-1: #0099C6;
+    --color-pie-2: #66AA00;
+    --color-pie-3: #316395;
+    --color-pie-4: #994499;
+    --color-pie-5: #22AA99;
+    --color-pie-6: #AAAA11;
+    --color-pie-7: #6633CC;
+    --color-pie-8: #E67300;
+    --color-pie-9: #329262;
+    --color-pie-10: #5574A6;
+    --color-layout-background: var(--color-white-grey);
+    --color-layout-divider: var(--color-black-10-percent);
+    --color-layout-loader-border: var(--color-plan);
+    --color-layout-loader-background: var(--color-plan);
+    --color-layout-help-icon: var(--color-light-blue);
+    --color-sidebar-background: var(--color-theme);
+    --color-sidebar-divider: var(--color-white-15-percent);
+    --color-sidebar-text: var(--color-white-50-percent);
+    --color-sidebar-text-hover: var(--color-text-dark);
+    --color-sidebar-collapsible-section-background: var(--color-white);
+    --color-sidebar-collapsible-section-text: var(--color-text-light);
+    --color-sidebar-collapsible-section-hover: var(--color-pale-grey);
+    --color-sidebar-collapsible-section-border: var(--color-pale-grey);
+    --color-sidebar-navigation-item-background: var(--color-theme);
+    --color-sidebar-navigation-item-icon: var(--color-text-dark);
+    --color-cards-background: var(--color-white);
+    --color-cards-border: var(--color-cement-grey);
+    --color-cards-header-background: var(--color-white-grey);
+    --color-cards-header-border: var(--color-cement-grey);
+    --color-info-box-info: var(--color-alert-success);
+    --color-info-box-info-text: var(--color-alert-success-text);
+    --color-info-box-notice: var(--color-alert-warning);
+    --color-info-box-notice-text: var(--color-alert-warning-text);
+    --color-info-box-error: var(--color-alert-danger);
+    --color-info-box-error-text: var(--color-alert-danger-text);
+    --color-calendar-today: var(--color-yellow-15-percent);
+    --color-calendar-popover-body: var(--color-white);
+    --color-calendar-popover-header: var(--color-white);
+    --color-calendar-popover-text: var(--color-text-light);
+    --color-calendar-border: var(--color-cement-grey);
+    --color-calendar-links: var(--color-text-light);
+    --color-calendar-button: var(--color-theme);
+    --color-forms-buttons-active-button: var(--color-theme);
+    --color-forms-buttons-secondary-button: var(--color-white);
+    --color-forms-buttons-secondary-button-border: var(--color-secondary);
+    --color-forms-input-background: var(--color-white);
+    --color-forms-input-border: var(--color-stone-grey);
+    --color-forms-input-text: var(--color-text-light);
+    --color-forms-select-background: var(--color-white);
+    --color-forms-select-border: var(--color-stone-grey);
+    --color-forms-select-text: var(--color-text-light);
+    --color-forms-checkbox-checked-background: var(--color-theme);
+    --color-forms-checkbox-checked-border: var(--color-stone-grey);
+    --color-forms-dropdown-item-text: var(--color-text-light);
+    --color-forms-dropdown-item-hover: var(--color-white-grey);
+    --color-forms-dropdown-header: var(--color-text-light);
+    --color-forms-dropdown-border: var(--color-stone-grey);
+    --color-graphs-punch-card: var(--color-ink);
+    --color-graphs-players-online: var(--color-bright-blue);
+    --color-graphs-tps-high: var(--color-green);
+    --color-graphs-tps-medium: var(--color-tps-yellow);
+    --color-graphs-tps-low: var(--color-red);
+    --color-graphs-cpu: var(--color-cpu-yellow);
+    --color-graphs-ram: var(--color-ram-green);
+    --color-graphs-chunks: var(--color-chunk-brown);
+    --color-graphs-entities: var(--color-entity-purple);
+    --color-graphs-world-map-high: var(--color-green);
+    --color-graphs-world-map-low: var(--color-map-green);
+    --color-graphs-ping-max: var(--color-amber);
+    --color-graphs-ping-avg: var(--color-warning);
+    --color-graphs-ping-min: var(--color-ping-amber);
+    --color-data-servers: var(--color-light-green);
+    --color-data-trend-better: var(--color-success);
+    --color-data-trend-same: var(--color-warning);
+    --color-data-trend-worse: var(--color-danger);
+    --color-data-play-playtime: var(--color-green);
+    --color-data-play-playtime-active: var(--color-green);
+    --color-data-play-playtime-afk: var(--color-grey);
+    --color-data-play-sessions: var(--color-teal);
+    --color-data-play-session-length: var(--color-teal);
+    --color-data-play-gamemode: var(--color-teal);
+    --color-data-play-first-seen: var(--color-light-green);
+    --color-data-play-last-seen: var(--color-teal);
+    --color-data-players-count: var(--color-black);
+    --color-data-players-online: var(--color-blue);
+    --color-data-players-unique: var(--color-light-blue);
+    --color-data-players-new: var(--color-light-green);
+    --color-data-players-activity-index: var(--color-amber);
+    --color-data-players-very-active: var(--color-green);
+    --color-data-players-active: var(--color-light-green);
+    --color-data-players-regular: var(--color-lime);
+    --color-data-players-irregular: var(--color-amber);
+    --color-data-players-inactive: var(--color-blue-grey);
+    --color-data-player-peak-last: var(--color-light-blue);
+    --color-data-player-peak-all-time: var(--color-light-green);
+    --color-data-performance-uptime: var(--color-light-green);
+    --color-data-performance-downtime: var(--color-red);
+    --color-data-performance-tps: var(--color-red);
+    --color-data-performance-tps-low-spikes: var(--color-red);
+    --color-data-performance-tps-average: var(--color-orange);
+    --color-data-performance-cpu: var(--color-amber);
+    --color-data-performance-ram: var(--color-light-green);
+    --color-data-performance-entities: var(--color-purple);
+    --color-data-performance-chunks: var(--color-blue-grey);
+    --color-data-performance-disk: var(--color-green);
+    --color-data-performance-ping: var(--color-amber);
+    --color-data-calculated-insights: var(--color-red);
+    --color-data-calculated-join-addresses: var(--color-amber);
+    --color-data-calculated-retention: var(--color-indigo);
+    --color-data-calculated-retention-new-players: var(--color-light-green);
+    --color-data-calculated-geolocation: var(--color-green);
+    --color-data-calculated-allow-list: var(--color-orange);
+    --color-data-calculated-plugin-versions: var(--color-indigo);
+    --color-data-player-versus-player-kills: var(--color-red);
+    --color-data-player-versus-mob-kills: var(--color-green);
+    --color-data-player-versus-deaths: var(--color-black);
+    --color-data-player-versus-top-3-first: var(--color-amber);
+    --color-data-player-versus-top-3-second: var(--color-grey);
+    --color-data-player-versus-top-3-third: var(--color-brown);
+    --color-data-player-status-online: var(--color-green);
+    --color-data-player-status-offline: var(--color-red);
+    --color-data-player-status-banned: var(--color-red);
+    --color-data-player-status-operator: var(--color-blue);
+    --color-data-player-status-kicks: var(--color-brown);
+    --color-data-player-status-nicknames: var(--color-purple);
+}
+
+.sidebar {
+    background-color: var(--color-sidebar-background);
+}
+
+.sidebar-collapse {
+    background-color: var(--color-sidebar-collapsible-section-background);
+    color: var(--color-sidebar-collapsible-section-text);
+}
+
+.navigation-item {
+    background-color: var(--color-sidebar-navigation-item-background);
+    color: var(--color-sidebar-navigation-item-icon);
+}
+
+/* Calendar overrides */
+.fc-title, .fc-time {
+    color: var(--color-text);
+}
+
+.fc-day-today {
+    background-color: var(--color-calendar-today) !important
+}
+
+.fc-popover-body, .fc-popover-header {
+    background-color: var(--color-calendar-popover-body) !important;
+    color: var(--color-text) !important;
+}
+
+.fc td, .fc tr, .fc th, .fc table, .fc-popover {
+    border-color: var(--color-calendar-border) !important;
+}
+
+.fc a {
+    color: var(--color-text) !important;
+}
+
+.fc-button {
+    background-color: var(--color-calendar-button) !important;
+}
+
+/* Minecraft color codes */
+.black {
+    color: #000000;
+}
+
+.darkblue {
+    color: #0000AA;
+}
+
+.darkgreen {
+    color: #00AA00;
+}
+
+.darkaqua {
+    color: #00AAAA;
+}
+
+.darkred {
+    color: #AA0000;
+}
+
+.darkpurple {
+    color: #AA00AA;
+}
+
+.gold {
+    color: #FFAA00;
+}
+
+.gray {
+    color: #AAAAAA;
+}
+
+.darkgray {
+    color: var(--color-black);
+}
+
+.blue {
+    color: #5555FF;
+}
+
+.green {
+    color: #55FF55;
+}
+
+.aqua {
+    color: #55FFFF;
+}
+
+.red {
+    color: #FF5555;
+}
+
+.pink {
+    color: #FF55FF;
+}
+
+.yellow {
+    color: #FFFF55;
+    text-shadow: 0 0 6px #000;
+}
+
+.white {
+    color: #FFFFFF;
+    text-shadow: 0 0 8px #000;
+}
+
+.col-help-icon {
+    color: var(--color-layout-help-icon);
+}
+
+.col-servers {
+    color: var(--color-data-servers);
+}
+
+.bg-servers {
+    background-color: var(--color-data-servers);
+}
+
+.col-trend-better {
+    color: var(--color-data-trend-better);
+}
+
+.bg-trend-better {
+    background-color: var(--color-data-trend-better);
+}
+
+.col-trend-same {
+    color: var(--color-data-trend-same);
+}
+
+.bg-trend-same {
+    background-color: var(--color-data-trend-same);
+}
+
+.col-trend-worse {
+    color: var(--color-data-trend-worse);
+}
+
+.bg-trend-worse {
+    background-color: var(--color-data-trend-worse);
+}
+
+.col-playtime {
+    color: var(--color-data-play-playtime);
+}
+
+.bg-playtime {
+    background-color: var(--color-data-play-playtime);
+}
+
+.col-playtime-active {
+    color: var(--color-data-play-playtime-active);
+}
+
+.bg-playtime-active {
+    background-color: var(--color-data-play-playtime-active);
+}
+
+.col-playtime-afk {
+    color: var(--color-data-play-playtime-afk);
+}
+
+.bg-playtime-afk {
+    background-color: var(--color-data-play-playtime-afk);
+}
+
+.col-sessions {
+    color: var(--color-data-play-sessions);
+}
+
+.bg-sessions {
+    background-color: var(--color-data-play-sessions);
+}
+
+.bg-sessions-outline {
+    border-color: var(--color-data-play-sessions);
+    border-style: solid;
+    border-width: 3px;
+    outline: var(--color-data-play-sessions) solid 1px;
+}
+
+.col-session-length {
+    color: var(--color-data-play-session-length);
+}
+
+.bg-session-length {
+    background-color: var(--color-data-play-session-length);
+}
+
+.col-gamemode {
+    color: var(--color-data-play-gamemode);
+}
+
+.bg-gamemode {
+    background-color: var(--color-data-play-gamemode);
+}
+
+.col-first-seen {
+    color: var(--color-data-play-first-seen);
+}
+
+.bg-first-seen {
+    background-color: var(--color-data-play-first-seen);
+}
+
+.col-last-seen {
+    color: var(--color-data-play-last-seen);
+}
+
+.bg-last-seen {
+    background-color: var(--color-data-play-last-seen);
+}
+
+.col-players-count {
+    color: var(--color-data-players-count);
+}
+
+.bg-players-count {
+    background-color: var(--color-data-players-count);
+}
+
+.col-players-online {
+    color: var(--color-data-players-online);
+}
+
+.bg-players-online {
+    background-color: var(--color-data-players-online);
+}
+
+.col-players-unique {
+    color: var(--color-data-players-unique);
+}
+
+.bg-players-unique {
+    background-color: var(--color-data-players-unique);
+}
+
+.col-players-new {
+    color: var(--color-data-players-new);
+}
+
+.bg-players-new {
+    background-color: var(--color-data-players-new);
+}
+
+.col-players-activity-index {
+    color: var(--color-data-players-activity-index);
+}
+
+.bg-players-activity-index {
+    background-color: var(--color-data-players-activity-index);
+}
+
+.col-players-very-active {
+    color: var(--color-data-players-very-active);
+}
+
+.bg-players-very-active {
+    background-color: var(--color-data-players-very-active);
+}
+
+.col-players-active {
+    color: var(--color-data-players-active);
+}
+
+.bg-players-active {
+    background-color: var(--color-data-players-active);
+}
+
+.col-players-regular {
+    color: var(--color-data-players-regular);
+}
+
+.bg-players-regular {
+    background-color: var(--color-data-players-regular);
+}
+
+.col-players-irregular {
+    color: var(--color-data-players-irregular);
+}
+
+.bg-players-irregular {
+    background-color: var(--color-data-players-irregular);
+}
+
+.col-players-inactive {
+    color: var(--color-data-players-inactive);
+}
+
+.bg-players-inactive {
+    background-color: var(--color-data-players-inactive);
+}
+
+.col-player-peak-last {
+    color: var(--color-data-player-peak-last);
+}
+
+.bg-player-peak-last {
+    background-color: var(--color-data-player-peak-last);
+}
+
+.col-player-peak-all-time {
+    color: var(--color-data-player-peak-all-time);
+}
+
+.bg-player-peak-all-time {
+    background-color: var(--color-data-player-peak-all-time);
+}
+
+.col-uptime {
+    color: var(--color-data-performance-uptime);
+}
+
+.bg-uptime {
+    background-color: var(--color-data-performance-uptime);
+}
+
+.col-downtime {
+    color: var(--color-data-performance-downtime);
+}
+
+.bg-downtime {
+    background-color: var(--color-data-performance-downtime);
+}
+
+.col-tps {
+    color: var(--color-data-performance-tps);
+}
+
+.bg-tps {
+    background-color: var(--color-data-performance-tps);
+}
+
+.col-tps-low-spikes {
+    color: var(--color-data-performance-tps-low-spikes);
+}
+
+.bg-tps-low-spikes {
+    background-color: var(--color-data-performance-tps-low-spikes);
+}
+
+.col-tps-average {
+    color: var(--color-data-performance-tps-average);
+}
+
+.bg-tps-average {
+    background-color: var(--color-data-performance-tps-average);
+}
+
+.col-cpu {
+    color: var(--color-data-performance-cpu);
+}
+
+.bg-cpu {
+    background-color: var(--color-data-performance-cpu);
+}
+
+.col-ram {
+    color: var(--color-data-performance-ram);
+}
+
+.bg-ram {
+    background-color: var(--color-data-performance-ram);
+}
+
+.col-entities {
+    color: var(--color-data-performance-entities);
+}
+
+.bg-entities {
+    background-color: var(--color-data-performance-entities);
+}
+
+.col-chunks {
+    color: var(--color-data-performance-chunks);
+}
+
+.bg-chunks {
+    background-color: var(--color-data-performance-chunks);
+}
+
+.col-disk {
+    color: var(--color-data-performance-disk);
+}
+
+.bg-disk {
+    background-color: var(--color-data-performance-disk);
+}
+
+.col-ping {
+    color: var(--color-data-performance-ping);
+}
+
+.bg-ping {
+    background-color: var(--color-data-performance-ping);
+}
+
+.col-insights {
+    color: var(--color-data-calculated-insights);
+}
+
+.bg-insights {
+    background-color: var(--color-data-calculated-insights);
+}
+
+.col-join-addresses {
+    color: var(--color-data-calculated-join-addresses);
+}
+
+.bg-join-addresses {
+    background-color: var(--color-data-calculated-join-addresses);
+}
+
+.col-retention {
+    color: var(--color-data-calculated-retention);
+}
+
+.bg-retention {
+    background-color: var(--color-data-calculated-retention);
+}
+
+.col-retention-new-players {
+    color: var(--color-data-calculated-retention-new-players);
+}
+
+.bg-retention-new-players {
+    background-color: var(--color-data-calculated-retention-new-players);
+}
+
+.col-geolocation {
+    color: var(--color-data-calculated-geolocation);
+}
+
+.bg-geolocation {
+    background-color: var(--color-data-calculated-geolocation);
+}
+
+.col-allow-list {
+    color: var(--color-data-calculated-allow-list);
+}
+
+.bg-allow-list {
+    background-color: var(--color-data-calculated-allow-list);
+}
+
+.col-plugin-versions {
+    color: var(--color-data-calculated-plugin-versions);
+}
+
+.bg-plugin-versions {
+    background-color: var(--color-data-calculated-plugin-versions);
+}
+
+.col-player-kills {
+    color: var(--color-data-player-versus-player-kills);
+}
+
+.bg-player-kills {
+    background-color: var(--color-data-player-versus-player-kills);
+}
+
+.col-mob-kills {
+    color: var(--color-data-player-versus-mob-kills);
+}
+
+.bg-mob-kills {
+    background-color: var(--color-data-player-versus-mob-kills);
+}
+
+.col-deaths {
+    color: var(--color-data-player-versus-deaths);
+}
+
+.bg-deaths {
+    background-color: var(--color-data-player-versus-deaths);
+}
+
+.col-top-3-first {
+    color: var(--color-data-player-versus-top-3-first);
+}
+
+.bg-top-3-first {
+    background-color: var(--color-data-player-versus-top-3-first);
+}
+
+.col-top-3-second {
+    color: var(--color-data-player-versus-top-3-second);
+}
+
+.bg-top-3-second {
+    background-color: var(--color-data-player-versus-top-3-second);
+}
+
+.col-top-3-third {
+    color: var(--color-data-player-versus-top-3-third);
+}
+
+.bg-top-3-third {
+    background-color: var(--color-data-player-versus-top-3-third);
+}
+
+.col-online {
+    color: var(--color-data-player-status-online);
+}
+
+.bg-online {
+    background-color: var(--color-data-player-status-online);
+}
+
+.col-offline {
+    color: var(--color-data-player-status-offline);
+}
+
+.bg-offline {
+    background-color: var(--color-data-player-status-offline);
+}
+
+.col-banned {
+    color: var(--color-data-player-status-banned);
+}
+
+.bg-banned {
+    background-color: var(--color-data-player-status-banned);
+}
+
+.col-operator {
+    color: var(--color-data-player-status-operator);
+}
+
+.bg-operator {
+    background-color: var(--color-data-player-status-operator);
+}
+
+.col-kicks {
+    color: var(--color-data-player-status-kicks);
+}
+
+.bg-kicks {
+    background-color: var(--color-data-player-status-kicks);
+}
+
+.col-nicknames {
+    color: var(--color-data-player-status-nicknames);
+}
+
+.bg-nicknames {
+    background-color: var(--color-data-player-status-nicknames);
+}

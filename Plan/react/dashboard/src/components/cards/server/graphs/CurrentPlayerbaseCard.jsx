@@ -14,8 +14,9 @@ export const CurrentPlayerbaseCardWithData = ({data, title}) => {
     return (
         <Card id={"playerbase-current"}>
             <Card.Header>
-                <h6 className="col-black" style={{width: '100%'}}>
-                    <Fa icon={faUsers} className="col-amber"/> {t(title ? title : 'html.label.currentPlayerbase')}
+                <h6 className="col-text" style={{width: '100%'}}>
+                    <Fa icon={faUsers}
+                        className="col-players-activity-index"/> {t(title ? title : 'html.label.currentPlayerbase')}
                 </h6>
             </Card.Header>
             <GroupVisualizer groups={data.activity_pie_series} name={t('html.label.players')}/>

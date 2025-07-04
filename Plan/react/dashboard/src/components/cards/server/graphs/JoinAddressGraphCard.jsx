@@ -79,10 +79,11 @@ const JoinAddressGraphCard = ({identifier}) => {
     return (
         <Card>
             <Card.Header>
-                <h6 className="col-black" style={{width: '100%'}}>
-                    <Fa icon={faChartColumn} className="col-amber"/> {t('html.label.joinAddresses')}
+                <h6 className="col-text" style={{width: '100%'}}>
+                    <Fa icon={faChartColumn} className="col-join-addresses"/> {t('html.label.joinAddresses')}
                 </h6>
-                <Toggle value={stack} onValueChange={setStack} color={'amber'}>{t('html.label.stacked')}</Toggle>
+                <Toggle value={stack} onValueChange={setStack}
+                        color={'join-addresses'}>{t('html.label.stacked')}</Toggle>
             </Card.Header>
             {data &&
                 <JoinAddressGraph id={'join-address-graph'} data={data?.join_addresses_by_date} colors={data?.colors}

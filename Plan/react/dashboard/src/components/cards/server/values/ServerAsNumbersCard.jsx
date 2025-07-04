@@ -23,7 +23,7 @@ const ServerAsNumbersCard = ({data}) => {
     return (
         <Card id={isGameServer ? "server-as-numbers" : "network-as-numbers"}>
             <Card.Header>
-                <h6 className="col-black">
+                <h6 className="col-text">
                     <Fa icon={faBookOpen}/> {isGameServer ? t('html.label.serverAsNumberse') : t('html.label.networkAsNumbers')}
                 </h6>
             </Card.Header>
@@ -32,45 +32,45 @@ const ServerAsNumbersCard = ({data}) => {
                 <CurrentUptime uptime={data.current_uptime}/>
                 <hr/>
                 <Datapoint name={t('html.label.totalPlayers')}
-                           color={'black'} icon={faUsers}
+                           color={'players-count'} icon={faUsers}
                            value={data.total_players} bold/>
                 <Datapoint name={t('html.label.regularPlayers')}
-                           color={'lime'} icon={faUsers}
+                           color={'players-regular'} icon={faUsers}
                            value={data.regular_players} bold/>
                 <Datapoint name={t('html.label.playersOnline')}
-                           color={'blue'} icon={faUser}
+                           color={'players-online'} icon={faUser}
                            value={data.online_players} bold/>
                 {showPeaks && <>
                     <hr/>
                     <Datapoint name={<>{t('html.label.lastPeak')} (<FormattedDate date={data.last_peak_date}/>)</>}
-                               color={'blue'} icon={faChartLine}
+                               color={'player-peak-last'} icon={faChartLine}
                                value={data.last_peak_players} valueLabel={t('html.unit.players')} bold/>
                     <Datapoint name={<>{t('html.label.bestPeak')} (<FormattedDate date={data.best_peak_date}/>)</>}
-                               color={'light-green'} icon={faChartLine}
+                               color={'player-peak-all-time'} icon={faChartLine}
                                value={data.best_peak_players} valueLabel={t('html.unit.players')} bold/>
                 </>}
                 <hr/>
                 <Datapoint name={t('html.label.totalPlaytime')}
-                           color={'green'} icon={faClock}
+                           color={'playtime'} icon={faClock}
                            value={<FormattedTime timeMs={data.playtime}/>}/>
                 <Datapoint name={t('html.label.averagePlaytime') + ' ' + t('html.label.perPlayer')}
-                           color={'green'} icon={faClock}
+                           color={'playtime'} icon={faClock}
                            value={<FormattedTime timeMs={data.player_playtime}/>}/>
                 <Datapoint name={t('html.label.averageSessionLength')}
-                           color={'teal'} icon={faClock}
+                           color={'sessions'} icon={faClock}
                            value={<FormattedTime timeMs={data.session_length_avg}/>}/>
                 <Datapoint name={t('html.label.sessions')}
-                           color={'teal'} icon={faCalendarCheck}
+                           color={'sessions'} icon={faCalendarCheck}
                            value={data.sessions} bold/>
                 {data.player_kills !== undefined && <hr/>}
                 <Datapoint name={t('html.label.playerKills')}
-                           color={'red'} icon={faCrosshairs}
+                           color={'player-kills'} icon={faCrosshairs}
                            value={data.player_kills} bold/>
                 <Datapoint name={t('html.label.mobKills')}
-                           color={'green'} icon={faCrosshairs}
+                           color={'mob-kills'} icon={faCrosshairs}
                            value={data.mob_kills} bold/>
                 <Datapoint name={t('html.label.deaths')}
-                           color={'black'} icon={faSkull}
+                           color={'deaths'} icon={faSkull}
                            value={data.deaths} bold/>
             </ExtendableCardBody>
         </Card>
