@@ -12,6 +12,7 @@ import {useDataRequest} from "../../hooks/dataFetchHook";
 import ErrorPage from "./ErrorPage";
 import {useAuth} from "../../hooks/authenticationHook";
 import MainPageRedirect from "../../components/navigation/MainPageRedirect";
+import {SwitchTransition} from "react-transition-group";
 
 const HelpModal = React.lazy(() => import("../../components/modal/HelpModal"));
 
@@ -74,7 +75,9 @@ const PlayerPage = () => {
                 <Header page={player?.info?.name} tab={currentTab}/>
                 <div id="content" style={{display: 'flex'}}>
                     <main className="container-fluid mt-4">
-                        <Outlet context={{player: player}}/>
+                        <SwitchTransition>
+                            <Outlet context={{player: player}}/>
+                        </SwitchTransition>
                     </main>
                     <aside>
                         <ColorSelectorModal/>

@@ -53,7 +53,7 @@ const ExampleSection = ({displayedItem, className}) => {
     return (
         <div className={"example-section " + className}
              style={{position: 'sticky', top: '0'}}>
-            <CollapseWithButton disabled={!example} title={<h5
+            <CollapseWithButton disabled={!example} open title={<h5
                 className={"col-text"}>{t('html.label.themeEditor.example')}{example ? <>{' '}&middot; {displayedItem}</> : ''}</h5>}>
                 {example && <div className={"example"}>
                     {example}

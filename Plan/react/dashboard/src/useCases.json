@@ -1,7 +1,9 @@
 {
-  "theme": "var(--color-plan)",
-  "themeText": "var(--color-theme)",
-  "text": "var(--color-text-light)",
+  "referenceColors": {
+    "theme": "var(--color-plan)",
+    "themeText": "var(--color-theme)",
+    "text": "var(--color-text-light)"
+  },
   "layout": {
     "background": "var(--color-white-grey)",
     "title": "var(--color-light-slate)",

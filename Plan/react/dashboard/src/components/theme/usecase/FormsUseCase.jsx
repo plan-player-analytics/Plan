@@ -15,6 +15,11 @@ const FormsUseCase = () => {
     const {t} = useTranslation();
 
     const label = t('html.label.themeEditor.example');
+    const options = [
+        {name: 'label-1', displayName: label},
+        {name: 'label-2', displayName: label},
+        {name: 'label-3', displayName: label}
+    ];
     return (
         <>
             <ActionButton disabled={false} className={"m-2"}>
@@ -47,10 +52,7 @@ const FormsUseCase = () => {
             <hr/>
             <Row>
                 <Col md={12}>
-                    <BasicDropdown selected={'label-1'} options={[{name: 'label-1', displayName: label}, {
-                        name: 'label-2',
-                        displayName: label
-                    }, {name: 'label-2', displayName: label}]}/>
+                    <BasicDropdown selected={'label-1'} options={options}/>
                 </Col>
             </Row>
         </>

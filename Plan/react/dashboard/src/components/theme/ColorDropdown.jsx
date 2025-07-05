@@ -4,28 +4,9 @@ import {Dropdown, Form} from "react-bootstrap";
 import {FontAwesomeIcon as Fa, FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faExclamationTriangle, faTimes} from "@fortawesome/free-solid-svg-icons";
 
-const ColorDropdown = ({
-                           id,
-                           colors,
-                           value,
-                           onChange,
-                           onHoverChange,
-                           label,
-                           onRemoveOverride = null,
-                           marginLeft = 0
-                       }) => {
-    const {t} = useTranslation();
-    // Extract name from CSS variable or use first color as default
-    const selectedName = value?.replace('var(--color-', '').replace(')', '') || Object.keys(colors)[0];
-    const isTextColor = selectedName.includes('text') || label.includes('Text');
-    const cssColor = `var(--color-${selectedName})`;
-    const contrastColor = `var(--contrast-color-${selectedName})`;
-    const [isOpen, setIsOpen] = useState(false);
+const useMenuPlacement = (isOpen) => {
     const selectedItemRef = useRef(null);
     const dropdownMenuRef = useRef(null);
-
-    const missing = !colors[selectedName];
-
     useEffect(() => {
         if (isOpen && selectedItemRef.current && dropdownMenuRef.current) {
             setTimeout(() => {
@@ -51,6 +32,30 @@ const ColorDropdown = ({
             }, 0);
         }
     }, [isOpen]);
+    return {selectedItemRef, dropdownMenuRef};
+}
+
+const ColorDropdown = ({
+                           id,
+                           colors,
+                           value,
+                           onChange,
+                           onHoverChange,
+                           label,
+                           onRemoveOverride = null,
+                           marginLeft = 0
+                       }) => {
+    const {t} = useTranslation();
+    // Extract name from CSS variable or use first color as default
+    const selectedName = value?.replace('var(--color-', '').replace(')', '') || Object.keys(colors)[0];
+    const isTextColor = selectedName.includes('text') || label.includes('Text');
+    const cssColor = `var(--color-${selectedName})`;
+    const contrastColor = `var(--contrast-color-${selectedName})`;
+    const [isOpen, setIsOpen] = useState(false);
+
+    const missing = !colors[selectedName];
+
+    const {selectedItemRef, dropdownMenuRef} = useMenuPlacement(isOpen);
 
     return (
         <tr id={id} onMouseOver={() => onHoverChange(id, 'enter')} onMouseOut={() => onHoverChange(id, 'exit')}>

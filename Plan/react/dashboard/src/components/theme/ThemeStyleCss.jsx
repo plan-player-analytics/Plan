@@ -36,6 +36,9 @@ const generateThemeCSS = ({theme, useCases, nightModeUseCases}) => {
 
     // Add night mode use case variables
     const flattenedNightUseCases = flattenObject(nightModeUseCases);
+    if (nightModeUseCases.referenceColors) Object.entries(nightModeUseCases.referenceColors).forEach(([key, value]) => {
+        flattenedNightUseCases[key] = value
+    });
     Object.entries(flattenedNightUseCases).forEach(([key, value]) => {
         if (typeof value === 'string' && value.startsWith('var(--color-')) {
             const referencedColor = value.replace('var(--color-', '').replace(')', '');
@@ -47,6 +50,9 @@ const generateThemeCSS = ({theme, useCases, nightModeUseCases}) => {
     const nightModeKeys = Object.keys(flattenedNightUseCases);
     // Add use case variables
     const flattenedUseCases = flattenObject(useCases);
+    if (useCases.referenceColors) Object.entries(useCases.referenceColors).forEach(([key, value]) => {
+        flattenedUseCases[key] = value
+    });
     Object.entries(flattenedUseCases).forEach(([key, value]) => {
         if (typeof value === 'string' && value.startsWith('var(--color-')) {
             const referencedColor = value.replace('var(--color-', '').replace(')', '');

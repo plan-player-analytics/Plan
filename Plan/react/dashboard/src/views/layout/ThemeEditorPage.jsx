@@ -10,146 +10,11 @@ import CardHeader from "../../components/cards/CardHeader";
 import useCases from "../../useCases.json";
 import nightModeUseCases from "../../nightModeUseCases.json";
 import {ThemeStyleCss} from "../../components/theme/ThemeStyleCss";
-import {mergeUseCases} from '../../util/mutator';
 import ExampleSection from "../../components/theme/ExampleSection.jsx";
 import ColorSection from "../../components/theme/ColorSection.jsx";
 import {ColorEditContextProvider} from "../../hooks/context/colorEditContextHook.jsx";
 import ColorEditForm from "../../components/theme/ColorEditForm.jsx";
-import ColorDropdown from "../../components/theme/ColorDropdown.jsx";
-
-const formatLabel = (key) => {
-    // Convert camelCase to Title Case with spaces
-    return key
-        .replace(/([A-Z])/g, ' $1')
-        .replace(/^./, str => str.toUpperCase())
-        .trim();
-};
-
-const UseCase = ({path, value, onChange, onHoverChange, colors, isNightMode, baseValue, onRemoveOverride}) => {
-    const level = Math.max(0, path.length - 1);
-    const id = path.join('.');
-
-    if (typeof value === 'string') {
-        const hasOverride = isNightMode && value !== baseValue;
-        return (
-            <ColorDropdown
-                id={id} key={id}
-                colors={colors}
-                value={value}
-                onChange={(newValue) => onChange(newValue, path)}
-                label={formatLabel(path[path.length - 1])}
-                marginLeft={level * 20}
-                onRemoveOverride={hasOverride ? () => onRemoveOverride?.(path) : null}
-                onHoverChange={(a, b) => onHoverChange(a, b, isNightMode)}
-            />
-        );
-    }
-
-    if (Array.isArray(value)) {
-        return null;
-    }
-
-    return (
-        <>
-            {typeof value === 'object' && !Array.isArray(value) && path.length > 0 && (
-                <tr>
-                    <td colSpan={2}>
-                        {level === 0 && <hr/>}
-                        <h6 className={'mt-2 mb-3'} style={{marginLeft: level * 20, fontWeight: "bold"}}
-                            onMouseOver={() => onHoverChange(id, 'enter', isNightMode)}
-                            onMouseOut={() => onHoverChange(id, 'exit', isNightMode)}>
-                            {formatLabel(path[path.length - 1])}
-                        </h6>
-                    </td>
-                </tr>
-            )}
-            {Object.entries(value).map(([key, val]) => (
-                <UseCase
-                    key={key}
-                    path={[...path, key]}
-                    value={val}
-                    onChange={onChange}
-                    onHoverChange={onHoverChange}
-                    colors={colors}
-                    isNightMode={isNightMode}
-                    baseValue={baseValue?.[key]}
-                    onRemoveOverride={onRemoveOverride}
-                />
-            ))}
-        </>
-    );
-};
-
-const UseCaseSection = ({useCases, onHoverChange, colors, baseUseCases = null, isNightMode = false, onUpdate}) => {
-    const {t} = useTranslation();
-    // For night mode, we need to merge the base use cases with overrides
-    const mergedUseCases = isNightMode && baseUseCases ? mergeUseCases(baseUseCases, useCases) : useCases;
-
-    const handleColorChange = (newValue, path) => {
-        const result = {...useCases};
-        let current = result;
-        for (let i = 0; i < path.length - 1; i++) {
-            if (!current[path[i]] || typeof current[path[i]] !== 'object') {
-                current[path[i]] = {};
-            }
-            current = current[path[i]];
-        }
-        current[path[path.length - 1]] = newValue;
-        onUpdate?.(result);
-    };
-
-    const handleRemoveOverride = (path) => {
-        // Create a new object without the override, but maintain structure
-        const removeOverride = (obj, pathArr) => {
-            if (pathArr.length === 0) return obj;
-
-            const [current, ...rest] = pathArr;
-            const result = {...obj};
-
-            if (rest.length === 0) {
-                // We've reached the target property, remove it
-                delete result[current];
-                // If the parent object becomes empty, return null to signal removal
-                return Object.keys(result).length === 0 ? null : result;
-            }
-
-            // Continue traversing
-            const nested = removeOverride(obj[current] || {}, rest);
-            if (nested === null) {
-                delete result[current];
-                return Object.keys(result).length === 0 ? null : result;
-            }
-            result[current] = nested;
-            return result;
-        };
-
-        // Get the new state without the override
-        const newState = removeOverride(useCases, path) || {};
-
-        // Update parent
-        onUpdate?.(newState);
-    };
-
-    return (
-        <div className={"ps-4 pt-4 pb-4 mb-4" + (isNightMode ? ' night-mode-colors' : '')}>
-            <h5 className="mb-3">{isNightMode ? t('html.label.themeEditor.nightModeOverrides') : t('html.label.themeEditor.useCases')}</h5>
-            <table style={{width: '100%', borderCollapse: 'collapse'}}>
-                <tbody>
-                <UseCase
-                    path={[]}
-                    value={mergedUseCases}
-                    onChange={handleColorChange}
-                    colors={colors}
-                    isNightMode={isNightMode}
-                    baseValue={baseUseCases}
-                    onRemoveOverride={isNightMode ? handleRemoveOverride : undefined}
-                    onHoverChange={onHoverChange}
-                />
-                </tbody>
-            </table>
-        </div>
-    );
-};
+import UseCaseSection from "../../components/theme/UseCaseSection.jsx";
 
 const ThemeEditorPage = () => {
     const {t} = useTranslation();
@@ -172,25 +37,13 @@ const ThemeEditorPage = () => {
         }
     }
 
-    // TODO change this to generate css a bit differently
-    const referenceColors = {};
-    Object.entries(currentUseCases).forEach(([key, value]) => {
-        if (typeof value === 'string') {
-            referenceColors[key] = value;
-        }
-    })
-    const nightReferenceColors = {};
-    Object.entries(currentNightModeUseCases).forEach(([key, value]) => {
-        if (typeof value === 'string') {
-            nightReferenceColors[key] = value;
-        }
-    })
+    const referenceColors = currentUseCases.referenceColors;
+    const nightReferenceColors = currentNightModeUseCases.referenceColors;
 
     const handleColorSave = (current, setFunction) => (name, color, previous) => {
         const newObj = {};
         for (const [key, value] of Object.entries(current)) {
             if (key === previous) {
-                // TODO needs to handle use cases that are using the color if renamed
                 newObj[name] = color;
             } else {
                 newObj[key] = value;

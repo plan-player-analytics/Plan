@@ -1,7 +1,9 @@
 {
-  "theme": "var(--color-night-dark-blue)",
-  "themeText": "var(--color-plan)",
-  "text": "var(--color-night-text)",
+  "referenceColors": {
+    "theme": "var(--color-night-dark-blue)",
+    "themeText": "var(--color-plan)",
+    "text": "var(--color-night-text)"
+  },
   "layout": {
     "background": "var(--color-night-black)",
     "divider": "var(--color-night-blue)",
