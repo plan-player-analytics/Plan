@@ -18,6 +18,7 @@ import FilterList from "./FilterList";
 import {useQueryResultContext} from "../../../hooks/queryResultContext";
 import {useNavigate} from "react-router-dom";
 import {useNavigation} from "../../../hooks/navigationHook.jsx";
+import ActionButton from "../../input/ActionButton.jsx";
 
 const parseTime = (dateString, timeString) => {
     const d = dateString.match(
@@ -254,13 +255,12 @@ const QueryOptionsCard = () => {
                     </Col>
                 </Row>
             </Card.Body>
-            <button id={"query-button"}
-                    className={"btn bg-theme m-2"}
-                    disabled={Boolean(invalidFields.length) || loadingResults}
-                    onClick={performQuery}>
+            <ActionButton id={"query-button"} className={"m-2"}
+                          disabled={Boolean(invalidFields.length) || loadingResults}
+                          onClick={performQuery}>
                 <FontAwesomeIcon icon={loadingResults ? faGear : faSearch}
                                  spin={loadingResults}/> {t('html.query.performQuery')}
-            </button>
+            </ActionButton>
         </Card>
     )
 };

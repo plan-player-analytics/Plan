@@ -32,28 +32,21 @@
   },
   "forms": {
     "buttons": {
-      "secondaryButton": "var(--color-night-grey-blue)",
-      "secondaryButtonBorder": "var(--color-night-blue)"
+      "actionButton": "var(--color-theme)",
+      "outlineButtonBorder": "var(--color-text)"
     },
     "input": {
       "background": "var(--color-night-dark-blue)",
-      "border": "var(--color-night-blue)"
-    },
-    "select": {
-      "background": "var(--color-night-dark-blue)",
-      "border": "var(--color-night-blue)"
+      "border": "var(--color-night-blue)",
+      "text": "var(--color-text)"
     },
     "checkbox": {
-      "checked": {
-        "background": "var(--color-night-blue)",
-        "border": "var(--color-night-blue)"
-      }
+      "checked": "var(--color-night-blue)",
+      "border": "var(--color-night-blue)"
     },
     "dropdown": {
-      "item": {
-        "hover": "var(--color-night-blue)"
-      },
-      "border": "var(--color-night-blue)"
+      "hover": "var(--color-night-dark-grey-blue)",
+      "selected": "var(--color-night-dark-grey-blue)"
     }
   },
   "calendar": {

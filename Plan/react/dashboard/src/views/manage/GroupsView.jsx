@@ -31,6 +31,7 @@ import {DropdownStatusContextProvider, useDropdownStatusContext} from "../../hoo
 import {useNavigation} from "../../hooks/navigationHook";
 import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 import {useAuth} from "../../hooks/authenticationHook";
+import Checkbox from "../../components/input/Checkbox.jsx";
 
 const GroupsHeader = ({groupName, icon}) => {
     return (
@@ -56,12 +57,8 @@ const PermissionDropdown = ({permission, checked, indeterminate, togglePermissio
                         event.preventDefault();
                         toggle(permission);
                     }}>
-                        <input className={"form-check-input"} type={"checkbox"} value={indeterminate ? "" : checked}
-                               checked={checked}
-                               ref={input => {
-                                   if (input) input.indeterminate = indeterminate
-                               }}
-                               onChange={() => togglePermission(permission)}
+                        <Checkbox indeterminate={indeterminate} checked={checked}
+                                  onChange={() => togglePermission(permission)}
                         /> {permission} {permission && translated !== translationKey &&
                         <OpaqueText inline>&middot; {translated}</OpaqueText>}
                         <hr style={{margin: 0}}/>

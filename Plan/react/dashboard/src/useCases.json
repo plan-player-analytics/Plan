@@ -54,33 +54,21 @@
   },
   "forms": {
     "buttons": {
-      "activeButton": "var(--color-theme)",
-      "secondaryButton": "var(--color-white)",
-      "secondaryButtonBorder": "var(--color-secondary)"
+      "actionButton": "var(--color-theme)",
+      "outlineButtonBorder": "var(--color-secondary)"
     },
     "input": {
       "background": "var(--color-white)",
       "border": "var(--color-cement-grey)",
-      "text": "var(--color-text)"
-    },
-    "select": {
-      "background": "var(--color-white)",
-      "border": "var(--color-cement-grey)",
-      "text": "var(--color-text)"
+      "text": "var(--color-cool-grey)"
     },
     "checkbox": {
-      "checked": {
-        "background": "var(--color-theme)",
-        "border": "var(--color-cement-grey)"
-      }
+      "checked": "var(--color-theme)",
+      "border": "var(--color-cement-grey)"
     },
     "dropdown": {
-      "item": {
-        "text": "var(--color-text)",
-        "hover": "var(--color-white-grey)"
-      },
-      "header": "var(--color-text)",
-      "border": "var(--color-cement-grey)"
+      "hover": "var(--color-white-grey)",
+      "selected": "var(--color-white-grey)"
     }
   },
   "graphs": {

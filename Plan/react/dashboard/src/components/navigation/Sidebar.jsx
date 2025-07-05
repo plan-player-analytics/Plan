@@ -13,6 +13,7 @@ import {useTranslation} from "react-i18next";
 import {Collapse} from "react-bootstrap";
 import {baseAddress} from "../../service/backendConfiguration";
 import PageNavigationItem from "./PageNavigationItem";
+import {useWindowWidth} from "../../hooks/interaction/windowWidthHook.jsx";
 
 const Logo = () => (
     <a className="sidebar-brand d-flex align-items-center justify-content-center" href="/">
@@ -188,7 +189,7 @@ const renderItem = (item, i, openCollapse, setOpenCollapse, t, windowWidth, coll
     return <hr key={i} className="sidebar-divider"/>
 }
 
-const Sidebar = ({page, items, openItemIndex}) => {
+const Sidebar = ({page, items, openItemIndex, keepOpen}) => {
     const {t} = useTranslation();
     const {currentTab, sidebarExpanded, setSidebarExpanded} = useNavigation();
     const {authRequired, hasPermission, hasChildPermission} = useAuth();
@@ -198,12 +199,7 @@ const Sidebar = ({page, items, openItemIndex}) => {
         setOpenCollapse(openCollapse === collapse ? undefined : collapse);
     }
 
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-    const updateWidth = useCallback(() => setWindowWidth(window.innerWidth), []);
-    useEffect(() => {
-        window.addEventListener('resize', updateWidth);
-        return () => window.removeEventListener('resize', updateWidth);
-    }, [updateWidth]);
+    const windowWidth = useWindowWidth();
 
     const collapseSidebar = useCallback(() => {
         setSidebarExpanded(windowWidth > 1350);
@@ -249,7 +245,7 @@ const Sidebar = ({page, items, openItemIndex}) => {
 
     return (
         <>
-            {sidebarExpanded &&
+            {(sidebarExpanded || keepOpen) &&
                 <ul className={"navbar-nav sidebar sidebar-dark accordion"} id="accordionSidebar">
                     <Logo/>
                     <PageNavigationItem page={page}/>

@@ -15,6 +15,7 @@ import DataPlayerStatusUseCase from "./usecase/DataPlayerStatusUseCase.jsx";
 import React from "react";
 import {useTranslation} from "react-i18next";
 import CollapseWithButton from "../layout/CollapseWithButton.jsx";
+import FormsUseCase from "./usecase/FormsUseCase.jsx";
 
 const findExample = (path, examples) => {
     if (!path || !path.length) return undefined;
@@ -44,14 +45,15 @@ const ExampleSection = ({displayedItem, className}) => {
         "data.performance": <DataPerformanceUseCase/>,
         "data.calculated": <DataCalculatedUseCase/>,
         "data.playerVersus": <DataPlayerVersusUseCase/>,
-        "data.playerStatus": <DataPlayerStatusUseCase/>
+        "data.playerStatus": <DataPlayerStatusUseCase/>,
+        "forms": <FormsUseCase/>
     }
     const example = findExample(displayedItem, examples);
 
     return (
         <div className={"example-section " + className}
              style={{position: 'sticky', top: '0'}}>
-            <CollapseWithButton title={<h5
+            <CollapseWithButton disabled={!example} title={<h5
                 className={"col-text"}>{t('html.label.themeEditor.example')}{example ? <>{' '}&middot; {displayedItem}</> : ''}</h5>}>
                 {example && <div className={"example"}>
                     {example}

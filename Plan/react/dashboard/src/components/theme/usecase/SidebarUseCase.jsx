@@ -38,7 +38,7 @@ export const SidebarUseCase = () => {
 
     return (
         <div id={"wrapper"}>
-            <Sidebar page={'example'} items={items} openItemIndex={3}/>
+            <Sidebar page={'example'} items={items} openItemIndex={3} keepOpen/>
             <div className="d-flex flex-column" id="content-wrapper">
                 <AlertPopupArea/>
                 <Header page={displayedServerName} tab={t('html.label.themeEditor.example')} hideUpdater/>

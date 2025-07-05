@@ -362,8 +362,8 @@ pre {
 }
 
 .form-control {
-    color: #6e707e;
-    border: 1px solid #d1d3e2;
+    color: var(--color-forms-input-text);
+    border: 1px solid var(--color-forms-input-border);
     border-radius: 0.35rem;
 }
 
@@ -372,29 +372,29 @@ pre {
 }
 
 .form-control:focus {
-    color: #6e707e;
-    border-color: #bac8f3;
-    box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
+    color: var(--color-forms-input-text);
+    border-color: color-mix(in hsl, var(--color-forms-input-border), #bac8f3 20%);
+    box-shadow: 0 0 0 0.2rem color-mix(in hsl, var(--color-forms-input-border), rgba(78, 115, 223, 0.25) 75%);
 }
 
 .form-control::-webkit-input-placeholder {
-    color: #858796;
+    color: color-mix(in hsl, var(--color-forms-input-text), #fff 20%);
 }
 
 .form-control::-moz-placeholder {
-    color: #858796;
+    color: color-mix(in hsl, var(--color-forms-input-text), #fff 20%);
 }
 
 .form-control:-ms-input-placeholder {
-    color: #858796;
+    color: color-mix(in hsl, var(--color-forms-input-text), #fff 20%);
 }
 
 .form-control::-ms-input-placeholder {
-    color: #858796;
+    color: color-mix(in hsl, var(--color-forms-input-text), #fff 20%);
 }
 
 .form-control::placeholder {
-    color: #858796;
+    color: color-mix(in hsl, var(--color-forms-input-text), #fff 20%);
 }
 
 .form-control:disabled, .form-control[readonly] {
@@ -511,12 +511,11 @@ select.form-control:focus::-ms-value {
 }
 
 .btn {
-    color: #858796;
     border-radius: 0.35rem;
 }
 
-.btn:hover {
-    color: #858796;
+.btn:disabled {
+    background-image: linear-gradient(rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0) 100%);
 }
 
 .btn:focus, .btn.focus {
@@ -819,32 +818,37 @@ select.form-control:focus::-ms-value {
 }
 
 .btn-outline-secondary {
-    color: #858796;
-    border-color: #858796;
+    color: var(--color-forms-buttons-outline-button-border);
+    border-color: var(--color-forms-buttons-outline-button-border);
+    --bs-btn-hover-bg: var(--color-forms-buttons-outline-button-border);
+    --bs-btn-disabled-bg: transparent;
+    --bs-btn-hover-color: color-mix(in srgb, var(--color-forms-buttons-outline-button-border) 90%, black);
+    --bs-btn-disabled-color: color-mix(in srgb, var(--color-forms-buttons-outline-button-border) 75%, transparent);
+    --bs-btn-disabled-border-color: var(--color-forms-buttons-outline-button-border);
 }
 
 .btn-outline-secondary:hover {
-    background-color: #858796;
-    border-color: #858796;
+    background-color: color-mix(in srgb, var(--color-forms-buttons-outline-button-border), rgba(0, 0, 0, 0) 80%);
+    border-color: var(--color-forms-buttons-outline-button-border);
 }
 
 .btn-outline-secondary:focus, .btn-outline-secondary.focus {
-    box-shadow: 0 0 0 0.2rem rgba(133, 135, 150, 0.5);
+    box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--color-forms-buttons-outline-button-border), rgba(0, 0, 0, 0) 70%);
 }
 
 .btn-outline-secondary.disabled, .btn-outline-secondary:disabled {
-    color: #858796;
+    color: var(--color-forms-buttons-outline-button-border);
 }
 
 .btn-outline-secondary:not(:disabled):not(.disabled):active, .btn-outline-secondary:not(:disabled):not(.disabled).active,
 .show > .btn-outline-secondary.dropdown-toggle {
-    background-color: #858796;
-    border-color: #858796;
+    background-color: var(--color-forms-buttons-outline-button-border);
+    border-color: var(--color-forms-buttons-outline-button-border);
 }
 
 .btn-outline-secondary:not(:disabled):not(.disabled):active:focus, .btn-outline-secondary:not(:disabled):not(.disabled).active:focus,
 .show > .btn-outline-secondary.dropdown-toggle:focus {
-    box-shadow: 0 0 0 0.2rem rgba(133, 135, 150, 0.5);
+    box-shadow: 0 0 0 0.2rem color-mix(in srgb, var(--color-forms-buttons-outline-button-border), rgba(0, 0, 0, 0) 70%);
 }
 
 .btn-outline-success {
@@ -1078,7 +1082,7 @@ select.form-control:focus::-ms-value {
 }
 
 .input-group-text {
-    color: var(--color-forms-input-text);
+    color: var(--color-text);
     background-color: var(--color-forms-input-background);
     border: 1px solid var(--color-forms-input-border);
     border-radius: 0.35rem;
@@ -1087,7 +1091,7 @@ select.form-control:focus::-ms-value {
 .form-select {
     color: var(--color-forms-input-text);
     background: var(--color-forms-input-background) url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' width='4' height='5' viewBox='0 0 4 5'%3e%3cpath fill='%235a5c69' d='M2 0L0 2h4zm0 5L0 3h4z'/%3e%3c/svg%3e") no-repeat right 0.75rem center/8px 10px;
-    border: 1px solid var(--color-forms-dropdown-border);
+    border: 1px solid var(--color-forms-input-border);
     border-radius: 0.35rem;
 }
 

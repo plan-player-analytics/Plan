@@ -115,21 +115,16 @@
     --color-calendar-border: var(--color-cement-grey);
     --color-calendar-links: var(--color-text-light);
     --color-calendar-button: var(--color-theme);
-    --color-forms-buttons-active-button: var(--color-theme);
-    --color-forms-buttons-secondary-button: var(--color-white);
-    --color-forms-buttons-secondary-button-border: var(--color-secondary);
+    --color-forms-buttons-action-button: var(--color-theme);
+    --contrast-color-forms-buttons-action-button: var(--color-text-light);
+    --color-forms-buttons-outline-button-border: var(--color-secondary);
     --color-forms-input-background: var(--color-white);
-    --color-forms-input-border: var(--color-stone-grey);
-    --color-forms-input-text: var(--color-text-light);
-    --color-forms-select-background: var(--color-white);
-    --color-forms-select-border: var(--color-stone-grey);
-    --color-forms-select-text: var(--color-text-light);
-    --color-forms-checkbox-checked-background: var(--color-theme);
-    --color-forms-checkbox-checked-border: var(--color-stone-grey);
-    --color-forms-dropdown-item-text: var(--color-text-light);
-    --color-forms-dropdown-item-hover: var(--color-white-grey);
-    --color-forms-dropdown-header: var(--color-text-light);
-    --color-forms-dropdown-border: var(--color-stone-grey);
+    --color-forms-input-border: var(--color-cement-grey);
+    --color-forms-input-text: var(--color-text);
+    --color-forms-checkbox-checked: var(--color-theme);
+    --color-forms-checkbox-border: var(--color-cement-grey);
+    --color-forms-dropdown-hover: var(--color-white-grey);
+    --color-forms-dropdown-selected: var(--color-white-grey);
     --color-graphs-punch-card: var(--color-ink);
     --color-graphs-players-online: var(--color-bright-blue);
     --color-graphs-tps-high: var(--color-green);
@@ -218,13 +213,27 @@
     color: var(--color-layout-title);
 }
 
+.form-control, .form-control:focus {
+    background-color: var(--color-forms-input-background);
+}
+
+.btn-action {
+    background-color: var(--color-forms-buttons-action-button);
+    color: var(--contrast-color-forms-buttons-action-button);
+    --bs-btn-hover-bg: var(--color-forms-buttons-action-button);
+    --bs-btn-disabled-bg: var(--color-forms-buttons-action-button);
+    --bs-btn-disabled-border-color: var(--color-forms-buttons-action-button);
+    --bs-btn-hover-color: color-mix(in srgb, var(--contrast-color-forms-buttons-action-button) 90%, black);
+    --bs-btn-disabled-color: var(--contrast-color-forms-buttons-action-button);
+}
+
 /* Calendar overrides */
 .fc-title, .fc-time {
     color: var(--color-text);
 }
 
 .fc-day-today {
-    background-color: var(--color-calendar-today) !important
+    background-color: var(--color-calendar-today) !important;
 }
 
 .fc-popover-body, .fc-popover-header {
