@@ -5,7 +5,6 @@ import Highcharts from "highcharts/highstock";
 import NoDataDisplay from "highcharts/modules/no-data-to-display"
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../../hooks/themeHook";
-import {withReducedSaturation} from "../../../util/colors";
 import Accessibility from "highcharts/modules/accessibility";
 import {useMetadata} from "../../../hooks/metadataHook";
 import {useAuth} from "../../../hooks/authenticationHook.jsx";
@@ -25,7 +24,7 @@ const CpuRamPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => 
                 type: 'areaspline',
                 tooltip: tooltip.zeroDecimals,
                 data: dataSeries.playersOnline,
-                color: data.colors.playersOnline,
+                color: "var(--color-graphs-players-online)",
                 yAxis: 0
             } : {},
             cpu: hasPermission('page.server.performance.graphs.cpu') ? {
@@ -33,7 +32,7 @@ const CpuRamPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => 
                 type: spline,
                 tooltip: tooltip.twoDecimals,
                 data: dataSeries.cpu,
-                color: nightModeEnabled ? withReducedSaturation(data.colors.cpu) : data.colors.cpu,
+                color: "var(--color-graphs-cpu)",
                 yAxis: 1
             } : {},
             ram: hasPermission('page.server.performance.graphs.ram') ? {
@@ -41,7 +40,7 @@ const CpuRamPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => 
                 type: spline,
                 tooltip: tooltip.zeroDecimals,
                 data: dataSeries.ram,
-                color: nightModeEnabled ? withReducedSaturation(data.colors.ram) : data.colors.ram,
+                color: "var(--color-graphs-ram)",
                 yAxis: 2
             } : {}
         };

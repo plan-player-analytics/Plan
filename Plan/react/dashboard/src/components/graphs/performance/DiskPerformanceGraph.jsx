@@ -5,7 +5,6 @@ import Highcharts from "highcharts/highstock";
 import NoDataDisplay from "highcharts/modules/no-data-to-display"
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../../hooks/themeHook";
-import {withReducedSaturation} from "../../../util/colors";
 import Accessibility from "highcharts/modules/accessibility";
 import {useMetadata} from "../../../hooks/metadataHook";
 
@@ -18,13 +17,13 @@ const DiskPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
         const zones = {
             disk: [{
                 value: data.zones.diskThresholdMed,
-                color: data.colors.low
+                color: "var(--color-graphs-disk-low)"
             }, {
                 value: data.zones.diskThresholdHigh,
-                color: data.colors.med
+                color: "var(--color-graphs-disk-medium)"
             }, {
                 value: Number.MAX_VALUE,
-                color: data.colors.high
+                color: "var(--color-graphs-disk-high)"
             }]
         };
 
@@ -32,7 +31,7 @@ const DiskPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
             disk: {
                 name: t('html.label.disk'),
                 type: 'areaspline',
-                color: nightModeEnabled ? withReducedSaturation(data.colors.high) : data.colors.high,
+                color: "var(--color-graphs-disk-high)",
                 zones: zones.disk,
                 tooltip: tooltip.zeroDecimals,
                 data: dataSeries.disk

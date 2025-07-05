@@ -16,6 +16,8 @@ import React from "react";
 import {useTranslation} from "react-i18next";
 import CollapseWithButton from "../layout/CollapseWithButton.jsx";
 import FormsUseCase from "./usecase/FormsUseCase.jsx";
+import {addToObject} from "../../util/mutator.js";
+import {graphUseCases} from "./usecase/GraphUseCases.jsx";
 
 const findExample = (path, examples) => {
     if (!path || !path.length) return undefined;
@@ -48,6 +50,7 @@ const ExampleSection = ({displayedItem, className}) => {
         "data.playerStatus": <DataPlayerStatusUseCase/>,
         "forms": <FormsUseCase/>
     }
+    addToObject(examples, graphUseCases);
     const example = findExample(displayedItem, examples);
 
     return (

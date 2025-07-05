@@ -54,6 +54,16 @@
       "body": "var(--color-white)"
     }
   },
+  "tables": {
+    "basic": {
+      "oddRow": "var(--color-white-grey)",
+      "evenRow": "var(--color-pale-grey)"
+    },
+    "dataTable": {
+      "oddRow": "var(--color-white-grey)",
+      "evenRow": "var(--color-pale-grey)"
+    }
+  },
   "forms": {
     "buttons": {
       "actionButton": "var(--color-theme)",
@@ -77,22 +87,28 @@
     "punchCard": "var(--color-ink)",
     "playersOnline": "var(--color-bright-blue)",
     "tps": {
-      "high": "var(--color-green)",
-      "medium": "var(--color-tps-yellow)",
-      "low": "var(--color-red)"
+      "high": "var(--color-high-green)",
+      "medium": "var(--color-medium-yellow)",
+      "low": "var(--color-low-red)"
     },
     "cpu": "var(--color-cpu-yellow)",
     "ram": "var(--color-ram-green)",
     "chunks": "var(--color-chunk-brown)",
     "entities": "var(--color-entity-purple)",
-    "worldMap": {
-      "high": "var(--color-green)",
-      "low": "var(--color-map-green)"
+    "disk": {
+      "high": "var(--color-high-green)",
+      "medium": "var(--color-medium-yellow)",
+      "low": "var(--color-low-red)"
     },
     "ping": {
       "max": "var(--color-amber)",
       "avg": "var(--color-warning)",
       "min": "var(--color-ping-amber)"
+    },
+    "worldMap": {
+      "high": "var(--color-high-green)",
+      "low": "var(--color-map-green)",
+      "bars": "var(--color-green)"
     }
   },
   "data": {

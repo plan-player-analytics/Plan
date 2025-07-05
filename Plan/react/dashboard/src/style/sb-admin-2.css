@@ -1047,8 +1047,8 @@ select.form-control:focus::-ms-value {
 
 .dropdown-menu {
     font-size: 0.85rem;
-    color: #858796;
-    border: 1px solid #e3e6f0;
+    color: var(--color-forms-input-text);
+    border: 1px solid var(--color-forms-input-border);
     border-radius: 0.35rem;
 }
 
@@ -1057,12 +1057,12 @@ select.form-control:focus::-ms-value {
 }
 
 .dropdown-item {
-    color: #3a3b45;
+    color: var(--color-forms-input-text);
 }
 
 .dropdown-item:hover, .dropdown-item:focus {
-    color: #2e2f37;
-    background-color: #f8f9fc;
+    color: color-mix(in hsl, var(--color-forms-input-text), #fff 20%);
+    background-color: var(--color-forms-dropdown-hover);
 }
 
 .dropdown-item.active, .dropdown-item:active {
@@ -1074,11 +1074,11 @@ select.form-control:focus::-ms-value {
 }
 
 .dropdown-header {
-    color: #858796;
+    color: var(--color-forms-input-text);
 }
 
 .dropdown-item-text {
-    color: #3a3b45;
+    color: var(--color-forms-input-text);
 }
 
 .input-group-text {
@@ -2171,12 +2171,13 @@ a.text-dark:hover, a.text-dark:focus {
 
 .dropdown .dropdown-menu {
     font-size: 0.85rem;
+    background-color: var(--color-forms-input-background);
 }
 
 .dropdown .dropdown-menu .dropdown-header {
     font-weight: 800;
     font-size: 0.65rem;
-    color: #b7b9cc;
+    color: var(--color-forms-input-text);
 }
 
 .dropdown.no-arrow .dropdown-toggle::after {

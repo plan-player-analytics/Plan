@@ -25,3 +25,11 @@ export const mergeUseCases = (base, override) => {
     }
     return merged;
 };
+
+export const addToObject = (base, toAdd) => {
+    if (!toAdd) return base;
+    Object.entries(toAdd).forEach(([key, value]) => {
+        base[key] = value
+    });
+    return base;
+}

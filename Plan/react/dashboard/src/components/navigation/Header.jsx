@@ -69,7 +69,7 @@ const Header = ({page, tab, hideUpdater}) => {
             <div className="topbar-divider"/>
 
             <Dropdown className="nav-item">
-                <Dropdown.Toggle variant=''>
+                <Dropdown.Toggle variant='' style={{'--bs-btn-color': 'var(--color-forms-input-text)'}}>
                     {authRequired && user ? <>
                         <span className="me-1 login-username">{user.username} </span>
                         <img alt="user img" className="rounded-circle" src={headImageUrl} style={{height: "2rem"}}/>

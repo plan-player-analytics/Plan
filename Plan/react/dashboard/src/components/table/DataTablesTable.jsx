@@ -111,7 +111,8 @@ const ExportMenu = ({matchingData}) => {
     return (
         <>{hasData &&
             <Dropdown>
-                <Dropdown.Toggle variant={""} id="dropdown-basic">
+                <Dropdown.Toggle variant={""} id="dropdown-basic"
+                                 style={{'--bs-btn-color': 'var(--color-forms-input-text)'}}>
                     {generating &&
                         <FontAwesomeIcon icon={"gear"} className={"fa-spin"} title={t('html.label.export')}/>}
                     {!generating && <FontAwesomeIcon icon={"file-export"} title={t('html.label.export')}/>}

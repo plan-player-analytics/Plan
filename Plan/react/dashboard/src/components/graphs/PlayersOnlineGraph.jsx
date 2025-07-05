@@ -4,7 +4,7 @@ import {tooltip} from "../../util/graphs";
 import LineGraph from "./LineGraph";
 import {ChartLoader} from "../navigation/Loader";
 
-const PlayersOnlineGraph = ({data, selectedRange, extremes, onSetExtremes}) => {
+const PlayersOnlineGraph = ({data, selectedRange, extremes, onSetExtremes, color}) => {
     const {t} = useTranslation();
     const [series, setSeries] = useState([]);
 
@@ -15,7 +15,7 @@ const PlayersOnlineGraph = ({data, selectedRange, extremes, onSetExtremes}) => {
             type: 'areaspline',
             tooltip: tooltip.zeroDecimals,
             data: data.playersOnline,
-            color: data.color,
+            color: color || "var(--color-graphs-players-online)",
             yAxis: 0
         }
         setSeries([playersOnlineSeries]);

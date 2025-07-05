@@ -22,7 +22,7 @@ const ProjectionDropDown = ({projection, setProjection}) => {
     return (
         <Dropdown className="float-end" style={{margin: "-0.5rem", marginLeft: 0}}
                   title={t('html.label.geoProjection.dropdown')}>
-            <Dropdown.Toggle variant=''>
+            <Dropdown.Toggle variant='' style={{'--bs-btn-color': 'var(--color-forms-input-text)'}}>
                 <Fa icon={faLayerGroup}/> {t(projection)}
             </Dropdown.Toggle>
 
@@ -102,7 +102,7 @@ const GeolocationsCard = ({identifier, data}) => {
             <Card.Body className="chart-area" style={{height: "100%"}}>
                 <ExtendableRow id={'row-geolocations-graphs-card-0'}>
                     <Col md={3}>
-                        <GeolocationBarGraph series={data.geolocation_bar_series} color={data.colors.bars}/>
+                        <GeolocationBarGraph series={data.geolocation_bar_series}/>
                     </Col>
                     <Col md={9}>
                         <GeolocationWorldMap series={data.geolocation_series} colors={data.colors}

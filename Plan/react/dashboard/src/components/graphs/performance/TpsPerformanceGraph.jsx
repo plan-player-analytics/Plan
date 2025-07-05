@@ -5,7 +5,6 @@ import Highcharts from "highcharts/highstock";
 import NoDataDisplay from "highcharts/modules/no-data-to-display"
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../../hooks/themeHook";
-import {withReducedSaturation} from "../../../util/colors";
 import Accessibility from "highcharts/modules/accessibility";
 import {useMetadata} from "../../../hooks/metadataHook";
 import {useAuth} from "../../../hooks/authenticationHook.jsx";
@@ -20,13 +19,13 @@ const TpsPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
         const zones = {
             tps: [{
                 value: data.zones.tpsThresholdMed,
-                color: nightModeEnabled ? withReducedSaturation(data.colors.low) : data.colors.low
+                color: "var(--color-graphs-tps-low)"
             }, {
                 value: data.zones.tpsThresholdHigh,
-                color: nightModeEnabled ? withReducedSaturation(data.colors.med) : data.colors.med
+                color: "var(--color-graphs-tps-medium)"
             }, {
                 value: 30,
-                color: nightModeEnabled ? withReducedSaturation(data.colors.high) : data.colors.high
+                color: "var(--color-graphs-tps-high)"
             }]
         };
 
@@ -37,13 +36,13 @@ const TpsPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
                 type: 'areaspline',
                 tooltip: tooltip.zeroDecimals,
                 data: dataSeries.playersOnline,
-                color: data.colors.playersOnline,
+                color: "var(--color-graphs-players-online)",
                 yAxis: 0
             } : {},
             tps: hasPermission('page.server.performance.graphs.tps') ? {
                 name: t('html.label.tps'),
                 type: spline,
-                color: nightModeEnabled ? withReducedSaturation(data.colors.high) : data.colors.high,
+                color: "var(--color-graphs-tps-high)",
                 zones: zones.tps,
                 tooltip: tooltip.twoDecimals,
                 data: dataSeries.tps,

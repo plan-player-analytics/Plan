@@ -193,6 +193,11 @@
     --color-data-player-status-operator: var(--color-blue);
     --color-data-player-status-kicks: var(--color-brown);
     --color-data-player-status-nicknames: var(--color-purple);
+
+}
+
+.dropdown .dropdown-menu {
+    --bg-dropdown-bg: var(--color-forms-input-background) !important;
 }
 
 .sidebar {

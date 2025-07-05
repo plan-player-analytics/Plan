@@ -1,11 +1,10 @@
 import React, {useEffect} from 'react';
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../hooks/themeHook";
-import {withReducedSaturation} from "../../util/colors";
 import Highcharts from "highcharts";
 import Accessibility from "highcharts/modules/accessibility";
 
-const GeolocationBarGraph = ({series, color}) => {
+const GeolocationBarGraph = ({series}) => {
     const {t} = useTranslation();
     const {nightModeEnabled, graphTheming} = useTheme();
 
@@ -13,7 +12,7 @@ const GeolocationBarGraph = ({series, color}) => {
         const bars = series.map(bar => bar.value);
         const categories = series.map(bar => bar.label);
         const geolocationBarSeries = {
-            color: nightModeEnabled ? withReducedSaturation(color) : color,
+            color: "var(--color-graphs-world-map-bars)",
             name: t('html.label.players'),
             data: bars
         };
@@ -43,7 +42,7 @@ const GeolocationBarGraph = ({series, color}) => {
             },
             series: [geolocationBarSeries]
         })
-    }, [color, series, graphTheming, nightModeEnabled, t]);
+    }, [series, graphTheming, nightModeEnabled, t]);
 
     return (<div id="countryBarChart"/>);
 };

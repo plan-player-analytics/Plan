@@ -5,7 +5,6 @@ import Highcharts from "highcharts/highstock";
 import NoDataDisplay from "highcharts/modules/no-data-to-display"
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../../hooks/themeHook";
-import {withReducedSaturation} from "../../../util/colors";
 import Accessibility from "highcharts/modules/accessibility";
 import {useMetadata} from "../../../hooks/metadataHook";
 import {useAuth} from "../../../hooks/authenticationHook.jsx";
@@ -25,7 +24,7 @@ const WorldPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
                 type: 'areaspline',
                 tooltip: tooltip.zeroDecimals,
                 data: dataSeries.playersOnline,
-                color: data.colors.playersOnline,
+                color: "var(--color-graphs-players-online)",
                 yAxis: 0
             } : {},
             entities: hasPermission('page.server.performance.graphs.entities') ? {
@@ -33,7 +32,7 @@ const WorldPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
                 type: spline,
                 tooltip: tooltip.zeroDecimals,
                 data: dataSeries.entities,
-                color: nightModeEnabled ? withReducedSaturation(data.colors.entities) : data.colors.entities,
+                color: "var(--color-graphs-entities)",
                 yAxis: 1
             } : {},
             chunks: hasPermission('page.server.performance.graphs.chunks') ? {
@@ -41,7 +40,7 @@ const WorldPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
                 type: spline,
                 tooltip: tooltip.zeroDecimals,
                 data: dataSeries.chunks,
-                color: nightModeEnabled ? withReducedSaturation(data.colors.chunks) : data.colors.chunks,
+                color: "var(--color-graphs-chunks)",
                 yAxis: 2
             } : {}
         };

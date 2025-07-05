@@ -1,3 +1,4 @@
+// TODO 4114 change into CSS variables
 export const getLightModeChartTheming = () => {
     return { // Defaults
         chart: {
