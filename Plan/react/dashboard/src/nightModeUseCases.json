@@ -59,6 +59,38 @@
       "body": "var(--color-night-dark-blue)"
     }
   },
+  "graphs": {
+    "style": {
+      "gridLine": "var(--color-night-dark-grey-blue)",
+      "minorGridLine": "var(--color-black)",
+      "tooltipBackground": "var(--color-night-dark-blue)",
+      "selectorButton": {
+        "background": "var(--color-light-slate)",
+        "hover": "var(--color-night-blue)",
+        "selected": "var(--color-night-blue)"
+      },
+      "selectorTextInput": {
+        "background": "var(--color-theme)",
+        "border": "var(--color-night-dark-grey-blue)"
+      },
+      "selectorRange": {
+        "handle": {
+          "background": "var(--color-light-slate)",
+          "border": "var(--color-grey)"
+        },
+        "outline": "var(--color-grey)",
+        "selectedArea": "var(--color-white-50-percent)",
+        "seriesLine": "var(--color-bright-blue)"
+      },
+      "scrollbar": {
+        "decoration": "var(--color-text)",
+        "barBackground": "var(--color-night-grey-blue)",
+        "buttonBackground": "var(--color-grey)",
+        "trackBackground": "var(--color-medium-slate)"
+      }
+    },
+    "punchCard": "var(--color-text)"
+  },
   "data": {
     "players": {
       "count": "var(--color-text)"

@@ -1,44 +1,43 @@
-// TODO 4114 change into CSS variables
 export const getLightModeChartTheming = () => {
     return { // Defaults
         chart: {
             backgroundColor: null,
-            plotBorderColor: '#cccccc'
+            plotBorderColor: 'var(--color-text)'
         },
         title: {
-            style: {color: '#3E576F'}
+            style: {color: 'var(--color-text)'}
         },
         subtitle: {
-            style: {color: '#3E576F'}
+            style: {color: 'var(--color-text)'}
         },
         xAxis: {
-            gridLineColor: '#E6E6E6',
+            gridLineColor: 'var(--color-graphs-style-grid-line)',
             labels: {
-                style: {color: '#333333'}
+                style: {color: 'var(--color-text)'}
             },
-            lineColor: '#E6E6E6',
-            minorGridLineColor: '#505053',
-            tickColor: '#E6E6E6',
+            lineColor: 'var(--color-graphs-style-grid-line)',
+            minorGridLineColor: 'var(--color-graphs-style-minor-grid-line)',
+            tickColor: 'var(--color-graphs-style-grid-line)',
             title: {
-                style: {color: '#333333'}
+                style: {color: 'var(--color-text)'}
             }
         },
         yAxis: {
-            gridLineColor: '#E6E6E6',
+            gridLineColor: 'var(--color-graphs-style-grid-line)',
             labels: {
-                style: {color: '#333333'}
+                style: {color: 'var(--color-text)'}
             },
-            lineColor: '#E6E6E6',
-            minorGridLineColor: '#505053',
-            tickColor: '#E6E6E6',
+            lineColor: 'var(--color-graphs-style-grid-line)',
+            minorGridLineColor: 'var(--color-graphs-style-minor-grid-line)',
+            tickColor: 'var(--color-graphs-style-grid-line)',
             tickWidth: 1,
             title: {
-                style: {color: '#333333'}
+                style: {color: 'var(--color-text)'}
             }
         },
         tooltip: {
-            backgroundColor: 'rgba(247,247,247,0.85)',
-            style: {color: '#333333'}
+            backgroundColor: 'var(--color-graphs-style-tooltip-background)',
+            style: {color: 'var(--color-text)'}
         },
         plotOptions: {
             series: {
@@ -47,70 +46,70 @@ export const getLightModeChartTheming = () => {
             }
         },
         legend: {
-            itemStyle: {color: '#333333'},
-            itemHoverStyle: {color: '#000000'},
-            itemHiddenStyle: {color: '#cccccc'}
+            itemStyle: {color: 'var(--color-text)'},
+            itemHoverStyle: {color: 'var(--color-text)'},
+            itemHiddenStyle: {color: 'color-mix(in srgb, var(--color-text), transparent 50%)'}
         },
         labels: {
-            style: {color: '#333333'}
+            style: {color: 'var(--color-text)'}
         },
         drilldown: {
-            activeAxisLabelStyle: {color: '#333333'},
-            activeDataLabelStyle: {color: '#333333'}
+            activeAxisLabelStyle: {color: 'var(--color-text)'},
+            activeDataLabelStyle: {color: 'var(--color-text)'}
         },
         navigation: {
             buttonOptions: {
-                symbolStroke: '#333333',
-                theme: {fill: '#CCCCCC'}
+                symbolStroke: 'var(--color-text)',
+                theme: {fill: 'var(--color-text)'}
             }
         },
         // scroll charts
         rangeSelector: {
             buttonTheme: {
-                fill: '#F7F7F7',
-                stroke: '#333',
-                style: {color: '#4B336A'},
+                fill: 'var(--color-graphs-style-selector-button-background)',
+                stroke: 'var(--color-text)',
+                style: {color: 'var(--color-text)'},
                 states: {
                     hover: {
-                        fill: '#E6EBF5',
-                        stroke: '#333',
-                        style: {color: 'black'}
+                        fill: 'var(--color-graphs-style-selector-button-hover)',
+                        stroke: 'var(--color-text)',
+                        style: {color: 'var(--color-text)'}
                     },
                     select: {
-                        fill: '#E6EBF5',
-                        stroke: '#333',
-                        style: {color: 'black'}
+                        fill: 'var(--color-graphs-style-selector-button-selected)',
+                        stroke: 'var(--color-text)',
+                        style: {color: 'var(--color-text)'}
                     }
                 }
             },
-            inputBoxBorderColor: '#CCCCCC',
+            inputBoxBorderColor: 'var(--color-graphs-style-selector-text-input-border)',
             inputStyle: {
-                backgroundColor: '#333',
-                color: '#666666'
+                backgroundColor: 'var(--color-graphs-style-selector-text-input-background)',
+                color: 'var(--color-text)'
             },
-            labelStyle: {color: "#666666"}
+            labelStyle: {color: 'var(--color-text)'}
         },
 
         navigator: {
             handles: {
-                backgroundColor: '#f2f2f2',
-                borderColor: '#999999'
+                backgroundColor: 'var(--color-graphs-style-selector-range-handle-background)',
+                borderColor: 'var(--color-graphs-style-selector-range-handle-border)'
             },
-            outlineColor: '#cccccc',
-            maskFill: 'rgba(102,133,194,0.3)',
-            series: {lineColor: "#3FA0FF"},
-            xAxis: {gridLineColor: '#e6e6e6'}
+            outlineColor: 'var(--color-graphs-style-selector-range-outline)',
+            maskFill: 'color-mix(in srgb, var(--color-graphs-style-selector-range-selected-area), transparent 75%)',
+            series: {lineColor: "var(--color-graphs-style-selector-range-series-line)"},
+            xAxis: {gridLineColor: 'var(--color-graphs-style-grid-line)'}
         },
 
         scrollbar: {
-            barBackgroundColor: '#cccccc',
-            barBorderColor: '#cccccc',
-            buttonArrowColor: '#333333',
-            buttonBackgroundColor: '#e6e6e6',
-            buttonBorderColor: '#cccccc',
-            rifleColor: '#333333',
-            trackBackgroundColor: '#f2f2f2',
-            trackBorderColor: '#f2f2f2'
+            barBackgroundColor: 'var(--color-graphs-style-scrollbar-bar-background)',
+            barBorderColor: 'var(--color-graphs-style-scrollbar-bar-background)',
+            buttonArrowColor: 'var(--color-text)',
+            buttonBackgroundColor: 'var(--color-graphs-style-scrollbar-button-background)',
+            buttonBorderColor: 'var(--color-graphs-style-scrollbar-button-background)',
+            rifleColor: 'var(--color-graphs-style-scrollbar-decoration)',
+            trackBackgroundColor: 'var(--color-graphs-style-scrollbar-track-background)',
+            trackBorderColor: 'var(--color-graphs-style-scrollbar-track-background)',
         }
     };
 }
@@ -122,39 +121,39 @@ export const getNightModeChartTheming = () => {
             plotBorderColor: '#606063'
         },
         title: {
-            style: {color: '#eee8d5'}
+            style: {color: 'var(--color-night-text)'}
         },
         subtitle: {
-            style: {color: '#eee8d5'}
+            style: {color: 'var(--color-night-text)'}
         },
         xAxis: {
             gridLineColor: '#707073',
             labels: {
-                style: {color: '#eee8d5'}
+                style: {color: 'var(--color-night-text)'}
             },
             lineColor: '#707073',
             minorGridLineColor: '#505053',
             tickColor: '#707073',
             title: {
-                style: {color: '#eee8d5'}
+                style: {color: 'var(--color-night-text)'}
             }
         },
         yAxis: {
             gridLineColor: '#707073',
             labels: {
-                style: {color: '#eee8d5'}
+                style: {color: 'var(--color-night-text)'}
             },
             lineColor: '#707073',
             minorGridLineColor: '#505053',
             tickColor: '#707073',
             tickWidth: 1,
             title: {
-                style: {color: '#eee8d5'}
+                style: {color: 'var(--color-night-text)'}
             }
         },
         tooltip: {
             backgroundColor: '#44475a',
-            style: {color: '#eee8d5'}
+            style: {color: 'var(--color-night-text)'}
         },
         plotOptions: {
             series: {
@@ -163,20 +162,20 @@ export const getNightModeChartTheming = () => {
             }
         },
         legend: {
-            itemStyle: {color: '#eee8d5'},
-            itemHoverStyle: {color: '#eee8d5'},
+            itemStyle: {color: 'var(--color-night-text)'},
+            itemHoverStyle: {color: 'var(--color-night-text)'},
             itemHiddenStyle: {color: '#606063'}
         },
         labels: {
-            style: {color: '#eee8d5'}
+            style: {color: 'var(--color-night-text)'}
         },
         drilldown: {
-            activeAxisLabelStyle: {color: '#eee8d5'},
-            activeDataLabelStyle: {color: '#eee8d5'}
+            activeAxisLabelStyle: {color: 'var(--color-night-text)'},
+            activeDataLabelStyle: {color: 'var(--color-night-text)'}
         },
         navigation: {
             buttonOptions: {
-                symbolStroke: '#eee8d5',
+                symbolStroke: 'var(--color-night-text)',
                 theme: {fill: '#44475a'}
             }
         },

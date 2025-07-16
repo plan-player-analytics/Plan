@@ -44,18 +44,24 @@ const regeneratePoints = (points, rangeStart, rangeEnd) => {
     return newPoints;
 }
 
+const Background = ({children}) => {
+    return <div style={{backgroundColor: "var(--color-cards-background"}}>{children}</div>
+}
+
 const PunchCardGraphUseCase = () => {
-    return <PunchCard series={player.punchcard_series}/>
+    return <Background><PunchCard series={player.punchcard_series}/></Background>
 };
 
 const PlayersOnlineGraphUseCase = () => {
-    return <PlayersOnlineGraph data={{playersOnline: generatePoints()}} selectedRange={4}/>
+    return <Background>
+        <PlayersOnlineGraph data={{playersOnline: generatePoints()}} selectedRange={4}/>
+    </Background>
 }
 
 const TpsGraphUseCase = () => {
-    return <TpsPerformanceGraph id={'tps-graph'} data={{zones: {tpsThresholdHigh: 15, tpsThresholdMed: 5}}}
+    return <Background><TpsPerformanceGraph id={'tps-graph'} data={{zones: {tpsThresholdHigh: 15, tpsThresholdMed: 5}}}
                                 dataSeries={{playersOnline: [], tps: generatePoints(0, 20)}}
-                                pluginHistorySeries={{}}/>
+                                            pluginHistorySeries={{}}/></Background>
 }
 const CpuGraphUseCase = () => {
     const dataSeries = {
@@ -63,9 +69,9 @@ const CpuGraphUseCase = () => {
         cpu: generatePoints(0, 100),
         ram: []
     };
-    return <CpuRamPerformanceGraph id={'cpu-graph'}
+    return <Background><CpuRamPerformanceGraph id={'cpu-graph'}
                                    dataSeries={dataSeries}
-                                   pluginHistorySeries={{}}/>
+                                               pluginHistorySeries={{}}/></Background>
 }
 
 const RamGraphUseCase = () => {
@@ -74,9 +80,9 @@ const RamGraphUseCase = () => {
         cpu: [],
         ram: generatePoints(10000, 11000)
     };
-    return <CpuRamPerformanceGraph id={'ram-graph'}
+    return <Background><CpuRamPerformanceGraph id={'ram-graph'}
                                    dataSeries={dataSeries}
-                                   pluginHistorySeries={{}}/>
+                                               pluginHistorySeries={{}}/></Background>
 }
 
 const ChunksGraphUseCase = () => {
@@ -85,9 +91,9 @@ const ChunksGraphUseCase = () => {
         chunks: generatePoints(100, 2000),
         entities: []
     };
-    return <WorldPerformanceGraph id={'chunk-graph'}
+    return <Background><WorldPerformanceGraph id={'chunk-graph'}
                                   dataSeries={dataSeries}
-                                  pluginHistorySeries={{}}/>
+                                              pluginHistorySeries={{}}/></Background>
 }
 
 const EntitiesGraphUseCase = () => {
@@ -96,18 +102,18 @@ const EntitiesGraphUseCase = () => {
         chunks: [],
         entities: generatePoints(100, 20000)
     };
-    return <WorldPerformanceGraph id={'entities-graph'}
+    return <Background><WorldPerformanceGraph id={'entities-graph'}
                                   dataSeries={dataSeries}
-                                  pluginHistorySeries={{}}/>
+                                              pluginHistorySeries={{}}/></Background>
 }
 
 const DiskGraphUseCase = () => {
     const dataSeries = {
         disk: generatePoints(50, 2000),
     }
-    return <DiskPerformanceGraph id={'disk-graph'} dataSeries={dataSeries}
+    return <Background><DiskPerformanceGraph id={'disk-graph'} dataSeries={dataSeries}
                                  data={{zones: {diskThresholdHigh: 500, diskThresholdMed: 100}}}
-                                 pluginHistorySeries={{}}/>
+                                             pluginHistorySeries={{}}/></Background>
 }
 
 const PingGraphUseCase = () => {
@@ -117,7 +123,7 @@ const PingGraphUseCase = () => {
         avg_ping_series: regeneratePoints(points, 50, 75),
         max_ping_series: regeneratePoints(points, 100, 200),
     }
-    return <PingGraph id={'ping-graph'} data={data}/>
+    return <Background><PingGraph id={'ping-graph'} data={data}/></Background>
 }
 
 const WorldMapUseCase = () => {
@@ -146,6 +152,7 @@ const WorldMapUseCase = () => {
 }
 
 export const graphUseCases = {
+    'graphs.style': <PlayersOnlineGraphUseCase/>,
     'graphs.punchCard': <PunchCardGraphUseCase/>,
     'graphs.playersOnline': <PlayersOnlineGraphUseCase/>,
     'graphs.tps': <TpsGraphUseCase/>,

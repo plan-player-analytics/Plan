@@ -3,7 +3,6 @@ import Highcharts from 'highcharts';
 import {useTheme} from "../../hooks/themeHook";
 import {useTranslation} from "react-i18next";
 import Accessibility from "highcharts/modules/accessibility";
-import {withReducedSaturation} from "../../util/colors";
 
 const PunchCard = ({series}) => {
     const {t} = useTranslation();
@@ -11,7 +10,7 @@ const PunchCard = ({series}) => {
     useEffect(() => {
         const punchCard = {
             name: t('html.label.relativeJoinActivity'),
-            color: nightModeEnabled ? withReducedSaturation('#222') : '#222',
+            color: "var(--color-graphs-punch-card)",
             type: 'scatter',
             data: series
         };

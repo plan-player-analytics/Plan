@@ -84,6 +84,35 @@
     }
   },
   "graphs": {
+    "style": {
+      "gridLine": "var(--color-cement-grey)",
+      "minorGridLine": "var(--color-black)",
+      "tooltipBackground": "var(--color-white-grey)",
+      "selectorButton": {
+        "background": "var(--color-white-grey)",
+        "hover": "var(--color-cement-grey)",
+        "selected": "var(--color-cement-grey)"
+      },
+      "selectorTextInput": {
+        "background": "var(--color-white-grey)",
+        "border": "var(--color-light-grey)"
+      },
+      "selectorRange": {
+        "handle": {
+          "background": "var(--color-white-grey)",
+          "border": "var(--color-grey)"
+        },
+        "outline": "var(--color-light-grey)",
+        "selectedArea": "var(--color-bright-blue)",
+        "seriesLine": "var(--color-bright-blue)"
+      },
+      "scrollbar": {
+        "decoration": "var(--color-text)",
+        "barBackground": "var(--color-light-grey)",
+        "buttonBackground": "var(--color-cement-grey)",
+        "trackBackground": "var(--color-white-grey)"
+      }
+    },
     "punchCard": "var(--color-ink)",
     "playersOnline": "var(--color-bright-blue)",
     "tps": {
