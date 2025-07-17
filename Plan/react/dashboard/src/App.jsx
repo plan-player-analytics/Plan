@@ -20,6 +20,8 @@ import {PageExtensionContextProvider} from "./hooks/pageExtensionHook";
 import ErrorBoundary from "./components/ErrorBoundary";
 import {AlertPopupContextProvider} from "./hooks/context/alertPopupContext";
 import {PreferencesContextProvider} from "./hooks/preferencesHook";
+import {ThemeStorageContextProvider} from "./hooks/context/themeContextHook.jsx";
+import {ThemeEditContextProvider} from "./hooks/context/themeEditContextHook.jsx";
 
 const PlayerPage = React.lazy(() => import("./views/layout/PlayerPage"));
 const PlayerOverview = React.lazy(() => import("./views/player/PlayerOverview"));
@@ -87,13 +89,15 @@ const ContextProviders = ({children}) => (
         <MetadataContextProvider>
             <PreferencesContextProvider>
                 <ThemeContextProvider>
-                    <NavigationContextProvider>
-                        <AlertPopupContextProvider>
-                            <PageExtensionContextProvider>
-                                {children}
-                            </PageExtensionContextProvider>
-                        </AlertPopupContextProvider>
-                    </NavigationContextProvider>
+                    <ThemeStorageContextProvider>
+                        <NavigationContextProvider>
+                            <AlertPopupContextProvider>
+                                <PageExtensionContextProvider>
+                                    {children}
+                                </PageExtensionContextProvider>
+                            </AlertPopupContextProvider>
+                        </NavigationContextProvider>
+                    </ThemeStorageContextProvider>
                 </ThemeContextProvider>
             </PreferencesContextProvider>
         </MetadataContextProvider>
@@ -210,7 +214,10 @@ function App() {
                             </Route>}
                             {!staticSite && <Route path="/errors" element={<Lazy><ErrorsPage/></Lazy>}/>}
                             {!staticSite && <Route path="/docs" element={<Lazy><SwaggerView/></Lazy>}/>}
-                            <Route path="/theme-editor" element={<Lazy><ThemeEditorPage/></Lazy>}/>
+                            <Route path="/theme-editor" element={
+                                <Lazy><ThemeEditContextProvider><ThemeEditorPage/></ThemeEditContextProvider></Lazy>}/>
+                            <Route path="/theme-editor/:identifier" element={
+                                <Lazy><ThemeEditContextProvider><ThemeEditorPage/></ThemeEditContextProvider></Lazy>}/>
                             <Route path="*" element={<Lazy><ErrorPage error={{
                                 message: 'Page not found, please correct the address',
                                 title: 'No such page',

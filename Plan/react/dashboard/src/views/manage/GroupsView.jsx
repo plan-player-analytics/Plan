@@ -32,6 +32,7 @@ import {useNavigation} from "../../hooks/navigationHook";
 import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 import {useAuth} from "../../hooks/authenticationHook";
 import Checkbox from "../../components/input/Checkbox.jsx";
+import TextInput from "../../components/input/TextInput.jsx";
 
 const GroupsHeader = ({groupName, icon}) => {
     return (
@@ -277,19 +278,13 @@ const AddGroupBody = ({groups, reloadGroupNames}) => {
         <Card>
             <CardHeader icon={faPlus} label={t('html.label.managePage.addGroup.header')}/>
             <Card.Body>
-                <InputGroup>
-                    <div className={"input-group-text"}>
-                        <FontAwesomeIcon icon={faUserGroup}/>
-                    </div>
-                    <input type="text" className={"form-control" + (invalid ? " is-invalid" : '')}
+                <TextInput icon={faUserGroup}
+                           isInvalid={newValue => newValue.length > 100}
+                           invalidFeedback={t('html.label.managePage.addGroup.invalidName')}
                            placeholder={t('html.label.managePage.addGroup.name')}
                            value={value}
-                           onChange={onChange}
-                    />
-                    {invalid && <div className="invalid-feedback">
-                        {t('html.label.managePage.addGroup.invalidName')}
-                    </div>}
-                </InputGroup>
+                           setValue={newValue => setValue(newValue.toLowerCase().replace(" ", "_"))}
+                />
                 <button className={"btn bg-plan mt-2"} disabled={invalid || !value || value.length === 0}
                         onClick={() => {
                             addGroup(value).then(({error}) => {

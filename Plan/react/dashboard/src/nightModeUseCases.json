@@ -14,10 +14,10 @@
     }
   },
   "sidebar": {
-    "text": "var(--color-night-text)",
+    "text": "var(--color-text)",
     "divider": "var(--color-night-blue)",
     "navigationItem": {
-      "icon": "var(--color-night-text)"
+      "icon": "var(--color-text)"
     },
     "collapsibleSection": {
       "background": "var(--color-theme)",

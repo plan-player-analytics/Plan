@@ -454,6 +454,8 @@ public enum HtmlLang implements Lang {
     THEME_EDITOR_ALREADY_EXISTS_WARNING("html.label.themeEditor.alreadyExistsWarning", "Color with that name already exists - It will be overridden!"),
     THEME_EDITOR_MISSING("html.label.themeEditor.missing", "Missing color"),
     THEME_EDITOR_REMOVE_OVERRIDE("html.label.themeEditor.removeOverride", "Remove night mode override"),
+    THEME_EDITOR_NAME("html.label.themeEditor.themeName", "Theme name"),
+    THEME_EDITOR_INVALID_NAME("html.label.themeEditor.invalidName", "Name should be alphanumerical. Max 100 characters."),
 
     INFO_NO_UPTIME("html.description.noUptimeCalculation", "Server is offline, or has never restarted with Plan installed."),
     WARNING_NO_GAME_SERVERS("html.description.noGameServers", "Some data requires Plan to be installed on game servers."),

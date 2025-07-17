@@ -10,10 +10,10 @@
     "placeholder": "var(--color-text-dark)"
   },
   "colors": {
-    "white": "#ffffff",
     "black": "#555555",
-    "text-light": "#333",
+    "white": "#ffffff",
     "text-dark": "#fff",
+    "text-light": "#333",
     "white-15-percent": "rgba(255,255,255,0.15)",
     "black-10-percent": "rgba(0, 0, 0, 0.1)",
     "plan": "#368F17",

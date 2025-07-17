@@ -1,40 +1,35 @@
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
 import Sidebar from "../../components/navigation/Sidebar";
 import Header from "../../components/navigation/Header";
-import {faPalette} from "@fortawesome/free-solid-svg-icons";
+import {faFileSignature, faPalette} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
-import theme from "../../theme.json";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
 import {Card, Col, Row} from "react-bootstrap";
 import CardHeader from "../../components/cards/CardHeader";
-import useCases from "../../useCases.json";
-import nightModeUseCases from "../../nightModeUseCases.json";
 import {ThemeStyleCss} from "../../components/theme/ThemeStyleCss";
 import ExampleSection from "../../components/theme/ExampleSection.jsx";
 import ColorSection from "../../components/theme/ColorSection.jsx";
 import {ColorEditContextProvider} from "../../hooks/context/colorEditContextHook.jsx";
 import ColorEditForm from "../../components/theme/ColorEditForm.jsx";
 import UseCaseSection from "../../components/theme/UseCaseSection.jsx";
-import {nameToCssVariable} from "../../util/colors.js";
-import {recursiveFindAndReplaceValue} from "../../util/mutator.js";
+import TextInput from "../../components/input/TextInput.jsx";
+import {useThemeEditContext} from "../../hooks/context/themeEditContextHook.jsx";
+import EditorMenuToast from "../../components/theme/EditorMenuToast.jsx";
 
 const ThemeEditorPage = () => {
     const {t} = useTranslation();
-    const [currentColors, setCurrentColors] = useState(theme.colors);
-    const [currentNightColors, setCurrentNightColors] = useState(theme.nightColors);
-    const [currentUseCases, setCurrentUseCases] = useState(useCases);
-    const [currentNightModeUseCases, setCurrentNightModeUseCases] = useState(nightModeUseCases);
+    const {
+        name, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases,
+        deleteColor,
+        deleteNightColor,
+        saveColor,
+        saveNightColor,
+        updateUseCase,
+        updateNightUseCase,
+        removeNightOverride
+    } = useThemeEditContext();
     const [hoveredItem, setHoveredItem] = useState(undefined);
     const [nightHover, setNightHover] = useState(false);
-    useEffect(() => {
-        setCurrentColors(theme.colors)
-    }, [theme.colors]);
-    useEffect(() => {
-        setCurrentUseCases(useCases);
-    }, [useCases]);
-    useEffect(() => {
-        setCurrentNightModeUseCases(nightModeUseCases);
-    }, [nightModeUseCases]);
     const onHoverChange = (id, state, night) => {
         if (state === 'enter') {
             setHoveredItem(id);
@@ -45,37 +40,6 @@ const ThemeEditorPage = () => {
     const referenceColors = currentUseCases.referenceColors;
     const nightReferenceColors = currentNightModeUseCases.referenceColors;
 
-    const updateUseCaseColorName = (oldName, newName) => {
-        const oldVariable = nameToCssVariable(oldName);
-        const newVariable = nameToCssVariable(newName);
-        setCurrentUseCases(recursiveFindAndReplaceValue(currentUseCases, oldVariable, newVariable));
-        setCurrentNightModeUseCases(recursiveFindAndReplaceValue(currentNightModeUseCases, oldVariable, newVariable));
-    }
-
-    const handleColorSave = (current, setFunction) => (name, color, previous) => {
-        const newObj = {};
-        for (const [key, value] of Object.entries(current)) {
-            if (key === previous) {
-                newObj[name] = color;
-            } else {
-                newObj[key] = value;
-            }
-        }
-        if (newObj[name] === undefined) {
-            newObj[name] = color;
-        }
-        const renamed = name !== previous;
-        if (renamed) updateUseCaseColorName(previous, name);
-        setFunction(newObj);
-    }
-
-    const handleDelete = (current, setFunction) => (name) => {
-        const copy = {...current};
-        // TODO needs to handle use cases that are using the color
-        delete copy[name];
-        setFunction(copy);
-    }
-
     const title = t("html.label.themeEditor.title");
     const colors = {...referenceColors, '-': "", ...currentColors};
     const nightColors = {...nightReferenceColors, '-': "", ...currentNightColors, ...colors};
@@ -85,18 +49,31 @@ const ThemeEditorPage = () => {
                            nightModeUseCases={currentNightModeUseCases}/>
             <Sidebar page={title} items={[]}/>
             <div className="d-flex flex-column" id="content-wrapper">
-                <Header page={title} hideUpdater/>
+                <Header page={title} tab={name} hideUpdater/>
                 <div id="content" style={{display: 'flex'}}>
                     <main className="container-fluid mt-4">
                         <Card className="shadow mb-4 theme-editor">
+                            <EditorMenuToast/>
                             <CardHeader icon={faPalette} color="primary" label={title}/>
                             <Card.Body>
+                                <Row onMouseEnter={() => onHoverChange(undefined, 'enter', false)} className={'mb-4'}>
+                                    <Col xs={12}>
+                                        <h5 className="mb-3">{t('html.label.themeEditor.themeName')}</h5>
+                                        <TextInput icon={faFileSignature}
+                                                   isInvalid={newValue => !newValue.length || newValue.length > 100}
+                                                   invalidFeedback={t('html.label.themeEditor.invalidName')}
+                                                   placeholder={t('html.label.themeEditor.themeName')}
+                                                   value={name}
+                                                   setValue={newValue => setName(newValue)}
+                                        />
+                                    </Col>
+                                </Row>
                                 <Row onMouseEnter={() => onHoverChange(undefined, 'enter', false)}>
                                     <Col xs={12}>
                                         <ColorEditContextProvider
                                             colors={nightColors}
-                                            saveFunction={handleColorSave(currentColors, setCurrentColors)}
-                                            deleteFunction={handleDelete(currentColors, setCurrentColors)}
+                                            saveFunction={saveColor}
+                                            deleteFunction={deleteColor}
                                         >
                                             <ColorSection title={t("html.label.themeEditor.colors")}
                                                           colors={currentColors}/>
@@ -104,8 +81,8 @@ const ThemeEditorPage = () => {
                                         </ColorEditContextProvider>
                                         <ColorEditContextProvider
                                             colors={nightColors}
-                                            saveFunction={handleColorSave(currentNightColors, setCurrentNightColors)}
-                                            deleteFunction={handleDelete(currentNightColors, setCurrentNightColors)}
+                                            saveFunction={saveNightColor}
+                                            deleteFunction={deleteNightColor}
                                         >
                                             <ColorSection title={t("html.label.themeEditor.nightColors")}
                                                           colors={currentNightColors}/>
@@ -121,7 +98,7 @@ const ThemeEditorPage = () => {
                                                 <UseCaseSection
                                                     useCases={currentUseCases}
                                                     colors={colors}
-                                                    onUpdate={setCurrentUseCases}
+                                                    updateUseCase={updateUseCase}
                                                     onHoverChange={onHoverChange}
                                                 />
                                             </Col>
@@ -131,7 +108,8 @@ const ThemeEditorPage = () => {
                                                     colors={nightColors}
                                                     baseUseCases={currentUseCases}
                                                     isNightMode={true}
-                                                    onUpdate={setCurrentNightModeUseCases}
+                                                    updateUseCase={updateNightUseCase}
+                                                    removeOverride={removeNightOverride}
                                                     onHoverChange={onHoverChange}
                                                 />
                                             </Col>

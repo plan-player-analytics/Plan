@@ -103,6 +103,7 @@ export const useTheme = () => {
 
     const nightModeEnabled = isNightModeEnabled();
     return {
+        currentTheme: selectedColor,
         color: selectedColor,
         setColor: setTheme,
         nightModeEnabled: nightModeEnabled,
@@ -122,7 +123,7 @@ export const ThemeCss = () => {
 
     return (
         <style>
-            {':root {--color-theme: var(--color-' + color + ') !important;}'}
+            {':root {--color-theme: var(--color-' + color + ');}'}
         </style>
     )
 }

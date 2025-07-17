@@ -14,7 +14,7 @@ export const HoverTrigger = ({children}) => {
     }
 
     return (<HoverContext.Provider value={{hovered}}>
-            <div onfocusin={onHoverEnter} onfocusout={onHoverLeave} onMouseEnter={onHoverEnter}
+            <div onFocus={onHoverEnter} onBlur={onHoverLeave} onMouseEnter={onHoverEnter}
                  onMouseLeave={onHoverLeave}>
                 {children}
             </div>

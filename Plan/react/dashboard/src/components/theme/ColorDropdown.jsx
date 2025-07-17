@@ -89,12 +89,12 @@ const ColorDropdown = ({
                                 ref={dropdownMenuRef}
                             >
                                 {Object.keys(colors).map(name => {
-                                    if (name === '-') return <hr/>;
+                                    if (name === '-') return <hr key={id + '-' + name}/>;
                                     const isItemTextColor = name.includes('text') || label.includes('Text');
                                     const isSelected = name === selectedName;
                                     return (
                                         <Dropdown.Item
-                                            key={name}
+                                            key={id + '-' + name}
                                             onClick={() => {
                                                 onChange?.(`var(--color-${name})`);
                                                 setIsOpen(false);
