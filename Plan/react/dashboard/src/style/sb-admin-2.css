@@ -2768,19 +2768,19 @@ a.text-dark:hover, a.text-dark:focus {
 }
 
 .sidebar-dark .sidebar-heading {
-    color: rgba(255, 255, 255, 0.4);
+    color: color-mix(in srgb, var(--color-sidebar-text), transparent 60%);
 }
 
 .sidebar-dark .nav-item .nav-link {
-    color: rgba(255, 255, 255, 0.8);
+    color: color-mix(in srgb, var(--color-sidebar-text), transparent 20%);
 }
 
 .sidebar-dark .nav-item .nav-link i, .sidebar-dark .nav-item .nav-link svg {
-    color: rgba(255, 255, 255, 0.3);
+    color: color-mix(in srgb, var(--color-sidebar-text), transparent 70%);
 }
 
 .sidebar-dark .nav-item .nav-link:active, .sidebar-dark .nav-item .nav-link:focus, .sidebar-dark .nav-item .nav-link:hover {
-    color: #fff;
+    color: var(--color-sidebar-text);
 }
 
 .sidebar-dark .nav-item .nav-link:active i,

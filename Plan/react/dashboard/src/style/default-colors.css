@@ -1,13 +1,10 @@
 :root {
     --color-white: #ffffff;
     --color-white-15-percent: rgba(255, 255, 255, 0.15);
-    --color-white-50-percent: rgba(255, 255, 255, 0.5);
     --color-black: #555555;
     --color-black-10-percent: rgba(0, 0, 0, 0.1);
     --color-text-light: #333;
-    --color-text-light-disabled: #858796;
     --color-text-dark: #fff;
-    --color-text-dark-disabled: #ccc;
     --color-plan: #368F17;
     --color-red: #F44336;
     --color-pink: #E91E63;
@@ -93,8 +90,7 @@
     --color-layout-help-icon: var(--color-light-blue);
     --color-sidebar-background: var(--color-theme);
     --color-sidebar-divider: var(--color-white-15-percent);
-    --color-sidebar-text: var(--color-white-50-percent);
-    --color-sidebar-text-hover: var(--color-text-dark);
+    --color-sidebar-text: var(--color-text-dark);
     --color-sidebar-collapsible-section-background: var(--color-white);
     --color-sidebar-collapsible-section-text: var(--color-text-light);
     --color-sidebar-collapsible-section-hover: var(--color-pale-grey);
@@ -129,6 +125,7 @@
     --color-forms-dropdown-hover: var(--color-white-grey);
     --color-forms-dropdown-selected: var(--color-white-grey);
     --color-graphs-style-grid-line: var(--color-cement-grey);
+    --color-graphs-style-border: var(--color-light-grey);
     --color-graphs-style-minor-grid-line: var(--color-black);
     --color-graphs-style-tooltip-background: var(--color-white-grey);
     --color-graphs-style-selector-button-background: var(--color-white-grey);

@@ -17,7 +17,7 @@ const randomDate = (start, end) => {
 
 const generatePoints = (rangeStart, rangeEnd) => {
     const arr = [];
-    const start = new Date(new Date().getTime() - (24 * 60 * 6000));
+    const start = new Date(new Date().getTime() - 2 * 86400000);
     const startRange = rangeStart || 0;
     const endRange = rangeEnd ? (rangeEnd - startRange) : 100;
     for (let i = 0; i < 100; i++) {

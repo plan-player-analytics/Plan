@@ -33,3 +33,21 @@ export const addToObject = (base, toAdd) => {
     });
     return base;
 }
+
+export const recursiveFindAndReplaceValue = (object, toReplace, replaceWith) => {
+    // Normalize toReplace to an array for easier checking
+    const toReplaceArr = Array.isArray(toReplace) ? toReplace : [toReplace];
+
+    if (Array.isArray(object)) {
+        return object.map(item => recursiveFindAndReplaceValue(item, toReplaceArr, replaceWith));
+    } else if (object !== null && typeof object === 'object') {
+        const result = {};
+        for (const [key, value] of Object.entries(object)) {
+            result[key] = recursiveFindAndReplaceValue(value, toReplaceArr, replaceWith);
+        }
+        return result;
+    } else {
+        // Primitive value: replace if in toReplaceArr
+        return toReplaceArr.includes(object) ? replaceWith : object;
+    }
+}

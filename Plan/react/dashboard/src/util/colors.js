@@ -100,6 +100,18 @@ const colorMap = {
     NONE: ""
 };
 
+export const nameToCssVariable = name => {
+    return `var(--color-${name})`;
+}
+
+export const nameToContrastCssVariable = name => {
+    return `var(--contrast-color-${name})`;
+}
+
+export const cssVariableToName = cssVariable => {
+    return cssVariable?.replace('var(--color-', '').replace(')', '')
+}
+
 export const getColors = () => {
     return Object.values(colorMap).filter(color => color);
 }

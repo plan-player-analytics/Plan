@@ -42,7 +42,8 @@ export const getLightModeChartTheming = () => {
         plotOptions: {
             series: {
                 dataLabels: {color: undefined},
-                marker: {lineColor: undefined}
+                marker: {lineColor: undefined},
+                borderColor: 'var(--color-graphs-style-border)'
             }
         },
         legend: {
@@ -96,7 +97,7 @@ export const getLightModeChartTheming = () => {
                 borderColor: 'var(--color-graphs-style-selector-range-handle-border)'
             },
             outlineColor: 'var(--color-graphs-style-selector-range-outline)',
-            maskFill: 'color-mix(in srgb, var(--color-graphs-style-selector-range-selected-area), transparent 75%)',
+            maskFill: 'color-mix(in srgb, var(--color-graphs-style-selector-range-selected-area), transparent 85%)',
             series: {lineColor: "var(--color-graphs-style-selector-range-series-line)"},
             xAxis: {gridLineColor: 'var(--color-graphs-style-grid-line)'}
         },
@@ -111,6 +112,16 @@ export const getLightModeChartTheming = () => {
             trackBackgroundColor: 'var(--color-graphs-style-scrollbar-track-background)',
             trackBorderColor: 'var(--color-graphs-style-scrollbar-track-background)',
         }
+        // mapNavigation: { 4114 TODO look at some point, only color and fill works
+        //     buttonOptions: {
+        //         style: {
+        //             color: 'var(--color-text)'
+        //         },
+        //         theme: {
+        //             fill: 'var(--color-graphs-style-selector-button-background)'
+        //         }
+        //     }
+        // }
     };
 }
 

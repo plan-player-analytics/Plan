@@ -15,6 +15,8 @@ import ColorSection from "../../components/theme/ColorSection.jsx";
 import {ColorEditContextProvider} from "../../hooks/context/colorEditContextHook.jsx";
 import ColorEditForm from "../../components/theme/ColorEditForm.jsx";
 import UseCaseSection from "../../components/theme/UseCaseSection.jsx";
+import {nameToCssVariable} from "../../util/colors.js";
+import {recursiveFindAndReplaceValue} from "../../util/mutator.js";
 
 const ThemeEditorPage = () => {
     const {t} = useTranslation();
@@ -24,6 +26,9 @@ const ThemeEditorPage = () => {
     const [currentNightModeUseCases, setCurrentNightModeUseCases] = useState(nightModeUseCases);
     const [hoveredItem, setHoveredItem] = useState(undefined);
     const [nightHover, setNightHover] = useState(false);
+    useEffect(() => {
+        setCurrentColors(theme.colors)
+    }, [theme.colors]);
     useEffect(() => {
         setCurrentUseCases(useCases);
     }, [useCases]);
@@ -40,6 +45,13 @@ const ThemeEditorPage = () => {
     const referenceColors = currentUseCases.referenceColors;
     const nightReferenceColors = currentNightModeUseCases.referenceColors;
 
+    const updateUseCaseColorName = (oldName, newName) => {
+        const oldVariable = nameToCssVariable(oldName);
+        const newVariable = nameToCssVariable(newName);
+        setCurrentUseCases(recursiveFindAndReplaceValue(currentUseCases, oldVariable, newVariable));
+        setCurrentNightModeUseCases(recursiveFindAndReplaceValue(currentNightModeUseCases, oldVariable, newVariable));
+    }
+
     const handleColorSave = (current, setFunction) => (name, color, previous) => {
         const newObj = {};
         for (const [key, value] of Object.entries(current)) {
@@ -52,6 +64,8 @@ const ThemeEditorPage = () => {
         if (newObj[name] === undefined) {
             newObj[name] = color;
         }
+        const renamed = name !== previous;
+        if (renamed) updateUseCaseColorName(previous, name);
         setFunction(newObj);
     }
 

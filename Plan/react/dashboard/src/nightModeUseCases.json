@@ -14,6 +14,7 @@
     }
   },
   "sidebar": {
+    "text": "var(--color-night-text)",
     "divider": "var(--color-night-blue)",
     "navigationItem": {
       "icon": "var(--color-night-text)"
@@ -63,6 +64,7 @@
     "style": {
       "gridLine": "var(--color-night-dark-grey-blue)",
       "minorGridLine": "var(--color-black)",
+      "border": "var(--color-night-dark-grey-blue)",
       "tooltipBackground": "var(--color-night-dark-blue)",
       "selectorButton": {
         "background": "var(--color-light-slate)",
@@ -79,7 +81,7 @@
           "border": "var(--color-grey)"
         },
         "outline": "var(--color-grey)",
-        "selectedArea": "var(--color-white-50-percent)",
+        "selectedArea": "var(--color-white)",
         "seriesLine": "var(--color-bright-blue)"
       },
       "scrollbar": {

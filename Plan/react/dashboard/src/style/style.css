@@ -763,7 +763,7 @@ div#navSrvContainer::-webkit-scrollbar-thumb {
 
 .bg-transparent-light {
     background-color: transparent;
-    color: var(--color-text-dark);
+    color: var(--color-sidebar-text);
 }
 
 .bg-red, body.theme-red .fc-toolbar-chunk .btn.btn-primary {
@@ -944,7 +944,7 @@ div#navSrvContainer::-webkit-scrollbar-thumb {
 .btn.bg-grey:hover,
 .btn.bg-blue-grey:hover,
 .btn.bg-transparent-light:hover {
-    color: var(--color-text-dark-disabled) !important;
+    color: color-mix(in srgb, var(--color-sidebar-text), transparent 35%);
     background-color: var(--bs-btn-disabled-bg);
 }
 

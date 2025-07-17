@@ -3,6 +3,7 @@ import {useTranslation} from "react-i18next";
 import {Dropdown, Form} from "react-bootstrap";
 import {FontAwesomeIcon as Fa, FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faExclamationTriangle, faTimes} from "@fortawesome/free-solid-svg-icons";
+import {cssVariableToName, nameToContrastCssVariable, nameToCssVariable} from "../../util/colors.js";
 
 const useMenuPlacement = (isOpen) => {
     const selectedItemRef = useRef(null);
@@ -47,10 +48,10 @@ const ColorDropdown = ({
                        }) => {
     const {t} = useTranslation();
     // Extract name from CSS variable or use first color as default
-    const selectedName = value?.replace('var(--color-', '').replace(')', '') || Object.keys(colors)[0];
+    const selectedName = cssVariableToName(value) || Object.keys(colors)[0];
     const isTextColor = selectedName.includes('text') || label.includes('Text');
-    const cssColor = `var(--color-${selectedName})`;
-    const contrastColor = `var(--contrast-color-${selectedName})`;
+    const cssColor = nameToCssVariable(selectedName);
+    const contrastColor = nameToContrastCssVariable(selectedName);
     const [isOpen, setIsOpen] = useState(false);
 
     const missing = !colors[selectedName];

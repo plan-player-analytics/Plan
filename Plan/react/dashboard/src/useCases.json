@@ -16,8 +16,7 @@
   },
   "sidebar": {
     "background": "var(--color-theme)",
-    "text": "var(--color-white-50-percent)",
-    "textHover": "var(--color-text-dark)",
+    "text": "var(--color-text-dark)",
     "divider": "var(--color-white-15-percent)",
     "collapsibleSection": {
       "background": "var(--color-white)",
@@ -87,6 +86,7 @@
     "style": {
       "gridLine": "var(--color-cement-grey)",
       "minorGridLine": "var(--color-black)",
+      "border": "var(--color-light-grey)",
       "tooltipBackground": "var(--color-white-grey)",
       "selectorButton": {
         "background": "var(--color-white-grey)",
