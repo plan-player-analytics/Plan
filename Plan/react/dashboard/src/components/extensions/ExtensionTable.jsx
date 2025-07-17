@@ -44,7 +44,11 @@ const ExtensionDataTable = ({table}) => {
         order: [[1, "desc"]]
     }
     const rowKeyFunction = (row, column) => {
-        return JSON.stringify(Object.entries(row).filter(e => e[0].includes('Value'))) + "-" + JSON.stringify(column?.data?._);
+        // Generate a unique key by joining all value fields as strings
+        const valueFields = Object.entries(row)
+            .filter(e => typeof e[0] === 'string' && e[0].includes('Value'))
+            .map(e => String(e[1]));
+        return valueFields.join('-') + '-' + String(column?.data?._);
     }
 
     return (
