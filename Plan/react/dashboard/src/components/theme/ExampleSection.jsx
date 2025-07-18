@@ -18,6 +18,7 @@ import CollapseWithButton from "../layout/CollapseWithButton.jsx";
 import FormsUseCase from "./usecase/FormsUseCase.jsx";
 import {addToObject} from "../../util/mutator.js";
 import {graphUseCases} from "./usecase/GraphUseCases.jsx";
+import {BasicTableUseCase, DataTableUseCase, TableUseCase} from "./usecase/TableUseCases.jsx";
 
 const findExample = (path, examples) => {
     if (!path || !path.length) return undefined;
@@ -48,7 +49,8 @@ const ExampleSection = ({displayedItem, className}) => {
         "data.calculated": <DataCalculatedUseCase/>,
         "data.playerVersus": <DataPlayerVersusUseCase/>,
         "data.playerStatus": <DataPlayerStatusUseCase/>,
-        "forms": <FormsUseCase/>
+        "forms": <FormsUseCase/>,
+        "tables": <TableUseCase/>
     }
     addToObject(examples, graphUseCases);
     const example = findExample(displayedItem, examples);

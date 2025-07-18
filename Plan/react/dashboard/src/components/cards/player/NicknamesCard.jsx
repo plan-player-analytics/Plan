@@ -7,6 +7,7 @@ import Scrollable from "../../Scrollable";
 import {faClock} from "@fortawesome/free-regular-svg-icons";
 import React from "react";
 import ColoredText from "../../text/ColoredText";
+import FormattedDate from "../../text/FormattedDate.jsx";
 
 const NicknamesCard = ({nicknames}) => {
     const {t} = useTranslation();
@@ -31,7 +32,7 @@ const NicknamesCard = ({nicknames}) => {
                     {nicknames.map(nickname => (<tr key={JSON.stringify(nickname)}>
                         <td><ColoredText text={nickname.nickname}/></td>
                         <td>{nickname.server}</td>
-                        <td>{nickname.date}</td>
+                        <td><FormattedDate date={nickname.date}/></td>
                     </tr>))}
                     </tbody>}
                     {!nicknames?.length && <tbody>

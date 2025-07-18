@@ -787,3 +787,30 @@
 .bg-nicknames {
     background-color: var(--color-data-player-status-nicknames);
 }
+
+table {
+    color: var(--color-tables-text);
+}
+
+thead {
+    color: var(--color-tables-text);
+    background-color: var(--color-tables-even-row);
+}
+
+thead[class^='bg'], thead[class*=' myclass'] {
+    color: var(--color-tables-colored-header-text) !important;
+}
+
+.table-striped, .table-striped thead {
+    border-color: var(--color-tables-border);
+}
+
+.table-striped tbody tr:nth-of-type(2n+1) {
+    color: var(--color-tables-text);
+    background-color: var(--color-tables-odd-row);
+}
+
+.table-striped tbody tr:nth-of-type(2n), .table-striped {
+    color: var(--color-tables-text);
+    background-color: var(--color-tables-even-row);
+}

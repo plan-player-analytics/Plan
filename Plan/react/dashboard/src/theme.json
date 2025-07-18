@@ -61,12 +61,16 @@
     "ink": "#222222",
     "dark-slate": "#212529",
     "medium-slate": "#3a3b45",
+    "table-slate": "#44454e",
+    "border-slate": "#4b4d5a",
     "light-slate": "#5a5c69",
     "light-grey": "#dddddd",
     "white-grey": "#f8f9fc",
     "stone-grey": "#d1d3e2",
     "cement-grey": "#e3e6f0",
-    "pale-grey": "#eaecf4"
+    "pale-grey": "#eaecf4",
+    "border-grey": "#dddfeb",
+    "table-grey": "#f3f3f3"
   },
   "nightColors": {
     "night-black": "#282a36",

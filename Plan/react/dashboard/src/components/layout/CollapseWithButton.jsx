@@ -18,7 +18,7 @@ const CollapseWithButton = ({title, children, coverToggle, disabled, open}) => {
     return (
         <>
             {coverToggle && !collapsed && <div onClick={toggle} style={modalCloseStyle}></div>}
-            <button disabled={disabled} className={"btn dropdown-toggle " + (collapsed ? "collapsed" : "")}
+            <button disabled={disabled} className={"btn col-text dropdown-toggle " + (collapsed ? "collapsed" : "")}
                     onClick={toggle}>{title}</button>
             <div className={"collapse " + (collapsed ? '' : "show")}>
                 {children}

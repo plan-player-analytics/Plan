@@ -15,24 +15,24 @@ img {
 
 .table th,
 .table td {
-    border-top: 1px solid #dddfeb;
+    border-top: 1px solid var(--color-tables-border);
 }
 
 .table thead th {
-    border-bottom: 2px solid #dddfeb !important;
+    border-bottom: 2px solid var(--color-tables-border) !important;
 }
 
 .table tbody + tbody {
-    border-top: 2px solid #dddfeb;
+    border-top: 2px solid var(--color-tables-border);
 }
 
 .table-bordered {
-    border: 1px solid #dddfeb;
+    border: 1px solid var(--color-tables-border);
 }
 
 .table-bordered th,
 .table-bordered td {
-    border: 1px solid #dddfeb;
+    border: 1px solid var(--color-tables-border);
 }
 
 /* SB Admin 2 table changes start */
@@ -212,7 +212,7 @@ img {
 .table .thead-light th {
     color: #6e707e;
     background-color: #eaecf4;
-    border-color: #dddfeb;
+    border-color: var(--color-tables-border);
 }
 
 .table-dark {
@@ -253,11 +253,11 @@ img {
     .table-dark td,
     .table-dark thead th,
     .table-dark tbody + tbody {
-        border-color: #dddfeb;
+        border-color: var(--color-tables-border);
     }
 
     .table .thead-dark th {
-        border-color: #dddfeb;
+        border-color: var(--color-tables-border);
     }
 }
 
@@ -1855,7 +1855,7 @@ a.text-dark:hover, a.text-dark:focus {
 
     .table-bordered th,
     .table-bordered td {
-        border: 1px solid #dddfeb !important;
+        border: 1px solid var(--color-tables-border) !important;
     }
 }
 

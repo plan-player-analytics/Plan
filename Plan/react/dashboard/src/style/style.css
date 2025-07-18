@@ -34,12 +34,8 @@ small, .small {
 }
 
 .table {
-    --bs-table-striped-color: none;
-}
-
-.table-dark {
-    --bs-table-striped-bg: rgba(255, 255, 255, 0.05);
-    --bs-table-bg: none;
+    --bs-table-striped-bg: transparent;
+    --bs-table-bg: transparent;
 }
 
 .table-dark.table-bordered {

@@ -54,14 +54,11 @@
     }
   },
   "tables": {
-    "basic": {
-      "oddRow": "var(--color-white-grey)",
-      "evenRow": "var(--color-pale-grey)"
-    },
-    "dataTable": {
-      "oddRow": "var(--color-white-grey)",
-      "evenRow": "var(--color-pale-grey)"
-    }
+    "text": "var(--color-text)",
+    "coloredHeaderText": "var(--color-text-dark)",
+    "oddRow": "var(--color-table-grey)",
+    "evenRow": "var(--color-white)",
+    "border": "var(--color-border-grey)"
   },
   "forms": {
     "buttons": {

@@ -33,6 +33,12 @@
       "border": "var(--color-night-blue)"
     }
   },
+  "tables": {
+    "coloredHeaderText": "var(--color-text)",
+    "oddRow": "var(--color-table-slate)",
+    "evenRow": "var(--color-medium-slate)",
+    "border": "var(--color-border-slate)"
+  },
   "forms": {
     "buttons": {
       "actionButton": "var(--color-theme)",
