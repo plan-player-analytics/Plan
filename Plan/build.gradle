@@ -92,7 +92,7 @@ subprojects {
 
         junitVersion = "5.13.3"
         mockitoVersion = "5.18.0"
-        seleniumVersion = "4.33.0"
+        seleniumVersion = "4.34.0"
         testContainersVersion = "1.21.2"
         awaitilityVersion = "4.3.0"
         swaggerVersion = "2.2.33"
