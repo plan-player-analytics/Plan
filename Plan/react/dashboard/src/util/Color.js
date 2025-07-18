@@ -15,11 +15,15 @@ import {
 } from "./colors.js";
 
 export const getColorConverter = color => {
-    if (typeof color === 'string') {
-        if (color.startsWith('#')) return new HexColor(color);
-        if (color.startsWith("rgb")) return new RgbaColor(color);
-        if (color.startsWith("hsl")) return new HslaColor(color);
-        if (color.startsWith("hsv")) return new HsvColor(color);
+    try {
+        if (typeof color === 'string') {
+            if (color.startsWith('#')) return new HexColor(color);
+            if (color.startsWith("rgb(") || color.startsWith("rgba(") && color.endsWith(')')) return new RgbaColor(color);
+            if (color.startsWith("hsl(") || color.startsWith("hsla(") && color.endsWith(')')) return new HslaColor(color);
+            if (color.startsWith("hsv(") && color.endsWith(')')) return new HsvColor(color);
+        }
+    } catch (e) {
+        console.warn('failed to parse color', color, e);
     }
     return undefined;
 }

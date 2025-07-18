@@ -95,6 +95,7 @@ const ColorDropdown = ({
                                     return (
                                         <Dropdown.Item
                                             key={id + '-' + name}
+                                            as="button"
                                             onClick={() => {
                                                 onChange?.(`var(--color-${name})`);
                                                 setIsOpen(false);

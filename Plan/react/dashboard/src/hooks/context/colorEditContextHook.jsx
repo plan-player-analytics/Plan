@@ -34,7 +34,7 @@ export const ColorEditContextProvider = ({colors, saveFunction, deleteFunction, 
         if (name.length) {
             saveFunction(name, color, previous);
         } else {
-            saveFunction('new-color', color, previous);
+            saveFunction('new-color-' + Math.floor(Math.random() * 1000), color, previous);
         }
         discardEdit();
     }

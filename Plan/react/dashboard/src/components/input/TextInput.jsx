@@ -2,7 +2,17 @@ import React, {useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {InputGroup} from "react-bootstrap";
 
-const TextInput = ({id, icon, invalidFeedback, placeholder, value, setValue, isInvalid}) => {
+const TextInput = ({
+                       id,
+                       icon,
+                       invalidFeedback,
+                       placeholder,
+                       value,
+                       setValue,
+                       isInvalid,
+                       disabled,
+                       disabledFeedback
+                   }) => {
     const [cachedValue, setCachedValue] = useState(value);
     const [invalid, setInvalid] = useState(false);
     const onChange = event => {
@@ -32,9 +42,13 @@ const TextInput = ({id, icon, invalidFeedback, placeholder, value, setValue, isI
                    onChange={onChange}
                    onBlur={onBlur}
                    onKeyDown={onKeyDown}
+                   disabled={disabled}
             />
             {invalid && invalidFeedback && <div className="invalid-feedback">
                 {invalidFeedback}
+            </div>}
+            {disabled && disabledFeedback && <div className="disabled-feedback">
+                {disabledFeedback}
             </div>}
         </InputGroup>
     )

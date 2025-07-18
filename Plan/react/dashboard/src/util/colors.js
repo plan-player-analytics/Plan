@@ -245,7 +245,7 @@ export const rgbaStringToArray = (rgbaString) => {
         Number(split[0].trim()),
         Number(split[1].trim()),
         Number(split[2].trim()),
-        Number(split[3].trim())
+        split.length === 4 ? Number(split[3].trim()) : 1
     ];
 }
 

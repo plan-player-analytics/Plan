@@ -1,4 +1,4 @@
-import {createContext, useContext, useEffect, useState} from "react";
+import {createContext, useContext, useEffect, useMemo, useState} from "react";
 import {useTheme} from "../themeHook.jsx";
 import useCases from "../../useCases.json";
 import nightModeUseCases from "../../nightModeUseCases.json";
@@ -24,9 +24,11 @@ export const ThemeStorageContextProvider = ({children}) => {
         setCurrentNightModeUseCases(nightModeUseCases);
     }, [nightModeUseCases]);
 
-    const sharedState = {
-        name, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases
-    };
+    const sharedState = useMemo(() => {
+        return {
+            name, setName, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases
+        }
+    }, [name, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases]);
     return (<ThemeStorageContext.Provider value={sharedState}>
             {children}
         </ThemeStorageContext.Provider>

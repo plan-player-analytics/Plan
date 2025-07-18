@@ -126,5 +126,42 @@ p, span, td, .h3, a, button
 
   .editor-toast
     position: fixed
-    top: 5rem
-    right: 1.7rem
+    top: 8.5rem
+    right: 1.9rem
+    transition: top 0.5s
+    z-index: 100
+    width: 22.2rem
+    --bs-toast-bg: var(--color-cards-background)
+
+    &.scrolled
+      top: 1em
+
+.disabled-feedback
+  width: 100%
+  margin-top: 0.25rem
+  font-size: 0.875em
+  color: var(--color-secondary)
+
+.edit-history
+  margin: 0
+  margin-top: 1rem
+  padding-left: 0
+  list-style: none
+
+  .edit
+    color: var(--color-text)
+
+  .redo
+    color: color-mix(in srgb, var(--color-text), transparent 50%)
+
+    &.nested
+      margin-left: 1rem
+
+.issues
+  margin: 0
+  margin-top: 1rem
+  padding-left: 0
+  list-style: none
+
+  .issue
+    color: var(--color-danger)

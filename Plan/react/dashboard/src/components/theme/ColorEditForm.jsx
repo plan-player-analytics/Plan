@@ -54,10 +54,10 @@ const ColorEditForm = () => {
         )
     }
 
-    const contrastColor = getContrastColor(color) || "var(--color-forms-input-text)";
+    const contrastColor = !isColorInvalid() && getContrastColor(color) || "var(--color-forms-input-text)";
 
     function isNameInvalid() {
-        return false;
+        return name.length > 100;
     }
 
     function isColorInvalid() {

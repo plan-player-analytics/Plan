@@ -1403,3 +1403,7 @@ ul.filters {
 .link:hover {
     color: var(--bs-link-hover-color)
 }
+
+.card-header .btn.float-end {
+    margin-top: -0.5rem;
+}

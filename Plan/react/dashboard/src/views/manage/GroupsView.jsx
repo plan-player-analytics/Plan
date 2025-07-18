@@ -33,6 +33,7 @@ import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 import {useAuth} from "../../hooks/authenticationHook";
 import Checkbox from "../../components/input/Checkbox.jsx";
 import TextInput from "../../components/input/TextInput.jsx";
+import UnsavedChangesText from "../../components/text/UnsavedChangesText.jsx";
 
 const GroupsHeader = ({groupName, icon}) => {
     return (
@@ -242,24 +243,6 @@ const DiscardButton = () => {
             </button>}
         </>
     )
-}
-
-const UnsavedChangesText = ({visible}) => {
-    const {t} = useTranslation();
-    const {dirty} = useConfigurationStorageContext();
-    const show = visible !== undefined ? visible : dirty;
-    if (show) {
-        return (
-            <p style={{
-                display: "inline-block",
-                marginLeft: "1rem",
-                marginBottom: 0,
-                opacity: 0.6
-            }}>{t('html.label.managePage.changes.unsaved')}</p>
-        )
-    } else {
-        return <></>
-    }
 }
 
 const AddGroupBody = ({groups, reloadGroupNames}) => {

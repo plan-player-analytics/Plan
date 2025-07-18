@@ -17,9 +17,9 @@ const CardUseCase = () => {
                 </button>
             </CardHeader>
             <Card.Body>
-                <p className={"col-text"}><Datapoint name={"Example"} value={1234} icon={faUser}/></p>
+                <Datapoint name={"Example"} value={1234} icon={faUser}/>
                 <hr/>
-                <p className={"col-text"}><Datapoint name={"Example"} value={1234} icon={faUser}/></p>
+                <Datapoint name={"Example"} value={1234} icon={faUser}/>
             </Card.Body>
         </Card>
     )

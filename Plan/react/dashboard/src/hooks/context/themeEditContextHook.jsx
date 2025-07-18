@@ -1,24 +1,32 @@
 import {createContext, useContext, useMemo, useState} from "react";
 import {useThemeStorage} from "./themeContextHook.jsx";
-import {nameToCssVariable} from "../../util/colors.js";
-import {recursiveFindAndReplaceValue} from "../../util/mutator.js";
+import {cssVariableToName, nameToCssVariable} from "../../util/colors.js";
+import {flattenObject, recursiveFindAndReplaceValue} from "../../util/mutator.js";
+import {useTranslation} from "react-i18next";
 
 const ThemeEditContext = createContext({});
 
 export const ThemeEditContextProvider = ({children}) => {
+    const {t} = useTranslation();
     const [edits, setEdits] = useState([]);
     const [redos, setRedos] = useState([]);
-    const {name, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases} = useThemeStorage();
+    const {
+        name,
+        setName,
+        currentColors,
+        currentNightColors,
+        currentUseCases,
+        currentNightModeUseCases
+    } = useThemeStorage();
 
     const applyEdits = (type, object) => {
-        console.group('Applying edits', edits.length)
+        console.debug('Applying edits', edits.length)
         let result = object;
         const applicable = edits.filter(edit => edit.type.includes(type));
         for (let applicableEdit of applicable) {
-            console.log('Applying', applicableEdit.name, 'to', applicableEdit.type)
+            console.debug('Applying', applicableEdit.name, 'to', applicableEdit.type)
             result = applicableEdit.operation(result, type);
         }
-        console.groupEnd();
         return result;
     }
 
@@ -36,8 +44,25 @@ export const ThemeEditContextProvider = ({children}) => {
     }
 
     const redo = () => {
-        addEdit(redos[redos.length - 1]);
+        const toRedo = redos[redos.length - 1];
+        if (toRedo.length) {
+            toRedo.forEach(edit => {
+                addEdit(edit)
+            })
+        } else {
+            addEdit(toRedo);
+        }
         setRedos(redos.slice(0, -1));
+    }
+
+    const discardChanges = () => {
+        if (!edits.length) {
+            setRedos([]);
+        } else {
+            const undone = [...edits];
+            setEdits([]);
+            setRedos(prev => [...prev, undone]);
+        }
     }
 
     const updateUseCaseColorName = (current, oldName, newName) => {
@@ -46,7 +71,7 @@ export const ThemeEditContextProvider = ({children}) => {
         return recursiveFindAndReplaceValue(current, oldVariable, newVariable);
     }
 
-    const handleColorSave = (current, setFunction) => (name, color, previous) => {
+    const handleColorSave = (current) => (name, color, previous) => {
         const newObj = {};
         for (const [key, value] of Object.entries(current)) {
             if (key === previous) {
@@ -61,10 +86,10 @@ export const ThemeEditContextProvider = ({children}) => {
         return newObj;
     }
     const saveColor = (name, color, previous) => {
-        const renamed = name !== previous;
+        const renamed = previous && name !== previous;
         if (renamed) {
             addEdit({
-                name: 'rename-edit-color-' + previous + '-to-' + name,
+                name: t('html.label.themeEditor.changes.renameColor', {previous, name, color}),
                 type: 'color,useCase,nightModeUseCase', operation: (current, type) => {
                     if (type === 'color') {
                         return handleColorSave(current)(name, color, previous);
@@ -75,7 +100,10 @@ export const ThemeEditContextProvider = ({children}) => {
             })
         } else {
             addEdit({
-                name: 'edit-color-' + name,
+                name: t(previous ? 'html.label.themeEditor.changes.setColor' : 'html.label.themeEditor.changes.addColor', {
+                    name,
+                    color
+                }),
                 type: 'color', operation: (current) => handleColorSave(current)(name, color, previous)
             })
         }
@@ -84,7 +112,7 @@ export const ThemeEditContextProvider = ({children}) => {
         const renamed = name !== previous;
         if (renamed) {
             addEdit({
-                name: 'rename-edit-color-' + previous + '-to-' + name,
+                name: t('html.label.themeEditor.changes.renameColor', {previous, name, color}),
                 type: 'nightColor,nightModeUseCase', operation: (current, type) => {
                     if (type === 'nightColor') {
                         return handleColorSave(current)(name, color, previous);
@@ -95,7 +123,10 @@ export const ThemeEditContextProvider = ({children}) => {
             })
         } else {
             addEdit({
-                name: 'edit-color-' + name,
+                name: t(previous ? 'html.label.themeEditor.changes.setColor' : 'html.label.themeEditor.changes.addColor', {
+                    name,
+                    color
+                }),
                 type: 'nightColor', operation: (current) => handleColorSave(current)(name, color, previous)
             })
         }
@@ -107,12 +138,12 @@ export const ThemeEditContextProvider = ({children}) => {
         return copy;
     }
     const deleteColor = name => addEdit({
-        name: 'delete-color-' + name,
+        name: t('html.label.themeEditor.changes.deleteColor', {name}),
         type: 'color',
         operation: current => handleDelete(current)(name)
     })
     const deleteNightColor = name => addEdit({
-        name: 'delete-color-' + name,
+        name: t('html.label.themeEditor.changes.deleteColor', {name}),
         type: 'nightColor',
         operation: current => handleDelete(current)(name)
     })
@@ -157,28 +188,63 @@ export const ThemeEditContextProvider = ({children}) => {
         return removeOverride(current, path) || {};
     };
     const updateUseCase = (newValue, path) => addEdit({
-        name: 'update-use-case(' + path + '): ' + newValue,
+        name: t('html.label.themeEditor.changes.changeUseCase', {
+            path: path.join('.'),
+            name: cssVariableToName(newValue)
+        }),
         type: 'useCase',
         operation: current => handleColorChange(current, newValue, path)
     });
     const updateNightUseCase = (newValue, path) => addEdit({
-        name: 'update-use-case(' + path + '): ' + newValue,
+        name: t('html.label.themeEditor.changes.changeNightMode', {
+            path: path.join('.'),
+            name: cssVariableToName(newValue)
+        }),
         type: 'nightModeUseCase',
         operation: current => handleColorChange(current, newValue, path)
     });
     const removeNightOverride = (path) => addEdit({
-        name: 'delete-use-case(' + path + ')',
+        name: t('html.label.themeEditor.changes.removeNightMode', {path: path.join('.')}),
         type: 'nightModeUseCase',
         operation: current => handleRemoveOverride(current, path)
     });
 
     const sharedState = useMemo(() => {
+        const editedColors = applyEdits('color', currentColors);
+        const editedNightColors = applyEdits('nightColor', currentNightColors);
+        const editedUseCases = applyEdits('useCase', currentUseCases);
+        const editedNightModeUseCases = applyEdits('nightModeUseCase', currentNightModeUseCases);
+
+        const issues = [];
+
+        const allColorsExist = () => {
+            const referenceColors = Object.keys(editedUseCases.referenceColors)
+            const colorMissing = name => {
+                const exists = editedColors[name] || editedNightColors[name] || referenceColors.includes(name);
+                if (!exists) console.warn(name, "doesn't exist on color maps")
+                return !exists;
+            }
+            const missingUseCase = Object.entries(flattenObject(editedUseCases))
+                .filter(e => colorMissing(cssVariableToName(e[1])));
+            const missingNightModeUseCase = Object.entries(flattenObject(editedNightModeUseCases))
+                .filter(e => colorMissing(cssVariableToName(e[1])));
+
+            missingUseCase.forEach(e => issues.push(
+                t('html.label.themeEditor.issues.missingUseCase', {name: e[0], colorName: cssVariableToName(e[1])})));
+            missingNightModeUseCase.forEach(e => issues.push(
+                t('html.label.themeEditor.issues.missingNightCase', {name: e[0], colorName: cssVariableToName(e[1])})));
+
+            return !missingUseCase.length && !missingNightModeUseCase.length
+        }
+
+        const savePossible = edits.length > 0 && allColorsExist()
+
         return {
-            name,
-            currentColors: applyEdits('color', currentColors),
-            currentNightColors: applyEdits('nightColor', currentNightColors),
-            currentUseCases: applyEdits('useCase', currentUseCases),
-            currentNightModeUseCases: applyEdits('nightModeUseCase', currentNightModeUseCases),
+            name, setName,
+            currentColors: editedColors,
+            currentNightColors: editedNightColors,
+            currentUseCases: editedUseCases,
+            currentNightModeUseCases: editedNightModeUseCases,
             editCount: edits.length,
             redoCount: redos.length,
             deleteColor,
@@ -189,9 +255,14 @@ export const ThemeEditContextProvider = ({children}) => {
             updateNightUseCase,
             removeNightOverride,
             undo,
-            redo
+            redo,
+            discardChanges,
+            edits,
+            redos,
+            issues,
+            savePossible
         }
-    }, [edits]);
+    }, [edits, name]);
     return (<ThemeEditContext.Provider value={sharedState}>
             {children}
         </ThemeEditContext.Provider>

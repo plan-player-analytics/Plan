@@ -5,9 +5,9 @@ import './style/style.css';
 import './style/mobile.css';
 import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
 
-import {BrowserRouter, Navigate, Route, Routes} from "react-router-dom";
+import {createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider} from "react-router-dom";
 import React, {useCallback} from "react";
-import {NightModeCss, ThemeContextProvider, ThemeCss} from "./hooks/themeHook";
+import {ThemeContextProvider, ThemeCss} from "./hooks/themeHook";
 import axios from "axios";
 import ErrorView from "./views/ErrorView";
 import {faMapSigns} from "@fortawesome/free-solid-svg-icons";
@@ -67,12 +67,14 @@ const QueryResultView = React.lazy(() => import("./views/query/QueryResultView")
 const ManagePage = React.lazy(() => import("./views/layout/ManagePage"));
 const GroupsView = React.lazy(() => import("./views/manage/GroupsView"));
 
+const ThemeEditorPage = React.lazy(() => import("./views/layout/ThemeEditorPage"));
+const ThemeEditorView = React.lazy(() => import("./views/theme/ThemeEditorView"));
+
 const LoginPage = React.lazy(() => import("./views/layout/LoginPage"));
 const RegisterPage = React.lazy(() => import("./views/layout/RegisterPage"));
 const ErrorPage = React.lazy(() => import("./views/layout/ErrorPage"));
 const ErrorsPage = React.lazy(() => import("./views/layout/ErrorsPage"));
 const SwaggerView = React.lazy(() => import("./views/SwaggerView"));
-const ThemeEditorPage = React.lazy(() => import("./views/layout/ThemeEditorPage"));
 
 const OverviewRedirect = () => {
     return (<Navigate to={"overview"} replace={true}/>)
@@ -127,6 +129,105 @@ const getBasename = () => {
     }
 }
 
+const router = createBrowserRouter(
+    createRoutesFromElements(
+        <>
+            <Route path="" element={<MainPageRedirect/>}/>
+            <Route path="/" element={<MainPageRedirect/>}/>
+            <Route path="index.html" element={<MainPageRedirect/>}/>
+            {!staticSite && <Route path="/login" element={<Lazy><LoginPage/></Lazy>}/>}
+            {!staticSite && <Route path="/register" element={<Lazy><RegisterPage/></Lazy>}/>}
+            <Route path="/player/:identifier" element={<Lazy><PlayerPage/></Lazy>}>
+                <Route path="" element={<Lazy><OverviewRedirect/></Lazy>}/>
+                <Route path="overview" element={<Lazy><PlayerOverview/></Lazy>}/>
+                <Route path="sessions" element={<Lazy><PlayerSessions/></Lazy>}/>
+                <Route path="pvppve" element={<Lazy><PlayerPvpPve/></Lazy>}/>
+                <Route path="servers" element={<Lazy><PlayerServers/></Lazy>}/>
+                <Route path="plugins/:serverName" element={<Lazy><PlayerPluginData/></Lazy>}/>
+                <Route path="*" element={<ErrorView error={{
+                    message: 'Unknown tab address, please correct the address',
+                    title: 'No such tab',
+                    icon: faMapSigns
+                }}/>}/>
+            </Route>
+            <Route path="/players" element={<Lazy><PlayersPage/></Lazy>}>
+                <Route path="" element={<Lazy><AllPlayers/></Lazy>}/>
+                <Route path="*" element={<Lazy><AllPlayers/></Lazy>}/>
+            </Route>
+            <Route path="/server/:identifier" element={<Lazy><ServerPage/></Lazy>}>
+                <Route path="" element={<OverviewRedirect/>}/>
+                <Route path="overview" element={<Lazy><ServerOverview/></Lazy>}/>
+                <Route path="online-activity" element={<Lazy><OnlineActivity/></Lazy>}/>
+                <Route path="sessions" element={<Lazy><ServerSessions/></Lazy>}/>
+                <Route path="pvppve" element={<Lazy><ServerPvpPve/></Lazy>}/>
+                <Route path="allowlist" element={<Lazy><ServerAllowList/></Lazy>}/>
+                <Route path="playerbase" element={<Lazy><PlayerbaseOverview/></Lazy>}/>
+                <Route path="join-addresses" element={<Lazy><ServerJoinAddresses/></Lazy>}/>
+                <Route path="retention" element={<Lazy><ServerPlayerRetention/></Lazy>}/>
+                <Route path="players" element={<Lazy><ServerPlayers/></Lazy>}/>
+                <Route path="geolocations" element={<Lazy><ServerGeolocations/></Lazy>}/>
+                <Route path="performance" element={<Lazy><ServerPerformance/></Lazy>}/>
+                <Route path="plugin-history" element={<Lazy><ServerPluginHistory/></Lazy>}/>
+                <Route path="plugins-overview" element={<Lazy><ServerPluginData/></Lazy>}/>
+                <Route path="plugins/:plugin" element={<Lazy><ServerWidePluginData/></Lazy>}/>
+                <Route path="*" element={<ErrorView error={{
+                    message: 'Unknown tab address, please correct the address',
+                    title: 'No such tab',
+                    icon: faMapSigns
+                }}/>}/>
+            </Route>
+            <Route path="/network" element={<Lazy><NetworkPage/></Lazy>}>
+                <Route path="" element={<OverviewRedirect/>}/>
+                <Route path="overview" element={<Lazy><NetworkOverview/></Lazy>}/>
+                <Route path="serversOverview" element={<Lazy><NetworkServers/></Lazy>}/>
+                <Route path="sessions" element={<Lazy><NetworkSessions/></Lazy>}/>
+                {!staticSite &&
+                    <Route path="performance" element={<Lazy><NetworkPerformance/></Lazy>}/>}
+                <Route path="playerbase" element={<Lazy><NetworkPlayerbaseOverview/></Lazy>}/>
+                <Route path="retention" element={<Lazy><NetworkPlayerRetention/></Lazy>}/>
+                <Route path="join-addresses" element={<Lazy><NetworkJoinAddresses/></Lazy>}/>
+                <Route path="players" element={<Lazy><AllPlayers/></Lazy>}/>
+                <Route path="geolocations" element={<Lazy><NetworkGeolocations/></Lazy>}/>
+                <Route path="plugin-history" element={<Lazy><NetworkPluginHistory/></Lazy>}/>
+                <Route path="plugins-overview" element={<Lazy><ServerPluginData/></Lazy>}/>
+                <Route path="plugins/:plugin" element={<Lazy><ServerWidePluginData/></Lazy>}/>
+                <Route path="*" element={<ErrorView error={{
+                    message: 'Unknown tab address, please correct the address',
+                    title: 'No such tab',
+                    icon: faMapSigns
+                }}/>}/>
+            </Route>
+            {!staticSite && <Route path="/manage" element={<Lazy><ManagePage/></Lazy>}>
+                <Route path="" element={<GroupsRedirect/>}/>
+                <Route path="groups" element={<Lazy><GroupsView/></Lazy>}/>
+            </Route>}
+            {!staticSite && <Route path="/query" element={<Lazy><QueryPage/></Lazy>}>
+                <Route path="" element={<NewRedirect/>}/>
+                <Route path="new" element={<Lazy><NewQueryView/></Lazy>}/>
+                <Route path="result" element={<Lazy><QueryResultView/></Lazy>}/>
+            </Route>}
+            {!staticSite && <Route path="/errors" element={<Lazy><ErrorsPage/></Lazy>}/>}
+            {!staticSite && <Route path="/docs" element={<Lazy><SwaggerView/></Lazy>}/>}
+            <Route path="/theme-editor" element={
+                <Lazy>
+                    <ThemeEditContextProvider>
+                        <ThemeEditorPage/>
+                    </ThemeEditContextProvider>
+                </Lazy>
+            }>
+                <Route path="" element={<NewRedirect/>}/>
+                <Route path=":identifier" element={<Lazy><ThemeEditorView/></Lazy>}/>
+                <Route path="new" element={<Lazy><ThemeEditorView/></Lazy>}/>
+            </Route>
+            <Route path="*" element={<Lazy><ErrorPage error={{
+                message: 'Page not found, please correct the address',
+                title: 'No such page',
+                icon: faMapSigns
+            }}/></Lazy>}/>
+        </>
+    ), {basename: getBasename()}
+);
+
 function App() {
     axios.defaults.withCredentials = true;
 
@@ -135,96 +236,7 @@ function App() {
             <ContextProviders>
                 <ThemeCss/>
                 <div id="wrapper">
-                    <BrowserRouter basename={getBasename()}>
-                        <NightModeCss/>
-                        <Routes>
-                            <Route path="" element={<MainPageRedirect/>}/>
-                            <Route path="/" element={<MainPageRedirect/>}/>
-                            <Route path="index.html" element={<MainPageRedirect/>}/>
-                            {!staticSite && <Route path="/login" element={<Lazy><LoginPage/></Lazy>}/>}
-                            {!staticSite && <Route path="/register" element={<Lazy><RegisterPage/></Lazy>}/>}
-                            <Route path="/player/:identifier" element={<Lazy><PlayerPage/></Lazy>}>
-                                <Route path="" element={<Lazy><OverviewRedirect/></Lazy>}/>
-                                <Route path="overview" element={<Lazy><PlayerOverview/></Lazy>}/>
-                                <Route path="sessions" element={<Lazy><PlayerSessions/></Lazy>}/>
-                                <Route path="pvppve" element={<Lazy><PlayerPvpPve/></Lazy>}/>
-                                <Route path="servers" element={<Lazy><PlayerServers/></Lazy>}/>
-                                <Route path="plugins/:serverName" element={<Lazy><PlayerPluginData/></Lazy>}/>
-                                <Route path="*" element={<ErrorView error={{
-                                    message: 'Unknown tab address, please correct the address',
-                                    title: 'No such tab',
-                                    icon: faMapSigns
-                                }}/>}/>
-                            </Route>
-                            <Route path="/players" element={<Lazy><PlayersPage/></Lazy>}>
-                                <Route path="" element={<Lazy><AllPlayers/></Lazy>}/>
-                                <Route path="*" element={<Lazy><AllPlayers/></Lazy>}/>
-                            </Route>
-                            <Route path="/server/:identifier" element={<Lazy><ServerPage/></Lazy>}>
-                                <Route path="" element={<OverviewRedirect/>}/>
-                                <Route path="overview" element={<Lazy><ServerOverview/></Lazy>}/>
-                                <Route path="online-activity" element={<Lazy><OnlineActivity/></Lazy>}/>
-                                <Route path="sessions" element={<Lazy><ServerSessions/></Lazy>}/>
-                                <Route path="pvppve" element={<Lazy><ServerPvpPve/></Lazy>}/>
-                                <Route path="allowlist" element={<Lazy><ServerAllowList/></Lazy>}/>
-                                <Route path="playerbase" element={<Lazy><PlayerbaseOverview/></Lazy>}/>
-                                <Route path="join-addresses" element={<Lazy><ServerJoinAddresses/></Lazy>}/>
-                                <Route path="retention" element={<Lazy><ServerPlayerRetention/></Lazy>}/>
-                                <Route path="players" element={<Lazy><ServerPlayers/></Lazy>}/>
-                                <Route path="geolocations" element={<Lazy><ServerGeolocations/></Lazy>}/>
-                                <Route path="performance" element={<Lazy><ServerPerformance/></Lazy>}/>
-                                <Route path="plugin-history" element={<Lazy><ServerPluginHistory/></Lazy>}/>
-                                <Route path="plugins-overview" element={<Lazy><ServerPluginData/></Lazy>}/>
-                                <Route path="plugins/:plugin" element={<Lazy><ServerWidePluginData/></Lazy>}/>
-                                <Route path="*" element={<ErrorView error={{
-                                    message: 'Unknown tab address, please correct the address',
-                                    title: 'No such tab',
-                                    icon: faMapSigns
-                                }}/>}/>
-                            </Route>
-                            <Route path="/network" element={<Lazy><NetworkPage/></Lazy>}>
-                                <Route path="" element={<OverviewRedirect/>}/>
-                                <Route path="overview" element={<Lazy><NetworkOverview/></Lazy>}/>
-                                <Route path="serversOverview" element={<Lazy><NetworkServers/></Lazy>}/>
-                                <Route path="sessions" element={<Lazy><NetworkSessions/></Lazy>}/>
-                                {!staticSite &&
-                                    <Route path="performance" element={<Lazy><NetworkPerformance/></Lazy>}/>}
-                                <Route path="playerbase" element={<Lazy><NetworkPlayerbaseOverview/></Lazy>}/>
-                                <Route path="retention" element={<Lazy><NetworkPlayerRetention/></Lazy>}/>
-                                <Route path="join-addresses" element={<Lazy><NetworkJoinAddresses/></Lazy>}/>
-                                <Route path="players" element={<Lazy><AllPlayers/></Lazy>}/>
-                                <Route path="geolocations" element={<Lazy><NetworkGeolocations/></Lazy>}/>
-                                <Route path="plugin-history" element={<Lazy><NetworkPluginHistory/></Lazy>}/>
-                                <Route path="plugins-overview" element={<Lazy><ServerPluginData/></Lazy>}/>
-                                <Route path="plugins/:plugin" element={<Lazy><ServerWidePluginData/></Lazy>}/>
-                                <Route path="*" element={<ErrorView error={{
-                                    message: 'Unknown tab address, please correct the address',
-                                    title: 'No such tab',
-                                    icon: faMapSigns
-                                }}/>}/>
-                            </Route>
-                            {!staticSite && <Route path="/manage" element={<Lazy><ManagePage/></Lazy>}>
-                                <Route path="" element={<GroupsRedirect/>}/>
-                                <Route path="groups" element={<Lazy><GroupsView/></Lazy>}/>
-                            </Route>}
-                            {!staticSite && <Route path="/query" element={<Lazy><QueryPage/></Lazy>}>
-                                <Route path="" element={<NewRedirect/>}/>
-                                <Route path="new" element={<Lazy><NewQueryView/></Lazy>}/>
-                                <Route path="result" element={<Lazy><QueryResultView/></Lazy>}/>
-                            </Route>}
-                            {!staticSite && <Route path="/errors" element={<Lazy><ErrorsPage/></Lazy>}/>}
-                            {!staticSite && <Route path="/docs" element={<Lazy><SwaggerView/></Lazy>}/>}
-                            <Route path="/theme-editor" element={
-                                <Lazy><ThemeEditContextProvider><ThemeEditorPage/></ThemeEditContextProvider></Lazy>}/>
-                            <Route path="/theme-editor/:identifier" element={
-                                <Lazy><ThemeEditContextProvider><ThemeEditorPage/></ThemeEditContextProvider></Lazy>}/>
-                            <Route path="*" element={<Lazy><ErrorPage error={{
-                                message: 'Page not found, please correct the address',
-                                title: 'No such page',
-                                icon: faMapSigns
-                            }}/></Lazy>}/>
-                        </Routes>
-                    </BrowserRouter>
+                    <RouterProvider router={router}/>
                 </div>
             </ContextProviders>
         </div>
