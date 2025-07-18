@@ -13,6 +13,7 @@ import ExampleSection from "../../components/theme/ExampleSection.jsx";
 import {faFileSignature, faPalette} from "@fortawesome/free-solid-svg-icons";
 import ActionButton from "../../components/input/ActionButton.jsx";
 import UnsavedChangesText from "../../components/text/UnsavedChangesText.jsx";
+import SecondaryActionButton from "../../components/input/button/SecondaryActionButton.jsx";
 
 const ThemeEditorView = () => {
     const {t} = useTranslation();
@@ -48,9 +49,9 @@ const ThemeEditorView = () => {
         <Card className="shadow mb-4 theme-editor">
             <EditorMenuToast/>
             <CardHeader icon={faPalette} color="primary" label={title}>
-                <button className={"btn bg-grey float-end"} onClick={discardChanges} disabled={editCount === 0}>
+                <SecondaryActionButton className={'float-end'} onClick={discardChanges} disabled={editCount === 0}>
                     {t('html.label.managePage.changes.discard')}
-                </button>
+                </SecondaryActionButton>
                 <ActionButton className={"float-end me-2"}
                               disabled={!savePossible}>{t('html.label.managePage.changes.save')}</ActionButton>
                 <UnsavedChangesText visible={editCount > 0} className={"float-end me-3"}/>

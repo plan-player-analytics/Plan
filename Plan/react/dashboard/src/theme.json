@@ -65,12 +65,11 @@
     "border-slate": "#4b4d5a",
     "light-slate": "#5a5c69",
     "light-grey": "#dddddd",
+    "table-grey": "#f3f3f3",
     "white-grey": "#f8f9fc",
-    "stone-grey": "#d1d3e2",
-    "cement-grey": "#e3e6f0",
     "pale-grey": "#eaecf4",
-    "border-grey": "#dddfeb",
-    "table-grey": "#f3f3f3"
+    "cement-grey": "#e3e6f0",
+    "border-grey": "#dddfeb"
   },
   "nightColors": {
     "night-black": "#282a36",

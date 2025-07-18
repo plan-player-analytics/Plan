@@ -18,7 +18,7 @@ import CollapseWithButton from "../layout/CollapseWithButton.jsx";
 import FormsUseCase from "./usecase/FormsUseCase.jsx";
 import {addToObject} from "../../util/mutator.js";
 import {graphUseCases} from "./usecase/GraphUseCases.jsx";
-import {BasicTableUseCase, DataTableUseCase, TableUseCase} from "./usecase/TableUseCases.jsx";
+import {TableUseCase} from "./usecase/TableUseCases.jsx";
 
 const findExample = (path, examples) => {
     if (!path || !path.length) return undefined;

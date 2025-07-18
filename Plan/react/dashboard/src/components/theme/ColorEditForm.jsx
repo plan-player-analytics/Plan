@@ -5,6 +5,9 @@ import {useTranslation} from "react-i18next";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {getContrastColor} from "../../util/colors.js";
 import {faCheck, faExclamationTriangle, faPalette, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
+import ActionButton from "../input/ActionButton.jsx";
+import DangerButton from "../input/button/DangerButton.jsx";
+import SecondaryActionButton from "../input/button/SecondaryActionButton.jsx";
 
 
 const ColorEditForm = () => {
@@ -44,12 +47,12 @@ const ColorEditForm = () => {
     if (!open) {
         return (
             <Col className="mb-4">
-                <button className={"btn bg-theme"} onClick={editNewColor}>
+                <ActionButton onClick={editNewColor}>
                     <FontAwesomeIcon icon={faPlus}/>{t('html.label.themeEditor.addColor')}
-                </button>
-                <button className={"btn bg-red ms-2"} onClick={() => setDeleting(true)}>
+                </ActionButton>
+                <DangerButton className={'ms-2'} onClick={() => setDeleting(true)}>
                     <FontAwesomeIcon icon={faTrash}/>{t('html.label.themeEditor.deleteColors')}
-                </button>
+                </DangerButton>
             </Col>
         )
     }
@@ -99,12 +102,12 @@ const ColorEditForm = () => {
                     icon={faExclamationTriangle}/> {t('html.label.themeEditor.alreadyExistsWarning')}</span>}
             </Col>
             <Col>
-                <button className={"btn bg-theme"} onClick={finishEdit} disabled={isNameInvalid() || isColorInvalid()}>
+                <ActionButton onClick={finishEdit} disabled={isNameInvalid() || isColorInvalid()}>
                     {t('html.label.managePage.changes.save')}
-                </button>
-                <button className={"btn bg-grey ms-2"} onClick={discardEdit}>
+                </ActionButton>
+                <SecondaryActionButton className={"ms-2"} onClick={discardEdit}>
                     {t('html.label.managePage.changes.discard')}
-                </button>
+                </SecondaryActionButton>
             </Col>
         </Row>
     )

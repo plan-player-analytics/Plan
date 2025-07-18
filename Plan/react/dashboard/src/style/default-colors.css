@@ -245,11 +245,31 @@
 .btn-action {
     background-color: var(--color-forms-buttons-action-button);
     color: var(--contrast-color-forms-buttons-action-button);
-    --bs-btn-hover-bg: var(--color-forms-buttons-action-button);
+    --bs-btn-hover-bg: color-mix(in srgb, var(--color-forms-buttons-action-button) 90%, black);
     --bs-btn-disabled-bg: var(--color-forms-buttons-action-button);
     --bs-btn-disabled-border-color: var(--color-forms-buttons-action-button);
     --bs-btn-hover-color: color-mix(in srgb, var(--contrast-color-forms-buttons-action-button) 90%, black);
     --bs-btn-disabled-color: var(--contrast-color-forms-buttons-action-button);
+}
+
+.btn-secondary-action {
+    background-color: var(--color-forms-buttons-secondary-action-button);
+    color: var(--contrast-color-forms-buttons-secondary-action-button);
+    --bs-btn-hover-bg: color-mix(in srgb, var(--color-forms-buttons-secondary-action-button) 90%, black);
+    --bs-btn-disabled-bg: var(--color-forms-buttons-secondary-action-button);
+    --bs-btn-disabled-border-color: var(--color-forms-buttons-secondary-action-button);
+    --bs-btn-hover-color: color-mix(in srgb, var(--contrast-color-forms-buttons-secondary-action-button) 70%, black);
+    --bs-btn-disabled-color: var(--contrast-color-forms-buttons-secondary-action-button);
+}
+
+.btn-danger {
+    background-color: var(--color-forms-buttons-dangerous-button);
+    color: var(--contrast-color-forms-buttons-dangerous-button);
+    --bs-btn-hover-bg: var(--color-forms-buttons-dangerous-button);
+    --bs-btn-disabled-bg: var(--color-forms-buttons-dangerous-button);
+    --bs-btn-disabled-border-color: var(--color-forms-buttons-dangerous-button);
+    --bs-btn-hover-color: color-mix(in srgb, var(--contrast-color-forms-buttons-dangerous-button) 90%, black);
+    --bs-btn-disabled-color: var(--contrast-color-forms-buttons-dangerous-button);
 }
 
 /* Calendar overrides */

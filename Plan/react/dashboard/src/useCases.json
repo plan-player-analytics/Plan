@@ -63,6 +63,8 @@
   "forms": {
     "buttons": {
       "actionButton": "var(--color-theme)",
+      "dangerousButton": "var(--color-danger)",
+      "secondaryActionButton": "var(--color-grey)",
       "outlineButtonBorder": "var(--color-secondary)"
     },
     "input": {
