@@ -41,7 +41,7 @@
   },
   "forms": {
     "buttons": {
-      "actionButton": "var(--color-theme)",
+      "actionButton": "var(--color-plan)",
       "outlineButtonBorder": "var(--color-text)"
     },
     "input": {
@@ -49,19 +49,16 @@
       "border": "var(--color-night-blue)",
       "text": "var(--color-text)"
     },
-    "checkbox": {
-      "checked": "var(--color-night-blue)",
-      "border": "var(--color-night-blue)"
+    "multiSelect": {
+      "itemBackground": "var(--color-night-dark-grey-blue"
     },
-    "dropdown": {
-      "hover": "var(--color-night-dark-grey-blue)",
-      "selected": "var(--color-night-dark-grey-blue)"
+    "checkbox": {
+      "checked": "var(--color-plan)"
     }
   },
   "calendar": {
     "today": "var(--color-night-grey-blue)",
     "border": "var(--color-night-blue)",
-    "button": "var(--color-plan)",
     "popover": {
       "body": "var(--color-night-dark-blue)"
     }

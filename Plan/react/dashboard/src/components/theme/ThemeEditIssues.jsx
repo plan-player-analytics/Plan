@@ -10,7 +10,7 @@ const ThemeEditIssues = () => {
     return (
         <ul className={'issues'}>
             <li className={'issue'}><FontAwesomeIcon
-                icon={faExclamationTriangle}/> {t('html.label.themeEditor.issues.problems')}</li>
+                icon={faExclamationTriangle}/> {issues.length} {t('html.label.themeEditor.issues.problems')}</li>
             {issues.map((item, index) => <li className={'issue'} key={'issue' + index}>{item}</li>)}
         </ul>
     )

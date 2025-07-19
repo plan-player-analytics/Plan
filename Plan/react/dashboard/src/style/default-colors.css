@@ -244,7 +244,7 @@
 
 .btn-action {
     background-color: var(--color-forms-buttons-action-button);
-    color: var(--contrast-color-forms-buttons-action-button);
+    color: var(--contrast-color-forms-buttons-action-button) !important;
     --bs-btn-hover-bg: color-mix(in srgb, var(--color-forms-buttons-action-button) 90%, black);
     --bs-btn-disabled-bg: var(--color-forms-buttons-action-button);
     --bs-btn-disabled-border-color: var(--color-forms-buttons-action-button);
@@ -833,4 +833,18 @@ thead[class^='bg'], thead[class*=' myclass'] {
 .table-striped tbody tr:nth-of-type(2n), .table-striped {
     color: var(--color-tables-text);
     background-color: var(--color-tables-even-row);
+}
+
+.form-check-input[type="checkbox"] {
+    --bs-form-check-bg: var(--color-forms-input-background);
+    --bs-border-color: var(--color-forms-input-border);
+}
+
+.form-check-input[type="checkbox"]:checked, .form-check-input[type="checkbox"]:indeterminate {
+    background-color: var(--color-forms-checkbox-checked);
+    border-color: var(--color-forms-checkbox-checked);
+}
+
+.btn.col-text:hover, .btn.col-text:focus {
+    color: color-mix(in srgb, var(--color-text), black 20%)
 }

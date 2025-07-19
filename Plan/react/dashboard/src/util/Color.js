@@ -81,6 +81,11 @@ export class Color {
         return hslToHsv(this.toHslArray());
     }
 
+    toHsvaArray() {
+        const rgba = this.toRgbaArray();
+        return [...this.toHslArray(), rgba[3]];
+    }
+
     reduceSaturation(reductionPercentage) {
         const rgba = this.toRgbaArray();
         return new HslaColor([...new HslaColor(withReducedSaturationRgba(rgba, reductionPercentage)).toHslArray(), rgba[3]]);

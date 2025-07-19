@@ -1,24 +1,97 @@
-import React from 'react';
+import React, {useMemo} from 'react';
+import Select from 'react-select';
 
 const MultiSelect = ({options, selectedIndexes, setSelectedIndexes, className}) => {
-    const handleChange = (event) => {
-        const renderedOptions = Object.values(event.target.selectedOptions)
-            .map(htmlElement => htmlElement.text)
-            .map(option => options.indexOf(option));
-        setSelectedIndexes(renderedOptions);
-    }
+    // Convert options to react-select format
+    const selectOptions = options.map((option, index) => ({
+        value: index,
+        label: option
+    }));
+
+    // Convert selectedIndexes to react-select format
+    const selectedOptions = selectedIndexes.map(index => selectOptions[index]);
+
+    const handleChange = (selectedOptions) => {
+        const newSelectedIndexes = selectedOptions ? selectedOptions.map(option => option.value) : [];
+        setSelectedIndexes(newSelectedIndexes);
+    };
+
+    const bootstrapStyles = useMemo(() => ({
+        control: (provided) => ({
+            ...provided,
+            backgroundColor: 'var(--color-forms-input-background)',
+            borderColor: 'var(--color-forms-input-border)',
+            minHeight: '38px',
+            boxShadow: 'none',
+            '&:hover': {borderColor: 'var(--color-forms-input-border)'},
+        }),
+        menu: (provided) => ({
+            ...provided,
+            backgroundColor: 'var(--color-forms-input-background)',
+            borderRadius: '0.375rem',
+            border: '1px solid var(--color-forms-input-border)',
+            boxShadow: '0 0.5rem 1rem rgba(0,0,0,.15)',
+            marginTop: 2,
+            zIndex: 9999,
+        }),
+        option: (provided, state) => ({
+            ...provided,
+            backgroundColor: state.isFocused
+                ? 'color-mix(in srgb, var(--contrast-color-forms-input-background), transparent 90%)'
+                : 'var(--color-forms-input-background)',
+            color: 'var(--color-text)',
+            padding: '0.375rem 1.5rem',
+            cursor: 'pointer',
+        }),
+        multiValue: (provided) => ({
+            ...provided,
+            backgroundColor: 'var(--color-forms-multi-select-item-background)',
+            borderRadius: '0.2rem',
+            padding: '0 2px',
+        }),
+        multiValueLabel: (provided) => ({
+            ...provided,
+            color: 'var(--color-text)',
+            fontSize: '0.875em',
+        }),
+        multiValueRemove: (provided) => ({
+            ...provided,
+            color: 'var(--color-text)',
+            ':hover': {
+                backgroundColor: 'var(--color-forms-buttons-dangerous-button)',
+                color: 'var(--contrast-color-forms-buttons-dangerous-button)',
+            },
+        }),
+        dropdownIndicator: (provided) => ({
+            ...provided,
+            color: 'var(--color-text)'
+        }),
+        clearIndicator: (provided) => ({
+            ...provided,
+            color: 'var(--color-text)',
+            ':hover': {color: 'var(--color-forms-buttons-dangerous-button)'},
+        }),
+        indicatorSeparator: (provided) => ({
+            ...provided,
+            backgroundColor: 'var(--color-forms-input-text)',
+        }),
+        input: (provided) => ({
+            ...provided,
+            color: 'var(--color-forms-input-text)',
+        })
+    }), []);
 
     return (
-        <select className={"form-control " + className} multiple
-                onChange={handleChange}>
-            {options.map((option, i) => {
-                return (
-                    <option key={JSON.stringify(option)} value={selectedIndexes.includes(i)}
-                            selected={selectedIndexes.includes(i)}>{option}</option>
-                )
-            })}
-        </select>
-    )
+        <Select
+            isMulti
+            options={selectOptions}
+            value={selectedOptions}
+            onChange={handleChange}
+            className={className}
+            classNamePrefix="react-select"
+            styles={bootstrapStyles}
+        />
+    );
 };
 
-export default MultiSelect
+export default MultiSelect;

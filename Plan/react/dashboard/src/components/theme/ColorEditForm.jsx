@@ -1,4 +1,4 @@
-import React, {useEffect, useRef} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Col, InputGroup, Row} from "react-bootstrap";
 import {useColorEditContext} from "../../hooks/context/colorEditContextHook.jsx";
 import {useTranslation} from "react-i18next";
@@ -8,7 +8,79 @@ import {faCheck, faExclamationTriangle, faPalette, faPlus, faTrash} from "@forta
 import ActionButton from "../input/ActionButton.jsx";
 import DangerButton from "../input/button/DangerButton.jsx";
 import SecondaryActionButton from "../input/button/SecondaryActionButton.jsx";
+import Chrome from "@uiw/react-color-chrome";
+import {GithubPlacement} from '@uiw/react-color-github';
+import Wheel from "@uiw/react-color-wheel";
+import {getColorArrayConverter, getColorConverter} from "../../util/Color.js";
 
+
+const ColorInput = ({ref, color, contrastColor, invalid, onChange}) => {
+    const [focused, setFocused] = useState(true);
+    const onChangeText = event => {
+        onChange(event.target.value);
+    }
+    const converter = getColorConverter(color);
+
+    const onSelectorChange = event => {
+        if (converter) {
+            const opacity = converter.toRgbaArray()[3];
+            if (opacity < 1) {
+                const rgba = getColorConverter(event.hex).toRgbaArray();
+                rgba[3] = opacity;
+                onChange(getColorArrayConverter(rgba, 'rgba').toRgbaString());
+                return;
+            }
+        }
+        onChange(event.hex);
+    }
+
+
+    return (
+        <React.Fragment>
+            <input ref={ref} type="text" className={"form-control " + (invalid ? 'is-invalid' : '')}
+                   style={{background: color, color: contrastColor}}
+                   id={'color-edit-id'}
+                   value={color}
+                   aria-invalid={invalid}
+                   onChange={onChangeText}
+                   onFocus={() => setFocused(true)}
+                   onBlur={() => setFocused(false)}
+            />
+            <Row className={"color-selector p-0"}
+                 style={{
+                     padding: "0.5rem 0rem",
+                     paddingTop: "0",
+                     backgroundColor: "var(--color-cards-background)",
+                     border: "1px solid var(--color-cards-border)",
+                     position: 'absolute',
+                     top: "2.5rem",
+                     right: "0.8rem"
+                 }}>
+                <Col className={"p-0"}>
+                    <Chrome
+                        color={converter ? converter.toHex() : color}
+                        style={{width: 140,}}
+                        placement={GithubPlacement.Right}
+                        showEyeDropper={false}
+                        showColorPreview={false}
+                        showAlpha={false}
+                        showHue={true}
+                        showWheel={false}
+                        showInput={false}
+                        onChange={onSelectorChange}
+                    />
+                </Col>
+                <Col className={"p-0 m-2"}>
+                    <Wheel
+                        color={converter ? converter.toHex() : color}
+                        style={{marginTop: "0.5rem"}}
+                        onChange={onSelectorChange}
+                    />
+                </Col>
+            </Row>
+        </React.Fragment>
+    );
+}
 
 const ColorEditForm = () => {
     const {t} = useTranslation();
@@ -90,13 +162,8 @@ const ColorEditForm = () => {
                            placeholder={'new-color'}
                            onChange={event => onNameChange(event.target.value)}
                     />
-                    <input ref={ref} type="text" className={"form-control " + (isColorInvalid() ? 'is-invalid' : '')}
-                           style={{background: color, color: contrastColor}}
-                           id={'color-edit-id'}
-                           value={color}
-                           aria-invalid={isColorInvalid()}
-                           onChange={event => onColorChange(event.target.value)}
-                    />
+                    <ColorInput ref={ref} color={color} contrastColor={contrastColor}
+                                invalid={isColorInvalid()} onChange={onColorChange}/>
                 </InputGroup>
                 {alreadyExists && <span class="help-block" style={{color: "var(--color-warning)"}}><FontAwesomeIcon
                     icon={faExclamationTriangle}/> {t('html.label.themeEditor.alreadyExistsWarning')}</span>}

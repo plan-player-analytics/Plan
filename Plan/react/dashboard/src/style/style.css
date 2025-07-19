@@ -1403,3 +1403,11 @@ ul.filters {
 .card-header .btn.float-end {
     margin-top: -0.5rem;
 }
+
+/* Fix vertical alignment of dropdown toggle arrow */
+.dropdown-toggle {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

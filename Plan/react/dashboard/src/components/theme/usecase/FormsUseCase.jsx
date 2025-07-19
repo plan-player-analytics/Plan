@@ -12,6 +12,7 @@ import Checkbox from "../../input/Checkbox.jsx";
 import {BasicDropdown} from "../../input/BasicDropdown.jsx";
 import SecondaryActionButton from "../../input/button/SecondaryActionButton.jsx";
 import DangerButton from "../../input/button/DangerButton.jsx";
+import Toggle from "../../input/Toggle.jsx";
 
 const FormsUseCase = () => {
     const {t} = useTranslation();
@@ -63,6 +64,8 @@ const FormsUseCase = () => {
             <Checkbox indeterminate={false} checked={false} className={"ms-2"}/> {label}
             <Checkbox indeterminate={false} checked={true} className={"ms-2"}/> {label}
             <Checkbox indeterminate={true} checked={false} className={"ms-2"}/> {label}
+            <Toggle value={true} inline className={"ms-2"}>{label}</Toggle>
+            <Toggle value={false} inline className={"ms-2"}>{label}</Toggle>
             <hr/>
             <Row>
                 <Col md={12}>

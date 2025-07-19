@@ -46,7 +46,6 @@
     "errorText": "var(--color-alert-danger-text)"
   },
   "calendar": {
-    "button": "var(--color-theme)",
     "today": "var(--color-yellow-15-percent)",
     "border": "var(--color-cement-grey)",
     "popover": {
@@ -69,16 +68,14 @@
     },
     "input": {
       "background": "var(--color-white)",
-      "border": "var(--color-cement-grey)",
+      "border": "var(--color-border-grey)",
       "text": "var(--color-cool-grey)"
     },
-    "checkbox": {
-      "checked": "var(--color-theme)",
-      "border": "var(--color-cement-grey)"
+    "multiSelect": {
+      "itemBackground": "var(--color-pale-grey)"
     },
-    "dropdown": {
-      "hover": "var(--color-white-grey)",
-      "selected": "var(--color-white-grey)"
+    "checkbox": {
+      "checked": "var(--color-theme)"
     }
   },
   "graphs": {

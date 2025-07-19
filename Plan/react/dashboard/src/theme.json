@@ -1,14 +1,5 @@
 {
   "defaultTheme": "plan",
-  "nightText": {
-    "default": "var(--color-text-dark)",
-    "buttons": "var(--color-text-dark)",
-    "transparentLight": "var(--color-text-dark)",
-    "headings": "var(--color-text-dark)",
-    "cardText": "var(--color-text-dark)",
-    "bodyText": "var(--color-text-dark)",
-    "placeholder": "var(--color-text-dark)"
-  },
   "colors": {
     "black": "#555555",
     "white": "#ffffff",

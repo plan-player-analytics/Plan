@@ -12,8 +12,7 @@ const ThemeEditHistory = () => {
 
     return (
         <ul className={'edit-history'}>
-            {edits.map((item, index) => <li className={'edit'} key={'history' + index}>{item.name}</li>)}
-            {redos.toReversed().map((item, index) => {
+            {redos.map((item, index) => {
                 if (item.length) {
                     return <React.Fragment key={'redo' + index}>
                         <li className={'redo'}>{t('html.label.themeEditor.changes.discardedChanges')}</li>
@@ -24,6 +23,7 @@ const ThemeEditHistory = () => {
                     return <li className={'redo'} key={'redo' + index}>{item.name}</li>
                 }
             })}
+            {edits.toReversed().map((item, index) => <li className={'edit'} key={'history' + index}>{item.name}</li>)}
         </ul>
     )
 };
