@@ -503,10 +503,10 @@
   dependencies:
     preact "~10.12.1"
 
-"@fullcalendar/daygrid@^6.1.17":
-  version "6.1.17"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/daygrid/-/daygrid-6.1.17.tgz#3ff9d8d99da872631b661bf9ca5a47ed849421cf"
-  integrity sha512-K7m+pd7oVJ9fW4h7CLDdDGJbc9szJ1xDU1DZ2ag+7oOo1aCNLv44CehzkkknM6r8EYlOOhgaelxQpKAI4glj7A==
+"@fullcalendar/daygrid@^6.1.18":
+  version "6.1.18"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/daygrid/-/daygrid-6.1.18.tgz#49b4a237d0115b4695cd8593d0dfa36d81fa5ad4"
+  integrity sha512-s452Zle1SdMEzZDw+pDczm8m3JLIZzS9ANMThXTnqeqJewW1gqNFYas18aHypJSgF9Fh9rDJjTSUw04BpXB/Mg==
 
 "@fullcalendar/interaction@^6.1.17":
   version "6.1.17"
