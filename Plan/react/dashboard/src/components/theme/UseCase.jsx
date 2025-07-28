@@ -38,7 +38,7 @@ const NightModeRemovalButton = ({onRemove, path}) => (
         className="d-flex align-items-center px-1 col-red"
         onClick={() => onRemove?.(path)}
         title="Remove override"
-        style={{marginLeft: 8}}
+        style={{marginLeft: 8, marginRight: 8}}
     >
         <Fa icon={faTimes}/>
     </button>
@@ -46,8 +46,8 @@ const NightModeRemovalButton = ({onRemove, path}) => (
 
 const UseCaseDropdown = ({id, colors, value, onChange, label, onRemoveOverride, path}) => (
     <td style={{paddingBottom: '8px', width: '100%'}}>
-        <div style={{display: 'flex', alignItems: 'center'}}>
-            <div style={{width: '300px'}}>
+        <div style={{display: 'flex', alignItems: 'center', width: onRemoveOverride ? '90%' : 'calc(90% - 44px)'}}>
+            <div style={{flexGrow: 1}}>
                 <ColorDropdown
                     id={id} key={id}
                     colors={colors}
@@ -102,7 +102,11 @@ const UseCaseArraySelector = ({
             <UseCaseLabel level={level} label={formatLabel(path[path.length - 1])}/>
             <td style={{paddingBottom: '8px', width: '100%'}}>
                 <div style={{display: 'flex', alignItems: 'center'}}>
-                    <div ref={ref} style={{width: '95%', display: 'flex', alignItems: 'center'}} className={selector}>
+                    <div ref={ref} style={{
+                        width: showRemove ? '100%' : 'calc(100% - 44px)',
+                        display: 'flex',
+                        alignItems: 'center'
+                    }} className={selector}>
                         <ColorMultiSelect
                             style={{flexGrow: 1}}
                             colors={colors}
