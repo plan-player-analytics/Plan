@@ -221,15 +221,18 @@
 }
 
 .sidebar {
+    background: var(--color-sidebar-background);
     background-color: var(--color-sidebar-background);
 }
 
 .sidebar-collapse {
+    background: var(--color-sidebar-collapsible-section-background);
     background-color: var(--color-sidebar-collapsible-section-background);
     color: var(--color-sidebar-collapsible-section-text);
 }
 
 .navigation-item {
+    background: var(--color-sidebar-navigation-item-background);
     background-color: var(--color-sidebar-navigation-item-background);
     color: var(--color-sidebar-navigation-item-icon);
 }
@@ -239,30 +242,38 @@
 }
 
 .form-control, .form-control:focus {
+    background: var(--color-forms-input-background);
     background-color: var(--color-forms-input-background);
 }
 
 .btn-action {
+    background: var(--color-forms-buttons-action-button);
     background-color: var(--color-forms-buttons-action-button);
     color: var(--contrast-color-forms-buttons-action-button) !important;
     --bs-btn-hover-bg: color-mix(in srgb, var(--color-forms-buttons-action-button) 90%, black);
+    --bs-btn-active-bg: color-mix(in srgb, var(--color-forms-buttons-action-button) 90%, black);
     --bs-btn-disabled-bg: var(--color-forms-buttons-action-button);
     --bs-btn-disabled-border-color: var(--color-forms-buttons-action-button);
     --bs-btn-hover-color: color-mix(in srgb, var(--contrast-color-forms-buttons-action-button) 90%, black);
+    --bs-btn-active-color: color-mix(in srgb, var(--contrast-color-forms-buttons-action-button) 90%, black);
     --bs-btn-disabled-color: var(--contrast-color-forms-buttons-action-button);
 }
 
 .btn-secondary-action {
+    background: var(--color-forms-buttons-secondary-action-button);
     background-color: var(--color-forms-buttons-secondary-action-button);
     color: var(--contrast-color-forms-buttons-secondary-action-button);
     --bs-btn-hover-bg: color-mix(in srgb, var(--color-forms-buttons-secondary-action-button) 90%, black);
+    --bs-btn-active-bg: color-mix(in srgb, var(--color-forms-buttons-secondary-action-button) 90%, black);
     --bs-btn-disabled-bg: var(--color-forms-buttons-secondary-action-button);
     --bs-btn-disabled-border-color: var(--color-forms-buttons-secondary-action-button);
     --bs-btn-hover-color: color-mix(in srgb, var(--contrast-color-forms-buttons-secondary-action-button) 70%, black);
+    --bs-btn-active-color: color-mix(in srgb, var(--contrast-color-forms-buttons-secondary-action-button) 70%, black);
     --bs-btn-disabled-color: var(--contrast-color-forms-buttons-secondary-action-button);
 }
 
 .btn-danger {
+    background: var(--color-forms-buttons-dangerous-button);
     background-color: var(--color-forms-buttons-dangerous-button);
     color: var(--contrast-color-forms-buttons-dangerous-button);
     --bs-btn-hover-bg: var(--color-forms-buttons-dangerous-button);
@@ -278,10 +289,12 @@
 }
 
 .fc-day-today {
+    background: var(--color-calendar-today) !important;
     background-color: var(--color-calendar-today) !important;
 }
 
 .fc-popover-body, .fc-popover-header {
+    background: var(--color-calendar-popover-body) !important;
     background-color: var(--color-calendar-popover-body) !important;
     color: var(--color-text) !important;
 }
@@ -295,6 +308,7 @@
 }
 
 .fc-button {
+    background: var(--color-calendar-button) !important;
     background-color: var(--color-calendar-button) !important;
 }
 
@@ -374,6 +388,7 @@
 }
 
 .bg-servers {
+    background: var(--color-data-servers);
     background-color: var(--color-data-servers);
 }
 
@@ -382,6 +397,7 @@
 }
 
 .bg-trend-better {
+    background: var(--color-data-trend-better);
     background-color: var(--color-data-trend-better);
 }
 
@@ -390,6 +406,7 @@
 }
 
 .bg-trend-same {
+    background: var(--color-data-trend-same);
     background-color: var(--color-data-trend-same);
 }
 
@@ -398,6 +415,7 @@
 }
 
 .bg-trend-worse {
+    background: var(--color-data-trend-worse);
     background-color: var(--color-data-trend-worse);
 }
 
@@ -406,6 +424,7 @@
 }
 
 .bg-playtime {
+    background: var(--color-data-play-playtime);
     background-color: var(--color-data-play-playtime);
 }
 
@@ -414,6 +433,7 @@
 }
 
 .bg-playtime-active {
+    background: var(--color-data-play-playtime-active);
     background-color: var(--color-data-play-playtime-active);
 }
 
@@ -422,6 +442,7 @@
 }
 
 .bg-playtime-afk {
+    background: var(--color-data-play-playtime-afk);
     background-color: var(--color-data-play-playtime-afk);
 }
 
@@ -430,6 +451,7 @@
 }
 
 .bg-sessions {
+    background: var(--color-data-play-sessions);
     background-color: var(--color-data-play-sessions);
 }
 
@@ -445,6 +467,7 @@
 }
 
 .bg-session-length {
+    background: var(--color-data-play-session-length);
     background-color: var(--color-data-play-session-length);
 }
 
@@ -453,6 +476,7 @@
 }
 
 .bg-gamemode {
+    background: var(--color-data-play-gamemode);
     background-color: var(--color-data-play-gamemode);
 }
 
@@ -461,6 +485,7 @@
 }
 
 .bg-first-seen {
+    background: var(--color-data-play-first-seen);
     background-color: var(--color-data-play-first-seen);
 }
 
@@ -469,6 +494,7 @@
 }
 
 .bg-last-seen {
+    background: var(--color-data-play-last-seen);
     background-color: var(--color-data-play-last-seen);
 }
 
@@ -477,6 +503,7 @@
 }
 
 .bg-players-count {
+    background: var(--color-data-players-count);
     background-color: var(--color-data-players-count);
 }
 
@@ -485,6 +512,7 @@
 }
 
 .bg-players-online {
+    background: var(--color-data-players-online);
     background-color: var(--color-data-players-online);
 }
 
@@ -493,6 +521,7 @@
 }
 
 .bg-players-unique {
+    background: var(--color-data-players-unique);
     background-color: var(--color-data-players-unique);
 }
 
@@ -501,6 +530,7 @@
 }
 
 .bg-players-new {
+    background: var(--color-data-players-new);
     background-color: var(--color-data-players-new);
 }
 
@@ -509,6 +539,7 @@
 }
 
 .bg-players-activity-index {
+    background: var(--color-data-players-activity-index);
     background-color: var(--color-data-players-activity-index);
 }
 
@@ -517,6 +548,7 @@
 }
 
 .bg-players-very-active {
+    background: var(--color-data-players-very-active);
     background-color: var(--color-data-players-very-active);
 }
 
@@ -525,6 +557,7 @@
 }
 
 .bg-players-active {
+    background: var(--color-data-players-active);
     background-color: var(--color-data-players-active);
 }
 
@@ -533,6 +566,7 @@
 }
 
 .bg-players-regular {
+    background: var(--color-data-players-regular);
     background-color: var(--color-data-players-regular);
 }
 
@@ -541,6 +575,7 @@
 }
 
 .bg-players-irregular {
+    background: var(--color-data-players-irregular);
     background-color: var(--color-data-players-irregular);
 }
 
@@ -549,6 +584,7 @@
 }
 
 .bg-players-inactive {
+    background: var(--color-data-players-inactive);
     background-color: var(--color-data-players-inactive);
 }
 
@@ -557,6 +593,7 @@
 }
 
 .bg-player-peak-last {
+    background: var(--color-data-player-peak-last);
     background-color: var(--color-data-player-peak-last);
 }
 
@@ -565,6 +602,7 @@
 }
 
 .bg-player-peak-all-time {
+    background: var(--color-data-player-peak-all-time);
     background-color: var(--color-data-player-peak-all-time);
 }
 
@@ -573,6 +611,7 @@
 }
 
 .bg-uptime {
+    background: var(--color-data-performance-uptime);
     background-color: var(--color-data-performance-uptime);
 }
 
@@ -581,6 +620,7 @@
 }
 
 .bg-downtime {
+    background: var(--color-data-performance-downtime);
     background-color: var(--color-data-performance-downtime);
 }
 
@@ -589,6 +629,7 @@
 }
 
 .bg-tps {
+    background: var(--color-data-performance-tps);
     background-color: var(--color-data-performance-tps);
 }
 
@@ -597,6 +638,7 @@
 }
 
 .bg-tps-low-spikes {
+    background: var(--color-data-performance-tps-low-spikes);
     background-color: var(--color-data-performance-tps-low-spikes);
 }
 
@@ -605,6 +647,7 @@
 }
 
 .bg-tps-average {
+    background: var(--color-data-performance-tps-average);
     background-color: var(--color-data-performance-tps-average);
 }
 
@@ -613,6 +656,7 @@
 }
 
 .bg-cpu {
+    background: var(--color-data-performance-cpu);
     background-color: var(--color-data-performance-cpu);
 }
 
@@ -621,6 +665,7 @@
 }
 
 .bg-ram {
+    background: var(--color-data-performance-ram);
     background-color: var(--color-data-performance-ram);
 }
 
@@ -629,6 +674,7 @@
 }
 
 .bg-entities {
+    background: var(--color-data-performance-entities);
     background-color: var(--color-data-performance-entities);
 }
 
@@ -637,6 +683,7 @@
 }
 
 .bg-chunks {
+    background: var(--color-data-performance-chunks);
     background-color: var(--color-data-performance-chunks);
 }
 
@@ -645,6 +692,7 @@
 }
 
 .bg-disk {
+    background: var(--color-data-performance-disk);
     background-color: var(--color-data-performance-disk);
 }
 
@@ -653,6 +701,7 @@
 }
 
 .bg-ping {
+    background: var(--color-data-performance-ping);
     background-color: var(--color-data-performance-ping);
 }
 
@@ -661,6 +710,7 @@
 }
 
 .bg-insights {
+    background: var(--color-data-calculated-insights);
     background-color: var(--color-data-calculated-insights);
 }
 
@@ -669,6 +719,7 @@
 }
 
 .bg-join-addresses {
+    background: var(--color-data-calculated-join-addresses);
     background-color: var(--color-data-calculated-join-addresses);
 }
 
@@ -677,6 +728,7 @@
 }
 
 .bg-retention {
+    background: var(--color-data-calculated-retention);
     background-color: var(--color-data-calculated-retention);
 }
 
@@ -685,6 +737,7 @@
 }
 
 .bg-retention-new-players {
+    background: var(--color-data-calculated-retention-new-players);
     background-color: var(--color-data-calculated-retention-new-players);
 }
 
@@ -693,6 +746,7 @@
 }
 
 .bg-geolocation {
+    background: var(--color-data-calculated-geolocation);
     background-color: var(--color-data-calculated-geolocation);
 }
 
@@ -701,6 +755,7 @@
 }
 
 .bg-allow-list {
+    background: var(--color-data-calculated-allow-list);
     background-color: var(--color-data-calculated-allow-list);
 }
 
@@ -709,6 +764,7 @@
 }
 
 .bg-plugin-versions {
+    background: var(--color-data-calculated-plugin-versions);
     background-color: var(--color-data-calculated-plugin-versions);
 }
 
@@ -717,6 +773,7 @@
 }
 
 .bg-player-kills {
+    background: var(--color-data-player-versus-player-kills);
     background-color: var(--color-data-player-versus-player-kills);
 }
 
@@ -725,6 +782,7 @@
 }
 
 .bg-mob-kills {
+    background: var(--color-data-player-versus-mob-kills);
     background-color: var(--color-data-player-versus-mob-kills);
 }
 
@@ -733,6 +791,7 @@
 }
 
 .bg-deaths {
+    background: var(--color-data-player-versus-deaths);
     background-color: var(--color-data-player-versus-deaths);
 }
 
@@ -741,6 +800,7 @@
 }
 
 .bg-top-3-first {
+    background: var(--color-data-player-versus-top-3-first);
     background-color: var(--color-data-player-versus-top-3-first);
 }
 
@@ -749,6 +809,7 @@
 }
 
 .bg-top-3-second {
+    background: var(--color-data-player-versus-top-3-second);
     background-color: var(--color-data-player-versus-top-3-second);
 }
 
@@ -757,6 +818,7 @@
 }
 
 .bg-top-3-third {
+    background: var(--color-data-player-versus-top-3-third);
     background-color: var(--color-data-player-versus-top-3-third);
 }
 
@@ -765,6 +827,7 @@
 }
 
 .bg-online {
+    background: var(--color-data-player-status-online);
     background-color: var(--color-data-player-status-online);
 }
 
@@ -773,6 +836,7 @@
 }
 
 .bg-offline {
+    background: var(--color-data-player-status-offline);
     background-color: var(--color-data-player-status-offline);
 }
 
@@ -781,6 +845,7 @@
 }
 
 .bg-banned {
+    background: var(--color-data-player-status-banned);
     background-color: var(--color-data-player-status-banned);
 }
 
@@ -789,6 +854,7 @@
 }
 
 .bg-operator {
+    background: var(--color-data-player-status-operator);
     background-color: var(--color-data-player-status-operator);
 }
 
@@ -797,6 +863,7 @@
 }
 
 .bg-kicks {
+    background: var(--color-data-player-status-kicks);
     background-color: var(--color-data-player-status-kicks);
 }
 
@@ -805,6 +872,7 @@
 }
 
 .bg-nicknames {
+    background: var(--color-data-player-status-nicknames);
     background-color: var(--color-data-player-status-nicknames);
 }
 
@@ -814,6 +882,7 @@ table {
 
 thead {
     color: var(--color-tables-text);
+    background: var(--color-tables-even-row);
     background-color: var(--color-tables-even-row);
 }
 
@@ -827,11 +896,13 @@ thead[class^='bg'], thead[class*=' myclass'] {
 
 .table-striped tbody tr:nth-of-type(2n+1) {
     color: var(--color-tables-text);
+    background: var(--color-tables-odd-row);
     background-color: var(--color-tables-odd-row);
 }
 
 .table-striped tbody tr:nth-of-type(2n), .table-striped {
     color: var(--color-tables-text);
+    background: var(--color-tables-even-row);
     background-color: var(--color-tables-even-row);
 }
 
@@ -843,6 +914,10 @@ thead[class^='bg'], thead[class*=' myclass'] {
 .form-check-input[type="checkbox"]:checked, .form-check-input[type="checkbox"]:indeterminate {
     background-color: var(--color-forms-checkbox-checked);
     border-color: var(--color-forms-checkbox-checked);
+}
+
+.form-check-label {
+    color: var(--color-forms-input-text);
 }
 
 .btn.col-text:hover, .btn.col-text:focus {

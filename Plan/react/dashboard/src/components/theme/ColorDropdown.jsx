@@ -59,7 +59,11 @@ const ColorDropdown = ({
     const {selectedItemRef, dropdownMenuRef} = useMenuPlacement(isOpen);
 
     return (
-        <tr id={id} onMouseOver={() => onHoverChange(id, 'enter')} onMouseOut={() => onHoverChange(id, 'exit')}>
+        <tr id={id}
+            onMouseOver={() => onHoverChange(id, 'enter')}
+            onFocus={() => onHoverChange(id, 'enter')}
+            onMouseOut={() => onHoverChange(id, 'exit')}
+            onBlur={() => onHoverChange(id, 'exit')}>
             <td style={{paddingBottom: '8px', paddingRight: '16px', whiteSpace: 'nowrap'}}>
                 <span style={{marginLeft}}>{label}</span>
             </td>
@@ -74,10 +78,12 @@ const ColorDropdown = ({
                                     display: "flex",
                                     justifyContent: "space-between",
                                     alignItems: "center",
-                                    backgroundColor: isTextColor ? contrastColor : cssColor,
+                                    background: isTextColor ? contrastColor : cssColor,
                                     color: isTextColor ? cssColor : contrastColor
                                 }}
                                 variant=""
+                                onFocus={() => onHoverChange(id, 'enter')}
+                                onBlur={() => onHoverChange(id, 'exit')}
                             >
                                 {missing ? <><FontAwesomeIcon
                                         icon={faExclamationTriangle}/> {t('html.label.themeEditor.missing')}</>
@@ -101,7 +107,7 @@ const ColorDropdown = ({
                                                 setIsOpen(false);
                                             }}
                                             style={{
-                                                backgroundColor: isItemTextColor ? 'transparent' : `var(--color-${name})`,
+                                                background: isItemTextColor ? 'transparent' : `var(--color-${name})`,
                                                 color: isItemTextColor ? `var(--color-${name})` : `var(--contrast-color-${name})`
                                             }}
                                             ref={isSelected ? selectedItemRef : null}

@@ -61,8 +61,9 @@ const PermissionDropdown = ({permission, checked, indeterminate, togglePermissio
                     }}>
                         <Checkbox indeterminate={indeterminate} checked={checked}
                                   onChange={() => togglePermission(permission)}
-                        /> {permission} {permission && translated !== translationKey &&
-                        <OpaqueText inline>&middot; {translated}</OpaqueText>}
+                        >{permission} {permission && translated !== translationKey &&
+                            <OpaqueText inline>&middot; {translated}</OpaqueText>}
+                        </Checkbox>
                         <hr style={{margin: 0}}/>
                     </summary>
 

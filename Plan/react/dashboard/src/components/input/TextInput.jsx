@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {InputGroup} from "react-bootstrap";
 
@@ -30,6 +30,10 @@ const TextInput = ({
             setValue(cachedValue);
         }
     }
+
+    useEffect(() => {
+        if (value !== cachedValue) setCachedValue(value);
+    }, [value]);
 
     return (
         <InputGroup id={id}>

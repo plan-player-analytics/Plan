@@ -1,6 +1,7 @@
 import React from 'react';
 import PlayerSessionCalendar from "../../calendar/PlayerSessionCalendar.jsx";
 import {calculateCssHexColor} from "../../../util/colors.js";
+import Background from "./Background.jsx";
 
 const CalendarUseCase = () => {
 
@@ -25,11 +26,9 @@ const CalendarUseCase = () => {
         })
     }
     return (
-        <div>
-            <div>
-                <PlayerSessionCalendar series={series} firstDay={1}/>
-            </div>
-        </div>
+        <Background>
+            <PlayerSessionCalendar series={series} firstDay={1}/>
+        </Background>
     )
 };
 

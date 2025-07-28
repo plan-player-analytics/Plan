@@ -821,8 +821,10 @@ select.form-control:focus::-ms-value {
     color: var(--color-forms-buttons-outline-button-border);
     border-color: var(--color-forms-buttons-outline-button-border);
     --bs-btn-hover-bg: var(--color-forms-buttons-outline-button-border);
+    --bs-btn-active-bg: transparent;
     --bs-btn-disabled-bg: transparent;
     --bs-btn-hover-color: color-mix(in srgb, var(--color-forms-buttons-outline-button-border) 90%, black);
+    --bs-btn-active-color: color-mix(in srgb, var(--color-forms-buttons-outline-button-border) 90%, black);
     --bs-btn-disabled-color: color-mix(in srgb, var(--color-forms-buttons-outline-button-border) 75%, transparent);
     --bs-btn-disabled-border-color: var(--color-forms-buttons-outline-button-border);
 }

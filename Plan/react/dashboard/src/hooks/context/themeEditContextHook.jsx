@@ -11,13 +11,20 @@ export const ThemeEditContextProvider = ({children}) => {
     const [edits, setEdits] = useState([]);
     const [redos, setRedos] = useState([]);
     const {
-        name,
-        setName,
+        name: originalName,
         currentColors,
         currentNightColors,
         currentUseCases,
-        currentNightModeUseCases
+        currentNightModeUseCases,
+        currentPieColors: originalPieColors,
+        currentDrilldownColors: originalDrilldownColors,
+        currentThemeColorOptions: originalThemeColorOptions
     } = useThemeStorage();
+
+    const [name, setName] = useState(originalName);
+    const [currentPieColors, setCurrentPieColors] = useState(originalPieColors);
+    const [currentDrilldownColors, setCurrentDrilldownColors] = useState(originalDrilldownColors);
+    const [currentThemeColorOptions, setCurrentThemeColorOptions] = useState(originalThemeColorOptions);
 
     const applyEdits = (type, object) => {
         console.debug('Applying edits', edits.length)
@@ -63,6 +70,10 @@ export const ThemeEditContextProvider = ({children}) => {
             setEdits([]);
             setRedos(prev => [...prev, undone]);
         }
+        setName(originalName);
+        setCurrentThemeColorOptions(originalThemeColorOptions);
+        setCurrentPieColors(originalPieColors);
+        setCurrentDrilldownColors(originalDrilldownColors);
     }
 
     const updateUseCaseColorName = (current, oldName, newName) => {
@@ -237,7 +248,9 @@ export const ThemeEditContextProvider = ({children}) => {
             return !missingUseCase.length && !missingNightModeUseCase.length
         }
 
-        const savePossible = edits.length > 0 && allColorsExist()
+        const colorOptionsModified = false; // TODO
+        const somethingToSave = edits.length > 0 || name !== originalName || colorOptionsModified;
+        const savePossible = somethingToSave && allColorsExist()
 
         return {
             name, setName,
@@ -245,6 +258,9 @@ export const ThemeEditContextProvider = ({children}) => {
             currentNightColors: editedNightColors,
             currentUseCases: editedUseCases,
             currentNightModeUseCases: editedNightModeUseCases,
+            currentPieColors,
+            currentDrilldownColors,
+            currentThemeColorOptions,
             editCount: edits.length,
             redoCount: redos.length,
             deleteColor,
@@ -254,13 +270,17 @@ export const ThemeEditContextProvider = ({children}) => {
             updateUseCase,
             updateNightUseCase,
             removeNightOverride,
+            setCurrentPieColors,
+            setCurrentDrilldownColors,
+            setCurrentThemeColorOptions,
             undo,
             redo,
             discardChanges,
             edits,
             redos,
             issues,
-            savePossible
+            savePossible,
+            discardPossible: somethingToSave
         }
     }, [edits, name]);
     return (<ThemeEditContext.Provider value={sharedState}>

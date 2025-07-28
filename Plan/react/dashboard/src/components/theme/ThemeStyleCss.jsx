@@ -1,9 +1,11 @@
 import {addToObject, flattenObject} from '../../util/mutator';
 import {getContrastColor} from '../../util/colors';
 import {getColorConverter} from "../../util/Color.js";
+import {useThemeEditContext} from "../../hooks/context/themeEditContextHook.jsx";
+import {useThemeStorage} from "../../hooks/context/themeContextHook.jsx";
 
 // Function to generate CSS variables from theme data
-const generateThemeCSS = ({theme, useCases, nightModeUseCases}) => {
+const generateThemeCSS = ({colors, nightColors, useCases, nightModeUseCases}) => {
     const baseVariables = [];
     const nightModeVariables = [];
 
@@ -14,15 +16,17 @@ const generateThemeCSS = ({theme, useCases, nightModeUseCases}) => {
     };
 
     // Add regular colors
-    Object.entries(theme.colors).forEach(([key, value]) => {
+    Object.entries(colors).forEach(([key, value]) => {
         addColorWithContrast(key, value, baseVariables);
         // Add desaturated version for night mode
-        const nightColor = getColorConverter(value).reduceSaturation().toRgbaString()
+        const converter = getColorConverter(value);
+
+        const nightColor = converter ? converter.reduceSaturation().toRgbaString() : value;
         addColorWithContrast(key, nightColor, nightModeVariables);
     });
 
     // Add night mode colors
-    Object.entries(theme.nightColors).forEach(([key, value]) => {
+    Object.entries(nightColors).forEach(([key, value]) => {
         addColorWithContrast(key, value, baseVariables);
         addColorWithContrast(key, value, nightModeVariables);
     });
@@ -74,8 +78,12 @@ const generateThemeCSS = ({theme, useCases, nightModeUseCases}) => {
 }`;
 };
 
-export const ThemeStyleCss = ({theme, useCases, nightModeUseCases}) => {
+export const ThemeStyleCss = ({editMode}) => {
+    const {
+        currentColors: colors, currentNightColors: nightColors,
+        currentUseCases: useCases, currentNightModeUseCases: nightModeUseCases
+    } = editMode ? useThemeEditContext() : useThemeStorage();
     return (
-        <style>{generateThemeCSS({theme, useCases, nightModeUseCases})}</style>
+        <style>{generateThemeCSS({colors, nightColors, useCases, nightModeUseCases})}</style>
     )
 }

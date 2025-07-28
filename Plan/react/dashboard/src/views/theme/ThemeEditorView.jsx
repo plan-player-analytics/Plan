@@ -14,11 +14,15 @@ import {faFileSignature, faPalette} from "@fortawesome/free-solid-svg-icons";
 import ActionButton from "../../components/input/ActionButton.jsx";
 import UnsavedChangesText from "../../components/text/UnsavedChangesText.jsx";
 import SecondaryActionButton from "../../components/input/button/SecondaryActionButton.jsx";
+import ColorMultiSelect from "../../components/theme/ColorMultiSelect.jsx";
 
 const ThemeEditorView = () => {
     const {t} = useTranslation();
     const {
         name, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases,
+        currentPieColors, setCurrentPieColors,
+        currentDrilldownColors, setCurrentDrilldownColors,
+        currentThemeColorOptions, setCurrentThemeColorOptions,
         setName,
         deleteColor,
         deleteNightColor,
@@ -27,7 +31,7 @@ const ThemeEditorView = () => {
         updateUseCase,
         updateNightUseCase,
         removeNightOverride,
-        discardChanges, editCount, savePossible
+        discardChanges, editCount, discardPossible, savePossible
     } = useThemeEditContext();
     const [hoveredItem, setHoveredItem] = useState(undefined);
     const [nightHover, setNightHover] = useState(false);
@@ -49,7 +53,7 @@ const ThemeEditorView = () => {
         <Card className="shadow mb-4 theme-editor">
             <EditorMenuToast/>
             <CardHeader icon={faPalette} color="primary" label={title}>
-                <SecondaryActionButton className={'float-end'} onClick={discardChanges} disabled={editCount === 0}>
+                <SecondaryActionButton className={'float-end'} onClick={discardChanges} disabled={!discardPossible}>
                     {t('html.label.managePage.changes.discard')}
                 </SecondaryActionButton>
                 <ActionButton className={"float-end me-2"}
@@ -71,7 +75,7 @@ const ThemeEditorView = () => {
                         />
                     </Col>
                 </Row>
-                <Row onMouseEnter={() => onHoverChange(undefined, 'enter', false)}>
+                <Row>
                     <Col xs={12}>
                         <ColorEditContextProvider
                             colors={nightColors}
@@ -91,6 +95,23 @@ const ThemeEditorView = () => {
                                           colors={currentNightColors}/>
                             <ColorEditForm/>
                         </ColorEditContextProvider>
+
+                        <h5>{t("html.label.themeEditor.themeColorOptions")}</h5>
+                        <small>Colors that user can select for 'Theme' color in Theme selector</small>
+                        <ColorMultiSelect className={"mb-3"} colors={colors} selectedColors={currentThemeColorOptions}
+                                          setSelectedColors={setCurrentThemeColorOptions} sort/>
+
+                        <div onMouseEnter={() => onHoverChange('graphs.pie', 'enter', false)}
+                             onFocus={() => onHoverChange('graphs.pie', 'enter', false)}
+                        >
+                            <h5>{t("html.label.themeEditor.defaultPiecolors")}</h5>
+                            <small>Colors that are used if pie colors are not defined separately (e.g. World Pie),
+                                repeating if there are more slices than colors</small>
+                            <ColorMultiSelect className={"mb-2"} colors={colors} selectedColors={currentPieColors}
+                                              setSelectedColors={setCurrentPieColors}/>
+                            <ColorMultiSelect className={"ms-4"} colors={colors} selectedColors={currentDrilldownColors}
+                                              setSelectedColors={setCurrentDrilldownColors}/>
+                        </div>
                     </Col>
                 </Row>
                 <hr/>

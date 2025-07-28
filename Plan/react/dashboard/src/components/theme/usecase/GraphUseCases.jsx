@@ -10,6 +10,7 @@ import DiskPerformanceGraph from "../../graphs/performance/DiskPerformanceGraph.
 import PingGraph from "../../graphs/performance/PingGraph.jsx";
 import GeolocationsCard from "../../cards/common/GeolocationsCard.jsx";
 import {calculateCssHexColor} from "../../../util/colors.js";
+import Background from "./Background.jsx";
 
 const randomDate = (start, end) => {
     return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
@@ -42,10 +43,6 @@ const regeneratePoints = (points, rangeStart, rangeEnd) => {
         newPoints.push([points[i][0], randNum]);
     }
     return newPoints;
-}
-
-const Background = ({children}) => {
-    return <div style={{backgroundColor: "var(--color-cards-background"}}>{children}</div>
 }
 
 const PunchCardGraphUseCase = () => {

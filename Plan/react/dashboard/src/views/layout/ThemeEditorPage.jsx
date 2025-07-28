@@ -10,15 +10,12 @@ import {Outlet} from "react-router-dom";
 
 const ThemeEditorPage = () => {
     const {t} = useTranslation();
-    const {
-        name, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases
-    } = useThemeEditContext();
+    const {name} = useThemeEditContext();
 
     const title = t("html.label.themeEditor.title");
     return (
         <>
-            <ThemeStyleCss theme={{colors: currentColors, nightColors: currentNightColors}} useCases={currentUseCases}
-                           nightModeUseCases={currentNightModeUseCases}/>
+            <ThemeStyleCss editMode/>
             <Sidebar page={title} items={[]}/>
             <div className="d-flex flex-column" id="content-wrapper">
                 <Header page={title} tab={name} hideUpdater/>

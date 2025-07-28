@@ -17,25 +17,28 @@ const Contents = ({name, color}) => {
     const {editColor, deleting, deleteColor} = useColorEditContext();
 
     return (
-        <>
-            <button
-                onClick={() => {
-                    if (deleting) {
-                        deleteColor(name);
-                    } else {
-                        editColor(name, color)
-                    }
-                }}
-                className="color-box-wrapper"
-                style={{'--box-color': cssColor, '--box-contrast-color': contrastColor}}
-                title={`${name}: ${color}`}
-            >
-                <span>{name}</span>
-                {!hovered && !deleting && <div>{color}</div>}
-                {hovered && !deleting && <div><FontAwesomeIcon icon={faPencil}/></div>}
-                {deleting && <div><FontAwesomeIcon icon={faTrash}/></div>}
-            </button>
-        </>
+        <button
+            onClick={() => {
+                if (deleting) {
+                    deleteColor(name);
+                } else {
+                    editColor(name, color)
+                }
+            }}
+            className="color-box-wrapper"
+            style={{
+                '--box-color': cssColor,
+                '--box-contrast-color': contrastColor,
+                textOverflow: 'ellipsis',
+                overflow: 'hidden'
+            }}
+            title={`${name}: ${color}`}
+        >
+            <span>{name}</span>
+            {!hovered && !deleting && <div>{color}</div>}
+            {hovered && !deleting && <div><FontAwesomeIcon icon={faPencil}/></div>}
+            {deleting && <div><FontAwesomeIcon icon={faTrash}/></div>}
+        </button>
     )
 }
 

@@ -129,6 +129,7 @@ p.collapsing {
     width: 2rem;
     height: 2rem;
     border: 4px solid var(--color-layout-loader-border);
+    background: var(--color-layout-loader-background);
     background-color: var(--color-layout-loader-background);
     border-radius: 5px;
     animation: loader 2s infinite ease;

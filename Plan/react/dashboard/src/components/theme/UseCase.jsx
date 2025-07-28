@@ -42,7 +42,9 @@ const UseCase = ({path, value, onChange, onHoverChange, colors, isNightMode, bas
                         {(level === 0 && path[0] !== 'referenceColors') && <hr/>}
                         <h6 className={'mt-2 mb-3'} style={{marginLeft: level * 20, fontWeight: "bold"}}
                             onMouseOver={() => onHoverChange(id, 'enter', isNightMode)}
-                            onMouseOut={() => onHoverChange(id, 'exit', isNightMode)}>
+                            onFocus={() => onHoverChange(id, 'enter', isNightMode)}
+                            onMouseOut={() => onHoverChange(id, 'exit', isNightMode)}
+                            onBlur={() => onHoverChange(id, 'exit', isNightMode)}>
                             {formatLabel(path[path.length - 1])}
                         </h6>
                     </td>

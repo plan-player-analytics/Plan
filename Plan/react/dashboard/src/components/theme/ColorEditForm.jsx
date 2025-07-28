@@ -144,12 +144,16 @@ const ColorEditForm = () => {
         const rgbRegex = /^rgba?\(\s*(\d{1,3}%?\s*,\s*){2}\d{1,3}%?(\s*,\s*(0|1|0?\.\d+))?\s*\)$/;
         const hslRegex = /^hsla?\(\s*(\d{1,3})(deg)?\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%(?:\s*,\s*(0|1|0?\.\d+))?\s*\)$/i;
         const hsvRegex = /^hsva?\(\s*(\d{1,3})(deg)?\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%(?:\s*,\s*(0|1|0?\.\d+))?\s*\)$/i;
+        const linearGradientRegex = /^linear-gradient\(.*\)$/i;
+        const radialGradientRegex = /^radial-gradient\(.*\)$/i;
 
-        return !(hexRegex.test(color) || rgbRegex.test(color) || hslRegex.test(color) || hsvRegex.test(color));
+        return !(hexRegex.test(color) || rgbRegex.test(color) || hslRegex.test(color) || hsvRegex.test(color) || linearGradientRegex.test(color) || radialGradientRegex.test(color));
     }
 
+    const isGradient = color.includes('gradient');
+
     return (
-        <Row className={"mb-4"}>
+        <Row className={"mb-4 color-edit-form"}>
             <Col>
                 <InputGroup>
                     <div className={"input-group-text"} style={{background: color, color: contrastColor}}>
@@ -165,8 +169,10 @@ const ColorEditForm = () => {
                     <ColorInput ref={ref} color={color} contrastColor={contrastColor}
                                 invalid={isColorInvalid()} onChange={onColorChange}/>
                 </InputGroup>
-                {alreadyExists && <span class="help-block" style={{color: "var(--color-warning)"}}><FontAwesomeIcon
+                {alreadyExists && <span className="help-block" style={{color: "var(--color-warning)"}}><FontAwesomeIcon
                     icon={faExclamationTriangle}/> {t('html.label.themeEditor.alreadyExistsWarning')}</span>}
+                {isGradient && <span className="help-block" style={{color: "var(--color-warning)"}}><FontAwesomeIcon
+                    icon={faExclamationTriangle}/> {t('html.label.themeEditor.gradientWarning')}</span>}
             </Col>
             <Col>
                 <ActionButton onClick={finishEdit} disabled={isNameInvalid() || isColorInvalid()}>
