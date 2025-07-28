@@ -470,7 +470,9 @@ public enum HtmlLang implements Lang {
     THEME_EDITOR_CHANGE_ADD_COLOR("html.label.themeEditor.changes.addColor", "Added {{name}} color {{color}}"),
     THEME_EDITOR_CHANGE_DELETE_COLOR("html.label.themeEditor.changes.deleteColor", "Deleted color {{name}}"),
     THEME_EDITOR_CHANGE_USE_CASE("html.label.themeEditor.changes.changeUseCase", "Changed {{path}} to {{name}}"),
+    THEME_EDITOR_CHANGE_USE_CASE_ARRAY("html.label.themeEditor.changes.changeUseCase", "Changed {{path}} list"),
     THEME_EDITOR_CHANGE_NIGHT_MODE("html.label.themeEditor.changes.changeNightMode", "Changed night mode {{path}} to {{name}}"),
+    THEME_EDITOR_CHANGE_NIGHT_MODE_ARRAY("html.label.themeEditor.changes.changeNightMode", "Changed night mode {{path}} list"),
     THEME_EDITOR_CHANGE_REMOVE_NIGHT_MODE("html.label.themeEditor.changes.removeNightMode", "Removed night mode override {{path}}"),
     THEME_EDITOR_CHANGE_DISCARDED_CHANGES("html.label.themeEditor.changes.discardedChanges", "Discarded changes:"),
 

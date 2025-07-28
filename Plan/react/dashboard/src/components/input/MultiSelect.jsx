@@ -1,7 +1,7 @@
 import React, {useMemo} from 'react';
 import Select from 'react-select';
 
-const MultiSelect = ({options, selectedIndexes, setSelectedIndexes, className}) => {
+const MultiSelect = ({options, selectedIndexes, setSelectedIndexes, className, style}) => {
     // Convert options to react-select format
     const selectOptions = options.map((option, index) => ({
         value: index,
@@ -17,6 +17,7 @@ const MultiSelect = ({options, selectedIndexes, setSelectedIndexes, className}) 
     };
 
     const bootstrapStyles = useMemo(() => ({
+        container: (provided) => ({...provided, ...style}),
         control: (provided) => ({
             ...provided,
             background: 'var(--color-forms-input-background)',

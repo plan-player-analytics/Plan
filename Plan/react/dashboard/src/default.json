@@ -85,47 +85,29 @@
     "night-text": "#eee8d5",
     "night-text-50-percent": "rgba(238, 232, 213, 0.5)"
   },
-  "pieColors": [
-    "pie-0",
-    "pie-1",
-    "pie-2",
-    "pie-3",
-    "pie-4",
-    "pie-5",
-    "pie-6",
-    "pie-7",
-    "pie-8",
-    "pie-9"
-  ],
-  "pieDrilldownColors": [
-    "drilldown-0",
-    "drilldown-1",
-    "drilldown-2",
-    "drilldown-3"
-  ],
-  "themeColorOptions": [
-    "theme",
-    "red",
-    "pink",
-    "purple",
-    "deep-purple",
-    "indigo",
-    "blue",
-    "light-blue",
-    "cyan",
-    "teal",
-    "green",
-    "light-green",
-    "lime",
-    "yellow",
-    "amber",
-    "orange",
-    "deep-orange",
-    "brown",
-    "grey",
-    "blue-grey"
-  ],
   "useCases": {
+    "themeColorOptions": [
+      "theme",
+      "red",
+      "pink",
+      "purple",
+      "deep-purple",
+      "indigo",
+      "blue",
+      "light-blue",
+      "cyan",
+      "teal",
+      "green",
+      "light-green",
+      "lime",
+      "yellow",
+      "amber",
+      "orange",
+      "deep-orange",
+      "brown",
+      "grey",
+      "blue-grey"
+    ],
     "referenceColors": {
       "theme": "var(--color-plan)",
       "themeText": "var(--color-theme)",
@@ -261,6 +243,26 @@
         "high": "var(--color-high-green)",
         "low": "var(--color-map-green)",
         "bars": "var(--color-green)"
+      },
+      "pie": {
+        "colors": [
+          "pie-0",
+          "pie-1",
+          "pie-2",
+          "pie-3",
+          "pie-4",
+          "pie-5",
+          "pie-6",
+          "pie-7",
+          "pie-8",
+          "pie-9"
+        ],
+        "drilldown": [
+          "drilldown-0",
+          "drilldown-1",
+          "drilldown-2",
+          "drilldown-3"
+        ]
       }
     },
     "data": {
@@ -337,6 +339,9 @@
     }
   },
   "nightModeUseCases": {
+    "themeColorOptions": [
+      "theme"
+    ],
     "referenceColors": {
       "theme": "var(--color-night-dark-blue)",
       "themeText": "var(--color-plan)",

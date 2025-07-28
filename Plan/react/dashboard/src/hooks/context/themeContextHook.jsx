@@ -11,21 +11,12 @@ export const ThemeStorageContextProvider = ({children}) => {
     const [currentNightColors, setCurrentNightColors] = useState(theme.nightColors);
     const [currentUseCases, setCurrentUseCases] = useState(theme.useCases);
     const [currentNightModeUseCases, setCurrentNightModeUseCases] = useState(theme.nightModeUseCases);
-    const [currentPieColors, setCurrentPieColors] = useState(theme.pieColors);
-    const [currentDrilldownColors, setCurrentDrilldownColors] = useState(theme.pieDrilldownColors);
-    const [currentThemeColorOptions, setCurrentThemeColorOptions] = useState(theme.themeColorOptions);
 
     const sharedState = useMemo(() => {
         return {
-            name, setName, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases,
-            currentPieColors, setCurrentPieColors,
-            currentDrilldownColors, setCurrentDrilldownColors,
-            currentThemeColorOptions, setCurrentThemeColorOptions
+            name, setName, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases
         }
-    }, [name, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases,
-        currentPieColors, setCurrentPieColors,
-        currentDrilldownColors, setCurrentDrilldownColors,
-        currentThemeColorOptions, setCurrentThemeColorOptions]);
+    }, [name, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases]);
     return (<ThemeStorageContext.Provider value={sharedState}>
             {children}
         </ThemeStorageContext.Provider>

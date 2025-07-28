@@ -15,16 +15,10 @@ export const ThemeEditContextProvider = ({children}) => {
         currentColors,
         currentNightColors,
         currentUseCases,
-        currentNightModeUseCases,
-        currentPieColors: originalPieColors,
-        currentDrilldownColors: originalDrilldownColors,
-        currentThemeColorOptions: originalThemeColorOptions
+        currentNightModeUseCases
     } = useThemeStorage();
 
     const [name, setName] = useState(originalName);
-    const [currentPieColors, setCurrentPieColors] = useState(originalPieColors);
-    const [currentDrilldownColors, setCurrentDrilldownColors] = useState(originalDrilldownColors);
-    const [currentThemeColorOptions, setCurrentThemeColorOptions] = useState(originalThemeColorOptions);
 
     const applyEdits = (type, object) => {
         console.debug('Applying edits', edits.length)
@@ -198,22 +192,36 @@ export const ThemeEditContextProvider = ({children}) => {
         // Get the new state without the override
         return removeOverride(current, path) || {};
     };
-    const updateUseCase = (newValue, path) => addEdit({
-        name: t('html.label.themeEditor.changes.changeUseCase', {
-            path: path.join('.'),
-            name: cssVariableToName(newValue)
-        }),
-        type: 'useCase',
-        operation: current => handleColorChange(current, newValue, path)
-    });
-    const updateNightUseCase = (newValue, path) => addEdit({
-        name: t('html.label.themeEditor.changes.changeNightMode', {
-            path: path.join('.'),
-            name: cssVariableToName(newValue)
-        }),
-        type: 'nightModeUseCase',
-        operation: current => handleColorChange(current, newValue, path)
-    });
+
+    const updateUseCase = (newValue, path) => Array.isArray(newValue)
+        ? addEdit({
+            name: t('html.label.themeEditor.changes.changeUseCaseArray', {path: path.join('.')}),
+            type: 'useCase',
+            operation: current => handleColorChange(current, newValue, path)
+        })
+        : addEdit({
+            name: t('html.label.themeEditor.changes.changeUseCase', {
+                path: path.join('.'),
+                name: cssVariableToName(newValue)
+            }),
+            type: 'useCase',
+            operation: current => handleColorChange(current, newValue, path)
+        });
+
+    const updateNightUseCase = (newValue, path) => Array.isArray(newValue)
+        ? addEdit({
+            name: t('html.label.themeEditor.changes.changeNightModeArray', {path: path.join('.')}),
+            type: 'nightModeUseCase',
+            operation: current => handleColorChange(current, newValue, path)
+        })
+        : addEdit({
+            name: t('html.label.themeEditor.changes.changeNightMode', {
+                path: path.join('.'),
+                name: cssVariableToName(newValue)
+            }),
+            type: 'nightModeUseCase',
+            operation: current => handleColorChange(current, newValue, path)
+        });
     const removeNightOverride = (path) => addEdit({
         name: t('html.label.themeEditor.changes.removeNightMode', {path: path.join('.')}),
         type: 'nightModeUseCase',
@@ -258,9 +266,6 @@ export const ThemeEditContextProvider = ({children}) => {
             currentNightColors: editedNightColors,
             currentUseCases: editedUseCases,
             currentNightModeUseCases: editedNightModeUseCases,
-            currentPieColors,
-            currentDrilldownColors,
-            currentThemeColorOptions,
             editCount: edits.length,
             redoCount: redos.length,
             deleteColor,
@@ -270,9 +275,6 @@ export const ThemeEditContextProvider = ({children}) => {
             updateUseCase,
             updateNightUseCase,
             removeNightOverride,
-            setCurrentPieColors,
-            setCurrentDrilldownColors,
-            setCurrentThemeColorOptions,
             undo,
             redo,
             discardChanges,

@@ -391,11 +391,34 @@ export const calculateCssColors = (cssSelector) => {
             }
         } catch (e) {
             // Skip stylesheets we can't access
-
         }
     }
 
     return colors;
+}
+
+export const calculateCssMinHeight = (cssSelector) => {
+    for (const stylesheet of document.styleSheets) {
+        try {
+            // Skip if we can't access the rules (e.g., cross-origin stylesheets)
+            if (!stylesheet.cssRules) continue;
+
+            // Look through all rules in the stylesheet
+            for (const rule of stylesheet.cssRules) {
+                if (rule instanceof CSSStyleRule && rule.selectorText === cssSelector) {
+                    const style = rule.style;
+
+                    // Get color if set
+                    if (style.minHeight) {
+                        return style.minHeight;
+                    }
+                }
+            }
+        } catch (e) {
+            // Skip stylesheets we can't access
+        }
+    }
+    return 0;
 }
 
 export const extractUniqueSelectors = (cssString) => {

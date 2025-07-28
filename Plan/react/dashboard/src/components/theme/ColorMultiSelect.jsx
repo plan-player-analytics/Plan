@@ -1,15 +1,16 @@
-import React, {useEffect, useState} from 'react';
+import React from 'react';
 import MultiSelect from "../input/MultiSelect.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSquare} from "@fortawesome/free-solid-svg-icons";
 
-const ColorMultiSelect = ({className, colors, selectedColors, setSelectedColors, sort}) => {
+const ColorMultiSelect = ({className, colors, selectedColors, setSelectedColors, sort, style}) => {
     const colorArray = Object.keys(colors);
-    const [selectedIndexes, setSelectedIndexes] = useState(selectedColors ? selectedColors.map(color => colorArray.indexOf(color)) : []);
+    const selectedIndexes = selectedColors ? selectedColors.map(color => colorArray.indexOf(color)) : [];
 
     const changeSelectedIndexes = selected => {
-        setSelectedIndexes(sort ? selected.toSorted() : selected);
-    }
+        const newIndexes = sort ? selected.toSorted() : selected;
+        setSelectedColors?.(newIndexes.length ? newIndexes.map(index => colorArray[index]) : [colorArray[0]]);
+    };
 
     const options = colorArray.map(color => (
         <span key={color} style={{
@@ -17,19 +18,9 @@ const ColorMultiSelect = ({className, colors, selectedColors, setSelectedColors,
         }}><FontAwesomeIcon icon={faSquare}/> {color}</span>
     ));
 
-    useEffect(() => {
-        if (selectedIndexes.length) {
-            if (selectedIndexes.length !== selectedColors.length) {
-                setSelectedColors?.(selectedIndexes.map(index => colorArray[index]));
-            }
-        } else {
-            setSelectedIndexes([0]);
-        }
-    }, [selectedIndexes, selectedColors]);
-
     return (
         <MultiSelect className={className} options={options} selectedIndexes={selectedIndexes}
-                     setSelectedIndexes={changeSelectedIndexes}/>
+                     setSelectedIndexes={changeSelectedIndexes} style={style}/>
     )
 };
 
