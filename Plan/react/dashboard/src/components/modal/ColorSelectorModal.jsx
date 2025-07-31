@@ -2,12 +2,17 @@ import React from "react";
 import {useTheme} from "../../hooks/themeHook";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCloudMoon, faPalette} from "@fortawesome/free-solid-svg-icons";
-import {colorEnumToBgClass} from "../../util/colors";
+import {nameToContrastCssVariable, nameToCssVariable} from "../../util/colors";
 import {Modal} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
+import {useThemeStorage} from "../../hooks/context/themeContextHook.jsx";
 
 const ColorSelectorButton = ({color, setColor, disabled}) =>
-    <button className={"btn color-chooser " + colorEnumToBgClass(color) + (disabled ? " disabled" : '')}
+    <button className={`btn color-chooser ${disabled ? " disabled" : ''}`}
+            style={{
+                color: nameToContrastCssVariable(color),
+                backgroundColor: nameToCssVariable(color)
+            }}
             id={"choose-" + color}
             disabled={disabled}
             onClick={() => setColor(color)}
@@ -18,6 +23,9 @@ const ColorSelectorButton = ({color, setColor, disabled}) =>
 const ColorSelectorModal = () => {
     const {t} = useTranslation();
     const theme = useTheme();
+    const {currentUseCases, currentNightModeUseCases} = useThemeStorage();
+
+    const colorOptions = (theme.nightModeEnabled ? currentNightModeUseCases : currentUseCases)['themeColorOptions'];
 
     return (
         <Modal id="colorChooserModal"
@@ -31,12 +39,11 @@ const ColorSelectorModal = () => {
                 <button aria-label="Close" className="btn-close" onClick={theme.toggleColorChooser}/>
             </Modal.Header>
             <Modal.Body style={{padding: "0.5rem 0 0.5rem 0.5rem"}}>
-                {theme.themeColors.map(color =>
+                {colorOptions.map(color =>
                     <ColorSelectorButton
-                        key={color.name}
-                        color={color.name}
+                        key={color}
+                        color={color}
                         setColor={theme.setColor}
-                        disabled={theme.nightModeEnabled}
                     />)}
             </Modal.Body>
             <Modal.Footer>

@@ -398,7 +398,7 @@ pre {
 }
 
 .form-control:disabled, .form-control[readonly] {
-    background-color: #eaecf4;
+    background-color: color-mix(in hsl, var(--color-forms-input-background), var(--contrast-color-forms-input-background) 10%);
 }
 
 select.form-control:focus::-ms-value {

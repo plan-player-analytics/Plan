@@ -55,6 +55,7 @@ public class Theme implements SubSystem {
         this.logger = logger;
     }
 
+    @Deprecated
     public String getValue(ThemeVal variable) {
         try {
             return getThemeValue(variable);
@@ -94,6 +95,7 @@ public class Theme implements SubSystem {
         return variable.getDefaultValue();
     }
 
+    @Deprecated
     public String replaceThemeColors(String resourceString) {
         return replaceVariables(resourceString,
                 RED, PINK, PURPLE,

@@ -344,6 +344,28 @@
         "kicks": "var(--color-brown)",
         "nicknames": "var(--color-purple)"
       }
+    },
+    "plugin": {
+      "red": "var(--color-red)",
+      "pink": "var(--color-pink)",
+      "purple": "var(--color-purple)",
+      "deepPurple": "var(--color-deep-purple)",
+      "indigo": "var(--color-indigo)",
+      "blue": "var(--color-blue)",
+      "lightBlue": "var(--color-light-blue)",
+      "cyan": "var(--color-cyan)",
+      "teal": "var(--color-teal)",
+      "green": "var(--color-green)",
+      "lightGreen": "var(--color-light-green)",
+      "lime": "var(--color-lime)",
+      "yellow": "var(--color-yellow)",
+      "amber": "var(--color-amber)",
+      "orange": "var(--color-orange)",
+      "deepOrange": "var(--color-deep-orange)",
+      "brown": "var(--color-brown)",
+      "grey": "var(--color-grey)",
+      "blue-grey": "var(--color-blue-grey)",
+      "black": "var(--color-black)"
     }
   },
   "nightModeUseCases": {

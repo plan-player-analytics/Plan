@@ -1,10 +1,6 @@
 import {createContext, useContext, useEffect, useMemo, useState} from "react";
-import {createNightModeCss, getColors} from "../util/colors";
 import {getChartTheming} from "../util/graphColors";
 import {useMetadata} from "./metadataHook";
-
-const themeColors = getColors();
-themeColors.splice(themeColors.length - 4, 4);
 
 const getDefaultTheme = (metadata) => {
     const defaultTheme = metadata.defaultTheme;
@@ -15,7 +11,7 @@ const getDefaultTheme = (metadata) => {
         || defaultTheme === 'default'
         || defaultTheme === 'black'
         || defaultTheme === 'white'
-        || (defaultTheme !== 'night' && !themeColors.map(color => color.name).includes(defaultTheme));
+        || defaultTheme !== 'night';
 
     return invalidColor ? 'plan' : defaultTheme;
 }
@@ -104,12 +100,10 @@ export const useTheme = () => {
         currentTheme: selectedColor,
         color: selectedColor,
         setColor: setTheme,
-        nightModeEnabled: nightModeEnabled,
-        colorChooserOpen: colorChooserOpen,
-        nightModeCss: nightModeEnabled ? createNightModeCss() : undefined,
-        toggleNightMode: toggleNightMode,
-        toggleColorChooser: toggleColorChooser,
-        themeColors: themeColors,
+        nightModeEnabled,
+        colorChooserOpen,
+        toggleNightMode,
+        toggleColorChooser,
         graphTheming: chartTheming
     };
 }
