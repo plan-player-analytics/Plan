@@ -38,7 +38,6 @@ const Header = ({page, tab, hideUpdater}) => {
 
     const {getPlayerHeadImageUrl} = useMetadata();
     const headImageUrl = user ? getPlayerHeadImageUrl(user.playerName, user.playerUUID) : undefined
-    // TODO Remove .replace('<', '') after locale replacement
     return (
         <nav className="nav-header nav mt-3 align-items-center justify-content-between container-fluid">
             <div className="d-sm-flex">
@@ -47,7 +46,7 @@ const Header = ({page, tab, hideUpdater}) => {
                         <Fa icon={faBars} className={"sidebar-toggler"}/>
                     </button>
                     {page}
-                    {tab ? <>{' '}&middot; {t(tab).replace('<', '')}</> : ''}</h1>
+                    {tab ? <>{' '}&middot; {t(tab)}</> : ''}</h1>
             </div>
 
             {!hideUpdater && <>

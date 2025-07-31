@@ -17,7 +17,6 @@
 package com.djrapitops.plan.storage.database.queries.filter.filters;
 
 import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
-import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.FilterLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.filter.CompleteSetException;
@@ -32,15 +31,12 @@ import java.util.*;
 public class OperatorsFilter extends MultiOptionFilter {
 
     private final DBSystem dbSystem;
-    private final Locale locale;
 
     @Inject
     public OperatorsFilter(
-            DBSystem dbSystem,
-            Locale locale
+            DBSystem dbSystem
     ) {
         this.dbSystem = dbSystem;
-        this.locale = locale;
     }
 
     @Override
@@ -49,7 +45,7 @@ public class OperatorsFilter extends MultiOptionFilter {
     }
 
     private String[] getOptionsArray() {
-        return new String[]{locale.getString(FilterLang.OPERATORS), locale.getString(FilterLang.NON_OPERATORS)};
+        return new String[]{FilterLang.OPERATORS.getKey(), FilterLang.NON_OPERATORS.getKey()};
     }
 
     @Override

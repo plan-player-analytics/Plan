@@ -27,7 +27,7 @@ const MultipleChoiceFilter = ({index, label, filter, removeFilter, setFilterOpti
 
     return (
         <div id={'filter-' + index} className="mt-2">
-            <label className="form-label" htmlFor={'filter-' + index}>{select}{t(label)}:</label>
+            <label className="form-label" htmlFor={'filter-' + index}>{select} {t(label)}:</label>
             <Row>
                 <Col md={11} className={"flex-fill"}>
                     <MultiSelect options={filter.options.options}

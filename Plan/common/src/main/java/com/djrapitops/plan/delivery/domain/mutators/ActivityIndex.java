@@ -120,6 +120,16 @@ public class ActivityIndex {
         };
     }
 
+    public static String[] getGroupLocaleKeys() {
+        return new String[]{
+                HtmlLang.INDEX_VERY_ACTIVE.getKey(),
+                HtmlLang.INDEX_ACTIVE.getKey(),
+                HtmlLang.INDEX_REGULAR.getKey(),
+                HtmlLang.INDEX_IRREGULAR.getKey(),
+                HtmlLang.INDEX_INACTIVE.getKey()
+        };
+    }
+
     private double calculate(DataContainer container) {
         return calculate(SessionsMutator.forContainer(container));
     }
@@ -206,6 +216,20 @@ public class ActivityIndex {
             return locale.getString(HtmlLang.INDEX_IRREGULAR);
         } else {
             return locale.getString(HtmlLang.INDEX_INACTIVE);
+        }
+    }
+
+    public String getGroupLocaleKey() {
+        if (value >= VERY_ACTIVE) {
+            return HtmlLang.INDEX_VERY_ACTIVE.getKey();
+        } else if (value >= ACTIVE) {
+            return HtmlLang.INDEX_ACTIVE.getKey();
+        } else if (value >= REGULAR) {
+            return HtmlLang.INDEX_REGULAR.getKey();
+        } else if (value >= IRREGULAR) {
+            return HtmlLang.INDEX_IRREGULAR.getKey();
+        } else {
+            return HtmlLang.INDEX_INACTIVE.getKey();
         }
     }
 }

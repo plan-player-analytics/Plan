@@ -1172,7 +1172,7 @@ div#navSrvContainer::-webkit-scrollbar-thumb {
 }
 
 .col-theme {
-    color: var(--color-theme);
+    color: var(--color-theme-text);
 }
 
 .col-text {
@@ -1355,7 +1355,7 @@ ul.filters {
 #wrapper {
     display: flex;
     min-height: 100vh;
-    background-image: linear-gradient(to right, var(--color-theme) 0%, var(--color-theme) 14rem, #f8f9fc 14.01rem, #f8f9fc 100%);
+    background-image: linear-gradient(to right, var(--color-theme) 0%, var(--color-theme) 14rem, var(--color-layout-background) 14.01rem, var(--color-layout-background) 100%);
 }
 
 .contributor {

@@ -21,7 +21,7 @@ const serverCount = (count, t) => {
     } else if (count === 2) {
         return t('html.query.label.servers.two');
     } else {
-        return t('html.query.label.servers.many').replace('{number}', count);
+        return t('html.query.label.servers.many', {number: count});
     }
 }
 
@@ -89,8 +89,8 @@ const QueryResultView = () => {
                     </Col>
                     <Col lg={4}>
                         <CurrentPlayerbaseCardWithData data={result.data.activity}
-                                                       title={t('html.query.title.activityOnDate')
-                                                           .replace('<span id="activity-date"></span>', result.view.beforeDate)}/>
+                                                       title={t('html.query.title.activityOnDate',
+                                                           {activityDate: result.view.beforeDate})}/>
                     </Col>
                 </Row>
                 <Row>

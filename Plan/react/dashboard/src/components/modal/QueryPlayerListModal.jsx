@@ -16,7 +16,7 @@ const QueryPlayerListModal = ({open, toggle, queryData, title}) => {
         <Modal id="queryModal" aria-labelledby="queryModalLabel" show={open} onHide={toggle} size="xl">
             <Modal.Header>
                 <Modal.Title id="queryModalLabel">
-                    <Fa icon={faSearch}/> {queryData ? title || getViewTitle(queryData, t, true) : t('html.query.title.text').replace('<', '')}
+                    <Fa icon={faSearch}/> {queryData ? title || getViewTitle(queryData, t, true) : t('html.query.title.text')}
                 </Modal.Title>
                 <button aria-label="Close" className="btn-close" type="button" onClick={toggle}/>
             </Modal.Header>

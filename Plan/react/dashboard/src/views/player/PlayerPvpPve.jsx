@@ -43,7 +43,7 @@ const PvpDeathsTableCard = ({player}) => {
                     <Fa icon={faSkull} className="col-player-kills"/> {t('html.label.recentPvpDeaths')}
                 </h6>
             </Card.Header>
-            <KillsTable kills={player.player_deaths}/>
+            <KillsTable kills={player.player_deaths} deaths/>
         </Card>
     )
 }

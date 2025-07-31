@@ -21,6 +21,7 @@ export const useDatePreferences = () => {
 }
 
 export function formatDate(date, offset, pattern, recentDays, recentDaysPattern, t) {
+    if (!isNumber(date)) return date;
     const dayMs = 24 * 60 * 60 * 1000;
     const timestamp = date - offset;
     const now = Date.now();

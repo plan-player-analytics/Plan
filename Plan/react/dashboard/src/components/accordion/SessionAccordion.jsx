@@ -1,23 +1,28 @@
 import React from "react";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import {faCrosshairs, faServer, faSignal, faSkull, faUser} from "@fortawesome/free-solid-svg-icons";
-import {faCalendarPlus, faClock, faMap} from "@fortawesome/free-regular-svg-icons";
+import {faCrosshairs, faServer, faSignal, faSkull, faUser, faUserPlus} from "@fortawesome/free-solid-svg-icons";
+import {faClock, faMap} from "@fortawesome/free-regular-svg-icons";
 import Datapoint from "../Datapoint";
 import {Col, Row} from "react-bootstrap";
 import WorldPie from "../graphs/WorldPie";
-import KillsTable from "../table/KillsTable";
+import {SimpleKillsTable} from "../table/KillsTable";
 import Accordion from "./Accordion";
 import {useTranslation} from "react-i18next";
 import {baseAddress} from "../../service/backendConfiguration";
 import {ChartLoader} from "../navigation/Loader";
+import {usePreferences} from "../../hooks/preferencesHook.jsx";
+import FormattedDate from "../text/FormattedDate.jsx";
+import FormattedTime from "../text/FormattedTime.jsx";
+import {formatDecimals} from "../../util/formatters.js";
 
 const SessionHeader = ({session}) => {
+    const {t} = useTranslation();
     return (
         <>
-            <td>{session.name}{session.first_session ?
-                <Fa icon={faCalendarPlus} title="Registered (First session)"/> : ''}</td>
-            <td>{session.start}</td>
-            <td>{session.length}</td>
+            <td>{session.name} {session.first_session ?
+                <Fa icon={faUserPlus} title="Registered (First session)"/> : ''}</td>
+            <td><FormattedDate date={session.start}/>{session.online ? ` (${t('html.value.online').trim()})` : ''}</td>
+            <td><FormattedTime timeMs={session.length}/></td>
             <td>{session.network_server ? session.network_server : session.most_used_world}</td>
         </>
     )
@@ -25,20 +30,21 @@ const SessionHeader = ({session}) => {
 
 const SessionBody = ({i, session}) => {
     const {t} = useTranslation();
+    const {decimalFormat} = usePreferences();
     return (
         <Row>
             <Col lg={6}>
                 <Datapoint
                     icon={faClock} color={"sessions"}
-                    name={t('html.label.sessionEnded')} value={session.end} bold
+                    name={t('html.label.sessionEnded')} value={<FormattedDate date={session.end}/>} bold
                 />
                 <Datapoint
                     icon={faClock} color={"sessions"}
-                    name={t('html.label.length')} value={session.length} bold
+                    name={t('html.label.length')} value={<FormattedTime timeMs={session.length}/>} bold
                 />
                 <Datapoint
                     icon={faClock} color={"playtime-afk"}
-                    name={t('html.label.afkTime')} value={session.afk_time} bold
+                    name={t('html.label.afkTime')} value={<FormattedTime timeMs={session.afk_time}/>} bold
                 />
                 <Datapoint
                     icon={faServer} color={"servers"}
@@ -46,7 +52,7 @@ const SessionBody = ({i, session}) => {
                 />
                 {session.avg_ping ? <Datapoint
                     icon={faSignal} color={"ping"}
-                    name={t('html.label.averagePing')} value={session.avg_ping} bold
+                    name={t('html.label.averagePing')} value={formatDecimals(session.avg_ping, decimalFormat)} bold
                 /> : ''}
                 <br/>
                 <Datapoint
@@ -62,7 +68,7 @@ const SessionBody = ({i, session}) => {
                     name={t('html.label.deaths')} value={session.deaths} bold
                 />
                 <hr/>
-                <KillsTable kills={session.player_kills}/>
+                <SimpleKillsTable kills={session.player_kills}/>
             </Col>
             <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
                 <WorldPie id={"worldpie_" + i}
@@ -89,8 +95,9 @@ const SessionAccordion = (
     }
 ) => {
     const {t} = useTranslation();
+    const {preferencesLoaded} = usePreferences();
 
-    if (!sessions) return <ChartLoader/>
+    if (!sessions || !preferencesLoaded) return <ChartLoader/>
 
     const firstColumn = isPlayer ? (<><Fa icon={faUser}/> {t('html.label.player')}</>)
         : (<><Fa icon={faServer}/> {t('html.label.server')}</>)

@@ -16,6 +16,7 @@ import DiskPerformanceGraph from "../../../graphs/performance/DiskPerformanceGra
 import PingGraph from "../../../graphs/performance/PingGraph";
 import {mapPerformanceDataToSeries} from "../../../../util/graphs";
 import {useAuth} from "../../../../hooks/authenticationHook";
+import {GraphExtremesContextProvider} from "../../../../hooks/interaction/graphExtremesContextHook.jsx";
 
 const AllGraphTab = ({data, dataSeries, pluginHistorySeries, loadingError}) => {
     if (loadingError) return <ErrorViewBody error={loadingError}/>
@@ -149,7 +150,9 @@ const PerformanceGraphsCard = () => {
         },
     ].filter(tab => hasChildPermission(tab.permission));
     return <Card id={"performance-graphs"}>
-        <CardTabs tabs={tabs}/>
+        <GraphExtremesContextProvider>
+            <CardTabs tabs={tabs}/>
+        </GraphExtremesContextProvider>
     </Card>
 }
 

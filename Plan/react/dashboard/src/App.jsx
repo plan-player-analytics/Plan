@@ -6,8 +6,8 @@ import './style/mobile.css';
 import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
 
 import {createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider} from "react-router-dom";
-import React, {useCallback} from "react";
-import {ThemeContextProvider, ThemeCss} from "./hooks/themeHook";
+import React, {useCallback, useEffect} from "react";
+import {ThemeContextProvider, useTheme} from "./hooks/themeHook";
 import axios from "axios";
 import ErrorView from "./views/ErrorView";
 import {faMapSigns} from "@fortawesome/free-solid-svg-icons";
@@ -22,6 +22,7 @@ import {AlertPopupContextProvider} from "./hooks/context/alertPopupContext";
 import {PreferencesContextProvider} from "./hooks/preferencesHook";
 import {ThemeStorageContextProvider} from "./hooks/context/themeContextHook.jsx";
 import {ThemeEditContextProvider} from "./hooks/context/themeEditContextHook.jsx";
+import {ThemeStyleCss} from "./components/theme/ThemeStyleCss.jsx";
 
 const PlayerPage = React.lazy(() => import("./views/layout/PlayerPage"));
 const PlayerOverview = React.lazy(() => import("./views/player/PlayerOverview"));
@@ -228,16 +229,34 @@ const router = createBrowserRouter(
     ), {basename: getBasename()}
 );
 
+const Wrapper = ({children}) => {
+    const {nightModeEnabled} = useTheme();
+
+    useEffect(() => {
+        if (nightModeEnabled) {
+            document.body.classList.add('night-mode-colors');
+        } else {
+            document.body.classList.remove('night-mode-colors');
+        }
+    }, [nightModeEnabled]);
+
+    return (
+        <div id={`wrapper`} className={nightModeEnabled && 'night-mode-colors'}>
+            {children}
+        </div>
+    )
+}
+
 function App() {
     axios.defaults.withCredentials = true;
 
     return (
         <div className="App">
             <ContextProviders>
-                <ThemeCss/>
-                <div id="wrapper">
+                <ThemeStyleCss/>
+                <Wrapper>
                     <RouterProvider router={router}/>
-                </div>
+                </Wrapper>
             </ContextProviders>
         </div>
     );

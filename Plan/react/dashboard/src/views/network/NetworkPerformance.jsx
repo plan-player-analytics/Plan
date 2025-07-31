@@ -14,6 +14,7 @@ import {mapPerformanceDataToSeries} from "../../util/graphs";
 import PerformanceGraphsCard from "../../components/cards/network/PerformanceGraphsCard";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 import {useAuth} from "../../hooks/authenticationHook";
+import ActionButton from "../../components/input/ActionButton.jsx";
 
 const NetworkPerformance = () => {
     const {hasPermission} = useAuth();
@@ -110,10 +111,9 @@ const NetworkPerformance = () => {
                             <MultiSelect options={serverOptions.map(server => server.serverName)}
                                          selectedIndexes={selectedOptions}
                                          setSelectedIndexes={setSelectedOptions}/>
-                            <button className={'btn ' + (isUpToDate ? 'bg-transparent' : 'bg-theme')}
-                                    onClick={applySelected} disabled={isUpToDate}>
+                            <ActionButton onClick={applySelected} disabled={isUpToDate}>
                                 {t('html.label.apply')}
-                            </button>
+                            </ActionButton>
                         </Card>
                     </Col>
                 </ExtendableRow>

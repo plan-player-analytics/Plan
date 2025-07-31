@@ -17,7 +17,7 @@ const UseCaseSection = ({
     const mergedUseCases = isNightMode && baseUseCases ? mergeUseCases(baseUseCases, useCases) : useCases;
 
     return (
-        <div className={"ps-4 pt-4 pb-4 mb-4" + (isNightMode ? ' night-mode-colors' : '')}>
+        <div className={"use-case-section ps-4 pt-4 pb-4 mb-4" + (isNightMode ? ' night-mode-colors' : '')}>
             <h5 className="mb-3">{isNightMode ? t('html.label.themeEditor.nightModeOverrides') : t('html.label.themeEditor.useCases')}</h5>
             <table style={{width: '100%', borderCollapse: 'collapse'}}>
                 <tbody>

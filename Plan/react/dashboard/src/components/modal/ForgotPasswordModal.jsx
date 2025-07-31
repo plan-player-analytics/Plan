@@ -16,13 +16,13 @@ const ForgotPasswordModal = ({show, toggle}) => {
                show={show}
                onHide={toggle}
         >
-            <Modal.Header className="bg-white">
+            <Modal.Header>
                 <Modal.Title id="forgotModalLabel">
                     <Fa icon={faHandPointRight}/> {t('html.login.forgotPassword1')}
                 </Modal.Title>
                 <button aria-label="Close" className="btn-close" onClick={toggle}/>
             </Modal.Header>
-            <Modal.Body className="bg-white">
+            <Modal.Body>
                 <p>{t('html.login.forgotPassword2')}</p>
                 <p><code>/{mainCommand || 'plan'} unregister</code></p>
                 <p>{t('html.login.forgotPassword3')}</p>

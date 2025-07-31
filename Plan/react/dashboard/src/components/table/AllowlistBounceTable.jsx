@@ -64,7 +64,7 @@ const AllowlistBounceTable = ({bounces, lastSeen}) => {
     if (!preferencesLoaded) return <></>;
 
     return (
-        <DataTablesTable id={"allowlist-bounce-table"} options={options} colorClass={"bg-orange"}
+        <DataTablesTable id={"allowlist-bounce-table"} options={options} colorClass={"bg-allow-list"}
                          rowKeyFunction={rowKeyFunction}/>
     )
 };

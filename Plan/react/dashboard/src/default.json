@@ -146,6 +146,11 @@
         "border": "var(--color-cement-grey)"
       }
     },
+    "tabs": {
+      "background": "var(--color-white)",
+      "selected": "var(--color-white)",
+      "border": "var(--color-border-grey)"
+    },
     "infoBox": {
       "info": "var(--color-alert-success)",
       "infoText": "var(--color-alert-success-text)",
@@ -179,6 +184,9 @@
         "background": "var(--color-white)",
         "border": "var(--color-border-grey)",
         "text": "var(--color-cool-grey)"
+      },
+      "dropdown": {
+        "hover": "var(--color-white-grey)"
       },
       "multiSelect": {
         "itemBackground": "var(--color-pale-grey)"
@@ -376,6 +384,11 @@
         "border": "var(--color-night-blue)"
       }
     },
+    "tabs": {
+      "background": "var(--color-night-dark-blue)",
+      "selected": "var(--color-night-dark-blue)",
+      "border": "var(--color-night-blue)"
+    },
     "tables": {
       "coloredHeaderText": "var(--color-text)",
       "oddRow": "var(--color-table-slate)",
@@ -393,10 +406,13 @@
         "text": "var(--color-text)"
       },
       "multiSelect": {
-        "itemBackground": "var(--color-night-dark-grey-blue"
+        "itemBackground": "var(--color-night-dark-grey-blue)"
       },
       "checkbox": {
         "checked": "var(--color-plan)"
+      },
+      "dropdown": {
+        "hover": "var(--color-night-dark-grey-blue)"
       }
     },
     "calendar": {

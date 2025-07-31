@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
 import {linegraphButtons, tooltip} from "../../../util/graphs";
 import Highcharts from "highcharts/highstock";
@@ -9,6 +9,7 @@ import {withReducedSaturation} from "../../../util/colors";
 import Accessibility from "highcharts/modules/accessibility";
 import {useMetadata} from "../../../hooks/metadataHook";
 import {useAuth} from "../../../hooks/authenticationHook.jsx";
+import {useGraphExtremesContext} from "../../../hooks/interaction/graphExtremesContextHook.jsx";
 
 const yAxis = [
     {
@@ -68,6 +69,8 @@ const AllPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
     const {graphTheming, nightModeEnabled} = useTheme();
     const {timeZoneOffsetMinutes} = useMetadata();
     const {hasPermission} = useAuth();
+    const {extremes, onSetExtremes} = useGraphExtremesContext();
+    const [graph, setGraph] = useState(undefined);
 
     const onResize = useCallback(() => {
         let chartElement = document.getElementById(id);
@@ -164,13 +167,20 @@ const AllPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
         Accessibility(Highcharts);
         Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}})
         Highcharts.setOptions(graphTheming);
-        Highcharts.stockChart(id, {
+        setGraph(Highcharts.stockChart(id, {
             chart: {
                 noData: t('html.label.noDataToDisplay')
             },
             rangeSelector: {
                 selected: 2,
                 buttons: linegraphButtons
+            },
+            xAxis: {
+                events: {
+                    afterSetExtremes: (event) => {
+                        if (onSetExtremes) onSetExtremes(event);
+                    }
+                }
             },
             yAxis,
             title: {text: ''},
@@ -186,9 +196,13 @@ const AllPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
                 timezoneOffset: timeZoneOffsetMinutes
             },
             series: [series.playersOnline, series.tps, series.cpu, series.ram, series.entities, series.chunks, pluginHistorySeries]
-        });
+        }));
     }, [data, dataSeries, graphTheming, nightModeEnabled, id, t, timeZoneOffsetMinutes, pluginHistorySeries])
-
+    useEffect(() => {
+        if (graph?.xAxis?.length && extremes) {
+            graph.xAxis[0].setExtremes(extremes.min, extremes.max);
+        }
+    }, [graph, extremes]);
     return (
         <div className="chart-area" style={{height: "450px"}} id={id}>
             <span className="loader"/>

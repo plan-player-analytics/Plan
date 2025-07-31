@@ -1,8 +1,7 @@
 import {createContext, useContext, useEffect, useMemo, useState} from "react";
 import {createNightModeCss, getColors} from "../util/colors";
-import {getLightModeChartTheming, getNightModeChartTheming} from "../util/graphColors";
+import {getChartTheming} from "../util/graphColors";
 import {useMetadata} from "./metadataHook";
-import {useLocation} from "react-router-dom";
 
 const themeColors = getColors();
 themeColors.splice(themeColors.length - 4, 4);
@@ -60,8 +59,7 @@ export const ThemeContextProvider = ({children}) => {
     )
 }
 
-const lightModeChartTheming = getLightModeChartTheming();
-const nightModeChartTheming = getNightModeChartTheming();
+const chartTheming = getChartTheming();
 
 export const useTheme = () => {
     const {
@@ -112,39 +110,6 @@ export const useTheme = () => {
         toggleNightMode: toggleNightMode,
         toggleColorChooser: toggleColorChooser,
         themeColors: themeColors,
-        graphTheming: nightModeEnabled ? nightModeChartTheming : lightModeChartTheming
+        graphTheming: chartTheming
     };
-}
-
-export const ThemeCss = () => {
-    const {color} = useTheme();
-
-    if (!color) return <></>;
-
-    return (
-        <style>
-            {':root {--color-theme: var(--color-' + color + ');}'}
-        </style>
-    )
-}
-
-export const NightModeCss = () => {
-    const theme = useTheme();
-    const location = useLocation();
-
-    if (location.pathname.startsWith('/docs')) {
-        return <>
-            <style>
-                {'#wrapper {background-image: none;}'}
-            </style>
-        </>
-    }
-
-    return (
-        <>
-            {theme.nightModeEnabled ? <style>
-                {theme.nightModeCss}
-            </style> : ''}
-        </>
-    );
 }

@@ -30,7 +30,7 @@ const BetweenDatesFilter = ({index, label, filter, removeFilter, setFilterOption
 
     return (
         <div id={'filter-' + index} className="mt-2">
-            <label>{select}{label}:</label>
+            <label>{select} {label}:</label>
             <Row className={"my-2 justify-content-start"}>
                 <Col md={3} sm={6}>
                     <DateInputField id={"filter-" + index + "-from-date"}

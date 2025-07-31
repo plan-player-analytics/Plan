@@ -1,11 +1,13 @@
 import React, {useMemo} from 'react';
 import Select from 'react-select';
+import {useTranslation} from "react-i18next";
 
 const MultiSelect = ({options, selectedIndexes, setSelectedIndexes, className, style}) => {
+    const {t} = useTranslation();
     // Convert options to react-select format
     const selectOptions = options.map((option, index) => ({
         value: index,
-        label: option
+        label: typeof option === 'string' ? t(option) : option
     }));
 
     // Convert selectedIndexes to react-select format

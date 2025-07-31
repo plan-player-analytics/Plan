@@ -12,7 +12,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
 import {useMetadata} from "../../hooks/metadataHook";
-import {useTranslation} from "react-i18next";
+import {Trans, useTranslation} from "react-i18next";
 
 const LicenseSection = () => {
     const {t} = useTranslation();
@@ -72,11 +72,12 @@ const Contributions = () => {
         contributed: ['exclamation-triangle']
     }];
 
-    // TODO Translate
     return (<>
         <p>Player Analytics {t('html.modal.info.developer')} AuroraLS3.</p>
-        <p>In addition following <span className="col-theme">awesome people</span> have
-            contributed:</p>
+        <p><Trans i18nKey="html.modal.info.contributors.text"
+                  shouldUnescape={true}
+                  components={{1: <span className="col-theme"/>}}
+        /></p>
         <ul className="row contributors">
             {contributors.map((contributor, i) => <Contributor key={contributor.name} contributor={contributor}/>)}
             <li>{t('html.modal.info.contributors.bugreporters')}</li>

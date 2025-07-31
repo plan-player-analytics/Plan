@@ -256,8 +256,7 @@ export const ThemeEditContextProvider = ({children}) => {
             return !missingUseCase.length && !missingNightModeUseCase.length
         }
 
-        const colorOptionsModified = false; // TODO
-        const somethingToSave = edits.length > 0 || name !== originalName || colorOptionsModified;
+        const somethingToSave = edits.length > 0 || name !== originalName;
         const savePossible = somethingToSave && allColorsExist()
 
         return {

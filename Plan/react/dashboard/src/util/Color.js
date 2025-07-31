@@ -1,4 +1,5 @@
 import {
+    calculateCssHexColor,
     hexToRgb,
     hslaStringToArray,
     hslToHsv,
@@ -17,6 +18,7 @@ import {
 export const getColorConverter = color => {
     try {
         if (typeof color === 'string') {
+            if (color.startsWith("var(")) return new HexColor(calculateCssHexColor(color));
             if (color.startsWith('#')) return new HexColor(color);
             if (color.startsWith("rgb(") || color.startsWith("rgba(") && color.endsWith(')')) return new RgbaColor(color);
             if (color.startsWith("hsl(") || color.startsWith("hsla(") && color.endsWith(')')) return new HslaColor(color);
@@ -88,7 +90,17 @@ export class Color {
 
     reduceSaturation(reductionPercentage) {
         const rgba = this.toRgbaArray();
-        return new HslaColor([...new HslaColor(withReducedSaturationRgba(rgba, reductionPercentage)).toHslArray(), rgba[3]]);
+        const hslArray = new HslaColor(withReducedSaturationRgba(rgba, reductionPercentage)).toHslArray();
+        return new HslaColor([...hslArray, rgba[3]]);
+    }
+
+    increaseHue(amount) {
+        const rgba = this.toRgbaArray();
+        const asHsv = getColorArrayConverter(this.toHsvArray(), 'hsv');
+        asHsv.hsv[0] = (asHsv.hsv[0] + amount) % 1;
+        const asRgba = asHsv.toRgbaArray();
+        asRgba[3] = rgba[3];
+        return getColorArrayConverter(asRgba, 'rgba');
     }
 
     toLuminance() {

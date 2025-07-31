@@ -157,10 +157,20 @@ export const hslaStringToArray = (hslaString) => {
 }
 
 export const hslToHsv = ([h, s, l]) => {
-    const hsv1 = s * (l < 50 ? l : 100 - l) / 100;
-    const hsvS = hsv1 === 0 ? 0 : 2 * hsv1 / (l + hsv1) * 100;
-    const hsvV = l + hsv1;
-    return [h, hsvS, hsvV];
+    // Normalize s and l if they are > 1 (i.e., in [0, 100])
+    if (h > 1 || s > 1 || l > 1) {
+        h = h / 360;
+        s = s / 100;
+        l = l / 100;
+    }
+    const v = l + s * Math.min(l, 1 - l);
+    const newS = v === 0 ? 0 : 2 * (1 - l / v);
+    // Clamp to [0, 1]
+    return [
+        h,
+        Math.max(0, Math.min(1, newS)),
+        Math.max(0, Math.min(1, v))
+    ];
 }
 
 export const hsvToHex = (hsv) => {
@@ -290,6 +300,7 @@ export const rgbToHsl = ([r, g, b]) => {
     } else {
         const d = max - min;
         s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
+        s = Math.max(0, Math.min(1, s));
         switch (max) {
             case r:
                 h = (g - b) / d + (g < b ? 6 : 0);
@@ -313,7 +324,11 @@ export const withReducedSaturation = (hex, reduceSaturationPercentage) => {
     const saturationReduction = reduceSaturationPercentage ? reduceSaturationPercentage : 0.70;
 
     const rgb = hexToRgb(hex);
-    const [h, s, l] = rgbToHsl(rgb);
+    let [h, s, l] = rgbToHsl(rgb);
+
+    // Ensure s and l are in [0, 1]
+    if (s > 1) s = s / 100;
+    if (l > 1) l = l / 100;
 
     // To css property
     return 'hsl(' + h * 360 + ',' + s * 100 * saturationReduction + '%,' + l * 95 + '%)';

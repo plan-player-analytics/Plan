@@ -67,13 +67,13 @@ const generateThemeCSS = ({colors, nightColors, useCases, nightModeUseCases}) =>
     return `
 :root {
   ${baseVariables.join(';\n  ')};
-  background-color: var(--color-white-grey);
+  --editor-bg-color: var(--color-white-grey);
   color: var(--color-text-light);
 }
 
 .night-mode-colors {
   ${nightModeVariables.join(';\n  ')};
-  background-color: var(--color-night-dark-blue);
+  --editor-bg-color: var(--color-night-dark-blue);
   color: var(--color-night-text);
 }`;
 };

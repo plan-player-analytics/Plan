@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {linegraphButtons, tooltip} from "../../../util/graphs";
 import Highcharts from "highcharts/highstock";
@@ -8,12 +8,15 @@ import {useTheme} from "../../../hooks/themeHook";
 import Accessibility from "highcharts/modules/accessibility";
 import {useMetadata} from "../../../hooks/metadataHook";
 import {useAuth} from "../../../hooks/authenticationHook.jsx";
+import {useGraphExtremesContext} from "../../../hooks/interaction/graphExtremesContextHook.jsx";
 
 const CpuRamPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
     const {t} = useTranslation();
     const {graphTheming, nightModeEnabled} = useTheme();
     const {timeZoneOffsetMinutes} = useMetadata();
     const {hasPermission} = useAuth();
+    const {extremes, onSetExtremes} = useGraphExtremesContext();
+    const [graph, setGraph] = useState(undefined);
 
     useEffect(() => {
         const spline = 'spline'
@@ -49,12 +52,12 @@ const CpuRamPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => 
         Accessibility(Highcharts);
         Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}})
         Highcharts.setOptions(graphTheming);
-        Highcharts.stockChart(id, {
+        setGraph(Highcharts.stockChart(id, {
             chart: {
                 noData: t('html.label.noDataToDisplay')
             },
             rangeSelector: {
-                selected: 1, // TODO Sync range selectors state
+                selected: 1,
                 buttons: linegraphButtons
             },
             yAxis: [{
@@ -80,7 +83,13 @@ const CpuRamPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => 
                     }
                 },
                 softMin: 0
-            }],
+            }], xAxis: {
+                events: {
+                    afterSetExtremes: (event) => {
+                        if (onSetExtremes) onSetExtremes(event);
+                    }
+                }
+            },
             title: {text: ''},
             plotOptions: {
                 areaspline: {
@@ -94,8 +103,14 @@ const CpuRamPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => 
                 timezoneOffset: timeZoneOffsetMinutes
             },
             series: [series.playersOnline, series.cpu, series.ram, pluginHistorySeries]
-        });
+        }));
     }, [data, dataSeries, graphTheming, nightModeEnabled, id, t, timeZoneOffsetMinutes, pluginHistorySeries])
+
+    useEffect(() => {
+        if (graph?.xAxis?.length && extremes) {
+            graph.xAxis[0].setExtremes(extremes.min, extremes.max);
+        }
+    }, [graph, extremes]);
 
     return (
         <div className="chart-area" style={{height: "450px"}} id={id}>

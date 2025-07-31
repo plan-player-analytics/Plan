@@ -181,9 +181,7 @@ const QueryOptionsCard = () => {
                 <label>{t('html.query.label.view')}</label>
                 <Row className={"my-2 justify-content-start justify-content-md-center"}>
                     <Col className={"my-2"}>
-                        <label>{t('html.query.label.from') // TODO Remove locale hack when the old frontend is disabled
-                            .replace('</label>', '')
-                            .replace('>', '')}</label>
+                        <label>{t('html.query.label.from')}</label>
                     </Col>
                     <Col md={3}>
                         <DateInputField id={"viewFromDateField"}
@@ -202,9 +200,7 @@ const QueryOptionsCard = () => {
                         />
                     </Col>
                     <Col md={1} className={"my-2 text-center"}>
-                        <label>{t('html.query.label.to') // TODO Remove locale hack when the old frontend is disabled
-                            .replace('</label>', '')
-                            .replace('>', '')}</label>
+                        <label>{t('html.query.label.to')}</label>
                     </Col>
                     <Col md={3}>
                         <DateInputField id={"viewToDateField"}
