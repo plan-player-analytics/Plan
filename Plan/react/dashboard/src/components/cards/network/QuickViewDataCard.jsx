@@ -12,6 +12,7 @@ import {
 import {useTranslation} from "react-i18next";
 import Datapoint from "../../Datapoint";
 import CurrentUptime from "../../datapoint/CurrentUptime";
+import FormattedDate from "../../text/FormattedDate.jsx";
 
 const QuickViewDataCard = ({server}) => {
     const {t} = useTranslation()
@@ -21,10 +22,10 @@ const QuickViewDataCard = ({server}) => {
             <CardHeader icon={faBookOpen} color={'servers'} label={server.name + ' ' + t('html.label.asNumbers')}/>
             <Card.Body>
                 <CurrentUptime uptime={server.current_uptime}/>
-                <Datapoint name={t('html.label.lastPeak') + ' (' + server.last_peak_date + ')'}
+                <Datapoint name={<>{t('html.label.lastPeak')} (<FormattedDate date={server.last_peak_date}/>)</>}
                            color={'player-peak-last'} icon={faChartLine}
                            value={server.last_peak_players} valueLabel={t('html.unit.players')} bold/>
-                <Datapoint name={t('html.label.bestPeak') + ' (' + server.best_peak_date + ')'}
+                <Datapoint name={<>{t('html.label.bestPeak')} (<FormattedDate date={server.best_peak_date}/>)</>}
                            color={'player-peak-all-time'} icon={faChartLine}
                            value={server.best_peak_players} valueLabel={t('html.unit.players')} bold/>
                 <hr/>

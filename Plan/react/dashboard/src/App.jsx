@@ -241,7 +241,7 @@ const Wrapper = ({children}) => {
     }, [nightModeEnabled]);
 
     return (
-        <div id={`wrapper`} className={nightModeEnabled && 'night-mode-colors'}>
+        <div id={`wrapper`}>
             {children}
         </div>
     )

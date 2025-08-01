@@ -116,7 +116,7 @@ const SessionAccordion = (
                 body: <SessionBody session={session}/>,
                 header: <SessionHeader session={session}/>,
                 color: 'sessions',
-                outline: !session.start.includes("Online")
+                outline: !session.online
             }
         })}/>
     )

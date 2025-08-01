@@ -53,7 +53,6 @@ export const localeService = {
             if (!this.clientLocale) {
                 this.clientLocale = this.defaultLanguage;
             }
-
             let loadPath = baseAddress + '/v1/locale/{{lng}}';
             if (staticSite) loadPath = baseAddress + '/locale/{{lng}}.json'
             await i18next
@@ -99,7 +98,8 @@ export const localeService = {
         }
 
         window.localStorage.setItem("locale", langCode);
-        await i18next.changeLanguage(langCode)
+        await i18next.changeLanguage(langCode);
+        this.clientLocale = langCode;
     },
 
     getLanguages: function () {
@@ -115,5 +115,9 @@ export const localeService = {
             .map(entry => {
                 return {name: entry[0], displayName: entry[1]}
             });
+    },
+
+    getIntlFriendlyLocale: () => {
+        return localeService.clientLocale === 'CN' ? 'zh-cn' : localeService.clientLocale.toLocaleLowerCase().replace('_', '-')
     }
 }

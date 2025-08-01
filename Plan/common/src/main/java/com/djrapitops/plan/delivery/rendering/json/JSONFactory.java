@@ -311,8 +311,8 @@ public class JSONFactory {
 
                     Optional<DateObj<Integer>> recentPeak = db.query(TPSQueries.fetchPeakPlayerCount(serverUUID, now - TimeUnit.DAYS.toMillis(2L)));
                     Optional<DateObj<Integer>> allTimePeak = db.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID));
-                    server.put("last_peak_date", recentPeak.map(DateObj::getDate).map(year).orElse("-"));
-                    server.put("best_peak_date", allTimePeak.map(DateObj::getDate).map(year).orElse("-"));
+                    server.put("last_peak_date", recentPeak.map(DateObj::getDate).map(Object.class::cast).orElse("-"));
+                    server.put("best_peak_date", allTimePeak.map(DateObj::getDate).map(Object.class::cast).orElse("-"));
                     server.put("last_peak_players", recentPeak.map(DateObj::getValue).orElse(0));
                     server.put("best_peak_players", allTimePeak.map(DateObj::getValue).orElse(0));
 
