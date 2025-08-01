@@ -26,6 +26,8 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import {faSuperpowers} from "@fortawesome/free-brands-svg-icons";
 import Datapoint from "../../Datapoint";
+import FormattedTime from "../../text/FormattedTime.jsx";
+import FormattedDate from "../../text/FormattedDate.jsx";
 
 const PlayerHeadSection = ({player}) => {
     const {t} = useTranslation();
@@ -82,15 +84,16 @@ const PlayerOverviewCard = ({player}) => {
                     <Col lg={6}>
                         <Datapoint
                             icon={faClock} color="playtime"
-                            name={t('html.label.totalPlaytime')} value={player.info.playtime}
+                            name={t('html.label.totalPlaytime')} value={<FormattedTime timeMs={player.info.playtime}/>}
                         />
                         <Datapoint
                             icon={faClock} color="playtime-active"
-                            name={t('html.label.totalActive')} value={player.info.active_playtime}
+                            name={t('html.label.totalActive')}
+                            value={<FormattedTime timeMs={player.info.active_playtime}/>}
                         />
                         <Datapoint
                             icon={faClock} color="playtime-afk"
-                            name={t('html.label.totalAfk')} value={player.info.afk_time}
+                            name={t('html.label.totalAfk')} value={<FormattedTime timeMs={player.info.afk_time}/>}
                         />
                         <hr/>
                         <Datapoint
@@ -99,16 +102,19 @@ const PlayerOverviewCard = ({player}) => {
                         />
                         <Datapoint
                             icon={faClock} color="sessions"
-                            name={t('html.label.longestSession')} value={player.info.longest_session_length}
+                            name={t('html.label.longestSession')}
+                            value={<FormattedTime timeMs={player.info.longest_session_length}/>}
                         />
                         <Datapoint
                             icon={faClock} color="sessions"
-                            name={t('html.label.sessionMedian')} value={player.info.session_median}
+                            name={t('html.label.sessionMedian')}
+                            value={<FormattedTime timeMs={player.info.session_median}/>}
                         />
                         <hr/>
                         <Datapoint
                             icon={faUserPlus} color="first-seen"
-                            name={t('html.label.registered')} value={player.info.registered} boldTitle
+                            name={t('html.label.registered')} value={<FormattedDate date={player.info.registered}/>}
+                            boldTitle
                         />
                     </Col>
                     <Col lg={6}>
@@ -146,7 +152,8 @@ const PlayerOverviewCard = ({player}) => {
                         <hr/>
                         <Datapoint
                             icon={faCalendar} color="last-seen"
-                            name={t('html.label.lastSeen')} value={player.info.last_seen} boldTitle
+                            name={t('html.label.lastSeen')} value={<FormattedDate date={player.info.last_seen}/>}
+                            boldTitle
                         />
                     </Col>
                 </ExtendableRow>

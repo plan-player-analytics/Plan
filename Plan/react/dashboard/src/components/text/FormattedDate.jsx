@@ -6,6 +6,7 @@ import {useTranslation} from "react-i18next";
 import {isNumber} from "../../util/isNumber.js";
 
 export const useDatePreferences = () => {
+    const {t} = useTranslation();
     const {timeZoneOffsetHours} = useMetadata();
     const {preferencesLoaded, dateFormatNoSeconds, recentDaysInDateFormat} = usePreferences();
 
@@ -17,7 +18,7 @@ export const useDatePreferences = () => {
 
     const offset = timeZoneOffsetHours * 60 * 60 * 1000;
 
-    return {pattern, recentDays, recentDaysPattern, offset};
+    return {t, pattern, recentDays, recentDaysPattern, offset};
 }
 
 export function formatDate(date, offset, pattern, recentDays, recentDaysPattern, t) {
@@ -39,6 +40,11 @@ export function formatDate(date, offset, pattern, recentDays, recentDaysPattern,
     }
 
     return date !== 0 ? new SimpleDateFormat(format).format(timestamp) : '-'
+}
+
+export function formatDateWithPreferences(datePreferences, date) {
+    const {t, pattern, recentDays, recentDaysPattern, offset} = datePreferences;
+    return formatDate(date, offset, pattern, recentDays, recentDaysPattern, t);
 }
 
 const FormattedDate = ({date, react}) => {

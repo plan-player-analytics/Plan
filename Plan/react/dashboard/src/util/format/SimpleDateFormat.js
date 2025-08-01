@@ -36,9 +36,8 @@ SimpleDateFormat.prototype.applyPattern = function (pattern) {
 
 SimpleDateFormat.prototype.format = function (date) {
     let formattedString = "";
-    const instance = moment();
-    instance.locale(localeService.getIntlFriendlyLocale());
-    const d = instance.utc(date);
+    moment.locale(localeService.getIntlFriendlyLocale());
+    const d = moment.utc(date);
 
     let p = this._or(this.pattern, this._defaultPatternsByLocale[d.locale()]);
 

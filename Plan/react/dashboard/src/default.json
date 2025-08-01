@@ -364,7 +364,7 @@
       "deepOrange": "var(--color-deep-orange)",
       "brown": "var(--color-brown)",
       "grey": "var(--color-grey)",
-      "blue-grey": "var(--color-blue-grey)",
+      "blueGrey": "var(--color-blue-grey)",
       "black": "var(--color-black)"
     }
   },

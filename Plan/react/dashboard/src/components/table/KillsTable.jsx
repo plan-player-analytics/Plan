@@ -11,14 +11,15 @@ import {
 import {useTranslation} from "react-i18next";
 import Scrollable from "../Scrollable";
 import {usePreferences} from "../../hooks/preferencesHook.jsx";
-import {formatDate, useDatePreferences} from "../text/FormattedDate.jsx";
+import FormattedDate from "../text/FormattedDate.jsx";
 import {faCalendar} from "@fortawesome/free-regular-svg-icons";
 import DataTablesTable from "./DataTablesTable.jsx";
 import {formatTimeAmount} from "../../util/format/TimeAmountFormat.js";
 import {useTimePreferences} from "../text/FormattedTime.jsx";
 
-const VictimName = ({kill, timePreferences}) => {
+const VictimName = ({kill}) => {
     const {t} = useTranslation();
+    const timePreferences = useTimePreferences();
 
     const day = 24 * 60 * 60 * 1000;
     if (kill.timeSinceRegisterMillis > 0 && kill.timeSinceRegisterMillis < day) {
@@ -31,18 +32,13 @@ const VictimName = ({kill, timePreferences}) => {
 }
 
 const KillRow = ({kill}) => {
-    const timePreferences = useTimePreferences();
-    const datePreferences = useDatePreferences();
-    const formatDateEasy = date => {
-        return formatDate(date, datePreferences.offset, datePreferences.pattern, false, datePreferences.recentDaysPattern, t);
-    }
     const killSeparator = <Fa
         icon={kill.killerUUID === kill.victimUUID ? faSkullCrossbones : faAngleRight}
         className={"col-red"}/>;
     return (
         <tr>
-            <td>{formatDateEasy(kill.date)}</td>
-            <td>{kill.killerName} {killSeparator} <VictimName kill={kill} timePreferences={timePreferences}/></td>
+            <td><FormattedDate date={kill.date} react/></td>
+            <td>{kill.killerName} {killSeparator} <VictimName kill={kill}/></td>
             <td>{kill.weapon}</td>
             <td>{kill.serverName}</td>
         </tr>
@@ -52,11 +48,6 @@ const KillRow = ({kill}) => {
 const KillsTable = ({kills, deaths}) => {
     const {t} = useTranslation();
     const {preferencesLoaded} = usePreferences();
-    const timePreferences = useTimePreferences();
-    const datePreferences = useDatePreferences();
-    const formatDateEasy = date => {
-        return formatDate(date, datePreferences.offset, datePreferences.pattern, false, datePreferences.recentDaysPattern, t);
-    }
 
     const columns = [{
         title: <><Fa icon={faCalendar}/> {t('html.label.time.date')}</>,
@@ -79,9 +70,9 @@ const KillsTable = ({kills, deaths}) => {
             className={"col-red"}/>;
         return {
             killText: kill.killerName + ' > ' + kill.victimName,
-            kill: <>{kill.killerName} {killSeparator} <VictimName kill={kill} timePreferences={timePreferences}/></>,
+            kill: <>{kill.killerName} {killSeparator} <VictimName kill={kill}/></>,
             date: kill.date,
-            dateFormatted: formatDateEasy(kill.date),
+            dateFormatted: <FormattedDate date={kill.date} react/>,
             weapon: kill.weapon,
             server: kill.serverName
         };

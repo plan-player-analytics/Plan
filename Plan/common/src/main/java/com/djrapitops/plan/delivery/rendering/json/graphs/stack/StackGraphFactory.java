@@ -53,6 +53,6 @@ public class StackGraphFactory {
 
     public StackGraph activityStackGraph(DateMap<Map<String, Integer>> activityData) {
         String[] colors = theme.getPieColors(ThemeVal.GRAPH_ACTIVITY_PIE);
-        return new ActivityStackGraph(activityData, colors, dayFormatter, ActivityIndex.getDefaultGroupLangKeys());
+        return new ActivityStackGraph(activityData, colors, ActivityIndex.getDefaultGroupLangKeys());
     }
 }

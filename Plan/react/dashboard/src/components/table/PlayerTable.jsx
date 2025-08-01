@@ -1,15 +1,14 @@
 import {useTranslation} from "react-i18next";
 import {usePreferences} from "../../hooks/preferencesHook.jsx";
 import React, {useCallback, useEffect, useState} from "react";
-import {useTimePreferences} from "../text/FormattedTime.jsx";
-import {formatDate, useDatePreferences} from "../text/FormattedDate.jsx";
+import FormattedTime from "../text/FormattedTime.jsx";
+import FormattedDate from "../text/FormattedDate.jsx";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCheck, faGlobe, faSignal, faUser, faUserPlus} from "@fortawesome/free-solid-svg-icons";
 import {faCalendarCheck, faCalendarPlus, faClock} from "@fortawesome/free-regular-svg-icons";
 import ExtensionIcon from "../extensions/ExtensionIcon.jsx";
 import {Link} from "react-router-dom";
 import {formatDecimals} from "../../util/formatters.js";
-import {formatTimeAmount} from "../../util/format/TimeAmountFormat.js";
 import {ExtensionValueTableCell} from "../extensions/ExtensionCard.jsx";
 import {ChartLoader} from "../navigation/Loader.jsx";
 import DataTablesTable from "./DataTablesTable.jsx";
@@ -37,9 +36,6 @@ const PlayerTable = ({data, orderBy}) => {
     const {preferencesLoaded, decimalFormat} = usePreferences();
 
     const [options, setOptions] = useState(undefined);
-
-    const timePreferences = useTimePreferences();
-    const datePreferences = useDatePreferences();
 
     useEffect(() => {
         if (!data) return;
@@ -83,10 +79,6 @@ const PlayerTable = ({data, orderBy}) => {
             }
         }));
 
-        const formatDateEasy = date => {
-            return formatDate(date, datePreferences.offset, datePreferences.pattern, false, datePreferences.recentDaysPattern, t);
-        }
-
         const rows = data.players.map(player => {
             const row = {
                 name: player.playerName,
@@ -96,12 +88,12 @@ const PlayerTable = ({data, orderBy}) => {
                 activityGroup: t(getActivityGroup(player.activityIndex)),
                 activityIndexAndGroup: formatDecimals(player.activityIndex, decimalFormat) + " (" + t(getActivityGroup(player.activityIndex)) + ")",
                 activePlaytime: player.playtimeActive,
-                activePlaytimeFormatted: formatTimeAmount(timePreferences, player.playtimeActive),
+                activePlaytimeFormatted: <FormattedTime timeMs={player.playtimeActive}/>,
                 sessions: player.sessionCount,
                 registered: player.registered,
-                registeredFormatted: formatDateEasy(player.registered),
+                registeredFormatted: <FormattedDate date={player.registered} react/>,
                 lastSeen: player.lastSeen,
-                lastSeenFormatted: formatDateEasy(player.lastSeen),
+                lastSeenFormatted: <FormattedDate date={player.lastSeen} react/>,
                 country: player.country,
                 pingAverage: player.pingAverage,
                 pingAverageFormatted: formatDecimals(player.pingAverage, decimalFormat) + "ms",

@@ -10,6 +10,8 @@ import {faSuperpowers} from "@fortawesome/free-brands-svg-icons";
 import {useTranslation} from "react-i18next";
 import {baseAddress} from "../../service/backendConfiguration";
 import {useAuth} from "../../hooks/authenticationHook";
+import FormattedDate from "../text/FormattedDate.jsx";
+import FormattedTime from "../text/FormattedTime.jsx";
 
 const ServerHeader = ({server}) => {
     const {t} = useTranslation();
@@ -19,9 +21,9 @@ const ServerHeader = ({server}) => {
                 {server.operator ? <Fa icon={faSuperpowers} title="Operator"/> : ''}
                 {server.banned ? <Fa icon={faGavel} title="Banned"/> : ''}
             </td>
-            <td>{server.playtime}</td>
-            <td>{server.registered}</td>
-            <td>{server.last_seen}</td>
+            <td><FormattedTime timeMs={server.playtime}/></td>
+            <td><FormattedDate date={server.registered}/></td>
+            <td><FormattedDate date={server.last_seen}/></td>
         </>
     )
 }
@@ -43,19 +45,20 @@ const ServerBody = ({i, server}) => {
                 />
                 <Datapoint
                     icon={faClock} color={"playtime"}
-                    name={t('html.label.playtime')} value={server.playtime} bold
+                    name={t('html.label.playtime')} value={<FormattedTime timeMs={server.playtime}/>} bold
                 />
                 <Datapoint
                     icon={faClock} color={"playtime-afk"}
-                    name={t('html.label.afkTime')} value={server.afk_time} bold
+                    name={t('html.label.afkTime')} value={<FormattedTime timeMs={server.afk_time}/>} bold
                 />
                 <Datapoint
                     icon={faClock} color={"sessions"}
-                    name={t('html.label.longestSession')} value={server.longest_session_length} bold
+                    name={t('html.label.longestSession')}
+                    value={<FormattedTime timeMs={server.longest_session_length}/>} bold
                 />
                 <Datapoint
                     icon={faClock} color={"sessions"}
-                    name={t('html.label.sessionMedian')} value={server.session_median} bold
+                    name={t('html.label.sessionMedian')} value={<FormattedTime timeMs={server.session_median}/>} bold
                 />
                 <br/>
                 <Datapoint

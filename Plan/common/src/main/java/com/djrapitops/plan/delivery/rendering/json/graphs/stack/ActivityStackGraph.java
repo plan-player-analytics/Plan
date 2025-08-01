@@ -18,8 +18,8 @@ package com.djrapitops.plan.delivery.rendering.json.graphs.stack;
 
 import com.djrapitops.plan.delivery.domain.DateMap;
 import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
-import com.djrapitops.plan.delivery.formatting.Formatter;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
@@ -32,14 +32,12 @@ import java.util.Map;
  */
 class ActivityStackGraph extends StackGraph {
 
-    ActivityStackGraph(DateMap<Map<String, Integer>> activityData, String[] colors, Formatter<Long> dayFormatter, String[] groups) {
-        super(getLabels(activityData.navigableKeySet(), dayFormatter), getDataSets(activityData, colors, groups));
+    ActivityStackGraph(DateMap<Map<String, Integer>> activityData, String[] colors, String[] groups) {
+        super(getLabels(activityData.navigableKeySet()), getDataSets(activityData, colors, groups));
     }
 
-    private static String[] getLabels(Collection<Long> dates, Formatter<Long> dayFormatter) {
-        return dates.stream()
-                .map(dayFormatter)
-                .toArray(String[]::new);
+    private static Serializable[] getLabels(Collection<Long> dates) {
+        return dates.toArray(Serializable[]::new);
     }
 
     private static StackDataSet[] initializeDataSet(String[] groups, String[] colors) {

@@ -14,6 +14,7 @@ import LoadIn from "../../components/animation/LoadIn";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 import ConnectionsCard from "../../components/cards/player/ConnectionsCard";
 import {useAuth} from "../../hooks/authenticationHook";
+import FormattedTime from "../../components/text/FormattedTime.jsx";
 
 const PunchCardCard = ({player}) => {
     const {t} = useTranslation();
@@ -40,13 +41,21 @@ const OnlineActivityCard = ({player}) => {
             </Card.Header>
             <AsNumbersTable headers={[t('html.label.last30days'), t('html.label.last7days')]}>
                 <TableRow icon={faClock} color="playtime" text={t('html.label.playtime')}
-                          values={[player.online_activity.playtime_30d, player.online_activity.playtime_7d]}/>
+                          values={[
+                              <FormattedTime timeMs={player.online_activity.playtime_30d}/>,
+                              <FormattedTime timeMs={player.online_activity.playtime_7d}/>]}/>
                 <TableRow icon={faClock} color="playtime-active" text={t('html.label.activePlaytime')}
-                          values={[player.online_activity.active_playtime_30d, player.online_activity.active_playtime_7d]}/>
+                          values={[
+                              <FormattedTime timeMs={player.online_activity.active_playtime_30d}/>,
+                              <FormattedTime timeMs={player.online_activity.active_playtime_7d}/>]}/>
                 <TableRow icon={faClock} color="playtime-afk" text={t('html.label.afk')}
-                          values={[player.online_activity.afk_time_30d, player.online_activity.afk_time_7d]}/>
+                          values={[
+                              <FormattedTime timeMs={player.online_activity.afk_time_30d}/>,
+                              <FormattedTime timeMs={player.online_activity.afk_time_7d}/>]}/>
                 <TableRow icon={faClock} color="sessions" text={t('html.label.medianSessionLength')}
-                          values={[player.online_activity.median_session_length_30d, player.online_activity.median_session_length_7d]}/>
+                          values={[
+                              <FormattedTime timeMs={player.online_activity.median_session_length_30d}/>,
+                              <FormattedTime timeMs={player.online_activity.median_session_length_7d}/>]}/>
                 <TableRow icon={faCalendarCheck} color="sessions" text={t('html.label.sessions')}
                           values={[player.online_activity.session_count_30d, player.online_activity.session_count_7d]}/>
                 <TableRow icon={faCrosshairs} color="player-kills" text={t('html.label.playerKills')}
