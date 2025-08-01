@@ -35,8 +35,11 @@ export function formatTimeAmount(options, timeMs) {
             yearsDisplay: 'auto',
             months: 'long',
             monthsDisplay: 'auto',
+            secondsDisplay: ms < 1000 ? 'always' : 'auto',
         };
-        if (options.HOURS.includes('%zero%')) {
+        // Temporary support for old format, we can later move the whole thing to the preferences menu,
+        // so that there's a dropdown of options that are same as above, but modified for each option.
+        if (options.HOURS.includes(ZERO_PH) || options.MINUTES.includes(ZERO_PH)) {
             format.style = 'digital';
         }
         return new Intl.DurationFormat(localeService.getIntlFriendlyLocale(), format).format({
@@ -45,7 +48,7 @@ export function formatTimeAmount(options, timeMs) {
             days: Math.floor(days),
             hours: Math.floor(hours),
             minutes: Math.floor(minutes),
-            seconds: years >= 1 ? undefined : Math.floor(seconds)
+            seconds: years >= 1 || months > 1 || days > 1 ? undefined : Math.floor(seconds)
         });
     }
 

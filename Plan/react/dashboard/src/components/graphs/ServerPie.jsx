@@ -1,16 +1,20 @@
 import React, {useEffect} from "react";
 import Highcharts from 'highcharts';
 
-import {formatTimeAmount} from '../../util/formatters'
 import {useTheme} from "../../hooks/themeHook";
 import {withReducedSaturation} from "../../util/colors";
 import {useTranslation} from "react-i18next";
 import NoDataDisplay from "highcharts/modules/no-data-to-display";
 import Accessibility from "highcharts/modules/accessibility";
+import {usePreferences} from "../../hooks/preferencesHook.jsx";
+import {useTimePreferences} from "../text/FormattedTime.jsx";
+import {formatTimeAmount} from "../../util/format/TimeAmountFormat.js";
 
 const ServerPie = ({colors, series}) => {
     const {t} = useTranslation();
     const {nightModeEnabled, graphTheming} = useTheme();
+    const {preferencesLoaded} = usePreferences();
+    const timePreferences = useTimePreferences();
 
     useEffect(() => {
         const reduceColors = (colorsToReduce) => colorsToReduce.map(color => withReducedSaturation(color));
@@ -53,6 +57,8 @@ const ServerPie = ({colors, series}) => {
             series: [pieSeries]
         });
     }, [colors, series, graphTheming, nightModeEnabled, t]);
+
+    if (!preferencesLoaded) return <Loader/>;
 
     return (<div className="chart-pie" id="server-pie"/>);
 }
