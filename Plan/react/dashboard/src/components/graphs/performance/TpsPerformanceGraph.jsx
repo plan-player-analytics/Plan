@@ -98,7 +98,7 @@ const TpsPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
             time: {
                 timezoneOffset: timeZoneOffsetMinutes
             },
-            series: [series.playersOnline, series.tps, pluginHistorySeries]
+            series: [series.playersOnline, series.tps, pluginHistorySeries].filter(s => s)
         }));
     }, [data, dataSeries, graphTheming, nightModeEnabled, id, t, timeZoneOffsetMinutes, pluginHistorySeries])
     useEffect(() => {

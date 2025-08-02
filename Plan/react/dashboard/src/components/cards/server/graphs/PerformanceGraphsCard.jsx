@@ -77,7 +77,7 @@ const PerformanceGraphsCard = () => {
         data: pluginHistory,
         loadingError: pluginHistoryLoadingError
     } = useDataRequest(fetchPluginHistory, [identifier], authRequired && hasPermission('page.server.plugin.history'));
-    const [pluginHistorySeries, setPluginHistorySeries] = useState({});
+    const [pluginHistorySeries, setPluginHistorySeries] = useState(undefined);
 
     useEffect(() => {
         if (data) {

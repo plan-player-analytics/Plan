@@ -101,7 +101,7 @@ const WorldPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
             time: {
                 timezoneOffset: timeZoneOffsetMinutes
             },
-            series: [series.playersOnline, series.entities, series.chunks, pluginHistorySeries]
+            series: [series.playersOnline, series.entities, series.chunks, pluginHistorySeries].filter(s => s)
         }));
     }, [data, dataSeries, graphTheming, nightModeEnabled, id, t, timeZoneOffsetMinutes, pluginHistorySeries])
     useEffect(() => {

@@ -78,7 +78,7 @@ const DiskPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
             time: {
                 timezoneOffset: timeZoneOffsetMinutes
             },
-            series: [series.disk, pluginHistorySeries]
+            series: [series.disk, pluginHistorySeries].filter(s => s)
         }));
     }, [data, dataSeries, graphTheming, nightModeEnabled, id, t, timeZoneOffsetMinutes, pluginHistorySeries])
 

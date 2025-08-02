@@ -102,7 +102,7 @@ const CpuRamPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => 
             time: {
                 timezoneOffset: timeZoneOffsetMinutes
             },
-            series: [series.playersOnline, series.cpu, series.ram, pluginHistorySeries]
+            series: [series.playersOnline, series.cpu, series.ram, pluginHistorySeries].filter(s => s)
         }));
     }, [data, dataSeries, graphTheming, nightModeEnabled, id, t, timeZoneOffsetMinutes, pluginHistorySeries])
 
