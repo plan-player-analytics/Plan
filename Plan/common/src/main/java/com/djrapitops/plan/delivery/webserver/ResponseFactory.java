@@ -57,6 +57,7 @@ import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
@@ -430,6 +431,14 @@ public class ResponseFactory {
         }
     }
 
+    public Response notFound404Json(String message) {
+        return Response.builder()
+                .setMimeType(MimeType.JSON)
+                .setJSONContent(Map.of("status", "404", "message", message))
+                .setStatus(404)
+                .build();
+    }
+
     public Response forbidden403() {
         return forbidden403("Your user is not authorized to view this page.<br>"
                 + "If you believe this is an error contact staff to change your access level.");
@@ -545,7 +554,14 @@ public class ResponseFactory {
                         .build();
             }
         } catch (UncheckedIOException e) {
-            return notFound404("Theme file by that name doesn't exist");
+            return notFound404Json("Theme file by that name doesn't exist");
         }
+    }
+
+    public Response successResponse() {
+        return Response.builder()
+                .setMimeType(MimeType.JSON)
+                .setJSONContent(Map.of("success", true))
+                .build();
     }
 }

@@ -48,7 +48,7 @@ const ThemeEditorView = () => {
 
     return (
         <MinHeightProvider>
-            <Card className="shadow mb-4 theme-editor">
+            <Card className="shadow mb-4 theme-editor" id={"theme-editor"}>
                 <EditorMenuToast/>
                 <CardHeader icon={faPalette} color="primary" label={title}>
                     <SecondaryActionButton className={'float-end'} onClick={discardChanges} disabled={!discardPossible}>

@@ -91,6 +91,7 @@ class HttpAccessControlTest {
             "/v1/saveGroupPermissions",
             "/v1/deleteGroup",
             "/v1/storePreferences",
+            "/v1/saveTheme",
             "/v1/pluginHistory?server=" + TestConstants.SERVER_UUID_STRING,
             "/manage",
             "/auth/register",

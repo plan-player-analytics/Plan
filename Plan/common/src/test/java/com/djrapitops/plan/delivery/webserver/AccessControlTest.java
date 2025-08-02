@@ -165,7 +165,9 @@ class AccessControlTest {
                 Arguments.of("/v1/storePreferences", WebPermission.ACCESS, 400, 400),
                 Arguments.of("/v1/pluginHistory?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_NETWORK_PLUGIN_HISTORY, 200, 403),
                 Arguments.of("/v1/pluginHistory?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_PLUGIN_HISTORY, 200, 403),
-                Arguments.of("/v1/gameAllowlistBounces?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_ALLOWLIST_BOUNCE, 200, 403)
+                Arguments.of("/v1/gameAllowlistBounces?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_ALLOWLIST_BOUNCE, 200, 403),
+                Arguments.of("/v1/theme?theme=default", WebPermission.ACCESS, 200, 200),
+                Arguments.of("/v1/saveTheme?theme=default", WebPermission.MANAGE_THEMES, 400, 403)
         );
     }
 

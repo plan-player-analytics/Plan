@@ -27,6 +27,8 @@ import com.djrapitops.plan.delivery.webserver.resolver.json.plugins.ExtensionJSO
 import com.djrapitops.plan.delivery.webserver.resolver.json.plugins.PluginHistoryJSONResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.json.query.FiltersJSONResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.json.query.QueryJSONResolver;
+import com.djrapitops.plan.delivery.webserver.resolver.json.theme.SaveThemeJSONResolver;
+import com.djrapitops.plan.delivery.webserver.resolver.json.theme.ThemeJSONResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.json.webgroup.*;
 import com.djrapitops.plan.identification.Identifiers;
 import dagger.Lazy;
@@ -54,6 +56,7 @@ public class RootJSONResolver {
     private final CompositeResolver.Builder readOnlyResourcesBuilder;
     private final StorePreferencesJSONResolver storePreferencesJSONResolver;
     private final PluginHistoryJSONResolver pluginHistoryJSONResolver;
+    private final SaveThemeJSONResolver saveThemeJSONResolver;
     private CompositeResolver resolver;
 
     @Inject
@@ -92,6 +95,7 @@ public class RootJSONResolver {
             PluginHistoryJSONResolver pluginHistoryJSONResolver,
             AllowlistJSONResolver allowlistJSONResolver,
             ThemeJSONResolver themeJSONResolver,
+            SaveThemeJSONResolver saveThemeJSONResolver,
 
             PreferencesJSONResolver preferencesJSONResolver,
             StorePreferencesJSONResolver storePreferencesJSONResolver,
@@ -144,6 +148,7 @@ public class RootJSONResolver {
         this.webGroupSaveJSONResolver = webGroupSaveJSONResolver;
         this.webGroupDeleteJSONResolver = webGroupDeleteJSONResolver;
         this.storePreferencesJSONResolver = storePreferencesJSONResolver;
+        this.saveThemeJSONResolver = saveThemeJSONResolver;
     }
 
     private <T> ServerTabJSONResolver<T> forJSON(DataID dataID, ServerTabJSONCreator<T> tabJSONCreator, WebPermission permission) {
@@ -161,6 +166,7 @@ public class RootJSONResolver {
                         .add("deleteGroup", webGroupDeleteJSONResolver)
                         .add("storePreferences", storePreferencesJSONResolver)
                         .add("pluginHistory", pluginHistoryJSONResolver)
+                        .add("saveTheme", saveThemeJSONResolver)
                         .build();
             } else {
                 resolver = readOnlyResourcesBuilder.build();

@@ -37,6 +37,7 @@ import com.djrapitops.plan.storage.database.transactions.webuser.StoreWebGroupTr
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import extension.FullSystemExtension;
 import extension.SeleniumExtension;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
@@ -49,7 +50,6 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
-import org.awaitility.Awaitility;
 import utilities.RandomData;
 import utilities.TestConstants;
 import utilities.TestResources;
@@ -200,7 +200,8 @@ class AccessControlVisibilityTest {
                 Arguments.arguments(WebPermission.MANAGE_GROUPS, "slice_h_0", "manage"),
                 Arguments.arguments(WebPermission.ACCESS_QUERY, "query-button", "query"),
                 Arguments.arguments(WebPermission.ACCESS_PLAYERS, "players-table", "players"),
-                Arguments.arguments(WebPermission.ACCESS_ERRORS, "content", "errors")
+                Arguments.arguments(WebPermission.ACCESS_ERRORS, "content", "errors"),
+                Arguments.arguments(WebPermission.ACCESS_THEME_EDITOR, "theme-editor", "theme-editor/default")
 //                Arguments.arguments(WebPermission.ACCESS_DOCS, "swagger-ui", "docs")
         );
     }

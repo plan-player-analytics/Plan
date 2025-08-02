@@ -92,4 +92,10 @@ public class TestResources {
             throw new UncheckedIOException("Failed to create file " + toFile.getAbsolutePath() + ", " + e.getMessage(), e);
         }
     }
+
+    public static byte[] getJarResourceAsBytes(String pathFromResourcesDirRoot) throws IOException {
+        try (InputStream asStream = TestResources.class.getResourceAsStream(pathFromResourcesDirRoot)) {
+            return asStream.readAllBytes();
+        }
+    }
 }

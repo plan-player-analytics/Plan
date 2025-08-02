@@ -90,7 +90,10 @@ const QueryResultView = () => {
                     <Col lg={4}>
                         <CurrentPlayerbaseCardWithData data={result.data.activity}
                                                        title={t('html.query.title.activityOnDate',
-                                                           {activityDate: result.view.beforeDate})}/>
+                                                           {
+                                                               activityDate: result.view.beforeDate,
+                                                               interpolation: {escapeValue: false}
+                                                           })}/>
                     </Col>
                 </Row>
                 <Row>
