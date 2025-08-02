@@ -25,7 +25,7 @@ const ColorSelectorModal = () => {
     const theme = useTheme();
     const {currentUseCases, currentNightModeUseCases} = useThemeStorage();
 
-    const colorOptions = (theme.nightModeEnabled ? currentNightModeUseCases : currentUseCases)['themeColorOptions'];
+    const colorOptions = theme.loaded ? (theme.nightModeEnabled ? currentNightModeUseCases : currentUseCases)['themeColorOptions'] : [];
 
     return (
         <Modal id="colorChooserModal"

@@ -126,6 +126,7 @@ public enum WebPermission implements Supplier<String>, Lang {
     ACCESS_QUERY("Allows accessing /query and Query results pages"),
     ACCESS_ERRORS("Allows accessing /errors page"),
     ACCESS_DOCS("Allows accessing /docs page"),
+    ACCESS_THEME_EDITOR("Allows accessing /theme-editor page"),
 
     MANAGE_GROUPS("Allows modifying group permissions & Access to /manage/groups page"),
     MANAGE_USERS("Allows modifying what users belong to what group");

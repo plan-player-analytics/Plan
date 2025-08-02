@@ -43,6 +43,6 @@ public class QueryPageResolver implements Resolver {
 
     @Override
     public Optional<Response> resolve(Request request) {
-        return Optional.of(responseFactory.queryPageResponse(request));
+        return Optional.of(responseFactory.reactPageResponse(request));
     }
 }

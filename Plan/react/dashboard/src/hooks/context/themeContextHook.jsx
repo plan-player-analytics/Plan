@@ -1,20 +1,41 @@
-import {createContext, useContext, useMemo, useState} from "react";
+import {createContext, useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {useTheme} from "../themeHook.jsx";
-import theme from "../../default.json";
+import {fetchTheme} from "../../service/metadataService.js";
 
 const ThemeStorageContext = createContext({});
 
 export const ThemeStorageContextProvider = ({children}) => {
-    const {currentTheme} = useTheme();
-    const [name, setName] = useState('Default');
-    const [currentColors, setCurrentColors] = useState(theme.colors);
-    const [currentNightColors, setCurrentNightColors] = useState(theme.nightColors);
-    const [currentUseCases, setCurrentUseCases] = useState(theme.useCases);
-    const [currentNightModeUseCases, setCurrentNightModeUseCases] = useState(theme.nightModeUseCases);
+    const theme = useTheme();
+    const {currentTheme, currentColor} = theme;
+    const [loaded, setLoaded] = useState(false);
+    const [currentColors, setCurrentColors] = useState({});
+    const [currentNightColors, setCurrentNightColors] = useState({});
+    const [currentUseCases, setCurrentUseCases] = useState({});
+    const [currentNightModeUseCases, setCurrentNightModeUseCases] = useState({});
+
+    const loadTheme = useCallback(async (name) => {
+        const response = await fetchTheme(name);
+        if (response.error) {
+            console.error(response.error);
+            return;
+        }
+        const theme = response.data;
+        setCurrentColors(theme.colors);
+        setCurrentNightColors(theme.nightColors);
+        setCurrentUseCases(theme.useCases);
+        setCurrentNightModeUseCases(theme.nightModeUseCases);
+        setLoaded(true);
+    }, [])
+
+    useEffect(() => {
+        if (theme.loaded && currentTheme) {
+            loadTheme(currentTheme);
+        }
+    }, [theme.loaded, currentTheme]);
 
     const sharedState = useMemo(() => {
         return {
-            name, setName, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases
+            loaded, name: currentTheme, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases
         }
     }, [name, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases]);
     return (<ThemeStorageContext.Provider value={sharedState}>

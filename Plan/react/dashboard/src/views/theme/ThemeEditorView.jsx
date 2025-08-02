@@ -67,7 +67,7 @@ const ThemeEditorView = () => {
                                        invalidFeedback={t('html.label.themeEditor.invalidName')}
                                        placeholder={t('html.label.themeEditor.themeName')}
                                        value={name}
-                                       disabled={name === 'Default'}
+                                       disabled={name === 'default'}
                                        disabledFeedback={t('html.label.themeEditor.defaultThemeNameFeedback')}
                                        setValue={newValue => setName(newValue)}
                             />

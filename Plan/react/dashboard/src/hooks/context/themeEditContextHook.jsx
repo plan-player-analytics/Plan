@@ -11,6 +11,7 @@ export const ThemeEditContextProvider = ({children}) => {
     const [edits, setEdits] = useState([]);
     const [redos, setRedos] = useState([]);
     const {
+        loaded,
         name: originalName,
         currentColors,
         currentNightColors,
@@ -260,6 +261,7 @@ export const ThemeEditContextProvider = ({children}) => {
         const savePossible = somethingToSave && allColorsExist()
 
         return {
+            loaded,
             name, setName,
             currentColors: editedColors,
             currentNightColors: editedNightColors,

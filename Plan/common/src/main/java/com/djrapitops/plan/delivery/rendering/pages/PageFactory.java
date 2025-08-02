@@ -19,13 +19,9 @@ package com.djrapitops.plan.delivery.rendering.pages;
 import com.djrapitops.plan.delivery.rendering.BundleAddressCorrection;
 import com.djrapitops.plan.delivery.rendering.html.icon.Icon;
 import com.djrapitops.plan.delivery.web.ResourceService;
-import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resource.WebResource;
 import com.djrapitops.plan.identification.ServerInfo;
-import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.theme.Theme;
-import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.file.PublicHtmlFiles;
 import com.djrapitops.plan.utilities.dev.Untrusted;
@@ -49,7 +45,6 @@ public class PageFactory {
     private final Lazy<PlanFiles> files;
     private final Lazy<PublicHtmlFiles> publicHtmlFiles;
     private final Lazy<Theme> theme;
-    private final Lazy<DBSystem> dbSystem;
     private final Lazy<BundleAddressCorrection> bundleAddressCorrection;
     private static final String ERROR_HTML_FILE = "error.html";
 
@@ -59,7 +54,6 @@ public class PageFactory {
             Lazy<PlanFiles> files,
             Lazy<PublicHtmlFiles> publicHtmlFiles,
             Lazy<Theme> theme,
-            Lazy<DBSystem> dbSystem,
             Lazy<ServerInfo> serverInfo,
             Lazy<BundleAddressCorrection> bundleAddressCorrection
     ) {
@@ -67,12 +61,7 @@ public class PageFactory {
         this.files = files;
         this.publicHtmlFiles = publicHtmlFiles;
         this.theme = theme;
-        this.dbSystem = dbSystem;
         this.bundleAddressCorrection = bundleAddressCorrection;
-    }
-
-    public Page playersPage() throws IOException {
-        return reactPage();
     }
 
     public Page reactPage() throws IOException {
@@ -85,29 +74,6 @@ public class PageFactory {
         } catch (UncheckedIOException readFail) {
             throw readFail.getCause();
         }
-    }
-
-    /**
-     * Create a server page.
-     *
-     * @param serverUUID UUID of the server
-     * @return {@link Page} that matches the server page.
-     * @throws NotFoundException If the server can not be found in the database.
-     * @throws IOException       If the template files can not be read.
-     */
-    public Page serverPage(ServerUUID serverUUID) throws IOException {
-        if (dbSystem.get().getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverUUID)).isEmpty()) {
-            throw new NotFoundException("Server not found in the database");
-        }
-        return reactPage();
-    }
-
-    public Page playerPage() throws IOException {
-        return reactPage();
-    }
-
-    public Page networkPage() throws IOException {
-        return reactPage();
     }
 
     public Page internalErrorPage(String message, @Untrusted Throwable error) {
@@ -151,21 +117,5 @@ public class PageFactory {
         return publicHtmlFiles.get().findPublicHtmlResource(resourceName)
                 .orElseGet(() -> files.get().getResourceFromJar("web/" + resourceName))
                 .asWebResource();
-    }
-
-    public Page loginPage() throws IOException {
-        return reactPage();
-    }
-
-    public Page registerPage() throws IOException {
-        return reactPage();
-    }
-
-    public Page queryPage() throws IOException {
-        return reactPage();
-    }
-
-    public Page errorsPage() throws IOException {
-        return reactPage();
     }
 }

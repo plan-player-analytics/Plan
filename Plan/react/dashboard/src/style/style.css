@@ -1172,7 +1172,7 @@ div#navSrvContainer::-webkit-scrollbar-thumb {
 }
 
 .col-theme {
-    color: var(--color-theme-text);
+    color: var(--color-themeText);
 }
 
 .col-text {

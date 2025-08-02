@@ -28,7 +28,6 @@ import com.djrapitops.plan.delivery.rendering.pages.PageFactory;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.ResponseBuilder;
-import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resource.WebResource;
 import com.djrapitops.plan.identification.Identifiers;
@@ -40,6 +39,8 @@ import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
+import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
+import com.djrapitops.plan.storage.file.FileResource;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.file.PublicHtmlFiles;
 import com.djrapitops.plan.storage.file.Resource;
@@ -55,6 +56,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.file.Path;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Function;
@@ -149,16 +151,6 @@ public class ResponseFactory {
                 .build();
     }
 
-    public Response playersPageResponse(@Untrusted Request request) {
-        try {
-            Optional<Response> error = checkDbClosedError();
-            if (error.isPresent()) return error.get();
-            return forPage(request, pageFactory.playersPage());
-        } catch (IOException e) {
-            return forInternalError(e, "Failed to generate players page");
-        }
-    }
-
     private Optional<Response> checkDbClosedError() {
         Database.State dbState = dbSystem.getDatabase().getState();
         if (dbState != Database.State.OPEN) {
@@ -196,23 +188,14 @@ public class ResponseFactory {
         return forInternalError(e, cause);
     }
 
-    public Response networkPageResponse(@Untrusted Request request) {
-        Optional<Response> error = checkDbClosedError();
-        if (error.isPresent()) return error.get();
-        try {
-            return forPage(request, pageFactory.networkPage());
-        } catch (IOException e) {
-            return forInternalError(e, "Failed to generate network page");
-        }
-    }
-
     public Response serverPageResponse(@Untrusted Request request, ServerUUID serverUUID) {
         Optional<Response> error = checkDbClosedError();
         if (error.isPresent()) return error.get();
         try {
-            return forPage(request, pageFactory.serverPage(serverUUID));
-        } catch (NotFoundException e) {
-            return notFound404(e.getMessage());
+            if (dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverUUID)).isEmpty()) {
+                return notFound404("Server not found in the database");
+            }
+            return forPage(request, pageFactory.reactPage());
         } catch (IOException e) {
             return forInternalError(e, "Failed to generate server page");
         }
@@ -509,7 +492,7 @@ public class ResponseFactory {
             Database db = dbSystem.getDatabase();
             PlayerContainer player = db.query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
             if (player.getValue(PlayerKeys.REGISTERED).isPresent()) {
-                return forPage(request, pageFactory.playerPage());
+                return forPage(request, pageFactory.reactPage());
             } else {
                 return forPage(request, pageFactory.reactPage(), 404);
             }
@@ -517,38 +500,6 @@ public class ResponseFactory {
             return playerNotFound404();
         } catch (IOException e) {
             return forInternalError(e, "Failed to generate player page");
-        }
-    }
-
-    public Response loginPageResponse(@Untrusted Request request) {
-        try {
-            return forPage(request, pageFactory.loginPage());
-        } catch (IOException e) {
-            return forInternalError(e, "Failed to generate login page");
-        }
-    }
-
-    public Response registerPageResponse(@Untrusted Request request) {
-        try {
-            return forPage(request, pageFactory.registerPage());
-        } catch (IOException e) {
-            return forInternalError(e, "Failed to generate register page");
-        }
-    }
-
-    public Response queryPageResponse(@Untrusted Request request) {
-        try {
-            return forPage(request, pageFactory.queryPage());
-        } catch (IOException e) {
-            return forInternalError(e, "Failed to generate query page");
-        }
-    }
-
-    public Response errorsPageResponse(@Untrusted Request request) {
-        try {
-            return forPage(request, pageFactory.errorsPage());
-        } catch (IOException e) {
-            return forInternalError(e, "Failed to generate errors page");
         }
     }
 
@@ -568,6 +519,33 @@ public class ResponseFactory {
             return forPage(request, pageFactory.reactPage());
         } catch (UncheckedIOException | IOException e) {
             return forInternalError(e, "Could not read index.html");
+        }
+    }
+
+    public Response themeResponse(@Untrusted String themeName, Request request) {
+        Path themeDirectory = files.getThemeDirectory();
+        try {
+            String resourceName = themeName + ".json";
+            WebResource foundTheme = files.attemptToFind(themeDirectory, resourceName)
+                    .map(file -> (Resource) new FileResource(file.getName(), file))
+                    .orElseGet(() -> files.getResourceFromJar("themes/" + themeName + ".json"))
+                    .asWebResource();
+
+            Optional<Long> lastModified = foundTheme.getLastModified();
+            @Untrusted Optional<Long> tag = Identifiers.getEtag(request);
+            if (tag.isPresent() && lastModified.isPresent() && tag.get() >= lastModified.get()) {
+                return browserCachedNotChangedResponse();
+            } else {
+                long date = lastModified.orElseGet(System::currentTimeMillis);
+                return Response.builder()
+                        .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CHECK_ETAG)
+                        .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(date))
+                        .setHeader(HttpHeader.ETAG.asString(), date)
+                        .setJSONContent(foundTheme.asString())
+                        .build();
+            }
+        } catch (UncheckedIOException e) {
+            return notFound404("Theme file by that name doesn't exist");
         }
     }
 }

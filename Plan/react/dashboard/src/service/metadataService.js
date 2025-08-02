@@ -40,3 +40,9 @@ export const savePreferences = async preferences => {
     let url = '/v1/storePreferences'
     return doSomePostRequest(url, [standard200option], preferences);
 }
+
+export const fetchTheme = async name => {
+    let url = `/v1/theme?theme=${name}`;
+    if (staticSite) url = `/theme/${name}.json`
+    return doGetRequest(url);
+}

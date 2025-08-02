@@ -41,7 +41,7 @@ public class ErrorsPageResolver implements Resolver {
 
     @Override
     public Optional<Response> resolve(Request request) {
-        return Optional.of(responseFactory.errorsPageResponse(request));
+        return Optional.of(responseFactory.reactPageResponse(request));
     }
 
 }

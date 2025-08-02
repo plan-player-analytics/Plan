@@ -164,4 +164,16 @@ public class PlanFiles implements SubSystem {
     public Path getJSONStorageDirectory() {
         return getDataDirectory().resolve("cached_json");
     }
+
+    public Path getThemeDirectory() {
+        Path themeDirectory = getDataDirectory().resolve("theme");
+        if (!Files.exists(themeDirectory)) {
+            try {
+                Files.createDirectories(themeDirectory);
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        }
+        return themeDirectory;
+    }
 }

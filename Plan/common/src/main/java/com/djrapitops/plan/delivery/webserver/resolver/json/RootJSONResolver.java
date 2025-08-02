@@ -91,6 +91,7 @@ public class RootJSONResolver {
             PlayerJoinAddressJSONResolver playerJoinAddressJSONResolver,
             PluginHistoryJSONResolver pluginHistoryJSONResolver,
             AllowlistJSONResolver allowlistJSONResolver,
+            ThemeJSONResolver themeJSONResolver,
 
             PreferencesJSONResolver preferencesJSONResolver,
             StorePreferencesJSONResolver storePreferencesJSONResolver,
@@ -131,7 +132,8 @@ public class RootJSONResolver {
                 .add("retention", retentionJSONResolver)
                 .add("joinAddresses", playerJoinAddressJSONResolver)
                 .add("preferences", preferencesJSONResolver)
-                .add("gameAllowlistBounces", allowlistJSONResolver);
+                .add("gameAllowlistBounces", allowlistJSONResolver)
+                .add("theme", themeJSONResolver);
 
         this.webServer = webServer;
         // These endpoints require authentication to be enabled.

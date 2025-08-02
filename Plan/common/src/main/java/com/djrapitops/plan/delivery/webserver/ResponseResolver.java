@@ -83,6 +83,7 @@ public class ResponseResolver {
     private final SwaggerJsonResolver swaggerJsonResolver;
     private final SwaggerPageResolver swaggerPageResolver;
     private final ManagePageResolver managePageResolver;
+    private final ThemeEditorResolver themeEditorResolver;
     private final ErrorLogger errorLogger;
 
     private final ResolverService resolverService;
@@ -105,6 +106,7 @@ public class ResponseResolver {
             RootPageResolver rootPageResolver,
             RootJSONResolver rootJSONResolver,
             StaticResourceResolver staticResourceResolver,
+            ThemeEditorResolver themeEditorResolver,
             PublicHtmlResolver publicHtmlResolver,
 
             LoginPageResolver loginPageResolver,
@@ -130,6 +132,7 @@ public class ResponseResolver {
         this.rootPageResolver = rootPageResolver;
         this.rootJSONResolver = rootJSONResolver;
         this.staticResourceResolver = staticResourceResolver;
+        this.themeEditorResolver = themeEditorResolver;
         this.publicHtmlResolver = publicHtmlResolver;
         this.loginPageResolver = loginPageResolver;
         this.registerPageResolver = registerPageResolver;
@@ -157,6 +160,7 @@ public class ResponseResolver {
         resolverService.registerResolver(plugin, "/player", playerPageResolver);
         resolverService.registerResolver(plugin, "/network", serverPageResolver);
         resolverService.registerResolver(plugin, "/server", serverPageResolver);
+        resolverService.registerResolver(plugin, "/theme-editor", themeEditorResolver);
         if (webServer.get().isAuthRequired()) {
             resolverService.registerResolver(plugin, "/login", loginPageResolver);
             resolverService.registerResolver(plugin, "/register", registerPageResolver);

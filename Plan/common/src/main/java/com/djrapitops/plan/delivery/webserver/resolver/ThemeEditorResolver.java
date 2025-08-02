@@ -14,42 +14,38 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.webserver.resolver.auth;
+package com.djrapitops.plan.delivery.webserver.resolver;
 
-import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
+import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
-import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.ResponseFactory;
-import com.djrapitops.plan.delivery.webserver.http.WebServer;
-import com.djrapitops.plan.utilities.dev.Untrusted;
-import dagger.Lazy;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
 
+/**
+ * Resolver endpoint for /theme-editor pages.
+ *
+ * @author AuroraLS3
+ */
 @Singleton
-public class RegisterPageResolver implements NoAuthResolver {
+public class ThemeEditorResolver implements Resolver {
 
     private final ResponseFactory responseFactory;
-    private final Lazy<WebServer> webServer;
 
     @Inject
-    public RegisterPageResolver(
-            ResponseFactory responseFactory,
-            Lazy<WebServer> webServer
-    ) {
-        this.responseFactory = responseFactory;
-        this.webServer = webServer;
+    public ThemeEditorResolver(ResponseFactory responseFactory) {this.responseFactory = responseFactory;}
+
+    @Override
+    public boolean canAccess(Request request) {
+        return request.getUser().map(user -> user.hasPermission(WebPermission.ACCESS_THEME_EDITOR)).orElse(false);
     }
 
     @Override
-    public Optional<Response> resolve(@Untrusted Request request) {
-        Optional<WebUser> user = request.getUser();
-        if (user.isPresent() || !webServer.get().isAuthRequired()) {
-            return Optional.of(responseFactory.redirectResponse("/"));
-        }
+    public Optional<Response> resolve(Request request) {
         return Optional.of(responseFactory.reactPageResponse(request));
     }
 }

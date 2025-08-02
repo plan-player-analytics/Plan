@@ -2,26 +2,28 @@ import {createContext, useContext, useEffect, useMemo, useState} from "react";
 import {getChartTheming} from "../util/graphColors";
 import {useMetadata} from "./metadataHook";
 
-const getDefaultTheme = (metadata) => {
-    const defaultTheme = metadata.defaultTheme;
-
-    // Use 'plan' if default or if default is undefined.
-    // Avoid night mode staying on if default theme is night mode
-    const invalidColor = !defaultTheme
-        || defaultTheme === 'default'
-        || defaultTheme === 'black'
-        || defaultTheme === 'white'
-        || defaultTheme !== 'night';
-
-    return invalidColor ? 'plan' : defaultTheme;
-}
-
 const getStoredTheme = (defaultTheme) => {
-    const stored = window.localStorage.getItem('themeColor');
+    const stored = window.localStorage.getItem('themeName');
     return stored && stored !== 'undefined' ? stored : defaultTheme;
 }
 
 const setStoredTheme = themeColor => {
+    if (themeColor) {
+        window.localStorage.setItem('themeName', themeColor);
+    }
+}
+
+const validateTheme = (themeColor, available) => {
+    const invalidTheme = !available.includes(themeColor);
+    setSelectedColor(invalidTheme ? 'default' : themeColor);
+}
+
+const getStoredColor = () => {
+    const stored = window.localStorage.getItem('themeColor');
+    return stored && stored !== 'undefined' ? stored : 'theme';
+}
+
+const setStoredColor = themeColor => {
     if (themeColor) {
         window.localStorage.setItem('themeColor', themeColor);
     }
@@ -33,22 +35,23 @@ export const ThemeContextProvider = ({children}) => {
     const metadata = useMetadata();
 
     const [colorChooserOpen, setColorChooserOpen] = useState(false);
-    const [selectedColor, setSelectedColor] = useState(getStoredTheme('plan'));
-    const [previousColor, setPreviousColor] = useState(undefined);
+    const [selectedColor, setSelectedColor] = useState(undefined);
+    const [nightMode, setNightMode] = useState(false);
 
     useEffect(() => {
-        if (!metadata) return;
-
-        setSelectedColor(getStoredTheme(getDefaultTheme(metadata)));
+        if (!metadata.loaded) return;
+        const theme = getStoredTheme(metadata.defaultTheme);
+        const invalidTheme = !metadata.availableThemes.includes(theme);
+        setSelectedColor(invalidTheme ? 'default' : theme);
     }, [metadata, setSelectedColor]);
 
     const sharedState = useMemo(() => {
         return {
             selectedColor, setSelectedColor,
-            previousColor, setPreviousColor,
-            colorChooserOpen, setColorChooserOpen
+            colorChooserOpen, setColorChooserOpen,
+            nightMode, setNightMode
         }
-    }, [selectedColor, setSelectedColor, previousColor, setPreviousColor, colorChooserOpen, setColorChooserOpen]);
+    }, [selectedColor, setSelectedColor, colorChooserOpen, setColorChooserOpen]);
     return (<ThemeContext.Provider value={sharedState}>
             {children}
         </ThemeContext.Provider>
@@ -61,42 +64,32 @@ export const useTheme = () => {
     const {
         selectedColor,
         setSelectedColor,
-        previousColor,
-        setPreviousColor,
         colorChooserOpen,
-        setColorChooserOpen
+        setColorChooserOpen,
+        nightMode,
+        setNightMode
     } = useContext(ThemeContext);
-
-    const metadata = useMetadata();
 
     const setTheme = color => {
         setStoredTheme(color);
         setSelectedColor(color);
     }
 
-    if (!selectedColor) setTheme(selectedColor);
-
     const toggleColorChooser = () => {
         setColorChooserOpen(!colorChooserOpen);
     }
 
     const isNightModeEnabled = () => {
-        return selectedColor === 'night';
+        return nightMode;
     }
 
     const toggleNightMode = () => {
-        if (isNightModeEnabled()) {
-            const defaultTheme = getDefaultTheme(metadata);
-            const lightTheme = defaultTheme === 'night' ? 'plan' : defaultTheme;
-            setTheme(previousColor ? previousColor : lightTheme);
-        } else {
-            setPreviousColor(selectedColor);
-            setTheme('night');
-        }
+        setNightMode(!nightMode);
     }
 
     const nightModeEnabled = isNightModeEnabled();
     return {
+        loaded: selectedColor !== undefined,
         currentTheme: selectedColor,
         color: selectedColor,
         setColor: setTheme,

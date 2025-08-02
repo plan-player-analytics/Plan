@@ -80,9 +80,12 @@ const generateThemeCSS = ({colors, nightColors, useCases, nightModeUseCases}) =>
 
 export const ThemeStyleCss = ({editMode}) => {
     const {
+        loaded,
         currentColors: colors, currentNightColors: nightColors,
         currentUseCases: useCases, currentNightModeUseCases: nightModeUseCases
     } = editMode ? useThemeEditContext() : useThemeStorage();
+
+    if (!loaded) return <></>
     return (
         <style>{generateThemeCSS({colors, nightColors, useCases, nightModeUseCases})}</style>
     )

@@ -35,6 +35,7 @@ public class LocaleModifications {
         apply(HtmlLang.QUERY_ARE_PLUGIN_GROUP, locale, new ReplaceString("${group}", "{{group}}"));
         apply(HtmlLang.QUERY_ARE_PLUGIN_GROUP, locale, new ReplaceString("${plugin}", "{{plugin}}"));
         apply(HtmlLang.QUERY_RESULTS_MATCH, locale, new ReplaceString("${resultCount}", "{{resultCount}}"));
+        apply(HtmlLang.QUERY, locale, new ReplaceString("<", ""));
         apply(HtmlLang.QUERY_RESULTS, locale, new ReplaceString("<", ""));
         apply(HtmlLang.QUERY_TIME_TO, locale, new ReplaceString("</label>", ""));
         apply(HtmlLang.QUERY_TIME_TO, locale, new ReplaceString(">", ""));
