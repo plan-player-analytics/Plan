@@ -71,7 +71,7 @@ ${applyToClass ? `.${applyToClass}` : ':root'} {
   color: var(--color-text-light);
 }
 
-${applyToClass ? `.${applyToClass}.night-mode-colors` : '.night-mode-colors'} {
+${applyToClass ? `.${applyToClass}.night-mode-colors,.${applyToClass} .night-mode-colors` : '.night-mode-colors'} {
   ${nightModeVariables.join(';\n  ')};
   --editor-bg-color: var(--color-night-dark-blue);
   color: var(--color-night-text);

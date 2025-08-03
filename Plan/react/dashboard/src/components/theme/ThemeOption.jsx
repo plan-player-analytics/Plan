@@ -10,6 +10,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCheck, faPencilAlt} from "@fortawesome/free-solid-svg-icons";
 import OutlineButton from "../input/OutlineButton.jsx";
 import {useAuth} from "../../hooks/authenticationHook.jsx";
+import {useNavigate} from "react-router-dom";
 
 const ThemeOption = ({theme, nightMode, selected, setSelected}) => {
     useEffect(() => {
@@ -17,6 +18,7 @@ const ThemeOption = ({theme, nightMode, selected, setSelected}) => {
     }, []);
     const {authLoaded, authRequired, hasPermission} = useAuth();
     const themeHook = useTheme();
+    const navigate = useNavigate();
 
     const managedComponent = !!setSelected;
     const canEdit = !managedComponent && authLoaded && (!authRequired || hasPermission('access.theme.editor'))
@@ -31,6 +33,7 @@ const ThemeOption = ({theme, nightMode, selected, setSelected}) => {
 
     const onClickEdit = () => {
         themeHook.toggleColorChooser();
+        if (themeHook.nightModeEnabled) themeHook.toggleNightMode();
         navigate(`/theme-editor/${theme}`);
     }
 
@@ -185,7 +188,12 @@ const ThemeOption = ({theme, nightMode, selected, setSelected}) => {
                                               className={'selected-check'} icon={faCheck}/>}
             </button>
             {canEdit &&
-                <OutlineButton style={{position: 'relative', left: "75%", bottom: "3.5rem"}} onClick={onClickEdit}>
+                <OutlineButton style={{
+                    padding: "0.2rem 0.5em",
+                    position: 'relative',
+                    left: "75%",
+                    bottom: selected ? "4.9rem" : "3.4rem"
+                }} onClick={onClickEdit}>
                     <FontAwesomeIcon icon={faPencilAlt}/>
                 </OutlineButton>}
         </Col>

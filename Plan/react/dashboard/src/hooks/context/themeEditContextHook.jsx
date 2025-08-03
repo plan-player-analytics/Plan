@@ -1,5 +1,5 @@
 import {createContext, useContext, useMemo, useState} from "react";
-import {useThemeStorage} from "./themeContextHook.jsx";
+import {getLocallyStoredThemes, useThemeStorage} from "./themeContextHook.jsx";
 import {cssVariableToName, nameToCssVariable} from "../../util/colors.js";
 import {flattenObject, recursiveFindAndReplaceValue} from "../../util/mutator.js";
 import {useTranslation} from "react-i18next";
@@ -257,8 +257,9 @@ export const ThemeEditContextProvider = ({children}) => {
             return !missingUseCase.length && !missingNightModeUseCase.length
         }
 
+        const onlyLocal = getLocallyStoredThemes().includes(originalName);
         const somethingToSave = edits.length > 0 || name !== originalName;
-        const savePossible = somethingToSave && allColorsExist()
+        const savePossible = (somethingToSave || onlyLocal) && allColorsExist()
 
         return {
             loaded,
@@ -283,6 +284,7 @@ export const ThemeEditContextProvider = ({children}) => {
             redos,
             issues,
             savePossible,
+            onlyLocal,
             discardPossible: somethingToSave
         }
     }, [edits, name]);

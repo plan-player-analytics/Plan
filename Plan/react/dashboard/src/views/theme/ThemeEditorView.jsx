@@ -10,14 +10,17 @@ import ColorSection from "../../components/theme/ColorSection.jsx";
 import ColorEditForm from "../../components/theme/ColorEditForm.jsx";
 import UseCaseSection from "../../components/theme/UseCaseSection.jsx";
 import ExampleSection from "../../components/theme/ExampleSection.jsx";
-import {faFileSignature, faSwatchbook} from "@fortawesome/free-solid-svg-icons";
+import {faDownload, faExclamationCircle, faFileSignature, faSwatchbook} from "@fortawesome/free-solid-svg-icons";
 import ActionButton from "../../components/input/ActionButton.jsx";
 import UnsavedChangesText from "../../components/text/UnsavedChangesText.jsx";
 import SecondaryActionButton from "../../components/input/button/SecondaryActionButton.jsx";
 import {MinHeightProvider} from "../../hooks/context/minHeightContextHook.jsx";
+import {useMetadata} from "../../hooks/metadataHook.jsx";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 const ThemeEditorView = () => {
     const {t} = useTranslation();
+    const metadata = useMetadata();
     const {
         name, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases,
         setName,
@@ -28,7 +31,7 @@ const ThemeEditorView = () => {
         updateUseCase,
         updateNightUseCase,
         removeNightOverride,
-        discardChanges, editCount, discardPossible, savePossible
+        discardChanges, editCount, discardPossible, savePossible, onlyLocal
     } = useThemeEditContext();
     const [hoveredItem, setHoveredItem] = useState(undefined);
     const [nightHover, setNightHover] = useState(false);
@@ -39,12 +42,38 @@ const ThemeEditorView = () => {
         }
     }
 
+    const download = () => {
+        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({
+            colors: currentColors,
+            nightColors: currentNightColors,
+            useCases: currentUseCases,
+            nightModeUseCases: currentNightModeUseCases
+        }));
+        const dlAnchorElem = document.createElement('a');
+        dlAnchorElem.setAttribute("href", dataStr);
+        dlAnchorElem.setAttribute("download", name + ".json");
+        document.body.appendChild(dlAnchorElem);
+        dlAnchorElem.click();
+        dlAnchorElem.remove();
+    }
+
+    const save = () => {
+
+    }
+
     const referenceColors = currentUseCases.referenceColors;
     const nightReferenceColors = currentNightModeUseCases.referenceColors;
 
     const title = t("html.label.themeEditor.title");
     const colors = {...referenceColors, '-': "", ...currentColors};
     const nightColors = {...nightReferenceColors, '-': "", ...currentNightColors, ...colors};
+
+    const isNameInvalid = newValue => {
+        return !newValue.length
+            || newValue.length > 100
+            || metadata.availableThemes?.includes(newValue)
+            || name === 'new'
+    }
 
     return (
         <MinHeightProvider>
@@ -54,16 +83,26 @@ const ThemeEditorView = () => {
                     <SecondaryActionButton className={'float-end'} onClick={discardChanges} disabled={!discardPossible}>
                         {t('html.label.managePage.changes.discard')}
                     </SecondaryActionButton>
-                    <ActionButton className={"float-end me-2"}
+                    <ActionButton className={"float-end me-2"} onClick={save}
                                   disabled={!savePossible}>{t('html.label.managePage.changes.save')}</ActionButton>
+                    {onlyLocal &&
+                        <ActionButton className={"float-end me-2"} onClick={download} disabled={!savePossible}>
+                            <FontAwesomeIcon icon={faDownload}/> {t('html.modal.version.download')}
+                        </ActionButton>}
                     <UnsavedChangesText visible={editCount > 0} className={"float-end me-3"}/>
+                    {onlyLocal && <small className={"ms-3"} style={{
+                        display: "inline-block",
+                        marginBottom: 0,
+                        opacity: 0.6
+                    }}><FontAwesomeIcon
+                        icon={faExclamationCircle}/> {t('html.label.themeEditor.themeStoredOnlyLocally')}</small>}
                 </CardHeader>
                 <Card.Body>
                     <Row onMouseEnter={() => onHoverChange(undefined, 'enter', false)} className={'mb-4'}>
                         <Col xs={12}>
                             <h5 className="mb-3">{t('html.label.themeEditor.themeName')}</h5>
                             <TextInput icon={faFileSignature}
-                                       isInvalid={newValue => !newValue.length || newValue.length > 100}
+                                       isInvalid={isNameInvalid}
                                        invalidFeedback={t('html.label.themeEditor.invalidName')}
                                        placeholder={t('html.label.themeEditor.themeName')}
                                        value={name}

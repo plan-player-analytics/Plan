@@ -59,14 +59,14 @@ const ColorSelectorModal = () => {
                     </Col>
                 </Row>
                 <hr/>
-                {metadata.loaded && <Row>
+                {metadata.loaded && <Row style={{paddingRight: "0.3rem"}}>
                     <h5>{t('html.label.themeSelect')}</h5>
                     {metadata.availableThemes.map(themeName => <ThemeOption
                         key={themeName}
                         theme={themeName}
                         nightMode={theme.nightModeEnabled}
                         selected={themeName === theme.currentTheme}/>)}
-                    {canEdit && <AddThemeButton/>}
+                    {canEdit && <Col xs={4}><AddThemeButton/></Col>}
                 </Row>}
             </Modal.Body>
             <Modal.Footer>

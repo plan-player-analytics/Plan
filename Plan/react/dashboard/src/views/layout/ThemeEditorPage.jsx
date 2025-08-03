@@ -14,45 +14,48 @@ import {useMetadata} from "../../hooks/metadataHook.jsx";
 import {faPlus, faSwatchbook} from "@fortawesome/free-solid-svg-icons";
 
 const ThemeEditorPage = () => {
-    const {identifier} = useParams();
-
-    return (
-        <ThemeContextProvider themeOverride={identifier}>
-            <ThemeStorageContextProvider>
-                <WaitUntilThemeLoads/>
-            </ThemeStorageContextProvider>
-        </ThemeContextProvider>
-    );
-};
-
-const WaitUntilThemeLoads = () => {
     const {t} = useTranslation();
     const metadata = useMetadata();
     const title = t("html.label.themeEditor.title");
-
-    const theme = useThemeStorage();
-    if (!theme.loaded) return <ChartLoader/>
+    const {identifier} = useParams();
 
     const items = metadata.loaded ? metadata.availableThemes.map(theme => {
         return {name: theme, icon: faSwatchbook, href: theme}
     }) : [];
-    items.push({name: 'Add theme', icon: faPlus, href: 'new'});
+    items.push({name: t('html.label.themeEditor.addTheme'), icon: faPlus, href: 'new'});
     return (
-        <ThemeEditContextProvider>
-            <ThemeStyleCss editMode/>
+        <>
             <Sidebar page={title} items={items}/>
             <div className="d-flex flex-column" id="content-wrapper">
                 <Header page={title} hideUpdater/>
                 <div id="content" style={{display: 'flex'}}>
                     <main className="container-fluid mt-4">
-                        <SwitchTransition>
-                            <Outlet/>
-                        </SwitchTransition>
+                        <ThemeContextProvider themeOverride={identifier}>
+                            <ThemeStorageContextProvider>
+                                <WaitUntilThemeLoads/>
+                            </ThemeStorageContextProvider>
+                        </ThemeContextProvider>
                     </main>
                     <aside>
                         <ColorSelectorModal/>
                     </aside>
                 </div>
+            </div>
+        </>
+    );
+};
+
+const WaitUntilThemeLoads = () => {
+    const theme = useThemeStorage();
+    if (!theme.loaded) return <ChartLoader/>
+
+    return (
+        <ThemeEditContextProvider>
+            <ThemeStyleCss editMode applyToClass={'theme-editor-wrapper'}/>
+            <div className={'theme-editor-wrapper'}>
+                <SwitchTransition>
+                    <Outlet/>
+                </SwitchTransition>
             </div>
         </ThemeEditContextProvider>
     )

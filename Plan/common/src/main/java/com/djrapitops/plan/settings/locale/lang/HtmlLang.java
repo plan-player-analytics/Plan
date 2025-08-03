@@ -455,6 +455,8 @@ public enum HtmlLang implements Lang {
     THEME_EDITOR_FINISH("html.label.themeEditor.finish", "Finish"),
     THEME_EDITOR_WARNING_ALREADY_EXISTS("html.label.themeEditor.alreadyExistsWarning", "Color with that name already exists - It will be overridden!"),
     THEME_EDITOR_WARNING_GRADIENT("html.label.themeEditor.gradientWarning", "Gradients do not work with all elements."),
+    THEME_EDITOR_WARNING_THEME_NAME("html.label.themeEditor.nameWarning", "A valid name that doesn't already exist is needed."),
+    THEME_EDITOR_WARNING_LOCAL("html.label.themeEditor.themeStoredOnlyLocally", "Theme is currently only in Browser local storage (Only you can see it). Remember to save your edits!"),
     THEME_EDITOR_MISSING("html.label.themeEditor.missing", "Missing color"),
     THEME_EDITOR_REMOVE_OVERRIDE("html.label.themeEditor.removeOverride", "Remove night mode override"),
     THEME_EDITOR_NAME("html.label.themeEditor.themeName", "Theme name"),
@@ -465,6 +467,9 @@ public enum HtmlLang implements Lang {
     THEME_EDITOR_HIDE_HISTORY("html.label.themeEditor.hideHistory", "Hide history"),
     THEME_EDITOR_UNDO("html.label.themeEditor.undo", "Undo"),
     THEME_EDITOR_REDO("html.label.themeEditor.redo", "Redo"),
+    THEME_EDITOR_OPEN_EDITOR("html.label.themeEditor.openEditor", "Open editor"),
+    THEME_EDITOR_ADD_THEME("html.label.themeEditor.addTheme", "Add theme"),
+    THEME_EDITOR_UPLOAD_THEME("html.label.themeEditor.uploadTheme", "or Upload a previously downloaded theme:"),
 
     THEME_EDITOR_CHANGE_RENAME_COLOR("html.label.themeEditor.changes.renameColor", "Renamed {{previous}} to {{name}}, set color to {{color}}"),
     THEME_EDITOR_CHANGE_SET_COLOR("html.label.themeEditor.changes.setColor", "Set {{name}} color to {{color}}"),

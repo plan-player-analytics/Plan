@@ -122,7 +122,7 @@ public class MetadataJSONResolver implements NoAuthResolver {
                     .collect(Collectors.toList());
 
             // Add the themes in the jar // TODO replace with something automated like getting from web file versions
-            for (String themeName : new String[]{"default"}) {
+            for (String themeName : new String[]{"default", "high-contrast"}) {
                 if (!foundThemes.contains(themeName)) {
                     foundThemes.add(themeName);
                 }

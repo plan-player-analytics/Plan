@@ -2,25 +2,25 @@ import React from 'react';
 import OutlineButton from "../input/OutlineButton.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlus} from "@fortawesome/free-solid-svg-icons";
-import {Col} from "react-bootstrap";
 import {useNavigate} from "react-router-dom";
 import {useTheme} from "../../hooks/themeHook.jsx";
+import {useTranslation} from "react-i18next";
 
 const AddThemeButton = () => {
+    const {t} = useTranslation();
     const navigate = useNavigate();
     const theme = useTheme();
 
     const onClick = () => {
         theme.toggleColorChooser();
+        if (theme.nightModeEnabled) theme.toggleNightMode();
         navigate("/theme-editor/new");
     }
 
     return (
-        <Col xs={4}>
-            <OutlineButton style={{height: '82px'}} onClick={onClick}>
-                <FontAwesomeIcon icon={faPlus}/> Add Theme
-            </OutlineButton>
-        </Col>
+        <OutlineButton style={{height: '82px', width: '100%', wordWrap: 'break-word'}} onClick={onClick}>
+            <FontAwesomeIcon icon={faPlus}/> {t('html.label.themeEditor.addTheme')}
+        </OutlineButton>
     )
 };
 

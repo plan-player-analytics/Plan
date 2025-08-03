@@ -3,6 +3,7 @@ import {fetchNetworkMetadata, fetchPlanMetadata} from "../service/metadataServic
 
 import terminal from '../Terminal-icon.png'
 import {useAuth} from "./authenticationHook";
+import {getLocallyStoredThemes} from "./context/themeContextHook.jsx";
 
 const MetadataContext = createContext({});
 
@@ -46,12 +47,14 @@ export const MetadataContextProvider = ({children}) => {
     const displayedServerName = metadata.isProxy ? metadata.networkName : (metadata.serverName?.startsWith('Server') ? "Plan" : metadata.serverNameserverName);
 
     const sharedState = useMemo(() => {
+            const loaded = Object.keys(metadata).length > 0;
             return {
                 ...metadata,
+                availableThemes: loaded ? [...metadata.availableThemes, ...getLocallyStoredThemes()] : getLocallyStoredThemes(),
                 getPlayerHeadImageUrl,
                 datastore,
                 displayedServerName,
-                loaded: Object.keys(metadata).length > 0
+                loaded
             }
         },
         [metadata, getPlayerHeadImageUrl, datastore, displayedServerName]);
