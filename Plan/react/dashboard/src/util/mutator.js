@@ -1,4 +1,6 @@
 // Function to flatten nested object into dot notation
+import {cssVariableToName} from "./colors.js";
+
 export const flattenObject = (obj, prefix = '') => {
     return Object.entries(obj).reduce((acc, [key, value]) => {
         const newKey = prefix ? `${prefix}-${key}` : key;
@@ -35,19 +37,17 @@ export const addToObject = (base, toAdd) => {
 }
 
 export const recursiveFindAndReplaceValue = (object, toReplace, replaceWith) => {
-    // Normalize toReplace to an array for easier checking
-    const toReplaceArr = Array.isArray(toReplace) ? toReplace : [toReplace];
-
     if (Array.isArray(object)) {
-        return object.map(item => recursiveFindAndReplaceValue(item, toReplaceArr, replaceWith));
+        const toReplaceName = cssVariableToName(toReplace);
+        const toReplaceWithName = cssVariableToName(replaceWith)
+        return object.map(item => item === toReplaceName ? toReplaceWithName : item);
     } else if (object !== null && typeof object === 'object') {
         const result = {};
         for (const [key, value] of Object.entries(object)) {
-            result[key] = recursiveFindAndReplaceValue(value, toReplaceArr, replaceWith);
+            result[key] = recursiveFindAndReplaceValue(value, toReplace, replaceWith);
         }
         return result;
     } else {
-        // Primitive value: replace if in toReplaceArr
-        return toReplaceArr.includes(object) ? replaceWith : object;
+        return toReplace === object ? replaceWith : object;
     }
 }

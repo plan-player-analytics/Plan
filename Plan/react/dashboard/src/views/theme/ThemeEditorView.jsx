@@ -10,7 +10,7 @@ import ColorSection from "../../components/theme/ColorSection.jsx";
 import ColorEditForm from "../../components/theme/ColorEditForm.jsx";
 import UseCaseSection from "../../components/theme/UseCaseSection.jsx";
 import ExampleSection from "../../components/theme/ExampleSection.jsx";
-import {faFileSignature, faPalette} from "@fortawesome/free-solid-svg-icons";
+import {faFileSignature, faSwatchbook} from "@fortawesome/free-solid-svg-icons";
 import ActionButton from "../../components/input/ActionButton.jsx";
 import UnsavedChangesText from "../../components/text/UnsavedChangesText.jsx";
 import SecondaryActionButton from "../../components/input/button/SecondaryActionButton.jsx";
@@ -50,7 +50,7 @@ const ThemeEditorView = () => {
         <MinHeightProvider>
             <Card className="shadow mb-4 theme-editor" id={"theme-editor"}>
                 <EditorMenuToast/>
-                <CardHeader icon={faPalette} color="primary" label={title}>
+                <CardHeader icon={faSwatchbook} color="primary" label={title}>
                     <SecondaryActionButton className={'float-end'} onClick={discardChanges} disabled={!discardPossible}>
                         {t('html.label.managePage.changes.discard')}
                     </SecondaryActionButton>

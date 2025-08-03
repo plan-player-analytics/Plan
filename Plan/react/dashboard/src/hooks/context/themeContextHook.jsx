@@ -6,7 +6,7 @@ const ThemeStorageContext = createContext({});
 
 export const ThemeStorageContextProvider = ({children}) => {
     const theme = useTheme();
-    const {currentTheme, currentColor} = theme;
+    const {currentTheme, color} = theme;
     const [loaded, setLoaded] = useState(false);
     const [currentColors, setCurrentColors] = useState({});
     const [currentNightColors, setCurrentNightColors] = useState({});
@@ -37,7 +37,7 @@ export const ThemeStorageContextProvider = ({children}) => {
         return {
             loaded, name: currentTheme, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases
         }
-    }, [name, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases]);
+    }, [name, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases, loaded]);
     return (<ThemeStorageContext.Provider value={sharedState}>
             {children}
         </ThemeStorageContext.Provider>

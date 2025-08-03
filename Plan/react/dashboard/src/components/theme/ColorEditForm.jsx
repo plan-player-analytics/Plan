@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, {forwardRef, useEffect, useRef, useState} from 'react';
 import {Col, InputGroup, Row} from "react-bootstrap";
 import {useColorEditContext} from "../../hooks/context/colorEditContextHook.jsx";
 import {useTranslation} from "react-i18next";
@@ -14,7 +14,7 @@ import Wheel from "@uiw/react-color-wheel";
 import {getColorArrayConverter, getColorConverter} from "../../util/Color.js";
 
 
-const ColorInput = ({ref, color, contrastColor, invalid, onChange}) => {
+const ColorInput = forwardRef(({color, contrastColor, invalid, onChange}, ref) => {
     const [focused, setFocused] = useState(true);
     const onChangeText = event => {
         onChange(event.target.value);
@@ -80,7 +80,7 @@ const ColorInput = ({ref, color, contrastColor, invalid, onChange}) => {
             </Row>
         </React.Fragment>
     );
-}
+});
 
 const ColorEditForm = () => {
     const {t} = useTranslation();

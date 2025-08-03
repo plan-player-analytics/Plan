@@ -31,27 +31,31 @@ const setStoredColor = themeColor => {
 
 const ThemeContext = createContext({});
 
-export const ThemeContextProvider = ({children}) => {
+export const ThemeContextProvider = ({children, themeOverride}) => {
     const metadata = useMetadata();
 
     const [colorChooserOpen, setColorChooserOpen] = useState(false);
+    const [selectedTheme, setSelectedTheme] = useState(themeOverride);
     const [selectedColor, setSelectedColor] = useState(undefined);
     const [nightMode, setNightMode] = useState(false);
 
     useEffect(() => {
         if (!metadata.loaded) return;
+        if (themeOverride) return;
         const theme = getStoredTheme(metadata.defaultTheme);
         const invalidTheme = !metadata.availableThemes.includes(theme);
-        setSelectedColor(invalidTheme ? 'default' : theme);
-    }, [metadata, setSelectedColor]);
+        setSelectedTheme(invalidTheme ? 'default' : theme);
+        setSelectedColor(getStoredColor());
+    }, [metadata, setSelectedTheme, setSelectedColor]);
 
     const sharedState = useMemo(() => {
         return {
+            selectedTheme, setSelectedTheme,
             selectedColor, setSelectedColor,
             colorChooserOpen, setColorChooserOpen,
             nightMode, setNightMode
         }
-    }, [selectedColor, setSelectedColor, colorChooserOpen, setColorChooserOpen]);
+    }, [selectedTheme, selectedColor, nightMode, setSelectedColor, colorChooserOpen, setColorChooserOpen]);
     return (<ThemeContext.Provider value={sharedState}>
             {children}
         </ThemeContext.Provider>
@@ -62,6 +66,8 @@ const chartTheming = getChartTheming();
 
 export const useTheme = () => {
     const {
+        selectedTheme,
+        setSelectedTheme,
         selectedColor,
         setSelectedColor,
         colorChooserOpen,
@@ -72,6 +78,11 @@ export const useTheme = () => {
 
     const setTheme = color => {
         setStoredTheme(color);
+        setSelectedTheme(color);
+    }
+
+    const setColor = color => {
+        setStoredColor(color);
         setSelectedColor(color);
     }
 
@@ -89,10 +100,11 @@ export const useTheme = () => {
 
     const nightModeEnabled = isNightModeEnabled();
     return {
-        loaded: selectedColor !== undefined,
-        currentTheme: selectedColor,
+        loaded: selectedTheme !== undefined,
+        currentTheme: selectedTheme,
         color: selectedColor,
-        setColor: setTheme,
+        setTheme,
+        setColor,
         nightModeEnabled,
         colorChooserOpen,
         toggleNightMode,

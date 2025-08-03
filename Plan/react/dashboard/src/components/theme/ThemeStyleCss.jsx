@@ -5,7 +5,7 @@ import {useThemeEditContext} from "../../hooks/context/themeEditContextHook.jsx"
 import {useThemeStorage} from "../../hooks/context/themeContextHook.jsx";
 
 // Function to generate CSS variables from theme data
-const generateThemeCSS = ({colors, nightColors, useCases, nightModeUseCases}) => {
+const generateThemeCSS = ({applyToClass, colors, nightColors, useCases, nightModeUseCases}) => {
     const baseVariables = [];
     const nightModeVariables = [];
 
@@ -65,20 +65,20 @@ const generateThemeCSS = ({colors, nightColors, useCases, nightModeUseCases}) =>
 
 
     return `
-:root {
+${applyToClass ? `.${applyToClass}` : ':root'} {
   ${baseVariables.join(';\n  ')};
   --editor-bg-color: var(--color-white-grey);
   color: var(--color-text-light);
 }
 
-.night-mode-colors {
+${applyToClass ? `.${applyToClass}.night-mode-colors` : '.night-mode-colors'} {
   ${nightModeVariables.join(';\n  ')};
   --editor-bg-color: var(--color-night-dark-blue);
   color: var(--color-night-text);
 }`;
 };
 
-export const ThemeStyleCss = ({editMode}) => {
+export const ThemeStyleCss = ({editMode, applyToClass}) => {
     const {
         loaded,
         currentColors: colors, currentNightColors: nightColors,
@@ -87,6 +87,6 @@ export const ThemeStyleCss = ({editMode}) => {
 
     if (!loaded) return <></>
     return (
-        <style>{generateThemeCSS({colors, nightColors, useCases, nightModeUseCases})}</style>
+        <style>{generateThemeCSS({applyToClass, colors, nightColors, useCases, nightModeUseCases})}</style>
     )
 }

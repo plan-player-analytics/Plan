@@ -21,7 +21,6 @@ import ErrorBoundary from "./components/ErrorBoundary";
 import {AlertPopupContextProvider} from "./hooks/context/alertPopupContext";
 import {PreferencesContextProvider} from "./hooks/preferencesHook";
 import {ThemeStorageContextProvider} from "./hooks/context/themeContextHook.jsx";
-import {ThemeEditContextProvider} from "./hooks/context/themeEditContextHook.jsx";
 import {ThemeStyleCss} from "./components/theme/ThemeStyleCss.jsx";
 
 const PlayerPage = React.lazy(() => import("./views/layout/PlayerPage"));
@@ -69,6 +68,7 @@ const ManagePage = React.lazy(() => import("./views/layout/ManagePage"));
 const GroupsView = React.lazy(() => import("./views/manage/GroupsView"));
 
 const ThemeEditorPage = React.lazy(() => import("./views/layout/ThemeEditorPage"));
+const AddThemeView = React.lazy(() => import("./views/theme/AddThemeView"));
 const ThemeEditorView = React.lazy(() => import("./views/theme/ThemeEditorView"));
 
 const LoginPage = React.lazy(() => import("./views/layout/LoginPage"));
@@ -211,14 +211,12 @@ const router = createBrowserRouter(
             {!staticSite && <Route path="/docs" element={<Lazy><SwaggerView/></Lazy>}/>}
             <Route path="/theme-editor" element={
                 <Lazy>
-                    <ThemeEditContextProvider>
-                        <ThemeEditorPage/>
-                    </ThemeEditContextProvider>
+                    <ThemeEditorPage/>
                 </Lazy>
             }>
                 <Route path="" element={<NewRedirect/>}/>
                 <Route path=":identifier" element={<Lazy><ThemeEditorView/></Lazy>}/>
-                <Route path="new" element={<Lazy><ThemeEditorView/></Lazy>}/>
+                <Route path="new" element={<Lazy><AddThemeView/></Lazy>}/>
             </Route>
             <Route path="*" element={<Lazy><ErrorPage error={{
                 message: 'Page not found, please correct the address',

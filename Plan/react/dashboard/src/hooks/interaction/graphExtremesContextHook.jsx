@@ -12,7 +12,6 @@ export const GraphExtremesContextProvider = ({children}) => {
         if (currentDebounce.current) clearTimeout(currentDebounce.current);
         currentDebounce.current = setTimeout(() => {
             if (event?.trigger) {
-                console.log('set extremes', event)
                 setMin(event.min);
                 setMax(event.max);
             }
