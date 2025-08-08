@@ -55,7 +55,7 @@ class UsedLocaleRegressionTest {
         Path reactSourceDir = Paths.get("").toAbsolutePath().getParent().resolve("react/dashboard/src");
 
         // t('translation.key') or {t("translation.key")
-        Pattern translatePattern = Pattern.compile("[\\s|{]t\\(['|\"](...+?)['|\"]\\)");
+        Pattern translatePattern = Pattern.compile("[\\s{]t\\((['\"])(.+?)\\1");//Pattern.compile("[\\s|{]t\\(['|\"](...+?)['|\"]\\)");
 
         Set<String> foundLangKeys = new HashSet<>();
         Files.walkFileTree(reactSourceDir, new SimpleFileVisitor<>() {
@@ -65,7 +65,7 @@ class UsedLocaleRegressionTest {
 
                 Matcher scriptMatcher = translatePattern.matcher(contents);
                 while (scriptMatcher.find()) {
-                    foundLangKeys.add(scriptMatcher.toMatchResult().group(1));
+                    foundLangKeys.add(scriptMatcher.toMatchResult().group(2));
                 }
 
                 return super.visitFile(file, attrs);

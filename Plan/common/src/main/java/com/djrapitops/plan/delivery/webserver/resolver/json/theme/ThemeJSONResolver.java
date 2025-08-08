@@ -83,7 +83,7 @@ public class ThemeJSONResolver implements NoAuthResolver {
         if (themeFilePattern.matcher(themeName).matches()) {
             return responseFactory.themeResponse(themeName, request);
         } else {
-            return responseFactory.badRequest("'theme' parameter was invalid", "/v1/target");
+            return responseFactory.badRequest("'theme' parameter was invalid", "/v1/theme");
         }
     }
 }

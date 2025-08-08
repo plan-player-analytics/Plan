@@ -100,12 +100,15 @@ public class SaveThemeJSONResolver implements Resolver {
 
     private Response getResponse(@Untrusted String themeName, Request request) {
         if (!themeFilePattern.matcher(themeName).matches()) {
-            return responseFactory.badRequest("'theme' parameter was invalid", "/v1/target");
+            return responseFactory.badRequest("'theme' parameter was invalid", "/v1/saveTheme");
         }
 
         @Untrusted byte[] requestBody = request.getRequestBody();
         try {
             @Untrusted ThemeDto result = gson.fromJson(new String(requestBody, StandardCharsets.UTF_8), ThemeDto.class);
+            if (result == null) {
+                return responseFactory.badRequest("Body needs to be a vaild theme file", "/v1/saveTheme");
+            }
 
             List<String> issues = new ArrayList<>();
 

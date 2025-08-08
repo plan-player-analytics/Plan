@@ -56,7 +56,7 @@ public class RequestHandler {
     }
 
     public Response getResponse(InternalRequest internalRequest) {
-        @Untrusted String accessAddress = internalRequest.getAccessAddress(webserverConfiguration);
+        @Untrusted(reason = "from header") String accessAddress = internalRequest.getAccessAddress(webserverConfiguration);
         @Untrusted String requestedPath = internalRequest.getRequestedPath();
 
         boolean blocked = false;
@@ -74,7 +74,7 @@ public class RequestHandler {
             response = responseFactory.ipWhitelist403(accessAddress);
         } else {
             try {
-                request = internalRequest.toRequest();
+                request = internalRequest.toRequest(accessAddress);
                 response = attemptToResolve(request, accessAddress);
             } catch (WebUserAuthException thrownByAuthentication) {
                 response = processFailedAuthentication(internalRequest, accessAddress, thrownByAuthentication);

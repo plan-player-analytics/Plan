@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.auth;
 
+import com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration;
 import com.djrapitops.plan.delivery.webserver.http.InternalRequest;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 
@@ -28,20 +29,22 @@ import java.util.Optional;
 public class AuthenticationExtractor {
 
     private final ActiveCookieStore activeCookieStore;
+    private final WebserverConfiguration webserverConfiguration;
 
     @Inject
-    public AuthenticationExtractor(ActiveCookieStore activeCookieStore) {
+    public AuthenticationExtractor(ActiveCookieStore activeCookieStore, WebserverConfiguration webserverConfiguration) {
         this.activeCookieStore = activeCookieStore;
+        this.webserverConfiguration = webserverConfiguration;
     }
 
     public Optional<Authentication> extractAuthentication(InternalRequest internalRequest) {
-        return getCookieAuthentication(internalRequest.getCookies());
+        return getCookieAuthentication(internalRequest.getCookies(), internalRequest.getAccessAddress(webserverConfiguration));
     }
 
-    private Optional<Authentication> getCookieAuthentication(@Untrusted List<Cookie> cookies) {
+    private Optional<Authentication> getCookieAuthentication(@Untrusted List<Cookie> cookies, String accessAddress) {
         for (@Untrusted Cookie cookie : cookies) {
             if ("auth".equals(cookie.getName())) {
-                return Optional.of(new CookieAuthentication(activeCookieStore, cookie.getValue()));
+                return Optional.of(new CookieAuthentication(activeCookieStore, cookie.getValue(), accessAddress));
             }
         }
         return Optional.empty();

@@ -14,20 +14,25 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.utilities.dev;
+package com.djrapitops.plan.storage.database.transactions.patches;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import com.djrapitops.plan.storage.database.sql.building.Sql;
+import com.djrapitops.plan.storage.database.sql.tables.CookieTable;
 
 /**
- * Annotation for identifying untrusted data that has not been sanitized.
+ * Adds ip_address column to plan_cookies.
  *
  * @author AuroraLS3
  */
-@Retention(RetentionPolicy.SOURCE)
-@Target({ElementType.PARAMETER, ElementType.FIELD, ElementType.METHOD, ElementType.LOCAL_VARIABLE, ElementType.TYPE_PARAMETER, ElementType.TYPE_USE, ElementType.CONSTRUCTOR, ElementType.TYPE})
-public @interface Untrusted {
-    String reason() default "";
+public class CookieTableIpAddressPatch extends Patch {
+
+    @Override
+    public boolean hasBeenApplied() {
+        return hasColumn(CookieTable.TABLE_NAME, CookieTable.IP_ADDRESS);
+    }
+
+    @Override
+    protected void applyPatch() {
+        addColumn(CookieTable.TABLE_NAME, CookieTable.IP_ADDRESS + " " + Sql.varchar(45));
+    }
 }

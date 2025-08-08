@@ -469,6 +469,7 @@ public enum HtmlLang implements Lang {
     THEME_EDITOR_REDO("html.label.themeEditor.redo", "Redo"),
     THEME_EDITOR_OPEN_EDITOR("html.label.themeEditor.openEditor", "Open editor"),
     THEME_EDITOR_ADD_THEME("html.label.themeEditor.addTheme", "Add theme"),
+    THEME_EDTIOR_BASED_ON_THEME("html.label.themeEditor.basedOnTheme", "Based on theme"),
     THEME_EDITOR_UPLOAD_THEME("html.label.themeEditor.uploadTheme", "or Upload a previously downloaded theme:"),
 
     THEME_EDITOR_CHANGE_RENAME_COLOR("html.label.themeEditor.changes.renameColor", "Renamed {{previous}} to {{name}}, set color to {{color}}"),

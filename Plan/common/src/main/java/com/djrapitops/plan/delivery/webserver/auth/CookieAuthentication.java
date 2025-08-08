@@ -19,19 +19,26 @@ package com.djrapitops.plan.delivery.webserver.auth;
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 
+import java.util.Objects;
+
 public class CookieAuthentication implements Authentication {
 
     private final ActiveCookieStore activeCookieStore;
     @Untrusted
     private final String cookie;
+    private final String accessAddress;
 
-    public CookieAuthentication(ActiveCookieStore activeCookieStore, @Untrusted String cookie) {
+    public CookieAuthentication(ActiveCookieStore activeCookieStore, @Untrusted String cookie, String accessAddress) {
         this.activeCookieStore = activeCookieStore;
         this.cookie = cookie;
+        this.accessAddress = accessAddress;
     }
 
     @Override
     public User getUser() {
-        return activeCookieStore.checkCookie(cookie).orElse(null);
+        return activeCookieStore.findCookie(cookie)
+                // Prevents another IP from using a cookie granted to one IP
+                .filter(cookieMetadata -> Objects.equals(cookieMetadata.getIpAddress(), accessAddress))
+                .map(CookieMetadata::getUser).orElse(null);
     }
 }
