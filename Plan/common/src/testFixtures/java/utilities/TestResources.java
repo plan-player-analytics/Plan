@@ -34,6 +34,12 @@ public class TestResources {
         /* static method class */
     }
 
+    public static File getAsset(String called) {
+        File file = new File("src/main/resources/assets/plan/" + called);
+        System.out.println(file.getAbsolutePath());
+        return file;
+    }
+
     public static File getTestResourceFile(String called, Class testClass) throws URISyntaxException {
         URL resource = testClass.getResource("/" + called);
         URI resourceURI = resource.toURI();

@@ -3,18 +3,17 @@ import Highcharts from 'highcharts';
 import factory from 'highcharts/modules/drilldown';
 
 import {useTheme} from "../../hooks/themeHook";
-import {withReducedSaturation} from "../../util/colors";
-import {useMetadata} from "../../hooks/metadataHook";
+import {nameToCssVariable, withReducedSaturation} from "../../util/colors";
 import {useTranslation} from "react-i18next";
 import Accessibility from "highcharts/modules/accessibility";
 import {useTimePreferences} from "../text/FormattedTime.jsx";
 import {usePreferences} from "../../hooks/preferencesHook.jsx";
 import Loader from "../navigation/Loader.jsx";
 import {formatTimeAmount} from "../../util/format/TimeAmountFormat.js";
+import {useThemeStorage} from "../../hooks/context/themeContextHook.jsx";
 
 const WorldPie = ({id, worldSeries, gmSeries}) => {
     const {t} = useTranslation();
-    const {gmPieColors} = useMetadata();
     const {preferencesLoaded} = usePreferences();
     const timePreferences = useTimePreferences();
 
@@ -23,6 +22,9 @@ const WorldPie = ({id, worldSeries, gmSeries}) => {
     }, []);
 
     const {nightModeEnabled, graphTheming} = useTheme();
+    const {currentUseCases} = useThemeStorage();
+
+    const gmPieColors = currentUseCases.graphs.pie.drilldown.map(nameToCssVariable);
 
     useEffect(() => {
         const reduceColors = (series) => {

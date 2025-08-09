@@ -3,11 +3,14 @@ import {getLocallyStoredThemes, useThemeStorage} from "./themeContextHook.jsx";
 import {cssVariableToName, nameToCssVariable} from "../../util/colors.js";
 import {flattenObject, recursiveFindAndReplaceValue} from "../../util/mutator.js";
 import {useTranslation} from "react-i18next";
+import {saveTheme} from "../../service/metadataService.js";
+import {useAuth} from "../authenticationHook.jsx";
 
 const ThemeEditContext = createContext({});
 
 export const ThemeEditContextProvider = ({children}) => {
     const {t} = useTranslation();
+    const {authRequired, hasPermission} = useAuth();
     const [edits, setEdits] = useState([]);
     const [redos, setRedos] = useState([]);
     const {
@@ -16,10 +19,16 @@ export const ThemeEditContextProvider = ({children}) => {
         currentColors,
         currentNightColors,
         currentUseCases,
-        currentNightModeUseCases
+        currentNightModeUseCases,
+        saveUploadedThemeLocally,
+        deleteThemeLocally,
+        reloadTheme
     } = useThemeStorage();
 
     const [name, setName] = useState(originalName);
+    const onNameChange = value => {
+        setName(value.toLowerCase().replace(/[^a-z0-9-]/g, "-"));
+    }
 
     const applyEdits = (type, object) => {
         console.debug('Applying edits', edits.length)
@@ -66,9 +75,6 @@ export const ThemeEditContextProvider = ({children}) => {
             setRedos(prev => [...prev, undone]);
         }
         setName(originalName);
-        setCurrentThemeColorOptions(originalThemeColorOptions);
-        setCurrentPieColors(originalPieColors);
-        setCurrentDrilldownColors(originalDrilldownColors);
     }
 
     const updateUseCaseColorName = (current, oldName, newName) => {
@@ -259,11 +265,35 @@ export const ThemeEditContextProvider = ({children}) => {
 
         const onlyLocal = getLocallyStoredThemes().includes(originalName);
         const somethingToSave = edits.length > 0 || name !== originalName;
-        const savePossible = (somethingToSave || onlyLocal) && allColorsExist()
+        const savePossible = (somethingToSave || (onlyLocal && authRequired && hasPermission('manage.themes'))) && allColorsExist();
+
+        const save = async () => {
+            if (!savePossible) {
+                return
+            }
+
+            const themeToSave = {
+                colors: editedColors,
+                nightColors: editedNightColors,
+                useCases: editedUseCases,
+                nightModeUseCases: editedNightModeUseCases
+            };
+
+            saveUploadedThemeLocally(name, themeToSave);
+            // Save remotely
+            if (authRequired && hasPermission('manage.themes')) {
+                await saveTheme(name, themeToSave);
+                deleteThemeLocally(name);
+            }
+            setEdits([]);
+            setRedos([]);
+            reloadTheme();
+        }
 
         return {
             loaded,
-            name, setName,
+            name,
+            setName: onNameChange,
             currentColors: editedColors,
             currentNightColors: editedNightColors,
             currentUseCases: editedUseCases,
@@ -285,7 +315,8 @@ export const ThemeEditContextProvider = ({children}) => {
             issues,
             savePossible,
             onlyLocal,
-            discardPossible: somethingToSave
+            discardPossible: somethingToSave,
+            save
         }
     }, [edits, name]);
     return (<ThemeEditContext.Provider value={sharedState}>

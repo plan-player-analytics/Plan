@@ -57,7 +57,7 @@ const AddThemeView = () => {
                     <Col xs={12}>
                         <TextInput icon={faFileSignature}
                                    isInvalid={isNameInvalid}
-                                   invalidFeedback={t('html.label.themeEditor.invalidName')}
+                                   invalidFeedback={metadata.availableThemes?.includes(name) ? t('html.label.themeEditor.existingName') : t('html.label.themeEditor.invalidName')}
                                    placeholder={t('html.label.themeEditor.themeName')}
                                    value={name}
                                    setValue={newValue => setName(newValue.toLowerCase().replace(/[^a-z0-9-]/g, "-"))}

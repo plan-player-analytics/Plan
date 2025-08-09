@@ -24,6 +24,7 @@ import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.ResponseFactory;
+import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
@@ -41,7 +42,9 @@ import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -60,11 +63,13 @@ public class SaveThemeJSONResolver implements Resolver {
     private static final Pattern themeFilePattern = Pattern.compile("[a-zA-Z0-9-]*");
     private static final Pattern colorPattern = Pattern.compile("[a-zA-Z0-9-)(]*");
 
+    private final PlanFiles files;
     private final ResponseFactory responseFactory;
     private final Gson gson;
 
     @Inject
-    public SaveThemeJSONResolver(ResponseFactory responseFactory, Gson gson) {
+    public SaveThemeJSONResolver(PlanFiles files, ResponseFactory responseFactory, Gson gson) {
+        this.files = files;
         this.responseFactory = responseFactory;
         this.gson = gson;
     }
@@ -119,11 +124,16 @@ public class SaveThemeJSONResolver implements Resolver {
                 return responseFactory.badRequest("Invalid request body: " + issues.toString(), "/v1/saveTheme");
             }
 
-            // TODO save the actual theme file
+            java.nio.file.Path themeFile = files.getThemeDirectory()
+                    .resolve(themeName + ".json");
+
+            Files.write(themeFile, gson.toJson(result).getBytes(StandardCharsets.UTF_8), PlanFiles.replaceIfExists());
 
             return responseFactory.successResponse();
         } catch (JsonSyntaxException e) {
             return responseFactory.badRequest("Request body was invalid json", "/v1/saveTheme");
+        } catch (IOException e) {
+            return responseFactory.internalErrorResponse(e, e.getMessage());
         }
     }
 

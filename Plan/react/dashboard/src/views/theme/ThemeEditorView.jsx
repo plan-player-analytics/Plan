@@ -31,7 +31,7 @@ const ThemeEditorView = () => {
         updateUseCase,
         updateNightUseCase,
         removeNightOverride,
-        discardChanges, editCount, discardPossible, savePossible, onlyLocal
+        discardChanges, editCount, discardPossible, savePossible, onlyLocal, save
     } = useThemeEditContext();
     const [hoveredItem, setHoveredItem] = useState(undefined);
     const [nightHover, setNightHover] = useState(false);
@@ -55,10 +55,6 @@ const ThemeEditorView = () => {
         document.body.appendChild(dlAnchorElem);
         dlAnchorElem.click();
         dlAnchorElem.remove();
-    }
-
-    const save = () => {
-
     }
 
     const referenceColors = currentUseCases.referenceColors;
@@ -86,7 +82,7 @@ const ThemeEditorView = () => {
                     <ActionButton className={"float-end me-2"} onClick={save}
                                   disabled={!savePossible}>{t('html.label.managePage.changes.save')}</ActionButton>
                     {onlyLocal &&
-                        <ActionButton className={"float-end me-2"} onClick={download} disabled={!savePossible}>
+                        <ActionButton className={"float-end me-2"} onClick={download}>
                             <FontAwesomeIcon icon={faDownload}/> {t('html.modal.version.download')}
                         </ActionButton>}
                     <UnsavedChangesText visible={editCount > 0} className={"float-end me-3"}/>

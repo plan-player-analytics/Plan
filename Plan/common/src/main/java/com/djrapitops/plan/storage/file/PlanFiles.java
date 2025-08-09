@@ -31,7 +31,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Optional;
 
 /**
@@ -165,8 +167,14 @@ public class PlanFiles implements SubSystem {
         return getDataDirectory().resolve("cached_json");
     }
 
+    public static OpenOption[] replaceIfExists() {
+        return new OpenOption[]{
+                StandardOpenOption.CREATE_NEW, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE
+        };
+    }
+
     public Path getThemeDirectory() {
-        Path themeDirectory = getDataDirectory().resolve("theme");
+        Path themeDirectory = getDataDirectory().resolve("web_themes");
         if (!Files.exists(themeDirectory)) {
             try {
                 Files.createDirectories(themeDirectory);

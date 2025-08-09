@@ -39,6 +39,23 @@ export const ThemeStorageContextProvider = ({children}) => {
         setLoaded(true);
     }, []);
 
+    const saveUploadedThemeLocally = (name, themeJson) => {
+        const locallyStoredThemes = getLocallyStoredThemes();
+        window.localStorage.setItem(`locally-stored-theme-${name}`, JSON.stringify(themeJson));
+        locallyStoredThemes.push(name);
+        window.localStorage.setItem(`locally-stored-themes`, JSON.stringify(locallyStoredThemes));
+    }
+
+    const deleteThemeLocally = (name) => {
+        const locallyStoredThemes = getLocallyStoredThemes();
+        window.localStorage.removeItem(`locally-stored-theme-${name}`);
+        const index = locallyStoredThemes.indexOf(name);
+        if (index > -1) {
+            locallyStoredThemes.splice(index, 1);
+        }
+        window.localStorage.setItem(`locally-stored-themes`, JSON.stringify(locallyStoredThemes));
+    }
+
     const cloneThemeLocally = async (themeToClone, nameAs) => {
         const response = await fetchTheme(themeToClone);
         if (response.error) {
@@ -46,17 +63,11 @@ export const ThemeStorageContextProvider = ({children}) => {
             return; // TODO alert context
         }
         const theme = response.data;
-        const locallyStoredThemes = getLocallyStoredThemes();
-        window.localStorage.setItem(`locally-stored-theme-${nameAs}`, JSON.stringify(theme));
-        locallyStoredThemes.push(nameAs);
-        window.localStorage.setItem(`locally-stored-themes`, JSON.stringify(locallyStoredThemes));
+        saveUploadedThemeLocally(nameAs, theme);
     }
 
-    const saveUploadedThemeLocally = (name, themeJson) => {
-        const locallyStoredThemes = getLocallyStoredThemes();
-        window.localStorage.setItem(`locally-stored-theme-${name}`, JSON.stringify(themeJson));
-        locallyStoredThemes.push(name);
-        window.localStorage.setItem(`locally-stored-themes`, JSON.stringify(locallyStoredThemes));
+    const reloadTheme = () => {
+        loadTheme(currentTheme);
     }
 
     useEffect(() => {
@@ -68,7 +79,7 @@ export const ThemeStorageContextProvider = ({children}) => {
     const sharedState = useMemo(() => {
         return {
             loaded, name: currentTheme, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases,
-            cloneThemeLocally, saveUploadedThemeLocally
+            cloneThemeLocally, saveUploadedThemeLocally, deleteThemeLocally, reloadTheme
         }
     }, [name, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases, loaded]);
     return (<ThemeStorageContext.Provider value={sharedState}>

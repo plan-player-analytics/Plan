@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.webserver.resolver.json.metadata;
 
 import com.djrapitops.plan.delivery.rendering.html.Contributors;
+import com.djrapitops.plan.delivery.web.AssetVersions;
 import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
@@ -57,6 +58,7 @@ public class MetadataJSONResolver implements NoAuthResolver {
     private final PlanConfig config;
     private final Theme theme;
     private final ServerInfo serverInfo;
+    private final AssetVersions assetVersions;
     private final ResponseFactory responseFactory;
 
     @Inject
@@ -66,6 +68,7 @@ public class MetadataJSONResolver implements NoAuthResolver {
             PlanConfig config,
             Theme theme,
             ServerInfo serverInfo,
+            AssetVersions assetVersions,
             ResponseFactory responseFactory
     ) {
         this.mainCommand = mainCommand;
@@ -73,6 +76,7 @@ public class MetadataJSONResolver implements NoAuthResolver {
         this.config = config;
         this.theme = theme;
         this.serverInfo = serverInfo;
+        this.assetVersions = assetVersions;
         this.responseFactory = responseFactory;
     }
 
@@ -121,8 +125,8 @@ public class MetadataJSONResolver implements NoAuthResolver {
                     .map(fileName -> StringUtils.split(fileName, '.')[0])
                     .collect(Collectors.toList());
 
-            // Add the themes in the jar // TODO replace with something automated like getting from web file versions
-            for (String themeName : new String[]{"default", "high-contrast"}) {
+            // Add the themes in the jar
+            for (String themeName : assetVersions.getThemeNames()) {
                 if (!foundThemes.contains(themeName)) {
                     foundThemes.add(themeName);
                 }
