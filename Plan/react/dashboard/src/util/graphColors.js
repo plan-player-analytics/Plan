@@ -74,12 +74,12 @@ export const getChartTheming = () => {
                     hover: {
                         fill: 'var(--color-graphs-style-selector-button-hover)',
                         stroke: 'var(--color-text)',
-                        style: {color: 'var(--color-text)'}
+                        style: {color: 'var(--contrast-color-graphs-style-selector-button-hover)'}
                     },
                     select: {
                         fill: 'var(--color-graphs-style-selector-button-selected)',
                         stroke: 'var(--color-text)',
-                        style: {color: 'var(--color-text)'}
+                        style: {color: 'var(--contrast-color-graphs-style-selector-button-selected)'}
                     }
                 }
             },

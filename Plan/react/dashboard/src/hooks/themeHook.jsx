@@ -13,11 +13,6 @@ const setStoredTheme = themeColor => {
     }
 }
 
-const validateTheme = (themeColor, available) => {
-    const invalidTheme = !available.includes(themeColor);
-    setSelectedColor(invalidTheme ? 'default' : themeColor);
-}
-
 const getStoredColor = () => {
     const stored = window.localStorage.getItem('themeColor');
     return stored && stored !== 'undefined' ? stored : 'theme';
@@ -29,6 +24,17 @@ const setStoredColor = themeColor => {
     }
 }
 
+const getStoredNightMode = () => {
+    const stored = window.localStorage.getItem('nightMode');
+    return stored && stored !== 'undefined' ? stored === 'true' : false;
+}
+
+const setStoredNightMode = value => {
+    if (value) {
+        window.localStorage.setItem('nightMode', '' + value);
+    }
+}
+
 const ThemeContext = createContext({});
 
 export const ThemeContextProvider = ({children, themeOverride}) => {
@@ -37,7 +43,7 @@ export const ThemeContextProvider = ({children, themeOverride}) => {
     const [colorChooserOpen, setColorChooserOpen] = useState(false);
     const [selectedTheme, setSelectedTheme] = useState(themeOverride);
     const [selectedColor, setSelectedColor] = useState(undefined);
-    const [nightMode, setNightMode] = useState(false);
+    const [nightMode, setNightMode] = useState(getStoredNightMode());
 
     useEffect(() => {
         if (!metadata.loaded) return;
@@ -53,7 +59,10 @@ export const ThemeContextProvider = ({children, themeOverride}) => {
             selectedTheme, setSelectedTheme,
             selectedColor, setSelectedColor,
             colorChooserOpen, setColorChooserOpen,
-            nightMode, setNightMode
+            nightMode, setNightMode: value => {
+                setStoredNightMode(value);
+                setNightMode(value);
+            }
         }
     }, [selectedTheme, selectedColor, nightMode, setSelectedColor, colorChooserOpen, setColorChooserOpen]);
     return (<ThemeContext.Provider value={sharedState}>
