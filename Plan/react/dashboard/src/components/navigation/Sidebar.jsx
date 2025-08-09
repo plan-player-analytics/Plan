@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from "react";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import logo from '../../Flaticon_circle.png';
 import {faDoorOpen, faDownload, faPalette, faQuestionCircle} from "@fortawesome/free-solid-svg-icons";
-import {NavLink, useLocation} from "react-router-dom";
+import {Link, NavLink, useLocation} from "react-router-dom";
 import {useTheme} from "../../hooks/themeHook";
 import PluginInformationModal from "../modal/PluginInformationModal";
 import VersionInformationModal from "../modal/VersionInformationModal";
@@ -16,9 +16,9 @@ import PageNavigationItem from "./PageNavigationItem";
 import {useWindowWidth} from "../../hooks/interaction/windowWidthHook.jsx";
 
 const Logo = () => (
-    <a className="sidebar-brand d-flex align-items-center justify-content-center" href="/">
+    <Link className="sidebar-brand d-flex align-items-center justify-content-center" to="/">
         <img alt="logo" className="w-22" src={logo}/>
-    </a>
+    </Link>
 )
 
 const Divider = ({showMargin}) => (

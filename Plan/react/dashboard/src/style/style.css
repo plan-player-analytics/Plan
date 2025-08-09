@@ -181,10 +181,6 @@ div.scrollbar {
     border-color: transparent !important;
 }
 
-.color-chooser.active {
-    opacity: 0.5;
-}
-
 /* Navbar ====================================== */
 
 .col-red .navbar .nav > li > a:hover,

@@ -1,7 +1,7 @@
 import React from "react";
 import {useTheme} from "../../hooks/themeHook";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import {faCloudMoon, faPalette} from "@fortawesome/free-solid-svg-icons";
+import {faCheck, faCloudMoon, faPalette} from "@fortawesome/free-solid-svg-icons";
 import {nameToContrastCssVariable, nameToCssVariable} from "../../util/colors";
 import {Col, Modal, Row} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
@@ -25,7 +25,7 @@ const ColorSelectorButton = ({color, setColor, disabled, active}) => {
                 disabled={disabled}
                 onClick={() => setColor(color)}
         >
-            <Fa icon={faPalette}/>
+            <Fa icon={active ? faCheck : faPalette}/>
         </button>
     )
 }
@@ -61,7 +61,7 @@ const ColorSelectorModal = () => {
                                 key={color}
                                 color={color}
                                 setColor={theme.setColor}
-                                active={color === theme.selectedColor}
+                                active={color === theme.color}
                             />)}
                     </Col>
                 </Row>
