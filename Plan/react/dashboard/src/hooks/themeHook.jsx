@@ -26,13 +26,11 @@ const setStoredColor = themeColor => {
 
 const getStoredNightMode = () => {
     const stored = window.localStorage.getItem('nightMode');
-    return stored && stored !== 'undefined' ? stored === 'true' : false;
+    return stored && stored !== 'undefined' ? stored !== 'false' : false;
 }
 
 const setStoredNightMode = value => {
-    if (value) {
-        window.localStorage.setItem('nightMode', '' + value);
-    }
+    window.localStorage.setItem('nightMode', '' + value);
 }
 
 const ThemeContext = createContext({});
@@ -59,10 +57,7 @@ export const ThemeContextProvider = ({children, themeOverride}) => {
             selectedTheme, setSelectedTheme,
             selectedColor, setSelectedColor,
             colorChooserOpen, setColorChooserOpen,
-            nightMode, setNightMode: value => {
-                setStoredNightMode(value);
-                setNightMode(value);
-            }
+            nightMode, setNightMode
         }
     }, [selectedTheme, selectedColor, nightMode, setSelectedColor, colorChooserOpen, setColorChooserOpen]);
     return (<ThemeContext.Provider value={sharedState}>
@@ -104,6 +99,7 @@ export const useTheme = () => {
     }
 
     const toggleNightMode = () => {
+        setStoredNightMode(!nightMode);
         setNightMode(!nightMode);
     }
 
