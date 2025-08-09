@@ -2789,10 +2789,10 @@ swagger-client@^3.35.5:
     ramda "^0.30.1"
     ramda-adjunct "^5.1.0"
 
-swagger-ui@^5.27.0:
-  version "5.27.0"
-  resolved "https://registry.yarnpkg.com/swagger-ui/-/swagger-ui-5.27.0.tgz#e56736a87845eccb4ed417cecc25e76d42ac5103"
-  integrity sha512-MHLrCCAZcwimWnQykjEjdA0nbQQdNjby20HUx3zwvBujW2JKH7uEUH1UaOOr/Oub9oIVSRq21TNh1J2IwrTuWw==
+swagger-ui@^5.27.1:
+  version "5.27.1"
+  resolved "https://registry.yarnpkg.com/swagger-ui/-/swagger-ui-5.27.1.tgz#44bc4dd0d2679874a374bfa420171beca0957c58"
+  integrity sha512-cGQyafnHLmVFiBeFrbUzUtMn+R0/XI7r69T/cxp5bkusTdLu1Ul8A+8j9hgThYLEH33LukOzldtiuu4gr8XE6g==
   dependencies:
     "@babel/runtime-corejs3" "^7.27.1"
     "@scarf/scarf" "=1.4.0"
