@@ -29,6 +29,7 @@ const AddThemeView = () => {
 
     const createTheme = async () => {
         await themeStorage.cloneThemeLocally(basedOnTheme, name);
+        metadata.refreshThemeList();
         navigate("/theme-editor/" + name);
     }
 
@@ -46,8 +47,8 @@ const AddThemeView = () => {
     const isNameInvalid = newValue => {
         return !newValue.length
             || newValue.length > 100
-            || metadata.availableThemes?.includes(newValue)
-            || name === 'new'
+            || metadata.getAvailableThemes()?.includes(newValue)
+            || name === 'new' || name === 'delete'
     }
     const nameIsInvalid = isNameInvalid(name);
     return (
@@ -57,26 +58,26 @@ const AddThemeView = () => {
                 <Card.Body>
                     <Row className={'mb-4'}>
                         <Col xs={12}>
-                            <TextInput icon={faFileSignature}
-                                       isInvalid={isNameInvalid}
-                                       invalidFeedback={metadata.availableThemes?.includes(name) ? t('html.label.themeEditor.existingName') : t('html.label.themeEditor.invalidName')}
-                                       placeholder={t('html.label.themeEditor.themeName')}
-                                       value={name}
-                                       setValue={newValue => setName(newValue.toLowerCase().replace(/[^a-z0-9-]/g, "-"))}
-                            />
-                        </Col>
-                    </Row>
-                    <Row className={'mb-4'}>
-                        <Col xs={12}>
                             <h5 className="mb-3">{t('html.label.themeEditor.basedOnTheme')}</h5>
                             <Row>
-                                {metadata.availableThemes.map(themeName => <ThemeOption
+                                {metadata.getAvailableThemes().map(themeName => <ThemeOption
                                     key={themeName}
                                     theme={themeName}
                                     nightMode={theme.nightModeEnabled}
                                     selected={themeName === basedOnTheme}
                                     setSelected={setBasedOnTheme}/>)}
                             </Row>
+                        </Col>
+                    </Row>
+                    <Row className={'mb-4'}>
+                        <Col xs={12}>
+                            <TextInput icon={faFileSignature}
+                                       isInvalid={isNameInvalid}
+                                       invalidFeedback={metadata.getAvailableThemes()?.includes(name) ? t('html.label.themeEditor.existingName') : t('html.label.themeEditor.invalidName')}
+                                       placeholder={t('html.label.themeEditor.themeName')}
+                                       value={name}
+                                       setValue={newValue => setName(newValue.toLowerCase().replace(/[^a-z0-9-]/g, "-"))}
+                            />
                         </Col>
                     </Row>
                     <Row>

@@ -10,7 +10,7 @@ import ColorSection from "../../components/theme/ColorSection.jsx";
 import ColorEditForm from "../../components/theme/ColorEditForm.jsx";
 import UseCaseSection from "../../components/theme/UseCaseSection.jsx";
 import ExampleSection from "../../components/theme/ExampleSection.jsx";
-import {faDownload, faExclamationCircle, faFileSignature, faSwatchbook} from "@fortawesome/free-solid-svg-icons";
+import {faExclamationCircle, faFileSignature, faSwatchbook} from "@fortawesome/free-solid-svg-icons";
 import ActionButton from "../../components/input/ActionButton.jsx";
 import UnsavedChangesText from "../../components/text/UnsavedChangesText.jsx";
 import SecondaryActionButton from "../../components/input/button/SecondaryActionButton.jsx";
@@ -18,6 +18,7 @@ import {MinHeightProvider} from "../../hooks/context/minHeightContextHook.jsx";
 import {useMetadata} from "../../hooks/metadataHook.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import LoadIn from "../../components/animation/LoadIn.jsx";
+import DownloadButton from "../../components/theme/DownloadButton.jsx";
 
 const ThemeEditorView = () => {
     const {t} = useTranslation();
@@ -43,21 +44,6 @@ const ThemeEditorView = () => {
         }
     }
 
-    const download = () => {
-        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({
-            colors: currentColors,
-            nightColors: currentNightColors,
-            useCases: currentUseCases,
-            nightModeUseCases: currentNightModeUseCases
-        }));
-        const dlAnchorElem = document.createElement('a');
-        dlAnchorElem.setAttribute("href", dataStr);
-        dlAnchorElem.setAttribute("download", name + ".json");
-        document.body.appendChild(dlAnchorElem);
-        dlAnchorElem.click();
-        dlAnchorElem.remove();
-    }
-
     const referenceColors = currentUseCases.referenceColors;
     const nightReferenceColors = currentNightModeUseCases.referenceColors;
 
@@ -68,8 +54,8 @@ const ThemeEditorView = () => {
     const isNameInvalid = newValue => {
         return !newValue.length
             || newValue.length > 100
-            || metadata.availableThemes?.includes(newValue)
-            || name === 'new'
+            || metadata.getAvailableThemes()?.includes(newValue)
+            || name === 'new' || name === 'delete'
     }
 
     return (
@@ -84,10 +70,7 @@ const ThemeEditorView = () => {
                         </SecondaryActionButton>
                         <ActionButton className={"float-end me-2"} onClick={save}
                                       disabled={!savePossible}>{t('html.label.managePage.changes.save')}</ActionButton>
-                        {onlyLocal &&
-                            <ActionButton className={"float-end me-2"} onClick={download}>
-                                <FontAwesomeIcon icon={faDownload}/> {t('html.modal.version.download')}
-                            </ActionButton>}
+                        {onlyLocal && <DownloadButton className={"float-end me-2"}/>}
                         <UnsavedChangesText visible={editCount > 0} className={"float-end me-3"}/>
                         {onlyLocal && <small className={"ms-3"} style={{
                             display: "inline-block",

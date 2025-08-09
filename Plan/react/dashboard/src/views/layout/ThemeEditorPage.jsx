@@ -11,7 +11,7 @@ import {ThemeContextProvider} from "../../hooks/themeHook.jsx";
 import {ThemeStorageContextProvider, useThemeStorage} from "../../hooks/context/themeContextHook.jsx";
 import {ChartLoader} from "../../components/navigation/Loader.jsx";
 import {useMetadata} from "../../hooks/metadataHook.jsx";
-import {faPlus, faSwatchbook} from "@fortawesome/free-solid-svg-icons";
+import {faPlus, faSwatchbook, faTrash} from "@fortawesome/free-solid-svg-icons";
 
 const ThemeEditorPage = () => {
     const {t} = useTranslation();
@@ -19,10 +19,11 @@ const ThemeEditorPage = () => {
     const title = t("html.label.themeEditor.title");
     const {identifier} = useParams();
 
-    const items = metadata.loaded ? metadata.availableThemes.map(theme => {
+    const items = metadata.loaded ? metadata.getAvailableThemes().map(theme => {
         return {name: theme, icon: faSwatchbook, href: theme}
     }) : [];
     items.push({name: t('html.label.themeEditor.addTheme'), icon: faPlus, href: 'new'});
+    items.push({name: t('html.label.themeEditor.deleteThemes'), icon: faTrash, href: 'delete'});
     return (
         <>
             <Sidebar page={title} items={items}/>

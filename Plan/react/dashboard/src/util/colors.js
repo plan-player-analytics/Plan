@@ -234,14 +234,15 @@ export const hsvToString = ([h, s, v]) => {
     return `hsv(${h}, ${s}%, ${v}%)`;
 }
 
-export const calculateCssHexColor = (cssColor) => {
+export const calculateCssHexColor = (cssColor, inElement) => {
     const colorCalculationElement = document.createElement('div');
     colorCalculationElement.style.display = 'none';
     colorCalculationElement.style.color = cssColor;
-    document.body.appendChild(colorCalculationElement);
+    const element = inElement || document.body;
+    element.appendChild(colorCalculationElement);
     const rgbString = window.getComputedStyle(colorCalculationElement, null).getPropertyValue("color");
     const hex = rgbToHexString(rgbStringToArray(rgbString));
-    document.body.removeChild(colorCalculationElement);
+    element.removeChild(colorCalculationElement);
     return hex;
 }
 

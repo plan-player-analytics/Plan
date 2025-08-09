@@ -91,6 +91,8 @@ export const ThemeStorageContextProvider = ({children}) => {
             currentNightColors,
             currentUseCases,
             currentNightModeUseCases,
+            usedColors: theme.nightModeEnabled ? currentColors : {...currentColors, ...currentNightColors},
+            usedUseCases: theme.nightModeEnabled ? currentUseCases : {...currentUseCases, ...currentNightModeUseCases},
             cloneThemeLocally, saveUploadedThemeLocally, deleteThemeLocally, reloadTheme
         }
     }, [name, color, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases, loaded, theme.nightModeEnabled]);

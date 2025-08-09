@@ -473,6 +473,14 @@ public enum HtmlLang implements Lang {
     THEME_EDTIOR_BASED_ON_THEME("html.label.themeEditor.basedOnTheme", "Based on theme"),
     THEME_EDITOR_UPLOAD_THEME("html.label.themeEditor.uploadTheme", "or Upload a previously downloaded theme:"),
 
+    THEME_EDITOR_DELETE_THEMES("html.label.themeEditor.deleteThemes", "Delete themes"),
+    THEME_EDITOR_THEME_TO_DELETE("html.label.themeEditor.themeToDelete", "Theme to delete"),
+    THEME_EDITOR_DOWNLOAD_BEFORE_DELETE("html.label.themeEditor.downloadThemeBeforeDeleting", "Would you like to download the theme before deleting it?"),
+    THEME_EDITOR_CONFIRM_DELETE("html.label.themeEditor.confirmDelete", "I confirm that I want to delete theme called {{theme}} and that this is an irreversible action."),
+    THEME_EDITOR_DELETE_THEME("html.label.themeEditor.deleteTheme", "Delete theme"),
+    THEME_EDITOR_DELETE_LOCAL("html.label.themeEditor.deleteLocalTheme", "Delete theme (Only the locally stored one)"),
+    THEME_EDITOR_NO_PERMISSION_TO_DELETE("html.label.themeEditor.noPermissionToDelete", "You don't have access rights for deleting non-local themes. You may need to delete them from the plugin folder."),
+
     THEME_EDITOR_CHANGE_RENAME_COLOR("html.label.themeEditor.changes.renameColor", "Renamed {{previous}} to {{name}}, set color to {{color}}"),
     THEME_EDITOR_CHANGE_SET_COLOR("html.label.themeEditor.changes.setColor", "Set {{name}} color to {{color}}"),
     THEME_EDITOR_CHANGE_ADD_COLOR("html.label.themeEditor.changes.addColor", "Added {{name}} color {{color}}"),

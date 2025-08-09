@@ -7,15 +7,18 @@ import CardHeader from "../CardHeader";
 import {useDataRequest} from "../../../hooks/dataFetchHook";
 import {fetchServerPie} from "../../../service/networkService";
 import {ErrorViewCard} from "../../../views/ErrorView";
+import {useThemeStorage} from "../../../hooks/context/themeContextHook.jsx";
+import {nameToCssVariable} from "../../../util/colors.js";
 
 const ServerPieCard = () => {
     const {data, loadingError} = useDataRequest(fetchServerPie, []);
+    const {usedUseCases} = useThemeStorage()
 
     if (!data) return <CardLoader/>;
     if (loadingError) return <ErrorViewCard error={loadingError}/>;
 
     const series = data.server_pie_series_30d;
-    const colors = data.server_pie_colors;
+    const colors = usedUseCases?.graphs?.pie?.colors?.map(nameToCssVariable) || data.server_pie_colors;
 
     return (
         <Card>

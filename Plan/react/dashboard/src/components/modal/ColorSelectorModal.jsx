@@ -69,7 +69,7 @@ const ColorSelectorModal = () => {
                 <hr/>
                 {metadata.loaded && <Row style={{paddingRight: "0.3rem"}}>
                     <h5>{t('html.label.themeSelect')}</h5>
-                    {metadata.availableThemes.map(themeName => <ThemeOption
+                    {metadata.getAvailableThemes().map(themeName => <ThemeOption
                         key={themeName}
                         theme={themeName}
                         nightMode={theme.nightModeEnabled}

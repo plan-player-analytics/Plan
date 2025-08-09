@@ -1,21 +1,34 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
 import {ThemeContextProvider, useTheme} from "../../hooks/themeHook.jsx";
-import {ThemeStorageContextProvider} from "../../hooks/context/themeContextHook.jsx";
+import {getLocallyStoredThemes, ThemeStorageContextProvider} from "../../hooks/context/themeContextHook.jsx";
 import {ThemeStyleCss} from "./ThemeStyleCss.jsx";
 import {Card, Col} from "react-bootstrap";
 import logo from "../../Flaticon_circle.png";
 import drawSine from "../../util/loginSineRenderer.js";
 import {calculateCssHexColor} from "../../util/colors.js";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faCheck, faPencilAlt} from "@fortawesome/free-solid-svg-icons";
+import {faCheck, faDesktop, faPencilAlt} from "@fortawesome/free-solid-svg-icons";
 import OutlineButton from "../input/OutlineButton.jsx";
 import {useAuth} from "../../hooks/authenticationHook.jsx";
 import {useNavigate} from "react-router-dom";
+import {useTranslation} from "react-i18next";
+
+const StorageIcon = ({theme}) => {
+    const {t} = useTranslation();
+    const onlyLocal = getLocallyStoredThemes().includes(theme);
+
+    if (!onlyLocal) return <></>
+
+    return (
+        <small>(<FontAwesomeIcon icon={faDesktop}/> {t('html.value.localMachine')})</small>
+    )
+}
 
 const ThemeOption = ({theme, nightMode, selected, setSelected}) => {
+    const ref = useRef();
     useEffect(() => {
-        drawSine(`theme-plot-${theme}`, calculateCssHexColor("var(--color-data-players-online)"));
-    }, []);
+        drawSine(`theme-plot-${theme}`, calculateCssHexColor("var(--color-data-players-online)", ref.current));
+    }, [ref]);
     const {authLoaded, authRequired, hasPermission} = useAuth();
     const themeHook = useTheme();
     const navigate = useNavigate();
@@ -42,9 +55,10 @@ const ThemeOption = ({theme, nightMode, selected, setSelected}) => {
             <button
                 className={`theme-option theme-${theme} col-12 ${nightMode ? 'night-mode-colors' : ''} ${selected ? 'selected' : ''}`}
                 onClick={onClickChoose}>
-                <ThemeContextProvider themeOverride={theme}>
+                <ThemeContextProvider themeOverride={theme} key={theme}>
                     <ThemeStorageContextProvider>
                         <ThemeStyleCss applyToClass={`theme-${theme}`}/>
+                        <div ref={ref}/>
                         <Card style={{backgroundColor: 'var(--color-layout-background)'}}>
                             <p className={'col-text'} style={{
                                 position: 'absolute',
@@ -55,7 +69,7 @@ const ThemeOption = ({theme, nightMode, selected, setSelected}) => {
                                 zIndex: 5,
                                 display: 'inline',
                                 width: "100%"
-                            }}>{theme}</p>
+                            }}>{theme} {managedComponent && <StorageIcon theme={theme}/>}</p>
                             <div style={{
                                 background: 'var(--color-sidebar-background)',
                                 width: '23%',

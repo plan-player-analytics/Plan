@@ -69,6 +69,7 @@ const GroupsView = React.lazy(() => import("./views/manage/GroupsView"));
 
 const ThemeEditorPage = React.lazy(() => import("./views/layout/ThemeEditorPage"));
 const AddThemeView = React.lazy(() => import("./views/theme/AddThemeView"));
+const DeleteThemesView = React.lazy(() => import("./views/theme/DeleteThemesView.jsx"));
 const ThemeEditorView = React.lazy(() => import("./views/theme/ThemeEditorView"));
 
 const LoginPage = React.lazy(() => import("./views/layout/LoginPage"));
@@ -217,6 +218,7 @@ const router = createBrowserRouter(
                 <Route path="" element={<NewRedirect/>}/>
                 <Route path=":identifier" element={<Lazy><ThemeEditorView/></Lazy>}/>
                 <Route path="new" element={<Lazy><AddThemeView/></Lazy>}/>
+                <Route path="delete" element={<Lazy><DeleteThemesView/></Lazy>}/>
             </Route>
             <Route path="*" element={<Lazy><ErrorPage error={{
                 message: 'Page not found, please correct the address',

@@ -22,9 +22,9 @@ const WorldPie = ({id, worldSeries, gmSeries}) => {
     }, []);
 
     const {nightModeEnabled, graphTheming} = useTheme();
-    const {currentUseCases} = useThemeStorage();
+    const {usedUseCases} = useThemeStorage();
 
-    const gmPieColors = currentUseCases?.graphs?.pie?.drilldown?.map(nameToCssVariable) || [];
+    const gmPieColors = usedUseCases?.graphs?.pie?.drilldown?.map(nameToCssVariable) || [];
 
     useEffect(() => {
         const reduceColors = (series) => {

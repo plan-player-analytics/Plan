@@ -146,8 +146,9 @@ const ColorEditForm = () => {
         const hsvRegex = /^hsva?\(\s*(\d{1,3})(deg)?\s*,\s*(\d{1,3})%\s*,\s*(\d{1,3})%(?:\s*,\s*(0|1|0?\.\d+))?\s*\)$/i;
         const linearGradientRegex = /^linear-gradient\(.*\)$/i;
         const radialGradientRegex = /^radial-gradient\(.*\)$/i;
+        const colorMix = /^color-mix\(.*\)$/i;
 
-        return !(hexRegex.test(color) || rgbRegex.test(color) || hslRegex.test(color) || hsvRegex.test(color) || linearGradientRegex.test(color) || radialGradientRegex.test(color));
+        return !(hexRegex.test(color) || rgbRegex.test(color) || hslRegex.test(color) || hsvRegex.test(color) || linearGradientRegex.test(color) || radialGradientRegex.test(color)) || colorMix.test(color);
     }
 
     const isGradient = color.includes('gradient');

@@ -11,6 +11,12 @@ export const MetadataContextProvider = ({children}) => {
     const [datastore] = useState({});
     const [metadata, setMetadata] = useState({});
     const {authRequired, authLoaded, loggedIn} = useAuth();
+    const [updateThemeList, setUpdateThemeList] = useState(Date.now());
+
+    const refreshThemeList = () => {
+        setUpdateThemeList(Date.now());
+        updateMetadata();
+    }
 
     const updateMetadata = useCallback(async () => {
         if (authRequired && (!authLoaded || !loggedIn)) return;
@@ -47,17 +53,18 @@ export const MetadataContextProvider = ({children}) => {
     const displayedServerName = metadata.isProxy ? metadata.networkName : (metadata.serverName?.startsWith('Server') ? "Plan" : metadata.serverNameserverName);
 
     const sharedState = useMemo(() => {
-            const loaded = Object.keys(metadata).length > 0;
+            const loaded = Object.keys(metadata).length > 0 && !metadata.metadataError;
             return {
                 ...metadata,
-                availableThemes: loaded ? [...metadata.availableThemes, ...getLocallyStoredThemes()] : getLocallyStoredThemes(),
+                getAvailableThemes: () => loaded ? [...new Set([...metadata.availableThemes, ...getLocallyStoredThemes()])] : getLocallyStoredThemes(),
                 getPlayerHeadImageUrl,
                 datastore,
                 displayedServerName,
-                loaded
+                loaded,
+                refreshThemeList
             }
         },
-        [metadata, getPlayerHeadImageUrl, datastore, displayedServerName]);
+        [metadata, getPlayerHeadImageUrl, datastore, displayedServerName, updateThemeList]);
     return (<MetadataContext.Provider value={sharedState}>
             {children}
         </MetadataContext.Provider>

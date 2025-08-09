@@ -3,7 +3,7 @@ import {getChartTheming} from "../util/graphColors";
 import {useMetadata} from "./metadataHook";
 
 const getStoredTheme = (defaultTheme) => {
-    const stored = window.localStorage.getItem('themeName');
+    const stored = window.localStorage.getItem('theme.name');
     return stored && stored !== 'undefined' ? stored : defaultTheme;
 }
 
@@ -14,7 +14,7 @@ const setStoredTheme = themeColor => {
 }
 
 const getStoredColor = () => {
-    const stored = window.localStorage.getItem('themeColor');
+    const stored = window.localStorage.getItem('theme.color');
     return stored && stored !== 'undefined' ? stored : 'theme';
 }
 
@@ -25,12 +25,16 @@ const setStoredColor = themeColor => {
 }
 
 const getStoredNightMode = () => {
-    const stored = window.localStorage.getItem('nightMode');
+    const stored = window.localStorage.getItem('theme.nightMode');
     return stored && stored !== 'undefined' ? stored !== 'false' : false;
 }
 
 const setStoredNightMode = value => {
     window.localStorage.setItem('nightMode', '' + value);
+}
+
+const removeOldVariables = () => {
+    window.localStorage.removeItem('themeColor');
 }
 
 const ThemeContext = createContext({});
@@ -43,11 +47,13 @@ export const ThemeContextProvider = ({children, themeOverride}) => {
     const [selectedColor, setSelectedColor] = useState(undefined);
     const [nightMode, setNightMode] = useState(getStoredNightMode());
 
+    removeOldVariables();
+
     useEffect(() => {
         if (!metadata.loaded) return;
         if (themeOverride) return;
         const theme = getStoredTheme(metadata.defaultTheme);
-        const invalidTheme = !metadata.availableThemes.includes(theme);
+        const invalidTheme = !metadata.getAvailableThemes().includes(theme);
         setSelectedTheme(invalidTheme ? 'default' : theme);
         setSelectedColor(getStoredColor());
     }, [metadata, setSelectedTheme, setSelectedColor]);
