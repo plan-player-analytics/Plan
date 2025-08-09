@@ -42,7 +42,9 @@ export const ThemeStorageContextProvider = ({children}) => {
     const saveUploadedThemeLocally = (name, themeJson) => {
         const locallyStoredThemes = getLocallyStoredThemes();
         window.localStorage.setItem(`locally-stored-theme-${name}`, JSON.stringify(themeJson));
-        locallyStoredThemes.push(name);
+        if (!locallyStoredThemes.includes(name)) {
+            locallyStoredThemes.push(name);
+        }
         window.localStorage.setItem(`locally-stored-themes`, JSON.stringify(locallyStoredThemes));
     }
 
@@ -77,11 +79,21 @@ export const ThemeStorageContextProvider = ({children}) => {
     }, [theme.loaded, currentTheme]);
 
     const sharedState = useMemo(() => {
+        const themeOptions = (theme.nightModeEnabled
+            ? currentNightModeUseCases?.themeColorOptions
+            : currentUseCases?.themeColorOptions) || [];
+        const colorExistsAsOption = themeOptions.includes(color);
         return {
-            loaded, name: currentTheme, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases,
+            loaded,
+            name: currentTheme,
+            color: colorExistsAsOption ? color : undefined,
+            currentColors,
+            currentNightColors,
+            currentUseCases,
+            currentNightModeUseCases,
             cloneThemeLocally, saveUploadedThemeLocally, deleteThemeLocally, reloadTheme
         }
-    }, [name, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases, loaded]);
+    }, [name, color, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases, loaded, theme.nightModeEnabled]);
     return (<ThemeStorageContext.Provider value={sharedState}>
             {children}
         </ThemeStorageContext.Provider>

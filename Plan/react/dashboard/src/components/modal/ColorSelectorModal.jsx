@@ -11,18 +11,25 @@ import ThemeOption from "../theme/ThemeOption.jsx";
 import {useAuth} from "../../hooks/authenticationHook.jsx";
 import AddThemeButton from "../theme/AddThemeButton.jsx";
 
-const ColorSelectorButton = ({color, setColor, disabled, active}) =>
-    <button className={`btn color-chooser ${disabled ? "disabled" : ''} ${active ? 'active' : ''}`}
-            style={{
-                color: nameToContrastCssVariable(color),
-                backgroundColor: nameToCssVariable(color)
-            }}
-            id={"choose-" + color}
-            disabled={disabled}
-            onClick={() => setColor(color)}
-    >
-        <Fa icon={faPalette}/>
-    </button>
+const ColorSelectorButton = ({color, setColor, disabled, active}) => {
+    const validCssColor = color => {
+        return color === 'theme' ? 'reference-colors-theme' : color;
+    }
+    return (
+        <button className={`btn color-chooser ${disabled ? "disabled" : ''} ${active ? 'active' : ''}`}
+                style={{
+                    color: nameToContrastCssVariable(validCssColor(color)),
+                    backgroundColor: nameToCssVariable(validCssColor(color))
+                }}
+                id={"choose-" + color}
+                disabled={disabled}
+                onClick={() => setColor(color)}
+        >
+            <Fa icon={faPalette}/>
+        </button>
+    )
+}
+
 
 const ColorSelectorModal = () => {
     const {t} = useTranslation();
