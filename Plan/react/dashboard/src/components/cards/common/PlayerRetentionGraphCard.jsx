@@ -289,7 +289,7 @@ const PlayerRetentionGraphCard = ({identifier, selectedGroupBy, setSelectedGroup
         <Card>
             <CardHeader icon={faUsersViewfinder} color={'retention'} label={t('html.label.playerRetention')}>
                 <button className={"float-end"} onClick={openHelp}>
-                    <Fa className={"col-blue"}
+                    <Fa className={"col-help-icon"}
                         icon={faQuestionCircle}/>
                 </button>
             </CardHeader>

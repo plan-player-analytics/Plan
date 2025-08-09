@@ -10,6 +10,7 @@ import {useMetadata} from "../../hooks/metadataHook.jsx";
 import ThemeOption from "../theme/ThemeOption.jsx";
 import {useAuth} from "../../hooks/authenticationHook.jsx";
 import AddThemeButton from "../theme/AddThemeButton.jsx";
+import ActionButton from "../input/ActionButton.jsx";
 
 const ColorSelectorButton = ({color, setColor, disabled, active}) => {
     const validCssColor = color => {
@@ -19,7 +20,7 @@ const ColorSelectorButton = ({color, setColor, disabled, active}) => {
         <button className={`btn color-chooser ${disabled ? "disabled" : ''} ${active ? 'active' : ''}`}
                 style={{
                     color: nameToContrastCssVariable(validCssColor(color)),
-                    backgroundColor: nameToCssVariable(validCssColor(color))
+                    background: nameToCssVariable(validCssColor(color))
                 }}
                 id={"choose-" + color}
                 disabled={disabled}
@@ -80,7 +81,7 @@ const ColorSelectorModal = () => {
                 <button className="btn" id="night-mode-toggle" type="button" onClick={theme.toggleNightMode}>
                     <Fa icon={faCloudMoon}/> {t('html.button.nightMode')}
                 </button>
-                <button className="btn bg-theme" type="button" onClick={theme.toggleColorChooser}>OK</button>
+                <ActionButton onClick={theme.toggleColorChooser}>OK</ActionButton>
             </Modal.Footer>
         </Modal>
     )

@@ -34,6 +34,9 @@ import {useAuth} from "../../hooks/authenticationHook";
 import Checkbox from "../../components/input/Checkbox.jsx";
 import TextInput from "../../components/input/TextInput.jsx";
 import UnsavedChangesText from "../../components/text/UnsavedChangesText.jsx";
+import ActionButton from "../../components/input/ActionButton.jsx";
+import DangerButton from "../../components/input/button/DangerButton.jsx";
+import OutlineButton from "../../components/input/OutlineButton.jsx";
 
 const GroupsHeader = ({groupName, icon}) => {
     return (
@@ -144,11 +147,11 @@ const SaveButton = () => {
     const {dirty, requestSave} = useConfigurationStorageContext();
 
     return (
-        <button className={"float-end btn bg-theme"} style={{margin: "-0.5rem"}}
+        <ActionButton className={"float-end"} style={{margin: "-0.5rem"}}
                 disabled={!dirty}
                 onClick={requestSave}>
             <Fa icon={faFloppyDisk}/> {t('html.label.managePage.changes.save')}
-        </button>
+        </ActionButton>
     )
 }
 
@@ -178,7 +181,7 @@ const DeleteGroupButton = ({groupName, groups, reloadGroupNames}) => {
                                values={{groupName, moveTo: groupOptions[moveToGroup]}}/>
                     </p>
 
-                    <button className={"btn bg-red mt-2"}
+                    <DangerButton className={"mt-2"}
                             onClick={() => {
                                 deleteGroup(groupName, groupOptions[moveToGroup]).then(({error}) => {
                                     if (error) {
@@ -210,25 +213,25 @@ const DeleteGroupButton = ({groupName, groups, reloadGroupNames}) => {
                             }}>
                         <Fa icon={faTrash}/> <Trans i18nKey="html.label.managePage.deleteGroup.confirm"
                                                     values={{groupName}}/>
-                    </button>
-                    <button className={"btn bg-grey-outline mt-2"} style={{marginLeft: "0.5rem"}}
+                    </DangerButton>
+                    <OutlineButton className={"mt-2"} style={{marginLeft: "0.5rem"}}
                             onClick={() => {
                                 setClicked(false)
                             }}>
                         <Fa icon={faRotateLeft}/> {t("command.confirmation.deny")}
-                    </button>
+                    </OutlineButton>
                 </Card.Body>
             </Card>
         )
     }
 
     return (
-        <button className={"float-end btn bg-grey-outline"}
+        <OutlineButton className={"float-end"}
                 onClick={() => {
                     setClicked(true)
                 }}>
             <Fa icon={faTrash}/> <Trans i18nKey={"html.label.managePage.deleteGroup.header"} values={{groupName}}/>
-        </button>
+        </OutlineButton>
     )
 }
 
@@ -331,7 +334,7 @@ const GroupsCard = ({groups, reloadGroupNames}) => {
     return (
         <Card>
             <CardHeader icon={faUsersGear} color="theme" label={t('html.label.managePage.groupHeader')}>
-                <button className={"btn bg-transparent col-blue"} style={{margin: "-0.5rem"}}
+                <button className={"btn bg-transparent col-help-icon"} style={{margin: "-0.5rem"}}
                         onClick={openHelp}>
                     <Fa icon={faQuestionCircle}/>
                 </button>

@@ -687,38 +687,6 @@ select.form-control:focus::-ms-value {
     box-shadow: 0 0 0 0.2rem rgba(247, 203, 91, 0.5);
 }
 
-.btn-danger {
-    background-color: #e74a3b;
-    border-color: #e74a3b;
-}
-
-.btn-danger:hover {
-    background-color: #e02d1b;
-    border-color: #d52a1a;
-}
-
-.btn-danger:focus, .btn-danger.focus {
-    background-color: #e02d1b;
-    border-color: #d52a1a;
-    box-shadow: 0 0 0 0.2rem rgba(235, 101, 88, 0.5);
-}
-
-.btn-danger.disabled, .btn-danger:disabled {
-    background-color: #e74a3b;
-    border-color: #e74a3b;
-}
-
-.btn-danger:not(:disabled):not(.disabled):active, .btn-danger:not(:disabled):not(.disabled).active,
-.show > .btn-danger.dropdown-toggle {
-    background-color: #d52a1a;
-    border-color: #ca2819;
-}
-
-.btn-danger:not(:disabled):not(.disabled):active:focus, .btn-danger:not(:disabled):not(.disabled).active:focus,
-.show > .btn-danger.dropdown-toggle:focus {
-    box-shadow: 0 0 0 0.2rem rgba(235, 101, 88, 0.5);
-}
-
 .btn-light {
     color: #3a3b45;
     background-color: #f8f9fc;

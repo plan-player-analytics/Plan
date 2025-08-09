@@ -5,12 +5,14 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faArrowRight, faSearch} from "@fortawesome/free-solid-svg-icons";
 import {getViewTitle} from "../../views/query/QueryResultView";
 import {ChartLoader} from "../navigation/Loader";
-import {Link} from "react-router-dom";
+import {useNavigation} from "react-router-dom";
 import {useAuth} from "../../hooks/authenticationHook";
 import PlayerTable from "../table/PlayerTable.jsx";
+import ActionButton from "../input/ActionButton.jsx";
 
 const QueryPlayerListModal = ({open, toggle, queryData, title}) => {
     const {t} = useTranslation();
+    const navigate = useNavigation();
     const {hasPermission} = useAuth();
     return (
         <Modal id="queryModal" aria-labelledby="queryModalLabel" show={open} onHide={toggle} size="xl">
@@ -26,11 +28,10 @@ const QueryPlayerListModal = ({open, toggle, queryData, title}) => {
                              orderBy={2}/>}
             <Modal.Footer>
                 {hasPermission('access.query') && Boolean(queryData?.data?.players.players.length) &&
-                    <Link className="btn bg-theme"
-                          to={"/query/result?timestamp=" + queryData?.timestamp}>
+                    <ActionButton onClick={() => navigate("/query/result?timestamp=" + queryData?.timestamp)}>
                         {t('html.query.label.showFullQuery')} <Fa icon={faArrowRight}/>
-                    </Link>}
-                <button className="btn bg-theme" onClick={toggle}>OK</button>
+                    </ActionButton>}
+                <ActionButton onClick={toggle}>OK</ActionButton>
             </Modal.Footer>
         </Modal>
     )

@@ -8,6 +8,7 @@ import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 import NewPlayerRetentionHelp from "./help/NewPlayerRetentionHelp";
 import PlayerRetentionGraphHelp from "./help/PlayerRetentionGraphHelp";
 import GroupPermissionHelp from "./help/GroupPermissionHelp";
+import ActionButton from "../input/ActionButton.jsx";
 
 const HelpModal = () => {
     const {t} = useTranslation();
@@ -47,7 +48,7 @@ const HelpModal = () => {
                 {helpTopic?.body}
             </Modal.Body>
             <Modal.Footer>
-                <button className="btn bg-theme" onClick={toggle}>OK</button>
+                <ActionButton onClick={toggle}>OK</ActionButton>
             </Modal.Footer>
         </Modal>
     );

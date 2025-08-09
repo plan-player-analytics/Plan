@@ -47,7 +47,7 @@ const PingTable = ({countries}) => {
     if (!preferencesLoaded) return <></>;
 
     return (
-        <DataTablesTable id={"ping-table"} options={options} colorClass={"bg-amber"}/>
+        <DataTablesTable id={"ping-table"} options={options} colorClass={"bg-ping"}/>
     )
 };
 

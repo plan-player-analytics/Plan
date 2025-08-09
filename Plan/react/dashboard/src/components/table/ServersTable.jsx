@@ -18,6 +18,7 @@ import {useTheme} from "../../hooks/themeHook";
 import {useTranslation} from "react-i18next";
 import Scrollable from "../Scrollable";
 import {NavLink} from "react-router-dom";
+import ActionButton from "../input/ActionButton.jsx";
 
 const ServerRow = ({server, onQuickView}) => {
     const {t} = useTranslation();
@@ -40,19 +41,19 @@ const ServerRow = ({server, onQuickView}) => {
             <td className="p-1">
                 <NavLink to={"/server/" + encodeURIComponent(server.serverUUID)}
                          title={t('html.label.serverAnalysis') + ': ' + server.name}
-                         className={'btn bg-transparent col-light-green'}><Fa
+                         className={'btn bg-transparent col-servers'}><Fa
                     icon={faLink}/> {t('html.label.serverAnalysis')}
                 </NavLink>
             </td>
             <td>{server.players}</td>
             <td>{t(server.online)}</td>
             <td className="p-1">
-                <button className={'btn bg-light-blue float-right'}
+                <ActionButton className={'btn bg-players-online float-right'}
                         title={t('html.label.quickView') + ': ' + server.name}
                         onClick={onQuickView}
                 >
                     <Fa icon={faCaretSquareRight}/>
-                </button>
+                </ActionButton>
             </td>
         </tr>
     );

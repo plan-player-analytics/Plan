@@ -163,32 +163,32 @@ const PerformanceGraphsCard = ({data}) => {
 
     const tabs = [
         {
-            name: t('html.label.playersOnline'), icon: faUser, color: 'light-blue', href: 'players-online',
+            name: t('html.label.playersOnline'), icon: faUser, color: 'players-online', href: 'players-online',
             element: <Tab id={'players-online'} data={performanceSeries.players}
                           yAxis={yAxisConfigurations.PLAYERS_ONLINE}/>
         }, {
-            name: t('html.label.tps'), icon: faTachometerAlt, color: 'red', href: 'tps',
+            name: t('html.label.tps'), icon: faTachometerAlt, color: 'tps', href: 'tps',
             element: <Tab id={'tps'} data={performanceSeries.tps} yAxis={yAxisConfigurations.TPS}/>,
             disabled: !dataIncludesGameServers
         }, {
-            name: t('html.label.cpu'), icon: faTachometerAlt, color: 'amber', href: 'cpu',
+            name: t('html.label.cpu'), icon: faTachometerAlt, color: 'cpu', href: 'cpu',
             element: <Tab id={'cpu'} data={performanceSeries.cpu} yAxis={yAxisConfigurations.CPU}/>
         }, {
-            name: t('html.label.ram'), icon: faMicrochip, color: 'light-green', href: 'ram',
+            name: t('html.label.ram'), icon: faMicrochip, color: 'ram', href: 'ram',
             element: <Tab id={'ram'} data={performanceSeries.ram} yAxis={yAxisConfigurations.RAM_OR_DISK}/>
         }, {
-            name: t('html.label.entities'), icon: faDragon, color: 'purple', href: 'entities',
+            name: t('html.label.entities'), icon: faDragon, color: 'entities', href: 'entities',
             element: <Tab id={'entities'} data={performanceSeries.entities} yAxis={yAxisConfigurations.ENTITIES}/>,
             disabled: !dataIncludesGameServers
         }, {
-            name: t('html.label.loadedChunks'), icon: faMap, color: 'blue-grey', href: 'chunks',
+            name: t('html.label.loadedChunks'), icon: faMap, color: 'chunks', href: 'chunks',
             element: <Tab id={'chunks'} data={performanceSeries.chunks} yAxis={yAxisConfigurations.CHUNKS}/>,
             disabled: !dataIncludesGameServers
         }, {
-            name: t('html.label.diskSpace'), icon: faHdd, color: 'green', href: 'disk',
+            name: t('html.label.diskSpace'), icon: faHdd, color: 'disk', href: 'disk',
             element: <Tab id={'disk'} data={performanceSeries.disk} yAxis={yAxisConfigurations.RAM_OR_DISK}/>
         }, {
-            name: t('html.label.ping'), icon: faSignal, color: 'amber', href: 'ping',
+            name: t('html.label.ping'), icon: faSignal, color: 'ping', href: 'ping',
             element: networkMetadata ? <PingTab id={'ping'} identifier={networkMetadata.currentServer.serverUUID}/> :
                 <ChartLoader/>
         },

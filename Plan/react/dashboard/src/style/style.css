@@ -896,7 +896,7 @@ div#navSrvContainer::-webkit-scrollbar-thumb {
 }
 
 .bg-theme, body.theme .fc-toolbar-chunk .btn.btn-primary {
-    background-color: var(--color-theme);
+    background: var(--color-theme);
     --bs-btn-disabled-bg: var(--color-theme);
     color: var(--color-text-dark);
 }

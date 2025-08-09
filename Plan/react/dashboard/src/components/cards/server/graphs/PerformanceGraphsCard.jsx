@@ -119,31 +119,31 @@ const PerformanceGraphsCard = () => {
 
     const tabs = [
         {
-            name: t('html.label.all'), icon: faGears, color: 'blue-grey', href: 'all',
+            name: t('html.label.all'), icon: faGears, color: 'chunks', href: 'all',
             element: <AllGraphTab data={data} dataSeries={parsedData} pluginHistorySeries={pluginHistorySeries}
                                   loadingError={loadingError || pluginHistoryLoadingError}/>,
             permission: 'page.server.performance.graphs'
         }, {
-            name: t('html.label.tps'), icon: faTachometerAlt, color: 'red', href: 'tps',
+            name: t('html.label.tps'), icon: faTachometerAlt, color: 'tps', href: 'tps',
             element: <TpsGraphTab data={data} dataSeries={parsedData} pluginHistorySeries={pluginHistorySeries}
                                   loadingError={loadingError || pluginHistoryLoadingError}/>,
             permission: 'page.server.performance.graphs.tps'
         }, {
-            name: t('html.label.cpuRam'), icon: faMicrochip, color: 'light-green', href: 'cpu-ram',
+            name: t('html.label.cpuRam'), icon: faMicrochip, color: 'ram', href: 'cpu-ram',
             element: <CpuRamGraphTab data={data} dataSeries={parsedData} pluginHistorySeries={pluginHistorySeries}
                                      loadingError={loadingError || pluginHistoryLoadingError}/>,
             permission: ['page.server.performance.graphs.cpu', 'page.server.performance.graphs.ram']
         }, {
-            name: t('html.label.world'), icon: faMap, color: 'purple', href: 'world-load',
+            name: t('html.label.world'), icon: faMap, color: 'entities', href: 'world-load',
             element: <WorldGraphTab data={data} dataSeries={parsedData} pluginHistorySeries={pluginHistorySeries}
                                     loadingError={loadingError || pluginHistoryLoadingError}/>,
             permission: ['page.server.performance.graphs.entities', 'page.server.performance.graphs.chunks']
         }, {
-            name: t('html.label.ping'), icon: faSignal, color: 'amber', href: 'ping',
+            name: t('html.label.ping'), icon: faSignal, color: 'ping', href: 'ping',
             element: <PingGraphTab identifier={identifier}/>,
             permission: 'page.server.performance.graphs.ping'
         }, {
-            name: t('html.label.diskSpace'), icon: faHdd, color: 'green', href: 'disk',
+            name: t('html.label.diskSpace'), icon: faHdd, color: 'disk', href: 'disk',
             element: <DiskGraphTab data={data} dataSeries={parsedData} pluginHistorySeries={pluginHistorySeries}
                                    loadingError={loadingError || pluginHistoryLoadingError}/>,
             permission: 'page.server.performance.graphs.disk'

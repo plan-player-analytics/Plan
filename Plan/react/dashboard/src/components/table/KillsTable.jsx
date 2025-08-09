@@ -23,7 +23,7 @@ const VictimName = ({kill}) => {
 
     const day = 24 * 60 * 60 * 1000;
     if (kill.timeSinceRegisterMillis > 0 && kill.timeSinceRegisterMillis < day) {
-        return <span className={"col-light-green"}
+        return <span className={"col-first-seen"}
                      title={t('html.label.playerKillsVictimIndicator').replace("<>",
                          formatTimeAmount(timePreferences, kill.timeSinceRegisterMillis))}>{kill.victimName}</span>
     }
@@ -34,7 +34,7 @@ const VictimName = ({kill}) => {
 const KillRow = ({kill}) => {
     const killSeparator = <Fa
         icon={kill.killerUUID === kill.victimUUID ? faSkullCrossbones : faAngleRight}
-        className={"col-red"}/>;
+        className={"col-player-kills"}/>;
     return (
         <tr>
             <td><FormattedDate date={kill.date} react/></td>
@@ -67,7 +67,7 @@ const KillsTable = ({kills, deaths}) => {
     const rows = kills.map(kill => {
         const killSeparator = <Fa
             icon={kill.killerUUID === kill.victimUUID ? faSkullCrossbones : faAngleRight}
-            className={"col-red"}/>;
+            className={"col-player-kills"}/>;
         return {
             killText: kill.killerName + ' > ' + kill.victimName,
             kill: <>{kill.killerName} {killSeparator} <VictimName kill={kill}/></>,

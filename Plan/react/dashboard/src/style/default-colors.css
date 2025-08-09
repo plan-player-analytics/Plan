@@ -303,12 +303,19 @@
 .btn-danger {
     background: var(--color-forms-buttons-dangerous-button);
     background-color: var(--color-forms-buttons-dangerous-button);
+    border-color: var(--color-forms-buttons-dangerous-button);
     color: var(--contrast-color-forms-buttons-dangerous-button);
     --bs-btn-hover-bg: var(--color-forms-buttons-dangerous-button);
     --bs-btn-disabled-bg: var(--color-forms-buttons-dangerous-button);
     --bs-btn-disabled-border-color: var(--color-forms-buttons-dangerous-button);
     --bs-btn-hover-color: color-mix(in srgb, var(--contrast-color-forms-buttons-dangerous-button) 90%, black);
+    --bs-btn-hover-border-color: color-mix(in srgb, var(--color-forms-buttons-dangerous-button) 90%, black);
     --bs-btn-disabled-color: var(--contrast-color-forms-buttons-dangerous-button);
+}
+
+.btn.bg-transparent {
+    --bs-btn-hover-color: currentcolor !important;
+    --bs-btn-hover-bg: transparent;
 }
 
 /* Calendar overrides */

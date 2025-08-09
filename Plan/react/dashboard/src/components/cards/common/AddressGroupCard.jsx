@@ -6,6 +6,8 @@ import {faCheck, faList, faPencil} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import MultiSelect from "../../input/MultiSelect.jsx";
 import {faTrashAlt} from "@fortawesome/free-regular-svg-icons";
+import ActionButton from "../../input/ActionButton.jsx";
+import OutlineButton from "../../input/OutlineButton.jsx";
 
 const AddressGroupCard = ({n, group, editGroup, allAddresses, remove}) => {
     const {t} = useTranslation();
@@ -51,14 +53,12 @@ const AddressGroupCard = ({n, group, editGroup, allAddresses, remove}) => {
             <Card.Body>
                 <MultiSelect options={allAddresses} selectedIndexes={selectedIndexes}
                              setSelectedIndexes={setSelectedIndexes}/>
-                <button className={'mt-2 btn ' + (isUpToDate ? 'bg-transparent' : 'bg-theme')}
-                        onClick={applySelected} disabled={isUpToDate}>
+                <ActionButton className={'mt-2'} onClick={applySelected} disabled={isUpToDate}>
                     {t('html.label.apply')}
-                </button>
-                <button className={'mt-2 btn btn-outline-secondary float-end'}
-                        onClick={remove}>
+                </ActionButton>
+                <OutlineButton className={'mt-2 float-end'} onClick={remove}>
                     <FontAwesomeIcon icon={faTrashAlt}/>
-                </button>
+                </OutlineButton>
             </Card.Body>
         </Card>
     )

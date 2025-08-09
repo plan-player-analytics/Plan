@@ -12,6 +12,7 @@ import {useAuth} from "../../hooks/authenticationHook";
 import FinalizeRegistrationModal from "../../components/modal/FinalizeRegistrationModal";
 import {fetchRegisterCheck, postRegister} from "../../service/authenticationService";
 import {useMetadata} from "../../hooks/metadataHook";
+import ActionButton from "../../components/input/ActionButton.jsx";
 
 const Logo = () => {
     return (
@@ -74,9 +75,9 @@ const RegisterForm = ({register}) => {
                        value={password} onChange={event => setPassword(event.target.value)}/>
                 <div className={"form-text"}>{t('html.register.passwordTip')}</div>
             </div>
-            <button className="btn bg-theme btn-user w-100" id="register-button" onClick={onRegister}>
+            <ActionButton className="btn-user w-100" id="register-button" onClick={onRegister}>
                 {t('html.register.register')}
-            </button>
+            </ActionButton>
         </form>
     );
 }

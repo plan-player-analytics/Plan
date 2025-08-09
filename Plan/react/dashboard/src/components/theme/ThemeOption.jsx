@@ -57,7 +57,7 @@ const ThemeOption = ({theme, nightMode, selected, setSelected}) => {
                                 width: "100%"
                             }}>{theme}</p>
                             <div style={{
-                                backgroundColor: 'var(--color-sidebar-background)',
+                                background: 'var(--color-sidebar-background)',
                                 width: '23%',
                                 height: '80px'
                             }}>

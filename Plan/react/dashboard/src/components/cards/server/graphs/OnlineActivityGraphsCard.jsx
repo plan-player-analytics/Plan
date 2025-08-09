@@ -108,19 +108,19 @@ const OnlineActivityGraphsCard = () => {
     const {t} = useTranslation();
     const tabs = [
         {
-            name: t('html.label.dayByDay'), icon: faChartArea, color: 'blue', href: 'day-by-day',
+            name: t('html.label.dayByDay'), icon: faChartArea, color: 'players-unique', href: 'day-by-day',
             element: <DayByDayTab/>,
             permission: 'page.server.online.activity.graphs.day.by.day'
         }, {
-            name: t('html.label.hourByHour'), icon: faChartArea, color: 'blue', href: 'hour-by-hour',
+            name: t('html.label.hourByHour'), icon: faChartArea, color: 'players-unique', href: 'hour-by-hour',
             element: <HourByHourTab/>,
             permission: 'page.server.online.activity.graphs.hour.by.hour'
         }, {
-            name: t('html.label.serverCalendar'), icon: faCalendar, color: 'teal', href: 'server-calendar',
+            name: t('html.label.serverCalendar'), icon: faCalendar, color: 'sessions', href: 'server-calendar',
             element: <ServerCalendarTab/>,
             permission: 'page.server.online.activity.graphs.calendar'
         }, {
-            name: t('html.label.punchcard30days'), icon: faBraille, color: 'black', href: 'punchcard',
+            name: t('html.label.punchcard30days'), icon: faBraille, color: 'text', href: 'punchcard',
             element: <PunchCardTab/>,
             permission: 'page.server.online.activity.graphs.punchcard'
         },

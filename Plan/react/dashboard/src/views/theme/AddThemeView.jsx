@@ -26,8 +26,8 @@ const AddThemeView = () => {
         return <ChartLoader/>
     }
 
-    const createTheme = () => {
-        themeStorage.cloneThemeLocally(basedOnTheme, name);
+    const createTheme = async () => {
+        await themeStorage.cloneThemeLocally(basedOnTheme, name);
         navigate("/theme-editor/" + name);
     }
 

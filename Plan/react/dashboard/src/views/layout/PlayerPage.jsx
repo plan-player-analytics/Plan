@@ -13,6 +13,7 @@ import ErrorPage from "./ErrorPage";
 import {useAuth} from "../../hooks/authenticationHook";
 import MainPageRedirect from "../../components/navigation/MainPageRedirect";
 import {SwitchTransition} from "react-transition-group";
+import {ChartLoader} from "../../components/navigation/Loader.jsx";
 
 const HelpModal = React.lazy(() => import("../../components/modal/HelpModal"));
 
@@ -68,16 +69,17 @@ const PlayerPage = () => {
     if (authRequired && !loggedIn) return <MainPageRedirect/>;
     if (loadingError) return <ErrorPage error={loadingError}/>;
 
-    return player ? (
+    return (
         <>
-            <Sidebar page={player?.info?.name} items={sidebarItems}/>
+            <Sidebar page={player?.info?.name} items={player ? sidebarItems : []}/>
             <div className="d-flex flex-column" id="content-wrapper">
                 <Header page={player?.info?.name} tab={currentTab}/>
                 <div id="content" style={{display: 'flex'}}>
                     <main className="container-fluid mt-4">
-                        <SwitchTransition>
+                        {player && <SwitchTransition>
                             <Outlet context={{player: player}}/>
-                        </SwitchTransition>
+                        </SwitchTransition>}
+                        {!player && <ChartLoader/>}
                     </main>
                     <aside>
                         <ColorSelectorModal/>
@@ -86,14 +88,7 @@ const PlayerPage = () => {
                 </div>
             </div>
         </>
-    ) : <>
-        <div className="page-loader">
-            <div className="loader-container">
-                <span className="loader"/>
-                <p className="loader-text">Please wait..</p>
-            </div>
-        </div>
-    </>
+    )
 }
 
 export const usePlayer = () => {

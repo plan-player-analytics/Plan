@@ -13,6 +13,7 @@ import {
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
 import {useMetadata} from "../../hooks/metadataHook";
 import {Trans, useTranslation} from "react-i18next";
+import ActionButton from "../input/ActionButton.jsx";
 
 const LicenseSection = () => {
     const {t} = useTranslation();
@@ -139,7 +140,7 @@ const PluginInformationModal = ({open, toggle}) => {
                 <MetricsLinks/>
             </Modal.Body>
             <Modal.Footer>
-                <button className="btn bg-theme" onClick={toggle}>OK</button>
+                <ActionButton onClick={toggle}>OK</ActionButton>
             </Modal.Footer>
         </Modal>
     )
