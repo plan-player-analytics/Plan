@@ -30,7 +30,7 @@ const ThemeEditorPage = () => {
                 <Header page={title} hideUpdater/>
                 <div id="content" style={{display: 'flex'}}>
                     <main className="container-fluid mt-4">
-                        <ThemeContextProvider themeOverride={identifier}>
+                        <ThemeContextProvider themeOverride={identifier} key={identifier}>
                             <ThemeStorageContextProvider>
                                 <WaitUntilThemeLoads/>
                             </ThemeStorageContextProvider>

@@ -79,7 +79,7 @@ const AddThemeView = () => {
                 </Row>
                 <Row>
                     <Col xs={12}>
-                        {nameIsInvalid && <div className="disabled-feedback">
+                        {nameIsInvalid && <div className="disabled-feedback mb-1">
                             <FontAwesomeIcon icon={faInfoCircle}/> {t('html.label.themeEditor.nameWarning')}
                         </div>}
                         <ActionButton onClick={createTheme}
