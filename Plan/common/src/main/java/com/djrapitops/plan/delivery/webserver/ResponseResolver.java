@@ -232,7 +232,11 @@ public class ResponseResolver {
                     Optional<Response> resolved = resolver.resolve(request);
                     if (resolved.isPresent()) return resolved.get();
                 } else {
-                    return responseFactory.forbidden403();
+                    if (request.getPath().startsWith("/v1/")) {
+                        return responseFactory.forbidden403Json();
+                    } else {
+                        return responseFactory.forbidden403();
+                    }
                 }
             } else {
                 Optional<Response> resolved = resolver.resolve(request);

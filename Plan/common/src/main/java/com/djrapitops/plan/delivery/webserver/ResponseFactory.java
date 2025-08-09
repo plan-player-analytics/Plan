@@ -57,6 +57,7 @@ import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -441,7 +442,11 @@ public class ResponseFactory {
 
     public Response forbidden403() {
         return forbidden403("Your user is not authorized to view this page.<br>"
-                + "If you believe this is an error contact staff to change your access level.");
+                + "If you believe this is an error contact staff to change your access.");
+    }
+
+    public Response forbidden403Json() {
+        return forbidden403Json("Your user is not authorized to view this page. If you believe this is an error contact staff to change your access.");
     }
 
     public Response forbidden403(String message) {
@@ -454,6 +459,19 @@ public class ResponseFactory {
         } catch (IOException e) {
             return forInternalError(e, "Failed to generate 403 page");
         }
+    }
+
+    public Response forbidden403Json(String message) {
+        return Response.builder()
+                .setMimeType(MimeType.JSON)
+                .setJSONContent(Maps.builder(String.class, Object.class)
+                        .put("status", 403)
+                        .put("message", message)
+                        .put("icon", List.of("far", "fa-hand-paper"))
+                        .put("title", "403 Forbidden")
+                        .build())
+                .setStatus(403)
+                .build();
     }
 
     public Response failedLoginAttempts403() {
