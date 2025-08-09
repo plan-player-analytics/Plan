@@ -20,7 +20,10 @@ import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.URIQuery;
 import com.djrapitops.plan.delivery.webserver.ResponseFactory;
+import com.djrapitops.plan.storage.file.PlanFiles;
 import com.google.gson.Gson;
+import extension.FullSystemExtension;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -30,15 +33,17 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import utilities.TestResources;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Map;
 
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
 /**
  * @author AuroraLS3
  */
-@ExtendWith(MockitoExtension.class)
+@ExtendWith({MockitoExtension.class, FullSystemExtension.class})
 class SaveThemeJSONResolverTest {
 
     @Mock
@@ -51,8 +56,13 @@ class SaveThemeJSONResolverTest {
     @Mock
     Request request;
 
+    @BeforeEach
+    void setUp(PlanFiles files) {
+        saveThemeJSONResolver = new SaveThemeJSONResolver(files, responseFactory, gson);
+    }
+
     @Test
-    void defaultThemeIsDeemedValid() throws IOException {
+    void defaultThemeIsDeemedValid(PlanFiles files) throws IOException {
         when(request.getQuery()).thenReturn(new URIQuery(Map.of("theme", "default")));
         when(request.getRequestBody()).thenReturn(TestResources.getJarResourceAsBytes("/assets/plan/themes/default.json"));
         lenient().when(responseFactory.badRequest(any(), any())).thenReturn(mock(Response.class));
@@ -62,5 +72,7 @@ class SaveThemeJSONResolverTest {
 
         verify(responseFactory, times(0)).badRequest(any(), any());
         verify(responseFactory, times(1)).successResponse();
+
+        assertTrue(Files.exists(files.getThemeDirectory().resolve("default.json")));
     }
 }

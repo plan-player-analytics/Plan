@@ -81,6 +81,18 @@ public class ReactExporter extends FileExporter {
         exportStaticBundle(toDirectory);
         exportLocaleJson(toDirectory.resolve("locale"));
         exportMetadataJson(toDirectory.resolve("metadata"));
+        exportThemeJson(toDirectory.resolve("theme"));
+        exportReactRedirects(toDirectory, files, config, new String[]{
+                "theme-editor",
+                "theme-editor/new",
+        });
+    }
+
+    private void exportThemeJson(Path toDirectory) throws IOException {
+        List<String> themeNames = assetVersions.getThemeNames();
+        for (String themeName : themeNames) {
+            exportJson(toDirectory, "theme?theme=" + themeName, themeName);
+        }
     }
 
     private void exportMetadataJson(Path toDirectory) throws IOException {

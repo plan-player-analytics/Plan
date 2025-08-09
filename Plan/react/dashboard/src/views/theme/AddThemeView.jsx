@@ -12,6 +12,7 @@ import {useTranslation} from "react-i18next";
 import {useThemeStorage} from "../../hooks/context/themeContextHook.jsx";
 import {useNavigate} from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import LoadIn from "../../components/animation/LoadIn.jsx";
 
 const AddThemeView = () => {
     const {t} = useTranslation();
@@ -50,46 +51,48 @@ const AddThemeView = () => {
     }
     const nameIsInvalid = isNameInvalid(name);
     return (
-        <Card className="shadow mb-4 add-theme">
-            <CardHeader icon={faPlusCircle} color="primary" label={t('html.label.themeEditor.addTheme')}/>
-            <Card.Body>
-                <Row className={'mb-4'}>
-                    <Col xs={12}>
-                        <TextInput icon={faFileSignature}
-                                   isInvalid={isNameInvalid}
-                                   invalidFeedback={metadata.availableThemes?.includes(name) ? t('html.label.themeEditor.existingName') : t('html.label.themeEditor.invalidName')}
-                                   placeholder={t('html.label.themeEditor.themeName')}
-                                   value={name}
-                                   setValue={newValue => setName(newValue.toLowerCase().replace(/[^a-z0-9-]/g, "-"))}
-                        />
-                    </Col>
-                </Row>
-                <Row className={'mb-4'}>
-                    <Col xs={12}>
-                        <h5 className="mb-3">{t('html.label.themeEditor.basedOnTheme')}</h5>
-                        <Row>
-                            {metadata.availableThemes.map(themeName => <ThemeOption
-                                key={themeName}
-                                theme={themeName}
-                                nightMode={theme.nightModeEnabled}
-                                selected={themeName === basedOnTheme}
-                                setSelected={setBasedOnTheme}/>)}
-                        </Row>
-                    </Col>
-                </Row>
-                <Row>
-                    <Col xs={12}>
-                        {nameIsInvalid && <div className="disabled-feedback mb-1">
-                            <FontAwesomeIcon icon={faInfoCircle}/> {t('html.label.themeEditor.nameWarning')}
-                        </div>}
-                        <ActionButton onClick={createTheme}
-                                      disabled={nameIsInvalid}>{t('html.label.themeEditor.openEditor')}</ActionButton>
-                        <p className={"mt-1 mb-1"}>{t('html.label.themeEditor.uploadTheme')}</p>
-                        <input onChange={onUpload} type={"file"} disabled={nameIsInvalid}/>
-                    </Col>
-                </Row>
-            </Card.Body>
-        </Card>
+        <LoadIn>
+            <Card className="shadow mb-4 add-theme">
+                <CardHeader icon={faPlusCircle} color="primary" label={t('html.label.themeEditor.addTheme')}/>
+                <Card.Body>
+                    <Row className={'mb-4'}>
+                        <Col xs={12}>
+                            <TextInput icon={faFileSignature}
+                                       isInvalid={isNameInvalid}
+                                       invalidFeedback={metadata.availableThemes?.includes(name) ? t('html.label.themeEditor.existingName') : t('html.label.themeEditor.invalidName')}
+                                       placeholder={t('html.label.themeEditor.themeName')}
+                                       value={name}
+                                       setValue={newValue => setName(newValue.toLowerCase().replace(/[^a-z0-9-]/g, "-"))}
+                            />
+                        </Col>
+                    </Row>
+                    <Row className={'mb-4'}>
+                        <Col xs={12}>
+                            <h5 className="mb-3">{t('html.label.themeEditor.basedOnTheme')}</h5>
+                            <Row>
+                                {metadata.availableThemes.map(themeName => <ThemeOption
+                                    key={themeName}
+                                    theme={themeName}
+                                    nightMode={theme.nightModeEnabled}
+                                    selected={themeName === basedOnTheme}
+                                    setSelected={setBasedOnTheme}/>)}
+                            </Row>
+                        </Col>
+                    </Row>
+                    <Row>
+                        <Col xs={12}>
+                            {nameIsInvalid && <div className="disabled-feedback mb-1">
+                                <FontAwesomeIcon icon={faInfoCircle}/> {t('html.label.themeEditor.nameWarning')}
+                            </div>}
+                            <ActionButton onClick={createTheme}
+                                          disabled={nameIsInvalid}>{t('html.label.themeEditor.openEditor')}</ActionButton>
+                            <p className={"mt-1 mb-1"}>{t('html.label.themeEditor.uploadTheme')}</p>
+                            <input onChange={onUpload} type={"file"} disabled={nameIsInvalid}/>
+                        </Col>
+                    </Row>
+                </Card.Body>
+            </Card>
+        </LoadIn>
     )
 };
 
