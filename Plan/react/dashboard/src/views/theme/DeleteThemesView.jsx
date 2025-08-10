@@ -19,6 +19,7 @@ import DangerButton from "../../components/input/button/DangerButton.jsx";
 import {ThemeEditContextProvider} from "../../hooks/context/themeEditContextHook.jsx";
 import DownloadButton from "../../components/theme/DownloadButton.jsx";
 import {useAuth} from "../../hooks/authenticationHook.jsx";
+import {deleteTheme} from "../../service/metadataService.js";
 
 const DeleteThemesView = () => {
     const {t} = useTranslation();
@@ -36,13 +37,11 @@ const DeleteThemesView = () => {
     const onlyLocal = getLocallyStoredThemes().includes(themeToDelete);
     const canDelete = onlyLocal || authRequired && hasPermission('manage.themes');
 
-    const deleteTheme = async () => {
+    const onDelete = async () => {
         if (onlyLocal) {
             await themeStorage.deleteThemeLocally(themeToDelete);
-        } else {
-            if (canDelete) {
-                // TODO delete request
-            }
+        } else if (canDelete) {
+            await deleteTheme(themeToDelete);
         }
         setConfirm(false);
         metadata.refreshThemeList();
@@ -91,7 +90,7 @@ const DeleteThemesView = () => {
                     </Row>}
                     {canDelete && <Row>
                         <Col xs={12}>
-                            <DangerButton onClick={deleteTheme} disabled={!confirm}>
+                            <DangerButton onClick={onDelete} disabled={!confirm}>
                                 <FontAwesomeIcon
                                     icon={faTrash}/> {t(onlyLocal ? 'html.label.themeEditor.deleteLocalTheme' : 'html.label.themeEditor.deleteTheme')}
                             </DangerButton>

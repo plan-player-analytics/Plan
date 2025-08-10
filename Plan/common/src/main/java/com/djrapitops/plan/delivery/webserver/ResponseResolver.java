@@ -22,6 +22,7 @@ import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
+import com.djrapitops.plan.delivery.web.resolver.exception.MethodNotAllowedException;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
@@ -190,10 +191,12 @@ public class ResponseResolver {
     public Response getResponse(@Untrusted Request request) {
         try {
             return tryToGetResponse(request);
-        } catch (NotFoundException e) {
-            return responseFactory.notFound404(e.getMessage());
         } catch (BadRequestException e) {
             return responseFactory.badRequest(e.getMessage(), request.getPath().asString());
+        } catch (NotFoundException e) {
+            return responseFactory.notFound404(e.getMessage());
+        } catch (MethodNotAllowedException e) {
+            return responseFactory.methodNotAllowed405(e.getMessage(), e.getAllowedMethods());
         } catch (WebUserAuthException e) {
             throw e; // Pass along
         } catch (Exception e) {

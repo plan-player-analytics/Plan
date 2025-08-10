@@ -148,7 +148,7 @@ public class PlanFiles implements SubSystem {
     }
 
     public Optional<File> attemptToFind(Path dir, @Untrusted String resourceName) {
-        if (dir.toFile().exists() && dir.toFile().isDirectory()) {
+        if (Files.exists(dir) && Files.isDirectory(dir)) {
             // Path may be absolute due to resolving untrusted path
             @Untrusted Path asPath = dir.resolve(resourceName);
             if (!asPath.startsWith(dir)) {

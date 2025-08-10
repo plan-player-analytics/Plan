@@ -57,10 +57,7 @@ import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Function;
 
 /**
@@ -220,7 +217,6 @@ public class ResponseFactory {
             WebResource resource = getPublicOrJarResource(fileName);
             String content = UnaryChain.of(resource.asString())
                     .chain(this::replaceMainAddressPlaceholder)
-                    .chain(theme::replaceThemeColors)
                     .chain(contents -> bundleAddressCorrection.get().correctAddressForWebserver(contents, fileName))
                     .apply();
             ResponseBuilder responseBuilder = Response.builder()
@@ -255,7 +251,6 @@ public class ResponseFactory {
         try {
             WebResource resource = getPublicOrJarResource(fileName);
             String content = UnaryChain.of(resource.asString())
-                    .chain(theme::replaceThemeColors)
                     .chain(contents -> bundleAddressCorrection.get().correctAddressForWebserver(contents, fileName))
                     .apply();
 
@@ -511,6 +506,18 @@ public class ResponseFactory {
                         .put("requestedTarget", target)
                         .build())
                 .setStatus(400)
+                .build();
+    }
+
+    public Response methodNotAllowed405(String target, String... allowedMethods) {
+        return Response.builder()
+                .setMimeType(MimeType.JSON)
+                .setJSONContent(Maps.builder(String.class, Object.class)
+                        .put("status", 405)
+                        .put("error", "HTTP method not allowed, allowed: " + Arrays.toString(allowedMethods))
+                        .put("requestedTarget", target)
+                        .build())
+                .setStatus(405)
                 .build();
     }
 

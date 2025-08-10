@@ -1,4 +1,10 @@
-import {doGetRequest, doSomePostRequest, standard200option, staticSite} from "./backendConfiguration";
+import {
+    doGetRequest,
+    doSomeDeleteRequest,
+    doSomePostRequest,
+    standard200option,
+    staticSite
+} from "./backendConfiguration";
 
 export const fetchPlanMetadata = async () => {
     let url = '/v1/metadata';
@@ -51,4 +57,10 @@ export const saveTheme = async (name, theme) => {
     if (staticSite) return;
     let url = `/v1/saveTheme?theme=${name}`;
     return doSomePostRequest(url, [standard200option], JSON.stringify(theme));
+}
+
+export const deleteTheme = async (name) => {
+    if (staticSite) return;
+    let url = `/v1/deleteTheme?theme=${name}`;
+    return doSomeDeleteRequest(url, [standard200option]);
 }

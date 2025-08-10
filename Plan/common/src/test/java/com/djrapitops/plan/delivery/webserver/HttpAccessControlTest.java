@@ -92,6 +92,7 @@ class HttpAccessControlTest {
             "/v1/deleteGroup",
             "/v1/storePreferences",
             "/v1/saveTheme",
+            "/v1/deleteTheme",
             "/v1/pluginHistory?server=" + TestConstants.SERVER_UUID_STRING,
             "/manage",
             "/auth/register",
@@ -105,14 +106,12 @@ class HttpAccessControlTest {
         assertEquals(404, code);
     }
 
-
     private int access(String resource) throws IOException, KeyManagementException, NoSuchAlgorithmException {
         HttpURLConnection connection = null;
         try {
             connection = CONNECTOR.getConnection("GET", ADDRESS + resource);
 
             return connection.getResponseCode();
-
         } finally {
             if (connection != null) connection.disconnect();
         }

@@ -21,6 +21,8 @@ import com.djrapitops.plan.delivery.domain.datatransfer.ThemeDto;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
+import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
+import com.djrapitops.plan.delivery.web.resolver.exception.MethodNotAllowedException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.ResponseFactory;
@@ -96,23 +98,30 @@ public class SaveThemeJSONResolver implements Resolver {
     )
     @Override
     public Optional<Response> resolve(Request request) {
+        if (!"POST".equals(request.getMethod())) {
+            throw new MethodNotAllowedException("POST");
+        }
         @Untrusted Optional<String> theme = request.getQuery().get("theme");
         if (theme.isEmpty()) {
-            return Optional.of(responseFactory.badRequest("'theme' parameter is required", "/v1/saveTheme"));
+            throw new BadRequestException("'theme' parameter is required");
         }
         return Optional.of(getResponse(theme.get().toLowerCase(), request));
     }
 
     private Response getResponse(@Untrusted String themeName, Request request) {
         if (!themeFilePattern.matcher(themeName).matches()) {
-            return responseFactory.badRequest("'theme' parameter was invalid", "/v1/saveTheme");
+            throw new BadRequestException("'theme' parameter was invalid");
         }
 
         @Untrusted byte[] requestBody = request.getRequestBody();
         try {
             @Untrusted ThemeDto result = gson.fromJson(new String(requestBody, StandardCharsets.UTF_8), ThemeDto.class);
-            if (result == null) {
-                return responseFactory.badRequest("Body needs to be a vaild theme file", "/v1/saveTheme");
+            if (result == null
+                    || result.getColors() == null || result.getColors().isEmpty()
+                    || result.getNightColors() == null || result.getNightColors().isEmpty()
+                    || result.getUseCases() == null || result.getUseCases().isEmpty()
+                    || result.getNightModeUseCases() == null || result.getNightModeUseCases().isEmpty()) {
+                throw new BadRequestException("Body needs to be a vaild theme file");
             }
 
             List<String> issues = new ArrayList<>();
@@ -121,17 +130,20 @@ public class SaveThemeJSONResolver implements Resolver {
             validateUseCases("", result.getNightModeUseCases(), issues);
 
             if (!issues.isEmpty()) {
-                return responseFactory.badRequest("Invalid request body: " + issues.toString(), "/v1/saveTheme");
+                throw new BadRequestException("Invalid request body: " + issues.toString());
             }
 
-            java.nio.file.Path themeFile = files.getThemeDirectory()
-                    .resolve(themeName + ".json");
+            java.nio.file.Path themeDirectory = files.getThemeDirectory();
+            java.nio.file.Path themeFile = themeDirectory.resolve(themeName + ".json");
+            if (!themeFile.startsWith(themeFile)) {
+                throw new BadRequestException("'theme' parameter was invalid");
+            }
 
             Files.write(themeFile, gson.toJson(result).getBytes(StandardCharsets.UTF_8), PlanFiles.replaceIfExists());
 
             return responseFactory.successResponse();
         } catch (JsonSyntaxException e) {
-            return responseFactory.badRequest("Request body was invalid json", "/v1/saveTheme");
+            throw new BadRequestException("Request body was invalid json");
         } catch (IOException e) {
             return responseFactory.internalErrorResponse(e, e.getMessage());
         }
