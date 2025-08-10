@@ -112,16 +112,21 @@ public class SaveThemeJSONResolver implements Resolver {
         if (!themeFilePattern.matcher(themeName).matches()) {
             throw new BadRequestException("'theme' parameter was invalid");
         }
+        if (themeName.length() > 100) {
+            throw new BadRequestException("'theme' name was too long");
+        }
 
         @Untrusted byte[] requestBody = request.getRequestBody();
         try {
             @Untrusted ThemeDto result = gson.fromJson(new String(requestBody, StandardCharsets.UTF_8), ThemeDto.class);
             if (result == null
+                    || result.getName() == null || result.getName().isEmpty()
+                    || !themeFilePattern.matcher(result.getName()).matches()
                     || result.getColors() == null || result.getColors().isEmpty()
                     || result.getNightColors() == null || result.getNightColors().isEmpty()
                     || result.getUseCases() == null || result.getUseCases().isEmpty()
                     || result.getNightModeUseCases() == null || result.getNightModeUseCases().isEmpty()) {
-                throw new BadRequestException("Body needs to be a vaild theme file");
+                throw new BadRequestException("Body needs to be a valid theme file");
             }
 
             List<String> issues = new ArrayList<>();
@@ -135,17 +140,45 @@ public class SaveThemeJSONResolver implements Resolver {
 
             java.nio.file.Path themeDirectory = files.getThemeDirectory();
             java.nio.file.Path themeFile = themeDirectory.resolve(themeName + ".json");
-            if (!themeFile.startsWith(themeFile)) {
+            if (!themeFile.startsWith(themeDirectory)) {
                 throw new BadRequestException("'theme' parameter was invalid");
             }
 
             Files.write(themeFile, gson.toJson(result).getBytes(StandardCharsets.UTF_8), PlanFiles.replaceIfExists());
 
+            request.getQuery().get("originalName")
+                    .ifPresent(originalName -> deleteOriginal(themeName, originalName, themeDirectory));
             return responseFactory.successResponse();
         } catch (JsonSyntaxException e) {
             throw new BadRequestException("Request body was invalid json");
         } catch (IOException e) {
             return responseFactory.internalErrorResponse(e, e.getMessage());
+        }
+    }
+
+    private void deleteOriginal(@Untrusted String themeName, @Untrusted String originalName, java.nio.file.Path themeDirectory) {
+        if (originalName.equals(themeName)) return; // Theme was not renamed.
+
+        // All these checks are against trying to delete other themes than the one they're editing.
+        if (!themeFilePattern.matcher(originalName).matches()) {
+            throw new BadRequestException("'originalTheme' parameter was invalid, theme could have been renamed by another user");
+        }
+        java.nio.file.Path originalThemeFile = themeDirectory.resolve(originalName + ".json");
+        if (!originalThemeFile.startsWith(themeDirectory)) {
+            throw new BadRequestException("'originalTheme' parameter was invalid, theme could have been renamed by another user");
+        }
+        if (!Files.exists(originalThemeFile)) {
+            throw new BadRequestException("'originalTheme' parameter was invalid, theme could have been renamed by another user");
+        }
+        try {
+            ThemeDto original = gson.fromJson(Files.readString(originalThemeFile), ThemeDto.class);
+            if (!original.getName().equals(originalName)) {
+                throw new BadRequestException("'originalTheme' parameter was invalid, doesn't match original file");
+            }
+
+            Files.delete(originalThemeFile);
+        } catch (JsonSyntaxException | IOException e) {
+            throw new BadRequestException("'originalTheme' parameter was invalid, could not parse or delete original file. Delete manually.");
         }
     }
 

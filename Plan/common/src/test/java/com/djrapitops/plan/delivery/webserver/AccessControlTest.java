@@ -168,7 +168,11 @@ class AccessControlTest {
                 Arguments.of("/v1/gameAllowlistBounces?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_ALLOWLIST_BOUNCE, 200, 403),
                 Arguments.of("/v1/theme?theme=default", WebPermission.ACCESS, 200, 200),
                 Arguments.of("/v1/saveTheme?theme=default", WebPermission.MANAGE_THEMES, 405, 403),
-                Arguments.of("/v1/deleteTheme?theme=default", WebPermission.MANAGE_THEMES, 405, 403)
+                Arguments.of("/v1/deleteTheme?theme=default", WebPermission.MANAGE_THEMES, 405, 403),
+                Arguments.of("/theme-editor", WebPermission.ACCESS_THEME_EDITOR, 200, 403),
+                Arguments.of("/theme-editor/new", WebPermission.ACCESS_THEME_EDITOR, 200, 403),
+                Arguments.of("/theme-editor/delete", WebPermission.ACCESS_THEME_EDITOR, 200, 403),
+                Arguments.of("/theme-editor/default", WebPermission.ACCESS_THEME_EDITOR, 200, 403)
         );
     }
 

@@ -12,12 +12,19 @@ import {ThemeStorageContextProvider, useThemeStorage} from "../../hooks/context/
 import {ChartLoader} from "../../components/navigation/Loader.jsx";
 import {useMetadata} from "../../hooks/metadataHook.jsx";
 import {faPlus, faSwatchbook, faTrash} from "@fortawesome/free-solid-svg-icons";
+import ErrorView from "../ErrorView.jsx";
+import AlertPopupArea from "../../components/alert/AlertPopupArea.jsx";
+import ErrorPage from "./ErrorPage.jsx";
 
 const ThemeEditorPage = () => {
     const {t} = useTranslation();
     const metadata = useMetadata();
     const title = t("html.label.themeEditor.title");
     const {identifier} = useParams();
+
+    if (metadata.metadataError) {
+        return <ErrorPage error={metadata.metadataError}/>
+    }
 
     const items = metadata.loaded ? metadata.getAvailableThemes().map(theme => {
         return {name: theme, icon: faSwatchbook, href: theme}
@@ -28,6 +35,7 @@ const ThemeEditorPage = () => {
         <>
             <Sidebar page={title} items={items}/>
             <div className="d-flex flex-column" id="content-wrapper">
+                <AlertPopupArea/>
                 <Header page={title} hideUpdater/>
                 <div id="content" style={{display: 'flex'}}>
                     <main className="container-fluid mt-4">
@@ -48,6 +56,7 @@ const ThemeEditorPage = () => {
 
 const WaitUntilThemeLoads = () => {
     const theme = useThemeStorage();
+    if (theme.error) return <ErrorView error={theme.error}/>
     if (!theme.loaded) return <ChartLoader/>
 
     return (

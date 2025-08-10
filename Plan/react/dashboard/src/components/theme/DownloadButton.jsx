@@ -5,7 +5,7 @@ import ActionButton from "../input/ActionButton.jsx";
 import {useTranslation} from "react-i18next";
 import {useThemeEditContext} from "../../hooks/context/themeEditContextHook.jsx";
 
-const DownloadButton = ({className}) => {
+const DownloadButton = ({className, disabled}) => {
     const {t} = useTranslation();
 
     const {
@@ -14,6 +14,7 @@ const DownloadButton = ({className}) => {
 
     const download = () => {
         const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify({
+            name,
             colors: currentColors,
             nightColors: currentNightColors,
             useCases: currentUseCases,
@@ -28,7 +29,7 @@ const DownloadButton = ({className}) => {
     }
 
     return (
-        <ActionButton className={className} onClick={download}>
+        <ActionButton className={className} onClick={download} disabled={disabled}>
             <FontAwesomeIcon icon={faDownload}/> {t('html.modal.version.download')}
         </ActionButton>
     )

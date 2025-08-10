@@ -63,6 +63,7 @@ class SaveThemeJSONResolverTest {
 
     @Test
     void defaultThemeIsDeemedValid(PlanFiles files) throws IOException {
+        when(request.getMethod()).thenReturn("POST");
         when(request.getQuery()).thenReturn(new URIQuery(Map.of("theme", "default")));
         when(request.getRequestBody()).thenReturn(TestResources.getJarResourceAsBytes("/assets/plan/themes/default.json"));
         lenient().when(responseFactory.badRequest(any(), any())).thenReturn(mock(Response.class));

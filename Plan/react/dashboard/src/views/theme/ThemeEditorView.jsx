@@ -24,7 +24,7 @@ const ThemeEditorView = () => {
     const {t} = useTranslation();
     const metadata = useMetadata();
     const {
-        name, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases,
+        name, originalName, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases,
         setName,
         deleteColor,
         deleteNightColor,
@@ -57,6 +57,7 @@ const ThemeEditorView = () => {
             || metadata.getAvailableThemes()?.includes(newValue)
             || name === 'new' || name === 'delete'
     }
+    const invalidName = isNameInvalid(name);
 
     return (
         <LoadIn>
@@ -69,8 +70,8 @@ const ThemeEditorView = () => {
                             {t('html.label.managePage.changes.discard')}
                         </SecondaryActionButton>
                         <ActionButton className={"float-end me-2"} onClick={save}
-                                      disabled={!savePossible}>{t('html.label.managePage.changes.save')}</ActionButton>
-                        {onlyLocal && <DownloadButton className={"float-end me-2"}/>}
+                                      disabled={!savePossible || invalidName}>{t('html.label.managePage.changes.save')}</ActionButton>
+                        {onlyLocal && <DownloadButton className={"float-end me-2"} disabled={invalidName}/>}
                         <UnsavedChangesText visible={editCount > 0} className={"float-end me-3"}/>
                         {onlyLocal && <small className={"ms-3"} style={{
                             display: "inline-block",
@@ -88,7 +89,7 @@ const ThemeEditorView = () => {
                                            invalidFeedback={t('html.label.themeEditor.invalidName')}
                                            placeholder={t('html.label.themeEditor.themeName')}
                                            value={name}
-                                           disabled={name === 'default'}
+                                           disabled={originalName === 'default'}
                                            disabledFeedback={t('html.label.themeEditor.defaultThemeNameFeedback')}
                                            setValue={newValue => setName(newValue)}
                                 />

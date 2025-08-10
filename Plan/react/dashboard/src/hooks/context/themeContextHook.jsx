@@ -1,6 +1,10 @@
-import {createContext, useCallback, useContext, useEffect, useMemo, useState} from "react";
+import React, {createContext, useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {useTheme} from "../themeHook.jsx";
 import {fetchTheme} from "../../service/metadataService.js";
+import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
+import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons";
+import {useAlertPopupContext} from "./alertPopupContext.jsx";
+import {Trans} from "react-i18next";
 
 const ThemeStorageContext = createContext({});
 
@@ -11,13 +15,16 @@ export const getLocallyStoredThemes = () => {
 export const ThemeStorageContextProvider = ({children}) => {
     const theme = useTheme();
     const {currentTheme, color} = theme;
+    const {addAlert} = useAlertPopupContext();
     const [loaded, setLoaded] = useState(false);
     const [currentColors, setCurrentColors] = useState({});
     const [currentNightColors, setCurrentNightColors] = useState({});
     const [currentUseCases, setCurrentUseCases] = useState({});
     const [currentNightModeUseCases, setCurrentNightModeUseCases] = useState({});
+    const [error, setError] = useState(null);
 
     const loadTheme = useCallback(async (name) => {
+        setError(null);
         let theme;
         if (getLocallyStoredThemes().includes(name)) {
             const found = window.localStorage.getItem(`locally-stored-theme-${name}`);
@@ -28,6 +35,7 @@ export const ThemeStorageContextProvider = ({children}) => {
             const response = await fetchTheme(name);
             if (response.error) {
                 console.error(response.error);
+                setError(response.error);
                 return;
             }
             theme = response.data;
@@ -39,13 +47,16 @@ export const ThemeStorageContextProvider = ({children}) => {
         setLoaded(true);
     }, []);
 
-    const saveUploadedThemeLocally = (name, themeJson) => {
+    const saveUploadedThemeLocally = (name, themeJson, originalName) => {
         const locallyStoredThemes = getLocallyStoredThemes();
         window.localStorage.setItem(`locally-stored-theme-${name}`, JSON.stringify(themeJson));
         if (!locallyStoredThemes.includes(name)) {
             locallyStoredThemes.push(name);
         }
         window.localStorage.setItem(`locally-stored-themes`, JSON.stringify(locallyStoredThemes));
+        if (name !== originalName) {
+            deleteThemeLocally(originalName);
+        }
     }
 
     const deleteThemeLocally = (name) => {
@@ -62,10 +73,20 @@ export const ThemeStorageContextProvider = ({children}) => {
         const response = await fetchTheme(themeToClone);
         if (response.error) {
             console.error(response.error);
-            return; // TODO alert context
+            addAlert({
+                timeout: 15000,
+                color: "error",
+                content: <>
+                    <Fa icon={faExclamationTriangle}/>
+                    {" "}
+                    <Trans i18nKey={"html.label.themeEditor.failedToClone"} values={{error: error?.message}}/>
+                </>
+            });
+            return false;
         }
         const theme = response.data;
         saveUploadedThemeLocally(nameAs, theme);
+        return true;
     }
 
     const reloadTheme = () => {
@@ -84,7 +105,7 @@ export const ThemeStorageContextProvider = ({children}) => {
             : currentUseCases?.themeColorOptions) || [];
         const colorExistsAsOption = themeOptions.includes(color);
         return {
-            loaded,
+            loaded, error,
             name: currentTheme,
             color: colorExistsAsOption ? color : undefined,
             currentColors,
@@ -95,7 +116,7 @@ export const ThemeStorageContextProvider = ({children}) => {
             usedUseCases: theme.nightModeEnabled ? currentUseCases : {...currentUseCases, ...currentNightModeUseCases},
             cloneThemeLocally, saveUploadedThemeLocally, deleteThemeLocally, reloadTheme
         }
-    }, [name, color, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases, loaded, theme.nightModeEnabled]);
+    }, [name, color, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases, loaded, error, theme.nightModeEnabled]);
     return (<ThemeStorageContext.Provider value={sharedState}>
             {children}
         </ThemeStorageContext.Provider>

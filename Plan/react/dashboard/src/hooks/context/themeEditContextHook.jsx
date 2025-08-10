@@ -1,10 +1,13 @@
-import {createContext, useContext, useMemo, useState} from "react";
+import React, {createContext, useContext, useMemo, useState} from "react";
 import {getLocallyStoredThemes, useThemeStorage} from "./themeContextHook.jsx";
 import {cssVariableToName, nameToCssVariable} from "../../util/colors.js";
 import {flattenObject, recursiveFindAndReplaceValue} from "../../util/mutator.js";
-import {useTranslation} from "react-i18next";
+import {Trans, useTranslation} from "react-i18next";
 import {saveTheme} from "../../service/metadataService.js";
 import {useAuth} from "../authenticationHook.jsx";
+import {useAlertPopupContext} from "./alertPopupContext.jsx";
+import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
+import {faCheck, faExclamationTriangle} from "@fortawesome/free-solid-svg-icons";
 
 const ThemeEditContext = createContext({});
 
@@ -13,6 +16,7 @@ export const ThemeEditContextProvider = ({children}) => {
     const {authRequired, hasPermission} = useAuth();
     const [edits, setEdits] = useState([]);
     const [redos, setRedos] = useState([]);
+    const {addAlert} = useAlertPopupContext();
     const {
         loaded,
         name: originalName,
@@ -273,17 +277,35 @@ export const ThemeEditContextProvider = ({children}) => {
             }
 
             const themeToSave = {
+                name: name,
                 colors: editedColors,
                 nightColors: editedNightColors,
                 useCases: editedUseCases,
                 nightModeUseCases: editedNightModeUseCases
             };
 
-            saveUploadedThemeLocally(name, themeToSave);
+            saveUploadedThemeLocally(name, themeToSave, originalName);
             // Save remotely
             if (authRequired && hasPermission('manage.themes')) {
-                await saveTheme(name, themeToSave);
-                deleteThemeLocally(name);
+                const {data, error} = await saveTheme(name, themeToSave, originalName);
+                if (!error) {
+                    deleteThemeLocally(name);
+                    addAlert({
+                        timeout: 5000,
+                        color: "success",
+                        content: <><Fa icon={faCheck}/>{" "}{t('html.label.managePage.alert.saveSuccess')}</>
+                    });
+                } else {
+                    addAlert({
+                        timeout: 15000,
+                        color: "warning",
+                        content: <>
+                            <Fa icon={faExclamationTriangle}/>
+                            {" "}
+                            <Trans i18nKey={"html.label.managePage.alert.saveFail"} values={{error: error?.message}}/>
+                        </>
+                    });
+                }
             }
             setEdits([]);
             setRedos([]);
@@ -293,6 +315,7 @@ export const ThemeEditContextProvider = ({children}) => {
         return {
             loaded,
             name,
+            originalName,
             setName: onNameChange,
             currentColors: editedColors,
             currentNightColors: editedNightColors,

@@ -13,6 +13,7 @@ import {useThemeStorage} from "../../hooks/context/themeContextHook.jsx";
 import {useNavigate} from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import LoadIn from "../../components/animation/LoadIn.jsx";
+import ErrorView from "../ErrorView.jsx";
 
 const AddThemeView = () => {
     const {t} = useTranslation();
@@ -23,14 +24,18 @@ const AddThemeView = () => {
     const [name, setName] = useState('');
     const [basedOnTheme, setBasedOnTheme] = useState('default');
 
+    if (metadata.metadataError) {
+        return <ErrorView error={metadata.metadataError}/>
+    }
     if (!metadata.loaded) {
         return <ChartLoader/>
     }
 
     const createTheme = async () => {
-        await themeStorage.cloneThemeLocally(basedOnTheme, name);
-        metadata.refreshThemeList();
-        navigate("/theme-editor/" + name);
+        if (await themeStorage.cloneThemeLocally(basedOnTheme, name)) {
+            metadata.refreshThemeList();
+            navigate("/theme-editor/" + name);
+        }
     }
 
     const onUploadFinished = (event) => {
@@ -73,7 +78,7 @@ const AddThemeView = () => {
                         <Col xs={12}>
                             <TextInput icon={faFileSignature}
                                        isInvalid={isNameInvalid}
-                                       invalidFeedback={metadata.getAvailableThemes()?.includes(name) ? t('html.label.themeEditor.existingName') : t('html.label.themeEditor.invalidName')}
+                                       invalidFeedback={t('html.label.themeEditor.invalidName')}
                                        placeholder={t('html.label.themeEditor.themeName')}
                                        value={name}
                                        setValue={newValue => setName(newValue.toLowerCase().replace(/[^a-z0-9-]/g, "-"))}

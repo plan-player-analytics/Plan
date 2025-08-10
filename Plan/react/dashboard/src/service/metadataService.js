@@ -53,9 +53,9 @@ export const fetchTheme = async name => {
     return doGetRequest(url);
 }
 
-export const saveTheme = async (name, theme) => {
+export const saveTheme = async (name, theme, originalName) => {
     if (staticSite) return;
-    let url = `/v1/saveTheme?theme=${name}`;
+    let url = `/v1/saveTheme?theme=${name}&originalName=${originalName}`;
     return doSomePostRequest(url, [standard200option], JSON.stringify(theme));
 }
 

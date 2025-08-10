@@ -35,7 +35,6 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.ErrorPageLang;
-import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
@@ -75,7 +74,6 @@ public class ResponseFactory {
     private final PageFactory pageFactory;
     private final Locale locale;
     private final DBSystem dbSystem;
-    private final Theme theme;
     private final Lazy<Addresses> addresses;
     private final Lazy<BundleAddressCorrection> bundleAddressCorrection;
     private final Formatter<Long> httpLastModifiedFormatter;
@@ -88,7 +86,6 @@ public class ResponseFactory {
             Locale locale,
             DBSystem dbSystem,
             Formatters formatters,
-            Theme theme,
             Lazy<Addresses> addresses,
             Lazy<BundleAddressCorrection> bundleAddressCorrection
     ) {
@@ -97,7 +94,6 @@ public class ResponseFactory {
         this.pageFactory = pageFactory;
         this.locale = locale;
         this.dbSystem = dbSystem;
-        this.theme = theme;
         this.addresses = addresses;
 
         httpLastModifiedFormatter = formatters.httpLastModifiedLong();

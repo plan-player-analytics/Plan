@@ -24,10 +24,19 @@ import java.util.Objects;
  */
 public class ThemeDto {
 
+    private String name;
     private Map<String, String> colors;
     private Map<String, String> nightColors;
     private Map<String, Object> useCases;
     private Map<String, Object> nightModeUseCases;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public Map<String, String> getColors() {
         return colors;

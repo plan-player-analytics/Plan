@@ -130,7 +130,7 @@ public enum WebPermission implements Supplier<String>, Lang {
 
     MANAGE_GROUPS("Allows modifying group permissions & Access to /manage/groups page"),
     MANAGE_USERS("Allows modifying what users belong to what group"),
-    MANAGE_THEMES("Allows editing and saving themes via theme-editor");
+    MANAGE_THEMES("Allows saving or deleting themes via theme-editor for everyone");
 
     private final String description;
     private final boolean deprecated;

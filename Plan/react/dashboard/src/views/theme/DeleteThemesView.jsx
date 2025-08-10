@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useMetadata} from "../../hooks/metadataHook.jsx";
-import {faExclamationTriangle, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {faExclamationTriangle, faInfoCircle, faTrash} from "@fortawesome/free-solid-svg-icons";
 import CardHeader from "../../components/cards/CardHeader.jsx";
 import {Card, Col, Row} from "react-bootstrap";
 import ThemeOption from "../../components/theme/ThemeOption.jsx";
@@ -55,6 +55,8 @@ const DeleteThemesView = () => {
                     <Row className={'mb-4'}>
                         <Col xs={12}>
                             <h5 className="mb-3">{t('html.label.themeEditor.themeToDelete')}</h5>
+                            {!onlyLocal && <small><FontAwesomeIcon
+                                icon={faInfoCircle}/> {t('html.label.themeEditor.canNotDeleteBuiltIn')}</small>}
                             <Row>
                                 {metadata.getAvailableThemes().map(themeName => <ThemeOption
                                     key={themeName}
@@ -70,7 +72,7 @@ const DeleteThemesView = () => {
                     </Row>
                     <Row>
                         <Col xs={12} className="mb-1">
-                            <p className={"mb-1"}>{t('html.label.themeEditor.downloadThemeBeforeDeleting')}</p>
+                            <p className={"mb-1"}>{t('html.label.themeEditor.downloadThemeBeforeDeleting', {theme: themeToDelete})}</p>
                             <ThemeContextProvider themeOverride={themeToDelete} key={themeToDelete}>
                                 <ThemeStorageContextProvider>
                                     <ThemeEditContextProvider>
