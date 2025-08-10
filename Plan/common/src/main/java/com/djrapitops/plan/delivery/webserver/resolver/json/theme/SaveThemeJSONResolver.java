@@ -108,6 +108,16 @@ public class SaveThemeJSONResolver implements Resolver {
         return Optional.of(getResponse(theme.get().toLowerCase(), request));
     }
 
+    private static boolean isInvalid(ThemeDto result) {
+        return result == null
+                || result.getName() == null || result.getName().isEmpty()
+                || !themeFilePattern.matcher(result.getName()).matches()
+                || result.getColors() == null || result.getColors().isEmpty()
+                || result.getNightColors() == null || result.getNightColors().isEmpty()
+                || result.getUseCases() == null || result.getUseCases().isEmpty()
+                || result.getNightModeUseCases() == null || result.getNightModeUseCases().isEmpty();
+    }
+
     private Response getResponse(@Untrusted String themeName, Request request) {
         if (!themeFilePattern.matcher(themeName).matches()) {
             throw new BadRequestException("'theme' parameter was invalid");
@@ -119,14 +129,11 @@ public class SaveThemeJSONResolver implements Resolver {
         @Untrusted byte[] requestBody = request.getRequestBody();
         try {
             @Untrusted ThemeDto result = gson.fromJson(new String(requestBody, StandardCharsets.UTF_8), ThemeDto.class);
-            if (result == null
-                    || result.getName() == null || result.getName().isEmpty()
-                    || !themeFilePattern.matcher(result.getName()).matches()
-                    || result.getColors() == null || result.getColors().isEmpty()
-                    || result.getNightColors() == null || result.getNightColors().isEmpty()
-                    || result.getUseCases() == null || result.getUseCases().isEmpty()
-                    || result.getNightModeUseCases() == null || result.getNightModeUseCases().isEmpty()) {
+            if (isInvalid(result)) {
                 throw new BadRequestException("Body needs to be a valid theme file");
+            }
+            if (!result.getName().equals(themeName)) {
+                throw new BadRequestException("name in the body must match 'theme' parameter");
             }
 
             List<String> issues = new ArrayList<>();

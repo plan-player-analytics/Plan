@@ -45,6 +45,7 @@ const DeleteThemesView = () => {
         }
         setConfirm(false);
         metadata.refreshThemeList();
+        setThemeToDelete('default');
     }
 
     return (
