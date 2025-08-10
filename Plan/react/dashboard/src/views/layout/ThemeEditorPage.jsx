@@ -7,20 +7,23 @@ import {ThemeStyleCss} from "../../components/theme/ThemeStyleCss";
 import {ThemeEditContextProvider} from "../../hooks/context/themeEditContextHook.jsx";
 import {SwitchTransition} from "react-transition-group";
 import {Outlet, useParams} from "react-router-dom";
-import {ThemeContextProvider} from "../../hooks/themeHook.jsx";
+import {ThemeContextProvider, useTheme} from "../../hooks/themeHook.jsx";
 import {ThemeStorageContextProvider, useThemeStorage} from "../../hooks/context/themeContextHook.jsx";
 import {ChartLoader} from "../../components/navigation/Loader.jsx";
 import {useMetadata} from "../../hooks/metadataHook.jsx";
-import {faPlus, faSwatchbook, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {faInfoCircle, faPlus, faSwatchbook, faTrash} from "@fortawesome/free-solid-svg-icons";
 import ErrorView from "../ErrorView.jsx";
 import AlertPopupArea from "../../components/alert/AlertPopupArea.jsx";
 import ErrorPage from "./ErrorPage.jsx";
+import {Alert} from "react-bootstrap";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 const ThemeEditorPage = () => {
     const {t} = useTranslation();
     const metadata = useMetadata();
     const title = t("html.label.themeEditor.title");
     const {identifier} = useParams();
+    const {nightModeEnabled} = useTheme();
 
     if (metadata.metadataError) {
         return <ErrorPage error={metadata.metadataError}/>
@@ -39,6 +42,9 @@ const ThemeEditorPage = () => {
                 <Header page={title} hideUpdater/>
                 <div id="content" style={{display: 'flex'}}>
                     <main className="container-fluid mt-4">
+                        {nightModeEnabled && <Alert variant={"warning"}>
+                            <FontAwesomeIcon icon={faInfoCircle}/> {t('html.label.themeEditor.lightModeInfo')}
+                        </Alert>}
                         <ThemeContextProvider themeOverride={identifier} key={identifier}>
                             <ThemeStorageContextProvider>
                                 <WaitUntilThemeLoads/>

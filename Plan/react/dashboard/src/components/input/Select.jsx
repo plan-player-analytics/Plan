@@ -9,7 +9,7 @@ const Select = ({options, selectedIndex, setSelectedIndex, className}) => {
     }
 
     return (
-        <select className={`form-control form-select ${className}`}
+        <select className={`form-control form-select ${className || ''}`}
                 onChange={handleChange}>
             {options.map((option, i) => {
                 return (

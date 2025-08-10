@@ -46,7 +46,6 @@ const ThemeOption = ({theme, nightMode, selected, setSelected}) => {
 
     const onClickEdit = () => {
         themeHook.toggleColorChooser();
-        if (themeHook.nightModeEnabled) themeHook.toggleNightMode();
         navigate(`/theme-editor/${theme}`);
     }
 

@@ -5,7 +5,7 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faTimes} from "@fortawesome/free-solid-svg-icons";
 import {useMinHeightContext} from "../../hooks/context/minHeightContextHook";
 
-const formatLabel = (key) => {
+export const formatLabel = (key) => {
     return key
         .replace(/([A-Z])/g, ' $1')
         .replace(/^./, str => str.toUpperCase())

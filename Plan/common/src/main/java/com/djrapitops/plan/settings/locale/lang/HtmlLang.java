@@ -481,6 +481,7 @@ public enum HtmlLang implements Lang {
     THEME_EDITOR_DELETE_LOCAL("html.label.themeEditor.deleteLocalTheme", "Delete theme (Only the locally stored one)"),
     THEME_EDITOR_NO_PERMISSION_TO_DELETE("html.label.themeEditor.noPermissionToDelete", "You don't have access rights for deleting non-local themes. You may need to delete them from the plugin folder."),
     THEME_EDITOR_FAILED_CLONE("html.label.themeEditor.failedToClone", "Failed to clone the original theme {{error}}"),
+    THEME_EDITOR_LIGHT_MODE_INFO("html.label.themeEditor.lightModeInfo", "Theme editor uses light-mode to see fully saturated colors."),
 
     THEME_EDITOR_CHANGE_RENAME_COLOR("html.label.themeEditor.changes.renameColor", "Renamed {{previous}} to {{name}}, set color to {{color}}"),
     THEME_EDITOR_CHANGE_SET_COLOR("html.label.themeEditor.changes.setColor", "Set {{name}} color to {{color}}"),

@@ -77,9 +77,7 @@ const PermissionDropdown = ({permission, checked, indeterminate, togglePermissio
     } else {
         return (
             <li style={root ? {marginLeft: "1.4rem"} : {marginLeft: "3rem"}}>
-                <input className={"form-check-input"} type={"checkbox"} value={checked}
-                       checked={checked}
-                       onChange={() => togglePermission(permission)}
+                <Checkbox checked={checked} onChange={() => togglePermission(permission)}
                 /> {permission} {permission && translated !== translationKey &&
                 <OpaqueText inline>&middot; {translated}</OpaqueText>}
             </li>
@@ -148,8 +146,8 @@ const SaveButton = () => {
 
     return (
         <ActionButton className={"float-end"} style={{margin: "-0.5rem"}}
-                disabled={!dirty}
-                onClick={requestSave}>
+                      disabled={!dirty}
+                      onClick={requestSave}>
             <Fa icon={faFloppyDisk}/> {t('html.label.managePage.changes.save')}
         </ActionButton>
     )
@@ -182,42 +180,42 @@ const DeleteGroupButton = ({groupName, groups, reloadGroupNames}) => {
                     </p>
 
                     <DangerButton className={"mt-2"}
-                            onClick={() => {
-                                deleteGroup(groupName, groupOptions[moveToGroup]).then(({error}) => {
-                                    if (error) {
-                                        addAlert({
-                                            timeout: 15000,
-                                            color: "danger",
-                                            content: <>
-                                                <Fa icon={faExclamationTriangle}/>
-                                                {" "}
-                                                <Trans i18nKey={"html.label.managePage.alert.groupDeleteFail"}
-                                                       values={{error: error?.message}}/>
-                                            </>
-                                        });
-                                    } else {
-                                        reloadGroupNames();
-                                        setClicked(false);
-                                        addAlert({
-                                            timeout: 7500,
-                                            color: "success",
-                                            content: <>
-                                                <Fa icon={faCheck}/>
-                                                {" "}
-                                                <Trans i18nKey={"html.label.managePage.alert.groupDeleteSuccess"}
-                                                       values={{groupName}}/>
-                                            </>
-                                        });
-                                    }
-                                })
-                            }}>
+                                  onClick={() => {
+                                      deleteGroup(groupName, groupOptions[moveToGroup]).then(({error}) => {
+                                          if (error) {
+                                              addAlert({
+                                                  timeout: 15000,
+                                                  color: "danger",
+                                                  content: <>
+                                                      <Fa icon={faExclamationTriangle}/>
+                                                      {" "}
+                                                      <Trans i18nKey={"html.label.managePage.alert.groupDeleteFail"}
+                                                             values={{error: error?.message}}/>
+                                                  </>
+                                              });
+                                          } else {
+                                              reloadGroupNames();
+                                              setClicked(false);
+                                              addAlert({
+                                                  timeout: 7500,
+                                                  color: "success",
+                                                  content: <>
+                                                      <Fa icon={faCheck}/>
+                                                      {" "}
+                                                      <Trans i18nKey={"html.label.managePage.alert.groupDeleteSuccess"}
+                                                             values={{groupName}}/>
+                                                  </>
+                                              });
+                                          }
+                                      })
+                                  }}>
                         <Fa icon={faTrash}/> <Trans i18nKey="html.label.managePage.deleteGroup.confirm"
                                                     values={{groupName}}/>
                     </DangerButton>
                     <OutlineButton className={"mt-2"} style={{marginLeft: "0.5rem"}}
-                            onClick={() => {
-                                setClicked(false)
-                            }}>
+                                   onClick={() => {
+                                       setClicked(false)
+                                   }}>
                         <Fa icon={faRotateLeft}/> {t("command.confirmation.deny")}
                     </OutlineButton>
                 </Card.Body>
@@ -227,9 +225,9 @@ const DeleteGroupButton = ({groupName, groups, reloadGroupNames}) => {
 
     return (
         <OutlineButton className={"float-end"}
-                onClick={() => {
-                    setClicked(true)
-                }}>
+                       onClick={() => {
+                           setClicked(true)
+                       }}>
             <Fa icon={faTrash}/> <Trans i18nKey={"html.label.managePage.deleteGroup.header"} values={{groupName}}/>
         </OutlineButton>
     )

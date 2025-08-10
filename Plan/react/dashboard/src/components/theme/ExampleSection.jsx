@@ -19,6 +19,7 @@ import FormsUseCase from "./usecase/FormsUseCase.jsx";
 import {addToObject} from "../../util/mutator.js";
 import {graphUseCases} from "./usecase/GraphUseCases.jsx";
 import {TableUseCase} from "./usecase/TableUseCases.jsx";
+import {formatLabel} from "./UseCase.jsx";
 
 const findExample = (path, examples) => {
     if (!path || !path.length) return undefined;
@@ -55,11 +56,13 @@ const ExampleSection = ({displayedItem, className}) => {
     addToObject(examples, graphUseCases);
     const example = findExample(displayedItem, examples);
 
+    const displayText = displayedItem ? displayedItem.split('.').map(formatLabel).join(' › ') : "";
+
     return (
         <div className={"example-section " + className}
              style={{position: 'sticky', top: '0'}}>
             <CollapseWithButton disabled={!example} open title={<h5
-                className={"col-text"}>{t('html.label.themeEditor.example')}{example ? <>{' '}&middot; {displayedItem}</> : ''}</h5>}>
+                className={"col-text"}>{t('html.label.themeEditor.example')}{example ? <>{' '}&middot; {displayText}</> : ''}</h5>}>
                 {example && <div className={"example"}>
                     {example}
                 </div>}

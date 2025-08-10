@@ -189,7 +189,7 @@ const RegisterPage = () => {
                 <Logo/>
                 <RegisterCard>
                     <div className="text-center">
-                        <h1 className="h4 text-gray-900 mb-4">{t('html.register.createNewUser')}</h1>
+                        <h1 className="h4 col-text mb-4">{t('html.register.createNewUser')}</h1>
                     </div>
                     {failMessage && <Alert className='alert-danger'>{failMessage}</Alert>}
                     <RegisterForm register={register}/>

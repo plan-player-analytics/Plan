@@ -54,7 +54,7 @@ const ThemeEditorView = () => {
     const isNameInvalid = newValue => {
         return !newValue.length
             || newValue.length > 100
-            || metadata.getAvailableThemes()?.includes(newValue)
+            || metadata.getAvailableThemes()?.filter(n => originalName !== n)?.includes(newValue)
             || name === 'new' || name === 'delete'
     }
     const invalidName = isNameInvalid(name);

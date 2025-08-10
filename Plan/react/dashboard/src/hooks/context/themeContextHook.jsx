@@ -12,6 +12,9 @@ export const getLocallyStoredThemes = () => {
     return JSON.parse(window.localStorage.getItem('locally-stored-themes') || '[]');
 }
 
+// Reduce refetching theme inside the theme editor to avoid rate-limit issues.
+const themeCache = {};
+
 export const ThemeStorageContextProvider = ({children}) => {
     const theme = useTheme();
     const {currentTheme, color} = theme;
@@ -32,13 +35,18 @@ export const ThemeStorageContextProvider = ({children}) => {
         }
 
         if (!theme) {
-            const response = await fetchTheme(name);
-            if (response.error) {
-                console.error(response.error);
-                setError(response.error);
-                return;
+            if (themeCache[name]) {
+                theme = themeCache[name];
+            } else {
+                const response = await fetchTheme(name);
+                if (response.error) {
+                    console.error(response.error);
+                    setError(response.error);
+                    return;
+                }
+                theme = response.data;
+                themeCache[name] = theme;
             }
-            theme = response.data;
         }
         setCurrentColors(theme.colors);
         setCurrentNightColors(theme.nightColors);
@@ -70,26 +78,37 @@ export const ThemeStorageContextProvider = ({children}) => {
     }
 
     const cloneThemeLocally = async (themeToClone, nameAs) => {
-        const response = await fetchTheme(themeToClone);
-        if (response.error) {
-            console.error(response.error);
-            addAlert({
-                timeout: 15000,
-                color: "error",
-                content: <>
-                    <Fa icon={faExclamationTriangle}/>
-                    {" "}
-                    <Trans i18nKey={"html.label.themeEditor.failedToClone"} values={{error: error?.message}}/>
-                </>
-            });
-            return false;
+        let theme;
+        if (getLocallyStoredThemes().includes(name)) {
+            const found = window.localStorage.getItem(`locally-stored-theme-${name}`);
+            if (found) theme = JSON.parse(found); // TODO catch json parse error
         }
-        const theme = response.data;
+        if (themeCache[name]) {
+            theme = themeCache[name];
+        } else {
+            const response = await fetchTheme(themeToClone);
+            if (response.error) {
+                console.error(response.error);
+                addAlert({
+                    timeout: 15000,
+                    color: "error",
+                    content: <>
+                        <Fa icon={faExclamationTriangle}/>
+                        {" "}
+                        <Trans i18nKey={"html.label.themeEditor.failedToClone"} values={{error: error?.message}}/>
+                    </>
+                });
+                return false;
+            }
+            theme = response.data;
+            themeCache[name] = theme;
+        }
         saveUploadedThemeLocally(nameAs, theme);
         return true;
     }
 
     const reloadTheme = () => {
+        delete themeCache[name];
         loadTheme(currentTheme);
     }
 

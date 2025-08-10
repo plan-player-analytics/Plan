@@ -5,7 +5,7 @@ import {Col, Row} from "react-bootstrap";
 const SliceHeader = ({i, open, onClick, slice, alignment}) => {
     return (
         <li id={"slice_h_" + i} aria-controls={"slice_t_" + i}
-            className={"clickable btn nav-item mb-1 " + (open ? "bg-plan" : "bg-grey-outline")}
+            className={"clickable btn nav-item mb-1 " + (open ? "btn-action" : "btn-outline-secondary")}
             data-bs-target={"#slice_t_" + i} data-bs-toggle="collapse"
             onClick={onClick}
             style={{textAlign: alignment}}

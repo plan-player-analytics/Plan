@@ -13,7 +13,6 @@ const AddThemeButton = () => {
 
     const onClick = () => {
         theme.toggleColorChooser();
-        if (theme.nightModeEnabled) theme.toggleNightMode();
         navigate("/theme-editor/new");
     }
 

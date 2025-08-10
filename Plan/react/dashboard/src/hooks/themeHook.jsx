@@ -9,7 +9,7 @@ const getStoredTheme = (defaultTheme) => {
 
 const setStoredTheme = themeColor => {
     if (themeColor) {
-        window.localStorage.setItem('themeName', themeColor);
+        window.localStorage.setItem('theme.name', themeColor);
     }
 }
 
@@ -20,7 +20,7 @@ const getStoredColor = () => {
 
 const setStoredColor = themeColor => {
     if (themeColor) {
-        window.localStorage.setItem('themeColor', themeColor);
+        window.localStorage.setItem('theme.color', themeColor);
     }
 }
 
@@ -30,7 +30,7 @@ const getStoredNightMode = () => {
 }
 
 const setStoredNightMode = value => {
-    window.localStorage.setItem('nightMode', '' + value);
+    window.localStorage.setItem('theme.nightMode', '' + value);
 }
 
 const removeOldVariables = () => {
@@ -56,7 +56,7 @@ export const ThemeContextProvider = ({children, themeOverride}) => {
         const invalidTheme = !metadata.getAvailableThemes().includes(theme);
         setSelectedTheme(invalidTheme ? 'default' : theme);
         setSelectedColor(getStoredColor());
-    }, [metadata, setSelectedTheme, setSelectedColor]);
+    }, [metadata.loaded, metadata, setSelectedTheme, setSelectedColor]);
 
     const sharedState = useMemo(() => {
         return {

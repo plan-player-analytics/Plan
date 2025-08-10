@@ -1080,7 +1080,7 @@ thead[class^='bg'], thead[class*=' bg'] {
     --bs-btn-color: var(--color-text);
 }
 
-.card-body, .card-header, h1, h2, h3, h4, h5, h6, p {
+.card-body, .card-header, h1, h2, h3, h4, h5, h6, p, .form-text, .bg-grey-outline {
     color: var(--color-text);
 }
 

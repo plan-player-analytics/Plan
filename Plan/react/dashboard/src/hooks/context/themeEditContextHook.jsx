@@ -248,7 +248,7 @@ export const ThemeEditContextProvider = ({children}) => {
         const issues = [];
 
         const allColorsExist = () => {
-            const referenceColors = Object.keys(editedUseCases.referenceColors)
+            const referenceColors = Object.keys(editedUseCases?.referenceColors || {})
             const colorMissing = name => {
                 const exists = editedColors[name] || editedNightColors[name] || referenceColors.includes(name);
                 if (!exists) console.warn(name, "doesn't exist on color maps")
