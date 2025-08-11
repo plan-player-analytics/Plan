@@ -12,6 +12,7 @@ import {formatDecimals} from "../../util/formatters.js";
 import {ExtensionValueTableCell} from "../extensions/ExtensionCard.jsx";
 import {ChartLoader} from "../navigation/Loader.jsx";
 import DataTablesTable from "./DataTablesTable.jsx";
+import {localeService, reverseRegionLookupMap} from "../../service/localeService.js";
 
 const getActivityGroup = value => {
     const VERY_ACTIVE = 3.75;
@@ -78,8 +79,11 @@ const PlayerTable = ({data, orderBy}) => {
                 data: {_: descriptor.name + "Value", display: descriptor.name}
             }
         }));
+        const regions = new Intl.DisplayNames([localeService.getIntlFriendlyLocale()], {type: 'region'});
 
         const rows = data.players.map(player => {
+            const code = reverseRegionLookupMap[player.country];
+            const location = code ? regions.of(code) : player.country.replace('Local Machine', t('html.value.localMachine'));
             const row = {
                 name: player.playerName,
                 uuid: player.playerUUID,
@@ -94,7 +98,7 @@ const PlayerTable = ({data, orderBy}) => {
                 registeredFormatted: <FormattedDate date={player.registered} react/>,
                 lastSeen: player.lastSeen,
                 lastSeenFormatted: <FormattedDate date={player.lastSeen} react/>,
-                country: player.country,
+                country: location,
                 pingAverage: player.pingAverage,
                 pingAverageFormatted: formatDecimals(player.pingAverage, decimalFormat) + "ms",
                 pingMax: player.pingMax,

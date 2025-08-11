@@ -19,7 +19,7 @@ const QueryPath = ({newQuery}) => {
         }
 
         if (kind.startsWith("pluginGroups-")) {
-            return "Group: " + kind.substring(13);
+            return t('html.query.filter.pluginGroup.name') + kind.substring(13);
         }
         switch (kind) {
             case "allPlayers":

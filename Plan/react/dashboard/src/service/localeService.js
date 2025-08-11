@@ -121,3 +121,17 @@ export const localeService = {
         return localeService.clientLocale === 'CN' ? 'zh-cn' : localeService.clientLocale.toLocaleLowerCase().replace('_', '-')
     }
 }
+
+const generateGeolocationMap = () => {
+    const regions = new Intl.DisplayNames(['en'], {type: 'region'});
+    const map = {}
+    for (let i = 0; i < 26; i++) {
+        for (let j = 0; j < 26; j++) {
+            let code = String.fromCharCode(97 + i) + String.fromCharCode(97 + j)
+            const result = regions.of(`${code}`);
+            map[result] = code;
+        }
+    }
+    return map;
+}
+export const reverseRegionLookupMap = generateGeolocationMap();

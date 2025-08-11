@@ -120,7 +120,7 @@ public class MetadataJSONResolver implements NoAuthResolver {
     private List<String> getAvailableThemes() throws IOException {
         try (Stream<java.nio.file.Path> found = Files.list(files.getThemeDirectory())) {
             List<String> foundThemes = found
-                    .filter(file -> file.endsWith(".json"))
+                    .filter(file -> file.toFile().getAbsolutePath().endsWith(".json"))
                     .map(file -> file.getFileName().toString())
                     .map(fileName -> StringUtils.split(fileName, '.')[0])
                     .collect(Collectors.toList());

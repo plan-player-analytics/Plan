@@ -4,13 +4,14 @@ import {fetchJoinAddressByDay} from "../../../../service/serverService";
 import {ErrorViewCard} from "../../../../views/ErrorView";
 import {ChartLoader} from "../../../navigation/Loader";
 import {Card} from "react-bootstrap";
-import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
+import {FontAwesomeIcon, FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faChartColumn} from "@fortawesome/free-solid-svg-icons";
 import JoinAddressGraph from "../../../graphs/JoinAddressGraph";
 import Toggle from "../../../input/Toggle";
 import {useJoinAddressListContext} from "../../../../hooks/context/joinAddressListContextHook.jsx";
 import {useNavigation} from "../../../../hooks/navigationHook.jsx";
 import {staticSite} from "../../../../service/backendConfiguration.js";
+import {faHandPointDown} from "@fortawesome/free-regular-svg-icons";
 
 const JoinAddressGraphCard = ({identifier}) => {
     const {t} = useTranslation();
@@ -89,7 +90,8 @@ const JoinAddressGraphCard = ({identifier}) => {
                 <JoinAddressGraph id={'join-address-graph'} data={data?.join_addresses_by_date} colors={data?.colors}
                                   stack={stack}/>}
             {!data && noSelectedAddresses &&
-                <div className="chart-area" style={{height: "450px"}}><p>Select some addresses</p></div>}
+                <div className="chart-area" style={{height: "450px"}}><p>{t('html.label.selectSomeAddresses')}
+                    <FontAwesomeIcon icon={faHandPointDown}/></p></div>}
             {!data && !noSelectedAddresses && <ChartLoader/>}
         </Card>
     )

@@ -42,7 +42,7 @@ public class LocaleModifications {
         apply(HtmlLang.QUERY_TIME_FROM, locale, new ReplaceString("</label>", ""));
         apply(HtmlLang.QUERY_TIME_FROM, locale, new ReplaceString(">", ""));
         apply(HtmlLang.QUERY_ACTIVITY_ON, locale, new ReplaceString("<span id=\"activity-date\"></span>", "{{activityDate}}"));
-        apply(HtmlLang.TEXT_CONTRIBUTORS_THANKS, locale, "<span col=\"col-theme\">", "<1>");
+        apply(HtmlLang.TEXT_CONTRIBUTORS_THANKS, locale, "<span class=\"col-plan\">", "<1>");
         apply(HtmlLang.TEXT_CONTRIBUTORS_THANKS, locale, "</span>", "</1>");
         apply(HtmlLang.QUERY_SERVERS_MANY, locale, " {number} ", "{{number}}");
         apply(HtmlLang.HELP_ACTIVITY_INDEX_WEEK, locale, " {}", " {{number}}");

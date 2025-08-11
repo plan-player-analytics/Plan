@@ -7,10 +7,14 @@ import {faGlobe, faWifi} from "@fortawesome/free-solid-svg-icons";
 import Scrollable from "../../Scrollable";
 import {faClock} from "@fortawesome/free-regular-svg-icons";
 import FormattedDate from "../../text/FormattedDate.jsx";
+import {localeService, reverseRegionLookupMap} from "../../../service/localeService.js";
 
 const ConnectionsCard = ({connections}) => {
     const {t} = useTranslation();
     const {nightModeEnabled} = useTheme();
+
+    const regions = new Intl.DisplayNames([localeService.getIntlFriendlyLocale()], {type: 'region'});
+
     return (
         <Card>
             <Card.Header>
@@ -27,10 +31,15 @@ const ConnectionsCard = ({connections}) => {
                     </tr>
                     </thead>
                     {Boolean(connections?.length) && <tbody>
-                    {connections.map(connection => (<tr key={JSON.stringify(connection)}>
-                        <td>{connection.geolocation.replace('Local Machine', t('html.value.localMachine'))}</td>
-                        <td><FormattedDate date={connection.date}/></td>
-                    </tr>))}
+                    {connections.map(connection => {
+                        const code = reverseRegionLookupMap[connection.geolocation];
+                        const location = code ? regions.of(code) : connection.geolocation.replace('Local Machine', t('html.value.localMachine'));
+
+                        return (<tr key={JSON.stringify(connection)}>
+                            <td>{location}</td>
+                            <td><FormattedDate date={connection.date}/></td>
+                        </tr>)
+                    })}
                     </tbody>}
                     {!connections?.length && <tbody>
                     <tr>

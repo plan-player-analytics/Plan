@@ -3,14 +3,19 @@ import {useTranslation} from "react-i18next";
 import {useTheme} from "../../hooks/themeHook";
 import Highcharts from "highcharts";
 import Accessibility from "highcharts/modules/accessibility";
+import {localeService, reverseRegionLookupMap} from "../../service/localeService.js";
 
 const GeolocationBarGraph = ({series}) => {
     const {t} = useTranslation();
     const {nightModeEnabled, graphTheming} = useTheme();
 
     useEffect(() => {
+        const regions = new Intl.DisplayNames([localeService.getIntlFriendlyLocale()], {type: 'region'});
         const bars = series.map(bar => bar.value);
-        const categories = series.map(bar => bar.label);
+        const categories = series.map(bar => {
+            const code = reverseRegionLookupMap[bar.label];
+            return code ? regions.of(code) : bar.label.replace('Local Machine', t('html.value.localMachine'));
+        });
         const geolocationBarSeries = {
             color: "var(--color-graphs-world-map-bars)",
             name: t('html.label.players'),
@@ -42,7 +47,7 @@ const GeolocationBarGraph = ({series}) => {
             },
             series: [geolocationBarSeries]
         })
-    }, [series, graphTheming, nightModeEnabled, t]);
+    }, [series, graphTheming, nightModeEnabled, t, localeService.clientLocale]);
 
     return (<div id="countryBarChart"/>);
 };
