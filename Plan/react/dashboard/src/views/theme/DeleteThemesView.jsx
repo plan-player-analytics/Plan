@@ -50,7 +50,7 @@ const DeleteThemesView = () => {
 
     return (
         <LoadIn>
-            <Card className="shadow mb-4 delete-theme">
+            {hasPermission('access.theme.editor') && <Card className="shadow mb-4 delete-theme" id="delete-theme">
                 <CardHeader icon={faTrash} color="primary" label={t('html.label.themeEditor.deleteThemes')}/>
                 <Card.Body>
                     <Row className={'mb-4'}>
@@ -106,7 +106,7 @@ const DeleteThemesView = () => {
                         </Col>
                     </Row>}
                 </Card.Body>
-            </Card>
+            </Card>}
         </LoadIn>
     )
 };

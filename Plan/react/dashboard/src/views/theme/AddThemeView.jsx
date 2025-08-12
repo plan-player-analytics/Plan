@@ -14,8 +14,10 @@ import {useNavigate} from "react-router-dom";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import LoadIn from "../../components/animation/LoadIn.jsx";
 import ErrorView from "../ErrorView.jsx";
+import {useAuth} from "../../hooks/authenticationHook.jsx";
 
 const AddThemeView = () => {
+    const {hasPermission} = useAuth();
     const {t} = useTranslation();
     const navigate = useNavigate()
     const theme = useTheme();
@@ -58,7 +60,7 @@ const AddThemeView = () => {
     const nameIsInvalid = isNameInvalid(name);
     return (
         <LoadIn>
-            <Card className="shadow mb-4 add-theme">
+            {hasPermission('access.theme.editor') && <Card className="shadow mb-4 add-theme" id={"add-theme"}>
                 <CardHeader icon={faPlusCircle} color="primary" label={t('html.label.themeEditor.addTheme')}/>
                 <Card.Body>
                     <Row className={'mb-4'}>
@@ -97,7 +99,7 @@ const AddThemeView = () => {
                         </Col>
                     </Row>
                 </Card.Body>
-            </Card>
+            </Card>}
         </LoadIn>
     )
 };

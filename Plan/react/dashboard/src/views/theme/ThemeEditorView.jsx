@@ -19,8 +19,10 @@ import {useMetadata} from "../../hooks/metadataHook.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import LoadIn from "../../components/animation/LoadIn.jsx";
 import DownloadButton from "../../components/theme/DownloadButton.jsx";
+import {useAuth} from "../../hooks/authenticationHook.jsx";
 
 const ThemeEditorView = () => {
+    const {hasPermission} = useAuth();
     const {t} = useTranslation();
     const metadata = useMetadata();
     const {
@@ -61,7 +63,7 @@ const ThemeEditorView = () => {
 
     return (
         <LoadIn>
-            <MinHeightProvider>
+            {hasPermission('access.theme.editor') && <MinHeightProvider>
                 <Card className="shadow mb-4 theme-editor" id={"theme-editor"}>
                     <EditorMenuToast/>
                     <CardHeader icon={faSwatchbook} color="primary" label={title}>
@@ -147,7 +149,7 @@ const ThemeEditorView = () => {
                     <ExampleSection displayedItem={hoveredItem}
                                     className={nightHover ? ' night-mode-colors' : ''}/>
                 </Card>
-            </MinHeightProvider>
+            </MinHeightProvider>}
         </LoadIn>
     )
 };

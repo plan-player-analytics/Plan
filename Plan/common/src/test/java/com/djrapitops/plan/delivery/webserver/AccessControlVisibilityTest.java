@@ -202,8 +202,8 @@ class AccessControlVisibilityTest {
                 Arguments.arguments(WebPermission.ACCESS_PLAYERS, "players-table", "players"),
                 Arguments.arguments(WebPermission.ACCESS_ERRORS, "content", "errors"),
                 Arguments.arguments(WebPermission.ACCESS_THEME_EDITOR, "theme-editor", "theme-editor/default"),
-                Arguments.arguments(WebPermission.ACCESS_THEME_EDITOR, "theme-editor", "theme-editor/new"),
-                Arguments.arguments(WebPermission.ACCESS_THEME_EDITOR, "theme-editor", "theme-editor/delete")
+                Arguments.arguments(WebPermission.ACCESS_THEME_EDITOR, "add-theme", "theme-editor/new"),
+                Arguments.arguments(WebPermission.ACCESS_THEME_EDITOR, "delete-theme", "theme-editor/delete")
 //                Arguments.arguments(WebPermission.ACCESS_DOCS, "swagger-ui", "docs")
         );
     }

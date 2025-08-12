@@ -17,6 +17,7 @@ import AlertPopupArea from "../../components/alert/AlertPopupArea.jsx";
 import ErrorPage from "./ErrorPage.jsx";
 import {Alert} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {useAuth} from "../../hooks/authenticationHook.jsx";
 
 const ThemeEditorPage = () => {
     const {t} = useTranslation();
@@ -24,7 +25,9 @@ const ThemeEditorPage = () => {
     const title = t("html.label.themeEditor.title");
     const {identifier} = useParams();
     const {nightModeEnabled} = useTheme();
+    const {authRequired, loggedIn} = useAuth();
 
+    if (authRequired && !loggedIn) return <MainPageRedirect/>;
     if (metadata.metadataError) {
         return <ErrorPage error={metadata.metadataError}/>
     }

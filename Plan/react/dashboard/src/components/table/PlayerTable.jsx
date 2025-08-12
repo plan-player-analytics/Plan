@@ -83,7 +83,7 @@ const PlayerTable = ({data, orderBy}) => {
 
         const rows = data.players.map(player => {
             const code = reverseRegionLookupMap[player.country];
-            const location = code ? regions.of(code) : player.country.replace('Local Machine', t('html.value.localMachine'));
+            const location = code ? regions.of(code) : player.country?.replace('Local Machine', t('html.value.localMachine'));
             const row = {
                 name: player.playerName,
                 uuid: player.playerUUID,
