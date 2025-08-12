@@ -20,6 +20,7 @@ const ServerAsNumbersCard = ({data}) => {
 
     const isGameServer = data.player_kills !== undefined;
     const showPeaks = isGameServer || networkMetadata.usingRedisBungee || networkMetadata.servers.filter(server => server.proxy).length === 1;
+
     return (
         <Card id={isGameServer ? "server-as-numbers" : "network-as-numbers"}>
             <Card.Header>
@@ -56,9 +57,9 @@ const ServerAsNumbersCard = ({data}) => {
                 <Datapoint name={t('html.label.averagePlaytime') + ' ' + t('html.label.perPlayer')}
                            color={'playtime'} icon={faClock}
                            value={<FormattedTime timeMs={data.player_playtime}/>}/>
-                <Datapoint name={t('html.label.averageSessionLength')}
+                {data.session_length_avg && <Datapoint name={t('html.label.averageSessionLength')}
                            color={'sessions'} icon={faClock}
-                           value={<FormattedTime timeMs={data.session_length_avg}/>}/>
+                                                       value={<FormattedTime timeMs={data.session_length_avg}/>}/>}
                 <Datapoint name={t('html.label.sessions')}
                            color={'sessions'} icon={faCalendarCheck}
                            value={data.sessions} bold/>
