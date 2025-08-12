@@ -18,9 +18,6 @@ package com.djrapitops.plan.delivery.rendering.json.graphs.stack;
 
 import com.djrapitops.plan.delivery.domain.DateMap;
 import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
-import com.djrapitops.plan.delivery.formatting.Formatter;
-import com.djrapitops.plan.delivery.formatting.Formatters;
-import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 
@@ -36,19 +33,13 @@ import java.util.Map;
 @Singleton
 public class StackGraphFactory {
 
-    private final Locale locale;
     private final Theme theme;
-    private final Formatter<Long> dayFormatter;
 
     @Inject
     public StackGraphFactory(
-            Locale locale,
-            Formatters formatters,
             Theme theme
     ) {
-        this.locale = locale;
         this.theme = theme;
-        this.dayFormatter = formatters.dayLong();
     }
 
     public StackGraph activityStackGraph(DateMap<Map<String, Integer>> activityData) {

@@ -41,7 +41,6 @@ import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.settings.locale.lang.HtmlLang;
-import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
@@ -74,7 +73,6 @@ public class JSONFactory {
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final ServerUptimeCalculator serverUptimeCalculator;
-    private final Theme theme;
     private final Graphs graphs;
     private final Formatters formatters;
 
@@ -85,7 +83,6 @@ public class JSONFactory {
             DBSystem dbSystem,
             ServerInfo serverInfo,
             ServerUptimeCalculator serverUptimeCalculator,
-            Theme theme,
             Graphs graphs,
             Formatters formatters
     ) {
@@ -94,7 +91,6 @@ public class JSONFactory {
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.serverUptimeCalculator = serverUptimeCalculator;
-        this.theme = theme;
         this.graphs = graphs;
         this.formatters = formatters;
     }
@@ -307,7 +303,7 @@ public class JSONFactory {
                     Map<String, Object> server = new HashMap<>();
                     server.put("name", entry.getValue().getIdentifiableName());
                     server.put("serverUUID", entry.getValue().getUuid().toString());
-                    server.put("playersOnlineColor", theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE));
+                    server.put("playersOnlineColor", ThemeVal.GRAPH_PLAYERS_ONLINE.getDefaultValue());
 
                     Optional<DateObj<Integer>> recentPeak = db.query(TPSQueries.fetchPeakPlayerCount(serverUUID, now - TimeUnit.DAYS.toMillis(2L)));
                     Optional<DateObj<Integer>> allTimePeak = db.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID));

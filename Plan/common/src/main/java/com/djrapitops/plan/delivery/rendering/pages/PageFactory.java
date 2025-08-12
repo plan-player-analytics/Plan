@@ -90,13 +90,12 @@ public class PageFactory {
 
     public Page errorPage(String title, String error) throws IOException {
         return new ErrorMessagePage(
-                getResourceAsString(ERROR_HTML_FILE), title, error,
-                versionChecker.get(), theme.get());
+                getResourceAsString(ERROR_HTML_FILE), title, error, versionChecker.get());
     }
 
     public Page errorPage(Icon icon, String title, String error) throws IOException {
         return new ErrorMessagePage(
-                getResourceAsString(ERROR_HTML_FILE), icon, title, error, theme.get(), versionChecker.get());
+                getResourceAsString(ERROR_HTML_FILE), icon, title, error, versionChecker.get());
     }
 
     public String getResourceAsString(String name) throws IOException {

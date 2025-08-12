@@ -156,9 +156,9 @@ public class PlayerJSONCreator {
                 .put("avg_ping_series", pingGraph.getAvgGraph().getPointArrays())
                 .put("max_ping_series", pingGraph.getMaxGraph().getPointArrays())
                 .put("colors", Maps.builder(String.class, String.class)
-                        .put("min", theme.getValue(ThemeVal.GRAPH_MIN_PING))
-                        .put("avg", theme.getValue(ThemeVal.GRAPH_AVG_PING))
-                        .put("max", theme.getValue(ThemeVal.GRAPH_MAX_PING))
+                        .put("min", ThemeVal.GRAPH_MIN_PING.getDefaultValue())
+                        .put("avg", ThemeVal.GRAPH_AVG_PING.getDefaultValue())
+                        .put("max", ThemeVal.GRAPH_MAX_PING.getDefaultValue())
                         .build())
                 .build();
     }
