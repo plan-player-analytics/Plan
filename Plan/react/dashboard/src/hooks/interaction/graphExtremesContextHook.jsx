@@ -18,14 +18,13 @@ export const GraphExtremesContextProvider = ({children}) => {
         }, 500);
     }, [setMin, setMax]);
 
-    const extremes = useMemo(() => {
+    const sharedState = useMemo(() => {
         if (min !== undefined && max !== undefined) {
-            return {min, max}
+            return {extremes: {min, max}, onSetExtremes}
         }
-        return undefined;
+        return {onSetExtremes};
     }, [min, max]);
 
-    const sharedState = {extremes, onSetExtremes};
     return (<GraphExtremesContext.Provider value={sharedState}>
             {children}
         </GraphExtremesContext.Provider>

@@ -1,10 +1,10 @@
 import React from "react";
-import {getContrastColor} from '../../util/colors';
 import {Col} from 'react-bootstrap';
 import {HoverTrigger, useHoverContext} from "../../hooks/interaction/hoverHook.jsx";
 import {useColorEditContext} from "../../hooks/context/colorEditContextHook.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPencil, faTrash} from "@fortawesome/free-solid-svg-icons";
+import {getContrastColor} from "../../util/Color.js";
 
 const Contents = ({name, color}) => {
     const cssColor = color.startsWith('var(') ? color : `var(--color-${name})`;
@@ -13,7 +13,7 @@ const Contents = ({name, color}) => {
     if (name.includes('percent') && name.includes('white')) {
         contrastColor = 'var(--color-night-black)'
     }
-    const {hovered} = useHoverContext();
+    const hovered = useHoverContext();
     const {editColor, deleting, deleteColor} = useColorEditContext();
 
     return (

@@ -1,9 +1,8 @@
-import React, {forwardRef, useEffect, useRef, useState} from 'react';
+import React, {forwardRef, useEffect, useRef} from 'react';
 import {Col, InputGroup, Row} from "react-bootstrap";
 import {useColorEditContext} from "../../hooks/context/colorEditContextHook.jsx";
 import {useTranslation} from "react-i18next";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {getContrastColor} from "../../util/colors.js";
 import {faCheck, faExclamationTriangle, faPalette, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
 import ActionButton from "../input/ActionButton.jsx";
 import DangerButton from "../input/button/DangerButton.jsx";
@@ -11,11 +10,10 @@ import SecondaryActionButton from "../input/button/SecondaryActionButton.jsx";
 import Chrome from "@uiw/react-color-chrome";
 import {GithubPlacement} from '@uiw/react-color-github';
 import Wheel from "@uiw/react-color-wheel";
-import {getColorArrayConverter, getColorConverter} from "../../util/Color.js";
+import {getColorArrayConverter, getColorConverter, getContrastColor} from "../../util/Color.js";
 
 
 const ColorInput = forwardRef(({color, contrastColor, invalid, onChange}, ref) => {
-    const [focused, setFocused] = useState(true);
     const onChangeText = event => {
         onChange(event.target.value);
     }
@@ -43,8 +41,6 @@ const ColorInput = forwardRef(({color, contrastColor, invalid, onChange}, ref) =
                    value={color}
                    aria-invalid={invalid}
                    onChange={onChangeText}
-                   onFocus={() => setFocused(true)}
-                   onBlur={() => setFocused(false)}
             />
             <Row className={"color-selector p-0"}
                  style={{

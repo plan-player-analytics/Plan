@@ -11,8 +11,7 @@ import {
     rgbStringToArray,
     rgbToHexString,
     rgbToHsl,
-    rgbToString,
-    withReducedSaturationRgba
+    rgbToString
 } from "./colors.js";
 
 export const getColorConverter = color => {
@@ -47,6 +46,21 @@ export const getColorArrayConverter = (color, type) => {
     }
 }
 
+export const withReducedSaturationRgba = (rgba, reduceSaturationPercentage) => {
+    const saturationReduction = reduceSaturationPercentage || 0.70;
+
+    const [h, s, l] = getColorArrayConverter(rgba, 'rgba').toHslArray();
+    if (isNaN(h)) console.log(rgba, [h, s, l]);
+
+    return 'hsl(' + h * 360 + ',' + s * 100 * saturationReduction + '%,' + l * 95 + '%)';
+}
+export const getContrastColor = (color) => {
+    const converter = getColorConverter(color);
+    if (!converter) return undefined;
+    const luminance = converter.toLuminance();
+    return luminance < 0.5 ? '#ffffff' : '#000000';
+};
+
 export class Color {
     toHex() {
         return rgbToHexString(this.toRgbArray())
@@ -57,6 +71,7 @@ export class Color {
     }
 
     toRgbArray() {
+        return this.toRgbaArray().slice(0, 3);
     }
 
     toRgbaString() {

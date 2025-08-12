@@ -249,22 +249,17 @@ const DiscardButton = () => {
 
 const AddGroupBody = ({groups, reloadGroupNames}) => {
     const {t} = useTranslation();
-    const [invalid, setInvalid] = useState(false);
     const [value, setValue] = useState(undefined);
     const {addAlert} = useAlertPopupContext();
 
-    const onChange = (event) => {
-        const newValue = event.target.value;
-        setValue(newValue.toLowerCase().replace(" ", "_"));
-        setInvalid(newValue.length > 100);
-    }
-
+    const isInvalid = newValue => newValue.length > 100 || groups.find(group => group.name === newValue);
+    const invalid = isInvalid(value);
     return (
         <Card>
             <CardHeader icon={faPlus} label={t('html.label.managePage.addGroup.header')}/>
             <Card.Body>
                 <TextInput icon={faUserGroup}
-                           isInvalid={newValue => newValue.length > 100}
+                           isInvalid={isInvalid}
                            invalidFeedback={t('html.label.managePage.addGroup.invalidName')}
                            placeholder={t('html.label.managePage.addGroup.name')}
                            value={value}

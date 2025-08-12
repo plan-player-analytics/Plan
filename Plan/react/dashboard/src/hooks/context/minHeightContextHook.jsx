@@ -1,4 +1,4 @@
-import React, {createContext, useCallback, useContext, useState} from "react";
+import React, {createContext, useCallback, useContext, useMemo, useState} from "react";
 
 const MinHeightContext = createContext();
 
@@ -26,11 +26,10 @@ export const MinHeightProvider = ({children}) => {
         setMinHeightRules(rules => {
             const existingRule = rules[selector];
             const existingHeight = existingRule?.minHeight;
-            const existingNightMode = existingRule?.nightMode;
 
             // Change the height if:
             // - It's taller than existing one
-            // - or if the height of the currently registered one changed (check if nightMode is same)
+            // - or if the height of the currently registered one changed
             const shouldUpdate = !existingHeight || minHeight > existingHeight;
 
             if (!shouldUpdate) return rules;
@@ -38,8 +37,11 @@ export const MinHeightProvider = ({children}) => {
         });
     }, []);
 
+    const value = useMemo(() => {
+        return {minHeightRules, registerMinHeight, unregisterMinHeight}
+    }, [minHeightRules]);
     return (
-        <MinHeightContext.Provider value={{minHeightRules, registerMinHeight, unregisterMinHeight}}>
+        <MinHeightContext.Provider value={value}>
             <style>
                 {Object.entries(minHeightRules)
                     .map(([selector, opt]) => `.${selector}{min-height:${opt.minHeight}px;}`)

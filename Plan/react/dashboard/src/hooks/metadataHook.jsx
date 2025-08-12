@@ -3,7 +3,8 @@ import {fetchNetworkMetadata, fetchPlanMetadata} from "../service/metadataServic
 
 import terminal from '../Terminal-icon.png'
 import {useAuth} from "./authenticationHook";
-import {getLocallyStoredThemes} from "./context/themeContextHook.jsx";
+
+import {getLocallyStoredThemes} from "./themeHook.jsx";
 
 const MetadataContext = createContext({});
 

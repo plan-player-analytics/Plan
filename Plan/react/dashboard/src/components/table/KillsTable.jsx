@@ -108,7 +108,7 @@ export const SimpleKillsTable = ({kills}) => {
         <Scrollable>
             <table className={"table mb-0"}>
                 <tbody>
-                {kills.length ? kills.map((kill, i) => <KillRow key={i} kill={kill}/>) :
+                {kills.length ? kills.map(kill => <KillRow key={JSON.stringify(kill)} kill={kill}/>) :
                     <tr>
                         <td>{t('html.generic.none')}</td>
                         <td>-</td>

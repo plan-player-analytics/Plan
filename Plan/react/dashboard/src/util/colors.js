@@ -1,5 +1,3 @@
-import {getColorArrayConverter, getColorConverter} from "./Color.js";
-
 export const nameToCssVariable = name => {
     return `var(--color-${name})`;
 }
@@ -209,15 +207,6 @@ export const withReducedSaturation = (hex, reduceSaturationPercentage) => {
     return 'hsl(' + h * 360 + ',' + s * 100 * saturationReduction + '%,' + l * 95 + '%)';
 }
 
-export const withReducedSaturationRgba = (rgba, reduceSaturationPercentage) => {
-    const saturationReduction = reduceSaturationPercentage ? reduceSaturationPercentage : 0.70;
-
-    const [h, s, l] = getColorArrayConverter(rgba, 'rgba').toHslArray();
-    if (isNaN(h)) console.log(rgba, [h, s, l]);
-
-    return 'hsl(' + h * 360 + ',' + s * 100 * saturationReduction + '%,' + l * 95 + '%)';
-}
-
 export const rgbToString = ([r, g, b]) => {
     return `rgb(${r}, ${g}, ${b})`;
 }
@@ -288,9 +277,3 @@ export const calculateCssColors = (cssSelector) => {
     return colors;
 }
 
-export const getContrastColor = (color) => {
-    const converter = getColorConverter(color);
-    if (!converter) return undefined;
-    const luminance = converter.toLuminance();
-    return luminance < 0.5 ? '#ffffff' : '#000000';
-};

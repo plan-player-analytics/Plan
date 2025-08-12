@@ -1,6 +1,6 @@
 import {addToObject, flattenObject} from '../../util/mutator';
-import {getContrastColor, nameToCssVariable} from '../../util/colors';
-import {getColorConverter} from "../../util/Color.js";
+import {nameToCssVariable} from '../../util/colors';
+import {getColorConverter, getContrastColor} from "../../util/Color.js";
 import {useThemeEditContext} from "../../hooks/context/themeEditContextHook.jsx";
 import {useThemeStorage} from "../../hooks/context/themeContextHook.jsx";
 

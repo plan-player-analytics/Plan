@@ -1,4 +1,4 @@
-import {createContext, useContext, useState} from "react";
+import {createContext, useContext, useMemo, useState} from "react";
 import {hsvToHex, randomHSVColor} from "../../util/colors.js";
 
 const ColorEditContext = createContext({});
@@ -51,7 +51,8 @@ export const ColorEditContextProvider = ({colors, saveFunction, deleteFunction, 
 
     const alreadyExists = previous !== name && !!colors[name];
 
-    return (<ColorEditContext.Provider value={{
+    const sharedState = useMemo(() => {
+        return {
             alreadyExists,
             name,
             color,
@@ -65,7 +66,9 @@ export const ColorEditContextProvider = ({colors, saveFunction, deleteFunction, 
             discardEdit,
             editNewColor,
             deleteColor
-        }}>
+        }
+    }, [alreadyExists, name, color, deleting, open]);
+    return (<ColorEditContext.Provider value={sharedState}>
             {children}
         </ColorEditContext.Provider>
     )

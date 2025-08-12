@@ -1,6 +1,6 @@
 import React, {useEffect, useRef} from 'react';
-import {ThemeContextProvider, useTheme} from "../../hooks/themeHook.jsx";
-import {getLocallyStoredThemes, ThemeStorageContextProvider} from "../../hooks/context/themeContextHook.jsx";
+import {getLocallyStoredThemes, ThemeContextProvider, useTheme} from "../../hooks/themeHook.jsx";
+import {ThemeStorageContextProvider} from "../../hooks/context/themeContextHook.jsx";
 import {ThemeStyleCss} from "./ThemeStyleCss.jsx";
 import {Card, Col} from "react-bootstrap";
 import logo from "../../Flaticon_circle.png";

@@ -1,5 +1,5 @@
 import React, {createContext, useContext, useMemo, useState} from "react";
-import {getLocallyStoredThemes, useThemeStorage} from "./themeContextHook.jsx";
+import {useThemeStorage} from "./themeContextHook.jsx";
 import {cssVariableToName, nameToCssVariable} from "../../util/colors.js";
 import {flattenObject, recursiveFindAndReplaceValue} from "../../util/mutator.js";
 import {Trans, useTranslation} from "react-i18next";
@@ -8,6 +8,7 @@ import {useAuth} from "../authenticationHook.jsx";
 import {useAlertPopupContext} from "./alertPopupContext.jsx";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCheck, faExclamationTriangle} from "@fortawesome/free-solid-svg-icons";
+import {getLocallyStoredThemes} from "../themeHook.jsx";
 
 const ThemeEditContext = createContext({});
 
@@ -287,7 +288,7 @@ export const ThemeEditContextProvider = ({children}) => {
             saveUploadedThemeLocally(name, themeToSave, originalName);
             // Save remotely
             if (authRequired && hasPermission('manage.themes')) {
-                const {data, error} = await saveTheme(name, themeToSave, originalName);
+                const {error} = await saveTheme(name, themeToSave, originalName);
                 if (!error) {
                     deleteThemeLocally(name);
                     addAlert({

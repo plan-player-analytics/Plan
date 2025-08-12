@@ -51,7 +51,7 @@ const ServerPie = ({colors, series}) => {
             },
             tooltip: {
                 formatter: function () {
-                    return '<b>' + this.point.name + ':</b> ' + formatTimeAmount(this.y) + ' (' + this.percentage.toFixed(2) + '%)';
+                    return '<b>' + this.point.name + ':</b> ' + formatTimeAmount(timePreferences, this.y) + ' (' + this.percentage.toFixed(2) + '%)';
                 }
             },
             series: [pieSeries]

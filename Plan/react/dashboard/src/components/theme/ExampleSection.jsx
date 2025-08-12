@@ -22,7 +22,7 @@ import {TableUseCase} from "./usecase/TableUseCases.jsx";
 import {formatLabel} from "./UseCase.jsx";
 
 const findExample = (path, examples) => {
-    if (!path || !path.length) return undefined;
+    if (!path?.length) return undefined;
     const found = examples[path];
     if (found) return found;
     return findExample(path.split('.').slice(0, -1).join('.'), examples);

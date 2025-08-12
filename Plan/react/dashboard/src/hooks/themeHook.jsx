@@ -123,3 +123,6 @@ export const useTheme = () => {
         graphTheming: chartTheming
     };
 }
+export const getLocallyStoredThemes = () => {
+    return JSON.parse(window.localStorage.getItem('locally-stored-themes') || '[]');
+}

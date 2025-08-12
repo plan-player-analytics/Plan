@@ -13,9 +13,9 @@ export const HoverTrigger = ({children}) => {
         setHovered(false);
     }
 
-    return (<HoverContext.Provider value={{hovered}}>
+    return (<HoverContext.Provider value={hovered}>
             <div onFocus={onHoverEnter} onBlur={onHoverLeave} onMouseEnter={onHoverEnter}
-                 onMouseLeave={onHoverLeave}>
+                 onMouseLeave={onHoverLeave} tabIndex={-1}>
                 {children}
             </div>
         </HoverContext.Provider>

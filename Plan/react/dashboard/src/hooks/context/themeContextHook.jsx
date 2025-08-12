@@ -1,5 +1,5 @@
 import React, {createContext, useCallback, useContext, useEffect, useMemo, useState} from "react";
-import {useTheme} from "../themeHook.jsx";
+import {getLocallyStoredThemes, useTheme} from "../themeHook.jsx";
 import {fetchTheme} from "../../service/metadataService.js";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons";
@@ -7,10 +7,6 @@ import {useAlertPopupContext} from "./alertPopupContext.jsx";
 import {Trans} from "react-i18next";
 
 const ThemeStorageContext = createContext({});
-
-export const getLocallyStoredThemes = () => {
-    return JSON.parse(window.localStorage.getItem('locally-stored-themes') || '[]');
-}
 
 // Reduce refetching theme inside the theme editor to avoid rate-limit issues.
 const themeCache = {};
@@ -77,7 +73,7 @@ export const ThemeStorageContextProvider = ({children}) => {
         window.localStorage.setItem(`locally-stored-themes`, JSON.stringify(locallyStoredThemes));
     }
 
-    const cloneThemeLocally = async (themeToClone, nameAs) => {
+    const cloneThemeLocally = async (themeToClone, name) => {
         let theme;
         if (getLocallyStoredThemes().includes(name)) {
             const found = window.localStorage.getItem(`locally-stored-theme-${name}`);
@@ -103,12 +99,12 @@ export const ThemeStorageContextProvider = ({children}) => {
             theme = response.data;
             themeCache[name] = theme;
         }
-        saveUploadedThemeLocally(nameAs, theme);
+        saveUploadedThemeLocally(name, theme);
         return true;
     }
 
     const reloadTheme = () => {
-        delete themeCache[name];
+        delete themeCache[currentTheme];
         loadTheme(currentTheme);
     }
 

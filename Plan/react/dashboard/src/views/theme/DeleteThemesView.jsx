@@ -5,13 +5,9 @@ import CardHeader from "../../components/cards/CardHeader.jsx";
 import {Card, Col, Row} from "react-bootstrap";
 import ThemeOption from "../../components/theme/ThemeOption.jsx";
 import {ChartLoader} from "../../components/navigation/Loader.jsx";
-import {ThemeContextProvider, useTheme} from "../../hooks/themeHook.jsx";
+import {getLocallyStoredThemes, ThemeContextProvider, useTheme} from "../../hooks/themeHook.jsx";
 import {useTranslation} from "react-i18next";
-import {
-    getLocallyStoredThemes,
-    ThemeStorageContextProvider,
-    useThemeStorage
-} from "../../hooks/context/themeContextHook.jsx";
+import {ThemeStorageContextProvider, useThemeStorage} from "../../hooks/context/themeContextHook.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import LoadIn from "../../components/animation/LoadIn.jsx";
 import Checkbox from "../../components/input/Checkbox.jsx";
