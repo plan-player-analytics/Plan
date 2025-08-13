@@ -252,7 +252,7 @@ const AddGroupBody = ({groups, reloadGroupNames}) => {
     const [value, setValue] = useState(undefined);
     const {addAlert} = useAlertPopupContext();
 
-    const isInvalid = newValue => newValue.length > 100 || groups.find(group => group.name === newValue);
+    const isInvalid = newValue => newValue && (newValue.length > 100 || groups.find(group => group.name === newValue));
     const invalid = isInvalid(value);
     return (
         <Card>

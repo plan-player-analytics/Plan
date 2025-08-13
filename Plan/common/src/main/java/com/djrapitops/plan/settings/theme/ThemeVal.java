@@ -21,7 +21,7 @@ package com.djrapitops.plan.settings.theme;
  *
  * @author AuroraLS3
  */
-@Deprecated
+@Deprecated(since = "2025-08-13, removal of theme.yml")
 public enum ThemeVal {
 
     THEME_DEFAULT("DefaultColor", "plan"),

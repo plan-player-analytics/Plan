@@ -50,7 +50,7 @@ public class ThemeConfig extends Config {
         }
     }
 
-    private static ConfigNode getDefaults(PlanFiles files, PlanConfig config, PluginLogger logger) {
+    public static ConfigNode getDefaults(PlanFiles files, PlanConfig config, PluginLogger logger) {
         String fileName = config.get(DisplaySettings.THEME);
         String fileLocation = getFileLocation(fileName);
 
@@ -89,7 +89,7 @@ public class ThemeConfig extends Config {
         }
     }
 
-    private static File getConfigFile(PlanFiles files) {
+    public static File getConfigFile(PlanFiles files) {
         return files.getFileFromPluginFolder("theme.yml");
     }
 }

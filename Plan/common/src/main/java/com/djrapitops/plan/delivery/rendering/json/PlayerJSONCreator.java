@@ -133,7 +133,7 @@ public class PlayerJSONCreator {
         if (hasPermission.test(WebPermission.PAGE_PLAYER_SERVERS)) {
             List<Map<String, Object>> serverAccordion = new ServerAccordion(player, serverNames, graphs, GenericLang.UNKNOWN.getKey()).asMaps();
             Map<ServerUUID, WorldTimes> worldTimesPerServer = PerServerMutator.forContainer(player).worldTimesPerServer();
-            String[] pieColors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
+            String[] pieColors = theme.getWorldPieColors();
 
             data.put("ping_graph", createPingGraphJson(player));
             data.put("servers", serverAccordion);

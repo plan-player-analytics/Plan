@@ -17,14 +17,19 @@
 package com.djrapitops.plan.settings.theme;
 
 import com.djrapitops.plan.SubSystem;
+import com.djrapitops.plan.settings.config.ConfigNode;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import net.playeranalytics.plugin.server.PluginLogger;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Arrays;
+import java.util.Objects;
 
 /**
  * Enum that contains available themes.
@@ -47,16 +52,42 @@ public class Theme implements SubSystem {
         this.logger = logger;
     }
 
-    public String[] getPieColors(ThemeVal variable) {
-        return Arrays.stream(StringUtils.split(variable.getDefaultValue()/*TODO handle new config path*/, ','))
+    public String[] getWorldPieColors() {
+        return Arrays.stream(StringUtils.split(config.get(DisplaySettings.WORLD_PIE), ','))
                 .map(color -> StringUtils.remove(StringUtils.trim(color), '"'))
                 .toArray(String[]::new);
     }
 
     @Override
     public void enable() {
-        // TODO write migration logic for moving specific colors to config
         ThemeConfig themeConfig = new ThemeConfig(files, config, logger);
+        if (themeConfig.fileExists()) {
+            if (themeConfig.contains("GraphColors.WorldPie")) {
+                logger.info("Copied theme.yml 'GraphColors.WorldPie' to config.yml '" + DisplaySettings.WORLD_PIE.getPath() + "'");
+                config.set(DisplaySettings.WORLD_PIE, themeConfig.getString("GraphColors.WorldPie"));
+            }
+
+            if (containsNonDefaultValues(themeConfig)) {
+                logger.warn("'theme.yml' file has been deprecated in favor of theme-editor on the website. Please delete it manually after noting necessary details (modifications from default were detected.)");
+            } else {
+                try {
+                    logger.info("Deleting deprecated 'theme.yml' file automatically since it contains only default values.");
+                    Files.deleteIfExists(ThemeConfig.getConfigFile(files).toPath());
+                } catch (IOException e) {
+                    logger.warn("'theme.yml' failed to be deleted automatically (" + e.getMessage() + "). Please delete it manually.");
+                }
+            }
+        }
+    }
+
+    private boolean containsNonDefaultValues(ThemeConfig themeConfig) {
+        ConfigNode defaults = ThemeConfig.getDefaults(files, config, logger);
+        for (ThemeVal value : ThemeVal.values()) {
+            if (!Objects.equals(defaults.getString(value.getThemePath()), themeConfig.getString(value.getThemePath()))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override

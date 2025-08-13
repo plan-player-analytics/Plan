@@ -210,10 +210,7 @@ const router = createBrowserRouter(
             </Route>}
             {!staticSite && <Route path="/errors" element={<Lazy><ErrorsPage/></Lazy>}/>}
             {!staticSite && <Route path="/docs" element={<Lazy><SwaggerView/></Lazy>}/>}
-            <Route path="/theme-editor" element={
-                <Lazy>
-                    <ThemeEditorPage/>
-                </Lazy>
+            <Route path="/theme-editor" element={<Lazy><ThemeEditorPage/></Lazy>
             }>
                 <Route path="" element={<NewRedirect/>}/>
                 <Route path=":identifier" element={<Lazy><ThemeEditorView/></Lazy>}/>
