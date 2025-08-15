@@ -75,7 +75,7 @@ subprojects {
         jetbrainsAnnotationsVersion = "26.0.2"
         jettyVersion = "11.0.24"
         mysqlVersion = "9.2.0"
-        mariadbVersion = "3.5.4"
+        mariadbVersion = "3.5.5"
         sqliteVersion = "3.42.0.1"
         adventureVersion = "4.23.0"
         hikariVersion = "6.3.0"
