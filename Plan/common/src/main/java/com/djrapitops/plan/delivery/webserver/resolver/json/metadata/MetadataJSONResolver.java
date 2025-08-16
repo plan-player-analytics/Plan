@@ -21,7 +21,6 @@ import com.djrapitops.plan.delivery.web.AssetVersions;
 import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
-import com.djrapitops.plan.delivery.webserver.ResponseFactory;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
@@ -36,6 +35,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import net.playeranalytics.plugin.server.PluginLogger;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
@@ -43,9 +43,7 @@ import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.IOException;
 import java.nio.file.Files;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import java.util.*;
 import java.util.stream.Stream;
 
 @Singleton
@@ -58,7 +56,7 @@ public class MetadataJSONResolver implements NoAuthResolver {
     private final Theme theme;
     private final ServerInfo serverInfo;
     private final AssetVersions assetVersions;
-    private final ResponseFactory responseFactory;
+    private final PluginLogger logger;
 
     @Inject
     public MetadataJSONResolver(
@@ -68,7 +66,7 @@ public class MetadataJSONResolver implements NoAuthResolver {
             Theme theme,
             ServerInfo serverInfo,
             AssetVersions assetVersions,
-            ResponseFactory responseFactory
+            PluginLogger logger
     ) {
         this.mainCommand = mainCommand;
         this.files = files;
@@ -76,7 +74,7 @@ public class MetadataJSONResolver implements NoAuthResolver {
         this.theme = theme;
         this.serverInfo = serverInfo;
         this.assetVersions = assetVersions;
-        this.responseFactory = responseFactory;
+        this.logger = logger;
     }
 
     @GET
@@ -90,48 +88,46 @@ public class MetadataJSONResolver implements NoAuthResolver {
     }
 
     private Response getResponse() {
-        try {
-            return Response.builder()
-                    .setJSONContent(Maps.builder(String.class, Object.class)
-                            .put("timestamp", System.currentTimeMillis())
-                            .put("timeZoneId", config.getTimeZone().getID())
-                            .put("timeZoneOffsetHours", config.getTimeZoneOffsetHours())
-                            .put("timeZoneOffsetMinutes", config.getTimeZoneOffsetHours() * 60)
-                            .put("contributors", Contributors.getContributors())
-                            .put("defaultTheme", config.get(DisplaySettings.THEME))
-                            .put("availableThemes", getAvailableThemes())
-                            .put("gmPieColors", theme.getWorldPieColors())
-                            .put("playerHeadImageUrl", config.get(DisplaySettings.PLAYER_HEAD_IMG_URL))
-                            .put("isProxy", serverInfo.getServer().isProxy())
-                            .put("serverName", serverInfo.getServer().getIdentifiableName())
-                            .put("serverUUID", serverInfo.getServer().getUuid().toString())
-                            .put("networkName", serverInfo.getServer().isProxy() ? config.get(ProxySettings.NETWORK_NAME) : null)
-                            .put("mainCommand", mainCommand)
-                            .put("refreshBarrierMs", config.get(WebserverSettings.REDUCED_REFRESH_BARRIER))
-                            .put("registrationDisabled", config.isTrue(WebserverSettings.DISABLED_REGISTRATION))
-                            .build())
-                    .build();
-        } catch (IOException e) {
-            return responseFactory.internalErrorResponse(e, "failed to read theme files from theme directory");
-        }
+        return Response.builder()
+                .setJSONContent(Maps.builder(String.class, Object.class)
+                        .put("timestamp", System.currentTimeMillis())
+                        .put("timeZoneId", config.getTimeZone().getID())
+                        .put("timeZoneOffsetHours", config.getTimeZoneOffsetHours())
+                        .put("timeZoneOffsetMinutes", config.getTimeZoneOffsetHours() * 60)
+                        .put("contributors", Contributors.getContributors())
+                        .put("defaultTheme", config.get(DisplaySettings.THEME))
+                        .put("availableThemes", getAvailableThemes())
+                        .put("gmPieColors", theme.getWorldPieColors())
+                        .put("playerHeadImageUrl", config.get(DisplaySettings.PLAYER_HEAD_IMG_URL))
+                        .put("isProxy", serverInfo.getServer().isProxy())
+                        .put("serverName", serverInfo.getServer().getIdentifiableName())
+                        .put("serverUUID", serverInfo.getServer().getUuid().toString())
+                        .put("networkName", serverInfo.getServer().isProxy() ? config.get(ProxySettings.NETWORK_NAME) : null)
+                        .put("mainCommand", mainCommand)
+                        .put("refreshBarrierMs", config.get(WebserverSettings.REDUCED_REFRESH_BARRIER))
+                        .put("registrationDisabled", config.isTrue(WebserverSettings.DISABLED_REGISTRATION))
+                        .build())
+                .build();
     }
 
-    private List<String> getAvailableThemes() throws IOException {
+    private List<String> getAvailableThemes() {
+        Set<String> foundThemes = new HashSet<>();
+        try {
+            // Add the themes in the jar
+            foundThemes.addAll(assetVersions.getThemeNames());
+        } catch (IOException e) {
+            logger.warn("Could not read themes from jar: " + e.toString());
+        }
         try (Stream<java.nio.file.Path> found = Files.list(files.getThemeDirectory())) {
-            List<String> foundThemes = found
-                    .filter(file -> file.toFile().getAbsolutePath().endsWith(".json"))
+            found.filter(file -> file.toFile().getAbsolutePath().endsWith(".json"))
                     .map(file -> file.getFileName().toString())
                     .map(fileName -> StringUtils.split(fileName, '.')[0])
-                    .collect(Collectors.toList());
-
-            // Add the themes in the jar
-            for (String themeName : assetVersions.getThemeNames()) {
-                if (!foundThemes.contains(themeName)) {
-                    foundThemes.add(themeName);
-                }
-            }
-            foundThemes.sort(String.CASE_INSENSITIVE_ORDER);
-            return foundThemes;
+                    .forEach(foundThemes::add);
+        } catch (IOException e) {
+            logger.warn("Could not read web_themes directory: " + e.toString());
         }
+        List<String> asList = new ArrayList<>(foundThemes);
+        asList.sort(String.CASE_INSENSITIVE_ORDER);
+        return asList;
     }
 }

@@ -85,6 +85,7 @@ public class ReactExporter extends FileExporter {
         exportReactRedirects(toDirectory, files, config, new String[]{
                 "theme-editor",
                 "theme-editor/new",
+                "theme-editor/delete",
         });
     }
 

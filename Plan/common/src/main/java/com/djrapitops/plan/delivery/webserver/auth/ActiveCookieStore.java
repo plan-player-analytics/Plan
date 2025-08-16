@@ -118,8 +118,7 @@ public class ActiveCookieStore implements SubSystem {
     }
 
     public String generateNewCookie(User user, String ipAddress) {
-        String seed = DigestUtils.sha256Hex(UUID.randomUUID().toString());
-        SecureRandom secureRandom = new SecureRandom(seed.getBytes());
+        SecureRandom secureRandom = new SecureRandom();
         String cookie = DigestUtils.sha256Hex(user.getUsername() + UUID.randomUUID() + System.currentTimeMillis() + secureRandom.nextLong());
         long expiresAt = System.currentTimeMillis() + cookieExpiresAfterMs;
         USERS_BY_COOKIE.put(cookie, new CookieMetadata(user, expiresAt, ipAddress));

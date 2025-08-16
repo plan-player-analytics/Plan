@@ -105,7 +105,7 @@ public class ExportTestUtilities {
         driver.get(address);
 
         new WebDriverWait(driver, Duration.of(10, ChronoUnit.SECONDS)).until(
-                webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
+                webDriver -> "complete".equals(((JavascriptExecutor) webDriver).executeScript("return document.readyState")));
 
         assertFalse(driver.findElement(By.tagName("body")).getText().contains("Bad Gateway"), "502 Bad Gateway, nginx could not reach Plan");
 
@@ -143,6 +143,7 @@ public class ExportTestUtilities {
                 .add("/players")
                 .add("/theme-editor")
                 .add("/theme-editor/new")
+                .add("/theme-editor/delete")
                 .build();
     }
 

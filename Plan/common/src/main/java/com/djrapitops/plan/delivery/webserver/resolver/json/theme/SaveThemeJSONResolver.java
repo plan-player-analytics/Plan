@@ -119,14 +119,18 @@ public class SaveThemeJSONResolver implements Resolver {
     }
 
     private Response getResponse(@Untrusted String themeName, Request request) {
-        if (!themeFilePattern.matcher(themeName).matches()) {
+        if (!themeFilePattern.matcher(themeName).matches() || StringUtils.containsAny(themeName, '\n', '\t')) {
             throw new BadRequestException("'theme' parameter was invalid");
+        }
+        if (themeName.isEmpty()) {
+            throw new BadRequestException("'theme' name can not be empty");
         }
         if (themeName.length() > 100) {
             throw new BadRequestException("'theme' name was too long");
         }
 
         @Untrusted byte[] requestBody = request.getRequestBody();
+        if (requestBody == null) throw new BadRequestException("Request body is required");
         try {
             @Untrusted ThemeDto result = gson.fromJson(new String(requestBody, StandardCharsets.UTF_8), ThemeDto.class);
             if (isInvalid(result)) {
@@ -163,7 +167,7 @@ public class SaveThemeJSONResolver implements Resolver {
         }
     }
 
-    private void deleteOriginal(@Untrusted String themeName, @Untrusted String originalName, java.nio.file.Path themeDirectory) {
+    void deleteOriginal(@Untrusted String themeName, @Untrusted String originalName, java.nio.file.Path themeDirectory) {
         if (originalName.equals(themeName)) return; // Theme was not renamed.
 
         // All these checks are against trying to delete other themes than the one they're editing.

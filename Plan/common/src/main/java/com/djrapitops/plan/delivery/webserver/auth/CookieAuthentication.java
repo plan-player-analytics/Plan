@@ -26,9 +26,10 @@ public class CookieAuthentication implements Authentication {
     private final ActiveCookieStore activeCookieStore;
     @Untrusted
     private final String cookie;
+    @Untrusted
     private final String accessAddress;
 
-    public CookieAuthentication(ActiveCookieStore activeCookieStore, @Untrusted String cookie, String accessAddress) {
+    public CookieAuthentication(ActiveCookieStore activeCookieStore, @Untrusted String cookie, @Untrusted String accessAddress) {
         this.activeCookieStore = activeCookieStore;
         this.cookie = cookie;
         this.accessAddress = accessAddress;

@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.settings.locale;
 
+import jakarta.validation.constraints.NotNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 
@@ -55,12 +56,13 @@ class UsedLocaleRegressionTest {
         Path reactSourceDir = Paths.get("").toAbsolutePath().getParent().resolve("react/dashboard/src");
 
         // t('translation.key') or {t("translation.key")
-        Pattern translatePattern = Pattern.compile("[\\s{]t\\((['\"])(.+?)\\1");//Pattern.compile("[\\s|{]t\\(['|\"](...+?)['|\"]\\)");
+        // or {t("translation.key", {interpolation: "value"})}
+        Pattern translatePattern = Pattern.compile("[\\s{]t\\((['\"])(.+?)\\1");
 
         Set<String> foundLangKeys = new HashSet<>();
         Files.walkFileTree(reactSourceDir, new SimpleFileVisitor<>() {
             @Override
-            public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
+            public FileVisitResult visitFile(@NotNull Path file, @NotNull BasicFileAttributes attrs) throws IOException {
                 String contents = new String(Files.readAllBytes(file));
 
                 Matcher scriptMatcher = translatePattern.matcher(contents);

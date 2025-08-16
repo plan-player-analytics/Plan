@@ -41,7 +41,7 @@ public class AuthenticationExtractor {
         return getCookieAuthentication(internalRequest.getCookies(), internalRequest.getAccessAddress(webserverConfiguration));
     }
 
-    private Optional<Authentication> getCookieAuthentication(@Untrusted List<Cookie> cookies, String accessAddress) {
+    private Optional<Authentication> getCookieAuthentication(@Untrusted List<Cookie> cookies, @Untrusted String accessAddress) {
         for (@Untrusted Cookie cookie : cookies) {
             if ("auth".equals(cookie.getName())) {
                 return Optional.of(new CookieAuthentication(activeCookieStore, cookie.getValue(), accessAddress));

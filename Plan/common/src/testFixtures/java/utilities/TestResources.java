@@ -35,13 +35,12 @@ public class TestResources {
     }
 
     public static File getAsset(String called) {
-        File file = new File("src/main/resources/assets/plan/" + called);
-        System.out.println(file.getAbsolutePath());
-        return file;
+        return new File("src/main/resources/assets/plan/" + called);
     }
 
-    public static File getTestResourceFile(String called, Class testClass) throws URISyntaxException {
+    public static File getTestResourceFile(String called, Class<?> testClass) throws URISyntaxException {
         URL resource = testClass.getResource("/" + called);
+        if (resource == null) throw new IllegalArgumentException("Resource not found: " + called);
         URI resourceURI = resource.toURI();
         Path resourcePath = Paths.get(resourceURI);
         return resourcePath.toFile();
@@ -101,6 +100,7 @@ public class TestResources {
 
     public static byte[] getJarResourceAsBytes(String pathFromResourcesDirRoot) throws IOException {
         try (InputStream asStream = TestResources.class.getResourceAsStream(pathFromResourcesDirRoot)) {
+            if (asStream == null) throw new IllegalArgumentException("Resource not found: " + pathFromResourcesDirRoot);
             return asStream.readAllBytes();
         }
     }

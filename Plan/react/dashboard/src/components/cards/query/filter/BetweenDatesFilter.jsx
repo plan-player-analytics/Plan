@@ -5,6 +5,7 @@ import TimeInputField from "../../../input/TimeInputField";
 import {Col, Row} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTrashAlt} from "@fortawesome/free-regular-svg-icons";
+import OutlineButton from "../../../input/OutlineButton.jsx";
 
 const BetweenDatesFilter = ({index, label, filter, removeFilter, setFilterOptions, setAsInvalid, setAsValid}) => {
     const {t} = useTranslation();
@@ -68,9 +69,9 @@ const BetweenDatesFilter = ({index, label, filter, removeFilter, setFilterOption
                     />
                 </Col>
                 <Col md={"auto"} sm={12} className={"my-1 my-md-auto"}>
-                    <button className="filter-remover btn btn-outline-secondary float-end"
-                            onClick={removeFilter}><FontAwesomeIcon icon={faTrashAlt}/>
-                    </button>
+                    <OutlineButton className="filter-remover float-end" onClick={removeFilter}>
+                        <FontAwesomeIcon icon={faTrashAlt}/>
+                    </OutlineButton>
                 </Col>
             </Row>
         </div>

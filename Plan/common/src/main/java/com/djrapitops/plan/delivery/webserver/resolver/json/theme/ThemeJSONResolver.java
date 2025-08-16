@@ -16,9 +16,11 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.json.theme;
 
+import com.djrapitops.plan.delivery.domain.datatransfer.ThemeDto;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
+import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.webserver.ResponseFactory;
 import com.djrapitops.plan.utilities.dev.Untrusted;
@@ -27,10 +29,12 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
+import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -61,7 +65,7 @@ public class ThemeJSONResolver implements NoAuthResolver {
     @Operation(
             description = "Get theme json for a name",
             responses = {
-                    @ApiResponse(responseCode = "200", content = @Content(mediaType = MimeType.JSON)),
+                    @ApiResponse(responseCode = "200", content = @Content(mediaType = MimeType.JSON, schema = @Schema(implementation = ThemeDto.class))),
                     @ApiResponse(responseCode = "400", description = "If 'theme' parameter is not specified or invalid")
             },
             parameters = @Parameter(in = ParameterIn.QUERY, name = "theme", description = "Name of the theme, alphanumeric with dashes", examples = {
@@ -74,16 +78,19 @@ public class ThemeJSONResolver implements NoAuthResolver {
     public Optional<Response> resolve(Request request) {
         Optional<String> theme = request.getQuery().get("theme");
         if (theme.isEmpty()) {
-            return Optional.of(responseFactory.badRequest("'theme' parameter is required", "/v1/theme"));
+            throw new BadRequestException("'theme' parameter is required");
         }
         return Optional.of(getThemeResponse(theme.get(), request));
     }
 
     private Response getThemeResponse(@Untrusted String themeName, Request request) {
-        if (themeFilePattern.matcher(themeName).matches()) {
+        if (themeName.isEmpty()) {
+            throw new BadRequestException("'theme' name can not be empty");
+        }
+        if (themeFilePattern.matcher(themeName).matches() || StringUtils.containsAny(themeName, '\n', '\t')) {
             return responseFactory.themeResponse(themeName, request);
         } else {
-            return responseFactory.badRequest("'theme' parameter was invalid", "/v1/theme");
+            throw new BadRequestException("'theme' parameter was invalid");
         }
     }
 }

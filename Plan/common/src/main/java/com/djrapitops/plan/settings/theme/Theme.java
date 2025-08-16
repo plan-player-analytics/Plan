@@ -23,6 +23,7 @@ import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import net.playeranalytics.plugin.server.PluginLogger;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.VisibleForTesting;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -80,7 +81,8 @@ public class Theme implements SubSystem {
         }
     }
 
-    private boolean containsNonDefaultValues(ThemeConfig themeConfig) {
+    @VisibleForTesting
+    boolean containsNonDefaultValues(ThemeConfig themeConfig) {
         ConfigNode defaults = ThemeConfig.getDefaults(files, config, logger);
         for (ThemeVal value : ThemeVal.values()) {
             if (!Objects.equals(defaults.getString(value.getThemePath()), themeConfig.getString(value.getThemePath()))) {

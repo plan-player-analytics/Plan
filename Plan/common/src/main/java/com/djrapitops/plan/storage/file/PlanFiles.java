@@ -169,7 +169,7 @@ public class PlanFiles implements SubSystem {
 
     public static OpenOption[] replaceIfExists() {
         return new OpenOption[]{
-                StandardOpenOption.CREATE_NEW, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE
+                StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE
         };
     }
 
