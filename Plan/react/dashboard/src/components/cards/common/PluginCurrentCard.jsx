@@ -59,7 +59,7 @@ const PluginCurrentCard = ({data, loadingError}) => {
 
     return (
         <Card>
-            <CardHeader icon={faCubes} label={'html.label.currentlyInstalledPlugins'} color={"indigo"}/>
+            <CardHeader icon={faCubes} label={'html.label.currentlyInstalledPlugins'} color={"plugin-versions"}/>
             <DataTablesTable id={"plugin-current"} options={options} rowKeyFunction={rowKeyFunction}/>
         </Card>
     )

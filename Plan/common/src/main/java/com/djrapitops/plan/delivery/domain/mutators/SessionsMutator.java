@@ -280,12 +280,12 @@ public class SessionsMutator {
             sessionMap.put("server_url_name", Html.encodeToURL(serverName));
             sessionMap.put("server_uuid", serverUUID);
             sessionMap.put("name", nameFunction.apply(sessionMap));
-            sessionMap.put("start", formatters.yearLong().apply(session.getStart()) +
-                    (session.getExtraData(ActiveSession.class).isPresent() ? " (Online)" : ""));
-            sessionMap.put("end", formatters.yearLong().apply(session.getEnd()));
+            sessionMap.put("online", session.getExtraData(ActiveSession.class).isPresent());
+            sessionMap.put("start", session.getStart());
+            sessionMap.put("end", session.getEnd());
             sessionMap.put("most_used_world", worldAliasSettings.getLongestWorldPlayed(session));
-            sessionMap.put("length", formatters.timeAmount().apply(session.getLength()));
-            sessionMap.put("afk_time", formatters.timeAmount().apply(session.getAfkTime()));
+            sessionMap.put("length", session.getLength());
+            sessionMap.put("afk_time", session.getAfkTime());
             sessionMap.put("mob_kills", session.getMobKillCount());
             sessionMap.put("deaths", session.getDeathCount());
             sessionMap.put("player_kills", session.getExtraData(PlayerKills.class)

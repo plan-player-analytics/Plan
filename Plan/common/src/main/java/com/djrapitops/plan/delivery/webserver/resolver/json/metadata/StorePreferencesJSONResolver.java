@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.domain.datatransfer.preferences.Preferences;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
+import com.djrapitops.plan.delivery.web.resolver.exception.MethodNotAllowedException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.storage.database.DBSystem;
@@ -32,6 +33,7 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 
@@ -62,18 +64,19 @@ public class StorePreferencesJSONResolver implements Resolver {
             description = "Update user preferences",
             responses = {
                     @ApiResponse(responseCode = "200", description = "Storage was successful"),
-                    @ApiResponse(responseCode = "400", description = "Not logged in (This endpoint only accepts requests if logged in)"),
                     @ApiResponse(responseCode = "400", description = "Request body does not match json format of preferences"),
+                    @ApiResponse(responseCode = "403", description = "Not logged in (This endpoint only accepts requests if logged in)"),
+                    @ApiResponse(responseCode = "405", description = "Not POST request"),
             },
             requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = Preferences.class)))
     )
     @Override
     public Optional<Response> resolve(Request request) {
-        if (!request.getMethod().equals("POST")) {
-            throw new BadRequestException("This endpoint only accepts POST requests.");
+        if (!"POST".equals(request.getMethod())) {
+            throw new MethodNotAllowedException("POST");
         }
         WebUser user = request.getUser()
-                .orElseThrow(() -> new BadRequestException("This endpoint only accepts requests if logged in."));
+                .orElseThrow(() -> new ForbiddenException("This endpoint only accepts requests if logged in."));
         String preferencesBody = new String(request.getRequestBody(), StandardCharsets.UTF_8);
         try {
             Gson gson = new Gson();

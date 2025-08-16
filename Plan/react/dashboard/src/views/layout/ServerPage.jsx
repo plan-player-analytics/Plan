@@ -211,25 +211,23 @@ const ServerPage = () => {
     }
 
     return (
-        <>
-            <ServerExtensionContextProvider identifier={identifier}>
-                <ServerSidebar/>
-                <div className="d-flex flex-column" id="content-wrapper">
-                    <Header page={displayedServerName} tab={currentTab}/>
-                    <div id="content" style={{display: 'flex'}}>
-                        <main className="container-fluid mt-4">
-                            <SwitchTransition>
-                                <Outlet/>
-                            </SwitchTransition>
-                        </main>
-                        <aside>
-                            <ColorSelectorModal/>
-                            <React.Suspense fallback={""}><HelpModal/></React.Suspense>
-                        </aside>
-                    </div>
+        <ServerExtensionContextProvider identifier={identifier}>
+            <ServerSidebar/>
+            <div className="d-flex flex-column" id="content-wrapper">
+                <Header page={displayedServerName} tab={currentTab}/>
+                <div id="content" style={{display: 'flex'}}>
+                    <main className="container-fluid mt-4">
+                        <SwitchTransition>
+                            <Outlet/>
+                        </SwitchTransition>
+                    </main>
+                    <aside>
+                        <ColorSelectorModal/>
+                        <React.Suspense fallback={""}><HelpModal/></React.Suspense>
+                    </aside>
                 </div>
-            </ServerExtensionContextProvider>
-        </>
+            </div>
+        </ServerExtensionContextProvider>
     )
 }
 

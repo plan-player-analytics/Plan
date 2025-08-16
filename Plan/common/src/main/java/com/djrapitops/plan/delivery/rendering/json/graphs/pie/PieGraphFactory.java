@@ -26,7 +26,6 @@ import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.settings.theme.Theme;
-import com.djrapitops.plan.settings.theme.ThemeVal;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -56,7 +55,7 @@ public class PieGraphFactory {
     }
 
     public Pie activityPie(Map<String, Integer> activityData) {
-        String[] colors = theme.getPieColors(ThemeVal.GRAPH_ACTIVITY_PIE);
+        String[] colors = theme.getWorldPieColors();
         return new ActivityPie(activityData, colors, ActivityIndex.getDefaultGroupLangKeys());
     }
 
@@ -72,7 +71,7 @@ public class PieGraphFactory {
         WorldAliasSettings worldAliasSettings = config.getWorldAliasSettings();
         Map<String, Long> playtimePerAlias = worldAliasSettings.getPlaytimePerAlias(worldTimes);
         Map<String, GMTimes> gmTimesPerAlias = worldAliasSettings.getGMTimesPerAlias(worldTimes);
-        String[] colors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
+        String[] colors = theme.getWorldPieColors();
         boolean orderByPercentage = config.isTrue(DisplaySettings.ORDER_WORLD_PIE_BY_PERCENTAGE);
         return new WorldPie(playtimePerAlias, gmTimesPerAlias, colors, orderByPercentage);
     }

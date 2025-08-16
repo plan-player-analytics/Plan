@@ -2,18 +2,27 @@ import React, {useState} from 'react';
 import ExtensionIcon from "./ExtensionIcon";
 import DataTablesTable from "../table/DataTablesTable";
 import ColoredText from "../text/ColoredText";
-import {baseAddress} from "../../service/backendConfiguration";
+import {Link} from "react-router-dom";
+import FormattedTime from "../text/FormattedTime.jsx";
+import FormattedDate from "../text/FormattedDate.jsx";
 
 const ExtensionDataTable = ({table}) => {
     const [id] = useState("extension-table-" + new Date().getTime() + "-" + (Math.floor(Math.random() * 100000)));
-
-    const mapToCell = (value, j) => {
-        if (String(value).startsWith("<a class=\"link\" href=\"")) {
-            let linkHtml = value || String(value);
-            linkHtml = linkHtml.replace("../", baseAddress + '/');
-            return <span dangerouslySetInnerHTML={{__html: linkHtml}}/>;
+    const mapToCell = (cell, j) => {
+        const value = cell.value;
+        switch (cell.format) {
+            case 'TIME_MILLISECONDS':
+                return <FormattedTime timeMs={value}/>;
+            case 'DATE_YEAR':
+                return <FormattedDate date={value}/>;
+            case 'DATE_SECOND':
+                return <FormattedDate date={value} includeSeconds/>;
+            case 'PLAYER_NAME':
+                return <Link to={'/player/' + value}>{value}</Link>;
+            case 'CHAT_COLORED':
+            default:
+                return <ColoredText text={value || String(value)}/>
         }
-        return <ColoredText text={value || String(value)}/>
     };
 
     const data = {
@@ -29,8 +38,8 @@ const ExtensionDataTable = ({table}) => {
         data: table.table.rows.map((row) => {
             const dataRow = {};
             row.forEach((cell, j) => {
-                dataRow[`col${j}Value`] = cell['valueUnformatted'] || cell.value || cell;
-                dataRow[`col${j}Display`] = mapToCell(cell.value || cell, j);
+                dataRow[`col${j}Value`] = cell.value || cell;
+                dataRow[`col${j}Display`] = mapToCell(cell, j);
             });
             return dataRow;
         })

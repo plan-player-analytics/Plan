@@ -8,7 +8,7 @@ import {ChartLoader} from "../../navigation/Loader";
 const PingTableCard = ({data}) => {
     return (
         <Card id={'ping-per-country'}>
-            <CardHeader icon={faWifi} color="green" label={'html.label.connectionInfo'}/>
+            <CardHeader icon={faWifi} color="geolocation" label={'html.label.connectionInfo'}/>
             {data && <PingTable countries={data?.table || []}/>}
             {!data && <ChartLoader/>}
         </Card>

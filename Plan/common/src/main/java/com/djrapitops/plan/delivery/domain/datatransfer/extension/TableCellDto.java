@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.delivery.domain.datatransfer.extension;
 
-import org.jetbrains.annotations.Nullable;
+import com.djrapitops.plan.extension.table.TableColumnFormat;
 
 import java.util.Objects;
 
@@ -25,47 +25,39 @@ import java.util.Objects;
  */
 public class TableCellDto {
 
-    private final String value;
-    @Nullable
-    private final Object valueUnformatted;
+    private final Object value;
+    private final TableColumnFormat format;
 
-    public TableCellDto(String value) {
+    public TableCellDto(Object value, TableColumnFormat format) {
         this.value = value;
-        this.valueUnformatted = null;
+        this.format = format;
     }
 
-    public TableCellDto(String value, @Nullable Object valueUnformatted) {
-        this.value = value;
-        this.valueUnformatted = valueUnformatted;
-    }
-
-    public String getValue() {
+    public Object getValue() {
         return value;
     }
 
-    @Nullable
-    public Object getValueUnformatted() {
-        return valueUnformatted;
+    public TableColumnFormat getFormat() {
+        return format;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TableCellDto that = (TableCellDto) o;
-        return Objects.equals(getValue(), that.getValue()) && Objects.equals(getValueUnformatted(), that.getValueUnformatted());
+        return Objects.equals(getValue(), that.getValue()) && getFormat() == that.getFormat();
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getValue(), getValueUnformatted());
+        return Objects.hash(getValue(), getFormat());
     }
 
     @Override
     public String toString() {
         return "TableCellDto{" +
-                "value='" + value + '\'' +
-                ", valueUnformatted=" + valueUnformatted +
+                "value=" + value +
+                ", format=" + format +
                 '}';
     }
 }

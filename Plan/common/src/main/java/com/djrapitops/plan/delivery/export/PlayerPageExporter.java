@@ -122,7 +122,7 @@ public class PlayerPageExporter extends FileExporter {
 
     private Optional<Response> getJSONResponse(String resource) {
         try {
-            return jsonHandler.getResolver().resolve(new Request("GET", "/v1/" + resource, null, Collections.emptyMap()));
+            return jsonHandler.getResolver().resolve(new Request("GET", "/v1/" + resource, null, Collections.emptyMap(), null));
         } catch (WebUserAuthException e) {
             // The rest of the exceptions should not be thrown
             throw new IllegalStateException("Unexpected exception thrown: " + e, e);

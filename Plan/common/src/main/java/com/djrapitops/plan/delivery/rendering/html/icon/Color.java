@@ -21,26 +21,26 @@ import org.apache.commons.lang3.StringUtils;
 import java.util.Optional;
 
 public enum Color {
-    RED("col-red"),
-    PINK("col-pink"),
-    PURPLE("col-purple"),
-    DEEP_PURPLE("col-deep-purple"),
-    INDIGO("col-indigo"),
-    BLUE("col-blue"),
-    LIGHT_BLUE("col-light-blue"),
-    CYAN("col-cyan"),
-    TEAL("col-teal"),
-    GREEN("col-green"),
-    LIGHT_GREEN("col-light-green"),
-    LIME("col-lime"),
-    YELLOW("col-yellow"),
-    AMBER("col-amber"),
-    ORANGE("col-orange"),
-    DEEP_ORANGE("col-deep-orange"),
-    BROWN("col-brown"),
-    GREY("col-grey"),
-    BLUE_GREY("col-blue-grey"),
-    BLACK("col-black"),
+    RED("col-plugin-red"),
+    PINK("col-plugin-pink"),
+    PURPLE("col-plugin-purple"),
+    DEEP_PURPLE("col-plugin-deep-purple"),
+    INDIGO("col-plugin-indigo"),
+    BLUE("col-plugin-blue"),
+    LIGHT_BLUE("col-plugin-light-blue"),
+    CYAN("col-plugin-cyan"),
+    TEAL("col-plugin-teal"),
+    GREEN("col-plugin-green"),
+    LIGHT_GREEN("col-plugin-light-green"),
+    LIME("col-plugin-lime"),
+    YELLOW("col-plugin-yellow"),
+    AMBER("col-plugin-amber"),
+    ORANGE("col-plugin-orange"),
+    DEEP_ORANGE("col-plugin-deep-orange"),
+    BROWN("col-plugin-brown"),
+    GREY("col-plugin-grey"),
+    BLUE_GREY("col-plugin-blue-grey"),
+    BLACK("col-plugin-black"),
     NONE("");
 
     private final String htmlClass;
@@ -65,6 +65,6 @@ public enum Color {
     }
 
     public String getBackgroundColorClass() {
-        return StringUtils.replace(htmlClass, "col-", "bg-");
+        return StringUtils.replace(htmlClass, "col-plugin-", "bg-plugin-");
     }
 }

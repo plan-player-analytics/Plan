@@ -46,12 +46,12 @@ const NewPlayerRetentionHelp = () => {
                 },
                 plotLines: [{
                     label: {text: t('html.label.registered')},
-                    color: '#8BC34A',
+                    color: 'var(--color-data-play-first-seen)',
                     value: session1Time,
                     width: 2
                 }, {
                     label: {text: t('html.label.session')},
-                    color: '#009688',
+                    color: 'var(--color-data-play-sessions)',
                     value: session2Time,
                     width: 2
                 }],
@@ -60,7 +60,7 @@ const NewPlayerRetentionHelp = () => {
             series: [{
                 name: t('html.query.filter.registeredBetween.text'),
                 animation: false,
-                color: '#8BC34A',
+                color: 'var(--color-data-play-first-seen)',
                 data: [{
                     name: t('html.query.filter.registeredBetween.text'),
                     low: start,
@@ -69,7 +69,7 @@ const NewPlayerRetentionHelp = () => {
             }, {
                 name: t('html.query.filter.playedBetween.text'),
                 animation: false,
-                color: '#009688',
+                color: 'var(--color-data-play-sessions)',
                 data: [{
                     name: t('html.query.filter.playedBetween.text'),
                     low: retentionStart,

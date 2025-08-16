@@ -1,0 +1,367 @@
+{
+  "geolocation_bar_series": [
+    {
+      "label": "Finland",
+      "value": 100
+    },
+    {
+      "label": "United States",
+      "value": 75
+    },
+    {
+      "label": "Germany",
+      "value": 47
+    },
+    {
+      "label": "Netherlands",
+      "value": 39
+    },
+    {
+      "label": "Norway",
+      "value": 34
+    },
+    {
+      "label": "Sweden",
+      "value": 30
+    },
+    {
+      "label": "United Kingdom",
+      "value": 30
+    },
+    {
+      "label": "Estonia",
+      "value": 24
+    },
+    {
+      "label": "Spain",
+      "value": 19
+    },
+    {
+      "label": "Canada",
+      "value": 18
+    },
+    {
+      "label": "France",
+      "value": 14
+    },
+    {
+      "label": "Denmark",
+      "value": 14
+    },
+    {
+      "label": "Poland",
+      "value": 11
+    },
+    {
+      "label": "Italy",
+      "value": 10
+    },
+    {
+      "label": "Russia",
+      "value": 10
+    },
+    {
+      "label": "Turkey",
+      "value": 9
+    },
+    {
+      "label": "Belgium",
+      "value": 8
+    },
+    {
+      "label": "Australia",
+      "value": 7
+    },
+    {
+      "label": "India",
+      "value": 6
+    },
+    {
+      "label": "Slovakia",
+      "value": 6
+    }
+  ],
+  "geolocations_enabled": true,
+  "geolocation_series": [
+    {
+      "code": "DNK",
+      "value": 14
+    },
+    {
+      "code": "NZL",
+      "value": 1
+    },
+    {
+      "code": "CHE",
+      "value": 5
+    },
+    {
+      "code": "CHL",
+      "value": 1
+    },
+    {
+      "code": "CHN",
+      "value": 1
+    },
+    {
+      "code": "HRV",
+      "value": 2
+    },
+    {
+      "code": "IDN",
+      "value": 2
+    },
+    {
+      "code": "PRT",
+      "value": 4
+    },
+    {
+      "code": "VNM",
+      "value": 1
+    },
+    {
+      "code": "CYP",
+      "value": 1
+    },
+    {
+      "code": "MDV",
+      "value": 1
+    },
+    {
+      "code": "AUS",
+      "value": 7
+    },
+    {
+      "code": "AUT",
+      "value": 2
+    },
+    {
+      "code": "HKG",
+      "value": 2
+    },
+    {
+      "code": "MYS",
+      "value": 1
+    },
+    {
+      "code": "ZWE",
+      "value": 1
+    },
+    {
+      "code": "POL",
+      "value": 11
+    },
+    {
+      "code": "BGR",
+      "value": 3
+    },
+    {
+      "code": "JOR",
+      "value": 1
+    },
+    {
+      "code": "CZE",
+      "value": 5
+    },
+    {
+      "code": "GEO",
+      "value": 2
+    },
+    {
+      "code": "NOR",
+      "value": 34
+    },
+    {
+      "code": "OMN",
+      "value": 1
+    },
+    {
+      "code": "CAN",
+      "value": 18
+    },
+    {
+      "code": "ARE",
+      "value": 5
+    },
+    {
+      "code": "ARG",
+      "value": 2
+    },
+    {
+      "code": "GRC",
+      "value": 3
+    },
+    {
+      "code": "ROU",
+      "value": 3
+    },
+    {
+      "code": "ARM",
+      "value": 1
+    },
+    {
+      "code": "IND",
+      "value": 6
+    },
+    {
+      "code": "MAR",
+      "value": 4
+    },
+    {
+      "code": "MEX",
+      "value": 3
+    },
+    {
+      "code": "IRN",
+      "value": 1
+    },
+    {
+      "code": "KAZ",
+      "value": 1
+    },
+    {
+      "code": "QAT",
+      "value": 1
+    },
+    {
+      "code": "SAU",
+      "value": 1
+    },
+    {
+      "code": "NLD",
+      "value": 39
+    },
+    {
+      "code": "JPN",
+      "value": 1
+    },
+    {
+      "code": "BLR",
+      "value": 1
+    },
+    {
+      "code": "SVK",
+      "value": 6
+    },
+    {
+      "code": "SVN",
+      "value": 1
+    },
+    {
+      "code": "THA",
+      "value": 3
+    },
+    {
+      "code": "LTU",
+      "value": 1
+    },
+    {
+      "code": "PHL",
+      "value": 2
+    },
+    {
+      "code": "GBR",
+      "value": 30
+    },
+    {
+      "code": "URY",
+      "value": 1
+    },
+    {
+      "code": "HUN",
+      "value": 1
+    },
+    {
+      "code": "SWE",
+      "value": 30
+    },
+    {
+      "code": "USA",
+      "value": 75
+    },
+    {
+      "code": "ISL",
+      "value": 3
+    },
+    {
+      "code": "ESP",
+      "value": 19
+    },
+    {
+      "code": "EST",
+      "value": 24
+    },
+    {
+      "code": "BEL",
+      "value": 8
+    },
+    {
+      "code": "ISR",
+      "value": 6
+    },
+    {
+      "code": "FIN",
+      "value": 100
+    },
+    {
+      "code": "TUN",
+      "value": 1
+    },
+    {
+      "code": "LUX",
+      "value": 1
+    },
+    {
+      "code": "KOR",
+      "value": 2
+    },
+    {
+      "code": "BRA",
+      "value": 3
+    },
+    {
+      "code": "TUR",
+      "value": 9
+    },
+    {
+      "code": "RUS",
+      "value": 10
+    },
+    {
+      "code": "FRA",
+      "value": 14
+    },
+    {
+      "code": "DEU",
+      "value": 47
+    },
+    {
+      "code": "LVA",
+      "value": 5
+    },
+    {
+      "code": "EGY",
+      "value": 1
+    },
+    {
+      "code": "ITA",
+      "value": 10
+    },
+    {
+      "code": "PAK",
+      "value": 2
+    },
+    {
+      "code": "PER",
+      "value": 2
+    },
+    {
+      "code": "SGP",
+      "value": 1
+    },
+    {
+      "code": "ZAF",
+      "value": 2
+    }
+  ]
+}

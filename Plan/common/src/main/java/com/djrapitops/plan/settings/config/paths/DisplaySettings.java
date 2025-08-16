@@ -41,6 +41,7 @@ public class DisplaySettings {
     public static final Setting<String> CMD_COLOR_MAIN = new StringSetting("Display_options.Command_colors.Main");
     public static final Setting<String> CMD_COLOR_SECONDARY = new StringSetting("Display_options.Command_colors.Secondary");
     public static final Setting<String> CMD_COLOR_TERTIARY = new StringSetting("Display_options.Command_colors.Highlight");
+    public static final Setting<String> WORLD_PIE = new StringSetting("Display_options.WorldPie");
     public static final Setting<ConfigNode> WORLD_ALIASES = new Setting<>("World_aliases.List", ConfigNode.class) {
         @Override
         public ConfigNode getValueFrom(ConfigNode node) {

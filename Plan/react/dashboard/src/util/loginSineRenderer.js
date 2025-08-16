@@ -1,5 +1,5 @@
 // https://gist.github.com/gkhays/e264009c0832c73d5345847e673a64ab
-export default function drawSine(canvasId) {
+export default function drawSine(canvasId, fillColor) {
     let step;
 
     function drawPoint(ctx, x, y) {
@@ -9,7 +9,7 @@ export default function drawSine(canvasId) {
         // Hold x constant at 4 so the point only moves up and down.
         ctx.arc(x - 5, y, radius, 0, 2 * Math.PI, false);
 
-        ctx.fillStyle = '#fff';
+        ctx.fillStyle = fillColor || '#fff';
         ctx.fill();
         ctx.lineWidth = 1;
         ctx.stroke();
@@ -21,7 +21,7 @@ export default function drawSine(canvasId) {
 
         ctx.beginPath();
         ctx.lineWidth = 2;
-        ctx.strokeStyle = "#fff";
+        ctx.strokeStyle = fillColor || '#fff';
 
         // Drawing point
 

@@ -23,7 +23,7 @@ const Datapoint = ({icon, color, name, value, valueLabel, bold, boldTitle, title
     const extraLabel = getExtraLabel(t, valueLabel);
     const colorClass = color?.startsWith("col-") ? color : "col-" + color;
     return (
-        <p title={title ? title : name + ": " + translatedValue}>
+        <p className={"col-text"} title={title ? title : name + ": " + translatedValue}>
             {icon && <Fa icon={icon} className={colorClass}/>} {boldTitle ? <b>{name}</b> : name}
             {value !== undefined ? <End>{displayedValue} {extraLabel}{trend}</End> : ''}
         </p>

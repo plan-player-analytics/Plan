@@ -2,22 +2,29 @@ import React, {useEffect} from "react";
 import Highcharts from 'highcharts';
 import factory from 'highcharts/modules/drilldown';
 
-import {formatTimeAmount} from '../../util/formatters'
 import {useTheme} from "../../hooks/themeHook";
-import {withReducedSaturation} from "../../util/colors";
-import {useMetadata} from "../../hooks/metadataHook";
+import {nameToCssVariable, withReducedSaturation} from "../../util/colors";
 import {useTranslation} from "react-i18next";
 import Accessibility from "highcharts/modules/accessibility";
+import {useTimePreferences} from "../text/FormattedTime.jsx";
+import {usePreferences} from "../../hooks/preferencesHook.jsx";
+import Loader from "../navigation/Loader.jsx";
+import {formatTimeAmount} from "../../util/format/TimeAmountFormat.js";
+import {useThemeStorage} from "../../hooks/context/themeContextHook.jsx";
 
 const WorldPie = ({id, worldSeries, gmSeries}) => {
     const {t} = useTranslation();
-    const {gmPieColors} = useMetadata();
+    const {preferencesLoaded} = usePreferences();
+    const timePreferences = useTimePreferences();
 
     useEffect(() => {
         factory(Highcharts)
     }, []);
 
     const {nightModeEnabled, graphTheming} = useTheme();
+    const {usedUseCases} = useThemeStorage();
+
+    const gmPieColors = usedUseCases?.graphs?.pie?.drilldown?.map(nameToCssVariable) || [];
 
     useEffect(() => {
         const reduceColors = (series) => {
@@ -70,7 +77,7 @@ const WorldPie = ({id, worldSeries, gmSeries}) => {
                 },
                 tooltip: {
                     formatter: function () {
-                        return '<b>' + this.point.name + ':</b> ' + formatTimeAmount(this.y) + ' (' + this.percentage.toFixed(2) + '%)';
+                        return '<b>' + this.point.name + ':</b> ' + formatTimeAmount(timePreferences, this.y) + ' (' + this.percentage.toFixed(2) + '%)';
                     }
                 },
                 series: [pieSeries],
@@ -82,6 +89,8 @@ const WorldPie = ({id, worldSeries, gmSeries}) => {
             });
         }, 25)
     }, [worldSeries, gmSeries, graphTheming, nightModeEnabled, id, gmPieColors, t]);
+
+    if (!preferencesLoaded) return <Loader/>;
 
     return (<div className="chart-pie" id={id}/>)
 }

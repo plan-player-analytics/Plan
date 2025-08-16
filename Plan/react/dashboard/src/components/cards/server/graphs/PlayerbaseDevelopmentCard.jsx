@@ -19,11 +19,11 @@ export const PlayerbaseDevelopmentCardWithData = ({data, title}) => {
     return (
         <Card>
             <Card.Header>
-                <h6 className="col-black" style={{width: "100%"}}>
-                    <Fa className="col-amber"
+                <h6 className="col-text" style={{width: "100%"}}>
+                    <Fa className="col-players-activity-index"
                         icon={faChartLine}/> {t(title ? title : 'html.label.playerbaseDevelopment')}
                     <button className={"float-end"} onClick={openHelp}>
-                        <Fa className={"col-blue"}
+                        <Fa className={"col-help-icon"}
                             icon={faQuestionCircle}/>
                     </button>
                 </h6>

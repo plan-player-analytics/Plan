@@ -15,7 +15,7 @@ const CurrentUptime = ({uptime}) => {
         : undefined;
 
     return (
-        <Datapoint icon={faPowerOff} color={'light-green'}
+        <Datapoint icon={faPowerOff} color={'uptime'}
                    name={t('html.label.currentUptime')}
                    value={isNumber(uptime) && <FormattedTime timeMs={uptime}/> || uptime} valueLabel={infoBubble}/>
     )

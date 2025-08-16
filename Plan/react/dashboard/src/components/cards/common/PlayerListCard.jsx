@@ -12,8 +12,8 @@ const PlayerListCard = ({data, title, orderBy}) => {
     return (
         <Card>
             <Card.Header>
-                <h6 className="col-black">
-                    <Fa icon={faUsers} className="col-black"/> {title || t('html.label.playerList')}
+                <h6 className="col-text">
+                    <Fa icon={faUsers} className="col-players-count"/> {title || t('html.label.playerList')}
                 </h6>
             </Card.Header>
             <PlayerTable data={data} orderBy={orderBy}/>

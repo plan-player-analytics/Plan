@@ -35,7 +35,7 @@ const LineGraph = ({
         }
         Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}})
         Highcharts.setOptions(graphTheming);
-        setGraph(Highcharts.stockChart(id, options ? options : {
+        setGraph(Highcharts.stockChart(id, options || {
             chart: {
                 noData: t('html.label.noDataToDisplay')
             },

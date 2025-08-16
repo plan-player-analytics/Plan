@@ -10,8 +10,8 @@ const AllowlistBounceTableCard = ({bounces, lastSeen}) => {
     return (
         <Card id={'allowlist-table'}>
             <Card.Header>
-                <h6 className="col-black">
-                    <Fa icon={faFilterCircleXmark} className="col-orange"/> {t('html.label.allowlistBounces')}
+                <h6 className="col-text">
+                    <Fa icon={faFilterCircleXmark} className="col-allow-list"/> {t('html.label.allowlistBounces')}
                 </h6>
             </Card.Header>
             <AllowlistBounceTable bounces={bounces} lastSeen={lastSeen}/>

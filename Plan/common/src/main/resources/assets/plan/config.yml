@@ -203,6 +203,7 @@ Display_options:
     Main: '&2'
     Secondary: '&7'
     Highlight: '&f'
+  WorldPie: '"#0099C6", "#66AA00", "#316395", "#994499", "#22AA99", "#AAAA11", "#6633CC", "#E67300", "#329262", "#5574A6"'
 # -----------------------------------------------------
 Formatting:
   Decimal_points: '#.##'

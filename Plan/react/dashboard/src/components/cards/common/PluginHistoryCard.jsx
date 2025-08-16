@@ -53,7 +53,7 @@ const PluginHistoryCard = ({data, loadingError}) => {
 
     return (
         <Card>
-            <CardHeader icon={faCodeCompare} label={'html.label.pluginVersionHistory'} color={"indigo"}/>
+            <CardHeader icon={faCodeCompare} label={'html.label.pluginVersionHistory'} color={"plugin-versions"}/>
             <DataTablesTable id={"plugin-history"} options={options} rowKeyFunction={rowKeyFunction}/>
         </Card>
     )

@@ -16,8 +16,8 @@ const SessionCalendarCard = ({player}) => {
     return (
         <Card>
             <Card.Header>
-                <h6 className="col-black">
-                    <Fa icon={faCalendarAlt} className="col-teal"/> {t('html.label.sessionCalendar')}
+                <h6 className="col-text">
+                    <Fa icon={faCalendarAlt} className="col-sessions"/> {t('html.label.sessionCalendar')}
                 </h6>
             </Card.Header>
             <PlayerSessionCalendar series={player.calendar_series} firstDay={player.first_day}/>

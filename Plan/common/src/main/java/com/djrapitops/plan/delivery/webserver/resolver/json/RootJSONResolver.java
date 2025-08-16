@@ -27,6 +27,9 @@ import com.djrapitops.plan.delivery.webserver.resolver.json.plugins.ExtensionJSO
 import com.djrapitops.plan.delivery.webserver.resolver.json.plugins.PluginHistoryJSONResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.json.query.FiltersJSONResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.json.query.QueryJSONResolver;
+import com.djrapitops.plan.delivery.webserver.resolver.json.theme.DeleteThemeJSONResolver;
+import com.djrapitops.plan.delivery.webserver.resolver.json.theme.SaveThemeJSONResolver;
+import com.djrapitops.plan.delivery.webserver.resolver.json.theme.ThemeJSONResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.json.webgroup.*;
 import com.djrapitops.plan.identification.Identifiers;
 import dagger.Lazy;
@@ -54,6 +57,8 @@ public class RootJSONResolver {
     private final CompositeResolver.Builder readOnlyResourcesBuilder;
     private final StorePreferencesJSONResolver storePreferencesJSONResolver;
     private final PluginHistoryJSONResolver pluginHistoryJSONResolver;
+    private final SaveThemeJSONResolver saveThemeJSONResolver;
+    private final DeleteThemeJSONResolver deleteThemeJSONResolver;
     private CompositeResolver resolver;
 
     @Inject
@@ -92,8 +97,13 @@ public class RootJSONResolver {
             PluginHistoryJSONResolver pluginHistoryJSONResolver,
             AllowlistJSONResolver allowlistJSONResolver,
 
+            ThemeJSONResolver themeJSONResolver,
+            SaveThemeJSONResolver saveThemeJSONResolver,
+            DeleteThemeJSONResolver deleteThemeJSONResolver,
+
             PreferencesJSONResolver preferencesJSONResolver,
             StorePreferencesJSONResolver storePreferencesJSONResolver,
+
             WebGroupJSONResolver webGroupJSONResolver,
             WebGroupPermissionJSONResolver webGroupPermissionJSONResolver,
             WebPermissionJSONResolver webPermissionJSONResolver,
@@ -131,7 +141,8 @@ public class RootJSONResolver {
                 .add("retention", retentionJSONResolver)
                 .add("joinAddresses", playerJoinAddressJSONResolver)
                 .add("preferences", preferencesJSONResolver)
-                .add("gameAllowlistBounces", allowlistJSONResolver);
+                .add("gameAllowlistBounces", allowlistJSONResolver)
+                .add("theme", themeJSONResolver);
 
         this.webServer = webServer;
         // These endpoints require authentication to be enabled.
@@ -142,6 +153,8 @@ public class RootJSONResolver {
         this.webGroupSaveJSONResolver = webGroupSaveJSONResolver;
         this.webGroupDeleteJSONResolver = webGroupDeleteJSONResolver;
         this.storePreferencesJSONResolver = storePreferencesJSONResolver;
+        this.saveThemeJSONResolver = saveThemeJSONResolver;
+        this.deleteThemeJSONResolver = deleteThemeJSONResolver;
     }
 
     private <T> ServerTabJSONResolver<T> forJSON(DataID dataID, ServerTabJSONCreator<T> tabJSONCreator, WebPermission permission) {
@@ -159,6 +172,8 @@ public class RootJSONResolver {
                         .add("deleteGroup", webGroupDeleteJSONResolver)
                         .add("storePreferences", storePreferencesJSONResolver)
                         .add("pluginHistory", pluginHistoryJSONResolver)
+                        .add("saveTheme", saveThemeJSONResolver)
+                        .add("deleteTheme", deleteThemeJSONResolver)
                         .build();
             } else {
                 resolver = readOnlyResourcesBuilder.build();

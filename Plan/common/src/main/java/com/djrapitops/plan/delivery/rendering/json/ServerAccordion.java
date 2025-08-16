@@ -22,7 +22,6 @@ import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.keys.PerServerKeys;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
-import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.WorldPie;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
@@ -45,19 +44,13 @@ public class ServerAccordion {
     private final String unknown;
 
     private final Graphs graphs;
-    private final Formatter<Long> year;
-    private final Formatter<Long> timeAmount;
 
     public ServerAccordion(
             PlayerContainer container, Map<ServerUUID, String> serverNames,
             Graphs graphs,
-            Formatter<Long> year,
-            Formatter<Long> timeAmount,
             String unknown
     ) {
         this.graphs = graphs;
-        this.year = year;
-        this.timeAmount = timeAmount;
 
         this.serverNames = serverNames;
         perServer = container.getValue(PlayerKeys.PER_SERVER)
@@ -82,15 +75,15 @@ public class ServerAccordion {
 
             server.put("banned", ofServer.getValue(PerServerKeys.BANNED).orElse(false));
             server.put("operator", ofServer.getValue(PerServerKeys.OPERATOR).orElse(false));
-            server.put("registered", year.apply(ofServer.getValue(PerServerKeys.REGISTERED).orElse(0L)));
-            server.put("last_seen", year.apply(sessionsMutator.toLastSeen()));
+            server.put("registered", ofServer.getValue(PerServerKeys.REGISTERED).orElse(0L));
+            server.put("last_seen", sessionsMutator.toLastSeen());
             server.put("join_address", ofServer.getValue(PerServerKeys.JOIN_ADDRESS).orElse("-"));
 
             server.put("session_count", sessionsMutator.count());
-            server.put("playtime", timeAmount.apply(sessionsMutator.toPlaytime()));
-            server.put("afk_time", timeAmount.apply(sessionsMutator.toAfkTime()));
-            server.put("session_median", timeAmount.apply(sessionsMutator.toMedianSessionLength()));
-            server.put("longest_session_length", timeAmount.apply(sessionsMutator.toLongestSessionLength()));
+            server.put("playtime", sessionsMutator.toPlaytime());
+            server.put("afk_time", sessionsMutator.toAfkTime());
+            server.put("session_median", sessionsMutator.toMedianSessionLength());
+            server.put("longest_session_length", sessionsMutator.toLongestSessionLength());
 
             server.put("mob_kills", sessionsMutator.toMobKillCount());
             server.put("player_kills", sessionsMutator.toPlayerKillCount());

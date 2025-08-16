@@ -6,7 +6,7 @@ const TabButton = ({id, name, href, icon, color, active, disabled}) => {
     const navigate = useNavigate();
     return (
         <li className={"nav-item" + (disabled ? ' disabled' : '')} id={id}>
-            <button disabled={disabled} className={"nav-link col-black" + (active ? ' active' : '')}
+            <button disabled={disabled} className={"nav-link col-text" + (active ? ' active' : '')}
                     aria-selected={active} role="tab"
                     onClick={() => navigate('#' + href, {replace: true})}>
                 <Fa icon={icon} className={'col-' + color}/> {name}

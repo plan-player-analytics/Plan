@@ -20,7 +20,6 @@ import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
 import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
-import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.analysis.NetworkActivityIndexQueries;
 import com.djrapitops.plan.storage.database.queries.filter.CompleteSetException;
@@ -38,18 +37,15 @@ import java.util.stream.Collectors;
 public class ActivityIndexFilter extends MultiOptionFilter {
 
     private final PlanConfig config;
-    private final Locale locale;
     private final DBSystem dbSystem;
 
     @Inject
     public ActivityIndexFilter(
             PlanConfig config,
-            Locale locale,
             DBSystem dbSystem
     ) {
         this.dbSystem = dbSystem;
         this.config = config;
-        this.locale = locale;
     }
 
     @Override
@@ -58,7 +54,7 @@ public class ActivityIndexFilter extends MultiOptionFilter {
     }
 
     private String[] getOptionsArray() {
-        return ActivityIndex.getGroups(locale);
+        return ActivityIndex.getGroupLocaleKeys();
     }
 
     @Override
@@ -85,7 +81,7 @@ public class ActivityIndexFilter extends MultiOptionFilter {
         Map<Integer, ActivityIndex> indexes = dbSystem.getDatabase().query(NetworkActivityIndexQueries.activityIndexForAllPlayers(date, playtimeThreshold));
 
         return indexes.entrySet().stream()
-                .filter(entry -> selected.contains(entry.getValue().getGroup(locale)))
+                .filter(entry -> selected.contains(entry.getValue().getGroupLocaleKey()))
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toSet());
     }

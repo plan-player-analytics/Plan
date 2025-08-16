@@ -3,18 +3,15 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import {useTranslation} from "react-i18next";
 import {formatTimeAmount} from "../../util/format/TimeAmountFormat.js";
-import {formatDate, useDatePreferences} from "../text/FormattedDate.jsx";
+import {formatDateWithPreferences, useDatePreferences} from "../text/FormattedDate.jsx";
 import {useTimePreferences} from "../text/FormattedTime.jsx";
+import {localeService} from "../../service/localeService.js";
 
 const PlayerSessionCalendar = ({series, firstDay}) => {
     const {t} = useTranslation();
 
     const timePreferences = useTimePreferences();
     const datePreferences = useDatePreferences();
-
-    const formatDateEasy = date => {
-        return formatDate(date, datePreferences.offset, datePreferences.pattern, false, datePreferences.recentDaysPattern, t);
-    }
 
     const formatTitle = entry => {
         switch (entry.title) {
@@ -23,7 +20,7 @@ const PlayerSessionCalendar = ({series, firstDay}) => {
             case 'html.label.playtime':
                 return t(entry.title) + ": " + formatTimeAmount(timePreferences, entry.value)
             case 'html.label.registered':
-                return t(entry.title) + ": " + formatDateEasy(entry.value)
+                return t(entry.title) + ": " + formatDateWithPreferences(datePreferences, entry.value)
             default:
                 return t(entry.title) + ": " + entry.value;
         }
@@ -38,8 +35,16 @@ const PlayerSessionCalendar = ({series, firstDay}) => {
         }
     });
 
+    const buttonText = {
+        today: t('plugin.generic.today').toLowerCase().replaceAll("'", ''),
+        month: t('html.label.time.month').toLowerCase(),
+        week: t('html.label.time.week').toLowerCase(),
+        day: t('html.label.time.day').toLowerCase(),
+    };
+
     return (
         <FullCalendar
+            locale={localeService.getIntlFriendlyLocale()}
             plugins={[dayGridPlugin]}
             timeZone="UTC"
             themeSystem='bootstrap'
@@ -55,6 +60,7 @@ const PlayerSessionCalendar = ({series, firstDay}) => {
                 center: '',
                 right: 'dayGridMonth dayGridWeek dayGridDay today prev next'
             }}
+            buttonText={buttonText}
             events={(_fetchInfo, successCallback) => successCallback(actualSeries)}
         />
     )

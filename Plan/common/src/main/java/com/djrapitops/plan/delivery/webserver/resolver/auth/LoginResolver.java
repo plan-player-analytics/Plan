@@ -78,7 +78,7 @@ public class LoginResolver implements NoAuthResolver {
     @Override
     public Optional<Response> resolve(Request request) {
         try {
-            String cookie = activeCookieStore.generateNewCookie(getUser(request));
+            String cookie = activeCookieStore.generateNewCookie(getUser(request), request.getAccessIpAddress());
             return Optional.of(getResponse(cookie));
         } catch (DBOpException | PassEncryptException e) {
             throw new WebUserAuthException(e);

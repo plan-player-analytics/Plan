@@ -4,18 +4,13 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faDoorOpen, faRepeat, faUser} from "@fortawesome/free-solid-svg-icons";
 import {usePreferences} from "../../hooks/preferencesHook.jsx";
 import DataTablesTable from "./DataTablesTable.jsx";
-import {formatDate, useDatePreferences} from "../text/FormattedDate.jsx";
+import FormattedDate from "../text/FormattedDate.jsx";
 import {faCalendarCheck, faCalendarTimes} from "@fortawesome/free-regular-svg-icons";
 import {Link} from "react-router-dom";
 
 const AllowlistBounceTable = ({bounces, lastSeen}) => {
     const {t} = useTranslation();
     const {preferencesLoaded} = usePreferences();
-
-    const datePreferences = useDatePreferences();
-    const formatDateEasy = date => {
-        return formatDate(date, datePreferences.offset, datePreferences.pattern, false, datePreferences.recentDaysPattern, t);
-    }
 
     const columns = [{
         title: <><Fa icon={faUser}/> {t('html.label.player')}</>,
@@ -41,11 +36,11 @@ const AllowlistBounceTable = ({bounces, lastSeen}) => {
             player: playerId,
             link: lastSeen[bounce.playerUUID] ? <Link to={"/player/" + bounce.playerUUID}>{playerId}</Link> : playerId,
             date: bounce.lastTime,
-            dateFormatted: formatDateEasy(bounce.lastTime),
+            dateFormatted: <FormattedDate date={bounce.lastTime} react/>,
             attempts: bounce.count,
             lastKnownAttempt: seenAfterBounce ? t('html.label.allowed') : t('html.label.blocked'),
             lastSeen: lastSeen[bounce.playerUUID],
-            lastSeenFormatted: formatDateEasy(lastSeen[bounce.playerUUID])
+            lastSeenFormatted: <FormattedDate date={lastSeen[bounce.playerUUID]} react/>
         };
     });
     const options = {
@@ -64,7 +59,7 @@ const AllowlistBounceTable = ({bounces, lastSeen}) => {
     if (!preferencesLoaded) return <></>;
 
     return (
-        <DataTablesTable id={"allowlist-bounce-table"} options={options} colorClass={"bg-orange"}
+        <DataTablesTable id={"allowlist-bounce-table"} options={options} colorClass={"bg-allow-list"}
                          rowKeyFunction={rowKeyFunction}/>
     )
 };

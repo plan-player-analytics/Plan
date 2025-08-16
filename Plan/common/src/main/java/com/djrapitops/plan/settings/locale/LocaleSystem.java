@@ -35,9 +35,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -106,7 +104,6 @@ public class LocaleSystem implements SubSystem {
                 GenericLang.values(),
                 HelpLang.values(),
                 HtmlLang.values(),
-                JSLang.values(),
                 PluginLang.values(),
                 WebPermission.nonDeprecatedValues(),
         };
@@ -142,13 +139,30 @@ public class LocaleSystem implements SubSystem {
     }
 
     private void logDefaultKeys(Locale locale) {
+        Set<String> ignoredKeys = new HashSet<>(Arrays.asList(
+                "command.general.webUserList",
+                "command.header.info",
+                "html.label.geoProjection.mercator",
+                "html.label.geoProjection.miller",
+                "html.label.pvpPve",
+                "html.label.afk",
+                "html.label.totalAfk",
+                "html.label.tps",
+                "html.label.kdr"
+        ));
         Map<String, Lang> keys = getKeys();
+        List<String> untranslatedKeys = new ArrayList<>();
         for (Map.Entry<String, Lang> entry : keys.entrySet()) {
             String key = entry.getKey();
+            if (ignoredKeys.contains(key)) {continue;}
             Lang lang = entry.getValue();
             if (lang.getDefault().equals(locale.getString(lang))) {
-                logger.info("Untranslated line: " + key);
+                untranslatedKeys.add(key);
             }
+        }
+        untranslatedKeys.sort(String.CASE_INSENSITIVE_ORDER);
+        for (String key : untranslatedKeys) {
+            logger.info("Untranslated line: " + key);
         }
     }
 

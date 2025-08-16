@@ -54,7 +54,7 @@ public interface InternalRequest {
         return getAccessAddressFromSocketIp();
     }
 
-    Request toRequest();
+    Request toRequest(@Untrusted(reason = "from header sometimes") String accessAddress);
 
     Map<String, String> getRequestHeaders();
 
@@ -68,7 +68,7 @@ public interface InternalRequest {
 
     String getRequestedURIString();
 
-    default WebUser getWebUser(WebserverConfiguration webserverConfiguration, AuthenticationExtractor authenticationExtractor) {
+    default WebUser getWebUser(WebserverConfiguration webserverConfiguration, AuthenticationExtractor authenticationExtractor, @Untrusted String accessAddress) {
         return getAuthentication(webserverConfiguration, authenticationExtractor)
                 .map(Authentication::getUser) // Can throw WebUserAuthException
                 .map(User::toWebUser)

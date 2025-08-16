@@ -1,0 +1,491 @@
+{
+  "name": "monochromatic",
+  "colors": {
+    "black": "#555555",
+    "white": "#ffffff",
+    "text-dark": "#fff",
+    "text-light": "#333",
+    "white-15-percent": "rgba(255,255,255,0.15)",
+    "black-10-percent": "rgba(0, 0, 0, 0.1)",
+    "plan": "#368F17",
+    "red": "#F44336",
+    "pink": "#E91E63",
+    "purple": "#9C27B0",
+    "deep-purple": "#673AB7",
+    "indigo": "#3F51B5",
+    "blue": "#2196F3",
+    "light-blue": "#03A9F4",
+    "cyan": "#00BCD4",
+    "teal": "#009688",
+    "green": "#4CAF50",
+    "light-green": "#8BC34A",
+    "lime": "#CDDC39",
+    "yellow": "#ffe821",
+    "amber": "#FFC107",
+    "orange": "#FF9800",
+    "deep-orange": "#FF5722",
+    "brown": "#795548",
+    "blue-grey": "#607D8B",
+    "yellow-15-percent": "rgba(255, 220, 40, 0.15)",
+    "cpu-yellow": "#e0d264",
+    "ram-green": "#7dcc24",
+    "chunk-brown": "#b58310",
+    "entity-purple": "#ac69ef",
+    "bright-blue": "#1E90FF",
+    "ping-amber": "#ffd54f",
+    "map-green": "#EEFFEE",
+    "high-green": "#267F00",
+    "medium-yellow": "#e5cc12",
+    "low-red": "#b74343",
+    "alert-success": "#d2f4e8",
+    "alert-warning": "#fdf3d8",
+    "alert-danger": "#fadbd8",
+    "success": "#1CC88A",
+    "warning": "#F6C23E",
+    "danger": "#e74A3B",
+    "alert-success-text": "#0f6848",
+    "alert-warning-text": "#806520",
+    "alert-danger-text": "#78261f",
+    "secondary": "#6c757d",
+    "cool-grey": "#6e707e",
+    "grey": "#9E9E9E",
+    "ink": "#222222",
+    "dark-slate": "#212529",
+    "medium-slate": "#3a3b45",
+    "table-slate": "#44454e",
+    "border-slate": "#4b4d5a",
+    "light-slate": "#5a5c69",
+    "light-grey": "#dddddd",
+    "table-grey": "#f3f3f3",
+    "white-grey": "#f8f9fc",
+    "pale-grey": "#eaecf4",
+    "cement-grey": "#e3e6f0",
+    "border-grey": "#dddfeb",
+    "pie-0": "#0099C6",
+    "pie-1": "#66AA00",
+    "pie-2": "#316395",
+    "pie-3": "#994499",
+    "pie-4": "#22AA99",
+    "pie-5": "#AAAA11",
+    "pie-6": "#6633CC",
+    "pie-7": "#E67300",
+    "pie-8": "#329262",
+    "pie-9": "#5574A6",
+    "drilldown-0": "#438c99",
+    "drilldown-1": "#639A67",
+    "drilldown-2": "#D8EBB5",
+    "drilldown-3": "#D9BF77"
+  },
+  "nightColors": {
+    "night-black": "#282a36",
+    "night-dark-blue": "#44475a",
+    "night-blue": "#6272a4",
+    "night-grey-blue": "#646e8c",
+    "night-dark-grey-blue": "#606270",
+    "night-text": "#eee8d5",
+    "night-text-50-percent": "rgba(238, 232, 213, 0.5)"
+  },
+  "useCases": {
+    "themeColorOptions": [
+      "theme",
+      "red",
+      "pink",
+      "purple",
+      "deep-purple",
+      "indigo",
+      "blue",
+      "light-blue",
+      "cyan",
+      "teal",
+      "green",
+      "light-green",
+      "lime",
+      "yellow",
+      "amber",
+      "orange",
+      "deep-orange",
+      "brown",
+      "grey",
+      "blue-grey"
+    ],
+    "referenceColors": {
+      "theme": "var(--color-plan)",
+      "themeText": "var(--color-theme)",
+      "text": "var(--color-text-light)"
+    },
+    "layout": {
+      "background": "var(--color-white-grey)",
+      "title": "var(--color-light-slate)",
+      "divider": "var(--color-black-10-percent)",
+      "helpIcon": "var(--color-themeText)",
+      "loader": {
+        "border": "var(--color-theme)",
+        "background": "var(--color-theme)"
+      }
+    },
+    "sidebar": {
+      "background": "var(--color-theme)",
+      "text": "var(--color-text-dark)",
+      "divider": "var(--color-white-15-percent)",
+      "collapsibleSection": {
+        "background": "var(--color-white)",
+        "text": "var(--color-text)",
+        "hover": "var(--color-pale-grey)",
+        "border": "var(--color-pale-grey)"
+      },
+      "navigationItem": {
+        "background": "var(--color-theme)",
+        "icon": "var(--color-text-dark)"
+      }
+    },
+    "cards": {
+      "background": "var(--color-white)",
+      "border": "var(--color-cement-grey)",
+      "header": {
+        "background": "var(--color-white-grey)",
+        "border": "var(--color-cement-grey)"
+      }
+    },
+    "tabs": {
+      "background": "var(--color-white)",
+      "selected": "var(--color-white)",
+      "border": "var(--color-border-grey)"
+    },
+    "infoBox": {
+      "info": "var(--color-alert-success)",
+      "infoText": "var(--color-alert-success-text)",
+      "notice": "var(--color-alert-warning)",
+      "noticeText": "var(--color-alert-warning-text)",
+      "error": "var(--color-alert-danger)",
+      "errorText": "var(--color-alert-danger-text)"
+    },
+    "calendar": {
+      "today": "var(--color-yellow-15-percent)",
+      "border": "var(--color-cement-grey)",
+      "popover": {
+        "body": "var(--color-white)"
+      }
+    },
+    "tables": {
+      "text": "var(--color-text)",
+      "coloredHeaderText": "var(--color-text-dark)",
+      "oddRow": "var(--color-table-grey)",
+      "evenRow": "var(--color-white)",
+      "border": "var(--color-border-grey)"
+    },
+    "forms": {
+      "buttons": {
+        "actionButton": "var(--color-theme)",
+        "dangerousButton": "var(--color-theme)",
+        "secondaryActionButton": "var(--color-theme)",
+        "outlineButtonBorder": "var(--color-theme)"
+      },
+      "input": {
+        "background": "var(--color-white)",
+        "border": "var(--color-border-grey)",
+        "text": "var(--color-cool-grey)"
+      },
+      "dropdown": {
+        "hover": "var(--color-white-grey)"
+      },
+      "multiSelect": {
+        "itemBackground": "var(--color-pale-grey)"
+      },
+      "checkbox": {
+        "checked": "var(--color-theme)"
+      }
+    },
+    "graphs": {
+      "style": {
+        "gridLine": "var(--color-cement-grey)",
+        "minorGridLine": "var(--color-black)",
+        "border": "var(--color-light-grey)",
+        "tooltipBackground": "var(--color-white-grey)",
+        "selectorButton": {
+          "background": "var(--color-white-grey)",
+          "hover": "var(--color-cement-grey)",
+          "selected": "var(--color-cement-grey)"
+        },
+        "selectorTextInput": {
+          "background": "var(--color-white-grey)",
+          "border": "var(--color-light-grey)"
+        },
+        "selectorRange": {
+          "handle": {
+            "background": "var(--color-white-grey)",
+            "border": "var(--color-grey)"
+          },
+          "outline": "var(--color-light-grey)",
+          "selectedArea": "var(--color-theme)",
+          "seriesLine": "var(--color-theme)"
+        },
+        "scrollbar": {
+          "decoration": "var(--color-text)",
+          "barBackground": "var(--color-light-grey)",
+          "buttonBackground": "var(--color-cement-grey)",
+          "trackBackground": "var(--color-white-grey)"
+        }
+      },
+      "punchCard": "var(--color-ink)",
+      "playersOnline": "var(--color-theme)",
+      "tps": {
+        "high": "var(--color-high-green)",
+        "medium": "var(--color-medium-yellow)",
+        "low": "var(--color-low-red)"
+      },
+      "cpu": "var(--color-cpu-yellow)",
+      "ram": "var(--color-ram-green)",
+      "chunks": "var(--color-chunk-brown)",
+      "entities": "var(--color-entity-purple)",
+      "disk": {
+        "high": "var(--color-high-green)",
+        "medium": "var(--color-medium-yellow)",
+        "low": "var(--color-low-red)"
+      },
+      "ping": {
+        "max": "var(--color-amber)",
+        "avg": "var(--color-warning)",
+        "min": "var(--color-ping-amber)"
+      },
+      "worldMap": {
+        "high": "var(--color-high-green)",
+        "low": "var(--color-map-green)",
+        "bars": "var(--color-theme)"
+      },
+      "pie": {
+        "colors": [
+          "pie-0",
+          "pie-1",
+          "pie-2",
+          "pie-3",
+          "pie-4",
+          "pie-5",
+          "pie-6",
+          "pie-7",
+          "pie-8",
+          "pie-9"
+        ],
+        "drilldown": [
+          "drilldown-0",
+          "drilldown-1",
+          "drilldown-2",
+          "drilldown-3"
+        ]
+      }
+    },
+    "data": {
+      "servers": "var(--color-themeText)",
+      "trend": {
+        "better": "var(--color-themeText)",
+        "same": "var(--color-themeText)",
+        "worse": "var(--color-themeText)"
+      },
+      "play": {
+        "playtime": "var(--color-themeText)",
+        "playtimeActive": "var(--color-themeText)",
+        "playtimeAfk": "var(--color-themeText)",
+        "sessions": "var(--color-themeText)",
+        "sessionLength": "var(--color-themeText)",
+        "gamemode": "var(--color-themeText)",
+        "firstSeen": "var(--color-themeText)",
+        "lastSeen": "var(--color-themeText)"
+      },
+      "players": {
+        "count": "var(--color-themeText)",
+        "online": "var(--color-themeText)",
+        "unique": "var(--color-themeText)",
+        "new": "var(--color-themeText)",
+        "activityIndex": "var(--color-themeText)",
+        "veryActive": "var(--color-green)",
+        "active": "var(--color-light-green)",
+        "regular": "var(--color-lime)",
+        "irregular": "var(--color-amber)",
+        "inactive": "var(--color-blue-grey)"
+      },
+      "playerPeakLast": "var(--color-themeText)",
+      "playerPeakAllTime": "var(--color-themeText)",
+      "performance": {
+        "uptime": "var(--color-themeText)",
+        "downtime": "var(--color-themeText)",
+        "tps": "var(--color-themeText)",
+        "tpsLowSpikes": "var(--color-themeText)",
+        "tpsAverage": "var(--color-themeText)",
+        "cpu": "var(--color-themeText)",
+        "ram": "var(--color-themeText)",
+        "entities": "var(--color-themeText)",
+        "chunks": "var(--color-themeText)",
+        "disk": "var(--color-themeText)",
+        "ping": "var(--color-themeText)"
+      },
+      "calculated": {
+        "insights": "var(--color-themeText)",
+        "joinAddresses": "var(--color-themeText)",
+        "retention": "var(--color-themeText)",
+        "retentionNewPlayers": "var(--color-themeText)",
+        "geolocation": "var(--color-themeText)",
+        "allowList": "var(--color-themeText)",
+        "pluginVersions": "var(--color-themeText)"
+      },
+      "playerVersus": {
+        "playerKills": "var(--color-themeText)",
+        "mobKills": "var(--color-themeText)",
+        "deaths": "var(--color-themeText)",
+        "top-3": {
+          "first": "var(--color-themeText)",
+          "second": "var(--color-themeText)",
+          "third": "var(--color-themeText)"
+        }
+      },
+      "playerStatus": {
+        "online": "var(--color-themeText)",
+        "offline": "var(--color-grey)",
+        "banned": "var(--color-themeText)",
+        "operator": "var(--color-themeText)",
+        "kicks": "var(--color-themeText)",
+        "nicknames": "var(--color-themeText)"
+      }
+    },
+    "plugin": {
+      "red": "var(--color-themeText)",
+      "pink": "var(--color-themeText)",
+      "purple": "var(--color-themeText)",
+      "deepPurple": "var(--color-themeText)",
+      "indigo": "var(--color-themeText)",
+      "blue": "var(--color-themeText)",
+      "lightBlue": "var(--color-themeText)",
+      "cyan": "var(--color-themeText)",
+      "teal": "var(--color-themeText)",
+      "green": "var(--color-themeText)",
+      "lightGreen": "var(--color-themeText)",
+      "lime": "var(--color-themeText)",
+      "yellow": "var(--color-themeText)",
+      "amber": "var(--color-themeText)",
+      "orange": "var(--color-themeText)",
+      "deepOrange": "var(--color-themeText)",
+      "brown": "var(--color-themeText)",
+      "grey": "var(--color-themeText)",
+      "blueGrey": "var(--color-themeText)",
+      "black": "var(--color-themeText)"
+    }
+  },
+  "nightModeUseCases": {
+    "themeColorOptions": [
+      "theme",
+      "night-blue"
+    ],
+    "referenceColors": {
+      "theme": "var(--color-night-dark-blue)",
+      "themeText": "var(--color-night-blue)",
+      "text": "var(--color-night-text)"
+    },
+    "layout": {
+      "background": "var(--color-night-black)",
+      "divider": "var(--color-night-blue)",
+      "title": "var(--color-text)",
+      "loader": {
+        "border": "var(--color-themeText)",
+        "background": "var(--color-themeText)"
+      },
+      "helpIcon": "var(--color-themeText)"
+    },
+    "sidebar": {
+      "text": "var(--color-text)",
+      "divider": "var(--color-night-blue)",
+      "navigationItem": {
+        "icon": "var(--color-text)"
+      },
+      "collapsibleSection": {
+        "background": "var(--color-theme)",
+        "hover": "var(--color-night-dark-grey-blue)",
+        "border": "var(--color-night-blue)"
+      }
+    },
+    "cards": {
+      "background": "var(--color-night-dark-blue)",
+      "border": "var(--color-night-blue)",
+      "header": {
+        "background": "var(--color-night-dark-blue)",
+        "border": "var(--color-night-blue)"
+      }
+    },
+    "tabs": {
+      "background": "var(--color-night-dark-blue)",
+      "selected": "var(--color-night-dark-blue)",
+      "border": "var(--color-night-blue)"
+    },
+    "tables": {
+      "coloredHeaderText": "var(--color-text)",
+      "oddRow": "var(--color-table-slate)",
+      "evenRow": "var(--color-medium-slate)",
+      "border": "var(--color-border-slate)"
+    },
+    "forms": {
+      "buttons": {
+        "actionButton": "var(--color-themeText)",
+        "outlineButtonBorder": "var(--color-text)",
+        "dangerousButton": "var(--color-themeText)",
+        "secondaryActionButton": "var(--color-themeText)"
+      },
+      "input": {
+        "background": "var(--color-night-dark-blue)",
+        "border": "var(--color-night-blue)",
+        "text": "var(--color-text)"
+      },
+      "multiSelect": {
+        "itemBackground": "var(--color-night-dark-grey-blue)"
+      },
+      "checkbox": {
+        "checked": "var(--color-plan)"
+      },
+      "dropdown": {
+        "hover": "var(--color-night-dark-grey-blue)"
+      }
+    },
+    "calendar": {
+      "today": "var(--color-night-grey-blue)",
+      "border": "var(--color-night-blue)",
+      "popover": {
+        "body": "var(--color-night-dark-blue)"
+      }
+    },
+    "graphs": {
+      "style": {
+        "gridLine": "var(--color-night-dark-grey-blue)",
+        "minorGridLine": "var(--color-black)",
+        "border": "var(--color-night-dark-grey-blue)",
+        "tooltipBackground": "var(--color-night-dark-blue)",
+        "selectorButton": {
+          "background": "var(--color-light-slate)",
+          "hover": "var(--color-night-blue)",
+          "selected": "var(--color-night-blue)"
+        },
+        "selectorTextInput": {
+          "background": "var(--color-theme)",
+          "border": "var(--color-night-dark-grey-blue)"
+        },
+        "selectorRange": {
+          "handle": {
+            "background": "var(--color-light-slate)",
+            "border": "var(--color-grey)"
+          },
+          "outline": "var(--color-grey)",
+          "selectedArea": "var(--color-white)",
+          "seriesLine": "var(--color-night-blue)"
+        },
+        "scrollbar": {
+          "decoration": "var(--color-text)",
+          "barBackground": "var(--color-night-grey-blue)",
+          "buttonBackground": "var(--color-grey)",
+          "trackBackground": "var(--color-medium-slate)"
+        }
+      },
+      "punchCard": "var(--color-text)",
+      "worldMap": {
+        "bars": "var(--color-themeText)",
+        "high": "var(--color-night-blue)",
+        "low": "var(--color-grey)"
+      },
+      "playersOnline": "var(--color-themeText)"
+    }
+  }
+}

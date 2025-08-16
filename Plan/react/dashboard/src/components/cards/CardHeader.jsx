@@ -8,7 +8,7 @@ const CardHeader = ({icon, color, label, children}) => {
 
     return (
         <Card.Header>
-            <h6 className="col-black" style={{width: "100%"}}>
+            <h6 className="col-text" style={{width: "100%"}}>
                 <Fa icon={icon} className={"col-" + color}/> {label.length ? t(label) : label}
                 {children}
             </h6>

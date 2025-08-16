@@ -245,6 +245,7 @@ public abstract class SQLDB extends AbstractDatabase {
                 new LegacyPermissionLevelGroupsPatch(),
                 new SecurityTableGroupPatch(),
                 new ExtensionStringValueLengthPatch(),
+                new CookieTableIpAddressPatch()
         };
     }
 

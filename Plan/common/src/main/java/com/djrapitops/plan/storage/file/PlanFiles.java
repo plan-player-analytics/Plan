@@ -31,7 +31,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Optional;
 
 /**
@@ -146,7 +148,7 @@ public class PlanFiles implements SubSystem {
     }
 
     public Optional<File> attemptToFind(Path dir, @Untrusted String resourceName) {
-        if (dir.toFile().exists() && dir.toFile().isDirectory()) {
+        if (Files.exists(dir) && Files.isDirectory(dir)) {
             // Path may be absolute due to resolving untrusted path
             @Untrusted Path asPath = dir.resolve(resourceName);
             if (!asPath.startsWith(dir)) {
@@ -163,5 +165,23 @@ public class PlanFiles implements SubSystem {
 
     public Path getJSONStorageDirectory() {
         return getDataDirectory().resolve("cached_json");
+    }
+
+    public static OpenOption[] replaceIfExists() {
+        return new OpenOption[]{
+                StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE
+        };
+    }
+
+    public Path getThemeDirectory() {
+        Path themeDirectory = getDataDirectory().resolve("web_themes");
+        if (!Files.exists(themeDirectory)) {
+            try {
+                Files.createDirectories(themeDirectory);
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        }
+        return themeDirectory;
     }
 }

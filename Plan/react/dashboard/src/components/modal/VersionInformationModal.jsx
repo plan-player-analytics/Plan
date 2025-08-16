@@ -3,6 +3,7 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {Modal} from "react-bootstrap";
 import {faCheckCircle, faDownload} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
+import ActionButton from "../input/ActionButton.jsx";
 
 const UpdateAvailableModal = ({open, toggle, versionInfo}) => {
     const {t} = useTranslation();
@@ -26,7 +27,7 @@ const UpdateAvailableModal = ({open, toggle, versionInfo}) => {
                 </a>
             </Modal.Body>
             <Modal.Footer>
-                <button className="btn bg-theme" onClick={toggle}>OK</button>
+                <ActionButton onClick={toggle}>OK</ActionButton>
             </Modal.Footer>
         </Modal>
     )
@@ -47,7 +48,7 @@ const NewestVersionModal = ({open, toggle, versionInfo}) => {
                 {t('plugin.version.isLatest')}
             </Modal.Body>
             <Modal.Footer>
-                <button className="btn bg-theme" onClick={toggle}>OK</button>
+                <ActionButton onClick={toggle}>OK</ActionButton>
             </Modal.Footer>
         </Modal>
     );

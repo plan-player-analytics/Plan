@@ -17,7 +17,7 @@ const ServerWeekComparisonCard = ({data}) => {
     return (
         <Card id={"week-comparison"}>
             <Card.Header>
-                <h6 className="col-black">
+                <h6 className="col-text">
                     <Fa icon={faExchangeAlt}/> {t('html.label.weekComparison')}
                 </h6>
             </Card.Header>
@@ -26,7 +26,7 @@ const ServerWeekComparisonCard = ({data}) => {
                                  <><FormattedDay date={data.start}/> - <FormattedDay date={data.midpoint}/></>,
                                  <><FormattedDay date={data.midpoint}/> - <FormattedDay date={data.end}/></>,
                                  t('html.label.trend')]}>
-                <TableRow icon={faUsers} color="blue"
+                <TableRow icon={faUsers} color="players-unique"
                           text={t('html.label.uniquePlayers')}
                           values={[
                               data.unique_before,
@@ -34,7 +34,7 @@ const ServerWeekComparisonCard = ({data}) => {
                               <BigTrend key={JSON.stringify(data.unique_trend)}
                                         trend={data.unique_trend}/>
                           ]}/>
-                <TableRow icon={faUsers} color="light-green" text={t('html.label.newPlayers')}
+                <TableRow icon={faUsers} color="players-new" text={t('html.label.newPlayers')}
                           values={[data.new_before, data.new_after,
                               <BigTrend key={JSON.stringify(data.new_trend)}
                                         trend={data.new_trend}/>]}/>
@@ -42,7 +42,7 @@ const ServerWeekComparisonCard = ({data}) => {
                           values={[data.regular_before, data.regular_after,
                               <BigTrend key={JSON.stringify(data.regular_trend)}
                                         trend={data.regular_trend}/>]}/>
-                <TableRow icon={faClock} color="green"
+                <TableRow icon={faClock} color="playtime"
                           text={t('html.label.averagePlaytime') + ' ' + t('html.label.perPlayer')}
                           values={[
                               <FormattedTime key={"before-ms"} timeMs={data.average_playtime_before}/>,
@@ -51,26 +51,26 @@ const ServerWeekComparisonCard = ({data}) => {
                                         trend={data.average_playtime_trend}
                                         format={formatTimeFunction}/>]}/>
                 {data.session_length_average_before !== undefined && <TableRow
-                    icon={faClock} color="teal"
+                    icon={faClock} color="sessions"
                     text={t('html.label.averageSessionLength')}
                     values={[<FormattedTime key={"before-ms"} timeMs={data.session_length_average_before}/>,
                         <FormattedTime key={"after-ms"} timeMs={data.session_length_average_after}/>,
                         <BigTrend key={JSON.stringify(data.session_length_average_trend)}
                                   trend={data.session_length_average_trend}
                                   format={formatTimeFunction}/>]}/>}
-                <TableRow icon={faCalendarCheck} color="teal" text={t('html.label.sessions')}
+                <TableRow icon={faCalendarCheck} color="sessions" text={t('html.label.sessions')}
                           values={[data.sessions_before, data.sessions_after,
                               <BigTrend key={JSON.stringify(data.sessions_trend)}
                                         trend={data.sessions_trend}/>]}/>
-                <TableRow icon={faCrosshairs} color="red" text={t('html.label.playerKills')}
+                <TableRow icon={faCrosshairs} color="player-kills" text={t('html.label.playerKills')}
                           values={[data.player_kills_before, data.player_kills_after,
                               <BigTrend key={JSON.stringify(data.player_kills_trend)}
                                         trend={data.player_kills_trend}/>]}/>
-                <TableRow icon={faCrosshairs} color="green" text={t('html.label.mobKills')}
+                <TableRow icon={faCrosshairs} color="mob-kills" text={t('html.label.mobKills')}
                           values={[data.mob_kills_before, data.mob_kills_after,
                               <BigTrend key={JSON.stringify(data.mob_kills_trend)}
                                         trend={data.mob_kills_trend}/>]}/>
-                <TableRow icon={faSkull} color="black" text={t('html.label.deaths')}
+                <TableRow icon={faSkull} color="deaths" text={t('html.label.deaths')}
                           values={[data.deaths_before, data.deaths_after,
                               <BigTrend key={JSON.stringify(data.deaths_trend)}
                                         trend={data.deaths_trend}/>]}/>

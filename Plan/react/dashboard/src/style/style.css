@@ -1,52 +1,10 @@
-:root {
-    --color-red: #F44336;
-    --color-pink: #E91E63;
-    --color-purple: #9C27B0;
-    --color-deep-purple: #673AB7;
-    --color-indigo: #3F51B5;
-    --color-blue: #2196F3;
-    --color-light-blue: #03A9F4;
-    --color-cyan: #00BCD4;
-    --color-teal: #009688;
-    --color-green: #4CAF50;
-    --color-light-green: #8BC34A;
-    --color-lime: #CDDC39;
-    --color-yellow: #ffe821;
-    --color-amber: #FFC107;
-    --color-orange: #FF9800;
-    --color-deep-orange: #FF5722;
-    --color-brown: #795548;
-    --color-grey: #9E9E9E;
-    --color-blue-grey: #607D8B;
-    --color-black: #555555;
-    --color-white: #ffffff;
-    --color-plan: #368F17;
-    --color-text-light-bg: #333;
-    --color-text-dark-bg: #fff;
-    --color-text-dark-bg-disabled: #ccc;
-
-    --color-success: #1CC88A;
-    --color-warning: #F6C23E;
-    --color-danger: #e74A3B;
-
-    --color-night-black: #282a36;
-    --color-night-dark-blue: #44475a;
-    --color-night-blue: #6272a4;
-    --color-night-grey-blue: #646e8c;
-    --color-night-dark-grey-blue: #606270;
-    --color-night-text-dark-bg: #eee8d5;
-
-    --color-theme: var(--color-plan);
-    --color-night: var(--color-night-dark-blue);
-}
-
 a {
     text-decoration: none;
 }
 
 hr {
     background-color: transparent;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    border-top: 1px solid var(--color-layout-divider);
     opacity: 1;
 }
 
@@ -76,12 +34,8 @@ small, .small {
 }
 
 .table {
-    --bs-table-striped-color: none;
-}
-
-.table-dark {
-    --bs-table-striped-bg: rgba(255, 255, 255, 0.05);
-    --bs-table-bg: none;
+    --bs-table-striped-bg: transparent;
+    --bs-table-bg: transparent;
 }
 
 .table-dark.table-bordered {
@@ -174,8 +128,9 @@ p.collapsing {
     display: inline-block;
     width: 2rem;
     height: 2rem;
-    border: 4px solid var(--color-theme);
-    background-color: var(--color-theme);
+    border: 4px solid var(--color-layout-loader-border);
+    background: var(--color-layout-loader-background);
+    background-color: var(--color-layout-loader-background);
     border-radius: 5px;
     animation: loader 2s infinite ease;
 }
@@ -805,151 +760,151 @@ div#navSrvContainer::-webkit-scrollbar-thumb {
 
 .bg-transparent-light {
     background-color: transparent;
-    color: #fff;
+    color: var(--color-sidebar-text);
 }
 
 .bg-red, body.theme-red .fc-toolbar-chunk .btn.btn-primary {
     background-color: var(--color-red);
     --bs-btn-disabled-bg: var(--color-red);
-    color: var(--color-text-dark-bg);
+    color: var(--color-text-dark);
 }
 
 .bg-pink, body.theme-pink .fc-toolbar-chunk .btn.btn-primary {
     background-color: var(--color-pink);
     --bs-btn-disabled-bg: var(--color-pink);
-    color: var(--color-text-dark-bg);
+    color: var(--color-text-dark);
 }
 
 .bg-purple, body.theme-purple .fc-toolbar-chunk .btn.btn-primary {
     background-color: var(--color-purple);
     --bs-btn-disabled-bg: var(--color-purple);
-    color: var(--color-text-dark-bg);
+    color: var(--color-text-dark);
 }
 
 .bg-deep-purple, body.theme-deep-purple .fc-toolbar-chunk .btn.btn-primary {
     background-color: var(--color-deep-purple);
     --bs-btn-disabled-bg: var(--color-deep-purple);
-    color: var(--color-text-dark-bg);
+    color: var(--color-text-dark);
 }
 
 .bg-indigo, body.theme-indigo .fc-toolbar-chunk .btn.btn-primary {
     background-color: var(--color-indigo);
     --bs-btn-disabled-bg: var(--color-indigo);
-    color: var(--color-text-dark-bg);
+    color: var(--color-text-dark);
 }
 
 .bg-blue, body.theme-blue .fc-toolbar-chunk .btn.btn-primary {
     background-color: var(--color-blue);
     --bs-btn-disabled-bg: var(--color-blue);
-    color: var(--color-text-dark-bg);
+    color: var(--color-text-dark);
 }
 
 .bg-light-blue, body.theme-light-blue .fc-toolbar-chunk .btn.btn-primary {
     background-color: var(--color-light-blue);
     --bs-btn-disabled-bg: var(--color-light-blue);
-    color: var(--color-text-dark-bg);
+    color: var(--color-text-dark);
 }
 
 .bg-cyan, body.theme-cyan .fc-toolbar-chunk .btn.btn-primary {
     background-color: var(--color-cyan);
     --bs-btn-disabled-bg: var(--color-cyan);
-    color: var(--color-text-dark-bg);
+    color: var(--color-text-dark);
 }
 
 .bg-teal, body.theme-teal .fc-toolbar-chunk .btn.btn-primary {
     background-color: var(--color-teal);
     --bs-btn-disabled-bg: var(--color-teal);
-    color: var(--color-text-dark-bg);
+    color: var(--color-text-dark);
 }
 
 .bg-green, body.theme-green .fc-toolbar-chunk .btn.btn-primary {
     background-color: var(--color-green);
     --bs-btn-disabled-bg: var(--color-green);
-    color: var(--color-text-dark-bg);
+    color: var(--color-text-dark);
 }
 
 .bg-light-green, body.theme-light-green .fc-toolbar-chunk .btn.btn-primary {
     background-color: var(--color-light-green);
     --bs-btn-disabled-bg: var(--color-light-green);
-    color: var(--color-text-dark-bg);
+    color: var(--color-text-dark);
 }
 
 .bg-lime, body.theme-lime .fc-toolbar-chunk .btn.btn-primary {
     background-color: var(--color-lime);
     --bs-btn-disabled-bg: var(--color-lime);
-    color: var(--color-text-dark-bg);
+    color: var(--color-text-dark);
 }
 
 .bg-yellow, body.theme-yellow .fc-toolbar-chunk .btn.btn-primary {
     background-color: var(--color-yellow);
     --bs-btn-disabled-bg: var(--color-yellow);
-    color: var(--color-text-dark-bg);
+    color: var(--color-text-dark);
 }
 
 .bg-amber, body.theme-amber .fc-toolbar-chunk .btn.btn-primary {
     background-color: var(--color-amber);
     --bs-btn-disabled-bg: var(--color-amber);
-    color: var(--color-text-dark-bg);
+    color: var(--color-text-dark);
 }
 
 .bg-orange, body.theme-orange .fc-toolbar-chunk .btn.btn-primary {
     background-color: var(--color-orange);
     --bs-btn-disabled-bg: var(--color-orange);
-    color: var(--color-text-dark-bg);
+    color: var(--color-text-dark);
 }
 
 .bg-deep-orange, body.theme-deep-orange .fc-toolbar-chunk .btn.btn-primary {
     background-color: var(--color-deep-orange);
     --bs-btn-disabled-bg: var(--color-deep-orange);
-    color: var(--color-text-dark-bg);
+    color: var(--color-text-dark);
 }
 
 .bg-brown, body.theme-brown .fc-toolbar-chunk .btn.btn-primary {
     background-color: var(--color-brown);
     --bs-btn-disabled-bg: var(--color-brown);
-    color: var(--color-text-dark-bg);
+    color: var(--color-text-dark);
 }
 
 .bg-grey, body.theme-grey .fc-toolbar-chunk .btn.btn-primary {
     background-color: var(--color-grey);
     --bs-btn-disabled-bg: var(--color-grey);
-    color: var(--color-text-dark-bg);
+    color: var(--color-text-dark);
 }
 
 .bg-blue-grey, body.theme-blue-grey .fc-toolbar-chunk .btn.btn-primary {
     background-color: var(--color-blue-grey);
     --bs-btn-disabled-bg: var(--color-blue-grey);
-    color: var(--color-text-dark-bg);
+    color: var(--color-text-dark);
 }
 
 .bg-black, body.theme-black .fc-toolbar-chunk .btn.btn-primary {
     background-color: var(--color-black);
     --bs-btn-disabled-bg: var(--color-black);
-    color: var(--color-text-dark-bg);
+    color: var(--color-text-dark);
 }
 
 .bg-white, body.theme-white .fc-toolbar-chunk .btn.btn-primary {
     background-color: var(--color-white);
     --bs-btn-disabled-bg: var(--color-white);
-    color: var(--color-text-light-bg);
+    color: var(--color-text-light);
 }
 
 .bg-plan, body.theme-plan .fc-toolbar-chunk .btn.btn-primary {
     background-color: var(--color-plan);
     --bs-btn-disabled-bg: var(--color-plan);
-    color: var(--color-text-dark-bg);
+    color: var(--color-text-dark);
 }
 
 .bg-theme, body.theme .fc-toolbar-chunk .btn.btn-primary {
-    background-color: var(--color-theme);
+    background: var(--color-theme);
     --bs-btn-disabled-bg: var(--color-theme);
-    color: var(--color-text-dark-bg);
+    color: var(--color-text-dark);
 }
 
 .bg-theme.btn:hover, body.theme .fc-toolbar-chunk .btn.btn-primary:hover, .fc-button:hover {
     background-color: color-mix(in srgb, var(--color-theme) 90%, black) !important;
     --bs-btn-disabled-bg: var(--color-theme);
-    color: color-mix(in srgb, var(--color-text-dark-bg) 85%, black) !important;
+    color: color-mix(in srgb, var(--color-text-dark) 85%, black) !important;
 }
 
 .bg-success {
@@ -986,7 +941,7 @@ div#navSrvContainer::-webkit-scrollbar-thumb {
 .btn.bg-grey:hover,
 .btn.bg-blue-grey:hover,
 .btn.bg-transparent-light:hover {
-    color: var(--color-text-dark-bg-disabled) !important;
+    color: color-mix(in srgb, var(--color-sidebar-text), transparent 35%);
     background-color: var(--bs-btn-disabled-bg);
 }
 
@@ -1217,78 +1172,15 @@ div#navSrvContainer::-webkit-scrollbar-thumb {
 }
 
 .col-theme {
-    color: var(--color-theme);
+    color: var(--color-themeText);
+}
+
+.col-text {
+    color: var(--color-text);
 }
 
 button.col-theme:hover, a.col-theme:hover {
-    color: color-mix(in srgb, var(--color-theme) 60%, black)
-}
-
-/* Minecraft color codes */
-.black {
-    color: #000000;
-}
-
-.darkblue {
-    color: #0000AA;
-}
-
-.darkgreen {
-    color: #00AA00;
-}
-
-.darkaqua {
-    color: #00AAAA;
-}
-
-.darkred {
-    color: #AA0000;
-}
-
-.darkpurple {
-    color: #AA00AA;
-}
-
-.gold {
-    color: #FFAA00;
-}
-
-.gray {
-    color: #AAAAAA;
-}
-
-.darkgray {
-    color: var(--color-black);
-}
-
-.blue {
-    color: #5555FF;
-}
-
-.green {
-    color: #55FF55;
-}
-
-.aqua {
-    color: #55FFFF;
-}
-
-.red {
-    color: #FF5555;
-}
-
-.pink {
-    color: #FF55FF;
-}
-
-.yellow {
-    color: #FFFF55;
-    text-shadow: 0 0 6px #000;
-}
-
-.white {
-    color: #FFFFFF;
-    text-shadow: 0 0 8px #000;
+    color: color-mix(in srgb, var(--color-themeText) 60%, var(--contrast-color-themeText))
 }
 
 .italic {
@@ -1463,7 +1355,7 @@ ul.filters {
 #wrapper {
     display: flex;
     min-height: 100vh;
-    background-image: linear-gradient(to right, var(--color-theme) 0%, var(--color-theme) 14rem, #f8f9fc 14.01rem, #f8f9fc 100%);
+    background-image: linear-gradient(to right, var(--color-theme) 0%, var(--color-theme) 14rem, var(--color-layout-background) 14.01rem, var(--color-layout-background) 100%);
 }
 
 .contributor {
@@ -1507,4 +1399,16 @@ ul.filters {
 
 .link:hover {
     color: var(--bs-link-hover-color)
+}
+
+.card-header .btn.float-end {
+    margin-top: -0.5rem;
+}
+
+/* Fix vertical alignment of dropdown toggle arrow */
+.dropdown-toggle {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }

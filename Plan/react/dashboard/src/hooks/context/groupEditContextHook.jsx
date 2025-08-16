@@ -5,6 +5,7 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCheck, faExclamationTriangle} from "@fortawesome/free-solid-svg-icons";
 import {useAlertPopupContext} from "./alertPopupContext";
 import {Trans, useTranslation} from "react-i18next";
+import {useAuth} from "../authenticationHook.jsx";
 
 const GroupEditContext = createContext({});
 
@@ -48,6 +49,7 @@ export const GroupEditContextProvider = ({groupName, children}) => {
     const [lastSave, setLastSave] = useState(Date.now());
     const [lastDiscard, setLastDiscard] = useState(Date.now());
     const {addAlert} = useAlertPopupContext();
+    const {updateLoginDetails} = useAuth();
 
     const [allPermissions, setAllPermissions] = useState([]);
     useEffect(() => {
@@ -205,6 +207,7 @@ export const GroupEditContextProvider = ({groupName, children}) => {
                 });
             }
             setLastSave(Date.now());
+            updateLoginDetails();
         }
     }, [lastSave, changed, setChanged, saveRequested, setLastSave, permissions, groupName, addAlert, t]);
 

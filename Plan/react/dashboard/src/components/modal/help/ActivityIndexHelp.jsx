@@ -1,6 +1,5 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {tooltip} from "../../../util/graphs";
-import {withReducedSaturation} from "../../../util/colors";
 import {useTheme} from "../../../hooks/themeHook";
 import FunctionPlotGraph from "../../graphs/FunctionPlotGraph";
 import {useTranslation} from "react-i18next";
@@ -29,27 +28,27 @@ const ActivityIndexHelp = () => {
     const {nightModeEnabled} = useTheme();
 
     const yPlotLines = useMemo(() => [{
-        color: '#607D8B',
+        color: 'var(--color-data-players-inactive)',
         value: 0,
         width: 1,
         label: {text: t('html.label.inactive')}
     }, {
-        color: 'rgb(76,175,80)',
+        color: 'var(--color-data-players-very-active)',
         value: 3.75,
         width: 1.5,
         label: {text: t('html.label.veryActive')}
     }, {
-        color: 'rgb(139,195,74)',
+        color: 'var(--color-data-players-active)',
         value: 3,
         width: 1.5,
         label: {text: t('html.label.active')}
     }, {
-        color: 'rgb(205,220,57)',
+        color: 'var(--color-data-players-regular)',
         value: 2,
         width: 1.5,
         label: {text: t('html.label.regular')}
     }, {
-        color: 'rgb(255,193,7)',
+        color: 'var(--color-data-players-irregular)',
         value: 1,
         width: 1.5,
         label: {text: t('html.label.irregular')}
@@ -74,7 +73,7 @@ const ActivityIndexHelp = () => {
             data: data,
             type: 'spline',
             tooltip: tooltip.twoDecimals,
-            color: nightModeEnabled ? withReducedSaturation('#03A9F4') : '#03A9F4'
+            color: 'var(--color-data-players-online)'
         }, {
             name: t('html.label.help.testResult'),
             type: 'scatter',
@@ -82,7 +81,7 @@ const ActivityIndexHelp = () => {
             pointPlacement: 0,
             width: 5,
             tooltip: tooltip.twoDecimals,
-            color: 'rgb(76,175,80)'
+            color: 'var(--color-data-players-very-active)'
         }]
     }, [nightModeEnabled, t, result]);
 
@@ -117,17 +116,17 @@ const ActivityIndexHelp = () => {
             </InputGroup>
             <p>{t('html.label.playtime')}</p>
             <InputGroup className={'mb-1'}>
-                <InputGroup.Text>{t('html.label.help.activityIndexWeek').replace('{}', '1')}</InputGroup.Text>
+                <InputGroup.Text>{t('html.label.help.activityIndexWeek', {number: 1})}</InputGroup.Text>
                 <Form.Control value={week1} onChange={onWeek1Set} isInvalid={isNaN(week1)}/>
                 <InputGroup.Text>{t('html.label.help.playtimeUnit')}</InputGroup.Text>
             </InputGroup>
             <InputGroup className={'mb-1'}>
-                <InputGroup.Text>{t('html.label.help.activityIndexWeek').replace('{}', '2')}</InputGroup.Text>
+                <InputGroup.Text>{t('html.label.help.activityIndexWeek', {number: 2})}</InputGroup.Text>
                 <Form.Control value={week2} onChange={onWeek2Set} isInvalid={isNaN(week2)}/>
                 <InputGroup.Text>{t('html.label.help.playtimeUnit')}</InputGroup.Text>
             </InputGroup>
             <InputGroup className={'mb-2'}>
-                <InputGroup.Text>{t('html.label.help.activityIndexWeek').replace('{}', '3')}</InputGroup.Text>
+                <InputGroup.Text>{t('html.label.help.activityIndexWeek', {number: 3})}</InputGroup.Text>
                 <Form.Control value={week3} onChange={onWeek3Set} isInvalid={isNaN(week3)}/>
                 <InputGroup.Text>{t('html.label.help.playtimeUnit')}</InputGroup.Text>
             </InputGroup>

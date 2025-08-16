@@ -7,6 +7,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faHandPointer} from "@fortawesome/free-regular-svg-icons";
 import {useTimePreferences} from "../text/FormattedTime.jsx";
 import {formatTimeAmount} from "../../util/format/TimeAmountFormat.js";
+import {localeService} from "../../service/localeService.js";
 
 const ServerCalendar = ({series, firstDay, onSelect}) => {
     const {t} = useTranslation();
@@ -39,10 +40,18 @@ const ServerCalendar = ({series, firstDay, onSelect}) => {
         }
     });
 
+    const buttonText = {
+        today: t('plugin.generic.today').toLowerCase().replaceAll("'", ''),
+        month: t('html.label.time.month').toLowerCase(),
+        week: t('html.label.time.week').toLowerCase(),
+        day: t('html.label.time.day').toLowerCase(),
+    };
+
     return (
         <div id={'server-calendar'}>
             <p style={explainerStyle}><FontAwesomeIcon icon={faHandPointer}/> {t('html.text.clickAndDrag')}</p>
             <FullCalendar
+                locale={localeService.getIntlFriendlyLocale()}
                 plugins={[interactionPlugin, dayGridPlugin]}
                 timeZone="UTC"
                 themeSystem='bootstrap'
@@ -58,6 +67,7 @@ const ServerCalendar = ({series, firstDay, onSelect}) => {
                     center: '',
                     right: 'dayGridMonth dayGridWeek dayGridDay today prev next'
                 }}
+                buttonText={buttonText}
                 editable={false}
                 selectable={Boolean(onSelect)}
                 select={onSelect}

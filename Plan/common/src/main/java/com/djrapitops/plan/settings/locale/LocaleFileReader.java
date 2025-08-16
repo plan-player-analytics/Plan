@@ -50,6 +50,8 @@ public class LocaleFileReader {
                     locale.put(msg, new Message(config.getString(key)));
                 }
             });
+
+            LocaleModifications.apply(locale);
             return locale;
         }
     }

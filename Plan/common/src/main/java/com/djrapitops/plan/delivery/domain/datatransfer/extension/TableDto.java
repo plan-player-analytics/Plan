@@ -16,11 +16,8 @@
  */
 package com.djrapitops.plan.delivery.domain.datatransfer.extension;
 
-import com.djrapitops.plan.delivery.formatting.Formatters;
-import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.extension.table.TableColumnFormat;
-import org.apache.commons.text.StringEscapeUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -59,31 +56,12 @@ public class TableDto {
                             mapped.add(null);
                         } else {
                             TableColumnFormat format = tableColumnFormats[i];
-                            mapped.add(new TableCellDto(applyFormat(format, value), value));
+                            mapped.add(new TableCellDto(value, format));
                         }
                     }
                     return mapped.toArray(new TableCellDto[0]);
                 })
                 .collect(Collectors.toList());
-    }
-
-    public static String applyFormat(TableColumnFormat format, Object value) {
-        try {
-            switch (format) {
-                case TIME_MILLISECONDS:
-                    return Formatters.getInstance().timeAmount().apply(Long.parseLong(value.toString()));
-                case DATE_YEAR:
-                    return Formatters.getInstance().yearLong().apply(Long.parseLong(value.toString()));
-                case DATE_SECOND:
-                    return Formatters.getInstance().secondLong().apply(Long.parseLong(value.toString()));
-                case PLAYER_NAME:
-                    return Html.LINK.create("../player/" + Html.encodeToURL(value.toString()), StringEscapeUtils.escapeHtml4(value.toString()));
-                default:
-                    return value.toString();
-            }
-        } catch (Exception e) {
-            return Objects.toString(value);
-        }
     }
 
     private List<TableCellDto> constructRow(List<String> columns, TableCellDto[] row) {
@@ -93,10 +71,10 @@ public class TableDto {
         int columnCount = columns.size();
         for (int i = 0; i < columnCount; i++) {
             if (i > headerLength) {
-                constructedRow.add(new TableCellDto("-"));
+                constructedRow.add(new TableCellDto("-", null));
             } else {
                 TableCellDto cell = row[i];
-                constructedRow.add(cell != null ? cell : new TableCellDto("-"));
+                constructedRow.add(cell != null ? cell : new TableCellDto("-", null));
             }
         }
         return constructedRow;

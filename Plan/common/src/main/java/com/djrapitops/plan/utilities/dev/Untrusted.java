@@ -28,4 +28,6 @@ import java.lang.annotation.Target;
  */
 @Retention(RetentionPolicy.SOURCE)
 @Target({ElementType.PARAMETER, ElementType.FIELD, ElementType.METHOD, ElementType.LOCAL_VARIABLE, ElementType.TYPE_PARAMETER, ElementType.TYPE_USE, ElementType.CONSTRUCTOR, ElementType.TYPE})
-public @interface Untrusted {}
+public @interface Untrusted {
+    String reason() default "";
+}

@@ -6,7 +6,7 @@
 
     #wrapper {
         font-size: small;
-        background-image: var(--color-theme);
+        background-image: var(--color-layout-background);
     }
 
     .sidebar {

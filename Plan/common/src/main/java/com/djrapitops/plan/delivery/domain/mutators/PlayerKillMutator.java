@@ -50,7 +50,7 @@ public class PlayerKillMutator {
                     ServerIdentifier server = kill.getServer();
 
                     Map<String, Object> killMap = new HashMap<>();
-                    killMap.put("date", formatters.secondLong().apply(kill.getDate()));
+                    killMap.put("date", kill.getDate());
                     killMap.put("killer", killer.getName());
                     killMap.put("victim", victim.getName());
                     killMap.put("killerUUID", killer.getUuid().toString());

@@ -22,6 +22,7 @@ import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
+import com.djrapitops.plan.delivery.web.resolver.exception.MethodNotAllowedException;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
@@ -83,6 +84,7 @@ public class ResponseResolver {
     private final SwaggerJsonResolver swaggerJsonResolver;
     private final SwaggerPageResolver swaggerPageResolver;
     private final ManagePageResolver managePageResolver;
+    private final ThemeEditorResolver themeEditorResolver;
     private final ErrorLogger errorLogger;
 
     private final ResolverService resolverService;
@@ -105,6 +107,7 @@ public class ResponseResolver {
             RootPageResolver rootPageResolver,
             RootJSONResolver rootJSONResolver,
             StaticResourceResolver staticResourceResolver,
+            ThemeEditorResolver themeEditorResolver,
             PublicHtmlResolver publicHtmlResolver,
 
             LoginPageResolver loginPageResolver,
@@ -130,6 +133,7 @@ public class ResponseResolver {
         this.rootPageResolver = rootPageResolver;
         this.rootJSONResolver = rootJSONResolver;
         this.staticResourceResolver = staticResourceResolver;
+        this.themeEditorResolver = themeEditorResolver;
         this.publicHtmlResolver = publicHtmlResolver;
         this.loginPageResolver = loginPageResolver;
         this.registerPageResolver = registerPageResolver;
@@ -157,6 +161,7 @@ public class ResponseResolver {
         resolverService.registerResolver(plugin, "/player", playerPageResolver);
         resolverService.registerResolver(plugin, "/network", serverPageResolver);
         resolverService.registerResolver(plugin, "/server", serverPageResolver);
+        resolverService.registerResolver(plugin, "/theme-editor", themeEditorResolver);
         if (webServer.get().isAuthRequired()) {
             resolverService.registerResolver(plugin, "/login", loginPageResolver);
             resolverService.registerResolver(plugin, "/register", registerPageResolver);
@@ -186,10 +191,12 @@ public class ResponseResolver {
     public Response getResponse(@Untrusted Request request) {
         try {
             return tryToGetResponse(request);
-        } catch (NotFoundException e) {
-            return responseFactory.notFound404(e.getMessage());
         } catch (BadRequestException e) {
             return responseFactory.badRequest(e.getMessage(), request.getPath().asString());
+        } catch (NotFoundException e) {
+            return responseFactory.notFound404(e.getMessage());
+        } catch (MethodNotAllowedException e) {
+            return responseFactory.methodNotAllowed405(e.getMessage(), e.getAllowedMethods());
         } catch (WebUserAuthException e) {
             throw e; // Pass along
         } catch (Exception e) {
@@ -228,7 +235,11 @@ public class ResponseResolver {
                     Optional<Response> resolved = resolver.resolve(request);
                     if (resolved.isPresent()) return resolved.get();
                 } else {
-                    return responseFactory.forbidden403();
+                    if (request.getPath().startsWith("/v1/")) {
+                        return responseFactory.forbidden403Json();
+                    } else {
+                        return responseFactory.forbidden403();
+                    }
                 }
             } else {
                 Optional<Response> resolved = resolver.resolve(request);

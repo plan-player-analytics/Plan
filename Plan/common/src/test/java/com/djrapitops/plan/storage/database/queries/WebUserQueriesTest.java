@@ -22,6 +22,7 @@ import com.djrapitops.plan.delivery.domain.datatransfer.preferences.Preferences;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieExpiryCleanupTask;
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieStore;
+import com.djrapitops.plan.delivery.webserver.auth.CookieMetadata;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
@@ -99,10 +100,11 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
 
         ActiveCookieStore cookieStore = createActiveCookieStore();
 
-        String cookie = cookieStore.generateNewCookie(user);
+        String cookie = cookieStore.generateNewCookie(user, TestConstants.IPV4_ADDRESS);
 
-        Map<String, User> result = db().query(WebUserQueries.fetchActiveCookies());
-        Map<String, User> expected = Collections.singletonMap(cookie, user);
+        Map<String, CookieMetadata> result = db().query(WebUserQueries.fetchActiveCookies());
+        Map<String, CookieMetadata> expected = Collections.singletonMap(cookie, new CookieMetadata(user, 0, TestConstants.IPV4_ADDRESS));
+        result.entrySet().forEach(entry -> expected.get(entry.getKey()).setExpires(entry.getValue().getExpires()));
         assertEquals(expected, result);
     }
 
@@ -114,7 +116,7 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
 
         ActiveCookieStore cookieStore = createActiveCookieStore();
 
-        String cookie = cookieStore.generateNewCookie(user);
+        String cookie = cookieStore.generateNewCookie(user, TestConstants.IPV4_ADDRESS);
 
         cookieStore.removeCookie(cookie);
 
@@ -129,11 +131,11 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
 
         ActiveCookieStore cookieStore = createActiveCookieStore();
 
-        String cookie = cookieStore.generateNewCookie(user);
+        String cookie = cookieStore.generateNewCookie(user, TestConstants.IPV4_ADDRESS);
 
         db().executeTransaction(new RemoveWebUserTransaction(WEB_USERNAME));
 
-        assertFalse(cookieStore.checkCookie(cookie).isPresent());
+        assertFalse(cookieStore.findCookie(cookie).isPresent());
 
         assertTrue(db().query(WebUserQueries.fetchActiveCookies()).isEmpty());
     }

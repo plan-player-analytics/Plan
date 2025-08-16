@@ -24,25 +24,25 @@ const RecentPlayersCard = ({data}) => {
     return (
         <Card id={"recent-players"}>
             <Card.Header>
-                <h6 className="col-black">
+                <h6 className="col-text">
                     {t('html.label.players')}
                 </h6>
             </Card.Header>
             <ExtendableCardBody id={'card-body-network-overview-players'}>
                 <p>{t('html.label.last24hours')}</p>
-                <Datapoint icon={faUsers} color="light-blue"
+                <Datapoint icon={faUsers} color="players-unique"
                            name={t('html.label.uniquePlayers')} value={data.unique_players_1d}/>
-                <Datapoint icon={faUsers} color="light-green"
+                <Datapoint icon={faUsers} color="players-new"
                            name={t('html.label.newPlayers')} value={data.new_players_1d}/>
                 <p>{t('html.label.last7days')}</p>
-                <Datapoint icon={faUsers} color="light-blue"
+                <Datapoint icon={faUsers} color="players-unique"
                            name={t('html.label.uniquePlayers')} value={data.unique_players_7d}/>
-                <Datapoint icon={faUsers} color="light-green"
+                <Datapoint icon={faUsers} color="players-new"
                            name={t('html.label.newPlayers')} value={data.new_players_7d}/>
                 <p>{t('html.label.last30days')}</p>
-                <Datapoint icon={faUsers} color="light-blue"
+                <Datapoint icon={faUsers} color="players-unique"
                            name={t('html.label.uniquePlayers')} value={data.unique_players_30d}/>
-                <Datapoint icon={faUsers} color="light-green"
+                <Datapoint icon={faUsers} color="players-new"
                            name={t('html.label.newPlayers')} value={data.new_players_30d}/>
             </ExtendableCardBody>
         </Card>

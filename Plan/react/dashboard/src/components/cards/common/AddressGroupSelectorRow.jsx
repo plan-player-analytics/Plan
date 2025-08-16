@@ -5,6 +5,7 @@ import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import React from "react";
 import {useTranslation} from "react-i18next";
 import {useJoinAddressListContext} from "../../../hooks/context/joinAddressListContextHook.jsx";
+import ActionButton from "../../input/ActionButton.jsx";
 
 const AddressGroupSelectorRow = () => {
     const {t} = useTranslation();
@@ -21,9 +22,9 @@ const AddressGroupSelectorRow = () => {
                                       remove={() => remove(i)}/>
                 </Col>)}
             <Col lg={2}>
-                <button className={"btn bg-theme mb-4"} onClick={add}>
+                <ActionButton className={"mb-4"} onClick={add}>
                     <FontAwesomeIcon icon={faPlus}/> {t('html.label.addJoinAddressGroup')}
-                </button>
+                </ActionButton>
             </Col>
         </Row>
     )

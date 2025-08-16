@@ -5,6 +5,7 @@ import Highcharts from 'highcharts/highmaps';
 import topology from '@highcharts/map-collection/custom/world.topo.json';
 import Accessibility from "highcharts/modules/accessibility";
 import NoDataDisplay from "highcharts/modules/no-data-to-display";
+import {calculateCssHexColor} from "../../util/colors.js";
 
 export const ProjectionOptions = {
     MILLER: "html.label.geoProjection.miller",
@@ -32,6 +33,8 @@ const GeolocationWorldMap = ({series, colors, projection, onClickCountry}) => {
     const {t} = useTranslation();
     const {nightModeEnabled, graphTheming} = useTheme();
 
+    const minColor = calculateCssHexColor("var(--color-graphs-world-map-low)");
+    const maxColor = calculateCssHexColor("var(--color-graphs-world-map-high)");
     useEffect(() => {
         const mapSeries = {
             name: t('html.label.players'),
@@ -71,8 +74,8 @@ const GeolocationWorldMap = ({series, colors, projection, onClickCountry}) => {
             colorAxis: {
                 min: 1,
                 type: 'logarithmic',
-                minColor: colors.low,
-                maxColor: colors.high
+                minColor,
+                maxColor
             },
             series: [mapSeries]
         })

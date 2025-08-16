@@ -44,7 +44,6 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
-import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
@@ -76,7 +75,6 @@ import java.util.stream.Collectors;
 public class GraphJSONCreator {
 
     private final PlanConfig config;
-    private final Locale locale;
     private final Theme theme;
     private final DBSystem dbSystem;
     private final Graphs graphs;
@@ -84,13 +82,11 @@ public class GraphJSONCreator {
     @Inject
     public GraphJSONCreator(
             PlanConfig config,
-            Locale locale,
             Theme theme,
             DBSystem dbSystem,
             Graphs graphs
     ) {
         this.config = config;
-        this.locale = locale;
         this.theme = theme;
         this.dbSystem = dbSystem;
         this.graphs = graphs;
@@ -111,14 +107,14 @@ public class GraphJSONCreator {
                 ",\"chunks\":" + lineGraphs.chunkGraph(tpsMutator).toHighChartsSeries() +
                 ",\"disk\":" + lineGraphs.diskGraph(tpsMutator).toHighChartsSeries() +
                 ",\"colors\":{" +
-                "\"playersOnline\":\"" + theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE) + "\"," +
-                "\"cpu\":\"" + theme.getValue(ThemeVal.GRAPH_CPU) + "\"," +
-                "\"ram\":\"" + theme.getValue(ThemeVal.GRAPH_RAM) + "\"," +
-                "\"entities\":\"" + theme.getValue(ThemeVal.GRAPH_ENTITIES) + "\"," +
-                "\"chunks\":\"" + theme.getValue(ThemeVal.GRAPH_CHUNKS) + "\"," +
-                "\"low\":\"" + theme.getValue(ThemeVal.GRAPH_TPS_LOW) + "\"," +
-                "\"med\":\"" + theme.getValue(ThemeVal.GRAPH_TPS_MED) + "\"," +
-                "\"high\":\"" + theme.getValue(ThemeVal.GRAPH_TPS_HIGH) + "\"}" +
+                "\"playersOnline\":\"" + ThemeVal.GRAPH_PLAYERS_ONLINE.getDefaultValue() + "\"," +
+                "\"cpu\":\"" + ThemeVal.GRAPH_CPU.getDefaultValue() + "\"," +
+                "\"ram\":\"" + ThemeVal.GRAPH_RAM.getDefaultValue() + "\"," +
+                "\"entities\":\"" + ThemeVal.GRAPH_ENTITIES.getDefaultValue() + "\"," +
+                "\"chunks\":\"" + ThemeVal.GRAPH_CHUNKS.getDefaultValue() + "\"," +
+                "\"low\":\"" + ThemeVal.GRAPH_TPS_LOW.getDefaultValue() + "\"," +
+                "\"med\":\"" + ThemeVal.GRAPH_TPS_MED.getDefaultValue() + "\"," +
+                "\"high\":\"" + ThemeVal.GRAPH_TPS_HIGH.getDefaultValue() + "\"}" +
                 ",\"zones\":{" +
                 "\"tpsThresholdMed\":" + config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED) + ',' +
                 "\"tpsThresholdHigh\":" + config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_HIGH) + ',' +
@@ -169,14 +165,14 @@ public class GraphJSONCreator {
                 .put("keys", new String[]{"date", "playersOnline", "tps", "cpu", "ram", "entities", "chunks", "disk"})
                 .put("values", values)
                 .put("colors", Maps.builder(String.class, Object.class)
-                        .put("playersOnline", theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE))
-                        .put("cpu", theme.getValue(ThemeVal.GRAPH_CPU))
-                        .put("ram", theme.getValue(ThemeVal.GRAPH_RAM))
-                        .put("entities", theme.getValue(ThemeVal.GRAPH_ENTITIES))
-                        .put("chunks", theme.getValue(ThemeVal.GRAPH_CHUNKS))
-                        .put("low", theme.getValue(ThemeVal.GRAPH_TPS_LOW))
-                        .put("med", theme.getValue(ThemeVal.GRAPH_TPS_MED))
-                        .put("high", theme.getValue(ThemeVal.GRAPH_TPS_HIGH))
+                        .put("playersOnline", ThemeVal.GRAPH_PLAYERS_ONLINE.getDefaultValue())
+                        .put("cpu", ThemeVal.GRAPH_CPU.getDefaultValue())
+                        .put("ram", ThemeVal.GRAPH_RAM.getDefaultValue())
+                        .put("entities", ThemeVal.GRAPH_ENTITIES.getDefaultValue())
+                        .put("chunks", ThemeVal.GRAPH_CHUNKS.getDefaultValue())
+                        .put("low", ThemeVal.GRAPH_TPS_LOW.getDefaultValue())
+                        .put("med", ThemeVal.GRAPH_TPS_MED.getDefaultValue())
+                        .put("high", ThemeVal.GRAPH_TPS_HIGH.getDefaultValue())
                         .build())
                 .put("zones", Maps.builder(String.class, Object.class)
                         .put("tpsThresholdMed", config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED))
@@ -199,7 +195,7 @@ public class GraphJSONCreator {
                 Point::fromDateObj
         );
         return "{\"playersOnline\":" + graphs.line().lineGraph(points).toHighChartsSeries() +
-                ",\"color\":\"" + theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE) + "\"}";
+                ",\"color\":\"" + ThemeVal.GRAPH_PLAYERS_ONLINE.getDefaultValue() + "\"}";
     }
 
     public String uniqueAndNewGraphJSON(ServerUUID serverUUID) {
@@ -245,8 +241,8 @@ public class GraphJSONCreator {
                         MutatorFunctions.addMissing(newPerDay, gapFillPeriod, 0)
                 ), gapStrategy).toHighChartsSeries() +
                 ",\"colors\":{" +
-                "\"playersOnline\":\"" + theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE) + "\"," +
-                "\"newPlayers\":\"" + theme.getValue(ThemeVal.LIGHT_GREEN) + "\"" +
+                "\"playersOnline\":\"" + ThemeVal.GRAPH_PLAYERS_ONLINE.getDefaultValue() + "\"," +
+                "\"newPlayers\":\"" + ThemeVal.LIGHT_GREEN.getDefaultValue() + "\"" +
                 "}}";
     }
 
@@ -401,9 +397,9 @@ public class GraphJSONCreator {
                 .put("geolocation_series", worldMap.getEntries())
                 .put("geolocation_bar_series", geolocationBarGraph.getBars())
                 .put("colors", Maps.builder(String.class, String.class)
-                        .put("low", theme.getValue(ThemeVal.WORLD_MAP_LOW))
-                        .put("high", theme.getValue(ThemeVal.WORLD_MAP_HIGH))
-                        .put("bars", theme.getValue(ThemeVal.GREEN))
+                        .put("low", ThemeVal.WORLD_MAP_LOW.getDefaultValue())
+                        .put("high", ThemeVal.WORLD_MAP_HIGH.getDefaultValue())
+                        .put("bars", ThemeVal.GREEN.getDefaultValue())
                         .build())
                 .build();
     }
@@ -426,9 +422,9 @@ public class GraphJSONCreator {
                 ",\"avg_ping_series\":" + pingGraph.getAvgGraph().toHighChartsSeries() +
                 ",\"max_ping_series\":" + pingGraph.getMaxGraph().toHighChartsSeries() +
                 ",\"colors\":{" +
-                "\"min\":\"" + theme.getValue(ThemeVal.GRAPH_MIN_PING) + "\"," +
-                "\"avg\":\"" + theme.getValue(ThemeVal.GRAPH_AVG_PING) + "\"," +
-                "\"max\":\"" + theme.getValue(ThemeVal.GRAPH_MAX_PING) + "\"" +
+                "\"min\":\"" + ThemeVal.GRAPH_MIN_PING.getDefaultValue() + "\"," +
+                "\"avg\":\"" + ThemeVal.GRAPH_AVG_PING.getDefaultValue() + "\"," +
+                "\"max\":\"" + ThemeVal.GRAPH_MAX_PING.getDefaultValue() + "\"" +
                 "}}";
     }
 
@@ -440,14 +436,14 @@ public class GraphJSONCreator {
         );
         return Maps.builder(String.class, Object.class)
                 .put("punchCard", graphs.special().punchCard(sessions).getDots())
-                .put("color", theme.getValue(ThemeVal.GRAPH_PUNCHCARD))
+                .put("color", ThemeVal.GRAPH_PUNCHCARD.getDefaultValue())
                 .build();
     }
 
     public Map<String, Object> serverPreferencePieJSONAsMap() {
         long now = System.currentTimeMillis();
         long monthAgo = now - TimeUnit.DAYS.toMillis(30L);
-        String[] pieColors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
+        String[] pieColors = theme.getWorldPieColors();
         Map<String, Long> playtimePerServer = dbSystem.getDatabase().query(SessionQueries.playtimePerServer(monthAgo, now));
 
         return Maps.builder(String.class, Object.class)
@@ -465,14 +461,14 @@ public class GraphJSONCreator {
     }
 
     public Map<String, Object> joinAddressesByDay(ServerUUID serverUUID, long after, long before, @Untrusted List<String> addressFilter) {
-        String[] pieColors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
+        String[] pieColors = theme.getWorldPieColors();
         List<DateObj<Map<String, Integer>>> joinAddresses = dbSystem.getDatabase().query(JoinAddressQueries.joinAddressesPerDay(serverUUID, config.getTimeZone().getOffset(System.currentTimeMillis()), after, before, addressFilter));
 
         return mapToJson(pieColors, joinAddresses);
     }
 
     public Map<String, Object> joinAddressesByDay(long after, long before, @Untrusted List<String> addressFilter) {
-        String[] pieColors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
+        String[] pieColors = theme.getWorldPieColors();
         List<DateObj<Map<String, Integer>>> joinAddresses = dbSystem.getDatabase().query(JoinAddressQueries.joinAddressesPerDay(config.getTimeZone().getOffset(System.currentTimeMillis()), after, before, addressFilter));
 
         return mapToJson(pieColors, joinAddresses);
@@ -547,6 +543,6 @@ public class GraphJSONCreator {
             proxyGraphs.add(new ServerSpecificLineGraph(points, ServerDto.fromServer(proxy)));
         }
 
-        return new GraphCollection<>(proxyGraphs, theme.getValue(ThemeVal.GRAPH_PLAYERS_ONLINE));
+        return new GraphCollection<>(proxyGraphs, ThemeVal.GRAPH_PLAYERS_ONLINE.getDefaultValue());
     }
 }

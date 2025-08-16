@@ -44,7 +44,7 @@ const FilterDropdown = ({filterOptions, filters, setFilters}) => {
 
     return (
         <Dropdown>
-            <Dropdown.Toggle variant=''>
+            <Dropdown.Toggle variant='' style={{'--bs-btn-color': 'var(--color-forms-input-text)'}}>
                 <Fa icon={faPlus}/> {t('html.query.filters.add')}
             </Dropdown.Toggle>
 

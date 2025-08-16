@@ -50,6 +50,6 @@ public class RegisterPageResolver implements NoAuthResolver {
         if (user.isPresent() || !webServer.get().isAuthRequired()) {
             return Optional.of(responseFactory.redirectResponse("/"));
         }
-        return Optional.of(responseFactory.registerPageResponse(request));
+        return Optional.of(responseFactory.reactPageResponse(request));
     }
 }

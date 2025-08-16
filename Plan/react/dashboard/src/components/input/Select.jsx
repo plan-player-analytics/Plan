@@ -1,6 +1,6 @@
 import React from 'react';
 
-const Select = ({options, selectedIndex, setSelectedIndex}) => {
+const Select = ({options, selectedIndex, setSelectedIndex, className}) => {
     const handleChange = (event) => {
         const renderedOptions = Object.values(event.target.selectedOptions)
             .map(htmlElement => htmlElement.text)
@@ -9,7 +9,7 @@ const Select = ({options, selectedIndex, setSelectedIndex}) => {
     }
 
     return (
-        <select className="form-control form-select"
+        <select className={`form-control form-select ${className || ''}`}
                 onChange={handleChange}>
             {options.map((option, i) => {
                 return (

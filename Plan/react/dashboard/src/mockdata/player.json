@@ -2659,7 +2659,7 @@
       "y": 3,
       "z": 0,
       "marker": {
-        "radius": 0
+        "radius": 12
       }
     },
     {
@@ -2899,7 +2899,7 @@
       "y": 4,
       "z": 0,
       "marker": {
-        "radius": 0
+        "radius": 5
       }
     },
     {
@@ -2963,7 +2963,7 @@
       "y": 4,
       "z": 0,
       "marker": {
-        "radius": 0
+        "radius": 8
       }
     },
     {
@@ -3123,7 +3123,7 @@
       "y": 5,
       "z": 0,
       "marker": {
-        "radius": 0
+        "radius": 2
       }
     },
     {
@@ -3163,7 +3163,7 @@
       "y": 5,
       "z": 0,
       "marker": {
-        "radius": 0
+        "radius": 5
       }
     },
     {

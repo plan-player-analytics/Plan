@@ -13,8 +13,8 @@ const OnlineActivityAsNumbersCard = ({data}) => {
     return (
         <Card id={'online-activity-numbers'}>
             <Card.Header>
-                <h6 className="col-black">
-                    <Fa icon={faBookOpen} className="col-light-blue"/> {t('html.label.onlineActivityAsNumbers')}
+                <h6 className="col-text">
+                    <Fa icon={faBookOpen} className="col-players-unique"/> {t('html.label.onlineActivityAsNumbers')}
                 </h6>
             </Card.Header>
             <OnlineActivityAsNumbersTable data={data}/>

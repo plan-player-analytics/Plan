@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
+import com.djrapitops.plan.delivery.web.resolver.exception.MethodNotAllowedException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieStore;
 import com.djrapitops.plan.storage.database.DBSystem;
@@ -78,8 +79,8 @@ public class WebGroupDeleteJSONResolver implements Resolver {
     )
     @Override
     public Optional<Response> resolve(Request request) {
-        if (!request.getMethod().equals("DELETE")) {
-            throw new BadRequestException("Endpoint needs to be sent a DELETE request.");
+        if (!"DELETE".equals(request.getMethod())) {
+            throw new MethodNotAllowedException("DELETE");
         }
         @Untrusted String groupName = request.getQuery().get("group")
                 .orElseThrow(() -> new BadRequestException("'group' parameter not given."));
