@@ -19,9 +19,9 @@ const CardUseCase = () => {
                         </button>
                     </CardHeader>
                     <Card.Body>
-                        <Datapoint name={"Example"} value={1234} icon={faUser}/>
+                        <Datapoint name={'html.label.themeEditor.example'} value={1234} icon={faUser}/>
                         <hr/>
-                        <Datapoint name={"Example"} value={1234} icon={faUser}/>
+                        <Datapoint name={'html.label.themeEditor.example'} value={1234} icon={faUser}/>
                     </Card.Body>
                 </Card>
             </Col>
