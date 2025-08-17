@@ -21,6 +21,8 @@ import {faCalendar} from "@fortawesome/free-regular-svg-icons";
 import ServerCalendar from "../../../calendar/ServerCalendar";
 import {postQuery} from "../../../../service/queryService";
 import Highcharts from "highcharts/highstock";
+import "highcharts/modules/no-data-to-display"
+import "highcharts/modules/accessibility";
 import QueryPlayerListModal from "../../../modal/QueryPlayerListModal";
 
 const SingleProxyPlayersOnlineGraph = ({serverUUID}) => {

@@ -8,6 +8,8 @@ import GeolocationWorldMap, {ProjectionOptions} from "../../graphs/GeolocationWo
 import {CardLoader} from "../../navigation/Loader";
 import ExtendableRow from "../../layout/extension/ExtendableRow";
 import Highcharts from "highcharts/highstock";
+import "highcharts/modules/accessibility";
+import "highcharts/modules/no-data-to-display"
 import {postQuery} from "../../../service/queryService";
 import {useMetadata} from "../../../hooks/metadataHook";
 import QueryPlayerListModal from "../../modal/QueryPlayerListModal";

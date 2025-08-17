@@ -1,8 +1,10 @@
 import React, {useEffect} from "react";
 import Highcharts from 'highcharts';
+import "highcharts/modules/accessibility";
+import "highcharts/modules/no-data-to-display"
 import {useTheme} from "../../hooks/themeHook";
 import {useTranslation} from "react-i18next";
-import Accessibility from "highcharts/modules/accessibility";
+import {localeService} from "../../service/localeService.js";
 
 const PunchCard = ({series}) => {
     const {t} = useTranslation();
@@ -14,7 +16,8 @@ const PunchCard = ({series}) => {
             type: 'scatter',
             data: series
         };
-        Accessibility(Highcharts);
+
+        Highcharts.setOptions({lang: {locale: localeService.getIntlFriendlyLocale()}})
         Highcharts.setOptions(graphTheming);
         setTimeout(() => Highcharts.chart('punchcard', {
             chart: {

@@ -1,12 +1,13 @@
 import React, {useEffect} from 'react';
 
-import {linegraphButtons, tooltip} from "../../../util/graphs";
+import {tooltip, translateLinegraphButtons} from "../../../util/graphs";
 import Highcharts from "highcharts/highstock";
-import NoDataDisplay from "highcharts/modules/no-data-to-display"
+import "highcharts/modules/no-data-to-display"
+import "highcharts/modules/accessibility";
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../../hooks/themeHook";
-import Accessibility from "highcharts/modules/accessibility";
 import {useMetadata} from "../../../hooks/metadataHook";
+import {localeService} from "../../../service/localeService.js";
 
 const PingGraph = ({id, data}) => {
     const {t} = useTranslation();
@@ -40,9 +41,12 @@ const PingGraph = ({id, data}) => {
             }
         };
 
-        NoDataDisplay(Highcharts);
-        Accessibility(Highcharts);
-        Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}})
+        Highcharts.setOptions({
+            lang: {
+                locale: localeService.getIntlFriendlyLocale(),
+                noData: t('html.label.noDataToDisplay')
+            }
+        })
         Highcharts.setOptions(graphTheming);
         Highcharts.stockChart(id, {
             chart: {
@@ -50,7 +54,7 @@ const PingGraph = ({id, data}) => {
             },
             rangeSelector: {
                 selected: 2,
-                buttons: linegraphButtons
+                buttons: translateLinegraphButtons(t)
             },
             yAxis: {
                 labels: {

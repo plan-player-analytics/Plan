@@ -1,11 +1,12 @@
 import {useTranslation} from "react-i18next";
 import React, {useEffect} from "react";
 import {useTheme} from "../../hooks/themeHook";
-import NoDataDisplay from "highcharts/modules/no-data-to-display";
 import Highcharts from "highcharts/highstock";
+import "highcharts/modules/no-data-to-display";
+import "highcharts/modules/accessibility";
 import {nameToCssVariable, withReducedSaturation} from "../../util/colors";
-import Accessibility from "highcharts/modules/accessibility";
 import {formatDateWithPreferences, useDatePreferences} from "../text/FormattedDate.jsx";
+import {localeService} from "../../service/localeService.js";
 
 export const activityGroupToColor = label => {
     switch (label) {
@@ -36,9 +37,12 @@ const PlayerbaseGraph = ({data}) => {
             return {...line, color: withReducedSaturation(line.color)}
         });
 
-        NoDataDisplay(Highcharts);
-        Accessibility(Highcharts);
-        Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}})
+        Highcharts.setOptions({
+            lang: {
+                locale: localeService.getIntlFriendlyLocale(),
+                noData: t('html.label.noDataToDisplay')
+            }
+        })
         Highcharts.setOptions(graphTheming);
 
         const labels = data?.activity_labels.map(date => formatDateWithPreferences({

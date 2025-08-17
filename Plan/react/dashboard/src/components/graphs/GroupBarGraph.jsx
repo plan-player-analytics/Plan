@@ -3,7 +3,8 @@ import {useTranslation} from "react-i18next";
 import {useTheme} from "../../hooks/themeHook";
 import {withReducedSaturation} from "../../util/colors";
 import Highcharts from "highcharts";
-import Accessibility from "highcharts/modules/accessibility";
+import "highcharts/modules/accessibility";
+import "highcharts/modules/no-data-to-display"
 
 const GroupBarGraph = ({id, groups, colors, horizontal, name}) => {
     const {t} = useTranslation();
@@ -26,7 +27,6 @@ const GroupBarGraph = ({id, groups, colors, horizontal, name}) => {
             colors: getColors()
         };
 
-        Accessibility(Highcharts);
         Highcharts.setOptions(graphTheming);
         Highcharts.chart(id, {
             chart: {

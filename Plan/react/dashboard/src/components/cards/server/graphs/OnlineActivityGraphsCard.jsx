@@ -19,6 +19,8 @@ import ServerCalendar from "../../../calendar/ServerCalendar";
 import {ChartLoader} from "../../../navigation/Loader";
 import {useAuth} from "../../../../hooks/authenticationHook";
 import Highcharts from "highcharts/highstock";
+import "highcharts/modules/no-data-to-display"
+import "highcharts/modules/accessibility";
 import {postQuery} from "../../../../service/queryService";
 import QueryPlayerListModal from "../../../modal/QueryPlayerListModal";
 import {useMetadata} from "../../../../hooks/metadataHook";

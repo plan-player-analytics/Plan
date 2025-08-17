@@ -2,7 +2,8 @@ import React, {useEffect} from 'react';
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../hooks/themeHook";
 import Highcharts from "highcharts";
-import Accessibility from "highcharts/modules/accessibility";
+import "highcharts/modules/no-data-to-display"
+import "highcharts/modules/accessibility";
 import {localeService, reverseRegionLookupMap} from "../../service/localeService.js";
 
 const GeolocationBarGraph = ({series}) => {
@@ -22,7 +23,6 @@ const GeolocationBarGraph = ({series}) => {
             data: bars
         };
 
-        Accessibility(Highcharts);
         Highcharts.setOptions(graphTheming);
         Highcharts.chart("countryBarChart", {
             chart: {

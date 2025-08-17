@@ -1,15 +1,16 @@
 import React, {useCallback, useEffect, useState} from 'react';
 
-import {linegraphButtons, tooltip} from "../../../util/graphs";
+import {tooltip, translateLinegraphButtons} from "../../../util/graphs";
 import Highcharts from "highcharts/highstock";
-import NoDataDisplay from "highcharts/modules/no-data-to-display"
+import "highcharts/modules/no-data-to-display"
+import "highcharts/modules/accessibility";
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../../hooks/themeHook";
 import {withReducedSaturation} from "../../../util/colors";
-import Accessibility from "highcharts/modules/accessibility";
 import {useMetadata} from "../../../hooks/metadataHook";
 import {useAuth} from "../../../hooks/authenticationHook.jsx";
 import {useGraphExtremesContext} from "../../../hooks/interaction/graphExtremesContextHook.jsx";
+import {localeService} from "../../../service/localeService.js";
 
 const yAxis = [
     {
@@ -163,9 +164,12 @@ const AllPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
             } : {}
         };
 
-        NoDataDisplay(Highcharts);
-        Accessibility(Highcharts);
-        Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}})
+        Highcharts.setOptions({
+            lang: {
+                locale: localeService.getIntlFriendlyLocale(),
+                noData: t('html.label.noDataToDisplay')
+            }
+        })
         Highcharts.setOptions(graphTheming);
         setGraph(Highcharts.stockChart(id, {
             chart: {
@@ -173,7 +177,7 @@ const AllPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
             },
             rangeSelector: {
                 selected: 2,
-                buttons: linegraphButtons
+                buttons: translateLinegraphButtons(t)
             },
             xAxis: {
                 events: {

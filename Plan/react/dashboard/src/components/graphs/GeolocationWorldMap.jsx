@@ -3,9 +3,10 @@ import {useTranslation} from "react-i18next";
 import {useTheme} from "../../hooks/themeHook";
 import Highcharts from 'highcharts/highmaps';
 import topology from '@highcharts/map-collection/custom/world.topo.json';
-import Accessibility from "highcharts/modules/accessibility";
-import NoDataDisplay from "highcharts/modules/no-data-to-display";
+import "highcharts/modules/accessibility";
+import "highcharts/modules/no-data-to-display";
 import {calculateCssHexColor} from "../../util/colors.js";
+import {localeService} from "../../service/localeService.js";
 
 export const ProjectionOptions = {
     MILLER: "html.label.geoProjection.miller",
@@ -48,10 +49,13 @@ const GeolocationWorldMap = ({series, colors, projection, onClickCountry}) => {
             }
         };
 
-        NoDataDisplay(Highcharts);
-        Accessibility(Highcharts);
         Highcharts.setOptions(graphTheming);
-        Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}});
+        Highcharts.setOptions({
+            lang: {
+                locale: localeService.getIntlFriendlyLocale(),
+                noData: t('html.label.noDataToDisplay')
+            }
+        });
         Highcharts.mapChart('countryWorldMap', {
             chart: {
                 noData: t('html.label.noDataToDisplay'),

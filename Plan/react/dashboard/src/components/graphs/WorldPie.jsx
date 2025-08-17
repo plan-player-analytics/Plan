@@ -1,11 +1,12 @@
 import React, {useEffect} from "react";
 import Highcharts from 'highcharts';
-import factory from 'highcharts/modules/drilldown';
+import "highcharts/modules/accessibility";
+import 'highcharts/modules/drilldown';
+import "highcharts/modules/no-data-to-display"
 
 import {useTheme} from "../../hooks/themeHook";
 import {nameToCssVariable, withReducedSaturation} from "../../util/colors";
 import {useTranslation} from "react-i18next";
-import Accessibility from "highcharts/modules/accessibility";
 import {useTimePreferences} from "../text/FormattedTime.jsx";
 import {usePreferences} from "../../hooks/preferencesHook.jsx";
 import Loader from "../navigation/Loader.jsx";
@@ -16,10 +17,6 @@ const WorldPie = ({id, worldSeries, gmSeries}) => {
     const {t} = useTranslation();
     const {preferencesLoaded} = usePreferences();
     const timePreferences = useTimePreferences();
-
-    useEffect(() => {
-        factory(Highcharts)
-    }, []);
 
     const {nightModeEnabled, graphTheming} = useTheme();
     const {usedUseCases} = useThemeStorage();
@@ -41,7 +38,6 @@ const WorldPie = ({id, worldSeries, gmSeries}) => {
 
         const defaultTitle = '';
         const defaultSubtitle = t('html.text.clickToExpand');
-        Accessibility(Highcharts);
         Highcharts.setOptions(graphTheming);
         setTimeout(() => {
             const chart = Highcharts.chart(id, {

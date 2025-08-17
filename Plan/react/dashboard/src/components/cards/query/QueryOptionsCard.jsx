@@ -11,6 +11,8 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faGear, faSearch} from "@fortawesome/free-solid-svg-icons";
 import PlayersOnlineGraph from "../../graphs/PlayersOnlineGraph";
 import Highcharts from "highcharts/highstock";
+import "highcharts/modules/no-data-to-display"
+import "highcharts/modules/accessibility";
 import MultiSelect from "../../input/MultiSelect";
 import CollapseWithButton from "../../layout/CollapseWithButton";
 import FilterDropdown from "./FilterDropdown";

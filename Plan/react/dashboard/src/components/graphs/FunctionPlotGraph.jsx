@@ -1,9 +1,10 @@
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../hooks/themeHook";
 import React, {useEffect} from "react";
-import NoDataDisplay from "highcharts/modules/no-data-to-display";
 import Highcharts from "highcharts/highcharts";
-import Accessibility from "highcharts/modules/accessibility";
+import "highcharts/modules/no-data-to-display";
+import "highcharts/modules/accessibility";
+import {localeService} from "../../service/localeService.js";
 
 const FunctionPlotGraph = ({
                                id,
@@ -20,9 +21,12 @@ const FunctionPlotGraph = ({
     const {graphTheming, nightModeEnabled} = useTheme();
 
     useEffect(() => {
-        NoDataDisplay(Highcharts);
-        Accessibility(Highcharts);
-        Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}})
+        Highcharts.setOptions({
+            lang: {
+                locale: localeService.getIntlFriendlyLocale(),
+                noData: t('html.label.noDataToDisplay')
+            }
+        })
         Highcharts.setOptions(graphTheming);
         Highcharts.chart(id, options ? options : {
             chart: {
