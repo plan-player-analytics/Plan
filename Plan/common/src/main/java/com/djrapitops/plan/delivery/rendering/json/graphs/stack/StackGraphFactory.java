@@ -19,6 +19,7 @@ package com.djrapitops.plan.delivery.rendering.json.graphs.stack;
 import com.djrapitops.plan.delivery.domain.DateMap;
 import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
 import com.djrapitops.plan.settings.theme.Theme;
+import com.djrapitops.plan.settings.theme.ThemeVal;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -42,7 +43,7 @@ public class StackGraphFactory {
     }
 
     public StackGraph activityStackGraph(DateMap<Map<String, Integer>> activityData) {
-        String[] colors = theme.getWorldPieColors();
+        String[] colors = theme.getDefaultPieColors(ThemeVal.GRAPH_ACTIVITY_PIE);
         return new ActivityStackGraph(activityData, colors, ActivityIndex.getDefaultGroupLangKeys());
     }
 }

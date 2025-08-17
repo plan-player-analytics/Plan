@@ -59,6 +59,12 @@ public class Theme implements SubSystem {
                 .toArray(String[]::new);
     }
 
+    public String[] getDefaultPieColors(ThemeVal val) {
+        return Arrays.stream(StringUtils.split(val.getDefaultValue(), ','))
+                .map(color -> StringUtils.remove(StringUtils.trim(color), '"'))
+                .toArray(String[]::new);
+    }
+
     @Override
     public void enable() {
         ThemeConfig themeConfig = new ThemeConfig(files, config, logger);

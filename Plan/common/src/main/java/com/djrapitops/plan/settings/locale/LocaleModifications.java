@@ -20,7 +20,7 @@ import com.djrapitops.plan.settings.locale.lang.HtmlLang;
 import com.djrapitops.plan.settings.locale.lang.Lang;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.function.Function;
+import java.util.function.UnaryOperator;
 
 /**
  * @author AuroraLS3
@@ -52,11 +52,11 @@ public class LocaleModifications {
         apply(appliesTo, locale, new ReplaceString(replace, with));
     }
 
-    private static void apply(Lang appliesTo, Locale locale, Function<String, String> function) {
+    private static void apply(Lang appliesTo, Locale locale, UnaryOperator<String> function) {
         locale.put(appliesTo, new Message(function.apply(locale.get(appliesTo).toString())));
     }
 
-    static class ReplaceString implements Function<String, String> {
+    static class ReplaceString implements UnaryOperator<String> {
         private final String replace;
         private final String with;
 

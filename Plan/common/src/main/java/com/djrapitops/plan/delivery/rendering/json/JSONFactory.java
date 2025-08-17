@@ -271,7 +271,6 @@ public class JSONFactory {
         long now = System.currentTimeMillis();
         long weekAgo = now - TimeUnit.DAYS.toMillis(7L);
 
-        Formatter<Long> year = formatters.yearLong();
         Formatter<Double> decimals = formatters.decimals();
         Formatter<Long> timeAmount = formatters.timeAmount();
 

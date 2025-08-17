@@ -27,6 +27,7 @@ import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.ProxySettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.theme.Theme;
+import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.java.Maps;
 import io.swagger.v3.oas.annotations.Operation;
@@ -97,7 +98,7 @@ public class MetadataJSONResolver implements NoAuthResolver {
                         .put("contributors", Contributors.getContributors())
                         .put("defaultTheme", config.get(DisplaySettings.THEME))
                         .put("availableThemes", getAvailableThemes())
-                        .put("gmPieColors", theme.getWorldPieColors())
+                        .put("gmPieColors", theme.getDefaultPieColors(ThemeVal.GRAPH_GM_PIE))
                         .put("playerHeadImageUrl", config.get(DisplaySettings.PLAYER_HEAD_IMG_URL))
                         .put("isProxy", serverInfo.getServer().isProxy())
                         .put("serverName", serverInfo.getServer().getIdentifiableName())

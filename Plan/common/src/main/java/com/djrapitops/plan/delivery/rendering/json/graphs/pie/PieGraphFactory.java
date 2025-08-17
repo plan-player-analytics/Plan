@@ -26,6 +26,7 @@ import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.settings.theme.Theme;
+import com.djrapitops.plan.settings.theme.ThemeVal;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -55,7 +56,7 @@ public class PieGraphFactory {
     }
 
     public Pie activityPie(Map<String, Integer> activityData) {
-        String[] colors = theme.getWorldPieColors();
+        String[] colors = theme.getDefaultPieColors(ThemeVal.GRAPH_ACTIVITY_PIE);
         return new ActivityPie(activityData, colors, ActivityIndex.getDefaultGroupLangKeys());
     }
 
