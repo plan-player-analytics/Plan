@@ -103,10 +103,11 @@ public abstract class Transaction {
 
         // Retry if deadlock occurs.
         int errorCode = statementFail.getErrorCode();
+        boolean mysqlOutdatedRead = dbType == DBType.MYSQL && errorCode == 1020;
         boolean mySQLDeadlock = dbType == DBType.MYSQL && errorCode == 1213;
         boolean deadlocked = mySQLDeadlock || statementFail instanceof SQLTransactionRollbackException;
         boolean lockWaitTimeout = errorCode == 1205;
-        if (deadlocked || lockWaitTimeout && attempts < ATTEMPT_LIMIT) {
+        if (mysqlOutdatedRead || deadlocked || lockWaitTimeout && attempts < ATTEMPT_LIMIT) {
             executeTransaction(db); // Recurse to attempt again.
             return;
         }
