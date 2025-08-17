@@ -141,14 +141,11 @@ implements <a href="../../SubSystem.html" title="interface in com.djrapitops.pla
 <div class="block">Performs enable actions for the subsystem.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPieColors(com.djrapitops.plan.settings.theme.ThemeVal)" class="member-name-link">getPieColors</a><wbr>(<a href="ThemeVal.html" title="enum class in com.djrapitops.plan.settings.theme">ThemeVal</a>&nbsp;variable)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDefaultPieColors(com.djrapitops.plan.settings.theme.ThemeVal)" class="member-name-link">getDefaultPieColors</a><wbr>(<a href="ThemeVal.html" title="enum class in com.djrapitops.plan.settings.theme">ThemeVal</a>&nbsp;val)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getValue(com.djrapitops.plan.settings.theme.ThemeVal)" class="member-name-link">getValue</a><wbr>(<a href="ThemeVal.html" title="enum class in com.djrapitops.plan.settings.theme">ThemeVal</a>&nbsp;variable)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWorldPieColors()" class="member-name-link">getWorldPieColors</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#replaceThemeColors(java.lang.String)" class="member-name-link">replaceThemeColors</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;resourceString)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -184,15 +181,15 @@ implements <a href="../../SubSystem.html" title="interface in com.djrapitops.pla
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="getValue(com.djrapitops.plan.settings.theme.ThemeVal)">
-<h3>getValue</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">getValue</span><wbr><span class="parameters">(<a href="ThemeVal.html" title="enum class in com.djrapitops.plan.settings.theme">ThemeVal</a>&nbsp;variable)</span></div>
+<section class="detail" id="getWorldPieColors()">
+<h3>getWorldPieColors</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</span>&nbsp;<span class="element-name">getWorldPieColors</span>()</div>
 </section>
 </li>
 <li>
-<section class="detail" id="getPieColors(com.djrapitops.plan.settings.theme.ThemeVal)">
-<h3>getPieColors</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</span>&nbsp;<span class="element-name">getPieColors</span><wbr><span class="parameters">(<a href="ThemeVal.html" title="enum class in com.djrapitops.plan.settings.theme">ThemeVal</a>&nbsp;variable)</span></div>
+<section class="detail" id="getDefaultPieColors(com.djrapitops.plan.settings.theme.ThemeVal)">
+<h3>getDefaultPieColors</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</span>&nbsp;<span class="element-name">getDefaultPieColors</span><wbr><span class="parameters">(<a href="ThemeVal.html" title="enum class in com.djrapitops.plan.settings.theme">ThemeVal</a>&nbsp;val)</span></div>
 </section>
 </li>
 <li>
@@ -217,12 +214,6 @@ implements <a href="../../SubSystem.html" title="interface in com.djrapitops.pla
 <dt>Specified by:</dt>
 <dd><code><a href="../../SubSystem.html#disable()">disable</a></code>&nbsp;in interface&nbsp;<code><a href="../../SubSystem.html" title="interface in com.djrapitops.plan">SubSystem</a></code></dd>
 </dl>
-</section>
-</li>
-<li>
-<section class="detail" id="replaceThemeColors(java.lang.String)">
-<h3>replaceThemeColors</h3>
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">replaceThemeColors</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;resourceString)</span></div>
 </section>
 </li>
 </ul>

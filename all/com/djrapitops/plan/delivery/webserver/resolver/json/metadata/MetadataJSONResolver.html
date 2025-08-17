@@ -110,10 +110,13 @@ implements <a href="../../../../web/resolver/NoAuthResolver.html" title="interfa
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.settings.theme.Theme,com.djrapitops.plan.identification.ServerInfo)" class="member-name-link">MetadataJSONResolver</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;mainCommand,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String,com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.settings.theme.Theme,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.delivery.web.AssetVersions,net.playeranalytics.plugin.server.PluginLogger)" class="member-name-link">MetadataJSONResolver</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;mainCommand,
+ <a href="../../../../../storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
  <a href="../../../../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
  <a href="../../../../../settings/theme/Theme.html" title="class in com.djrapitops.plan.settings.theme">Theme</a>&nbsp;theme,
- <a href="../../../../../identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo)</code></div>
+ <a href="../../../../../identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
+ <a href="../../../../web/AssetVersions.html" title="class in com.djrapitops.plan.delivery.web">AssetVersions</a>&nbsp;assetVersions,
+ net.playeranalytics.plugin.server.PluginLogger&nbsp;logger)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -158,14 +161,17 @@ implements <a href="../../../../web/resolver/NoAuthResolver.html" title="interfa
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(java.lang.String,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.settings.theme.Theme,com.djrapitops.plan.identification.ServerInfo)">
+<section class="detail" id="&lt;init&gt;(java.lang.String,com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.settings.theme.Theme,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.delivery.web.AssetVersions,net.playeranalytics.plugin.server.PluginLogger)">
 <h3>MetadataJSONResolver</h3>
 <div class="member-signature"><span class="annotations">@Inject
 </span><span class="modifiers">public</span>&nbsp;<span class="element-name">MetadataJSONResolver</span><wbr><span class="parameters">(@Named("mainCommandName")
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;mainCommand,
+ <a href="../../../../../storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
  <a href="../../../../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
  <a href="../../../../../settings/theme/Theme.html" title="class in com.djrapitops.plan.settings.theme">Theme</a>&nbsp;theme,
- <a href="../../../../../identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo)</span></div>
+ <a href="../../../../../identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
+ <a href="../../../../web/AssetVersions.html" title="class in com.djrapitops.plan.delivery.web">AssetVersions</a>&nbsp;assetVersions,
+ net.playeranalytics.plugin.server.PluginLogger&nbsp;logger)</span></div>
 </section>
 </li>
 </ul>

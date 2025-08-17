@@ -54,6 +54,7 @@ com.djrapitops.plan.delivery.webserver.resolver.json
 com.djrapitops.plan.delivery.webserver.resolver.json.metadata
 com.djrapitops.plan.delivery.webserver.resolver.json.plugins
 com.djrapitops.plan.delivery.webserver.resolver.json.query
+com.djrapitops.plan.delivery.webserver.resolver.json.theme
 com.djrapitops.plan.delivery.webserver.resolver.json.webgroup
 com.djrapitops.plan.delivery.webserver.resolver.swagger
 com.djrapitops.plan.exceptions

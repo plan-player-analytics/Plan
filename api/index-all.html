@@ -779,10 +779,14 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Obtain an URI parameter by key.</div>
 </dd>
+<dt><a href="com/djrapitops/plan/delivery/web/resolver/request/Request.html#getAccessIpAddress()" class="member-name-link">getAccessIpAddress()</a> - Method in class com.djrapitops.plan.delivery.web.resolver.request.<a href="com/djrapitops/plan/delivery/web/resolver/request/Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">Request</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/query/CommonQueries.html#getActivityGroupForIndex(double)" class="member-name-link">getActivityGroupForIndex(double)</a> - Method in interface com.djrapitops.plan.query.<a href="com/djrapitops/plan/query/CommonQueries.html" title="interface in com.djrapitops.plan.query">CommonQueries</a></dt>
 <dd>
 <div class="block">Get a String that represents the Activity group for an index.</div>
 </dd>
+<dt><a href="com/djrapitops/plan/delivery/web/resolver/exception/MethodNotAllowedException.html#getAllowedMethods()" class="member-name-link">getAllowedMethods()</a> - Method in exception class com.djrapitops.plan.delivery.web.resolver.exception.<a href="com/djrapitops/plan/delivery/web/resolver/exception/MethodNotAllowedException.html" title="class in com.djrapitops.plan.delivery.web.resolver.exception">MethodNotAllowedException</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/extension/extractor/ExtensionMethod.html#getAnnotation(java.lang.Class)" class="member-name-link">getAnnotation(Class&lt;T&gt;)</a> - Method in class com.djrapitops.plan.extension.extractor.<a href="com/djrapitops/plan/extension/extractor/ExtensionMethod.html" title="class in com.djrapitops.plan.extension.extractor">ExtensionMethod</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/extension/extractor/ExtensionMethod.html#getAnnotationOrNull(java.lang.Class)" class="member-name-link">getAnnotationOrNull(Class&lt;T&gt;)</a> - Method in class com.djrapitops.plan.extension.extractor.<a href="com/djrapitops/plan/extension/extractor/ExtensionMethod.html" title="class in com.djrapitops.plan.extension.extractor">ExtensionMethod</a></dt>
@@ -1264,6 +1268,14 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Implementation detail - for abstracting annotations with the builder API.</div>
 </dd>
+<dt><a href="com/djrapitops/plan/delivery/web/resolver/exception/MethodNotAllowedException.html" class="type-name-link" title="class in com.djrapitops.plan.delivery.web.resolver.exception">MethodNotAllowedException</a> - Exception Class in <a href="com/djrapitops/plan/delivery/web/resolver/exception/package-summary.html">com.djrapitops.plan.delivery.web.resolver.exception</a></dt>
+<dd>
+<div class="block">Throw this exception when a Resolver gets invalid <a href="com/djrapitops/plan/delivery/web/resolver/request/Request.html#getMethod()"><code>Request.getMethod()</code></a>.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/delivery/web/resolver/exception/MethodNotAllowedException.html#%3Cinit%3E(java.lang.String...)" class="member-name-link">MethodNotAllowedException(String...)</a> - Constructor for exception class com.djrapitops.plan.delivery.web.resolver.exception.<a href="com/djrapitops/plan/delivery/web/resolver/exception/MethodNotAllowedException.html" title="class in com.djrapitops.plan.delivery.web.resolver.exception">MethodNotAllowedException</a></dt>
+<dd>
+<div class="block">Default constructor.</div>
+</dd>
 <dt><a href="com/djrapitops/plan/delivery/web/resolver/MimeType.html" class="type-name-link" title="class in com.djrapitops.plan.delivery.web.resolver">MimeType</a> - Class in <a href="com/djrapitops/plan/delivery/web/resolver/package-summary.html">com.djrapitops.plan.delivery.web.resolver</a></dt>
 <dd>&nbsp;</dd>
 </dl>
@@ -1489,9 +1501,21 @@ loadScripts(document, 'script');</script>
 </dd>
 <dt><a href="com/djrapitops/plan/delivery/web/resolver/request/Request.html#%3Cinit%3E(java.lang.String,com.djrapitops.plan.delivery.web.resolver.request.URIPath,com.djrapitops.plan.delivery.web.resolver.request.URIQuery,com.djrapitops.plan.delivery.web.resolver.request.WebUser,java.util.Map,byte%5B%5D)" class="member-name-link">Request(String, URIPath, URIQuery, WebUser, Map&lt;String, String&gt;, byte[])</a> - Constructor for class com.djrapitops.plan.delivery.web.resolver.request.<a href="com/djrapitops/plan/delivery/web/resolver/request/Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">Request</a></dt>
 <dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Use newer constructor with IP address.</div>
+</div>
+</dd>
+<dt><a href="com/djrapitops/plan/delivery/web/resolver/request/Request.html#%3Cinit%3E(java.lang.String,com.djrapitops.plan.delivery.web.resolver.request.URIPath,com.djrapitops.plan.delivery.web.resolver.request.URIQuery,com.djrapitops.plan.delivery.web.resolver.request.WebUser,java.util.Map,byte%5B%5D,java.lang.String)" class="member-name-link">Request(String, URIPath, URIQuery, WebUser, Map&lt;String, String&gt;, byte[], String)</a> - Constructor for class com.djrapitops.plan.delivery.web.resolver.request.<a href="com/djrapitops/plan/delivery/web/resolver/request/Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">Request</a></dt>
+<dd>
 <div class="block">Constructor.</div>
 </dd>
 <dt><a href="com/djrapitops/plan/delivery/web/resolver/request/Request.html#%3Cinit%3E(java.lang.String,java.lang.String,com.djrapitops.plan.delivery.web.resolver.request.WebUser,java.util.Map)" class="member-name-link">Request(String, String, WebUser, Map&lt;String, String&gt;)</a> - Constructor for class com.djrapitops.plan.delivery.web.resolver.request.<a href="com/djrapitops/plan/delivery/web/resolver/request/Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">Request</a></dt>
+<dd>
+<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
+<div class="deprecation-comment">Use newer constructor with IP address.</div>
+</div>
+</dd>
+<dt><a href="com/djrapitops/plan/delivery/web/resolver/request/Request.html#%3Cinit%3E(java.lang.String,java.lang.String,com.djrapitops.plan.delivery.web.resolver.request.WebUser,java.util.Map,java.lang.String)" class="member-name-link">Request(String, String, WebUser, Map&lt;String, String&gt;, String)</a> - Constructor for class com.djrapitops.plan.delivery.web.resolver.request.<a href="com/djrapitops/plan/delivery/web/resolver/request/Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">Request</a></dt>
 <dd>
 <div class="block">Special constructor that figures out URIPath and URIQuery from "/path/and?query=params" and has no request body.</div>
 </dd>
@@ -1656,6 +1680,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">'fas' (solid) Font awesome family.</div>
 </dd>
+<dt><a href="com/djrapitops/plan/delivery/web/resolver/request/URIPath.html#startsWith(java.lang.String)" class="member-name-link">startsWith(String)</a> - Method in class com.djrapitops.plan.delivery.web.resolver.request.<a href="com/djrapitops/plan/delivery/web/resolver/request/URIPath.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">URIPath</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/extension/annotation/StringProvider.html" class="type-name-link" title="annotation interface in com.djrapitops.plan.extension.annotation">StringProvider</a> - Annotation Interface in <a href="com/djrapitops/plan/extension/annotation/package-summary.html">com.djrapitops.plan.extension.annotation</a></dt>
 <dd>
 <div class="block">Method annotation to provide a String value.</div>
