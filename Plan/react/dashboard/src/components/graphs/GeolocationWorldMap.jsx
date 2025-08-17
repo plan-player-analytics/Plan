@@ -1,10 +1,10 @@
 import React, {useEffect} from 'react';
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../hooks/themeHook";
-import Highcharts from 'highcharts/highmaps';
+import Highcharts from 'highcharts/esm/highmaps';
 import topology from '@highcharts/map-collection/custom/world.topo.json';
-import "highcharts/modules/accessibility";
-import "highcharts/modules/no-data-to-display";
+import "highcharts/esm/modules/accessibility";
+import "highcharts/esm/modules/no-data-to-display";
 import {calculateCssHexColor} from "../../util/colors.js";
 import {localeService} from "../../service/localeService.js";
 

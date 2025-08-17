@@ -1,9 +1,9 @@
 import {useTranslation} from "react-i18next";
 import React, {useEffect} from "react";
 import {useTheme} from "../../hooks/themeHook";
-import Highcharts from "highcharts/highstock";
-import "highcharts/modules/no-data-to-display";
-import "highcharts/modules/accessibility";
+import Highcharts from "highcharts/esm/highstock";
+import "highcharts/esm/modules/no-data-to-display";
+import "highcharts/esm/modules/accessibility";
 import {nameToCssVariable, withReducedSaturation} from "../../util/colors";
 import {formatDateWithPreferences, useDatePreferences} from "../text/FormattedDate.jsx";
 import {localeService} from "../../service/localeService.js";

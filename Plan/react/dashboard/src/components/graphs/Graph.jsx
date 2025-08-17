@@ -1,10 +1,10 @@
 import {useTheme} from "../../hooks/themeHook";
 import React, {useEffect} from "react";
-import Highcharts from "highcharts/highstock";
-import "highcharts/modules/accessibility";
-import "highcharts/highcharts-more";
-import "highcharts/modules/dumbbell";
-import "highcharts/modules/no-data-to-display";
+import Highcharts from "highcharts/esm/highstock";
+import "highcharts/esm/modules/accessibility";
+import "highcharts/esm/highcharts-more";
+import "highcharts/esm/modules/dumbbell";
+import "highcharts/esm/modules/no-data-to-display";
 import {useTranslation} from "react-i18next";
 import {localeService} from "../../service/localeService.js";
 

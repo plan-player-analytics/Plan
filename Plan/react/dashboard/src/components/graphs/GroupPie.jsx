@@ -2,9 +2,9 @@ import React, {useEffect} from 'react';
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../hooks/themeHook";
 import {withReducedSaturation} from "../../util/colors";
-import Highcharts from "highcharts";
-import "highcharts/modules/accessibility";
-import "highcharts/modules/no-data-to-display"
+import Highcharts from "highcharts/esm/highcharts";
+import "highcharts/esm/modules/accessibility";
+import "highcharts/esm/modules/no-data-to-display"
 
 const GroupPie = ({id, groups, colors, name}) => {
     const {t} = useTranslation();

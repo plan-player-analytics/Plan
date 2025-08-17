@@ -5,6 +5,7 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons";
 import {useAlertPopupContext} from "./alertPopupContext.jsx";
 import {Trans} from "react-i18next";
+import {mergeUseCases} from "../../util/mutator.js";
 
 const ThemeStorageContext = createContext({});
 
@@ -127,8 +128,8 @@ export const ThemeStorageContextProvider = ({children}) => {
             currentNightColors,
             currentUseCases,
             currentNightModeUseCases,
-            usedColors: theme.nightModeEnabled ? currentColors : {...currentColors, ...currentNightColors},
-            usedUseCases: theme.nightModeEnabled ? currentUseCases : {...currentUseCases, ...currentNightModeUseCases},
+            usedColors: theme.nightModeEnabled ? {...currentColors, ...currentNightColors} : currentColors,
+            usedUseCases: theme.nightModeEnabled ? mergeUseCases(currentUseCases, currentNightModeUseCases) : currentUseCases,
             cloneThemeLocally, saveUploadedThemeLocally, deleteThemeLocally, reloadTheme
         }
     }, [name, color, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases, loaded, error, theme.nightModeEnabled]);

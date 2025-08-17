@@ -2,9 +2,9 @@ import React, {useEffect} from 'react';
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../hooks/themeHook";
 import {withReducedSaturation} from "../../util/colors";
-import Highcharts from "highcharts/highstock";
-import "highcharts/modules/no-data-to-display";
-import "highcharts/modules/accessibility";
+import Highcharts from "highcharts/esm/highstock";
+import "highcharts/esm/modules/no-data-to-display";
+import "highcharts/esm/modules/accessibility";
 import {translateLinegraphButtons} from "../../util/graphs";
 import {localeService} from "../../service/localeService.js";
 

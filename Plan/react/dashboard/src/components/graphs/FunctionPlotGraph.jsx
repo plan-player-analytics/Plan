@@ -1,9 +1,9 @@
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../hooks/themeHook";
 import React, {useEffect} from "react";
-import Highcharts from "highcharts/highcharts";
-import "highcharts/modules/no-data-to-display";
-import "highcharts/modules/accessibility";
+import Highcharts from "highcharts/esm/highcharts";
+import "highcharts/esm/modules/no-data-to-display";
+import "highcharts/esm/modules/accessibility";
 import {localeService} from "../../service/localeService.js";
 
 const FunctionPlotGraph = ({

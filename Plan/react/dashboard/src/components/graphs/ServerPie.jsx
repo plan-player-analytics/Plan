@@ -1,7 +1,7 @@
 import React, {useEffect} from "react";
-import Highcharts from 'highcharts';
-import "highcharts/modules/no-data-to-display";
-import "highcharts/modules/accessibility";
+import Highcharts from 'highcharts/esm/highcharts';
+import "highcharts/esm/modules/no-data-to-display";
+import "highcharts/esm/modules/accessibility";
 
 import {useTheme} from "../../hooks/themeHook";
 import {withReducedSaturation} from "../../util/colors";

@@ -1,9 +1,9 @@
 import React, {useEffect} from 'react';
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../hooks/themeHook";
-import Highcharts from "highcharts";
-import "highcharts/modules/no-data-to-display"
-import "highcharts/modules/accessibility";
+import Highcharts from "highcharts/esm/highcharts";
+import "highcharts/esm/modules/no-data-to-display"
+import "highcharts/esm/modules/accessibility";
 import {localeService, reverseRegionLookupMap} from "../../service/localeService.js";
 
 const GeolocationBarGraph = ({series}) => {

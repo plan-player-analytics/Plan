@@ -1,8 +1,8 @@
 import React, {useEffect} from "react";
-import Highcharts from 'highcharts';
-import "highcharts/modules/accessibility";
-import 'highcharts/modules/drilldown';
-import "highcharts/modules/no-data-to-display"
+import Highcharts from 'highcharts/esm/highcharts';
+import "highcharts/esm/modules/accessibility";
+import 'highcharts/esm/modules/drilldown';
+import "highcharts/esm/modules/no-data-to-display"
 
 import {useTheme} from "../../hooks/themeHook";
 import {nameToCssVariable, withReducedSaturation} from "../../util/colors";
@@ -22,6 +22,7 @@ const WorldPie = ({id, worldSeries, gmSeries}) => {
     const {usedUseCases} = useThemeStorage();
 
     const gmPieColors = usedUseCases?.graphs?.pie?.drilldown?.map(nameToCssVariable) || [];
+    console.log(usedUseCases, gmPieColors);
 
     useEffect(() => {
         const reduceColors = (series) => {
