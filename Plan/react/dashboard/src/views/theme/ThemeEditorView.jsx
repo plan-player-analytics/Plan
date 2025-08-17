@@ -17,7 +17,6 @@ import SecondaryActionButton from "../../components/input/button/SecondaryAction
 import {MinHeightProvider} from "../../hooks/context/minHeightContextHook.jsx";
 import {useMetadata} from "../../hooks/metadataHook.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import LoadIn from "../../components/animation/LoadIn.jsx";
 import DownloadButton from "../../components/theme/DownloadButton.jsx";
 import {useAuth} from "../../hooks/authenticationHook.jsx";
 
@@ -62,7 +61,7 @@ const ThemeEditorView = () => {
     const invalidName = isNameInvalid(name);
 
     return (
-        <LoadIn>
+        <div className={"load-in"}>
             {hasPermission('access.theme.editor') && <MinHeightProvider>
                 <Card className="shadow mb-4 theme-editor" id={"theme-editor"}>
                     <EditorMenuToast/>
@@ -150,7 +149,7 @@ const ThemeEditorView = () => {
                                     className={nightHover ? ' night-mode-colors' : ''}/>
                 </Card>
             </MinHeightProvider>}
-        </LoadIn>
+        </div>
     )
 };
 
