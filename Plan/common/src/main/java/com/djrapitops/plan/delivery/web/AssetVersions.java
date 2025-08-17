@@ -75,6 +75,7 @@ public class AssetVersions {
                 .filter(path -> path.startsWith("themes"))
                 .filter(path -> path.endsWith("json"))
                 .map(path -> path.substring(7, path.indexOf(",")))
+                .sorted()
                 .collect(Collectors.toList());
     }
 }

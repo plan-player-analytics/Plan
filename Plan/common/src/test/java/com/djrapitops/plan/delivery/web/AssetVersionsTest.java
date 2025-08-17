@@ -37,8 +37,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 @ExtendWith(FullSystemExtension.class)
 class AssetVersionsTest {
 
+    // This test may fail if new themes are added, but determineAssetModifications task is not run
     @Test
-        // This test may fail if new themes are added, but determineAssetModifications task is not run
     void themeNamesAreCorrect(PlanFiles files) throws IOException {
         List<String> themeNames = new AssetVersions(files).getThemeNames();
         List<String> expected = getFileNamesInFolder(TestResources.getAsset("themes"))
