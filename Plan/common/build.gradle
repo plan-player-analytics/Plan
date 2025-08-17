@@ -105,7 +105,7 @@ dependencies {
     testImplementation "org.testcontainers:testcontainers:$testContainersVersion"
     testImplementation "org.testcontainers:junit-jupiter:$testContainersVersion"
     testImplementation "org.testcontainers:nginx:$testContainersVersion"
-    testImplementation "org.awaitility:awaitility:$awaitilityVersion"
+    testFixturesApi "org.awaitility:awaitility:$awaitilityVersion"
     testFixturesApi "com.google.guava:guava:$guavaVersion"
 
     testFixturesApi "org.xerial:sqlite-jdbc:$sqliteVersion" // SQLite

@@ -141,6 +141,8 @@ public interface Database {
 
     State getState();
 
+    int getTransactionQueueSize();
+
     /**
      * Possible State changes:
      * CLOSED to PATCHING (Database init),

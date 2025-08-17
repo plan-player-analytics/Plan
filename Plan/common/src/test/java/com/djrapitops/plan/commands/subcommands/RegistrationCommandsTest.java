@@ -41,6 +41,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.openqa.selenium.json.TypeToken;
+import utilities.DBPreparer;
 import utilities.HTTPConnector;
 import utilities.TestConstants;
 import utilities.TestResources;
@@ -105,6 +106,7 @@ class RegistrationCommandsTest {
 
         command.build().executeCommand(sender, new Arguments(List.of("register", "--code", code)));
 
+        DBPreparer.awaitUntilTransactionsComplete(database);
         User user = database.query(WebUserQueries.fetchUser(username)).orElseThrow(AssertionError::new);
         assertEquals("admin", user.getPermissionGroup());
     }
@@ -162,6 +164,7 @@ class RegistrationCommandsTest {
 
         command.build().executeCommand(sender, new Arguments(List.of("setgroup", username, "no_access")));
 
+        DBPreparer.awaitUntilTransactionsComplete(database);
         User modifiedUser = database.query(WebUserQueries.fetchUser(username)).orElseThrow(AssertionError::new);
         assertEquals("no_access", modifiedUser.getPermissionGroup());
     }
