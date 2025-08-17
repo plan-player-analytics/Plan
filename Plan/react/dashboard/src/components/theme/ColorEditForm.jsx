@@ -78,7 +78,7 @@ const ColorInput = forwardRef(({color, contrastColor, invalid, onChange}, ref) =
     );
 });
 
-const ColorEditForm = () => {
+const ColorEditForm = ({onFocus}) => {
     const {t} = useTranslation();
     const {
         alreadyExists,
@@ -97,6 +97,9 @@ const ColorEditForm = () => {
     const ref = useRef(null);
 
     useEffect(() => {
+        if (open) {
+            onFocus();
+        }
         if (open && ref.current) {
             ref.current.focus();
         }

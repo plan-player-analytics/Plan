@@ -106,7 +106,7 @@ const ThemeEditorView = () => {
                                 >
                                     <ColorSection title={t("html.label.themeEditor.colors")}
                                                   colors={currentColors}/>
-                                    <ColorEditForm/>
+                                    <ColorEditForm onFocus={() => onHoverChange(undefined, 'enter', false)}/>
                                 </ColorEditContextProvider>
                                 <ColorEditContextProvider
                                     colors={nightColors}
@@ -115,7 +115,7 @@ const ThemeEditorView = () => {
                                 >
                                     <ColorSection title={t("html.label.themeEditor.nightColors")}
                                                   colors={currentNightColors}/>
-                                    <ColorEditForm/>
+                                    <ColorEditForm onFocus={() => onHoverChange(undefined, 'enter', false)}/>
                                 </ColorEditContextProvider>
                             </Col>
                         </Row>
