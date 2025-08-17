@@ -68,7 +68,7 @@ subprojects {
         redisBungeeVersion = "0.3.8-SNAPSHOT"
         redisBungeeProxioDevVersion = "0.7.3"
 
-        commonsTextVersion = "1.13.1"
+        commonsTextVersion = "1.14.0"
         commonsCompressVersion = "1.27.1"
         commonsCodecVersion = "1.18.0"
         caffeineVersion = "3.2.2"
