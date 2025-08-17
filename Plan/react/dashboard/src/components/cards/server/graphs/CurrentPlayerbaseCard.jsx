@@ -8,17 +8,22 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faUsers} from "@fortawesome/free-solid-svg-icons";
 import {CardLoader} from "../../../navigation/Loader";
 import GroupVisualizer from "../../../graphs/GroupVisualizer";
+import {activityGroupToColor} from "../../../graphs/PlayerbaseGraph.jsx";
 
 export const CurrentPlayerbaseCardWithData = ({data, title}) => {
     const {t} = useTranslation();
+    const actualGroups = data.activity_pie_series.map(slice => {
+        return {...slice, color: activityGroupToColor(slice.name)}
+    });
     return (
         <Card id={"playerbase-current"}>
             <Card.Header>
-                <h6 className="col-black" style={{width: '100%'}}>
-                    <Fa icon={faUsers} className="col-amber"/> {t(title ? title : 'html.label.currentPlayerbase')}
+                <h6 className="col-text" style={{width: '100%'}}>
+                    <Fa icon={faUsers}
+                        className="col-players-activity-index"/> {t(title || 'html.label.currentPlayerbase')}
                 </h6>
             </Card.Header>
-            <GroupVisualizer groups={data.activity_pie_series} name={t('html.label.players')}/>
+            <GroupVisualizer groups={actualGroups} name={t('html.label.players')}/>
         </Card>
     )
 }

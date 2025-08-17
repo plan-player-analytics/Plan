@@ -68,6 +68,10 @@ public class Config extends ConfigNode {
         configFilePath = null;
     }
 
+    public boolean fileExists() {
+        return Files.exists(configFilePath);
+    }
+
     public void read() throws IOException {
         try (ConfigReader reader = new ConfigReader(Files.newInputStream(configFilePath))) {
             copyAll(reader.read());

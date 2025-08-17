@@ -52,6 +52,7 @@ const getMinecraftColorClass = (colorLetter, previousColor) => {
 
 const ColoredText = ({text}) => {
     if (!text) return <></>;
+    if (typeof text !== 'string') return text;
 
     const parts = text.split(text.includes('&sect;') ? '&sect;' : '§');
     const htmlElements = [];

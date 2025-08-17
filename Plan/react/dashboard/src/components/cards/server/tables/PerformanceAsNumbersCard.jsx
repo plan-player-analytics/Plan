@@ -20,7 +20,7 @@ const PerformanceAsNumbersCard = ({data, servers}) => {
 
     return (
         <Card id={"performance-as-numbers"}>
-            <CardHeader icon={faBookOpen} color="blue-grey" label={"html.label.performanceAsNumbers"}/>
+            <CardHeader icon={faBookOpen} color="chunks" label={"html.label.performanceAsNumbers"}/>
             {noDataAlert}
             {!dataIncludesGameServers && <Alert className='alert-warning mb-0'>
                 <FontAwesomeIcon icon={faInfoCircle}/> {t('html.description.performanceNoGameServers')}

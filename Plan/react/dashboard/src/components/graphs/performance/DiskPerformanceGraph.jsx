@@ -1,30 +1,31 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {linegraphButtons, tooltip} from "../../../util/graphs";
 import Highcharts from "highcharts/highstock";
 import NoDataDisplay from "highcharts/modules/no-data-to-display"
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../../hooks/themeHook";
-import {withReducedSaturation} from "../../../util/colors";
 import Accessibility from "highcharts/modules/accessibility";
 import {useMetadata} from "../../../hooks/metadataHook";
+import {useGraphExtremesContext} from "../../../hooks/interaction/graphExtremesContextHook.jsx";
 
 const DiskPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
     const {t} = useTranslation();
     const {graphTheming, nightModeEnabled} = useTheme();
     const {timeZoneOffsetMinutes} = useMetadata();
-
+    const {extremes, onSetExtremes} = useGraphExtremesContext();
+    const [graph, setGraph] = useState(undefined);
     useEffect(() => {
         const zones = {
             disk: [{
                 value: data.zones.diskThresholdMed,
-                color: data.colors.low
+                color: "var(--color-graphs-disk-low)"
             }, {
                 value: data.zones.diskThresholdHigh,
-                color: data.colors.med
+                color: "var(--color-graphs-disk-medium)"
             }, {
                 value: Number.MAX_VALUE,
-                color: data.colors.high
+                color: "var(--color-graphs-disk-high)"
             }]
         };
 
@@ -32,7 +33,7 @@ const DiskPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
             disk: {
                 name: t('html.label.disk'),
                 type: 'areaspline',
-                color: nightModeEnabled ? withReducedSaturation(data.colors.high) : data.colors.high,
+                color: "var(--color-graphs-disk-high)",
                 zones: zones.disk,
                 tooltip: tooltip.zeroDecimals,
                 data: dataSeries.disk
@@ -43,13 +44,19 @@ const DiskPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
         Accessibility(Highcharts);
         Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}})
         Highcharts.setOptions(graphTheming);
-        Highcharts.stockChart(id, {
+        setGraph(Highcharts.stockChart(id, {
             chart: {
                 noData: t('html.label.noDataToDisplay')
             },
             rangeSelector: {
                 selected: 2,
                 buttons: linegraphButtons
+            }, xAxis: {
+                events: {
+                    afterSetExtremes: (event) => {
+                        if (onSetExtremes) onSetExtremes(event);
+                    }
+                }
             },
             yAxis: {
                 labels: {
@@ -71,9 +78,15 @@ const DiskPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
             time: {
                 timezoneOffset: timeZoneOffsetMinutes
             },
-            series: [series.disk, pluginHistorySeries]
-        });
+            series: [series.disk, pluginHistorySeries].filter(s => s)
+        }));
     }, [data, dataSeries, graphTheming, nightModeEnabled, id, t, timeZoneOffsetMinutes, pluginHistorySeries])
+
+    useEffect(() => {
+        if (graph?.xAxis?.length && extremes) {
+            graph.xAxis[0].setExtremes(extremes.min, extremes.max);
+        }
+    }, [graph, extremes]);
 
     return (
         <div className="chart-area" style={{height: "450px"}} id={id}>

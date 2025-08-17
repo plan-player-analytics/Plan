@@ -5,22 +5,24 @@ import {useMetadata} from "../../hooks/metadataHook";
 import {useTranslation} from "react-i18next";
 import {isNumber} from "../../util/isNumber.js";
 
-export const useDatePreferences = () => {
+export const useDatePreferences = (includeSeconds) => {
+    const {t} = useTranslation();
     const {timeZoneOffsetHours} = useMetadata();
-    const {preferencesLoaded, dateFormatNoSeconds, recentDaysInDateFormat} = usePreferences();
+    const {preferencesLoaded, dateFormatFull, dateFormatNoSeconds, recentDaysInDateFormat} = usePreferences();
 
     if (!preferencesLoaded) return {};
 
-    const pattern = dateFormatNoSeconds;
+    const pattern = includeSeconds ? dateFormatFull : dateFormatNoSeconds;
     const recentDays = recentDaysInDateFormat;
     const recentDaysPattern = 'MMM d YYYY';
 
     const offset = timeZoneOffsetHours * 60 * 60 * 1000;
 
-    return {pattern, recentDays, recentDaysPattern, offset};
+    return {t, pattern, recentDays, recentDaysPattern, offset};
 }
 
 export function formatDate(date, offset, pattern, recentDays, recentDaysPattern, t) {
+    if (!isNumber(date)) return date;
     const dayMs = 24 * 60 * 60 * 1000;
     const timestamp = date - offset;
     const now = Date.now();
@@ -40,10 +42,15 @@ export function formatDate(date, offset, pattern, recentDays, recentDaysPattern,
     return date !== 0 ? new SimpleDateFormat(format).format(timestamp) : '-'
 }
 
-const FormattedDate = ({date, react}) => {
+export function formatDateWithPreferences(datePreferences, date) {
+    const {t, pattern, recentDays, recentDaysPattern, offset} = datePreferences;
+    return formatDate(date, offset, pattern, recentDays, recentDaysPattern, t);
+}
+
+const FormattedDate = ({date, react, includeSeconds}) => {
     const {t} = useTranslation();
 
-    const {pattern, recentDays, recentDaysPattern, offset} = useDatePreferences();
+    const {pattern, recentDays, recentDaysPattern, offset} = useDatePreferences(includeSeconds);
 
     if (!pattern || date === undefined || date === null) return <></>;
     if (!isNumber(date)) return date;

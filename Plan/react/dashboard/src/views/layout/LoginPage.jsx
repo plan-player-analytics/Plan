@@ -12,6 +12,7 @@ import drawSine from "../../util/loginSineRenderer";
 import {fetchLogin} from "../../service/authenticationService";
 import ForgotPasswordModal from "../../components/modal/ForgotPasswordModal";
 import {useAuth} from "../../hooks/authenticationHook";
+import ActionButton from "../../components/input/button/ActionButton.jsx";
 
 const Logo = () => {
     return (
@@ -65,9 +66,9 @@ const LoginForm = ({login}) => {
                        id="inputPassword" placeholder={t('html.login.password')} type="password"
                        value={password} onChange={event => setPassword(event.target.value)}/>
             </div>
-            <button className="btn bg-theme btn-user w-100" id="login-button" onClick={onLogin}>
+            <ActionButton className="btn-user w-100" id="login-button" onClick={onLogin}>
                 {t('html.login.login')}
-            </button>
+            </ActionButton>
         </form>
     );
 }

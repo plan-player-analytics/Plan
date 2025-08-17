@@ -6,6 +6,8 @@ import {faCheck, faList, faPencil} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import MultiSelect from "../../input/MultiSelect.jsx";
 import {faTrashAlt} from "@fortawesome/free-regular-svg-icons";
+import ActionButton from "../../input/button/ActionButton.jsx";
+import OutlineButton from "../../input/button/OutlineButton.jsx";
 
 const AddressGroupCard = ({n, group, editGroup, allAddresses, remove}) => {
     const {t} = useTranslation();
@@ -35,7 +37,7 @@ const AddressGroupCard = ({n, group, editGroup, allAddresses, remove}) => {
     const isUpToDate = !selectedIndexes.length || selectedAddresses.length === group.addresses.length && selectedAddresses.every((a, i) => a === group.addresses[i]);
     return (
         <Card>
-            <CardHeader icon={faList} color={"amber"} label={
+            <CardHeader icon={faList} color={"join-addresses"} label={
                 editingName ?
                     <Form.Control
                         style={{position: "absolute", top: "0.5rem", left: "2.5rem", width: "calc(100% - 3rem)"}}
@@ -51,14 +53,12 @@ const AddressGroupCard = ({n, group, editGroup, allAddresses, remove}) => {
             <Card.Body>
                 <MultiSelect options={allAddresses} selectedIndexes={selectedIndexes}
                              setSelectedIndexes={setSelectedIndexes}/>
-                <button className={'mt-2 btn ' + (isUpToDate ? 'bg-transparent' : 'bg-theme')}
-                        onClick={applySelected} disabled={isUpToDate}>
+                <ActionButton className={'mt-2'} onClick={applySelected} disabled={isUpToDate}>
                     {t('html.label.apply')}
-                </button>
-                <button className={'mt-2 btn btn-outline-secondary float-end'}
-                        onClick={remove}>
+                </ActionButton>
+                <OutlineButton className={'mt-2 float-end'} onClick={remove}>
                     <FontAwesomeIcon icon={faTrashAlt}/>
-                </button>
+                </OutlineButton>
             </Card.Body>
         </Card>
     )

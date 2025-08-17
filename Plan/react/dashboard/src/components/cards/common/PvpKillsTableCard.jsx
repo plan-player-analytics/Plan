@@ -14,8 +14,8 @@ const PvpKillsTableCard = ({player_kills}) => {
     return (
         <Card id={'pvp-kills-table'}>
             <Card.Header>
-                <h6 className="col-black">
-                    <Fa icon={faCrosshairs} className="col-red"/> {t('html.label.recentPvpKills')}
+                <h6 className="col-text">
+                    <Fa icon={faCrosshairs} className="col-player-kills"/> {t('html.label.recentPvpKills')}
                 </h6>
             </Card.Header>
             <KillsTable kills={player_kills}/>

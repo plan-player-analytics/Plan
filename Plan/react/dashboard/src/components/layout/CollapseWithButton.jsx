@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 
-const CollapseWithButton = ({title, children, coverToggle}) => {
-    const [collapsed, setCollapsed] = useState(true);
+const CollapseWithButton = ({title, children, coverToggle, disabled, open}) => {
+    const [collapsed, setCollapsed] = useState(!open);
 
     const toggle = () => {
         setCollapsed(!collapsed);
@@ -18,7 +18,7 @@ const CollapseWithButton = ({title, children, coverToggle}) => {
     return (
         <>
             {coverToggle && !collapsed && <div onClick={toggle} style={modalCloseStyle}></div>}
-            <button className={"btn dropdown-toggle " + (collapsed ? "collapsed" : "")}
+            <button disabled={disabled} className={"btn col-text dropdown-toggle " + (collapsed ? "collapsed" : "")}
                     onClick={toggle}>{title}</button>
             <div className={"collapse " + (collapsed ? '' : "show")}>
                 {children}

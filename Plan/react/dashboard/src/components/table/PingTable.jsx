@@ -5,6 +5,7 @@ import {faGlobe, faSignal} from "@fortawesome/free-solid-svg-icons";
 import {formatDecimals} from "../../util/formatters.js";
 import {usePreferences} from "../../hooks/preferencesHook.jsx";
 import DataTablesTable from "./DataTablesTable.jsx";
+import {localeService, reverseRegionLookupMap} from "../../service/localeService.js";
 
 const PingTable = ({countries}) => {
     const {t} = useTranslation();
@@ -24,9 +25,13 @@ const PingTable = ({countries}) => {
         data: {_: "pingMax", display: "pingMaxFormatted"}
     }];
 
+    const regions = new Intl.DisplayNames([localeService.getIntlFriendlyLocale()], {type: 'region'});
+
     const rows = countries.map(country => {
+        const code = reverseRegionLookupMap[country.country];
+        const location = code ? regions.of(code) : country.country.replace('Local Machine', t('html.value.localMachine'));
         return {
-            country: country.country,
+            country: location,
             pingAverage: country.avg_ping,
             pingAverageFormatted: formatDecimals(country.avg_ping, decimalFormat) + " ms",
             pingMax: country.max_ping,
@@ -47,7 +52,7 @@ const PingTable = ({countries}) => {
     if (!preferencesLoaded) return <></>;
 
     return (
-        <DataTablesTable id={"ping-table"} options={options} colorClass={"bg-amber"}/>
+        <DataTablesTable id={"ping-table"} options={options} colorClass={"bg-ping"}/>
     )
 };
 

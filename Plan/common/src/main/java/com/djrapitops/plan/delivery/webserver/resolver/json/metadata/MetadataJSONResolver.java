@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.webserver.resolver.json.metadata;
 
 import com.djrapitops.plan.delivery.rendering.html.Contributors;
+import com.djrapitops.plan.delivery.web.AssetVersions;
 import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
@@ -27,6 +28,7 @@ import com.djrapitops.plan.settings.config.paths.ProxySettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
+import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.java.Maps;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -34,33 +36,46 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import net.playeranalytics.plugin.server.PluginLogger;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
-import java.util.Optional;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.*;
+import java.util.stream.Stream;
 
 @Singleton
 @Path("/v1/metadata")
 public class MetadataJSONResolver implements NoAuthResolver {
 
     private final String mainCommand;
+    private final PlanFiles files;
     private final PlanConfig config;
     private final Theme theme;
     private final ServerInfo serverInfo;
+    private final AssetVersions assetVersions;
+    private final PluginLogger logger;
 
     @Inject
     public MetadataJSONResolver(
             @Named("mainCommandName") String mainCommand,
+            PlanFiles files,
             PlanConfig config,
             Theme theme,
-            ServerInfo serverInfo
+            ServerInfo serverInfo,
+            AssetVersions assetVersions,
+            PluginLogger logger
     ) {
         this.mainCommand = mainCommand;
+        this.files = files;
         this.config = config;
-        // Dagger inject constructor
         this.theme = theme;
         this.serverInfo = serverInfo;
+        this.assetVersions = assetVersions;
+        this.logger = logger;
     }
 
     @GET
@@ -82,7 +97,8 @@ public class MetadataJSONResolver implements NoAuthResolver {
                         .put("timeZoneOffsetMinutes", config.getTimeZoneOffsetHours() * 60)
                         .put("contributors", Contributors.getContributors())
                         .put("defaultTheme", config.get(DisplaySettings.THEME))
-                        .put("gmPieColors", theme.getPieColors(ThemeVal.GRAPH_GM_PIE))
+                        .put("availableThemes", getAvailableThemes())
+                        .put("gmPieColors", theme.getDefaultPieColors(ThemeVal.GRAPH_GM_PIE))
                         .put("playerHeadImageUrl", config.get(DisplaySettings.PLAYER_HEAD_IMG_URL))
                         .put("isProxy", serverInfo.getServer().isProxy())
                         .put("serverName", serverInfo.getServer().getIdentifiableName())
@@ -93,5 +109,26 @@ public class MetadataJSONResolver implements NoAuthResolver {
                         .put("registrationDisabled", config.isTrue(WebserverSettings.DISABLED_REGISTRATION))
                         .build())
                 .build();
+    }
+
+    private List<String> getAvailableThemes() {
+        Set<String> foundThemes = new HashSet<>();
+        try {
+            // Add the themes in the jar
+            foundThemes.addAll(assetVersions.getThemeNames());
+        } catch (IOException e) {
+            logger.warn("Could not read themes from jar: " + e.toString());
+        }
+        try (Stream<java.nio.file.Path> found = Files.list(files.getThemeDirectory())) {
+            found.filter(file -> file.toFile().getAbsolutePath().endsWith(".json"))
+                    .map(file -> file.getFileName().toString())
+                    .map(fileName -> StringUtils.split(fileName, '.')[0])
+                    .forEach(foundThemes::add);
+        } catch (IOException e) {
+            logger.warn("Could not read web_themes directory: " + e.toString());
+        }
+        List<String> asList = new ArrayList<>(foundThemes);
+        asList.sort(String.CASE_INSENSITIVE_ORDER);
+        return asList;
     }
 }

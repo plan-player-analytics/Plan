@@ -1,12 +1,12 @@
 import React, {useCallback, useState} from 'react';
 import GroupTable from "../table/GroupTable";
 import GroupPie from "./GroupPie";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faBarChart, faChartColumn, faPieChart, faTable} from "@fortawesome/free-solid-svg-icons";
 import {Col, Row} from "react-bootstrap";
 import GroupBarGraph from "./GroupBarGraph";
 import ErrorBoundary from "../ErrorBoundary";
 import {ErrorViewText} from "../../views/ErrorView";
+import VisualizerSelector from "../input/button/VisualizerSelector.jsx";
 
 const options = {
     BAR: 'bar',
@@ -28,14 +28,6 @@ const Visualizer = ({option, groups, colors, name}) => {
         default:
             return <GroupBarGraph id={'group-bar-' + new Date()} groups={groups} colors={colors} name={name}/>;
     }
-}
-
-const VisualizerSelector = ({onClick, icon}) => {
-    return (
-        <button className="btn float-end visualizer-button" onClick={onClick}>
-            <FontAwesomeIcon icon={icon} className="col-gray"/>
-        </button>
-    )
 }
 
 const GroupVisualizer = ({groups, colors, name, horizontal}) => {

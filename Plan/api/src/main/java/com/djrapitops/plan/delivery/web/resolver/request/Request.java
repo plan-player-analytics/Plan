@@ -35,6 +35,7 @@ public final class Request {
     private final WebUser user;
     private final Map<String, String> headers;
     private final byte[] requestBody;
+    private final String accessIpAddress;
 
     /**
      * Constructor.
@@ -45,25 +46,58 @@ public final class Request {
      * @param user        Web user doing the request (if authenticated)
      * @param headers     Request headers <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers">Documentation</a>
      * @param requestBody Raw body as bytes, if present
+     * @deprecated Use newer constructor with IP address.
      */
+    @Deprecated
     public Request(String method, URIPath path, URIQuery query, WebUser user, Map<String, String> headers, byte[] requestBody) {
+        this(method, path, query, user, headers, requestBody, null);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param method          HTTP method, GET, PUT, POST, etc
+     * @param path            Requested path /example/target
+     * @param query           Request parameters ?param=value etc
+     * @param user            Web user doing the request (if authenticated)
+     * @param headers         Request headers <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers">Documentation</a>
+     * @param requestBody     Raw body as bytes, if present
+     * @param accessIpAddress IP address this request is coming from.
+     */
+    public Request(String method, URIPath path, URIQuery query, WebUser user, Map<String, String> headers, byte[] requestBody, String accessIpAddress) {
         this.method = method;
         this.path = path;
         this.query = query;
         this.user = user;
         this.headers = headers;
         this.requestBody = requestBody;
+        this.accessIpAddress = accessIpAddress;
     }
 
     /**
      * Special constructor that figures out URIPath and URIQuery from "/path/and?query=params" and has no request body.
      *
-     * @param method  HTTP requst method
+     * @param method  HTTP request method
      * @param target  The requested path and query, e.g. "/path/and?query=params"
      * @param user    User that made the request
      * @param headers HTTP request headers
+     * @deprecated Use newer constructor with IP address.
      */
+    @Deprecated
     public Request(String method, String target, WebUser user, Map<String, String> headers) {
+        this(method, target, user, headers, null);
+    }
+
+    /**
+     * Special constructor that figures out URIPath and URIQuery from "/path/and?query=params" and has no request body.
+     *
+     * @param method          HTTP request method
+     * @param target          The requested path and query, e.g. "/path/and?query=params"
+     * @param user            User that made the request
+     * @param headers         HTTP request headers
+     * @param accessIpAddress IP address this request is coming from.
+     */
+    public Request(String method, String target, WebUser user, Map<String, String> headers, String accessIpAddress) {
         this.method = method;
         if (target.contains("?")) {
             String[] halves = StringUtils.split(target, "?", 2);
@@ -76,6 +110,7 @@ public final class Request {
         this.user = user;
         this.headers = headers;
         this.requestBody = new byte[0];
+        this.accessIpAddress = accessIpAddress;
     }
 
     /**
@@ -134,7 +169,11 @@ public final class Request {
     }
 
     public Request omitFirstInPath() {
-        return new Request(method, path.omitFirst(), query, user, headers, requestBody);
+        return new Request(method, path.omitFirst(), query, user, headers, requestBody, accessIpAddress);
+    }
+
+    public String getAccessIpAddress() {
+        return accessIpAddress;
     }
 
     @Override

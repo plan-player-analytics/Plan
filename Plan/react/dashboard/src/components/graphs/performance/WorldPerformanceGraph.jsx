@@ -1,20 +1,22 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 
 import {linegraphButtons, tooltip} from "../../../util/graphs";
 import Highcharts from "highcharts/highstock";
 import NoDataDisplay from "highcharts/modules/no-data-to-display"
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../../hooks/themeHook";
-import {withReducedSaturation} from "../../../util/colors";
 import Accessibility from "highcharts/modules/accessibility";
 import {useMetadata} from "../../../hooks/metadataHook";
 import {useAuth} from "../../../hooks/authenticationHook.jsx";
+import {useGraphExtremesContext} from "../../../hooks/interaction/graphExtremesContextHook.jsx";
 
 const WorldPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
     const {t} = useTranslation();
     const {graphTheming, nightModeEnabled} = useTheme();
     const {timeZoneOffsetMinutes} = useMetadata();
     const {hasPermission} = useAuth();
+    const {extremes, onSetExtremes} = useGraphExtremesContext();
+    const [graph, setGraph] = useState(undefined);
 
     useEffect(() => {
         const spline = 'spline'
@@ -25,7 +27,7 @@ const WorldPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
                 type: 'areaspline',
                 tooltip: tooltip.zeroDecimals,
                 data: dataSeries.playersOnline,
-                color: data.colors.playersOnline,
+                color: "var(--color-graphs-players-online)",
                 yAxis: 0
             } : {},
             entities: hasPermission('page.server.performance.graphs.entities') ? {
@@ -33,7 +35,7 @@ const WorldPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
                 type: spline,
                 tooltip: tooltip.zeroDecimals,
                 data: dataSeries.entities,
-                color: nightModeEnabled ? withReducedSaturation(data.colors.entities) : data.colors.entities,
+                color: "var(--color-graphs-entities)",
                 yAxis: 1
             } : {},
             chunks: hasPermission('page.server.performance.graphs.chunks') ? {
@@ -41,7 +43,7 @@ const WorldPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
                 type: spline,
                 tooltip: tooltip.zeroDecimals,
                 data: dataSeries.chunks,
-                color: nightModeEnabled ? withReducedSaturation(data.colors.chunks) : data.colors.chunks,
+                color: "var(--color-graphs-chunks)",
                 yAxis: 2
             } : {}
         };
@@ -50,7 +52,7 @@ const WorldPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
         Accessibility(Highcharts);
         Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}})
         Highcharts.setOptions(graphTheming);
-        Highcharts.stockChart(id, {
+        setGraph(Highcharts.stockChart(id, {
             chart: {
                 noData: t('html.label.noDataToDisplay')
             },
@@ -80,7 +82,13 @@ const WorldPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
                     }
                 },
                 softMin: 0,
-            }],
+            }], xAxis: {
+                events: {
+                    afterSetExtremes: (event) => {
+                        if (onSetExtremes) onSetExtremes(event);
+                    }
+                }
+            },
             title: {text: ''},
             plotOptions: {
                 areaspline: {
@@ -93,10 +101,14 @@ const WorldPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
             time: {
                 timezoneOffset: timeZoneOffsetMinutes
             },
-            series: [series.playersOnline, series.entities, series.chunks, pluginHistorySeries]
-        });
+            series: [series.playersOnline, series.entities, series.chunks, pluginHistorySeries].filter(s => s)
+        }));
     }, [data, dataSeries, graphTheming, nightModeEnabled, id, t, timeZoneOffsetMinutes, pluginHistorySeries])
-
+    useEffect(() => {
+        if (graph?.xAxis?.length && extremes) {
+            graph.xAxis[0].setExtremes(extremes.min, extremes.max);
+        }
+    }, [graph, extremes]);
     return (
         <div className="chart-area" style={{height: "450px"}} id={id}>
             <span className="loader"/>

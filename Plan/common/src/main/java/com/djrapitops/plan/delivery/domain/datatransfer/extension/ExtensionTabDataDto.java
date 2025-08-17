@@ -47,7 +47,7 @@ public class ExtensionTabDataDto {
         if (doubleValue.isPresent()) return doubleValue;
         Optional<ExtensionValueDataDto> percentage = tabData.getPercentage(key).map(data -> new ExtensionValueDataDto(data.getDescription(), "PERCENTAGE", data.getFormattedValue(formatters.percentage())));
         if (percentage.isPresent()) return percentage;
-        Optional<ExtensionValueDataDto> number = tabData.getNumber(key).map(data -> new ExtensionValueDataDto(data.getDescription(), data.getFormatType() == FormatType.NONE ? "NUMBER" : data.getFormatType().name(), data.getFormattedValue(formatters.getNumberFormatter(data.getFormatType()))));
+        Optional<ExtensionValueDataDto> number = tabData.getNumber(key).map(data -> new ExtensionValueDataDto(data.getDescription(), data.getFormatType() == FormatType.NONE ? "NUMBER" : data.getFormatType().name(), data.getRawValue()));
         if (number.isPresent()) return number;
         Optional<ExtensionValueDataDto> string = tabData.getString(key).map(data -> new ExtensionValueDataDto(data.getDescription(), data.isPlayerName() ? "LINK" : "STRING", data.getFormattedValue()));
         if (string.isPresent()) return string;

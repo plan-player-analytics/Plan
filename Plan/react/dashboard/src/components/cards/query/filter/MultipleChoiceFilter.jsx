@@ -4,6 +4,7 @@ import MultiSelect from "../../../input/MultiSelect";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTrashAlt} from "@fortawesome/free-regular-svg-icons";
 import {Col, Row} from "react-bootstrap";
+import OutlineButton from "../../../input/button/OutlineButton.jsx";
 
 const MultipleChoiceFilter = ({index, label, filter, removeFilter, setFilterOptions}) => {
     const {t} = useTranslation();
@@ -26,7 +27,7 @@ const MultipleChoiceFilter = ({index, label, filter, removeFilter, setFilterOpti
 
     return (
         <div id={'filter-' + index} className="mt-2">
-            <label className="form-label" htmlFor={'filter-' + index}>{select}{t(label)}:</label>
+            <label className="form-label" htmlFor={'filter-' + index}>{select} {t(label)}:</label>
             <Row>
                 <Col md={11} className={"flex-fill"}>
                     <MultiSelect options={filter.options.options}
@@ -34,9 +35,9 @@ const MultipleChoiceFilter = ({index, label, filter, removeFilter, setFilterOpti
                                  selectedIndexes={selectedIndexes}/>
                 </Col>
                 <Col md={"auto"}>
-                    <button className="filter-remover btn btn-outline-secondary float-end"
-                            onClick={removeFilter}><FontAwesomeIcon icon={faTrashAlt}/>
-                    </button>
+                    <OutlineButton className={"filter-remover float-end"} onClick={removeFilter}>
+                        <FontAwesomeIcon icon={faTrashAlt}/>
+                    </OutlineButton>
                 </Col>
             </Row>
         </div>

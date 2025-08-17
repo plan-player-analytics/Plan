@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from "react";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import logo from '../../Flaticon_circle.png';
 import {faDoorOpen, faDownload, faPalette, faQuestionCircle} from "@fortawesome/free-solid-svg-icons";
-import {NavLink, useLocation} from "react-router-dom";
+import {Link, NavLink, useLocation} from "react-router-dom";
 import {useTheme} from "../../hooks/themeHook";
 import PluginInformationModal from "../modal/PluginInformationModal";
 import VersionInformationModal from "../modal/VersionInformationModal";
@@ -13,11 +13,12 @@ import {useTranslation} from "react-i18next";
 import {Collapse} from "react-bootstrap";
 import {baseAddress} from "../../service/backendConfiguration";
 import PageNavigationItem from "./PageNavigationItem";
+import {useWindowWidth} from "../../hooks/interaction/windowWidthHook.jsx";
 
 const Logo = () => (
-    <a className="sidebar-brand d-flex align-items-center justify-content-center" href="/">
+    <Link className="sidebar-brand d-flex align-items-center justify-content-center" to="/">
         <img alt="logo" className="w-22" src={logo}/>
-    </a>
+    </Link>
 )
 
 const Divider = ({showMargin}) => (
@@ -147,7 +148,7 @@ const SidebarCollapse = ({item, open, setOpen, collapseSidebar}) => {
             </button>
             <Collapse in={open}>
                 <div id={item.name + "-collapse"}>
-                    <div className="bg-white py-2 collapse-inner rounded">
+                    <div className="sidebar-collapse py-2 collapse-inner rounded">
                         {item.contents
                             .filter(content => content !== undefined)
                             .map(content =>
@@ -188,22 +189,17 @@ const renderItem = (item, i, openCollapse, setOpenCollapse, t, windowWidth, coll
     return <hr key={i} className="sidebar-divider"/>
 }
 
-const Sidebar = ({page, items}) => {
+const Sidebar = ({page, items, openItemIndex, keepOpen}) => {
     const {t} = useTranslation();
     const {currentTab, sidebarExpanded, setSidebarExpanded} = useNavigation();
     const {authRequired, hasPermission, hasChildPermission} = useAuth();
 
-    const [openCollapse, setOpenCollapse] = useState(undefined);
+    const [openCollapse, setOpenCollapse] = useState(openItemIndex);
     const toggleCollapse = collapse => {
         setOpenCollapse(openCollapse === collapse ? undefined : collapse);
     }
 
-    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
-    const updateWidth = useCallback(() => setWindowWidth(window.innerWidth), []);
-    useEffect(() => {
-        window.addEventListener('resize', updateWidth);
-        return () => window.removeEventListener('resize', updateWidth);
-    }, [updateWidth]);
+    const windowWidth = useWindowWidth();
 
     const collapseSidebar = useCallback(() => {
         setSidebarExpanded(windowWidth > 1350);
@@ -249,8 +245,8 @@ const Sidebar = ({page, items}) => {
 
     return (
         <>
-            {sidebarExpanded &&
-                <ul className={"navbar-nav sidebar sidebar-dark accordion bg-theme"} id="accordionSidebar">
+            {(sidebarExpanded || keepOpen) &&
+                <ul className={"navbar-nav sidebar sidebar-dark accordion"} id="accordionSidebar">
                     <Logo/>
                     <PageNavigationItem page={page}/>
                     <Divider showMargin={items.length && !items[0].contents && items[0].href === undefined}/>

@@ -3,7 +3,7 @@ import {useAuth} from "./authenticationHook";
 import {useNavigation} from "./navigationHook";
 import {useTheme} from "./themeHook";
 import {useMetadata} from "./metadataHook";
-import {getColors, withReducedSaturation} from "../util/colors";
+import {withReducedSaturation} from "../util/colors";
 import axios from "axios";
 import {useTranslation} from "react-i18next";
 
@@ -35,7 +35,7 @@ export const PageExtensionContextProvider = ({children}) => {
             },
             theme: {
                 currentThemeColor: themeContext.selectedColor,
-                colorMap: getColors(),
+                colorMap: {}, // deprecated, use var(--color-plugins-red) etc. in css instead.
                 withReducedSaturation
             },
             metadata: {

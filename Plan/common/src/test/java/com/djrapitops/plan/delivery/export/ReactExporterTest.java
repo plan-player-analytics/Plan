@@ -69,6 +69,26 @@ class ReactExporterTest {
     }
 
     @Test
+    void allThemesAreExported(PlanConfig config, Exporter exporter) throws ExportException, IOException {
+        config.set(ExportSettings.SERVER_PAGE, true);
+        Path exportPath = config.getPageExportPath();
+        exporter.exportReact();
+
+        Path themePath = Path.of(new File("").getAbsolutePath())
+                .resolve("src/main/resources/assets/plan/themes");
+
+        List<Path> filesToExport = Files.list(themePath)
+                .filter(path -> path.toFile().getAbsolutePath().endsWith(".json"))
+                .map(path -> path.relativize(themePath))
+                .toList();
+        assertFalse(filesToExport.isEmpty());
+        List<Path> filesExported = Files.list(exportPath).map(path -> path.relativize(exportPath)).toList();
+        assertAll(filesToExport.stream()
+                .map(path -> (Executable) () -> assertTrue(filesExported.contains(path)))
+                .toList());
+    }
+
+    @Test
     void noReactFilesAreExported(PlanConfig config, Exporter exporter) throws ExportException, IOException {
         config.set(ExportSettings.PLAYER_PAGES, false);
         config.set(ExportSettings.SERVER_PAGE, false);

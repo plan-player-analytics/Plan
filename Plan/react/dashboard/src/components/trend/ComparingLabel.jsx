@@ -4,8 +4,8 @@ import React from "react";
 
 const ComparingLabel = ({children}) => {
     return (<>
-        <Fa icon={faCaretUp} className="comparing text-success"/>
-        <Fa icon={faCaretDown} className="comparing text-danger"/>
+        <Fa icon={faCaretUp} className="comparing col-trend-better"/>
+        <Fa icon={faCaretDown} className="comparing col-trend-worse"/>
         {' '}<small>{children}</small>
     </>);
 }

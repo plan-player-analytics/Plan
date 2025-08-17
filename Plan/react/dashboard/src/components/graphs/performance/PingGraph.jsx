@@ -5,7 +5,6 @@ import Highcharts from "highcharts/highstock";
 import NoDataDisplay from "highcharts/modules/no-data-to-display"
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../../hooks/themeHook";
-import {withReducedSaturation} from "../../../util/colors";
 import Accessibility from "highcharts/modules/accessibility";
 import {useMetadata} from "../../../hooks/metadataHook";
 
@@ -23,21 +22,21 @@ const PingGraph = ({id, data}) => {
                 type: spline,
                 tooltip: tooltip.twoDecimals,
                 data: data.avg_ping_series,
-                color: nightModeEnabled ? withReducedSaturation(data.colors.avg) : data.colors.avg,
+                color: "var(--color-graphs-ping-avg)",
             },
             maxPing: {
                 name: t('html.label.worstPing'),
                 type: spline,
                 tooltip: tooltip.zeroDecimals,
                 data: data.max_ping_series,
-                color: nightModeEnabled ? withReducedSaturation(data.colors.max) : data.colors.max,
+                color: "var(--color-graphs-ping-max)",
             },
             minPing: {
                 name: t('html.label.bestPing'),
                 type: spline,
                 tooltip: tooltip.zeroDecimals,
                 data: data.min_ping_series,
-                color: nightModeEnabled ? withReducedSaturation(data.colors.min) : data.colors.min,
+                color: "var(--color-graphs-ping-min)",
             }
         };
 

@@ -190,6 +190,7 @@ tasks.register("determineAssetModifications") {
     inputs.files(fileTree("$rootDir/react/dashboard/build"))
     inputs.files(fileTree(dir: "src/main/resources/assets/plan/web"))
     inputs.files(fileTree(dir: "src/main/resources/assets/plan/locale"))
+    inputs.files(fileTree(dir: "src/main/resources/assets/plan/themes"))
     outputs.file("build/resources/main/assets/plan/AssetVersion.yml")
 
     doLast {
@@ -225,6 +226,22 @@ tasks.register("determineAssetModifications") {
             def relativePath = tree.getDir().toPath().relativize(f.toPath()) // File path relative to the tree
             versionFile.text += String.format(
                     "%s: %s\n", relativePath.toString().replace(".", ",").replace("\\", "/"), modified
+            )
+        }
+
+        tree = fileTree(dir: "src/main/resources/assets/plan/themes")
+        tree.forEach { File f ->
+            def gitModified = new ByteArrayOutputStream()
+            exec {
+                commandLine "git", "log", "-1", "--pretty=%ct", f.toString()
+                standardOutput = gitModified
+            }
+            def gitModifiedAsString = gitModified.toString().strip()
+            // git returns UNIX time in seconds, but most things in Java use UNIX time in milliseconds
+            def modified = gitModifiedAsString.isEmpty() ? System.currentTimeMillis() : Long.parseLong(gitModifiedAsString) * 1000
+            def relativePath = tree.getDir().toPath().relativize(f.toPath()) // File path relative to the tree
+            versionFile.text += String.format(
+                    "themes/%s: %s\n", relativePath.toString().replace(".", ",").replace("\\", "/"), modified
             )
         }
 
