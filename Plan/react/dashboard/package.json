@@ -16,7 +16,7 @@
     "@fullcalendar/bootstrap": "^6.1.17",
     "@fullcalendar/core": "^6.1.19",
     "@fullcalendar/daygrid": "^6.1.17",
-    "@fullcalendar/interaction": "^6.1.17",
+    "@fullcalendar/interaction": "^6.1.19",
     "@fullcalendar/react": "^6.1.17",
     "@highcharts/map-collection": "^2.3.1",
     "@testing-library/jest-dom": "^6.6.3",
