@@ -20,6 +20,8 @@ import {addToObject} from "../../util/mutator.js";
 import {graphUseCases} from "./usecase/GraphUseCases.jsx";
 import {TableUseCase} from "./usecase/TableUseCases.jsx";
 import {formatLabel} from "./UseCase.jsx";
+import TabsUseCase from "./usecase/TabsUseCase.jsx";
+import DataPluginsUseCase from "./usecase/DataPluginsUseCase.jsx";
 
 const findExample = (path, examples) => {
     if (!path?.length) return undefined;
@@ -34,6 +36,7 @@ const ExampleSection = ({displayedItem, className}) => {
         "sidebar": <SidebarUseCase/>,
         "layout.background": <SidebarUseCase/>,
         "layout.title": <SidebarUseCase/>,
+        "tabs": <TabsUseCase/>,
         "infoBox": <InfoBoxUseCase/>,
         "layout.loader": <ChartLoader/>,
         "data.trend": <TrendUseCase/>,
@@ -51,7 +54,8 @@ const ExampleSection = ({displayedItem, className}) => {
         "data.playerVersus": <DataPlayerVersusUseCase/>,
         "data.playerStatus": <DataPlayerStatusUseCase/>,
         "forms": <FormsUseCase/>,
-        "tables": <TableUseCase/>
+        "tables": <TableUseCase/>,
+        "plugin": <DataPluginsUseCase/>
     }
     addToObject(examples, graphUseCases);
     const example = findExample(displayedItem, examples);
