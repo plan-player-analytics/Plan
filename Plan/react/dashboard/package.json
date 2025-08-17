@@ -19,7 +19,7 @@
     "@fullcalendar/interaction": "^6.1.19",
     "@fullcalendar/react": "^6.1.19",
     "@highcharts/map-collection": "^2.3.1",
-    "@testing-library/jest-dom": "^6.6.3",
+    "@testing-library/jest-dom": "^6.7.0",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
     "@uiw/react-color-chrome": "^2.7.1",
@@ -42,7 +42,7 @@
     "react-mcjsonchat": "^1.0.0",
     "react-router-dom": "^6.26.0",
     "react-select": "^5.10.2",
-    "sass": "^1.89.2",
+    "sass": "^1.90.0",
     "source-map-explorer": "^2.5.2",
     "swagger-ui": "^5.27.1",
     "web-vitals": "^4.2.4"
