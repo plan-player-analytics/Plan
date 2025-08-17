@@ -5,6 +5,7 @@ import {faHandPointRight} from "@fortawesome/free-regular-svg-icons";
 import {useTranslation} from "react-i18next";
 import {useMetadata} from "../../hooks/metadataHook";
 import {Link} from "react-router-dom";
+import ModalCloseButton from "../input/button/ModalCloseButton.jsx";
 
 const ForgotPasswordModal = ({show, toggle}) => {
     const {t} = useTranslation();
@@ -20,7 +21,7 @@ const ForgotPasswordModal = ({show, toggle}) => {
                 <Modal.Title id="forgotModalLabel">
                     <Fa icon={faHandPointRight}/> {t('html.login.forgotPassword1')}
                 </Modal.Title>
-                <button aria-label="Close" className="btn-close" onClick={toggle}/>
+                <ModalCloseButton onClick={toggle}/>
             </Modal.Header>
             <Modal.Body>
                 <p>{t('html.login.forgotPassword2')}</p>

@@ -11,7 +11,7 @@ import ColorEditForm from "../../components/theme/ColorEditForm.jsx";
 import UseCaseSection from "../../components/theme/UseCaseSection.jsx";
 import ExampleSection from "../../components/theme/ExampleSection.jsx";
 import {faExclamationCircle, faFileSignature, faSwatchbook} from "@fortawesome/free-solid-svg-icons";
-import ActionButton from "../../components/input/ActionButton.jsx";
+import ActionButton from "../../components/input/button/ActionButton.jsx";
 import UnsavedChangesText from "../../components/text/UnsavedChangesText.jsx";
 import SecondaryActionButton from "../../components/input/button/SecondaryActionButton.jsx";
 import {MinHeightProvider} from "../../hooks/context/minHeightContextHook.jsx";

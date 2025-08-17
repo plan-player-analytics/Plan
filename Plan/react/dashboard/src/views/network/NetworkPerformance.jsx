@@ -14,7 +14,7 @@ import {mapPerformanceDataToSeries} from "../../util/graphs";
 import PerformanceGraphsCard from "../../components/cards/network/PerformanceGraphsCard";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 import {useAuth} from "../../hooks/authenticationHook";
-import ActionButton from "../../components/input/ActionButton.jsx";
+import ActionButton from "../../components/input/button/ActionButton.jsx";
 
 const NetworkPerformance = () => {
     const {hasPermission} = useAuth();

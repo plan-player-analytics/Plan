@@ -1,8 +1,7 @@
 import React from "react";
 import {useTheme} from "../../hooks/themeHook";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import {faCheck, faCloudMoon, faPalette} from "@fortawesome/free-solid-svg-icons";
-import {nameToContrastCssVariable, nameToCssVariable} from "../../util/colors";
+import {faCloudMoon, faPalette} from "@fortawesome/free-solid-svg-icons";
 import {Col, Modal, Row} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
 import {useThemeStorage} from "../../hooks/context/themeContextHook.jsx";
@@ -10,27 +9,9 @@ import {useMetadata} from "../../hooks/metadataHook.jsx";
 import ThemeOption from "../theme/ThemeOption.jsx";
 import {useAuth} from "../../hooks/authenticationHook.jsx";
 import AddThemeButton from "../theme/AddThemeButton.jsx";
-import ActionButton from "../input/ActionButton.jsx";
-
-const ColorSelectorButton = ({color, setColor, disabled, active}) => {
-    const validCssColor = color => {
-        return color === 'theme' ? 'reference-colors-theme' : color;
-    }
-    return (
-        <button className={`btn color-chooser ${disabled ? "disabled" : ''} ${active ? 'active' : ''}`}
-                style={{
-                    color: nameToContrastCssVariable(validCssColor(color)),
-                    background: nameToCssVariable(validCssColor(color))
-                }}
-                id={"choose-" + color}
-                disabled={disabled}
-                onClick={() => setColor(color)}
-        >
-            <Fa icon={active ? faCheck : faPalette}/>
-        </button>
-    )
-}
-
+import ActionButton from "../input/button/ActionButton.jsx";
+import ColorSelectorButton from "../theme/ColorSelectorButton.jsx";
+import ModalCloseButton from "../input/button/ModalCloseButton.jsx";
 
 const ColorSelectorModal = () => {
     const {t} = useTranslation();
@@ -51,7 +32,7 @@ const ColorSelectorModal = () => {
                 <Modal.Title id="colorChooserModalLabel">
                     <Fa icon={faPalette}/> {t('html.label.themeSelect')}
                 </Modal.Title>
-                <button aria-label="Close" className="btn-close" onClick={theme.toggleColorChooser}/>
+                <ModalCloseButton onClick={theme.toggleColorChooser}/>
             </Modal.Header>
             <Modal.Body style={{padding: "0.5rem 0 0.5rem 0.5rem"}}>
                 <Row>

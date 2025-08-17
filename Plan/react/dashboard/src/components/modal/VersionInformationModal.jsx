@@ -3,7 +3,9 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {Modal} from "react-bootstrap";
 import {faCheckCircle, faDownload} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
-import ActionButton from "../input/ActionButton.jsx";
+import ActionButton from "../input/button/ActionButton.jsx";
+import ModalCloseButton from "../input/button/ModalCloseButton.jsx";
+import ExternalLink from "../input/button/ExternalLink.jsx";
 
 const UpdateAvailableModal = ({open, toggle, versionInfo}) => {
     const {t} = useTranslation();
@@ -13,18 +15,18 @@ const UpdateAvailableModal = ({open, toggle, versionInfo}) => {
                 <Modal.Title id="versionModalLabel">
                     <Fa icon={faDownload}/> {t('html.modal.version.title')} {versionInfo.newVersion} {t('html.modal.version.available')}
                 </Modal.Title>
-                <button aria-label="Close" className="btn-close" type="button" onClick={toggle}/>
+                <ModalCloseButton onClick={toggle}/>
             </Modal.Header>
             <Modal.Body>
                 <p>You have version {versionInfo.currentVersion}.</p>
                 <p>New
                     release: {versionInfo.newVersion}{versionInfo.isRelease ? '' : " (" + t('html.modal.version.dev') + ")"}</p>
-                <a className="btn col-theme" href={versionInfo.changelogUrl} rel="noopener noreferrer" target="_blank">
+                <ExternalLink href={versionInfo.changelogUrl}>
                     {t('html.modal.version.changelog')}
-                </a>
-                <a className="btn col-theme" href={versionInfo.downloadUrl} rel="noopener noreferrer" target="_blank">
+                </ExternalLink>
+                <ExternalLink href={versionInfo.downloadUrl}>
                     {t('html.modal.version.download')} Plan-{versionInfo.newVersion}.jar
-                </a>
+                </ExternalLink>
             </Modal.Body>
             <Modal.Footer>
                 <ActionButton onClick={toggle}>OK</ActionButton>
@@ -42,7 +44,7 @@ const NewestVersionModal = ({open, toggle, versionInfo}) => {
                 <Modal.Title id="versionModalLabel">
                     <Fa icon={faCheckCircle}/> {t('html.version.current').replace('${0}', versionInfo.currentVersion)}.
                 </Modal.Title>
-                <button aria-label="Close" className="btn-close" type="button" onClick={toggle}/>
+                <ModalCloseButton onClick={toggle}/>
             </Modal.Header>
             <Modal.Body>
                 {t('plugin.version.isLatest')}

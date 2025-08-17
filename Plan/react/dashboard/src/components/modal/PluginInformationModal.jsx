@@ -13,7 +13,9 @@ import {
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
 import {useMetadata} from "../../hooks/metadataHook";
 import {Trans, useTranslation} from "react-i18next";
-import ActionButton from "../input/ActionButton.jsx";
+import ActionButton from "../input/button/ActionButton.jsx";
+import ExternalLink from "../input/button/ExternalLink.jsx";
+import ModalCloseButton from "../input/button/ModalCloseButton.jsx";
 
 const LicenseSection = () => {
     const {t} = useTranslation();
@@ -31,17 +33,14 @@ const LicenseSection = () => {
 const Links = () => {
     const {t} = useTranslation();
     return (<>
-            <a className="btn col-theme" href="https://github.com/plan-player-analytics/Plan/wiki"
-               rel="noopener noreferrer" target="_blank">
+            <ExternalLink href="https://github.com/plan-player-analytics/Plan/wiki">
                 <Fa icon={faGraduationCap}/> {t('html.modal.info.wiki')}
-            </a>
-            <a className="btn col-theme" href="https://github.com/plan-player-analytics/Plan/issues"
-               rel="noopener noreferrer" target="_blank">
-                <Fa icon={faBug}/> {t('html.modal.info.bugs')}</a>
-            <a className="btn col-theme" href="https://discord.gg/yXKmjzT" rel="noopener noreferrer"
-               target="_blank">
+            </ExternalLink>
+            <ExternalLink href="https://github.com/plan-player-analytics/Plan/issues">
+                <Fa icon={faBug}/> {t('html.modal.info.bugs')}</ExternalLink>
+            <ExternalLink href="https://discord.gg/yXKmjzT">
                 <Fa icon={faDiscord}/> {t('html.modal.info.discord')}
-            </a>
+            </ExternalLink>
         </>
     )
 }
@@ -80,7 +79,7 @@ const Contributions = () => {
                   components={{1: <span className="col-theme"/>}}
         /></p>
         <ul className="row contributors">
-            {contributors.map((contributor, i) => <Contributor key={contributor.name} contributor={contributor}/>)}
+            {contributors.map(contributor => <Contributor key={contributor.name} contributor={contributor}/>)}
             <li>{t('html.modal.info.contributors.bugreporters')}</li>
         </ul>
         <small>
@@ -100,22 +99,18 @@ const MetricsLinks = () => {
     return (
         <>
             <h6>{t('html.modal.info.metrics')}</h6>
-            <a className="btn col-theme" href="https://bstats.org/plugin/bukkit/Plan"
-               rel="noopener noreferrer" target="_blank">
+            <ExternalLink href="https://bstats.org/plugin/bukkit/Plan">
                 <Fa icon={faChartArea}/> Bukkit
-            </a>
-            <a className="btn col-theme" href="https://bstats.org/plugin/bungeecord/Plan"
-               rel="noopener noreferrer" target="_blank">
+            </ExternalLink>
+            <ExternalLink href="https://bstats.org/plugin/bungeecord/Plan">
                 <Fa icon={faChartArea}/> BungeeCord
-            </a>
-            <a className="btn col-theme" href="https://bstats.org/plugin/sponge/plan"
-               rel="noopener noreferrer" target="_blank">
+            </ExternalLink>
+            <ExternalLink href="https://bstats.org/plugin/sponge/plan">
                 <Fa icon={faChartArea}/> Sponge
-            </a>
-            <a className="btn col-theme" href="https://bstats.org/plugin/velocity/Plan/10326"
-               rel="noopener noreferrer" target="_blank">
+            </ExternalLink>
+            <ExternalLink href="https://bstats.org/plugin/velocity/Plan/10326">
                 <Fa icon={faChartArea}/> Velocity
-            </a>
+            </ExternalLink>
         </>
     );
 }
@@ -128,7 +123,7 @@ const PluginInformationModal = ({open, toggle}) => {
                 <Modal.Title id="informationModalLabel">
                     <Fa icon={faQuestionCircle}/> {t('html.modal.info.text')}
                 </Modal.Title>
-                <button aria-label="Close" className="btn-close" type="button" onClick={toggle}/>
+                <ModalCloseButton onClick={toggle}/>
             </Modal.Header>
             <Modal.Body>
                 <LicenseSection/>

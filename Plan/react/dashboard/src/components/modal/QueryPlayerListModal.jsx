@@ -8,7 +8,8 @@ import {ChartLoader} from "../navigation/Loader";
 import {useNavigation} from "react-router-dom";
 import {useAuth} from "../../hooks/authenticationHook";
 import PlayerTable from "../table/PlayerTable.jsx";
-import ActionButton from "../input/ActionButton.jsx";
+import ActionButton from "../input/button/ActionButton.jsx";
+import ModalCloseButton from "../input/button/ModalCloseButton.jsx";
 
 const QueryPlayerListModal = ({open, toggle, queryData, title}) => {
     const {t} = useTranslation();
@@ -20,7 +21,7 @@ const QueryPlayerListModal = ({open, toggle, queryData, title}) => {
                 <Modal.Title id="queryModalLabel">
                     <Fa icon={faSearch}/> {queryData ? title || getViewTitle(queryData, t, true) : t('html.query.title.text')}
                 </Modal.Title>
-                <button aria-label="Close" className="btn-close" type="button" onClick={toggle}/>
+                <ModalCloseButton onClick={toggle}/>
             </Modal.Header>
             {!queryData && <ChartLoader/>}
             {queryData &&

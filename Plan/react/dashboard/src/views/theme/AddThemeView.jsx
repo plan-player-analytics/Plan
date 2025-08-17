@@ -7,7 +7,7 @@ import TextInput from "../../components/input/TextInput.jsx";
 import ThemeOption from "../../components/theme/ThemeOption.jsx";
 import {ChartLoader} from "../../components/navigation/Loader.jsx";
 import {useTheme} from "../../hooks/themeHook.jsx";
-import ActionButton from "../../components/input/ActionButton.jsx";
+import ActionButton from "../../components/input/button/ActionButton.jsx";
 import {useTranslation} from "react-i18next";
 import {useThemeStorage} from "../../hooks/context/themeContextHook.jsx";
 import {useNavigate} from "react-router-dom";

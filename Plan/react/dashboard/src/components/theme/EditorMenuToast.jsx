@@ -3,11 +3,11 @@ import {Toast} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faHistory, faRedoAlt, faUndoAlt} from "@fortawesome/free-solid-svg-icons";
 import {useThemeEditContext} from "../../hooks/context/themeEditContextHook.jsx";
-import ActionButton from "../input/ActionButton.jsx";
+import ActionButton from "../input/button/ActionButton.jsx";
 import {useTranslation} from "react-i18next";
 import {unstable_usePrompt} from "react-router-dom";
 import ThemeEditHistory from "./ThemeEditHistory.jsx";
-import OutlineButton from "../input/OutlineButton.jsx";
+import OutlineButton from "../input/button/OutlineButton.jsx";
 import ThemeEditIssues from "./ThemeEditIssues.jsx";
 
 const EditorMenuToast = () => {

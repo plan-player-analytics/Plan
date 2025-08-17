@@ -8,12 +8,13 @@ import WorldPie from "../graphs/WorldPie";
 import {SimpleKillsTable} from "../table/KillsTable";
 import Accordion from "./Accordion";
 import {useTranslation} from "react-i18next";
-import {baseAddress} from "../../service/backendConfiguration";
 import {ChartLoader} from "../navigation/Loader";
 import {usePreferences} from "../../hooks/preferencesHook.jsx";
 import FormattedDate from "../text/FormattedDate.jsx";
 import FormattedTime from "../text/FormattedTime.jsx";
 import {formatDecimals} from "../../util/formatters.js";
+import PlayerPageLinkButton from "../input/button/PlayerPageLinkButton.jsx";
+import ServerPageLinkButton from "../input/button/ServerPageLinkButton.jsx";
 
 const SessionHeader = ({session}) => {
     const {t} = useTranslation();
@@ -74,14 +75,8 @@ const SessionBody = ({i, session}) => {
                 <WorldPie id={"worldpie_" + i}
                           worldSeries={session.world_series}
                           gmSeries={session.gm_series}/>
-                <a href={`${baseAddress}/player/${session.player_uuid}`}
-                   className="float-end btn bg-players-online">
-                    <Fa icon={faUser}/> {t('html.label.playerPage')}
-                </a>
-                {session.network_server ? <a href={`${baseAddress}/server/${session.server_uuid}`}
-                                             className="float-end btn bg-servers me-2">
-                    <Fa icon={faServer}/> {t('html.label.serverPage')}
-                </a> : ''}
+                <PlayerPageLinkButton uuid={session.player_uuid} className={'float-end'}/>
+                <ServerPageLinkButton uuid={session.server_uuid} className={'float-end me-2'}/>
             </div>
         </Row>
     )

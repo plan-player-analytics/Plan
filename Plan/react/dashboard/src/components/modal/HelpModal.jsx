@@ -8,7 +8,8 @@ import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 import NewPlayerRetentionHelp from "./help/NewPlayerRetentionHelp";
 import PlayerRetentionGraphHelp from "./help/PlayerRetentionGraphHelp";
 import GroupPermissionHelp from "./help/GroupPermissionHelp";
-import ActionButton from "../input/ActionButton.jsx";
+import ActionButton from "../input/button/ActionButton.jsx";
+import ModalCloseButton from "../input/button/ModalCloseButton.jsx";
 
 const HelpModal = () => {
     const {t} = useTranslation();
@@ -42,7 +43,7 @@ const HelpModal = () => {
                 <Modal.Title id="versionModalLabel">
                     <Fa icon={faQuestionCircle}/> {helpTopic?.title}
                 </Modal.Title>
-                <button aria-label="Close" className="btn-close" type="button" onClick={toggle}/>
+                <ModalCloseButton onClick={toggle}/>
             </Modal.Header>
             <Modal.Body>
                 {helpTopic?.body}

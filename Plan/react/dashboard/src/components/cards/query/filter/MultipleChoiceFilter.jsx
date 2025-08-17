@@ -4,7 +4,7 @@ import MultiSelect from "../../../input/MultiSelect";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTrashAlt} from "@fortawesome/free-regular-svg-icons";
 import {Col, Row} from "react-bootstrap";
-import OutlineButton from "../../../input/OutlineButton.jsx";
+import OutlineButton from "../../../input/button/OutlineButton.jsx";
 
 const MultipleChoiceFilter = ({index, label, filter, removeFilter, setFilterOptions}) => {
     const {t} = useTranslation();

@@ -34,9 +34,10 @@ import {useAuth} from "../../hooks/authenticationHook";
 import Checkbox from "../../components/input/Checkbox.jsx";
 import TextInput from "../../components/input/TextInput.jsx";
 import UnsavedChangesText from "../../components/text/UnsavedChangesText.jsx";
-import ActionButton from "../../components/input/ActionButton.jsx";
+import ActionButton from "../../components/input/button/ActionButton.jsx";
 import DangerButton from "../../components/input/button/DangerButton.jsx";
-import OutlineButton from "../../components/input/OutlineButton.jsx";
+import OutlineButton from "../../components/input/button/OutlineButton.jsx";
+import SecondaryActionButton from "../../components/input/button/SecondaryActionButton.jsx";
 
 const GroupsHeader = ({groupName, icon}) => {
     return (
@@ -239,10 +240,10 @@ const DiscardButton = () => {
 
     return (
         <>
-            {dirty && <button className={"float-end btn"} style={{margin: "-0.5rem", marginRight: "0.5rem"}}
+            {dirty && <SecondaryActionButton className={"float-end"} style={{margin: "-0.5rem", marginRight: "0.5rem"}}
                               onClick={requestDiscard}>
                 <Fa icon={faTrash}/> {t('html.label.managePage.changes.discard')}
-            </button>}
+            </SecondaryActionButton>}
         </>
     )
 }
@@ -265,7 +266,7 @@ const AddGroupBody = ({groups, reloadGroupNames}) => {
                            value={value}
                            setValue={newValue => setValue(newValue.toLowerCase().replace(" ", "_"))}
                 />
-                <button className={"btn bg-plan mt-2"} disabled={invalid || !value || value.length === 0}
+                <ActionButton className={"mt-2"} disabled={invalid || !value || value.length === 0}
                         onClick={() => {
                             addGroup(value).then(({error}) => {
                                 if (error) {
@@ -295,7 +296,7 @@ const AddGroupBody = ({groups, reloadGroupNames}) => {
                             })
                         }}>
                     <Fa icon={faFloppyDisk}/> {t('html.label.managePage.addGroup.header')}
-                </button>
+                </ActionButton>
             </Card.Body>
         </Card>
     )

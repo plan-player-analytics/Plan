@@ -3,22 +3,22 @@ import React, {useEffect} from "react";
 import {useTheme} from "../../hooks/themeHook";
 import NoDataDisplay from "highcharts/modules/no-data-to-display";
 import Highcharts from "highcharts/highstock";
-import {withReducedSaturation} from "../../util/colors";
+import {nameToCssVariable, withReducedSaturation} from "../../util/colors";
 import Accessibility from "highcharts/modules/accessibility";
 import {formatDateWithPreferences, useDatePreferences} from "../text/FormattedDate.jsx";
 
-export const getTranslateLabelForActivityGroup = value => {
-    switch (value) {
-        case "Very Active":
-            return 'html.label.veryActive'
-        case "Active":
-            return 'html.label.active'
-        case "Regular":
-            return 'html.label.indexRegular'
-        case "Irregular":
-            return 'html.label.irregular'
-        case "Inactive":
-            return 'html.label.indexInactive'
+export const activityGroupToColor = label => {
+    switch (label) {
+        case 'html.label.veryActive':
+            return nameToCssVariable('data-players-very-active');
+        case 'html.label.active':
+            return nameToCssVariable('data-players-active');
+        case 'html.label.indexRegular':
+            return nameToCssVariable('data-players-regular');
+        case 'html.label.irregular':
+            return nameToCssVariable('data-players-irregular');
+        case 'html.label.indexInactive':
+            return nameToCssVariable('data-players-inactive');
         default:
             return 'plugin.generic.unknown'
     }
@@ -49,7 +49,8 @@ const PlayerbaseGraph = ({data}) => {
         const series = data?.activity_series.map(dataSet => {
             return {
                 ...dataSet,
-                name: t(dataSet.name)
+                name: t(dataSet.name),
+                color: activityGroupToColor(dataSet.name)
             }
         });
 

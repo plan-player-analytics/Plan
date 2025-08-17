@@ -8,10 +8,9 @@ import WorldPie from "../graphs/WorldPie";
 import Accordion from "./Accordion";
 import {faSuperpowers} from "@fortawesome/free-brands-svg-icons";
 import {useTranslation} from "react-i18next";
-import {baseAddress} from "../../service/backendConfiguration";
-import {useAuth} from "../../hooks/authenticationHook";
 import FormattedDate from "../text/FormattedDate.jsx";
 import FormattedTime from "../text/FormattedTime.jsx";
+import ServerPageLinkButton from "../input/button/ServerPageLinkButton.jsx";
 
 const ServerHeader = ({server}) => {
     const {t} = useTranslation();
@@ -30,7 +29,6 @@ const ServerHeader = ({server}) => {
 
 const ServerBody = ({i, server}) => {
     const {t} = useTranslation();
-    const {hasPermission} = useAuth();
 
     return (
         <Row>
@@ -85,10 +83,7 @@ const ServerBody = ({i, server}) => {
                           worldSeries={server.world_pie_series}
                           gmSeries={server.gm_series}/>
 
-                {hasPermission('page.server') && <a href={`${baseAddress}/server/${server.server_uuid}`}
-                                                    className="float-end btn bg-servers me-2">
-                    <Fa icon={faServer}/> {t('html.label.serverPage')}
-                </a>}
+                <ServerPageLinkButton uuid={server.server_uuid} className={'float-end'}/>
             </div>
         </Row>
     )
