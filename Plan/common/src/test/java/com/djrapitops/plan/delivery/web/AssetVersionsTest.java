@@ -44,6 +44,7 @@ class AssetVersionsTest {
         List<String> expected = getFileNamesInFolder(TestResources.getAsset("themes"))
                 .filter(file -> file.endsWith("json"))
                 .map(file -> file.substring(0, file.indexOf('.')))
+                .sorted()
                 .toList();
         assertEquals(expected, themeNames);
     }
