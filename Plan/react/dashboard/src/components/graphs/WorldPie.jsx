@@ -22,7 +22,6 @@ const WorldPie = ({id, worldSeries, gmSeries}) => {
     const {usedUseCases} = useThemeStorage();
 
     const gmPieColors = usedUseCases?.graphs?.pie?.drilldown?.map(nameToCssVariable) || [];
-    console.log(usedUseCases, gmPieColors);
 
     useEffect(() => {
         const reduceColors = (series) => {

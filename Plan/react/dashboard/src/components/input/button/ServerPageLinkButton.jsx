@@ -14,7 +14,7 @@ const ServerPageLinkButton = ({uuid, className}) => {
 
     return (
         <Link to={`/server/${uuid}`}
-              className={`btn bg-servers  ${className || ''}`}>
+              className={`btn bg-servers ${className || ''}`}>
             <Fa icon={faServer}/> {t('html.label.serverPage')}
         </Link>
     )
