@@ -97,6 +97,7 @@ public class MetadataJSONResolver implements NoAuthResolver {
                         .put("timeZoneOffsetMinutes", config.getTimeZoneOffsetHours() * 60)
                         .put("contributors", Contributors.getContributors())
                         .put("defaultTheme", config.get(DisplaySettings.THEME))
+                        .put("defaultNightMode", config.get(DisplaySettings.NIGHT_MODE))
                         .put("availableThemes", getAvailableThemes())
                         .put("gmPieColors", theme.getDefaultPieColors(ThemeVal.GRAPH_GM_PIE))
                         .put("playerHeadImageUrl", config.get(DisplaySettings.PLAYER_HEAD_IMG_URL))

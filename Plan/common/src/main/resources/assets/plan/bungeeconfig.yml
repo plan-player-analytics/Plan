@@ -176,6 +176,7 @@ Display_options:
   # More information about Themes:
   # https://github.com/plan-player-analytics/Plan/wiki/Themes
   Theme: default
+  Night_mode: false
   # Can use ${playerName} or ${playerUUID} or ${playerUUIDNoDash}
   Player_head_image_url: "https://crafatar.com/avatars/${playerUUID}?size=120&default=MHF_Steve&overlay"
   Sessions:

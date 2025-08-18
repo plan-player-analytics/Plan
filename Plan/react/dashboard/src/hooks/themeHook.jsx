@@ -26,7 +26,7 @@ const setStoredColor = themeColor => {
 
 const getStoredNightMode = () => {
     const stored = window.localStorage.getItem('theme.nightMode');
-    return stored && stored !== 'undefined' ? stored !== 'false' : false;
+    return stored && stored !== 'undefined' ? stored !== 'false' : undefined;
 }
 
 const setStoredNightMode = value => {
@@ -54,6 +54,7 @@ export const ThemeContextProvider = ({children, themeOverride}) => {
         if (themeOverride) return;
         const theme = getStoredTheme(metadata.defaultTheme);
         const invalidTheme = !metadata.getAvailableThemes().includes(theme);
+        if (nightMode === undefined) setNightMode(metadata.defaultNightMode);
         setSelectedTheme(invalidTheme ? 'default' : theme);
         setSelectedColor(getStoredColor());
     }, [metadata.loaded, metadata, setSelectedTheme, setSelectedColor]);
