@@ -272,7 +272,6 @@ public class JSONFactory {
         long weekAgo = now - TimeUnit.DAYS.toMillis(7L);
 
         Formatter<Double> decimals = formatters.decimals();
-        Formatter<Long> timeAmount = formatters.timeAmount();
 
         Map<ServerUUID, Server> serverInformation = db.query(ServerQueries.fetchPlanServerInformation());
         ServerUUID proxyUUID = serverInformation.values().stream()
@@ -322,8 +321,8 @@ public class JSONFactory {
                     double averageTPS = tpsWeek.averageTPS();
                     server.put("avg_tps", averageTPS != -1 ? decimals.apply(averageTPS) : HtmlLang.UNIT_NO_DATA.getKey());
                     server.put("low_tps_spikes", tpsWeek.lowTpsSpikeCount(config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED)));
-                    server.put("downtime", timeAmount.apply(tpsWeek.serverDownTime()));
-                    server.put("current_uptime", serverUptimeCalculator.getServerUptimeMillis(serverUUID).map(timeAmount)
+                    server.put("downtime", tpsWeek.serverDownTime());
+                    server.put("current_uptime", serverUptimeCalculator.getServerUptimeMillis(serverUUID).map(Object.class::cast)
                             .orElse(GenericLang.UNAVAILABLE.getKey()));
 
                     Optional<TPS> online = tpsWeek.getLast();

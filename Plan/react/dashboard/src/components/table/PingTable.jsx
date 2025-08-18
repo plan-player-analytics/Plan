@@ -33,11 +33,11 @@ const PingTable = ({countries}) => {
         return {
             country: location,
             pingAverage: country.avg_ping,
-            pingAverageFormatted: formatDecimals(country.avg_ping, decimalFormat) + " ms",
+            pingAverageFormatted: localeService.localizePing(formatDecimals(country.avg_ping, decimalFormat)),
             pingMax: country.max_ping,
-            pingMaxFormatted: country.max_ping + " ms",
+            pingMaxFormatted: localeService.localizePing(country.max_ping),
             pingMin: country.min_ping,
-            pingMinFormatted: country.min_ping + " ms"
+            pingMinFormatted: localeService.localizePing(country.min_ping)
         };
     });
     const options = {

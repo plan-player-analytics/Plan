@@ -100,11 +100,11 @@ const PlayerTable = ({data, orderBy}) => {
                 lastSeenFormatted: <FormattedDate date={player.lastSeen} react/>,
                 country: location,
                 pingAverage: player.pingAverage,
-                pingAverageFormatted: formatDecimals(player.pingAverage, decimalFormat) + "ms",
+                pingAverageFormatted: localeService.localizePing(formatDecimals(player.pingAverage, decimalFormat)),
                 pingMax: player.pingMax,
-                pingMaxFormatted: player.pingMax + "ms",
+                pingMaxFormatted: localeService.localizePing(player.pingMax),
                 pingMin: player.pingMin,
-                pingMinFormatted: player.pingMin + "ms"
+                pingMinFormatted: localeService.localizePing(player.pingMin)
             };
             data.extensionDescriptors.forEach(descriptor => {
                 row[descriptor.name] = <ExtensionValueTableCell data={player.extensionValues[descriptor.name]}/>;

@@ -37,7 +37,6 @@ const NightModeRemovalButton = ({onRemove, path}) => (
     <button
         className="d-flex align-items-center px-1 col-red"
         onClick={() => onRemove?.(path)}
-        title="Remove override"
         style={{marginLeft: 8, marginRight: 8}}
     >
         <Fa icon={faTimes}/>

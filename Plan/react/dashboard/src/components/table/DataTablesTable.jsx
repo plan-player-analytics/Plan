@@ -113,9 +113,10 @@ const ExportMenu = ({matchingData}) => {
             <Dropdown>
                 <Dropdown.Toggle variant={""} id="dropdown-basic" className={"col-text"}
                                  style={{'--bs-btn-color': 'var(--color-forms-input-text)'}}>
-                    {generating &&
-                        <FontAwesomeIcon icon={"gear"} className={"fa-spin"} title={t('html.label.export')}/>}
-                    {!generating && <FontAwesomeIcon icon={"file-export"} title={t('html.label.export')}/>}
+                    {generating && <span title={t('html.label.export')}>
+                            <FontAwesomeIcon icon={"gear"} className={"fa-spin"}/>
+                    </span>}
+                    {!generating && <span title={t('html.label.export')}><FontAwesomeIcon icon={"file-export"}/></span>}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                     <Dropdown.Item onClick={exportCSV}><FontAwesomeIcon

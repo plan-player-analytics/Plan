@@ -21,7 +21,9 @@ const SessionHeader = ({session}) => {
     return (
         <>
             <td>{session.name} {session.first_session ?
-                <Fa icon={faUserPlus} title="Registered (First session)"/> : ''}</td>
+                <span title={t('html.label.registered') + ' (' + t('html.label.firstSession' + ')')}>
+                    <Fa icon={faUserPlus}/>
+                </span> : ''}</td>
             <td><FormattedDate date={session.start}/>{session.online ? ` (${t('html.value.online').trim()})` : ''}</td>
             <td><FormattedTime timeMs={session.length}/></td>
             <td>{session.network_server ? session.network_server : session.most_used_world}</td>

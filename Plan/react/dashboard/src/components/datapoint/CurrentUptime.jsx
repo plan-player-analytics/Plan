@@ -11,7 +11,7 @@ const CurrentUptime = ({uptime}) => {
     const {t} = useTranslation();
 
     const infoBubble = uptime === 'plugin.generic.unavailable'
-        ? <FontAwesomeIcon icon={faQuestionCircle} title={t('html.description.noUptimeCalculation')}/>
+        ? <span title={t('html.description.noUptimeCalculation')}><FontAwesomeIcon icon={faQuestionCircle}/></span>
         : undefined;
 
     return (

@@ -45,7 +45,6 @@ public class SessionsOverviewJSONCreator implements ServerTabJSONCreator<Map<Str
 
     private final DBSystem dbSystem;
 
-    private final Formatter<Long> timeAmount;
     private final Formatter<Double> percentage;
 
     @Inject
@@ -55,7 +54,6 @@ public class SessionsOverviewJSONCreator implements ServerTabJSONCreator<Map<Str
     ) {
         this.dbSystem = dbSystem;
 
-        timeAmount = formatters.timeAmount();
         percentage = formatters.percentage();
     }
 
@@ -75,13 +73,13 @@ public class SessionsOverviewJSONCreator implements ServerTabJSONCreator<Map<Str
 
         long uptime = TimeUnit.DAYS.toMillis(30L) - tpsMutator.serverDownTime();
         long occupied = tpsMutator.serverOccupiedTime();
-        insights.put("server_occupied", timeAmount.apply(occupied));
+        insights.put("server_occupied", occupied);
         insights.put("server_occupied_perc", percentage.apply(Percentage.calculate(occupied, uptime, -1)));
 
         Long playtime = db.query(SessionQueries.playtime(monthAgo, now, serverUUID));
         Long afkTime = db.query(SessionQueries.afkTime(monthAgo, now, serverUUID));
-        insights.put("total_playtime", timeAmount.apply(playtime));
-        insights.put("afk_time", timeAmount.apply(afkTime));
+        insights.put("total_playtime", playtime);
+        insights.put("afk_time", afkTime);
         insights.put("afk_time_perc", percentage.apply(Percentage.calculate(afkTime, playtime, -1)));
 
         GMTimes gmTimes = db.query(WorldTimesQueries.fetchGMTimes(monthAgo, now, serverUUID));

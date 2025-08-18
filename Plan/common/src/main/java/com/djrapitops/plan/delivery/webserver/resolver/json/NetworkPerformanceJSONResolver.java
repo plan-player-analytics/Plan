@@ -163,14 +163,14 @@ public class NetworkPerformanceJSONResolver implements Resolver {
         long downtimeMonth = getTotalDowntime(mutatorsOfServersMonth);
         long downtimeWeek = getTotalDowntime(mutatorsOfServersWeek);
         long downtimeDay = getTotalDowntime(mutatorsOfServersDay);
-        numbers.put("server_downtime_30d", timeAmount.apply(downtimeMonth));
-        numbers.put("server_downtime_7d", timeAmount.apply(downtimeWeek));
-        numbers.put("server_downtime_24h", timeAmount.apply(downtimeDay));
+        numbers.put("server_downtime_30d", downtimeMonth);
+        numbers.put("server_downtime_7d", downtimeWeek);
+        numbers.put("server_downtime_24h", downtimeDay);
 
         if (!tpsData.isEmpty()) {
-            numbers.put("avg_server_downtime_30d", timeAmount.apply(downtimeMonth / tpsData.size()));
-            numbers.put("avg_server_downtime_7d", timeAmount.apply(downtimeWeek / tpsData.size()));
-            numbers.put("avg_server_downtime_24h", timeAmount.apply(downtimeDay / tpsData.size()));
+            numbers.put("avg_server_downtime_30d", downtimeMonth / tpsData.size());
+            numbers.put("avg_server_downtime_7d", downtimeWeek / tpsData.size());
+            numbers.put("avg_server_downtime_24h", downtimeDay / tpsData.size());
         } else {
             numbers.put("avg_server_downtime_30d", "-");
             numbers.put("avg_server_downtime_7d", "-");

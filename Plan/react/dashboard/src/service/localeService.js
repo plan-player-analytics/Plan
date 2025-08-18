@@ -119,6 +119,12 @@ export const localeService = {
 
     getIntlFriendlyLocale: () => {
         return localeService.clientLocale === 'CN' ? 'zh-cn' : localeService.clientLocale.toLocaleLowerCase().replace('_', '-')
+    },
+
+    localizePing: (value) => {
+        return new Intl.DurationFormat(localeService.getIntlFriendlyLocale(), {style: 'narrow'})
+            .format({milliseconds: 1})
+            .replace('1', value);
     }
 }
 

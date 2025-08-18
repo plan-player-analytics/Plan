@@ -17,8 +17,8 @@ const ServerHeader = ({server}) => {
     return (
         <>
             <td>{t(server.server_name)}
-                {server.operator ? <Fa icon={faSuperpowers} title="Operator"/> : ''}
-                {server.banned ? <Fa icon={faGavel} title="Banned"/> : ''}
+                {server.operator ? <span title={t('html.label.operator')}><Fa icon={faSuperpowers}/></span> : ''}
+                {server.banned ? <span title={t('html.label.banned')}><Fa icon={faGavel}/></span> : ''}
             </td>
             <td><FormattedTime timeMs={server.playtime}/></td>
             <td><FormattedDate date={server.registered}/></td>

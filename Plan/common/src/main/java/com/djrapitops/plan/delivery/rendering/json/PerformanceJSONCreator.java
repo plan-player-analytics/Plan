@@ -48,7 +48,6 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
     private final DBSystem dbSystem;
 
     private final Formatter<Double> decimals;
-    private final Formatter<Long> timeAmount;
     private final Formatter<Double> percentage;
     private final Formatter<Double> byteSize;
 
@@ -63,7 +62,6 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
 
         decimals = formatters.decimals();
         percentage = formatters.percentage();
-        timeAmount = formatters.timeAmount();
         byteSize = formatters.byteSize();
     }
 
@@ -96,9 +94,9 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
         numbers.put("low_tps_spikes_7d", tpsDataWeek.lowTpsSpikeCount(tpsThreshold));
         numbers.put("low_tps_spikes_24h", tpsDataDay.lowTpsSpikeCount(tpsThreshold));
 
-        numbers.put("server_downtime_30d", timeAmount.apply(tpsDataMonth.serverDownTime()));
-        numbers.put("server_downtime_7d", timeAmount.apply(tpsDataWeek.serverDownTime()));
-        numbers.put("server_downtime_24h", timeAmount.apply(tpsDataDay.serverDownTime()));
+        numbers.put("server_downtime_30d", tpsDataMonth.serverDownTime());
+        numbers.put("server_downtime_7d", tpsDataWeek.serverDownTime());
+        numbers.put("server_downtime_24h", tpsDataDay.serverDownTime());
 
         numbers.put("players_30d", format(tpsDataMonth.averagePlayers()));
         numbers.put("players_7d", format(tpsDataWeek.averagePlayers()));

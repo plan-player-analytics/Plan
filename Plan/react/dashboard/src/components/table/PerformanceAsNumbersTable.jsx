@@ -15,6 +15,7 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faEye, faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 import AsNumbersTable from "./AsNumbersTable";
 import {ChartLoader} from "../navigation/Loader";
+import FormattedTime from "../text/FormattedTime.jsx";
 
 const PerformanceAsNumbersTable = ({data, servers}) => {
     const {t} = useTranslation();
@@ -23,8 +24,7 @@ const PerformanceAsNumbersTable = ({data, servers}) => {
     const dataIncludesGameServers = servers && Boolean(servers.filter(server => !server.proxy).length);
     const noTPSOnProxies = !servers || dataIncludesGameServers
         ? ''
-        : <Fa icon={faQuestionCircle}
-              title={t('html.description.performanceNoGameServers')}/>;
+        : <span title={t('html.description.performanceNoGameServers')}><Fa icon={faQuestionCircle}/></span>;
 
     return (
         <AsNumbersTable
@@ -39,17 +39,17 @@ const PerformanceAsNumbersTable = ({data, servers}) => {
             <TableRow icon={faPowerOff} color="downtime"
                       text={t(data.avg_server_downtime_30d ? 'html.label.serverDowntime' : 'html.label.totalServerDowntime') + ' (' + t('generic.noData') + ')'}
                       values={[
-                          data.server_downtime_30d,
-                          data.server_downtime_7d,
-                          data.server_downtime_24h
+                          <FormattedTime timeMs={data.server_downtime_30d}/>,
+                          <FormattedTime timeMs={data.server_downtime_7d}/>,
+                          <FormattedTime timeMs={data.server_downtime_24h}/>
                       ]}/>
-            <TableRow icon={faPowerOff} color="downtime"
-                      text={t('html.label.averageServerDowntime')}
-                      values={[
-                          data.avg_server_downtime_30d,
-                          data.avg_server_downtime_7d,
-                          data.avg_server_downtime_24h
-                      ]}/>
+            {data.avg_server_downtime_30d && <TableRow icon={faPowerOff} color="downtime"
+                                                       text={t('html.label.averageServerDowntime')}
+                                                       values={[
+                                                           <FormattedTime timeMs={data.avg_server_downtime_30d}/>,
+                                                           <FormattedTime timeMs={data.avg_server_downtime_7d}/>,
+                                                           <FormattedTime timeMs={data.avg_server_downtime_24h}/>
+                                                       ]}/>}
             <TableRow icon={faUser} color="players-online" text={t('html.label.averagePlayers')}
                       values={[
                           data.players_30d,
@@ -82,7 +82,7 @@ const PerformanceAsNumbersTable = ({data, servers}) => {
                       ]}/>
             <TableRow icon={faMap} color="chunks"
                       text={<>{t('html.label.averageChunks')}{' '}{data.chunks_30d === 'plugin.generic.unavailable' ?
-                          <Fa icon={faEye} title={t('html.description.noSpongeChunks')}/> : ''}</>}
+                          <span title={t('html.description.noSpongeChunks')}><Fa icon={faEye}/></span> : ''}</>}
                       values={[
                           <>{t(data.chunks_30d)} {noTPSOnProxies}</>,
                           <>{t(data.chunks_7d)} {noTPSOnProxies}</>,

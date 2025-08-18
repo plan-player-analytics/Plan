@@ -37,6 +37,7 @@ const GeolocationWorldMap = ({series, colors, projection, onClickCountry}) => {
     const minColor = calculateCssHexColor("var(--color-graphs-world-map-low)");
     const maxColor = calculateCssHexColor("var(--color-graphs-world-map-high)");
     useEffect(() => {
+        const regions = new Intl.DisplayNames([localeService.getIntlFriendlyLocale()], {type: 'region'});
         const mapSeries = {
             name: t('html.label.players'),
             type: 'map',
@@ -73,6 +74,13 @@ const GeolocationWorldMap = ({series, colors, projection, onClickCountry}) => {
 
             mapView: {
                 projection: getProjection(projection)
+            },
+
+            tooltip: {
+                formatter: function () {
+                    const translatedRegion = regions.of(this.properties['iso-a2']);
+                    return `${this.series.name}<br><span style="color:${this.color}">●</span> ${translatedRegion}: ${this.value}`
+                }
             },
 
             colorAxis: {

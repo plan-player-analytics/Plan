@@ -40,7 +40,6 @@ public class NetworkSessionsOverviewJSONCreator implements NetworkTabJSONCreator
 
     private final DBSystem dbSystem;
 
-    private final Formatter<Long> timeAmount;
     private final Formatter<Double> percentage;
 
     @Inject
@@ -50,7 +49,6 @@ public class NetworkSessionsOverviewJSONCreator implements NetworkTabJSONCreator
     ) {
         this.dbSystem = dbSystem;
 
-        timeAmount = formatters.timeAmount();
         percentage = formatters.percentage();
     }
 
@@ -67,8 +65,8 @@ public class NetworkSessionsOverviewJSONCreator implements NetworkTabJSONCreator
 
         Long playtime = db.query(SessionQueries.playtime(monthAgo, now));
         Long afkTime = db.query(SessionQueries.afkTime(monthAgo, now));
-        insights.put("total_playtime", timeAmount.apply(playtime));
-        insights.put("afk_time", timeAmount.apply(afkTime));
+        insights.put("total_playtime", playtime);
+        insights.put("afk_time", afkTime);
         insights.put("afk_time_perc", percentage.apply(Percentage.calculate(afkTime, playtime, -1)));
 
         return insights;

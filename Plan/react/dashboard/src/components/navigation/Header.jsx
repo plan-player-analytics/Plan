@@ -55,7 +55,7 @@ const Header = ({page, tab, hideUpdater}) => {
                     {!staticSite && <button onClick={requestUpdate}>
                         <Fa icon={faSyncAlt} spin={Boolean(updating)}/>
                     </button>}
-                    {staticSite && <Fa icon={faClockRotateLeft} title={t('html.label.exported')}/>}
+                    {staticSite && <span title={t('html.label.exported')}><Fa icon={faClockRotateLeft}/></span>}
                     {' '}
                     <span className="refresh-time"><FormattedDate date={lastUpdate.date} react/></span>
                 </div>

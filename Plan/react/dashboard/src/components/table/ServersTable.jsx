@@ -28,11 +28,12 @@ const ServerRow = ({server, onQuickView}) => {
 
     let noDataWarning = '';
     if (!server.playersOnline.length) {
-        noDataWarning = <>&nbsp;<Fa icon={faBoxArchive} title={t('html.description.noData30d')}/></>
+        noDataWarning = <>&nbsp;<span title={t('html.description.noData30d')}><Fa icon={faBoxArchive}/></span></>
     } else if (timeUtc - server.playersOnline[server.playersOnline.length - 1][0] > dayMs) {
-        noDataWarning = <>&nbsp;<Fa icon={faExclamationTriangle}
-                                    className={timeUtc - server.playersOnline[server.playersOnline.length - 1][0] > dayMs * 7 ? '' : "col-deep-orange"}
-                                    title={t('html.description.noData24h')}/></>
+        noDataWarning = <>&nbsp;<span title={t('html.description.noData24h')}>
+            <Fa icon={faExclamationTriangle}
+                className={timeUtc - server.playersOnline[server.playersOnline.length - 1][0] > dayMs * 7 ? '' : "col-deep-orange"}/>
+        </span></>
     }
 
     return (
@@ -49,8 +50,8 @@ const ServerRow = ({server, onQuickView}) => {
             <td>{t(server.online)}</td>
             <td className="p-1">
                 <ActionButton className={'btn bg-players-online float-right'}
-                        title={t('html.label.quickView') + ': ' + server.name}
-                        onClick={onQuickView}
+                              title={t('html.label.quickView') + ': ' + server.name}
+                              onClick={onQuickView}
                 >
                     <Fa icon={faCaretSquareRight}/>
                 </ActionButton>
