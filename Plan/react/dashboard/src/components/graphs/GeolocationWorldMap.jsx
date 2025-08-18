@@ -91,7 +91,7 @@ const GeolocationWorldMap = ({series, colors, projection, onClickCountry}) => {
             },
             series: [mapSeries]
         })
-    }, [colors, series, graphTheming, nightModeEnabled, t, projection, onClickCountry]);
+    }, [colors, series, graphTheming, nightModeEnabled, t, projection, onClickCountry, localeService.clientLocale]);
 
     return (<div id="countryWorldMap"/>);
 };
