@@ -39,3 +39,147 @@ p, span, td, .h3, a, button
     position: absolute
     bottom: 0
     margin-left: -1rem
+
+// Color Box Styles
+.color-box-wrapper
+  width: 100%
+  height: 40px
+  border: 1px solid #ddd
+  border-radius: 4px
+  padding: 8px 0 8px 12px
+  display: flex
+  align-items: center
+  justify-content: space-between
+  cursor: default
+
+  > span
+    overflow: hidden
+    text-overflow: ellipsis
+    white-space: nowrap
+    font-size: 0.9rem
+    margin-right: 8px
+
+  > div
+    padding-right: 10px
+    height: 100%
+    display: flex
+    align-items: center
+    justify-content: center
+    font-size: 0.8rem
+    font-family: monospace
+
+.background-color-box
+  .color-box-wrapper
+    background: var(--box-color)
+    color: var(--box-contrast-color)
+    border-color: var(--color-tables-border)
+
+.text-color-box
+  .color-box-wrapper
+    background-color: var(--box-contrast-color, white)
+    border-color: var(--color-tables-border)
+
+    > span,
+    > div
+      color: var(--box-color)
+
+  &.night-mode
+    .color-box-wrapper
+      background-color: var(--color-night-dark-blue)
+
+.theme-editor
+  .use-case-section
+    background-color: var(--editor-bg-color)
+
+  .example-section
+    position: static
+    bottom: 0
+    background-color: var(--color-layout-background)
+    border-top: 2px solid var(--color-layout-divider)
+    padding: 1rem
+    width: 100%
+    height: 100%
+
+    transition: color 0.2s, background-color 0.2s, border-color 0.1s
+
+    *
+      transition: color 0.2s, background-color 0.2s, border-color 0.1s
+
+    .example
+      min-height: 40vh
+      max-height: 40vh
+      overflow-y: auto
+      overflow-x: hidden
+      padding-right: 1rem
+
+    .dropdown-toggle
+      width: 100%
+      display: flex
+      border-color: transparent !important
+
+    > .dropdown-toggle:focus
+      border: none
+      outline: none
+      box-shadow: none
+
+    > .dropdown-toggle::after
+      position: absolute
+      right: 2rem
+      top: 1.7rem
+      font-size: 2rem
+      color: var(--color-text)
+
+  .editor-toast
+    position: fixed
+    top: 9.2rem
+    right: 1.9rem
+    transition: top 0.5s
+    z-index: 100
+    width: 22.5rem
+    --bs-toast-bg: var(--color-cards-background)
+
+    &.scrolled
+      top: 1em
+
+.disabled-feedback
+  width: 100%
+  margin-top: 0.25rem
+  font-size: 0.875em
+  color: var(--color-secondary)
+
+.edit-history
+  margin: 0
+  margin-top: 1rem
+  padding-left: 0
+  list-style: none
+  max-height: 30vh
+  overflow-y: auto
+
+  .edit
+    color: var(--color-text)
+
+  .redo
+    color: color-mix(in srgb, var(--color-text), transparent 50%)
+
+    &.nested
+      margin-left: 1rem
+
+.issues
+  margin: 0
+  margin-top: 1rem
+  padding-left: 0
+  list-style: none
+  max-height: 30vh
+  overflow-y: auto
+
+  .issue
+    color: var(--color-danger)
+
+.theme-option
+  transition: opacity 0.2s
+
+  &.selected
+    font-weight: bold
+
+  &:hover
+    opacity: 0.7

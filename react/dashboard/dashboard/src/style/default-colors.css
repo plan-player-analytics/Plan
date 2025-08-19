@@ -1,0 +1,1110 @@
+:root {
+    --color-black: #555555;
+    --color-white: #ffffff;
+    --color-text-dark: #fff;
+    --color-text-light: #333;
+    --color-white-15-percent: rgba(255, 255, 255, 0.15);
+    --color-black-10-percent: rgba(0, 0, 0, 0.1);
+    --color-plan: #368F17;
+    --color-red: #F44336;
+    --color-pink: #E91E63;
+    --color-purple: #9C27B0;
+    --color-deep-purple: #673AB7;
+    --color-indigo: #3F51B5;
+    --color-blue: #2196F3;
+    --color-light-blue: #03A9F4;
+    --color-cyan: #00BCD4;
+    --color-teal: #009688;
+    --color-green: #4CAF50;
+    --color-light-green: #8BC34A;
+    --color-lime: #CDDC39;
+    --color-yellow: #ffe821;
+    --color-amber: #FFC107;
+    --color-orange: #FF9800;
+    --color-deep-orange: #FF5722;
+    --color-brown: #795548;
+    --color-blue-grey: #607D8B;
+    --color-yellow-15-percent: rgba(255, 220, 40, 0.15);
+    --color-cpu-yellow: #e0d264;
+    --color-ram-green: #7dcc24;
+    --color-chunk-brown: #b58310;
+    --color-entity-purple: #ac69ef;
+    --color-bright-blue: #1E90FF;
+    --color-ping-amber: #ffd54f;
+    --color-map-green: #EEFFEE;
+    --color-high-green: #267F00;
+    --color-medium-yellow: #e5cc12;
+    --color-low-red: #b74343;
+    --color-alert-success: #d2f4e8;
+    --color-alert-warning: #fdf3d8;
+    --color-alert-danger: #fadbd8;
+    --color-success: #1CC88A;
+    --color-warning: #F6C23E;
+    --color-danger: #e74A3B;
+    --color-alert-success-text: #0f6848;
+    --color-alert-warning-text: #806520;
+    --color-alert-danger-text: #78261f;
+    --color-secondary: #6c757d;
+    --color-cool-grey: #6e707e;
+    --color-grey: #9E9E9E;
+    --color-ink: #222222;
+    --color-dark-slate: #212529;
+    --color-medium-slate: #3a3b45;
+    --color-table-slate: #44454e;
+    --color-border-slate: #4b4d5a;
+    --color-light-slate: #5a5c69;
+    --color-light-grey: #dddddd;
+    --color-table-grey: #f3f3f3;
+    --color-white-grey: #f8f9fc;
+    --color-pale-grey: #eaecf4;
+    --color-cement-grey: #e3e6f0;
+    --color-border-grey: #dddfeb;
+    --color-pie-0: #0099C6;
+    --color-pie-1: #66AA00;
+    --color-pie-2: #316395;
+    --color-pie-3: #994499;
+    --color-pie-4: #22AA99;
+    --color-pie-5: #AAAA11;
+    --color-pie-6: #6633CC;
+    --color-pie-7: #E67300;
+    --color-pie-8: #329262;
+    --color-pie-9: #5574A6;
+    --color-drilldown-0: #438c99;
+    --color-drilldown-1: #639A67;
+    --color-drilldown-2: #D8EBB5;
+    --color-drilldown-3: #D9BF77;
+
+    --color-night-black: #282a36;
+    --color-night-dark-blue: #44475a;
+    --color-night-blue: #6272a4;
+    --color-night-grey-blue: #646e8c;
+    --color-night-dark-grey-blue: #606270;
+    --color-night-text: #eee8d5;
+    --color-night-text-50-percent: rgba(238, 232, 213, 0.5);
+
+    --color-theme: var(--color-plan);
+    --color-themeText: var(--color-theme);
+    --color-text: var(--color-text-light);
+
+    --color-layout-background: var(--color-white-grey);
+    --color-layout-title: var(--color-light-slate);
+    --color-layout-divider: var(--color-black-10-percent);
+    --color-layout-help-icon: var(--color-light-blue);
+    --color-layout-loader-border: var(--color-theme);
+    --color-layout-loader-background: var(--color-theme);
+    --color-sidebar-background: var(--color-theme);
+    --color-sidebar-text: var(--color-text-dark);
+    --color-sidebar-divider: var(--color-white-15-percent);
+    --color-sidebar-collapsible-section-background: var(--color-white);
+    --color-sidebar-collapsible-section-text: var(--color-text);
+    --color-sidebar-collapsible-section-hover: var(--color-pale-grey);
+    --color-sidebar-collapsible-section-border: var(--color-pale-grey);
+    --color-sidebar-navigation-item-background: var(--color-theme);
+    --color-sidebar-navigation-item-icon: var(--color-text-dark);
+    --color-cards-background: var(--color-white);
+    --color-cards-border: var(--color-cement-grey);
+    --color-cards-header-background: var(--color-white-grey);
+    --color-cards-header-border: var(--color-cement-grey);
+    --color-tabs-background: var(--color-white);
+    --color-tabs-selected: var(--color-white);
+    --color-tabs-border: var(--color-border-grey);
+    --color-info-box-info: var(--color-alert-success);
+    --color-info-box-info-text: var(--color-alert-success-text);
+    --color-info-box-notice: var(--color-alert-warning);
+    --color-info-box-notice-text: var(--color-alert-warning-text);
+    --color-info-box-error: var(--color-alert-danger);
+    --color-info-box-error-text: var(--color-alert-danger-text);
+    --color-calendar-today: var(--color-yellow-15-percent);
+    --color-calendar-border: var(--color-cement-grey);
+    --color-calendar-popover-body: var(--color-white);
+    --color-tables-text: var(--color-text);
+    --color-tables-colored-header-text: var(--color-text-dark);
+    --color-tables-odd-row: var(--color-table-grey);
+    --color-tables-even-row: var(--color-white);
+    --color-tables-border: var(--color-border-grey);
+    --color-forms-buttons-action-button: var(--color-theme);
+    --color-forms-buttons-dangerous-button: var(--color-danger);
+    --color-forms-buttons-secondary-action-button: var(--color-grey);
+    --color-forms-buttons-outline-button-border: var(--color-secondary);
+    --color-forms-input-background: var(--color-white);
+    --color-forms-input-border: var(--color-border-grey);
+    --color-forms-input-text: var(--color-cool-grey);
+    --color-forms-dropdown-hover: var(--color-white-grey);
+    --color-forms-multi-select-item-background: var(--color-pale-grey);
+    --color-forms-checkbox-checked: var(--color-theme);
+    --color-graphs-style-grid-line: var(--color-cement-grey);
+    --color-graphs-style-minor-grid-line: var(--color-black);
+    --color-graphs-style-border: var(--color-light-grey);
+    --color-graphs-style-tooltip-background: var(--color-white-grey);
+    --color-graphs-style-selector-button-background: var(--color-white-grey);
+    --color-graphs-style-selector-button-hover: var(--color-cement-grey);
+    --color-graphs-style-selector-button-selected: var(--color-cement-grey);
+    --color-graphs-style-selector-text-input-background: var(--color-white-grey);
+    --color-graphs-style-selector-text-input-border: var(--color-light-grey);
+    --color-graphs-style-selector-range-handle-background: var(--color-white-grey);
+    --color-graphs-style-selector-range-handle-border: var(--color-grey);
+    --color-graphs-style-selector-range-outline: var(--color-light-grey);
+    --color-graphs-style-selector-range-selected-area: var(--color-bright-blue);
+    --color-graphs-style-selector-range-series-line: var(--color-bright-blue);
+    --color-graphs-style-scrollbar-decoration: var(--color-text);
+    --color-graphs-style-scrollbar-bar-background: var(--color-light-grey);
+    --color-graphs-style-scrollbar-button-background: var(--color-cement-grey);
+    --color-graphs-style-scrollbar-track-background: var(--color-white-grey);
+    --color-graphs-punch-card: var(--color-ink);
+    --color-graphs-players-online: var(--color-bright-blue);
+    --color-graphs-tps-high: var(--color-high-green);
+    --color-graphs-tps-medium: var(--color-medium-yellow);
+    --color-graphs-tps-low: var(--color-low-red);
+    --color-graphs-cpu: var(--color-cpu-yellow);
+    --color-graphs-ram: var(--color-ram-green);
+    --color-graphs-chunks: var(--color-chunk-brown);
+    --color-graphs-entities: var(--color-entity-purple);
+    --color-graphs-disk-high: var(--color-high-green);
+    --color-graphs-disk-medium: var(--color-medium-yellow);
+    --color-graphs-disk-low: var(--color-low-red);
+    --color-graphs-ping-max: var(--color-amber);
+    --color-graphs-ping-avg: var(--color-warning);
+    --color-graphs-ping-min: var(--color-ping-amber);
+    --color-graphs-world-map-high: var(--color-high-green);
+    --color-graphs-world-map-low: var(--color-map-green);
+    --color-graphs-world-map-bars: var(--color-green);
+    --color-data-servers: var(--color-light-green);
+    --color-data-trend-better: var(--color-success);
+    --color-data-trend-same: var(--color-warning);
+    --color-data-trend-worse: var(--color-danger);
+    --color-data-play-playtime: var(--color-green);
+    --color-data-play-playtime-active: var(--color-green);
+    --color-data-play-playtime-afk: var(--color-grey);
+    --color-data-play-sessions: var(--color-teal);
+    --color-data-play-session-length: var(--color-teal);
+    --color-data-play-gamemode: var(--color-teal);
+    --color-data-play-first-seen: var(--color-light-green);
+    --color-data-play-last-seen: var(--color-teal);
+    --color-data-players-count: var(--color-black);
+    --color-data-players-online: var(--color-blue);
+    --color-data-players-unique: var(--color-light-blue);
+    --color-data-players-new: var(--color-light-green);
+    --color-data-players-activity-index: var(--color-amber);
+    --color-data-players-very-active: var(--color-green);
+    --color-data-players-active: var(--color-light-green);
+    --color-data-players-regular: var(--color-lime);
+    --color-data-players-irregular: var(--color-amber);
+    --color-data-players-inactive: var(--color-blue-grey);
+    --color-data-player-peak-last: var(--color-light-blue);
+    --color-data-player-peak-all-time: var(--color-light-green);
+    --color-data-performance-uptime: var(--color-light-green);
+    --color-data-performance-downtime: var(--color-red);
+    --color-data-performance-tps: var(--color-red);
+    --color-data-performance-tps-low-spikes: var(--color-red);
+    --color-data-performance-tps-average: var(--color-orange);
+    --color-data-performance-cpu: var(--color-amber);
+    --color-data-performance-ram: var(--color-light-green);
+    --color-data-performance-entities: var(--color-purple);
+    --color-data-performance-chunks: var(--color-blue-grey);
+    --color-data-performance-disk: var(--color-green);
+    --color-data-performance-ping: var(--color-amber);
+    --color-data-calculated-insights: var(--color-red);
+    --color-data-calculated-join-addresses: var(--color-amber);
+    --color-data-calculated-retention: var(--color-indigo);
+    --color-data-calculated-retention-new-players: var(--color-light-green);
+    --color-data-calculated-geolocation: var(--color-green);
+    --color-data-calculated-allow-list: var(--color-orange);
+    --color-data-calculated-plugin-versions: var(--color-indigo);
+    --color-data-player-versus-player-kills: var(--color-red);
+    --color-data-player-versus-mob-kills: var(--color-green);
+    --color-data-player-versus-deaths: var(--color-black);
+    --color-data-player-versus-top-3-first: var(--color-amber);
+    --color-data-player-versus-top-3-second: var(--color-grey);
+    --color-data-player-versus-top-3-third: var(--color-brown);
+    --color-data-player-status-online: var(--color-green);
+    --color-data-player-status-offline: var(--color-red);
+    --color-data-player-status-banned: var(--color-red);
+    --color-data-player-status-operator: var(--color-blue);
+    --color-data-player-status-kicks: var(--color-brown);
+    --color-data-player-status-nicknames: var(--color-purple);
+    --color-plugin-red: var(--color-red);
+    --color-plugin-pink: var(--color-pink);
+    --color-plugin-purple: var(--color-purple);
+    --color-plugin-deep-purple: var(--color-deep-purple);
+    --color-plugin-indigo: var(--color-indigo);
+    --color-plugin-blue: var(--color-blue);
+    --color-plugin-light-blue: var(--color-light-blue);
+    --color-plugin-cyan: var(--color-cyan);
+    --color-plugin-teal: var(--color-teal);
+    --color-plugin-green: var(--color-green);
+    --color-plugin-light-green: var(--color-light-green);
+    --color-plugin-lime: var(--color-lime);
+    --color-plugin-yellow: var(--color-yellow);
+    --color-plugin-amber: var(--color-amber);
+    --color-plugin-orange: var(--color-orange);
+    --color-plugin-deep-orange: var(--color-deep-orange);
+    --color-plugin-brown: var(--color-brown);
+    --color-plugin-grey: var(--color-grey);
+    --color-plugin-blue-grey: var(--color-blue-grey);
+    --color-plugin-black: var(--color-black);
+}
+
+.dropdown .dropdown-menu {
+    --bg-dropdown-bg: var(--color-forms-input-background) !important;
+}
+
+.sidebar {
+    background: var(--color-sidebar-background);
+    background-color: var(--color-sidebar-background);
+}
+
+.sidebar-collapse {
+    background: var(--color-sidebar-collapsible-section-background);
+    background-color: var(--color-sidebar-collapsible-section-background);
+    color: var(--color-sidebar-collapsible-section-text);
+}
+
+.navigation-item {
+    background: var(--color-sidebar-navigation-item-background);
+    background-color: var(--color-sidebar-navigation-item-background);
+    color: var(--color-sidebar-navigation-item-icon);
+}
+
+.header {
+    color: var(--color-layout-title);
+}
+
+.form-control, .form-control:focus {
+    background: var(--color-forms-input-background);
+    background-color: var(--color-forms-input-background);
+}
+
+.btn-action {
+    background: var(--color-forms-buttons-action-button);
+    background-color: var(--color-forms-buttons-action-button);
+    color: var(--contrast-color-forms-buttons-action-button) !important;
+    --bs-btn-hover-bg: color-mix(in srgb, var(--color-forms-buttons-action-button) 90%, black);
+    --bs-btn-active-bg: color-mix(in srgb, var(--color-forms-buttons-action-button) 90%, black);
+    --bs-btn-disabled-bg: var(--color-forms-buttons-action-button);
+    --bs-btn-disabled-border-color: var(--color-forms-buttons-action-button);
+    --bs-btn-hover-color: color-mix(in srgb, var(--contrast-color-forms-buttons-action-button) 90%, black);
+    --bs-btn-active-color: color-mix(in srgb, var(--contrast-color-forms-buttons-action-button) 90%, black);
+    --bs-btn-disabled-color: var(--contrast-color-forms-buttons-action-button);
+}
+
+.btn-secondary-action {
+    background: var(--color-forms-buttons-secondary-action-button);
+    background-color: var(--color-forms-buttons-secondary-action-button);
+    color: var(--contrast-color-forms-buttons-secondary-action-button);
+    --bs-btn-hover-bg: color-mix(in srgb, var(--color-forms-buttons-secondary-action-button) 90%, black);
+    --bs-btn-active-bg: color-mix(in srgb, var(--color-forms-buttons-secondary-action-button) 90%, black);
+    --bs-btn-disabled-bg: var(--color-forms-buttons-secondary-action-button);
+    --bs-btn-disabled-border-color: var(--color-forms-buttons-secondary-action-button);
+    --bs-btn-hover-color: color-mix(in srgb, var(--contrast-color-forms-buttons-secondary-action-button) 70%, black);
+    --bs-btn-active-color: color-mix(in srgb, var(--contrast-color-forms-buttons-secondary-action-button) 70%, black);
+    --bs-btn-disabled-color: var(--contrast-color-forms-buttons-secondary-action-button);
+}
+
+.btn-danger {
+    background: var(--color-forms-buttons-dangerous-button);
+    background-color: var(--color-forms-buttons-dangerous-button);
+    border-color: var(--color-forms-buttons-dangerous-button);
+    color: var(--contrast-color-forms-buttons-dangerous-button);
+    --bs-btn-hover-bg: var(--color-forms-buttons-dangerous-button);
+    --bs-btn-disabled-bg: var(--color-forms-buttons-dangerous-button);
+    --bs-btn-disabled-border-color: var(--color-forms-buttons-dangerous-button);
+    --bs-btn-hover-color: color-mix(in srgb, var(--contrast-color-forms-buttons-dangerous-button) 90%, black);
+    --bs-btn-hover-border-color: color-mix(in srgb, var(--color-forms-buttons-dangerous-button) 90%, black);
+    --bs-btn-disabled-color: var(--contrast-color-forms-buttons-dangerous-button);
+}
+
+.btn.bg-transparent {
+    --bs-btn-hover-color: currentcolor !important;
+    --bs-btn-hover-bg: transparent;
+}
+
+/* Calendar overrides */
+.fc-title, .fc-time {
+    color: var(--color-text);
+}
+
+.fc-day-today {
+    background: var(--color-calendar-today) !important;
+    background-color: var(--color-calendar-today) !important;
+}
+
+.fc-popover-body, .fc-popover-header {
+    background: var(--color-calendar-popover-body) !important;
+    background-color: var(--color-calendar-popover-body) !important;
+    color: var(--color-text) !important;
+}
+
+.fc td, .fc tr, .fc th, .fc table, .fc-popover {
+    border-color: var(--color-calendar-border) !important;
+}
+
+.fc a {
+    color: var(--color-text) !important;
+}
+
+.fc-button {
+    background: var(--color-forms-buttons-action-button) !important;
+    background-color: var(--color-forms-buttons-action-button) !important;
+}
+
+/* Minecraft color codes */
+.black {
+    color: #000000;
+}
+
+.darkblue {
+    color: #0000AA;
+}
+
+.darkgreen {
+    color: #00AA00;
+}
+
+.darkaqua {
+    color: #00AAAA;
+}
+
+.darkred {
+    color: #AA0000;
+}
+
+.darkpurple {
+    color: #AA00AA;
+}
+
+.gold {
+    color: #FFAA00;
+}
+
+.gray {
+    color: #AAAAAA;
+}
+
+.darkgray {
+    color: var(--color-black);
+}
+
+.blue {
+    color: #5555FF;
+}
+
+.green {
+    color: #55FF55;
+}
+
+.aqua {
+    color: #55FFFF;
+}
+
+.red {
+    color: #FF5555;
+}
+
+.pink {
+    color: #FF55FF;
+}
+
+.yellow {
+    color: #FFFF55;
+    text-shadow: 0 0 6px #000;
+}
+
+.white {
+    color: #FFFFFF;
+    text-shadow: 0 0 8px #000;
+}
+
+.col-help-icon {
+    color: var(--color-layout-help-icon);
+}
+
+.col-servers {
+    color: var(--color-data-servers);
+}
+
+.bg-servers {
+    background-color: var(--color-data-servers);
+    --bs-btn-hover-bg: var(--color-data-servers);
+}
+
+.bg-servers-outline {
+    border-color: var(--color-data-servers);
+    border-style: solid;
+    outline: var(--color-data-servers) solid 1px;
+}
+
+.col-trend-better {
+    color: var(--color-data-trend-better);
+}
+
+.bg-trend-better {
+    background-color: var(--color-data-trend-better);
+}
+
+.col-trend-same {
+    color: var(--color-data-trend-same);
+}
+
+.bg-trend-same {
+    background-color: var(--color-data-trend-same);
+}
+
+.col-trend-worse {
+    color: var(--color-data-trend-worse);
+}
+
+.bg-trend-worse {
+    background-color: var(--color-data-trend-worse);
+}
+
+.col-playtime {
+    color: var(--color-data-play-playtime);
+}
+
+.bg-playtime {
+    background-color: var(--color-data-play-playtime);
+}
+
+.col-playtime-active {
+    color: var(--color-data-play-playtime-active);
+}
+
+.bg-playtime-active {
+    background-color: var(--color-data-play-playtime-active);
+}
+
+.col-playtime-afk {
+    color: var(--color-data-play-playtime-afk);
+}
+
+.bg-playtime-afk {
+    background-color: var(--color-data-play-playtime-afk);
+}
+
+.col-sessions {
+    color: var(--color-data-play-sessions);
+}
+
+.bg-sessions {
+    background-color: var(--color-data-play-sessions);
+}
+
+.bg-sessions-outline {
+    border-color: var(--color-data-play-sessions);
+    border-style: solid;
+    border-width: 3px;
+    outline: var(--color-data-play-sessions) solid 1px;
+}
+
+.col-session-length {
+    color: var(--color-data-play-session-length);
+}
+
+.bg-session-length {
+    background-color: var(--color-data-play-session-length);
+}
+
+.col-gamemode {
+    color: var(--color-data-play-gamemode);
+}
+
+.bg-gamemode {
+    background-color: var(--color-data-play-gamemode);
+}
+
+.col-first-seen {
+    color: var(--color-data-play-first-seen);
+}
+
+.bg-first-seen {
+    background-color: var(--color-data-play-first-seen);
+}
+
+.col-last-seen {
+    color: var(--color-data-play-last-seen);
+}
+
+.bg-last-seen {
+    background-color: var(--color-data-play-last-seen);
+}
+
+.col-players-count {
+    color: var(--color-data-players-count);
+}
+
+.bg-players-count {
+    background-color: var(--color-data-players-count);
+}
+
+.col-players-online {
+    color: var(--color-data-players-online);
+}
+
+.bg-players-online {
+    background-color: var(--color-data-players-online);
+    --bs-btn-hover-bg: var(--color-data-players-online);
+}
+
+.col-players-unique {
+    color: var(--color-data-players-unique);
+}
+
+.bg-players-unique {
+    background-color: var(--color-data-players-unique);
+}
+
+.col-players-new {
+    color: var(--color-data-players-new);
+}
+
+.bg-players-new {
+    background-color: var(--color-data-players-new);
+}
+
+.col-players-activity-index {
+    color: var(--color-data-players-activity-index);
+}
+
+.bg-players-activity-index {
+    background-color: var(--color-data-players-activity-index);
+}
+
+.col-players-very-active {
+    color: var(--color-data-players-very-active);
+}
+
+.bg-players-very-active {
+    background-color: var(--color-data-players-very-active);
+}
+
+.col-players-active {
+    color: var(--color-data-players-active);
+}
+
+.bg-players-active {
+    background-color: var(--color-data-players-active);
+}
+
+.col-players-regular {
+    color: var(--color-data-players-regular);
+}
+
+.bg-players-regular {
+    background-color: var(--color-data-players-regular);
+}
+
+.col-players-irregular {
+    color: var(--color-data-players-irregular);
+}
+
+.bg-players-irregular {
+    background-color: var(--color-data-players-irregular);
+}
+
+.col-players-inactive {
+    color: var(--color-data-players-inactive);
+}
+
+.bg-players-inactive {
+    background-color: var(--color-data-players-inactive);
+}
+
+.col-player-peak-last {
+    color: var(--color-data-player-peak-last);
+}
+
+.bg-player-peak-last {
+    background-color: var(--color-data-player-peak-last);
+}
+
+.col-player-peak-all-time {
+    color: var(--color-data-player-peak-all-time);
+}
+
+.bg-player-peak-all-time {
+    background-color: var(--color-data-player-peak-all-time);
+}
+
+.col-uptime {
+    color: var(--color-data-performance-uptime);
+}
+
+.bg-uptime {
+    background-color: var(--color-data-performance-uptime);
+}
+
+.col-downtime {
+    color: var(--color-data-performance-downtime);
+}
+
+.bg-downtime {
+    background-color: var(--color-data-performance-downtime);
+}
+
+.col-tps {
+    color: var(--color-data-performance-tps);
+}
+
+.bg-tps {
+    background-color: var(--color-data-performance-tps);
+}
+
+.col-tps-low-spikes {
+    color: var(--color-data-performance-tps-low-spikes);
+}
+
+.bg-tps-low-spikes {
+    background-color: var(--color-data-performance-tps-low-spikes);
+}
+
+.col-tps-average {
+    color: var(--color-data-performance-tps-average);
+}
+
+.bg-tps-average {
+    background-color: var(--color-data-performance-tps-average);
+}
+
+.col-cpu {
+    color: var(--color-data-performance-cpu);
+}
+
+.bg-cpu {
+    background-color: var(--color-data-performance-cpu);
+}
+
+.col-ram {
+    color: var(--color-data-performance-ram);
+}
+
+.bg-ram {
+    background-color: var(--color-data-performance-ram);
+}
+
+.col-entities {
+    color: var(--color-data-performance-entities);
+}
+
+.bg-entities {
+    background-color: var(--color-data-performance-entities);
+}
+
+.col-chunks {
+    color: var(--color-data-performance-chunks);
+}
+
+.bg-chunks {
+    background-color: var(--color-data-performance-chunks);
+}
+
+.col-disk {
+    color: var(--color-data-performance-disk);
+}
+
+.bg-disk {
+    background-color: var(--color-data-performance-disk);
+}
+
+.col-ping {
+    color: var(--color-data-performance-ping);
+}
+
+.bg-ping {
+    background-color: var(--color-data-performance-ping);
+}
+
+.col-insights {
+    color: var(--color-data-calculated-insights);
+}
+
+.bg-insights {
+    background-color: var(--color-data-calculated-insights);
+}
+
+.col-join-addresses {
+    color: var(--color-data-calculated-join-addresses);
+}
+
+.bg-join-addresses {
+    background-color: var(--color-data-calculated-join-addresses);
+    --color-forms-checkbox-checked: var(--color-data-calculated-join-addresses);
+}
+
+.col-retention {
+    color: var(--color-data-calculated-retention);
+}
+
+.bg-retention {
+    background-color: var(--color-data-calculated-retention);
+}
+
+.col-retention-new-players {
+    color: var(--color-data-calculated-retention-new-players);
+}
+
+.bg-retention-new-players {
+    background-color: var(--color-data-calculated-retention-new-players);
+}
+
+.col-geolocation {
+    color: var(--color-data-calculated-geolocation);
+}
+
+.bg-geolocation {
+    background-color: var(--color-data-calculated-geolocation);
+}
+
+.col-allow-list {
+    color: var(--color-data-calculated-allow-list);
+}
+
+.bg-allow-list {
+    background-color: var(--color-data-calculated-allow-list);
+}
+
+.col-plugin-versions {
+    color: var(--color-data-calculated-plugin-versions);
+}
+
+.bg-plugin-versions {
+    background-color: var(--color-data-calculated-plugin-versions);
+}
+
+.col-player-kills {
+    color: var(--color-data-player-versus-player-kills);
+}
+
+.bg-player-kills {
+    background-color: var(--color-data-player-versus-player-kills);
+}
+
+.col-mob-kills {
+    color: var(--color-data-player-versus-mob-kills);
+}
+
+.bg-mob-kills {
+    background-color: var(--color-data-player-versus-mob-kills);
+}
+
+.col-deaths {
+    color: var(--color-data-player-versus-deaths);
+}
+
+.bg-deaths {
+    background-color: var(--color-data-player-versus-deaths);
+}
+
+.col-top-3-first {
+    color: var(--color-data-player-versus-top-3-first);
+}
+
+.bg-top-3-first {
+    background-color: var(--color-data-player-versus-top-3-first);
+}
+
+.col-top-3-second {
+    color: var(--color-data-player-versus-top-3-second);
+}
+
+.bg-top-3-second {
+    background-color: var(--color-data-player-versus-top-3-second);
+}
+
+.col-top-3-third {
+    color: var(--color-data-player-versus-top-3-third);
+}
+
+.bg-top-3-third {
+    background-color: var(--color-data-player-versus-top-3-third);
+}
+
+.col-online {
+    color: var(--color-data-player-status-online);
+}
+
+.bg-online {
+    background-color: var(--color-data-player-status-online);
+}
+
+.col-offline {
+    color: var(--color-data-player-status-offline);
+}
+
+.bg-offline {
+    background-color: var(--color-data-player-status-offline);
+}
+
+.col-banned {
+    color: var(--color-data-player-status-banned);
+}
+
+.bg-banned {
+    background-color: var(--color-data-player-status-banned);
+}
+
+.col-operator {
+    color: var(--color-data-player-status-operator);
+}
+
+.bg-operator {
+    background-color: var(--color-data-player-status-operator);
+}
+
+.col-kicks {
+    color: var(--color-data-player-status-kicks);
+}
+
+.bg-kicks {
+    background-color: var(--color-data-player-status-kicks);
+}
+
+.col-nicknames {
+    color: var(--color-data-player-status-nicknames);
+}
+
+.bg-nicknames {
+    background-color: var(--color-data-player-status-nicknames);
+    --bs-btn-hover-bg: var(--color-data-player-status-nicknames);
+}
+
+.bg-plugin-red {
+    background: var(--color-plugin-red);
+}
+
+.col-plugin-red {
+    color: var(--color-plugin-red);
+}
+
+.bg-plugin-pink {
+    background: var(--color-plugin-pink);
+}
+
+.col-plugin-pink {
+    color: var(--color-plugin-pink);
+}
+
+.bg-plugin-purple {
+    background: var(--color-plugin-purple);
+}
+
+.col-plugin-purple {
+    color: var(--color-plugin-purple);
+}
+
+.bg-plugin-deep-purple {
+    background: var(--color-plugin-deep-purple);
+}
+
+.col-plugin-deep-purple {
+    color: var(--color-plugin-deep-purple);
+}
+
+.bg-plugin-indigo {
+    background: var(--color-plugin-indigo);
+}
+
+.col-plugin-indigo {
+    color: var(--color-plugin-indigo);
+}
+
+.bg-plugin-blue {
+    background: var(--color-plugin-blue);
+}
+
+.col-plugin-blue {
+    color: var(--color-plugin-blue);
+}
+
+.bg-plugin-light-blue {
+    background: var(--color-plugin-light-blue);
+}
+
+.col-plugin-light-blue {
+    color: var(--color-plugin-light-blue);
+}
+
+.bg-plugin-cyan {
+    background: var(--color-plugin-cyan);
+}
+
+.col-plugin-cyan {
+    color: var(--color-plugin-cyan);
+}
+
+.bg-plugin-teal {
+    background: var(--color-plugin-teal);
+}
+
+.col-plugin-teal {
+    color: var(--color-plugin-teal);
+}
+
+.bg-plugin-green {
+    background: var(--color-plugin-green);
+}
+
+.col-plugin-green {
+    color: var(--color-plugin-green);
+}
+
+.bg-plugin-light-green {
+    background: var(--color-plugin-light-green);
+}
+
+.col-plugin-light-green {
+    color: var(--color-plugin-light-green);
+}
+
+.bg-plugin-lime {
+    background: var(--color-plugin-lime);
+}
+
+.col-plugin-lime {
+    color: var(--color-plugin-lime);
+}
+
+.bg-plugin-yellow {
+    background: var(--color-plugin-yellow);
+}
+
+.col-plugin-yellow {
+    color: var(--color-plugin-yellow);
+}
+
+.bg-plugin-amber {
+    background: var(--color-plugin-amber);
+}
+
+.col-plugin-amber {
+    color: var(--color-plugin-amber);
+}
+
+.bg-plugin-orange {
+    background: var(--color-plugin-orange);
+}
+
+.col-plugin-orange {
+    color: var(--color-plugin-orange);
+}
+
+.bg-plugin-deep-orange {
+    background: var(--color-plugin-deep-orange);
+}
+
+.col-plugin-deep-orange {
+    color: var(--color-plugin-deep-orange);
+}
+
+.bg-plugin-brown {
+    background: var(--color-plugin-brown);
+}
+
+.col-plugin-brown {
+    color: var(--color-plugin-brown);
+}
+
+.bg-plugin-grey {
+    background: var(--color-plugin-grey);
+}
+
+.col-plugin-grey {
+    color: var(--color-plugin-grey);
+}
+
+.bg-plugin-blue-grey {
+    background: var(--color-plugin-blue-grey);
+}
+
+.col-plugin-blue-grey {
+    color: var(--color-plugin-blue-grey);
+}
+
+.bg-plugin-black {
+    background: var(--color-plugin-black);
+}
+
+.col-plugin-black {
+    color: var(--color-plugin-black);
+}
+
+table {
+    color: var(--color-tables-text);
+}
+
+thead {
+    color: var(--color-tables-text);
+    background: var(--color-tables-even-row);
+    background-color: var(--color-tables-even-row);
+}
+
+thead[class^='bg'], thead[class*=' bg'] {
+    color: var(--color-tables-colored-header-text) !important;
+}
+
+.table-striped, .table-striped thead {
+    border-color: var(--color-tables-border);
+}
+
+.table-striped tbody tr:nth-of-type(2n+1) {
+    color: var(--color-tables-text);
+    background: var(--color-tables-odd-row);
+    background-color: var(--color-tables-odd-row);
+}
+
+.table-striped tbody tr:nth-of-type(2n), .table-striped {
+    color: var(--color-tables-text);
+    background: var(--color-tables-even-row);
+    background-color: var(--color-tables-even-row);
+}
+
+.form-check-input[type="checkbox"] {
+    --bs-form-check-bg: var(--color-forms-input-background);
+    --bs-border-color: var(--color-forms-input-border);
+}
+
+.form-check-input[type="checkbox"]:checked, .form-check-input[type="checkbox"]:indeterminate {
+    background-color: var(--color-forms-checkbox-checked);
+    border-color: var(--color-forms-checkbox-checked);
+}
+
+.form-check-label {
+    color: var(--color-forms-input-text);
+}
+
+.btn.col-text:hover, .btn.col-text:focus {
+    color: color-mix(in srgb, var(--color-text), black 20%)
+}
+
+.visualizer-button {
+    color: var(--color-text);
+    --bs-btn-color: var(--color-text);
+}
+
+.card-body, .card-header, h1, h2, h3, h4, h5, h6, p, .form-text, .bg-grey-outline {
+    color: var(--color-text);
+}
+
+.btn {
+    --bs-btn-color: var(--color-text);
+    --bs-btn-hover-color: var(--color-text);
+    --bs-btn-active-border-color: var(--color-forms-input-border);
+}
+
+.btn[class^='bg'], .btn[class*=' bg'] {
+    --bs-btn-color: var(--color-tables-colored-header-text);
+    --bs-btn-hover-color: var(--color-tables-colored-header-text);
+}
+
+.btn-close {
+    --bs-btn-close-color: var(--color-text);
+    --bs-btn-close-fill: var(--color-text);
+}
+
+.modal-dialog * {
+    --bs-modal-bg: var(--color-cards-background);
+    --bs-border-color: var(--color-cards-border);
+    --bs-modal-footer-border-color: var(--color-cards-border);
+    --bs-modal-header-border-color: var(--color-cards-border);
+    --bs-modal-color: var(--color-text);
+
+}

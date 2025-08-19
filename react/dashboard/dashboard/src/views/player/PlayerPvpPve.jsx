@@ -18,16 +18,16 @@ const InsightsCard = ({player}) => {
     return (
         <Card>
             <Card.Header>
-                <h6 className="col-black">
-                    <Fa icon={faLifeRing} className="col-red"/> {t('html.label.insights')}
+                <h6 className="col-text">
+                    <Fa icon={faLifeRing} className="col-insights"/> {t('html.label.insights')}
                 </h6>
             </Card.Header>
             <Card.Body>
-                <Datapoint icon={faKhanda} color="amber" name={t('html.label.deadliestWeapon')}
+                <Datapoint icon={faKhanda} color="top-3-first" name={t('html.label.deadliestWeapon')}
                            value={player.kill_data.weapon_1st}/>
-                <Datapoint icon={faKhanda} color="grey" name={t('html.label.secondDeadliestWeapon')}
+                <Datapoint icon={faKhanda} color="top-3-second" name={t('html.label.secondDeadliestWeapon')}
                            value={player.kill_data.weapon_2nd}/>
-                <Datapoint icon={faKhanda} color="brown" name={t('html.label.thirdDeadliestWeapon')}
+                <Datapoint icon={faKhanda} color="top-3-third" name={t('html.label.thirdDeadliestWeapon')}
                            value={player.kill_data.weapon_3rd}/>
             </Card.Body>
         </Card>
@@ -39,11 +39,11 @@ const PvpDeathsTableCard = ({player}) => {
     return (
         <Card>
             <Card.Header>
-                <h6 className="col-black">
-                    <Fa icon={faSkull} className="col-red"/> {t('html.label.recentPvpDeaths')}
+                <h6 className="col-text">
+                    <Fa icon={faSkull} className="col-player-kills"/> {t('html.label.recentPvpDeaths')}
                 </h6>
             </Card.Header>
-            <KillsTable kills={player.player_deaths}/>
+            <KillsTable kills={player.player_deaths} deaths/>
         </Card>
     )
 }

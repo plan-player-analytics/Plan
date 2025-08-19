@@ -19,7 +19,7 @@ const QueryPath = ({newQuery}) => {
         }
 
         if (kind.startsWith("pluginGroups-")) {
-            return "Group: " + kind.substring(13);
+            return t('html.query.filter.pluginGroup.name') + kind.substring(13);
         }
         switch (kind) {
             case "allPlayers":
@@ -53,7 +53,7 @@ const QueryPath = ({newQuery}) => {
             {path.map((step, i) => <p key={step.kind + step.size}
                                       style={{marginBottom: 0, marginLeft: i * 0.7 + "rem"}}>
                 <FontAwesomeIcon
-                    icon={faFilter}/> '{getReadableFilterName(step.kind)}' matched {step.size} players
+                    icon={faFilter}/> '{getReadableFilterName(step.kind)}' {t('html.query.results.match', {resultCount: step.size})}
             </p>)}
         </aside>
     )

@@ -1,23 +1,25 @@
 import {useTranslation} from "react-i18next";
 import React, {useEffect} from "react";
 import {useTheme} from "../../hooks/themeHook";
-import NoDataDisplay from "highcharts/modules/no-data-to-display";
-import Highcharts from "highcharts/highstock";
-import {withReducedSaturation} from "../../util/colors";
-import Accessibility from "highcharts/modules/accessibility";
+import Highcharts from "highcharts/esm/highstock";
+import "highcharts/esm/modules/no-data-to-display";
+import "highcharts/esm/modules/accessibility";
+import {nameToCssVariable, withReducedSaturation} from "../../util/colors";
+import {formatDateWithPreferences, useDatePreferences} from "../text/FormattedDate.jsx";
+import {localeService} from "../../service/localeService.js";
 
-export const getTranslateLabelForActivityGroup = value => {
-    switch (value) {
-        case "Very Active":
-            return 'html.label.veryActive'
-        case "Active":
-            return 'html.label.active'
-        case "Regular":
-            return 'html.label.indexRegular'
-        case "Irregular":
-            return 'html.label.irregular'
-        case "Inactive":
-            return 'html.label.indexInactive'
+export const activityGroupToColor = label => {
+    switch (label) {
+        case 'html.label.veryActive':
+            return nameToCssVariable('data-players-very-active');
+        case 'html.label.active':
+            return nameToCssVariable('data-players-active');
+        case 'html.label.indexRegular':
+            return nameToCssVariable('data-players-regular');
+        case 'html.label.irregular':
+            return nameToCssVariable('data-players-irregular');
+        case 'html.label.indexInactive':
+            return nameToCssVariable('data-players-inactive');
         default:
             return 'plugin.generic.unknown'
     }
@@ -26,6 +28,7 @@ export const getTranslateLabelForActivityGroup = value => {
 const PlayerbaseGraph = ({data}) => {
     const {t} = useTranslation()
     const {nightModeEnabled, graphTheming} = useTheme();
+    const datePreferences = useDatePreferences();
 
     const id = 'playerbase-graph';
 
@@ -34,16 +37,24 @@ const PlayerbaseGraph = ({data}) => {
             return {...line, color: withReducedSaturation(line.color)}
         });
 
-        NoDataDisplay(Highcharts);
-        Accessibility(Highcharts);
-        Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}})
+        Highcharts.setOptions({
+            lang: {
+                locale: localeService.getIntlFriendlyLocale(),
+                noData: t('html.label.noDataToDisplay')
+            }
+        })
         Highcharts.setOptions(graphTheming);
 
-        const labels = data?.activity_labels;
+        const labels = data?.activity_labels.map(date => formatDateWithPreferences({
+            ...datePreferences,
+            pattern: 'MMMM dd',
+            recentDaysPattern: 'MMMM dd'
+        }, date));
         const series = data?.activity_series.map(dataSet => {
             return {
                 ...dataSet,
-                name: t(dataSet.name)
+                name: t(dataSet.name),
+                color: activityGroupToColor(dataSet.name)
             }
         });
 
@@ -73,7 +84,7 @@ const PlayerbaseGraph = ({data}) => {
             },
             series: nightModeEnabled ? reduceColors(series) : series
         })
-    }, [data, graphTheming, id, t, nightModeEnabled])
+    }, [data, graphTheming, id, t, nightModeEnabled, datePreferences])
 
     return (
         <div className="chart-area" id={id}>

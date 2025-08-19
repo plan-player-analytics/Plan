@@ -9,6 +9,8 @@ import End from "../layout/End";
 import {MinecraftChat} from "react-mcjsonchat";
 import ColoredText from "../text/ColoredText";
 import {Link} from "react-router-dom";
+import FormattedTime from "../text/FormattedTime.jsx";
+import FormattedDate from "../text/FormattedDate.jsx";
 
 export const ExtensionCardWrapper = ({extension, children}) => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -57,6 +59,12 @@ export const ExtensionValueTableCell = ({data}) => {
         return (<Link to={data.value?.link}><ColoredText text={data.value?.text}/></Link>);
     } else if (data.type === 'COMPONENT') {
         return (<MinecraftChat component={JSON.parse(data.value)}/>)
+    } else if (data.type === 'TIME_MILLISECONDS') {
+        return <FormattedTime timeMs={value}/>;
+    } else if (data.type === 'DATE_YEAR') {
+        return <FormattedDate date={value}/>;
+    } else if (data.type === 'DATE_SECOND') {
+        return <FormattedDate date={value} includeSeconds/>;
     } else {
         return (<span title={title}>{data.value}</span>);
     }
@@ -85,8 +93,23 @@ const ExtensionValue = ({data}) => {
     } else if (data.type === 'COMPONENT') {
         return (<p title={title}>
             {icon && <Fa icon={icon} className={colorClass}/>} {name}
-            {<End><MinecraftChat component={JSON.parse(data.value)}/></End>}
+            <End><MinecraftChat component={JSON.parse(data.value)}/></End>
         </p>)
+    } else if (data.type === 'TIME_MILLISECONDS') {
+        return <p title={title}>
+            {icon && <Fa icon={icon} className={colorClass}/>} {name}
+            <End><FormattedTime timeMs={value}/></End>
+        </p>;
+    } else if (data.type === 'DATE_YEAR') {
+        return <p title={title}>
+            {icon && <Fa icon={icon} className={colorClass}/>} {name}
+            <End><FormattedDate date={value}/></End>
+        </p>;
+    } else if (data.type === 'DATE_SECOND') {
+        return <p title={title}>
+            {icon && <Fa icon={icon} className={colorClass}/>} {name}
+            <End><FormattedDate date={value} includeSeconds/></End>
+        </p>;
     } else {
         return (<Datapoint name={name}
                            title={title}
@@ -143,8 +166,8 @@ const ExtensionCard = ({extension}) => {
         <ul className="nav nav-tabs tab-nav-right" role="tablist">
             {extension.onlyGenericTab ? '' :
                 extension.tabs.map((tab, i) => <li key={JSON.stringify(tab)} role="presentation"
-                                                   className="nav-item col-black">
-                    <button className={"nav-link col-black"
+                                                   className="nav-item col-text">
+                    <button className={"nav-link col-text"
                         + (openTabIndex === i ? ' active' : '')} onClick={() => toggleTabIndex(i)}>
                         <ExtensionIcon icon={tab.tabInformation.icon}/> {tab.tabInformation.tabName}
                     </button>

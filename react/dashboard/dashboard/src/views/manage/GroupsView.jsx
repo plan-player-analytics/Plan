@@ -31,6 +31,13 @@ import {DropdownStatusContextProvider, useDropdownStatusContext} from "../../hoo
 import {useNavigation} from "../../hooks/navigationHook";
 import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 import {useAuth} from "../../hooks/authenticationHook";
+import Checkbox from "../../components/input/Checkbox.jsx";
+import TextInput from "../../components/input/TextInput.jsx";
+import UnsavedChangesText from "../../components/text/UnsavedChangesText.jsx";
+import ActionButton from "../../components/input/button/ActionButton.jsx";
+import DangerButton from "../../components/input/button/DangerButton.jsx";
+import OutlineButton from "../../components/input/button/OutlineButton.jsx";
+import SecondaryActionButton from "../../components/input/button/SecondaryActionButton.jsx";
 
 const GroupsHeader = ({groupName, icon}) => {
     return (
@@ -56,14 +63,11 @@ const PermissionDropdown = ({permission, checked, indeterminate, togglePermissio
                         event.preventDefault();
                         toggle(permission);
                     }}>
-                        <input className={"form-check-input"} type={"checkbox"} value={indeterminate ? "" : checked}
-                               checked={checked}
-                               ref={input => {
-                                   if (input) input.indeterminate = indeterminate
-                               }}
-                               onChange={() => togglePermission(permission)}
-                        /> {permission} {permission && translated !== translationKey &&
-                        <OpaqueText inline>&middot; {translated}</OpaqueText>}
+                        <Checkbox indeterminate={indeterminate} checked={checked}
+                                  onChange={() => togglePermission(permission)}
+                        >{permission} {permission && translated !== translationKey &&
+                            <OpaqueText inline>&middot; {translated}</OpaqueText>}
+                        </Checkbox>
                         <hr style={{margin: 0}}/>
                     </summary>
 
@@ -74,9 +78,7 @@ const PermissionDropdown = ({permission, checked, indeterminate, togglePermissio
     } else {
         return (
             <li style={root ? {marginLeft: "1.4rem"} : {marginLeft: "3rem"}}>
-                <input className={"form-check-input"} type={"checkbox"} value={checked}
-                       checked={checked}
-                       onChange={() => togglePermission(permission)}
+                <Checkbox checked={checked} onChange={() => togglePermission(permission)}
                 /> {permission} {permission && translated !== translationKey &&
                 <OpaqueText inline>&middot; {translated}</OpaqueText>}
             </li>
@@ -144,11 +146,11 @@ const SaveButton = () => {
     const {dirty, requestSave} = useConfigurationStorageContext();
 
     return (
-        <button className={"float-end btn bg-theme"} style={{margin: "-0.5rem"}}
-                disabled={!dirty}
-                onClick={requestSave}>
+        <ActionButton className={"float-end"} style={{margin: "-0.5rem"}}
+                      disabled={!dirty}
+                      onClick={requestSave}>
             <Fa icon={faFloppyDisk}/> {t('html.label.managePage.changes.save')}
-        </button>
+        </ActionButton>
     )
 }
 
@@ -178,57 +180,57 @@ const DeleteGroupButton = ({groupName, groups, reloadGroupNames}) => {
                                values={{groupName, moveTo: groupOptions[moveToGroup]}}/>
                     </p>
 
-                    <button className={"btn bg-red mt-2"}
-                            onClick={() => {
-                                deleteGroup(groupName, groupOptions[moveToGroup]).then(({error}) => {
-                                    if (error) {
-                                        addAlert({
-                                            timeout: 15000,
-                                            color: "danger",
-                                            content: <>
-                                                <Fa icon={faExclamationTriangle}/>
-                                                {" "}
-                                                <Trans i18nKey={"html.label.managePage.alert.groupDeleteFail"}
-                                                       values={{error: error?.message}}/>
-                                            </>
-                                        });
-                                    } else {
-                                        reloadGroupNames();
-                                        setClicked(false);
-                                        addAlert({
-                                            timeout: 7500,
-                                            color: "success",
-                                            content: <>
-                                                <Fa icon={faCheck}/>
-                                                {" "}
-                                                <Trans i18nKey={"html.label.managePage.alert.groupDeleteSuccess"}
-                                                       values={{groupName}}/>
-                                            </>
-                                        });
-                                    }
-                                })
-                            }}>
+                    <DangerButton className={"mt-2"}
+                                  onClick={() => {
+                                      deleteGroup(groupName, groupOptions[moveToGroup]).then(({error}) => {
+                                          if (error) {
+                                              addAlert({
+                                                  timeout: 15000,
+                                                  color: "danger",
+                                                  content: <>
+                                                      <Fa icon={faExclamationTriangle}/>
+                                                      {" "}
+                                                      <Trans i18nKey={"html.label.managePage.alert.groupDeleteFail"}
+                                                             values={{error: error?.message}}/>
+                                                  </>
+                                              });
+                                          } else {
+                                              reloadGroupNames();
+                                              setClicked(false);
+                                              addAlert({
+                                                  timeout: 7500,
+                                                  color: "success",
+                                                  content: <>
+                                                      <Fa icon={faCheck}/>
+                                                      {" "}
+                                                      <Trans i18nKey={"html.label.managePage.alert.groupDeleteSuccess"}
+                                                             values={{groupName}}/>
+                                                  </>
+                                              });
+                                          }
+                                      })
+                                  }}>
                         <Fa icon={faTrash}/> <Trans i18nKey="html.label.managePage.deleteGroup.confirm"
                                                     values={{groupName}}/>
-                    </button>
-                    <button className={"btn bg-grey-outline mt-2"} style={{marginLeft: "0.5rem"}}
-                            onClick={() => {
-                                setClicked(false)
-                            }}>
+                    </DangerButton>
+                    <OutlineButton className={"mt-2"} style={{marginLeft: "0.5rem"}}
+                                   onClick={() => {
+                                       setClicked(false)
+                                   }}>
                         <Fa icon={faRotateLeft}/> {t("command.confirmation.deny")}
-                    </button>
+                    </OutlineButton>
                 </Card.Body>
             </Card>
         )
     }
 
     return (
-        <button className={"float-end btn bg-grey-outline"}
-                onClick={() => {
-                    setClicked(true)
-                }}>
+        <OutlineButton className={"float-end"}
+                       onClick={() => {
+                           setClicked(true)
+                       }}>
             <Fa icon={faTrash}/> <Trans i18nKey={"html.label.managePage.deleteGroup.header"} values={{groupName}}/>
-        </button>
+        </OutlineButton>
     )
 }
 
@@ -238,62 +240,33 @@ const DiscardButton = () => {
 
     return (
         <>
-            {dirty && <button className={"float-end btn"} style={{margin: "-0.5rem", marginRight: "0.5rem"}}
+            {dirty && <SecondaryActionButton className={"float-end"} style={{margin: "-0.5rem", marginRight: "0.5rem"}}
                               onClick={requestDiscard}>
                 <Fa icon={faTrash}/> {t('html.label.managePage.changes.discard')}
-            </button>}
+            </SecondaryActionButton>}
         </>
     )
 }
 
-const UnsavedChangesText = ({visible}) => {
-    const {t} = useTranslation();
-    const {dirty} = useConfigurationStorageContext();
-    const show = visible !== undefined ? visible : dirty;
-    if (show) {
-        return (
-            <p style={{
-                display: "inline-block",
-                marginLeft: "1rem",
-                marginBottom: 0,
-                opacity: 0.6
-            }}>{t('html.label.managePage.changes.unsaved')}</p>
-        )
-    } else {
-        return <></>
-    }
-}
-
 const AddGroupBody = ({groups, reloadGroupNames}) => {
     const {t} = useTranslation();
-    const [invalid, setInvalid] = useState(false);
     const [value, setValue] = useState(undefined);
     const {addAlert} = useAlertPopupContext();
 
-    const onChange = (event) => {
-        const newValue = event.target.value;
-        setValue(newValue.toLowerCase().replace(" ", "_"));
-        setInvalid(newValue.length > 100);
-    }
-
+    const isInvalid = newValue => newValue && (newValue.length > 100 || groups.find(group => group.name === newValue));
+    const invalid = isInvalid(value);
     return (
         <Card>
             <CardHeader icon={faPlus} label={t('html.label.managePage.addGroup.header')}/>
             <Card.Body>
-                <InputGroup>
-                    <div className={"input-group-text"}>
-                        <FontAwesomeIcon icon={faUserGroup}/>
-                    </div>
-                    <input type="text" className={"form-control" + (invalid ? " is-invalid" : '')}
+                <TextInput icon={faUserGroup}
+                           isInvalid={isInvalid}
+                           invalidFeedback={t('html.label.managePage.addGroup.invalidName')}
                            placeholder={t('html.label.managePage.addGroup.name')}
                            value={value}
-                           onChange={onChange}
-                    />
-                    {invalid && <div className="invalid-feedback">
-                        {t('html.label.managePage.addGroup.invalidName')}
-                    </div>}
-                </InputGroup>
-                <button className={"btn bg-plan mt-2"} disabled={invalid || !value || value.length === 0}
+                           setValue={newValue => setValue(newValue.toLowerCase().replace(" ", "_"))}
+                />
+                <ActionButton className={"mt-2"} disabled={invalid || !value || value.length === 0}
                         onClick={() => {
                             addGroup(value).then(({error}) => {
                                 if (error) {
@@ -323,7 +296,7 @@ const AddGroupBody = ({groups, reloadGroupNames}) => {
                             })
                         }}>
                     <Fa icon={faFloppyDisk}/> {t('html.label.managePage.addGroup.header')}
-                </button>
+                </ActionButton>
             </Card.Body>
         </Card>
     )
@@ -355,7 +328,7 @@ const GroupsCard = ({groups, reloadGroupNames}) => {
     return (
         <Card>
             <CardHeader icon={faUsersGear} color="theme" label={t('html.label.managePage.groupHeader')}>
-                <button className={"btn bg-transparent col-blue"} style={{margin: "-0.5rem"}}
+                <button className={"btn bg-transparent col-help-icon"} style={{margin: "-0.5rem"}}
                         onClick={openHelp}>
                     <Fa icon={faQuestionCircle}/>
                 </button>

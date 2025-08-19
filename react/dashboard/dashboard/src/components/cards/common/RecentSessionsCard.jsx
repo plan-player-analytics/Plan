@@ -11,8 +11,8 @@ const RecentSessionsCard = ({id, sessions, isPlayer, isNetwork}) => {
     return (
         <Card id={'session-list'}>
             <Card.Header>
-                <h6 className="col-black" style={{width: '100%'}}>
-                    <Fa icon={faCalendar} className="col-teal"/> {t('html.label.recentSessions')}
+                <h6 className="col-text" style={{width: '100%'}}>
+                    <Fa icon={faCalendar} className="col-sessions"/> {t('html.label.recentSessions')}
                     <span className="float-end">
                     <Fa icon={faHandPointer}/> <small>{t('html.text.clickToExpand')}</small>
                 </span>

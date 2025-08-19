@@ -9,7 +9,7 @@ const QuickViewGraphCard = ({server}) => {
     const {t} = useTranslation();
     return (
         <Card>
-            <CardHeader icon={faChartArea} color={'light-blue'}
+            <CardHeader icon={faChartArea} color={'players-online'}
                         label={server.name + ' ' + t('html.label.onlineActivity') + ' (' + t('html.label.thirtyDays') + ')'}/>
             <PlayersOnlineGraph data={{playersOnline: server.playersOnline, color: server.playersOnlineColor}}/>
         </Card>

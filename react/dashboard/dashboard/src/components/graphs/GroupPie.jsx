@@ -2,8 +2,9 @@ import React, {useEffect} from 'react';
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../hooks/themeHook";
 import {withReducedSaturation} from "../../util/colors";
-import Accessibility from "highcharts/modules/accessibility";
-import Highcharts from "highcharts";
+import Highcharts from "highcharts/esm/highcharts";
+import "highcharts/esm/modules/accessibility";
+import "highcharts/esm/modules/no-data-to-display"
 
 const GroupPie = ({id, groups, colors, name}) => {
     const {t} = useTranslation();
@@ -27,7 +28,6 @@ const GroupPie = ({id, groups, colors, name}) => {
             data: series
         };
 
-        Accessibility(Highcharts);
         Highcharts.setOptions(graphTheming);
         Highcharts.chart(id, {
             chart: {

@@ -2,11 +2,12 @@ import React from "react";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCaretDown, faCaretRight, faCaretUp} from "@fortawesome/free-solid-svg-icons";
 
-const TrendUpGood = ({value}) => <Fa icon={faCaretUp} className="trend text-success" title={value}/>;
-const TrendUpBad = ({value}) => <Fa icon={faCaretUp} className="trend text-danger" title={value}/>;
-const TrendDownBad = ({value}) => <Fa icon={faCaretDown} className="trend text-danger" title={value}/>;
-const TrendDownGood = ({value}) => <Fa icon={faCaretDown} className="trend text-success" title={value}/>;
-const TrendSame = ({value}) => <Fa icon={faCaretRight} className="trend text-warning" title={value}/>;
+const TrendUpGood = ({value}) => <span title={value}><Fa icon={faCaretUp} className="trend col-trend-better"/></span>;
+const TrendUpBad = ({value}) => <span title={value}><Fa icon={faCaretUp} className="trend col-trend-worse"/></span>;
+const TrendDownBad = ({value}) => <span title={value}><Fa icon={faCaretDown} className="trend col-trend-worse"/></span>;
+const TrendDownGood = ({value}) => <span title={value}><Fa icon={faCaretDown}
+                                                           className="trend col-trend-better"/></span>;
+const TrendSame = ({value}) => <span title={value}><Fa icon={faCaretRight} className="trend col-trend-same"/></span>;
 
 
 const SmallTrend = ({trend}) => {

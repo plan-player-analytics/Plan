@@ -1,9 +1,10 @@
 import React, {useEffect} from "react";
-import Highcharts from 'highcharts';
+import Highcharts from 'highcharts/esm/highcharts';
+import "highcharts/esm/modules/accessibility";
+import "highcharts/esm/modules/no-data-to-display"
 import {useTheme} from "../../hooks/themeHook";
 import {useTranslation} from "react-i18next";
-import Accessibility from "highcharts/modules/accessibility";
-import {withReducedSaturation} from "../../util/colors";
+import {localeService} from "../../service/localeService.js";
 
 const PunchCard = ({series}) => {
     const {t} = useTranslation();
@@ -11,11 +12,12 @@ const PunchCard = ({series}) => {
     useEffect(() => {
         const punchCard = {
             name: t('html.label.relativeJoinActivity'),
-            color: nightModeEnabled ? withReducedSaturation('#222') : '#222',
+            color: "var(--color-graphs-punch-card)",
             type: 'scatter',
             data: series
         };
-        Accessibility(Highcharts);
+
+        Highcharts.setOptions({lang: {locale: localeService.getIntlFriendlyLocale()}})
         Highcharts.setOptions(graphTheming);
         setTimeout(() => Highcharts.chart('punchcard', {
             chart: {

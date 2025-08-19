@@ -1,4 +1,10 @@
-import {doGetRequest, doSomePostRequest, standard200option, staticSite} from "./backendConfiguration";
+import {
+    doGetRequest,
+    doSomeDeleteRequest,
+    doSomePostRequest,
+    standard200option,
+    staticSite
+} from "./backendConfiguration";
 
 export const fetchPlanMetadata = async () => {
     let url = '/v1/metadata';
@@ -39,4 +45,22 @@ export const savePreferences = async preferences => {
     if (staticSite) return;
     let url = '/v1/storePreferences'
     return doSomePostRequest(url, [standard200option], preferences);
+}
+
+export const fetchTheme = async name => {
+    let url = `/v1/theme?theme=${name}`;
+    if (staticSite) url = `/theme/${name}.json`
+    return doGetRequest(url);
+}
+
+export const saveTheme = async (name, theme, originalName) => {
+    if (staticSite) return;
+    let url = `/v1/saveTheme?theme=${name}&originalName=${originalName}`;
+    return doSomePostRequest(url, [standard200option], JSON.stringify(theme));
+}
+
+export const deleteTheme = async (name) => {
+    if (staticSite) return;
+    let url = `/v1/deleteTheme?theme=${name}`;
+    return doSomeDeleteRequest(url, [standard200option]);
 }

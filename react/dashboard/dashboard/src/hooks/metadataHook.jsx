@@ -4,12 +4,20 @@ import {fetchNetworkMetadata, fetchPlanMetadata} from "../service/metadataServic
 import terminal from '../Terminal-icon.png'
 import {useAuth} from "./authenticationHook";
 
+import {getLocallyStoredThemes} from "./themeHook.jsx";
+
 const MetadataContext = createContext({});
 
 export const MetadataContextProvider = ({children}) => {
     const [datastore] = useState({});
     const [metadata, setMetadata] = useState({});
     const {authRequired, authLoaded, loggedIn} = useAuth();
+    const [updateThemeList, setUpdateThemeList] = useState(Date.now());
+
+    const refreshThemeList = () => {
+        setUpdateThemeList(Date.now());
+        updateMetadata();
+    }
 
     const updateMetadata = useCallback(async () => {
         if (authRequired && (!authLoaded || !loggedIn)) return;
@@ -43,10 +51,21 @@ export const MetadataContextProvider = ({children}) => {
         updateMetadata();
     }, [updateMetadata, authLoaded, loggedIn]);
 
+    const displayedServerName = metadata.isProxy ? metadata.networkName : (metadata.serverName?.startsWith('Server') ? "Plan" : metadata.serverNameserverName);
+
     const sharedState = useMemo(() => {
-            return {...metadata, getPlayerHeadImageUrl, datastore}
+            const loaded = Object.keys(metadata).length > 0 && !metadata.metadataError;
+            return {
+                ...metadata,
+                getAvailableThemes: () => loaded ? [...new Set([...metadata.availableThemes, ...getLocallyStoredThemes()])] : getLocallyStoredThemes(),
+                getPlayerHeadImageUrl,
+                datastore,
+                displayedServerName,
+                loaded,
+                refreshThemeList
+            }
         },
-        [metadata, getPlayerHeadImageUrl, datastore]);
+        [metadata, getPlayerHeadImageUrl, datastore, displayedServerName, updateThemeList]);
     return (<MetadataContext.Provider value={sharedState}>
             {children}
         </MetadataContext.Provider>

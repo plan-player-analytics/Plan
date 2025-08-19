@@ -21,7 +21,7 @@ import {download, generateCsv, mkConfig} from "export-to-csv";
 
 const PaginationOption = ({onClick, children, selected}) => (
     <li>
-        <button className={"btn " + (selected ? "bg-theme" : '')} onClick={onClick}>{children}</button>
+        <button className={"btn col-text " + (selected ? "btn-action" : '')} onClick={onClick}>{children}</button>
     </li>
 )
 
@@ -68,7 +68,7 @@ const VisibleColumnsSelector = ({columns, visibleColumnIndexes, toggleColumn}) =
                 <Card.Body>
                     <ul style={{listStyle: "none", paddingLeft: "0.25rem", margin: 0}}>
                         {columns.map((column, i) => {
-                            return <li key={JSON.stringify(column.data)}>
+                            return <li className={'col-text'} key={JSON.stringify(column.data)}>
                                 <Toggle value={visibleColumnIndexes.includes(i)}
                                         onValueChange={() => toggleColumn(i)}>{column.title}</Toggle>
                             </li>
@@ -111,10 +111,12 @@ const ExportMenu = ({matchingData}) => {
     return (
         <>{hasData &&
             <Dropdown>
-                <Dropdown.Toggle variant={""} id="dropdown-basic">
-                    {generating &&
-                        <FontAwesomeIcon icon={"gear"} className={"fa-spin"} title={t('html.label.export')}/>}
-                    {!generating && <FontAwesomeIcon icon={"file-export"} title={t('html.label.export')}/>}
+                <Dropdown.Toggle variant={""} id="dropdown-basic" className={"col-text"}
+                                 style={{'--bs-btn-color': 'var(--color-forms-input-text)'}}>
+                    {generating && <span title={t('html.label.export')}>
+                            <FontAwesomeIcon icon={"gear"} className={"fa-spin"}/>
+                    </span>}
+                    {!generating && <span title={t('html.label.export')}><FontAwesomeIcon icon={"file-export"}/></span>}
                 </Dropdown.Toggle>
                 <Dropdown.Menu>
                     <Dropdown.Item onClick={exportCSV}><FontAwesomeIcon
@@ -321,7 +323,7 @@ const DataTablesTable = ({id, rowKeyFunction, options, colorClass, expandCompone
                 </React.Fragment>)}
                 </tbody>
             </table>
-            <p className={"dataTables_info float-start"}
+            <p className={"dataTables_info float-start col-text"}
                style={{maxWidth: "40%", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>
                 <Trans i18nKey={"html.label.table.showNofM"}
                        defaults={"Showing {{n}} of {{m}} entries"}

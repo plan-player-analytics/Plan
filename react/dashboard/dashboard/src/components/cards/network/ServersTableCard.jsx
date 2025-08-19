@@ -17,7 +17,7 @@ const SortDropDown = ({sortBy, sortReversed, setSortBy}) => {
 
     return (
         <Dropdown className="float-end" style={{position: "absolute", right: "0.5rem"}}>
-            <Dropdown.Toggle variant=''>
+            <Dropdown.Toggle variant='' style={{'--bs-btn-color': 'var(--color-forms-input-text)'}}>
                 <Fa icon={getSortIcon()}/> {t(sortBy.label)}
             </Dropdown.Toggle>
 
@@ -54,8 +54,8 @@ const ServersTableCard = ({loaded, servers, onSelect}) => {
     return (
         <Card>
             <Card.Header style={{width: "100%"}}>
-                <h6 className="col-black">
-                    <Fa icon={faNetworkWired} className={"col-light-green"}/> {t('html.label.servers')}
+                <h6 className="col-text">
+                    <Fa icon={faNetworkWired} className={"col-servers"}/> {t('html.label.servers')}
                 </h6>
                 <SortDropDown sortBy={sortBy} setSortBy={setSort} sortReversed={sortReversed}/>
             </Card.Header>

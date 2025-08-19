@@ -55,7 +55,12 @@ export const useDataRequest = (fetchMethod, parameters, shouldRequest) => {
             } else if (error) {
                 console.warn(error);
                 datastore.finishUpdate(fetchMethod)
-                setLoadingError(error);
+                const isObject = error?.data !== null && typeof error?.data === 'object' && !Array.isArray(error?.data);
+                if (isObject) {
+                    setLoadingError({...error, ...error.data, data: undefined})
+                } else {
+                    setLoadingError(error);
+                }
                 finishUpdate(0, "Error: " + error.message, datastore.isSomethingUpdating());
             }
         };
