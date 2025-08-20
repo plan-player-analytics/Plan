@@ -1,0 +1,342 @@
+extensions.AOneBlock.hasIsland.description: Does the player have an island
+extensions.AOneBlock.hasIsland.text: Has Island
+extensions.AOneBlock.islandCreated.description: When the Island was created
+extensions.AOneBlock.islandCreated.text: Island Created
+extensions.AOneBlock.islandLevel.description: Level of the player's island
+extensions.AOneBlock.islandLevel.text: Island level
+extensions.AOneBlock.islandName.description: Name of the player's island
+extensions.AOneBlock.islandName.text: Island name
+extensions.AOneBlock.islandResets.description: How many times can the player reset their island
+extensions.AOneBlock.islandResets.text: Island Resets Left
+extensions.AOneBlock.islandUpdated.description: When the Island was changed last time
+extensions.AOneBlock.islandUpdated.text: Last Changed
+extensions.AOneBlock.islandWorld.description: What world is used for ASkyBlock islands
+extensions.AOneBlock.islandWorld.text: Island World
+extensions.ASkyBlock.challengeProgress.description: % out of total challenges completed
+extensions.ASkyBlock.challengeProgress.text: Progress
+extensions.ASkyBlock.challengesCompleted.description: How many challenges has the player completed
+extensions.ASkyBlock.challengesCompleted.text: Completed Challenges
+extensions.ASkyBlock.hasIsland.description: Does the player have a skyblock island
+extensions.ASkyBlock.hasIsland.text: Has Island
+extensions.ASkyBlock.islandCount.description: How many islands exist
+extensions.ASkyBlock.islandCount.text: Island Count
+extensions.ASkyBlock.islandLevel.description: Level of the player's island
+extensions.ASkyBlock.islandLevel.text: Island level
+extensions.ASkyBlock.islandName.description: Name of the player's island
+extensions.ASkyBlock.islandName.text: Island name
+extensions.ASkyBlock.islandResets.description: How many times can the player reset their island
+extensions.ASkyBlock.islandResets.text: Island Resets Left
+extensions.ASkyBlock.islandWorld.description: What world is used for ASkyBlock islands
+extensions.ASkyBlock.islandWorld.text: Island World
+extensions.AcidIsland.hasIsland.description: Does the player have an island
+extensions.AcidIsland.hasIsland.text: Has Island
+extensions.AcidIsland.islandCreated.description: When the Island was created
+extensions.AcidIsland.islandCreated.text: Island Created
+extensions.AcidIsland.islandLevel.description: Level of the player's island
+extensions.AcidIsland.islandLevel.text: Island level
+extensions.AcidIsland.islandName.description: Name of the player's island
+extensions.AcidIsland.islandName.text: Island name
+extensions.AcidIsland.islandResets.description: How many times can the player reset their island
+extensions.AcidIsland.islandResets.text: Island Resets Left
+extensions.AcidIsland.islandUpdated.description: When the Island was changed last time
+extensions.AcidIsland.islandUpdated.text: Last Changed
+extensions.AcidIsland.islandWorld.description: What world is used for ASkyBlock islands
+extensions.AcidIsland.islandWorld.text: Island World
+extensions.AdvancedAchievements.achievementCount.description: How many achievements the player has
+extensions.AdvancedAchievements.achievementCount.text: Achievements
+extensions.AdvancedAntiCheat.timesKickedForHack.description: Times Kicked for Possible Hacking, also includes false positives
+extensions.AdvancedAntiCheat.timesKickedForHack.text: Kicked for Hacking
+extensions.AdvancedBan.banExpireDate.description: When the ban expires
+extensions.AdvancedBan.banExpireDate.text: Ends
+extensions.AdvancedBan.banIssueDate.description: When the ban was issued
+extensions.AdvancedBan.banIssueDate.text: Date
+extensions.AdvancedBan.banIssuer.description: Who banned the player
+extensions.AdvancedBan.banIssuer.text: Operator
+extensions.AdvancedBan.banReason.description: Why the ban was issued
+extensions.AdvancedBan.banReason.text: Reason
+extensions.AdvancedBan.banWillExpire.description: Is the ban permanent
+extensions.AdvancedBan.banWillExpire.text: Will Expire
+extensions.AdvancedBan.isBanned.description: Is the player banned on AdvancedBan
+extensions.AdvancedBan.isBanned.text: Banned
+extensions.AdvancedBan.isMuted.description: Is the player muted on AdvancedBan
+extensions.AdvancedBan.isMuted.text: Muted
+extensions.AdvancedBan.muteExpireDate.description: When the mute expires
+extensions.AdvancedBan.muteExpireDate.text: Ends
+extensions.AdvancedBan.muteIssueDate.description: When the mute was issued
+extensions.AdvancedBan.muteIssueDate.text: Date
+extensions.AdvancedBan.muteIssuer.description: Who muted the player
+extensions.AdvancedBan.muteIssuer.text: Operator
+extensions.AdvancedBan.muteReason.description: Why the mute was issued
+extensions.AdvancedBan.muteReason.text: Reason
+extensions.AdvancedBan.muteWillExpire.description: Is the mute permanent
+extensions.AdvancedBan.muteWillExpire.text: Will Expire
+extensions.AdvancedBan.warnings.description: How many unexpired warnings player has on AdvancedBan
+extensions.AdvancedBan.warnings.text: Warnings
+extensions.BSkyBlock.hasIsland.description: Does the player have an island
+extensions.BSkyBlock.hasIsland.text: Has Island
+extensions.BSkyBlock.islandCreated.description: When the Island was created
+extensions.BSkyBlock.islandCreated.text: Island Created
+extensions.BSkyBlock.islandLevel.description: Level of the player's island
+extensions.BSkyBlock.islandLevel.text: Island level
+extensions.BSkyBlock.islandName.description: Name of the player's island
+extensions.BSkyBlock.islandName.text: Island name
+extensions.BSkyBlock.islandResets.description: How many times can the player reset their island
+extensions.BSkyBlock.islandResets.text: Island Resets Left
+extensions.BSkyBlock.islandUpdated.description: When the Island was changed last time
+extensions.BSkyBlock.islandUpdated.text: Last Changed
+extensions.BSkyBlock.islandWorld.description: What world is used for ASkyBlock islands
+extensions.BSkyBlock.islandWorld.text: Island World
+extensions.BanManager.banExpireDate.description: When the ban expires
+extensions.BanManager.banExpireDate.text: Ends
+extensions.BanManager.banIssueDate.description: When the ban was issued
+extensions.BanManager.banIssueDate.text: Date
+extensions.BanManager.banIssuer.description: Who banned the player
+extensions.BanManager.banIssuer.text: Banned by
+extensions.BanManager.banReason.description: Why the ban was issued
+extensions.BanManager.banReason.text: Reason
+extensions.BanManager.isBanned.description: Is the player banned on BanManager
+extensions.BanManager.isBanned.text: Banned
+extensions.BanManager.isMuted.description: Is the player muted on BanManager
+extensions.BanManager.isMuted.text: Muted
+extensions.BanManager.muteExpireDate.description: When the mute expires
+extensions.BanManager.muteExpireDate.text: Ends
+extensions.BanManager.muteIssueDate.description: When the mute was issued
+extensions.BanManager.muteIssueDate.text: Date
+extensions.BanManager.muteIssuer.description: Who muted the player
+extensions.BanManager.muteIssuer.text: Muted by
+extensions.BanManager.muteReason.description: Why the mute was issued
+extensions.BanManager.muteReason.text: Reason
+extensions.CMI.balance.text: Balance
+extensions.CMI.isJailed.text: Jailed
+extensions.CMI.isMuted.text: Muted
+extensions.CMI.jailTimeout.text: Jail Expires
+extensions.CMI.muteTimeout.text: Mute Expires
+extensions.CMI.playerHomes.text: homes
+extensions.CaveBlock.hasIsland.description: Does the player have an island
+extensions.CaveBlock.hasIsland.text: Has Island
+extensions.CaveBlock.islandCreated.description: When the Island was created
+extensions.CaveBlock.islandCreated.text: Island Created
+extensions.CaveBlock.islandLevel.description: Level of the player's island
+extensions.CaveBlock.islandLevel.text: Island level
+extensions.CaveBlock.islandName.description: Name of the player's island
+extensions.CaveBlock.islandName.text: Island name
+extensions.CaveBlock.islandResets.description: How many times can the player reset their island
+extensions.CaveBlock.islandResets.text: Island Resets Left
+extensions.CaveBlock.islandUpdated.description: When the Island was changed last time
+extensions.CaveBlock.islandUpdated.text: Last Changed
+extensions.CaveBlock.islandWorld.description: What world is used for ASkyBlock islands
+extensions.CaveBlock.islandWorld.text: Island World
+extensions.DKBans.banExpireDate.description: When the ban expires
+extensions.DKBans.banExpireDate.text: Ends
+extensions.DKBans.banIssueDate.description: When the ban was issued
+extensions.DKBans.banIssueDate.text: Date
+extensions.DKBans.banIssuer.description: Who banned the player
+extensions.DKBans.banIssuer.text: Operator
+extensions.DKBans.banReason.description: Why the ban was issued
+extensions.DKBans.banReason.text: Reason
+extensions.DKBans.banWillExpire.description: Is the ban permanent
+extensions.DKBans.banWillExpire.text: Will Expire
+extensions.DKBans.bans.description: Total amount of bans on DKBans
+extensions.DKBans.bans.text: Bans
+extensions.DKBans.isBanned.description: Is the player banned on DKBans
+extensions.DKBans.isBanned.text: Banned
+extensions.DKBans.isMuted.description: Is the player muted on DKBans
+extensions.DKBans.isMuted.text: Muted
+extensions.DKBans.muteExpireDate.description: When the mute expires
+extensions.DKBans.muteExpireDate.text: Ends
+extensions.DKBans.muteIssueDate.description: When the mute was issued
+extensions.DKBans.muteIssueDate.text: Date
+extensions.DKBans.muteIssuer.description: Who muted the player
+extensions.DKBans.muteIssuer.text: Operator
+extensions.DKBans.muteReason.description: Why the mute was issued
+extensions.DKBans.muteReason.text: Reason
+extensions.DKBans.muteWillExpire.description: Is the mute permanent
+extensions.DKBans.muteWillExpire.text: Will Expire
+extensions.DKBans.mutes.description: Total amount of mutes on DKBans
+extensions.DKBans.mutes.text: Mutes
+extensions.DKBans.reportPercentage.description: The global accepted/denied ratio for reports on DKBans
+extensions.DKBans.reportPercentage.text: Report accept ratio
+extensions.DKBans.reports.description: Total amount of reports on DKBans
+extensions.DKBans.reports.text: Reports
+extensions.DKBans.unbans.description: Total amount of unbans on DKBans
+extensions.DKBans.unbans.text: Unbans
+extensions.DKBans.warnings.description: Total amount of warnings on DKBans
+extensions.DKBans.warnings.text: Warnings
+extensions.DKCoins.coins.description: The amount of coins the player has on DKCoins
+extensions.DKCoins.coins.text: Coins
+extensions.DKCoins.name.description: The name for the player on DKCoins
+extensions.DKCoins.name.text: Name
+extensions.DiscordSRV.accountCreated.description: When the player's linked Discord account was created
+extensions.DiscordSRV.accountCreated.text: Account creation date
+extensions.DiscordSRV.accountsLinked.description: How many Discord users have linked their player accounts.
+extensions.DiscordSRV.accountsLinked.text: Accounts Linked
+extensions.DiscordSRV.accountsLinkedPerMembers.description: Percentage of users in Discord server vs the amount of linked accounts. (Keep in mind users can be linked but no in the main Discord server)
+extensions.DiscordSRV.accountsLinkedPerMembers.text: Accounts linked / Users in main guild
+extensions.DiscordSRV.guildUsers.description: How many Discord users are on the main Discord server.
+extensions.DiscordSRV.guildUsers.text: Users in main guild
+extensions.DiscordSRV.hasLinkedAccount.description: Has the player linked their Discord account
+extensions.DiscordSRV.hasLinkedAccount.text: Has Linked Account
+extensions.DiscordSRV.joinDate.description: When the linked player's linked Discord account joined the main Discord server
+extensions.DiscordSRV.joinDate.text: Join Date
+extensions.DiscordSRV.nickName.description: The nickname of the player's linked Discord account on the main Discord server
+extensions.DiscordSRV.nickName.text: Nickname
+extensions.DiscordSRV.roles.description: The roles of the player's linked Discord account on the main Discord server
+extensions.DiscordSRV.roles.text: Roles
+extensions.DiscordSRV.username.description: The player's linked Discord accounts username
+extensions.DiscordSRV.username.text: Username
+extensions.Economy_(Vault).balance.description: How much money the player has
+extensions.Economy_(Vault).balance.text: Balance
+extensions.Essentials.isJailed.text: Jailed
+extensions.Essentials.isMuted.text: Muted
+extensions.Essentials.jailTimeout.text: Jail Expires
+extensions.Essentials.muteTimeout.text: Mute Expires
+extensions.Essentials.playerHomes.text: homes
+extensions.EssentialsEco.balance.text: Balance
+extensions.Factions.created.description: When the faction was created
+extensions.Factions.created.text: Created
+extensions.Factions.faction.text: Faction
+extensions.Factions.factionLeader.description: Who leads the faction
+extensions.Factions.factionLeader.text: Leader
+extensions.Factions.maxPower.description: How much power the player can have
+extensions.Factions.maxPower.text: Max Power
+extensions.Factions.power.description: How much power the faction has
+extensions.Factions.power.text: Power
+extensions.FactionsUUID.allyCount.description: How many allies the faction has
+extensions.FactionsUUID.allyCount.text: Allies
+extensions.FactionsUUID.balance.description: How much money the faction has
+extensions.FactionsUUID.balance.text: Balance
+extensions.FactionsUUID.created.description: When the faction was created
+extensions.FactionsUUID.created.text: Created
+extensions.FactionsUUID.description.description: The description of the faction
+extensions.FactionsUUID.description.text: Description
+extensions.FactionsUUID.economyEnabled.description: If FactionsUUID economy is enabled
+extensions.FactionsUUID.economyEnabled.text: Economy enabled
+extensions.FactionsUUID.faction.text: Faction
+extensions.FactionsUUID.factionLeader.description: Who leads the faction
+extensions.FactionsUUID.factionLeader.text: Leader
+extensions.FactionsUUID.hasFaction.description: If the player has a faction
+extensions.FactionsUUID.hasFaction.text: Has faction
+extensions.FactionsUUID.maxPower.description: How much power the faction can have
+extensions.FactionsUUID.maxPower.text: Max Power
+extensions.FactionsUUID.memberCount.description: How many members the faction has
+extensions.FactionsUUID.memberCount.text: Member count
+extensions.FactionsUUID.power.description: How much power the faction has
+extensions.FactionsUUID.power.text: Power
+extensions.FactionsUUID.powerMax.description: How much power the player can have
+extensions.FactionsUUID.powerMax.text: Max Power
+extensions.FactionsUUID.role.description: The role of the player in the faction
+extensions.FactionsUUID.role.text: Role
+extensions.FactionsUUID.truceCount.description: How many truced factions the faction has
+extensions.FactionsUUID.truceCount.text: Truces
+extensions.FastLogin.premiumStatus.text: Premium status
+extensions.Floodgate.bedrock.description: If the player is bedrock
+extensions.Floodgate.bedrock.text: Bedrock player
+extensions.Floodgate.bedrockUsername.description: The (last known) bedrock username for the player
+extensions.Floodgate.bedrockUsername.text: Bedrock username
+extensions.Floodgate.dataAvailable.text: Data available
+extensions.Floodgate.device.description: The (last known) device the player is using
+extensions.Floodgate.device.text: Player device
+extensions.Floodgate.hasLinked.text: Has linked java account
+extensions.Floodgate.javaUsername.description: The (last known) java username (the prefix & java compliant name from the bedrock name) for the player
+extensions.Floodgate.javaUsername.text: Java username
+extensions.Floodgate.languageCode.description: The (last known) language code for the player
+extensions.Floodgate.languageCode.text: Language code
+extensions.Floodgate.linkedPlayer.description: The (last known) linked Java player of this bedrock player
+extensions.Floodgate.linkedPlayer.text: Linked player
+extensions.Floodgate.version.description: The (last known) client version for the player
+extensions.Floodgate.version.text: Version
+extensions.GriefDefender.accruedBlocks.description: Accrued Blocks that player accrue during the game time
+extensions.GriefDefender.accruedBlocks.text: Accrued Blocks
+extensions.GriefDefender.bonusBlocks.description: Bonus Blocks that player get reward
+extensions.GriefDefender.bonusBlocks.text: Bonus Blocks
+extensions.GriefDefender.claimCount.description: How many claims the player has
+extensions.GriefDefender.claimCount.text: Claims
+extensions.GriefDefender.claimType.description: Basic + Town + SUBDIVISION + Admin
+extensions.GriefDefender.claimType.text: Claim Type
+extensions.GriefDefender.claimedArea.description: How large area the player has claimed
+extensions.GriefDefender.claimedArea.text: Claimed Area
+extensions.GriefDefender.initialBlocks.description: Initial Blocks that player first play on your server
+extensions.GriefDefender.initialBlocks.text: Initial Blocks
+extensions.GriefDefender.remainingBlocks.description: Remaining Blocks that player has at present
+extensions.GriefDefender.remainingBlocks.text: Remaining Blocks
+extensions.GriefPrevention.claimCount.description: How many claims the player has
+extensions.GriefPrevention.claimCount.text: Claims
+extensions.GriefPrevention.claimedArea.description: How large area the player has claimed
+extensions.GriefPrevention.claimedArea.text: Claimed Area
+extensions.GriefPrevention.isSoftMuted.description: Are the player's messages muted for others, but shown to them
+extensions.GriefPrevention.isSoftMuted.text: SoftMuted
+extensions.Jobs.jobs.text: Job
+extensions.Litebans.connectors.text: Connected from same IP
+extensions.LuckPerms.permissionGroups.text: Permission Group
+extensions.LuckPerms.prefix.description: Current user prefix
+extensions.LuckPerms.prefix.text: Prefix
+extensions.LuckPerms.primaryGroup.text: Primary Group
+extensions.LuckPerms.suffix.description: Current user suffix
+extensions.LuckPerms.suffix.text: Suffix
+extensions.LuckPerms.weight.description: Weight of the permission group
+extensions.LuckPerms.weight.text: Weight
+extensions.MarriageMaster.numberOfMarriages.description: How many marriages are there
+extensions.MarriageMaster.numberOfMarriages.text: Marriages
+extensions.Nucleus.homeCount.text: Homes
+extensions.Nucleus.isJailed.text: Jailed
+extensions.Nucleus.isMuted.text: Muted
+extensions.Nucleus.jail.description: Where the player is jailed at
+extensions.Nucleus.jail.text: Jail
+extensions.Nucleus.jailEnd.text: Ends
+extensions.Nucleus.jailOperator.description: Who jailed the player
+extensions.Nucleus.jailOperator.text: Operator
+extensions.Nucleus.jailReason.description: Why the player was jailed
+extensions.Nucleus.jailReason.text: Reason
+extensions.Nucleus.jailStart.text: Date
+extensions.Nucleus.muteEnd.text: Ends
+extensions.Nucleus.muteOperator.description: Who muted the player
+extensions.Nucleus.muteOperator.text: Operator
+extensions.Nucleus.muteReason.description: Why the player was muted
+extensions.Nucleus.muteReason.text: Reason
+extensions.Nucleus.muteStart.text: Date
+extensions.Nucleus.nickname.text: Nickname
+extensions.Permission_Groups_(Vault).group.text: Permission Groups
+extensions.PlotSquared.plotCount.text: Plots
+extensions.ProtocolSupport.protocolVersion.description: Version used last time the player joined
+extensions.ProtocolSupport.protocolVersion.text: Last Join Version
+extensions.Quests.mostFrequent.description: Top repeated quest
+extensions.Quests.mostFrequent.text: Most frequent
+extensions.Quests.points.description: Total amount of Quest Points
+extensions.Quests.points.text: Quest Points
+extensions.RedProtect.totalArea.description: Total area the player has claimed
+extensions.RedProtect.totalArea.text: Total Area
+extensions.SkyGrid.hasIsland.description: Does the player have an island
+extensions.SkyGrid.hasIsland.text: Has Island
+extensions.SkyGrid.islandCreated.description: When the Island was created
+extensions.SkyGrid.islandCreated.text: Island Created
+extensions.SkyGrid.islandLevel.description: Level of the player's island
+extensions.SkyGrid.islandLevel.text: Island level
+extensions.SkyGrid.islandName.description: Name of the player's island
+extensions.SkyGrid.islandName.text: Island name
+extensions.SkyGrid.islandResets.description: How many times can the player reset their island
+extensions.SkyGrid.islandResets.text: Island Resets Left
+extensions.SkyGrid.islandUpdated.description: When the Island was changed last time
+extensions.SkyGrid.islandUpdated.text: Last Changed
+extensions.SkyGrid.islandWorld.description: What world is used for ASkyBlock islands
+extensions.SkyGrid.islandWorld.text: Island World
+extensions.Sponge_Economy.balance.description: How much currency the player has.
+extensions.Sponge_Economy.balance.text: Balance (Default Currency)
+extensions.Sponge_Economy.defaultCurrency.description: What currency is used by default.
+extensions.Sponge_Economy.defaultCurrency.text: Default Currency
+extensions.SuperbVote.votes.description: How many times player has voted while SuperbVote was installed
+extensions.SuperbVote.votes.text: Votes
+extensions.Towny.nation.description: What nation is the town part of
+extensions.Towny.nation.text: Nation
+extensions.Towny.numberOfTowns.description: How many towns there are
+extensions.Towny.numberOfTowns.text: Number of Towns
+extensions.Towny.town.text: Town
+extensions.Towny.townCoordinates.description: Where is the town located
+extensions.Towny.townCoordinates.text: Town Coordinates
+extensions.Towny.townMayor.description: Who runs the town
+extensions.Towny.townMayor.text: Mayor
+extensions.ViaVersion.protocolVersion.description: Version used last time the player joined
+extensions.ViaVersion.protocolVersion.text: Last Join Version
+extensions.mcMMO.highestSkill.description: The highest mcmmo skill level
+extensions.mcMMO.highestSkill.text: Highest Level Skill
+extensions.nuVotifier.votes.description: Times the player has voted
+extensions.nuVotifier.votes.text: Votes

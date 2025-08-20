@@ -11,6 +11,8 @@ import ColoredText from "../text/ColoredText";
 import {Link} from "react-router-dom";
 import FormattedTime from "../text/FormattedTime.jsx";
 import FormattedDate from "../text/FormattedDate.jsx";
+import {ExtensionInfoContextProvider, useExtensionInfo} from "../../hooks/context/extensionInfoContext.jsx";
+import {useTranslation} from "react-i18next";
 
 export const ExtensionCardWrapper = ({extension, children}) => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -31,7 +33,11 @@ export const ExtensionCardWrapper = ({extension, children}) => {
     const baseWidth = windowWidth < 1000 ? 6 : 4;
     const width = (wide ? 2 : 1) * baseWidth;
 
-    return <Col lg={width} md={width} className="extension-wrapper">{children}</Col>
+    return <Col lg={width} md={width} className="extension-wrapper">
+        <ExtensionInfoContextProvider extension={extension}>
+            {children}
+        </ExtensionInfoContextProvider>
+    </Col>
 }
 
 const ExtensionTab = ({tab}) => {
@@ -70,12 +76,30 @@ export const ExtensionValueTableCell = ({data}) => {
     }
 }
 
+const getPluginKey = pluginName => {
+    return pluginName.replaceAll(':', '_').replaceAll(' ', '_')
+}
+
+const getValueName = (t, extension, description) => {
+    const key = 'extensions.' + getPluginKey(extension.extensionInformation.pluginName) + '.' + description.name + '.text';
+    const translated = t(key);
+    return translated !== key ? translated : description.name;
+}
+
+const getValueDescription = (t, extension, description) => {
+    const key = 'extensions.' + getPluginKey(extension.extensionInformation.pluginName) + '.' + description.name + '.description';
+    const translated = t(key);
+    return translated !== key ? translated : description.description;
+}
+
 const ExtensionValue = ({data}) => {
+    const {t} = useTranslation();
+    const extension = useExtensionInfo();
     const color = data.description.icon.colorClass;
     const colorClass = color?.startsWith("col-") ? color : "col-" + color;
     const icon = [data.description.icon.familyClass, data.description.icon.iconName];
-    const name = data.description.text;
-    const title = data.description.description;
+    const name = getValueName(t, extension, data.description);
+    const title = getValueDescription(t, extension, data.description);
     if (data.type === 'STRING') {
         return (
             <p title={title}>

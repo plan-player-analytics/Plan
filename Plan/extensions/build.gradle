@@ -29,7 +29,6 @@ dependencies {
     implementation "net.playeranalytics:Extension-LuckPerms:5.0-R1.6"
     implementation "net.playeranalytics:Extension-MarriageMaster:2.3-R1.3"
     implementation "net.playeranalytics:Extension-McMMO:2.1.149-R2.5"
-    implementation "net.playeranalytics:Extension-MinigamesLib:1.14.17-R1.2"
     implementation "net.playeranalytics:Extension-MyPet:3.10-R1.2"
     implementation "net.playeranalytics:Extension-Nucleus:3.0.0-R1.0"
     implementation "net.playeranalytics:Extension-nuVotifier:2.3.4-R1.3"
@@ -46,4 +45,7 @@ dependencies {
     implementation "net.playeranalytics:Extension-Towny:0.99-R1.3"
     implementation "net.playeranalytics:Extension-Vault:1.7-R1.3"
     implementation "net.playeranalytics:Extension-ViaVersion:4.0.1-R1.5"
+
+    testImplementation(testFixtures(project(":common")))
+    testImplementation "io.github.classgraph:classgraph:4.8.181"
 }

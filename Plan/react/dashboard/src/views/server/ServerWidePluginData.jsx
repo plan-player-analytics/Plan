@@ -7,6 +7,7 @@ import {useParams} from "react-router-dom";
 import {useTranslation} from "react-i18next";
 import Loader from "../../components/navigation/Loader";
 import {useServerExtensionContext} from "../../hooks/serverExtensionDataContext";
+import {ExtensionInfoContextProvider} from "../../hooks/context/extensionInfoContext.jsx";
 
 const PluginData = ({plugin}) => {
     const {t} = useTranslation();
@@ -43,7 +44,9 @@ const PluginData = ({plugin}) => {
                 <Row id={"extension-" + extension.extensionInformation.pluginName}
                      style={{overflowY: 'hidden'}}>
                     <Col md={12}>
-                        <ExtensionCard extension={extension}/>
+                        <ExtensionInfoContextProvider extension={extension}>
+                            <ExtensionCard extension={extension}/>
+                        </ExtensionInfoContextProvider>
                     </Col>
                 </Row>
             </section>

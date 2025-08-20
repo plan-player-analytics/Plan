@@ -20,6 +20,7 @@ import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.web.AssetVersions;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
+import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.locale.lang.*;
@@ -27,6 +28,7 @@ import com.djrapitops.plan.settings.upkeep.FileWatcher;
 import com.djrapitops.plan.settings.upkeep.WatchedFile;
 import com.djrapitops.plan.storage.file.FileResource;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.storage.file.Resource;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.server.PluginLogger;
@@ -46,6 +48,12 @@ import java.util.stream.Collectors;
  */
 @Singleton
 public class LocaleSystem implements SubSystem {
+
+    private static Lang[] pluginTranslations;
+
+    public static void setPluginTranslations(Lang[] pluginTranslations) {
+        LocaleSystem.pluginTranslations = pluginTranslations;
+    }
 
     private final PlanFiles files;
     private final PlanConfig config;
@@ -106,12 +114,26 @@ public class LocaleSystem implements SubSystem {
                 HtmlLang.values(),
                 PluginLang.values(),
                 WebPermission.nonDeprecatedValues(),
+                pluginTranslations != null ? pluginTranslations : new Lang[0],
         };
+    }
+
+    private Lang[] readPluginTranslations() {
+        Resource pluginResources = files.getResourceFromJar("plugin_translations.yml");
+        try {
+            return pluginResources.asLines().stream()
+                    .map(line -> line.split(": "))
+                    .map(split -> new RuntimeLoadedLang(split[0], split[1]))
+                    .toArray(Lang[]::new);
+        } catch (IOException e) {
+            throw new EnableException("Could not read plugin_translations.yml from jar: " + e.toString());
+        }
     }
 
     @Override
     public void enable() {
         convertFromLegacyFormat();
+        setPluginTranslations(readPluginTranslations());
 
         File localeFile = files.getLocaleFile();
 
