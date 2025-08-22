@@ -41,7 +41,7 @@ public class ExtensionTabDataDto {
     public static Optional<ExtensionValueDataDto> mapToValue(ExtensionTabData tabData, String key) {
         Formatters formatters = Formatters.getInstance();
 
-        Optional<ExtensionValueDataDto> booleanValue = tabData.getBoolean(key).map(data -> new ExtensionValueDataDto(data.getDescription(), "BOOLEAN", data.getFormattedValue()));
+        Optional<ExtensionValueDataDto> booleanValue = tabData.getBoolean(key).map(data -> new ExtensionValueDataDto(data.getDescription(), "BOOLEAN", data.getValue()));
         if (booleanValue.isPresent()) return booleanValue;
         Optional<ExtensionValueDataDto> doubleValue = tabData.getDouble(key).map(data -> new ExtensionValueDataDto(data.getDescription(), "DOUBLE", data.getFormattedValue(formatters.decimals())));
         if (doubleValue.isPresent()) return doubleValue;
