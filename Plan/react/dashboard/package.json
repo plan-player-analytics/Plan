@@ -22,7 +22,7 @@
     "@testing-library/jest-dom": "^6.7.0",
     "@testing-library/react": "^16.3.0",
     "@testing-library/user-event": "^14.6.1",
-    "@uiw/react-color-chrome": "^2.7.1",
+    "@uiw/react-color-chrome": "^2.8.0",
     "@uiw/react-color-wheel": "^2.7.1",
     "axios": "^1.11.0",
     "bootstrap": "^5.3.7",
