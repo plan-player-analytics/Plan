@@ -201,12 +201,14 @@ const LoginPage = () => {
         }
     }
 
+    useEffect(() => {
+        if (authLoaded && !authRequired || loggedIn) {
+            navigate('../');
+        }
+    }, [authLoaded]);
+
     if (!authLoaded) {
         return <></>
-    }
-
-    if (!authRequired || loggedIn) {
-        navigate('../');
     }
 
     return (
