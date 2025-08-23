@@ -238,6 +238,575 @@ command:
             serverUUID: "  §2Сервер UUID: §f${0}"
             update: "  §2Доступне оновлення: §f${0}"
             version: "  §2Версія: §f${0}"
+extensions:
+    AOneBlock:
+        hasIsland:
+            description: "Does the player have an island"
+            text: "Has Island"
+        islandCreated:
+            description: "When the Island was created"
+            text: "Island Created"
+        islandLevel:
+            description: "Level of the player's island"
+            text: "Island level"
+        islandName:
+            description: "Name of the player's island"
+            text: "Island name"
+        islandResets:
+            description: "How many times can the player reset their island"
+            text: "Island Resets Left"
+        islandUpdated:
+            description: "When the Island was changed last time"
+            text: "Last Changed"
+        islandWorld:
+            description: "What world is used for ASkyBlock islands"
+            text: "Island World"
+    ASkyBlock:
+        challengeProgress:
+            description: "% out of total challenges completed"
+            text: "Progress"
+        challengesCompleted:
+            description: "How many challenges has the player completed"
+            text: "Completed Challenges"
+        hasIsland:
+            description: "Does the player have a skyblock island"
+            text: "Has Island"
+        islandCount:
+            description: "How many islands exist"
+            text: "Island Count"
+        islandLevel:
+            description: "Level of the player's island"
+            text: "Island level"
+        islandName:
+            description: "Name of the player's island"
+            text: "Island name"
+        islandResets:
+            description: "How many times can the player reset their island"
+            text: "Island Resets Left"
+        islandWorld:
+            description: "What world is used for ASkyBlock islands"
+            text: "Island World"
+    AcidIsland:
+        hasIsland:
+            description: "Does the player have an island"
+            text: "Has Island"
+        islandCreated:
+            description: "When the Island was created"
+            text: "Island Created"
+        islandLevel:
+            description: "Level of the player's island"
+            text: "Island level"
+        islandName:
+            description: "Name of the player's island"
+            text: "Island name"
+        islandResets:
+            description: "How many times can the player reset their island"
+            text: "Island Resets Left"
+        islandUpdated:
+            description: "When the Island was changed last time"
+            text: "Last Changed"
+        islandWorld:
+            description: "What world is used for ASkyBlock islands"
+            text: "Island World"
+    AdvancedAchievements:
+        achievementCount:
+            description: "How many achievements the player has"
+            text: "Achievements"
+    AdvancedAntiCheat:
+        timesKickedForHack:
+            description: "Times Kicked for Possible Hacking, also includes false positives"
+            text: "Kicked for Hacking"
+    AdvancedBan:
+        banExpireDate:
+            description: "When the ban expires"
+            text: "Ends"
+        banIssueDate:
+            description: "When the ban was issued"
+            text: "Date"
+        banIssuer:
+            description: "Who banned the player"
+            text: "Operator"
+        banReason:
+            description: "Why the ban was issued"
+            text: "Reason"
+        banWillExpire:
+            description: "Is the ban permanent"
+            text: "Will Expire"
+        isBanned:
+            description: "Is the player banned on AdvancedBan"
+            text: "Banned"
+        isMuted:
+            description: "Is the player muted on AdvancedBan"
+            text: "Muted"
+        muteExpireDate:
+            description: "When the mute expires"
+            text: "Ends"
+        muteIssueDate:
+            description: "When the mute was issued"
+            text: "Date"
+        muteIssuer:
+            description: "Who muted the player"
+            text: "Operator"
+        muteReason:
+            description: "Why the mute was issued"
+            text: "Reason"
+        muteWillExpire:
+            description: "Is the mute permanent"
+            text: "Will Expire"
+        warnings:
+            description: "How many unexpired warnings player has on AdvancedBan"
+            text: "Warnings"
+    BSkyBlock:
+        hasIsland:
+            description: "Does the player have an island"
+            text: "Has Island"
+        islandCreated:
+            description: "When the Island was created"
+            text: "Island Created"
+        islandLevel:
+            description: "Level of the player's island"
+            text: "Island level"
+        islandName:
+            description: "Name of the player's island"
+            text: "Island name"
+        islandResets:
+            description: "How many times can the player reset their island"
+            text: "Island Resets Left"
+        islandUpdated:
+            description: "When the Island was changed last time"
+            text: "Last Changed"
+        islandWorld:
+            description: "What world is used for ASkyBlock islands"
+            text: "Island World"
+    BanManager:
+        banExpireDate:
+            description: "When the ban expires"
+            text: "Ends"
+        banIssueDate:
+            description: "When the ban was issued"
+            text: "Date"
+        banIssuer:
+            description: "Who banned the player"
+            text: "Banned by"
+        banReason:
+            description: "Why the ban was issued"
+            text: "Reason"
+        isBanned:
+            description: "Is the player banned on BanManager"
+            text: "Banned"
+        isMuted:
+            description: "Is the player muted on BanManager"
+            text: "Muted"
+        muteExpireDate:
+            description: "When the mute expires"
+            text: "Ends"
+        muteIssueDate:
+            description: "When the mute was issued"
+            text: "Date"
+        muteIssuer:
+            description: "Who muted the player"
+            text: "Muted by"
+        muteReason:
+            description: "Why the mute was issued"
+            text: "Reason"
+    CMI:
+        balance:
+            text: "Balance"
+        isJailed:
+            text: "Jailed"
+        isMuted:
+            text: "Muted"
+        jailTimeout:
+            text: "Jail Expires"
+        muteTimeout:
+            text: "Mute Expires"
+        playerHomes:
+            text: "homes"
+    CaveBlock:
+        hasIsland:
+            description: "Does the player have an island"
+            text: "Has Island"
+        islandCreated:
+            description: "When the Island was created"
+            text: "Island Created"
+        islandLevel:
+            description: "Level of the player's island"
+            text: "Island level"
+        islandName:
+            description: "Name of the player's island"
+            text: "Island name"
+        islandResets:
+            description: "How many times can the player reset their island"
+            text: "Island Resets Left"
+        islandUpdated:
+            description: "When the Island was changed last time"
+            text: "Last Changed"
+        islandWorld:
+            description: "What world is used for ASkyBlock islands"
+            text: "Island World"
+    DKBans:
+        banExpireDate:
+            description: "When the ban expires"
+            text: "Ends"
+        banIssueDate:
+            description: "When the ban was issued"
+            text: "Date"
+        banIssuer:
+            description: "Who banned the player"
+            text: "Operator"
+        banReason:
+            description: "Why the ban was issued"
+            text: "Reason"
+        banWillExpire:
+            description: "Is the ban permanent"
+            text: "Will Expire"
+        bans:
+            description: "Total amount of bans on DKBans"
+            text: "Bans"
+        isBanned:
+            description: "Is the player banned on DKBans"
+            text: "Banned"
+        isMuted:
+            description: "Is the player muted on DKBans"
+            text: "Muted"
+        muteExpireDate:
+            description: "When the mute expires"
+            text: "Ends"
+        muteIssueDate:
+            description: "When the mute was issued"
+            text: "Date"
+        muteIssuer:
+            description: "Who muted the player"
+            text: "Operator"
+        muteReason:
+            description: "Why the mute was issued"
+            text: "Reason"
+        muteWillExpire:
+            description: "Is the mute permanent"
+            text: "Will Expire"
+        mutes:
+            description: "Total amount of mutes on DKBans"
+            text: "Mutes"
+        reportPercentage:
+            description: "The global accepted/denied ratio for reports on DKBans"
+            text: "Report accept ratio"
+        reports:
+            description: "Total amount of reports on DKBans"
+            text: "Reports"
+        unbans:
+            description: "Total amount of unbans on DKBans"
+            text: "Unbans"
+        warnings:
+            description: "Total amount of warnings on DKBans"
+            text: "Warnings"
+    DKCoins:
+        coins:
+            description: "The amount of coins the player has on DKCoins"
+            text: "Coins"
+        name:
+            description: "The name for the player on DKCoins"
+            text: "Name"
+    DiscordSRV:
+        accountCreated:
+            description: "When the player's linked Discord account was created"
+            text: "Account creation date"
+        accountsLinked:
+            description: "How many Discord users have linked their player accounts."
+            text: "Accounts Linked"
+        accountsLinkedPerMembers:
+            description: "Percentage of users in Discord server vs the amount of linked accounts. (Keep in mind users can be linked but no in the main Discord server)"
+            text: "Accounts linked / Users in main guild"
+        guildUsers:
+            description: "How many Discord users are on the main Discord server."
+            text: "Users in main guild"
+        hasLinkedAccount:
+            description: "Has the player linked their Discord account"
+            text: "Has Linked Account"
+        joinDate:
+            description: "When the linked player's linked Discord account joined the main Discord server"
+            text: "Join Date"
+        nickName:
+            description: "The nickname of the player's linked Discord account on the main Discord server"
+            text: "Nickname"
+        roles:
+            description: "The roles of the player's linked Discord account on the main Discord server"
+            text: "Roles"
+        username:
+            description: "The player's linked Discord accounts username"
+            text: "Username"
+    Economy_(Vault):
+        balance:
+            description: "How much money the player has"
+            text: "Balance"
+    Essentials:
+        isJailed:
+            text: "Jailed"
+        isMuted:
+            text: "Muted"
+        jailTimeout:
+            text: "Jail Expires"
+        muteTimeout:
+            text: "Mute Expires"
+        playerHomes:
+            text: "homes"
+    EssentialsEco:
+        balance:
+            text: "Balance"
+    Factions:
+        created:
+            description: "When the faction was created"
+            text: "Created"
+        faction:
+            text: "Faction"
+        factionLeader:
+            description: "Who leads the faction"
+            text: "Leader"
+        maxPower:
+            description: "How much power the player can have"
+            text: "Max Power"
+        power:
+            description: "How much power the faction has"
+            text: "Power"
+    FactionsUUID:
+        allyCount:
+            description: "How many allies the faction has"
+            text: "Allies"
+        balance:
+            description: "How much money the faction has"
+            text: "Balance"
+        created:
+            description: "When the faction was created"
+            text: "Created"
+        description:
+            description: "The description of the faction"
+            text: "Description"
+        economyEnabled:
+            description: "If FactionsUUID economy is enabled"
+            text: "Economy enabled"
+        faction:
+            text: "Faction"
+        factionLeader:
+            description: "Who leads the faction"
+            text: "Leader"
+        hasFaction:
+            description: "If the player has a faction"
+            text: "Has faction"
+        maxPower:
+            description: "How much power the faction can have"
+            text: "Max Power"
+        memberCount:
+            description: "How many members the faction has"
+            text: "Member count"
+        power:
+            description: "How much power the faction has"
+            text: "Power"
+        powerMax:
+            description: "How much power the player can have"
+            text: "Max Power"
+        role:
+            description: "The role of the player in the faction"
+            text: "Role"
+        truceCount:
+            description: "How many truced factions the faction has"
+            text: "Truces"
+    FastLogin:
+        premiumStatus:
+            text: "Premium status"
+    Floodgate:
+        bedrock:
+            description: "If the player is bedrock"
+            text: "Bedrock player"
+        bedrockUsername:
+            description: "The (last known) bedrock username for the player"
+            text: "Bedrock username"
+        dataAvailable:
+            text: "Data available"
+        device:
+            description: "The (last known) device the player is using"
+            text: "Player device"
+        hasLinked:
+            text: "Has linked java account"
+        javaUsername:
+            description: "The (last known) java username (the prefix & java compliant name from the bedrock name) for the player"
+            text: "Java username"
+        languageCode:
+            description: "The (last known) language code for the player"
+            text: "Language code"
+        linkedPlayer:
+            description: "The (last known) linked Java player of this bedrock player"
+            text: "Linked player"
+        version:
+            description: "The (last known) client version for the player"
+            text: "Version"
+    GriefDefender:
+        accruedBlocks:
+            description: "Accrued Blocks that player accrue during the game time"
+            text: "Accrued Blocks"
+        bonusBlocks:
+            description: "Bonus Blocks that player get reward"
+            text: "Bonus Blocks"
+        claimCount:
+            description: "How many claims the player has"
+            text: "Claims"
+        claimType:
+            description: "Basic + Town + SUBDIVISION + Admin"
+            text: "Claim Type"
+        claimedArea:
+            description: "How large area the player has claimed"
+            text: "Claimed Area"
+        initialBlocks:
+            description: "Initial Blocks that player first play on your server"
+            text: "Initial Blocks"
+        remainingBlocks:
+            description: "Remaining Blocks that player has at present"
+            text: "Remaining Blocks"
+    GriefPrevention:
+        claimCount:
+            description: "How many claims the player has"
+            text: "Claims"
+        claimedArea:
+            description: "How large area the player has claimed"
+            text: "Claimed Area"
+        isSoftMuted:
+            description: "Are the player's messages muted for others, but shown to them"
+            text: "SoftMuted"
+    Jobs:
+        jobs:
+            text: "Job"
+    Litebans:
+        connectors:
+            text: "Connected from same IP"
+    LuckPerms:
+        permissionGroups:
+            text: "Permission Group"
+        prefix:
+            description: "Current user prefix"
+            text: "Prefix"
+        primaryGroup:
+            text: "Primary Group"
+        suffix:
+            description: "Current user suffix"
+            text: "Suffix"
+        weight:
+            description: "Weight of the permission group"
+            text: "Weight"
+    MarriageMaster:
+        numberOfMarriages:
+            description: "How many marriages are there"
+            text: "Marriages"
+    Nucleus:
+        homeCount:
+            text: "Homes"
+        isJailed:
+            text: "Jailed"
+        isMuted:
+            text: "Muted"
+        jail:
+            description: "Where the player is jailed at"
+            text: "Jail"
+        jailEnd:
+            text: "Ends"
+        jailOperator:
+            description: "Who jailed the player"
+            text: "Operator"
+        jailReason:
+            description: "Why the player was jailed"
+            text: "Reason"
+        jailStart:
+            text: "Date"
+        muteEnd:
+            text: "Ends"
+        muteOperator:
+            description: "Who muted the player"
+            text: "Operator"
+        muteReason:
+            description: "Why the player was muted"
+            text: "Reason"
+        muteStart:
+            text: "Date"
+        nickname:
+            text: "Nickname"
+    Permission_Groups_(Vault):
+        group:
+            text: "Permission Groups"
+    PlotSquared:
+        plotCount:
+            text: "Plots"
+    ProtocolSupport:
+        protocolVersion:
+            description: "Version used last time the player joined"
+            text: "Last Join Version"
+    Quests:
+        mostFrequent:
+            description: "Top repeated quest"
+            text: "Most frequent"
+        points:
+            description: "Total amount of Quest Points"
+            text: "Quest Points"
+    RedProtect:
+        totalArea:
+            description: "Total area the player has claimed"
+            text: "Total Area"
+    SkyGrid:
+        hasIsland:
+            description: "Does the player have an island"
+            text: "Has Island"
+        islandCreated:
+            description: "When the Island was created"
+            text: "Island Created"
+        islandLevel:
+            description: "Level of the player's island"
+            text: "Island level"
+        islandName:
+            description: "Name of the player's island"
+            text: "Island name"
+        islandResets:
+            description: "How many times can the player reset their island"
+            text: "Island Resets Left"
+        islandUpdated:
+            description: "When the Island was changed last time"
+            text: "Last Changed"
+        islandWorld:
+            description: "What world is used for ASkyBlock islands"
+            text: "Island World"
+    Sponge_Economy:
+        balance:
+            description: "How much currency the player has."
+            text: "Balance (Default Currency)"
+        defaultCurrency:
+            description: "What currency is used by default."
+            text: "Default Currency"
+    SuperbVote:
+        votes:
+            description: "How many times player has voted while SuperbVote was installed"
+            text: "Votes"
+    Towny:
+        nation:
+            description: "What nation is the town part of"
+            text: "Nation"
+        numberOfTowns:
+            description: "How many towns there are"
+            text: "Number of Towns"
+        town:
+            text: "Town"
+        townCoordinates:
+            description: "Where is the town located"
+            text: "Town Coordinates"
+        townMayor:
+            description: "Who runs the town"
+            text: "Mayor"
+    ViaVersion:
+        protocolVersion:
+            description: "Version used last time the player joined"
+            text: "Last Join Version"
+    mcMMO:
+        highestSkill:
+            description: "The highest mcmmo skill level"
+            text: "Highest Level Skill"
+    nuVotifier:
+        votes:
+            description: "Times the player has voted"
+            text: "Votes"
 generic:
     noData: "Немає даних"
 html:

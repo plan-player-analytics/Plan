@@ -238,6 +238,575 @@ command:
             serverUUID: "  §2Palvelimen UUID: §f${0}"
             update: "  §2Päivitys saatavilla: §f${0}"
             version: "  §2Versio: §f${0}"
+extensions:
+    AOneBlock:
+        hasIsland:
+            description: "Onko pelaajalla saarta"
+            text: "Omistaa saaren"
+        islandCreated:
+            description: "Milloin saari luotiin"
+            text: "Saari luotu"
+        islandLevel:
+            description: "Pelaajan saaren taso"
+            text: "Saaren taso"
+        islandName:
+            description: "Pelaajan saaren nimi"
+            text: "Saaren nimi"
+        islandResets:
+            description: "Montako kertaa pelaaja voi vielä nollata saarensa"
+            text: "Saaren nollauksia jäljellä"
+        islandUpdated:
+            description: "Milloin saarta muutettiin viimeksi"
+            text: "Muutettu viimeksi"
+        islandWorld:
+            description: "Mitä maailmaa käytetään AOneBlock saarille"
+            text: "Saari-maalima"
+    ASkyBlock:
+        challengeProgress:
+            description: "% haasteista suoritettu"
+            text: "Edistyminen"
+        challengesCompleted:
+            description: "How many challenges has the player completed"
+            text: "Completed Challenges"
+        hasIsland:
+            description: "Onko pelaajalla saarta"
+            text: "Omistaa saaren"
+        islandCount:
+            description: "Montako saarta on olemassa"
+            text: "Saarien määrä"
+        islandLevel:
+            description: "Pelaajan saaren taso"
+            text: "Saaren taso"
+        islandName:
+            description: "Pelaajan saaren nimi"
+            text: "Saaren nimi"
+        islandResets:
+            description: "Montako kertaa pelaaja voi vielä nollata saarensa"
+            text: "Saaren nollauksia jäljellä"
+        islandWorld:
+            description: "Mitä maailmaa käytetään ASkyBlock saarille"
+            text: "Saari-maalima"
+    AcidIsland:
+        hasIsland:
+            description: "Onko pelaajalla saarta"
+            text: "Omistaa saaren"
+        islandCreated:
+            description: "Milloin saari luotiin"
+            text: "Saari luotu"
+        islandLevel:
+            description: "Pelaajan saaren taso"
+            text: "Saaren taso"
+        islandName:
+            description: "Pelaajan saaren nimi"
+            text: "Saaren nimi"
+        islandResets:
+            description: "Montako kertaa pelaaja voi vielä nollata saarensa"
+            text: "Saaren nollauksia jäljellä"
+        islandUpdated:
+            description: "Milloin saarta muutettiin viimeksi"
+            text: "Muutettu viimeksi"
+        islandWorld:
+            description: "Mitä maailmaa käytetään AcidIsland saarille"
+            text: "Saari-maalima"
+    AdvancedAchievements:
+        achievementCount:
+            description: "Montako saavutusta pelaajalla on"
+            text: "Saavutukset"
+    AdvancedAntiCheat:
+        timesKickedForHack:
+            description: "Montako kertaa pelaaja on potkittu hakkeroinnista, sisältää väärät positiiviset"
+            text: "Potkittu hakkeroinnista"
+    AdvancedBan:
+        banExpireDate:
+            description: "Koska rangaistus päättyy"
+            text: "Loppuu"
+        banIssueDate:
+            description: "Koska rangaistus asetettiin"
+            text: "Päivä"
+        banIssuer:
+            description: "Kuka asetti rangaistuksen"
+            text: "Operaattori"
+        banReason:
+            description: "Miksi rangaistus annettiin"
+            text: "Syy"
+        banWillExpire:
+            description: "Onko rangaistus ikuinen"
+            text: "Loppuu"
+        isBanned:
+            description: "Onko pelaaja porttikiellossa AdvancedBanissa"
+            text: "Porttikiellossa"
+        isMuted:
+            description: "Onko pelaaja mykistetty AdvancedBanissa"
+            text: "Mykistetty"
+        muteExpireDate:
+            description: "Koska rangaistus päättyy"
+            text: "Loppuu"
+        muteIssueDate:
+            description: "Koska rangaistus asetettiin"
+            text: "Päivä"
+        muteIssuer:
+            description: "Kuka asetti rangaistuksen"
+            text: "Operaattori"
+        muteReason:
+            description: "Miksi rangaistus annettiin"
+            text: "Syy"
+        muteWillExpire:
+            description: "Onko rangaistus ikuinen"
+            text: "Loppuu"
+        warnings:
+            description: "Montako voimassaolevaa varoitusta pelaajalla on AdvancedBanissa"
+            text: "Varoitukset"
+    BSkyBlock:
+        hasIsland:
+            description: "Onko pelaajalla saarta"
+            text: "Omistaa saaren"
+        islandCreated:
+            description: "Milloin saari luotiin"
+            text: "Saari luotu"
+        islandLevel:
+            description: "Pelaajan saaren taso"
+            text: "Saaren taso"
+        islandName:
+            description: "Pelaajan saaren nimi"
+            text: "Saaren nimi"
+        islandResets:
+            description: "Montako kertaa pelaaja voi vielä nollata saarensa"
+            text: "Saaren nollauksia jäljellä"
+        islandUpdated:
+            description: "Milloin saarta muutettiin viimeksi"
+            text: "Muutettu viimeksi"
+        islandWorld:
+            description: "Mitä maailmaa käytetään BSkyBlock saarille"
+            text: "Saari-maalima"
+    BanManager:
+        banExpireDate:
+            description: "Koska rangaistus päättyy"
+            text: "Loppuu"
+        banIssueDate:
+            description: "Koska rangaistus asetettiin"
+            text: "Päivä"
+        banIssuer:
+            description: "Kuka asetti rangaistuksen"
+            text: "Operaattori"
+        banReason:
+            description: "Miksi rangaistus annettiin"
+            text: "Syy"
+        isBanned:
+            description: "Onko pelaaja porttikiellossa BanManagerissa"
+            text: "Porttikiellossa"
+        isMuted:
+            description: "Onko pelaaja mykistetty BanManagerissa"
+            text: "Mykistetty"
+        muteExpireDate:
+            description: "Koska rangaistus päättyy"
+            text: "Loppuu"
+        muteIssueDate:
+            description: "Koska rangaistus asetettiin"
+            text: "Päivä"
+        muteIssuer:
+            description: "Kuka asetti rangaistuksen"
+            text: "Operaattori"
+        muteReason:
+            description: "Miksi rangaistus annettiin"
+            text: "Syy"
+    CMI:
+        balance:
+            text: "Saldo"
+        isJailed:
+            text: "Vangittu"
+        isMuted:
+            text: "Mykistetty"
+        jailTimeout:
+            text: "Vankituomio loppuu"
+        muteTimeout:
+            text: "Mykistys loppuu"
+        playerHomes:
+            text: "kodit"
+    CaveBlock:
+        hasIsland:
+            description: "Onko pelaajalla saarta"
+            text: "Omistaa saaren"
+        islandCreated:
+            description: "Milloin saari luotiin"
+            text: "Saari luotu"
+        islandLevel:
+            description: "Pelaajan saaren taso"
+            text: "Saaren taso"
+        islandName:
+            description: "Pelaajan saaren nimi"
+            text: "Saaren nimi"
+        islandResets:
+            description: "Montako kertaa pelaaja voi vielä nollata saarensa"
+            text: "Saaren nollauksia jäljellä"
+        islandUpdated:
+            description: "Milloin saarta muutettiin viimeksi"
+            text: "Muutettu viimeksi"
+        islandWorld:
+            description: "Mitä maailmaa käytetään CaveBlock saarille"
+            text: "Saari-maalima"
+    DKBans:
+        banExpireDate:
+            description: "Koska rangaistus päättyy"
+            text: "Loppuu"
+        banIssueDate:
+            description: "Koska rangaistus asetettiin"
+            text: "Päivä"
+        banIssuer:
+            description: "Kuka asetti rangaistuksen"
+            text: "Operaattori"
+        banReason:
+            description: "Miksi rangaistus annettiin"
+            text: "Syy"
+        banWillExpire:
+            description: "Onko rangaistus ikuinen"
+            text: "Loppuu"
+        bans:
+            description: "Pannojen määrä DKBansissa"
+            text: "Porttikiellot"
+        isBanned:
+            description: "Onko pelaaja porttikiellossa DKBansissa"
+            text: "Porttikiellossa"
+        isMuted:
+            description: "Onko pelaaja mykistetty DKBansissa"
+            text: "Mykistetty"
+        muteExpireDate:
+            description: "Koska rangaistus päättyy"
+            text: "Loppuu"
+        muteIssueDate:
+            description: "Koska rangaistus asetettiin"
+            text: "Päivä"
+        muteIssuer:
+            description: "Kuka asetti rangaistuksen"
+            text: "Operaattori"
+        muteReason:
+            description: "Miksi rangaistus annettiin"
+            text: "Syy"
+        muteWillExpire:
+            description: "Onko rangaistus ikuinen"
+            text: "Loppuu"
+        mutes:
+            description: "Mykistyksien määrä DKBansissa"
+            text: "Mykistykset"
+        reportPercentage:
+            description: "Raporttien hyväksymis/hylkäys suhde DKBansissa"
+            text: "Raporttien hyväksymissuhde"
+        reports:
+            description: "Raporttien määrä DKBansissa"
+            text: "Raportit"
+        unbans:
+            description: "Porttikieltojen poistojen määrä DKBansissa"
+            text: "Porttikiellon poistot"
+        warnings:
+            description: "Varoitusten määrä DKBansissa"
+            text: "Varoitukset"
+    DKCoins:
+        coins:
+            description: "Kolikoiden määrä joka pelaajalla on"
+            text: "Kolikoita"
+        name:
+            description: "Pelaajan nimi"
+            text: "Nimi"
+    DiscordSRV:
+        accountCreated:
+            description: "Koska pelaajan linkitetty discord tili luotiin"
+            text: "Tilin luontipäivä"
+        accountsLinked:
+            description: "Montako discord tiliä on linkittänyt pelaajansa."
+            text: "Tilejä linkitetty"
+        accountsLinkedPerMembers:
+            description: "Prosenttiosuus käyttäjistä Discord palvelimella vs. tilit jotka on linkitetty. (Huomioi että osa pelaajista voivat olla linkitettyjä vaikka ne eivät ole Discord palvelimella)"
+            text: "Tilejä linkitetty / Käyttäjiä pääkillassa"
+        guildUsers:
+            description: "Paljonko discord käyttäjiä on pää Discord palvelimella."
+            text: "Käyttäjiä pääkillassa"
+        hasLinkedAccount:
+            description: "Onko pelaaja linkittänyt Discord tilinsä"
+            text: "Onko linkittänyt tilinsä"
+        joinDate:
+            description: "Koska pelaajan linkitetty Discord käyttäjä liittyi pää Discord palvelimelle"
+            text: "Liittymispäivä"
+        nickName:
+            description: "Pelaajan linkitetyn Discord tilin näyttönimi"
+            text: "Näyttönimi"
+        roles:
+            description: "Pelaajan linkitetyn Discord tilin roolit"
+            text: "Roolit"
+        username:
+            description: "Pelaajan linkitetyn Discord tilin käyttäjänimi"
+            text: "Käyttäjänimi"
+    Economy_(Vault):
+        balance:
+            description: "Paljonko pelaajalla on rahaa"
+            text: "Saldo"
+    Essentials:
+        isJailed:
+            text: "Vankilassa"
+        isMuted:
+            text: "Mykistetty"
+        jailTimeout:
+            text: "Vankilasta vapautuu"
+        muteTimeout:
+            text: "Mykistys vanhenee"
+        playerHomes:
+            text: "kodit"
+    EssentialsEco:
+        balance:
+            text: "Saldo"
+    Factions:
+        created:
+            description: "Koska kilta luotiin"
+            text: "Luotu"
+        faction:
+            text: "Kilta"
+        factionLeader:
+            description: "Kuka johtaa kiltaa"
+            text: "Johtaja"
+        maxPower:
+            description: "Paljonko voimaa pelaajalla voi olla"
+            text: "Maksimivoima"
+        power:
+            description: "Paljonko voimaa killalla on"
+            text: "Voima"
+    FactionsUUID:
+        allyCount:
+            description: "Liittolaisten määrä"
+            text: "Liittolaiset"
+        balance:
+            description: "Paljonko rahaa killalla on"
+            text: "Saldo"
+        created:
+            description: "Koska kilta luotiin"
+            text: "Luotu"
+        description:
+            description: "Killan kuvaus"
+            text: "Kuvaus"
+        economyEnabled:
+            description: "Onko FactionsUUID talous laitettu päälle"
+            text: "Talous päällä"
+        faction:
+            text: "Kilta"
+        factionLeader:
+            description: "Kuka johtaa kiltaa"
+            text: "Johtaja"
+        hasFaction:
+            description: "Onko pelaaja killassa"
+            text: "Onko kilta"
+        maxPower:
+            description: "Paljonko voimaa killalla voi olla"
+            text: "Maksimivoima"
+        memberCount:
+            description: "Montako jäsentä killalla on"
+            text: "Jäsenmäärä"
+        power:
+            description: "Paljonko voimaa killalla on"
+            text: "Voima"
+        powerMax:
+            description: "Paljonko voimaa pelaajalla voi olla"
+            text: "Maksimivoima"
+        role:
+            description: "Pelaajan rooli killassa"
+            text: "Rooli"
+        truceCount:
+            description: "Montako aselepoa killalla on"
+            text: "Aselepoja"
+    FastLogin:
+        premiumStatus:
+            text: "Premium tila"
+    Floodgate:
+        bedrock:
+            description: "Pelaako bedrock:illa"
+            text: "Bedrock pelaaja"
+        bedrockUsername:
+            description: "Viimeisin tiedetty bedrock käyttäjänimi"
+            text: "Bedrock käyttäjänimi"
+        dataAvailable:
+            text: "Tiedot saatavilla"
+        device:
+            description: "Viimeisin tiedetty laite"
+            text: "Pelaajan laite"
+        hasLinked:
+            text: "Java tili linkitetty"
+        javaUsername:
+            description: "Viimeisin tiedetty java käyttäjänimi (etuliite ja javalle kelpaava nimi)"
+            text: "Java käyttäjänimi"
+        languageCode:
+            description: "Viimeisin tiedetty käytetty kielikoodi"
+            text: "Kieli koodi"
+        linkedPlayer:
+            description: "Viimeisin tiedetty linkitetty Java pelaaja"
+            text: "Linkitetty pelaaja"
+        version:
+            description: "Viimeisin tiedetty asiakasohjelman versio"
+            text: "Versio"
+    GriefDefender:
+        accruedBlocks:
+            description: "Kerääntyneet palikat joita pelaajat saavat peliajasta"
+            text: "Kerääntyneet palikat"
+        bonusBlocks:
+            description: "Bonus palikoita jotka pelaajat saavat palkintona"
+            text: "Bonus palikat"
+        claimCount:
+            description: "Montako varausta pelajalla on"
+            text: "Varaukset"
+        claimType:
+            description: "Perus + Kaupunki + SUBDIVISIOONA + Ylläpitäjä"
+            text: "Varauksen tyyppi"
+        claimedArea:
+            description: "Miten ison alueen pelaaja on varannut"
+            text: "Varattu alue"
+        initialBlocks:
+            description: "Aluksi saatu palikkamäärä"
+            text: "Alkupalikat"
+        remainingBlocks:
+            description: "Pelaajan jäljellä olevat palikat"
+            text: "Jäljellä olevat palikat"
+    GriefPrevention:
+        claimCount:
+            description: "Montako varausta pelajalla on"
+            text: "Varaukset"
+        claimedArea:
+            description: "Miten ison alueen pelaaja on varannut"
+            text: "Varattu alue"
+        isSoftMuted:
+            description: "Onko pelaajan viestit mykistetty toisille, mutta näkyvät hänelle itselleen"
+            text: "Varjomykistys"
+    Jobs:
+        jobs:
+            text: "Työ"
+    Litebans:
+        connectors:
+            text: "Yhdistänyt samasta IP osoitteesta"
+    LuckPerms:
+        permissionGroups:
+            text: "Käyttöoikeusryhmä"
+        prefix:
+            description: "Nykyinen käyttäjän etuliite"
+            text: "Etuliite"
+        primaryGroup:
+            text: "Pääryhmä"
+        suffix:
+            description: "Nykyinen käyttäjän takaliite"
+            text: "Takaliite"
+        weight:
+            description: "Käyttöoikeusryhmän paino"
+            text: "Paino"
+    MarriageMaster:
+        numberOfMarriages:
+            description: "Montako avioliittoa on"
+            text: "Avioliittoja"
+    Nucleus:
+        homeCount:
+            text: "Koteja"
+        isJailed:
+            text: "Vangitty"
+        isMuted:
+            text: "Mykistetty"
+        jail:
+            description: "Missä pelaaja on vankina"
+            text: "Vankila"
+        jailEnd:
+            text: "Loppuu"
+        jailOperator:
+            description: "Kuka vangitsi pelaajan"
+            text: "Operaattori"
+        jailReason:
+            description: "Miksi pelaaja vangittiin"
+            text: "Syy"
+        jailStart:
+            text: "Päivämäärä"
+        muteEnd:
+            text: "Loppuu"
+        muteOperator:
+            description: "Kuka mykisti pelaajan"
+            text: "Operaattori"
+        muteReason:
+            description: "Miksi pelaaja mykistettiin"
+            text: "Syy"
+        muteStart:
+            text: "Päivämäärä"
+        nickname:
+            text: "Näyttönimi"
+    Permission_Groups_(Vault):
+        group:
+            text: "Käyttöoikeusryhmä"
+    PlotSquared:
+        plotCount:
+            text: "Tontit"
+    ProtocolSupport:
+        protocolVersion:
+            description: "Versio jota käytettiin kun pelaaja viimeksi liittyi"
+            text: "Viimeisin liittymisversio"
+    Quests:
+        mostFrequent:
+            description: "Eniten suoritettu tehtävä"
+            text: "Usein suoritettu"
+        points:
+            description: "Tehtäväpisteiden määrä"
+            text: "Tehtäväpisteet"
+    RedProtect:
+        totalArea:
+            description: "Alue jonka pelaaja on varannut"
+            text: "Varattu alue"
+    SkyGrid:
+        hasIsland:
+            description: "Onko pelaajalla saarta"
+            text: "Omistaa saaren"
+        islandCreated:
+            description: "Milloin saari luotiin"
+            text: "Saari luotu"
+        islandLevel:
+            description: "Pelaajan saaren taso"
+            text: "Saaren taso"
+        islandName:
+            description: "Pelaajan saaren nimi"
+            text: "Saaren nimi"
+        islandResets:
+            description: "Montako kertaa pelaaja voi vielä nollata saarensa"
+            text: "Saaren nollauksia jäljellä"
+        islandUpdated:
+            description: "Milloin saarta muutettiin viimeksi"
+            text: "Muutettu viimeksi"
+        islandWorld:
+            description: "Mitä maailmaa käytetään SkyGrid saarille"
+            text: "Saari-maalima"
+    Sponge_Economy:
+        balance:
+            description: "Paljonko valuuttaa pelaajalla on."
+            text: "Saldo (Oletusvaluutta)"
+        defaultCurrency:
+            description: "Mitä valuuttaa käytetään oletuksena."
+            text: "Oletusvaluutta"
+    SuperbVote:
+        votes:
+            description: "Montako kertaa pelaaja on äänestänyt SuperbVote asennettuna"
+            text: "Äänet"
+    Towny:
+        nation:
+            description: "Mihin valtioon kylä kuuluu"
+            text: "Valtio"
+        numberOfTowns:
+            description: "Montako kylää on"
+            text: "Kylämäärä"
+        town:
+            text: "Kylä"
+        townCoordinates:
+            description: "Missä kylä sijaitsee"
+            text: "Kylän sijainti"
+        townMayor:
+            description: "Kuka johtaa kylää"
+            text: "Pormestari"
+    ViaVersion:
+        protocolVersion:
+            description: "Versio jota käytettiin kun pelaaja viimeksi liittyi"
+            text: "Viimeisin liittymisversio"
+    mcMMO:
+        highestSkill:
+            description: "Pelaajan korkein mcMMO taso"
+            text: "Korkein taso"
+    nuVotifier:
+        votes:
+            description: "Montako kertaa pelaaja on äänestänyt"
+            text: "Ääniä"
 generic:
     noData: "Ei tietoa"
 html:
@@ -320,7 +889,7 @@ html:
         averageSessions: "Keskimääräinen Istuntomäärä"
         averageTps: "Keskimäräinen TPS"
         averageTps7days: "Keskimääräinen TPS (7 päivää)"
-        banned: "Pannassa"
+        banned: "Porttikiellossa"
         bestPeak: "Paras Huippu"
         bestPing: "Paras Vasteaika"
         blocked: "Estetty"
@@ -826,7 +1395,7 @@ html:
                 text: "ovat Aktiivisuus Luokissa"
             banStatus:
                 name: "Pannan tila"
-            banned: "Pannassa"
+            banned: "Porttikiellossa"
             country:
                 text: "ovat liittyneet maasta"
             generic:
@@ -842,7 +1411,7 @@ html:
             joinAddress:
                 text: "liittyi osoitteella"
             nonOperators: "Ei-operaattoreita"
-            notBanned: "Ei-pannassa"
+            notBanned: "Ei-porttikiellossa"
             operatorStatus:
                 name: "Operaattoristatuksen tila"
             operators: "Operaattoreita"
