@@ -70,9 +70,7 @@ public class ExportTestUtilities {
 
     private static boolean ignoredLogLines(String log) {
         return !StringUtils.containsAny(log,
-                "fonts.gstatic.com", "fonts.googleapis.com", "cdn.jsdelivr.net", "manifest.json",
-                "React Router Future Flag Warning", // TODO remove after update to react-router-dom v7
-                "Highcharts warning:" // TODO remove after fixing highcharts module loading issues
+                "fonts.gstatic.com", "fonts.googleapis.com", "cdn.jsdelivr.net", "manifest.json"
         );
     }
 

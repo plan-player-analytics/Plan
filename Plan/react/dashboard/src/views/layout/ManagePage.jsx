@@ -9,7 +9,7 @@ import MainPageRedirect from "../../components/navigation/MainPageRedirect";
 import ErrorPage from "./ErrorPage";
 import Sidebar from "../../components/navigation/Sidebar";
 import Header from "../../components/navigation/Header";
-import {Outlet} from "react-router-dom";
+import {Outlet} from "react-router";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
 import AlertPopupArea from "../../components/alert/AlertPopupArea";
 

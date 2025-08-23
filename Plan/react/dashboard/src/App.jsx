@@ -5,7 +5,7 @@ import './style/style.css';
 import './style/mobile.css';
 import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
 
-import {createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider} from "react-router-dom";
+import {createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider} from "react-router";
 import React, {useCallback, useEffect} from "react";
 import {ThemeContextProvider, useTheme} from "./hooks/themeHook";
 import axios from "axios";
@@ -134,18 +134,16 @@ const getBasename = () => {
 const router = createBrowserRouter(
     createRoutesFromElements(
         <>
-            <Route path="" element={<MainPageRedirect/>}/>
-            <Route path="/" element={<MainPageRedirect/>}/>
             <Route path="index.html" element={<MainPageRedirect/>}/>
             {!staticSite && <Route path="/login" element={<Lazy><LoginPage/></Lazy>}/>}
             {!staticSite && <Route path="/register" element={<Lazy><RegisterPage/></Lazy>}/>}
             <Route path="/player/:identifier" element={<Lazy><PlayerPage/></Lazy>}>
-                <Route path="" element={<Lazy><OverviewRedirect/></Lazy>}/>
                 <Route path="overview" element={<Lazy><PlayerOverview/></Lazy>}/>
                 <Route path="sessions" element={<Lazy><PlayerSessions/></Lazy>}/>
                 <Route path="pvppve" element={<Lazy><PlayerPvpPve/></Lazy>}/>
                 <Route path="servers" element={<Lazy><PlayerServers/></Lazy>}/>
                 <Route path="plugins/:serverName" element={<Lazy><PlayerPluginData/></Lazy>}/>
+                <Route path="" element={<Lazy><OverviewRedirect/></Lazy>}/>
                 <Route path="*" element={<ErrorView error={{
                     message: 'Unknown tab address, please correct the address',
                     title: 'No such tab',
@@ -157,7 +155,6 @@ const router = createBrowserRouter(
                 <Route path="*" element={<Lazy><AllPlayers/></Lazy>}/>
             </Route>
             <Route path="/server/:identifier" element={<Lazy><ServerPage/></Lazy>}>
-                <Route path="" element={<OverviewRedirect/>}/>
                 <Route path="overview" element={<Lazy><ServerOverview/></Lazy>}/>
                 <Route path="online-activity" element={<Lazy><OnlineActivity/></Lazy>}/>
                 <Route path="sessions" element={<Lazy><ServerSessions/></Lazy>}/>
@@ -172,6 +169,7 @@ const router = createBrowserRouter(
                 <Route path="plugin-history" element={<Lazy><ServerPluginHistory/></Lazy>}/>
                 <Route path="plugins-overview" element={<Lazy><ServerPluginData/></Lazy>}/>
                 <Route path="plugins/:plugin" element={<Lazy><ServerWidePluginData/></Lazy>}/>
+                <Route path="" element={<OverviewRedirect/>}/>
                 <Route path="*" element={<ErrorView error={{
                     message: 'Unknown tab address, please correct the address',
                     title: 'No such tab',
@@ -179,7 +177,6 @@ const router = createBrowserRouter(
                 }}/>}/>
             </Route>
             <Route path="/network" element={<Lazy><NetworkPage/></Lazy>}>
-                <Route path="" element={<OverviewRedirect/>}/>
                 <Route path="overview" element={<Lazy><NetworkOverview/></Lazy>}/>
                 <Route path="serversOverview" element={<Lazy><NetworkServers/></Lazy>}/>
                 <Route path="sessions" element={<Lazy><NetworkSessions/></Lazy>}/>
@@ -193,6 +190,7 @@ const router = createBrowserRouter(
                 <Route path="plugin-history" element={<Lazy><NetworkPluginHistory/></Lazy>}/>
                 <Route path="plugins-overview" element={<Lazy><ServerPluginData/></Lazy>}/>
                 <Route path="plugins/:plugin" element={<Lazy><ServerWidePluginData/></Lazy>}/>
+                <Route path="" element={<OverviewRedirect/>}/>
                 <Route path="*" element={<ErrorView error={{
                     message: 'Unknown tab address, please correct the address',
                     title: 'No such tab',
@@ -204,19 +202,21 @@ const router = createBrowserRouter(
                 <Route path="groups" element={<Lazy><GroupsView/></Lazy>}/>
             </Route>}
             {!staticSite && <Route path="/query" element={<Lazy><QueryPage/></Lazy>}>
-                <Route path="" element={<NewRedirect/>}/>
                 <Route path="new" element={<Lazy><NewQueryView/></Lazy>}/>
                 <Route path="result" element={<Lazy><QueryResultView/></Lazy>}/>
+                <Route path="" element={<NewRedirect/>}/>
             </Route>}
             {!staticSite && <Route path="/errors" element={<Lazy><ErrorsPage/></Lazy>}/>}
             {!staticSite && <Route path="/docs" element={<Lazy><SwaggerView/></Lazy>}/>}
             <Route path="/theme-editor" element={<Lazy><ThemeEditorPage/></Lazy>
             }>
-                <Route path="" element={<NewRedirect/>}/>
                 <Route path=":identifier" element={<Lazy><ThemeEditorView/></Lazy>}/>
                 <Route path="new" element={<Lazy><AddThemeView/></Lazy>}/>
                 <Route path="delete" element={<Lazy><DeleteThemesView/></Lazy>}/>
+                <Route path="" element={<NewRedirect/>}/>
             </Route>
+            <Route path="" element={<MainPageRedirect/>}/>
+            <Route path="/" element={<MainPageRedirect/>}/>
             <Route path="*" element={<Lazy><ErrorPage error={{
                 message: 'Page not found, please correct the address',
                 title: 'No such page',

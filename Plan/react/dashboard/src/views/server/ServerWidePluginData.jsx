@@ -3,7 +3,7 @@ import ErrorView from "../ErrorView";
 import LoadIn from "../../components/animation/LoadIn";
 import {Card, Col, Row} from "react-bootstrap";
 import ExtensionCard from "../../components/extensions/ExtensionCard";
-import {useParams} from "react-router-dom";
+import {useParams} from "react-router";
 import {useTranslation} from "react-i18next";
 import Loader from "../../components/navigation/Loader";
 import {useServerExtensionContext} from "../../hooks/serverExtensionDataContext";

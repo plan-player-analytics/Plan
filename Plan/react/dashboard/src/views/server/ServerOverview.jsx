@@ -11,7 +11,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Datapoint from "../../components/Datapoint";
 import {useTranslation} from "react-i18next";
-import {useParams} from "react-router-dom";
+import {useParams} from "react-router";
 import {fetchServerOverview} from "../../service/serverService";
 import ErrorView from "../ErrorView";
 import {useDataRequest} from "../../hooks/dataFetchHook";

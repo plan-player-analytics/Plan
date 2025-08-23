@@ -10,7 +10,7 @@ import {useTheme} from "../../hooks/themeHook.jsx";
 import ActionButton from "../../components/input/button/ActionButton.jsx";
 import {useTranslation} from "react-i18next";
 import {useThemeStorage} from "../../hooks/context/themeContextHook.jsx";
-import {useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import LoadIn from "../../components/animation/LoadIn.jsx";
 import ErrorView from "../ErrorView.jsx";

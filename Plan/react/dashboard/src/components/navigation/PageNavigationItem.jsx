@@ -3,7 +3,7 @@ import {faCompass} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {InputGroup} from "react-bootstrap";
-import {useLocation, useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router";
 import {useMetadata} from "../../hooks/metadataHook";
 import {useAuth} from "../../hooks/authenticationHook";
 

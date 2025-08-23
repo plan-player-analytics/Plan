@@ -8,7 +8,7 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import End from "../layout/End";
 import {MinecraftChat} from "react-mcjsonchat";
 import ColoredText from "../text/ColoredText";
-import {Link} from "react-router-dom";
+import {Link} from "react-router";
 import FormattedTime from "../text/FormattedTime.jsx";
 import FormattedDate from "../text/FormattedDate.jsx";
 

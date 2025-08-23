@@ -3,7 +3,7 @@ import PvpPveAsNumbersCard from "../../components/cards/server/tables/PvpPveAsNu
 import {Col} from "react-bootstrap";
 import PvpKillsTableCard from "../../components/cards/common/PvpKillsTableCard";
 import PvpPveInsightsCard from "../../components/cards/server/insights/PvpPveInsightsCard";
-import {useParams} from "react-router-dom";
+import {useParams} from "react-router";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import {fetchKills, fetchPvpPve} from "../../service/serverService";
 import ErrorView from "../ErrorView";

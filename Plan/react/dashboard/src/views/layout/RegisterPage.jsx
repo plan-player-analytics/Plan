@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 
 import logo from '../../Flaticon_circle.png'
 import {Alert, Card, Col, Row} from "react-bootstrap";
-import {Link, useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router";
 import {useTranslation} from "react-i18next";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faPalette} from "@fortawesome/free-solid-svg-icons";

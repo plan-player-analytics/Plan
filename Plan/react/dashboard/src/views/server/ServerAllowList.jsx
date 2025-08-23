@@ -1,6 +1,6 @@
 import React from 'react';
 import {useDataRequest} from "../../hooks/dataFetchHook";
-import {useParams} from "react-router-dom";
+import {useParams} from "react-router";
 import {fetchAllowlistBounces} from "../../service/serverService";
 import ErrorView from "../ErrorView";
 import {Col} from "react-bootstrap";
