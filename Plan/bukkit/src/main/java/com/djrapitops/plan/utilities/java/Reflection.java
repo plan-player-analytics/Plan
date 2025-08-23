@@ -109,6 +109,43 @@ public final class Reflection {
         throw new IllegalArgumentException("Cannot find field with type " + fieldType);
     }
 
+    public static <T> FieldAccessor<T> findField(Class<?> target, Class<T> fieldType) {
+        for (final Field field : target.getDeclaredFields()) {
+            if (fieldType.isAssignableFrom(field.getType())) {
+
+                return new FieldAccessor<>() {
+
+                    @Override
+                    @SuppressWarnings("unchecked")
+                    public T get(Object target) {
+                        try {
+                            return (T) field.get(target);
+                        } catch (IllegalAccessException e) {
+                            throw new IllegalStateException("Cannot access reflection.", e);
+                        }
+                    }
+
+                    @Override
+                    public void set(Object target, Object value) {
+                        try {
+                            field.set(target, value);
+                        } catch (IllegalAccessException e) {
+                            throw new IllegalStateException("Cannot access reflection.", e);
+                        }
+                    }
+
+                    @Override
+                    public boolean hasField(Object target) {
+                        // target instanceof DeclaringClass
+                        return field.getDeclaringClass().isAssignableFrom(target.getClass());
+                    }
+                };
+            }
+        }
+
+        throw new IllegalArgumentException("Cannot find field with type " + fieldType);
+    }
+
     /**
      * Retrieve a class in the net.minecraft.server.VERSION.* package.
      *

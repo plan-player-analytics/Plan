@@ -20,6 +20,7 @@ import com.djrapitops.plan.gathering.domain.PluginMetadata;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -75,4 +76,8 @@ public interface ServerSensor<W> {
     default boolean supportsBans() {return false;}
 
     default boolean isBanned(UUID playerUUID) {return false;}
+
+    default Optional<Double> getAverageMspt() {
+        return Optional.empty();
+    }
 }

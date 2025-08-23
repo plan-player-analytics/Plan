@@ -17,6 +17,7 @@
 package com.djrapitops.plan.gathering;
 
 import com.djrapitops.plan.gathering.domain.PluginMetadata;
+import com.djrapitops.plan.gathering.timed.SpigotMsptField;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Server;
@@ -28,6 +29,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -155,4 +157,8 @@ public class BukkitSensor implements ServerSensor<World> {
         return player.isBanned();
     }
 
+    @Override
+    public Optional<Double> getAverageMspt() {
+        return SpigotMsptField.getAverageMspt();
+    }
 }
