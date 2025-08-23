@@ -11,6 +11,8 @@ const ExtensionDataTable = ({table}) => {
     const mapToCell = (cell, j) => {
         const value = cell.value;
         switch (cell.format) {
+            case 'BOOLEAN':
+                return t(Boolean(value) ? 'plugin.generic.yes' : 'plugin.generic.no')
             case 'TIME_MILLISECONDS':
                 return <FormattedTime timeMs={value}/>;
             case 'DATE_YEAR':

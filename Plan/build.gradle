@@ -54,7 +54,7 @@ subprojects {
     }
 
     ext {
-        daggerVersion = "2.57"
+        daggerVersion = "2.57.1"
 
         palVersion = "5.3.0"
 
@@ -69,16 +69,16 @@ subprojects {
         redisBungeeProxioDevVersion = "0.7.3"
 
         commonsTextVersion = "1.14.0"
-        commonsCompressVersion = "1.27.1"
+        commonsCompressVersion = "1.28.0"
         commonsCodecVersion = "1.19.0"
         caffeineVersion = "3.2.2"
         jetbrainsAnnotationsVersion = "26.0.2"
-        jettyVersion = "11.0.24"
-        mysqlVersion = "9.2.0"
+        jettyVersion = "11.0.26"
+        mysqlVersion = "9.4.0"
         mariadbVersion = "3.5.5"
         sqliteVersion = "3.42.0.1"
         adventureVersion = "4.24.0"
-        hikariVersion = "7.0.1"
+        hikariVersion = "7.0.2"
         slf4jVersion = "2.0.17"
         geoIpVersion = "4.3.1"
         gsonVersion = "2.13.1"
@@ -90,12 +90,12 @@ subprojects {
         placeholderapiVersion = "2.11.5"
         nkPlaceholderapiVersion = "1.4-SNAPSHOT"
 
-        junitVersion = "5.13.3"
-        mockitoVersion = "5.18.0"
-        seleniumVersion = "4.34.0"
+        junitVersion = "5.13.4"
+        mockitoVersion = "5.19.0"
+        seleniumVersion = "4.35.0"
         testContainersVersion = "1.21.3"
         awaitilityVersion = "4.3.0"
-        swaggerVersion = "2.2.35"
+        swaggerVersion = "2.2.36"
         guavaVersion = "33.4.8-jre"
     }
 
