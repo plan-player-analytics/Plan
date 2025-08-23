@@ -27,6 +27,7 @@ import com.djrapitops.plan.utilities.MiscUtils;
 import com.djrapitops.plan.utilities.SemaphoreAccessCounter;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import dagger.Lazy;
+import dev.vankka.dependencydownload.ApplicationDependencyManager;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.scheduling.Task;
 import net.playeranalytics.plugin.server.PluginLogger;
@@ -70,9 +71,19 @@ public class SQLiteDB extends SQLDB {
             Lazy<ServerInfo> serverInfo,
             RunnableFactory runnableFactory,
             PluginLogger logger,
-            ErrorLogger errorLogger
+            ErrorLogger errorLogger,
+            ApplicationDependencyManager applicationDependencyManager
     ) {
-        super(() -> serverInfo.get().getServerUUID(), locale, config, files, runnableFactory, logger, errorLogger);
+        super(
+                () -> serverInfo.get().getServerUUID(),
+                locale,
+                config,
+                files,
+                runnableFactory,
+                logger,
+                errorLogger,
+                applicationDependencyManager
+        );
         dbName = databaseFile.getName();
         this.databaseFile = databaseFile;
         connectionLock = new SemaphoreAccessCounter();
@@ -240,6 +251,7 @@ public class SQLiteDB extends SQLDB {
         private final PluginLogger logger;
         private final ErrorLogger errorLogger1;
         private final PlanFiles files;
+        private final ApplicationDependencyManager applicationDependencyManager;
 
         @Inject
         public Factory(
@@ -249,7 +261,8 @@ public class SQLiteDB extends SQLDB {
                 Lazy<ServerInfo> serverInfo,
                 RunnableFactory runnableFactory,
                 PluginLogger logger,
-                ErrorLogger errorLogger1
+                ErrorLogger errorLogger1,
+                ApplicationDependencyManager applicationDependencyManager
         ) {
             this.locale = locale;
             this.config = config;
@@ -258,6 +271,7 @@ public class SQLiteDB extends SQLDB {
             this.runnableFactory = runnableFactory;
             this.logger = logger;
             this.errorLogger1 = errorLogger1;
+            this.applicationDependencyManager = applicationDependencyManager;
         }
 
         public SQLiteDB usingDefaultFile() {
@@ -271,7 +285,8 @@ public class SQLiteDB extends SQLDB {
         public SQLiteDB usingFile(File databaseFile) {
             return new SQLiteDB(databaseFile,
                     locale, config, files, serverInfo,
-                    runnableFactory, logger, errorLogger1
+                    runnableFactory, logger, errorLogger1,
+                    applicationDependencyManager
             );
         }
 

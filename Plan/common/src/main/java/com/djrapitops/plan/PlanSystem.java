@@ -35,10 +35,12 @@ import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plan.version.VersionChecker;
+import dev.vankka.dependencydownload.ApplicationDependencyManager;
 import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.IOException;
 
 /**
  * PlanSystem contains everything Plan needs to run.
@@ -74,6 +76,7 @@ public class PlanSystem implements SubSystem {
     private final ApiServices apiServices;
     private final PluginLogger logger;
     private final ErrorLogger errorLogger;
+    private final ApplicationDependencyManager applicationDependencyManager;
 
     @Inject
     public PlanSystem(
@@ -93,6 +96,7 @@ public class PlanSystem implements SubSystem {
             DeliveryUtilities deliveryUtilities,
             PluginLogger logger,
             ErrorLogger errorLogger,
+            ApplicationDependencyManager applicationDependencyManager,
             ApiServices apiServices, // API v5
             @SuppressWarnings("deprecation") PlanAPI.PlanAPIHolder apiHolder, GatheringUtilities gatheringUtilities // Deprecated PlanAPI, backwards compatibility
     ) {
@@ -113,6 +117,7 @@ public class PlanSystem implements SubSystem {
         this.gatheringUtilities = gatheringUtilities;
         this.logger = logger;
         this.errorLogger = errorLogger;
+        this.applicationDependencyManager = applicationDependencyManager;
         this.apiServices = apiServices;
 
         logger.info("§2");
@@ -191,6 +196,12 @@ public class PlanSystem implements SubSystem {
         Formatters.clearSingleton();
 
         apiServices.disableExtensionDataUpdates();
+
+        try {
+            applicationDependencyManager.cleanupCacheDirectory();
+        } catch (IOException e) {
+            logger.warn("Failed to cleanup dependency cache directory", e);
+        }
 
         disableSystems(
                 taskSystem,

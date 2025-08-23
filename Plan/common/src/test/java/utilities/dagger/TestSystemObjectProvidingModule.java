@@ -27,6 +27,8 @@ import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.google.gson.Gson;
 import dagger.Module;
 import dagger.Provides;
+import dev.vankka.dependencydownload.ApplicationDependencyManager;
+import dev.vankka.dependencydownload.path.DependencyPathProvider;
 import utilities.TestErrorLogger;
 import utilities.TestResources;
 
@@ -92,5 +94,11 @@ public class TestSystemObjectProvidingModule {
     @Singleton
     ErrorLogger provideErrorLogger() {
         return new TestErrorLogger();
+    }
+
+    @Provides
+    @Singleton
+    ApplicationDependencyManager applicationDependencyManager(@Named("dataFolder") File dataFolder) {
+        return new ApplicationDependencyManager(DependencyPathProvider.directory(dataFolder.toPath()));
     }
 }

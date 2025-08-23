@@ -35,11 +35,14 @@ import com.google.gson.Gson;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.ElementsIntoSet;
+import dev.vankka.dependencydownload.ApplicationDependencyManager;
+import dev.vankka.dependencydownload.path.DependencyPathProvider;
 import net.playeranalytics.plugin.PluginInformation;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -121,6 +124,13 @@ public class SystemObjectProvidingModule {
             JSONFileStorage jsonFileStorage
     ) {
         return new JSONMemoryStorageShim(config, jsonFileStorage);
+    }
+
+    @Provides
+    @Singleton
+    ApplicationDependencyManager applicationDependencyManager(@Named("dataFolder") File dataFolder) {
+        Path librariesDirectory = dataFolder.toPath().resolve("libraries");
+        return new ApplicationDependencyManager(DependencyPathProvider.directory(librariesDirectory));
     }
 
 }

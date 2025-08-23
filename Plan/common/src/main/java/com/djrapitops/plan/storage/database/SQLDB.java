@@ -38,10 +38,12 @@ import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.java.ThrowableUtils;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import dev.vankka.dependencydownload.ApplicationDependencyManager;
 import dev.vankka.dependencydownload.DependencyManager;
 import dev.vankka.dependencydownload.classloader.IsolatedClassLoader;
+import dev.vankka.dependencydownload.repository.MavenRepository;
 import dev.vankka.dependencydownload.repository.Repository;
-import dev.vankka.dependencydownload.repository.StandardRepository;
+import dev.vankka.dependencydownload.resource.DependencyDownloadResource;
 import net.playeranalytics.plugin.scheduling.PluginRunnable;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.scheduling.TimeAmount;
@@ -67,8 +69,8 @@ public abstract class SQLDB extends AbstractDatabase {
     private static boolean downloadDriver = true;
 
     private static final List<Repository> DRIVER_REPOSITORIES = Arrays.asList(
-            new StandardRepository("https://repo.papermc.io/repository/maven-public"),
-            new StandardRepository("https://repo1.maven.org/maven2")
+            new MavenRepository("https://repo.papermc.io/repository/maven-public"),
+            new MavenRepository("https://repo1.maven.org/maven2")
     );
 
     private final Supplier<ServerUUID> serverUUIDSupplier;
@@ -79,6 +81,7 @@ public abstract class SQLDB extends AbstractDatabase {
     protected final RunnableFactory runnableFactory;
     protected final PluginLogger logger;
     protected final ErrorLogger errorLogger;
+    protected final ApplicationDependencyManager applicationDependencyManager;
 
     protected ClassLoader driverClassLoader;
 
@@ -97,7 +100,8 @@ public abstract class SQLDB extends AbstractDatabase {
             PlanFiles files,
             RunnableFactory runnableFactory,
             PluginLogger logger,
-            ErrorLogger errorLogger
+            ErrorLogger errorLogger,
+            ApplicationDependencyManager applicationDependencyManager
     ) {
         this.serverUUIDSupplier = serverUUIDSupplier;
         this.locale = locale;
@@ -106,6 +110,7 @@ public abstract class SQLDB extends AbstractDatabase {
         this.runnableFactory = runnableFactory;
         this.logger = logger;
         this.errorLogger = errorLogger;
+        this.applicationDependencyManager = applicationDependencyManager;
 
         this.transactionExecutorServiceProvider = () -> {
             String nameFormat = "Plan " + getClass().getSimpleName() + "-transaction-thread-%d";
@@ -129,8 +134,12 @@ public abstract class SQLDB extends AbstractDatabase {
 
     public void downloadDriver() {
         if (downloadDriver) {
-            DependencyManager dependencyManager = new DependencyManager(files.getDataDirectory().resolve("libraries"));
-            dependencyManager.loadFromResource(getDependencyResource());
+            DependencyManager dependencyManager = new DependencyManager(
+                    applicationDependencyManager.getDependencyPathProvider(),
+                    applicationDependencyManager.getLogger()
+            );
+            dependencyManager.loadResource(DependencyDownloadResource.parse(getDependencyResource()));
+
             try {
                 dependencyManager.downloadAll(null, DRIVER_REPOSITORIES).get();
             } catch (InterruptedException e) {
@@ -141,6 +150,10 @@ public abstract class SQLDB extends AbstractDatabase {
 
             IsolatedClassLoader classLoader = new IsolatedClassLoader();
             dependencyManager.load(null, classLoader);
+
+            // Include this dependency manager in the application dependency manager for library cleaning purposes
+            applicationDependencyManager.include(dependencyManager);
+
             this.driverClassLoader = classLoader;
         } else {
             this.driverClassLoader = getClass().getClassLoader();
