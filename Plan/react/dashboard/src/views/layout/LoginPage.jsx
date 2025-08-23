@@ -50,7 +50,7 @@ const LoginForm = ({login}) => {
 
     const onLogin = useCallback(event => {
         event.preventDefault();
-        login(username, password).then(() => setPassword(''));
+        login(username, password);
     }, [username, password, setPassword, login]);
 
     return (
@@ -192,12 +192,14 @@ const LoginPage = () => {
                 window.location.reload();
             } else {
                 setFailMessage(t('html.login.failed') + (error.data && error.data.error ? error.data.error : error.message));
+                setPassword('');
             }
         } else if (data && data.success) {
             await updateLoginDetails();
             redirectAfterLogin();
         } else {
             setFailMessage(t('html.login.failed') + data ? data.error : t('generic.noData'));
+            setPassword('');
         }
     }
 
