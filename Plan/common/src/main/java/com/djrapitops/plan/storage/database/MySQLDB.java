@@ -33,6 +33,7 @@ import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import com.zaxxer.hikari.pool.HikariPool;
 import dagger.Lazy;
+import dev.vankka.dependencydownload.ApplicationDependencyManager;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.server.PluginLogger;
 
@@ -65,9 +66,19 @@ public class MySQLDB extends SQLDB {
             Lazy<ServerInfo> serverInfo,
             RunnableFactory runnableFactory,
             PluginLogger pluginLogger,
-            ErrorLogger errorLogger
+            ErrorLogger errorLogger,
+            ApplicationDependencyManager applicationDependencyManager
     ) {
-        super(() -> serverInfo.get().getServerUUID(), locale, config, files, runnableFactory, pluginLogger, errorLogger);
+        super(
+                () -> serverInfo.get().getServerUUID(),
+                locale,
+                config,
+                files,
+                runnableFactory,
+                pluginLogger,
+                errorLogger,
+                applicationDependencyManager
+        );
     }
 
     private static synchronized void increment() {

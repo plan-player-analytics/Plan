@@ -57,7 +57,7 @@ dependencies {
     implementation "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
 
     compileOnly "net.kyori:adventure-api:$adventureVersion"
-    implementation("dev.vankka:dependencydownload-runtime:$dependencyDownloadVersion") {
+    api("dev.vankka:dependencydownload-runtime:$dependencyDownloadVersion") {
         // Effectively disables relocating
         exclude module: "jar-relocator"
     }
