@@ -128,7 +128,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.djrapitops.plan.storage.database.SQLDB">Fields inherited from class&nbsp;com.djrapitops.plan.storage.database.<a href="SQLDB.html" title="class in com.djrapitops.plan.storage.database">SQLDB</a></h3>
-<code><a href="SQLDB.html#config">config</a>, <a href="SQLDB.html#driverClassLoader">driverClassLoader</a>, <a href="SQLDB.html#errorLogger">errorLogger</a>, <a href="SQLDB.html#files">files</a>, <a href="SQLDB.html#locale">locale</a>, <a href="SQLDB.html#logger">logger</a>, <a href="SQLDB.html#runnableFactory">runnableFactory</a></code></div>
+<code><a href="SQLDB.html#applicationDependencyManager">applicationDependencyManager</a>, <a href="SQLDB.html#config">config</a>, <a href="SQLDB.html#driverClassLoader">driverClassLoader</a>, <a href="SQLDB.html#errorLogger">errorLogger</a>, <a href="SQLDB.html#files">files</a>, <a href="SQLDB.html#locale">locale</a>, <a href="SQLDB.html#logger">logger</a>, <a href="SQLDB.html#runnableFactory">runnableFactory</a></code></div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.djrapitops.plan.storage.database.AbstractDatabase">Fields inherited from class&nbsp;com.djrapitops.plan.storage.database.<a href="AbstractDatabase.html" title="class in com.djrapitops.plan.storage.database">AbstractDatabase</a></h3>
 <code><a href="AbstractDatabase.html#accessLock">accessLock</a></code></div>
@@ -142,13 +142,14 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.file.PlanFiles,dagger.Lazy,net.playeranalytics.plugin.scheduling.RunnableFactory,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">MySQLDB</a><wbr>(<a href="../../settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.file.PlanFiles,dagger.Lazy,net.playeranalytics.plugin.scheduling.RunnableFactory,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,dev.vankka.dependencydownload.ApplicationDependencyManager)" class="member-name-link">MySQLDB</a><wbr>(<a href="../../settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
  <a href="../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
  <a href="../file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
  dagger.Lazy&lt;<a href="../../identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&gt;&nbsp;serverInfo,
  net.playeranalytics.plugin.scheduling.RunnableFactory&nbsp;runnableFactory,
  net.playeranalytics.plugin.server.PluginLogger&nbsp;pluginLogger,
- <a href="../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</code></div>
+ <a href="../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger,
+ dev.vankka.dependencydownload.ApplicationDependencyManager&nbsp;applicationDependencyManager)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -233,7 +234,7 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.file.PlanFiles,dagger.Lazy,net.playeranalytics.plugin.scheduling.RunnableFactory,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)">
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.file.PlanFiles,dagger.Lazy,net.playeranalytics.plugin.scheduling.RunnableFactory,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,dev.vankka.dependencydownload.ApplicationDependencyManager)">
 <h3>MySQLDB</h3>
 <div class="member-signature"><span class="annotations">@Inject
 </span><span class="modifiers">public</span>&nbsp;<span class="element-name">MySQLDB</span><wbr><span class="parameters">(<a href="../../settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
@@ -242,7 +243,8 @@ loadScripts(document, 'script');</script>
  dagger.Lazy&lt;<a href="../../identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&gt;&nbsp;serverInfo,
  net.playeranalytics.plugin.scheduling.RunnableFactory&nbsp;runnableFactory,
  net.playeranalytics.plugin.server.PluginLogger&nbsp;pluginLogger,
- <a href="../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</span></div>
+ <a href="../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger,
+ dev.vankka.dependencydownload.ApplicationDependencyManager&nbsp;applicationDependencyManager)</span></div>
 </section>
 </li>
 </ul>
