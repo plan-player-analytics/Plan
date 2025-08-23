@@ -55,10 +55,8 @@ class JSONStorageTest {
 
     private Optional<File> findTheFile() {
         File[] files = tempDir.toFile().listFiles();
-        if (files != null) {
-            for (File file : files) {
-                return Optional.of(file);
-            }
+        if (files != null && files.length > 0) {
+            return Optional.of(files[0]);
         }
         return Optional.empty();
     }

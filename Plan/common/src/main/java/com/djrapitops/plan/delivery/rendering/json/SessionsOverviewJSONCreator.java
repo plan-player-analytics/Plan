@@ -71,7 +71,7 @@ public class SessionsOverviewJSONCreator implements ServerTabJSONCreator<Map<Str
 
         Map<String, Object> insights = new HashMap<>();
 
-        long uptime = TimeUnit.DAYS.toMillis(30L) - tpsMutator.serverDownTime();
+        long uptime = tpsMutator.serverUptime();
         long occupied = tpsMutator.serverOccupiedTime();
         insights.put("server_occupied", occupied);
         insights.put("server_occupied_perc", percentage.apply(Percentage.calculate(occupied, uptime, -1)));

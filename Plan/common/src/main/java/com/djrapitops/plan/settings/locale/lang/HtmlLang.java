@@ -193,6 +193,7 @@ public enum HtmlLang implements Lang {
     LABEL_SERVER_DOWNTIME("html.label.serverDowntime", "Server Downtime"),
     LABEL_TOTAL_SERVER_DOWNTIME("html.label.totalServerDowntime", "Total Server Downtime"),
     LABEL_AVERAGE_SERVER_DOWNTIME("html.label.averageServerDowntime", "Average Downtime / Server"),
+    LABEL_AVERAGE_SERVER_UPTIME("html.label.averageServerUptime", "Average Uptime / Server"),
     LABEL_DURING_LOW_TPS("html.label.duringLowTps", "During Low TPS Spikes:"),
     TEXT_NO_LOW_TPS("html.text.noLowTps", "No low tps spikes"),
     // Player Page
@@ -264,6 +265,7 @@ public enum HtmlLang implements Lang {
     LABEL_MAX_FREE_DISK("html.label.maxFreeDisk", "Max Free Disk"),
     LABEL_MIN_FREE_DISK("html.label.minFreeDisk", "Min Free Disk"),
     LABEL_CURRENT_UPTIME("html.label.currentUptime", "Current Uptime"),
+    LABEL_SERVER_UPTIME("html.label.serverUptime", "Server Uptime"),
     LABEL_TOTAL("html.label.total", "Total"),
     LABEL_ALPHABETICAL("html.label.alphabetical", "Alphabetical"),
     LABEL_SORT_BY("html.label.sortBy", "Sort By"),

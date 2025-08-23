@@ -25,7 +25,6 @@ import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
@@ -187,11 +186,6 @@ public class OnlineActivityOverviewJSONCreator implements ServerTabJSONCreator<M
         ));
         numbers.put("session_length_7d_avg", sessionLengthAvgWeek);
         numbers.put("session_length_24h_avg", sessionLengthAvgDay);
-
-        TPSMutator tpsMutator = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServer(monthAgo, now, serverUUID)));
-        numbers.put("average_tps", decimalFormatter.apply(tpsMutator.averageTPS()));
-        numbers.put("low_tps_spikes", tpsMutator.lowTpsSpikeCount(config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED)));
-        numbers.put("downtime", tpsMutator.serverDownTime());
 
         return numbers;
     }

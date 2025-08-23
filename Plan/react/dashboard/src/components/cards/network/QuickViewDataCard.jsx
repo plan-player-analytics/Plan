@@ -13,6 +13,7 @@ import {useTranslation} from "react-i18next";
 import Datapoint from "../../Datapoint";
 import CurrentUptime from "../../datapoint/CurrentUptime";
 import FormattedDate from "../../text/FormattedDate.jsx";
+import FormattedTime from "../../text/FormattedTime.jsx";
 
 const QuickViewDataCard = ({server}) => {
     const {t} = useTranslation()
@@ -39,7 +40,7 @@ const QuickViewDataCard = ({server}) => {
                 <Datapoint icon={faExclamationCircle} color={'tps-low-spikes'} name={t('html.label.lowTpsSpikes')}
                            value={server.low_tps_spikes}/>
                 <Datapoint icon={faPowerOff} color={'downtime'} name={t('html.label.downtime')}
-                           value={server.downtime}/>
+                           value={<FormattedTime timeMs={server.downtime}/>}/>
             </Card.Body>
         </Card>
     )

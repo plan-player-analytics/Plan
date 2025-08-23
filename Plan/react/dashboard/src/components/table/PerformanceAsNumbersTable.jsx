@@ -43,13 +43,29 @@ const PerformanceAsNumbersTable = ({data, servers}) => {
                           <FormattedTime timeMs={data.server_downtime_7d}/>,
                           <FormattedTime timeMs={data.server_downtime_24h}/>
                       ]}/>
-            {data.avg_server_downtime_30d && <TableRow icon={faPowerOff} color="downtime"
-                                                       text={t('html.label.averageServerDowntime')}
-                                                       values={[
-                                                           <FormattedTime timeMs={data.avg_server_downtime_30d}/>,
-                                                           <FormattedTime timeMs={data.avg_server_downtime_7d}/>,
-                                                           <FormattedTime timeMs={data.avg_server_downtime_24h}/>
-                                                       ]}/>}
+            {data.avg_server_downtime_30d && (
+                <TableRow icon={faPowerOff} color="downtime"
+                          text={t('html.label.averageServerDowntime')}
+                          values={[
+                              <FormattedTime timeMs={data.avg_server_downtime_30d}/>,
+                              <FormattedTime timeMs={data.avg_server_downtime_7d}/>,
+                              <FormattedTime timeMs={data.avg_server_downtime_24h}/>
+                          ]}/>)}
+            <TableRow icon={faPowerOff} color="uptime"
+                      text={t('html.label.serverUptime')}
+                      values={[
+                          <FormattedTime timeMs={data.server_uptime_30d}/>,
+                          <FormattedTime timeMs={data.server_uptime_7d}/>,
+                          <FormattedTime timeMs={data.server_uptime_24h}/>
+                      ]}/>
+            {data.avg_server_uptime_30d && (
+                <TableRow icon={faPowerOff} color="uptime"
+                          text={t('html.label.averageServerUptime')}
+                          values={[
+                              <FormattedTime timeMs={data.avg_server_uptime_30d}/>,
+                              <FormattedTime timeMs={data.avg_server_uptime_7d}/>,
+                              <FormattedTime timeMs={data.avg_server_uptime_24h}/>
+                          ]}/>)}
             <TableRow icon={faUser} color="players-online" text={t('html.label.averagePlayers')}
                       values={[
                           data.players_30d,
