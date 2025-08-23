@@ -4,7 +4,7 @@ import ServerWorldPieCard from "../../components/cards/server/graphs/ServerWorld
 import ServerRecentSessionsCard from "../../components/cards/server/tables/ServerRecentSessionsCard";
 import SessionInsightsCard from "../../components/cards/server/insights/SessionInsightsCard";
 import LoadIn from "../../components/animation/LoadIn";
-import {useParams} from "react-router-dom";
+import {useParams} from "react-router";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 import {useAuth} from "../../hooks/authenticationHook";
 

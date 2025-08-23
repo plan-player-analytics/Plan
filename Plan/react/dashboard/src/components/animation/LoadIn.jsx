@@ -1,9 +1,11 @@
-import React, {useEffect, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Transition} from 'react-transition-group';
 
 const defaultDuration = 250;
 
 const LoadIn = ({children, duration}) => {
+    const nodeRef = useRef();
+
     if (!duration) duration = defaultDuration;
     const reduceAnimations = window.matchMedia(`(prefers-reduced-motion: reduce)`).matches;
 
@@ -58,9 +60,9 @@ const LoadIn = ({children, duration}) => {
     }, [setVisible])
 
     return (
-        <Transition in={visible} timeout={duration}>
+        <Transition in={visible} timeout={duration} nodeRef={nodeRef}>
             {state => (
-                <div className={"load-in"} style={{
+                <div ref={nodeRef} className={"load-in"} style={{
                     ...defaultStyle,
                     ...transitionStyles[state]
                 }}>

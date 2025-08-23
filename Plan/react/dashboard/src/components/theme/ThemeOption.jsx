@@ -10,7 +10,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCheck, faDesktop, faPencilAlt} from "@fortawesome/free-solid-svg-icons";
 import OutlineButton from "../input/button/OutlineButton.jsx";
 import {useAuth} from "../../hooks/authenticationHook.jsx";
-import {useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router";
 import {useTranslation} from "react-i18next";
 
 const StorageIcon = ({theme}) => {

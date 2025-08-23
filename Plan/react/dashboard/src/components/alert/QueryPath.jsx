@@ -3,7 +3,7 @@ import {useQueryResultContext} from "../../hooks/queryResultContext";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFilter} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
-import {Link} from "react-router-dom";
+import {Link} from "react-router";
 
 const QueryPath = ({newQuery}) => {
     const {t} = useTranslation();

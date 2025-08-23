@@ -7,7 +7,7 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCheck, faGlobe, faSignal, faUser, faUserPlus} from "@fortawesome/free-solid-svg-icons";
 import {faCalendarCheck, faCalendarPlus, faClock} from "@fortawesome/free-regular-svg-icons";
 import ExtensionIcon from "../extensions/ExtensionIcon.jsx";
-import {Link} from "react-router-dom";
+import {Link} from "react-router";
 import {formatDecimals} from "../../util/formatters.js";
 import {ExtensionValueTableCell} from "../extensions/ExtensionCard.jsx";
 import {ChartLoader} from "../navigation/Loader.jsx";

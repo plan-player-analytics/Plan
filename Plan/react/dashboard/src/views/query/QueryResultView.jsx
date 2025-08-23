@@ -3,7 +3,7 @@ import LoadIn from "../../components/animation/LoadIn";
 import {Col, Row} from "react-bootstrap";
 import QueryPath from "../../components/alert/QueryPath";
 import {useQueryResultContext} from "../../hooks/queryResultContext";
-import {useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router";
 import PlayerListCard from "../../components/cards/common/PlayerListCard";
 import {fetchExistingResults} from "../../service/queryService";
 import {PlayerbaseDevelopmentCardWithData} from "../../components/cards/server/graphs/PlayerbaseDevelopmentCard";

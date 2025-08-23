@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import ExtensionIcon from "./ExtensionIcon";
 import DataTablesTable from "../table/DataTablesTable";
 import ColoredText from "../text/ColoredText";
-import {Link} from "react-router-dom";
+import {Link} from "react-router";
 import FormattedTime from "../text/FormattedTime.jsx";
 import FormattedDate from "../text/FormattedDate.jsx";
 

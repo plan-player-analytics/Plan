@@ -1,5 +1,5 @@
 import React from 'react';
-import {useParams} from "react-router-dom";
+import {useParams} from "react-router";
 import {useAuth} from "../../hooks/authenticationHook";
 import PlayerRetention from "../../components/cards/common/PlayerRetention.jsx";
 

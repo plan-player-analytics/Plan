@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useLocation, useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 
 const TabButton = ({id, name, href, icon, color, active, disabled}) => {
