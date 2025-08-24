@@ -12,9 +12,9 @@
     </module>
     <module name="SuppressionSingleFilter"> <!-- Skip class fan out complexity for SQLDB.java -->
         <property name="checks" value="ClassFanOutComplexity"/>
-        <!-- These files need refactoring. -->
+        <!-- These files are ignored. -->
         <property name="files"
-                  value="SQLDB.java|ExtensionRegister.java|DataValueGatherer.java|PlayerOnlineListener.java|DatabaseCommands.java|.*Test.java"/>
+                  value="Patches.java|ExtensionRegister.java|DataValueGatherer.java|PlayerOnlineListener.java|DatabaseCommands.java|.*Test.java"/>
     </module>
 
     <module name="RegexpHeader"> <!-- License check -->
