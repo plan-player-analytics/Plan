@@ -33,7 +33,7 @@ public class TPSBuilder {
     protected int entityCount = -1;
     protected int chunksLoaded = -1;
     protected long freeDiskSpace = -1;
-    protected Double averageMspt = null;
+    protected Double msptAverage = null;
     protected Double mspt95thPercentile = null;
 
     /**
@@ -48,7 +48,7 @@ public class TPSBuilder {
 
     public TPS toTPS() {
         TPS tps = new TPS(date, ticksPerSecond, players, cpuUsage, usedMemory, entityCount, chunksLoaded, freeDiskSpace);
-        tps.setAverageMspt(averageMspt);
+        tps.setMsptAverage(msptAverage);
         tps.setMspt95thPercentile(mspt95thPercentile);
         return tps;
     }
@@ -93,13 +93,27 @@ public class TPSBuilder {
         return this;
     }
 
-    public TPSBuilder averageMspt(Double averageMspt) {
-        this.averageMspt = averageMspt;
+    public TPSBuilder msptAverage(Double msptAverage) {
+        this.msptAverage = msptAverage;
+        return this;
+    }
+
+    public TPSBuilder msptAverage(double msptAverage, boolean wasNull) {
+        if (!wasNull) {
+            this.msptAverage = msptAverage;
+        }
         return this;
     }
 
     public TPSBuilder mspt95thPercentile(Double mspt95thPercentile) {
         this.mspt95thPercentile = mspt95thPercentile;
+        return this;
+    }
+
+    public TPSBuilder mspt95thPercentile(double mspt95thPercentile, boolean wasNull) {
+        if (!wasNull) {
+            this.mspt95thPercentile = mspt95thPercentile;
+        }
         return this;
     }
 }

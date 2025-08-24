@@ -166,14 +166,14 @@ public class BukkitSensor implements ServerSensor<World> {
     }
 
     @Override
-    public Optional<Double> getAverageMspt() {
-        Optional<Double> averageMspt = Optional.empty();
+    public Optional<Double> getMsptAverage() {
+        Optional<Double> msptAverage = Optional.empty();
         if (hasAverageTickTimeMethod) {
-            averageMspt = paperMsptField.getAverageTickTime();
+            msptAverage = paperMsptField.getAverageTickTime();
         }
-        if (averageMspt.isEmpty()) {
-            averageMspt = SpigotMspt.getAverageMspt();
+        if (msptAverage.isEmpty()) {
+            msptAverage = SpigotMspt.getMsptAverage();
         }
-        return averageMspt;
+        return msptAverage;
     }
 }

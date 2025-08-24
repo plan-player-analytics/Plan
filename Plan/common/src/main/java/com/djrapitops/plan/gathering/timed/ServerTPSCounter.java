@@ -89,7 +89,7 @@ public class ServerTPSCounter<W> extends TPSCounter {
         playersOnline.add(serverSensor.getOnlinePlayerCount());
         cpu.add(systemUsage.getCpu());
         ram.add(systemUsage.getRam());
-        serverSensor.getAverageMspt().ifPresent(mspt::add);
+        serverSensor.getMsptAverage().ifPresent(mspt::add);
         result.ifPresent(tps -> save(tps, time));
     }
 
@@ -105,8 +105,8 @@ public class ServerTPSCounter<W> extends TPSCounter {
             chunkCount += serverSensor.getChunkCount(world);
         }
         long freeDiskSpace = systemUsage.getFreeDiskSpace();
-        Double averageMspt = mspt.getAverageAndReset();
-        if (averageMspt <= 0) averageMspt = null;
+        Double msptAverage = mspt.getAverageAndReset();
+        if (msptAverage <= 0) msptAverage = null;
         Double mspt95thPercentile = msptDistribution.getNthPercentile(0.95).orElse(null);
 
         dbSystem.getDatabase().executeTransaction(new TPSStoreTransaction(
@@ -121,7 +121,7 @@ public class ServerTPSCounter<W> extends TPSCounter {
                         .entities(entityCount)
                         .chunksLoaded(chunkCount)
                         .freeDiskSpace(freeDiskSpace)
-                        .averageMspt(averageMspt)
+                        .msptAverage(msptAverage)
                         .mspt95thPercentile(mspt95thPercentile)
                         .toTPS()
         ));

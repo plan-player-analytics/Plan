@@ -22,5 +22,5 @@ import java.util.Optional;
  * @author AuroraLS3
  */
 public interface TickTimesAccess {
-    Optional<Double> getAverageMspt();
+    Optional<Double> getMsptAverage();
 }

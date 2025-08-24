@@ -97,6 +97,14 @@ public abstract class Sql {
         }
     }
 
+    public static void setDoubleOrNull(PreparedStatement statement, int index, Double value) throws SQLException {
+        if (value != null) {
+            statement.setDouble(index, value);
+        } else {
+            statement.setNull(index, Types.DOUBLE);
+        }
+    }
+
     public static String concat(DBType dbType, String one, String two) {
         if (dbType == DBType.MYSQL) {
             return "CONCAT(" + one + ',' + two + ")";

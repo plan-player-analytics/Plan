@@ -106,7 +106,7 @@ public class FabricSensor implements ServerSensor<ServerWorld> {
     }
 
     @Override
-    public Optional<Double> getAverageMspt() {
-        return ((TickTimesAccess) server).getAverageMspt();
+    public Optional<Double> getMsptAverage() {
+        return ((TickTimesAccess) server).getMsptAverage();
     }
 }

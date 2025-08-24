@@ -77,7 +77,7 @@ public interface ServerSensor<W> {
 
     default boolean isBanned(UUID playerUUID) {return false;}
 
-    default Optional<Double> getAverageMspt() {
+    default Optional<Double> getMsptAverage() {
         return Optional.empty();
     }
 }

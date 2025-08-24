@@ -35,7 +35,7 @@ public class TickTimesMixin implements TickTimesAccess {
     @Final
     public long[] tickTimes;
 
-    public Optional<Double> getAverageMspt() {
+    public Optional<Double> getMsptAverage() {
         return Optional.ofNullable(tickTimes)
                 .map(value -> {
                     if (value.length <= 0) return null;

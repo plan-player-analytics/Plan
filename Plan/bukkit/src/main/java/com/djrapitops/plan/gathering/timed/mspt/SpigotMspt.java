@@ -29,7 +29,7 @@ import java.util.stream.LongStream;
  */
 public class SpigotMspt {
 
-    public static Optional<Double> getAverageMspt() {
+    public static Optional<Double> getMsptAverage() {
         return Optional.ofNullable(getValue())
                 .map(value -> {
                     if (value.length <= 0) return null;

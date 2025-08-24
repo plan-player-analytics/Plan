@@ -26,6 +26,7 @@ import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.objects.JoinAddressQueries;
 import com.djrapitops.plan.storage.database.queries.objects.WorldTimesQueries;
+import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.sql.tables.webuser.*;
 import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
@@ -193,6 +194,8 @@ public class LargeStoreQueries {
                         statement.setDouble(7, tps.getEntityCount());
                         statement.setDouble(8, tps.getChunksLoaded());
                         statement.setLong(9, tps.getFreeDiskSpace());
+                        Sql.setDoubleOrNull(statement, 10, tps.getMsptAverage());
+                        Sql.setDoubleOrNull(statement, 11, tps.getMspt95thPercentile());
                         statement.addBatch();
                     }
                 }

@@ -39,6 +39,8 @@ public class TPSTable {
     public static final String ENTITIES = "entities";
     public static final String CHUNKS = "chunks_loaded";
     public static final String FREE_DISK = "free_disk_space";
+    public static final String MSPT_AVERAGE = "mspt_average";
+    public static final String MSPT_95TH_PERCENTILE = "mspt_95th_percentile";
 
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
             + SERVER_ID + ','
@@ -49,10 +51,12 @@ public class TPSTable {
             + RAM_USAGE + ','
             + ENTITIES + ','
             + CHUNKS + ','
-            + FREE_DISK
+            + FREE_DISK + ','
+            + MSPT_AVERAGE + ','
+            + MSPT_95TH_PERCENTILE
             + ") VALUES ("
             + ServerTable.SELECT_SERVER_ID + ','
-            + "?, ?, ?, ?, ?, ?, ?, ?)";
+            + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private TPSTable() {
         /* Static information class */
@@ -70,6 +74,8 @@ public class TPSTable {
                 .column(ENTITIES, Sql.INT).notNull()
                 .column(CHUNKS, Sql.INT).notNull()
                 .column(FREE_DISK, Sql.LONG).notNull()
+                .column(MSPT_AVERAGE, Sql.DOUBLE) // Nullable
+                .column(MSPT_95TH_PERCENTILE, Sql.DOUBLE) // Nullable
                 .foreignKey(SERVER_ID, ServerTable.TABLE_NAME, ServerTable.ID)
                 .toString();
     }
