@@ -14,41 +14,34 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.gathering.timed;
+package net.playeranalytics.plan.gathering.mixin;
 
-import com.djrapitops.plan.utilities.java.Reflection;
+import net.minecraft.server.MinecraftServer;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.Optional;
 import java.util.OptionalDouble;
 import java.util.stream.LongStream;
 
 /**
- * Accessor for the average MSPT field in MinecraftServer class which is a long[] array with 100 values.
- *
  * @author AuroraLS3
  */
-public class SpigotMsptField {
+@Mixin(MinecraftServer.class)
+public class TickTimesMixin implements TickTimesAccess {
 
-    public static Optional<Double> getAverageMspt() {
-        return Optional.ofNullable(getValue())
+    @Shadow
+    @Final
+    public long[] tickTimes;
+
+    public Optional<Double> getAverageMspt() {
+        return Optional.ofNullable(tickTimes)
                 .map(value -> {
                     if (value.length <= 0) return null;
                     OptionalDouble average = LongStream.of(value).filter(i -> i != 0L).average();
                     return average.isPresent() ? average.getAsDouble() : null;
                 });
-    }
-
-    private static long[] getValue() {
-        try {
-            // Special thanks to Fuzzlemann for figuring out the methods required for this check.
-            // https://github.com/plan-player-analytics/Plan/issues/769#issuecomment-433898242
-            Class<?> minecraftServerClass = Reflection.getMinecraftClass("MinecraftServer");
-            Object minecraftServer = Reflection.getField(minecraftServerClass, "SERVER", minecraftServerClass).get(null);
-
-            return Reflection.findField(minecraftServerClass, long[].class).get(minecraftServer);
-        } catch (Exception | NoClassDefFoundError | NoSuchFieldError e) {
-            return null;
-        }
     }
 
 }
