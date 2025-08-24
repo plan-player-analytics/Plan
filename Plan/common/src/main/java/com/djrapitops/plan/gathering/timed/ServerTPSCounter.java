@@ -22,6 +22,7 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.TPSStoreTransaction;
 import com.djrapitops.plan.utilities.analysis.Average;
+import com.djrapitops.plan.utilities.analysis.Distribution;
 import com.djrapitops.plan.utilities.analysis.Maximum;
 import com.djrapitops.plan.utilities.analysis.TimerAverage;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
@@ -50,6 +51,8 @@ public class ServerTPSCounter<W> extends TPSCounter {
     private final Maximum.ForInteger playersOnline;
     private final Average cpu;
     private final Average ram;
+    private final Average mspt;
+    private final Distribution msptDistribution;
 
     @Inject
     public ServerTPSCounter(
@@ -75,6 +78,8 @@ public class ServerTPSCounter<W> extends TPSCounter {
         playersOnline = new Maximum.ForInteger(0);
         cpu = new Average();
         ram = new Average();
+        mspt = new Average();
+        msptDistribution = new Distribution();
     }
 
     @Override
@@ -84,6 +89,7 @@ public class ServerTPSCounter<W> extends TPSCounter {
         playersOnline.add(serverSensor.getOnlinePlayerCount());
         cpu.add(systemUsage.getCpu());
         ram.add(systemUsage.getRam());
+        serverSensor.getAverageMspt().ifPresent(mspt::add);
         result.ifPresent(tps -> save(tps, time));
     }
 
@@ -99,6 +105,9 @@ public class ServerTPSCounter<W> extends TPSCounter {
             chunkCount += serverSensor.getChunkCount(world);
         }
         long freeDiskSpace = systemUsage.getFreeDiskSpace();
+        Double averageMspt = mspt.getAverageAndReset();
+        if (averageMspt <= 0) averageMspt = null;
+        Double mspt95thPercentile = msptDistribution.getNthPercentile(0.95).orElse(null);
 
         dbSystem.getDatabase().executeTransaction(new TPSStoreTransaction(
                 logger,
@@ -112,6 +121,8 @@ public class ServerTPSCounter<W> extends TPSCounter {
                         .entities(entityCount)
                         .chunksLoaded(chunkCount)
                         .freeDiskSpace(freeDiskSpace)
+                        .averageMspt(averageMspt)
+                        .mspt95thPercentile(mspt95thPercentile)
                         .toTPS()
         ));
     }

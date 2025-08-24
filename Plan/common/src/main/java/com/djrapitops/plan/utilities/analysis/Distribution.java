@@ -16,36 +16,38 @@
  */
 package com.djrapitops.plan.utilities.analysis;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+
 /**
- * Utility for averaging data.
+ * Utility for calculating nth percentile values, eg 95th percentile.
  *
  * @author AuroraLS3
  */
-public class Average {
+public class Distribution {
 
-    private double total;
-    private int count;
+    private final List<Double> values;
 
-    public Average() {
-        total = 0.0;
-        count = 0;
+    public Distribution() {
+        values = new ArrayList<>();
+    }
+
+    public void add(double value) {
+        values.add(value);
     }
 
     /**
-     * Add a new entry and check if save should be done.
+     * Get the highest value within a percentile.
      *
-     * @param value TPS value
+     * @param percentile Percentage 0.0 to 1.0 of values to include
+     * @return Highest value that matches percentile
      */
-    public void add(double value) {
-        total += value;
-        count++;
-    }
-
-    public double getAverageAndReset() {
-        if (count == 0) return -1;
-        double average = total / count;
-        total = 0.0;
-        count = 0;
-        return average;
+    public Optional<Double> getNthPercentile(double percentile) {
+        values.sort(Double::compareTo);
+        int count = values.size();
+        int lastInPercentile = (int) Math.floor(count * percentile) - 1;
+        if (lastInPercentile <= 0) return Optional.empty();
+        return Optional.of(values.get(lastInPercentile));
     }
 }
