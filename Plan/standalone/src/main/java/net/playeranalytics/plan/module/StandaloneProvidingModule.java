@@ -33,6 +33,8 @@ import com.google.gson.Gson;
 import dagger.Module;
 import dagger.Provides;
 import dagger.multibindings.ElementsIntoSet;
+import dev.vankka.dependencydownload.ApplicationDependencyManager;
+import dev.vankka.dependencydownload.path.DependencyPathProvider;
 import net.playeranalytics.plan.gathering.NoOpListenerSystem;
 import net.playeranalytics.plan.gathering.NoOpServerSensor;
 import net.playeranalytics.plugin.PluginInformation;
@@ -41,6 +43,7 @@ import net.playeranalytics.plugin.server.PluginLogger;
 import javax.inject.Named;
 import javax.inject.Singleton;
 import java.io.File;
+import java.nio.file.Path;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -139,4 +142,10 @@ public class StandaloneProvidingModule {
         return information.getDataFolder();
     }
 
+    @Provides
+    @Singleton
+    ApplicationDependencyManager applicationDependencyManager(@Named("dataFolder") File dataFolder) {
+        Path librariesDirectory = dataFolder.toPath().resolve("libraries");
+        return new ApplicationDependencyManager(DependencyPathProvider.directory(librariesDirectory));
+    }
 }

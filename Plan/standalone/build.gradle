@@ -2,9 +2,5 @@ dependencies {
     implementation project(":api")
     implementation project(":common")
 
-    shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
-}
-
-shadowJar {
-    configurations = [project.configurations.shadow]
+    api "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
 }
