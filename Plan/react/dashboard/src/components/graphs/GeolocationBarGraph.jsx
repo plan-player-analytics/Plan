@@ -1,24 +1,28 @@
 import React, {useEffect} from 'react';
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../hooks/themeHook";
-import {withReducedSaturation} from "../../util/colors";
-import Highcharts from "highcharts";
-import Accessibility from "highcharts/modules/accessibility";
+import Highcharts from "highcharts/esm/highcharts";
+import "highcharts/esm/modules/no-data-to-display"
+import "highcharts/esm/modules/accessibility";
+import {localeService, reverseRegionLookupMap} from "../../service/localeService.js";
 
-const GeolocationBarGraph = ({series, color}) => {
+const GeolocationBarGraph = ({series}) => {
     const {t} = useTranslation();
     const {nightModeEnabled, graphTheming} = useTheme();
 
     useEffect(() => {
+        const regions = new Intl.DisplayNames([localeService.getIntlFriendlyLocale()], {type: 'region'});
         const bars = series.map(bar => bar.value);
-        const categories = series.map(bar => bar.label);
+        const categories = series.map(bar => {
+            const code = reverseRegionLookupMap[bar.label];
+            return code ? regions.of(code) : bar.label.replace('Local Machine', t('html.value.localMachine'));
+        });
         const geolocationBarSeries = {
-            color: nightModeEnabled ? withReducedSaturation(color) : color,
+            color: "var(--color-graphs-world-map-bars)",
             name: t('html.label.players'),
             data: bars
         };
 
-        Accessibility(Highcharts);
         Highcharts.setOptions(graphTheming);
         Highcharts.chart("countryBarChart", {
             chart: {
@@ -43,7 +47,7 @@ const GeolocationBarGraph = ({series, color}) => {
             },
             series: [geolocationBarSeries]
         })
-    }, [color, series, graphTheming, nightModeEnabled, t]);
+    }, [series, graphTheming, nightModeEnabled, t, localeService.clientLocale]);
 
     return (<div id="countryBarChart"/>);
 };

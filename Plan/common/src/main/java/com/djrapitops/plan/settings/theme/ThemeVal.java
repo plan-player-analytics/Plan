@@ -20,7 +20,9 @@ package com.djrapitops.plan.settings.theme;
  * Enum class used for getting the Html colors that match the config settings.
  *
  * @author AuroraLS3
+ * @deprecated theme.yml is deprecated and with it any colors accessible in this enum. Use CSS color variables for use-cases instead, since they are only stable variables on the website.
  */
+@Deprecated(since = "2025-08-13, removal of theme.yml")
 public enum ThemeVal {
 
     THEME_DEFAULT("DefaultColor", "plan"),

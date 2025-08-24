@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
-import {Outlet} from "react-router-dom";
+import {Outlet} from "react-router";
 import {useNavigation} from "../../hooks/navigationHook";
 import {faSearch} from "@fortawesome/free-solid-svg-icons";
 import Sidebar from "../../components/navigation/Sidebar";

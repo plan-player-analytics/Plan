@@ -306,7 +306,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
                 , new Transaction() {
                     @Override
                     protected void performOperations() {
-                        execute("UPDATE " + UserInfoTable.TABLE_NAME + " SET " + UserInfoTable.REGISTERED + "=0" +
+                        execute("UPDATE " + UserInfoTable.TABLE_NAME + " SET " + UserInfoTable.REGISTERED + "=1" +
                                 WHERE + UserInfoTable.USER_ID + "=(" + SELECT + "MAX(" + UsersTable.ID + ")" + FROM + UsersTable.TABLE_NAME + ")");
                     }
                 }
@@ -314,7 +314,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
 
         // Check test assumptions
         Map<UUID, Long> registerDates = db().query(UserInfoQueries.fetchRegisterDates(0L, System.currentTimeMillis(), serverUUID()));
-        assertEquals(0L, registerDates.get(playerUUID));
+        assertEquals(1L, registerDates.get(playerUUID));
         Optional<BaseUser> baseUser = db().query(BaseUserQueries.fetchBaseUserOfPlayer(playerUUID));
         assertEquals(1000L, baseUser.isPresent() ? baseUser.get().getRegistered() : null);
 
@@ -323,7 +323,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
 
         // Test expected result
         Optional<BaseUser> updatedBaseUser = db().query(BaseUserQueries.fetchBaseUserOfPlayer(playerUUID));
-        assertEquals(0L, updatedBaseUser.isPresent() ? updatedBaseUser.get().getRegistered() : null);
+        assertEquals(1L, updatedBaseUser.isPresent() ? updatedBaseUser.get().getRegistered() : null);
         assertTrue(testedPatch.isApplied());
     }
 

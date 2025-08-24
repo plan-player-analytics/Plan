@@ -26,7 +26,9 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.google.common.util.concurrent.MoreExecutors;
+import org.awaitility.Awaitility;
 
+import java.time.Duration;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -39,6 +41,12 @@ public class DBPreparer {
     public DBPreparer(Dependencies dependencies, int testPortNumber) {
         this.dependencies = dependencies;
         this.testPortNumber = testPortNumber;
+    }
+
+    public static void awaitUntilTransactionsComplete(Database database) {
+        Awaitility.await()
+                .atMost(Duration.ofSeconds(10))
+                .until(() -> database.getTransactionQueueSize() == 0);
     }
 
     public Optional<Database> prepareSQLite() {

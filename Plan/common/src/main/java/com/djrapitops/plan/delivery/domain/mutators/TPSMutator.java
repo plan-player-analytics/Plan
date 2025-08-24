@@ -120,6 +120,28 @@ public class TPSMutator {
         return downTime;
     }
 
+    public long serverUptime() {
+        long lastDate = -1;
+        long uptime = 0;
+        tpsData.sort(new TPSComparator());
+
+        for (TPS tps : tpsData) {
+            long date = tps.getDate();
+            if (lastDate == -1) {
+                lastDate = date;
+                continue;
+            }
+
+            long diff = date - lastDate;
+            if (diff < TimeUnit.MINUTES.toMillis(2L)) {
+                uptime += diff;
+            }
+            lastDate = date;
+        }
+
+        return uptime;
+    }
+
     public long serverOccupiedTime() {
         long lastDate = -1;
         long activeTime = 0;

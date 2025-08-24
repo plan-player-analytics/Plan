@@ -9,7 +9,7 @@ import MainPageRedirect from "../../components/navigation/MainPageRedirect";
 import ErrorPage from "./ErrorPage";
 import Sidebar from "../../components/navigation/Sidebar";
 import Header from "../../components/navigation/Header";
-import {Outlet} from "react-router-dom";
+import {Outlet} from "react-router";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
 import AlertPopupArea from "../../components/alert/AlertPopupArea";
 
@@ -17,7 +17,7 @@ const HelpModal = React.lazy(() => import("../../components/modal/HelpModal"));
 
 const ManagePage = () => {
     const {t, i18n} = useTranslation();
-    const {isProxy, networkName, serverName} = useMetadata();
+    const {displayedServerName} = useMetadata();
 
     const [error] = useState(undefined);
     const {sidebarItems, setSidebarItems, currentTab, setCurrentTab} = useNavigation();
@@ -41,7 +41,6 @@ const ManagePage = () => {
     if (authRequired && !loggedIn) return <MainPageRedirect/>;
     if (error) return <ErrorPage error={error}/>;
 
-    const displayedServerName = isProxy ? networkName : (serverName?.startsWith('Server') ? "Plan" : serverName);
     return (
         <>
             <Sidebar items={sidebarItems}/>

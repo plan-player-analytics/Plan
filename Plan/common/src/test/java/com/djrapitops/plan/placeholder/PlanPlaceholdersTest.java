@@ -19,13 +19,18 @@ package com.djrapitops.plan.placeholder;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.domain.ServerIdentifier;
 import com.djrapitops.plan.gathering.domain.*;
+import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
+import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreServerPlayerTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.TPSStoreTransaction;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
+import utilities.DBPreparer;
 import utilities.RandomData;
 import utilities.TestConstants;
 import utilities.dagger.PlanPluginComponent;
@@ -234,5 +239,63 @@ class PlanPlaceholdersTest {
             database.executeTransaction(new StoreSessionTransaction(new FinishedSession(playerUUID, serverUUID, System.currentTimeMillis(), System.currentTimeMillis(), 0, dataMap)))
                     .get();
         }
+    }
+
+    @Test
+    void networkPlayersOnlineGraphDisplaysDataSingleProxy() {
+        Database database = component.system().getDatabaseSystem().getDatabase();
+        database.executeTransaction(new StoreServerInformationTransaction(new Server(-1, TestConstants.SERVER_UUID, TestConstants.SERVER_NAME, "", false, TestConstants.VERSION)));
+        database.executeTransaction(new StoreServerInformationTransaction(new Server(-1, TestConstants.SERVER_TWO_UUID, TestConstants.SERVER_TWO_NAME, "", true, TestConstants.VERSION)));
+        database.executeTransaction(new TPSStoreTransaction(TestConstants.SERVER_UUID, TPSBuilder.get()
+                .playersOnline(1)
+                .date(System.currentTimeMillis())
+                .toTPS()));
+        database.executeTransaction(new TPSStoreTransaction(TestConstants.SERVER_TWO_UUID, TPSBuilder.get()
+                .playersOnline(2)
+                .date(System.currentTimeMillis())
+                .toTPS()));
+
+        DBPreparer.awaitUntilTransactionsComplete(database);
+        String value = underTest.onPlaceholderRequest(TestConstants.PLAYER_ONE_UUID, "network_players_online", List.of());
+        assertEquals("2", value);
+    }
+
+    @Test
+    void networkPlayersOnlineGraphDisplaysDataTwoProxies() {
+        Database database = component.system().getDatabaseSystem().getDatabase();
+        database.executeTransaction(new StoreServerInformationTransaction(new Server(-1, TestConstants.SERVER_UUID, TestConstants.SERVER_NAME, "", true, TestConstants.VERSION)));
+        database.executeTransaction(new StoreServerInformationTransaction(new Server(-1, TestConstants.SERVER_TWO_UUID, TestConstants.SERVER_TWO_NAME, "", true, TestConstants.VERSION)));
+        database.executeTransaction(new TPSStoreTransaction(TestConstants.SERVER_UUID, TPSBuilder.get()
+                .playersOnline(1)
+                .date(System.currentTimeMillis())
+                .toTPS()));
+        database.executeTransaction(new TPSStoreTransaction(TestConstants.SERVER_TWO_UUID, TPSBuilder.get()
+                .playersOnline(2)
+                .date(System.currentTimeMillis())
+                .toTPS()));
+
+        DBPreparer.awaitUntilTransactionsComplete(database);
+
+        String value = underTest.onPlaceholderRequest(TestConstants.PLAYER_ONE_UUID, "network_players_online", List.of());
+        assertEquals("3", value);
+    }
+
+    @Test
+    void networkPlayersOnlineGraphDisplaysDataNoProxies() {
+        Database database = component.system().getDatabaseSystem().getDatabase();
+        database.executeTransaction(new StoreServerInformationTransaction(new Server(-1, TestConstants.SERVER_UUID, TestConstants.SERVER_NAME, "", false, TestConstants.VERSION)));
+        database.executeTransaction(new StoreServerInformationTransaction(new Server(-1, TestConstants.SERVER_TWO_UUID, TestConstants.SERVER_TWO_NAME, "", false, TestConstants.VERSION)));
+        database.executeTransaction(new TPSStoreTransaction(TestConstants.SERVER_UUID, TPSBuilder.get()
+                .playersOnline(1)
+                .date(System.currentTimeMillis())
+                .toTPS()));
+        database.executeTransaction(new TPSStoreTransaction(TestConstants.SERVER_TWO_UUID, TPSBuilder.get()
+                .playersOnline(2)
+                .date(System.currentTimeMillis())
+                .toTPS()));
+        DBPreparer.awaitUntilTransactionsComplete(database);
+
+        String value = underTest.onPlaceholderRequest(TestConstants.PLAYER_ONE_UUID, "network_players_online", List.of());
+        assertEquals("3", value);
     }
 }

@@ -38,16 +38,15 @@ const Header = ({page, tab, hideUpdater}) => {
 
     const {getPlayerHeadImageUrl} = useMetadata();
     const headImageUrl = user ? getPlayerHeadImageUrl(user.playerName, user.playerUUID) : undefined
-    // TODO Remove .replace('<', '') after locale replacement
     return (
         <nav className="nav-header nav mt-3 align-items-center justify-content-between container-fluid">
             <div className="d-sm-flex">
-                <h1 className="h3 mb-0 text-gray-800">
+                <h1 className="h3 mb-0 header">
                     <button onClick={toggleSidebar}>
                         <Fa icon={faBars} className={"sidebar-toggler"}/>
                     </button>
                     {page}
-                    {tab ? <>{' '}&middot; {t(tab).replace('<', '')}</> : ''}</h1>
+                    {tab ? <>{' '}&middot; {t(tab)}</> : ''}</h1>
             </div>
 
             {!hideUpdater && <>
@@ -56,7 +55,7 @@ const Header = ({page, tab, hideUpdater}) => {
                     {!staticSite && <button onClick={requestUpdate}>
                         <Fa icon={faSyncAlt} spin={Boolean(updating)}/>
                     </button>}
-                    {staticSite && <Fa icon={faClockRotateLeft} title={t('html.label.exported')}/>}
+                    {staticSite && <span title={t('html.label.exported')}><Fa icon={faClockRotateLeft}/></span>}
                     {' '}
                     <span className="refresh-time"><FormattedDate date={lastUpdate.date} react/></span>
                 </div>
@@ -69,7 +68,7 @@ const Header = ({page, tab, hideUpdater}) => {
             <div className="topbar-divider"/>
 
             <Dropdown className="nav-item">
-                <Dropdown.Toggle variant=''>
+                <Dropdown.Toggle variant='' style={{'--bs-btn-color': 'var(--color-forms-input-text)'}}>
                     {authRequired && user ? <>
                         <span className="me-1 login-username">{user.username} </span>
                         <img alt="user img" className="rounded-circle" src={headImageUrl} style={{height: "2rem"}}/>

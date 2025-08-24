@@ -5,7 +5,7 @@ export const CardLoader = () => {
     return (
         <Card className="loading">
             <Card.Header>
-                <h6 className="col-black">
+                <h6 className="col-text">
                     ...
                 </h6>
             </Card.Header>

@@ -39,10 +39,14 @@ public class BanStatusTransaction extends Transaction {
 
     private final UUID playerUUID;
     private final ServerUUID serverUUID;
-    private final BooleanSupplier banStatus;
 
-    public BanStatusTransaction(UUID playerUUID, ServerUUID serverUUID, boolean banStatus) {
-        this(playerUUID, serverUUID, () -> banStatus);
+    private Boolean banned;
+    private BooleanSupplier banStatus;
+
+    public BanStatusTransaction(UUID playerUUID, ServerUUID serverUUID, boolean banned) {
+        this.playerUUID = playerUUID;
+        this.serverUUID = serverUUID;
+        this.banned = banned;
     }
 
     public BanStatusTransaction(UUID playerUUID, ServerUUID serverUUID, BooleanSupplier banStatus) {
@@ -65,7 +69,7 @@ public class BanStatusTransaction extends Transaction {
         return new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setBoolean(1, banStatus.getAsBoolean());
+                statement.setBoolean(1, banned != null ? banned : banStatus.getAsBoolean());
                 statement.setString(2, playerUUID.toString());
                 statement.setString(3, serverUUID.toString());
             }

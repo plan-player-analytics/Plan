@@ -10,8 +10,8 @@ const PvpPveAsNumbersCard = ({kill_data}) => {
     return (
         <Card id={"pvp-pve-as-numbers"}>
             <Card.Header>
-                <h6 className="col-black">
-                    <Fa icon={faCampground} className="col-red"/> {t('html.label.pvpPveAsNumbers')}
+                <h6 className="col-text">
+                    <Fa icon={faCampground} className="col-player-kills"/> {t('html.label.pvpPveAsNumbers')}
                 </h6>
             </Card.Header>
             <ServerPvpPveAsNumbersTable killData={kill_data}/>

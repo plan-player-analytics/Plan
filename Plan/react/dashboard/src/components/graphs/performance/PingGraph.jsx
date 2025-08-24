@@ -1,13 +1,13 @@
 import React, {useEffect} from 'react';
 
-import {linegraphButtons, tooltip} from "../../../util/graphs";
-import Highcharts from "highcharts/highstock";
-import NoDataDisplay from "highcharts/modules/no-data-to-display"
+import {tooltip, translateLinegraphButtons} from "../../../util/graphs";
+import Highcharts from "highcharts/esm/highstock";
+import "highcharts/esm/modules/no-data-to-display"
+import "highcharts/esm/modules/accessibility";
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../../hooks/themeHook";
-import {withReducedSaturation} from "../../../util/colors";
-import Accessibility from "highcharts/modules/accessibility";
 import {useMetadata} from "../../../hooks/metadataHook";
+import {localeService} from "../../../service/localeService.js";
 
 const PingGraph = ({id, data}) => {
     const {t} = useTranslation();
@@ -23,27 +23,30 @@ const PingGraph = ({id, data}) => {
                 type: spline,
                 tooltip: tooltip.twoDecimals,
                 data: data.avg_ping_series,
-                color: nightModeEnabled ? withReducedSaturation(data.colors.avg) : data.colors.avg,
+                color: "var(--color-graphs-ping-avg)",
             },
             maxPing: {
                 name: t('html.label.worstPing'),
                 type: spline,
                 tooltip: tooltip.zeroDecimals,
                 data: data.max_ping_series,
-                color: nightModeEnabled ? withReducedSaturation(data.colors.max) : data.colors.max,
+                color: "var(--color-graphs-ping-max)",
             },
             minPing: {
                 name: t('html.label.bestPing'),
                 type: spline,
                 tooltip: tooltip.zeroDecimals,
                 data: data.min_ping_series,
-                color: nightModeEnabled ? withReducedSaturation(data.colors.min) : data.colors.min,
+                color: "var(--color-graphs-ping-min)",
             }
         };
 
-        NoDataDisplay(Highcharts);
-        Accessibility(Highcharts);
-        Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}})
+        Highcharts.setOptions({
+            lang: {
+                locale: localeService.getIntlFriendlyLocale(),
+                noData: t('html.label.noDataToDisplay')
+            }
+        })
         Highcharts.setOptions(graphTheming);
         Highcharts.stockChart(id, {
             chart: {
@@ -51,7 +54,7 @@ const PingGraph = ({id, data}) => {
             },
             rangeSelector: {
                 selected: 2,
-                buttons: linegraphButtons
+                buttons: translateLinegraphButtons(t)
             },
             yAxis: {
                 labels: {

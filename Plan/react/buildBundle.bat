@@ -1,2 +1,2 @@
 cd ..
-./gradlew :common:yarnBundle
+./gradlew :common:bundle

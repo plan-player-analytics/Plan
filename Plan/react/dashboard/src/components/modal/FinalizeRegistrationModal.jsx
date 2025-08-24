@@ -4,6 +4,7 @@ import {useMetadata} from "../../hooks/metadataHook";
 import {Modal} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faHandPointRight} from "@fortawesome/free-regular-svg-icons";
+import ModalCloseButton from "../input/button/ModalCloseButton.jsx";
 
 const FinalizeRegistrationModal = ({show, toggle, registerCode}) => {
     const {t} = useTranslation();
@@ -15,13 +16,13 @@ const FinalizeRegistrationModal = ({show, toggle, registerCode}) => {
                show={show}
                onHide={toggle}
         >
-            <Modal.Header className="bg-white">
+            <Modal.Header>
                 <Modal.Title id={"finalizeModalLabel"}>
                     <Fa icon={faHandPointRight}/> {t('html.register.completion')}
                 </Modal.Title>
-                <button aria-label="Close" className="btn-close" onClick={toggle}/>
+                <ModalCloseButton onClick={toggle}/>
             </Modal.Header>
-            <Modal.Body className={"bg-white"}>
+            <Modal.Body>
                 <p>{t('html.register.completion1')} {t('html.register.completion2')}</p>
                 <p>{t('html.register.completion3')}</p>
                 <p><code>/{mainCommand} register --code {registerCode}</code></p>

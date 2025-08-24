@@ -1,10 +1,12 @@
 import React, {useEffect} from 'react';
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../hooks/themeHook";
-import Highcharts from 'highcharts/highmaps';
+import Highcharts from 'highcharts/esm/highmaps';
 import topology from '@highcharts/map-collection/custom/world.topo.json';
-import Accessibility from "highcharts/modules/accessibility";
-import NoDataDisplay from "highcharts/modules/no-data-to-display";
+import "highcharts/esm/modules/accessibility";
+import "highcharts/esm/modules/no-data-to-display";
+import {calculateCssHexColor} from "../../util/colors.js";
+import {localeService} from "../../service/localeService.js";
 
 export const ProjectionOptions = {
     MILLER: "html.label.geoProjection.miller",
@@ -32,7 +34,10 @@ const GeolocationWorldMap = ({series, colors, projection, onClickCountry}) => {
     const {t} = useTranslation();
     const {nightModeEnabled, graphTheming} = useTheme();
 
+    const minColor = calculateCssHexColor("var(--color-graphs-world-map-low)");
+    const maxColor = calculateCssHexColor("var(--color-graphs-world-map-high)");
     useEffect(() => {
+        const regions = new Intl.DisplayNames([localeService.getIntlFriendlyLocale()], {type: 'region'});
         const mapSeries = {
             name: t('html.label.players'),
             type: 'map',
@@ -45,10 +50,13 @@ const GeolocationWorldMap = ({series, colors, projection, onClickCountry}) => {
             }
         };
 
-        NoDataDisplay(Highcharts);
-        Accessibility(Highcharts);
         Highcharts.setOptions(graphTheming);
-        Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}});
+        Highcharts.setOptions({
+            lang: {
+                locale: localeService.getIntlFriendlyLocale(),
+                noData: t('html.label.noDataToDisplay')
+            }
+        });
         Highcharts.mapChart('countryWorldMap', {
             chart: {
                 noData: t('html.label.noDataToDisplay'),
@@ -68,15 +76,22 @@ const GeolocationWorldMap = ({series, colors, projection, onClickCountry}) => {
                 projection: getProjection(projection)
             },
 
+            tooltip: {
+                formatter: function () {
+                    const translatedRegion = regions.of(this.properties['iso-a2']);
+                    return `${this.series.name}<br><span style="color:${this.color}">●</span> ${translatedRegion}: ${this.value}`
+                }
+            },
+
             colorAxis: {
                 min: 1,
                 type: 'logarithmic',
-                minColor: colors.low,
-                maxColor: colors.high
+                minColor,
+                maxColor
             },
             series: [mapSeries]
         })
-    }, [colors, series, graphTheming, nightModeEnabled, t, projection, onClickCountry]);
+    }, [colors, series, graphTheming, nightModeEnabled, t, projection, onClickCountry, localeService.clientLocale]);
 
     return (<div id="countryWorldMap"/>);
 };

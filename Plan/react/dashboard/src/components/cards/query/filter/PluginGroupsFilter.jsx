@@ -1,8 +1,12 @@
 import React from 'react';
 import MultipleChoiceFilter from "./MultipleChoiceFilter";
+import {useTranslation} from "react-i18next";
 
 const PluginGroupsFilter = ({index, filter, removeFilter, setFilterOptions}) => {
-    const label = `are in ${filter.options.plugin}'s ${filter.options.group} Groups`
+    const {t} = useTranslation();
+    const label = t('html.query.filter.pluginGroup.text', {
+        plugin: filter.options.plugin, group: filter.options.group
+    });
 
     return (
         <MultipleChoiceFilter

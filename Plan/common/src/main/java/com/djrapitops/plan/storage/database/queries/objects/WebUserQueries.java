@@ -19,6 +19,7 @@ package com.djrapitops.plan.storage.database.queries.objects;
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.delivery.domain.datatransfer.preferences.Preferences;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
+import com.djrapitops.plan.delivery.webserver.auth.CookieMetadata;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
@@ -119,7 +120,7 @@ public class WebUserQueries {
         return db -> db.queryList(sql, WebUserQueries::extractUser);
     }
 
-    public static Query<Map<String, User>> fetchActiveCookies() {
+    public static Query<Map<String, CookieMetadata>> fetchActiveCookies() {
         String sql = SELECT +
                 SecurityTable.USERNAME + ',' +
                 UsersTable.USER_NAME + ',' +
@@ -127,6 +128,8 @@ public class WebUserQueries {
                 SecurityTable.SALT_PASSWORD_HASH + ',' +
                 WebGroupTable.NAME + ',' +
                 CookieTable.COOKIE + ',' +
+                CookieTable.EXPIRES + ',' +
+                CookieTable.IP_ADDRESS + ',' +
                 "GROUP_CONCAT(" + WebPermissionTable.PERMISSION + ",',') as user_permissions" +
                 FROM + CookieTable.TABLE_NAME + " c" +
                 INNER_JOIN + SecurityTable.TABLE_NAME + " s on c." + CookieTable.WEB_USERNAME + "=s." + SecurityTable.USERNAME +
@@ -141,10 +144,20 @@ public class WebUserQueries {
                 SecurityTable.LINKED_TO + ',' +
                 SecurityTable.SALT_PASSWORD_HASH + ',' +
                 WebGroupTable.NAME + ',' +
-                CookieTable.COOKIE;
+                CookieTable.COOKIE + ',' +
+                CookieTable.EXPIRES + ',' +
+                CookieTable.IP_ADDRESS;
 
-        return db -> db.queryMap(sql, (set, byCookie) -> byCookie.put(set.getString(CookieTable.COOKIE), extractUser(set)),
+        return db -> db.queryMap(sql, (set, byCookie) -> byCookie.put(set.getString(CookieTable.COOKIE), extractCookieMetadata(set)),
                 System.currentTimeMillis());
+    }
+
+    private static CookieMetadata extractCookieMetadata(ResultSet set) throws SQLException {
+        return new CookieMetadata(
+                extractUser(set),
+                set.getLong(CookieTable.EXPIRES),
+                set.getString(CookieTable.IP_ADDRESS)
+        );
     }
 
     private static User extractUser(ResultSet set) throws SQLException {
@@ -158,11 +171,6 @@ public class WebUserQueries {
                 .filter(permission -> !permission.isEmpty())
                 .collect(Collectors.toList()) : List.of();
         return new User(username, linkedTo != null ? linkedTo : "console", linkedToUUID, passwordHash, permissionGroup, new HashSet<>(permissions));
-    }
-
-    public static Query<Map<String, Long>> getCookieExpiryTimes() {
-        String sql = SELECT + CookieTable.COOKIE + ',' + CookieTable.EXPIRES + FROM + CookieTable.TABLE_NAME;
-        return db -> db.queryMap(sql, (set, expiryTimes) -> expiryTimes.put(set.getString(CookieTable.COOKIE), set.getLong(CookieTable.EXPIRES)));
     }
 
     public static Query<List<String>> fetchGroupNames() {

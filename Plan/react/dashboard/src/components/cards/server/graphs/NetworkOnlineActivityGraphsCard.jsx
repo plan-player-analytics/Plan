@@ -21,6 +21,8 @@ import {faCalendar} from "@fortawesome/free-regular-svg-icons";
 import ServerCalendar from "../../../calendar/ServerCalendar";
 import {postQuery} from "../../../../service/queryService";
 import Highcharts from "highcharts/highstock";
+import "highcharts/modules/no-data-to-display"
+import "highcharts/modules/accessibility";
 import QueryPlayerListModal from "../../../modal/QueryPlayerListModal";
 
 const SingleProxyPlayersOnlineGraph = ({serverUUID}) => {
@@ -120,19 +122,22 @@ const NetworkOnlineActivityGraphsCard = () => {
     const {t} = useTranslation();
     const tabs = [
         {
-            name: t('html.label.networkOnlineActivity'), icon: faChartArea, color: 'blue', href: 'online-activity',
+            name: t('html.label.networkOnlineActivity'),
+            icon: faChartArea,
+            color: 'players-online',
+            href: 'online-activity',
             element: <PlayersOnlineTab/>,
             permission: 'page.network.overview.graphs.online'
         }, {
-            name: t('html.label.dayByDay'), icon: faChartArea, color: 'blue', href: 'day-by-day',
+            name: t('html.label.dayByDay'), icon: faChartArea, color: 'players-unique', href: 'day-by-day',
             element: <DayByDayTab/>,
             permission: 'page.network.overview.graphs.day.by.day'
         }, {
-            name: t('html.label.hourByHour'), icon: faChartArea, color: 'blue', href: 'hour-by-hour',
+            name: t('html.label.hourByHour'), icon: faChartArea, color: 'players-unique', href: 'hour-by-hour',
             element: <HourByHourTab/>,
             permission: 'page.network.overview.graphs.hour.by.hour'
         }, {
-            name: t('html.label.networkCalendar'), icon: faCalendar, color: 'teal', href: 'network-calendar',
+            name: t('html.label.networkCalendar'), icon: faCalendar, color: 'sessions', href: 'network-calendar',
             element: <NetworkCalendarTab/>,
             permission: 'page.network.overview.graphs.calendar'
         }

@@ -76,7 +76,7 @@ public class SpongeWorldChangeListener {
 
         UUID uuid = player.uniqueId();
 
-        String worldName = Sponge.game().server().worldManager().worldDirectory(event.destinationWorld().key())
+        String worldName = Optional.ofNullable(Sponge.game().server().worldManager().worldDirectory(event.destinationWorld().key()))
                 .map(path -> path.getFileName().toString()).orElse("Unknown");
         String gameMode = getGameMode(player);
 

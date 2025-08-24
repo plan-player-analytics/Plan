@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
-import {linegraphButtons, tooltip} from "../../util/graphs";
+import {tooltip, translateLinegraphButtons} from "../../util/graphs";
 import LineGraph from './LineGraph'
 import {ChartLoader} from "../navigation/Loader";
 import {useTheme} from "../../hooks/themeHook";
@@ -30,7 +30,7 @@ const StackedPlayersOnlineGraph = ({data}) => {
             title: {text: ''},
             rangeSelector: {
                 selected: 2,
-                buttons: linegraphButtons
+                buttons: translateLinegraphButtons(t)
             },
             chart: {
                 noData: t('html.label.noDataToDisplay'),

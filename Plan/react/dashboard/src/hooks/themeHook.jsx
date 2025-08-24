@@ -1,149 +1,129 @@
 import {createContext, useContext, useEffect, useMemo, useState} from "react";
-import {createNightModeCss, getColors} from "../util/colors";
-import {getLightModeChartTheming, getNightModeChartTheming} from "../util/graphColors";
+import {getChartTheming} from "../util/graphColors";
 import {useMetadata} from "./metadataHook";
-import {useLocation} from "react-router-dom";
-
-const themeColors = getColors();
-themeColors.splice(themeColors.length - 4, 4);
-
-const getDefaultTheme = (metadata) => {
-    const defaultTheme = metadata.defaultTheme;
-
-    // Use 'plan' if default or if default is undefined.
-    // Avoid night mode staying on if default theme is night mode
-    const invalidColor = !defaultTheme
-        || defaultTheme === 'default'
-        || defaultTheme === 'black'
-        || defaultTheme === 'white'
-        || (defaultTheme !== 'night' && !themeColors.map(color => color.name).includes(defaultTheme));
-
-    return invalidColor ? 'plan' : defaultTheme;
-}
 
 const getStoredTheme = (defaultTheme) => {
-    const stored = window.localStorage.getItem('themeColor');
+    const stored = window.localStorage.getItem('theme.name');
     return stored && stored !== 'undefined' ? stored : defaultTheme;
 }
 
 const setStoredTheme = themeColor => {
     if (themeColor) {
-        window.localStorage.setItem('themeColor', themeColor);
+        window.localStorage.setItem('theme.name', themeColor);
     }
+}
+
+const getStoredColor = () => {
+    const stored = window.localStorage.getItem('theme.color');
+    return stored && stored !== 'undefined' ? stored : 'theme';
+}
+
+const setStoredColor = themeColor => {
+    if (themeColor) {
+        window.localStorage.setItem('theme.color', themeColor);
+    }
+}
+
+const getStoredNightMode = () => {
+    const stored = window.localStorage.getItem('theme.nightMode');
+    return stored && stored !== 'undefined' ? stored !== 'false' : undefined;
+}
+
+const setStoredNightMode = value => {
+    window.localStorage.setItem('theme.nightMode', '' + value);
+}
+
+const removeOldVariables = () => {
+    window.localStorage.removeItem('themeColor');
 }
 
 const ThemeContext = createContext({});
 
-export const ThemeContextProvider = ({children}) => {
+export const ThemeContextProvider = ({children, themeOverride}) => {
     const metadata = useMetadata();
 
     const [colorChooserOpen, setColorChooserOpen] = useState(false);
-    const [selectedColor, setSelectedColor] = useState(getStoredTheme('plan'));
-    const [previousColor, setPreviousColor] = useState(undefined);
+    const [selectedTheme, setSelectedTheme] = useState(themeOverride);
+    const [selectedColor, setSelectedColor] = useState(undefined);
+    const [nightMode, setNightMode] = useState(getStoredNightMode());
+
+    removeOldVariables();
 
     useEffect(() => {
-        if (!metadata) return;
-
-        setSelectedColor(getStoredTheme(getDefaultTheme(metadata)));
-    }, [metadata, setSelectedColor]);
+        if (!metadata.loaded) return;
+        if (themeOverride) return;
+        const theme = getStoredTheme(metadata.defaultTheme);
+        const invalidTheme = !metadata.getAvailableThemes().includes(theme);
+        if (nightMode === undefined) setNightMode(metadata.defaultNightMode);
+        setSelectedTheme(invalidTheme ? 'default' : theme);
+        setSelectedColor(getStoredColor());
+    }, [metadata.loaded, metadata, setSelectedTheme, setSelectedColor]);
 
     const sharedState = useMemo(() => {
         return {
+            selectedTheme, setSelectedTheme,
             selectedColor, setSelectedColor,
-            previousColor, setPreviousColor,
-            colorChooserOpen, setColorChooserOpen
+            colorChooserOpen, setColorChooserOpen,
+            nightMode, setNightMode
         }
-    }, [selectedColor, setSelectedColor, previousColor, setPreviousColor, colorChooserOpen, setColorChooserOpen]);
+    }, [selectedTheme, selectedColor, nightMode, setSelectedColor, colorChooserOpen, setColorChooserOpen]);
     return (<ThemeContext.Provider value={sharedState}>
             {children}
         </ThemeContext.Provider>
     )
 }
 
-const lightModeChartTheming = getLightModeChartTheming();
-const nightModeChartTheming = getNightModeChartTheming();
+const chartTheming = getChartTheming();
 
 export const useTheme = () => {
     const {
+        selectedTheme,
+        setSelectedTheme,
         selectedColor,
         setSelectedColor,
-        previousColor,
-        setPreviousColor,
         colorChooserOpen,
-        setColorChooserOpen
+        setColorChooserOpen,
+        nightMode,
+        setNightMode
     } = useContext(ThemeContext);
-
-    const metadata = useMetadata();
 
     const setTheme = color => {
         setStoredTheme(color);
-        setSelectedColor(color);
+        setSelectedTheme(color);
     }
 
-    if (!selectedColor) setTheme(selectedColor);
+    const setColor = color => {
+        setStoredColor(color);
+        setSelectedColor(color);
+    }
 
     const toggleColorChooser = () => {
         setColorChooserOpen(!colorChooserOpen);
     }
 
     const isNightModeEnabled = () => {
-        return selectedColor === 'night';
+        return nightMode;
     }
 
     const toggleNightMode = () => {
-        if (isNightModeEnabled()) {
-            const defaultTheme = getDefaultTheme(metadata);
-            const lightTheme = defaultTheme === 'night' ? 'plan' : defaultTheme;
-            setTheme(previousColor ? previousColor : lightTheme);
-        } else {
-            setPreviousColor(selectedColor);
-            setTheme('night');
-        }
+        setStoredNightMode(!nightMode);
+        setNightMode(!nightMode);
     }
 
     const nightModeEnabled = isNightModeEnabled();
     return {
+        loaded: selectedTheme !== undefined,
+        currentTheme: selectedTheme,
         color: selectedColor,
-        setColor: setTheme,
-        nightModeEnabled: nightModeEnabled,
-        colorChooserOpen: colorChooserOpen,
-        nightModeCss: nightModeEnabled ? createNightModeCss() : undefined,
-        toggleNightMode: toggleNightMode,
-        toggleColorChooser: toggleColorChooser,
-        themeColors: themeColors,
-        graphTheming: nightModeEnabled ? nightModeChartTheming : lightModeChartTheming
+        setTheme,
+        setColor,
+        nightModeEnabled,
+        colorChooserOpen,
+        toggleNightMode,
+        toggleColorChooser,
+        graphTheming: chartTheming
     };
 }
-
-export const ThemeCss = () => {
-    const {color} = useTheme();
-
-    if (!color) return <></>;
-
-    return (
-        <style>
-            {':root {--color-theme: var(--color-' + color + ') !important;}'}
-        </style>
-    )
-}
-
-export const NightModeCss = () => {
-    const theme = useTheme();
-    const location = useLocation();
-
-    if (location.pathname.startsWith('/docs')) {
-        return <>
-            <style>
-                {'#wrapper {background-image: none;}'}
-            </style>
-        </>
-    }
-
-    return (
-        <>
-            {theme.nightModeEnabled ? <style>
-                {theme.nightModeCss}
-            </style> : ''}
-        </>
-    );
+export const getLocallyStoredThemes = () => {
+    return JSON.parse(window.localStorage.getItem('locally-stored-themes') || '[]');
 }

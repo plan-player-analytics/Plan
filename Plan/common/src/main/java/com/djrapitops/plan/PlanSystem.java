@@ -22,6 +22,7 @@ import com.djrapitops.plan.delivery.export.ExportSystem;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.webserver.NonProxyWebserverDisableChecker;
 import com.djrapitops.plan.delivery.webserver.WebServerSystem;
+import com.djrapitops.plan.gathering.GatheringUtilities;
 import com.djrapitops.plan.gathering.cache.CacheSystem;
 import com.djrapitops.plan.gathering.importing.ImportSystem;
 import com.djrapitops.plan.gathering.listeners.ListenerSystem;
@@ -34,10 +35,12 @@ import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plan.version.VersionChecker;
+import dev.vankka.dependencydownload.ApplicationDependencyManager;
 import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.io.IOException;
 
 /**
  * PlanSystem contains everything Plan needs to run.
@@ -69,9 +72,11 @@ public class PlanSystem implements SubSystem {
     private final ImportSystem importSystem;
     private final ExportSystem exportSystem;
     private final DeliveryUtilities deliveryUtilities;
+    private final GatheringUtilities gatheringUtilities;
     private final ApiServices apiServices;
     private final PluginLogger logger;
     private final ErrorLogger errorLogger;
+    private final ApplicationDependencyManager applicationDependencyManager;
 
     @Inject
     public PlanSystem(
@@ -91,8 +96,9 @@ public class PlanSystem implements SubSystem {
             DeliveryUtilities deliveryUtilities,
             PluginLogger logger,
             ErrorLogger errorLogger,
+            ApplicationDependencyManager applicationDependencyManager,
             ApiServices apiServices, // API v5
-            @SuppressWarnings("deprecation") PlanAPI.PlanAPIHolder apiHolder // Deprecated PlanAPI, backwards compatibility
+            @SuppressWarnings("deprecation") PlanAPI.PlanAPIHolder apiHolder, GatheringUtilities gatheringUtilities // Deprecated PlanAPI, backwards compatibility
     ) {
         this.files = files;
         this.configSystem = configSystem;
@@ -108,8 +114,10 @@ public class PlanSystem implements SubSystem {
         this.importSystem = importSystem;
         this.exportSystem = exportSystem;
         this.deliveryUtilities = deliveryUtilities;
+        this.gatheringUtilities = gatheringUtilities;
         this.logger = logger;
         this.errorLogger = errorLogger;
+        this.applicationDependencyManager = applicationDependencyManager;
         this.apiServices = apiServices;
 
         logger.info("§2");
@@ -188,6 +196,12 @@ public class PlanSystem implements SubSystem {
         Formatters.clearSingleton();
 
         apiServices.disableExtensionDataUpdates();
+
+        try {
+            applicationDependencyManager.cleanupCacheDirectory();
+        } catch (IOException e) {
+            logger.warn("Failed to cleanup dependency cache directory", e);
+        }
 
         disableSystems(
                 taskSystem,
@@ -274,6 +288,10 @@ public class PlanSystem implements SubSystem {
 
     public DeliveryUtilities getDeliveryUtilities() {
         return deliveryUtilities;
+    }
+
+    public GatheringUtilities getGatheringUtilities() {
+        return gatheringUtilities;
     }
 
     public boolean isEnabled() {

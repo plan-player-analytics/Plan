@@ -87,7 +87,7 @@ public class ServerPageResolver implements Resolver {
         boolean toNetworkPage = serverInfo.getServer().isProxy() && serverInfo.getServerUUID().equals(serverUUID);
         if (toNetworkPage) {
             if (request.getPath().getPart(0).map(NETWORK_PAGE::equals).orElse(false)) {
-                return Optional.of(responseFactory.networkPageResponse(request));
+                return Optional.of(responseFactory.reactPageResponse(request));
             } else {
                 // Accessing /server/Server <Bungee ID> which should be redirected to /network
                 return redirectToCurrentServer();

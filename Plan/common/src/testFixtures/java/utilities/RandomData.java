@@ -23,7 +23,7 @@ import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.tables.KillsTable;
-import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.text.RandomStringGenerator;
 
 import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
@@ -60,7 +60,10 @@ public class RandomData {
     }
 
     public static String randomString(int size) {
-        return RandomStringUtils.randomAlphanumeric(size);
+        return new RandomStringGenerator.Builder().withinRange('A', 'z').get()
+                .generate(size)
+                .replace(';', '_')
+                .replace('\\', '_');
     }
 
     public static List<Nickname> randomNicknames(ServerUUID serverUUID) {
@@ -217,5 +220,9 @@ public class RandomData {
         return IntStream.range(0, n).mapToObj(i -> "join_address_" + i)
                 .map(JoinAddress::new)
                 .collect(Collectors.toList());
+    }
+
+    public static List<UUID> randomUUIDs(int n) {
+        return IntStream.range(0, n).mapToObj(i -> UUID.randomUUID()).toList();
     }
 }

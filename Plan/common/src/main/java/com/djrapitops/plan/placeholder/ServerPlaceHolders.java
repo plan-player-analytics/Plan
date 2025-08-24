@@ -40,10 +40,7 @@ import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 
@@ -89,12 +86,14 @@ public class ServerPlaceHolders implements Placeholders {
         placeholders.registerStatic("network_players_online",
                 parameters -> {
                     DateObj<Long> count = new DateObj<>(System.currentTimeMillis(), 0L);
-                    for (Server proxy : database.query(ServerQueries.fetchProxyServers())) {
-                        ServerUUID proxyUUID = proxy.getUuid();
-                        new DateObjMutator<>(database.query(TPSQueries.fetchPlayersOnlineOfServer(fiveMinAgo(), now(), proxyUUID)))
+                    Collection<ServerUUID> servers = database.query(ServerQueries.fetchProxyServerUUIDs());
+                    if (servers.isEmpty()) servers = database.query(ServerQueries.fetchServerNamesToUUIDs()).values();
+                    for (ServerUUID serverUUID : servers) {
+                        List<DateObj<Integer>> data = database.query(TPSQueries.fetchPlayersOnlineOfServer(fiveMinAgo(), now(), serverUUID));
+                        new DateObjMutator<>(data)
                                 .mostRecent()
                                 .ifPresent(playersOnline -> {
-                                    if (Math.abs(count.getDate() - playersOnline.getDate()) > TimeUnit.MINUTES.toMillis(2L)) {
+                                    if (Math.abs(count.getDate() - playersOnline.getDate()) < TimeUnit.MINUTES.toMillis(2L)) {
                                         count.setValue(count.getValue() + playersOnline.getValue());
                                     }
                                 });

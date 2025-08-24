@@ -75,7 +75,8 @@ public class BukkitPlayerData implements PlatformPlayerData {
 
     @Override
     public Optional<Long> getRegisterDate() {
-        return Optional.of(player.getFirstPlayed());
+        long firstPlayed = player.getFirstPlayed();
+        return firstPlayed > 0 ? Optional.of(firstPlayed) : Optional.empty();
     }
 
     @Override

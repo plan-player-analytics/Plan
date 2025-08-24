@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.transactions.events;
 
+import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.tables.AllowlistBounceTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
@@ -48,7 +49,35 @@ public class StoreAllowlistBounceTransaction extends Transaction {
 
     @Override
     protected void performOperations() {
-        boolean updated = execute(new ExecStatement(AllowlistBounceTable.INCREMENT_TIMES_STATEMENT) {
+        boolean updated = update();
+        if (!updated) {
+            try {
+                insert();
+            } catch (DBOpException e) {
+                if (e.isDuplicateKeyViolation()) {
+                    update();
+                    return;
+                }
+                throw e;
+            }
+        }
+    }
+
+    private void insert() {
+        execute(new ExecStatement(AllowlistBounceTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+                statement.setString(2, playerName);
+                statement.setString(3, serverUUID.toString());
+                statement.setInt(4, 1);
+                statement.setLong(5, time);
+            }
+        });
+    }
+
+    private boolean update() {
+        return execute(new ExecStatement(AllowlistBounceTable.INCREMENT_TIMES_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, time);
@@ -56,17 +85,5 @@ public class StoreAllowlistBounceTransaction extends Transaction {
                 statement.setString(3, serverUUID.toString());
             }
         });
-        if (!updated) {
-            execute(new ExecStatement(AllowlistBounceTable.INSERT_STATEMENT) {
-                @Override
-                public void prepare(PreparedStatement statement) throws SQLException {
-                    statement.setString(1, playerUUID.toString());
-                    statement.setString(2, playerName);
-                    statement.setString(3, serverUUID.toString());
-                    statement.setInt(4, 1);
-                    statement.setLong(5, time);
-                }
-            });
-        }
     }
 }

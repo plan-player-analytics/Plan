@@ -14,8 +14,8 @@ const WorldPieCard = ({worldSeries, gmSeries}) => {
     return (
         <Card>
             <Card.Header>
-                <h6 className="col-black" style={{width: '100%'}}>
-                    <Fa icon={faClock} className="col-teal"/> {t('html.label.worldPlaytime')}
+                <h6 className="col-text" style={{width: '100%'}}>
+                    <Fa icon={faClock} className="col-sessions"/> {t('html.label.worldPlaytime')}
                 </h6>
             </Card.Header>
             <WorldPie

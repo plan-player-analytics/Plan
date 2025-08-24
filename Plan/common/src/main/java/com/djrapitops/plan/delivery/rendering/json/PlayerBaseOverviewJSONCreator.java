@@ -45,7 +45,6 @@ public class PlayerBaseOverviewJSONCreator implements ServerTabJSONCreator<Map<S
     private final PlanConfig config;
     private final DBSystem dbSystem;
 
-    private final Formatter<Long> timeAmount;
     private final Formatter<Double> percentage;
 
     @Inject
@@ -57,7 +56,6 @@ public class PlayerBaseOverviewJSONCreator implements ServerTabJSONCreator<Map<S
         this.config = config;
         this.dbSystem = dbSystem;
 
-        timeAmount = formatters.timeAmount();
         percentage = formatters.percentage();
     }
 
@@ -91,9 +89,9 @@ public class PlayerBaseOverviewJSONCreator implements ServerTabJSONCreator<Map<S
 
         Long avgPlaytimeBefore = db.query(SessionQueries.averagePlaytimePerPlayer(twoMonthsAgo, monthAgo, serverUUID));
         Long avgPlaytimeAfter = db.query(SessionQueries.averagePlaytimePerPlayer(monthAgo, now, serverUUID));
-        trends.put("playtime_avg_then", timeAmount.apply(avgPlaytimeBefore));
-        trends.put("playtime_avg_now", timeAmount.apply(avgPlaytimeAfter));
-        trends.put("playtime_avg_trend", new Trend(avgPlaytimeBefore, avgPlaytimeAfter, false, timeAmount));
+        trends.put("playtime_avg_then", avgPlaytimeBefore);
+        trends.put("playtime_avg_now", avgPlaytimeAfter);
+        trends.put("playtime_avg_trend", new Trend(avgPlaytimeBefore, avgPlaytimeAfter, false));
 
         Long avgAfkBefore = db.query(SessionQueries.averageAfkPerPlayer(twoMonthsAgo, monthAgo, serverUUID));
         Long avgAfkAfter = db.query(SessionQueries.averageAfkPerPlayer(monthAgo, now, serverUUID));
@@ -105,15 +103,15 @@ public class PlayerBaseOverviewJSONCreator implements ServerTabJSONCreator<Map<S
 
         Long avgRegularPlaytimeBefore = db.query(ActivityIndexQueries.averagePlaytimePerRegularPlayer(twoMonthsAgo, monthAgo, serverUUID, playThreshold));
         Long avgRegularPlaytimeAfter = db.query(ActivityIndexQueries.averagePlaytimePerRegularPlayer(monthAgo, now, serverUUID, playThreshold));
-        trends.put("regular_playtime_avg_then", timeAmount.apply(avgRegularPlaytimeBefore));
-        trends.put("regular_playtime_avg_now", timeAmount.apply(avgRegularPlaytimeAfter));
-        trends.put("regular_playtime_avg_trend", new Trend(avgRegularPlaytimeBefore, avgRegularPlaytimeAfter, false, timeAmount));
+        trends.put("regular_playtime_avg_then", avgRegularPlaytimeBefore);
+        trends.put("regular_playtime_avg_now", avgRegularPlaytimeAfter);
+        trends.put("regular_playtime_avg_trend", new Trend(avgRegularPlaytimeBefore, avgRegularPlaytimeAfter, false));
 
         Long avgRegularSessionLengthBefore = db.query(ActivityIndexQueries.averageSessionLengthPerRegularPlayer(twoMonthsAgo, monthAgo, serverUUID, playThreshold));
         Long avgRegularSessionLengthAfter = db.query(ActivityIndexQueries.averageSessionLengthPerRegularPlayer(monthAgo, now, serverUUID, playThreshold));
-        trends.put("regular_session_avg_then", timeAmount.apply(avgRegularSessionLengthBefore));
-        trends.put("regular_session_avg_now", timeAmount.apply(avgRegularSessionLengthAfter));
-        trends.put("regular_session_avg_trend", new Trend(avgRegularSessionLengthBefore, avgRegularSessionLengthAfter, false, timeAmount));
+        trends.put("regular_session_avg_then", avgRegularSessionLengthBefore);
+        trends.put("regular_session_avg_now", avgRegularSessionLengthAfter);
+        trends.put("regular_session_avg_trend", new Trend(avgRegularSessionLengthBefore, avgRegularSessionLengthAfter, false));
 
         Long avgRegularAfkBefore = db.query(ActivityIndexQueries.averageAFKPerRegularPlayer(twoMonthsAgo, monthAgo, serverUUID, playThreshold));
         Long avgRegularAfkAfter = db.query(ActivityIndexQueries.averageAFKPerRegularPlayer(monthAgo, now, serverUUID, playThreshold));

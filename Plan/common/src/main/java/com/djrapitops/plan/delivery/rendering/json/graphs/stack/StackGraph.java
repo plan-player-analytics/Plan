@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.delivery.rendering.json.graphs.stack;
 
+import java.io.Serializable;
+
 /**
  * Utility for creating HighCharts Stack graphs.
  *
@@ -24,14 +26,14 @@ package com.djrapitops.plan.delivery.rendering.json.graphs.stack;
 public class StackGraph {
 
     private final StackDataSet[] dataSets;
-    private final String[] labels;
+    private final Serializable[] labels;
 
-    public StackGraph(String[] labels, StackDataSet... dataSets) {
+    public StackGraph(Serializable[] labels, StackDataSet... dataSets) {
         this.dataSets = dataSets;
         this.labels = labels;
     }
 
-    public String[] getLabels() {
+    public Serializable[] getLabels() {
         return labels;
     }
 

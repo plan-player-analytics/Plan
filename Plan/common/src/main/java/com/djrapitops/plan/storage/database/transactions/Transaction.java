@@ -103,14 +103,16 @@ public abstract class Transaction {
 
         // Retry if deadlock occurs.
         int errorCode = statementFail.getErrorCode();
+        boolean mysqlOutdatedRead = dbType == DBType.MYSQL && errorCode == 1020;
         boolean mySQLDeadlock = dbType == DBType.MYSQL && errorCode == 1213;
         boolean deadlocked = mySQLDeadlock || statementFail instanceof SQLTransactionRollbackException;
-        if (deadlocked && attempts < ATTEMPT_LIMIT) {
+        boolean lockWaitTimeout = errorCode == 1205;
+        if (mysqlOutdatedRead || deadlocked || lockWaitTimeout && attempts < ATTEMPT_LIMIT) {
             executeTransaction(db); // Recurse to attempt again.
             return;
         }
 
-        if (dbType == DBType.MYSQL && errorCode == 1205) {
+        if (dbType == DBType.MYSQL && lockWaitTimeout) {
             if (!db.isUnderHeavyLoad()) {
                 db.getLogger().warn("Database appears to be under heavy load. Dropping some unimportant transactions and adding short pauses for next 10 minutes.");
                 db.getRunnableFactory().create(db::assumeNoMoreHeavyLoad)

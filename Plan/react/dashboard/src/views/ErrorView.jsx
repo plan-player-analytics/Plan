@@ -29,7 +29,7 @@ export const ErrorViewCard = ({error}) => {
         <LoadIn>
             <Card>
                 <Card.Header>
-                    <h6 className="col-black">
+                    <h6 className="col-text">
                         <Fa icon={error.icon ? error.icon : faBug}/> Error information
                     </h6>
                 </Card.Header>

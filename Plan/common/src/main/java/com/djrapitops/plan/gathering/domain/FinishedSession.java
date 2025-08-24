@@ -187,7 +187,7 @@ public class FinishedSession implements DateHolder {
      * @return Serialized format
      */
     public String serializeCSV() {
-        return String.valueOf(playerUUID) + ';' +
+        return (String.valueOf(playerUUID) + ';' +
                 serverUUID + ';' +
                 start + ';' +
                 end + ';' +
@@ -200,7 +200,8 @@ public class FinishedSession implements DateHolder {
                 getExtraData(JoinAddress.class).map(JoinAddress::getAddress)
                         .map(address -> address.replace(';', ':'))
                         .orElse(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP) + ';' +
-                getExtraData(PlayerName.class).map(PlayerName::get).orElseGet(playerUUID::toString);
+                getExtraData(PlayerName.class).map(PlayerName::get).orElseGet(playerUUID::toString))
+                .replace('\\', '_'); // Untrusted data can contain escape characters that fail json serialization.
     }
 
     public static class Id {

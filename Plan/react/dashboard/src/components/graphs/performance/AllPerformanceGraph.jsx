@@ -1,14 +1,16 @@
-import React, {useCallback, useEffect} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 
-import {linegraphButtons, tooltip} from "../../../util/graphs";
-import Highcharts from "highcharts/highstock";
-import NoDataDisplay from "highcharts/modules/no-data-to-display"
+import {tooltip, translateLinegraphButtons} from "../../../util/graphs";
+import Highcharts from "highcharts/esm/highstock";
+import "highcharts/esm/modules/no-data-to-display"
+import "highcharts/esm/modules/accessibility";
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../../hooks/themeHook";
 import {withReducedSaturation} from "../../../util/colors";
-import Accessibility from "highcharts/modules/accessibility";
 import {useMetadata} from "../../../hooks/metadataHook";
 import {useAuth} from "../../../hooks/authenticationHook.jsx";
+import {useGraphExtremesContext} from "../../../hooks/interaction/graphExtremesContextHook.jsx";
+import {localeService} from "../../../service/localeService.js";
 
 const yAxis = [
     {
@@ -68,6 +70,8 @@ const AllPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
     const {graphTheming, nightModeEnabled} = useTheme();
     const {timeZoneOffsetMinutes} = useMetadata();
     const {hasPermission} = useAuth();
+    const {extremes, onSetExtremes} = useGraphExtremesContext();
+    const [graph, setGraph] = useState(undefined);
 
     const onResize = useCallback(() => {
         let chartElement = document.getElementById(id);
@@ -160,17 +164,27 @@ const AllPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
             } : {}
         };
 
-        NoDataDisplay(Highcharts);
-        Accessibility(Highcharts);
-        Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}})
+        Highcharts.setOptions({
+            lang: {
+                locale: localeService.getIntlFriendlyLocale(),
+                noData: t('html.label.noDataToDisplay')
+            }
+        })
         Highcharts.setOptions(graphTheming);
-        Highcharts.stockChart(id, {
+        setGraph(Highcharts.stockChart(id, {
             chart: {
                 noData: t('html.label.noDataToDisplay')
             },
             rangeSelector: {
                 selected: 2,
-                buttons: linegraphButtons
+                buttons: translateLinegraphButtons(t)
+            },
+            xAxis: {
+                events: {
+                    afterSetExtremes: (event) => {
+                        if (onSetExtremes) onSetExtremes(event);
+                    }
+                }
             },
             yAxis,
             title: {text: ''},
@@ -185,10 +199,14 @@ const AllPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
             time: {
                 timezoneOffset: timeZoneOffsetMinutes
             },
-            series: [series.playersOnline, series.tps, series.cpu, series.ram, series.entities, series.chunks, pluginHistorySeries]
-        });
+            series: [series.playersOnline, series.tps, series.cpu, series.ram, series.entities, series.chunks, pluginHistorySeries].filter(s => s)
+        }));
     }, [data, dataSeries, graphTheming, nightModeEnabled, id, t, timeZoneOffsetMinutes, pluginHistorySeries])
-
+    useEffect(() => {
+        if (graph?.xAxis?.length && extremes) {
+            graph.xAxis[0].setExtremes(extremes.min, extremes.max);
+        }
+    }, [graph, extremes]);
     return (
         <div className="chart-area" style={{height: "450px"}} id={id}>
             <span className="loader"/>

@@ -4,7 +4,7 @@ plugins {
     id("java-test-fixtures")
     id "dev.vankka.dependencydownload.plugin" version "$dependencyDownloadVersion"
     id "com.github.node-gradle.node" version "7.1.0"
-    id "io.swagger.core.v3.swagger-gradle-plugin" version "2.2.28"
+    id "io.swagger.core.v3.swagger-gradle-plugin" version "2.2.36"
 }
 
 configurations {
@@ -57,7 +57,7 @@ dependencies {
     implementation "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
 
     compileOnly "net.kyori:adventure-api:$adventureVersion"
-    implementation("dev.vankka:dependencydownload-runtime:$dependencyDownloadVersion") {
+    api("dev.vankka:dependencydownload-runtime:$dependencyDownloadVersion") {
         // Effectively disables relocating
         exclude module: "jar-relocator"
     }
@@ -105,7 +105,7 @@ dependencies {
     testImplementation "org.testcontainers:testcontainers:$testContainersVersion"
     testImplementation "org.testcontainers:junit-jupiter:$testContainersVersion"
     testImplementation "org.testcontainers:nginx:$testContainersVersion"
-    testImplementation "org.awaitility:awaitility:$awaitilityVersion"
+    testFixturesApi "org.awaitility:awaitility:$awaitilityVersion"
     testFixturesApi "com.google.guava:guava:$guavaVersion"
 
     testFixturesApi "org.xerial:sqlite-jdbc:$sqliteVersion" // SQLite
@@ -127,7 +127,7 @@ test {
 
 node {
     download = true
-    version = "20.9.0"
+    version = "24.1.0"
     nodeProjectDir = file("$rootDir/react/dashboard")
 }
 
@@ -190,6 +190,7 @@ tasks.register("determineAssetModifications") {
     inputs.files(fileTree("$rootDir/react/dashboard/build"))
     inputs.files(fileTree(dir: "src/main/resources/assets/plan/web"))
     inputs.files(fileTree(dir: "src/main/resources/assets/plan/locale"))
+    inputs.files(fileTree(dir: "src/main/resources/assets/plan/themes"))
     outputs.file("build/resources/main/assets/plan/AssetVersion.yml")
 
     doLast {
@@ -225,6 +226,22 @@ tasks.register("determineAssetModifications") {
             def relativePath = tree.getDir().toPath().relativize(f.toPath()) // File path relative to the tree
             versionFile.text += String.format(
                     "%s: %s\n", relativePath.toString().replace(".", ",").replace("\\", "/"), modified
+            )
+        }
+
+        tree = fileTree(dir: "src/main/resources/assets/plan/themes")
+        tree.forEach { File f ->
+            def gitModified = new ByteArrayOutputStream()
+            exec {
+                commandLine "git", "log", "-1", "--pretty=%ct", f.toString()
+                standardOutput = gitModified
+            }
+            def gitModifiedAsString = gitModified.toString().strip()
+            // git returns UNIX time in seconds, but most things in Java use UNIX time in milliseconds
+            def modified = gitModifiedAsString.isEmpty() ? System.currentTimeMillis() : Long.parseLong(gitModifiedAsString) * 1000
+            def relativePath = tree.getDir().toPath().relativize(f.toPath()) // File path relative to the tree
+            versionFile.text += String.format(
+                    "themes/%s: %s\n", relativePath.toString().replace(".", ",").replace("\\", "/"), modified
             )
         }
 

@@ -2,7 +2,7 @@ import React from "react";
 import {Col} from "react-bootstrap";
 import OnlineActivityGraphsCard from "../../components/cards/server/graphs/OnlineActivityGraphsCard";
 import OnlineActivityAsNumbersCard from "../../components/cards/server/tables/OnlineActivityAsNumbersCard";
-import {useParams} from "react-router-dom";
+import {useParams} from "react-router";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import {fetchOnlineActivityOverview} from "../../service/serverService";
 import ErrorView from "../ErrorView";

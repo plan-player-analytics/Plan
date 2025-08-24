@@ -62,26 +62,26 @@ class ActiveCookieStoreTest {
 
     @Test
     void cookiesAreStored() {
-        String cookie = underTest.generateNewCookie(user);
-        User matchingUser = underTest.checkCookie(cookie).orElseThrow(AssertionError::new);
+        String cookie = underTest.generateNewCookie(user, TestConstants.IPV4_ADDRESS);
+        User matchingUser = underTest.findCookie(cookie).map(CookieMetadata::getUser).orElseThrow(AssertionError::new);
 
         assertEquals(user, matchingUser);
     }
 
     @Test
     void cookiesAreRemoved() {
-        String cookie = underTest.generateNewCookie(user);
+        String cookie = underTest.generateNewCookie(user, TestConstants.IPV4_ADDRESS);
 
         underTest.removeCookie(cookie);
-        assertFalse(underTest.checkCookie(cookie).isPresent());
+        assertFalse(underTest.findCookie(cookie).isPresent());
     }
 
     @Test
     void usersCookiesAreRemoved() {
-        String cookie = underTest.generateNewCookie(user);
+        String cookie = underTest.generateNewCookie(user, TestConstants.IPV4_ADDRESS);
 
         ActiveCookieStore.removeUserCookie(user.getUsername());
-        assertFalse(underTest.checkCookie(cookie).isPresent());
+        assertFalse(underTest.findCookie(cookie).isPresent());
     }
 
 }

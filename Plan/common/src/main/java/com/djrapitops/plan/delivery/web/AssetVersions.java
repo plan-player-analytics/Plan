@@ -27,6 +27,7 @@ import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Singleton
 public class AssetVersions {
@@ -67,5 +68,14 @@ public class AssetVersions {
     public List<String> getAssetPaths() throws IOException {
         if (webAssetConfig == null) prepare();
         return webAssetConfig.getConfigPaths();
+    }
+
+    public List<String> getThemeNames() throws IOException {
+        return getAssetPaths().stream()
+                .filter(path -> path.startsWith("themes"))
+                .filter(path -> path.endsWith("json"))
+                .map(path -> path.substring(7, path.indexOf(",")))
+                .sorted()
+                .collect(Collectors.toList());
     }
 }

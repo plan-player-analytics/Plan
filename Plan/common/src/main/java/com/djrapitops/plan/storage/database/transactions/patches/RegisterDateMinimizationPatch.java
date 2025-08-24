@@ -55,12 +55,13 @@ public class RegisterDateMinimizationPatch extends Patch {
                 UserInfoTable.USER_ID + ',' +
                 "MIN(" + UserInfoTable.REGISTERED + ") as min_registered" +
                 FROM + UserInfoTable.TABLE_NAME +
+                WHERE + UserInfoTable.REGISTERED + "!=0" +
                 GROUP_BY + UserInfoTable.USER_ID;
 
         String sql = SELECT + UsersTable.USER_UUID + ",u1." + UsersTable.REGISTERED + ",min_registered" +
                 FROM + '(' + selectSmallestRegisterDates + ") u2" +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u1 on u1." + UsersTable.ID + "=u2." + UserInfoTable.USER_ID +
-                WHERE + "u1." + UsersTable.REGISTERED + ">min_registered";
+                WHERE + "u1." + UsersTable.REGISTERED + ">min_registered OR u1." + UsersTable.REGISTERED + "=0";
 
         return new QueryAllStatement<>(sql, 500) {
             @Override
@@ -83,7 +84,7 @@ public class RegisterDateMinimizationPatch extends Patch {
 
         String sql = "UPDATE " + UsersTable.TABLE_NAME + " SET " + UsersTable.REGISTERED + "=?" +
                 WHERE + UsersTable.USER_UUID + "=?" +
-                AND + UsersTable.REGISTERED + ">?";
+                AND + UsersTable.REGISTERED + ">? OR " + UsersTable.REGISTERED + "=0";
 
         execute(new ExecBatchStatement(sql) {
             @Override

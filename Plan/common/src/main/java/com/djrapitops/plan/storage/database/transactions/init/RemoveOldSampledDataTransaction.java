@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.transactions.init;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
+import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 import com.djrapitops.plan.storage.database.sql.tables.PingTable;
@@ -57,8 +58,15 @@ public class RemoveOldSampledDataTransaction extends ThrowawayTransaction {
     protected void performOperations() {
         Optional<Integer> allTimePeak = query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID)).map(DateObj::getValue);
 
-        execute(cleanTPSTable(allTimePeak.orElse(-1)));
-        execute(cleanPingTable());
+        try {
+            execute(cleanTPSTable(allTimePeak.orElse(-1)));
+            execute(cleanPingTable());
+        } catch (DBOpException e) {
+            if (e.isModifiedSinceLastReadViolation()) {
+                return;
+            }
+            throw e;
+        }
     }
 
     private Executable cleanTPSTable(int allTimePlayerPeak) {

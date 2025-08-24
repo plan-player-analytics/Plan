@@ -25,7 +25,6 @@ import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
@@ -55,7 +54,6 @@ public class OnlineActivityOverviewJSONCreator implements ServerTabJSONCreator<M
     private final PlanConfig config;
     private final DBSystem dbSystem;
 
-    private final Formatter<Long> timeAmountFormatter;
     private final Formatter<Double> decimalFormatter;
     private final Formatter<Double> percentageFormatter;
 
@@ -68,7 +66,6 @@ public class OnlineActivityOverviewJSONCreator implements ServerTabJSONCreator<M
         this.config = config;
         this.dbSystem = dbSystem;
 
-        timeAmountFormatter = formatters.timeAmount();
         decimalFormatter = formatters.decimals();
         percentageFormatter = formatters.percentage();
     }
@@ -154,20 +151,19 @@ public class OnlineActivityOverviewJSONCreator implements ServerTabJSONCreator<M
         Long playtimeDay = db.query(SessionQueries.playtime(dayAgo, now, serverUUID));
         Long playtimeBefore = db.query(SessionQueries.playtime(monthAgo, halfMonthAgo, serverUUID));
         Long playtimeAfter = db.query(SessionQueries.playtime(halfMonthAgo, now, serverUUID));
-        numbers.put("playtime_30d", timeAmountFormatter.apply(playtimeMonth));
-        numbers.put("playtime_30d_trend", new Trend(playtimeBefore, playtimeAfter, false, timeAmountFormatter));
-        numbers.put("playtime_7d", timeAmountFormatter.apply(playtimeWeek));
-        numbers.put("playtime_24h", timeAmountFormatter.apply(playtimeDay));
+        numbers.put("playtime_30d", playtimeMonth);
+        numbers.put("playtime_30d_trend", new Trend(playtimeBefore, playtimeAfter, false));
+        numbers.put("playtime_7d", playtimeWeek);
+        numbers.put("playtime_24h", playtimeDay);
 
-        numbers.put("playtime_30d_avg", timeAmountFormatter.apply(db.query(SessionQueries.averagePlaytimePerDay(monthAgo, now, timeZoneOffset, serverUUID))));
+        numbers.put("playtime_30d_avg", db.query(SessionQueries.averagePlaytimePerDay(monthAgo, now, timeZoneOffset, serverUUID)));
         numbers.put("playtime_30d_avg_trend", new Trend(
                 db.query(SessionQueries.averagePlaytimePerDay(monthAgo, halfMonthAgo, timeZoneOffset, serverUUID)),
                 db.query(SessionQueries.averagePlaytimePerDay(halfMonthAgo, now, timeZoneOffset, serverUUID)),
-                false,
-                timeAmountFormatter
+                false
         ));
-        numbers.put("playtime_7d_avg", timeAmountFormatter.apply(db.query(SessionQueries.averagePlaytimePerDay(weekAgo, now, timeZoneOffset, serverUUID))));
-        numbers.put("playtime_24h_avg", timeAmountFormatter.apply(db.query(SessionQueries.playtime(dayAgo, now, serverUUID))));
+        numbers.put("playtime_7d_avg", db.query(SessionQueries.averagePlaytimePerDay(weekAgo, now, timeZoneOffset, serverUUID)));
+        numbers.put("playtime_24h_avg", db.query(SessionQueries.playtime(dayAgo, now, serverUUID)));
 
         Long sessionsMonth = db.query(SessionQueries.sessionCount(monthAgo, now, serverUUID));
         Long sessionsWeek = db.query(SessionQueries.sessionCount(weekAgo, now, serverUUID));
@@ -182,20 +178,14 @@ public class OnlineActivityOverviewJSONCreator implements ServerTabJSONCreator<M
         Long sessionLengthAvgMonth = sessionsMonth != 0 ? playtimeMonth / sessionsMonth : 0;
         Long sessionLengthAvgWeek = sessionsWeek != 0 ? playtimeWeek / sessionsWeek : 0;
         Long sessionLengthAvgDay = sessionsDay != 0 ? playtimeDay / sessionsDay : 0;
-        numbers.put("session_length_30d_avg", timeAmountFormatter.apply(sessionLengthAvgMonth));
+        numbers.put("session_length_30d_avg", sessionLengthAvgMonth);
         numbers.put("session_length_30d_trend", new Trend(
                 sessionsBefore != 0 ? playtimeBefore / sessionsBefore : 0,
                 sessionsAfter != 0 ? playtimeAfter / sessionsAfter : 0,
-                false,
-                timeAmountFormatter
+                false
         ));
-        numbers.put("session_length_7d_avg", timeAmountFormatter.apply(sessionLengthAvgWeek));
-        numbers.put("session_length_24h_avg", timeAmountFormatter.apply(sessionLengthAvgDay));
-
-        TPSMutator tpsMutator = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServer(monthAgo, now, serverUUID)));
-        numbers.put("average_tps", decimalFormatter.apply(tpsMutator.averageTPS()));
-        numbers.put("low_tps_spikes", tpsMutator.lowTpsSpikeCount(config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED)));
-        numbers.put("downtime", timeAmountFormatter.apply(tpsMutator.serverDownTime()));
+        numbers.put("session_length_7d_avg", sessionLengthAvgWeek);
+        numbers.put("session_length_24h_avg", sessionLengthAvgDay);
 
         return numbers;
     }
@@ -224,14 +214,14 @@ public class OnlineActivityOverviewJSONCreator implements ServerTabJSONCreator<M
         long avgFirstSessionLength = firstSessions.toAverageSessionLength();
         long avgFirstSessionLengthBefore = firstSessionsBefore.toAverageSessionLength();
         long avgFirstSessionLengthAfter = firstSessionsAfter.toAverageSessionLength();
-        insights.put("first_session_length_avg", timeAmountFormatter.apply(avgFirstSessionLength));
-        insights.put("first_session_length_trend", new Trend(avgFirstSessionLengthBefore, avgFirstSessionLengthAfter, false, timeAmountFormatter));
+        insights.put("first_session_length_avg", avgFirstSessionLength);
+        insights.put("first_session_length_trend", new Trend(avgFirstSessionLengthBefore, avgFirstSessionLengthAfter, false));
 
         long medianFirstSessionLength = firstSessions.toMedianSessionLength();
         long medianFirstSessionLengthBefore = firstSessionsBefore.toMedianSessionLength();
         long medianFirstSessionLengthAfter = firstSessionsAfter.toMedianSessionLength();
-        insights.put("first_session_length_median", timeAmountFormatter.apply(medianFirstSessionLength));
-        insights.put("first_session_length_median_trend", new Trend(medianFirstSessionLengthBefore, medianFirstSessionLengthAfter, false, timeAmountFormatter));
+        insights.put("first_session_length_median", medianFirstSessionLength);
+        insights.put("first_session_length_median_trend", new Trend(medianFirstSessionLengthBefore, medianFirstSessionLengthAfter, false));
 
         int lonelyJoins = playersOnlineResolver.findLonelyJoins(sessions.toSessionStarts());
         int loneJoinsBefore = playersOnlineResolver.findLonelyJoins(sessions.filterSessionsBetween(monthAgo, halfMonthAgo).toSessionStarts());

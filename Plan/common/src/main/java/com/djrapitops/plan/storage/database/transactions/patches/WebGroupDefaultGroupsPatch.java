@@ -42,7 +42,8 @@ public class WebGroupDefaultGroupsPatch extends Patch {
                                 WebPermission.PAGE,
                                 WebPermission.ACCESS,
                                 WebPermission.MANAGE_GROUPS,
-                                WebPermission.MANAGE_USERS
+                        WebPermission.MANAGE_USERS,
+                        WebPermission.MANAGE_THEMES
                         })
                         .map(WebPermission::getPermission)
                         .collect(Collectors.toList()))

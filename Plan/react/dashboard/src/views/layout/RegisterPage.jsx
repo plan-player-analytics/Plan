@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 
 import logo from '../../Flaticon_circle.png'
 import {Alert, Card, Col, Row} from "react-bootstrap";
-import {Link, useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router";
 import {useTranslation} from "react-i18next";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faPalette} from "@fortawesome/free-solid-svg-icons";
@@ -12,6 +12,7 @@ import {useAuth} from "../../hooks/authenticationHook";
 import FinalizeRegistrationModal from "../../components/modal/FinalizeRegistrationModal";
 import {fetchRegisterCheck, postRegister} from "../../service/authenticationService";
 import {useMetadata} from "../../hooks/metadataHook";
+import ActionButton from "../../components/input/button/ActionButton.jsx";
 
 const Logo = () => {
     return (
@@ -74,9 +75,9 @@ const RegisterForm = ({register}) => {
                        value={password} onChange={event => setPassword(event.target.value)}/>
                 <div className={"form-text"}>{t('html.register.passwordTip')}</div>
             </div>
-            <button className="btn bg-theme btn-user w-100" id="register-button" onClick={onRegister}>
+            <ActionButton className="btn-user w-100" id="register-button" onClick={onRegister}>
                 {t('html.register.register')}
-            </button>
+            </ActionButton>
         </form>
     );
 }
@@ -188,7 +189,7 @@ const RegisterPage = () => {
                 <Logo/>
                 <RegisterCard>
                     <div className="text-center">
-                        <h1 className="h4 text-gray-900 mb-4">{t('html.register.createNewUser')}</h1>
+                        <h1 className="h4 col-text mb-4">{t('html.register.createNewUser')}</h1>
                     </div>
                     {failMessage && <Alert className='alert-danger'>{failMessage}</Alert>}
                     <RegisterForm register={register}/>

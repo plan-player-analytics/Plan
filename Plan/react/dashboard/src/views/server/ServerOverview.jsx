@@ -11,7 +11,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import Datapoint from "../../components/Datapoint";
 import {useTranslation} from "react-i18next";
-import {useParams} from "react-router-dom";
+import {useParams} from "react-router";
 import {fetchServerOverview} from "../../service/serverService";
 import ErrorView from "../ErrorView";
 import {useDataRequest} from "../../hooks/dataFetchHook";
@@ -35,7 +35,7 @@ const Last7DaysCard = ({data}) => {
     return (
         <Card id={"last-7-days"}>
             <Card.Header>
-                <h6 className="col-black">
+                <h6 className="col-text">
                     {t('html.label.last7days')}
                 </h6>
             </Card.Header>
@@ -44,27 +44,27 @@ const Last7DaysCard = ({data}) => {
             </Alert>}
             <Card.Body>
                 <Datapoint name={t('html.label.uniquePlayers')}
-                           color={'blue'} icon={faUsers}
+                           color={'players-unique'} icon={faUsers}
                            value={data.unique_players} bold/>
                 <Datapoint name={t('html.label.uniquePlayers') + ' ' + t('html.label.perDay')}
-                           color={'blue'} icon={faUser}
+                           color={'players-unique'} icon={faUser}
                            value={data.unique_players_day} bold/>
                 <Datapoint name={t('html.label.newPlayers')}
-                           color={'light-green'} icon={faUsers}
+                           color={'players-new'} icon={faUsers}
                            value={data.new_players} bold/>
                 <Datapoint name={t('html.label.newPlayers')}
-                           color={'light-green'} icon={faUsers}
+                           color={'players-new'} icon={faUsers}
                            value={data.new_players_retention_perc}
                            valueLabel={data.new_players_retention + '/' + data.new_players} bold/>
                 <hr/>
                 <Datapoint name={t('html.label.averageTps')}
-                           color={'orange'} icon={faTachometerAlt}
+                           color={'tps-average'} icon={faTachometerAlt}
                            value={data.average_tps} bold/>
                 <Datapoint name={t('html.label.lowTpsSpikes')}
-                           color={'red'} icon={faExclamationCircle}
+                           color={'tps-low-spikes'} icon={faExclamationCircle}
                            value={data.low_tps_spikes} bold/>
                 <Datapoint name={t('html.label.downtime')}
-                           color={'red'} icon={faPowerOff}
+                           color={'downtime'} icon={faPowerOff}
                            value={<FormattedTime timeMs={data.downtime}/>}/>
             </Card.Body>
         </Card>

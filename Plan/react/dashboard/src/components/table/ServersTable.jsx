@@ -17,7 +17,8 @@ import {
 import {useTheme} from "../../hooks/themeHook";
 import {useTranslation} from "react-i18next";
 import Scrollable from "../Scrollable";
-import {NavLink} from "react-router-dom";
+import {NavLink} from "react-router";
+import ActionButton from "../input/button/ActionButton.jsx";
 
 const ServerRow = ({server, onQuickView}) => {
     const {t} = useTranslation();
@@ -27,11 +28,12 @@ const ServerRow = ({server, onQuickView}) => {
 
     let noDataWarning = '';
     if (!server.playersOnline.length) {
-        noDataWarning = <>&nbsp;<Fa icon={faBoxArchive} title={t('html.description.noData30d')}/></>
+        noDataWarning = <>&nbsp;<span title={t('html.description.noData30d')}><Fa icon={faBoxArchive}/></span></>
     } else if (timeUtc - server.playersOnline[server.playersOnline.length - 1][0] > dayMs) {
-        noDataWarning = <>&nbsp;<Fa icon={faExclamationTriangle}
-                                    className={timeUtc - server.playersOnline[server.playersOnline.length - 1][0] > dayMs * 7 ? '' : "col-deep-orange"}
-                                    title={t('html.description.noData24h')}/></>
+        noDataWarning = <>&nbsp;<span title={t('html.description.noData24h')}>
+            <Fa icon={faExclamationTriangle}
+                className={timeUtc - server.playersOnline[server.playersOnline.length - 1][0] > dayMs * 7 ? '' : "col-deep-orange"}/>
+        </span></>
     }
 
     return (
@@ -40,19 +42,19 @@ const ServerRow = ({server, onQuickView}) => {
             <td className="p-1">
                 <NavLink to={"/server/" + encodeURIComponent(server.serverUUID)}
                          title={t('html.label.serverAnalysis') + ': ' + server.name}
-                         className={'btn bg-transparent col-light-green'}><Fa
+                         className={'btn bg-transparent col-servers'}><Fa
                     icon={faLink}/> {t('html.label.serverAnalysis')}
                 </NavLink>
             </td>
             <td>{server.players}</td>
             <td>{t(server.online)}</td>
             <td className="p-1">
-                <button className={'btn bg-light-blue float-right'}
-                        title={t('html.label.quickView') + ': ' + server.name}
-                        onClick={onQuickView}
+                <ActionButton className={'btn bg-players-online float-right'}
+                              title={t('html.label.quickView') + ': ' + server.name}
+                              onClick={onQuickView}
                 >
                     <Fa icon={faCaretSquareRight}/>
-                </button>
+                </ActionButton>
             </td>
         </tr>
     );

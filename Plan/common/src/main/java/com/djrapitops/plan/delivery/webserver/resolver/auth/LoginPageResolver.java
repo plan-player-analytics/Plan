@@ -52,6 +52,6 @@ public class LoginPageResolver implements NoAuthResolver {
                     .filter(redirectBackTo -> !redirectBackTo.startsWith("http"));
             return Optional.of(responseFactory.redirectResponse(from.orElse("/")));
         }
-        return Optional.of(responseFactory.loginPageResponse(request));
+        return Optional.of(responseFactory.reactPageResponse(request));
     }
 }

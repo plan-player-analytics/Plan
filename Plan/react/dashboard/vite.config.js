@@ -22,9 +22,11 @@ export default defineConfig({
         host: 'localhost',
         port: 3000,
         open: true,
+        secure: false,
         proxy: {
-            "/v1": {target: packageJson.proxy},
-            "/docs/swagger.json": {target: packageJson.proxy}
+            "/v1": {target: packageJson.proxy, secure: false},
+            "/auth": {target: packageJson.proxy, secure: false},
+            "/docs/swagger.json": {target: packageJson.proxy, secure: false}
         }
     }
 });

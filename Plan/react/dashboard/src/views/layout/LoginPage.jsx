@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 
 import logo from '../../Flaticon_circle.png'
 import {Alert, Card, Col, Row} from "react-bootstrap";
-import {Link, useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router";
 import {useTranslation} from "react-i18next";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faPalette} from "@fortawesome/free-solid-svg-icons";
@@ -12,6 +12,7 @@ import drawSine from "../../util/loginSineRenderer";
 import {fetchLogin} from "../../service/authenticationService";
 import ForgotPasswordModal from "../../components/modal/ForgotPasswordModal";
 import {useAuth} from "../../hooks/authenticationHook";
+import ActionButton from "../../components/input/button/ActionButton.jsx";
 
 const Logo = () => {
     return (
@@ -49,7 +50,7 @@ const LoginForm = ({login}) => {
 
     const onLogin = useCallback(event => {
         event.preventDefault();
-        login(username, password).then(() => setPassword(''));
+        login(username, password);
     }, [username, password, setPassword, login]);
 
     return (
@@ -65,9 +66,9 @@ const LoginForm = ({login}) => {
                        id="inputPassword" placeholder={t('html.login.password')} type="password"
                        value={password} onChange={event => setPassword(event.target.value)}/>
             </div>
-            <button className="btn bg-theme btn-user w-100" id="login-button" onClick={onLogin}>
+            <ActionButton className="btn-user w-100" id="login-button" onClick={onLogin}>
                 {t('html.login.login')}
-            </button>
+            </ActionButton>
         </form>
     );
 }
@@ -191,21 +192,25 @@ const LoginPage = () => {
                 window.location.reload();
             } else {
                 setFailMessage(t('html.login.failed') + (error.data && error.data.error ? error.data.error : error.message));
+                setPassword('');
             }
         } else if (data && data.success) {
             await updateLoginDetails();
             redirectAfterLogin();
         } else {
             setFailMessage(t('html.login.failed') + data ? data.error : t('generic.noData'));
+            setPassword('');
         }
     }
 
+    useEffect(() => {
+        if (authLoaded && !authRequired || loggedIn) {
+            navigate('../');
+        }
+    }, [authLoaded]);
+
     if (!authLoaded) {
         return <></>
-    }
-
-    if (!authRequired || loggedIn) {
-        navigate('../');
     }
 
     return (

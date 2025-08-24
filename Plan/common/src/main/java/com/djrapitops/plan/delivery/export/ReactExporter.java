@@ -81,6 +81,19 @@ public class ReactExporter extends FileExporter {
         exportStaticBundle(toDirectory);
         exportLocaleJson(toDirectory.resolve("locale"));
         exportMetadataJson(toDirectory.resolve("metadata"));
+        exportThemeJson(toDirectory.resolve("theme"));
+        exportReactRedirects(toDirectory, files, config, new String[]{
+                "theme-editor",
+                "theme-editor/new",
+                "theme-editor/delete",
+        });
+    }
+
+    private void exportThemeJson(Path toDirectory) throws IOException {
+        List<String> themeNames = assetVersions.getThemeNames();
+        for (String themeName : themeNames) {
+            exportJson(toDirectory, "theme?theme=" + themeName, themeName);
+        }
     }
 
     private void exportMetadataJson(Path toDirectory) throws IOException {
@@ -172,7 +185,7 @@ public class ReactExporter extends FileExporter {
 
     private Optional<Response> getJsonResponse(String resource) {
         try {
-            return jsonHandler.getResolver().resolve(new Request("GET", "/v1/" + resource, null, Collections.emptyMap()));
+            return jsonHandler.getResolver().resolve(new Request("GET", "/v1/" + resource, null, Collections.emptyMap(), null));
         } catch (WebUserAuthException e) {
             // The rest of the exceptions should not be thrown
             throw new IllegalStateException("Unexpected exception thrown: " + e, e);

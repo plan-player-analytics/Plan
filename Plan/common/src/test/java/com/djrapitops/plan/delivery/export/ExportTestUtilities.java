@@ -26,6 +26,7 @@ import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTran
 import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
 import com.djrapitops.plan.utilities.java.Lists;
 import org.apache.commons.lang3.StringUtils;
+import org.awaitility.Awaitility;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.NoSuchElementException;
@@ -34,7 +35,6 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.awaitility.Awaitility;
 import utilities.RandomData;
 import utilities.TestConstants;
 
@@ -70,8 +70,7 @@ public class ExportTestUtilities {
 
     private static boolean ignoredLogLines(String log) {
         return !StringUtils.containsAny(log,
-                "fonts.gstatic.com", "fonts.googleapis.com", "cdn.jsdelivr.net", "manifest.json",
-                "React Router Future Flag Warning" // TODO remove after update to react-router-dom v7
+                "fonts.gstatic.com", "fonts.googleapis.com", "cdn.jsdelivr.net", "manifest.json"
         );
     }
 
@@ -105,7 +104,7 @@ public class ExportTestUtilities {
         driver.get(address);
 
         new WebDriverWait(driver, Duration.of(10, ChronoUnit.SECONDS)).until(
-                webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
+                webDriver -> "complete".equals(((JavascriptExecutor) webDriver).executeScript("return document.readyState")));
 
         assertFalse(driver.findElement(By.tagName("body")).getText().contains("Bad Gateway"), "502 Bad Gateway, nginx could not reach Plan");
 
@@ -141,6 +140,9 @@ public class ExportTestUtilities {
                 .addAll(ServerPageExporter.getRedirections(serverUUID))
                 .addAll(PlayerPageExporter.getRedirections(TestConstants.PLAYER_ONE_UUID))
                 .add("/players")
+                .add("/theme-editor")
+                .add("/theme-editor/new")
+                .add("/theme-editor/delete")
                 .build();
     }
 

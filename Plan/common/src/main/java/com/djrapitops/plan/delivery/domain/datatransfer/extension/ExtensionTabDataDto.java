@@ -42,13 +42,13 @@ public class ExtensionTabDataDto {
     public static Optional<ExtensionValueDataDto> mapToValue(ExtensionTabData tabData, String key) {
         Formatters formatters = Formatters.getInstance();
 
-        Optional<ExtensionValueDataDto> booleanValue = tabData.getBoolean(key).map(data -> new ExtensionValueDataDto(data.getDescription(), "BOOLEAN", data.getFormattedValue()));
+        Optional<ExtensionValueDataDto> booleanValue = tabData.getBoolean(key).map(data -> new ExtensionValueDataDto(data.getDescription(), "BOOLEAN", data.getValue()));
         if (booleanValue.isPresent()) return booleanValue;
         Optional<ExtensionValueDataDto> doubleValue = tabData.getDouble(key).map(data -> new ExtensionValueDataDto(data.getDescription(), "DOUBLE", data.getFormattedValue(formatters.decimals())));
         if (doubleValue.isPresent()) return doubleValue;
         Optional<ExtensionValueDataDto> percentage = tabData.getPercentage(key).map(data -> new ExtensionValueDataDto(data.getDescription(), "PERCENTAGE", data.getFormattedValue(formatters.percentage())));
         if (percentage.isPresent()) return percentage;
-        Optional<ExtensionValueDataDto> number = tabData.getNumber(key).map(data -> new ExtensionValueDataDto(data.getDescription(), data.getFormatType() == FormatType.NONE ? "NUMBER" : data.getFormatType().name(), data.getFormattedValue(formatters.getNumberFormatter(data.getFormatType()))));
+        Optional<ExtensionValueDataDto> number = tabData.getNumber(key).map(data -> new ExtensionValueDataDto(data.getDescription(), data.getFormatType() == FormatType.NONE ? "NUMBER" : data.getFormatType().name(), data.getRawValue()));
         if (number.isPresent()) return number;
         Optional<ExtensionValueDataDto> string = tabData.getString(key).map(data -> new ExtensionValueDataDto(data.getDescription(), data.isPlayerName() ? "LINK" : "STRING", data.getFormattedValue()));
         if (string.isPresent()) return string;

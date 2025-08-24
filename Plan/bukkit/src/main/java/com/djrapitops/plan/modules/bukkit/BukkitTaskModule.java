@@ -25,10 +25,7 @@ import com.djrapitops.plan.delivery.webserver.configuration.AddressAllowList;
 import com.djrapitops.plan.extension.ExtensionServerDataUpdater;
 import com.djrapitops.plan.gathering.ShutdownDataPreservation;
 import com.djrapitops.plan.gathering.ShutdownHook;
-import com.djrapitops.plan.gathering.timed.BukkitPingCounter;
-import com.djrapitops.plan.gathering.timed.InstalledPluginGatheringTask;
-import com.djrapitops.plan.gathering.timed.ServerTPSCounter;
-import com.djrapitops.plan.gathering.timed.SystemUsageBuffer;
+import com.djrapitops.plan.gathering.timed.*;
 import com.djrapitops.plan.settings.upkeep.ConfigStoreTask;
 import com.djrapitops.plan.storage.upkeep.DBCleanTask;
 import com.djrapitops.plan.storage.upkeep.ExtensionDisableOnGameServerTask;
@@ -113,4 +110,8 @@ public interface BukkitTaskModule {
     @Binds
     @IntoSet
     TaskSystem.Task bindInstalledPluginGatheringTask(InstalledPluginGatheringTask installedPluginGatheringTask);
+
+    @Binds
+    @IntoSet
+    TaskSystem.Task bindBanStatusUpkeepTask(BanStatusUpkeepTask banStatusUpkeepTask);
 }

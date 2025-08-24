@@ -70,7 +70,7 @@ public class SpongePlayerData implements PlatformPlayerData {
 
     @Override
     public Optional<String> getCurrentWorld() {
-        return Sponge.game().server().worldManager().worldDirectory(player.world().key())
+        return Optional.ofNullable(Sponge.game().server().worldManager().worldDirectory(player.world().key()))
                 .map(path -> path.getFileName().toString());
     }
 

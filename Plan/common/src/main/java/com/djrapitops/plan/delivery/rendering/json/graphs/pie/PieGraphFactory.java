@@ -56,7 +56,7 @@ public class PieGraphFactory {
     }
 
     public Pie activityPie(Map<String, Integer> activityData) {
-        String[] colors = theme.getPieColors(ThemeVal.GRAPH_ACTIVITY_PIE);
+        String[] colors = theme.getDefaultPieColors(ThemeVal.GRAPH_ACTIVITY_PIE);
         return new ActivityPie(activityData, colors, ActivityIndex.getDefaultGroupLangKeys());
     }
 
@@ -72,7 +72,7 @@ public class PieGraphFactory {
         WorldAliasSettings worldAliasSettings = config.getWorldAliasSettings();
         Map<String, Long> playtimePerAlias = worldAliasSettings.getPlaytimePerAlias(worldTimes);
         Map<String, GMTimes> gmTimesPerAlias = worldAliasSettings.getGMTimesPerAlias(worldTimes);
-        String[] colors = theme.getPieColors(ThemeVal.GRAPH_WORLD_PIE);
+        String[] colors = theme.getWorldPieColors();
         boolean orderByPercentage = config.isTrue(DisplaySettings.ORDER_WORLD_PIE_BY_PERCENTAGE);
         return new WorldPie(playtimePerAlias, gmTimesPerAlias, colors, orderByPercentage);
     }

@@ -20,9 +20,11 @@ import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.exceptions.LibraryLoadingException;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.dev.Untrusted;
+import dev.vankka.dependencydownload.ApplicationDependencyManager;
 import dev.vankka.dependencydownload.DependencyManager;
 import dev.vankka.dependencydownload.classloader.IsolatedClassLoader;
-import dev.vankka.dependencydownload.repository.StandardRepository;
+import dev.vankka.dependencydownload.repository.MavenRepository;
+import dev.vankka.dependencydownload.resource.DependencyDownloadResource;
 import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
@@ -45,14 +47,21 @@ public class IpAllowListMatcher {
     private final PluginLogger logger;
     private final PlanFiles files;
     private final AddressAllowList addressAllowList;
+    protected final ApplicationDependencyManager applicationDependencyManager;
     private final AtomicBoolean failedDownload = new AtomicBoolean(false);
     private ClassLoader libraryClassLoader;
 
     @Inject
-    public IpAllowListMatcher(PluginLogger logger, PlanFiles files, AddressAllowList addressAllowList) {
+    public IpAllowListMatcher(
+            PluginLogger logger,
+            PlanFiles files,
+            AddressAllowList addressAllowList,
+            ApplicationDependencyManager applicationDependencyManager
+    ) {
         this.logger = logger;
         this.files = files;
         this.addressAllowList = addressAllowList;
+        this.applicationDependencyManager = applicationDependencyManager;
     }
 
     public synchronized void prepare() {
@@ -69,11 +78,15 @@ public class IpAllowListMatcher {
     private void downloadLibrary() throws ExecutionException {
         if (DOWNLOAD_LIBRARY) {
             logger.info("Downloading IP Address parsing library for Allowlist checking, this may take a while...");
-            DependencyManager dependencyManager = new DependencyManager(files.getDataDirectory().resolve("libraries"));
-            dependencyManager.loadFromResource(getDependencyResource());
+            DependencyManager dependencyManager = new DependencyManager(
+                    applicationDependencyManager.getDependencyPathProvider(),
+                    applicationDependencyManager.getLogger()
+            );
+            dependencyManager.loadResource(DependencyDownloadResource.parse(getDependencyResource()));
+
             try {
                 dependencyManager.downloadAll(null, List.of(
-                        new StandardRepository("https://repo1.maven.org/maven2")
+                        new MavenRepository("https://repo1.maven.org/maven2")
                 )).get();
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
@@ -81,6 +94,10 @@ public class IpAllowListMatcher {
 
             IsolatedClassLoader classLoader = new IsolatedClassLoader();
             dependencyManager.load(null, classLoader);
+
+            // Include this dependency manager in the application dependency manager for library cleaning purposes
+            applicationDependencyManager.include(dependencyManager);
+
             this.libraryClassLoader = classLoader;
         } else {
             libraryClassLoader = getClass().getClassLoader();

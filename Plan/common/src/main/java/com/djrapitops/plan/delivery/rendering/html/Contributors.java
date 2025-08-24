@@ -116,7 +116,9 @@ public class Contributors {
             new Contributor("mcmdev", CODE),
             new Contributor("ZhangYuheng", CODE),
             new Contributor("Zaemong", LANG),
-            new Contributor("YannicHock", CODE)
+            new Contributor("TWJohnJohn20116", LANG),
+            new Contributor("YannicHock", CODE),
+            new Contributor("SaolGhra", CODE)
     };
 
     private Contributors() {

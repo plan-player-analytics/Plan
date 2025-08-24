@@ -96,5 +96,4 @@ public class PluginSuperClassBindingModule {
     String provideMainCommandName() {
         return "plan";
     }
-
 }

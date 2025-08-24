@@ -18,7 +18,6 @@ package com.djrapitops.plan.delivery.rendering.json.graphs.calendar;
 
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.settings.locale.lang.HtmlLang;
-import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 
 import java.util.*;
@@ -36,22 +35,19 @@ public class ServerCalendar {
     private final SortedMap<Long, Long> playtimePerDay;
 
     private final Formatter<Long> iso8601TZIndependent;
-    private final Theme theme;
 
     ServerCalendar(
             SortedMap<Long, Integer> uniquePerDay,
             SortedMap<Long, Integer> newPerDay,
             SortedMap<Long, Long> playtimePerDay,
             NavigableMap<Long, Integer> sessionsPerDay,
-            Formatter<Long> iso8601TZIndependent,
-            Theme theme
+            Formatter<Long> iso8601TZIndependent
     ) {
         this.uniquePerDay = uniquePerDay;
         this.newPerDay = newPerDay;
         this.iso8601TZIndependent = iso8601TZIndependent;
         this.sessionsPerDay = sessionsPerDay;
         this.playtimePerDay = playtimePerDay;
-        this.theme = theme;
     }
 
     public List<CalendarEntry> getEntries() {
@@ -74,7 +70,7 @@ public class ServerCalendar {
             String day = iso8601TZIndependent.apply(key);
 
             entries.add(CalendarEntry.of(HtmlLang.NEW_CALENDAR.getKey(), newPlayers, day)
-                    .withColor(theme.getValue(ThemeVal.LIGHT_GREEN)));
+                    .withColor(ThemeVal.LIGHT_GREEN.getDefaultValue()));
         }
     }
 
@@ -102,7 +98,7 @@ public class ServerCalendar {
             String day = iso8601TZIndependent.apply(key);
 
             entries.add(CalendarEntry.of(HtmlLang.LABEL_PLAYTIME.getKey(), playtime, day)
-                    .withColor(theme.getValue(ThemeVal.GREEN)));
+                    .withColor(ThemeVal.GREEN.getDefaultValue()));
         }
     }
 
@@ -116,7 +112,7 @@ public class ServerCalendar {
             String day = iso8601TZIndependent.apply(key);
 
             entries.add(CalendarEntry.of(HtmlLang.SIDE_SESSIONS.getKey(), sessionCount, day)
-                    .withColor(theme.getValue(ThemeVal.TEAL)));
+                    .withColor(ThemeVal.TEAL.getDefaultValue()));
         }
     }
 }

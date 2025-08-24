@@ -1,5 +1,5 @@
 import React from 'react';
-import {useParams} from "react-router-dom";
+import {useParams} from "react-router";
 import JoinAddresses from "../../components/cards/common/JoinAddresses.jsx";
 import {useAuth} from "../../hooks/authenticationHook.jsx";
 

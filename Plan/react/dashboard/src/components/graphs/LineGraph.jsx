@@ -1,11 +1,12 @@
 import {useTheme} from "../../hooks/themeHook";
 import React, {useEffect, useState} from "react";
-import {linegraphButtons} from "../../util/graphs";
-import Highcharts from "highcharts/highstock";
-import NoDataDisplay from "highcharts/modules/no-data-to-display"
-import Accessibility from "highcharts/modules/accessibility"
+import {translateLinegraphButtons} from "../../util/graphs";
+import Highcharts from "highcharts/esm/highstock";
+import "highcharts/esm/modules/no-data-to-display";
+import "highcharts/esm/modules/accessibility"
 import {useTranslation} from "react-i18next";
 import {useMetadata} from "../../hooks/metadataHook";
+import {localeService} from "../../service/localeService.js";
 
 const LineGraph = ({
                        id,
@@ -17,8 +18,7 @@ const LineGraph = ({
                        extremes,
                        onSetExtremes,
                        alreadyOffsetTimezone,
-                       options,
-                       extraModules
+                       options
                    }) => {
     const {t} = useTranslation()
     const {graphTheming, nightModeEnabled} = useTheme();
@@ -26,22 +26,20 @@ const LineGraph = ({
     const [graph, setGraph] = useState(undefined);
 
     useEffect(() => {
-        NoDataDisplay(Highcharts);
-        Accessibility(Highcharts);
-        if (extraModules) {
-            for (const extraModule of extraModules) {
-                extraModule(Highcharts);
+        Highcharts.setOptions({
+            lang: {
+                locale: localeService.getIntlFriendlyLocale(),
+                noData: t('html.label.noDataToDisplay')
             }
-        }
-        Highcharts.setOptions({lang: {noData: t('html.label.noDataToDisplay')}})
+        })
         Highcharts.setOptions(graphTheming);
-        setGraph(Highcharts.stockChart(id, options ? options : {
+        setGraph(Highcharts.stockChart(id, options || {
             chart: {
                 noData: t('html.label.noDataToDisplay')
             },
             rangeSelector: {
                 selected: selectedRange !== undefined ? selectedRange : 2,
-                buttons: linegraphButtons
+                buttons: translateLinegraphButtons(t)
             },
             yAxis: yAxis || {
                 softMax: 2,
@@ -68,7 +66,7 @@ const LineGraph = ({
             },
             series: series
         }));
-    }, [options, extraModules, series, id, t,
+    }, [options, series, id, t,
         graphTheming, nightModeEnabled, alreadyOffsetTimezone, timeZoneOffsetMinutes,
         legendEnabled, yAxis,
         onSetExtremes, setGraph, selectedRange]);

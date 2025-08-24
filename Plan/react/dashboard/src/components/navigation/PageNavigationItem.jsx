@@ -3,7 +3,7 @@ import {faCompass} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {InputGroup} from "react-bootstrap";
-import {useLocation, useNavigate} from "react-router-dom";
+import {useLocation, useNavigate} from "react-router";
 import {useMetadata} from "../../hooks/metadataHook";
 import {useAuth} from "../../hooks/authenticationHook";
 
@@ -124,7 +124,7 @@ const PageNavigationItem = ({page}) => {
         <li className={"nav-item nav-button nav-link"}
             style={{padding: "1rem"}}>
             <InputGroup>
-                <div className="input-group-text bg-theme col-white"
+                <div className="input-group-text navigation-item"
                      style={{paddingLeft: "0.5rem", paddingRight: "0.5rem"}}><Fa icon={faCompass}/></div>
                 <select onChange={onSelect}
                         aria-label="Page selector"

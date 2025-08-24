@@ -27,6 +27,7 @@ import com.djrapitops.plan.settings.config.paths.key.*;
 public class DisplaySettings {
 
     public static final Setting<String> THEME = new StringSetting("Display_options.Theme");
+    public static final Setting<Boolean> NIGHT_MODE = new BooleanSetting("Display_options.Night_mode");
     public static final Setting<String> PLAYER_HEAD_IMG_URL = new StringSetting("Display_options.Player_head_image_url");
     public static final Setting<Integer> SESSIONS_PER_PAGE = new IntegerSetting("Display_options.Sessions.Show_on_page");
     public static final Setting<Boolean> ORDER_WORLD_PIE_BY_PERCENTAGE = new BooleanSetting("Display_options.Sessions.Order_world_pies_by_percentage");
@@ -41,6 +42,7 @@ public class DisplaySettings {
     public static final Setting<String> CMD_COLOR_MAIN = new StringSetting("Display_options.Command_colors.Main");
     public static final Setting<String> CMD_COLOR_SECONDARY = new StringSetting("Display_options.Command_colors.Secondary");
     public static final Setting<String> CMD_COLOR_TERTIARY = new StringSetting("Display_options.Command_colors.Highlight");
+    public static final Setting<String> WORLD_PIE = new StringSetting("Display_options.WorldPie");
     public static final Setting<ConfigNode> WORLD_ALIASES = new Setting<>("World_aliases.List", ConfigNode.class) {
         @Override
         public ConfigNode getValueFrom(ConfigNode node) {

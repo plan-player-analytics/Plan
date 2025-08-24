@@ -2,7 +2,7 @@ import {Col} from "react-bootstrap";
 import React from "react";
 import PlayerbaseDevelopmentCard from "../../components/cards/server/graphs/PlayerbaseDevelopmentCard";
 import CurrentPlayerbaseCard from "../../components/cards/server/graphs/CurrentPlayerbaseCard";
-import {useParams} from "react-router-dom";
+import {useParams} from "react-router";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import {fetchPlayerbaseOverview} from "../../service/serverService";
 import {ErrorViewCard} from "../ErrorView";
