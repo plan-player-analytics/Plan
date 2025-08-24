@@ -25,8 +25,15 @@ import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
-import com.djrapitops.plan.storage.database.sql.tables.*;
+import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
+import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPlayerValueTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPluginTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionProviderTable;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import org.apache.commons.lang3.StringUtils;
+import org.intellij.lang.annotations.Language;
+import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -48,17 +55,19 @@ public class PluginBooleanGroupFilter extends MultiOptionFilter {
     }
 
     private static Query<List<PluginBooleanOption>> pluginBooleanOptionsQuery() {
+        @Language("SQL")
         String selectOptions = SELECT + DISTINCT +
                 "server." + ServerTable.ID + " as server_id," +
                 "server." + ServerTable.NAME + " as server_name," +
+                "server." + ServerTable.PROXY + " as is_proxy," +
                 "plugin." + ExtensionPluginTable.PLUGIN_NAME + " as plugin_name," +
                 "provider." + ExtensionProviderTable.TEXT + " as provider_text" +
                 FROM + ServerTable.TABLE_NAME + " server" +
                 INNER_JOIN + ExtensionPluginTable.TABLE_NAME + " plugin on plugin." + ExtensionPluginTable.SERVER_UUID + "=server." + ServerTable.SERVER_UUID +
                 INNER_JOIN + ExtensionProviderTable.TABLE_NAME + " provider on provider." + ExtensionProviderTable.PLUGIN_ID + "=plugin." + ExtensionPluginTable.ID +
-                INNER_JOIN + ExtensionPlayerValueTable.TABLE_NAME + " value on value." + ExtensionPlayerValueTable.PROVIDER_ID + "=provider." + ExtensionProviderTable.ID +
-                WHERE + "value." + ExtensionPlayerValueTable.BOOLEAN_VALUE + " IS NOT NULL" +
-                ORDER_BY + "server_name ASC, plugin_name ASC, provider_text ASC";
+                INNER_JOIN + ExtensionPlayerValueTable.TABLE_NAME + " v on v." + ExtensionPlayerValueTable.PROVIDER_ID + "=provider." + ExtensionProviderTable.ID +
+                WHERE + "v." + ExtensionPlayerValueTable.BOOLEAN_VALUE + " IS NOT NULL" +
+                ORDER_BY + "server_name, plugin_name, provider_text";
         return new QueryAllStatement<>(selectOptions) {
             @Override
             public List<PluginBooleanOption> processResults(ResultSet set) throws SQLException {
@@ -66,10 +75,11 @@ public class PluginBooleanGroupFilter extends MultiOptionFilter {
                 while (set.next()) {
                     int serverId = set.getInt("server_id");
                     String serverName = set.getString("server_name");
+                    boolean proxy = set.getBoolean("is_proxy");
                     String pluginName = set.getString("plugin_name");
                     String providerText = set.getString("provider_text");
                     options.add(new PluginBooleanOption(
-                            Server.getIdentifiableName(serverName, serverId),
+                            Server.getIdentifiableName(serverName, serverId, proxy),
                             pluginName,
                             providerText
                     ));
@@ -81,13 +91,13 @@ public class PluginBooleanGroupFilter extends MultiOptionFilter {
     }
 
     private static Query<Set<Integer>> playersInGroups(
-            Map<PluginBooleanOption, SelectedBoolean> selected,
+            @Untrusted Map<PluginBooleanOption, SelectedBoolean> selected,
             Map<String, ServerUUID> namesToUUIDs
     ) {
         return db -> {
             Set<Integer> userIds = new HashSet<>();
             for (Map.Entry<PluginBooleanOption, SelectedBoolean> option : selected.entrySet()) {
-                PluginBooleanOption pluginBooleanOption = option.getKey();
+                @Untrusted PluginBooleanOption pluginBooleanOption = option.getKey();
                 SelectedBoolean selectedBoolean = option.getValue();
                 userIds.addAll(
                         db.query(playersInGroup(
@@ -103,8 +113,12 @@ public class PluginBooleanGroupFilter extends MultiOptionFilter {
     }
 
     private static Query<Set<Integer>> playersInGroup(
-            ServerUUID serverUUID, String pluginName, String providerText, SelectedBoolean selectedBoolean
+            @Nullable ServerUUID serverUUID, @Untrusted String pluginName, @Untrusted String providerText, SelectedBoolean selectedBoolean
     ) {
+        if (serverUUID == null) {
+            return db -> Collections.emptySet();
+        }
+
         String selectUUIDsWithBooleanValues = SELECT + DISTINCT + "u." + UsersTable.ID + " as id" +
                 FROM + ExtensionPluginTable.TABLE_NAME + " plugin" +
                 INNER_JOIN + ExtensionProviderTable.TABLE_NAME + " provider on provider." + ExtensionProviderTable.PLUGIN_ID + "=plugin." + ExtensionPluginTable.ID +
@@ -162,12 +176,12 @@ public class PluginBooleanGroupFilter extends MultiOptionFilter {
     }
 
     @Override
-    public Set<Integer> getMatchingUserIds(InputFilterDto query) {
-        Map<PluginBooleanOption, SelectedBoolean> selectedBooleanOptions = new HashMap<>();
-        for (String selected : getSelected(query)) {
-            String[] optionAndBoolean = StringUtils.split(selected, ":", 2);
-            PluginBooleanOption pluginBooleanOption = PluginBooleanOption.parse(optionAndBoolean[0].trim());
-            String selectedBoolean = optionAndBoolean[1].trim().toUpperCase();
+    public Set<Integer> getMatchingUserIds(@Untrusted InputFilterDto query) {
+        @Untrusted Map<PluginBooleanOption, SelectedBoolean> selectedBooleanOptions = new HashMap<>();
+        for (@Untrusted String selected : getSelected(query)) {
+            @Untrusted String[] optionAndBoolean = StringUtils.split(selected, ":", 2);
+            @Untrusted PluginBooleanOption pluginBooleanOption = PluginBooleanOption.parse(optionAndBoolean[0].trim());
+            @Untrusted String selectedBoolean = optionAndBoolean[1].trim().toUpperCase();
             selectedBooleanOptions.computeIfPresent(pluginBooleanOption, (key, existing) -> SelectedBoolean.BOTH);
             selectedBooleanOptions.computeIfAbsent(pluginBooleanOption, key -> SelectedBoolean.valueOf(selectedBoolean));
         }
@@ -183,6 +197,7 @@ public class PluginBooleanGroupFilter extends MultiOptionFilter {
         BOTH
     }
 
+    @Untrusted
     public static class PluginBooleanOption implements Comparable<PluginBooleanOption> {
         private final String serverName;
         private final String pluginName;
@@ -194,12 +209,13 @@ public class PluginBooleanGroupFilter extends MultiOptionFilter {
             this.providerText = providerText;
         }
 
-        public static PluginBooleanOption parse(String fromFormatted) {
-            String[] split1 = StringUtils.split(fromFormatted, ",", 2);
-            String[] split2 = StringUtils.split(split1[1], "-", 2);
-            String serverName = split1[0].trim();
-            String pluginName = split2[0].trim();
-            String providerName = split2[1].trim();
+        @Untrusted
+        public static PluginBooleanOption parse(@Untrusted String fromFormatted) {
+            @Untrusted String[] split1 = StringUtils.split(fromFormatted, ",", 2);
+            @Untrusted String[] split2 = StringUtils.split(split1[1], "-", 2);
+            @Untrusted String serverName = split1[0].trim();
+            @Untrusted String pluginName = split2[0].trim();
+            @Untrusted String providerName = split2[1].trim();
             return new PluginBooleanOption(serverName, pluginName, providerName);
         }
 

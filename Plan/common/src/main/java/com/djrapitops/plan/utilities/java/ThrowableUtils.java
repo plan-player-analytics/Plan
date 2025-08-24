@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.utilities.java;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.Arrays;
 import java.util.stream.Stream;
 
@@ -30,18 +32,27 @@ public class ThrowableUtils {
         /* Static method class */
     }
 
-    public static void appendEntryPointToCause(Throwable throwable, Throwable originPoint) {
+    public static void appendEntryPointToCause(Throwable throwable, StackTraceElement[] originPoint) {
         Throwable cause = throwable.getCause();
         while (cause.getCause() != null) {
             cause = cause.getCause();
         }
 
         cause.setStackTrace(
-                Stream.concat(
-                        Arrays.stream(cause.getStackTrace()),
-                        Arrays.stream(originPoint.getStackTrace())
-                ).toArray(StackTraceElement[]::new)
+                combineStackTrace(originPoint, cause.getStackTrace())
         );
+    }
+
+    @NotNull
+    public static StackTraceElement[] combineStackTrace(StackTraceElement[] originPoint, StackTraceElement[] cause) {
+        if (originPoint == null && cause == null) return new StackTraceElement[0];
+        if (originPoint == null) return cause;
+        if (cause == null) return originPoint;
+
+        return Stream.concat(
+                Arrays.stream(cause),
+                Arrays.stream(originPoint)
+        ).toArray(StackTraceElement[]::new);
     }
 
     public static String findCallerAfterClass(StackTraceElement[] stackTrace, Class<?> afterThis) {

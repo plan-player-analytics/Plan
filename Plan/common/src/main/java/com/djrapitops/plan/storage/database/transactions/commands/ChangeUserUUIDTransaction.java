@@ -16,7 +16,11 @@
  */
 package com.djrapitops.plan.storage.database.transactions.commands;
 
-import com.djrapitops.plan.storage.database.sql.tables.*;
+import com.djrapitops.plan.storage.database.sql.tables.KillsTable;
+import com.djrapitops.plan.storage.database.sql.tables.NicknamesTable;
+import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionGroupsTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPlayerTableValueTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
 import com.djrapitops.plan.storage.database.transactions.Transaction;

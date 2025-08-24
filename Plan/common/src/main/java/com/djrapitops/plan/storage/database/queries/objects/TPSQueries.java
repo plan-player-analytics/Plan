@@ -23,8 +23,9 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
-import com.djrapitops.plan.utilities.Benchmark;
+import com.djrapitops.plan.utilities.dev.Benchmark;
 import com.djrapitops.plan.utilities.java.Lists;
+import org.intellij.lang.annotations.Language;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -216,15 +217,17 @@ public class TPSQueries {
     }
 
     public static Query<Optional<DateObj<Integer>>> fetchPeakPlayerCount(ServerUUID serverUUID, long afterDate) {
-        String subQuery = '(' + SELECT + "MAX(" + PLAYERS_ONLINE + ')' + FROM + TABLE_NAME + WHERE + SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
-                AND + DATE + ">= ?)";
-        String sql = SELECT +
-                DATE + ',' + PLAYERS_ONLINE +
-                FROM + TABLE_NAME +
+        String subQuery = '(' + SELECT + "MAX(" + PLAYERS_ONLINE + ") as " + PLAYERS_ONLINE + FROM + TABLE_NAME +
                 WHERE + SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + DATE + ">= ?" +
-                AND + PLAYERS_ONLINE + "=" + subQuery +
-                ORDER_BY + DATE + " DESC LIMIT 1";
+                GROUP_BY + SERVER_ID + ")";
+        String sql = SELECT +
+                "t." + DATE + ',' + "t." + PLAYERS_ONLINE +
+                FROM + TABLE_NAME + " t" +
+                INNER_JOIN + subQuery + " max on t." + PLAYERS_ONLINE + "=max." + PLAYERS_ONLINE +
+                WHERE + SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                AND + "t." + DATE + ">= ?" +
+                ORDER_BY + "t." + DATE + " DESC LIMIT 1";
 
         return new QueryStatement<>(sql) {
             @Override
@@ -248,7 +251,6 @@ public class TPSQueries {
         };
     }
 
-    @Benchmark.Slow("1s")
     public static Query<Optional<DateObj<Integer>>> fetchAllTimePeakPlayerCount(ServerUUID serverUUID) {
         return fetchPeakPlayerCount(serverUUID, 0);
     }
@@ -452,6 +454,12 @@ public class TPSQueries {
         };
     }
 
+    public static Query<Optional<Long>> fetchLastStoredTpsDate(ServerUUID serverUUID) {
+        @Language("SQL")
+        String sql = "SELECT MAX(date) FROM plan_tps WHERE server_id=" + ServerTable.SELECT_SERVER_ID;
+        return db -> db.queryOptional(sql, resultSet -> resultSet.getLong(1), serverUUID);
+    }
+
     public static Query<Map<Integer, List<TPS>>> fetchTPSDataOfServers(long after, long before, Collection<ServerUUID> serverUUIDs) {
         String sql = SELECT + "*" + FROM + TABLE_NAME +
                 WHERE + SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
@@ -482,28 +490,39 @@ public class TPSQueries {
     public static Query<Optional<Long>> fetchLatestServerStartTime(ServerUUID serverUUID, long dataGapThreshold) {
         String selectPreviousRowNumber = SELECT +
                 "-1+ROW_NUMBER() over (ORDER BY " + DATE + ") AS previous_rn, " +
+                SERVER_ID + ',' +
                 DATE + " AS d1" +
                 FROM + TABLE_NAME +
                 WHERE + SERVER_ID + '=' + ServerTable.SELECT_SERVER_ID +
+                GROUP_BY + SERVER_ID + ',' + DATE +
                 ORDER_BY + "d1 DESC";
         String selectRowNumber = SELECT +
                 "ROW_NUMBER() over (ORDER BY " + DATE + ") AS rn, " +
+                SERVER_ID + ',' +
                 DATE + " AS previous_date" +
                 FROM + TABLE_NAME +
                 WHERE + SERVER_ID + '=' + ServerTable.SELECT_SERVER_ID +
+                GROUP_BY + SERVER_ID + ',' + DATE +
                 ORDER_BY + "previous_date DESC";
-        String selectFirstEntryDate = SELECT + "MIN(" + DATE + ") as start_time" +
+
+        String selectFirstEntryDate = SELECT +
+                "MIN(" + DATE + ") as start_time," +
+                SERVER_ID + " as server_id" +
                 FROM + TABLE_NAME +
-                WHERE + SERVER_ID + '=' + ServerTable.SELECT_SERVER_ID;
+                WHERE + SERVER_ID + '=' + ServerTable.SELECT_SERVER_ID +
+                GROUP_BY + SERVER_ID;
+
         // Finds the start time since difference between d1 and previous date is a gap,
         // so d1 is always first entry after a gap in the data. MAX finds the latest.
         // Union ensures if there are no gaps to use the first date recorded.
         String selectStartTime = SELECT +
-                "MAX(d1) AS start_time" +
+                "MAX(d1) AS start_time," +
+                "t1." + SERVER_ID + " as server_id" +
                 FROM + "(" + selectPreviousRowNumber + ") t1" +
                 INNER_JOIN +
-                "(" + selectRowNumber + ") t2 ON t1.previous_rn=t2.rn" +
+                "(" + selectRowNumber + ") t2 ON t1.previous_rn=t2.rn AND t2." + SERVER_ID + "=t1." + SERVER_ID +
                 WHERE + "d1 - previous_date > ?" +
+                GROUP_BY + "t1." + SERVER_ID +
                 UNION + selectFirstEntryDate;
 
         return new QueryStatement<>(selectStartTime) {

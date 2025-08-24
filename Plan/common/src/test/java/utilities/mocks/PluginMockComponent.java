@@ -59,7 +59,7 @@ public class PluginMockComponent {
         initComponent();
         PlanSystem system = component.system();
         system.getConfigSystem().getConfig().set(WebserverSettings.PORT, ThreadLocalRandom.current()
-                .nextInt(65535 - 1024) + 1024); // Random non-privileged port
+                .nextInt(10240) + 10240); // Random non-privileged port
         return system;
     }
 

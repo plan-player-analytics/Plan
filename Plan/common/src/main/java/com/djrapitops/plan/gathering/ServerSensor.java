@@ -16,7 +16,11 @@
  */
 package com.djrapitops.plan.gathering;
 
+import com.djrapitops.plan.gathering.domain.PluginMetadata;
+
 import java.util.Collections;
+import java.util.List;
+import java.util.UUID;
 
 /**
  * Allows sensing values from different server platforms.
@@ -55,4 +59,20 @@ public interface ServerSensor<W> {
     default int getEntityCount(W world) {
         return -1;
     }
+
+    default List<String> getOnlinePlayerNames() {
+        return Collections.emptyList();
+    }
+
+    default boolean usingRedisBungee() {
+        return false;
+    }
+
+    default List<PluginMetadata> getInstalledPlugins() {
+        return List.of();
+    }
+
+    default boolean supportsBans() {return false;}
+
+    default boolean isBanned(UUID playerUUID) {return false;}
 }

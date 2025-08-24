@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.formatting;
 
 import com.djrapitops.plan.delivery.domain.DateHolder;
 import com.djrapitops.plan.delivery.formatting.time.*;
+import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.locale.Locale;
 
@@ -43,6 +44,7 @@ public class Formatters {
     private final DayFormatter dayLongFormatter;
     private final SecondFormatter secondLongFormatter;
     private final ClockFormatter clockLongFormatter;
+    private final HttpLastModifiedDateFormatter httpLastModifiedDateFormatter;
     private final JavascriptDateFormatter javascriptDateFormatter;
     private final ISO8601NoClockFormatter iso8601NoClockLongFormatter;
     private final ISO8601NoClockTZIndependentFormatter iso8601NoClockTZIndependentFormatter;
@@ -59,6 +61,7 @@ public class Formatters {
         dayLongFormatter = new DayFormatter(config, locale);
         clockLongFormatter = new ClockFormatter(config, locale);
         secondLongFormatter = new SecondFormatter(config, locale);
+        httpLastModifiedDateFormatter = new HttpLastModifiedDateFormatter(config, locale);
         javascriptDateFormatter = new JavascriptDateFormatter(config, locale);
         iso8601NoClockLongFormatter = new ISO8601NoClockFormatter(config, locale);
         iso8601NoClockTZIndependentFormatter = new ISO8601NoClockTZIndependentFormatter();
@@ -122,6 +125,10 @@ public class Formatters {
         return iso8601NoClockFormatter;
     }
 
+    public Formatter<Long> httpLastModifiedLong() {
+        return httpLastModifiedDateFormatter;
+    }
+
     public Formatter<Long> javascriptDateFormatterLong() {
         return javascriptDateFormatter;
     }
@@ -152,6 +159,20 @@ public class Formatters {
 
     public Formatter<Long> byteSizeLong() {
         return value -> byteSizeFormatter.apply((double) value);
+    }
+
+    public Formatter<Long> getNumberFormatter(FormatType type) {
+        switch (type) {
+            case DATE_SECOND:
+                return secondLong();
+            case DATE_YEAR:
+                return yearLong();
+            case TIME_MILLISECONDS:
+                return timeAmount();
+            case NONE:
+            default:
+                return Object::toString;
+        }
     }
 
     static class Holder {

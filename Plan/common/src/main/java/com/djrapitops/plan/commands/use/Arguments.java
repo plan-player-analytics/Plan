@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.commands.use;
 
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.TextStringBuilder;
 
@@ -29,6 +30,7 @@ import java.util.Optional;
  *
  * @author AuroraLS3
  */
+@Untrusted
 public class Arguments {
 
     private final List<String> args;

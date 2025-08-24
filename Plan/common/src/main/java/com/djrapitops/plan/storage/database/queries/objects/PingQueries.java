@@ -260,4 +260,12 @@ public class PingQueries {
             }
         };
     }
+
+    public static Query<Double> averagePing(long after, long before) {
+        String sql = SELECT + "AVG(" + PingTable.AVG_PING + ") as average" + FROM + PingTable.TABLE_NAME +
+                WHERE + PingTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                AND + PingTable.DATE + ">=?" +
+                AND + PingTable.DATE + "<=?";
+        return db -> db.queryOptional(sql, set -> set.getDouble("average"), after, before).orElse(-1.0);
+    }
 }

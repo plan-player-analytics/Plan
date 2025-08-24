@@ -22,7 +22,6 @@ import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
-import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.ProxySettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.locale.LangCode;
@@ -44,25 +43,22 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
-import org.testcontainers.shaded.org.awaitility.Awaitility;
 import utilities.RandomData;
 import utilities.TestConstants;
 import utilities.mocks.PluginMockComponent;
 
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static com.djrapitops.plan.delivery.export.ExportTestUtilities.assertNoLogs;
 
 /**
  * This test class is for catching any JavaScript errors.
  * <p>
  * Errors may have been caused by:
- * - Missing placeholders {@code ${placeholder}} inside {@code <script>} tags.
+ * - Javascript mistakes / build issues
+ * - Missed console.log statements
  * - Automatic formatting of plugin javascript (See https://github.com/plan-player-analytics/Plan/issues/820)
  * - Missing file definition in Mocker
  */
@@ -84,10 +80,9 @@ class JSErrorRegressionTest {
         PlanConfig config = planSystem.getConfigSystem().getConfig();
         config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
         config.set(ProxySettings.IP, "localhost:" + TEST_PORT_NUMBER);
-        config.set(PluginSettings.FRONTEND_BETA, true);
 
         // Avoid accidentally DDoS:ing head image service during tests.
-        config.set(DisplaySettings.PLAYER_HEAD_IMG_URL, "http://localhost:" + TEST_PORT_NUMBER + "/${playerUUID}/img/Flaticon_circle.png");
+        config.set(DisplaySettings.PLAYER_HEAD_IMG_URL, "data:image/png;base64,AA==");
 
         planSystem.enable();
         serverUUID = planSystem.getServerInfo().getServerUUID();
@@ -128,20 +123,16 @@ class JSErrorRegressionTest {
         };
 
         LangCode[] languages = LangCode.values();
-        return Arrays.stream(languages)
-                .filter(lang -> lang != LangCode.CUSTOM)
-                .flatMap(lang ->
-                        Arrays.stream(addresses)
-                                .map(link -> testAddress(link, lang, driver)))
-                .collect(Collectors.toList());
+        return
+                Arrays.stream(addresses)
+                        .map(link -> testAddress(link, driver))
+                        .collect(Collectors.toList());
     }
 
-    private DynamicTest testAddress(String address, LangCode language, ChromeDriver driver) {
-        return DynamicTest.dynamicTest("Page should not log anything on js console (" + language.name() + "): " + address, () -> {
+    private DynamicTest testAddress(String address, ChromeDriver driver) {
+        return DynamicTest.dynamicTest("Page should not log anything on js console: " + address, () -> {
             Locale locale = planSystem.getLocaleSystem().getLocale();
             try {
-                locale.loadFromAnotherLocale(Locale.forLangCode(language, planSystem.getPlanFiles()));
-
                 driver.get(address);
                 Thread.sleep(250);
 
@@ -149,9 +140,7 @@ class JSErrorRegressionTest {
                 logs.addAll(driver.manage().logs().get(LogType.CLIENT).getAll());
                 logs.addAll(driver.manage().logs().get(LogType.BROWSER).getAll());
 
-                assertNoLogs("'" + address + "' (in " + language.name() + "),", logs);
-            } catch (IOException e) {
-                throw new UncheckedIOException(e);
+                assertNoLogs(logs, address);
             } finally {
                 locale.clear(); // Reset locale after test
             }
@@ -175,15 +164,13 @@ class JSErrorRegressionTest {
 
         for (String href : anchorLinks) {
             driver.get(address);
-            Awaitility.await()
-                    .atMost(3, TimeUnit.SECONDS)
-                    .until(() -> "complete".equals(driver.executeScript("return document.readyState")));
+            SeleniumExtension.waitForPageLoadForSeconds(3, driver);
 
             List<LogEntry> logs = new ArrayList<>();
             logs.addAll(driver.manage().logs().get(LogType.CLIENT).getAll());
             logs.addAll(driver.manage().logs().get(LogType.BROWSER).getAll());
 
-            assertNoLogs("Page link '" + address + "'->'" + href + "' issue: ", logs);
+            assertNoLogs(logs, "Page link '" + address + "'->'" + href + "'");
             System.out.println("'" + address + "' has link to " + href);
         }
     }
@@ -202,12 +189,5 @@ class JSErrorRegressionTest {
         } catch (StaleElementReferenceException e) {
             return getLinks(driver, attempt + 1);
         }
-    }
-
-
-    private void assertNoLogs(String testName, List<LogEntry> logs) {
-        assertTrue(logs.isEmpty(), () -> testName + "Browser console included " + logs.size() + " logs: " + logs.stream()
-                .map(log -> "\n" + log.getLevel().getName() + " " + log.getMessage())
-                .toList());
     }
 }

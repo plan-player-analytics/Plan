@@ -53,7 +53,7 @@ import java.util.logging.Logger;
  * Task that handles player ping calculation on Bukkit based servers.
  * <p>
  * Modified PingManager from LagMonitor plugin.
- * https://github.com/games647/LagMonitor/blob/master/src/main/java/com/github/games647/lagmonitor/task/PingManager.java
+ * <a href="https://github.com/games647/LagMonitor/blob/master/src/main/java/com/github/games647/lagmonitor/task/PingManager.java">original</a>
  *
  * @author games647
  */
@@ -87,11 +87,11 @@ public class BukkitPingCounter extends TaskSystem.Task implements Listener {
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         startRecording = new ConcurrentHashMap<>();
-        playerHistory = new HashMap<>();
+        playerHistory = new ConcurrentHashMap<>();
 
-        Optional<PingMethod> pingMethod = loadPingMethod();
-        if (pingMethod.isPresent()) {
-            this.pingMethod = pingMethod.get();
+        Optional<PingMethod> loaded = loadPingMethod();
+        if (loaded.isPresent()) {
+            this.pingMethod = loaded.get();
             pingMethodAvailable = true;
         } else {
             pingMethodAvailable = false;
@@ -100,6 +100,7 @@ public class BukkitPingCounter extends TaskSystem.Task implements Listener {
 
     private Optional<PingMethod> loadPingMethod() {
         PingMethod[] methods = new PingMethod[]{
+                new SpigotPingMethod(),
                 new PaperPingMethod(),
                 new ReflectiveLatencyFieldMethod(),
                 new ReflectivePingFieldMethod(),

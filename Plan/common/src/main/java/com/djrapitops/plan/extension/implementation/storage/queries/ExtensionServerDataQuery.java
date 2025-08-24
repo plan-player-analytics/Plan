@@ -27,7 +27,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
-import com.djrapitops.plan.storage.database.sql.tables.*;
+import com.djrapitops.plan.storage.database.sql.tables.extension.*;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -115,6 +115,7 @@ public class ExtensionServerDataQuery implements Query<List<ExtensionData>> {
                 "v1." + ExtensionServerValueTable.PERCENTAGE_VALUE + " as percentage_value," +
                 "v1." + ExtensionServerValueTable.LONG_VALUE + " as long_value," +
                 "v1." + ExtensionServerValueTable.STRING_VALUE + " as string_value," +
+                "v1." + ExtensionServerValueTable.COMPONENT_VALUE + " as component_value," +
                 "p1." + ExtensionProviderTable.PLUGIN_ID + " as plugin_id," +
                 "p1." + ExtensionProviderTable.PROVIDER_NAME + " as provider_name," +
                 "p1." + ExtensionProviderTable.TEXT + " as text," +
@@ -136,7 +137,7 @@ public class ExtensionServerDataQuery implements Query<List<ExtensionData>> {
                 INNER_JOIN + ExtensionPluginTable.TABLE_NAME + " e1 on p1." + ExtensionProviderTable.PLUGIN_ID + "=e1." + ExtensionPluginTable.ID +
                 LEFT_JOIN + ExtensionTabTable.TABLE_NAME + " t1 on t1." + ExtensionTabTable.ID + "=p1." + ExtensionProviderTable.TAB_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i1 on i1." + ExtensionIconTable.ID + "=p1." + ExtensionProviderTable.ICON_ID +
-                LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i2 on i2." + ExtensionIconTable.ID + "=p1." + ExtensionTabTable.ICON_ID +
+                LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i2 on i2." + ExtensionIconTable.ID + "=t1." + ExtensionTabTable.ICON_ID +
                 WHERE + ExtensionPluginTable.SERVER_UUID + "=?" +
                 AND + "p1." + ExtensionProviderTable.HIDDEN + "=?";
 
@@ -215,6 +216,11 @@ public class ExtensionServerDataQuery implements Query<List<ExtensionData>> {
         if (stringValue != null) {
             boolean isPlayerName = set.getBoolean("is_player_name");
             extensionTab.putStringData(new ExtensionStringData(description, isPlayerName, stringValue));
+        }
+
+        String componentValue = set.getString(ExtensionServerValueTable.COMPONENT_VALUE);
+        if (componentValue != null) {
+            extensionTab.putComponentData(new ExtensionComponentData(description, componentValue));
         }
     }
 

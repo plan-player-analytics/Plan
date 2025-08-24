@@ -21,10 +21,8 @@ import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Icon;
 import org.apache.commons.lang3.StringUtils;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Object for giving Plan table data.
@@ -98,6 +96,52 @@ public final class Table {
 
     public TableColumnFormat[] getTableColumnFormats() {
         return tableColumnFormats;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Table table = (Table) o;
+        return Arrays.equals(getColumns(), table.getColumns())
+                && Arrays.equals(getIcons(), table.getIcons())
+                && Arrays.equals(getTableColumnFormats(), table.getTableColumnFormats())
+                && valuesEqual(table);
+    }
+
+    private boolean valuesEqual(Table other) {
+        List<Object[]> rows1 = getRows();
+        List<Object[]> rows2 = other.getRows();
+        if (rows1.size() != rows2.size()) return false;
+        for (int i = 0; i < rows1.size(); i++) {
+            Object[] values1 = rows1.get(i);
+            Object[] values2 = rows2.get(i);
+            for (int j = 0; j < getMaxColumnSize(); j++) {
+                if (!Objects.equals(Objects.toString(values1[0]), Objects.toString(values2[0]))) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = Objects.hash(getRows());
+        result = 31 * result + Arrays.hashCode(getColumns());
+        result = 31 * result + Arrays.hashCode(getIcons());
+        result = 31 * result + Arrays.hashCode(getTableColumnFormats());
+        return result;
+    }
+
+    @Override
+    public String toString() {
+        return "Table{" +
+                "columns=" + Arrays.toString(columns) +
+                ", icons=" + Arrays.toString(icons) +
+                ", tableColumnFormats=" + Arrays.toString(tableColumnFormats) +
+                ", rows=" + rows.stream().map(Arrays::toString).collect(Collectors.toList()) +
+                '}';
     }
 
     /**

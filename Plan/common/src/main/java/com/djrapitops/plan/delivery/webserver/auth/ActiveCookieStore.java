@@ -25,11 +25,13 @@ import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.storage.database.transactions.events.CookieChangeTransaction;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import net.playeranalytics.plugin.server.PluginLogger;
 import org.apache.commons.codec.digest.DigestUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.security.SecureRandom;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -39,8 +41,8 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class ActiveCookieStore implements SubSystem {
 
-    private static final Map<String, User> USERS_BY_COOKIE = new ConcurrentHashMap<>();
-    public static long cookieExpiresAfterMs = TimeUnit.HOURS.toMillis(2L);
+    private static final Map<String, CookieMetadata> USERS_BY_COOKIE = new ConcurrentHashMap<>();
+    private static long cookieExpiresAfterMs = TimeUnit.HOURS.toMillis(2L);
 
     private final ActiveCookieExpiryCleanupTask activeCookieExpiryCleanupTask;
 
@@ -66,12 +68,16 @@ public class ActiveCookieStore implements SubSystem {
         this.processing = processing;
     }
 
+    public static long getCookieExpiresAfterMs() {
+        return cookieExpiresAfterMs;
+    }
+
     private static void removeCookieStatic(String cookie) {
         Holder.getActiveCookieStore().removeCookie(cookie);
     }
 
-    public static void removeUserCookie(String username) {
-        USERS_BY_COOKIE.entrySet().stream().filter(entry -> entry.getValue().getUsername().equals(username))
+    public static void removeUserCookie(@Untrusted String username) {
+        USERS_BY_COOKIE.entrySet().stream().filter(entry -> entry.getValue().getUser().getUsername().equals(username))
                 .findAny()
                 .map(Map.Entry::getKey)
                 .ifPresent(ActiveCookieStore::removeCookieStatic);
@@ -84,15 +90,16 @@ public class ActiveCookieStore implements SubSystem {
     @Override
     public void enable() {
         ActiveCookieStore.setCookiesExpireAfter(config.get(WebserverSettings.COOKIES_EXPIRE_AFTER));
-        processing.submitNonCritical(this::loadActiveCookies);
+        processing.submitNonCritical(this::reloadActiveCookies);
     }
 
-    private void loadActiveCookies() {
-        USERS_BY_COOKIE.clear();
+    public void reloadActiveCookies() {
         try {
-            USERS_BY_COOKIE.putAll(dbSystem.getDatabase().query(WebUserQueries.fetchActiveCookies()));
-            for (Map.Entry<String, Long> entry : dbSystem.getDatabase().query(WebUserQueries.getCookieExpiryTimes()).entrySet()) {
-                long timeToExpiry = Math.max(entry.getValue() - System.currentTimeMillis(), 0L);
+            Map<String, CookieMetadata> cookies = dbSystem.getDatabase().query(WebUserQueries.fetchActiveCookies());
+            USERS_BY_COOKIE.clear();
+            USERS_BY_COOKIE.putAll(cookies);
+            for (Map.Entry<String, CookieMetadata> entry : cookies.entrySet()) {
+                long timeToExpiry = Math.max(entry.getValue().getExpires() - System.currentTimeMillis(), 0L);
                 activeCookieExpiryCleanupTask.addExpiry(entry.getKey(), System.currentTimeMillis() + timeToExpiry);
             }
         } catch (DBOpException databaseClosedUnexpectedly) {
@@ -106,34 +113,36 @@ public class ActiveCookieStore implements SubSystem {
         USERS_BY_COOKIE.clear();
     }
 
-    public Optional<User> checkCookie(String cookie) {
+    public Optional<CookieMetadata> findCookie(@Untrusted String cookie) {
         return Optional.ofNullable(USERS_BY_COOKIE.get(cookie));
     }
 
-    public String generateNewCookie(User user) {
-        String cookie = DigestUtils.sha256Hex(user.getUsername() + UUID.randomUUID() + System.currentTimeMillis());
-        USERS_BY_COOKIE.put(cookie, user);
-        saveNewCookie(user, cookie, System.currentTimeMillis());
+    public String generateNewCookie(User user, String ipAddress) {
+        SecureRandom secureRandom = new SecureRandom();
+        String cookie = DigestUtils.sha256Hex(user.getUsername() + UUID.randomUUID() + System.currentTimeMillis() + secureRandom.nextLong());
+        long expiresAt = System.currentTimeMillis() + cookieExpiresAfterMs;
+        USERS_BY_COOKIE.put(cookie, new CookieMetadata(user, expiresAt, ipAddress));
+        saveNewCookie(user, cookie, System.currentTimeMillis(), ipAddress);
         activeCookieExpiryCleanupTask.addExpiry(cookie, System.currentTimeMillis() + cookieExpiresAfterMs);
         return cookie;
     }
 
-    private void saveNewCookie(User user, String cookie, long now) {
+    private void saveNewCookie(User user, String cookie, long now, String ipAddress) {
         dbSystem.getDatabase().executeTransaction(CookieChangeTransaction.storeCookie(
-                user.getUsername(), cookie, now + cookieExpiresAfterMs
+                user.getUsername(), cookie, now + cookieExpiresAfterMs, ipAddress
         ));
     }
 
-    public void removeCookie(String cookie) {
-        Optional<User> foundUser = checkCookie(cookie);
-        if (foundUser.isPresent()) {
-            USERS_BY_COOKIE.remove(cookie);
-            deleteCookieByUser(foundUser.get().getUsername());
-            deleteCookie(cookie);
-        }
+    public void removeCookie(@Untrusted String cookie) {
+        findCookie(cookie)
+                .map(CookieMetadata::getUser)
+                .map(User::getUsername)
+                .ifPresent(this::deleteCookieByUser);
+        USERS_BY_COOKIE.remove(cookie);
+        deleteCookie(cookie);
     }
 
-    private void deleteCookie(String cookie) {
+    private void deleteCookie(@Untrusted String cookie) {
         dbSystem.getDatabase().executeTransaction(CookieChangeTransaction.removeCookie(cookie));
     }
 

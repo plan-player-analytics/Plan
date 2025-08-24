@@ -18,6 +18,10 @@ package com.djrapitops.plan.extension.table;
 
 public enum TableColumnFormat {
     /**
+     * Boolean variables to be translated 'Yes' or 'No'.
+     */
+    BOOLEAN,
+    /**
      * String variables to be formatted as links to player page.
      */
     PLAYER_NAME,

@@ -17,9 +17,9 @@
 package com.djrapitops.plan.storage.database.transactions.patches;
 
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionPluginTable;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionServerTableValueTable;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionTableProviderTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPluginTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionServerTableValueTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionTableProviderTable;
 import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
 
 import java.sql.PreparedStatement;
@@ -31,7 +31,7 @@ import java.util.Set;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
- * Removes invalid data caused by https://github.com/plan-player-analytics/Plan/issues/1355.
+ * Removes invalid data caused by <a href="https://github.com/plan-player-analytics/Plan/issues/1355">issue #1355</a>.
  *
  * @author AuroraLS3
  */

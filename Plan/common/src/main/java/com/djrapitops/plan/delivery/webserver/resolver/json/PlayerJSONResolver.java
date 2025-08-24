@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.rendering.json.PlayerJSONCreator;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
@@ -36,8 +37,10 @@ import jakarta.ws.rs.Path;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Predicate;
 
 @Singleton
 @Path("/v1/player")
@@ -55,8 +58,8 @@ public class PlayerJSONResolver implements Resolver {
     @Override
     public boolean canAccess(Request request) {
         WebUser user = request.getUser().orElse(new WebUser(""));
-        if (user.hasPermission("page.player.other")) return true;
-        if (user.hasPermission("page.player.self")) {
+        if (user.hasPermission(WebPermission.ACCESS_PLAYER)) return true;
+        if (user.hasPermission(WebPermission.ACCESS_PLAYER_SELF)) {
             try {
                 UUID webUserUUID = identifiers.getPlayerUUID(user.getName());
                 UUID playerUUID = identifiers.getPlayerUUID(request);
@@ -88,9 +91,14 @@ public class PlayerJSONResolver implements Resolver {
 
     private Response getResponse(Request request) {
         UUID playerUUID = identifiers.getPlayerUUID(request); // Can throw BadRequestException
+
+        Predicate<WebPermission> hasPermission = request.getUser()
+                .map(user -> (Predicate<WebPermission>) user::hasPermission)
+                .orElse(permission -> true); // No user means auth disabled inside resolve
+        Map<String, Object> jsonAsMap = jsonCreator.createJSONAsMap(playerUUID, hasPermission);
         return Response.builder()
                 .setMimeType(MimeType.JSON)
-                .setJSONContent(jsonCreator.createJSONAsMap(playerUUID))
+                .setJSONContent(jsonAsMap)
                 .build();
     }
 }

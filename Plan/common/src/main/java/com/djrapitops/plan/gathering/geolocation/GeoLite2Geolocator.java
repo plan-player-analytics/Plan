@@ -26,7 +26,7 @@ import com.maxmind.geoip2.model.CountryResponse;
 import com.maxmind.geoip2.record.Country;
 import org.apache.commons.compress.archivers.tar.TarArchiveEntry;
 import org.apache.commons.compress.archivers.tar.TarArchiveInputStream;
-import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.IOUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -36,6 +36,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
@@ -80,7 +81,6 @@ public class GeoLite2Geolocator implements Geolocator {
                 Files.delete(geolocationDB.toPath()); // Delete old data according to restriction 3. in EULA
             }
         }
-
         downloadDatabase();
         // Delete old Geolocation database file if it still exists (on success to avoid a no-file situation)
         Files.deleteIfExists(files.getFileFromPluginFolder("GeoIP.dat").toPath());
@@ -88,28 +88,38 @@ public class GeoLite2Geolocator implements Geolocator {
 
     private void downloadDatabase() throws IOException {
         // Avoid Socket leak with the parameters in case download url has proxy
-        // https://AuroraLS3.github.io/mishaps/java_socket_leak_incident
         Properties properties = System.getProperties();
         properties.setProperty("sun.net.client.defaultConnectTimeout", Long.toString(TimeUnit.MINUTES.toMillis(1L)));
         properties.setProperty("sun.net.client.defaultReadTimeout", Long.toString(TimeUnit.MINUTES.toMillis(1L)));
         properties.setProperty("sun.net.http.retryPost", Boolean.toString(false));
 
-        String downloadFrom = "https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&license_key=DEyDUKfCwNbtc5eK&suffix=tar.gz";
-        URL downloadSite = new URL(downloadFrom);
-        try (
-                InputStream in = downloadSite.openStream();
-                GZIPInputStream gzipIn = new GZIPInputStream(in);
-                TarArchiveInputStream tarIn = new TarArchiveInputStream(gzipIn);
-                FileOutputStream fos = new FileOutputStream(geolocationDB.getAbsoluteFile())
-        ) {
-            findAndCopyFromTar(tarIn, fos);
+        String downloadURL = config.get(DataGatheringSettings.GEOLOCATION_DOWNLOAD_URL);
+        URL downloadSite = new URL(downloadURL);
+        if (downloadURL.startsWith("https://download.maxmind.com/app/geoip_download")) {
+            try (
+                    InputStream in = downloadSite.openStream();
+                    GZIPInputStream gzipIn = new GZIPInputStream(in);
+                    TarArchiveInputStream tarIn = new TarArchiveInputStream(gzipIn);
+                    FileOutputStream fos = new FileOutputStream(geolocationDB.getAbsoluteFile())
+            ) {
+                findAndCopyFromTar(tarIn, fos);
+            }
+        } else {
+            URLConnection connection = downloadSite.openConnection();
+            connection.setRequestProperty("X-PLAN-GEODB-TOKEN", "68342d1f-5fc9-4853-bd1e-ba88c466b3a6");
+            try (
+                    InputStream in = connection.getInputStream();
+                    FileOutputStream fos = new FileOutputStream(geolocationDB.getAbsoluteFile())
+            ) {
+                IOUtils.copy(in, fos);
+            }
         }
     }
 
     private void findAndCopyFromTar(TarArchiveInputStream tarIn, FileOutputStream fos) throws IOException {
         // Breadth first search
         Queue<TarArchiveEntry> entries = new ArrayDeque<>();
-        entries.add(tarIn.getNextTarEntry());
+        entries.add(tarIn.getNextEntry());
         while (!entries.isEmpty()) {
             TarArchiveEntry entry = entries.poll();
             if (entry.isDirectory()) {
@@ -122,7 +132,7 @@ public class GeoLite2Geolocator implements Geolocator {
                 break; // Found it
             }
 
-            TarArchiveEntry next = tarIn.getNextTarEntry();
+            TarArchiveEntry next = tarIn.getNextEntry();
             if (next != null) entries.add(next);
         }
     }
@@ -131,6 +141,7 @@ public class GeoLite2Geolocator implements Geolocator {
     public Optional<String> getCountry(InetAddress inetAddress) {
         if (inetAddress == null) return Optional.empty();
         if (inetAddress.getHostAddress().contains("127.0.0.1")) return Optional.of("Local Machine");
+        if (inetAddress.isSiteLocalAddress()) return Optional.of("Local Private Network");
 
         try (
                 // See https://github.com/maxmind/MaxMind-DB-Reader-java#file-lock-on-windows

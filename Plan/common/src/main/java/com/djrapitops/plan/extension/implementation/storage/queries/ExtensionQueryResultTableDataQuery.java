@@ -25,7 +25,9 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
-import com.djrapitops.plan.storage.database.sql.tables.*;
+import com.djrapitops.plan.storage.database.sql.building.Sql;
+import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.*;
 import org.apache.commons.text.TextStringBuilder;
 
 import java.sql.PreparedStatement;
@@ -79,7 +81,7 @@ public class ExtensionQueryResultTableDataQuery implements Query<Map<UUID, Exten
     private Query<Map<UUID, ExtensionTabData>> fetchPlayerData() {
         String selectUuids = SELECT + UsersTable.USER_UUID +
                 FROM + UsersTable.TABLE_NAME +
-                WHERE + UsersTable.ID + " IN (" + new TextStringBuilder().appendWithSeparators(userIds, ",") + ")";
+                WHERE + UsersTable.ID + " IN (" + Sql.nParameters(userIds.size()) + ")";
 
         String sql = SELECT +
                 "v1." + ExtensionPlayerValueTable.USER_UUID + " as uuid," +
@@ -104,19 +106,13 @@ public class ExtensionQueryResultTableDataQuery implements Query<Map<UUID, Exten
                 AND + "p1." + ExtensionProviderTable.IS_PLAYER_NAME + "=?" +
                 AND + "e1." + ExtensionPluginTable.SERVER_UUID + "=?";
 
-        return new QueryStatement<>(sql, 1000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setBoolean(1, true);                  // Select only values that should be shown
-                statement.setBoolean(2, false);                 // Don't select player_name String values
-                statement.setString(3, serverUUID.toString());
-            }
-
-            @Override
-            public Map<UUID, ExtensionTabData> processResults(ResultSet set) throws SQLException {
-                return extractDataByPlayer(set);
-            }
-        };
+        return db -> db.queryMap(sql, this::extractPlayer, HashMap::new,
+                        userIds,
+                        true,  // Select only values that should be shown
+                        false, // Don't select player_name String values
+                        serverUUID)
+                .entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().build()));
     }
 
     private Query<Map<UUID, ExtensionTabData>> fetchPlayerGroups() {
@@ -155,15 +151,19 @@ public class ExtensionQueryResultTableDataQuery implements Query<Map<UUID, Exten
         Map<UUID, ExtensionTabData.Builder> dataByPlayer = new HashMap<>();
 
         while (set.next()) {
-            UUID playerUUID = UUID.fromString(set.getString("uuid"));
-            ExtensionTabData.Builder data = dataByPlayer.getOrDefault(playerUUID, new ExtensionTabData.Builder(null));
-
-            ExtensionDescription extensionDescription = extractDescription(set);
-            extractAndPutDataTo(data, extensionDescription, set);
-
-            dataByPlayer.put(playerUUID, data);
+            extractPlayer(set, dataByPlayer);
         }
         return dataByPlayer.entrySet().stream().collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().build()));
+    }
+
+    private void extractPlayer(ResultSet set, Map<UUID, ExtensionTabData.Builder> dataByPlayer) throws SQLException {
+        UUID playerUUID = UUID.fromString(set.getString("uuid"));
+        ExtensionTabData.Builder data = dataByPlayer.getOrDefault(playerUUID, new ExtensionTabData.Builder(null));
+
+        ExtensionDescription extensionDescription = extractDescription(set);
+        extractAndPutDataTo(data, extensionDescription, set);
+
+        dataByPlayer.put(playerUUID, data);
     }
 
     private void extractAndPutDataTo(ExtensionTabData.Builder extensionTab, ExtensionDescription description, ResultSet set) throws SQLException {

@@ -36,8 +36,10 @@ import net.playeranalytics.plan.gathering.listeners.FabricListener;
 import net.playeranalytics.plan.gathering.listeners.events.PlanFabricEvents;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 
+@Singleton
 public class DeathEventListener implements FabricListener {
 
     private final Processing processing;
@@ -45,6 +47,7 @@ public class DeathEventListener implements FabricListener {
     private final ServerInfo serverInfo;
 
     private boolean isEnabled = false;
+    private boolean wasRegistered = false;
 
     @Inject
     public DeathEventListener(
@@ -59,9 +62,19 @@ public class DeathEventListener implements FabricListener {
 
     @Override
     public void register() {
-        ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register((world, killer, killedEntity) -> {
-            PlanFabricEvents.ON_KILLED.invoker().onKilled(killedEntity, killer);
-        });
+        if (this.wasRegistered) {
+            return;
+        }
+
+        ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register((world, killer, killedEntity) ->
+                {
+                    if (!this.isEnabled) {
+                        return;
+                    }
+                    PlanFabricEvents.ON_KILLED.invoker().onKilled(killedEntity, killer);
+                }
+        );
+
         PlanFabricEvents.ON_KILLED.register((victim, killer) -> {
             if (!this.isEnabled) {
                 return;
@@ -84,12 +97,14 @@ public class DeathEventListener implements FabricListener {
                         ? new PlayerKillProcessor(getKiller(player), getVictim((ServerPlayerEntity) victim), serverInfo.getServerIdentifier(), findWeapon(player), time)
                         : new MobKillProcessor(player.getUuid());
                 processing.submitCritical(processor);
-            } catch (Exception e) {
+            } catch (Exception | NoSuchMethodError e) {
                 errorLogger.error(e, ErrorContext.builder().related(getClass(), victim, killer).build());
             }
 
         });
+
         this.enable();
+        this.wasRegistered = true;
     }
 
     private PlayerKill.Killer getKiller(ServerPlayerEntity killer) {
@@ -101,14 +116,14 @@ public class DeathEventListener implements FabricListener {
     }
 
     public Optional<ServerPlayerEntity> getCause(Entity killer) {
-        if (killer instanceof ServerPlayerEntity) return Optional.of((ServerPlayerEntity) killer);
-        if (killer instanceof TameableEntity) return getOwner((TameableEntity) killer);
-        if (killer instanceof ProjectileEntity) return getShooter((ProjectileEntity) killer);
+        if (killer instanceof ServerPlayerEntity player) return Optional.of(player);
+        if (killer instanceof TameableEntity tamed) return getOwner(tamed);
+        if (killer instanceof ProjectileEntity projectile) return getShooter(projectile);
         return Optional.empty();
     }
 
     public String findWeapon(Entity killer) {
-        if (killer instanceof ServerPlayerEntity) return getItemInHand((ServerPlayerEntity) killer);
+        if (killer instanceof ServerPlayerEntity player) return getItemInHand(player);
 
         // Projectile, EnderCrystal and all other causes that are not known yet
         return new EntityNameFormatter().apply(killer.getType().getName().getString());
@@ -121,8 +136,8 @@ public class DeathEventListener implements FabricListener {
 
     private Optional<ServerPlayerEntity> getShooter(ProjectileEntity projectile) {
         Entity source = projectile.getOwner();
-        if (source instanceof ServerPlayerEntity) {
-            return Optional.of((ServerPlayerEntity) source);
+        if (source instanceof ServerPlayerEntity player) {
+            return Optional.of(player);
         }
 
         return Optional.empty();
@@ -134,8 +149,8 @@ public class DeathEventListener implements FabricListener {
         }
 
         Entity owner = tameable.getOwner();
-        if (owner instanceof ServerPlayerEntity) {
-            return Optional.of((ServerPlayerEntity) owner);
+        if (owner instanceof ServerPlayerEntity player) {
+            return Optional.of(player);
         }
 
         return Optional.empty();

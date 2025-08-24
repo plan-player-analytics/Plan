@@ -19,6 +19,7 @@ package com.djrapitops.plan.identification;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.player.UUIDFetcher;
 import org.jetbrains.annotations.Nullable;
@@ -50,18 +51,18 @@ public class UUIDUtility {
         this.errorLogger = errorLogger;
     }
 
-    public static Optional<UUID> parseFromString(String uuidString) {
+    public static Optional<UUID> parseFromString(@Untrusted String uuidString) {
         try {
             return Optional.of(UUID.fromString(uuidString));
-        } catch (IllegalArgumentException malformedUUIDException) {
+        } catch (@Untrusted IllegalArgumentException malformedUUIDException) {
             return Optional.empty();
         }
     }
 
-    public Optional<String> getNameOf(String possiblePlayerUUID) {
+    public Optional<String> getNameOf(@Untrusted String possiblePlayerUUID) {
         try {
             return getNameOf(UUID.fromString(possiblePlayerUUID));
-        } catch (IllegalArgumentException notUUID) {
+        } catch (@Untrusted IllegalArgumentException notUUID) {
             return Optional.empty();
         }
     }
@@ -78,7 +79,7 @@ public class UUIDUtility {
      * @return UUID of the player
      */
     @Nullable
-    public UUID getUUIDOf(String playerName) {
+    public UUID getUUIDOf(@Untrusted String playerName) {
         if (playerName == null) throw new IllegalArgumentException("Player name can not be null!");
         UUID uuid = getUUIDFromString(playerName);
         if (uuid != null) return uuid;
@@ -87,23 +88,23 @@ public class UUIDUtility {
                 .orElse(getUUIDViaUUIDFetcher(playerName));
     }
 
-    private UUID getUUIDFromString(String playerName) {
+    private UUID getUUIDFromString(@Untrusted String playerName) {
         try {
             return UUID.fromString(playerName);
-        } catch (IllegalArgumentException ignore) {
+        } catch (@Untrusted IllegalArgumentException ignore) {
             return null;
         }
     }
 
-    private UUID getUUIDViaUUIDFetcher(String playerName) {
+    private UUID getUUIDViaUUIDFetcher(@Untrusted String playerName) {
         try {
             return UUIDFetcher.getUUIDOf(playerName);
-        } catch (Exception | NoClassDefFoundError ignored) {
+        } catch (@Untrusted Exception | NoClassDefFoundError ignored) {
             return null;
         }
     }
 
-    private Optional<UUID> getUUIDFromDB(String playerName) {
+    private Optional<UUID> getUUIDFromDB(@Untrusted String playerName) {
         try {
             return dbSystem.getDatabase().query(UserIdentifierQueries.fetchPlayerUUIDOf(playerName));
         } catch (DBOpException e) {

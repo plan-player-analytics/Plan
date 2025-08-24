@@ -17,11 +17,13 @@
 package com.djrapitops.plan.gathering.domain.event;
 
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
 import java.util.function.Supplier;
 
+@Untrusted
 public class JoinAddress {
     private final Supplier<String> address;
 
@@ -33,6 +35,7 @@ public class JoinAddress {
         this.address = address;
     }
 
+    @Untrusted
     public String getAddress() {
         return StringUtils.truncate(address.get(), JoinAddressTable.JOIN_ADDRESS_MAX_LENGTH);
     }

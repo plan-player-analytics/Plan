@@ -31,6 +31,7 @@ import org.spongepowered.api.event.entity.living.player.PlayerChangeClientSettin
 import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.event.message.PlayerChatEvent;
 import org.spongepowered.api.event.network.ServerSideConnectionEvent;
+import org.spongepowered.api.profile.GameProfile;
 
 import javax.inject.Inject;
 import java.util.Map;
@@ -65,6 +66,10 @@ public class SpongeAFKListener {
         if (afkTracker == null) {
             afkTracker = new AFKTracker(config);
         }
+    }
+
+    public static AFKTracker getAfkTracker() {
+        return afkTracker;
     }
 
     private void event(Event event, ServerPlayer player) {
@@ -118,6 +123,6 @@ public class SpongeAFKListener {
 
     @Listener(order = Order.POST)
     public void onLeave(ServerSideConnectionEvent.Disconnect event) {
-        ignorePermissionInfo.remove(event.player().uniqueId());
+        event.profile().map(GameProfile::uuid).ifPresent(ignorePermissionInfo::remove);
     }
 }

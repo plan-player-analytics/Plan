@@ -17,12 +17,18 @@
 package net.playeranalytics.plan.gathering;
 
 import com.djrapitops.plan.gathering.ServerSensor;
+import com.djrapitops.plan.gathering.domain.PluginMetadata;
+import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.impl.FabricLoaderImpl;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.minecraft.server.world.ServerWorld;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Singleton
@@ -42,7 +48,7 @@ public class FabricSensor implements ServerSensor<ServerWorld> {
         //Returns the ticks per second of the last 100 ticks
         double totalTickLength = 0;
         int count = 0;
-        for (long tickLength : server.lastTickLengths) {
+        for (long tickLength : server.getTickTimes()) {
             if (tickLength == 0) continue; // Ignore uninitialized values in array
             totalTickLength += Math.max(tickLength, TimeUnit.MILLISECONDS.toNanos(50));
             count++;
@@ -81,5 +87,20 @@ public class FabricSensor implements ServerSensor<ServerWorld> {
     @Override
     public int getOnlinePlayerCount() {
         return server.getCurrentPlayerCount();
+    }
+
+    @Override
+    public List<String> getOnlinePlayerNames() {
+        return Arrays.asList(server.getPlayerNames());
+    }
+
+    @Override
+    public List<PluginMetadata> getInstalledPlugins() {
+        return FabricLoaderImpl.INSTANCE.getMods().stream()
+                .map(ModContainer::getMetadata)
+                .map(metadata -> new PluginMetadata(
+                        Optional.ofNullable(metadata.getName()).orElse(metadata.getId()),
+                        metadata.getVersion().getFriendlyString()))
+                .toList();
     }
 }

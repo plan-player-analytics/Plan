@@ -20,12 +20,14 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.commands.use.CMDSender;
 import com.djrapitops.plan.gathering.listeners.Status;
+import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CommandLang;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plan.version.VersionChecker;
@@ -33,7 +35,6 @@ import net.playeranalytics.plugin.PluginInformation;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Optional;
 
 @Singleton
 public class PluginStatusCommands {
@@ -41,6 +42,7 @@ public class PluginStatusCommands {
     private final PlanPlugin plugin;
     private final PluginInformation pluginInformation;
     private final Locale locale;
+    private final ServerInfo serverInfo;
     private final DBSystem dbSystem;
     private final Status status;
     private final VersionChecker versionChecker;
@@ -51,6 +53,7 @@ public class PluginStatusCommands {
             PlanPlugin plugin,
             PluginInformation pluginInformation,
             Locale locale,
+            ServerInfo serverInfo,
             DBSystem dbSystem,
             Status status,
             VersionChecker versionChecker,
@@ -59,6 +62,7 @@ public class PluginStatusCommands {
         this.plugin = plugin;
         this.pluginInformation = pluginInformation;
         this.locale = locale;
+        this.serverInfo = serverInfo;
         this.dbSystem = dbSystem;
         this.status = status;
         this.versionChecker = versionChecker;
@@ -80,15 +84,15 @@ public class PluginStatusCommands {
         }, "Plan Reload Thread").start();
     }
 
-    public void onDisable(CMDSender sender, Arguments arguments) {
+    public void onDisable(CMDSender sender, @Untrusted Arguments arguments) {
         if (arguments.isEmpty()) {
             plugin.onDisable();
             sender.send(locale.getString(CommandLang.DISABLE_DISABLED));
             return;
         }
 
-        Optional<String> kickCountDisable = arguments.get(0).filter("kickcount"::equalsIgnoreCase);
-        if (kickCountDisable.isPresent()) {
+        boolean kickCountDisable = arguments.get(0).map("kickcount"::equalsIgnoreCase).orElse(false);
+        if (kickCountDisable) {
             status.setCountKicks(false);
             sender.send(locale.getString(CommandLang.FEATURE_DISABLED, "Kick Counting"));
         } else {
@@ -103,7 +107,7 @@ public class PluginStatusCommands {
         Database database = dbSystem.getDatabase();
 
         String updateAvailable = versionChecker.isNewVersionAvailable() ? yes : no;
-        String proxyAvailable = database.query(ServerQueries.fetchProxyServerInformation()).isPresent() ? yes : no;
+        String proxyAvailable = database.query(ServerQueries.fetchProxyServers()).isEmpty() ? no : yes;
 
 
         String[] messages = {
@@ -113,6 +117,7 @@ public class PluginStatusCommands {
                 locale.getString(CommandLang.INFO_UPDATE, updateAvailable),
                 locale.getString(CommandLang.INFO_DATABASE, database.getType().getName() + " (" + database.getState().name() + ")"),
                 locale.getString(CommandLang.INFO_PROXY_CONNECTION, proxyAvailable),
+                locale.getString(CommandLang.INFO_SERVER_UUID, serverInfo.getServerUUID()),
                 "",
                 ">"
         };

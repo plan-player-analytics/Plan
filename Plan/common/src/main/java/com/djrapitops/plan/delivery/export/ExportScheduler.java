@@ -74,13 +74,20 @@ public class ExportScheduler extends PluginRunnable {
 
     private void scheduleExport() {
         Database database = dbSystem.getDatabase();
-        boolean hasProxy = database.query(ServerQueries.fetchProxyServerInformation()).isPresent();
+        boolean hasProxy = !database.query(ServerQueries.fetchProxyServers()).isEmpty();
         if (serverInfo.getServer().isNotProxy() && hasProxy) {
             return;
         }
 
+        scheduleReactExport();
         scheduleServerPageExport();
         schedulePlayersPageExport();
+    }
+
+    private void scheduleReactExport() {
+        runnableFactory.create(
+                new ExportTask(exporter, Exporter::exportReact, errorLogger)
+        ).runTaskLaterAsynchronously(TimeAmount.toTicks(5, TimeUnit.SECONDS));
     }
 
     private void schedulePlayersPageExport() {

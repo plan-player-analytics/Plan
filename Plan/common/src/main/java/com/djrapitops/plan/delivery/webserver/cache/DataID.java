@@ -25,6 +25,7 @@ import com.djrapitops.plan.identification.ServerUUID;
  */
 public enum DataID {
     PLAYERS,
+    PLAYERS_V2,
     SESSIONS,
     SERVERS,
     KILLS,
@@ -32,6 +33,7 @@ public enum DataID {
     GRAPH_PERFORMANCE,
     GRAPH_OPTIMIZED_PERFORMANCE,
     GRAPH_ONLINE,
+    GRAPH_ONLINE_PROXIES,
     GRAPH_UNIQUE_NEW,
     GRAPH_HOURLY_UNIQUE_NEW,
     GRAPH_CALENDAR,
@@ -40,7 +42,6 @@ public enum DataID {
     GRAPH_ACTIVITY,
     GRAPH_PING,
     GRAPH_SERVER_PIE,
-    GRAPH_HOSTNAME_PIE,
     GRAPH_PUNCHCARD,
     SERVER_OVERVIEW,
     ONLINE_OVERVIEW,
@@ -52,9 +53,28 @@ public enum DataID {
     EXTENSION_TABS,
     EXTENSION_JSON,
     LIST_SERVERS,
-    JOIN_ADDRESSES_BY_DAY;
+    JOIN_ADDRESSES_BY_DAY(false),
+    PLAYER_RETENTION,
+    PLAYER_JOIN_ADDRESSES,
+    PLAYER_ALLOWLIST_BOUNCES,
+    ;
+
+    private final boolean cacheable;
+
+    DataID() {
+        this(true);
+    }
+
+    DataID(boolean cacheable) {
+        this.cacheable = cacheable;
+    }
+
+    public boolean isCacheable() {
+        return cacheable;
+    }
 
     public String of(ServerUUID serverUUID) {
-        return name() + '-' + serverUUID;
+        if (serverUUID == null) return name();
+        return name() + "_" + serverUUID;
     }
 }

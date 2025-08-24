@@ -50,8 +50,8 @@ public class WorldTable {
 
     public static final String SELECT_WORLD_ID_STATEMENT = '(' +
             SELECT + TABLE_NAME + '.' + ID + FROM + TABLE_NAME +
-            WHERE + '(' + NAME + "=?)" +
-            AND + '(' + TABLE_NAME + '.' + SERVER_UUID + "=?)" +
+            WHERE + NAME + "=?" +
+            AND + TABLE_NAME + '.' + SERVER_UUID + "=?" +
             " LIMIT 1)";
 
     private WorldTable() {

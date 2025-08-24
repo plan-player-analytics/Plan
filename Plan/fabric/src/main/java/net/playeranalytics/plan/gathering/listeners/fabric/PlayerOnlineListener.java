@@ -16,6 +16,7 @@
  */
 package net.playeranalytics.plan.gathering.listeners.fabric;
 
+import com.djrapitops.plan.gathering.JoinAddressValidator;
 import com.djrapitops.plan.gathering.cache.JoinAddressCache;
 import com.djrapitops.plan.gathering.domain.event.PlayerJoin;
 import com.djrapitops.plan.gathering.domain.event.PlayerLeave;
@@ -30,7 +31,7 @@ import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.mojang.authlib.GameProfile;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.minecraft.network.NetworkState;
+import net.minecraft.network.packet.c2s.handshake.ConnectionIntent;
 import net.minecraft.network.packet.c2s.handshake.HandshakeC2SPacket;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -40,15 +41,18 @@ import net.playeranalytics.plan.gathering.listeners.FabricListener;
 import net.playeranalytics.plan.gathering.listeners.events.PlanFabricEvents;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.net.SocketAddress;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicReference;
 
+@Singleton
 public class PlayerOnlineListener implements FabricListener {
 
     private final PlayerJoinEventConsumer joinEventConsumer;
     private final PlayerLeaveEventConsumer leaveEventConsumer;
     private final JoinAddressCache joinAddressCache;
+    private final JoinAddressValidator joinAddressValidator;
 
     private final ServerInfo serverInfo;
     private final DBSystem dbSystem;
@@ -58,12 +62,15 @@ public class PlayerOnlineListener implements FabricListener {
     private final AtomicReference<String> joinAddress = new AtomicReference<>();
 
     private boolean isEnabled = false;
+    private boolean wasRegistered = false;
 
     @Inject
     public PlayerOnlineListener(
             PlayerJoinEventConsumer joinEventConsumer,
             PlayerLeaveEventConsumer leaveEventConsumer,
-            JoinAddressCache joinAddressCache, ServerInfo serverInfo,
+            JoinAddressCache joinAddressCache,
+            JoinAddressValidator joinAddressValidator,
+            ServerInfo serverInfo,
             DBSystem dbSystem,
             ErrorLogger errorLogger,
             MinecraftDedicatedServer server
@@ -71,6 +78,7 @@ public class PlayerOnlineListener implements FabricListener {
         this.joinEventConsumer = joinEventConsumer;
         this.leaveEventConsumer = leaveEventConsumer;
         this.joinAddressCache = joinAddressCache;
+        this.joinAddressValidator = joinAddressValidator;
         this.serverInfo = serverInfo;
         this.dbSystem = dbSystem;
         this.errorLogger = errorLogger;
@@ -79,6 +87,10 @@ public class PlayerOnlineListener implements FabricListener {
 
     @Override
     public void register() {
+        if (this.wasRegistered) {
+            return;
+        }
+
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             if (!this.isEnabled) {
                 return;
@@ -112,13 +124,16 @@ public class PlayerOnlineListener implements FabricListener {
             }
             onHandshake(packet);
         });
+
         this.enable();
+        this.wasRegistered = true;
     }
 
     private void onHandshake(HandshakeC2SPacket packet) {
         try {
-            if (packet.getIntendedState() == NetworkState.LOGIN) {
-                joinAddress.set(packet.getAddress());
+            if (packet.intendedState() == ConnectionIntent.LOGIN) {
+                String address = joinAddressValidator.sanitize(packet.address());
+                joinAddress.set(address);
             }
         } catch (Exception e) {
             errorLogger.error(e, ErrorContext.builder().related(getClass(), "onHandshake").build());
@@ -130,7 +145,10 @@ public class PlayerOnlineListener implements FabricListener {
             UUID playerUUID = profile.getId();
             ServerUUID serverUUID = serverInfo.getServerUUID();
 
-            joinAddressCache.put(playerUUID, joinAddress.get());
+            String playerJoinAddress = joinAddress.get();
+            if (joinAddressValidator.isValid(playerJoinAddress)) {
+                joinAddressCache.put(playerUUID, playerJoinAddress);
+            }
 
             dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID, banned));
         } catch (Exception e) {

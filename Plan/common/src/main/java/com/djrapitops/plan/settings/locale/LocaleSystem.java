@@ -17,11 +17,14 @@
 package com.djrapitops.plan.settings.locale;
 
 import com.djrapitops.plan.SubSystem;
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.web.AssetVersions;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.locale.lang.*;
+import com.djrapitops.plan.settings.upkeep.FileWatcher;
+import com.djrapitops.plan.settings.upkeep.WatchedFile;
 import com.djrapitops.plan.storage.file.FileResource;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
@@ -32,9 +35,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -53,6 +54,7 @@ public class LocaleSystem implements SubSystem {
     private final ErrorLogger errorLogger;
 
     private final Locale locale;
+    private FileWatcher fileWatcher;
 
     @Inject
     public LocaleSystem(
@@ -102,8 +104,8 @@ public class LocaleSystem implements SubSystem {
                 GenericLang.values(),
                 HelpLang.values(),
                 HtmlLang.values(),
-                JSLang.values(),
                 PluginLang.values(),
+                WebPermission.nonDeprecatedValues(),
         };
     }
 
@@ -119,7 +121,10 @@ public class LocaleSystem implements SubSystem {
 
         Optional<Locale> loaded;
         if (localeFile.exists()) {
+            writeNewDefaultLocale(localeFile);
             loaded = loadFromFile(localeFile);
+            fileWatcher = prepareFileWatcher(localeFile);
+            fileWatcher.start();
         } else {
             loaded = loadSettingLocale();
         }
@@ -127,6 +132,52 @@ public class LocaleSystem implements SubSystem {
 
         LangCode langCode = locale.getLangCode();
         logger.info("Locale: '" + langCode.getName() + "' by " + langCode.getAuthors());
+
+        if (config.isTrue(PluginSettings.LOG_NEW_LOCALE_LINES)) {
+            logDefaultKeys(locale);
+        }
+    }
+
+    private void logDefaultKeys(Locale locale) {
+        Set<String> ignoredKeys = new HashSet<>(Arrays.asList(
+                "command.general.webUserList",
+                "command.header.info",
+                "html.label.geoProjection.mercator",
+                "html.label.geoProjection.miller",
+                "html.label.pvpPve",
+                "html.label.afk",
+                "html.label.totalAfk",
+                "html.label.tps",
+                "html.label.kdr"
+        ));
+        Map<String, Lang> keys = getKeys();
+        List<String> untranslatedKeys = new ArrayList<>();
+        for (Map.Entry<String, Lang> entry : keys.entrySet()) {
+            String key = entry.getKey();
+            if (ignoredKeys.contains(key)) {continue;}
+            Lang lang = entry.getValue();
+            if (lang.getDefault().equals(locale.getString(lang))) {
+                untranslatedKeys.add(key);
+            }
+        }
+        untranslatedKeys.sort(String.CASE_INSENSITIVE_ORDER);
+        for (String key : untranslatedKeys) {
+            logger.info("Untranslated line: " + key);
+        }
+    }
+
+    public FileWatcher prepareFileWatcher(File localeFile) {
+        FileWatcher watcher = new FileWatcher(files.getDataDirectory(), errorLogger);
+        watcher.addToWatchlist(new WatchedFile(localeFile, this::reloadCustomLocale));
+        return watcher;
+    }
+
+    private void reloadCustomLocale() {
+        File localeFile = files.getLocaleFile();
+        if (localeFile.exists()) {
+            loadFromFile(localeFile).ifPresent(locale::loadFromAnotherLocale);
+            logger.info(locale.getString(PluginLang.RELOAD_LOCALE));
+        }
     }
 
     private void writeNewDefaultLocale(File localeFile) {
@@ -178,7 +229,7 @@ public class LocaleSystem implements SubSystem {
         }
     }
 
-    private Optional<Locale> loadSettingLocale() {
+    public Optional<Locale> loadSettingLocale() {
         try {
             String setting = config.get(PluginSettings.LOCALE);
             if ("write-all".equalsIgnoreCase(setting)) {
@@ -214,7 +265,9 @@ public class LocaleSystem implements SubSystem {
 
     @Override
     public void disable() {
-        // No action necessary on disable.
+        if (fileWatcher != null) {
+            fileWatcher.interrupt();
+        }
     }
 
     public Locale getLocale() {

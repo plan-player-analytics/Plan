@@ -37,6 +37,12 @@ public enum Family {
      */
     BRAND;
 
+    /**
+     * Get a family by the enum name without exception.
+     *
+     * @param name Family#name()
+     * @return Optional if the family is found by that name, empty if not found.
+     */
     public static Optional<Family> getByName(String name) {
         if (name == null) {
             return Optional.empty();

@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.gathering.domain;
 
+import com.djrapitops.plan.utilities.dev.Untrusted;
+
 import java.net.InetAddress;
 import java.util.Optional;
 import java.util.UUID;
@@ -24,8 +26,10 @@ public interface PlatformPlayerData {
 
     UUID getUUID();
 
+    @Untrusted
     String getName();
 
+    @Untrusted
     default Optional<String> getDisplayName() {
         return Optional.empty();
     }
@@ -38,6 +42,7 @@ public interface PlatformPlayerData {
         return Optional.empty();
     }
 
+    @Untrusted
     default Optional<String> getJoinAddress() {
         return Optional.empty();
     }

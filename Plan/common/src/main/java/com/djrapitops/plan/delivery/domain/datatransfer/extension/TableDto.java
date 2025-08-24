@@ -16,8 +16,8 @@
  */
 package com.djrapitops.plan.delivery.domain.datatransfer.extension;
 
-import com.djrapitops.plan.delivery.rendering.html.structure.HtmlTable;
 import com.djrapitops.plan.extension.table.Table;
+import com.djrapitops.plan.extension.table.TableColumnFormat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -41,8 +41,26 @@ public class TableDto {
                 .map(IconDto::new)
                 .collect(Collectors.toList());
 
-        rows = HtmlTable.mapToRows(table.getRows(), table.getTableColumnFormats()).stream()
+        rows = mapToRows(table.getRows(), table.getTableColumnFormats()).stream()
                 .map(row -> constructRow(columns, row))
+                .collect(Collectors.toList());
+    }
+
+    public static List<TableCellDto[]> mapToRows(List<Object[]> rows, TableColumnFormat[] tableColumnFormats) {
+        return rows.stream()
+                .map(row -> {
+                    List<TableCellDto> mapped = new ArrayList<>(row.length);
+                    for (int i = 0; i < row.length; i++) {
+                        Object value = row[i];
+                        if (value == null) {
+                            mapped.add(null);
+                        } else {
+                            TableColumnFormat format = tableColumnFormats[i];
+                            mapped.add(new TableCellDto(value, format));
+                        }
+                    }
+                    return mapped.toArray(new TableCellDto[0]);
+                })
                 .collect(Collectors.toList());
     }
 
@@ -53,10 +71,10 @@ public class TableDto {
         int columnCount = columns.size();
         for (int i = 0; i < columnCount; i++) {
             if (i > headerLength) {
-                constructedRow.add(new TableCellDto("-"));
+                constructedRow.add(new TableCellDto("-", null));
             } else {
                 TableCellDto cell = row[i];
-                constructedRow.add(cell != null ? cell : new TableCellDto("-"));
+                constructedRow.add(cell != null ? cell : new TableCellDto("-", null));
             }
         }
         return constructedRow;

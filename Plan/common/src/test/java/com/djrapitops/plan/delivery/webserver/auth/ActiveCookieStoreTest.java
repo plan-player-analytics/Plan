@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.delivery.webserver.auth;
 
-import com.djrapitops.plan.delivery.domain.WebUser;
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -29,6 +28,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import utilities.TestConstants;
 import utilities.TestPluginLogger;
+
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -51,7 +52,7 @@ class ActiveCookieStoreTest {
                 dbSystem,
                 Mockito.mock(Processing.class),
                 new TestPluginLogger());
-        user = new User(TestConstants.PLAYER_ONE_NAME, "console", null, PassEncryptUtil.createHash("testPass"), 0, WebUser.getPermissionsForLevel(0));
+        user = new User(TestConstants.PLAYER_ONE_NAME, "console", null, PassEncryptUtil.createHash("testPass"), "admin", List.of("page", "access"));
     }
 
     @AfterEach
@@ -61,26 +62,26 @@ class ActiveCookieStoreTest {
 
     @Test
     void cookiesAreStored() {
-        String cookie = underTest.generateNewCookie(user);
-        User matchingUser = underTest.checkCookie(cookie).orElseThrow(AssertionError::new);
+        String cookie = underTest.generateNewCookie(user, TestConstants.IPV4_ADDRESS);
+        User matchingUser = underTest.findCookie(cookie).map(CookieMetadata::getUser).orElseThrow(AssertionError::new);
 
         assertEquals(user, matchingUser);
     }
 
     @Test
     void cookiesAreRemoved() {
-        String cookie = underTest.generateNewCookie(user);
+        String cookie = underTest.generateNewCookie(user, TestConstants.IPV4_ADDRESS);
 
         underTest.removeCookie(cookie);
-        assertFalse(underTest.checkCookie(cookie).isPresent());
+        assertFalse(underTest.findCookie(cookie).isPresent());
     }
 
     @Test
     void usersCookiesAreRemoved() {
-        String cookie = underTest.generateNewCookie(user);
+        String cookie = underTest.generateNewCookie(user, TestConstants.IPV4_ADDRESS);
 
         ActiveCookieStore.removeUserCookie(user.getUsername());
-        assertFalse(underTest.checkCookie(cookie).isPresent());
+        assertFalse(underTest.findCookie(cookie).isPresent());
     }
 
 }

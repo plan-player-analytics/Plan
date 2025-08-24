@@ -19,6 +19,7 @@ package com.djrapitops.plan.command.use;
 import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.commands.use.CMDSender;
 import com.djrapitops.plan.commands.use.Subcommand;
+import com.djrapitops.plan.settings.Permissions;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.md_5.bungee.api.CommandSender;
@@ -42,7 +43,7 @@ public class BungeeCommand extends Command implements TabExecutor {
             ErrorLogger errorLogger,
             Subcommand command, String name
     ) {
-        super(name);
+        super(name, Permissions.USE_COMMAND.getPermission());
         this.runnableFactory = runnableFactory;
         this.errorLogger = errorLogger;
 

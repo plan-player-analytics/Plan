@@ -21,6 +21,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserInfoQueries;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -54,8 +55,8 @@ public class PlayedOnServerFilter extends MultiOptionFilter {
     }
 
     @Override
-    public Set<Integer> getMatchingUserIds(InputFilterDto query) {
-        List<String> serverNames = getSelected(query);
+    public Set<Integer> getMatchingUserIds(@Untrusted InputFilterDto query) {
+        @Untrusted List<String> serverNames = getSelected(query);
         List<ServerUUID> serverUUIDs = serverNames.isEmpty() ? Collections.emptyList() : dbSystem.getDatabase().query(ServerQueries.fetchServersMatchingIdentifiers(serverNames));
 
         return dbSystem.getDatabase().query(UserInfoQueries.userIdsOfRegisteredBetween(0, System.currentTimeMillis(), serverUUIDs));

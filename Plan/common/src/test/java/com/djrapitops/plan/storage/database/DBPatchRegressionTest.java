@@ -17,6 +17,8 @@
 package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.storage.database.sql.tables.*;
+import com.djrapitops.plan.storage.database.sql.tables.extension.*;
+import com.djrapitops.plan.storage.database.sql.tables.webuser.SecurityTable;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.patches.Patch;
 import utilities.TestConstants;

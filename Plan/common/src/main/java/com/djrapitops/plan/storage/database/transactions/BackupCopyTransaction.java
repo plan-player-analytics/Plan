@@ -54,12 +54,19 @@ public class BackupCopyTransaction extends RemoveEverythingTransaction {
         copyCommonUserInformation();
         copyWorldNames();
         copyTPSData();
+        copyWebGroups();
         copyPlanWebUsers();
         copyGeoInformation();
         copyNicknameData();
         copySessionsWithKillAndWorldData();
         copyPerServerUserInformation();
         copyPingData();
+    }
+
+    private void copyWebGroups() {
+        copy(LargeStoreQueries::storeGroupNames, WebUserQueries.fetchGroupNames());
+        copy(LargeStoreQueries::storePermissions, WebUserQueries.fetchAvailablePermissions());
+        copy(LargeStoreQueries::storeGroupPermissionRelations, WebUserQueries.fetchAllGroupPermissions());
     }
 
     private <T> void copy(Function<T, Executable> executableCreator, Query<T> dataQuery) {
@@ -81,6 +88,7 @@ public class BackupCopyTransaction extends RemoveEverythingTransaction {
 
     private void copyPlanWebUsers() {
         copy(LargeStoreQueries::storeAllPlanWebUsers, WebUserQueries.fetchAllUsers());
+        copy(LargeStoreQueries::storeAllPreferences, WebUserQueries.fetchAllPreferences());
     }
 
     private void copyPlanServerInformation() {

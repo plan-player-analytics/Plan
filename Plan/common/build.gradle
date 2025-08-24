@@ -1,23 +1,25 @@
 import dev.vankka.dependencydownload.task.GenerateDependencyDownloadResourceTask
-import org.apache.tools.ant.filters.ReplaceTokens
 
 plugins {
+    id("java-test-fixtures")
     id "dev.vankka.dependencydownload.plugin" version "$dependencyDownloadVersion"
-    id "com.github.node-gradle.node" version "3.4.0"
-    id "io.swagger.core.v3.swagger-gradle-plugin" version "2.2.2"
+    id "com.github.node-gradle.node" version "7.1.0"
+    id "io.swagger.core.v3.swagger-gradle-plugin" version "2.2.36"
 }
 
 configurations {
     // Runtime downloading scopes
     mysqlDriver
+    mariadbDriver
     sqliteDriver
-    testImplementation.extendsFrom mysqlDriver, sqliteDriver
-    compileOnly.extendsFrom mysqlDriver, sqliteDriver
+    ipAddressMatcher
+    testImplementation.extendsFrom mysqlDriver, mariadbDriver, sqliteDriver, ipAddressMatcher
+    compileOnly.extendsFrom mysqlDriver, mariadbDriver, sqliteDriver, ipAddressMatcher
 
     swaggerJson // swagger.json configuration
 }
 
-task generateResourceForMySQLDriver(type: GenerateDependencyDownloadResourceTask) {
+tasks.register("generateResourceForMySQLDriver", GenerateDependencyDownloadResourceTask) {
     var conf = configurations.mysqlDriver
     configuration = conf
     file = "assets/plan/dependencies/" + conf.name + ".txt"
@@ -25,7 +27,15 @@ task generateResourceForMySQLDriver(type: GenerateDependencyDownloadResourceTask
     includeShadowJarRelocations = false
 }
 
-task generateResourceForSQLiteDriver(type: GenerateDependencyDownloadResourceTask) {
+tasks.register("generateResourceForMariaDBDriver", GenerateDependencyDownloadResourceTask) {
+    var conf = configurations.mariadbDriver
+    configuration = conf
+    file = "assets/plan/dependencies/" + conf.name + ".txt"
+    // Not necessary to include in the resource
+    includeShadowJarRelocations = false
+}
+
+tasks.register("generateResourceForSQLiteDriver", GenerateDependencyDownloadResourceTask) {
     var conf = configurations.sqliteDriver
     configuration = conf
     file = "assets/plan/dependencies/" + conf.name + ".txt"
@@ -33,149 +43,237 @@ task generateResourceForSQLiteDriver(type: GenerateDependencyDownloadResourceTas
     includeShadowJarRelocations = false
 }
 
-dependencies {
-    implementation project(":api")
-    shadow project(":extensions")
+tasks.register("generateResourceForIpAddressMatcher", GenerateDependencyDownloadResourceTask) {
+    var conf = configurations.ipAddressMatcher
+    configuration = conf
+    file = "assets/plan/dependencies/" + conf.name + ".txt"
+    // Not necessary to include in the resource
+    includeShadowJarRelocations = false
+}
 
-    shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
-    compileOnly "net.kyori:adventure-api:4.9.3"
-    shadow("dev.vankka:dependencydownload-runtime:$dependencyDownloadVersion") {
+dependencies {
+    api project(":api")
+    api project(":extensions")
+    implementation "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
+
+    compileOnly "net.kyori:adventure-api:$adventureVersion"
+    api("dev.vankka:dependencydownload-runtime:$dependencyDownloadVersion") {
         // Effectively disables relocating
         exclude module: "jar-relocator"
     }
-    mysqlDriver "mysql:mysql-connector-java:$mysqlVersion"
+    mysqlDriver "com.mysql:mysql-connector-j:$mysqlVersion"
+    mariadbDriver "org.mariadb.jdbc:mariadb-java-client:$mariadbVersion"
     sqliteDriver "org.xerial:sqlite-jdbc:$sqliteVersion"
+    sqliteDriver "org.slf4j:slf4j-nop:1.7.36"
+    ipAddressMatcher "com.github.seancfoley:ipaddress:$ipAddressMatcherVersion"
 
-    shadow "org.apache.commons:commons-text:$commonsTextVersion"
-    shadow "org.apache.commons:commons-compress:$commonsCompressVersion"
-    shadow "commons-codec:commons-codec:$commonsCodecVersion"
-    shadow "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
-    shadow "com.zaxxer:HikariCP:$hikariVersion"
-    shadow "org.slf4j:slf4j-nop:$slf4jVersion"
-    shadow "org.slf4j:slf4j-api:$slf4jVersion"
-    shadow "com.maxmind.geoip2:geoip2:$geoIpVersion"
-    shadow "com.google.code.gson:gson:$gsonVersion"
-    shadow "org.eclipse.jetty:jetty-server:$jettyVersion"
-    shadow "org.eclipse.jetty:jetty-alpn-java-server:$jettyVersion"
-    shadow "org.eclipse.jetty.http2:http2-server:$jettyVersion"
-    shadow 'com.googlecode.json-simple:json-simple:1.1.1' // json simple used by UUIDFetcher
+    compileOnlyApi "org.jetbrains:annotations:$jetbrainsAnnotationsVersion"
+    api "org.apache.commons:commons-text:$commonsTextVersion"
+    api "org.apache.commons:commons-compress:$commonsCompressVersion"
+    api "commons-codec:commons-codec:$commonsCodecVersion"
+    api "com.github.ben-manes.caffeine:caffeine:$caffeineVersion"
+    implementation "com.zaxxer:HikariCP:$hikariVersion"
+    implementation "org.slf4j:slf4j-nop:$slf4jVersion"
+    implementation "org.slf4j:slf4j-api:$slf4jVersion"
+    implementation "com.maxmind.geoip2:geoip2:$geoIpVersion"
+    api "com.google.code.gson:gson:$gsonVersion"
+    api "org.eclipse.jetty:jetty-server:$jettyVersion"
+    implementation "org.eclipse.jetty:jetty-alpn-java-server:$jettyVersion"
+    implementation "org.eclipse.jetty.http2:http2-server:$jettyVersion"
+    implementation "org.jasypt:jasypt:$jasyptVersion:lite"
 
     // Swagger annotations
-    implementation "jakarta.ws.rs:jakarta.ws.rs-api:3.1.0"
+    implementation "jakarta.ws.rs:jakarta.ws.rs-api:4.0.0"
+    api "io.swagger.core.v3:swagger-annotations:$swaggerVersion"
     implementation "io.swagger.core.v3:swagger-core-jakarta:$swaggerVersion"
     implementation "io.swagger.core.v3:swagger-jaxrs2-jakarta:$swaggerVersion"
 
+
+    // Test Tooling Dependencies
+    testFixturesApi "org.junit.jupiter:junit-jupiter:$junitVersion"      // JUnit 5
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
+
+    testFixturesApi "org.mockito:mockito-core:$mockitoVersion"           // Mockito Core
+    testFixturesApi "org.mockito:mockito-junit-jupiter:$mockitoVersion"  // Mockito JUnit 5 Extension
+    testFixturesImplementation "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
+
+    // Testing dependencies required by Plan
     testImplementation project(":api")
+    testImplementation project(":extensions:adventure")
     testImplementation "com.google.code.gson:gson:$gsonVersion"
-    testImplementation "org.seleniumhq.selenium:selenium-java:4.4.0"
+    testImplementation "org.seleniumhq.selenium:selenium-java:$seleniumVersion"
     testImplementation "org.testcontainers:testcontainers:$testContainersVersion"
     testImplementation "org.testcontainers:junit-jupiter:$testContainersVersion"
     testImplementation "org.testcontainers:nginx:$testContainersVersion"
+    testFixturesApi "org.awaitility:awaitility:$awaitilityVersion"
+    testFixturesApi "com.google.guava:guava:$guavaVersion"
+
+    testFixturesApi "org.xerial:sqlite-jdbc:$sqliteVersion" // SQLite
+    testFixturesApi "com.mysql:mysql-connector-j:$mysqlVersion" // MySQL
+    testFixturesApi "org.mariadb.jdbc:mariadb-java-client:$mariadbVersion" // MariaDB
+
+    testImplementation "com.google.dagger:dagger:$daggerVersion"
+    testAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 }
 
-task updateVersion(type: Copy) {
-    from('src/main/resources') {
-        include 'plugin.yml'
-        include 'bungee.yml'
-        include 'nukkit.yml'
-        include 'fabric.mod.json'
-    }
-    into 'build/sources/resources/'
-    filter(ReplaceTokens, tokens: [version: '' + project.ext.fullVersion])
+test {
+    environment "PLAN_TEST_NODE_STRING", "String"
+    environment "PLAN_TEST_NODE_BOOLEAN", "true"
+    environment "PLAN_TEST_NODE_INTEGER", "5"
+    environment "PLAN_TEST_NODE_DOUBLE", "0.5"
+    environment "PLAN_TEST_NODE_LONG", "9223372036854775807"
+    environment "PLAN_TEST_NODE_STRINGLIST", "- Test\n- Another"
 }
 
 node {
     download = true
-    version = "16.14.2"
+    version = "24.1.0"
     nodeProjectDir = file("$rootDir/react/dashboard")
 }
 
-task yarnBundle(type: YarnTask) {
+tasks.register("bundle", YarnTask) {
+    dependsOn yarn
     inputs.files(fileTree("$rootDir/react/dashboard/src"))
     inputs.file("$rootDir/react/dashboard/package.json")
+    inputs.file("$rootDir/react/dashboard/vite.config.js")
 
     outputs.dir("$rootDir/react/dashboard/build")
 
-    dependsOn yarn_install
-    args = ['run', 'build']
+    args = ["run", "build"]
 }
 
-task copyYarnBuildResults {
+tasks.register("yarnStart", YarnTask) {
+    logging.captureStandardOutput LogLevel.INFO
+    inputs.file("$rootDir/react/dashboard/package.json")
+
+    dependsOn yarn
+    args = ["run", "start"]
+}
+
+tasks.register("copyYarnBuildResults") {
+    // Skip Yarn build on Jitpack since Jitpack doesn't offer gclib version compatible with Node 20
+    // Jitpack build is used mainly for java dependencies.
+    onlyIf("not running in Jitpack") { !project.hasProperty("isJitpack") }
     inputs.files(fileTree("$rootDir/react/dashboard/build"))
     outputs.dir("$rootDir/common/build/resources/main/assets/plan/web")
+    outputs.dir("$rootDir/common/build/resources/test/assets/plan/web")
 
-    dependsOn yarnBundle
+    dependsOn bundle
     doLast {
         mkdir "$rootDir/common/build/resources/main/assets/plan/web"
         copy {
             from "$rootDir/react/dashboard/build"
             into "$rootDir/common/build/resources/main/assets/plan/web"
         }
+        copy {
+            into "$rootDir/common/build/resources/main/assets/plan/web"
+            into "$rootDir/common/build/resources/test/assets/plan/web"
+        }
     }
 }
 
-task determineAssetModifications {
-    inputs.files(fileTree(dir: 'src/main/resources/assets/plan/web'))
-    inputs.files(fileTree(dir: 'src/main/resources/assets/plan/locale'))
+tasks.withType(Test.class).configureEach {
+    forkEvery = 100
+}
+
+tasks.named("checkstyleTest").configure {
+    // FAILURE: Task ':common:checkstyleTest' uses this output of task ':common:copyYarnBuildResults'
+    // without declaring an explicit or implicit dependency.
+    it.dependsOn(copyYarnBuildResults)
+}
+
+tasks.register("determineAssetModifications") {
+    // Skip Yarn build on Jitpack since Jitpack doesn't offer gclib version compatible with Node 20
+    // Jitpack build is used mainly for java dependencies.
+    onlyIf("not running in Jitpack") { !project.hasProperty("isJitpack") }
+    dependsOn bundle
+    inputs.files(fileTree("$rootDir/react/dashboard/build"))
+    inputs.files(fileTree(dir: "src/main/resources/assets/plan/web"))
+    inputs.files(fileTree(dir: "src/main/resources/assets/plan/locale"))
+    inputs.files(fileTree(dir: "src/main/resources/assets/plan/themes"))
     outputs.file("build/resources/main/assets/plan/AssetVersion.yml")
 
     doLast {
         mkdir "build/resources/main/assets/plan"
         def versionFile = file("build/resources/main/assets/plan/AssetVersion.yml")
         versionFile.text = "" // Clear previous build
-        ConfigurableFileTree tree = fileTree(dir: 'src/main/resources/assets/plan/web')
+        ConfigurableFileTree tree = fileTree(dir: "src/main/resources/assets/plan/web")
         tree.forEach { File f ->
             def gitModified = new ByteArrayOutputStream()
             exec {
-                commandLine 'git', 'log', '-1', '--pretty=%ct', f.toString()
+                commandLine "git", "log", "-1", "--pretty=%ct", f.toString()
                 standardOutput = gitModified
             }
             def gitModifiedAsString = gitModified.toString().strip()
             // git returns UNIX time in seconds, but most things in Java use UNIX time in milliseconds
             def modified = gitModifiedAsString.isEmpty() ? System.currentTimeMillis() : Long.parseLong(gitModifiedAsString) * 1000
             def relativePath = tree.getDir().toPath().relativize(f.toPath()) // File path relative to the tree
-            versionFile.text += String.format( // writing YAML as raw text probably isn't the best idea
-                    "%s: %s\n", relativePath.toString().replace('.', ','), modified
+            versionFile.text += String.format(
+                    "%s: %s\n", relativePath.toString().replace(".", ",").replace("\\", "/"), modified
             )
         }
-        tree = fileTree(dir: 'src/main/resources/assets/plan/locale')
+
+        tree = fileTree(dir: "src/main/resources/assets/plan/locale")
         tree.forEach { File f ->
             def gitModified = new ByteArrayOutputStream()
             exec {
-                commandLine 'git', 'log', '-1', '--pretty=%ct', f.toString()
+                commandLine "git", "log", "-1", "--pretty=%ct", f.toString()
                 standardOutput = gitModified
             }
             def gitModifiedAsString = gitModified.toString().strip()
             // git returns UNIX time in seconds, but most things in Java use UNIX time in milliseconds
             def modified = gitModifiedAsString.isEmpty() ? System.currentTimeMillis() : Long.parseLong(gitModifiedAsString) * 1000
             def relativePath = tree.getDir().toPath().relativize(f.toPath()) // File path relative to the tree
-            versionFile.text += String.format( // writing YAML as raw text probably isn't the best idea
-                    "%s: %s\n", relativePath.toString().replace('.', ','), modified
+            versionFile.text += String.format(
+                    "%s: %s\n", relativePath.toString().replace(".", ",").replace("\\", "/"), modified
+            )
+        }
+
+        tree = fileTree(dir: "src/main/resources/assets/plan/themes")
+        tree.forEach { File f ->
+            def gitModified = new ByteArrayOutputStream()
+            exec {
+                commandLine "git", "log", "-1", "--pretty=%ct", f.toString()
+                standardOutput = gitModified
+            }
+            def gitModifiedAsString = gitModified.toString().strip()
+            // git returns UNIX time in seconds, but most things in Java use UNIX time in milliseconds
+            def modified = gitModifiedAsString.isEmpty() ? System.currentTimeMillis() : Long.parseLong(gitModifiedAsString) * 1000
+            def relativePath = tree.getDir().toPath().relativize(f.toPath()) // File path relative to the tree
+            versionFile.text += String.format(
+                    "themes/%s: %s\n", relativePath.toString().replace(".", ",").replace("\\", "/"), modified
+            )
+        }
+
+        tree = fileTree("$rootDir/react/dashboard/build")
+        tree.forEach { File f ->
+            if (f.getName().endsWith(".map")) return
+            def modified = System.currentTimeMillis()
+            def relativePath = tree.getDir().toPath().relativize(f.toPath()) // File path relative to the tree
+            versionFile.text += String.format(
+                    "%s: %s\n", relativePath.toString().replace(".", ",").replace("\\", "/"), modified
             )
         }
     }
 }
 
 resolve { // Swagger json generation task
-    outputFileName = 'swagger'
-    outputFormat = 'JSON'
-    prettyPrint = 'TRUE'
+    outputFileName = "swagger"
+    outputFormat = "JSON"
+    prettyPrint = "TRUE"
     classpath = sourceSets.main.runtimeClasspath
     buildClasspath = classpath
     resourcePackages = [
-            'com.djrapitops.plan.delivery.webserver',
-            'com.djrapitops.plan.delivery.webserver.resolver.auth',
-            'com.djrapitops.plan.delivery.webserver.resolver.json',
+            "com.djrapitops.plan.delivery.webserver",
+            "com.djrapitops.plan.delivery.webserver.resolver.auth",
+            "com.djrapitops.plan.delivery.webserver.resolver.json",
     ]
-    outputDir = file('build/generated-resources/swagger/assets/plan/web/')
+    outputDir = "build/generated-resources/swagger/assets/plan/web"
 }
-task swaggerJsonJar(type: Jar) {
+
+jar {
     dependsOn resolve
-    archiveClassifier.set("resolve")
-    from 'build/generated-resources/swagger'
-}
-artifacts {
-    swaggerJson swaggerJsonJar
+    from "build/generated-resources/swagger"
 }
 
 processResources {
@@ -183,11 +281,7 @@ processResources {
     dependsOn determineAssetModifications
     dependsOn generateResourceForMySQLDriver
     dependsOn generateResourceForSQLiteDriver
-    dependsOn updateVersion
+    dependsOn generateResourceForIpAddressMatcher
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
-    from 'build/sources/resources'
-}
-
-shadowJar {
-    configurations = [project.configurations.shadow]
+    from "build/sources/resources"
 }

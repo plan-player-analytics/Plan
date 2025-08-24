@@ -48,6 +48,15 @@ public class VelocityPlayerData implements PlatformPlayerData {
 
     @Override
     public Optional<String> getJoinAddress() {
-        return player.getVirtualHost().map(InetSocketAddress::getHostString);
+        return player.getVirtualHost()
+                .map(InetSocketAddress::getHostString)
+                .map(this::removeExtra);
+    }
+
+    private String removeExtra(String address) {
+        if (address.contains("\u0000")) {
+            return address.substring(0, address.indexOf('\u0000'));
+        }
+        return address;
     }
 }

@@ -23,6 +23,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -54,11 +55,11 @@ public class OperatorPlaceholders implements Placeholders {
         );
     }
 
-    private ServerUUID getServerUUID(Arguments parameters) {
+    private ServerUUID getServerUUID(@Untrusted Arguments parameters) {
         return parameters.get(0).flatMap(this::getServerUUIDForServerIdentifier).orElseGet(serverInfo::getServerUUID);
     }
 
-    private Optional<ServerUUID> getServerUUIDForServerIdentifier(String serverIdentifier) {
+    private Optional<ServerUUID> getServerUUIDForServerIdentifier(@Untrusted String serverIdentifier) {
         return dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverIdentifier))
                 .map(Server::getUuid);
     }

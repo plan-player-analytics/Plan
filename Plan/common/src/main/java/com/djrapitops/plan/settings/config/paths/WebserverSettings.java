@@ -42,8 +42,10 @@ public class WebserverSettings {
     public static final Setting<List<String>> WHITELIST = new StringListSetting("Webserver.Security.IP_whitelist.Whitelist");
     public static final Setting<Boolean> DISABLED = new BooleanSetting("Webserver.Disable_Webserver");
     public static final Setting<Boolean> DISABLED_AUTHENTICATION = new BooleanSetting("Webserver.Security.Disable_authentication");
+    public static final Setting<Boolean> DISABLED_REGISTRATION = new BooleanSetting("Webserver.Security.Disable_registration");
     public static final Setting<Boolean> LOG_ACCESS_TO_CONSOLE = new BooleanSetting("Webserver.Security.Access_log.Print_to_console");
     public static final Setting<String> EXTERNAL_LINK = new StringSetting("Webserver.External_Webserver_address");
+    public static final Setting<String> PUBLIC_HTML_PATH = new StringSetting("Webserver.Public_html_directory");
 
     public static final Setting<Long> REDUCED_REFRESH_BARRIER = new TimeSetting("Webserver.Cache.Reduced_refresh_barrier");
     public static final Setting<Long> INVALIDATE_QUERY_RESULTS = new TimeSetting("Webserver.Cache.Invalidate_query_results_on_disk_after");

@@ -4,6 +4,7 @@ import I18NextLocalStorageBackend from "i18next-localstorage-backend";
 import I18NextHttpBackend from 'i18next-http-backend';
 import {initReactI18next} from 'react-i18next';
 import {fetchAvailableLocales} from "./metadataService";
+import {baseAddress, staticSite} from "./backendConfiguration";
 
 /**
  * A locale system for localizing the website.
@@ -52,7 +53,8 @@ export const localeService = {
             if (!this.clientLocale) {
                 this.clientLocale = this.defaultLanguage;
             }
-
+            let loadPath = baseAddress + '/v1/locale/{{lng}}';
+            if (staticSite) loadPath = baseAddress + '/locale/{{lng}}.json'
             await i18next
                 .use(I18NextChainedBackend)
                 .use(initReactI18next)
@@ -70,7 +72,7 @@ export const localeService = {
                             expirationTime: 7 * 24 * 60 * 60 * 1000, // 7 days
                             versions: this.languageVersions
                         }, {
-                            loadPath: '/v1/locale/{{lng}}'
+                            loadPath: loadPath
                         }]
                     },
                 }, () => {/* No need to initialize anything */
@@ -96,11 +98,13 @@ export const localeService = {
         }
 
         window.localStorage.setItem("locale", langCode);
-        await i18next.changeLanguage(langCode)
+        await i18next.changeLanguage(langCode);
+        this.clientLocale = langCode;
     },
 
     getLanguages: function () {
-        let languages = Object.fromEntries(Object.entries(this.availableLanguages).sort());
+        let languages = Object.fromEntries(Object.entries(this.availableLanguages)
+            .sort((a, b) => a[0].localeCompare(b[0])));
         if ('CUSTOM' in languages) {
             // Move "Custom" to first in list
             delete languages["CUSTOM"]
@@ -111,5 +115,29 @@ export const localeService = {
             .map(entry => {
                 return {name: entry[0], displayName: entry[1]}
             });
+    },
+
+    getIntlFriendlyLocale: () => {
+        return localeService.clientLocale === 'CN' ? 'zh-cn' : localeService.clientLocale.toLocaleLowerCase().replace('_', '-')
+    },
+
+    localizePing: (value) => {
+        return new Intl.DurationFormat(localeService.getIntlFriendlyLocale(), {style: 'narrow'})
+            .format({milliseconds: 1})
+            .replace('1', value);
     }
 }
+
+const generateGeolocationMap = () => {
+    const regions = new Intl.DisplayNames(['en'], {type: 'region'});
+    const map = {}
+    for (let i = 0; i < 26; i++) {
+        for (let j = 0; j < 26; j++) {
+            let code = String.fromCharCode(97 + i) + String.fromCharCode(97 + j)
+            const result = regions.of(`${code}`);
+            map[result] = code;
+        }
+    }
+    return map;
+}
+export const reverseRegionLookupMap = generateGeolocationMap();

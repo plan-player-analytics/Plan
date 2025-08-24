@@ -22,6 +22,7 @@ import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.utilities.ReentrantLockHelper;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.scheduling.TimeAmount;
 import net.playeranalytics.plugin.server.PluginLogger;
@@ -57,7 +58,8 @@ public class JSONFileStorage implements JSONStorage {
 
     private final Path jsonDirectory;
 
-    private final Pattern timestampRegex = Pattern.compile(".*-([0-9]*).json");
+    private final ReentrantLockHelper readWriteProtectionLock = new ReentrantLockHelper();
+    private final Pattern timestampRegex = Pattern.compile(".*-(\\d*).json");
     private static final String JSON_FILE_EXTENSION = ".json";
 
     private final Formatter<Long> dateFormatter;
@@ -71,7 +73,6 @@ public class JSONFileStorage implements JSONStorage {
         this.logger = logger;
 
         dateFormatter = formatters.yearLong();
-
         jsonDirectory = files.getJSONStorageDirectory();
     }
 
@@ -90,13 +91,19 @@ public class JSONFileStorage implements JSONStorage {
     public StoredJSON storeJson(String identifier, String json, long timestamp) {
         Path writingTo = jsonDirectory.resolve(identifier + '-' + timestamp + JSON_FILE_EXTENSION);
         String jsonToWrite = addMissingTimestamp(json, timestamp);
-        try {
-            if (!Files.isSymbolicLink(jsonDirectory)) Files.createDirectories(jsonDirectory);
-            Files.write(writingTo, jsonToWrite.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
-        } catch (IOException e) {
-            logger.warn("Could not write a file to " + writingTo.toFile().getAbsolutePath() + ": " + e.getMessage());
-        }
+        write(writingTo, jsonToWrite);
         return new StoredJSON(jsonToWrite, timestamp);
+    }
+
+    private void write(Path writingTo, String jsonToWrite) {
+        readWriteProtectionLock.performWriteOperation(() -> {
+            try {
+                if (!Files.isSymbolicLink(jsonDirectory)) Files.createDirectories(jsonDirectory);
+                Files.write(writingTo, jsonToWrite.getBytes(StandardCharsets.UTF_8), StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE);
+            } catch (IOException e) {
+                logger.warn("Could not write a file to " + writingTo.toFile().getAbsolutePath() + ": " + e.getMessage());
+            }
+        });
     }
 
     private String addMissingTimestamp(String json, long timestamp) {
@@ -122,9 +129,11 @@ public class JSONFileStorage implements JSONStorage {
     public Optional<StoredJSON> fetchJSON(String identifier) {
         File[] stored = jsonDirectory.toFile().listFiles();
         if (stored == null) return Optional.empty();
+
+        String lookForStart = identifier + '-';
         for (File file : stored) {
             String fileName = file.getName();
-            if (fileName.endsWith(JSON_FILE_EXTENSION) && fileName.startsWith(identifier + '-')) {
+            if (fileName.endsWith(JSON_FILE_EXTENSION) && fileName.startsWith(lookForStart)) {
                 return Optional.ofNullable(readStoredJSON(file));
             }
         }
@@ -132,22 +141,24 @@ public class JSONFileStorage implements JSONStorage {
     }
 
     private StoredJSON readStoredJSON(File from) {
-        Matcher timestampMatch = timestampRegex.matcher(from.getName());
-        if (timestampMatch.find()) {
-            try (Stream<String> lines = Files.lines(from.toPath())) {
-                long timestamp = Long.parseLong(timestampMatch.group(1));
-                StringBuilder json = new StringBuilder();
-                lines.forEach(json::append);
-                return new StoredJSON(json.toString(), timestamp);
-            } catch (IOException e) {
-                logger.warn(jsonDirectory.toFile().getAbsolutePath() + " file '" + from.getName() + "' could not be read: " + e.getMessage());
-            } catch (NumberFormatException e) {
-                logger.warn(jsonDirectory.toFile().getAbsolutePath() + " contained a file '" + from.getName() + "' with improperly formatted -timestamp (could not parse number). This file was not placed there by Plan!");
+        return readWriteProtectionLock.performReadOperation(() -> {
+            Matcher timestampMatch = timestampRegex.matcher(from.getName());
+            if (timestampMatch.find()) {
+                try (Stream<String> lines = Files.lines(from.toPath())) {
+                    long timestamp = Long.parseLong(timestampMatch.group(1));
+                    StringBuilder json = new StringBuilder();
+                    lines.forEach(json::append);
+                    return new StoredJSON(json.toString(), timestamp);
+                } catch (IOException e) {
+                    logger.warn(jsonDirectory.toFile().getAbsolutePath() + " file '" + from.getName() + "' could not be read: " + e.getMessage());
+                } catch (NumberFormatException e) {
+                    logger.warn(jsonDirectory.toFile().getAbsolutePath() + " contained a file '" + from.getName() + "' with improperly formatted -timestamp (could not parse number). This file was not placed there by Plan!");
+                }
+            } else {
+                logger.warn(jsonDirectory.toFile().getAbsolutePath() + " contained a file '" + from.getName() + "' that has no -timestamp. This file was not placed there by Plan!");
             }
-        } else {
-            logger.warn(jsonDirectory.toFile().getAbsolutePath() + " contained a file '" + from.getName() + "' that has no -timestamp. This file was not placed there by Plan!");
-        }
-        return null;
+            return null;
+        });
     }
 
     @Override
@@ -170,10 +181,12 @@ public class JSONFileStorage implements JSONStorage {
     private Optional<StoredJSON> fetchJSONWithTimestamp(String identifier, long timestamp, BiPredicate<Matcher, Long> timestampComparator) {
         File[] stored = jsonDirectory.toFile().listFiles();
         if (stored == null) return Optional.empty();
+
+        String lookForStart = identifier + '-';
         for (File file : stored) {
             try {
                 String fileName = file.getName();
-                if (fileName.endsWith(JSON_FILE_EXTENSION) && fileName.startsWith(identifier + '-')) {
+                if (fileName.endsWith(JSON_FILE_EXTENSION) && fileName.startsWith(lookForStart)) {
                     Matcher timestampMatch = timestampRegex.matcher(fileName);
                     if (timestampMatch.find() && timestampComparator.test(timestampMatch, timestamp)) {
                         return Optional.ofNullable(readStoredJSON(file));
@@ -249,14 +262,38 @@ public class JSONFileStorage implements JSONStorage {
     }
 
     private void deleteFiles(List<File> toDelete) {
-        for (File fileToDelete : toDelete) {
+        readWriteProtectionLock.performWriteOperation(() -> {
+            for (File fileToDelete : toDelete) {
+                try {
+                    Files.delete(fileToDelete.toPath());
+                } catch (IOException e) {
+                    // Failed to delete, set for deletion on next server shutdown.
+                    fileToDelete.deleteOnExit();
+                }
+            }
+        });
+    }
+
+    @Override
+    public Optional<Long> getTimestamp(String identifier) {
+        File[] stored = jsonDirectory.toFile().listFiles();
+        if (stored == null) return Optional.empty();
+
+        String lookForStart = identifier + '-';
+        for (File file : stored) {
             try {
-                Files.delete(fileToDelete.toPath());
-            } catch (IOException e) {
-                // Failed to delete, set for deletion on next server shutdown.
-                fileToDelete.deleteOnExit();
+                String fileName = file.getName();
+                if (fileName.endsWith(JSON_FILE_EXTENSION) && fileName.startsWith(lookForStart)) {
+                    Matcher timestampMatch = timestampRegex.matcher(fileName);
+                    if (timestampMatch.find()) {
+                        return Optional.of(Long.parseLong(timestampMatch.group(1)));
+                    }
+                }
+            } catch (NumberFormatException e) {
+                // Ignore this file, malformed timestamp
             }
         }
+        return Optional.empty();
     }
 
     @Singleton

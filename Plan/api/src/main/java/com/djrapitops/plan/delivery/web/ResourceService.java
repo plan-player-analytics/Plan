@@ -16,6 +16,9 @@
  */
 package com.djrapitops.plan.delivery.web;
 
+import com.djrapitops.plan.delivery.web.resolver.MimeType;
+import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
+import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resource.WebResource;
 
 import java.util.Optional;
@@ -48,7 +51,7 @@ public interface ResourceService {
     WebResource getResource(String pluginName, String fileName, Supplier<WebResource> source);
 
     /**
-     * Add javascript to load in an existing html resource.
+     * Add javascript to load in a html resource.
      * <p>
      * Adds {@code <script src="jsSrc"></script>} or multiple to the resource.
      *
@@ -62,6 +65,40 @@ public interface ResourceService {
      * @throws IllegalArgumentException If jsSources is empty or null
      */
     void addScriptsToResource(String pluginName, String fileName, Position position, String... jsSources);
+
+    /**
+     * Add javascript to load in a html resource.
+     * <p>
+     * Requires PAGE_EXTENSION_RESOURCES_REGISTER_DIRECT_CUSTOMIZATION Capability.
+     *
+     * @param pluginName         Name of your plugin (for config purposes)
+     * @param fileName           Name of the .html file being modified
+     * @param position           Where to place the script tag on the page.
+     * @param scriptName         Name of your javascript file (used on the page)
+     * @param javascriptAsString Javascript file contents in UTF-8
+     * @throws IllegalArgumentException If fileName is null, empty or does not end with .html
+     * @throws IllegalArgumentException If anything is empty or null
+     */
+    default void addJavascriptToResource(String pluginName, String fileName, Position position, String scriptName, String javascriptAsString) {
+        if (javascriptAsString == null || javascriptAsString.isEmpty()) {
+            throw new IllegalArgumentException("null or empty 'javascriptAsString' given.");
+        }
+        if (scriptName == null || scriptName.isEmpty()) {
+            throw new IllegalArgumentException("null or empty 'scriptName' given.");
+        }
+        String actualScriptName = scriptName.endsWith(".js") ? scriptName : scriptName + ".js";
+
+        addScriptsToResource(pluginName, fileName, position, "/" + pluginName + "/" + actualScriptName);
+        ResolverService.getInstance().registerResolver(pluginName, "/" + pluginName + "/" + actualScriptName, (NoAuthResolver) request -> {
+            if (request.getPath().asString().endsWith(actualScriptName)) {
+                return Optional.of(Response.builder()
+                        .setContent(javascriptAsString)
+                        .setMimeType(MimeType.JS)
+                        .build());
+            }
+            return Optional.empty();
+        });
+    }
 
     /**
      * Add css to load in an existing html resource.
@@ -79,9 +116,46 @@ public interface ResourceService {
      */
     void addStylesToResource(String pluginName, String fileName, Position position, String... cssSources);
 
+
+    /**
+     * Add javascript to load in a html resource.
+     * <p>
+     * Requires PAGE_EXTENSION_RESOURCES_REGISTER_DIRECT_CUSTOMIZATION Capability.
+     *
+     * @param pluginName  Name of your plugin (for config purposes)
+     * @param fileName    Name of the .html file being modified
+     * @param position    Where to place the script tag on the page.
+     * @param cssFileName Name of your css file (used on the page)
+     * @param cssAsString CSS file contents in UTF-8
+     * @throws IllegalArgumentException If fileName is null, empty or does not end with .html
+     * @throws IllegalArgumentException If anything is empty or null
+     */
+    default void addStyleToResource(String pluginName, String fileName, Position position, String cssFileName, String cssAsString) {
+        if (cssAsString == null || cssAsString.isEmpty()) {
+            throw new IllegalArgumentException("null or empty 'cssAsString' given.");
+        }
+        if (cssFileName == null || cssFileName.isEmpty()) {
+            throw new IllegalArgumentException("null or empty 'cssFileName' given.");
+        }
+        String actualCssFileName = cssFileName.endsWith(".js") ? cssFileName : cssFileName + ".js";
+
+        addStylesToResource(pluginName, fileName, position, pluginName + "/" + actualCssFileName);
+        ResolverService.getInstance().registerResolver(pluginName, pluginName + "/" + actualCssFileName, (NoAuthResolver) request -> {
+            if (request.getPath().asString().equals(actualCssFileName)) {
+                return Optional.of(Response.builder()
+                        .setContent(cssAsString)
+                        .setMimeType(MimeType.CSS)
+                        .build());
+            }
+            return Optional.empty();
+        });
+    }
+
     enum Position {
         /**
          * Loaded before page contents.
+         * <p>
+         * Recommended for loading style sheets.
          */
         PRE_CONTENT,
         /**
@@ -94,7 +168,11 @@ public interface ResourceService {
          * Loaded after script execution.
          * <p>
          * Recommended for loading data to custom structure on the page.
+         *
+         * @see <a href="https://github.com/plan-player-analytics/Plan/blob/master/Plan/react/dashboard/public/pageExtensionApi.js">Javascript API</a>
+         * @deprecated No longer supported on React pages, use the javascript API in PRE_MAIN_SCRIPT.
          */
+        @Deprecated
         AFTER_MAIN_SCRIPT;
 
         public String cleanName() {

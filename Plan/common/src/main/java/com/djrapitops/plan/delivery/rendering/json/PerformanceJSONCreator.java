@@ -23,7 +23,6 @@ import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
-import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.settings.locale.lang.HtmlLang;
 import com.djrapitops.plan.storage.database.DBSystem;
@@ -46,28 +45,23 @@ import java.util.concurrent.TimeUnit;
 public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, Object>> {
 
     private final PlanConfig config;
-    private final Locale locale;
     private final DBSystem dbSystem;
 
     private final Formatter<Double> decimals;
-    private final Formatter<Long> timeAmount;
     private final Formatter<Double> percentage;
     private final Formatter<Double> byteSize;
 
     @Inject
     public PerformanceJSONCreator(
             PlanConfig config,
-            Locale locale,
             DBSystem dbSystem,
             Formatters formatters
     ) {
         this.config = config;
-        this.locale = locale;
         this.dbSystem = dbSystem;
 
         decimals = formatters.decimals();
         percentage = formatters.percentage();
-        timeAmount = formatters.timeAmount();
         byteSize = formatters.byteSize();
     }
 
@@ -100,9 +94,13 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
         numbers.put("low_tps_spikes_7d", tpsDataWeek.lowTpsSpikeCount(tpsThreshold));
         numbers.put("low_tps_spikes_24h", tpsDataDay.lowTpsSpikeCount(tpsThreshold));
 
-        numbers.put("server_downtime_30d", timeAmount.apply(tpsDataMonth.serverDownTime()));
-        numbers.put("server_downtime_7d", timeAmount.apply(tpsDataWeek.serverDownTime()));
-        numbers.put("server_downtime_24h", timeAmount.apply(tpsDataDay.serverDownTime()));
+        numbers.put("server_downtime_30d", tpsDataMonth.serverDownTime());
+        numbers.put("server_downtime_7d", tpsDataWeek.serverDownTime());
+        numbers.put("server_downtime_24h", tpsDataDay.serverDownTime());
+
+        numbers.put("server_uptime_30d", tpsDataMonth.serverUptime());
+        numbers.put("server_uptime_7d", tpsDataWeek.serverUptime());
+        numbers.put("server_uptime_24h", tpsDataDay.serverUptime());
 
         numbers.put("players_30d", format(tpsDataMonth.averagePlayers()));
         numbers.put("players_7d", format(tpsDataWeek.averagePlayers()));
@@ -134,15 +132,15 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
     }
 
     private String format(double value) {
-        return value != -1 ? decimals.apply(value) : locale.get(GenericLang.UNAVAILABLE).toString();
+        return value != -1 ? decimals.apply(value) : GenericLang.UNAVAILABLE.getKey();
     }
 
     private String formatBytes(double value) {
-        return value != -1 ? byteSize.apply(value) : locale.get(GenericLang.UNAVAILABLE).toString();
+        return value != -1 ? byteSize.apply(value) : GenericLang.UNAVAILABLE.getKey();
     }
 
     private String formatPercentage(double value) {
-        return value != -1 ? percentage.apply(value / 100.0) : locale.get(GenericLang.UNAVAILABLE).toString();
+        return value != -1 ? percentage.apply(value / 100.0) : GenericLang.UNAVAILABLE.getKey();
     }
 
     private Map<String, Object> createInsightsMap(List<TPS> tpsData) {
@@ -157,7 +155,7 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
         double averageCPU = lowTPS.averageCPU();
         double averageEntities = lowTPS.averageEntities();
         double averageChunks = lowTPS.averageChunks();
-        insights.put("low_tps_players", avgPlayersOnline != -1 ? decimals.apply(avgPlayersOnline) : locale.get(HtmlLang.TEXT_NO_LOW_TPS).toString());
+        insights.put("low_tps_players", avgPlayersOnline != -1 ? decimals.apply(avgPlayersOnline) : HtmlLang.TEXT_NO_LOW_TPS.getKey());
         insights.put("low_tps_tps", averageTPS != -1 ? decimals.apply(averageTPS) : "-");
         insights.put("low_tps_cpu", averageCPU != -1 ? decimals.apply(averageCPU) : "-");
         insights.put("low_tps_entities", averageEntities != -1 ? decimals.apply(averageEntities) : "-");

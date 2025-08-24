@@ -19,7 +19,7 @@ package com.djrapitops.plan.extension.implementation.storage.transactions.result
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.identification.ServerUUID;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionProviderTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
 import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
@@ -28,7 +28,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
-import static com.djrapitops.plan.storage.database.sql.tables.ExtensionServerValueTable.*;
+import static com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionServerValueTable.*;
 
 /**
  * Transaction to store method result of a long.

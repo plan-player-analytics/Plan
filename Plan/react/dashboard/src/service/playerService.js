@@ -1,14 +1,15 @@
 import {faMapSigns} from "@fortawesome/free-solid-svg-icons";
-import {doSomeGetRequest, standard200option} from "./backendConfiguration";
+import {doSomeGetRequest, standard200option, staticSite} from "./backendConfiguration";
 
 export const fetchPlayer = async (timestamp, uuid) => {
-    const url = `/v1/player?player=${uuid}&timestamp=${timestamp}`;
-    return doSomeGetRequest(url, [
+    let url = `/v1/player?player=${uuid}`;
+    if (staticSite) url = `/player/${uuid}/player-${uuid}.json`
+    return doSomeGetRequest(url, timestamp, [
         standard200option,
         {
-            status: 400,
+            status: staticSite ? 404 : 400,
             get: () => ({
-                message: 'Player not found: ' + uuid + ', try another player',
+                message: 'Player not found: ' + uuid + ', try another player.' + (staticSite ? ' You can try the export players command.' : ''),
                 title: '404 Player not found',
                 icon: faMapSigns
             })

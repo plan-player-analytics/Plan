@@ -21,6 +21,8 @@ import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.URIPath;
 import com.djrapitops.plan.delivery.webserver.ResponseFactory;
+import com.djrapitops.plan.identification.Identifiers;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
@@ -35,7 +37,7 @@ import java.util.Optional;
 @Singleton
 public class StaticResourceResolver implements NoAuthResolver {
 
-    private static final String PART_REGEX = "(vendor|css|js|img|static)";
+    private static final String PART_REGEX = "(static)";
     public static final String PATH_REGEX = "^.*/" + PART_REGEX + "/.*";
 
     private final ResponseFactory responseFactory;
@@ -51,24 +53,29 @@ public class StaticResourceResolver implements NoAuthResolver {
     }
 
     private Response getResponse(Request request) {
-        String resource = getPath(request).asString().substring(1);
+        @Untrusted String resource = getPath(request).asString().substring(1);
+        @Untrusted Optional<Long> etag = Identifiers.getEtag(request);
         if (resource.endsWith(".css")) {
-            return responseFactory.cssResponse(resource);
+            return etag.map(tag -> responseFactory.cssResponse(tag, resource))
+                    .orElseGet(() -> responseFactory.cssResponse(resource));
         }
         if (resource.endsWith(".js")) {
-            return responseFactory.javaScriptResponse(resource);
+            return etag.map(tag -> responseFactory.javaScriptResponse(tag, resource))
+                    .orElseGet(() -> responseFactory.javaScriptResponse(resource));
         }
         if (resource.endsWith(".png")) {
-            return responseFactory.imageResponse(resource);
+            return etag.map(tag -> responseFactory.imageResponse(tag, resource))
+                    .orElseGet(() -> responseFactory.imageResponse(resource));
         }
         if (StringUtils.endsWithAny(resource, ".woff", ".woff2", ".eot", ".ttf")) {
-            return responseFactory.fontResponse(resource);
+            return etag.map(tag -> responseFactory.fontResponse(tag, resource))
+                    .orElseGet(() -> responseFactory.fontResponse(resource));
         }
         return null;
     }
 
     private URIPath getPath(Request request) {
-        URIPath path = request.getPath();
+        @Untrusted URIPath path = request.getPath();
         // Remove everything before /vendor /css /js or /img
         while (!path.getPart(0).map(part -> part.matches(PART_REGEX)).orElse(true)) {
             path = path.omitFirst();

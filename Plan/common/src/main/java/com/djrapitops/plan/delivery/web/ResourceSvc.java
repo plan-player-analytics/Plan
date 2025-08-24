@@ -17,17 +17,21 @@
 package com.djrapitops.plan.delivery.web;
 
 import com.djrapitops.plan.delivery.web.resource.WebResource;
+import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.ResourceSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
-import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.storage.file.PublicHtmlFiles;
 import com.djrapitops.plan.storage.file.Resource;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import dagger.Lazy;
 import net.playeranalytics.plugin.server.PluginLogger;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.text.TextStringBuilder;
+import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -49,23 +53,26 @@ import java.util.function.Supplier;
 public class ResourceSvc implements ResourceService {
 
     public final Set<Snippet> snippets;
-    private final PlanFiles files;
+    private final PublicHtmlFiles publicHtmlFiles;
     private final ResourceSettings resourceSettings;
     private final Locale locale;
     private final PluginLogger logger;
     private final ErrorLogger errorLogger;
+    private final Lazy<Addresses> addresses;
 
     @Inject
     public ResourceSvc(
-            PlanFiles files,
+            PublicHtmlFiles publicHtmlFiles,
             PlanConfig config,
             Locale locale,
+            Lazy<Addresses> addresses,
             PluginLogger logger,
             ErrorLogger errorLogger
     ) {
-        this.files = files;
+        this.publicHtmlFiles = publicHtmlFiles;
         this.resourceSettings = config.getResourceSettings();
         this.locale = locale;
+        this.addresses = addresses;
         this.logger = logger;
         this.errorLogger = errorLogger;
         this.snippets = new HashSet<>();
@@ -75,38 +82,9 @@ public class ResourceSvc implements ResourceService {
         Holder.set(this);
     }
 
-    @Override
-    public WebResource getResource(String pluginName, String fileName, Supplier<WebResource> source) {
-        checkParams(pluginName, fileName, source);
-        return applySnippets(pluginName, fileName, getTheResource(pluginName, fileName, source));
-    }
-
-    public void checkParams(String pluginName, String fileName, Supplier<WebResource> source) {
-        if (pluginName == null || pluginName.isEmpty()) {
-            throw new IllegalArgumentException("'pluginName' can't be '" + pluginName + "'!");
-        }
-        if (fileName == null || fileName.isEmpty()) {
-            throw new IllegalArgumentException("'fileName' can't be '" + fileName + "'!");
-        }
-        if (source == null) {
-            throw new IllegalArgumentException("'source' can't be null!");
-        }
-    }
-
-    private WebResource applySnippets(String pluginName, String fileName, WebResource resource) {
-        Map<Position, StringBuilder> byPosition = calculateSnippets(fileName);
-        if (byPosition.isEmpty()) return resource;
-
-        String html = applySnippets(resource, byPosition);
-        return WebResource.create(html);
-    }
-
-    private String applySnippets(WebResource resource, Map<Position, StringBuilder> byPosition) {
-        String html = resource.asString();
-        if (html == null) {
-            return "Error: Given resource did not support WebResource#asString method properly and returned 'null'";
-        }
-
+    @Nullable
+    @SuppressWarnings("deprecation") // Legacy method, backwards compatibility
+    private static String applyLegacy(Map<Position, StringBuilder> byPosition, String html) {
         StringBuilder toHead = byPosition.get(Position.PRE_CONTENT);
         if (toHead != null) {
             html = StringUtils.replaceOnce(html, "</head>", toHead.append("</head>").toString());
@@ -129,7 +107,54 @@ public class ResourceSvc implements ResourceService {
         return html;
     }
 
-    private Map<Position, StringBuilder> calculateSnippets(String fileName) {
+    @Override
+    public WebResource getResource(String pluginName, @Untrusted String fileName, Supplier<WebResource> source) {
+        checkParams(pluginName, fileName, source);
+        return applySnippets(pluginName, fileName, getTheResource(pluginName, fileName, source));
+    }
+
+    public void checkParams(String pluginName, @Untrusted String fileName, Supplier<WebResource> source) {
+        if (pluginName == null || pluginName.isEmpty()) {
+            throw new IllegalArgumentException("'pluginName' can't be '" + pluginName + "'!");
+        }
+        if (fileName == null || fileName.isEmpty()) {
+            throw new IllegalArgumentException("'fileName' can't be '" + fileName + "'!");
+        }
+        if (source == null) {
+            throw new IllegalArgumentException("'source' can't be null!");
+        }
+    }
+
+    private WebResource applySnippets(String pluginName, @Untrusted String fileName, WebResource resource) {
+        Map<Position, StringBuilder> byPosition = calculateSnippets(fileName);
+        if (byPosition.isEmpty()) return resource;
+
+        String html = applySnippets(fileName, resource, byPosition);
+        return WebResource.create(html);
+    }
+
+    private String applySnippets(@Untrusted String fileName, WebResource resource, Map<Position, StringBuilder> byPosition) {
+        String html = resource.asString();
+        if (html == null) {
+            return "Error: Given resource did not support WebResource#asString method properly and returned 'null'";
+        }
+
+        if ("index.html".equals(fileName)) {
+            StringBuilder toHead = byPosition.get(Position.PRE_CONTENT);
+            if (toHead != null) {
+                html = StringUtils.replaceOnce(html, "</head>", toHead.append("</head>").toString());
+            }
+            StringBuilder toBody = byPosition.get(Position.PRE_MAIN_SCRIPT);
+            if (toBody != null) {
+                html = StringUtils.replaceOnce(html, "<script></script>", toBody.toString());
+            }
+            return html;
+        } else {
+            return applyLegacy(byPosition, html);
+        }
+    }
+
+    private Map<Position, StringBuilder> calculateSnippets(@Untrusted String fileName) {
         Map<Position, StringBuilder> byPosition = new EnumMap<>(Position.class);
         for (Snippet snippet : snippets) {
             if (snippet.matches(fileName)) {
@@ -139,7 +164,7 @@ public class ResourceSvc implements ResourceService {
         return byPosition;
     }
 
-    public WebResource getTheResource(String pluginName, String fileName, Supplier<WebResource> source) {
+    public WebResource getTheResource(String pluginName, @Untrusted String fileName, Supplier<WebResource> source) {
         try {
             if (resourceSettings.shouldBeCustomized(pluginName, fileName)) {
                 return getOrWriteCustomized(fileName, source);
@@ -153,8 +178,8 @@ public class ResourceSvc implements ResourceService {
         return source.get();
     }
 
-    public WebResource getOrWriteCustomized(String fileName, Supplier<WebResource> source) throws IOException {
-        Optional<Resource> customizedResource = files.getCustomizableResource(fileName);
+    public WebResource getOrWriteCustomized(@Untrusted String fileName, Supplier<WebResource> source) throws IOException {
+        Optional<Resource> customizedResource = publicHtmlFiles.findCustomizedResource(fileName);
         if (customizedResource.isPresent()) {
             return readCustomized(customizedResource.get());
         } else {
@@ -170,11 +195,16 @@ public class ResourceSvc implements ResourceService {
         }
     }
 
-    public WebResource writeCustomized(String fileName, Supplier<WebResource> source) throws IOException {
+    public WebResource writeCustomized(@Untrusted String fileName, Supplier<WebResource> source) throws IOException {
         WebResource original = source.get();
         byte[] bytes = original.asBytes();
         OpenOption[] overwrite = {StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE};
-        Path to = resourceSettings.getCustomizationDirectory().resolve(fileName);
+        @Untrusted Path to = resourceSettings.getCustomizationDirectory().resolve(fileName);
+        if (!to.startsWith(resourceSettings.getCustomizationDirectory())) {
+            throw new IllegalArgumentException(
+                    "Absolute path was given for writing a customized file, " +
+                            "writing outside customization directory is prevented for security reasons.");
+        }
         Path dir = to.getParent();
         if (!Files.isSymbolicLink(dir)) Files.createDirectories(dir);
         Files.write(to, bytes, overwrite);
@@ -185,8 +215,8 @@ public class ResourceSvc implements ResourceService {
     public void addScriptsToResource(String pluginName, String fileName, Position position, String... jsSources) {
         checkParams(pluginName, fileName, position, jsSources);
 
-        String snippet = new TextStringBuilder("<script src=\"")
-                .appendWithSeparators(jsSources, "\"></script><script src=\"")
+        String snippet = new TextStringBuilder("<script src=\"").append(getBasePath())
+                .appendWithSeparators(jsSources, "\"></script><script src=\"" + getBasePath())
                 .append("\"></script>").build();
         snippets.add(new Snippet(pluginName, fileName, position, snippet));
         if (!"Plan".equals(pluginName)) {
@@ -216,13 +246,19 @@ public class ResourceSvc implements ResourceService {
     public void addStylesToResource(String pluginName, String fileName, Position position, String... cssSources) {
         checkParams(pluginName, fileName, position, cssSources);
 
-        String snippet = new TextStringBuilder("<link href=\"")
-                .appendWithSeparators(cssSources, "\" rel=\"stylesheet\"></link><link href=\"")
+        String snippet = new TextStringBuilder("<link href=\"").append(getBasePath())
+                .appendWithSeparators(cssSources, "\" rel=\"stylesheet\"></link><link href=\"" + getBasePath())
                 .append("\" rel=\"stylesheet\">").build();
         snippets.add(new Snippet(pluginName, fileName, position, snippet));
         if (!"Plan".equals(pluginName)) {
             logger.info(locale.getString(PluginLang.API_ADD_RESOURCE_CSS, pluginName, fileName, position.cleanName()));
         }
+    }
+
+    private String getBasePath() {
+        String address = addresses.get().getMainAddress()
+                .orElseGet(addresses.get()::getFallbackLocalhostAddress);
+        return addresses.get().getBasePath(address);
     }
 
     private static class Snippet {

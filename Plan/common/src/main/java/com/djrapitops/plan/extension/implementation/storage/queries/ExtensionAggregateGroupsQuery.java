@@ -27,7 +27,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
-import com.djrapitops.plan.storage.database.sql.tables.*;
+import com.djrapitops.plan.storage.database.sql.tables.extension.*;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -87,7 +87,7 @@ public class ExtensionAggregateGroupsQuery implements Query<Map<Integer, Extensi
                 INNER_JOIN + ExtensionPluginTable.TABLE_NAME + " e1 on p1." + ExtensionProviderTable.PLUGIN_ID + "=e1." + ExtensionPluginTable.ID +
                 LEFT_JOIN + ExtensionTabTable.TABLE_NAME + " t1 on t1." + ExtensionTabTable.ID + "=p1." + ExtensionProviderTable.TAB_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i1 on i1." + ExtensionIconTable.ID + "=p1." + ExtensionProviderTable.ICON_ID +
-                LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i2 on i2." + ExtensionIconTable.ID + "=p1." + ExtensionTabTable.ICON_ID +
+                LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i2 on i2." + ExtensionIconTable.ID + "=t1." + ExtensionTabTable.ICON_ID +
                 WHERE + ExtensionPluginTable.SERVER_UUID + "=?" +
                 AND + "p1." + ExtensionProviderTable.HIDDEN + "=?" +
                 ORDER_BY + "table_id ASC, group_name ASC";

@@ -20,6 +20,7 @@ import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.commands.use.CMDSender;
 import com.djrapitops.plan.commands.use.ColorScheme;
 import com.djrapitops.plan.delivery.domain.auth.User;
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieStore;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.delivery.webserver.auth.RegistrationBin;
@@ -33,14 +34,14 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
-import com.djrapitops.plan.utilities.PassEncryptUtil;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.UUID;
@@ -87,7 +88,7 @@ public class RegistrationCommands {
         }
     }
 
-    public void onRegister(CMDSender sender, Arguments arguments) {
+    public void onRegister(CMDSender sender, @Untrusted Arguments arguments) {
         ensureDatabaseIsOpen();
         if (arguments.isEmpty()) {
             String address = linkCommands.getAddress(sender) + "/register";
@@ -96,63 +97,43 @@ public class RegistrationCommands {
                     .apply(builder -> linkCommands.linkTo(builder, sender, address))
                     .send();
         } else {
-            Optional<String> code = arguments.getAfter("--code");
+            @Untrusted Optional<String> code = arguments.getAfter("--code");
             if (code.isPresent()) {
-                registerUsingCode(sender, code.get());
+                registerUsingCode(sender, code.get(), arguments);
             } else {
-                registerUsingLegacy(sender, arguments);
+                sender.send(locale.getString(CommandLang.FAIL_REQ_ARGS, "--code", "/plan register --code 81cc5b17"));
             }
         }
     }
 
-    public void registerUsingCode(CMDSender sender, String code) {
+    public void registerUsingCode(CMDSender sender, @Untrusted String code, @Untrusted Arguments arguments) {
         UUID linkedToUUID = sender.getUUID().orElse(null);
-        Optional<User> user = RegistrationBin.register(code, linkedToUUID);
-        if (user.isPresent()) {
-            registerUser(user.get(), sender, getPermissionLevel(sender));
-        } else {
-            throw new IllegalArgumentException(locale.getString(FailReason.USER_INFORMATION_NOT_FOUND));
-        }
+        User user = RegistrationBin.register(code, linkedToUUID)
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(FailReason.USER_INFORMATION_NOT_FOUND)));
+        String permissionGroup = getPermissionGroup(sender, arguments)
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(FailReason.NO_PERMISSION_GROUP)));
+        user.setPermissionGroup(permissionGroup);
+        registerUser(user, sender);
     }
 
-    public void registerUsingLegacy(CMDSender sender, Arguments arguments) {
-        String password = arguments.get(0)
-                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ARGS, 1, "<password>")));
-        String passwordHash = PassEncryptUtil.createHash(password);
-        int permissionLevel = arguments.getInteger(2)
-                .filter(arg -> sender.hasPermission(Permissions.REGISTER_OTHER)) // argument only allowed with register other permission
-                .orElseGet(() -> getPermissionLevel(sender));
-
-        Optional<UUID> senderUUID = sender.getUUID();
-        Optional<String> senderName = sender.getPlayerName();
-        if (senderUUID.isPresent() && senderName.isPresent()) {
-            String playerName = senderName.get();
-            UUID linkedToUUID = senderUUID.get();
-            String username = arguments.get(1).orElse(playerName);
-            registerUser(new User(username, playerName, linkedToUUID, passwordHash, permissionLevel, Collections.emptyList()), sender, permissionLevel);
-        } else {
-            String username = arguments.get(1)
-                    .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ARGS, 3, "<password> <name> <level>")));
-            registerUser(new User(username, "console", null, passwordHash, permissionLevel, Collections.emptyList()), sender, permissionLevel);
+    private Optional<String> getPermissionGroup(CMDSender sender, @Untrusted Arguments arguments) {
+        List<String> groups = dbSystem.getDatabase().query(WebUserQueries.fetchGroupNames());
+        if (sender.isPlayer()) {
+            for (String group : groups) {
+                if (sender.hasPermission("plan.webgroup." + group)) {
+                    return Optional.of(group);
+                }
+            }
+        } else if (arguments.contains("superuser")) {
+            return dbSystem.getDatabase().query(WebUserQueries.fetchGroupNamesWithPermission(WebPermission.MANAGE_GROUPS.getPermission()))
+                    .stream().findFirst();
         }
+        return Optional.empty();
     }
 
-    private int getPermissionLevel(CMDSender sender) {
-        if (sender.hasPermission(Permissions.SERVER)) {
-            return 0;
-        }
-        if (sender.hasPermission(Permissions.PLAYER_OTHER)) {
-            return 1;
-        }
-        if (sender.hasPermission(Permissions.PLAYER_SELF)) {
-            return 2;
-        }
-        return 100;
-    }
-
-    private void registerUser(User user, CMDSender sender, int permissionLevel) {
+    private void registerUser(User user, CMDSender sender) {
         String username = user.getUsername();
-        user.setPermissionLevel(permissionLevel);
+
         try {
             Database database = dbSystem.getDatabase();
             boolean userExists = database.query(WebUserQueries.fetchUser(username)).isPresent();
@@ -162,21 +143,21 @@ public class RegistrationCommands {
                     .get(); // Wait for completion
 
             sender.send(locale.getString(CommandLang.WEB_USER_REGISTER_SUCCESS, username));
-            logger.info(locale.getString(CommandLang.WEB_USER_REGISTER_NOTIFY, username, permissionLevel));
+            logger.info(locale.getString(CommandLang.WEB_USER_REGISTER_NOTIFY, username, user.getPermissionGroup()));
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         } catch (DBOpException | ExecutionException e) {
-            errorLogger.warn(e, ErrorContext.builder().related(sender, user, permissionLevel).build());
+            errorLogger.warn(e, ErrorContext.builder().related(sender, user).build());
         }
     }
 
-    public void onUnregister(String mainCommand, CMDSender sender, Arguments arguments) {
-        Optional<String> givenUsername = arguments.get(0).filter(arg -> sender.hasPermission(Permissions.UNREGISTER_OTHER));
+    public void onUnregister(CMDSender sender, @Untrusted Arguments arguments) {
+        @Untrusted Optional<String> givenUsername = arguments.get(0).filter(arg -> sender.hasPermission(Permissions.UNREGISTER_OTHER));
 
         Database database = dbSystem.getDatabase();
         UUID playerUUID = sender.getUUID().orElse(null);
 
-        String username;
+        @Untrusted String username;
         if (givenUsername.isEmpty() && playerUUID != null) {
             username = database.query(WebUserQueries.fetchUser(playerUUID))
                     .map(User::getUsername)
@@ -194,24 +175,9 @@ public class RegistrationCommands {
             throw new IllegalArgumentException(locale.getString(CommandLang.USER_NOT_LINKED));
         }
 
-        if (sender.supportsChatEvents()) {
-            sender.buildMessage()
-                    .addPart(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_UNREGISTER, user.getUsername(), user.getLinkedTo())).newLine()
-                    .addPart(colors.getTertiaryColor() + locale.getString(CommandLang.CONFIRM))
-                    .addPart("§2§l[\u2714]").command("/" + mainCommand + " accept").hover(locale.getString(CommandLang.CONFIRM_ACCEPT))
-                    .addPart(" ")
-                    .addPart("§4§l[\u2718]").command("/" + mainCommand + " cancel").hover(locale.getString(CommandLang.CONFIRM_DENY))
-                    .send();
-        } else {
-            sender.buildMessage()
-                    .addPart(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_UNREGISTER, user.getUsername(), user.getLinkedTo())).newLine()
-                    .addPart(colors.getTertiaryColor() + locale.getString(CommandLang.CONFIRM)).addPart("§a/" + mainCommand + " accept")
-                    .addPart(" ")
-                    .addPart("§c/" + mainCommand + " cancel")
-                    .send();
-        }
+        String prompt = locale.getString(CommandLang.CONFIRM_UNREGISTER, user.getUsername(), user.getLinkedTo());
 
-        confirmation.confirm(sender, choice -> {
+        confirmation.confirm(sender, prompt, choice -> {
             if (Boolean.TRUE.equals(choice)) {
                 try {
                     sender.send(colors.getMainColor() + locale.getString(CommandLang.UNREGISTER, user.getUsername()));
@@ -231,8 +197,8 @@ public class RegistrationCommands {
     }
 
 
-    public void onLogoutCommand(CMDSender sender, Arguments arguments) {
-        String loggingOut = arguments.get(0)
+    public void onLogoutCommand(@Untrusted Arguments arguments) {
+        @Untrusted String loggingOut = arguments.get(0)
                 .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ONE_ARG, locale.getString(HelpLang.ARG_USERNAME) + "/*")));
 
         if ("*".equals(loggingOut)) {
@@ -240,5 +206,33 @@ public class RegistrationCommands {
         } else {
             ActiveCookieStore.removeUserCookie(loggingOut);
         }
+    }
+
+    public void onChangePermissionGroup(CMDSender sender, @Untrusted Arguments arguments) {
+        String username = arguments.get(0)
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ARGS, locale.getString(HelpLang.ARG_USERNAME))));
+        String group = arguments.get(1)
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ARGS, locale.getString(HelpLang.ARG_GROUP))));
+
+        Database database = dbSystem.getDatabase();
+        User user = database.query(WebUserQueries.fetchUser(username))
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(FailReason.USER_DOES_NOT_EXIST)));
+
+        Optional<Integer> groupId = database.query(WebUserQueries.fetchGroupId(group));
+        if (groupId.isEmpty()) {
+            throw new IllegalArgumentException(locale.getString(FailReason.GROUP_DOES_NOT_EXIST));
+        }
+
+        user.setPermissionGroup(group);
+
+        database.executeTransaction(new StoreWebUserTransaction(user))
+                .thenRun(() -> sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS)));
+    }
+
+    public void onListWebGroups(CMDSender sender) {
+        Database database = dbSystem.getDatabase();
+        List<String> groupNames = database.query(WebUserQueries.fetchGroupNames());
+
+        sender.send(String.join(", ", groupNames));
     }
 }

@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.webserver.auth;
 
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.apache.commons.codec.digest.DigestUtils;
@@ -42,35 +43,36 @@ public class RegistrationBin {
         // Hide static cache constructor
     }
 
-    public static String addInfoForRegistration(String username, String password) {
+    public static String addInfoForRegistration(@Untrusted String username, @Untrusted String password) {
         String hash = PassEncryptUtil.createHash(password);
         String code = DigestUtils.sha256Hex(username + password + System.currentTimeMillis()).substring(0, 12);
         REGISTRATION_BIN.put(code, new AwaitingForRegistration(username, hash));
         return code;
     }
 
-    public static Optional<User> register(String code, UUID linkedToUUID) {
+    public static Optional<User> register(@Untrusted String code, UUID linkedToUUID) {
         AwaitingForRegistration found = REGISTRATION_BIN.getIfPresent(code);
         if (found == null) return Optional.empty();
         REGISTRATION_BIN.invalidate(code);
         return Optional.of(found.toUser(linkedToUUID));
     }
 
-    public static boolean contains(String code) {
+    public static boolean contains(@Untrusted String code) {
         return REGISTRATION_BIN.getIfPresent(code) != null;
     }
 
     private static class AwaitingForRegistration {
+        @Untrusted
         private final String username;
         private final String passwordHash;
 
-        public AwaitingForRegistration(String username, String passwordHash) {
+        public AwaitingForRegistration(@Untrusted String username, String passwordHash) {
             this.username = username;
             this.passwordHash = passwordHash;
         }
 
         public User toUser(UUID linkedToUUID) {
-            return new User(username, null, linkedToUUID, passwordHash, 100, Collections.emptyList());
+            return new User(username, null, linkedToUUID, passwordHash, null, Collections.emptyList());
         }
     }
 }

@@ -18,6 +18,8 @@ package com.djrapitops.plan.extension.implementation.results;
 
 import com.djrapitops.plan.delivery.rendering.html.Html;
 
+import java.util.Map;
+
 /**
  * Represents double data returned by a DoubleProvider or PercentageProvider method.
  *
@@ -51,9 +53,19 @@ public class ExtensionStringData implements DescribedExtensionData {
         return playerName;
     }
 
-    public String getFormattedValue() {
-        String withColors = Html.swapColorCodesToSpan(value);
-        return !playerName ? withColors : Html.LINK.create("../player/" + Html.encodeToURL(value), withColors);
+    public String getValue() {
+        return value;
+    }
+
+    public Object getFormattedValue() {
+        if (playerName) {
+            return Map.of(
+                    "link", "/player/" + Html.encodeToURL(value),
+                    "text", value
+            );
+        } else {
+            return value;
+        }
     }
 
     ExtensionStringData concatenate(ExtensionStringData other) {

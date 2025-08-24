@@ -1,17 +1,29 @@
 
 name: CI
 
-on: [push, pull_request]
+on:
+  push:
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
 
 jobs:
   test:
+    if: > 
+      (
+        (github.event_name == 'push')
+        || (github.event_name == 'pull_request' && github.repository != github.event.pull_request.head.repo.full_name && contains(fromJSON('["opened", "reopened", "synchronize"]'), github.event.action))
+      )
+
     name: Test, Build & Upload
 
     runs-on: ubuntu-latest
 
     services:
       mariadb:
-        image: mariadb:latest
+        image: mariadb:11.1-rc
         ports:
           - 3306
         env:
@@ -19,45 +31,34 @@ jobs:
           MYSQL_PASSWORD: password
           MYSQL_DATABASE: test
           MYSQL_ROOT_PASSWORD: password
-        options: --health-cmd="mysqladmin ping" --health-interval=5s --health-timeout=2s --health-retries=3
+        options: --health-cmd="mariadb-admin ping" --health-interval=5s --health-timeout=2s --health-retries=3
 
     steps:
-      - uses: actions/checkout@v2
+      - if: ${{ github.event_name == 'push' }}
+        name: 📥 Checkout git repository
+        uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Setup JDK
-        uses: actions/setup-java@v2
+
+      - if: ${{ github.event_name == 'pull_request' }}
+        name: 📥 Checkout git repository
+        uses: actions/checkout@v4
         with:
-          distribution: 'adopt'
-          java-version: '17'
-      - name: Setup Selenium Webdriver
-        uses: nanasess/setup-chromedriver@v1
-      - name: Setup Selenium Webdriver settings
-        run: |
-          export DISPLAY=:99
-          chromedriver --url-base=/wd/hub &
-          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
-      - name: Verify MariaDB connection
-        env:
-          PORT: ${{ job.services.mariadb.ports[3306] }}
-        run: |
-          while ! mysqladmin ping -h"127.0.0.1" -P"$PORT" --silent; do
-            sleep 1
-          done
-      - name: Cache Gradle packages
-        uses: actions/cache@v2
+          fetch-depth: 0
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: ☕ Setup JDK
+        uses: actions/setup-java@v4
         with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-      - name: Build jars
+          distribution: 'temurin'
+          java-version: '21'
+      - name: 💼 Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+      - name: 🛠 Build jars 
         run: |
           cd Plan
-          ./gradlew shadowJar
-      - name: Get versions
+          ./gradlew build -x test
+      - name: ⚙ Get versions
         run: |
           cd Plan
           ./gradlew snapshotVersion jarNameVersion
@@ -66,17 +67,37 @@ jobs:
           echo "snapshotVersion=$(cat build/versions/snapshot.txt)" >> $GITHUB_ENV
           echo "versionString=$(cat build/versions/jar.txt)" >> $GITHUB_ENV
           echo "artifactPath=$(pwd)/builds" >> $GITHUB_ENV
-      - name: Upload Plan.jar
-        uses: actions/upload-artifact@v3
+      - name: 📤 Upload Plan.jar 
+        uses: actions/upload-artifact@v4
         with:
           name: Plan-${{ env.versionString }}-${{ env.git_hash }}.jar
           path: ${{ env.artifactPath }}/Plan-${{ env.snapshotVersion }}.jar
-      - name: Upload PlanFabric.jar
-        uses: actions/upload-artifact@v3
+      - name: 📤 Upload PlanFabric.jar 
+        uses: actions/upload-artifact@v4
         with:
           name: PlanFabric-${{ env.versionString }}-${{ env.git_hash }}.jar
           path: ${{ env.artifactPath }}/PlanFabric-${{ env.snapshotVersion }}.jar
-      - name: Test
+      - name: 🚦 Setup Selenium Webdriver
+        uses: nanasess/setup-chromedriver@v2
+      - name: 🚦 Setup Selenium Webdriver settings
+        run: |
+          export DISPLAY=:99
+          chromedriver --url-base=/wd/hub &
+          sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 &
+      - name: 📶 Verify MariaDB connection 
+        env:
+          PORT: ${{ job.services.mariadb.ports[3306] }}
+        run: |
+          while ! mysqladmin ping -h"127.0.0.1" -P"$PORT" --silent; do
+            sleep 1
+          done
+      - name: 📶 Setup to avoid ERR_NETWORK_CHANGED
+        run: |
+          sudo resolvectl dns eth0 1.1.1.1
+          sudo resolvectl domain eth0 "~."
+          sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
+          sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
+      - name: 🩺 Test 
         env:
           MYSQL_DB: test
           MYSQL_USER: user
@@ -86,11 +107,38 @@ jobs:
         run: |
           cd Plan
           ./gradlew build
-      - name: SonarCloud
+      - name: 🖨 Build Javadocs
+        run: |
+          cd Plan
+          echo "Building javadocs with gradle"
+          ./gradlew aggregateJavadocs
+          echo "Moving to working directory:"
+          cd ../
+          mkdir javadocs
+          mkdir javadocs/all
+          mkdir javadocs/api
+          cp -r Plan/build/docs/javadoc/* javadocs/all/
+          cp -r Plan/api/build/docs/javadoc/* javadocs/api/
+          cp scripts/index.html javadocs/index.html
+          cd javadocs
+          touch .nojekyll
+      - name: 📤 Deploy Javadocs 
+        if: github.ref == 'refs/heads/master'
+        uses: JamesIves/github-pages-deploy-action@v4
+        with:
+          branch: gh-pages # The branch the action should deploy to.
+          folder: javadocs # The folder the action should deploy.
+      - name: 🩺 SonarCloud - Java
+        if: "${{ env.SONAR_TOKEN != '' }}"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        if: "${{ env.SONAR_TOKEN != '' }}"
         run: |
           cd Plan
           ./gradlew sonar -Dsonar.host.url=https://sonarcloud.io -Dsonar.organization=player-analytics-plan
+      - name: 🩺 SonarCloud - React
+        if: "${{ env.SONAR_TOKEN != '' }}"
+        uses: SonarSource/sonarqube-scan-action@master
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

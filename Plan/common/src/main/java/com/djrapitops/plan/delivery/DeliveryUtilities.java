@@ -17,7 +17,10 @@
 package com.djrapitops.plan.delivery;
 
 import com.djrapitops.plan.delivery.formatting.Formatters;
+import com.djrapitops.plan.delivery.rendering.json.graphs.GraphJSONCreator;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
+import com.djrapitops.plan.delivery.webserver.Addresses;
+import com.djrapitops.plan.storage.file.PublicHtmlFiles;
 import dagger.Lazy;
 
 import javax.inject.Inject;
@@ -26,16 +29,28 @@ import javax.inject.Singleton;
 @Singleton
 public class DeliveryUtilities {
 
+    private final Lazy<Addresses> addresses;
     private final Lazy<Formatters> formatters;
     private final Lazy<Graphs> graphs;
+    private final Lazy<PublicHtmlFiles> publicHtmlFiles;
+    private final Lazy<GraphJSONCreator> graphJSONCreator;
 
     @Inject
     public DeliveryUtilities(
+            Lazy<Addresses> addresses,
             Lazy<Formatters> formatters,
-            Lazy<Graphs> graphs
+            Lazy<Graphs> graphs,
+            Lazy<PublicHtmlFiles> publicHtmlFiles, Lazy<GraphJSONCreator> graphJSONCreator
     ) {
+        this.addresses = addresses;
         this.formatters = formatters;
         this.graphs = graphs;
+        this.publicHtmlFiles = publicHtmlFiles;
+        this.graphJSONCreator = graphJSONCreator;
+    }
+
+    public Addresses getAddresses() {
+        return addresses.get();
     }
 
     public Formatters getFormatters() {
@@ -46,4 +61,11 @@ public class DeliveryUtilities {
         return graphs.get();
     }
 
+    public PublicHtmlFiles getPublicHtmlFiles() {
+        return publicHtmlFiles.get();
+    }
+
+    public GraphJSONCreator getGraphJSONCreator() {
+        return graphJSONCreator.get();
+    }
 }

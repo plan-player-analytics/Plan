@@ -23,8 +23,8 @@ import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionPluginTable;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionTableProviderTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPluginTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionTableProviderTable;
 import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
@@ -39,7 +39,7 @@ import java.util.List;
 import java.util.UUID;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
-import static com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerTableValueTable.*;
+import static com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPlayerTableValueTable.*;
 
 /**
  * Transaction to store method result of a Table.

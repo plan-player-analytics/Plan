@@ -22,6 +22,7 @@ import com.djrapitops.plan.settings.config.ConfigNode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.function.Predicate;
 
 /**
  * Represents a change made to the config structure.
@@ -103,6 +104,8 @@ public interface ConfigChange {
         public boolean hasBeenApplied(Config config) {
             return config.getNode(oldPath)
                     .map(ConfigNode::getString)
+                    .map(String::trim)
+                    .filter(Predicate.not(String::isEmpty))
                     .isEmpty()
                     && config.getNode(newPath).isPresent();
         }

@@ -27,7 +27,11 @@ public enum PluginLang implements Lang {
     ENABLED_DATABASE("plugin.enable.database", "Enable - Database", "${0}-database connection established."),
     API_ADD_RESOURCE_JS("plugin.apiJSAdded", "API - js+", "PageExtension: ${0} added javascript(s) to ${1}, ${2}"),
     API_ADD_RESOURCE_CSS("plugin.apiCSSAdded", "API - css+", "PageExtension: ${0} added stylesheet(s) to ${1}, ${2}"),
+    RELOAD_LOCALE("plugin.localeReloaded", "API - locale reload", "Custom locale.yml was modified so it was reloaded and is now in use."),
 
+    ENABLE_NOTIFY_PROXY_ADDRESS("plugin.enable.notify.proxyAddress", "Enable - Notify proxy address", "Proxy server detected in the database - Proxy Webserver address is '${0}'."),
+    ENABLE_NOTIFY_PROXY_DISABLED_WEBSERVER("plugin.enable.notify.proxyDisabledWebserver", "Enable - Notify proxy disabled webserver", "Disabling Webserver on this server - You can override this behavior by setting '${0}' to false."),
+    ENABLE_NOTIFY_SETTING_CHANGE("plugin.enable.notify.settingChange", "Enable - Notify settingChange", "Note: Set '${0}' to ${1}"),
     ENABLE_NOTIFY_STORING_PRESERVED_SESSIONS("plugin.enable.notify.storeSessions", "Enable - Storing preserved sessions", "Storing sessions that were preserved before previous shutdown."),
     ENABLE_NOTIFY_EMPTY_IP("plugin.enable.notify.emptyIP", "Enable - Notify Empty IP", "IP in server.properties is empty & Alternative_IP is not in use. Incorrect links might be given!"),
     ENABLE_NOTIFY_BAD_IP("plugin.enable.notify.badIP", "Enable - Notify Bad IP", "0.0.0.0 is not a valid address, set up Alternative_IP settings. Incorrect links might be given!"),

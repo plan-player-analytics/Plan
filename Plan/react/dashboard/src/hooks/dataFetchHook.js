@@ -1,9 +1,10 @@
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import {useNavigation} from "./navigationHook";
 import {useDataStore} from "./datastoreHook";
 import {useMetadata} from "./metadataHook";
+import {staticSite} from "../service/backendConfiguration";
 
-export const useDataRequest = (fetchMethod, parameters) => {
+export const useDataRequest = (fetchMethod, parameters, shouldRequest) => {
     const [data, setData] = useState(undefined);
     const [loadingError, setLoadingError] = useState(undefined);
     const {updateRequested, finishUpdate} = useNavigation();
@@ -12,13 +13,17 @@ export const useDataRequest = (fetchMethod, parameters) => {
 
     /*eslint-disable react-hooks/exhaustive-deps */
     useEffect(() => {
+        if (shouldRequest !== undefined && !shouldRequest) {
+            setData(undefined);
+            return;
+        }
         datastore.setAsUpdating(fetchMethod);
         const handleResponse = (json, error, skipOldData, timeout) => {
             if (json) {
                 const timestamp = json.timestamp;
-                if (timestamp) {
+                if (!staticSite && timestamp) {
                     // Data has timestamp, the data may come from cache
-                    const acceptedTimestamp = timestamp + (refreshBarrierMs ? refreshBarrierMs : 15000);
+                    const acceptedTimestamp = timestamp + (refreshBarrierMs || 15000);
                     if (acceptedTimestamp < updateRequested) {
                         // Request again, received data was too old
                         setTimeout(() => {
@@ -50,7 +55,12 @@ export const useDataRequest = (fetchMethod, parameters) => {
             } else if (error) {
                 console.warn(error);
                 datastore.finishUpdate(fetchMethod)
-                setLoadingError(error);
+                const isObject = error?.data !== null && typeof error?.data === 'object' && !Array.isArray(error?.data);
+                if (isObject) {
+                    setLoadingError({...error, ...error.data, data: undefined})
+                } else {
+                    setLoadingError(error);
+                }
                 finishUpdate(0, "Error: " + error.message, datastore.isSomethingUpdating());
             }
         };
@@ -58,8 +68,10 @@ export const useDataRequest = (fetchMethod, parameters) => {
         fetchMethod(updateRequested, ...parameters).then(({data: json, error}) => {
             handleResponse(json, error, false, 1000);
         });
-    }, [fetchMethod, ...parameters, updateRequested, refreshBarrierMs])
+    }, [fetchMethod, parameters.length, ...parameters, updateRequested, refreshBarrierMs, shouldRequest])
     /* eslint-enable react-hooks/exhaustive-deps */
 
-    return {data, loadingError};
+    return useMemo(() => {
+        return {data, loadingError}
+    }, [data, loadingError]);
 }

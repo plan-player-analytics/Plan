@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.filter.filters.AllPlayersFilter;
 import com.djrapitops.plan.storage.database.queries.filter.filters.PluginGroupsFilter;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -70,7 +71,7 @@ public class QueryFilters {
         }
     }
 
-    public Optional<Filter> getFilter(String kind) {
+    public Optional<Filter> getFilter(@Untrusted String kind) {
         prepareFilters();
         return Optional.ofNullable(filters.get(kind));
     }
@@ -82,31 +83,30 @@ public class QueryFilters {
      * @return the result object or null if none of the filterQueries could be applied.
      * @throws BadRequestException If the request kind is not supported or if filter was given bad options.
      */
-    public Filter.Result apply(List<InputFilterDto> filterQueries) {
+    public Filter.Result apply(@Untrusted List<InputFilterDto> filterQueries) {
         prepareFilters();
         Filter.Result current = null;
         if (filterQueries.isEmpty()) return allPlayersFilter.apply(null);
-        for (InputFilterDto inputFilterDto : filterQueries) {
+        for (@Untrusted InputFilterDto inputFilterDto : filterQueries) {
             current = apply(current, inputFilterDto);
             if (current != null && current.isEmpty()) break;
         }
         return current;
     }
 
-    private Filter.Result apply(Filter.Result current, InputFilterDto inputFilterDto) {
-        String kind = inputFilterDto.getKind();
-        Filter filter = getFilter(kind).orElseThrow(() -> new BadRequestException("Filter kind not supported: '" + kind + "'"));
+    private Filter.Result apply(Filter.Result current, @Untrusted InputFilterDto inputFilterDto) {
+        @Untrusted String kind = inputFilterDto.getKind();
+        Filter filter = getFilter(kind).orElseThrow(() -> new BadRequestException("Given Filter 'kind' not supported"));
 
         return getResult(current, filter, inputFilterDto);
     }
 
-    private Filter.Result getResult(Filter.Result current, Filter filter, InputFilterDto query) {
+    private Filter.Result getResult(Filter.Result current, Filter filter, @Untrusted InputFilterDto query) {
         try {
             return current == null ? filter.apply(query) : current.apply(filter, query);
         } catch (IllegalArgumentException badOptions) {
             throw new BadRequestException("Bad parameters for filter '" + filter.getKind() +
-                    "': expecting " + Arrays.asList(filter.getExpectedParameters()) +
-                    ", but was given " + query.getSetParameters());
+                    "': expecting " + Arrays.asList(filter.getExpectedParameters()) + " as parameters");
         }
     }
 

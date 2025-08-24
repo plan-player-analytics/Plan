@@ -1,35 +1,34 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
+apply plugin: "com.gradleup.shadow"
+
+logger.lifecycle("Building artifact for version $fullVersion / $fullVersionFilename / $fullVersionSemantic")
+
 dependencies {
-    shadow project(path: ":api")
-    shadow project(path: ":extensions")
-    shadow project(path: ":common")
-    shadow project(path: ":common", configuration: "swaggerJson")
-    shadow project(path: ":bukkit")
-    shadow project(path: ":nukkit")
-    shadow project(path: ":sponge")
-    shadow project(path: ":bungeecord")
-    shadow project(path: ":velocity")
-    shadow project(path: ":standalone")
-    testImplementation project(path: ":common", configuration: 'testArtifacts')
-    testImplementation project(path: ":bukkit", configuration: 'testArtifacts')
-    testImplementation project(path: ":nukkit", configuration: 'testArtifacts')
-    testImplementation project(path: ":sponge", configuration: 'testArtifacts')
-    testImplementation project(path: ":bungeecord", configuration: 'testArtifacts')
-    testImplementation project(path: ":velocity", configuration: 'testArtifacts')
-    testImplementation project(path: ":standalone", configuration: 'testArtifacts')
+    implementation project(":api")
+    implementation project(":extensions")
+    implementation project(":common")
+    implementation project(":bukkit")
+    implementation project(":nukkit")
+    implementation project(":sponge")
+    implementation project(":bungeecord")
+    implementation project(":velocity")
+    implementation project(":standalone")
+
+    // Shadow configuration required to depend on Folia due to newer Java version
+    implementation project(path: ":folia", configuration: "shadow")
+
+    // Shadow configuration required to only relocate adventure calls in ComponentConverter, not whole plugin
+    implementation project(path: ":extensions:adventure", configuration: "shadow")
 }
 
 jar {
-    // Add the sponge mixin into the manifest
     manifest.attributes([
-            'MixinConfigs': 'plan-sponge.mixins.json',
             'Main-Class'  : 'net.playeranalytics.plan.PlanStandalone'
     ])
 }
 
-shadowJar {
-    dependsOn processResources
-    configurations = [project.configurations.shadow]
-
+tasks.named("shadowJar", ShadowJar) {
     // Exclude these files
     exclude "**/*.svg"
     exclude "**/*.psd"
@@ -39,16 +38,17 @@ shadowJar {
 
     exclude "**/module-info.class"
     exclude "module-info.class"
-    exclude 'META-INF/versions/' // Causes Sponge to crash
-    exclude 'mozilla/**/*'
+    exclude "META-INF/versions/" // Causes Sponge to crash
+    exclude "META-INF/services/net.kyori.**" // Causes ResolutionException on Sponge due to export to net.kyori module
+    exclude "mozilla/**/*"
 
     // Exclude extra dependencies
-    exclude 'org/apache/http/**/*' // Unnecessary http client depended on by geolite2 implementation
-    exclude "org/junit/**/*" // see extensions/build.gradle
-    exclude "org/opentest4j/**/*" // see extensions/build.gradle
     exclude "org/checkerframework/**/*" // Dagger compiler
     exclude "com/google/common/**/*"
     exclude "com/google/thirdparty/**/*"
+    exclude "com/google/auto/**/*"
+
+    exclude "org.javassist:.*"
     // Exclude swagger
     exclude "org/yaml/**/*"
     exclude "nonapi/**/*"
@@ -61,54 +61,56 @@ shadowJar {
     exclude "jakarta/xml/**/*"
     exclude "javassist/**/*"
 
-    relocate('org.slf4j', 'plan.org.slf4j')
+    relocate("org.slf4j", "plan.org.slf4j")
 
     // Unrelocate a package to use platform version of some libraries that were relocated in Plan
     exclude "com/djrapitops/plan/unrelocate/**/*"
-    relocate('com.djrapitops.plan.unrelocate.', '')
+    relocate("com.djrapitops.plan.unrelocate.", "")
 
-    relocate('org.apache', 'plan.org.apache') {
-        exclude 'org/apache/logging/**'
-        exclude 'org/apache/maven/**' // This needs to be unrelocated for Sponge
+    relocate("org.apache", "plan.org.apache") {
+        exclude "org/apache/logging/**"
+        exclude "org/apache/maven/**" // This needs to be unrelocated for Sponge
     }
-    relocate 'dagger', 'plan.dagger'
+
     // Don't relocate MySQL or SQLite since they are loaded with a isolated class loader
-    // relocate 'org.sqlite', 'plan.org.sqlite'
-    // relocate 'com.mysql', 'plan.com.mysql'
-    // relocate 'com.google.protobuf', 'plan.com.mysql.cj.x.google.protobuf'
-    relocate 'javax.inject', 'plan.javax.inject'
-    relocate 'com.github.benmanes', 'plan.com.github.benmanes'
-    relocate 'dev.vankka.dependencydownload', 'plan.dev.vankka.dependencydownload'
+    // relocate "org.sqlite", "plan.org.sqlite"
+    // relocate "com.mysql", "plan.com.mysql"
+    // relocate "com.google.protobuf", "plan.com.mysql.cj.x.google.protobuf"
 
-    relocate 'com.maxmind', 'plan.com.maxmind'
-    relocate 'com.fasterxml', 'plan.com.fasterxml'
-    relocate 'com.zaxxer', 'plan.com.zaxxer'
-    relocate 'com.google.gson', 'plan.com.google.gson'
-    relocate 'com.google.errorprone', 'plan.com.google.errorprone'
-    relocate 'org.bstats', 'plan.org.bstats'
+    relocate "dagger", "plan.dagger"
+    relocate "javax.inject", "plan.javax.inject"
+    relocate "jakarta.inject", "plan.jakarta.inject"
 
-    relocate 'org.eclipse.jetty', 'plan.org.eclipse.jetty'
-    relocate 'jakarta.servlet', 'plan.jakarta.servlet'
-    relocate 'javax.servlet', 'plan.javax.servlet'
+    relocate "dev.vankka.dependencydownload", "plan.dev.vankka.dependencydownload"
+    relocate "com.github.benmanes", "plan.com.github.benmanes"
+    relocate "com.maxmind", "plan.com.maxmind"
+    relocate "com.fasterxml", "plan.com.fasterxml"
+    relocate "com.zaxxer", "plan.com.zaxxer"
+    relocate "com.google.gson", "plan.com.google.gson"
+    relocate "com.google.errorprone", "plan.com.google.errorprone"
+    relocate "org.bstats", "plan.org.bstats"
+    relocate "org.jasypt", "plan.org.jasypt"
 
-    relocate 'org.json.simple', 'plan.org.json.simple'
+    relocate "org.eclipse.jetty", "plan.org.eclipse.jetty"
+    relocate "jakarta.servlet", "plan.jakarta.servlet"
+    relocate "javax.servlet", "plan.javax.servlet"
+
+    relocate "org.json.simple", "plan.org.json.simple"
 
     destinationDirectory.set(file("$rootDir/builds/"))
-    archiveBaseName.set('Plan')
-    archiveClassifier.set('')
+    archiveBaseName.set("Plan")
+    archiveClassifier.set("")
 
     mergeServiceFiles()
-
-    build {
-        dependsOn tasks.named("shadowJar")
-    }
 }
+
+tasks.assemble.dependsOn tasks.shadowJar
 
 publishing {
     publications {
         mavenJava(MavenPublication) {
-            groupId = 'com.djrapitops'
-            artifactId = 'Plan-plugin'
+            groupId = "com.djrapitops"
+            artifactId = "Plan-plugin"
             version = "$fullVersion"
 
             artifact shadowJar

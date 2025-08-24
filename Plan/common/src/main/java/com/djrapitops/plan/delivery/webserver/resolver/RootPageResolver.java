@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver;
 
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
@@ -32,6 +33,7 @@ import dagger.Lazy;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Resolves '/' URL (Address Root).
@@ -40,6 +42,8 @@ import java.util.Optional;
  */
 @Singleton
 public class RootPageResolver implements NoAuthResolver {
+
+    private static final String NETWORK_PAGE = "network";
 
     private final ResponseFactory responseFactory;
     private final Lazy<WebServer> webServer;
@@ -60,21 +64,31 @@ public class RootPageResolver implements NoAuthResolver {
     private Response getResponse(Request request) {
         Server server = serverInfo.getServer();
         if (!webServer.get().isAuthRequired()) {
-            String redirectTo = server.isProxy() ? "network" : "server/" + Html.encodeToURL(server.getIdentifiableName());
+            String redirectTo = server.isProxy() ? NETWORK_PAGE : "server/" + Html.encodeToURL(server.getIdentifiableName());
             return responseFactory.redirectResponse(redirectTo);
         }
 
         WebUser user = request.getUser()
                 .orElseThrow(() -> new WebUserAuthException(FailReason.EXPIRED_COOKIE));
 
-        if (user.hasPermission("page.server")) {
-            return responseFactory.redirectResponse(server.isProxy() ? "network" : "server/" + Html.encodeToURL(server.getIdentifiableName()));
-        } else if (user.hasPermission("page.players")) {
+        if (server.isProxy() && user.hasPermission(WebPermission.ACCESS_NETWORK)) {
+            return responseFactory.redirectResponse(NETWORK_PAGE);
+        } else if (user.hasPermission(WebPermission.ACCESS_SERVER)) {
+            return responseFactory.redirectResponse(server.isProxy() ? NETWORK_PAGE : "server/" + Html.encodeToURL(server.getIdentifiableName()));
+        } else if (user.hasPermission(WebPermission.ACCESS_PLAYERS)) {
             return responseFactory.redirectResponse("players");
-        } else if (user.hasPermission("page.player.self")) {
-            return responseFactory.redirectResponse("player/" + Html.encodeToURL(user.getName()));
+        } else if (user.hasPermission(WebPermission.ACCESS_PLAYER_SELF)) {
+            return responseFactory.redirectResponse("player/" + user.getUUID().map(UUID::toString).orElseGet(user::getName));
+        } else if (user.hasPermission(WebPermission.ACCESS_QUERY)) {
+            return responseFactory.redirectResponse("query");
+        } else if (user.hasPermission(WebPermission.MANAGE_GROUPS)) {
+            return responseFactory.redirectResponse("manage");
+        } else if (user.hasPermission(WebPermission.ACCESS_DOCS)) {
+            return responseFactory.redirectResponse("docs");
+        } else if (user.hasPermission(WebPermission.ACCESS_ERRORS)) {
+            return responseFactory.redirectResponse("errors");
         } else {
-            return responseFactory.forbidden403(user.getName() + " has insufficient permissions to be redirected to any page. Needs one of: 'page.server', 'page.players' or 'page.player.self'");
+            return responseFactory.forbidden403("User has insufficient permissions to be redirected to any page.");
         }
     }
 }

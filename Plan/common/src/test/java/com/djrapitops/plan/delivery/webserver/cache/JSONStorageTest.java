@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.cache;
 
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -54,10 +55,8 @@ class JSONStorageTest {
 
     private Optional<File> findTheFile() {
         File[] files = tempDir.toFile().listFiles();
-        if (files != null) {
-            for (File file : files) {
-                return Optional.of(file);
-            }
+        if (files != null && files.length > 0) {
+            return Optional.of(files[0]);
         }
         return Optional.empty();
     }
@@ -145,7 +144,7 @@ class JSONStorageTest {
     @Test
     void storedWithLaterDateIsNotFetched() {
         long timestamp = System.currentTimeMillis();
-        JSONStorage.StoredJSON stored = UNDER_TEST.storeJson("Identifier", Collections.singletonList("data"), timestamp);
+        UNDER_TEST.storeJson("Identifier", Collections.singletonList("data"), timestamp);
         assertFalse(UNDER_TEST.fetchJsonMadeAfter("Identifier", timestamp + TimeUnit.DAYS.toMillis(1L)).isPresent());
     }
 
@@ -160,14 +159,21 @@ class JSONStorageTest {
     @Test
     void storedWithEarlierDateIsNotFetched() {
         long timestamp = System.currentTimeMillis();
-        JSONStorage.StoredJSON stored = UNDER_TEST.storeJson("Identifier", Collections.singletonList("data"), timestamp);
+        UNDER_TEST.storeJson("Identifier", Collections.singletonList("data"), timestamp);
         assertFalse(UNDER_TEST.fetchJsonMadeBefore("Identifier", timestamp - TimeUnit.DAYS.toMillis(1L)).isPresent());
     }
 
     @Test
     void doesNotFetchWrongThing() {
         long timestamp = System.currentTimeMillis();
-        JSONStorage.StoredJSON stored = UNDER_TEST.storeJson(DataID.SESSIONS_OVERVIEW.name(), Collections.singletonList("data"), timestamp);
+        UNDER_TEST.storeJson(DataID.SESSIONS_OVERVIEW.name(), Collections.singletonList("data"), timestamp);
         assertFalse(UNDER_TEST.fetchJsonMadeBefore(DataID.SESSIONS.name(), timestamp + TimeUnit.DAYS.toMillis(1L)).isPresent());
+    }
+
+    @Test
+    void doesNotFetchWrongServer() {
+        long timestamp = System.currentTimeMillis();
+        UNDER_TEST.storeJson(DataID.SESSIONS_OVERVIEW.of(ServerUUID.randomUUID()), Collections.singletonList("data"), timestamp);
+        assertFalse(UNDER_TEST.fetchJsonMadeBefore(DataID.SESSIONS_OVERVIEW.name(), timestamp + TimeUnit.DAYS.toMillis(1L)).isPresent());
     }
 }

@@ -17,20 +17,20 @@
 package com.djrapitops.plan.settings.theme;
 
 import com.djrapitops.plan.SubSystem;
-import com.djrapitops.plan.exceptions.EnableException;
+import com.djrapitops.plan.settings.config.ConfigNode;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import net.playeranalytics.plugin.server.PluginLogger;
 import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.VisibleForTesting;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
-import java.util.ArrayList;
+import java.nio.file.Files;
 import java.util.Arrays;
-import java.util.List;
-
-import static com.djrapitops.plan.settings.theme.ThemeVal.*;
+import java.util.Objects;
 
 /**
  * Enum that contains available themes.
@@ -46,8 +46,6 @@ public class Theme implements SubSystem {
     private final PlanConfig config;
     private final PluginLogger logger;
 
-    private ThemeConfig themeConfig;
-
     @Inject
     public Theme(PlanFiles files, PlanConfig config, PluginLogger logger) {
         this.files = files;
@@ -55,74 +53,53 @@ public class Theme implements SubSystem {
         this.logger = logger;
     }
 
-    public String getValue(ThemeVal variable) {
-        try {
-            return getThemeValue(variable);
-        } catch (NullPointerException | IllegalStateException e) {
-            return variable.getDefaultValue();
-        }
+    public String[] getWorldPieColors() {
+        return Arrays.stream(StringUtils.split(config.get(DisplaySettings.WORLD_PIE), ','))
+                .map(color -> StringUtils.remove(StringUtils.trim(color), '"'))
+                .toArray(String[]::new);
     }
 
-    public String[] getPieColors(ThemeVal variable) {
-        return Arrays.stream(StringUtils.split(getValue(variable), ','))
+    public String[] getDefaultPieColors(ThemeVal val) {
+        return Arrays.stream(StringUtils.split(val.getDefaultValue(), ','))
                 .map(color -> StringUtils.remove(StringUtils.trim(color), '"'))
                 .toArray(String[]::new);
     }
 
     @Override
     public void enable() {
-        try {
-            themeConfig = new ThemeConfig(files, config, logger);
-            themeConfig.save();
-        } catch (IOException e) {
-            throw new EnableException("theme.yml could not be saved.", e);
+        ThemeConfig themeConfig = new ThemeConfig(files, config, logger);
+        if (themeConfig.fileExists()) {
+            if (themeConfig.contains("GraphColors.WorldPie")) {
+                logger.info("Copied theme.yml 'GraphColors.WorldPie' to config.yml '" + DisplaySettings.WORLD_PIE.getPath() + "'");
+                config.set(DisplaySettings.WORLD_PIE, themeConfig.getString("GraphColors.WorldPie"));
+            }
+
+            if (containsNonDefaultValues(themeConfig)) {
+                logger.warn("'theme.yml' file has been deprecated in favor of theme-editor on the website. Please delete it manually after noting necessary details (modifications from default were detected.)");
+            } else {
+                try {
+                    logger.info("Deleting deprecated 'theme.yml' file automatically since it contains only default values.");
+                    Files.deleteIfExists(ThemeConfig.getConfigFile(files).toPath());
+                } catch (IOException e) {
+                    logger.warn("'theme.yml' failed to be deleted automatically (" + e.getMessage() + "). Please delete it manually.");
+                }
+            }
         }
+    }
+
+    @VisibleForTesting
+    boolean containsNonDefaultValues(ThemeConfig themeConfig) {
+        ConfigNode defaults = ThemeConfig.getDefaults(files, config, logger);
+        for (ThemeVal value : ThemeVal.values()) {
+            if (!Objects.equals(defaults.getString(value.getThemePath()), themeConfig.getString(value.getThemePath()))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     public void disable() {
         // No need to save theme on disable
-    }
-
-    private String getColor(ThemeVal variable) {
-        String path = variable.getThemePath();
-        try {
-            return themeConfig.getString(path);
-        } catch (Exception | NoSuchFieldError e) {
-            logger.error("Something went wrong with getting variable " + variable.name() + " for: " + path);
-        }
-        return variable.getDefaultValue();
-    }
-
-    public String replaceThemeColors(String resourceString) {
-        return replaceVariables(resourceString,
-                RED, PINK, PURPLE,
-                DEEP_PURPLE, INDIGO, BLUE, LIGHT_BLUE, CYAN, TEAL, GREEN, LIGHT_GREEN, LIME,
-                YELLOW, AMBER, ORANGE, DEEP_ORANGE, BROWN, GREY, BLUE_GREY, BLACK, WHITE,
-                GRAPH_PUNCHCARD, GRAPH_PLAYERS_ONLINE, GRAPH_TPS_HIGH, GRAPH_TPS_MED, GRAPH_TPS_LOW,
-                GRAPH_CPU, GRAPH_RAM, GRAPH_CHUNKS, GRAPH_ENTITIES, GRAPH_WORLD_PIE, FONT_STYLESHEET, FONT_FAMILY
-        );
-    }
-
-    private String replaceVariables(String resourceString, ThemeVal... themeVariables) {
-        List<String> replace = new ArrayList<>();
-        List<String> with = new ArrayList<>();
-        for (ThemeVal variable : themeVariables) {
-            String value = getColor(variable);
-            String defaultValue = variable.getDefaultValue();
-            if (defaultValue.equals(value)) {
-                continue;
-            }
-            replace.add(defaultValue);
-            with.add(value);
-        }
-        replace.add("${defaultTheme}");
-        with.add(getValue(ThemeVal.THEME_DEFAULT));
-
-        return StringUtils.replaceEach(resourceString, replace.toArray(new String[0]), with.toArray(new String[0]));
-    }
-
-    private String getThemeValue(ThemeVal color) {
-        return themeConfig.getString(color.getThemePath());
     }
 }

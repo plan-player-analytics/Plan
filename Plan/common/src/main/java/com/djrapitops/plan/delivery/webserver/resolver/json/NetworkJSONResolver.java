@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
 import com.djrapitops.plan.delivery.rendering.json.network.NetworkOverviewJSONCreator;
 import com.djrapitops.plan.delivery.rendering.json.network.NetworkPlayerBaseOverviewJSONCreator;
@@ -49,19 +50,19 @@ public class NetworkJSONResolver {
     ) {
         this.asyncJSONResolverService = asyncJSONResolverService;
         resolver = CompositeResolver.builder()
-                .add("overview", forJSON(DataID.SERVER_OVERVIEW, networkOverviewJSONCreator))
-                .add("playerbaseOverview", forJSON(DataID.PLAYERBASE_OVERVIEW, networkPlayerBaseOverviewJSONCreator))
-                .add("sessionsOverview", forJSON(DataID.SESSIONS_OVERVIEW, networkSessionsOverviewJSONCreator))
-                .add("servers", forJSON(DataID.SERVERS, jsonFactory::serversAsJSONMaps))
-                .add("pingTable", forJSON(DataID.PING_TABLE, jsonFactory::pingPerGeolocation))
-                .add("listServers", forJSON(DataID.LIST_SERVERS, jsonFactory::listServers))
-                .add("serverOptions", forJSON(DataID.LIST_SERVERS, jsonFactory::listServers))
+                .add("overview", forJSON(DataID.SERVER_OVERVIEW, networkOverviewJSONCreator, WebPermission.PAGE_NETWORK_OVERVIEW_NUMBERS))
+                .add("playerbaseOverview", forJSON(DataID.PLAYERBASE_OVERVIEW, networkPlayerBaseOverviewJSONCreator, WebPermission.PAGE_NETWORK_PLAYERBASE_OVERVIEW))
+                .add("sessionsOverview", forJSON(DataID.SESSIONS_OVERVIEW, networkSessionsOverviewJSONCreator, WebPermission.PAGE_NETWORK_SESSIONS_OVERVIEW))
+                .add("servers", forJSON(DataID.SERVERS, jsonFactory::serversAsJSONMaps, WebPermission.PAGE_NETWORK_SERVER_LIST))
+                .add("pingTable", forJSON(DataID.PING_TABLE, jsonFactory::pingPerGeolocation, WebPermission.PAGE_NETWORK_GEOLOCATIONS_PING_PER_COUNTRY))
+                .add("listServers", forJSON(DataID.LIST_SERVERS, jsonFactory::listServers, WebPermission.PAGE_NETWORK_PERFORMANCE))
+                .add("serverOptions", forJSON(DataID.LIST_SERVERS, jsonFactory::listServers, WebPermission.PAGE_NETWORK_PERFORMANCE))
                 .add("performanceOverview", networkPerformanceJSONResolver)
                 .build();
     }
 
-    private <T> NetworkTabJSONResolver<T> forJSON(DataID dataID, NetworkTabJSONCreator<T> tabJSONCreator) {
-        return new NetworkTabJSONResolver<>(dataID, tabJSONCreator, asyncJSONResolverService);
+    private <T> NetworkTabJSONResolver<T> forJSON(DataID dataID, NetworkTabJSONCreator<T> tabJSONCreator, WebPermission permission) {
+        return new NetworkTabJSONResolver<>(dataID, permission, tabJSONCreator, asyncJSONResolverService);
     }
 
     public CompositeResolver getResolver() {

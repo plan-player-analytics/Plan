@@ -5,6 +5,7 @@
 # https://github.com/plan-player-analytics/Plan/wiki/Bukkit-Configuration
 # -----------------------------------------------------
 Server:
+  ServerName: Plan
   IP: 0.0.0.0
 Network:
   Name: Plan
@@ -13,13 +14,13 @@ Plugin:
   Logging:
     Locale: default
     Create_new_locale_file_on_next_enable: false
+    Log_untranslated_locale_keys: false
     Dev: false
     Delete_logs_after_days: 7
   Update_notifications:
     # Display update notification on the website
     Check_for_updates: true
     Notify_about_DEV_releases: false
-  Frontend_BETA: false
 # -----------------------------------------------------
 # Supported databases: MySQL
 # -----------------------------------------------------
@@ -31,8 +32,11 @@ Database:
     Password: minecraft
     Database: Plan
     # Launch options to append after mysql driver address
-    Launch_options: "?rewriteBatchedStatements=true&useSSL=false&serverTimezone=UTC"
+    Launch_options: "?rewriteBatchedStatements=true&serverTimezone=UTC"
     Max_connections: 8
+    Max_Lifetime:
+      Time: 25
+      Unit: MINUTES
 # -----------------------------------------------------
 # More information about SSL Certificate Settings:
 # https://github.com/plan-player-analytics/Plan/wiki/SSL-Certificate-%28HTTPS%29-Set-Up
@@ -43,9 +47,49 @@ Webserver:
     Enabled: false
     # %port% is replaced automatically with Webserver.Port
     Address: your.domain.here:%port%
-  # InternalIP usually does not need to be changed, only change it if you know what you're doing!
+    # Internal IP usually does not need to be changed, only change it if you know what you're doing!
   # 0.0.0.0 allocates Internal (local) IP automatically for the WebServer.
   Internal_IP: 0.0.0.0
+    # Use absolute path ("C:\Example\Path", "/var/example/path") or relative ("public_html" -> {server}/plugins/Plan/public_html)
+    # NOTE: All files in this directory can be read by anyone who can access the webserver.
+  # This can be used to host certbot http challenge file, or for customizing Plan React-bundle
+  Public_html_directory: "public_html"
+  Security:
+    SSL_certificate:
+      KeyStore_path: Cert.jks
+      Key_pass: default
+      Store_pass: default
+      Alias: alias
+    # HTTPS is required for Login.
+    Disable_authentication: false
+    # Disable /auth/register endpoint
+    Disable_registration: false
+    # Cross-Origin Resource Sharing (Requests from non-Plan web pages)
+    # https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+    CORS:
+      Allow_origin: "*"
+    # Allows using the whitelist & brute-force shield with a reverse-proxy.
+    # ! Make sure non-proxy access is not possible, it would allow IP spoofing !
+    Use_X-Forwarded-For_Header: false
+    Access_log:
+      Print_to_console: false
+      Remove_logs_after_days: 30
+    IP_whitelist:
+      Enabled: false
+        # Supported formats:
+        # IPv4 exact: "192.168.0.1", wildcard: "192.168.*.*", cidr: "192.168.0.0/16"
+        # IPv6 exact: "0:0:0:0:0:0:0:1", compressed: "1::1", cidr: "1234:db8:1234:1a:20::/64"
+        # More: https://seancfoley.github.io/IPAddress/ipaddress.html#supported-ip-address-parsing-formats
+      # Dynamic DNS hostname: "dns:intranet.example.com", updated once per minute
+      Whitelist:
+        - "192.168.0.0"
+        - "0:0:0:0:0:0:0:1"
+    # Does not affect existing cookies
+    Cookies_expire_after:
+      Time: 2
+      Unit: HOURS
+  Disable_Webserver: false
+  External_Webserver_address: "https://www.example.address"
   Cache:
     Reduced_refresh_barrier:
       Time: 15
@@ -59,45 +103,25 @@ Webserver:
     Invalidate_memory_cache_after:
       Time: 5
       Unit: MINUTES
-  Security:
-    SSL_certificate:
-      KeyStore_path: Cert.jks
-      Key_pass: default
-      Store_pass: default
-      Alias: alias
-    # HTTPS is required for Login.
-    Disable_authentication: false
-    # Cross-Origin Resource Sharing (Requests from non-Plan web pages)
-    # https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
-    CORS:
-      Allow_origin: "*"
-    # Allows using the whitelist & brute-force shield with a reverse-proxy.
-    # ! Make sure non-proxy access is not possible, it would allow IP spoofing !
-    Use_X-Forwarded-For_Header: false
-    Access_log:
-      Print_to_console: false
-      Remove_logs_after_days: 30
-    IP_whitelist:
-      Enabled: false
-      Whitelist:
-        - "192.168.0.0"
-        - "0:0:0:0:0:0:0:1"
-    # Does not affect existing cookies
-    Cookies_expire_after:
-      Time: 2
-      Unit: HOURS
-  Disable_Webserver: false
-  External_Webserver_address: "https://www.example.address"
 # -----------------------------------------------------
 Data_gathering:
   Geolocations: true
   # Please accept the EULA to download GeoLite2 IP-Country Database
   # https://www.maxmind.com/en/geolite2/eula
   Accept_GeoLite2_EULA: false
+    # This can be changed to your own MaxMind URL if you have license https://dev.maxmind.com/geoip/updating-databases?lang=en#directly-downloading-databases
+  # e.g. https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&license_key=YOUR_KEY&suffix=tar.gz
+  Geolocation_Download_URL: "https://geodb.playeranalytics.net/GeoLite2-Country.mmdb"
   Ping: true
   Disk_space: true
-  # Does not affect already gathered data
-  Preserve_join_address_case: false
+  Join_addresses:
+    Enabled: true
+    # Does not affect already gathered data
+    Preserve_case: false
+    Preserve_invalid: false
+    # Replaces these join addresses with unknown
+    Filter_out_from_data:
+      - "play.example.com"
 # -----------------------------------------------------
 # Supported time units: MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS
 # -----------------------------------------------------
@@ -152,6 +176,7 @@ Display_options:
   # More information about Themes:
   # https://github.com/plan-player-analytics/Plan/wiki/Themes
   Theme: default
+  Night_mode: false
   # Can use ${playerName} or ${playerUUID} or ${playerUUIDNoDash}
   Player_head_image_url: "https://crafatar.com/avatars/${playerUUID}?size=120&default=MHF_Steve&overlay"
   Sessions:
@@ -175,6 +200,7 @@ Display_options:
     Main: '&2'
     Secondary: '&7'
     Highlight: '&f'
+  WorldPie: '"#0099C6", "#66AA00", "#316395", "#994499", "#22AA99", "#AAAA11", "#6633CC", "#E67300", "#329262", "#5574A6"'
 # -----------------------------------------------------
 Formatting:
   Decimal_points: '#.##'
@@ -246,5 +272,3 @@ Plugins:
     Secret: "-"
 Customized_files:
   Path: "web"
-  # Web dev mode enables all customized files and disables webserver resource cache for instant changes on browser refresh.
-  Enable_web_dev_mode: false

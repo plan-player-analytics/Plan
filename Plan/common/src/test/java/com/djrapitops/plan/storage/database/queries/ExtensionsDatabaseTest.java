@@ -16,7 +16,8 @@
  */
 package com.djrapitops.plan.storage.database.queries;
 
-import com.djrapitops.plan.delivery.rendering.html.structure.HtmlTable;
+import com.djrapitops.plan.component.Component;
+import com.djrapitops.plan.component.ComponentService;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.ExtensionSvc;
@@ -29,8 +30,6 @@ import com.djrapitops.plan.extension.implementation.results.*;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerTableDataQuery;
-import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalPlayerResultsTransaction;
-import com.djrapitops.plan.extension.implementation.storage.transactions.results.RemoveUnsatisfiedConditionalServerResultsTransaction;
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
@@ -40,6 +39,8 @@ import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythi
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -64,6 +65,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
     @BeforeEach
     default void unregisterExtensions() {
+        componentService().register();
         ExtensionSvc extensionService = extensionService();
         extensionService.register();
         extensionService.unregister(new PlayerExtension());
@@ -112,6 +114,18 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         OptionalAssert.equals("0.5", tabData.getPercentage("percentageVal").map(data -> data.getFormattedValue(Object::toString)));
         OptionalAssert.equals("Something", tabData.getString("stringVal").map(ExtensionStringData::getFormattedValue));
         OptionalAssert.equals("Group", tabData.getString("groupVal").map(ExtensionStringData::getFormattedValue));
+
+        ObjectMapper objectMapper = new ObjectMapper();
+        ObjectNode objectNode = objectMapper.createObjectNode();
+        objectNode.put("color", "green");
+        objectNode.put("text", "Test");
+        OptionalAssert.equals(objectNode, tabData.getComponent("componentVal").map(ExtensionComponentData::getFormattedValue).map(str -> {
+            try {
+                return objectMapper.readTree(str);
+            } catch (Throwable t) {
+                return fail(t);
+            }
+        }));
     }
 
     @Test
@@ -174,8 +188,6 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         assertEquals(1, tabs.size()); // No tab defined, should contain 1 tab
         ExtensionTabData tabData = tabs.get(0);
 
-        System.out.println(tabData.getValueOrder());
-
         OptionalAssert.equals("0.0", tabData.getPercentage("boolVal_aggregate").map(data -> data.getFormattedValue(Objects::toString)));
         OptionalAssert.equals("0.5", tabData.getPercentage("percentageVal_avg").map(data -> data.getFormattedValue(Objects::toString)));
         OptionalAssert.equals("0.5", tabData.getDouble("doubleVal_avg").map(data -> data.getFormattedValue(Objects::toString)));
@@ -185,13 +197,18 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
         List<ExtensionTableData> tableData = tabData.getTableData();
         assertEquals(1, tableData.size());
-        HtmlTable table = tableData.get(0).getHtmlTable();
-        String result = table.toHtml();
-        assertTrue(result.contains("<tbody><tr><td>Group</td><td>1</td></tr></tbody>"), result);
+        Table expected = Table.builder()
+                .columnOne("a group", Icon.called("circle").build())
+                .columnTwo("Players", Icon.called("user").build())
+                .addRow("Group", 1).build();
+        Table result = tableData.get(0).getTable();
+        assertEquals(expected, result);
     }
 
     @Test
     default void unsatisfiedPlayerConditionalResultsAreCleaned() {
+        db().executeTransaction(new PlayerRegisterTransaction(playerUUID, System::currentTimeMillis, TestConstants.PLAYER_ONE_NAME));
+
         ExtensionSvc extensionService = extensionService();
 
         extensionService.register(new ConditionalExtension());
@@ -206,8 +223,6 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         ConditionalExtension.condition = false;
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
-        db().executeTransaction(new RemoveUnsatisfiedConditionalPlayerResultsTransaction());
-
         // Check that the wanted data exists
         checkThatPlayerDataExists(ConditionalExtension.condition);
 
@@ -215,10 +230,60 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         ConditionalExtension.condition = false;
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
-        db().executeTransaction(new RemoveUnsatisfiedConditionalPlayerResultsTransaction());
-
         // Check that the wanted data exists
         checkThatPlayerDataExists(ConditionalExtension.condition);
+    }
+
+    @Test
+    default void unsatisfiedPlayerConditionalResultsAreCleanedCompletely() {
+        db().executeTransaction(new PlayerRegisterTransaction(playerUUID, System::currentTimeMillis, TestConstants.PLAYER_ONE_NAME));
+
+        ExtensionSvc extensionService = extensionService();
+
+        extensionService.register(new RemovingConditionalExtension());
+
+        RemovingConditionalExtension.condition = true;
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
+
+        List<ExtensionData> ofServer = db().query(new ExtensionPlayerDataQuery(playerUUID)).get(serverUUID());
+        assertTrue(ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty(), "There was no data left");
+        ExtensionTabData tabData = ofServer.get(0).getTabs().get(0);
+        assertEquals(RemovingConditionalExtension.condition, tabData.getString("conditionalValue").isPresent());
+
+        // Reverse condition
+        RemovingConditionalExtension.condition = false;
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
+
+        ofServer = db().query(new ExtensionPlayerDataQuery(playerUUID)).get(serverUUID());
+        assertTrue(ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty(), "There was no data left");
+        tabData = ofServer.get(0).getTabs().get(0);
+        assertEquals(RemovingConditionalExtension.condition, tabData.getString("conditionalValue").isPresent());
+    }
+
+    @Test
+    default void unsatisfiedServerConditionalResultsAreCleanedCompletely() {
+        db().executeTransaction(new PlayerRegisterTransaction(playerUUID, System::currentTimeMillis, TestConstants.PLAYER_ONE_NAME));
+
+        ExtensionSvc extensionService = extensionService();
+
+        extensionService.register(new RemovingConditionalExtension());
+
+        RemovingConditionalExtension.condition = true;
+        extensionService.updateServerValues(CallEvents.MANUAL);
+
+        List<ExtensionData> ofServer = db().query(new ExtensionServerDataQuery(serverUUID()));
+        assertTrue(ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty(), "There was no data left");
+        ExtensionTabData tabData = ofServer.get(0).getTabs().get(0);
+        assertEquals(RemovingConditionalExtension.condition, tabData.getString("conditionalValue").isPresent());
+
+        // Reverse condition
+        RemovingConditionalExtension.condition = false;
+        extensionService.updateServerValues(CallEvents.MANUAL);
+
+        ofServer = db().query(new ExtensionServerDataQuery(serverUUID()));
+        assertTrue(ofServer != null && !ofServer.isEmpty() && !ofServer.get(0).getTabs().isEmpty(), "There was no data left");
+        tabData = ofServer.get(0).getTabs().get(0);
+        assertEquals(RemovingConditionalExtension.condition, tabData.getString("conditionalValue").isPresent());
     }
 
     default void checkThatPlayerDataExists(boolean condition) {
@@ -259,16 +324,12 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         ConditionalExtension.condition = false;
         extensionService.updateServerValues(CallEvents.MANUAL);
 
-        db().executeTransaction(new RemoveUnsatisfiedConditionalServerResultsTransaction());
-
         // Check that the wanted data exists
         checkThatServerDataExists(ConditionalExtension.condition);
 
         // Reverse condition
         ConditionalExtension.condition = false;
         extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
-
-        db().executeTransaction(new RemoveUnsatisfiedConditionalServerResultsTransaction());
 
         // Check that the wanted data exists
         checkThatServerDataExists(ConditionalExtension.condition);
@@ -315,16 +376,15 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         assertEquals(1, tableData.size());
         ExtensionTableData table = tableData.get(0);
 
-        HtmlTable expected = HtmlTable.fromExtensionTable(
-                Table.builder()
-                        .columnOne("first", Icon.called("gavel").build())
-                        .columnTwo("second", Icon.called("what").build())
-                        .columnThree("third", Icon.called("question").build())
-                        .addRow("value", 3, 0.5, 400L)
-                        .build(),
-                com.djrapitops.plan.delivery.rendering.html.icon.Color.AMBER);
+        Table expected = Table.builder()
+                .columnOne("first", Icon.called("gavel").build())
+                .columnTwo("second", Icon.called("what").build())
+                .columnThree("third", Icon.called("question").build())
+                .columnFive("five", Icon.called("").build())
+                .addRow("value", 3, 0.5)
+                .build();
 
-        assertEquals(expected.toHtml(), table.getHtmlTable().toHtml());
+        assertEquals(expected, table.getTable());
     }
 
     @Test
@@ -349,16 +409,14 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         assertEquals(1, tableData.size());
         ExtensionTableData table = tableData.get(0);
 
-        HtmlTable expected = HtmlTable.fromExtensionTable(
-                Table.builder()
-                        .columnOne("first", Icon.called("gavel").build())
-                        .columnTwo("second", Icon.called("what").build())
-                        .columnThree("third", Icon.called("question").build())
-                        .addRow("value", 3, 0.5, 400L)
-                        .build(),
-                com.djrapitops.plan.delivery.rendering.html.icon.Color.AMBER);
+        Table expected = Table.builder()
+                .columnOne("first", Icon.called("gavel").build())
+                .columnTwo("second", Icon.called("what").build())
+                .columnThree("third", Icon.called("question").build())
+                .addRow("value", 3, 0.5)
+                .build();
 
-        assertEquals(expected.toHtml(), table.getHtmlTable().toHtml());
+        assertEquals(expected, table.getTable());
     }
 
     @Test
@@ -431,6 +489,34 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         }
     }
 
+    @PluginInfo(name = "ConditionalExtension")
+    class RemovingConditionalExtension implements DataExtension {
+
+        static boolean condition = true;
+
+        @BooleanProvider(text = "a boolean", conditionName = "condition")
+        public boolean isCondition(UUID playerUUID) {
+            return condition;
+        }
+
+        @StringProvider(text = "Conditional Value")
+        @Conditional("condition")
+        public String conditionalValue(UUID playerUUID) {
+            return "Conditional";
+        }
+
+        @BooleanProvider(text = "a boolean", conditionName = "condition")
+        public boolean isCondition() {
+            return condition;
+        }
+
+        @StringProvider(text = "Conditional Value")
+        @Conditional("condition")
+        public String conditionalValue() {
+            return "Conditional";
+        }
+    }
+
     @PluginInfo(name = "ServerExtension")
     class ServerExtension implements DataExtension {
         @NumberProvider(text = "a number")
@@ -489,6 +575,11 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         @GroupProvider(text = "a group")
         public String[] groupVal(UUID playerUUID) {
             return new String[]{"Group"};
+        }
+
+        @ComponentProvider(text = "colored text")
+        public Component componentVal(UUID playerUUID) {
+            return ComponentService.getInstance().fromLegacy("&aTest", '&');
         }
     }
 

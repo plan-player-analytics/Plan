@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.storage.file;
 
-import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.IOUtils;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
@@ -26,6 +26,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.function.LongSupplier;
 
 /**
  * {@link Resource} implementation for something that is read via InputStream.
@@ -36,14 +37,21 @@ public class JarResource implements Resource {
 
     private final String resourceName;
     private final StreamSupplier streamSupplier;
+    private final LongSupplier lastModifiedSupplier;
 
-    public JarResource(String resourceName, StreamSupplier streamSupplier) {
+    public JarResource(String resourceName, StreamSupplier streamSupplier, LongSupplier lastModifiedSupplier) {
         this.resourceName = resourceName;
         this.streamSupplier = streamSupplier;
+        this.lastModifiedSupplier = lastModifiedSupplier;
     }
 
-    public JarResource(String resourceName, StreamFunction streamFunction) {
-        this(resourceName, () -> streamFunction.get(resourceName));
+    public JarResource(String resourceName, StreamFunction streamFunction, LongSupplier lastModifiedSupplier) {
+        this(resourceName, () -> streamFunction.get(resourceName), lastModifiedSupplier);
+    }
+
+    @Override
+    public long getLastModifiedDate() {
+        return lastModifiedSupplier.getAsLong();
     }
 
     @Override

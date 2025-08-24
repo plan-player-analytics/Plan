@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.modules;
 
-import com.djrapitops.plan.gathering.ServerSensor;
 import com.djrapitops.plan.settings.ConfigSystem;
 import com.djrapitops.plan.settings.ProxyConfigSystem;
 import com.djrapitops.plan.storage.database.DBSystem;
@@ -37,8 +36,5 @@ public interface ProxySuperClassBindingModule {
 
     @Binds
     ConfigSystem bindConfigSystem(ProxyConfigSystem configSystem);
-
-    @Binds
-    ServerSensor<?> bindServerSensor(ServerSensor<Object> sensor);
 
 }

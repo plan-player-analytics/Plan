@@ -27,7 +27,7 @@ import java.util.UUID;
  * @author AuroraLS3
  * @see TableContainer
  * @see InspectContainer
- * @deprecated PluginData API has been deprecated - see https://github.com/plan-player-analytics/Plan/wiki/APIv5---DataExtension-API for new API.
+ * @deprecated PluginData API has been deprecated - see <a href="https://github.com/plan-player-analytics/Plan/wiki/APIv5---DataExtension-API">wiki</a> for new API.
  */
 @Deprecated(since = "5.0")
 public final class AnalysisContainer extends InspectContainer {

@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 
 /**
  * UserImportRefiner attempts to find any crucial information that is missing.
- *
+ * <p>
  * - Finds UUIDs if only name is present.
  * - Finds Names if only UUID is present.
  * - Removes any importers that do not have any identifiers.

@@ -64,6 +64,9 @@ public interface CapabilityService {
         return Capability.getByName(capabilityName).isPresent();
     }
 
+    /**
+     * Singleton holder for listeners.
+     */
     class ListHolder {
         static final AtomicReference<List<Consumer<Boolean>>> enableListeners = new AtomicReference<>(
                 new CopyOnWriteArrayList<>()

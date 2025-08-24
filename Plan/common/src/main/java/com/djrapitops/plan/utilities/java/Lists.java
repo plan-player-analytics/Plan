@@ -81,7 +81,7 @@ public class Lists {
      * @param mapper   Function to change object of type A to type B
      * @param <A>      Type of the old list objects
      * @param <B>      Type of the new list objects
-     * @return List with elements in original that keep returned true for.
+     * @return Set with elements in original that keep returned true for.
      */
     public static <A, B> Set<B> mapUnique(Collection<A> original, Function<A, B> mapper) {
         Set<B> mapped = new HashSet<>();
@@ -106,6 +106,10 @@ public class Lists {
         public Lists.Builder<V> addAll(Collection<V> values) {
             list.addAll(values);
             return this;
+        }
+
+        public Lists.Builder<V> addAll(V[] values) {
+            return addAll(Arrays.asList(values));
         }
 
         public Lists.Builder<V> apply(UnaryOperator<Lists.Builder<V>> operator) {

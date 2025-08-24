@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.filter.Filter;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -51,7 +52,7 @@ public class AllPlayersFilter implements Filter {
     }
 
     @Override
-    public Set<Integer> getMatchingUserIds(InputFilterDto query) {
+    public Set<Integer> getMatchingUserIds(@Untrusted InputFilterDto query) {
         return dbSystem.getDatabase().query(UserIdentifierQueries.fetchAllUserIds());
     }
 }

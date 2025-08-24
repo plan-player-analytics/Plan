@@ -43,7 +43,7 @@ import java.util.stream.Collectors;
  * PlanAPI extension for all implementations.
  *
  * @author AuroraLS3
- * @deprecated Plan API v4 has been deprecated, use the APIv5 instead (https://github.com/plan-player-analytics/Plan/wiki/APIv5).
+ * @deprecated Plan API v4 has been deprecated, use the APIv5 instead (<a href="https://github.com/plan-player-analytics/Plan/wiki/APIv5">wiki</a>).
  */
 @Singleton
 @Deprecated(forRemoval = true, since = "5.0")

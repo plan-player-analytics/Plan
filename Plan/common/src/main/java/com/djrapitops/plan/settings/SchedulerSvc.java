@@ -24,6 +24,8 @@ import javax.inject.Singleton;
 @Singleton
 public class SchedulerSvc implements SchedulerService {
 
+    private static final boolean SINGLE_THREADED = true;
+
     private final Processing processing;
 
     @Inject
@@ -33,7 +35,7 @@ public class SchedulerSvc implements SchedulerService {
 
     @Override
     public void runAsync(Runnable runnable) {
-        processing.submitNonCritical(runnable);
+        processing.submitNonCritical(runnable, SINGLE_THREADED);
     }
 
     public void register() {

@@ -16,11 +16,14 @@
  */
 package com.djrapitops.plan.delivery.domain.datatransfer;
 
+import com.djrapitops.plan.utilities.dev.Untrusted;
+
 import java.util.List;
 import java.util.Objects;
 
 public class InputQueryDto {
 
+    @Untrusted
     public final List<InputFilterDto> filters;
     private final ViewDto view;
 
@@ -33,6 +36,7 @@ public class InputQueryDto {
         return view;
     }
 
+    @Untrusted
     public List<InputFilterDto> getFilters() {
         return filters;
     }

@@ -22,6 +22,7 @@ import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.ResponseFactory;
 import com.djrapitops.plan.delivery.webserver.http.WebServer;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import dagger.Lazy;
 
 import javax.inject.Inject;
@@ -44,13 +45,13 @@ public class LoginPageResolver implements NoAuthResolver {
     }
 
     @Override
-    public Optional<Response> resolve(Request request) {
+    public Optional<Response> resolve(@Untrusted Request request) {
         Optional<WebUser> user = request.getUser();
         if (user.isPresent() || !webServer.get().isAuthRequired()) {
-            Optional<String> from = request.getQuery().get("from")
+            @Untrusted Optional<String> from = request.getQuery().get("from")
                     .filter(redirectBackTo -> !redirectBackTo.startsWith("http"));
             return Optional.of(responseFactory.redirectResponse(from.orElse("/")));
         }
-        return Optional.of(responseFactory.loginPageResponse());
+        return Optional.of(responseFactory.reactPageResponse(request));
     }
 }

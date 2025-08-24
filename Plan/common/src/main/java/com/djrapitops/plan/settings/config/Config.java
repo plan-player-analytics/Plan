@@ -31,9 +31,6 @@ import java.util.Objects;
 
 /**
  * Configuration utility for storing settings in a .yml file.
- * <p>
- * Based on
- * https://github.com/AuroraLS3/Abstract-Plugin-Framework/blob/72e221d3571ef200727713d10d3684c51e9f469d/AbstractPluginFramework/api/src/main/java/com/djrapitops/plugin/config/Config.java
  *
  * @author AuroraLS3
  */
@@ -69,6 +66,10 @@ public class Config extends ConfigNode {
     Config() {
         super("", null, null);
         configFilePath = null;
+    }
+
+    public boolean fileExists() {
+        return Files.exists(configFilePath);
     }
 
     public void read() throws IOException {

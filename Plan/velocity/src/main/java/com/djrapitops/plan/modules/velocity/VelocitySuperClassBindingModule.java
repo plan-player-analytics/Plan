@@ -40,5 +40,5 @@ public interface VelocitySuperClassBindingModule {
     ListenerSystem bindListenerSystem(VelocityListenerSystem listenerSystem);
 
     @Binds
-    ServerSensor<Object> bindServerSensor(VelocitySensor sensor);
+    ServerSensor<?> bindServerSensor(VelocitySensor sensor);
 }

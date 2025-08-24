@@ -44,7 +44,7 @@ public abstract class ServerInfo implements SubSystem {
     }
 
     public ServerUUID getServerUUID() {
-        return getServer().getUuid();
+        return server.getUuid();
     }
 
     public ServerIdentifier getServerIdentifier() {

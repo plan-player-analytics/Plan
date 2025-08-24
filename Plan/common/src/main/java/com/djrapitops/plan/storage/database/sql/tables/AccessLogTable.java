@@ -20,6 +20,11 @@ import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 
+/**
+ * Represents plan_access_log table.
+ *
+ * @see com.djrapitops.plan.storage.database.transactions.patches.RemoveUsernameFromAccessLogPatch
+ */
 public class AccessLogTable {
 
     public static final String TABLE_NAME = "plan_access_log";

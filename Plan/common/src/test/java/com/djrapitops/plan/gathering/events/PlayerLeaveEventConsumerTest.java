@@ -31,7 +31,6 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.storage.database.Database;
-import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.objects.JoinAddressQueries;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserInfoQueries;
@@ -42,12 +41,13 @@ import com.djrapitops.plan.storage.database.transactions.events.StoreJoinAddress
 import com.djrapitops.plan.storage.database.transactions.events.StoreServerPlayerTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
 import extension.FullSystemExtension;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.testcontainers.shaded.org.awaitility.Awaitility;
+import utilities.DBPreparer;
 import utilities.TestConstants;
 import utilities.dagger.PlanPluginComponent;
 import utilities.mocks.objects.TestPlayerData;
@@ -98,12 +98,6 @@ class PlayerLeaveEventConsumerTest {
         database.executeTransaction(new StoreServerInformationTransaction(new Server(serverUUID, TestConstants.SERVER_NAME, "", TestConstants.VERSION)));
     }
 
-    private void waitUntilDatabaseIsDone(Database database) {
-        Awaitility.await()
-                .atMost(2, TimeUnit.SECONDS)
-                .until(() -> ((SQLDB) database).getTransactionQueueSize() < 1);
-    }
-
     PlayerLeave createPlayerLeave(PlatformPlayerData player) {
         return PlayerLeave.builder()
                 .time(System.currentTimeMillis())
@@ -126,7 +120,7 @@ class PlayerLeaveEventConsumerTest {
         PlayerLeave leave = createPlayerLeave(createTestPlayer());
 
         underTest.onLeaveGameServer(leave);
-        waitUntilDatabaseIsDone(database);
+        DBPreparer.awaitUntilTransactionsComplete(database);
 
         DataMap extraData = new DataMap();
         GMTimes gmTimes = new GMTimes(Map.of(
@@ -163,7 +157,7 @@ class PlayerLeaveEventConsumerTest {
                 .setBanned(true));
 
         underTest.onLeaveGameServer(leave);
-        waitUntilDatabaseIsDone(database);
+        DBPreparer.awaitUntilTransactionsComplete(database);
 
         Set<Integer> result = database.query(UserInfoQueries.userIdsOfBanned());
         assertEquals(1, result.size());
@@ -181,6 +175,7 @@ class PlayerLeaveEventConsumerTest {
         PlayerLeave leave = createPlayerLeave(createTestPlayer());
 
         underTest.onLeaveGameServer(leave);
+        DBPreparer.awaitUntilTransactionsComplete(database);
 
         File playerExportDir = config.getPageExportPath().resolve("player/" + TestConstants.PLAYER_ONE_UUID).toFile();
         Awaitility.await()
@@ -201,6 +196,7 @@ class PlayerLeaveEventConsumerTest {
         PlayerLeave leave = createPlayerLeave(createTestPlayer());
 
         underTest.onLeaveProxyServer(leave);
+        DBPreparer.awaitUntilTransactionsComplete(database);
 
         File playerExportDir = config.getPageExportPath().resolve("player/" + TestConstants.PLAYER_ONE_UUID).toFile();
         Awaitility.await()
@@ -259,18 +255,10 @@ class PlayerLeaveEventConsumerTest {
                 .setJoinAddress("PLAY.UPPERCASE.COM"));
 
         underTest.onLeaveGameServer(leave);
-        waitUntilDatabaseIsDone(database);
+        DBPreparer.awaitUntilTransactionsComplete(database);
 
         List<String> expected = List.of("PLAY.UPPERCASE.COM", "play.uppercase.com", JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
         List<String> result = database.query(JoinAddressQueries.allJoinAddresses());
         assertEquals(expected, result);
-
-        Map<String, Integer> expectedMap = Map.of("PLAY.UPPERCASE.COM", 1);
-        Map<String, Integer> resultMap = database.query(JoinAddressQueries.latestJoinAddresses(serverUUID));
-        assertEquals(expectedMap, resultMap);
-
-        expectedMap = Map.of("PLAY.UPPERCASE.COM", 1);
-        resultMap = database.query(JoinAddressQueries.latestJoinAddresses());
-        assertEquals(expectedMap, resultMap);
     }
 }

@@ -107,14 +107,22 @@ public class SessionJoinAddressPatch extends Patch {
     }
 
     private void populateLatestSessions() {
-        String sql = SELECT +
+        String selectLatestSessionIds = SELECT +
                 "MAX(s." + SessionsTable.ID + ") as session_id," +
-                "j." + JoinAddressTable.ID + " as join_address_id" +
+                "u." + UserInfoTable.USER_ID + ',' +
+                "u." + UserInfoTable.SERVER_ID + ',' +
+                "u." + UserInfoTable.JOIN_ADDRESS +
                 FROM + UserInfoTable.TABLE_NAME + " u" +
                 INNER_JOIN + SessionsTable.TABLE_NAME + " s on s." + SessionsTable.USER_ID + "=u." + UserInfoTable.USER_ID +
                 AND + "s." + SessionsTable.SERVER_ID + "=u." + UserInfoTable.SERVER_ID +
-                INNER_JOIN + JoinAddressTable.TABLE_NAME + " j on j." + JoinAddressTable.JOIN_ADDRESS + "=u." + UserInfoTable.JOIN_ADDRESS +
-                GROUP_BY + "u." + UserInfoTable.USER_ID + ",u." + UserInfoTable.SERVER_ID;
+                GROUP_BY + "u." + UserInfoTable.USER_ID + ',' + "u." + UserInfoTable.SERVER_ID + ',' + "u." + UserInfoTable.JOIN_ADDRESS;
+
+        String sql = SELECT +
+                "session_id," +
+                "j." + JoinAddressTable.ID + " as join_address_id" +
+                FROM + '(' + selectLatestSessionIds + ") q1 " +
+                INNER_JOIN + JoinAddressTable.TABLE_NAME + " j on " +
+                "j." + JoinAddressTable.JOIN_ADDRESS + "=q1." + UserInfoTable.JOIN_ADDRESS;
 
         Map<Integer, Integer> joinAddressIdsBySessionId = query(new QueryAllStatement<>(sql) {
             @Override

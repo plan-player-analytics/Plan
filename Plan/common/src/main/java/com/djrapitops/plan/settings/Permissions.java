@@ -22,6 +22,7 @@ package com.djrapitops.plan.settings;
  * @author AuroraLS3
  */
 public enum Permissions {
+    USE_COMMAND("plan.command"),
     SERVER("plan.server"),
     SERVERS("plan.servers"),
     NETWORK("plan.network"),
@@ -34,6 +35,7 @@ public enum Permissions {
     REGISTER_OTHER("plan.register.other"),
     UNREGISTER_SELF("plan.unregister.self"),
     UNREGISTER_OTHER("plan.unregister.other"),
+    SET_GROUP("plan.setgroup.other"),
     LOGOUT_OTHER("plan.logout.other"),
     INFO("plan.info"),
     RELOAD("plan.reload"),

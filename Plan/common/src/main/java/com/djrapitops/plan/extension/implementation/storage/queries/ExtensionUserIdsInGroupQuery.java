@@ -18,10 +18,10 @@ package com.djrapitops.plan.extension.implementation.storage.queries;
 
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionGroupsTable;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
-import org.apache.commons.text.TextStringBuilder;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionGroupsTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionProviderTable;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -38,9 +38,10 @@ public class ExtensionUserIdsInGroupQuery extends QueryStatement<Set<Integer>> {
     private final String pluginName;
     private final String groupProvider;
     private final ServerUUID serverUUID;
+    @Untrusted
     private final List<String> inGroups;
 
-    public ExtensionUserIdsInGroupQuery(String pluginName, String groupProvider, ServerUUID serverUUID, List<String> inGroups) {
+    public ExtensionUserIdsInGroupQuery(String pluginName, String groupProvider, ServerUUID serverUUID, @Untrusted List<String> inGroups) {
         super(buildSQL(inGroups), 100);
         this.pluginName = pluginName;
         this.groupProvider = groupProvider;
@@ -48,21 +49,19 @@ public class ExtensionUserIdsInGroupQuery extends QueryStatement<Set<Integer>> {
         this.inGroups = inGroups;
     }
 
-    private static String buildSQL(Collection<String> inGroups) {
-        TextStringBuilder dynamicInClauseAllocation = new TextStringBuilder();
-        dynamicInClauseAllocation.appendWithSeparators(inGroups.stream().map(group -> "?").toArray(), ",");
+    private static String buildSQL(@Untrusted Collection<String> inGroups) {
         return SELECT + DISTINCT + "u." + UsersTable.ID +
-                FROM + ExtensionGroupsTable.TABLE_NAME + " groups" +
-                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.USER_UUID + "=groups." + ExtensionGroupsTable.USER_UUID +
+                FROM + ExtensionGroupsTable.TABLE_NAME + " g" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.USER_UUID + "=g." + ExtensionGroupsTable.USER_UUID +
                 WHERE + ExtensionGroupsTable.PROVIDER_ID + "=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID +
-                AND + ExtensionGroupsTable.GROUP_NAME + " IN (" + dynamicInClauseAllocation.build() + ")";
+                AND + ExtensionGroupsTable.GROUP_NAME + " IN (" + nParameters(inGroups.size()) + ")";
     }
 
     @Override
     public void prepare(PreparedStatement statement) throws SQLException {
         ExtensionProviderTable.set3PluginValuesToStatement(statement, 1, groupProvider, pluginName, serverUUID);
         int index = 4;
-        for (String group : inGroups) {
+        for (@Untrusted String group : inGroups) {
             setStringOrNull(statement, index, group == null || "null".equalsIgnoreCase(group) ? null : group);
             index++;
         }

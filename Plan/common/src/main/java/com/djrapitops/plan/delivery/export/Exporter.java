@@ -47,6 +47,7 @@ public class Exporter extends FileExporter {
     private final NetworkPageExporter networkPageExporter;
 
     private final Set<ServerUUID> failedServers;
+    private final ReactExporter reactExporter;
 
     @Inject
     public Exporter(
@@ -55,7 +56,8 @@ public class Exporter extends FileExporter {
             PlayerPageExporter playerPageExporter,
             PlayersPageExporter playersPageExporter,
             ServerPageExporter serverPageExporter,
-            NetworkPageExporter networkPageExporter
+            NetworkPageExporter networkPageExporter,
+            ReactExporter reactExporter
     ) {
         this.config = config;
         this.playerJSONExporter = playerJSONExporter;
@@ -63,6 +65,7 @@ public class Exporter extends FileExporter {
         this.playersPageExporter = playersPageExporter;
         this.serverPageExporter = serverPageExporter;
         this.networkPageExporter = networkPageExporter;
+        this.reactExporter = reactExporter;
 
         failedServers = new HashSet<>();
     }
@@ -123,7 +126,7 @@ public class Exporter extends FileExporter {
         if (config.isFalse(ExportSettings.PLAYER_PAGES)) return false;
 
         try {
-            playerPageExporter.export(toDirectory, playerUUID, playerName);
+            playerPageExporter.export(toDirectory, playerUUID);
             return true;
         } catch (IOException | NotFoundException e) {
             throw new ExportException("Failed to export player: " + playerName + ", " + e.toString(), e);
@@ -159,6 +162,22 @@ public class Exporter extends FileExporter {
             return true;
         } catch (IOException e) {
             throw new ExportException("Failed to export player: " + playerName + ", " + e.toString(), e);
+        }
+    }
+
+    public void exportReact() throws ExportException {
+        if (config.isFalse(ExportSettings.PLAYER_PAGES)
+                && config.isFalse(ExportSettings.SERVER_PAGE)
+                && config.isFalse(ExportSettings.PLAYERS_PAGE)) {
+            return;
+        }
+
+        Path toDirectory = config.getPageExportPath();
+
+        try {
+            reactExporter.exportReactFiles(toDirectory);
+        } catch (IOException e) {
+            throw new ExportException("Failed to export react: " + e.toString(), e);
         }
     }
 }

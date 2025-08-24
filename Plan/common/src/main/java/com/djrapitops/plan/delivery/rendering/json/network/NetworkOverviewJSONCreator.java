@@ -16,9 +16,7 @@
  */
 package com.djrapitops.plan.delivery.rendering.json.network;
 
-import com.djrapitops.plan.delivery.domain.DateHolder;
 import com.djrapitops.plan.delivery.domain.DateObj;
-import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.Trend;
 import com.djrapitops.plan.gathering.ServerSensor;
@@ -27,7 +25,6 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
-import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
@@ -51,20 +48,15 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class NetworkOverviewJSONCreator implements NetworkTabJSONCreator<Map<String, Object>> {
 
-    private final Formatter<Long> day;
     private final PlanConfig config;
-    private final Locale locale;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final ServerSensor<?> serverSensor;
-    private final Formatter<Long> timeAmount;
     private final ServerUptimeCalculator serverUptimeCalculator;
-    private final Formatter<DateHolder> year;
 
     @Inject
     public NetworkOverviewJSONCreator(
             PlanConfig config,
-            Locale locale,
             DBSystem dbSystem,
             ServerInfo serverInfo,
             ServerSensor<?> serverSensor,
@@ -72,15 +64,10 @@ public class NetworkOverviewJSONCreator implements NetworkTabJSONCreator<Map<Str
             Formatters formatters
     ) {
         this.config = config;
-        this.locale = locale;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.serverSensor = serverSensor;
         this.serverUptimeCalculator = serverUptimeCalculator;
-
-        year = formatters.year();
-        day = formatters.dayLong();
-        timeAmount = formatters.timeAmount();
     }
 
     public Map<String, Object> createJSONAsMap() {
@@ -126,18 +113,19 @@ public class NetworkOverviewJSONCreator implements NetworkTabJSONCreator<Map<Str
         ServerUUID serverUUID = serverInfo.getServerUUID();
         Optional<DateObj<Integer>> lastPeak = db.query(TPSQueries.fetchPeakPlayerCount(serverUUID, twoDaysAgo));
         Optional<DateObj<Integer>> allTimePeak = db.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID));
-        numbers.put("last_peak_date", lastPeak.map(year).orElse("-"));
+        numbers.put("last_peak_date", lastPeak.map(DateObj::getDate).map(Object.class::cast).orElse("-"));
         numbers.put("last_peak_players", lastPeak.map(dateObj -> dateObj.getValue().toString()).orElse("-"));
-        numbers.put("best_peak_date", allTimePeak.map(year).orElse("-"));
+        numbers.put("best_peak_date", allTimePeak.map(DateObj::getDate).map(Object.class::cast).orElse("-"));
         numbers.put("best_peak_players", allTimePeak.map(dateObj -> dateObj.getValue().toString()).orElse("-"));
         Long totalPlaytime = db.query(SessionQueries.playtime(0L, now));
-        numbers.put("playtime", timeAmount.apply(totalPlaytime));
-        numbers.put("player_playtime", userCount != 0 ? timeAmount.apply(totalPlaytime / userCount) : "-");
+        numbers.put("playtime", totalPlaytime);
+        numbers.put("player_playtime", userCount != 0 ? totalPlaytime / userCount : "-");
         Long sessionCount = db.query(SessionQueries.sessionCount(0L, now));
         numbers.put("sessions", sessionCount);
-        numbers.put("session_length_avg", sessionCount != 0 ? timeAmount.apply(totalPlaytime / sessionCount) : "-");
-        numbers.put("current_uptime", serverUptimeCalculator.getServerUptimeMillis(serverUUID).map(timeAmount)
-                .orElse(locale.getString(GenericLang.UNAVAILABLE)));
+        numbers.put("session_length_avg", sessionCount != 0 ? totalPlaytime / sessionCount : "-");
+        numbers.put("current_uptime", serverUptimeCalculator.getServerUptimeMillis(serverUUID)
+                .map(Object.class::cast)
+                .orElse(GenericLang.UNAVAILABLE.getKey()));
 
         return numbers;
     }
@@ -151,9 +139,9 @@ public class NetworkOverviewJSONCreator implements NetworkTabJSONCreator<Map<Str
 
         Map<String, Object> weeks = new HashMap<>();
 
-        weeks.put("start", day.apply(twoWeeksAgo));
-        weeks.put("midpoint", day.apply(oneWeekAgo));
-        weeks.put("end", day.apply(now));
+        weeks.put("start", twoWeeksAgo);
+        weeks.put("midpoint", oneWeekAgo);
+        weeks.put("end", now);
 
         Integer uniqueBefore = db.query(PlayerCountQueries.uniquePlayerCount(twoWeeksAgo, oneWeekAgo));
         Integer uniqueAfter = db.query(PlayerCountQueries.uniquePlayerCount(oneWeekAgo, now));
@@ -179,9 +167,9 @@ public class NetworkOverviewJSONCreator implements NetworkTabJSONCreator<Map<Str
         Long playtimeAfter = db.query(SessionQueries.playtime(oneWeekAgo, now));
         long avgPlaytimeBefore = uniqueBefore != 0 ? playtimeBefore / uniqueBefore : 0L;
         long avgPlaytimeAfter = uniqueAfter != 0 ? playtimeAfter / uniqueAfter : 0L;
-        Trend avgPlaytimeTrend = new Trend(avgPlaytimeBefore, avgPlaytimeAfter, false, timeAmount);
-        weeks.put("average_playtime_before", timeAmount.apply(avgPlaytimeBefore));
-        weeks.put("average_playtime_after", timeAmount.apply(avgPlaytimeAfter));
+        Trend avgPlaytimeTrend = new Trend(avgPlaytimeBefore, avgPlaytimeAfter, false);
+        weeks.put("average_playtime_before", avgPlaytimeBefore);
+        weeks.put("average_playtime_after", avgPlaytimeAfter);
         weeks.put("average_playtime_trend", avgPlaytimeTrend);
 
         Long sessionsBefore = db.query(SessionQueries.sessionCount(twoWeeksAgo, oneWeekAgo));
@@ -193,9 +181,9 @@ public class NetworkOverviewJSONCreator implements NetworkTabJSONCreator<Map<Str
 
         long avgSessionLengthBefore = sessionsBefore != 0 ? playtimeBefore / sessionsBefore : 0;
         long avgSessionLengthAfter = sessionsAfter != 0 ? playtimeAfter / sessionsAfter : 0;
-        Trend avgSessionLengthTrend = new Trend(avgSessionLengthBefore, avgSessionLengthAfter, false, timeAmount);
-        weeks.put("session_length_average_before", timeAmount.apply(avgSessionLengthBefore));
-        weeks.put("session_length_average_after", timeAmount.apply(avgSessionLengthAfter));
+        Trend avgSessionLengthTrend = new Trend(avgSessionLengthBefore, avgSessionLengthAfter, false);
+        weeks.put("session_length_average_before", avgSessionLengthBefore);
+        weeks.put("session_length_average_after", avgSessionLengthAfter);
         weeks.put("session_length_average_trend", avgSessionLengthTrend);
 
         return weeks;

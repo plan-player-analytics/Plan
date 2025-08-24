@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database;
 
+import com.djrapitops.plan.exceptions.database.DBClosedException;
 import com.djrapitops.plan.exceptions.database.DBInitException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.exceptions.database.FatalDBException;
@@ -37,10 +38,12 @@ import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.java.ThrowableUtils;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import dev.vankka.dependencydownload.ApplicationDependencyManager;
 import dev.vankka.dependencydownload.DependencyManager;
 import dev.vankka.dependencydownload.classloader.IsolatedClassLoader;
+import dev.vankka.dependencydownload.repository.MavenRepository;
 import dev.vankka.dependencydownload.repository.Repository;
-import dev.vankka.dependencydownload.repository.StandardRepository;
+import dev.vankka.dependencydownload.resource.DependencyDownloadResource;
 import net.playeranalytics.plugin.scheduling.PluginRunnable;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.scheduling.TimeAmount;
@@ -50,10 +53,7 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
@@ -66,11 +66,12 @@ import java.util.function.Supplier;
  */
 public abstract class SQLDB extends AbstractDatabase {
 
-    private static final List<Repository> DRIVER_REPOSITORIES = Arrays.asList(
-            new StandardRepository("https://papermc.io/repo/repository/maven-public/"),
-            new StandardRepository("https://repo1.maven.org/maven2/")
-    );
     private static boolean downloadDriver = true;
+
+    private static final List<Repository> DRIVER_REPOSITORIES = Arrays.asList(
+            new MavenRepository("https://repo.papermc.io/repository/maven-public"),
+            new MavenRepository("https://repo1.maven.org/maven2")
+    );
 
     private final Supplier<ServerUUID> serverUUIDSupplier;
 
@@ -80,13 +81,15 @@ public abstract class SQLDB extends AbstractDatabase {
     protected final RunnableFactory runnableFactory;
     protected final PluginLogger logger;
     protected final ErrorLogger errorLogger;
-    private final AtomicInteger transactionQueueSize = new AtomicInteger(0);
+    private static final ThreadLocal<StackTraceElement[]> TRANSACTION_ORIGIN = new ThreadLocal<>();
+    protected final ApplicationDependencyManager applicationDependencyManager;
 
     private Supplier<ExecutorService> transactionExecutorServiceProvider;
     private ExecutorService transactionExecutor;
+    private final AtomicInteger transactionQueueSize = new AtomicInteger(0);
+    protected ClassLoader driverClassLoader;
     private final AtomicBoolean dropUnimportantTransactions = new AtomicBoolean(false);
     private final AtomicBoolean ranIntoFatalError = new AtomicBoolean(false);
-    protected ClassLoader driverClassLoader;
 
     protected SQLDB(
             Supplier<ServerUUID> serverUUIDSupplier,
@@ -95,7 +98,8 @@ public abstract class SQLDB extends AbstractDatabase {
             PlanFiles files,
             RunnableFactory runnableFactory,
             PluginLogger logger,
-            ErrorLogger errorLogger
+            ErrorLogger errorLogger,
+            ApplicationDependencyManager applicationDependencyManager
     ) {
         this.serverUUIDSupplier = serverUUIDSupplier;
         this.locale = locale;
@@ -104,6 +108,7 @@ public abstract class SQLDB extends AbstractDatabase {
         this.runnableFactory = runnableFactory;
         this.logger = logger;
         this.errorLogger = errorLogger;
+        this.applicationDependencyManager = applicationDependencyManager;
 
         this.transactionExecutorServiceProvider = () -> {
             String nameFormat = "Plan " + getClass().getSimpleName() + "-transaction-thread-%d";
@@ -125,22 +130,32 @@ public abstract class SQLDB extends AbstractDatabase {
 
     protected abstract List<String> getDependencyResource();
 
+    public static ThreadLocal<StackTraceElement[]> getTransactionOrigin() {
+        return TRANSACTION_ORIGIN;
+    }
+
     public void downloadDriver() {
         if (downloadDriver) {
-            DependencyManager dependencyManager = new DependencyManager(files.getDataDirectory().resolve("libraries"));
-            dependencyManager.loadFromResource(getDependencyResource());
-            CompletableFuture<Void>[] results = dependencyManager.download(null, DRIVER_REPOSITORIES);
-            for (int i = 0; i < results.length; i++) {
-                CompletableFuture<Void> result = results[i];
-                Repository repository = DRIVER_REPOSITORIES.get(i);
-                result.exceptionally(error -> {
-                    logger.warn("Failed to download " + getType().getName() + "-driver from " + repository.getHost() + ": " + error.getMessage() + ", " + error.getCause());
-                    return null;
-                });
+            DependencyManager dependencyManager = new DependencyManager(
+                    applicationDependencyManager.getDependencyPathProvider(),
+                    applicationDependencyManager.getLogger()
+            );
+            dependencyManager.loadResource(DependencyDownloadResource.parse(getDependencyResource()));
+
+            try {
+                dependencyManager.downloadAll(null, DRIVER_REPOSITORIES).get();
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            } catch (ExecutionException e) {
+                logger.error("Failed to download " + getType().getName() + "-driver", e);
             }
 
             IsolatedClassLoader classLoader = new IsolatedClassLoader();
             dependencyManager.load(null, classLoader);
+
+            // Include this dependency manager in the application dependency manager for library cleaning purposes
+            applicationDependencyManager.include(dependencyManager);
+
             this.driverClassLoader = classLoader;
         } else {
             this.driverClassLoader = getClass().getClassLoader();
@@ -149,7 +164,7 @@ public abstract class SQLDB extends AbstractDatabase {
 
     @Override
     public void init() {
-        List<Runnable> unfinishedTransactions = closeTransactionExecutor(transactionExecutor);
+        List<Runnable> unfinishedTransactions = forceCloseTransactionExecutor();
         this.transactionExecutor = transactionExecutorServiceProvider.get();
 
         setState(State.PATCHING);
@@ -168,9 +183,9 @@ public abstract class SQLDB extends AbstractDatabase {
         }
     }
 
-    private List<Runnable> closeTransactionExecutor(ExecutorService transactionExecutor) {
+    protected boolean attemptToCloseTransactionExecutor() {
         if (transactionExecutor == null || transactionExecutor.isShutdown() || transactionExecutor.isTerminated()) {
-            return Collections.emptyList();
+            return true;
         }
         transactionExecutor.shutdown();
         try {
@@ -180,20 +195,11 @@ public abstract class SQLDB extends AbstractDatabase {
                 logger.warn(TimeSettings.DB_TRANSACTION_FINISH_WAIT_DELAY.getPath() + " was set to over 5 minutes, using 5 min instead.");
                 waitMs = TimeUnit.MINUTES.toMillis(5L);
             }
-            if (!transactionExecutor.awaitTermination(waitMs, TimeUnit.MILLISECONDS)) {
-                List<Runnable> unfinished = transactionExecutor.shutdownNow();
-                int unfinishedCount = unfinished.size();
-                if (unfinishedCount > 0) {
-                    logger.warn(unfinishedCount + " unfinished database transactions were not executed.");
-                }
-                return unfinished;
-            }
+            return transactionExecutor.awaitTermination(waitMs, TimeUnit.MILLISECONDS);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
-        } finally {
-            logger.info(locale.getString(PluginLang.DISABLED_WAITING_TRANSACTIONS_COMPLETE));
         }
-        return Collections.emptyList();
+        return true;
     }
 
     Patch[] patches() {
@@ -211,7 +217,7 @@ public abstract class SQLDB extends AbstractDatabase {
                 new KillsOptimizationPatch(),
                 new NicknamesOptimizationPatch(),
                 new TransferTableRemovalPatch(),
-                new BadAFKThresholdValuePatch(),
+                // new BadAFKThresholdValuePatch(),
                 new DeleteIPsPatch(),
                 new ExtensionShowInPlayersTablePatch(),
                 new ExtensionTableRowValueLengthPatch(),
@@ -239,7 +245,18 @@ public abstract class SQLDB extends AbstractDatabase {
                 new RegisterDateMinimizationPatch(),
                 new UsersTableNameLengthPatch(),
                 new SessionJoinAddressPatch(),
-                new RemoveUsernameFromAccessLogPatch()
+                new RemoveUsernameFromAccessLogPatch(),
+                new ComponentColumnToExtensionDataPatch(),
+                new BadJoinAddressDataCorrectionPatch(),
+                new AfterBadJoinAddressDataCorrectionPatch(),
+                new CorrectWrongCharacterEncodingPatch(logger, config),
+                new UpdateWebPermissionsPatch(),
+                new WebGroupDefaultGroupsPatch(),
+                new WebGroupAddMissingAdminGroupPatch(),
+                new LegacyPermissionLevelGroupsPatch(),
+                new SecurityTableGroupPatch(),
+                new ExtensionStringValueLengthPatch(),
+                new CookieTableIpAddressPatch()
         };
     }
 
@@ -297,19 +314,33 @@ public abstract class SQLDB extends AbstractDatabase {
      */
     public abstract void setupDataSource();
 
-    @Override
-    public void close() {
-        if (getState() == State.OPEN) setState(State.CLOSING);
-        closeTransactionExecutor(transactionExecutor);
-        unloadDriverClassloader();
-        setState(State.CLOSED);
+    protected List<Runnable> forceCloseTransactionExecutor() {
+        if (transactionExecutor == null || transactionExecutor.isShutdown() || transactionExecutor.isTerminated()) {
+            return Collections.emptyList();
+        }
+        try {
+            List<Runnable> unfinished = transactionExecutor.shutdownNow();
+            int unfinishedCount = unfinished.size();
+            if (unfinishedCount > 0) {
+                logger.warn(unfinishedCount + " unfinished database transactions were not executed.");
+            }
+            return unfinished;
+        } finally {
+            logger.info(locale.getString(PluginLang.DISABLED_WAITING_TRANSACTIONS_COMPLETE));
+        }
     }
 
-    private void unloadDriverClassloader() {
-        // Unloading class loader using close() causes issues when reloading.
-        // It is better to leak this memory than crash the plugin on reload.
-
-        driverClassLoader = null;
+    @Override
+    public void close() {
+        // SQLiteDB Overrides this, so any additions to this should also be reflected there.
+        if (getState() == State.OPEN) setState(State.CLOSING);
+        if (attemptToCloseTransactionExecutor()) {
+            logger.info(locale.getString(PluginLang.DISABLED_WAITING_TRANSACTIONS_COMPLETE));
+        } else {
+            forceCloseTransactionExecutor();
+        }
+        unloadDriverClassloader();
+        setState(State.CLOSED);
     }
 
     public abstract Connection getConnection() throws SQLException;
@@ -318,17 +349,27 @@ public abstract class SQLDB extends AbstractDatabase {
 
     @Override
     public <T> T query(Query<T> query) {
-        accessLock.checkAccess();
-        return query.executeQuery(this);
+        return accessLock.performDatabaseOperation(() -> query.executeQuery(this));
+    }
+
+    public <T> T queryWithinTransaction(Query<T> query, Transaction transaction) {
+        return accessLock.performDatabaseOperation(() -> query.executeQuery(this), transaction);
+    }
+
+    protected void unloadDriverClassloader() {
+        // Unloading class loader using close() causes issues when reloading.
+        // It is better to leak this memory than crash the plugin on reload.
+
+        driverClassLoader = null;
     }
 
     @Override
     public CompletableFuture<?> executeTransaction(Transaction transaction) {
         if (getState() == State.CLOSED) {
-            throw new DBOpException("Transaction tried to execute although database is closed.");
+            throw new DBClosedException("Transaction tried to execute although database is closed.");
         }
 
-        Exception origin = new Exception();
+        StackTraceElement[] origin = Thread.currentThread().getStackTrace();
 
         if (determineIfShouldDropUnimportantTransactions(transactionQueueSize.incrementAndGet())
                 && transaction instanceof ThrowawayTransaction) {
@@ -338,21 +379,27 @@ public abstract class SQLDB extends AbstractDatabase {
 
         return CompletableFuture.supplyAsync(() -> {
             try {
-                accessLock.checkAccess(transaction);
-                if (!ranIntoFatalError.get()) {
-                    transaction.executeTransaction(this);
-                }
+                TRANSACTION_ORIGIN.set(origin);
+                if (getState() == State.CLOSED) return CompletableFuture.completedFuture(null);
+
+                accessLock.performDatabaseOperation(() -> {
+                    if (!ranIntoFatalError.get()) {transaction.executeTransaction(this);}
+                }, transaction);
                 return CompletableFuture.completedFuture(null);
             } finally {
                 transactionQueueSize.decrementAndGet();
+                TRANSACTION_ORIGIN.remove();
             }
         }, getTransactionExecutor()).exceptionally(errorHandler(transaction, origin));
     }
 
     private boolean determineIfShouldDropUnimportantTransactions(int queueSize) {
+        if (getState() == State.CLOSING) {
+            return true;
+        }
         boolean dropTransactions = dropUnimportantTransactions.get();
         if (queueSize >= 500 && !dropTransactions) {
-            logger.warn("Database can't keep up with transactions (Queue size: " + queueSize + "), dropping some unimportant transactions from execution.");
+            logger.warn("Database queue size: " + queueSize + ", dropping some unimportant transactions. If this keeps happening disable some extensions or optimize MySQL.");
             dropUnimportantTransactions.set(true);
             return true;
         } else if (queueSize < 50 && dropTransactions) {
@@ -362,7 +409,7 @@ public abstract class SQLDB extends AbstractDatabase {
         return dropTransactions;
     }
 
-    private Function<Throwable, CompletableFuture<Object>> errorHandler(Transaction transaction, Exception origin) {
+    private Function<Throwable, CompletableFuture<Object>> errorHandler(Transaction transaction, StackTraceElement[] origin) {
         return throwable -> {
             if (throwable == null) {
                 return CompletableFuture.completedFuture(null);
@@ -437,6 +484,7 @@ public abstract class SQLDB extends AbstractDatabase {
         return dropUnimportantTransactions.get();
     }
 
+    @Override
     public int getTransactionQueueSize() {
         return transactionQueueSize.get();
     }

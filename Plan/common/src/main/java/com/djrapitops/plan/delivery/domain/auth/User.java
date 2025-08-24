@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.domain.auth;
 
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import java.util.Collection;
 import java.util.Objects;
@@ -30,23 +31,24 @@ import java.util.UUID;
  */
 public class User implements Comparable<User> {
 
+    @Untrusted
     private final String username;
     private final String linkedTo;
     private final UUID linkedToUUID; // null for 'console'
     private final String passwordHash;
-    private int permissionLevel;
+    private String permissionGroup;
     private final Collection<String> permissions;
 
-    public User(String username, String linkedTo, UUID linkedToUUID, String passwordHash, int permissionLevel, Collection<String> permissions) {
+    public User(@Untrusted String username, String linkedTo, UUID linkedToUUID, String passwordHash, String permissionGroup, Collection<String> permissions) {
         this.username = username;
         this.linkedTo = linkedTo;
         this.linkedToUUID = linkedToUUID;
         this.passwordHash = passwordHash;
-        this.permissionLevel = permissionLevel;
+        this.permissionGroup = permissionGroup;
         this.permissions = permissions;
     }
 
-    public boolean doesPasswordMatch(String password) {
+    public boolean doesPasswordMatch(@Untrusted String password) {
         return PassEncryptUtil.verifyPassword(password, passwordHash);
     }
 
@@ -54,6 +56,7 @@ public class User implements Comparable<User> {
         return new WebUser(linkedTo, linkedToUUID, username, permissions);
     }
 
+    @Untrusted
     public String getUsername() {
         return username;
     }
@@ -70,20 +73,16 @@ public class User implements Comparable<User> {
         return passwordHash;
     }
 
-    /**
-     * @deprecated Permission list should be used instead.
-     */
-    @Deprecated(since = "2022-05-04", forRemoval = true)
-    public int getPermissionLevel() {
-        return permissionLevel;
+    public String getPermissionGroup() {
+        return permissionGroup;
     }
 
-    /**
-     * @deprecated Permission list should be used instead.
-     */
-    @Deprecated(since = "2022-05-04", forRemoval = true)
-    public void setPermissionLevel(int permissionLevel) {
-        this.permissionLevel = permissionLevel;
+    public void setPermissionGroup(String permissionGroup) {
+        this.permissionGroup = permissionGroup;
+    }
+
+    public Collection<String> getPermissions() {
+        return permissions;
     }
 
     @Override
@@ -93,7 +92,7 @@ public class User implements Comparable<User> {
                 ", linkedTo='" + linkedTo + '\'' +
                 ", linkedToUUID=" + linkedToUUID +
                 ", passwordHash='" + passwordHash + '\'' +
-                ", permissionLevel=" + permissionLevel +
+                ", permissionGroup=" + permissionGroup +
                 ", permissions=" + permissions +
                 '}';
     }
@@ -103,22 +102,22 @@ public class User implements Comparable<User> {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         User user = (User) o;
-        return permissionLevel == user.permissionLevel &&
-                Objects.equals(username, user.username) &&
+        return Objects.equals(username, user.username) &&
                 Objects.equals(linkedTo, user.linkedTo) &&
                 Objects.equals(linkedToUUID, user.linkedToUUID) &&
                 Objects.equals(passwordHash, user.passwordHash) &&
+                Objects.equals(permissionGroup, user.permissionGroup) &&
                 Objects.equals(permissions, user.permissions);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username, linkedTo, linkedToUUID, passwordHash, permissionLevel, permissions);
+        return Objects.hash(username, linkedTo, linkedToUUID, passwordHash, permissionGroup, permissions);
     }
 
     @Override
     public int compareTo(User other) {
-        int comparison = Integer.compare(this.permissionLevel, other.permissionLevel);
+        int comparison = String.CASE_INSENSITIVE_ORDER.compare(this.permissionGroup, other.permissionGroup);
         if (comparison == 0) comparison = String.CASE_INSENSITIVE_ORDER.compare(this.username, other.username);
         return comparison;
     }

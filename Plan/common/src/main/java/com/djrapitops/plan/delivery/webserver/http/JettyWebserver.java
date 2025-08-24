@@ -144,6 +144,8 @@ public class JettyWebserver implements WebServer {
         sslContext.map(SslContextFactory::getKeyStore).ifPresent(this::logCertificateExpiryInformation);
 
         responseResolver.registerPages();
+
+        webserverConfiguration.getAllowedIpList().prepare();
     }
 
     private void logCertificateExpiryInformation(KeyStore keyStore) {

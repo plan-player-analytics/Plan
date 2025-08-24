@@ -48,6 +48,10 @@ public class MiscUtils {
         return System.currentTimeMillis();
     }
 
+    public static long fiveMinAgo() {
+        return now() - TimeUnit.MINUTES.toMillis(5L);
+    }
+
     public static long dayAgo() {
         return now() - TimeUnit.DAYS.toMillis(1L);
     }

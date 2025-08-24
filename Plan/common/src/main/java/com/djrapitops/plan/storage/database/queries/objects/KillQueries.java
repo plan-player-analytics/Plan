@@ -55,6 +55,7 @@ public class KillQueries {
                 KillsTable.VICTIM_UUID + ", " +
                 KillsTable.SERVER_UUID + ", " +
                 "v." + UsersTable.USER_NAME + " as victim_name, " +
+                "v." + UsersTable.REGISTERED + " as victim_" + UsersTable.REGISTERED + ", " +
                 "k." + UsersTable.USER_NAME + " as killer_name," +
                 KillsTable.DATE + ", " +
                 KillsTable.WEAPON + ", " +
@@ -91,6 +92,7 @@ public class KillQueries {
                 KillsTable.VICTIM_UUID + ", " +
                 KillsTable.SERVER_UUID + ", " +
                 "v." + UsersTable.USER_NAME + " as victim_name, " +
+                "v." + UsersTable.REGISTERED + " as victim_" + UsersTable.REGISTERED + ", " +
                 "k." + UsersTable.USER_NAME + " as killer_name," +
                 KillsTable.DATE + ", " +
                 KillsTable.WEAPON + ", " +
@@ -126,6 +128,7 @@ public class KillQueries {
                 KillsTable.VICTIM_UUID + ", " +
                 KillsTable.SERVER_UUID + ", " +
                 "v." + UsersTable.USER_NAME + " as victim_name, " +
+                "v." + UsersTable.REGISTERED + " as victim_" + UsersTable.REGISTERED + ", " +
                 "k." + UsersTable.USER_NAME + " as killer_name," +
                 KillsTable.DATE + ", " +
                 KillsTable.WEAPON + ", " +
@@ -165,9 +168,9 @@ public class KillQueries {
             String weapon = set.getString(KillsTable.WEAPON);
             return Optional.of(new PlayerKill(
                     new PlayerKill.Killer(killer, killerName),
-                    new PlayerKill.Victim(victim, victimName),
+                    new PlayerKill.Victim(victim, victimName, set.getLong("victim_" + UsersTable.REGISTERED)),
                     new ServerIdentifier(ServerUUID.fromString(set.getString(KillsTable.SERVER_UUID)),
-                            Server.getIdentifiableName(set.getString("server_name"), set.getInt("server_id"))
+                            Server.getIdentifiableName(set.getString("server_name"), set.getInt("server_id"), false)
                     ), weapon, date
             ));
         }

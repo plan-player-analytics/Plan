@@ -19,8 +19,8 @@ package com.djrapitops.plan.storage.database.transactions.patches;
 import com.djrapitops.plan.storage.database.queries.HasMoreThanZeroQueryStatement;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
-import com.djrapitops.plan.storage.database.sql.tables.SecurityTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
+import com.djrapitops.plan.storage.database.sql.tables.webuser.SecurityTable;
 import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
 
 import java.sql.PreparedStatement;

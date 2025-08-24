@@ -22,19 +22,23 @@ import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 public class StoreJoinAddressTransaction extends Transaction {
 
+    @Untrusted
     private final Supplier<String> joinAddress;
+    private int newId;
 
-    public StoreJoinAddressTransaction(String joinAddress) {
+    public StoreJoinAddressTransaction(@Untrusted String joinAddress) {
         this(() -> joinAddress);
     }
 
@@ -54,23 +58,28 @@ public class StoreJoinAddressTransaction extends Transaction {
         return new HasMoreThanZeroQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                String address = getAddress();
+                @Untrusted String address = getAddress();
                 statement.setString(1, address);
             }
         };
     }
 
+    @Untrusted
     private String getAddress() {
         return StringUtils.truncate(joinAddress.get(), JoinAddressTable.JOIN_ADDRESS_MAX_LENGTH);
     }
 
     @Override
     protected void performOperations() {
-        execute(new ExecStatement(JoinAddressTable.INSERT_STATEMENT) {
+        newId = executeReturningId(new ExecStatement(JoinAddressTable.INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, getAddress());
             }
         });
+    }
+
+    public Optional<Integer> getNewId() {
+        return newId == -1 ? Optional.empty() : Optional.of(newId);
     }
 }

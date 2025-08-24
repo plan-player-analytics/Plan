@@ -1,14 +1,17 @@
 dependencies {
     compileOnly "org.apache.commons:commons-text:$commonsTextVersion"
-    testImplementation "org.apache.commons:commons-text:$commonsTextVersion"
     compileOnly "com.google.code.gson:gson:$gsonVersion"
+
+    testImplementation "org.apache.commons:commons-text:$commonsTextVersion"
+    testImplementation "org.junit.jupiter:junit-jupiter:$junitVersion"
+    testRuntimeOnly "org.junit.platform:junit-platform-launcher"
 }
 
 compileJava {
     options.release = 8
 }
 
-ext.apiVersion = '5.5-R0.1'
+def apiVersion = "5.7-R0.1"
 
 publishing {
     repositories {
@@ -22,11 +25,10 @@ publishing {
         }
     }
     publications {
-        apiArtifact(MavenPublication) {
-            from components.java
-            groupId 'com.djrapitops'
-            artifactId 'plan-api'
-            version "$apiVersion"
+        create("apiArtifact", MavenPublication) {
+            from(this.components.java)
+            artifactId = "plan-api"
+            version = apiVersion
         }
     }
 }

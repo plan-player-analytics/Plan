@@ -20,10 +20,12 @@ import com.djrapitops.plan.delivery.webserver.http.WebServer;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.properties.ServerProperties;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import dagger.Lazy;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -70,14 +72,18 @@ public class Addresses {
     }
 
     public Optional<String> getMainAddress() {
-        Optional<String> proxyServerAddress = getProxyServerAddress();
+        Optional<String> proxyServerAddress = getAnyValidServerAddress();
         return proxyServerAddress.isPresent() ? proxyServerAddress : getAccessAddress();
     }
 
     public Optional<String> getAccessAddress() {
         WebServer webServer = this.webserver.get();
         if (!webServer.isEnabled()) {
-            return Optional.of(getFallbackExternalAddress());
+            if (config.isTrue(ExportSettings.SERVER_PAGE)) {
+                return Optional.of(getFallbackExternalAddress());
+            } else {
+                return Optional.empty();
+            }
         }
         return getIP().map(ip -> webServer.getProtocol() + "://" + ip);
     }
@@ -99,16 +105,47 @@ public class Addresses {
     }
 
     public Optional<String> getProxyServerAddress() {
-        return dbSystem.getDatabase().query(ServerQueries.fetchProxyServerInformation()).map(Server::getWebAddress)
-                .filter(this::isValidAddress);
+        return dbSystem.getDatabase().query(ServerQueries.fetchProxyServers())
+                .stream()
+                .map(Server::getWebAddress)
+                .filter(this::isValidAddress)
+                .findAny();
+    }
+
+    public Optional<String> getAnyValidServerAddress() {
+        return dbSystem.getDatabase().query(ServerQueries.fetchPlanServerInformationCollection())
+                .stream()
+                .map(Server::getWebAddress)
+                .filter(this::isValidAddress)
+                .findAny();
     }
 
     private boolean isValidAddress(String address) {
-        return !address.isEmpty() && !"0.0.0.0".equals(address);
+        return address != null
+                && !address.isEmpty()
+                && !"0.0.0.0".equals(address)
+                && !"https://www.example.address".equals(address)
+                && !"http://www.example.address".equals(address)
+                && !"http://localhost:0".equals(address);
     }
 
     public Optional<String> getServerPropertyIP() {
         String ip = serverProperties.get().getIp();
         return isValidAddress(ip) ? Optional.of(ip) : Optional.empty();
+    }
+
+    public boolean isWebserverEnabled() {
+        return webserver.get().isEnabled();
+    }
+
+    public String getBasePath(String address) {
+        String basePath = address
+                .replace("http://", "")
+                .replace("https://", "");
+        if (StringUtils.contains(basePath, '/')) {
+            return basePath.substring(StringUtils.indexOf(basePath, '/'));
+        } else {
+            return "";
+        }
     }
 }

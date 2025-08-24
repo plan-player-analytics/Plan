@@ -24,15 +24,17 @@ import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.network.ServerPlayerEntity;
-import net.playeranalytics.plan.commands.CommandManager;
+import net.playeranalytics.plan.commands.FabricCommandManager;
 import net.playeranalytics.plan.gathering.listeners.FabricListener;
 import net.playeranalytics.plan.gathering.listeners.events.PlanFabricEvents;
 
 import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Singleton
 public class FabricAFKListener implements FabricListener {
 
     // Static so that /reload does not cause afk tracking to fail.
@@ -40,6 +42,7 @@ public class FabricAFKListener implements FabricListener {
     private final Map<UUID, Boolean> ignorePermissionInfo;
     private final ErrorLogger errorLogger;
     private boolean isEnabled = false;
+    private boolean wasRegistered = false;
 
     @Inject
     public FabricAFKListener(PlanConfig config, ErrorLogger errorLogger) {
@@ -53,6 +56,10 @@ public class FabricAFKListener implements FabricListener {
         if (afkTracker == null) {
             afkTracker = new AFKTracker(config);
         }
+    }
+
+    public static AFKTracker getAfkTracker() {
+        return afkTracker;
     }
 
     private void event(ServerPlayerEntity player) {
@@ -76,7 +83,7 @@ public class FabricAFKListener implements FabricListener {
     }
 
     private boolean checkPermission(ServerPlayerEntity player, String permission) {
-        if (CommandManager.isPermissionsApiAvailable()) {
+        if (FabricCommandManager.isPermissionsApiAvailable()) {
             return Permissions.check(player, permission);
         } else {
             return false;
@@ -85,7 +92,10 @@ public class FabricAFKListener implements FabricListener {
 
     @Override
     public void register() {
-        this.enable();
+        if (this.wasRegistered) {
+            return;
+        }
+
         ServerMessageEvents.CHAT_MESSAGE.register((message, sender, params) -> {
             if (!isEnabled) {
                 return;
@@ -109,7 +119,15 @@ public class FabricAFKListener implements FabricListener {
             }
             ignorePermissionInfo.remove(handler.player.getUuid());
         });
-        PlanFabricEvents.ON_MOVE.register((handler, packet) -> event(handler.player));
+        PlanFabricEvents.ON_MOVE.register((handler, packet) -> {
+            if (!this.isEnabled) {
+                return;
+            }
+            event(handler.player);
+        });
+
+        this.enable();
+        this.wasRegistered = true;
     }
 
 

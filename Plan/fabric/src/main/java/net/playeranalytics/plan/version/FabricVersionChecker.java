@@ -46,6 +46,7 @@ public class FabricVersionChecker extends VersionChecker {
         super(currentVersion, locale, config, logger, runnableFactory, errorLogger);
     }
 
+    @Override
     public Optional<VersionInfo> getNewVersionAvailable() {
         if (newVersionAvailable == null) {
             return Optional.empty();

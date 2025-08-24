@@ -16,12 +16,8 @@
  */
 package com.djrapitops.plan.storage.database.transactions.init;
 
-import com.djrapitops.plan.storage.database.queries.HasMoreThanZeroQueryStatement;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.transactions.patches.Patch;
-
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -30,24 +26,21 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  */
 public class RemoveIncorrectTebexPackageDataPatch extends Patch {
 
+    private static final String TABLE_NAME = "plan_tebex_payments";
+
     @Override
     public boolean hasBeenApplied() {
-        return !hasTable("plan_tebex_payments") || !query(hasWrongRows());
+        return !hasTable(TABLE_NAME) || !query(hasWrongRows());
     }
 
     private Query<Boolean> hasWrongRows() {
-        return new HasMoreThanZeroQueryStatement(
-                SELECT + "COUNT(*) as c" + FROM + "plan_tebex_payments" +
-                        WHERE + "packages LIKE 'TebexPackage%'"
-        ) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-            }
-        };
+        String sql = SELECT + "COUNT(*) as c" + FROM + TABLE_NAME +
+                WHERE + "packages LIKE 'TebexPackage%'";
+        return db -> db.queryOptional(sql, set -> set.getInt("c") > 0).orElse(false);
     }
 
     @Override
     protected void applyPatch() {
-        execute(DELETE_FROM + "plan_tebex_payments" + WHERE + "packages LIKE 'TebexPackage%'");
+        execute(DELETE_FROM + TABLE_NAME + WHERE + "packages LIKE 'TebexPackage%'");
     }
 }

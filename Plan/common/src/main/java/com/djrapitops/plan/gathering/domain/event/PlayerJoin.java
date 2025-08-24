@@ -64,6 +64,13 @@ public class PlayerJoin {
         return time;
     }
 
+    /**
+     * Get address used to join the server.
+     *
+     * @return Join address of the player.
+     * @deprecated {@link com.djrapitops.plan.gathering.JoinAddressValidator} should be used when looking at join address.
+     */
+    @Deprecated(since = "2024-04-27")
     public String getJoinAddress() {
         return player.getJoinAddress().orElse(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
     }

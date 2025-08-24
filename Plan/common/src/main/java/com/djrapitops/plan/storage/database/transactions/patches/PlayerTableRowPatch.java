@@ -30,8 +30,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
-import static com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerTableValueTable.ID;
-import static com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerTableValueTable.*;
+import static com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPlayerTableValueTable.*;
+import static com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPlayerTableValueTable.ID;
 
 public class PlayerTableRowPatch extends Patch {
 
@@ -43,10 +43,10 @@ public class PlayerTableRowPatch extends Patch {
 
     private boolean tableRowIdsAreUniquePerTableId() {
         String columnCountPerTableSql = SELECT +
-                TABLE_ID + ",COUNT(1) as c" +
+                USER_UUID + ',' + TABLE_ID + ",COUNT(1) as c" +
                 FROM + TABLE_NAME +
                 WHERE + TABLE_ROW + "=?" +
-                GROUP_BY + TABLE_ID;
+                GROUP_BY + TABLE_ID + ',' + USER_UUID;
         return query(new QueryStatement<>(columnCountPerTableSql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

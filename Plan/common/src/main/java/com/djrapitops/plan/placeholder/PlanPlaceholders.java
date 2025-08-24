@@ -18,9 +18,14 @@ package com.djrapitops.plan.placeholder;
 
 import com.djrapitops.plan.commands.use.Arguments;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
+import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
+import com.djrapitops.plan.utilities.dev.Untrusted;
+import net.playeranalytics.plugin.server.PluginLogger;
+import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -50,15 +55,18 @@ public final class PlanPlaceholders {
 
     private final DBSystem dbSystem;
     private final Identifiers identifiers;
+    private final PluginLogger logger;
 
     @Inject
     public PlanPlaceholders(
             DBSystem dbSystem,
             Set<Placeholders> placeholderRegistries,
-            Identifiers identifiers
+            Identifiers identifiers,
+            PluginLogger logger
     ) {
         this.dbSystem = dbSystem;
         this.identifiers = identifiers;
+        this.logger = logger;
 
         this.playerPlaceholders = new HashMap<>();
         this.staticPlaceholders = new HashMap<>();
@@ -107,21 +115,34 @@ public final class PlanPlaceholders {
      * value found but the placeholder is registered,
      * otherwise {@code null}
      */
-    public String onPlaceholderRequest(UUID uuid, String placeholder, List<String> parameters) {
+    public String onPlaceholderRequest(UUID uuid, @Untrusted String placeholder, @Untrusted List<String> parameters) {
+        try {
+            return tryReplacePlaceholder(uuid, placeholder, parameters);
+        } catch (DBOpException e) {
+            if (dbSystem.getDatabase().getState() == Database.State.CLOSED) {
+                return "Plan Bug #3020, please report";
+            }
+            logger.warn("Failed to get data for placeholder '" + placeholder + "', " + e.getMessage(), e);
+            return "db error";
+        }
+    }
+
+    @Nullable
+    private String tryReplacePlaceholder(UUID uuid, String placeholder, List<String> parameters) {
         for (Entry<String, Function<String, Serializable>> entry : rawHandlers.entrySet()) {
             if (placeholder.startsWith(entry.getKey())) {
                 return Objects.toString(entry.getValue().apply(placeholder));
             }
         }
 
-        Arguments arguments = new Arguments(parameters);
+        @Untrusted Arguments arguments = new Arguments(parameters);
 
         StaticPlaceholderLoader staticLoader = staticPlaceholders.get(placeholder);
         if (staticLoader != null) {
             return Objects.toString(staticLoader.apply(arguments));
         }
 
-        Optional<String> givenIdentifier = arguments.get(0);
+        @Untrusted Optional<String> givenIdentifier = arguments.get(0);
         Optional<UUID> foundUUID = givenIdentifier
                 .flatMap(this::getPlayerUUIDForIdentifier);
         UUID playerUUID = foundUUID.orElse(uuid);
@@ -142,7 +163,7 @@ public final class PlanPlaceholders {
         return null;
     }
 
-    private Optional<UUID> getPlayerUUIDForIdentifier(String identifier) {
+    private Optional<UUID> getPlayerUUIDForIdentifier(@Untrusted String identifier) {
         return Optional.ofNullable(identifiers.getPlayerUUID(identifier));
     }
 

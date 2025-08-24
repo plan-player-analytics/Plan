@@ -22,6 +22,7 @@ import com.djrapitops.plan.delivery.domain.ServerName;
 import com.djrapitops.plan.delivery.export.Exporter;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.ExtensionSvc;
+import com.djrapitops.plan.gathering.JoinAddressValidator;
 import com.djrapitops.plan.gathering.cache.NicknameCache;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
@@ -38,7 +39,6 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.events.*;
-import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -52,6 +52,7 @@ public class PlayerJoinEventConsumer {
     private final PlanConfig config;
     private final DBSystem dbSystem;
 
+    private final JoinAddressValidator joinAddressValidator;
     private final GeolocationCache geolocationCache;
     private final SessionCache sessionCache;
     private final NicknameCache nicknameCache;
@@ -63,7 +64,7 @@ public class PlayerJoinEventConsumer {
     public PlayerJoinEventConsumer(
             Processing processing,
             PlanConfig config,
-            DBSystem dbSystem,
+            DBSystem dbSystem, JoinAddressValidator joinAddressValidator,
             GeolocationCache geolocationCache,
             SessionCache sessionCache,
             NicknameCache nicknameCache,
@@ -73,6 +74,7 @@ public class PlayerJoinEventConsumer {
         this.processing = processing;
         this.config = config;
         this.dbSystem = dbSystem;
+        this.joinAddressValidator = joinAddressValidator;
         this.geolocationCache = geolocationCache;
         this.sessionCache = sessionCache;
         this.nicknameCache = nicknameCache;
@@ -108,11 +110,13 @@ public class PlayerJoinEventConsumer {
         );
     }
 
-    private void storeJoinAddress(PlayerJoin join) {
-        join.getPlayer().getJoinAddress()
-                .map(joinAddress -> config.isTrue(DataGatheringSettings.PRESERVE_JOIN_ADDRESS_CASE) ? joinAddress : StringUtils.lowerCase(joinAddress))
-                .map(StoreJoinAddressTransaction::new)
-                .ifPresent(dbSystem.getDatabase()::executeTransaction);
+    private static long getRegisterDate(PlayerJoin join) {
+        long registerDate = join.getPlayer().getRegisterDate().orElseGet(join::getTime);
+        // Correct incorrect register dates https://github.com/plan-player-analytics/Plan/issues/2934
+        if (registerDate < System.currentTimeMillis() / 1000) {
+            registerDate = registerDate * 1000;
+        }
+        return registerDate;
     }
 
     private void storeGeolocation(PlayerJoin join) {
@@ -130,9 +134,20 @@ public class PlayerJoinEventConsumer {
                 .ifPresent(dbSystem.getDatabase()::executeTransaction);
     }
 
+    private void storeJoinAddress(PlayerJoin join) {
+        join.getPlayer().getJoinAddress()
+                .map(joinAddressValidator::sanitize)
+                .filter(joinAddressValidator::isValid)
+                .map(StoreJoinAddressTransaction::new)
+                .ifPresent(dbSystem.getDatabase()::executeTransaction);
+    }
+
     private CompletableFuture<?> storeGamePlayer(PlayerJoin join) {
-        long registerDate = join.getPlayer().getRegisterDate().orElseGet(join::getTime);
-        String joinAddress = join.getPlayer().getJoinAddress().orElse(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
+        long registerDate = getRegisterDate(join);
+        String joinAddress = join.getPlayer().getJoinAddress()
+                .map(joinAddressValidator::sanitize)
+                .filter(joinAddressValidator::isValid)
+                .orElse(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
         Transaction transaction = new StoreServerPlayerTransaction(
                 join.getPlayerUUID(), registerDate, join.getPlayer().getName(), join.getServerUUID(), joinAddress
         );
@@ -162,12 +177,16 @@ public class PlayerJoinEventConsumer {
     }
 
     private ActiveSession mapToActiveSession(PlayerJoin join) {
+        String joinAddress = join.getPlayer().getJoinAddress()
+                .map(joinAddressValidator::sanitize)
+                .filter(joinAddressValidator::isValid)
+                .orElse(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
         ActiveSession session = new ActiveSession(join.getPlayerUUID(), join.getServerUUID(), join.getTime(),
                 join.getPlayer().getCurrentWorld().orElse(null),
                 join.getPlayer().getCurrentGameMode().orElse(null));
         session.getExtraData().put(PlayerName.class, new PlayerName(join.getPlayer().getName()));
         session.getExtraData().put(ServerName.class, new ServerName(join.getServer().isProxy() ? join.getServer().getName() : "Proxy Server"));
-        session.getExtraData().put(JoinAddress.class, new JoinAddress(config.isTrue(DataGatheringSettings.PRESERVE_JOIN_ADDRESS_CASE) ? join.getJoinAddress() : StringUtils.lowerCase(join.getJoinAddress())));
+        session.getExtraData().put(JoinAddress.class, new JoinAddress(joinAddress));
         return session;
     }
 

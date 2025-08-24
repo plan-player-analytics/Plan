@@ -3,7 +3,9 @@
   "minVersion": "0.8",
   "package": "net.playeranalytics.plan.gathering.listeners.events.mixin",
   "compatibilityLevel": "JAVA_17",
+  "refmap": "plan-fabric-refmap.json",
   "mixins": [
+    "ClientToServerHandshakePacketMixin",
     "KickCommandMixin",
     "PlayerManagerMixin",
     "ServerCommandSourceMixin",

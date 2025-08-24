@@ -62,14 +62,44 @@ public interface CommonQueries {
      */
     long fetchLastSeen(UUID playerUUID, UUID serverUUID);
 
+    /**
+     * Get the UUIDs of all servers Plan has registered.
+     *
+     * @return Set of Server UUIDs
+     */
     Set<UUID> fetchServerUUIDs();
 
+    /**
+     * Fetch UUID of a player by name.
+     *
+     * @param playerName Name of the player
+     * @return UUID if it is found by Plan or empty if not found.
+     */
     Optional<UUID> fetchUUIDOf(String playerName);
 
+    /**
+     * Fetch name of a player by UUID.
+     *
+     * @param playerUUID UUID of the player
+     * @return Name if it is known by Plan or empty if not.
+     */
     Optional<String> fetchNameOf(UUID playerUUID);
 
+    /**
+     * Check that schema has table you are using in your queries.
+     *
+     * @param table Name of the table, e.g. plan_users.
+     * @return true if table exists.
+     */
     boolean doesDBHaveTable(String table);
 
+    /**
+     * Check that schema table has a column you are using in your queries.
+     *
+     * @param table  Name of the table, e.g. plan_users.
+     * @param column Name of the column, e.g. id
+     * @return true if table and column exist.
+     */
     boolean doesDBHaveTableColumn(String table, String column);
 
     /**

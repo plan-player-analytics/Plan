@@ -19,6 +19,7 @@ package com.djrapitops.plan.settings.config.paths;
 import com.djrapitops.plan.settings.config.paths.key.IntegerSetting;
 import com.djrapitops.plan.settings.config.paths.key.Setting;
 import com.djrapitops.plan.settings.config.paths.key.StringSetting;
+import com.djrapitops.plan.settings.config.paths.key.TimeSetting;
 import com.djrapitops.plan.storage.database.DBType;
 import org.apache.commons.lang3.math.NumberUtils;
 
@@ -37,6 +38,7 @@ public class DatabaseSettings {
     public static final Setting<String> MYSQL_DATABASE = new StringSetting("Database.MySQL.Database");
     public static final Setting<String> MYSQL_LAUNCH_OPTIONS = new StringSetting("Database.MySQL.Launch_options");
     public static final Setting<Integer> MAX_CONNECTIONS = new IntegerSetting("Database.MySQL.Max_connections", value -> value > 0);
+    public static final Setting<Long> MAX_LIFETIME = new TimeSetting("Database.MySQL.Max_Lifetime");
 
     private DatabaseSettings() {
         /* static variable class */

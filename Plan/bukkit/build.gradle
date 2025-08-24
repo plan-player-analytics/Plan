@@ -1,26 +1,27 @@
 repositories {
     maven { // Placeholder API repository
-        url = "https://repo.extendedclip.com/content/repositories/placeholderapi/"
+        url = "https://repo.extendedclip.com/releases/"
     }
 }
 
 dependencies {
-    implementation project(":api")
     implementation project(":common")
 
-    shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
-    shadow "net.playeranalytics:platform-abstraction-layer-bukkit:$palVersion"
-    shadow "org.bstats:bstats-bukkit:$bstatsVersion"
-    compileOnly "me.clip:placeholderapi:$placeholderapiVersion"
+    implementation "net.playeranalytics:platform-abstraction-layer-bukkit:$palVersion"
+    implementation "org.bstats:bstats-bukkit:$bstatsVersion"
 
     compileOnly "com.destroystokyo.paper:paper-api:$paperVersion"
+    compileOnly "me.clip:placeholderapi:$placeholderapiVersion"
 
+    testImplementation(testFixtures(project(":common")))
+    testImplementation(project(":extensions:adventure"))
     testImplementation "com.destroystokyo.paper:paper-api:$paperVersion"
-    testImplementation project(path: ":common", configuration: 'testArtifacts')
 }
 
-shadowJar {
-    configurations = [project.configurations.shadow]
+processResources {
+    inputs.property("version", fullVersion)
 
-    relocate 'org.bstats', 'net.playeranalytics.bstats.utilities.metrics'
+    filesMatching("plugin.yml") {
+        expand("version": fullVersion)
+    }
 }

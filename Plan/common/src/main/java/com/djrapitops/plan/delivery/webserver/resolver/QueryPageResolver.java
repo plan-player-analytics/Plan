@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver;
 
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
@@ -37,11 +38,11 @@ public class QueryPageResolver implements Resolver {
 
     @Override
     public boolean canAccess(Request request) {
-        return request.getUser().map(user -> user.hasPermission("page.players")).orElse(false);
+        return request.getUser().map(user -> user.hasPermission(WebPermission.ACCESS_QUERY)).orElse(false);
     }
 
     @Override
     public Optional<Response> resolve(Request request) {
-        return Optional.of(responseFactory.queryPageResponse());
+        return Optional.of(responseFactory.reactPageResponse(request));
     }
 }

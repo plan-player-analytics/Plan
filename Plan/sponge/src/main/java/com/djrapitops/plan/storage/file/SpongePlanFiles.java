@@ -18,7 +18,7 @@ package com.djrapitops.plan.storage.file;
 
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSponge;
-import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.delivery.web.AssetVersions;
 import dagger.Lazy;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.resource.ResourcePath;
@@ -45,9 +45,9 @@ public class SpongePlanFiles extends PlanFiles {
             @Named("dataFolder") File dataFolder,
             JarResource.StreamFunction getResourceStream,
             PlanPlugin plugin,
-            Lazy<PlanConfig> config
+            Lazy<AssetVersions> assetVersions
     ) {
-        super(dataFolder, getResourceStream, config);
+        super(dataFolder, getResourceStream, assetVersions);
         this.plugin = plugin;
     }
 
@@ -73,7 +73,7 @@ public class SpongePlanFiles extends PlanFiles {
                 StringWriter writer = new StringWriter()
         ) {
             reader.transferTo(writer);
-            return new StringResource(resourceName, writer.toString());
+            return new StringResource(resourceName, writer.toString(), getLastModifiedForJarResource(resourceName));
         }
     }
 }

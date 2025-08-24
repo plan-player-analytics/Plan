@@ -19,7 +19,7 @@ package com.djrapitops.plan.version;
 import java.util.Objects;
 
 /**
- * Data class for reading version.txt in https://github.com/AuroraLS3/Plan-PlayerAnalytics.
+ * Data class for reading version.txt in <a href="https://github.com/plan-player-analytics/Plan">Github Repository</a>.
  *
  * @author AuroraLS3
  */

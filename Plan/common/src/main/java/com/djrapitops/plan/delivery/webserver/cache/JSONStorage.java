@@ -63,6 +63,8 @@ public interface JSONStorage extends SubSystem {
 
     void invalidateOlder(String identifier, long timestamp);
 
+    Optional<Long> getTimestamp(String identifier);
+
     final class StoredJSON {
         public final String json;
         public final long timestamp;
@@ -70,6 +72,18 @@ public interface JSONStorage extends SubSystem {
         public StoredJSON(String json, long timestamp) {
             this.json = json;
             this.timestamp = timestamp;
+        }
+
+        public static StoredJSON fromObject(Object json, long timestamp) {
+            return new StoredJSON(new Gson().toJson(json), timestamp);
+        }
+
+        public String getJson() {
+            return json;
+        }
+
+        public long getTimestamp() {
+            return timestamp;
         }
 
         @Override

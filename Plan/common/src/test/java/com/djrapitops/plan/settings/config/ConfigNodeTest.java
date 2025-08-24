@@ -393,4 +393,52 @@ class ConfigNodeTest {
                     });
         }).collect(Collectors.toList());
     }
+
+    @Test
+    void environmentVariableString() {
+        ConfigNode node = new ConfigNode("Test.Node.String", new ConfigNode("", null, null), null);
+        String expected = "String";
+        String result = node.getString();
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void environmentVariableBoolean() {
+        ConfigNode node = new ConfigNode("Test.Node.Boolean", new ConfigNode("", null, null), null);
+        Boolean expected = true;
+        Boolean result = node.getBoolean();
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void environmentVariableInteger() {
+        ConfigNode node = new ConfigNode("Test.Node.Integer", new ConfigNode("", null, null), null);
+        Integer expected = 5;
+        Integer result = node.getInteger();
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void environmentVariableDouble() {
+        ConfigNode node = new ConfigNode("Test.Node.Double", new ConfigNode("", null, null), null);
+        Double expected = 0.5;
+        Double result = node.getDouble();
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void environmentVariableLong() {
+        ConfigNode node = new ConfigNode("Test.Node.Long", new ConfigNode("", null, null), null);
+        Long expected = Long.MAX_VALUE;
+        Long result = node.getLong();
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void environmentVariableStringList() {
+        ConfigNode node = new ConfigNode("Test.Node.StringList", new ConfigNode("", null, null), null);
+        List<String> expected = List.of("Test", "Another");
+        List<String> result = node.getStringList();
+        assertEquals(expected, result);
+    }
 }

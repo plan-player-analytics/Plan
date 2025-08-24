@@ -17,6 +17,7 @@
 package com.djrapitops.plan.gathering;
 
 import com.djrapitops.plan.exceptions.database.DBInitException;
+import com.djrapitops.plan.gathering.afk.AFKTracker;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
@@ -47,7 +48,6 @@ public abstract class ServerShutdownSave {
     private final ErrorLogger errorLogger;
 
     private boolean shuttingDown = false;
-    private boolean startedDatabase = false;
 
     protected ServerShutdownSave(
             Locale locale,
@@ -62,6 +62,8 @@ public abstract class ServerShutdownSave {
     }
 
     protected abstract boolean checkServerShuttingDownStatus();
+
+    public abstract Optional<AFKTracker> getAfkTracker();
 
     public void serverIsKnownToBeShuttingDown() {
         shuttingDown = true;
@@ -87,7 +89,7 @@ public abstract class ServerShutdownSave {
 
     private Optional<Future<?>> attemptSave(Collection<ActiveSession> activeSessions) {
         try {
-            return Optional.of(saveActiveSessions(finishSessions(activeSessions, System.currentTimeMillis())));
+            return saveActiveSessions(finishSessions(activeSessions, System.currentTimeMillis()));
         } catch (DBInitException e) {
             errorLogger.error(e, ErrorContext.builder()
                     .whatToDo("Find the sessions in the error file and save them manually or ignore. Report & delete the error file after.")
@@ -98,33 +100,29 @@ public abstract class ServerShutdownSave {
         } catch (IllegalStateException ignored) {
             /* Database is not initialized */
             return Optional.empty();
-        } finally {
-            closeDatabase(dbSystem.getDatabase());
         }
     }
 
-    private Future<?> saveActiveSessions(Collection<FinishedSession> finishedSessions) {
+    private Optional<Future<?>> saveActiveSessions(Collection<FinishedSession> finishedSessions) {
         Database database = dbSystem.getDatabase();
         if (database.getState() == Database.State.CLOSED) {
-            // Ensure that database is not closed when performing the transaction.
-            startedDatabase = true;
-            database.init();
+            // Don't attempt to save if database is closed, session storage will be handled by
+            // ShutdownDataPreservation instead.
+            // Previously database reboot was attempted, but this could lead to server hang.
+            return Optional.empty();
         }
 
-        return saveSessions(finishedSessions, database);
+        return Optional.of(saveSessions(finishedSessions, database));
     }
 
     Collection<FinishedSession> finishSessions(Collection<ActiveSession> activeSessions, long now) {
-        return activeSessions.stream().map(session -> session.toFinishedSession(now)).collect(Collectors.toList());
+        return activeSessions.stream().map(session -> {
+            getAfkTracker().ifPresent(afkTracker -> afkTracker.performedAction(session.getPlayerUUID(), now));
+            return session.toFinishedSession(now);
+        }).collect(Collectors.toList());
     }
 
     private Future<?> saveSessions(Collection<FinishedSession> finishedSessions, Database database) {
         return database.executeTransaction(new ServerShutdownTransaction(finishedSessions));
-    }
-
-    private void closeDatabase(Database database) {
-        if (startedDatabase) {
-            database.close();
-        }
     }
 }

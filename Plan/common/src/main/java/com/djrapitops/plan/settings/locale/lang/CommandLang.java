@@ -88,6 +88,7 @@ public enum CommandLang implements Lang {
     INFO_UPDATE("command.subcommand.info.update", "Cmd Info - Update", "  §2Update Available: §f${0}"),
     INFO_DATABASE("command.subcommand.info.database", "Cmd Info - Database", "  §2Current Database: §f${0}"),
     INFO_PROXY_CONNECTION("command.subcommand.info.proxy", "Cmd Info - Bungee Connection", "  §2Connected to Proxy: §f${0}"),
+    INFO_SERVER_UUID("command.subcommand.info.serverUUID", "Cmd Info - Server UUID", "  §2Server UUID: §f${0}"),
 
     INGAME_ACTIVITY_INDEX("command.ingame.activityIndex", "Cmd Qinspect - Activity Index", "  §2Activity Index: §f${0} | ${1}"),
     INGAME_REGISTERED("command.ingame.registered", "Cmd Qinspect - Registered", "  §2Registered: §f${0}"),

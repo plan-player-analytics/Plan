@@ -19,11 +19,13 @@ package com.djrapitops.plan.delivery.webserver.http;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.webserver.PassBruteForceGuard;
+import com.djrapitops.plan.delivery.webserver.RateLimitGuard;
 import com.djrapitops.plan.delivery.webserver.ResponseFactory;
 import com.djrapitops.plan.delivery.webserver.ResponseResolver;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import org.apache.commons.lang3.StringUtils;
 import org.eclipse.jetty.http.HttpHeader;
 
@@ -39,6 +41,7 @@ public class RequestHandler {
     private final ResponseResolver responseResolver;
 
     private final PassBruteForceGuard bruteForceGuard;
+    private final RateLimitGuard rateLimitGuard;
     private final AccessLogger accessLogger;
 
     @Inject
@@ -49,22 +52,29 @@ public class RequestHandler {
         this.accessLogger = accessLogger;
 
         bruteForceGuard = new PassBruteForceGuard();
+        rateLimitGuard = new RateLimitGuard();
     }
 
     public Response getResponse(InternalRequest internalRequest) {
-        String accessAddress = internalRequest.getAccessAddress(webserverConfiguration);
+        @Untrusted(reason = "from header") String accessAddress = internalRequest.getAccessAddress(webserverConfiguration);
+        @Untrusted String requestedPath = internalRequest.getRequestedPath();
 
+        boolean blocked = false;
         Response response;
-        Request request = null;
+        @Untrusted Request request = null;
         if (bruteForceGuard.shouldPreventRequest(accessAddress)) {
             response = responseFactory.failedLoginAttempts403();
+            blocked = true;
+        } else if (rateLimitGuard.shouldPreventRequest(requestedPath, accessAddress)) {
+            response = responseFactory.failedRateLimit403();
+            blocked = true;
         } else if (!webserverConfiguration.getAllowedIpList().isAllowed(accessAddress)) {
             webserverConfiguration.getWebserverLogMessages()
                     .warnAboutWhitelistBlock(accessAddress, internalRequest.getRequestedURIString());
             response = responseFactory.ipWhitelist403(accessAddress);
         } else {
             try {
-                request = internalRequest.toRequest();
+                request = internalRequest.toRequest(accessAddress);
                 response = attemptToResolve(request, accessAddress);
             } catch (WebUserAuthException thrownByAuthentication) {
                 response = processFailedAuthentication(internalRequest, accessAddress, thrownByAuthentication);
@@ -76,22 +86,24 @@ public class RequestHandler {
         response.getHeaders().putIfAbsent("Access-Control-Allow-Credentials", "true");
         response.getHeaders().putIfAbsent("X-Robots-Tag", "noindex, nofollow");
 
-        accessLogger.log(internalRequest, request, response);
+        if (!blocked) {
+            accessLogger.log(internalRequest, request, response);
+        }
 
         return response;
     }
 
-    private Response attemptToResolve(Request request, String accessAddress) {
+    private Response attemptToResolve(@Untrusted Request request, @Untrusted String accessAddress) {
         Response response = protocolUpgradeResponse(request)
                 .orElseGet(() -> responseResolver.getResponse(request));
         request.getUser().ifPresent(user -> processSuccessfulLogin(response.getCode(), accessAddress));
         return response;
     }
 
-    private Optional<Response> protocolUpgradeResponse(Request request) {
-        Optional<String> upgrade = request.getHeader(HttpHeader.UPGRADE.asString());
+    private Optional<Response> protocolUpgradeResponse(@Untrusted Request request) {
+        @Untrusted Optional<String> upgrade = request.getHeader(HttpHeader.UPGRADE.asString());
         if (upgrade.isPresent()) {
-            String value = upgrade.get();
+            @Untrusted String value = upgrade.get();
             if ("h2c".equals(value) || "h2".equals(value)) {
                 return Optional.of(Response.builder()
                         .setStatus(101)
@@ -103,12 +115,12 @@ public class RequestHandler {
         return Optional.empty();
     }
 
-    private Response processFailedAuthentication(InternalRequest internalRequest, String accessAddress, WebUserAuthException thrownByAuthentication) {
+    private Response processFailedAuthentication(InternalRequest internalRequest, @Untrusted String accessAddress, WebUserAuthException thrownByAuthentication) {
         FailReason failReason = thrownByAuthentication.getFailReason();
         if (failReason == FailReason.USER_PASS_MISMATCH) {
             return processWrongPassword(accessAddress, failReason);
         } else {
-            String from = internalRequest.getRequestedURIString();
+            @Untrusted String from = internalRequest.getRequestedURIString();
             String directTo = StringUtils.startsWithAny(from, "/auth/", "/login") ? "/login" : "/login?from=." + from;
             return Response.builder()
                     .redirectTo(directTo)
@@ -117,7 +129,7 @@ public class RequestHandler {
         }
     }
 
-    private Response processWrongPassword(String accessAddress, FailReason failReason) {
+    private Response processWrongPassword(@Untrusted String accessAddress, FailReason failReason) {
         bruteForceGuard.increaseAttemptCountOnFailedLogin(accessAddress);
         if (bruteForceGuard.shouldPreventRequest(accessAddress)) {
             return responseFactory.failedLoginAttempts403();
@@ -126,7 +138,7 @@ public class RequestHandler {
         }
     }
 
-    private void processSuccessfulLogin(int responseCode, String accessAddress) {
+    private void processSuccessfulLogin(int responseCode, @Untrusted String accessAddress) {
         boolean successfulLogin = responseCode != 401;
         boolean notForbidden = responseCode != 403;
         if (successfulLogin && notForbidden) {

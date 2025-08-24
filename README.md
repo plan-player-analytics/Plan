@@ -1,9 +1,12 @@
-# ![Player Analytics](http://puu.sh/AXSg7/5f2f78c06c.jpg)
+![Player Analytics](http://puu.sh/AXSg7/5f2f78c06c.jpg)
 
 [![Github Actions](https://github.com/plan-player-analytics/Plan/workflows/CI/badge.svg)](https://github.com/plan-player-analytics/Plan/actions/workflows/ci.yml)
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)  
+![Java](https://custom-icon-badges.demolab.com/badge/⮞-red?logo=java-white)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=ncloc)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)
-[![Code coverage](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=coverage)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)
+[![Code coverage](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=coverage)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)  
+![React](https://custom-icon-badges.demolab.com/badge/⮞-blue?logo=react-white)
+[![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=plan-player-analytics_Plan&metric=ncloc)](https://sonarcloud.io/summary/overall?id=plan-player-analytics_Plan)
 
 [Documentation & Tutorials](https://github.com/plan-player-analytics/Plan/wiki) | [Releases](https://github.com/plan-player-analytics/Plan/releases) | [DEV builds](https://github.com/plan-player-analytics/Plan/actions/workflows/ci.yml?query=branch%3Amaster) | [Issues & Suggestions](https://github.com/plan-player-analytics/Plan/issues)
 
@@ -53,7 +56,7 @@ cd Plan
 - **[FullCalendar](https://github.com/fullcalendar/fullcalendar)** | [MIT License](https://datatables.net/license/mit)
 - **[Font Awesome Icons](http://fontawesome.io/icons/)** | [SIL Open Font License](http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL)
 - **[MaxMind GeoIP2 Country](https://www.maxmind.com/en/geoip2-country-database)** | [MaxMind End User License Agreement (EULA)](https://www.maxmind.com/en/end-user-license-agreement)
-- **[Dagger](https://dagger.dev/)**| [Apache-2.0 License](https://github.com/google/dagger/blob/master/LICENSE.txt)
+- **[Dagger](https://dagger.dev/)** | [Apache-2.0 License](https://github.com/google/dagger/blob/master/LICENSE.txt)
 - **[DependencyDownload](https://github.com/Vankka/DependencyDownload)** | [MIT License](https://github.com/Vankka/DependencyDownload/blob/main/LICENSE)
 
 ## License

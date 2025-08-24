@@ -16,13 +16,19 @@
  */
 package com.djrapitops.plan.storage.database;
 
+import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionQueryResultTableDataQueryTest;
 import com.djrapitops.plan.storage.database.queries.*;
+import com.djrapitops.plan.storage.database.queries.analysis.PlayerRetentionQueriesTest;
 import com.djrapitops.plan.storage.database.queries.analysis.TopListQueriesTest;
+import com.djrapitops.plan.storage.database.queries.objects.PluginMetadataQueriesTest;
 import com.djrapitops.plan.storage.database.transactions.commands.ChangeUserUUIDTransactionTest;
 import com.djrapitops.plan.storage.database.transactions.commands.CombineUserTransactionTest;
+import com.djrapitops.plan.storage.database.transactions.patches.AfterBadJoinAddressDataCorrectionPatchTest;
+import com.djrapitops.plan.storage.database.transactions.patches.BadJoinAddressDataCorrectionPatchTest;
 
 public interface DatabaseTestAggregate extends
         ActivityIndexQueriesTest,
+        AllowlistQueriesTest,
         DatabaseBackupTest,
         ExtensionsDatabaseTest,
         GeolocationQueriesTest,
@@ -37,6 +43,11 @@ public interface DatabaseTestAggregate extends
         FilterQueryTest,
         JoinAddressQueriesTest,
         ChangeUserUUIDTransactionTest,
-        CombineUserTransactionTest {
+        CombineUserTransactionTest,
+        ExtensionQueryResultTableDataQueryTest,
+        BadJoinAddressDataCorrectionPatchTest,
+        AfterBadJoinAddressDataCorrectionPatchTest,
+        PlayerRetentionQueriesTest,
+        PluginMetadataQueriesTest {
     /* Collects all query tests together so its easier to implement database tests */
 }

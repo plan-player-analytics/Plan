@@ -19,6 +19,7 @@ package com.djrapitops.plan.addons.placeholderapi;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.placeholder.PlanPlaceholders;
 import com.djrapitops.plan.processing.Processing;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plan.version.VersionChecker;
@@ -88,16 +89,32 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
         return versionChecker.getCurrentVersion();
     }
 
-    @Override
-    public String onRequest(OfflinePlayer player, String params) {
-        UUID uuid = player != null ? player.getUniqueId() : null;
-        if ("Server thread".equalsIgnoreCase(Thread.currentThread().getName())) {
-            return getCached(params, uuid);
-        }
-        return getPlaceholderValue(params, uuid);
+    private static boolean isServerThread() {
+        String threadName = Thread.currentThread().getName();
+        return "Server thread".equalsIgnoreCase(threadName) // Spigot
+                || threadName != null && threadName.contains("Region Scheduler Thread"); // Folia
     }
 
-    private String getPlaceholderValue(String params, UUID uuid) {
+    @Override
+    public String onRequest(OfflinePlayer player, @Untrusted String params) {
+        try {
+            UUID uuid = player != null ? player.getUniqueId() : null;
+            if (isServerThread()) {
+                return getCached(params, uuid);
+            }
+
+            return Optional.ofNullable(getCached(params, uuid))
+                    .orElseGet(() -> getPlaceholderValue(params, uuid));
+        } catch (IllegalStateException e) {
+            if ("zip file closed".equals(e.getMessage())) {
+                return null; // Plan is disabled.
+            } else {
+                throw e;
+            }
+        }
+    }
+
+    private String getPlaceholderValue(@Untrusted String params, UUID uuid) {
         try {
             String value = placeholders.onPlaceholderRequest(uuid, parseRequest(params), parseParameters(params));
 
@@ -114,14 +131,16 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
         }
     }
 
-    private String parseRequest(String params) {
+    @Untrusted
+    private String parseRequest(@Untrusted String params) {
         return params.split(":")[0];
     }
 
-    private List<String> parseParameters(String params) {
+    @Untrusted
+    private List<String> parseParameters(@Untrusted String params) {
         List<String> parameters = new ArrayList<>();
         boolean first = true;
-        for (String parameter : params.split(":")) {
+        for (@Untrusted String parameter : params.split(":")) {
             if (first) {
                 first = false;
             } else {
@@ -131,8 +150,8 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
         return parameters;
     }
 
-    private String getCached(String params, UUID uuid) {
-        String key = params + "-" + uuid;
+    private String getCached(@Untrusted String params, UUID uuid) {
+        @Untrusted String key = params + "-" + uuid;
 
         if (!currentlyProcessing.contains(key)) {
             currentlyProcessing.add(key);

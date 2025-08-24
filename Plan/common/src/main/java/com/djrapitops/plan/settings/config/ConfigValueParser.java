@@ -39,6 +39,8 @@ public interface ConfigValueParser<T> {
             return new BooleanParser();
         } else if (Long.class.isAssignableFrom(type)) {
             return new LongParser();
+        } else if (Double.class.isAssignableFrom(type)) {
+            return new DoubleParser();
         } else if (Integer.class.isAssignableFrom(type)) {
             return new IntegerParser();
         }

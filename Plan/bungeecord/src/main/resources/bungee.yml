@@ -1,0 +1,11 @@
+name: Plan
+author: AuroraLS3
+main: com.djrapitops.plan.PlanBungee
+version: ${version}
+softDepends:
+- AdvancedBan
+- LiteBans
+- LuckPerms
+- nuVotifier
+- ViaVersion
+- DKBans

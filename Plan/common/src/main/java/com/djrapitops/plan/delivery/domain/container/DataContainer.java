@@ -139,7 +139,6 @@ public interface DataContainer {
 
     /**
      * Get formatted Value identified by the Key.
-     * <p>
      *
      * @param key       Key that identifies the Value
      * @param formatter Formatter for the Optional returned by {@link DataContainer#getValue(Key)}

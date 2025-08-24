@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.file;
 
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
@@ -32,7 +33,7 @@ import java.util.function.Supplier;
  */
 public class ResourceCache {
 
-    private static final Cache<String, String> cache = Caffeine.newBuilder()
+    private static final Cache<String, Resource> cache = Caffeine.newBuilder()
             .expireAfterAccess(1, TimeUnit.MINUTES)
             .build();
 
@@ -40,18 +41,18 @@ public class ResourceCache {
         // Static class
     }
 
-    public static Resource getOrCache(String resourceName, Supplier<Resource> resourceSupplier) {
-        String found = cache.getIfPresent(resourceName);
+    public static Resource getOrCache(@Untrusted String resourceName, Supplier<Resource> resourceSupplier) {
+        Resource found = cache.getIfPresent(resourceName);
         if (found == null) {
             Resource created = resourceSupplier.get();
             if (created == null) return null;
             return new StringCachingResource(created);
         }
-        return new StringResource(resourceName, found);
+        return found;
     }
 
-    public static void cache(String resourceName, String got) {
-        cache.put(resourceName, got);
+    public static void cache(@Untrusted String resourceName, String contents, long lastModifiedDate) {
+        cache.put(resourceName, new StringResource(resourceName, contents, lastModifiedDate));
     }
 
     public static void invalidateAll() {

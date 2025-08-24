@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.swagger;
 
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
@@ -38,12 +39,12 @@ public class SwaggerPageResolver implements Resolver {
     @Override
     public boolean canAccess(Request request) {
         return request.getUser()
-                .filter(user -> user.hasPermission("page.server"))
+                .filter(user -> user.hasPermission(WebPermission.ACCESS_DOCS))
                 .isPresent();
     }
 
     @Override
     public Optional<Response> resolve(Request request) {
-        return Optional.of(responseFactory.reactPageResponse());
+        return Optional.of(responseFactory.reactPageResponse(request));
     }
 }

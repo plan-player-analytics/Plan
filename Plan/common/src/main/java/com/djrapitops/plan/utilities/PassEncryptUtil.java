@@ -17,6 +17,7 @@
 package com.djrapitops.plan.utilities;
 
 import com.djrapitops.plan.exceptions.PassEncryptException;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.crypto.SecretKeyFactory;
@@ -29,7 +30,7 @@ import java.util.Base64;
 /**
  * Password Encryption utility.
  * <p>
- * https://github.com/defuse/password-hashing/blob/master/PasswordStorage.java
+ * <a href="https://github.com/defuse/password-hashing/blob/master/PasswordStorage.java">Based on this code</a>
  *
  * @author Defuse
  */
@@ -62,7 +63,7 @@ public class PassEncryptUtil {
      * @return Hash + salt
      * @throws CannotPerformOperationException If the hash creation fails
      */
-    public static String createHash(String password) {
+    public static String createHash(@Untrusted String password) {
         return createHash(password.toCharArray());
     }
 
@@ -93,7 +94,7 @@ public class PassEncryptUtil {
      * @throws CannotPerformOperationException If hashing fails
      * @throws InvalidHashException            If the hash is missing details.
      */
-    public static boolean verifyPassword(String password, String correctHash) {
+    public static boolean verifyPassword(@Untrusted String password, String correctHash) {
         return verifyPassword(password.toCharArray(), correctHash);
     }
 

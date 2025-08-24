@@ -17,9 +17,11 @@
 package com.djrapitops.plan.delivery.web;
 
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
+import com.djrapitops.plan.delivery.web.resolver.request.Request;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Pattern;
 
@@ -62,6 +64,26 @@ public interface ResolverService {
      * @throws IllegalArgumentException If pluginName is null or empty.
      */
     void registerResolverForMatches(String pluginName, Pattern pattern, Resolver resolver);
+
+    /**
+     * Register a new permission that you are using in your {@link Resolver#canAccess(Request)} method.
+     * <p>
+     * The permissions are not given to any users by default, and need to be given by admin manually.
+     *
+     * @param webPermissions Permission strings, higher level permissions grant lower level automatically - eg. page.foo also grants page.foo.bar
+     * @return CompletableFuture that tells when the permissions have been stored.
+     */
+    CompletableFuture<Void> registerPermissions(String... webPermissions);
+
+    /**
+     * Register a new permission that you are using in your {@link Resolver#canAccess(Request)} method.
+     * <p>
+     * The permission is granted to any groups with {@code whenHasPermission} parameter.
+     *
+     * @param webPermission     Permission string, higher level permissions grant lower level automatically - eg. page.foo also grants page.foo.bar
+     * @param whenHasPermission Permission that a group already has that this permission should be granted to - eg. page.network.overview.numbers
+     */
+    void registerPermission(String webPermission, String whenHasPermission);
 
     /**
      * Obtain a {@link Resolver} for a target.

@@ -16,21 +16,16 @@
  */
 package com.djrapitops.plan.delivery.export;
 
-import com.djrapitops.plan.delivery.rendering.pages.Page;
-import com.djrapitops.plan.delivery.rendering.pages.PageFactory;
-import com.djrapitops.plan.delivery.web.ResourceService;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
-import com.djrapitops.plan.delivery.web.resource.WebResource;
 import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
-import com.djrapitops.plan.exceptions.connection.WebException;
+import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.identification.ServerInfo;
-import com.djrapitops.plan.settings.theme.Theme;
+import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.file.PlanFiles;
-import com.djrapitops.plan.storage.file.Resource;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
@@ -49,28 +44,25 @@ import java.util.Optional;
 public class PlayersPageExporter extends FileExporter {
 
     private final PlanFiles files;
+    private static final String PLAYERS_TABLE = "playersTable";
     private final DBSystem dbSystem;
-    private final PageFactory pageFactory;
     private final RootJSONResolver jsonHandler;
-    private final Theme theme;
     private final ServerInfo serverInfo;
 
     private final ExportPaths exportPaths;
+    private final PlanConfig config;
 
     @Inject
     public PlayersPageExporter(
             PlanFiles files,
-            DBSystem dbSystem,
-            PageFactory pageFactory,
+            PlanConfig config, DBSystem dbSystem,
             RootJSONResolver jsonHandler,
-            Theme theme,
             ServerInfo serverInfo
     ) {
         this.files = files;
+        this.config = config;
         this.dbSystem = dbSystem;
-        this.pageFactory = pageFactory;
         this.jsonHandler = jsonHandler;
-        this.theme = theme;
         this.serverInfo = serverInfo;
 
         exportPaths = new ExportPaths();
@@ -81,107 +73,40 @@ public class PlayersPageExporter extends FileExporter {
         if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
 
         exportPaths.put("href=\"/\"", "href=\"" + toRelativePathFromRoot(serverInfo.getServer().isProxy() ? "network" : "server") + '"');
-        exportRequiredResources(toDirectory);
         exportJSON(toDirectory);
-        exportHtml(toDirectory);
+        exportReactRedirects(toDirectory);
         exportPaths.clear();
     }
 
-    private void exportHtml(Path toDirectory) throws IOException {
-        Path to = toDirectory
-                .resolve("players")
-                .resolve("index.html");
-
-        Page page = pageFactory.playersPage();
-
-        // Fixes refreshingJsonRequest ignoring old data of export
-        String html = StringUtils.replaceEach(page.toHtml(),
-                new String[]{
-                        "}, 'playerlist', true);",
-                        "<head>"
-                },
-                new String[]{
-                        "}, 'playerlist');",
-                        "<head><style>.refresh-element {display: none;}</style>"
-                });
-
-        export(to, exportPaths.resolveExportPaths(html));
+    private void exportReactRedirects(Path toDirectory) throws IOException {
+        String[] redirections = {"players"};
+        exportReactRedirects(toDirectory, files, config, redirections);
     }
 
     private void exportJSON(Path toDirectory) throws IOException {
-        Response response = getJSONResponse("players")
+        Response response = getJSONResponse()
                 .orElseThrow(() -> new NotFoundException("players page was not properly exported: not found"));
 
-        String jsonResourceName = toFileName(toJSONResourceName("players")) + ".json";
+        String jsonResourceName = toFileName(toJSONResourceName()) + ".json";
 
         export(toDirectory.resolve("data").resolve(jsonResourceName),
                 // Replace ../player in urls to fix player page links
                 StringUtils.replace(response.getAsString(), "../player", toRelativePathFromRoot("player"))
         );
-        exportPaths.put("./v1/players", toRelativePathFromRoot("data/" + jsonResourceName));
+        exportPaths.put("./v1/" + PLAYERS_TABLE, toRelativePathFromRoot("data/" + jsonResourceName));
     }
 
-    private String toJSONResourceName(String resource) {
-        return StringUtils.replaceEach(resource, new String[]{"?", "&", "type=", "server="}, new String[]{"-", "_", "", ""});
+    private String toJSONResourceName() {
+        return StringUtils.replaceEach(PLAYERS_TABLE, new String[]{"?", "&", "type=", "server="}, new String[]{"-", "_", "", ""});
     }
 
-    private Optional<Response> getJSONResponse(String resource) {
+    private Optional<Response> getJSONResponse() {
         try {
-            return jsonHandler.getResolver().resolve(new Request("GET", "/v1/" + resource, null, Collections.emptyMap()));
-        } catch (WebException e) {
+            return jsonHandler.getResolver().resolve(new Request("GET", "/v1/" + PLAYERS_TABLE, null, Collections.emptyMap(), null));
+        } catch (WebUserAuthException e) {
             // The rest of the exceptions should not be thrown
             throw new IllegalStateException("Unexpected exception thrown: " + e.toString(), e);
         }
-    }
-
-    private void exportRequiredResources(Path toDirectory) throws IOException {
-        // Style
-        exportResources(toDirectory,
-                "img/Flaticon_circle.png",
-                "css/sb-admin-2.css",
-                "css/style.css",
-                "css/noauth.css",
-                "vendor/datatables/datatables.min.js",
-                "vendor/datatables/datatables.min.css",
-                "vendor/fontawesome-free/css/all.min.css",
-                "vendor/fontawesome-free/webfonts/fa-brands-400.eot",
-                "vendor/fontawesome-free/webfonts/fa-brands-400.ttf",
-                "vendor/fontawesome-free/webfonts/fa-brands-400.woff",
-                "vendor/fontawesome-free/webfonts/fa-brands-400.woff2",
-                "vendor/fontawesome-free/webfonts/fa-regular-400.eot",
-                "vendor/fontawesome-free/webfonts/fa-regular-400.ttf",
-                "vendor/fontawesome-free/webfonts/fa-regular-400.woff",
-                "vendor/fontawesome-free/webfonts/fa-regular-400.woff2",
-                "vendor/fontawesome-free/webfonts/fa-solid-900.eot",
-                "vendor/fontawesome-free/webfonts/fa-solid-900.ttf",
-                "vendor/fontawesome-free/webfonts/fa-solid-900.woff",
-                "vendor/fontawesome-free/webfonts/fa-solid-900.woff2",
-                "js/sb-admin-2.js",
-                "js/xmlhttprequests.js",
-                "js/color-selector.js"
-        );
-    }
-
-    private void exportResources(Path toDirectory, String... resourceNames) throws IOException {
-        for (String resourceName : resourceNames) {
-            exportResource(toDirectory, resourceName);
-        }
-    }
-
-    private void exportResource(Path toDirectory, String resourceName) throws IOException {
-        WebResource resource = ResourceService.getInstance().getResource("Plan", resourceName,
-                () -> files.getResourceFromJar("web/" + resourceName).asWebResource());
-        Path to = toDirectory.resolve(resourceName);
-
-        if (resourceName.endsWith(".css") || resourceName.endsWith("color-selector.js")) {
-            export(to, theme.replaceThemeColors(resource.asString()));
-        } else if (Resource.isTextResource(resourceName)) {
-            export(to, resource.asString());
-        } else {
-            export(to, resource);
-        }
-
-        exportPaths.put(resourceName, toRelativePathFromRoot(resourceName));
     }
 
     private String toRelativePathFromRoot(String resourceName) {

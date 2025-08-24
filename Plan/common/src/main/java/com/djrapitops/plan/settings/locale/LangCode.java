@@ -26,17 +26,18 @@ public enum LangCode {
     CUSTOM("Custom", ""),
     EN("English", "AuroraLS3"),
     ES("Español", "Catalina, itaquito, Elguerrero & 4drian3d"),
-    CN("\u6C49\u8BED", "f0rb1d (\u4f5b\u58c1\u706f), qsefthuopq, shaokeyibb, Fur_xia, 10935336 & SkipM4"), // Simplified Chinese
-    CS("čeština", "Shadowhackercz, QuakyCZ, MrFriggo & WolverStones"),
-    DE("Deutsch", "Eyremba, fuzzlemann, Morsmorse & hallo1142"),
+    CN("\u6C49\u8BED", "f0rb1d (\u4f5b\u58c1\u706f), qsefthuopq, shaokeyibb, Fur_xia, 10935336, SkipM4, TheLittle_Yang, jhqwqmc & liuzhen932"), // Simplified Chinese
+    CS("\u010de\u0161tina", "Shadowhackercz, QuakyCZ, MrFriggo & WolverStones"),
+    DE("Deutsch", "Eyremba, fuzzlemann, Morsmorse, hallo1142 & DubHacker"),
     FI("suomi", "AuroraLS3, KasperiP"),
-    FR("français", "CyanTech, Aurelien & Nogapra"),
+    FR("français", "CyanTech, Aurelien, Nogapra & Sniper_TVmc"),
     IT("Italiano", "Malachiel & Mastory_Md5"),
-    JA("\u65E5\u672C\u8A9E", "yukieji"),
+    JA("\u65E5\u672C\u8A9E", "yukieji, inductor, lis2a, yu_solt, Jumala9163, Zaemong & ringoXD"),
     KO("\uD55C\uAD6D\uC5B4", "Guinness_Akihiko"),
     NL("Nederlands", "Sander0542"),
-    RU("русский", "Saph1s, Perhun_Pak, BratishkaErik & stashenko"),
+    RU("ру\u0441\u0441к\u0438\u0439", "Saph1s, Perhun_Pak, BratishkaErik & stashenko"),
     TR("Türkçe", "TDJisvan, BruilsiozPro & EyuphanMandiraci"),
+    UK("україн\u0441ька \u043cо\u0432а", "xlanyleeet"),
     PT_BR("Português", "jvmuller"),
     ZH_TW("\u6F22\u8A9E", "\u6d1b\u4f0a & zisunny104");
 

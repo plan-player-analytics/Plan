@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.extension.extractor;
 
+import com.djrapitops.plan.component.Component;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.Group;
 import com.djrapitops.plan.extension.annotation.*;
@@ -452,6 +453,24 @@ class ExtensionExtractorTest {
         ExtensionExtractor underTest = new ExtensionExtractor(extension);
         Map<ExtensionMethod.ParameterType, ExtensionMethods> result = underTest.getMethods();
         Map<ExtensionMethod.ParameterType, ExtensionMethods> expected = buildExpectedExtensionMethodMap(extension, ExtensionMethods::addDataBuilderMethod);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void methodsAreExtracted9() throws NoSuchMethodException {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @Conditional("hasJoined")
+            @ComponentProvider(text = "Test")
+            public Component method() {
+                return null;
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+        Map<ExtensionMethod.ParameterType, ExtensionMethods> result = underTest.getMethods();
+        Map<ExtensionMethod.ParameterType, ExtensionMethods> expected = buildExpectedExtensionMethodMap(extension, ExtensionMethods::addComponentMethod);
 
         assertEquals(expected, result);
     }

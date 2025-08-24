@@ -75,6 +75,7 @@ public class SessionQueries {
             KillsTable.KILLER_UUID + ',' +
             KillsTable.VICTIM_UUID + ',' +
             "v." + UsersTable.USER_NAME + " as victim_name, " +
+            "v." + UsersTable.REGISTERED + " as victim_" + UsersTable.REGISTERED + ", " +
             "k." + UsersTable.USER_NAME + " as killer_name, " +
             KillsTable.DATE + ',' +
             KillsTable.WEAPON +
@@ -185,7 +186,8 @@ public class SessionQueries {
             ServerName serverName = new ServerName(
                     Server.getIdentifiableName(
                             set.getString("server_name"),
-                            set.getInt("server_id")
+                            set.getInt("server_id"),
+                            false
                     ));
             extraData.put(ServerName.class, serverName);
 
@@ -199,7 +201,8 @@ public class SessionQueries {
                 );
                 PlayerKill.Victim victim = new PlayerKill.Victim(
                         UUID.fromString(set.getString(KillsTable.VICTIM_UUID)),
-                        victimName
+                        victimName,
+                        set.getLong("victim_" + UsersTable.REGISTERED)
                 );
                 ServerIdentifier serverIdentifier = new ServerIdentifier(serverUUID, serverName);
                 String weapon = set.getString(KillsTable.WEAPON);
@@ -449,6 +452,46 @@ public class SessionQueries {
         };
     }
 
+    /**
+     * Query session count for each day within range across the whole network.
+     *
+     * @param after          After epoch ms
+     * @param before         Before epoch ms
+     * @param timeZoneOffset Offset in ms to determine start of day.
+     * @return Map - Epoch ms (Start of day at 0 AM, no offset) : Session count of that day
+     */
+    public static Query<NavigableMap<Long, Integer>> sessionCountPerDay(long after, long before, long timeZoneOffset) {
+        return database -> {
+            Sql sql = database.getSql();
+            String selectSessionsPerDay = SELECT +
+                    sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + SessionsTable.SESSION_START + "+?)/1000"))) +
+                    "*1000 as date," +
+                    "COUNT(1) as session_count" +
+                    FROM + SessionsTable.TABLE_NAME +
+                    WHERE + SessionsTable.SESSION_END + "<=?" +
+                    AND + SessionsTable.SESSION_START + ">=?" +
+                    GROUP_BY + "date";
+
+            return database.query(new QueryStatement<NavigableMap<Long, Integer>>(selectSessionsPerDay, 100) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, timeZoneOffset);
+                    statement.setLong(2, before);
+                    statement.setLong(3, after);
+                }
+
+                @Override
+                public NavigableMap<Long, Integer> processResults(ResultSet set) throws SQLException {
+                    NavigableMap<Long, Integer> uniquePerDay = new TreeMap<>();
+                    while (set.next()) {
+                        uniquePerDay.put(set.getLong("date"), set.getInt("session_count"));
+                    }
+                    return uniquePerDay;
+                }
+            });
+        };
+    }
+
     public static Query<Long> playtime(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
                 FROM + SessionsTable.TABLE_NAME +
@@ -545,6 +588,46 @@ public class SessionQueries {
                     statement.setLong(2, before);
                     statement.setLong(3, after);
                     statement.setString(4, serverUUID.toString());
+                }
+
+                @Override
+                public NavigableMap<Long, Long> processResults(ResultSet set) throws SQLException {
+                    NavigableMap<Long, Long> uniquePerDay = new TreeMap<>();
+                    while (set.next()) {
+                        uniquePerDay.put(set.getLong("date"), set.getLong("playtime"));
+                    }
+                    return uniquePerDay;
+                }
+            });
+        };
+    }
+
+    /**
+     * Query playtime for each day within range across the whole network.
+     *
+     * @param after          After epoch ms
+     * @param before         Before epoch ms
+     * @param timeZoneOffset Offset in ms to determine start of day.
+     * @return Map - Epoch ms (Start of day at 0 AM, no offset) : Playtime of that day
+     */
+    public static Query<NavigableMap<Long, Long>> playtimePerDay(long after, long before, long timeZoneOffset) {
+        return database -> {
+            Sql sql = database.getSql();
+            String selectPlaytimePerDay = SELECT +
+                    sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + SessionsTable.SESSION_START + "+?)/1000"))) +
+                    "*1000 as date," +
+                    "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
+                    FROM + SessionsTable.TABLE_NAME +
+                    WHERE + SessionsTable.SESSION_END + "<=?" +
+                    AND + SessionsTable.SESSION_START + ">=?" +
+                    GROUP_BY + "date";
+
+            return database.query(new QueryStatement<NavigableMap<Long, Long>>(selectPlaytimePerDay, 100) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, timeZoneOffset);
+                    statement.setLong(2, before);
+                    statement.setLong(3, after);
                 }
 
                 @Override
@@ -761,7 +844,7 @@ public class SessionQueries {
                 INNER_JOIN + ServerTable.TABLE_NAME + " s on s." + ServerTable.ID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_ID +
                 WHERE + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?" +
-                GROUP_BY + "s." + ServerTable.ID;
+                GROUP_BY + "s." + ServerTable.ID + ",s." + ServerTable.NAME;
         return new QueryStatement<>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -775,13 +858,22 @@ public class SessionQueries {
                 while (set.next()) {
                     String name = Server.getIdentifiableName(
                             set.getString(ServerTable.NAME),
-                            set.getInt(ServerTable.ID)
+                            set.getInt(ServerTable.ID),
+                            false
                     );
                     playtimePerServer.put(name, set.getLong("playtime"));
                 }
                 return playtimePerServer;
             }
         };
+    }
+
+    public static Query<Long> lastSeen(UUID playerUUID) {
+        String sql = SELECT + "MAX(" + SessionsTable.SESSION_END + ") as last_seen" +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID;
+        return db -> db.queryOptional(sql, set -> set.getLong("last_seen"), playerUUID)
+                .orElse(0L);
     }
 
     public static Query<Long> lastSeen(UUID playerUUID, ServerUUID serverUUID) {
@@ -823,6 +915,16 @@ public class SessionQueries {
                 return set.next() ? set.getLong("playtime") : 0L;
             }
         };
+    }
+
+    public static Query<Long> activePlaytime(long after, long before) {
+        String sql = SELECT + "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME +
+                ") as playtime" +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.SESSION_END + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?";
+        return db -> db.queryOptional(sql, set -> set.getLong("playtime"), after, before)
+                .orElse(0L);
     }
 
     public static Query<Set<Integer>> userIdsOfPlayedBetween(long after, long before, List<ServerUUID> serverUUIDs) {
@@ -911,5 +1013,17 @@ public class SessionQueries {
                 return set.next() ? set.getLong("m") : -1L;
             }
         };
+    }
+
+    public static Query<Map<UUID, Long>> lastSeen(ServerUUID serverUUID) {
+        String sql = SELECT + UsersTable.USER_UUID + ", MAX(" + SessionsTable.SESSION_END + ") as last_seen" +
+                FROM + SessionsTable.TABLE_NAME + " s" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u ON u." + UsersTable.ID + "=s." + SessionsTable.USER_ID +
+                WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                GROUP_BY + UsersTable.USER_UUID;
+        return db -> db.queryMap(sql, (set, to) -> to.put(
+                UUID.fromString(set.getString(UsersTable.USER_UUID)),
+                set.getLong("last_seen")
+        ), serverUUID);
     }
 }

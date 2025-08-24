@@ -17,6 +17,8 @@
 package com.djrapitops.plan.storage.database.transactions.commands;
 
 import com.djrapitops.plan.storage.database.sql.tables.*;
+import com.djrapitops.plan.storage.database.sql.tables.extension.*;
+import com.djrapitops.plan.storage.database.sql.tables.webuser.*;
 import com.djrapitops.plan.storage.database.transactions.events.StoreJoinAddressTransaction;
 import com.djrapitops.plan.storage.database.transactions.patches.Patch;
 
@@ -41,11 +43,16 @@ public class RemoveEverythingTransaction extends Patch {
         clearTable(WorldTimesTable.TABLE_NAME);
         clearTable(SessionsTable.TABLE_NAME);
         clearTable(JoinAddressTable.TABLE_NAME);
+        clearTable(AllowlistBounceTable.TABLE_NAME);
         clearTable(WorldTable.TABLE_NAME);
         clearTable(PingTable.TABLE_NAME);
         clearTable(UserInfoTable.TABLE_NAME);
         clearTable(UsersTable.TABLE_NAME);
         clearTable(TPSTable.TABLE_NAME);
+        clearTable(WebGroupToPermissionTable.TABLE_NAME);
+        clearTable(WebPermissionTable.TABLE_NAME);
+        clearTable(WebGroupTable.TABLE_NAME);
+        clearTable(WebUserPreferencesTable.TABLE_NAME);
         clearTable(SecurityTable.TABLE_NAME);
         clearTable(ServerTable.TABLE_NAME);
         clearTable(CookieTable.TABLE_NAME);

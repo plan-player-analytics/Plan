@@ -27,7 +27,7 @@ public class FabricPlayerPositionTracker {
 
     private static final double[] EMPTY_POSITION = new double[5];
 
-    public FabricPlayerPositionTracker() {
+    private FabricPlayerPositionTracker() {
         // Static method class
     }
 

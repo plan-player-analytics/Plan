@@ -20,7 +20,7 @@ import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.icon.IconAccessor;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionIconTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionIconTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 

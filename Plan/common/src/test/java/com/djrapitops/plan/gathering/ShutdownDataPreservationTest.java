@@ -17,6 +17,7 @@
 package com.djrapitops.plan.gathering;
 
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.gathering.afk.AFKTracker;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import org.junit.jupiter.api.BeforeEach;
@@ -24,11 +25,13 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import utilities.RandomData;
 import utilities.TestErrorLogger;
+import utilities.TestPluginLogger;
 import utilities.mocks.PluginMockComponent;
 
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -42,13 +45,24 @@ class ShutdownDataPreservationTest {
         PlanSystem system = pluginMockComponent.getPlanSystem();
         PlatformAbstractionLayer abstractionLayer = pluginMockComponent.getAbstractionLayer();
 
+        TestErrorLogger errorLogger = new TestErrorLogger();
         underTest = new ShutdownDataPreservation(
                 system.getPlanFiles(),
                 system.getLocaleSystem().getLocale(),
                 system.getDatabaseSystem(),
                 abstractionLayer.getPluginLogger(),
-                new TestErrorLogger()
-        );
+                errorLogger,
+                new ServerShutdownSave(system.getLocaleSystem().getLocale(), system.getDatabaseSystem(), new TestPluginLogger(), errorLogger) {
+                    @Override
+                    protected boolean checkServerShuttingDownStatus() {
+                        return false;
+                    }
+
+                    @Override
+                    public Optional<AFKTracker> getAfkTracker() {
+                        return Optional.empty();
+                    }
+                });
     }
 
     @Test

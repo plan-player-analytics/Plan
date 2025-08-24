@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v2.3.1
+        uses: actions/checkout@v3
       - name: Get Download URL
         run: |
           curl 'https://api.github.com/repos/plan-player-analytics/plan/releases/${{ github.event.release.id }}/assets' | jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric") | not)' > asset.txt
@@ -35,6 +35,7 @@ jobs:
           committer_email: 41898282+github-actions[bot]@users.noreply.github.com
           message: Update versions.txt ${{ github.event.release.name }}
           add: versions.txt
+          push: origin HEAD:master
 
   update_html:
     name: Update html-branch
@@ -42,7 +43,7 @@ jobs:
 
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v2.3.1
+        uses: actions/checkout@v3
       - name: Get git TAG
         id: tagName
         uses: olegtarasov/get-tag@v2.1
@@ -77,7 +78,7 @@ jobs:
           path: ${{ env.JAR_FILENAME }}
       - name: Upload release to Ore 🚀
         if: ${{ github.event.release.prerelease == false }}
-        uses: dualspiral/ore-upload-action@v1
+        uses: dualspiral/ore-upload-action@v2
         with:
           plugin: ${{ github.event.release.name }}
           description: ${{ github.event.release.body }}
@@ -118,7 +119,7 @@ jobs:
           changelog: ${{ github.event.release.body }}
           changelog_type: markdown
           display_name: ${{ github.event.release.name }}
-          game_versions: "2:Java 17,73407:1.19,Fabric"
+          game_versions: "Java 21,1.21.3,Fabric"
           release_type: release
           relations: fabric-api:requiredDependency,luckperms:optionalDependency
       - name: Upload prerelease to CurseForge 🚀
@@ -132,6 +133,6 @@ jobs:
           changelog: ${{ github.event.release.body }}
           changelog_type: markdown
           display_name: ${{ github.event.release.name }}
-          game_versions: "2:Java 17,73407:1.19,Fabric"
+          game_versions: "Java 21,1.21.3,Fabric"
           release_type: beta
           relations: fabric-api:requiredDependency,luckperms:optionalDependency

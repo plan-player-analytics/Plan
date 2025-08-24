@@ -27,17 +27,19 @@ import java.util.Optional;
 public class CalendarEntry {
 
     private final String title;
+    private final Serializable value;
     private final Serializable start;
     private Serializable end;
     private String color;
 
-    private CalendarEntry(String title, Serializable start) {
+    private CalendarEntry(String title, Serializable value, Serializable start) {
         this.title = title;
+        this.value = value;
         this.start = start;
     }
 
-    public static CalendarEntry of(String title, Serializable start) {
-        return new CalendarEntry(title, start);
+    public static CalendarEntry of(String title, Serializable value, Serializable start) {
+        return new CalendarEntry(title, value, start);
     }
 
     public CalendarEntry withEnd(Serializable end) {
@@ -50,8 +52,12 @@ public class CalendarEntry {
         return this;
     }
 
-    public String getTitle() {
+    public Serializable getTitle() {
         return title;
+    }
+
+    public Serializable getValue() {
+        return value;
     }
 
     public Serializable getStart() {
@@ -70,6 +76,7 @@ public class CalendarEntry {
     public String toString() {
         return "{" +
                 "title:'" + title + '\'' +
+                ", value:" + value +
                 ", start:'" + start + '\'' +
                 (end != null ? ", end='" + end + '\'' : "") +
                 (color != null ? ", color='" + color + '\'' : "") +

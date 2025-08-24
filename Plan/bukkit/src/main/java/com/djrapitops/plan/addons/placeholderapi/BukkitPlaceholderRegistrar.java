@@ -22,6 +22,7 @@ import com.djrapitops.plan.utilities.logging.ErrorLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.concurrent.TimeUnit;
 
 @Singleton
 public class BukkitPlaceholderRegistrar {
@@ -29,6 +30,8 @@ public class BukkitPlaceholderRegistrar {
     private final PlanPlaceholders placeholders;
     private final PlanSystem system;
     private final ErrorLogger errorLogger;
+
+    private PlanPlaceholderExtension placeholderExtension;
 
     @Inject
     public BukkitPlaceholderRegistrar(
@@ -42,6 +45,23 @@ public class BukkitPlaceholderRegistrar {
     }
 
     public void register() {
-        new PlanPlaceholderExtension(placeholders, system, errorLogger).register();
+        placeholderExtension = new PlanPlaceholderExtension(placeholders, system, errorLogger);
+        placeholderExtension.register();
+    }
+
+    public void unregister() {
+        if (placeholderExtension != null) {
+            boolean success = false;
+            while (!success) {
+                success = placeholderExtension.unregister();
+                if (!success) {
+                    try {
+                        Thread.sleep(TimeUnit.SECONDS.toMillis(1));
+                    } catch (InterruptedException interrupted) {
+                        Thread.currentThread().interrupt();
+                    }
+                }
+            }
+        }
     }
 }

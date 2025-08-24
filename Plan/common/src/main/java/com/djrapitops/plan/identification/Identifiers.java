@@ -21,6 +21,8 @@ import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
+import com.djrapitops.plan.utilities.dev.Untrusted;
+import org.eclipse.jetty.http.HttpHeader;
 import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
@@ -63,6 +65,38 @@ public class Identifiers {
         ));
     }
 
+    public static Optional<Long> getTimestamp(@Untrusted Request request) {
+        try {
+            long currentTime = System.currentTimeMillis();
+            long timestamp = request.getHeader("X-Plan-Timestamp")
+                    .map(Long::parseLong)
+                    .orElseGet(() -> request.getQuery().get("timestamp")
+                            .map(Long::parseLong)
+                            .orElse(currentTime));
+            if (currentTime + TimeUnit.SECONDS.toMillis(10L) < timestamp) {
+                return Optional.empty();
+            }
+            return Optional.of(timestamp);
+        } catch (@Untrusted NumberFormatException nonNumberTimestamp) {
+            throw new BadRequestException("'timestamp' was not a number");
+        }
+    }
+
+    public static Optional<Long> getEtag(Request request) {
+        return request.getHeader(HttpHeader.IF_NONE_MATCH.asString())
+                .map(tag -> {
+                    try {
+                        return Long.parseLong(tag);
+                    } catch (NumberFormatException notANumber) {
+                        throw new BadRequestException("'" + HttpHeader.IF_NONE_MATCH.asString() + "'-header was not a number. Clear browser cache.");
+                    }
+                });
+    }
+
+    public static Optional<String> getStringEtag(Request request) {
+        return request.getHeader(HttpHeader.IF_NONE_MATCH.asString());
+    }
+
     /**
      * Obtain UUID of the server.
      *
@@ -70,13 +104,13 @@ public class Identifiers {
      * @return UUID of the server.
      * @throws BadRequestException If the server is not in the database.
      */
-    public Optional<ServerUUID> getServerUUID(String identifier) {
+    public Optional<ServerUUID> getServerUUID(@Untrusted String identifier) {
         Optional<ServerUUID> parsed = UUIDUtility.parseFromString(identifier).map(ServerUUID::from);
         if (parsed.isPresent()) return parsed;
         return getServerUUIDFromName(identifier);
     }
 
-    private Optional<ServerUUID> getServerUUIDFromName(String serverName) {
+    private Optional<ServerUUID> getServerUUIDFromName(@Untrusted String serverName) {
         return dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverName))
                 .map(Server::getUuid);
     }
@@ -88,33 +122,12 @@ public class Identifiers {
      * @return UUID of the player.
      * @throws BadRequestException If player parameter is not defined or the player is not in the database.
      */
-    public UUID getPlayerUUID(Request request) {
-        String playerIdentifier = request.getQuery().get("player")
+    public UUID getPlayerUUID(@Untrusted Request request) {
+        @Untrusted String playerIdentifier = request.getQuery().get("player")
                 .orElseThrow(() -> new BadRequestException("'player' parameter was not defined.")).trim();
 
         Optional<UUID> parsed = UUIDUtility.parseFromString(playerIdentifier);
         return parsed.orElseGet(() -> getPlayerUUIDFromName(playerIdentifier));
-    }
-
-    private UUID getPlayerUUIDFromName(String playerName) {
-        return dbSystem.getDatabase()
-                .query(UserIdentifierQueries.fetchPlayerUUIDOf(playerName))
-                .orElseThrow(() -> new BadRequestException("Given 'player' was not found in the database."));
-    }
-
-    public static Optional<Long> getTimestamp(Request request) {
-        try {
-            long currentTime = System.currentTimeMillis();
-            long timestamp = request.getQuery().get("timestamp")
-                    .map(Long::parseLong)
-                    .orElse(currentTime);
-            if (currentTime + TimeUnit.SECONDS.toMillis(10L) < timestamp) {
-                return Optional.empty();
-            }
-            return Optional.of(timestamp);
-        } catch (NumberFormatException nonNumberTimestamp) {
-            throw new BadRequestException("'timestamp' was not a number: " + nonNumberTimestamp.getMessage());
-        }
     }
 
     @Nullable
@@ -124,5 +137,11 @@ public class Identifiers {
 
     public Optional<Integer> getPlayerUserId(UUID playerUUID) {
         return dbSystem.getDatabase().query(UserIdentifierQueries.fetchUserId(playerUUID));
+    }
+
+    private UUID getPlayerUUIDFromName(@Untrusted String playerName) {
+        return dbSystem.getDatabase()
+                .query(UserIdentifierQueries.fetchPlayerUUIDOf(playerName))
+                .orElseThrow(() -> new BadRequestException("Given 'player' was not found in the database."));
     }
 }

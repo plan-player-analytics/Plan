@@ -27,6 +27,7 @@ import net.playeranalytics.extension.askyblock.ASkyBlockExtensionFactory;
 import net.playeranalytics.extension.authme.AuthMeExtensionFactory;
 import net.playeranalytics.extension.banmanager.BanManagerExtensionFactory;
 import net.playeranalytics.extension.bentobox.BentoBoxExtensionFactory;
+import net.playeranalytics.extension.cmi.CMIExtensionFactory;
 import net.playeranalytics.extension.discordsrv.DiscordSRVExtensionFactory;
 import net.playeranalytics.extension.dkbans.DKBansExtensionFactory;
 import net.playeranalytics.extension.dkcoins.DKCoinsExtensionFactory;
@@ -112,6 +113,7 @@ public class ExtensionRegister {
         register(new DKCoinsExtensionFactory(), DKCoinsExtensionFactory::createExtension, DKCoinsExtensionFactory::registerListener);
         register(new EssentialsExtensionFactory(), EssentialsExtensionFactory::createExtension, EssentialsExtensionFactory::registerUpdateListeners);
         register(new EssentialsExtensionFactory(), EssentialsExtensionFactory::createEcoExtension, EssentialsExtensionFactory::registerEconomyUpdateListeners);
+        register(new CMIExtensionFactory(), CMIExtensionFactory::createCMIExtension, CMIExtensionFactory::registerCMIUpdateListeners);
         register(new FactionsExtensionFactory(), FactionsExtensionFactory::createExtension);
         register(new FactionsUUIDExtensionFactory(), FactionsUUIDExtensionFactory::createExtension, FactionsUUIDExtensionFactory::registerExpansion);
         register(new FastLoginExtensionFactory(), FastLoginExtensionFactory::createExtension);
@@ -137,7 +139,7 @@ public class ExtensionRegister {
         register(new PlotSquaredExtensionFactory(), PlotSquaredExtensionFactory::createExtension);
         register(new ProtectionStonesExtensionFactory(), ProtectionStonesExtensionFactory::createExtension);
         register(new ProtocolSupportExtensionFactory(), ProtocolSupportExtensionFactory::createExtension);
-        register(new QuestsExtensionFactory(), QuestsExtensionFactory::createExtension);
+        register(new QuestsExtensionFactory(), QuestsExtensionFactory::createExtension, QuestsExtensionFactory::registerListener);
         register(new ReactExtensionFactory(), ReactExtensionFactory::createExtension);
         register(new RedProtectExtensionFactory(), RedProtectExtensionFactory::createExtension);
         register(new SpongeEconomyExtensionFactory(), SpongeEconomyExtensionFactory::createExtension);
@@ -198,7 +200,7 @@ public class ExtensionRegister {
             createExtension.apply(factory).ifPresent(this::register);
         } catch (NotReadyException | UnsupportedOperationException ignore) {
             // This exception signals that the extension can not be registered right now (Intended fail).
-        } catch (Exception | NoClassDefFoundError | IncompatibleClassChangeError e) {
+        } catch (Exception | ExceptionInInitializerError | NoClassDefFoundError | IncompatibleClassChangeError e) {
             // Places all exceptions to one exception with plugin information so that they can be reported.
             suppressException(factory.getClass(), e);
         }
@@ -213,7 +215,7 @@ public class ExtensionRegister {
             createExtension.apply(factory).forEach(this::register);
         } catch (NotReadyException | UnsupportedOperationException ignore) {
             // This exception signals that the extension can not be registered right now (Intended fail).
-        } catch (Exception | NoClassDefFoundError | IncompatibleClassChangeError e) {
+        } catch (Exception | ExceptionInInitializerError | NoClassDefFoundError | IncompatibleClassChangeError e) {
             // Places all exceptions to one exception with plugin information so that they can be reported.
             suppressException(factory.getClass(), e);
         }
@@ -231,7 +233,7 @@ public class ExtensionRegister {
                     .ifPresent(caller -> registerListener.accept(factory, caller));
         } catch (NotReadyException | UnsupportedOperationException ignore) {
             // This exception signals that the extension can not be registered right now (Intended fail).
-        } catch (Exception | NoClassDefFoundError | IncompatibleClassChangeError e) {
+        } catch (Exception | ExceptionInInitializerError | NoClassDefFoundError | IncompatibleClassChangeError e) {
             // Places all exceptions to one exception with plugin information so that they can be reported.
             suppressException(factory.getClass(), e);
         }

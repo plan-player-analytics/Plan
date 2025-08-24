@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
@@ -57,7 +58,7 @@ public class ErrorsJSONResolver implements Resolver {
 
     @Override
     public boolean canAccess(Request request) {
-        return request.getUser().orElse(new WebUser("")).hasPermission("page.server");
+        return request.getUser().orElse(new WebUser("")).hasPermission(WebPermission.ACCESS_ERRORS);
     }
 
     @GET

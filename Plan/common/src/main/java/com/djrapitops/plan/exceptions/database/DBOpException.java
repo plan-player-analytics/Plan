@@ -30,6 +30,8 @@ import java.util.Optional;
 public class DBOpException extends IllegalStateException implements ExceptionWithContext {
 
     public static final String CONSTRAINT_VIOLATION = "Constraint Violation";
+    public static final String DUPLICATE_KEY = "Duplicate key";
+    public static final String MODIFIED_SINCE_LAST_READ = "Modified since last read";
     private final ErrorContext context;
 
     public DBOpException(String message) {
@@ -77,7 +79,7 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
             case 1022:
             case 23001:
             case 23505:
-                context.related("Duplicate key")
+                context.related(DUPLICATE_KEY)
                         .whatToDo("Report this, duplicate key exists in SQL.");
                 break;
             // Constraint violation
@@ -126,6 +128,9 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
             case 1213:
                 context.related("Deadlock");
                 break;
+            case 1205:
+                context.related("Lock wait timeout exceeded.");
+                break;
             case 1267:
             case 1366:
             case 1115:
@@ -146,6 +151,9 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
                 context.related("column byte length exceeded")
                         .whatToDo("Update your MySQL, column key size was exceeded (max key length is 767 bytes in 5.6) - MySQL 5.7 increases the limit.");
                 break;
+            case 1020: // MySQL error 'Record has changed since last read in table'
+                context.related(MODIFIED_SINCE_LAST_READ);
+                break;
             default:
                 context.related("Unknown SQL Error code");
         }
@@ -164,5 +172,15 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
                 && context.getRelated().contains(DBOpException.CONSTRAINT_VIOLATION)
                 && getCause() != null
                 && getCause().getMessage().contains("user_id");
+    }
+
+    public boolean isDuplicateKeyViolation() {
+        return context != null
+                && context.getRelated().contains(DBOpException.DUPLICATE_KEY);
+    }
+
+    public boolean isModifiedSinceLastReadViolation() {
+        return context != null
+                && context.getRelated().contains(DBOpException.MODIFIED_SINCE_LAST_READ);
     }
 }

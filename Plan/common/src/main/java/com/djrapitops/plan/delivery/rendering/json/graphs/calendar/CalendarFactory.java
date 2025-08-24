@@ -19,8 +19,6 @@ package com.djrapitops.plan.delivery.rendering.json.graphs.calendar;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.settings.theme.Theme;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -34,28 +32,22 @@ import java.util.SortedMap;
  */
 @Singleton
 public class CalendarFactory {
-    private final Theme theme;
     private final PlanConfig config;
-    private final Locale locale;
     private final Formatters formatters;
 
     @Inject
     public CalendarFactory(
             PlanConfig config,
-            Locale locale,
-            Formatters formatters,
-            Theme theme
+            Formatters formatters
     ) {
         this.config = config;
-        this.locale = locale;
         this.formatters = formatters;
-        this.theme = theme;
     }
 
     public PlayerCalendar playerCalendar(PlayerContainer player) {
         return new PlayerCalendar(
                 player,
-                formatters.timeAmount(), formatters.yearLong(), formatters.iso8601NoClockLong(), theme, locale,
+                formatters.iso8601NoClockLong(),
                 config.getTimeZone()
         );
     }
@@ -68,7 +60,7 @@ public class CalendarFactory {
     ) {
         return new ServerCalendar(
                 uniquePerDay, newPerDay, playtimePerDay, sessionsPerDay,
-                formatters.iso8601NoClockTZIndependentLong(), formatters.timeAmount(), theme, locale
+                formatters.iso8601NoClockTZIndependentLong()
         );
     }
 }

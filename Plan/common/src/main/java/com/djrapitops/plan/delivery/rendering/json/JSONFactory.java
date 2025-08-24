@@ -17,6 +17,8 @@
 package com.djrapitops.plan.delivery.rendering.json;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
+import com.djrapitops.plan.delivery.domain.RetentionData;
+import com.djrapitops.plan.delivery.domain.datatransfer.PlayerJoinAddresses;
 import com.djrapitops.plan.delivery.domain.datatransfer.ServerDto;
 import com.djrapitops.plan.delivery.domain.mutators.PlayerKillMutator;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
@@ -33,18 +35,23 @@ import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.settings.locale.lang.HtmlLang;
+import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
+import com.djrapitops.plan.storage.database.queries.analysis.PlayerRetentionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.*;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.NetworkTablePlayersQuery;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.ServerTablePlayersQuery;
+import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.java.Maps;
 
 import javax.inject.Inject;
@@ -88,7 +95,22 @@ public class JSONFactory {
         this.formatters = formatters;
     }
 
-    public Map<String, Object> serverPlayersTableJSON(ServerUUID serverUUID) {
+    private static void removeFiltered(Map<UUID, String> addressByPlayerUUID, List<String> filteredJoinAddresses) {
+        if (filteredJoinAddresses.isEmpty() || filteredJoinAddresses.equals(List.of("play.example.com"))) return;
+
+        Set<UUID> toRemove = new HashSet<>();
+        // Remove filtered addresses from the data
+        for (Map.Entry<UUID, String> entry : addressByPlayerUUID.entrySet()) {
+            if (filteredJoinAddresses.contains(entry.getValue())) {
+                toRemove.add(entry.getKey());
+            }
+        }
+        for (UUID playerUUID : toRemove) {
+            addressByPlayerUUID.put(playerUUID, JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
+        }
+    }
+
+    public PlayersTableJSONCreator serverPlayersTableJSON(ServerUUID serverUUID) {
         Integer xMostRecentPlayers = config.get(DisplaySettings.PLAYERS_PER_SERVER_PAGE);
         Long playtimeThreshold = config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD);
         boolean openPlayerLinksInNewTab = config.isTrue(DisplaySettings.OPEN_PLAYER_LINKS_IN_NEW_TAB);
@@ -100,26 +122,89 @@ public class JSONFactory {
                 database.query(new ExtensionServerTableDataQuery(serverUUID, xMostRecentPlayers)),
                 openPlayerLinksInNewTab,
                 formatters, locale
-        ).toJSONMap();
+        );
     }
 
-    public Map<String, Object> networkPlayersTableJSON() {
+    public PlayersTableJSONCreator networkPlayersTableJSON() {
         Integer xMostRecentPlayers = config.get(DisplaySettings.PLAYERS_PER_PLAYERS_PAGE);
         Long playtimeThreshold = config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD);
         boolean openPlayerLinksInNewTab = config.isTrue(DisplaySettings.OPEN_PLAYER_LINKS_IN_NEW_TAB);
 
         Database database = dbSystem.getDatabase();
 
-        ServerUUID mainServerUUID = database.query(ServerQueries.fetchProxyServerInformation()).map(Server::getUuid).orElse(serverInfo.getServerUUID());
-        Map<UUID, ExtensionTabData> pluginData = database.query(new ExtensionServerTableDataQuery(mainServerUUID, xMostRecentPlayers));
+        List<ServerUUID> mainServerUUIDs = database.query(ServerQueries.fetchProxyServers())
+                .stream()
+                .map(Server::getUuid)
+                .collect(Collectors.toList());
+        if (mainServerUUIDs.isEmpty()) mainServerUUIDs.add(serverInfo.getServerUUID());
+
+        Map<UUID, ExtensionTabData> allPluginData = new HashMap<>();
+
+        for (ServerUUID serverUUID : mainServerUUIDs) {
+            Map<UUID, ExtensionTabData> pluginData = database.query(new ExtensionServerTableDataQuery(serverUUID, xMostRecentPlayers));
+            for (Map.Entry<UUID, ExtensionTabData> entry : pluginData.entrySet()) {
+                UUID playerUUID = entry.getKey();
+                ExtensionTabData dataFromServer = entry.getValue();
+                ExtensionTabData alreadyIncludedData = allPluginData.get(playerUUID);
+                if (alreadyIncludedData == null) {
+                    allPluginData.put(playerUUID, dataFromServer);
+                } else {
+                    alreadyIncludedData.combine(dataFromServer);
+                }
+            }
+        }
+
 
         return new PlayersTableJSONCreator(
                 database.query(new NetworkTablePlayersQuery(System.currentTimeMillis(), playtimeThreshold, xMostRecentPlayers)),
-                pluginData,
+                allPluginData,
                 openPlayerLinksInNewTab,
                 formatters, locale,
                 true // players page
-        ).toJSONMap();
+        );
+    }
+
+    public List<RetentionData> playerRetentionAsJSONMap(ServerUUID serverUUID) {
+        Database db = dbSystem.getDatabase();
+        return db.query(PlayerRetentionQueries.fetchRetentionData(serverUUID));
+    }
+
+    public List<RetentionData> networkPlayerRetentionAsJSONMap() {
+        Database db = dbSystem.getDatabase();
+        return db.query(PlayerRetentionQueries.fetchRetentionData());
+    }
+
+    public PlayerJoinAddresses playerJoinAddresses(ServerUUID serverUUID, boolean includeByPlayerMap) {
+        Database db = dbSystem.getDatabase();
+        List<String> filteredJoinAddresses = config.get(DataGatheringSettings.FILTER_JOIN_ADDRESSES);
+        if (includeByPlayerMap) {
+            Map<UUID, String> addresses = db.query(JoinAddressQueries.latestJoinAddressesOfPlayers(serverUUID));
+
+            removeFiltered(addresses, filteredJoinAddresses);
+
+            return new PlayerJoinAddresses(
+                    addresses.values().stream().distinct().sorted().collect(Collectors.toList()),
+                    addresses
+            );
+        } else {
+            List<String> addresses = db.query(JoinAddressQueries.uniqueJoinAddresses(serverUUID));
+            addresses.removeAll(filteredJoinAddresses);
+            return new PlayerJoinAddresses(addresses, null);
+        }
+    }
+
+    public PlayerJoinAddresses playerJoinAddresses(boolean includeByPlayerMap) {
+        Database db = dbSystem.getDatabase();
+        List<String> filteredJoinAddresses = config.get(DataGatheringSettings.FILTER_JOIN_ADDRESSES);
+        List<String> unique = db.query(JoinAddressQueries.uniqueJoinAddresses());
+        unique.removeAll(filteredJoinAddresses);
+        if (includeByPlayerMap) {
+            Map<UUID, String> latest = db.query(JoinAddressQueries.latestJoinAddressesOfPlayers());
+            removeFiltered(latest, filteredJoinAddresses);
+            return new PlayerJoinAddresses(unique, latest);
+        } else {
+            return new PlayerJoinAddresses(unique, null);
+        }
     }
 
     public List<Map<String, Object>> serverSessionsAsJSONMap(ServerUUID serverUUID) {
@@ -171,11 +256,11 @@ public class JSONFactory {
 
     public List<Map<String, Object>> serverPlayerKillsAsJSONMaps(ServerUUID serverUUID) {
         Database db = dbSystem.getDatabase();
-        List<PlayerKill> kills = db.query(KillQueries.fetchPlayerKillsOnServer(serverUUID, 100));
+        List<PlayerKill> kills = db.query(KillQueries.fetchPlayerKillsOnServer(serverUUID, 50000));
         return new PlayerKillMutator(kills).toJSONAsMap(formatters);
     }
 
-    public Optional<ServerDto> serverForIdentifier(String identifier) {
+    public Optional<ServerDto> serverForIdentifier(@Untrusted String identifier) {
         return dbSystem.getDatabase()
                 .query(ServerQueries.fetchServerMatchingIdentifier(identifier))
                 .map(ServerDto::fromServer);
@@ -186,9 +271,7 @@ public class JSONFactory {
         long now = System.currentTimeMillis();
         long weekAgo = now - TimeUnit.DAYS.toMillis(7L);
 
-        Formatter<Long> year = formatters.yearLong();
         Formatter<Double> decimals = formatters.decimals();
-        Formatter<Long> timeAmount = formatters.timeAmount();
 
         Map<ServerUUID, Server> serverInformation = db.query(ServerQueries.fetchPlanServerInformation());
         ServerUUID proxyUUID = serverInformation.values().stream()
@@ -218,11 +301,12 @@ public class JSONFactory {
                     Map<String, Object> server = new HashMap<>();
                     server.put("name", entry.getValue().getIdentifiableName());
                     server.put("serverUUID", entry.getValue().getUuid().toString());
+                    server.put("playersOnlineColor", ThemeVal.GRAPH_PLAYERS_ONLINE.getDefaultValue());
 
                     Optional<DateObj<Integer>> recentPeak = db.query(TPSQueries.fetchPeakPlayerCount(serverUUID, now - TimeUnit.DAYS.toMillis(2L)));
                     Optional<DateObj<Integer>> allTimePeak = db.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID));
-                    server.put("last_peak_date", recentPeak.map(DateObj::getDate).map(year).orElse("-"));
-                    server.put("best_peak_date", allTimePeak.map(DateObj::getDate).map(year).orElse("-"));
+                    server.put("last_peak_date", recentPeak.map(DateObj::getDate).map(Object.class::cast).orElse("-"));
+                    server.put("best_peak_date", allTimePeak.map(DateObj::getDate).map(Object.class::cast).orElse("-"));
                     server.put("last_peak_players", recentPeak.map(DateObj::getValue).orElse(0));
                     server.put("best_peak_players", allTimePeak.map(DateObj::getValue).orElse(0));
 
@@ -235,15 +319,15 @@ public class JSONFactory {
                     server.put("unique_players", uniquePlayerCounts.getOrDefault(serverUUID, 0));
                     TPSMutator tpsWeek = tpsMonth.filterDataBetween(weekAgo, now);
                     double averageTPS = tpsWeek.averageTPS();
-                    server.put("avg_tps", averageTPS != -1 ? decimals.apply(averageTPS) : locale.get(HtmlLang.UNIT_NO_DATA).toString());
+                    server.put("avg_tps", averageTPS != -1 ? decimals.apply(averageTPS) : HtmlLang.UNIT_NO_DATA.getKey());
                     server.put("low_tps_spikes", tpsWeek.lowTpsSpikeCount(config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED)));
-                    server.put("downtime", timeAmount.apply(tpsWeek.serverDownTime()));
-                    server.put("current_uptime", serverUptimeCalculator.getServerUptimeMillis(serverUUID).map(timeAmount)
-                            .orElse(locale.getString(GenericLang.UNAVAILABLE)));
+                    server.put("downtime", tpsWeek.serverDownTime());
+                    server.put("current_uptime", serverUptimeCalculator.getServerUptimeMillis(serverUUID).map(Object.class::cast)
+                            .orElse(GenericLang.UNAVAILABLE.getKey()));
 
                     Optional<TPS> online = tpsWeek.getLast();
-                    server.put("online", online.map(point -> point.getDate() >= now - TimeUnit.MINUTES.toMillis(3L) ? point.getPlayers() : "Possibly offline")
-                            .orElse(locale.get(HtmlLang.UNIT_NO_DATA).toString()));
+                    server.put("online", online.map(point -> point.getDate() >= now - TimeUnit.MINUTES.toMillis(3L) ? point.getPlayers() : HtmlLang.LABEL_POSSIBLY_OFFLINE.getKey())
+                            .orElse(HtmlLang.UNIT_NO_DATA.getKey()));
                     servers.add(server);
                 });
         return Collections.singletonMap("servers", servers);
@@ -271,9 +355,9 @@ public class JSONFactory {
 
             tableEntries.add(Maps.builder(String.class, Object.class)
                     .put("country", geolocation)
-                    .put("avg_ping", formatters.decimals().apply(ping.getAverage()) + " ms")
-                    .put("min_ping", ping.getMin() + " ms")
-                    .put("max_ping", ping.getMax() + " ms")
+                    .put("avg_ping", ping.getAverage())
+                    .put("min_ping", ping.getMin())
+                    .put("max_ping", ping.getMax())
                     .build());
         }
         return tableEntries;

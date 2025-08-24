@@ -103,7 +103,7 @@ public class FabricMessageBuilder implements MessageBuilder {
     @Override
     public void send() {
         if (previous == null) {
-            sender.sendFeedback(builder, false);
+            sender.sendFeedback(() -> builder, false);
         } else {
             previous.builder.append(builder);
             previous.send();

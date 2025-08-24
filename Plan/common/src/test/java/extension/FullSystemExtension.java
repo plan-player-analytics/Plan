@@ -17,10 +17,27 @@
 package extension;
 
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.TaskSystem;
+import com.djrapitops.plan.commands.PlanCommand;
+import com.djrapitops.plan.delivery.DeliveryUtilities;
+import com.djrapitops.plan.delivery.export.Exporter;
+import com.djrapitops.plan.delivery.formatting.Formatters;
+import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
+import com.djrapitops.plan.delivery.webserver.Addresses;
+import com.djrapitops.plan.delivery.webserver.http.WebServer;
+import com.djrapitops.plan.gathering.ServerSensor;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.settings.ConfigSystem;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
+import com.djrapitops.plan.settings.locale.LocaleSystem;
+import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.storage.file.PublicHtmlFiles;
+import com.djrapitops.plan.utilities.java.Maps;
+import com.djrapitops.plan.utilities.java.ThrowingSupplier;
+import net.playeranalytics.plugin.server.PluginLogger;
 import org.junit.jupiter.api.extension.*;
 import utilities.RandomData;
 import utilities.dagger.PlanPluginComponent;
@@ -30,6 +47,8 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Map;
+import java.util.function.Supplier;
 
 /**
  * JUnit 5 extension to construct a full PlanSystem for a test.
@@ -43,6 +62,45 @@ public class FullSystemExtension implements ParameterResolver, BeforeAllCallback
     private Path tempDir;
     private PlanSystem planSystem;
 
+    private final Map<Class, Supplier> parameterResolvers;
+
+    public FullSystemExtension() {
+        // You can't use method references here because planSystem is null when this method is initialized.
+
+        this.parameterResolvers = Maps.builder(Class.class, Supplier.class)
+                .put(PlanSystem.class, () -> planSystem)
+                .put(PlanFiles.class, () -> planSystem.getPlanFiles())
+                .put(PlanConfig.class, () -> planSystem.getConfigSystem().getConfig())
+                .put(Theme.class, () -> planSystem.getConfigSystem().getTheme())
+                .put(ConfigSystem.class, () -> planSystem.getConfigSystem())
+                .put(ServerUUID.class, () -> planSystem.getServerInfo().getServerUUID())
+                .put(PlanPluginComponent.class, catching(PlanPluginComponent.class, () -> component.getComponent()))
+                .put(PluginLogger.class, catching(PluginLogger.class, () -> component.getAbstractionLayer().getPluginLogger()))
+                .put(PlanCommand.class, catching(PlanCommand.class, () -> component.getComponent().planCommand()))
+                .put(Database.class, () -> planSystem.getDatabaseSystem().getDatabase())
+                .put(DeliveryUtilities.class, () -> planSystem.getDeliveryUtilities())
+                .put(Formatters.class, () -> planSystem.getDeliveryUtilities().getFormatters())
+                .put(LocaleSystem.class, () -> planSystem.getLocaleSystem())
+                .put(Addresses.class, () -> planSystem.getDeliveryUtilities().getAddresses())
+                .put(PublicHtmlFiles.class, () -> planSystem.getDeliveryUtilities().getPublicHtmlFiles())
+                .put(WebServer.class, () -> planSystem.getWebServerSystem().getWebServer())
+                .put(Exporter.class, () -> planSystem.getExportSystem().getExporter())
+                .put(Graphs.class, () -> planSystem.getDeliveryUtilities().getGraphs())
+                .put(TaskSystem.class, () -> planSystem.getTaskSystem())
+                .put(ServerSensor.class, () -> planSystem.getGatheringUtilities().getServerSensor())
+                .build();
+    }
+
+    private <T, E extends Exception> Supplier<T> catching(Class<T> type, ThrowingSupplier<T, E> throwingSupplier) {
+        return () -> {
+            try {
+                return throwingSupplier.get();
+            } catch (Exception e) {
+                throw new ParameterResolutionException("Error getting " + type, e);
+            }
+        };
+    }
+
     @Override
     public void beforeAll(ExtensionContext context) throws Exception {
         tempDir = Files.createTempDirectory("plan-fullsystem-test");
@@ -54,7 +112,7 @@ public class FullSystemExtension implements ParameterResolver, BeforeAllCallback
 
     @Override
     public void afterAll(ExtensionContext context) throws Exception {
-        deleteDirectory(tempDir);
+        if (tempDir != null) deleteDirectory(tempDir);
     }
 
     private void deleteDirectory(Path directory) throws IOException {
@@ -76,35 +134,14 @@ public class FullSystemExtension implements ParameterResolver, BeforeAllCallback
     @Override
     public boolean supportsParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
         Class<?> type = parameterContext.getParameter().getType();
-        return PlanSystem.class.equals(type) ||
-                PlanConfig.class.equals(type) ||
-                ServerUUID.class.equals(type) ||
-                PlanPluginComponent.class.equals(type) ||
-                Database.class.equals(type);
+        return parameterResolvers.containsKey(type);
     }
 
     @Override
     public Object resolveParameter(ParameterContext parameterContext, ExtensionContext extensionContext) {
         Class<?> type = parameterContext.getParameter().getType();
-        if (PlanSystem.class.equals(type)) {
-            return planSystem;
-        }
-        if (PlanConfig.class.equals(type)) {
-            return planSystem.getConfigSystem().getConfig();
-        }
-        if (ServerUUID.class.equals(type)) {
-            return planSystem.getServerInfo().getServerUUID();
-        }
-        if (PlanPluginComponent.class.equals(type)) {
-            try {
-                return component.getComponent();
-            } catch (Exception e) {
-                throw new ParameterResolutionException("Error getting " + type.getName(), e);
-            }
-        }
-        if (Database.class.equals(type)) {
-            return planSystem.getDatabaseSystem().getDatabase();
-        }
+        Supplier<?> supplier = parameterResolvers.get(type);
+        if (supplier != null) return supplier.get();
         throw new ParameterResolutionException("Unsupported parameter type " + type.getName());
     }
 }

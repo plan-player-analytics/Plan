@@ -16,12 +16,14 @@
  */
 package com.djrapitops.plan.delivery.domain.datatransfer.extension;
 
-import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class ExtensionTabDataDto {
@@ -36,24 +38,29 @@ public class ExtensionTabDataDto {
         tableData = extensionTabData.getTableData().stream().map(ExtensionTableDataDto::new).collect(Collectors.toList());
     }
 
-    private List<ExtensionValueDataDto> constructValues(List<String> order, ExtensionTabData tabData) {
+    public static Optional<ExtensionValueDataDto> mapToValue(ExtensionTabData tabData, String key) {
         Formatters formatters = Formatters.getInstance();
-        Formatter<Double> decimalFormatter = formatters.decimals();
-        Formatter<Double> percentageFormatter = formatters.percentage();
 
-        Map<FormatType, Formatter<Long>> numberFormatters = new EnumMap<>(FormatType.class);
-        numberFormatters.put(FormatType.DATE_SECOND, formatters.secondLong());
-        numberFormatters.put(FormatType.DATE_YEAR, formatters.yearLong());
-        numberFormatters.put(FormatType.TIME_MILLISECONDS, formatters.timeAmount());
-        numberFormatters.put(FormatType.NONE, Object::toString);
+        Optional<ExtensionValueDataDto> booleanValue = tabData.getBoolean(key).map(data -> new ExtensionValueDataDto(data.getDescription(), "BOOLEAN", data.getValue()));
+        if (booleanValue.isPresent()) return booleanValue;
+        Optional<ExtensionValueDataDto> doubleValue = tabData.getDouble(key).map(data -> new ExtensionValueDataDto(data.getDescription(), "DOUBLE", data.getFormattedValue(formatters.decimals())));
+        if (doubleValue.isPresent()) return doubleValue;
+        Optional<ExtensionValueDataDto> percentage = tabData.getPercentage(key).map(data -> new ExtensionValueDataDto(data.getDescription(), "PERCENTAGE", data.getFormattedValue(formatters.percentage())));
+        if (percentage.isPresent()) return percentage;
+        Optional<ExtensionValueDataDto> number = tabData.getNumber(key).map(data -> new ExtensionValueDataDto(data.getDescription(), data.getFormatType() == FormatType.NONE ? "NUMBER" : data.getFormatType().name(), data.getRawValue()));
+        if (number.isPresent()) return number;
+        Optional<ExtensionValueDataDto> string = tabData.getString(key).map(data -> new ExtensionValueDataDto(data.getDescription(), data.isPlayerName() ? "LINK" : "STRING", data.getFormattedValue()));
+        if (string.isPresent()) return string;
+
+        // If component is not found either return empty Optional.
+        return tabData.getComponent(key).map(data -> new ExtensionValueDataDto(data.getDescription(), "COMPONENT", data.getFormattedValue()));
+    }
+
+    private List<ExtensionValueDataDto> constructValues(List<String> order, ExtensionTabData tabData) {
 
         List<ExtensionValueDataDto> extensionValues = new ArrayList<>();
         for (String key : order) {
-            tabData.getBoolean(key).ifPresent(data -> extensionValues.add(new ExtensionValueDataDto(data.getDescription(), "BOOLEAN", data.getFormattedValue())));
-            tabData.getDouble(key).ifPresent(data -> extensionValues.add(new ExtensionValueDataDto(data.getDescription(), "DOUBLE", data.getFormattedValue(decimalFormatter))));
-            tabData.getPercentage(key).ifPresent(data -> extensionValues.add(new ExtensionValueDataDto(data.getDescription(), "PERCENTAGE", data.getFormattedValue(percentageFormatter))));
-            tabData.getNumber(key).ifPresent(data -> extensionValues.add(new ExtensionValueDataDto(data.getDescription(), data.getFormatType() == FormatType.NONE ? "NUMBER" : data.getFormatType().name(), data.getFormattedValue(numberFormatters.get(data.getFormatType())))));
-            tabData.getString(key).ifPresent(data -> extensionValues.add(new ExtensionValueDataDto(data.getDescription(), data.isPlayerName() ? "HTML" : "STRING", data.getFormattedValue())));
+            mapToValue(tabData, key).ifPresent(extensionValues::add);
         }
         return extensionValues;
     }

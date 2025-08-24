@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.storage.file;
 
+import com.djrapitops.plan.utilities.dev.Untrusted;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -35,10 +37,11 @@ import java.util.stream.Stream;
  */
 public class FileResource implements Resource {
 
+    @Untrusted
     private final String resourceName;
     private final File file;
 
-    public FileResource(String resourceName, File file) {
+    public FileResource(@Untrusted String resourceName, File file) {
         this.resourceName = resourceName;
         this.file = file;
     }
@@ -54,8 +57,14 @@ public class FileResource implements Resource {
     }
 
     @Override
+    @Untrusted
     public String getResourceName() {
         return resourceName;
+    }
+
+    @Override
+    public long getLastModifiedDate() {
+        return file.lastModified();
     }
 
     @Override

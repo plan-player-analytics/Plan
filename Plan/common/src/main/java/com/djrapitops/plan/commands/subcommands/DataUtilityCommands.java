@@ -29,6 +29,7 @@ import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.exceptions.ExportException;
 import com.djrapitops.plan.gathering.domain.GeoInfo;
+import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.gathering.importing.ImportSystem;
 import com.djrapitops.plan.gathering.importing.importers.Importer;
 import com.djrapitops.plan.identification.Identifiers;
@@ -42,10 +43,12 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CommandLang;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.settings.locale.lang.HelpLang;
+import com.djrapitops.plan.settings.locale.lang.HtmlLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -95,8 +98,8 @@ public class DataUtilityCommands {
         }
     }
 
-    public void onExport(CMDSender sender, Arguments arguments) {
-        String exportKind = arguments.get(0)
+    public void onExport(CMDSender sender, @Untrusted Arguments arguments) {
+        @Untrusted String exportKind = arguments.get(0)
                 .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_ACCEPTS_ARGUMENTS, locale.getString(HelpLang.ARG_EXPORT_KIND), "players, server_json")));
 
         ensureDatabaseIsOpen();
@@ -104,7 +107,7 @@ public class DataUtilityCommands {
         getExportFunction(exportKind).accept(sender);
     }
 
-    private Consumer<CMDSender> getExportFunction(String exportArg) {
+    private Consumer<CMDSender> getExportFunction(@Untrusted String exportArg) {
         if ("players".equals(exportArg)) {
             return this::exportPlayers;
         } else if ("server_json".endsWith(exportArg)) {
@@ -176,8 +179,8 @@ public class DataUtilityCommands {
         }
     }
 
-    public void onImport(CMDSender sender, Arguments arguments) {
-        String importKind = arguments.get(0)
+    public void onImport(CMDSender sender, @Untrusted Arguments arguments) {
+        @Untrusted String importKind = arguments.get(0)
                 .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_ACCEPTS_ARGUMENTS, locale.getString(HelpLang.ARG_IMPORT_KIND), importSystem.getImporterNames().toString())));
 
         ensureDatabaseIsOpen();
@@ -185,7 +188,7 @@ public class DataUtilityCommands {
         findAndProcessImporter(sender, importKind);
     }
 
-    private void findAndProcessImporter(CMDSender sender, String importKind) {
+    private void findAndProcessImporter(CMDSender sender, @Untrusted String importKind) {
         Optional<Importer> foundImporter = importSystem.getImporter(importKind);
         if (foundImporter.isPresent()) {
             Importer importer = foundImporter.get();
@@ -199,8 +202,8 @@ public class DataUtilityCommands {
         }
     }
 
-    public void onSearch(CMDSender sender, Arguments arguments) {
-        String searchingFor = arguments.concatenate(" ");
+    public void onSearch(CMDSender sender, @Untrusted Arguments arguments) {
+        @Untrusted String searchingFor = arguments.concatenate(" ");
         if (searchingFor.trim().isEmpty()) {
             throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_EMPTY_SEARCH_STRING));
         }
@@ -221,8 +224,8 @@ public class DataUtilityCommands {
         sender.send(sender.getFormatter().table(asTableString.toString(), "::"));
     }
 
-    public void onInGame(CMDSender sender, Arguments arguments) {
-        String identifier = arguments.concatenate(" ");
+    public void onInGame(CMDSender sender, @Untrusted Arguments arguments) {
+        @Untrusted String identifier = arguments.concatenate(" ");
         UUID playerUUID = identifiers.getPlayerUUID(identifier);
         UUID senderUUID = sender.getUUID().orElse(null);
         if (playerUUID == null) playerUUID = senderUUID;
@@ -257,12 +260,17 @@ public class DataUtilityCommands {
         Optional<GeoInfo> mostRecentGeoInfo = new GeoInfoMutator(geoInfo).mostRecent();
         String geolocation = mostRecentGeoInfo.isPresent() ? mostRecentGeoInfo.get().getGeolocation() : "-";
         SessionsMutator sessionsMutator = SessionsMutator.forContainer(player);
+        String latestJoinAddress = sessionsMutator.latestSession()
+                .flatMap(session -> session.getExtraData(JoinAddress.class))
+                .map(JoinAddress::getAddress)
+                .orElse("-");
 
         String table = locale.getString(CommandLang.HEADER_INSPECT, playerName) + '\n' +
                 locale.getString(CommandLang.INGAME_ACTIVITY_INDEX, activityIndex.getFormattedValue(formatters.decimals()), activityIndex.getGroup()) + '\n' +
                 locale.getString(CommandLang.INGAME_REGISTERED, timestamp.apply(() -> registered)) + '\n' +
                 locale.getString(CommandLang.INGAME_LAST_SEEN, timestamp.apply(() -> lastSeen)) + '\n' +
                 locale.getString(CommandLang.INGAME_GEOLOCATION, geolocation) + '\n' +
+                "  §2" + locale.getString(HtmlLang.LABEL_LABEL_JOIN_ADDRESS) + ": §f" + latestJoinAddress + '\n' +
                 locale.getString(CommandLang.INGAME_TIMES_KICKED, player.getValue(PlayerKeys.KICK_COUNT).orElse(0)) + '\n' +
                 '\n' +
                 locale.getString(CommandLang.INGAME_PLAYTIME, length.apply(sessionsMutator.toPlaytime())) + '\n' +

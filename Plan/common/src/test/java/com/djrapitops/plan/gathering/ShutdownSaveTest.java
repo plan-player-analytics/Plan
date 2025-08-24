@@ -17,6 +17,7 @@
 package com.djrapitops.plan.gathering;
 
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.gathering.afk.AFKTracker;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
@@ -86,6 +87,11 @@ class ShutdownSaveTest {
             protected boolean checkServerShuttingDownStatus() {
                 return shutdownStatus;
             }
+
+            @Override
+            public Optional<AFKTracker> getAfkTracker() {
+                return Optional.empty();
+            }
         };
 
         shutdownStatus = false;
@@ -113,22 +119,28 @@ class ShutdownSaveTest {
     @Test
     void sessionsAreNotSavedOnReload() {
         shutdownStatus = false;
-        underTest.performSave();
+        Optional<Future<?>> future = underTest.performSave();
+        assertTrue(future.isEmpty());
 
-        database.init();
         assertTrue(database.query(SessionQueries.fetchAllSessions()).isEmpty());
-        database.close();
     }
 
     @Test
-    void sessionsAreSavedOnServerShutdown() {
+    void sessionsAreNotSavedIfDatabaseIsClosed() {
+        shutdownStatus = true;
+        database.close();
+        Optional<Future<?>> future = underTest.performSave();
+        assertTrue(future.isEmpty());
+    }
+
+    @Test
+    void sessionsAreSavedOnServerShutdown() throws Exception {
         shutdownStatus = true;
         Optional<Future<?>> save = underTest.performSave();
         assertTrue(save.isPresent());
+        save.get().get(); // Wait for save to be done, test fails without.
 
-        database.init();
         assertFalse(database.query(SessionQueries.fetchAllSessions()).isEmpty());
-        database.close();
     }
 
     private void placeSessionToCache() {

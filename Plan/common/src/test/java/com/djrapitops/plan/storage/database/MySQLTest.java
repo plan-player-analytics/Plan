@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.component.ComponentSvc;
 import com.djrapitops.plan.delivery.DeliveryUtilities;
 import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.identification.Server;
@@ -24,8 +25,10 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.queries.ExtensionsDatabaseTest;
+import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.filter.QueryFilters;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
+import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransaction;
 import org.junit.jupiter.api.AfterAll;
@@ -42,6 +45,8 @@ import utilities.TestConstants;
 import utilities.TestErrorLogger;
 
 import java.nio.file.Path;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -77,6 +82,21 @@ class MySQLTest implements DatabaseTest, DatabaseTestAggregate {
         Assumptions.assumeTrue(mysql.isPresent());
         database = mysql.get();
         database.executeTransaction(new CreateTablesTransaction());
+        // Enables more strict query mode to prevent errors from it going unnoticed.
+        database.executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                String currentSQLMode = query(new QueryAllStatement<>("SELECT @@GLOBAL.sql_mode as mode") {
+                    @Override
+                    public String processResults(ResultSet set) throws SQLException {
+                        return set.next() ? set.getString("mode") : null;
+                    }
+                });
+                if (!currentSQLMode.contains("ONLY_FULL_GROUP_BY")) {
+                    execute("SET GLOBAL sql_mode=(SELECT CONCAT(@@GLOBAL.sql_mode, ',ONLY_FULL_GROUP_BY'))");
+                }
+            }
+        });
     }
 
     @AfterAll
@@ -128,6 +148,11 @@ class MySQLTest implements DatabaseTest, DatabaseTestAggregate {
     @Override
     public ExtensionSvc extensionService() {
         return component.extensionService();
+    }
+
+    @Override
+    public ComponentSvc componentService() {
+        return component.componentService();
     }
 
     @Override

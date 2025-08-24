@@ -38,15 +38,16 @@ import java.util.concurrent.TimeUnit;
  * <p>
  * Activity for a single week is calculated using {@code A(t) = (1 / (pi/2 * (t/T) + 1))}.
  * A(t) is based on function f(x) = 1 / (x + 1), which has property f(0) = 1, decreasing from there, but not in a straight line.
- * You can see the function plotted here https://www.wolframalpha.com/input/?i=1+%2F+(x%2B1)+from+-1+to+2
+ * You can see the function plotted <a href="https://www.wolframalpha.com/input/?i=1+%2F+(x%2B1)+from+-1+to+2">here</a>
  * <p>
  * To fine tune the curve pi/2 is used since it felt like a good curve.
  * <p>
  * Activity index A is calculated by using the formula:
  * {@code A = 5 - 5 * [A(t1) + A(t2) + A(t3)] / 3}
  * <p>
+ * <a href="https://www.wolframalpha.com/input/?i=plot+y+%3D+5+-+5+*+(1+%2F+(pi%2F2+*+x%2B1))+and+y+%3D1+and+y+%3D+2+and+y+%3D+3+and+y+%3D+3.75+from+-0.5+to+3">
  * Plot for A and limits
- * https://www.wolframalpha.com/input/?i=plot+y+%3D+5+-+5+*+(1+%2F+(pi%2F2+*+x%2B1))+and+y+%3D1+and+y+%3D+2+and+y+%3D+3+and+y+%3D+3.75+from+-0.5+to+3
+ * </a>
  * <p>
  * New Limits for A would thus be
  * {@code < 1: Inactive}
@@ -90,6 +91,16 @@ public class ActivityIndex {
         return getGroups(null);
     }
 
+    public static String[] getDefaultGroupLangKeys() {
+        return new String[]{
+                HtmlLang.INDEX_VERY_ACTIVE.getKey(),
+                HtmlLang.INDEX_ACTIVE.getKey(),
+                HtmlLang.INDEX_REGULAR.getKey(),
+                HtmlLang.INDEX_IRREGULAR.getKey(),
+                HtmlLang.INDEX_INACTIVE.getKey()
+        };
+    }
+
     public static String[] getGroups(Locale locale) {
         if (locale == null) {
             return new String[]{
@@ -106,6 +117,16 @@ public class ActivityIndex {
                 locale.getString(HtmlLang.INDEX_REGULAR),
                 locale.getString(HtmlLang.INDEX_IRREGULAR),
                 locale.getString(HtmlLang.INDEX_INACTIVE)
+        };
+    }
+
+    public static String[] getGroupLocaleKeys() {
+        return new String[]{
+                HtmlLang.INDEX_VERY_ACTIVE.getKey(),
+                HtmlLang.INDEX_ACTIVE.getKey(),
+                HtmlLang.INDEX_REGULAR.getKey(),
+                HtmlLang.INDEX_IRREGULAR.getKey(),
+                HtmlLang.INDEX_INACTIVE.getKey()
         };
     }
 
@@ -158,22 +179,30 @@ public class ActivityIndex {
         return Math.abs(Math.log(other.value) - Math.log(value));
     }
 
-    public static String getGroup(double value) {
+    public static HtmlLang getGroupLang(double value) {
         if (value >= VERY_ACTIVE) {
-            return HtmlLang.INDEX_VERY_ACTIVE.getDefault();
+            return HtmlLang.INDEX_VERY_ACTIVE;
         } else if (value >= ACTIVE) {
-            return HtmlLang.INDEX_ACTIVE.getDefault();
+            return HtmlLang.INDEX_ACTIVE;
         } else if (value >= REGULAR) {
-            return HtmlLang.INDEX_REGULAR.getDefault();
+            return HtmlLang.INDEX_REGULAR;
         } else if (value >= IRREGULAR) {
-            return HtmlLang.INDEX_IRREGULAR.getDefault();
+            return HtmlLang.INDEX_IRREGULAR;
         } else {
-            return HtmlLang.INDEX_INACTIVE.getDefault();
+            return HtmlLang.INDEX_INACTIVE;
         }
+    }
+
+    public static String getGroup(double value) {
+        return getGroupLang(value).getDefault();
     }
 
     public String getGroup() {
         return getGroup(value);
+    }
+
+    public String getGroupLang() {
+        return getGroupLang(value).getKey();
     }
 
     public String getGroup(Locale locale) {
@@ -187,6 +216,20 @@ public class ActivityIndex {
             return locale.getString(HtmlLang.INDEX_IRREGULAR);
         } else {
             return locale.getString(HtmlLang.INDEX_INACTIVE);
+        }
+    }
+
+    public String getGroupLocaleKey() {
+        if (value >= VERY_ACTIVE) {
+            return HtmlLang.INDEX_VERY_ACTIVE.getKey();
+        } else if (value >= ACTIVE) {
+            return HtmlLang.INDEX_ACTIVE.getKey();
+        } else if (value >= REGULAR) {
+            return HtmlLang.INDEX_REGULAR.getKey();
+        } else if (value >= IRREGULAR) {
+            return HtmlLang.INDEX_IRREGULAR.getKey();
+        } else {
+            return HtmlLang.INDEX_INACTIVE.getKey();
         }
     }
 }

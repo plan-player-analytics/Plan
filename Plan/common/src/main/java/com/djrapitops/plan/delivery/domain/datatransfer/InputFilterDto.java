@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.domain.datatransfer;
 
 import com.djrapitops.plan.storage.database.queries.filter.Filter;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -28,6 +29,7 @@ import java.util.*;
  *
  * @author AuroraLS3
  */
+@Untrusted
 public class InputFilterDto {
 
     private final String kind;
@@ -38,7 +40,7 @@ public class InputFilterDto {
         this.parameters = parameters;
     }
 
-    public static List<InputFilterDto> parse(String json, Gson gson) throws IOException {
+    public static List<InputFilterDto> parse(@Untrusted String json, Gson gson) throws IOException {
         return gson.getAdapter(new TypeToken<List<InputFilterDto>>() {}).fromJson(json);
     }
 

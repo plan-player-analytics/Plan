@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.storage.database.sql.building.Sql;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,7 +81,7 @@ public enum DBType {
      * @param name the name of the {@code DBType}
      * @return an {@code Optional<DBType>}
      */
-    public static Optional<DBType> getForName(String name) {
+    public static Optional<DBType> getForName(@Untrusted String name) {
         for (DBType dbType : DBType.values()) {
             if (dbType.getName().equalsIgnoreCase(name)) {
                 return Optional.of(dbType);

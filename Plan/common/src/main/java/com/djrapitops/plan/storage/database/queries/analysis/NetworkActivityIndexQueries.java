@@ -46,15 +46,16 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  * <p>
  * Activity for a single week is calculated using {@code A(t) = (1 / (pi/2 * (t/T) + 1))}.
  * A(t) is based on function f(x) = 1 / (x + 1), which has property f(0) = 1, decreasing from there, but not in a straight line.
- * You can see the function plotted here https://www.wolframalpha.com/input/?i=1+%2F+(x%2B1)+from+-1+to+2
+ * You can see the function plotted <a href="https://www.wolframalpha.com/input/?i=1+%2F+(x%2B1)+from+-1+to+2">here</a>
  * <p>
  * To fine tune the curve pi/2 is used since it felt like a good curve.
  * <p>
  * Activity index A is calculated by using the formula:
  * {@code A = 5 - 5 * [A(t1) + A(t2) + A(t3)] / 3}
  * <p>
+ * <a href="https://www.wolframalpha.com/input/?i=plot+y+%3D+5+-+5+*+(1+%2F+(pi%2F2+*+x%2B1))+and+y+%3D1+and+y+%3D+2+and+y+%3D+3+and+y+%3D+3.75+from+-0.5+to+3">
  * Plot for A and limits
- * https://www.wolframalpha.com/input/?i=plot+y+%3D+5+-+5+*+(1+%2F+(pi%2F2+*+x%2B1))+and+y+%3D1+and+y+%3D+2+and+y+%3D+3+and+y+%3D+3.75+from+-0.5+to+3
+ * </a>
  * <p>
  * New Limits for A would thus be
  * {@code < 1: Inactive}
@@ -85,10 +86,10 @@ public class NetworkActivityIndexQueries {
                 WHERE + ServerTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(onServers, "','") + "')";
 
         String selectActivePlaytimeSQL = SELECT +
-                "ux." + UsersTable.ID + "," +
-                "ux." + UsersTable.USER_UUID + "," +
+                "ax_ux." + UsersTable.ID + "," +
+                "ax_ux." + UsersTable.USER_UUID + "," +
                 "COALESCE(active_playtime,0) AS active_playtime" +
-                FROM + UsersTable.TABLE_NAME + " ux" +
+                FROM + UsersTable.TABLE_NAME + " ax_ux" +
                 LEFT_JOIN + '(' + SELECT + SessionsTable.USER_ID +
                 ",SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME + ") as active_playtime" +
                 FROM + SessionsTable.TABLE_NAME +
@@ -96,17 +97,17 @@ public class NetworkActivityIndexQueries {
                 AND + SessionsTable.SESSION_START + "<=?" +
                 (onServers.isEmpty() ? "" : AND + SessionsTable.SERVER_ID + " IN (" + selectServerIds + ")") +
                 GROUP_BY + SessionsTable.USER_ID +
-                ") sx on sx." + SessionsTable.USER_ID + "=ux." + UsersTable.ID;
+                ") ax_sx on ax_sx." + SessionsTable.USER_ID + "=ax_ux." + UsersTable.ID;
 
         String selectThreeWeeks = selectActivePlaytimeSQL + UNION_ALL + selectActivePlaytimeSQL + UNION_ALL + selectActivePlaytimeSQL;
 
         return SELECT +
-                "5.0 - 5.0 * AVG(1.0 / (?/2.0 * (q1.active_playtime*1.0/?) +1.0)) as activity_index," +
-                "u." + UsersTable.ID + " as " + SessionsTable.USER_ID + ',' +
-                "u." + UsersTable.USER_UUID +
-                FROM + '(' + selectThreeWeeks + ") q1" +
-                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + "=q1." + UsersTable.ID +
-                GROUP_BY + "q1." + UsersTable.ID;
+                "5.0 - 5.0 * AVG(1.0 / (?/2.0 * (ax_q1.active_playtime*1.0/?) +1.0)) as activity_index," +
+                "ax_u." + UsersTable.ID + " as user_id," +
+                "ax_u." + UsersTable.USER_UUID +
+                FROM + '(' + selectThreeWeeks + ") ax_q1" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " ax_u on ax_u." + UsersTable.ID + "=ax_q1." + UsersTable.ID +
+                GROUP_BY + "ax_u." + UsersTable.ID + ",ax_u." + UsersTable.USER_UUID;
     }
 
     public static void setSelectActivityIndexSQLParameters(PreparedStatement statement, int index, long playtimeThreshold, long date) throws SQLException {
@@ -449,7 +450,7 @@ public class NetworkActivityIndexQueries {
                 Map<Integer, ActivityIndex> indexes = new HashMap<>();
                 while (set.next()) {
                     indexes.put(
-                            set.getInt(UsersTable.ID),
+                            set.getInt("user_id"),
                             new ActivityIndex(set.getDouble("activity_index"), date)
                     );
                 }

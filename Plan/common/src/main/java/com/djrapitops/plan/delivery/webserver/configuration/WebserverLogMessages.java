@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.server.PluginLogger;
@@ -61,7 +62,7 @@ public class WebserverLogMessages {
         }
     }
 
-    public void warnAboutWhitelistBlock(String accessAddress, String requestedURIString) {
+    public void warnAboutWhitelistBlock(@Untrusted String accessAddress, @Untrusted String requestedURIString) {
         logger.info(locale.getString(PluginLang.WEB_SERVER_NOTIFY_IP_WHITELIST_BLOCK, accessAddress, requestedURIString));
     }
 
@@ -71,7 +72,7 @@ public class WebserverLogMessages {
     }
 
     public void warnWebserverDisabledByConfig() {
-        logger.warn(locale.getString(PluginLang.ENABLE_NOTIFY_WEB_SERVER_DISABLED));
+        logger.info(locale.getString(PluginLang.ENABLE_NOTIFY_WEB_SERVER_DISABLED));
     }
 
     public void keystoreNotFoundError(InvalidPathException error, String keyStorePath) {

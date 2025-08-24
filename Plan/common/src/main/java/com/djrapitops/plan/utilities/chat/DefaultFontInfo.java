@@ -19,7 +19,7 @@ package com.djrapitops.plan.utilities.chat;
 /**
  * Contains width of characters in the chat with default font.
  * <p>
- * Original code form https://www.spigotmc.org/threads/free-code-sending-perfectly-centered-chat-message.95872/page-2
+ * <a href="https://www.spigotmc.org/threads/free-code-sending-perfectly-centered-chat-message.95872/page-2">Original code</a>
  */
 public enum DefaultFontInfo {
 

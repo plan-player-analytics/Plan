@@ -19,7 +19,7 @@ package com.djrapitops.plan.extension.implementation.storage.transactions;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.icon.IconAccessor;
 import com.djrapitops.plan.identification.ServerUUID;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionPluginTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPluginTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
 import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;

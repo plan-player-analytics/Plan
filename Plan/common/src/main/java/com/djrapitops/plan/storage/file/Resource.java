@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.file;
 
 import com.djrapitops.plan.delivery.web.resource.WebResource;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang3.StringUtils;
@@ -38,7 +39,10 @@ public interface Resource {
      *
      * @return Relative file path given to {@link PlanFiles}.
      */
+    @Untrusted
     String getResourceName();
+
+    long getLastModifiedDate();
 
     byte[] asBytes() throws IOException;
 
@@ -77,11 +81,13 @@ public interface Resource {
      * @throws UncheckedIOException if fails to read the file.
      */
     default WebResource asWebResource() {
-        try {
-            return WebResource.create(asInputStream());
-        } catch (IOException e) {
-            throw new UncheckedIOException("Failed to read '" + getResourceName() + "'", e);
-        }
+        return WebResource.create(() -> {
+            try {
+                return asInputStream();
+            } catch (IOException e) {
+                throw new UncheckedIOException("Failed to read '" + getResourceName() + "'", e);
+            }
+        }, getLastModifiedDate());
     }
 
     /**

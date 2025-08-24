@@ -113,6 +113,7 @@ public interface DataExtension {
      * <p>
      * Requires Capability DATA_EXTENSION_BUILDER_API
      *
+     * @param text Text that is displayed next to the value.
      * @return new builder.
      */
     default ValueBuilder valueBuilder(String text) {

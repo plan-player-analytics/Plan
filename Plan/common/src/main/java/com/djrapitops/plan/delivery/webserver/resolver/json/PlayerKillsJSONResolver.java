@@ -16,9 +16,10 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
+import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
-import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
@@ -49,7 +50,7 @@ import java.util.Optional;
  */
 @Singleton
 @Path("/v1/kills")
-public class PlayerKillsJSONResolver implements Resolver {
+public class PlayerKillsJSONResolver extends JSONResolver {
 
     private final Identifiers identifiers;
     private final AsyncJSONResolverService jsonResolverService;
@@ -67,8 +68,11 @@ public class PlayerKillsJSONResolver implements Resolver {
     }
 
     @Override
+    public Formatter<Long> getHttpLastModifiedFormatter() {return jsonResolverService.getHttpLastModifiedFormatter();}
+
+    @Override
     public boolean canAccess(Request request) {
-        return request.getUser().orElse(new WebUser("")).hasPermission("page.server");
+        return request.getUser().orElse(new WebUser("")).hasPermission(WebPermission.PAGE_SERVER_PLAYER_VERSUS_KILL_LIST);
     }
 
     @GET
@@ -99,9 +103,6 @@ public class PlayerKillsJSONResolver implements Resolver {
         JSONStorage.StoredJSON storedJSON = jsonResolverService.resolve(timestamp, DataID.KILLS, serverUUID,
                 theUUID -> Collections.singletonMap("player_kills", jsonFactory.serverPlayerKillsAsJSONMaps(theUUID))
         );
-        return Response.builder()
-                .setMimeType(MimeType.JSON)
-                .setJSONContent(storedJSON.json)
-                .build();
+        return getCachedOrNewResponse(request, storedJSON);
     }
 }

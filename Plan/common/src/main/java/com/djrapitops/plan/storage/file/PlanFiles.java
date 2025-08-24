@@ -17,10 +17,12 @@
 package com.djrapitops.plan.storage.file;
 
 import com.djrapitops.plan.SubSystem;
+import com.djrapitops.plan.delivery.web.AssetVersions;
 import com.djrapitops.plan.exceptions.EnableException;
-import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.CustomizedFileSettings;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import dagger.Lazy;
+import org.apache.commons.lang3.StringUtils;
+import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -29,7 +31,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
+import java.nio.file.OpenOption;
 import java.nio.file.Path;
+import java.nio.file.StandardOpenOption;
 import java.util.Optional;
 
 /**
@@ -45,17 +49,17 @@ public class PlanFiles implements SubSystem {
     private final File dataFolder;
     private final File configFile;
 
-    private final Lazy<PlanConfig> config;
+    private final Lazy<AssetVersions> assetVersions;
 
     @Inject
     public PlanFiles(
             @Named("dataFolder") File dataFolder,
             JarResource.StreamFunction getResourceStream,
-            Lazy<PlanConfig> config
+            Lazy<AssetVersions> assetVersions
     ) {
         this.dataFolder = dataFolder;
         this.getResourceStream = getResourceStream;
-        this.config = config;
+        this.assetVersions = assetVersions;
         this.configFile = getFileFromPluginFolder("config.yml");
     }
 
@@ -90,8 +94,10 @@ public class PlanFiles implements SubSystem {
         return getFileFromPluginFolder("locale.yml");
     }
 
-    public File getFileFromPluginFolder(String name) {
-        return new File(dataFolder, name.replace("/", File.separator));
+    public static OpenOption[] replaceIfExists() {
+        return new OpenOption[]{
+                StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE
+        };
     }
 
     @Override
@@ -112,14 +118,22 @@ public class PlanFiles implements SubSystem {
         // No disable actions necessary.
     }
 
+    public File getFileFromPluginFolder(@Untrusted String name) {
+        return new File(dataFolder, name.replace("/", File.separator));
+    }
+
     /**
      * Get a file in the jar as a {@link Resource}.
      *
      * @param resourceName Path to the file inside jar/assets/plan/ folder.
      * @return a {@link Resource} for accessing the resource.
      */
-    public Resource getResourceFromJar(String resourceName) {
-        return new JarResource("assets/plan/" + resourceName, getResourceStream);
+    public Resource getResourceFromJar(@Untrusted String resourceName) {
+        return new JarResource(
+                "assets/plan/" + resourceName,
+                getResourceStream,
+                () -> getLastModifiedForJarResource(resourceName)
+        );
     }
 
     /**
@@ -132,30 +146,25 @@ public class PlanFiles implements SubSystem {
         return new FileResource(resourceName, getFileFromPluginFolder(resourceName));
     }
 
-    // TODO Customized file logic should be moved to another class so the circular dependency on config can be removed.
-    public Optional<Resource> getCustomizableResource(String resourceName) {
-        return Optional.ofNullable(findCustomized(resourceName));
+    @NotNull
+    protected Long getLastModifiedForJarResource(@Untrusted String resourceName) {
+        String webResourceName = StringUtils.remove(resourceName, "web/");
+        return assetVersions.get().getAssetVersion(webResourceName)
+                .orElseGet(System::currentTimeMillis);
     }
 
-    private Resource findCustomized(String resourceName) {
-        if (config.get().isTrue(CustomizedFileSettings.WEB_DEV_MODE)) {
-            // Bypass cache in web developer mode.
-            return getFileResource(resourceName);
-        } else {
-            return ResourceCache.getOrCache(resourceName, () -> getFileResource(resourceName));
-        }
+    public Path getJSONStorageDirectory() {
+        return getDataDirectory().resolve("cached_json");
     }
 
-    private FileResource getFileResource(String resourceName) {
-        return attemptToFind(resourceName)
-                .map(found -> new FileResource(resourceName, found))
-                .orElse(null);
-    }
-
-    public Optional<File> attemptToFind(String resourceName) {
-        Path dir = config.get().getResourceSettings().getCustomizationDirectory();
-        if (dir.toFile().exists() && dir.toFile().isDirectory()) {
-            Path asPath = dir.resolve(resourceName);
+    public Optional<File> attemptToFind(Path dir, @Untrusted String resourceName) {
+        if (Files.exists(dir) && Files.isDirectory(dir)) {
+            // Path may be absolute due to resolving untrusted path
+            @Untrusted Path asPath = dir.resolve(resourceName);
+            if (!asPath.startsWith(dir)) {
+                return Optional.empty();
+            }
+            // Now it should be trustworthy
             File found = asPath.toFile();
             if (found.exists()) {
                 return Optional.of(found);
@@ -164,7 +173,15 @@ public class PlanFiles implements SubSystem {
         return Optional.empty();
     }
 
-    public Path getJSONStorageDirectory() {
-        return getDataDirectory().resolve("cached_json");
+    public Path getThemeDirectory() {
+        Path themeDirectory = getDataDirectory().resolve("web_themes");
+        if (!Files.exists(themeDirectory)) {
+            try {
+                Files.createDirectories(themeDirectory);
+            } catch (IOException e) {
+                throw new UncheckedIOException(e);
+            }
+        }
+        return themeDirectory;
     }
 }

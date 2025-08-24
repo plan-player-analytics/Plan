@@ -18,8 +18,8 @@ package com.djrapitops.plan.gathering.listeners.nukkit;
 
 import cn.nukkit.Player;
 import cn.nukkit.entity.Entity;
+import cn.nukkit.entity.EntityTameable;
 import cn.nukkit.entity.item.EntityEndCrystal;
-import cn.nukkit.entity.passive.EntityTameable;
 import cn.nukkit.entity.projectile.EntityProjectile;
 import cn.nukkit.event.EventHandler;
 import cn.nukkit.event.EventPriority;
@@ -43,6 +43,7 @@ import com.djrapitops.plan.utilities.logging.ErrorLogger;
 
 import javax.inject.Inject;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Event Listener for detecting player and mob deaths.
@@ -90,7 +91,7 @@ public class DeathEventListener implements Listener {
     }
 
     private PlayerKill.Victim getVictim(Player victim) {
-        return new PlayerKill.Victim(victim.getUniqueId(), victim.getName());
+        return new PlayerKill.Victim(victim.getUniqueId(), victim.getName(), TimeUnit.SECONDS.toMillis(victim.getFirstPlayed()));
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -130,13 +131,13 @@ public class DeathEventListener implements Listener {
         EntityDamageEvent entityDamageEvent = dead.getLastDamageCause();
         Entity killer = ((EntityDamageByEntityEvent) entityDamageEvent).getDamager();
         if (killer instanceof Player) return getItemInHand((Player) killer);
-        if (killer instanceof EntityTameable) return getPetType((EntityTameable) killer);
+        if (killer instanceof EntityTameable) return getPetType(killer);
 
         // EntityProjectile, EntityEndCrystal and all other causes that are not known yet
         return new EntityNameFormatter().apply(killer.getName());
     }
 
-    private String getPetType(EntityTameable tameable) {
+    private String getPetType(Entity tameable) {
         return tameable.getName();
     }
 
@@ -155,7 +156,7 @@ public class DeathEventListener implements Listener {
     }
 
     private Optional<Player> getOwner(EntityTameable tameable) {
-        if (!tameable.isTamed()) {
+        if (!tameable.hasOwner()) {
             return Optional.empty();
         }
 

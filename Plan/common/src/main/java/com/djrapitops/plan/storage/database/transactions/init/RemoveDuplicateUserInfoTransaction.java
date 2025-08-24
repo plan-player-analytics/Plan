@@ -33,8 +33,9 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 /**
  * Transaction for removing duplicate data in plan_user_info.
  * <p>
- * https://github.com/plan-player-analytics/Plan/issues/956
- * https://github.com/plan-player-analytics/Plan/issues/967
+ * Related issues:
+ * <a href="https://github.com/plan-player-analytics/Plan/issues/956">Issue #956</a>
+ * <a href="https://github.com/plan-player-analytics/Plan/issues/967">Issue #967</a>
  *
  * @author AuroraLS3
  */

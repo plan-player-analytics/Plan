@@ -20,6 +20,7 @@ import java.util.Optional;
 
 public final class URIPath {
 
+    // Example: /target/path/url
     private final String path;
 
     public URIPath(String path) {
@@ -98,6 +99,8 @@ public final class URIPath {
     public boolean endsWith(String suffix) {
         return path.endsWith(suffix);
     }
+
+    public boolean startsWith(String prefix) {return path.startsWith(prefix);}
 
     /**
      * Immutable modification, removes first part of the path string.

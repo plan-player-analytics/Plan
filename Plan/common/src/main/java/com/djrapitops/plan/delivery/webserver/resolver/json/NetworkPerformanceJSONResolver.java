@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.mutators.TPSMutator;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
@@ -28,11 +29,11 @@ import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
-import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import io.swagger.v3.oas.annotations.Operation;
@@ -49,6 +50,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -61,7 +63,6 @@ import java.util.stream.Collectors;
 public class NetworkPerformanceJSONResolver implements Resolver {
 
     private final PlanConfig config;
-    private final Locale locale;
     private final DBSystem dbSystem;
 
     private final Formatter<Double> decimals;
@@ -73,13 +74,11 @@ public class NetworkPerformanceJSONResolver implements Resolver {
     @Inject
     public NetworkPerformanceJSONResolver(
             PlanConfig config,
-            Locale locale,
             DBSystem dbSystem,
             Formatters formatters,
             Gson gson
     ) {
         this.config = config;
-        this.locale = locale;
         this.dbSystem = dbSystem;
 
         decimals = formatters.decimals();
@@ -91,7 +90,7 @@ public class NetworkPerformanceJSONResolver implements Resolver {
 
     @Override
     public boolean canAccess(Request request) {
-        return request.getUser().orElse(new WebUser("")).hasPermission("page.network");
+        return request.getUser().orElse(new WebUser("")).hasPermission(WebPermission.PAGE_NETWORK_PERFORMANCE);
     }
 
     @GET
@@ -119,7 +118,7 @@ public class NetworkPerformanceJSONResolver implements Resolver {
                 .build());
     }
 
-    private List<UUID> getUUIDList(String jsonString) {
+    private List<UUID> getUUIDList(@Untrusted String jsonString) {
         return gson.fromJson(jsonString, new TypeToken<List<UUID>>() {}.getType());
     }
 
@@ -162,21 +161,38 @@ public class NetworkPerformanceJSONResolver implements Resolver {
         numbers.put("low_tps_spikes_7d", tpsDataWeek.lowTpsSpikeCount(tpsThreshold));
         numbers.put("low_tps_spikes_24h", tpsDataDay.lowTpsSpikeCount(tpsThreshold));
 
-        long downtimeMonth = getTotalDowntime(mutatorsOfServersMonth);
-        long downtimeWeek = getTotalDowntime(mutatorsOfServersWeek);
-        long downtimeDay = getTotalDowntime(mutatorsOfServersDay);
-        numbers.put("server_downtime_30d", timeAmount.apply(downtimeMonth));
-        numbers.put("server_downtime_7d", timeAmount.apply(downtimeWeek));
-        numbers.put("server_downtime_24h", timeAmount.apply(downtimeDay));
+        long downtimeMonth = getTotal(mutatorsOfServersMonth, TPSMutator::serverDownTime);
+        long downtimeWeek = getTotal(mutatorsOfServersWeek, TPSMutator::serverDownTime);
+        long downtimeDay = getTotal(mutatorsOfServersDay, TPSMutator::serverDownTime);
+        numbers.put("server_downtime_30d", downtimeMonth);
+        numbers.put("server_downtime_7d", downtimeWeek);
+        numbers.put("server_downtime_24h", downtimeDay);
 
         if (!tpsData.isEmpty()) {
-            numbers.put("avg_server_downtime_30d", timeAmount.apply(downtimeMonth / tpsData.size()));
-            numbers.put("avg_server_downtime_7d", timeAmount.apply(downtimeWeek / tpsData.size()));
-            numbers.put("avg_server_downtime_24h", timeAmount.apply(downtimeDay / tpsData.size()));
+            numbers.put("avg_server_downtime_30d", downtimeMonth / tpsData.size());
+            numbers.put("avg_server_downtime_7d", downtimeWeek / tpsData.size());
+            numbers.put("avg_server_downtime_24h", downtimeDay / tpsData.size());
         } else {
             numbers.put("avg_server_downtime_30d", "-");
             numbers.put("avg_server_downtime_7d", "-");
             numbers.put("avg_server_downtime_24h", "-");
+        }
+
+        long uptimeMonth = getTotal(mutatorsOfServersMonth, TPSMutator::serverUptime);
+        long uptimeWeek = getTotal(mutatorsOfServersWeek, TPSMutator::serverUptime);
+        long uptimeDay = getTotal(mutatorsOfServersDay, TPSMutator::serverUptime);
+        numbers.put("server_uptime_30d", uptimeMonth);
+        numbers.put("server_uptime_7d", uptimeWeek);
+        numbers.put("server_uptime_24h", uptimeDay);
+
+        if (!tpsData.isEmpty()) {
+            numbers.put("avg_server_uptime_30d", uptimeMonth / tpsData.size());
+            numbers.put("avg_server_uptime_7d", uptimeWeek / tpsData.size());
+            numbers.put("avg_server_uptime_24h", uptimeDay / tpsData.size());
+        } else {
+            numbers.put("avg_server_uptime_30d", "-");
+            numbers.put("avg_server_uptime_7d", "-");
+            numbers.put("avg_server_uptime_24h", "-");
         }
 
         numbers.put("players_30d", format(tpsDataMonth.averagePlayers()));
@@ -201,24 +217,24 @@ public class NetworkPerformanceJSONResolver implements Resolver {
         return numbers;
     }
 
-    private long getTotalDowntime(Map<Integer, TPSMutator> mutatorsOfServersMonth) {
+    private long getTotal(Map<Integer, TPSMutator> mutatorsOfServersMonth, Function<TPSMutator, Long> transform) {
         long downTime = 0L;
         for (TPSMutator tpsMutator : mutatorsOfServersMonth.values()) {
-            downTime += tpsMutator.serverDownTime();
+            downTime += transform.apply(tpsMutator);
         }
         return downTime;
     }
 
     private String format(double value) {
-        return value != -1 ? decimals.apply(value) : locale.get(GenericLang.UNAVAILABLE).toString();
+        return value != -1 ? decimals.apply(value) : GenericLang.UNAVAILABLE.getKey();
     }
 
     private String formatBytes(double value) {
-        return value != -1 ? byteSize.apply(value) : locale.get(GenericLang.UNAVAILABLE).toString();
+        return value != -1 ? byteSize.apply(value) : GenericLang.UNAVAILABLE.getKey();
     }
 
     private String formatPercentage(double value) {
-        return value != -1 ? percentage.apply(value / 100.0) : locale.get(GenericLang.UNAVAILABLE).toString();
+        return value != -1 ? percentage.apply(value / 100.0) : GenericLang.UNAVAILABLE.getKey();
     }
 
 }

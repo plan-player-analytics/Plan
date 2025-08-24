@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.queries.filter;
 
 import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import java.util.*;
 
@@ -42,9 +43,9 @@ public interface Filter {
      * @return Set of UUIDs this filter applies to
      * @throws IllegalArgumentException If the arguments are not valid.
      */
-    Set<Integer> getMatchingUserIds(InputFilterDto query);
+    Set<Integer> getMatchingUserIds(@Untrusted InputFilterDto query);
 
-    default Result apply(InputFilterDto query) {
+    default Result apply(@Untrusted InputFilterDto query) {
         try {
             return new Result(null, getKind(), getMatchingUserIds(query));
         } catch (CompleteSetException allMatch) {

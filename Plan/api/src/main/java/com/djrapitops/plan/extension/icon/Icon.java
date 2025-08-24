@@ -16,10 +16,12 @@
  */
 package com.djrapitops.plan.extension.icon;
 
+import java.util.Objects;
+
 /**
  * Object that represents an icon on the website.
  * <p>
- * See https://fontawesome.com/icons (select 'free')) for icons and their {@link Family}.
+ * See <a href="https://fontawesome.com/icons">FontAwesome</a> (select 'free')) for icons and their {@link Family}.
  *
  * @author AuroraLS3
  */
@@ -73,10 +75,26 @@ public class Icon {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Icon icon = (Icon) o;
+        return type == icon.type && Objects.equals(getName(), icon.getName()) && getColor() == icon.getColor();
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, type, getName(), getColor());
+    }
+
+    @Override
     public String toString() {
         return "Icon{" + type.name() + ", '" + name + '\'' + ", " + color.name() + '}';
     }
 
+    /**
+     * Builder for an {@link Icon}.
+     */
     public static class Builder {
 
         private final Icon icon;

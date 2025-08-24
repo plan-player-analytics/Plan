@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.extension.implementation.builder;
 
+import com.djrapitops.plan.component.Component;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.annotation.BooleanProvider;
@@ -117,18 +118,22 @@ public class ExtValueBuilder implements ValueBuilder {
     }
 
     private ProviderInformation getProviderInformation() {
-        return getProviderInformation(false, null);
+        return getProviderInformation(false, false, null);
     }
 
     private ProviderInformation getBooleanProviderInformation(String providedCondition) {
-        return getProviderInformation(false, providedCondition);
+        return getProviderInformation(false, false, providedCondition);
+    }
+
+    private ProviderInformation getComponentProviderInformation() {
+        return getProviderInformation(false, true, null);
     }
 
     private ProviderInformation getPercentageProviderInformation() {
-        return getProviderInformation(true, null);
+        return getProviderInformation(true, false, null);
     }
 
-    private ProviderInformation getProviderInformation(boolean percentage, String providedCondition) {
+    private ProviderInformation getProviderInformation(boolean percentage, boolean component, String providedCondition) {
         ProviderInformation.Builder builder = ProviderInformation.builder(pluginName)
                 .setName(providerName != null ? providerName
                         : formatTextAsIdentifier(text))
@@ -145,6 +150,10 @@ public class ExtValueBuilder implements ValueBuilder {
 
         if (percentage) {
             builder = builder.setAsPercentage();
+        }
+
+        if (component) {
+            builder = builder.setAsComponent();
         }
 
         if (providedCondition != null && !providedCondition.isEmpty()) {
@@ -181,6 +190,11 @@ public class ExtValueBuilder implements ValueBuilder {
     }
 
     @Override
+    public DataValue<Component> buildComponent(Component value) {
+        return new ComponentDataValue(value, getComponentProviderInformation());
+    }
+
+    @Override
     public DataValue<Long> buildNumber(Long value) {
         return new NumberDataValue(value, getProviderInformation());
     }
@@ -213,6 +227,11 @@ public class ExtValueBuilder implements ValueBuilder {
     @Override
     public DataValue<String> buildString(Supplier<String> value) {
         return new StringDataValue(value, getProviderInformation());
+    }
+
+    @Override
+    public DataValue<Component> buildComponent(Supplier<Component> value) {
+        return new ComponentDataValue(value, getComponentProviderInformation());
     }
 
     @Override

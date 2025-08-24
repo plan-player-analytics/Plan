@@ -82,7 +82,7 @@ public class PlayerCountQueries {
                 INNER_JOIN + ServerTable.TABLE_NAME + " se on se." + ServerTable.ID + "=" + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_ID +
                 WHERE + SessionsTable.SESSION_END + "<=?" +
                 AND + SessionsTable.SESSION_START + ">=?" +
-                GROUP_BY + SessionsTable.SERVER_ID;
+                GROUP_BY + ServerTable.SERVER_UUID;
 
         return database -> database.queryMap(sql,
                 (set, byServer) -> byServer.put(
@@ -225,6 +225,26 @@ public class PlayerCountQueries {
         };
     }
 
+    public static Query<Integer> averageUniquePlayerCount(long after, long before, long timeZoneOffset) {
+        return database -> {
+            Sql sql = database.getSql();
+            String selectUniquePlayersPerDay = SELECT +
+                    sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + SessionsTable.SESSION_START + "+?)/1000"))) +
+                    "*1000 as date," +
+                    "COUNT(DISTINCT " + SessionsTable.USER_ID + ") as " + PLAYER_COUNT +
+                    FROM + SessionsTable.TABLE_NAME +
+                    WHERE + SessionsTable.SESSION_END + "<=?" +
+                    AND + SessionsTable.SESSION_START + ">=?" +
+                    GROUP_BY + "date";
+            String selectAverage = SELECT + "AVG(" + PLAYER_COUNT + ") as average" + FROM + '(' + selectUniquePlayersPerDay + ") q1";
+
+            return database.queryOptional(selectAverage,
+                            set -> (int) set.getDouble("average"),
+                            timeZoneOffset, before, after)
+                    .orElse(0);
+        };
+    }
+
     public static Query<Integer> newPlayerCount(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "COUNT(1) as " + PLAYER_COUNT +
                 FROM + UserInfoTable.TABLE_NAME +
@@ -256,7 +276,7 @@ public class PlayerCountQueries {
                 INNER_JOIN + ServerTable.TABLE_NAME + " s on s." + ServerTable.ID + '=' + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.SERVER_ID +
                 WHERE + UserInfoTable.REGISTERED + "<=?" +
                 AND + UserInfoTable.REGISTERED + ">=?" +
-                GROUP_BY + UserInfoTable.SERVER_ID;
+                GROUP_BY + "s." + ServerTable.SERVER_UUID;
 
         return database -> database.queryMap(sql,
                 (set, byServer) -> byServer.put(

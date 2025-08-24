@@ -1,0 +1,2 @@
+cd ..
+./gradlew :common:bundle

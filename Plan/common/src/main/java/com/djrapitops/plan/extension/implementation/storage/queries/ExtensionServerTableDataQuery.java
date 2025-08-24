@@ -25,7 +25,9 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
-import com.djrapitops.plan.storage.database.sql.tables.*;
+import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
+import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.*;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -76,10 +78,9 @@ public class ExtensionServerTableDataQuery implements Query<Map<UUID, ExtensionT
 
     private Query<Map<UUID, ExtensionTabData>> fetchPlayerData() {
         String selectLimitedNumberOfPlayerUUIDsByLastSeenDate = SELECT +
-                UsersTable.USER_UUID + ",MAX(" + SessionsTable.SESSION_END + ") as last_seen" +
+                SessionsTable.USER_ID + ",MAX(" + SessionsTable.SESSION_END + ") as last_seen" +
                 FROM + SessionsTable.TABLE_NAME +
-                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_ID +
-                GROUP_BY + SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_ID +
+                GROUP_BY + SessionsTable.USER_ID +
                 ORDER_BY + "last_seen DESC LIMIT ?";
 
         String sql = SELECT +
@@ -89,6 +90,7 @@ public class ExtensionServerTableDataQuery implements Query<Map<UUID, ExtensionT
                 "v1." + ExtensionPlayerValueTable.PERCENTAGE_VALUE + " as percentage_value," +
                 "v1." + ExtensionPlayerValueTable.LONG_VALUE + " as long_value," +
                 "v1." + ExtensionPlayerValueTable.STRING_VALUE + " as string_value," +
+                "v1." + ExtensionPlayerValueTable.COMPONENT_VALUE + " as component_value," +
                 "null as group_value," +
                 "p1." + ExtensionProviderTable.PROVIDER_NAME + " as provider_name," +
                 "p1." + ExtensionProviderTable.TEXT + " as text," +
@@ -97,7 +99,8 @@ public class ExtensionServerTableDataQuery implements Query<Map<UUID, ExtensionT
                 "i1." + ExtensionIconTable.ICON_NAME + " as provider_icon_name," +
                 "i1." + ExtensionIconTable.FAMILY + " as provider_icon_family" +
                 FROM + ExtensionPlayerValueTable.TABLE_NAME + " v1" +
-                INNER_JOIN + '(' + selectLimitedNumberOfPlayerUUIDsByLastSeenDate + ") as last_seen_q on last_seen_q.uuid=v1." + ExtensionPlayerValueTable.USER_UUID +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.USER_UUID + "=v1." + ExtensionPlayerValueTable.USER_UUID +
+                INNER_JOIN + '(' + selectLimitedNumberOfPlayerUUIDsByLastSeenDate + ") as last_seen_q on last_seen_q.user_id=u." + UsersTable.ID +
                 INNER_JOIN + ExtensionProviderTable.TABLE_NAME + " p1 on p1." + ExtensionProviderTable.ID + "=v1." + ExtensionPlayerValueTable.PROVIDER_ID +
                 INNER_JOIN + ExtensionPluginTable.TABLE_NAME + " e1 on e1." + ExtensionPluginTable.ID + "=p1." + ExtensionProviderTable.PLUGIN_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i1 on i1." + ExtensionIconTable.ID + "=p1." + ExtensionProviderTable.ICON_ID +
@@ -123,10 +126,10 @@ public class ExtensionServerTableDataQuery implements Query<Map<UUID, ExtensionT
 
     private Query<Map<UUID, ExtensionTabData>> fetchPlayerGroups() {
         String selectLimitedNumberOfPlayerUUIDsByLastSeenDate = SELECT +
-                UsersTable.USER_UUID + ",MAX(" + SessionsTable.SESSION_END + ") as last_seen" +
+                SessionsTable.USER_ID + "," +
+                "MAX(" + SessionsTable.SESSION_END + ") as last_seen" +
                 FROM + SessionsTable.TABLE_NAME +
-                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_ID +
-                GROUP_BY + SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_ID +
+                GROUP_BY + SessionsTable.USER_ID +
                 ORDER_BY + "last_seen DESC LIMIT ?";
 
         String sql = SELECT +
@@ -137,7 +140,8 @@ public class ExtensionServerTableDataQuery implements Query<Map<UUID, ExtensionT
                 "i1." + ExtensionIconTable.ICON_NAME + " as provider_icon_name," +
                 "i1." + ExtensionIconTable.FAMILY + " as provider_icon_family" +
                 FROM + ExtensionGroupsTable.TABLE_NAME + " v1" +
-                INNER_JOIN + '(' + selectLimitedNumberOfPlayerUUIDsByLastSeenDate + ") as last_seen_q on last_seen_q.uuid=v1." + ExtensionGroupsTable.USER_UUID +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.USER_UUID + "=v1." + ExtensionGroupsTable.USER_UUID +
+                INNER_JOIN + '(' + selectLimitedNumberOfPlayerUUIDsByLastSeenDate + ") as last_seen_q on last_seen_q.user_id=u." + UsersTable.ID +
                 INNER_JOIN + ExtensionProviderTable.TABLE_NAME + " p1 on p1." + ExtensionProviderTable.ID + "=v1." + ExtensionGroupsTable.PROVIDER_ID +
                 INNER_JOIN + ExtensionPluginTable.TABLE_NAME + " e1 on e1." + ExtensionPluginTable.ID + "=p1." + ExtensionProviderTable.PLUGIN_ID +
                 LEFT_JOIN + ExtensionIconTable.TABLE_NAME + " i1 on i1." + ExtensionIconTable.ID + "=p1." + ExtensionProviderTable.ICON_ID +
@@ -207,6 +211,11 @@ public class ExtensionServerTableDataQuery implements Query<Map<UUID, ExtensionT
         String stringValue = set.getString(ExtensionPlayerValueTable.STRING_VALUE);
         if (stringValue != null) {
             extensionTab.putStringData(ExtensionStringData.regularString(description, stringValue));
+        }
+
+        String componentValue = set.getString(ExtensionPlayerValueTable.COMPONENT_VALUE);
+        if (componentValue != null) {
+            extensionTab.putComponentData(new ExtensionComponentData(description, componentValue));
         }
     }
 

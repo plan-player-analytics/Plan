@@ -23,4 +23,8 @@ package com.djrapitops.plan.delivery.rendering.pages;
  */
 public interface Page {
     String toHtml();
+
+    default long lastModified() {
+        return System.currentTimeMillis();
+    }
 }

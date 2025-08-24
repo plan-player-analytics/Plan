@@ -19,9 +19,18 @@ updates:
   - dependency-name: com.h2database:h2
     versions:
     - "> 1.4.199"
+  groups:
+    swagger:
+      patterns:
+        - "*swagger*"
 - package-ecosystem: npm
   directory: "/Plan/react/dashboard"
   schedule:
     interval: weekly
     day: friday
   open-pull-requests-limit: 99
+  groups:
+    fontawesome:
+      patterns:
+        - "@fortawesome/*"
+    

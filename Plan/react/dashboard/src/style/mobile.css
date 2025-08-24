@@ -1,0 +1,40 @@
+@media (max-width: 660px) {
+    .w-22 {
+        width: unset !important;
+        height: 4rem;
+    }
+
+    #wrapper {
+        font-size: small;
+        background-image: var(--color-layout-background);
+    }
+
+    .sidebar {
+        position: absolute;
+        padding-top: 1rem;
+        width: calc(100vw - 1rem) !important;
+        padding-right: 0.15rem;
+        z-index: 9999;
+        height: 100%;
+    }
+
+    .sidebar .nav-item .nav-link {
+        width: 100%;
+    }
+
+    .nav-header {
+        margin-top: 0.75rem !important;
+    }
+
+    .nav-header > * {
+        margin-top: 0.5rem;
+    }
+
+    .visualizer-button {
+        padding: 0.25rem;
+    }
+
+    .contributor {
+        width: 50%;
+    }
+}

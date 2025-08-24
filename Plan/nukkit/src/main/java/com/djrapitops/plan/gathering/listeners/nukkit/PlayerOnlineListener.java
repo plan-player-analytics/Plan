@@ -35,6 +35,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.BanStatusTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.KickStoreTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreAllowlistBounceTransaction;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 
@@ -95,6 +96,13 @@ public class PlayerOnlineListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR)
     public void onPlayerKick(PlayerKickEvent event) {
         try {
+            if (event.getReasonEnum() == PlayerKickEvent.Reason.NOT_WHITELISTED) {
+                dbSystem.getDatabase().executeTransaction(new StoreAllowlistBounceTransaction(
+                        event.getPlayer().getUniqueId(),
+                        event.getPlayer().getName(),
+                        serverInfo.getServerUUID(), System.currentTimeMillis())
+                );
+            }
             if (status.areKicksNotCounted() || event.isCancelled()) {
                 return;
             }

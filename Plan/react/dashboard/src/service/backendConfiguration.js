@@ -1,21 +1,38 @@
 import axios from "axios";
 
-const toBeReplaced = "PLAN_BASE_ADDRESS";
+// Using var here intentionally to avoid rollup tree-shake removing the if-blocks using these variables.
+var javaReplaced = {
+    isStatic: "PLAN_EXPORTED_VERSION",
+    address: "PLAN_BASE_ADDRESS"
+}
 
 const isCurrentAddress = (address) => {
-    const is = window.location.href.startsWith(address);
-    if (!is) console.warn(`Configured address ${address} did not match start of ${window.location.href}, falling back to relative address. Configure 'Webserver.Alternative_IP' settings to point to your address.`)
+    let is = window.location.href.startsWith(address);
+    const usingProxyHttps = window.location.href.startsWith("https") && !address.startsWith("https");
+    if (usingProxyHttps) {
+        is = window.location.href.replace('https', '').startsWith(address.replace('http'));
+    }
+    if (!is) {
+        console.warn(`Configured address ${address} did not match start of ${window.location.href}, falling back to relative address. Configure 'Webserver.Alternative_IP' settings to point to your address.`)
+    }
     return is;
 }
 
-export const baseAddress = "PLAN_BASE_ADDRESS" === toBeReplaced || !isCurrentAddress(toBeReplaced) ? "" : toBeReplaced;
+// Using var here intentionally to avoid rollup tree-shake removing the if-blocks using these variables.
+export var baseAddress = javaReplaced.address.startsWith('PLAN_') || !isCurrentAddress(javaReplaced.address) ? "" : javaReplaced.address;
+export var staticSite = javaReplaced.isStatic === 'true';
 
-export const doSomeGetRequest = async (url, statusOptions) => {
-    return doSomeRequest(url, statusOptions, async () => axios.get(url));
+export const doSomeGetRequest = async (url, updateRequested, statusOptions) => {
+    return doSomeRequest(url, statusOptions, async () => axios.get(baseAddress + url,
+        updateRequested ? {headers: {"X-Plan-Timestamp": updateRequested}} : {}));
 }
 
 export const doSomePostRequest = async (url, statusOptions, body) => {
-    return doSomeRequest(url, statusOptions, async () => axios.post(url, body));
+    return doSomeRequest(url, statusOptions, async () => axios.post(baseAddress + url, body));
+}
+
+export const doSomeDeleteRequest = async (url, statusOptions, body) => {
+    return doSomeRequest(url, statusOptions, async () => axios.delete(baseAddress + url, body));
 }
 
 export const doSomeRequest = async (url, statusOptions, axiosFunction) => {
@@ -66,7 +83,8 @@ export const doSomeRequest = async (url, statusOptions, axiosFunction) => {
 }
 
 export const standard200option = {status: 200, get: response => response.data}
+const exported404options = {status: 404, get: () => 'Data not yet exported'}
 
-export const doGetRequest = async url => {
-    return doSomeGetRequest(url, [standard200option])
+export const doGetRequest = async (url, updateRequested) => {
+    return doSomeGetRequest(url, updateRequested, staticSite ? [standard200option, exported404options] : [standard200option])
 }

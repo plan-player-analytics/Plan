@@ -1,0 +1,17 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
+apply plugin: "com.gradleup.shadow"
+
+// :extensions:adventure is used to avoid relocating "net.kyori.adventure.*"
+// as it is used & provided natively on some platforms
+
+dependencies {
+    compileOnly project(":common")
+    api "net.kyori:adventure-text-serializer-gson:$adventureVersion"
+    api "net.kyori:adventure-text-serializer-legacy:$adventureVersion"
+    api "net.kyori:adventure-text-minimessage:$adventureVersion"
+}
+
+tasks.named("shadowJar", ShadowJar) {
+    relocate "net.kyori", "plan.net.kyori"
+}

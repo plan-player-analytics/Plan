@@ -21,8 +21,8 @@
         <property name="headerFile" value="${config_loc}/java.header"/>
     </module>
     <module name="FileLength">
-        <!-- This value is alright. Notable: SessionQueries 808 -->
-        <property name="max" value="1000"/>
+        <!-- This value is alright. Notable: SessionQueries 1007 -->
+        <property name="max" value="1250"/>
         <property name="fileExtensions" value=".java"/>
     </module>
     <module name="LineLength">
@@ -42,11 +42,6 @@
         <!-- Length restriction -->
         <module name="AnonInnerLength">
             <property name="max" value="50"/>
-        </module>
-
-        <module name="MethodLength">
-            <!-- This value is high. Notable: InspectPage: 138 -->
-            <property name="max" value="150"/>
         </module>
 
         <!-- Java Style -->
@@ -76,8 +71,8 @@
 
         <!-- Metrics -->
         <module name="ClassFanOutComplexity">
-            <!-- This value is a bit high. -->
-            <property name="max" value="40"/>
+            <!-- This value is a bit high. RootJSONResolver: 41 -->
+            <property name="max" value="50"/>
         </module>
         <module name="CyclomaticComplexity">
             <!-- This value is high. Notable: ThemeConfig: 16 -->

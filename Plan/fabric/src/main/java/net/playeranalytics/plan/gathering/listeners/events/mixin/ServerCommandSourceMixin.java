@@ -17,11 +17,12 @@
 package net.playeranalytics.plan.gathering.listeners.events.mixin;
 
 import com.djrapitops.plan.commands.use.*;
+import com.mojang.authlib.GameProfile;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.playeranalytics.plan.commands.CommandManager;
+import net.playeranalytics.plan.commands.FabricCommandManager;
 import net.playeranalytics.plan.commands.use.FabricMessageBuilder;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -29,6 +30,7 @@ import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.Optional;
 import java.util.UUID;
+import java.util.function.Supplier;
 
 @Mixin(ServerCommandSource.class)
 public abstract class ServerCommandSourceMixin implements CMDSender {
@@ -44,7 +46,7 @@ public abstract class ServerCommandSourceMixin implements CMDSender {
     }
 
     @Shadow
-    public abstract void sendFeedback(Text message, boolean broadcastToOps);
+    public abstract void sendFeedback(Supplier<Text> supplier, boolean broadcastToOps);
 
     @Shadow
     @Nullable
@@ -57,12 +59,12 @@ public abstract class ServerCommandSourceMixin implements CMDSender {
 
     @Override
     public Optional<String> getPlayerName() {
-        return getPlayer().map(ServerPlayerEntity::getEntityName);
+        return getPlayer().map(ServerPlayerEntity::getGameProfile).map(GameProfile::getName);
     }
 
     @Override
     public boolean hasPermission(String permission) {
-        return CommandManager.checkPermission((ServerCommandSource) (Object) this, permission);
+        return FabricCommandManager.checkPermission((ServerCommandSource) (Object) this, permission);
     }
 
     @Override
@@ -72,7 +74,7 @@ public abstract class ServerCommandSourceMixin implements CMDSender {
 
     @Override
     public void send(String message) {
-        this.sendFeedback(Text.literal(message), false);
+        this.sendFeedback(() -> Text.literal(message), false);
     }
 
     @Override

@@ -24,8 +24,8 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionIconTable;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionPluginTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionIconTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPluginTable;
 import com.djrapitops.plan.utilities.java.Lists;
 
 import java.sql.PreparedStatement;

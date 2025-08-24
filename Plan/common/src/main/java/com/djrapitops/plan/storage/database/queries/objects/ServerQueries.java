@@ -23,8 +23,10 @@ import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.java.Maps;
 import org.apache.commons.lang3.math.NumberUtils;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -57,13 +59,7 @@ public class ServerQueries {
             public Collection<Server> processResults(ResultSet set) throws SQLException {
                 Collection<Server> servers = new HashSet<>();
                 while (set.next()) {
-                    servers.add(new Server(
-                            set.getInt(ServerTable.ID),
-                            ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)),
-                            set.getString(ServerTable.NAME),
-                            set.getString(ServerTable.WEB_ADDRESS),
-                            set.getBoolean(ServerTable.PROXY),
-                            set.getString(ServerTable.PLAN_VERSION)));
+                    servers.add(extractServer(set));
                 }
                 return servers;
             }
@@ -110,7 +106,7 @@ public class ServerQueries {
         return fetchServerMatchingIdentifier(serverUUID.toString());
     }
 
-    public static Query<Optional<Server>> fetchServerMatchingIdentifier(String identifier) {
+    public static Query<Optional<Server>> fetchServerMatchingIdentifier(@Untrusted String identifier) {
         String sql = SELECT + '*' + FROM + ServerTable.TABLE_NAME +
                 WHERE + "(LOWER(" + ServerTable.SERVER_UUID + ") LIKE LOWER(?)" +
                 OR + "LOWER(" + ServerTable.NAME + ") LIKE LOWER(?)" +
@@ -132,45 +128,44 @@ public class ServerQueries {
             @Override
             public Optional<Server> processResults(ResultSet set) throws SQLException {
                 if (set.next()) {
-                    return Optional.of(new Server(
-                            set.getInt(ServerTable.ID),
-                            ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)),
-                            set.getString(ServerTable.NAME),
-                            set.getString(ServerTable.WEB_ADDRESS),
-                            set.getBoolean(ServerTable.PROXY),
-                            set.getString(ServerTable.PLAN_VERSION)));
+                    return Optional.of(extractServer(set));
                 }
                 return Optional.empty();
             }
         };
     }
 
-    public static Query<Optional<Server>> fetchProxyServerInformation() {
+    public static Query<List<Server>> fetchProxyServers() {
         String sql = SELECT + '*' + FROM + ServerTable.TABLE_NAME +
                 WHERE + ServerTable.INSTALLED + "=?" +
-                AND + ServerTable.PROXY + "=?" +
-                LIMIT + '1';
-        return new QueryStatement<>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setBoolean(1, true);
-                statement.setBoolean(2, true);
-            }
+                AND + ServerTable.PROXY + "=?";
+        return db -> db.queryList(sql, ServerQueries::extractServer, true, true);
+    }
 
-            @Override
-            public Optional<Server> processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    return Optional.of(new Server(
-                            set.getInt(ServerTable.ID),
-                            ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)),
-                            set.getString(ServerTable.NAME),
-                            set.getString(ServerTable.WEB_ADDRESS),
-                            set.getBoolean(ServerTable.PROXY),
-                            set.getString(ServerTable.PLAN_VERSION)));
-                }
-                return Optional.empty();
-            }
-        };
+    public static Query<List<Server>> fetchAllServers() {
+        String sql = SELECT + '*' + FROM + ServerTable.TABLE_NAME +
+                WHERE + ServerTable.INSTALLED + "=?";
+        return db -> db.queryList(sql, ServerQueries::extractServer, true, true);
+    }
+
+    private static @NotNull Server extractServer(ResultSet set) throws SQLException {
+        return new Server(
+                set.getInt(ServerTable.ID),
+                ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)),
+                set.getString(ServerTable.NAME),
+                set.getString(ServerTable.WEB_ADDRESS),
+                set.getBoolean(ServerTable.PROXY),
+                set.getString(ServerTable.PLAN_VERSION)
+        );
+    }
+
+    public static Query<List<ServerUUID>> fetchProxyServerUUIDs() {
+        String sql = SELECT + ServerTable.SERVER_UUID + FROM + ServerTable.TABLE_NAME +
+                WHERE + ServerTable.INSTALLED + "=?" +
+                AND + ServerTable.PROXY + "=?";
+        return db -> db.queryList(sql, set -> ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)),
+                true, true
+        );
     }
 
     public static Query<List<String>> fetchGameServerNames() {
@@ -184,7 +179,7 @@ public class ServerQueries {
             public List<String> processResults(ResultSet set) throws SQLException {
                 List<String> names = new ArrayList<>();
                 while (set.next()) {
-                    names.add(Server.getIdentifiableName(set.getString(ServerTable.NAME), set.getInt(ServerTable.ID)));
+                    names.add(Server.getIdentifiableName(set.getString(ServerTable.NAME), set.getInt(ServerTable.ID), false));
                 }
                 return names;
             }
@@ -193,7 +188,7 @@ public class ServerQueries {
 
     public static Query<Map<ServerUUID, String>> fetchServerNames() {
         String sql = Select.from(ServerTable.TABLE_NAME,
-                        ServerTable.ID, ServerTable.SERVER_UUID, ServerTable.NAME)
+                        ServerTable.ID, ServerTable.SERVER_UUID, ServerTable.NAME, ServerTable.PROXY)
                 .toString();
 
         return new QueryAllStatement<>(sql) {
@@ -202,7 +197,9 @@ public class ServerQueries {
                 Map<ServerUUID, String> names = new HashMap<>();
                 while (set.next()) {
                     ServerUUID serverUUID = ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID));
-                    names.put(serverUUID, Server.getIdentifiableName(set.getString(ServerTable.NAME), set.getInt(ServerTable.ID)));
+                    names.put(serverUUID, Server.getIdentifiableName(set.getString(ServerTable.NAME),
+                            set.getInt(ServerTable.ID),
+                            set.getBoolean(ServerTable.PROXY)));
                 }
                 return names;
             }
@@ -234,13 +231,7 @@ public class ServerQueries {
             public List<Server> processResults(ResultSet set) throws SQLException {
                 List<Server> matches = new ArrayList<>();
                 while (set.next()) {
-                    matches.add(new Server(
-                            set.getInt(ServerTable.ID),
-                            ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)),
-                            set.getString(ServerTable.NAME),
-                            set.getString(ServerTable.WEB_ADDRESS),
-                            set.getBoolean(ServerTable.PROXY),
-                            set.getString(ServerTable.PLAN_VERSION)));
+                    matches.add(extractServer(set));
                 }
                 return matches;
             }
@@ -283,7 +274,7 @@ public class ServerQueries {
         return db -> Maps.reverse(db.query(fetchServerNames()));
     }
 
-    public static Query<List<ServerUUID>> fetchServersMatchingIdentifiers(List<String> serverNames) {
+    public static Query<List<ServerUUID>> fetchServersMatchingIdentifiers(@Untrusted List<String> serverNames) {
         return db -> {
             Map<String, ServerUUID> nameToUUIDMap = db.query(ServerQueries.fetchServerNamesToUUIDs());
             return serverNames.stream()

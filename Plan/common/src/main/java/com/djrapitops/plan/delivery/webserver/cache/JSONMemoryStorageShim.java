@@ -120,6 +120,16 @@ public class JSONMemoryStorageShim implements JSONStorage {
         underlyingStorage.invalidateOlder(identifier, timestamp);
     }
 
+    @Override
+    public Optional<Long> getTimestamp(String identifier) {
+        for (TimestampedIdentifier key : getCache().asMap().keySet()) {
+            if (key.identifier.equalsIgnoreCase(identifier)) {
+                return Optional.of(key.timestamp);
+            }
+        }
+        return Optional.empty();
+    }
+
     static class TimestampedIdentifier {
         private final String identifier;
         private final long timestamp;

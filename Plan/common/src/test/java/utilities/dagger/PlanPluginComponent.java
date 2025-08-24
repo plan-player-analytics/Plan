@@ -51,6 +51,7 @@ import java.nio.file.Path;
 
         PluginServerPropertiesModule.class,
         PluginSuperClassBindingModule.class,
+        PlanPluginTaskModule.class,
         DBSystemModule.class
 })
 public interface PlanPluginComponent {

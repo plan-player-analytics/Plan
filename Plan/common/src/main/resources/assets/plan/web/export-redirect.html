@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta content="AuroraLS3" name="author">
+    <meta content="noindex, nofollow" name="robots">
+    <title>Plan | Player Analytics</title>
+    <script>
+        const address = `${PLAN_ADDRESS}`;
+        const currentAddress = window.location.pathname + window.location.hash + window.location.search;
+        let basePath = address.replace("http://", "")
+            .replace("https://", "");
+        if (basePath.includes('/')) {
+            basePath = basePath.substring(basePath.indexOf('/') + 1);
+        }
+        const redirectTo = currentAddress.replace(basePath, '');
+        window.location.href = address + `/?redirect=${encodeURIComponent(redirectTo)}`;
+    </script>
+</head>
+<body>
+<noscript>Please enable javascript.</noscript>
+</body>
+</html>

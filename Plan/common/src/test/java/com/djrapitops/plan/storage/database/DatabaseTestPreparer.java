@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.component.ComponentSvc;
 import com.djrapitops.plan.delivery.DeliveryUtilities;
 import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -63,7 +64,9 @@ public interface DatabaseTestPreparer {
         return system().getDeliveryUtilities();
     }
 
-    default ExtensionSvc extensionService() {return system().getExtensionService();}
+    default ExtensionSvc extensionService() {return system().getApiServices().getExtensionService();}
+
+    default ComponentSvc componentService() {return system().getApiServices().getComponentService();}
 
     QueryFilters queryFilters();
 

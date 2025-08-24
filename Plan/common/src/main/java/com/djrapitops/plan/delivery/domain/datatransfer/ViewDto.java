@@ -19,6 +19,7 @@ package com.djrapitops.plan.delivery.domain.datatransfer;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import org.apache.commons.lang3.StringUtils;
 
 import java.text.ParseException;
@@ -31,6 +32,7 @@ import java.util.stream.Collectors;
 /**
  * Represents query page view that the user wants to see data for.
  */
+@Untrusted
 public class ViewDto {
     private static final String DATE_PATTERN = "dd/MM/yyyy kk:mm";
 

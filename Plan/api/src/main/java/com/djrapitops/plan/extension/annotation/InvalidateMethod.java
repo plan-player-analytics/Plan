@@ -39,10 +39,18 @@ public @interface InvalidateMethod {
      */
     String value();
 
+    /**
+     * Multiple {@link InvalidateMethod} annotations are supported per class.
+     */
     @Retention(RetentionPolicy.RUNTIME)
     @Target(ElementType.TYPE)
     @interface Multiple {
 
+        /**
+         * All the annotations.
+         *
+         * @return All InvalidateMethod annotations in the class.
+         */
         InvalidateMethod[] value();
 
     }

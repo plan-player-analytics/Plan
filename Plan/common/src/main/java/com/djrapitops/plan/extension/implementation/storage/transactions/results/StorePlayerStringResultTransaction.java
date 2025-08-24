@@ -17,9 +17,11 @@
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
+import com.djrapitops.plan.extension.implementation.builder.ComponentDataValue;
+import com.djrapitops.plan.extension.implementation.builder.StringDataValue;
 import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.identification.ServerUUID;
-import com.djrapitops.plan.storage.database.sql.tables.ExtensionProviderTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionProviderTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
 import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
@@ -31,7 +33,7 @@ import java.util.UUID;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.AND;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
-import static com.djrapitops.plan.storage.database.sql.tables.ExtensionPlayerValueTable.*;
+import static com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPlayerValueTable.*;
 
 /**
  * Transaction to store method result of a String.
@@ -45,6 +47,7 @@ public class StorePlayerStringResultTransaction extends ThrowawayTransaction {
     private final String providerName;
     private final UUID playerUUID;
 
+    private final boolean component;
     private final String value;
 
     public StorePlayerStringResultTransaction(ProviderInformation information, Parameters parameters, String value) {
@@ -52,7 +55,8 @@ public class StorePlayerStringResultTransaction extends ThrowawayTransaction {
         this.providerName = information.getName();
         this.serverUUID = parameters.getServerUUID();
         this.playerUUID = parameters.getPlayerUUID();
-        this.value = StringUtils.truncate(value, 50);
+        this.component = information.isComponent();
+        this.value = StringUtils.truncate(value, component ? ComponentDataValue.MAX_LENGTH : StringDataValue.MAX_LENGTH);
     }
 
     @Override
@@ -72,7 +76,7 @@ public class StorePlayerStringResultTransaction extends ThrowawayTransaction {
     private Executable updateValue() {
         String sql = "UPDATE " + TABLE_NAME +
                 " SET " +
-                STRING_VALUE + "=?" +
+                (component ? COMPONENT_VALUE : STRING_VALUE) + "=?" +
                 WHERE + USER_UUID + "=?" +
                 AND + PROVIDER_ID + "=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID;
 
@@ -88,7 +92,7 @@ public class StorePlayerStringResultTransaction extends ThrowawayTransaction {
 
     private Executable insertValue() {
         String sql = "INSERT INTO " + TABLE_NAME + "(" +
-                STRING_VALUE + "," +
+                (component ? COMPONENT_VALUE : STRING_VALUE) + "," +
                 USER_UUID + "," +
                 PROVIDER_ID +
                 ") VALUES (?,?," + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID + ")";

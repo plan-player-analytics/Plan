@@ -21,6 +21,7 @@ import com.djrapitops.plan.utilities.logging.ErrorLogger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -38,24 +39,32 @@ public class TestErrorLogger implements ErrorLogger {
         return caught;
     }
 
+    public static Optional<Throwable> getLatest() {
+        if (caught.isEmpty()) return Optional.empty();
+        return Optional.of(caught.get(caught.size() - 1));
+    }
+
+    private static void logException(String level, Throwable throwable, ErrorContext context) {
+        String type = throwErrors ? "Unexpected exception" : "Expected exception";
+        System.out.println("[" + level + "] " + type + " occurred during test, context: " + context);
+        Logger.getGlobal().log(Level.SEVERE, throwable, () -> type + ": " + throwable.getMessage());
+    }
+
     @Override
     public void critical(Throwable throwable, ErrorContext context) {
-        System.out.println("[CRITICAL] Exception occurred during test, context: " + context);
-        Logger.getGlobal().log(Level.SEVERE, "The exception: " + throwable.getMessage(), throwable);
+        logException("CRITICAL", throwable, context);
         throwOrStore(throwable);
     }
 
     @Override
     public void error(Throwable throwable, ErrorContext context) {
-        System.out.println("[ERROR] Exception occurred during test, context: " + context);
-        Logger.getGlobal().log(Level.SEVERE, "The exception: " + throwable.getMessage(), throwable);
+        logException("ERROR", throwable, context);
         throwOrStore(throwable);
     }
 
     @Override
     public void warn(Throwable throwable, ErrorContext context) {
-        System.out.println("[WARN] Exception occurred during test, context: " + context);
-        Logger.getGlobal().log(Level.SEVERE, "The exception: " + throwable.getMessage(), throwable);
+        logException("WARN", throwable, context);
         throwOrStore(throwable);
     }
 

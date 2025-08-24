@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.extension.builder;
 
+import com.djrapitops.plan.component.Component;
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.annotation.BooleanProvider;
 import com.djrapitops.plan.extension.annotation.Conditional;
@@ -66,7 +67,7 @@ public interface ValueBuilder {
     /**
      * Icon displayed next to the value.
      * <p>
-     * See https://fontawesome.com/icons (select 'free')) for icons
+     * See <a href="https://fontawesome.com/icons">FontAwesome</a> (select 'free')) for icons
      *
      * @param iconName   Name of the icon
      * @param iconFamily Family of the icon
@@ -80,7 +81,7 @@ public interface ValueBuilder {
     /**
      * Icon displayed next to the value.
      * <p>
-     * See https://fontawesome.com/icons (select 'free')) for icons
+     * See <a href="https://fontawesome.com/icons">FontAwesome</a> (select 'free')) for icons
      *
      * @param icon Icon built using the methods in {@link Icon}.
      * @return This builder.
@@ -163,6 +164,14 @@ public interface ValueBuilder {
     DataValue<String> buildString(String value);
 
     /**
+     * Build a {@link Component}.
+     *
+     * @param value a {@link Component} made by {@link com.djrapitops.plan.component.ComponentService}
+     * @return a data value to give to {@link ExtensionDataBuilder}.
+     */
+    DataValue<Component> buildComponent(Component value);
+
+    /**
      * Build a Number.
      *
      * @param value a non-floating point number.
@@ -243,6 +252,13 @@ public interface ValueBuilder {
      * {@link ValueBuilder#buildString(String)}
      */
     DataValue<String> buildString(Supplier<String> value);
+
+    /**
+     * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
+     * <p>
+     * {@link ValueBuilder#buildComponent(Component)}
+     */
+    DataValue<Component> buildComponent(Supplier<Component> value);
 
     /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.

@@ -35,7 +35,11 @@ import org.apache.commons.lang3.StringUtils;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
@@ -77,7 +81,7 @@ public class WorldAliasSettings {
 
     private List<String[]> getRegexRules() {
         if (regexRules == null) {
-            regexRules = new ArrayList<>();
+            regexRules = new CopyOnWriteArrayList<>();
             for (String regexRule : config.get().getStringList("World_aliases.Regex")) {
                 regexRules.add(StringUtils.split(regexRule, ":", 2));
             }

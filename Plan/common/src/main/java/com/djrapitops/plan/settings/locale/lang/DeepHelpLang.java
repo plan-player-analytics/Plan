@@ -46,7 +46,9 @@ public enum DeepHelpLang implements Lang {
     DB_UNINSTALLED("command.help.dbUninstalled.inDepth", "In Depth Help - /plan db uninstalled", "Marks a server in Plan database as uninstalled so that it will not show up in server queries."),
     EXPORT("command.help.export.inDepth", "In Depth Help - /plan export", "Performs an export to export location defined in the config."),
     IMPORT("command.help.import.inDepth", "In Depth Help - /plan import", "Performs an import to load data into the database."),
-    JSON("command.help.json.inDepth", "In Depth Help - /plan json", "Allows you to download a player's data in json format. All of it.");
+    JSON("command.help.json.inDepth", "In Depth Help - /plan json", "Allows you to download a player's data in json format. All of it."),
+    SET_GROUP("command.help.setgroup.inDepth", "In Depth Help - /plan setgroup", "Allows you to change a users web permission group to an existing web group. Use /plan groups for list of available groups."),
+    GROUPS("command.help.groups.inDepth", "In Depth Help - /plan groups", "List available web permission groups that are managed on the web interface.");
 
     private final String key;
     private final String identifier;

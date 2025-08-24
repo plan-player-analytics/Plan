@@ -21,6 +21,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.google.gson.Gson;
 
 import javax.inject.Inject;
@@ -47,10 +48,10 @@ public class PlayedBetweenDateRangeFilter extends DateRangeFilter {
     }
 
     @Override
-    public Set<Integer> getMatchingUserIds(InputFilterDto query) {
+    public Set<Integer> getMatchingUserIds(@Untrusted InputFilterDto query) {
         long after = getAfter(query);
         long before = getBefore(query);
-        List<String> serverNames = getServerNames(query);
+        @Untrusted List<String> serverNames = getServerNames(query);
         List<ServerUUID> serverUUIDs = serverNames.isEmpty() ? Collections.emptyList() : dbSystem.getDatabase().query(ServerQueries.fetchServersMatchingIdentifiers(serverNames));
         return dbSystem.getDatabase().query(SessionQueries.userIdsOfPlayedBetween(after, before, serverUUIDs));
     }

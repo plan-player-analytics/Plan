@@ -16,11 +16,18 @@
  */
 package com.djrapitops.plan.gathering;
 
+import cn.nukkit.IPlayer;
+import cn.nukkit.Player;
 import cn.nukkit.level.Level;
+import cn.nukkit.plugin.Plugin;
 import com.djrapitops.plan.PlanNukkit;
+import com.djrapitops.plan.gathering.domain.PluginMetadata;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Singleton
 public class NukkitSensor implements ServerSensor<Level> {
@@ -62,5 +69,34 @@ public class NukkitSensor implements ServerSensor<Level> {
     @Override
     public Iterable<Level> getWorlds() {
         return plugin.getServer().getLevels().values();
+    }
+
+    @Override
+    public List<String> getOnlinePlayerNames() {
+        return plugin.getServer().getOnlinePlayers()
+                .values().stream()
+                .map(Player::getName)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PluginMetadata> getInstalledPlugins() {
+        return plugin.getServer().getPluginManager()
+                .getPlugins().values().stream()
+                .map(Plugin::getDescription)
+                .map(description -> new PluginMetadata(description.getName(), description.getVersion()))
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean supportsBans() {
+        return true;
+    }
+
+    @Override
+    public boolean isBanned(UUID playerUUID) {
+        IPlayer player = plugin.getServer().getOfflinePlayer(playerUUID);
+        if (player == null) {return false;}
+        return player.isBanned();
     }
 }

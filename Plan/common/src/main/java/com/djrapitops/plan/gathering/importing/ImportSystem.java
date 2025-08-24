@@ -18,6 +18,7 @@ package com.djrapitops.plan.gathering.importing;
 
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.gathering.importing.importers.Importer;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -53,7 +54,7 @@ public class ImportSystem implements SubSystem {
         importers.put(importer.getName(), importer);
     }
 
-    public Optional<Importer> getImporter(String name) {
+    public Optional<Importer> getImporter(@Untrusted String name) {
         return Optional.ofNullable(importers.get(name));
     }
 

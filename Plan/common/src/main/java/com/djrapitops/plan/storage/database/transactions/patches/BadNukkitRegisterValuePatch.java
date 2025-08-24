@@ -28,7 +28,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Patch to fix incorrect register dates for nukkit.
- * https://github.com/plan-player-analytics/Plan/issues/1320
+ * <a href="https://github.com/plan-player-analytics/Plan/issues/1320">Related issue</a>
  *
  * @author AuroraLS3
  */

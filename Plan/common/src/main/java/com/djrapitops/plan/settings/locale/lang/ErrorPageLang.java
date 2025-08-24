@@ -33,6 +33,7 @@ public enum ErrorPageLang implements Lang {
     ACCESS_DENIED_403("403AccessDenied", "Access Denied"),
     NOT_FOUND_404("html.error.404NotFound", "Not Found"),
     NO_SUCH_SERVER_404("html.error.serverNotSeen", "Server doesn't exist"),
+    NO_SUCH_SERVER_404_EXPORT("html.error.serverNotExported", "Server doesn't exist, its data might not have been exported yet."),
     PAGE_NOT_FOUND_404("html.error.404PageNotFound", "Page does not exist.");
 
     private final String key;

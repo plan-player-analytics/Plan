@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.delivery.rendering.json;
 
-import com.djrapitops.plan.delivery.domain.DateHolder;
 import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.delivery.domain.mutators.TPSMutator;
 import com.djrapitops.plan.delivery.formatting.Formatter;
@@ -29,7 +28,6 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
-import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
@@ -56,23 +54,18 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<String, Object>> {
 
-    private final Formatter<Long> day;
     private final PlanConfig config;
-    private final Locale locale;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final ServerSensor<?> serverSensor;
 
-    private final Formatter<Long> timeAmount;
     private final Formatter<Double> decimals;
     private final Formatter<Double> percentage;
     private final ServerUptimeCalculator serverUptimeCalculator;
-    private final Formatter<DateHolder> year;
 
     @Inject
     public ServerOverviewJSONCreator(
             PlanConfig config,
-            Locale locale,
             DBSystem dbSystem,
             ServerInfo serverInfo,
             ServerSensor<?> serverSensor,
@@ -80,15 +73,11 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
             Formatters formatters
     ) {
         this.config = config;
-        this.locale = locale;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.serverSensor = serverSensor;
         this.serverUptimeCalculator = serverUptimeCalculator;
 
-        year = formatters.year();
-        day = formatters.dayLong();
-        timeAmount = formatters.timeAmount();
         decimals = formatters.decimals();
         percentage = formatters.percentage();
     }
@@ -120,9 +109,9 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
         sevenDays.put("new_players_retention_perc", percentage.apply(retentionPercentage7d));
         TPSMutator tpsMutator = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServer(weekAgo, now, serverUUID)));
         double averageTPS = tpsMutator.averageTPS();
-        sevenDays.put("average_tps", averageTPS != -1 ? decimals.apply(averageTPS) : locale.get(GenericLang.UNAVAILABLE).toString());
+        sevenDays.put("average_tps", averageTPS != -1 ? decimals.apply(averageTPS) : GenericLang.UNAVAILABLE.getKey());
         sevenDays.put("low_tps_spikes", tpsMutator.lowTpsSpikeCount(config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED)));
-        sevenDays.put("downtime", timeAmount.apply(tpsMutator.serverDownTime()));
+        sevenDays.put("downtime", tpsMutator.serverDownTime());
 
         return sevenDays;
     }
@@ -141,19 +130,20 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
         numbers.put("online_players", getOnlinePlayers(serverUUID, db));
         Optional<DateObj<Integer>> lastPeak = db.query(TPSQueries.fetchPeakPlayerCount(serverUUID, twoDaysAgo));
         Optional<DateObj<Integer>> allTimePeak = db.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID));
-        numbers.put("last_peak_date", lastPeak.map(year).orElse("-"));
+        numbers.put("last_peak_date", lastPeak.map(DateObj::getDate).map(Object.class::cast).orElse("-"));
         numbers.put("last_peak_players", lastPeak.map(dateObj -> dateObj.getValue().toString()).orElse("-"));
-        numbers.put("best_peak_date", allTimePeak.map(year).orElse("-"));
+        numbers.put("best_peak_date", allTimePeak.map(DateObj::getDate).map(Object.class::cast).orElse("-"));
         numbers.put("best_peak_players", allTimePeak.map(dateObj -> dateObj.getValue().toString()).orElse("-"));
         Long totalPlaytime = db.query(SessionQueries.playtime(0L, now, serverUUID));
-        numbers.put("playtime", timeAmount.apply(totalPlaytime));
-        numbers.put("player_playtime", userCount != 0 ? timeAmount.apply(totalPlaytime / userCount) : "-");
+        numbers.put("playtime", totalPlaytime);
+        numbers.put("player_playtime", userCount != 0 ? totalPlaytime / userCount : "-");
         numbers.put("sessions", db.query(SessionQueries.sessionCount(0L, now, serverUUID)));
         numbers.put("player_kills", db.query(KillQueries.playerKillCount(0L, now, serverUUID)));
         numbers.put("mob_kills", db.query(KillQueries.mobKillCount(0L, now, serverUUID)));
         numbers.put("deaths", db.query(KillQueries.deathCount(0L, now, serverUUID)));
-        numbers.put("current_uptime", serverUptimeCalculator.getServerUptimeMillis(serverUUID).map(timeAmount)
-                .orElse(locale.getString(GenericLang.UNAVAILABLE)));
+        numbers.put("current_uptime", serverUptimeCalculator.getServerUptimeMillis(serverUUID)
+                .map(Object.class::cast)
+                .orElse(GenericLang.UNAVAILABLE.getKey()));
 
         return numbers;
     }
@@ -163,7 +153,7 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
                 ? serverSensor.getOnlinePlayerCount()
                 : db.query(TPSQueries.fetchLatestTPSEntryForServer(serverUUID))
                 .map(TPS::getPlayers).map(Object::toString)
-                .orElse(locale.get(GenericLang.UNKNOWN).toString());
+                .orElse(GenericLang.UNKNOWN.getKey());
     }
 
     private Map<String, Object> createWeeksMap(ServerUUID serverUUID) {
@@ -175,9 +165,9 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
 
         Map<String, Object> weeks = new HashMap<>();
 
-        weeks.put("start", day.apply(twoWeeksAgo));
-        weeks.put("midpoint", day.apply(oneWeekAgo));
-        weeks.put("end", day.apply(now));
+        weeks.put("start", twoWeeksAgo);
+        weeks.put("midpoint", oneWeekAgo);
+        weeks.put("end", now);
 
         Integer uniqueBefore = db.query(PlayerCountQueries.uniquePlayerCount(twoWeeksAgo, oneWeekAgo, serverUUID));
         Integer uniqueAfter = db.query(PlayerCountQueries.uniquePlayerCount(oneWeekAgo, now, serverUUID));
@@ -203,9 +193,9 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
         Long playtimeAfter = db.query(SessionQueries.playtime(oneWeekAgo, now, serverUUID));
         long avgPlaytimeBefore = uniqueBefore != 0 ? playtimeBefore / uniqueBefore : 0L;
         long avgPlaytimeAfter = uniqueAfter != 0 ? playtimeAfter / uniqueAfter : 0L;
-        Trend avgPlaytimeTrend = new Trend(avgPlaytimeBefore, avgPlaytimeAfter, false, timeAmount);
-        weeks.put("average_playtime_before", timeAmount.apply(avgPlaytimeBefore));
-        weeks.put("average_playtime_after", timeAmount.apply(avgPlaytimeAfter));
+        Trend avgPlaytimeTrend = new Trend(avgPlaytimeBefore, avgPlaytimeAfter, false);
+        weeks.put("average_playtime_before", avgPlaytimeBefore);
+        weeks.put("average_playtime_after", avgPlaytimeAfter);
         weeks.put("average_playtime_trend", avgPlaytimeTrend);
 
         Long sessionsBefore = db.query(SessionQueries.sessionCount(twoWeeksAgo, oneWeekAgo, serverUUID));

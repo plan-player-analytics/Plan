@@ -22,6 +22,7 @@ import com.djrapitops.plan.delivery.webserver.configuration.WebserverConfigurati
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.StoreRequestTransaction;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.server.PluginLogger;
@@ -46,13 +47,16 @@ public class AccessLogger {
         this.errorLogger = errorLogger;
     }
 
-    public void log(InternalRequest internalRequest, Request request, Response response) {
+    public void log(@Untrusted InternalRequest internalRequest, @Untrusted Request request, Response response) {
         if (webserverConfiguration.logAccessToConsole()) {
             int code = response.getCode();
-            String message = "Access Log: " + internalRequest.getMethod() + " " +
+            @Untrusted String message = "Access Log: " + internalRequest.getMethod() + " " +
                     getRequestURI(internalRequest, request) +
                     " (from " + internalRequest.getAccessAddress(webserverConfiguration) + ") - " +
                     code;
+            if (webserverConfiguration.isDevMode()) {
+                message += " Request Headers" + internalRequest.getRequestHeaders();
+            }
 
             int codeFamily = code - (code % 100); // 5XX, 4XX etc
             switch (codeFamily) {
@@ -71,8 +75,14 @@ public class AccessLogger {
             }
         }
         try {
+            long timestamp = internalRequest.getTimestamp();
+            String accessAddress = internalRequest.getAccessAddress(webserverConfiguration);
+            String method = internalRequest.getMethod();
+            method = method != null ? method : "?";
+            String url = StoreRequestTransaction.getTruncatedURI(request, internalRequest);
+            int responseCode = response.getCode();
             dbSystem.getDatabase().executeTransaction(
-                    new StoreRequestTransaction(webserverConfiguration, internalRequest, request, response)
+                    new StoreRequestTransaction(timestamp, accessAddress, method, url, responseCode)
             );
         } catch (CompletionException | DBOpException e) {
             errorLogger.warn(e, ErrorContext.builder()
@@ -82,6 +92,7 @@ public class AccessLogger {
         }
     }
 
+    @Untrusted
     private String getRequestURI(InternalRequest internalRequest, Request request) {
         return request != null ? request.getPath().asString() + request.getQuery().asString()
                 : internalRequest.getRequestedURIString();

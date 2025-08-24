@@ -16,17 +16,21 @@
  */
 package com.djrapitops.plan.delivery.webserver.auth;
 
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import org.apache.commons.lang3.StringUtils;
 
+@Untrusted
 public class Cookie {
 
     private final String name;
     private final String value;
 
     public Cookie(String rawRepresentation) {
-        String[] split = StringUtils.split(rawRepresentation, "=", 2);
-        name = split[0];
-        value = split[1];
+        this(StringUtils.split(rawRepresentation, "=", 2));
+    }
+
+    private Cookie(String[] splitRawRepresentation) {
+        this(splitRawRepresentation[0], splitRawRepresentation[1]);
     }
 
     public Cookie(String name, String value) {
@@ -40,5 +44,13 @@ public class Cookie {
 
     public String getValue() {
         return value;
+    }
+
+    @Override
+    public String toString() {
+        return "Cookie{" +
+                "'" + name + '\'' +
+                "='" + value + '\'' +
+                '}';
     }
 }

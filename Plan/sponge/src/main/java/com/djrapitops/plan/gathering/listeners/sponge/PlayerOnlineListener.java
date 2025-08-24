@@ -27,10 +27,12 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.BanStatusTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.KickStoreTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.StoreAllowlistBounceTransaction;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import org.jetbrains.annotations.NotNull;
+import org.spongepowered.api.Game;
 import org.spongepowered.api.Sponge;
-import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.Order;
@@ -54,6 +56,7 @@ public class PlayerOnlineListener {
     private final PlayerJoinEventConsumer joinEventConsumer;
     private final PlayerLeaveEventConsumer leaveEventConsumer;
 
+    private final Game game;
     private final ServerInfo serverInfo;
     private final DBSystem dbSystem;
     private final Status status;
@@ -63,13 +66,14 @@ public class PlayerOnlineListener {
     public PlayerOnlineListener(
             PlayerJoinEventConsumer joinEventConsumer,
             PlayerLeaveEventConsumer leaveEventConsumer,
-            ServerInfo serverInfo,
+            Game game, ServerInfo serverInfo,
             DBSystem dbSystem,
             Status status,
             ErrorLogger errorLogger
     ) {
         this.joinEventConsumer = joinEventConsumer;
         this.leaveEventConsumer = leaveEventConsumer;
+        this.game = game;
         this.serverInfo = serverInfo;
         this.dbSystem = dbSystem;
         this.status = status;
@@ -89,6 +93,18 @@ public class PlayerOnlineListener {
         GameProfile profile = event.profile();
         UUID playerUUID = profile.uniqueId();
         ServerUUID serverUUID = serverInfo.getServerUUID();
+        if (game.server().isWhitelistEnabled()) {
+            game.server().serviceProvider().whitelistService().isWhitelisted(profile)
+                    .thenAccept(whitelisted -> {
+                        if (Boolean.FALSE.equals(whitelisted)) {
+                            dbSystem.getDatabase().executeTransaction(new StoreAllowlistBounceTransaction(
+                                    playerUUID,
+                                    event.profile().name().orElse(event.user().uniqueId().toString()),
+                                    serverUUID,
+                                    System.currentTimeMillis()));
+                        }
+                    });
+        }
         dbSystem.getDatabase().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID, () -> isBanned(profile)));
     }
 
@@ -135,11 +151,12 @@ public class PlayerOnlineListener {
 
     @Listener(order = Order.DEFAULT)
     public void beforeQuit(ServerSideConnectionEvent.Disconnect event) {
-        leaveEventConsumer.beforeLeave(PlayerLeave.builder()
-                .server(serverInfo.getServer())
-                .player(new SpongePlayerData(event.player()))
-                .time(System.currentTimeMillis())
-                .build());
+        getPlayer(event)
+                .ifPresent(player -> leaveEventConsumer.beforeLeave(PlayerLeave.builder()
+                        .server(serverInfo.getServer())
+                        .player(player)
+                        .time(System.currentTimeMillis())
+                        .build()));
     }
 
     @Listener(order = Order.POST)
@@ -153,14 +170,22 @@ public class PlayerOnlineListener {
 
     private void actOnQuitEvent(ServerSideConnectionEvent.Disconnect event) {
         long time = System.currentTimeMillis();
-        Player player = event.player();
-        UUID playerUUID = player.uniqueId();
+        getPlayer(event)
+                .ifPresent(player -> {
+                    UUID playerUUID = player.getUUID();
+                    SpongeAFKListener.afkTracker.loggedOut(playerUUID, time);
+                    leaveEventConsumer.onLeaveGameServer(PlayerLeave.builder()
+                            .server(serverInfo.getServer())
+                            .player(player)
+                            .time(System.currentTimeMillis())
+                            .build());
+                });
+    }
 
-        SpongeAFKListener.afkTracker.loggedOut(playerUUID, time);
-        leaveEventConsumer.onLeaveGameServer(PlayerLeave.builder()
-                .server(serverInfo.getServer())
-                .player(new SpongePlayerData(event.player()))
-                .time(System.currentTimeMillis())
-                .build());
+    private @NotNull Optional<SpongePlayerData> getPlayer(ServerSideConnectionEvent.Disconnect event) {
+        return event.profile()
+                .map(GameProfile::uuid)
+                .flatMap(playerUUID -> game.server().player(playerUUID))
+                .map(SpongePlayerData::new);
     }
 }

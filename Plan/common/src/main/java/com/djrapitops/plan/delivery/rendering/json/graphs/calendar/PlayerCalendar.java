@@ -22,9 +22,7 @@ import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.gathering.domain.PlayerKills;
-import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.HtmlLang;
-import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.utilities.java.Lists;
 
@@ -38,11 +36,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class PlayerCalendar {
 
-    private final Formatter<Long> timeAmount;
-    private final Formatter<Long> year;
     private final Formatter<Long> iso8601Formatter;
-    private final Theme theme;
-    private final Locale locale;
     private final TimeZone timeZone;
 
     private final List<FinishedSession> allSessions;
@@ -50,21 +44,13 @@ public class PlayerCalendar {
 
     PlayerCalendar(
             PlayerContainer container,
-            Formatter<Long> timeAmount,
-            Formatter<Long> year,
             Formatter<Long> iso8601Formatter,
-            Theme theme,
-            Locale locale,
             TimeZone timeZone
     ) {
         this.allSessions = container.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>());
         this.registered = container.getValue(PlayerKeys.REGISTERED).orElse(0L);
 
-        this.timeAmount = timeAmount;
-        this.year = year;
         this.iso8601Formatter = iso8601Formatter;
-        this.theme = theme;
-        this.locale = locale;
         this.timeZone = timeZone;
     }
 
@@ -72,9 +58,8 @@ public class PlayerCalendar {
         List<CalendarEntry> entries = new ArrayList<>();
 
         entries.add(CalendarEntry
-                .of(locale.getString(HtmlLang.LABEL_REGISTERED) + ": " + year.apply(registered),
-                        registered
-                ).withColor(theme.getValue(ThemeVal.LIGHT_GREEN))
+                .of(HtmlLang.LABEL_REGISTERED.getKey(), registered, registered + timeZone.getOffset(registered))
+                .withColor(ThemeVal.LIGHT_GREEN.getDefaultValue())
         );
 
         Map<String, List<FinishedSession>> sessionsByDay = getSessionsByDay();
@@ -87,32 +72,32 @@ public class PlayerCalendar {
             long playtime = sessions.stream().mapToLong(FinishedSession::getLength).sum();
 
             entries.add(CalendarEntry
-                    .of(locale.getString(HtmlLang.LABEL_PLAYTIME) + ": " + timeAmount.apply(playtime), day)
-                    .withColor(theme.getValue(ThemeVal.GREEN))
+                    .of(HtmlLang.LABEL_PLAYTIME.getKey(), playtime, day)
+                    .withColor(ThemeVal.GREEN.getDefaultValue())
             );
-            entries.add(CalendarEntry.of(locale.getString(HtmlLang.SIDE_SESSIONS) + ": " + sessionCount, day));
+            entries.add(CalendarEntry.of(HtmlLang.SIDE_SESSIONS.getKey(), sessionCount, day)
+                    .withColor(ThemeVal.TEAL.getDefaultValue()));
         }
 
         long fiveMinutes = TimeUnit.MINUTES.toMillis(5L);
 
         for (FinishedSession session : allSessions) {
-            String length = timeAmount.apply(session.getLength());
             long start = session.getStart();
             long end = session.getEnd();
 
             entries.add(CalendarEntry
-                    .of(length + " " + locale.getString(HtmlLang.SESSION),
-                            start + timeZone.getOffset(start))
+                    .of(HtmlLang.SESSION.getKey(), session.getLength(), start + timeZone.getOffset(start))
                     .withEnd(end + timeZone.getOffset(end))
+                    .withColor(ThemeVal.TEAL.getDefaultValue())
             );
 
             for (PlayerKill kill : session.getExtraData(PlayerKills.class).map(PlayerKills::asList).orElseGet(ArrayList::new)) {
                 long time = kill.getDate();
                 String victim = kill.getVictim().getName();
                 entries.add(CalendarEntry
-                        .of(locale.getString(HtmlLang.KILLED) + ": " + victim, time)
+                        .of(HtmlLang.KILLED.getKey(), victim, time)
                         .withEnd(time + fiveMinutes)
-                        .withColor(theme.getValue(ThemeVal.RED))
+                        .withColor(ThemeVal.RED.getDefaultValue())
                 );
             }
         }

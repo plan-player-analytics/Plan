@@ -26,6 +26,11 @@ package com.djrapitops.plan.delivery.web.resolver.exception;
  */
 public class BadRequestException extends IllegalArgumentException {
 
+    /**
+     * Default constructor.
+     *
+     * @param message Error message - avoid including any input incoming in the request to prevent XSS.
+     */
     public BadRequestException(String message) {
         super(message);
     }

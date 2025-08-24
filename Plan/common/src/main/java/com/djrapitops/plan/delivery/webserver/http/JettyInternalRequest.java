@@ -22,6 +22,7 @@ import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.auth.AuthenticationExtractor;
 import com.djrapitops.plan.delivery.webserver.auth.Cookie;
 import com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.text.TextStringBuilder;
 import org.eclipse.jetty.http.HttpHeader;
@@ -70,17 +71,18 @@ public class JettyInternalRequest implements InternalRequest {
     }
 
     @Override
-    public com.djrapitops.plan.delivery.web.resolver.request.Request toRequest() {
+    public com.djrapitops.plan.delivery.web.resolver.request.Request toRequest(@Untrusted String accessAddress) {
         String requestMethod = baseRequest.getMethod();
-        URIPath path = new URIPath(baseRequest.getHttpURI().getDecodedPath());
-        URIQuery query = new URIQuery(baseRequest.getHttpURI().getQuery());
-        byte[] requestBody = readRequestBody();
-        WebUser user = getWebUser(webserverConfiguration, authenticationExtractor);
-        Map<String, String> headers = getRequestHeaders();
-        return new com.djrapitops.plan.delivery.web.resolver.request.Request(requestMethod, path, query, user, headers, requestBody);
+        @Untrusted URIPath path = new URIPath(baseRequest.getHttpURI().getDecodedPath());
+        @Untrusted URIQuery query = new URIQuery(baseRequest.getHttpURI().getQuery());
+        @Untrusted byte[] requestBody = readRequestBody();
+        WebUser user = getWebUser(webserverConfiguration, authenticationExtractor, accessAddress);
+        @Untrusted Map<String, String> headers = getRequestHeaders();
+        return new com.djrapitops.plan.delivery.web.resolver.request.Request(requestMethod, path, query, user, headers, requestBody, accessAddress);
     }
 
-    private Map<String, String> getRequestHeaders() {
+    @Override
+    public Map<String, String> getRequestHeaders() {
         return streamHeaderNames()
                 .collect(Collectors.toMap(Function.identity(), baseRequest::getHeader,
                         (one, two) -> one + ';' + two));
@@ -106,12 +108,12 @@ public class JettyInternalRequest implements InternalRequest {
 
     @Override
     public List<Cookie> getCookies() {
-        List<String> textCookies = getCookieHeaders();
+        @Untrusted List<String> textCookies = getCookieHeaders();
         List<Cookie> cookies = new ArrayList<>();
         if (!textCookies.isEmpty()) {
             String[] separated = new TextStringBuilder().appendWithSeparators(textCookies, ";").build().split(";");
             for (String textCookie : separated) {
-                cookies.add(new Cookie(textCookie));
+                cookies.add(new Cookie(textCookie.trim()));
             }
         }
         return cookies;
@@ -125,6 +127,11 @@ public class JettyInternalRequest implements InternalRequest {
     @Override
     public String getRequestedURIString() {
         return baseRequest.getRequestURI();
+    }
+
+    @Override
+    public String getRequestedPath() {
+        return baseRequest.getHttpURI().getDecodedPath();
     }
 
     @Override

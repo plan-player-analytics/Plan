@@ -44,7 +44,7 @@ public @interface PluginInfo {
     /**
      * Name of Font Awesome icon.
      * <p>
-     * See https://fontawesome.com/icons (select 'free')) for icons and their {@link Family}.
+     * See <a href="https://fontawesome.com/icons">FontAwesome</a> (select 'free')) for icons and their {@link Family}.
      *
      * @return Name of the icon, if name is not valid no icon is shown.
      */
@@ -53,7 +53,7 @@ public @interface PluginInfo {
     /**
      * Family of Font Awesome icon.
      * <p>
-     * See https://fontawesome.com/icons (select 'free')) for icons and their {@link Family}.
+     * See <a href="https://fontawesome.com/icons">FontAwesome</a> (select 'free')) for icons and their {@link Family}.
      *
      * @return Family that matches an icon, if there is no icon for this family no icon is shown.
      */

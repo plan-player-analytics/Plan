@@ -22,11 +22,20 @@ import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+/**
+ * Utility class for constructing a {@link Resolver} with Functional Interfaces.
+ */
 public class FunctionalResolverWrapper implements Resolver {
 
     private final Function<Request, Optional<Response>> resolver;
     private final Predicate<Request> accessCheck;
 
+    /**
+     * Default constructor.
+     *
+     * @param resolver    Function that solves the {@link Request} into an Optional {@link Response}.
+     * @param accessCheck Predicate that checks if {@link Request} is allowed or if 403 Forbidden should be given.
+     */
     public FunctionalResolverWrapper(Function<Request, Optional<Response>> resolver, Predicate<Request> accessCheck) {
         this.resolver = resolver;
         this.accessCheck = accessCheck;

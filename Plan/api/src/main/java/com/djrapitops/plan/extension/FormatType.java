@@ -42,6 +42,12 @@ public enum FormatType {
      */
     NONE;
 
+    /**
+     * Get a format type by the enum name without exception.
+     *
+     * @param name FormatType#name()
+     * @return Optional if the format type is found by that name, empty if not found.
+     */
     public static Optional<FormatType> getByName(String name) {
         if (name == null) {
             return Optional.empty();
@@ -51,4 +57,5 @@ public enum FormatType {
         } catch (IllegalArgumentException e) {
             return Optional.empty();
         }
-    }}
+    }
+}

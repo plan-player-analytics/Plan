@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.delivery.webserver.cache;
 
+import com.djrapitops.plan.delivery.formatting.Formatter;
+import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -46,10 +48,12 @@ public class AsyncJSONResolverService {
     private final Map<String, Future<JSONStorage.StoredJSON>> currentlyProcessing;
     private final Map<String, Long> previousUpdates;
     private final ReentrantLock accessLock; // Access lock prevents double processing same resource
+    private final Formatter<Long> httpLastModifiedFormatter;
 
     @Inject
     public AsyncJSONResolverService(
             PlanConfig config,
+            Formatters formatters,
             Processing processing,
             JSONStorage jsonStorage
     ) {
@@ -60,6 +64,8 @@ public class AsyncJSONResolverService {
         currentlyProcessing = new ConcurrentHashMap<>();
         previousUpdates = new ConcurrentHashMap<>();
         accessLock = new ReentrantLock();
+
+        httpLastModifiedFormatter = formatters.httpLastModifiedLong();
     }
 
     public <T> JSONStorage.StoredJSON resolve(
@@ -154,5 +160,9 @@ public class AsyncJSONResolverService {
             previousUpdates.put(identifier, created.timestamp);
             return created;
         });
+    }
+
+    public Formatter<Long> getHttpLastModifiedFormatter() {
+        return httpLastModifiedFormatter;
     }
 }

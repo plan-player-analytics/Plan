@@ -2,23 +2,27 @@ import org.spongepowered.gradle.plugin.config.PluginLoaders
 import org.spongepowered.gradle.vanilla.repository.MinecraftPlatform
 
 plugins {
-    id "org.spongepowered.gradle.plugin" version "2.0.2"
+    id "org.spongepowered.gradle.plugin" version "2.3.0"
     id "org.spongepowered.gradle.vanilla" version "0.2.1-SNAPSHOT"
 }
 
+// Shadow plugin applied even though shadow is not used in the module,
+// so that VanillaGradle doesn't include Minecraft in runtimeClassPath
+apply plugin: "com.gradleup.shadow"
+
 dependencies {
-    implementation project(":api")
     implementation project(":common")
 
-    shadow "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
-    shadow "net.playeranalytics:platform-abstraction-layer-sponge:$palVersion"
-    shadow "org.bstats:bstats-sponge:$bstatsVersion"
+    implementation "net.playeranalytics:platform-abstraction-layer-sponge:$palVersion"
+    implementation "org.bstats:bstats-sponge:$bstatsVersion"
+    implementation "com.google.code.gson:gson:$gsonVersion"
 
     annotationProcessor "org.spongepowered:spongeapi:$spongeVersion"
-    shadow "org.spongepowered:mixin:0.7.11-SNAPSHOT"
+    compileOnly "org.spongepowered:mixin:0.8.7"
 
     testImplementation "org.spongepowered:spongeapi:$spongeVersion"
-    testImplementation project(path: ":common", configuration: 'testArtifacts')
+    testImplementation(testFixtures(project(":common")))
+    testImplementation(project(":extensions:adventure"))
 }
 
 sponge {
@@ -37,42 +41,41 @@ sponge {
             description("Author")
         }
 
+        dependency("spongeapi") {
+            loadOrder(org.spongepowered.plugin.metadata.model.PluginDependency.LoadOrder.AFTER)
+            optional(false)
+            version("$spongeVersion")
+        }
         // Dependencies
         // version is a *required* property (empty string works fine)
         dependency("griefprevention") {
             optional(true)
-            version("")
+            version("*")
         }
         dependency("luckperms") {
             optional(true)
-            version("")
+            version("*")
         }
         dependency("nucleus") {
             optional(true)
-            version("")
+            version("*")
         }
         dependency("redprotect") {
             optional(true)
-            version("")
+            version("*")
         }
         dependency("nuvotifier") {
             optional(true)
-            version("")
+            version("*")
         }
     }
 }
 
 minecraft {
-    version("1.16.5")
-    platform(MinecraftPlatform.JOINED)
+    version("1.21.3")
+    platform(MinecraftPlatform.SERVER)
 }
 
-compileJava {
-    options.release = 11
-}
-
-shadowJar {
-    configurations = [project.configurations.shadow]
-
-    relocate "org.bstats", "net.playeranalytics.bstats.utilities.metrics"
+tasks.withType(JavaCompile).configureEach {
+    options.release.set(21)
 }

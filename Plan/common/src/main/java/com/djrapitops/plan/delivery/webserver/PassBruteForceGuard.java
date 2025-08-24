@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver;
 
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 
@@ -33,7 +34,7 @@ public class PassBruteForceGuard {
             .expireAfterWrite(90, TimeUnit.SECONDS)
             .build();
 
-    public boolean shouldPreventRequest(String accessor) {
+    public boolean shouldPreventRequest(@Untrusted String accessor) {
         Integer attempts = failedLoginAttempts.getIfPresent(accessor);
         if (attempts == null) return false;
         // Too many attempts, forbid further attempts.
@@ -41,7 +42,7 @@ public class PassBruteForceGuard {
     }
 
     // Don't call on first connection.
-    public void increaseAttemptCountOnFailedLogin(String accessor) {
+    public void increaseAttemptCountOnFailedLogin(@Untrusted String accessor) {
         // Authentication was attempted, but failed so new attempt is going to be given if not forbidden
         failedLoginAttempts.cleanUp();
 
@@ -59,7 +60,7 @@ public class PassBruteForceGuard {
         failedLoginAttempts.put(accessor, attempts + 1);
     }
 
-    public void resetAttemptCount(String accessor) {
+    public void resetAttemptCount(@Untrusted String accessor) {
         // Successful login
         failedLoginAttempts.cleanUp();
         failedLoginAttempts.invalidate(accessor);
@@ -72,12 +73,10 @@ public class PassBruteForceGuard {
         }
 
         @Override
-        public void increaseAttemptCountOnFailedLogin(String accessor) {
-        }
+        public void increaseAttemptCountOnFailedLogin(String accessor) { /* Disabled */ }
 
         @Override
-        public void resetAttemptCount(String accessor) {
-        }
+        public void resetAttemptCount(String accessor) { /* Disabled */ }
     }
 
 }

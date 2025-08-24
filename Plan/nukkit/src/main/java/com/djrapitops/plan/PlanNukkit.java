@@ -158,6 +158,9 @@ public class PlanNukkit extends PluginBase implements PlanPlugin {
             sender = new NukkitCMDSender(actualSender);
         }
 
+        if (command.getRequiredPermissions().stream().anyMatch(permission -> !sender.hasPermission(permission))) {
+            return true;
+        }
         runnableFactory.create(() -> {
             try {
                 command.getExecutor().accept(sender, new Arguments(args));

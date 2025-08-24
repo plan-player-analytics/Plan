@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver;
 
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
@@ -28,6 +29,7 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -40,6 +42,8 @@ import java.util.Optional;
  */
 @Singleton
 public class ServerPageResolver implements Resolver {
+
+    private static final String NETWORK_PAGE = "network";
 
     private final ResponseFactory responseFactory;
     private final DBSystem dbSystem;
@@ -58,10 +62,10 @@ public class ServerPageResolver implements Resolver {
 
     @Override
     public boolean canAccess(Request request) {
-        String firstPart = request.getPath().getPart(0).orElse("");
-        WebUser permissions = request.getUser().orElse(new WebUser(""));
-        boolean forServerPage = "server".equalsIgnoreCase(firstPart) && permissions.hasPermission("page.server");
-        boolean forNetworkPage = "network".equalsIgnoreCase(firstPart) && permissions.hasPermission("page.network");
+        @Untrusted String firstPart = request.getPath().getPart(0).orElse("");
+        WebUser user = request.getUser().orElse(new WebUser(""));
+        boolean forServerPage = "server".equalsIgnoreCase(firstPart) && user.hasPermission(WebPermission.ACCESS_SERVER);
+        boolean forNetworkPage = NETWORK_PAGE.equalsIgnoreCase(firstPart) && user.hasPermission(WebPermission.ACCESS_NETWORK);
         return forServerPage || forNetworkPage;
     }
 
@@ -74,28 +78,27 @@ public class ServerPageResolver implements Resolver {
 
     private Optional<Response> redirectToCurrentServer() {
         String directTo = serverInfo.getServer().isProxy()
-                ? "/network"
+                ? "/" + NETWORK_PAGE
                 : "/server/" + Html.encodeToURL(serverInfo.getServer().getIdentifiableName());
         return Optional.of(responseFactory.redirectResponse(directTo));
     }
 
-    private Optional<Response> getServerPage(ServerUUID serverUUID, Request request) {
+    private Optional<Response> getServerPage(ServerUUID serverUUID, @Untrusted Request request) {
         boolean toNetworkPage = serverInfo.getServer().isProxy() && serverInfo.getServerUUID().equals(serverUUID);
         if (toNetworkPage) {
-            if (request.getPath().getPart(0).map("network"::equals).orElse(false)) {
-                return Optional.of(responseFactory.networkPageResponse());
+            if (request.getPath().getPart(0).map(NETWORK_PAGE::equals).orElse(false)) {
+                return Optional.of(responseFactory.reactPageResponse(request));
             } else {
                 // Accessing /server/Server <Bungee ID> which should be redirected to /network
                 return redirectToCurrentServer();
             }
         }
-        return Optional.of(responseFactory.serverPageResponse(serverUUID));
+        return Optional.of(responseFactory.serverPageResponse(request, serverUUID));
     }
 
-    private Optional<ServerUUID> getServerUUID(URIPath path) {
+    private Optional<ServerUUID> getServerUUID(@Untrusted URIPath path) {
         if (serverInfo.getServer().isProxy()
-                && path.getPart(0).map("network"::equals).orElse(false)
-                && path.getPart(1).isEmpty() // No slash at the end.
+                && path.getPart(0).map(NETWORK_PAGE::equals).orElse(false)
         ) {
             return Optional.of(serverInfo.getServerUUID());
         }

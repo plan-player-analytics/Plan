@@ -17,12 +17,10 @@
 package extension;
 
 import org.apache.commons.lang3.SystemUtils;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.Assumptions;
 import org.junit.jupiter.api.extension.*;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.logging.LogType;
@@ -31,6 +29,7 @@ import utilities.CIProperties;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 /**
@@ -46,6 +45,21 @@ public class SeleniumExtension implements ParameterResolver, BeforeAllCallback, 
         WebElement body = driver.findElement(By.tagName("body"));
         body.sendKeys(Keys.CONTROL + "t");
         driver.switchTo().window(new ArrayList<>(driver.getWindowHandles()).get(0));
+    }
+
+    public static void waitForPageLoadForSeconds(int i, ChromeDriver driver) {
+        Awaitility.await("waitForPageLoadForSeconds")
+                .atMost(i, TimeUnit.SECONDS)
+                .until(() -> "complete".equals(driver.executeScript("return document.readyState")));
+    }
+
+    public static void waitForElementToBeVisible(By by, ChromeDriver driver) {
+        SeleniumExtension.waitForPageLoadForSeconds(5, driver);
+        Awaitility.await("waitForElementToBeVisible " + by.toString())
+                .atMost(5, TimeUnit.SECONDS)
+                .ignoreExceptionsMatching(throwable -> throwable instanceof NoSuchElementException
+                        || throwable instanceof StaleElementReferenceException)
+                .until(() -> driver.findElement(by).isDisplayed());
     }
 
     @Override
@@ -72,12 +86,15 @@ public class SeleniumExtension implements ParameterResolver, BeforeAllCallback, 
     private ChromeDriver getChromeWebDriver() {
         ChromeOptions chromeOptions = new ChromeOptions();
         chromeOptions.addArguments("--enable-javascript");
+        chromeOptions.addArguments("--ignore-certificate-errors");
+        chromeOptions.addArguments("--remote-allow-origins=*");
         chromeOptions.setCapability(ChromeOptions.LOGGING_PREFS, getLoggingPreferences());
 
         // Using environment variable assumes linux
         if (System.getenv(CIProperties.CHROME_DRIVER) != null) {
             chromeOptions.setBinary("/usr/bin/google-chrome-stable");
-            chromeOptions.setHeadless(true);
+            chromeOptions.addArguments("--headless=new");
+            chromeOptions.addArguments("--dns-prefetch-disable");
         }
 
         return new ChromeDriver(chromeOptions);

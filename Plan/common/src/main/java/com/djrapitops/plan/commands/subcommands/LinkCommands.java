@@ -33,6 +33,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -92,9 +93,9 @@ public class LinkCommands {
      * @param sender    Sender of command.
      * @param arguments Given arguments.
      */
-    public void onServerCommand(CMDSender sender, Arguments arguments) {
+    public void onServerCommand(CMDSender sender, @Untrusted Arguments arguments) {
         Server server;
-        String identifier = arguments.concatenate(" ");
+        @Untrusted String identifier = arguments.concatenate(" ");
         if (arguments.isEmpty()) {
             server = serverInfo.getServer();
         } else {
@@ -104,7 +105,7 @@ public class LinkCommands {
                     .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_SERVER_NOT_FOUND, identifier)));
         }
 
-        String address = getAddress(sender) + "/server/" + Html.encodeToURL(server.getName());
+        String address = getAddress(sender) + "/server/" + Html.encodeToURL(server.getUuid().toString());
         sender.buildMessage()
                 .addPart(colors.getMainColor() + locale.getString(CommandLang.LINK_SERVER))
                 .apply(builder -> linkTo(builder, sender, address))
@@ -117,7 +118,7 @@ public class LinkCommands {
      * @param sender    Sender of command.
      * @param arguments Given arguments.
      */
-    public void onServersCommand(CMDSender sender, Arguments arguments) {
+    public void onServersCommand(CMDSender sender, @Untrusted Arguments arguments) {
         ensureDatabaseIsOpen();
         String m = colors.getMainColor();
         String s = colors.getSecondaryColor();
@@ -125,7 +126,7 @@ public class LinkCommands {
         String serversListed = dbSystem.getDatabase()
                 .query(ServerQueries.fetchPlanServerInformationCollection())
                 .stream().sorted()
-                .map(server -> m + server.getId().orElse(0) + "::" + t + server.getName() + "::" + s + server.getUuid() + "::" + s + server.getPlanVersion() + "\n")
+                .map(server -> m + server.getId().orElse(0) + "::" + t + server.getIdentifiableName() + "::" + s + server.getUuid() + "::" + s + server.getPlanVersion() + "\n")
                 .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
                 .toString();
         sender.buildMessage()
@@ -148,8 +149,8 @@ public class LinkCommands {
      * @param sender    Sender of command.
      * @param arguments Given arguments.
      */
-    public void onPlayerCommand(CMDSender sender, Arguments arguments) {
-        String identifier = arguments.concatenate(" ");
+    public void onPlayerCommand(CMDSender sender, @Untrusted Arguments arguments) {
+        @Untrusted String identifier = arguments.concatenate(" ");
         UUID playerUUID = identifiers.getPlayerUUID(identifier);
         UUID senderUUID = sender.getUUID().orElse(null);
         if (playerUUID == null) playerUUID = senderUUID;
@@ -174,7 +175,7 @@ public class LinkCommands {
      * @param sender    Sender of command
      * @param arguments Only present to fulfill Subcommand#onCommand requirements.
      */
-    public void onPlayersCommand(CMDSender sender, Arguments arguments) {
+    public void onPlayersCommand(CMDSender sender, @Untrusted Arguments arguments) {
         String address = getAddress(sender) + "/players";
         sender.buildMessage()
                 .addPart(colors.getMainColor() + locale.getString(CommandLang.LINK_PLAYERS))
@@ -188,13 +189,13 @@ public class LinkCommands {
      * @param sender    Sender of command
      * @param arguments Only present to fulfill Subcommand#onCommand requirements.
      */
-    public void onNetworkCommand(CMDSender sender, Arguments arguments) {
+    public void onNetworkCommand(CMDSender sender, @Untrusted Arguments arguments) {
         String address = getAddress(sender) + "/network";
         sender.buildMessage()
                 .addPart(colors.getMainColor() + locale.getString(CommandLang.LINK_NETWORK))
                 .apply(builder -> linkTo(builder, sender, address))
                 .send();
-        if (dbSystem.getDatabase().query(ServerQueries.fetchProxyServerInformation()).isEmpty()) {
+        if (dbSystem.getDatabase().query(ServerQueries.fetchProxyServers()).isEmpty()) {
             throw new IllegalArgumentException(locale.getString(CommandLang.NOTIFY_NO_NETWORK));
         }
     }
@@ -205,7 +206,7 @@ public class LinkCommands {
      * @param sender    Sender of command.
      * @param arguments Given arguments.
      */
-    public void onWebUsersCommand(CMDSender sender, Arguments arguments) {
+    public void onWebUsersCommand(CMDSender sender, @Untrusted Arguments arguments) {
         ensureDatabaseIsOpen();
         String m = colors.getMainColor();
         String s = colors.getSecondaryColor();
@@ -216,7 +217,7 @@ public class LinkCommands {
             sender.send(t + locale.getString(CommandLang.HEADER_WEB_USERS, 0));
         } else {
             String usersListed = users.stream().sorted()
-                    .map(user -> m + user.getUsername() + "::" + t + user.getLinkedTo() + "::" + s + user.getPermissionLevel() + "\n")
+                    .map(user -> m + user.getUsername() + "::" + t + user.getLinkedTo() + "::" + s + user.getPermissionGroup() + "\n")
                     .collect(StringBuilder::new, StringBuilder::append, StringBuilder::append)
                     .toString();
             sender.buildMessage()
@@ -227,8 +228,8 @@ public class LinkCommands {
         }
     }
 
-    public void onJson(CMDSender sender, Arguments arguments) {
-        String identifier = arguments.concatenate(" ");
+    public void onJson(CMDSender sender, @Untrusted Arguments arguments) {
+        @Untrusted String identifier = arguments.concatenate(" ");
         UUID playerUUID = identifiers.getPlayerUUID(identifier);
         UUID senderUUID = sender.getUUID().orElse(null);
         if (playerUUID == null) playerUUID = senderUUID;

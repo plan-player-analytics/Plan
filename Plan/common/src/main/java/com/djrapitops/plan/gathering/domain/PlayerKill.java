@@ -115,8 +115,19 @@ public class PlayerKill implements DateHolder {
     }
 
     public static class Victim extends PlayerIdentifier {
-        public Victim(UUID uuid, String name) {
+        private final long registerDate;
+
+        public Victim(UUID uuid, String name, long registerDate) {
             super(uuid, name);
+            this.registerDate = registerDate;
+        }
+
+        public Victim(UUID uuid, String name) {
+            this(uuid, name, 0L);
+        }
+
+        public long getRegisterDate() {
+            return registerDate;
         }
     }
 

@@ -58,17 +58,64 @@ public class Plan extends JavaPlugin implements PlanPlugin {
     private RunnableFactory runnableFactory;
     private PlatformAbstractionLayer abstractionLayer;
     private ErrorLogger errorLogger;
+    private PlanBukkitComponent component;
+
+    private static boolean isFolia() {
+        try {
+            Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
 
     @Override
     public void onLoad() {
-        abstractionLayer = new BukkitPlatformLayer(this);
+        if (isFolia()) {
+            try {
+                // Attempt to load and use the Folia library for Java 17+
+                Class<?> foliaPlatformLayer = Class.forName("net.playeranalytics.plugin.FoliaPlatformLayer");
+                abstractionLayer = (PlatformAbstractionLayer) foliaPlatformLayer.getConstructor(JavaPlugin.class).newInstance(this);
+            } catch (Exception e) {
+                this.getLogger().log(Level.SEVERE, "Failed to load FoliaPlatformLayer", e);
+                abstractionLayer = new BukkitPlatformLayer(this);
+            }
+        } else {
+            abstractionLayer = new BukkitPlatformLayer(this);
+        }
         pluginLogger = abstractionLayer.getPluginLogger();
         runnableFactory = abstractionLayer.getRunnableFactory();
     }
 
+    private void registerPlaceholderAPIExtension(BukkitPlaceholderRegistrar placeholders) {
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            runnableFactory.create(() -> {
+                        try {
+                            placeholders.register();
+                        } catch (Exception | NoClassDefFoundError | NoSuchMethodError failed) {
+                            pluginLogger.warn("Failed to register PlaceholderAPI placeholders: " + failed.toString());
+                        }
+                    }
+            ).runTask();
+        }
+    }
+
+    private void registerMetrics() {
+        Plan plugin = this;
+        // Spigot 1.14 requires Sync events to be fired from a server thread.
+        // Registering a service fires a sync event, and bStats registers a service,
+        // so this has to be run on the server thread.
+        runnableFactory.create(() -> new BStatsBukkit(plugin).registerMetrics()).runTask();
+    }
+
+    @Override
+    public ColorScheme getColorScheme() {
+        return PlanColorScheme.create(system.getConfigSystem().getConfig(), pluginLogger);
+    }
+
     @Override
     public void onEnable() {
-        PlanBukkitComponent component = DaggerPlanBukkitComponent.builder()
+        component = DaggerPlanBukkitComponent.builder()
                 .plan(this)
                 .abstractionLayer(abstractionLayer)
                 .server(getServer())
@@ -105,36 +152,11 @@ public class Plan extends JavaPlugin implements PlanPlugin {
         }
     }
 
-    private void registerPlaceholderAPIExtension(BukkitPlaceholderRegistrar placeholders) {
-        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            runnableFactory.create(() -> {
-                        try {
-                            placeholders.register();
-                        } catch (Exception | NoClassDefFoundError | NoSuchMethodError failed) {
-                            pluginLogger.warn("Failed to register PlaceholderAPI placeholders: " + failed.toString());
-                        }
-                    }
-            ).runTask();
-        }
-    }
-
-    private void registerMetrics() {
-        Plan plugin = this;
-        // Spigot 1.14 requires Sync events to be fired from a server thread.
-        // Registering a service fires a sync event, and bStats registers a service,
-        // so this has to be run on the server thread.
-        runnableFactory.create(() -> new BStatsBukkit(plugin).registerMetrics()).runTask();
-    }
-
-    @Override
-    public ColorScheme getColorScheme() {
-        return PlanColorScheme.create(system.getConfigSystem().getConfig(), pluginLogger);
-    }
-
     @Override
     public void onDisable() {
         storeSessionsOnShutdown();
         cancelAllTasks();
+        if (component != null) unregisterPlaceholders(component.placeholders());
         if (system != null) system.disable();
 
         pluginLogger.info(Locale.getStringNullSafe(locale, PluginLang.DISABLED));
@@ -157,9 +179,17 @@ public class Plan extends JavaPlugin implements PlanPlugin {
         }
     }
 
+    private void unregisterPlaceholders(BukkitPlaceholderRegistrar placeholders) {
+        if (placeholders != null) {
+            runnableFactory.create(placeholders::unregister);
+        }
+    }
+
     public void cancelAllTasks() {
         runnableFactory.cancelAllKnownTasks();
-        Bukkit.getScheduler().cancelTasks(this);
+        if (!isFolia()) {
+            Bukkit.getScheduler().cancelTasks(this);
+        }
     }
 
     @Override

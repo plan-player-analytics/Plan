@@ -46,7 +46,7 @@ public class JettyResponseSender {
     }
 
     public void send() throws IOException {
-        if ("HEAD".equals(servletRequest.getMethod()) || response.getCode() == 204) {
+        if ("HEAD".equals(servletRequest.getMethod()) || response.getCode() == 204 || response.getCode() == 304) {
             setResponseHeaders();
             sendHeadResponse();
         } else if (canGzip()) {
@@ -117,7 +117,12 @@ public class JettyResponseSender {
 
     private void beginSend() {
         String length = response.getHeaders().get(HttpHeader.CONTENT_LENGTH.asString());
-        if (length == null || "0".equals(length) || response.getCode() == 204 || "HEAD".equals(servletRequest.getMethod())) {
+        if (length == null
+                || "0".equals(length)
+                || response.getCode() == 204
+                || response.getCode() == 304
+                || "HEAD".equals(servletRequest.getMethod())
+        ) {
             servletResponse.setHeader(HttpHeader.CONTENT_LENGTH.asString(), null);
         }
         // Return a content length of -1 for HTTP code 204 (No content)

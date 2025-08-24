@@ -27,9 +27,11 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.objects.JoinAddressQueries;
 import com.djrapitops.plan.storage.database.queries.objects.WorldTimesQueries;
 import com.djrapitops.plan.storage.database.sql.tables.*;
+import com.djrapitops.plan.storage.database.sql.tables.webuser.*;
 import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
 import org.apache.commons.lang3.StringUtils;
+import org.intellij.lang.annotations.Language;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -127,7 +129,7 @@ public class LargeStoreQueries {
                         statement.setString(2, user.getLinkedToUUID().toString());
                     }
                     statement.setString(3, user.getPasswordHash());
-                    statement.setInt(4, user.getPermissionLevel());
+                    statement.setString(4, user.getPermissionGroup());
                     statement.addBatch();
                 }
             }
@@ -219,7 +221,7 @@ public class LargeStoreQueries {
                         statement.setLong(2, user.getRegistered());
                         statement.setString(3, serverUUID.toString());
                         statement.setBoolean(4, user.isBanned());
-                        statement.setString(5, user.getJoinAddress());
+                        statement.setString(5, StringUtils.truncate(user.getJoinAddress(), JoinAddressTable.JOIN_ADDRESS_MAX_LENGTH));
                         statement.setBoolean(6, user.isOperator());
                         statement.addBatch();
                     }
@@ -289,8 +291,8 @@ public class LargeStoreQueries {
                     statement.setInt(5, session.getMobKillCount());
                     statement.setLong(6, session.getAfkTime());
                     statement.setString(7, session.getServerUUID().toString());
-                    statement.setString(8, session.getExtraData(JoinAddress.class)
-                            .map(JoinAddress::getAddress).orElse(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP));
+                    statement.setString(8, StringUtils.truncate(session.getExtraData(JoinAddress.class)
+                            .map(JoinAddress::getAddress).orElse(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP), JoinAddressTable.JOIN_ADDRESS_MAX_LENGTH));
                     statement.addBatch();
                 }
             }
@@ -424,6 +426,77 @@ public class LargeStoreQueries {
                         statement.setDouble(6, avgPing);
                         statement.addBatch();
                     }
+                }
+            }
+        };
+    }
+
+    public static Executable storeGroupNames(List<String> groups) {
+        if (groups == null || groups.isEmpty()) return Executable.empty();
+
+        return new ExecBatchStatement(WebGroupTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (String group : groups) {
+                    statement.setString(1, group);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+
+    public static Executable storePermissions(List<String> permissions) {
+        if (permissions == null || permissions.isEmpty()) return Executable.empty();
+
+        return new ExecBatchStatement(WebPermissionTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (String permission : permissions) {
+                    statement.setString(1, permission);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable storeGroupPermissionRelations(Map<String, List<String>> groupPermissions) {
+        if (groupPermissions == null || groupPermissions.isEmpty()) return Executable.empty();
+
+        @Language("SQL")
+        String sql = "INSERT INTO " + WebGroupToPermissionTable.TABLE_NAME + " (" +
+                WebGroupToPermissionTable.GROUP_ID + ',' + WebGroupToPermissionTable.PERMISSION_ID +
+                ") VALUES ((" +
+                WebGroupTable.SELECT_GROUP_ID + "),(" + WebPermissionTable.SELECT_PERMISSION_ID +
+                "))";
+
+        return new ExecBatchStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (var permissionsOfGroup : groupPermissions.entrySet()) {
+                    String group = permissionsOfGroup.getKey();
+                    for (String permission : permissionsOfGroup.getValue()) {
+                        statement.setString(1, group);
+                        statement.setString(2, permission);
+                        statement.addBatch();
+                    }
+                }
+            }
+        };
+    }
+
+    public static Executable storeAllPreferences(Map<String, String> preferencesByUsername) {
+        if (preferencesByUsername.isEmpty()) return Executable.empty();
+
+        return new ExecBatchStatement(WebUserPreferencesTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (var entry : preferencesByUsername.entrySet()) {
+                    String username = entry.getKey();
+                    String preferences = entry.getValue();
+                    statement.setString(1, preferences);
+                    statement.setString(2, username);
+                    statement.addBatch();
                 }
             }
         };

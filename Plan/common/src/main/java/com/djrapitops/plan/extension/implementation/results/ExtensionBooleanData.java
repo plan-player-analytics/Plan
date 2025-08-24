@@ -38,4 +38,8 @@ public class ExtensionBooleanData implements DescribedExtensionData {
     public String getFormattedValue() {
         return value ? "Yes" : "No";
     }
+
+    public boolean getValue() {
+        return value;
+    }
 }

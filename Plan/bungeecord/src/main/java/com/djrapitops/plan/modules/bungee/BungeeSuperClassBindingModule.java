@@ -40,5 +40,5 @@ public interface BungeeSuperClassBindingModule {
     ListenerSystem bindListenerSystem(BungeeListenerSystem listenerSystem);
 
     @Binds
-    ServerSensor<Object> bindServerSensor(BungeeSensor sensor);
+    ServerSensor<?> bindServerSensor(BungeeSensor sensor);
 }

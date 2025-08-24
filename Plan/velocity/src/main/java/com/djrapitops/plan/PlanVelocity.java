@@ -57,7 +57,8 @@ import java.util.logging.Level;
         version = "@version@",
         description = "Player Analytics Plugin by AuroraLS3",
         dependencies = {
-                @Dependency(id = "viaversion", optional = true)
+                @Dependency(id = "viaversion", optional = true),
+                @Dependency(id = "redisbungee", optional = true)
         },
         authors = {"AuroraLS3"}
 )
@@ -183,9 +184,5 @@ public class PlanVelocity implements PlanPlugin {
     @Override
     public File getDataFolder() {
         return dataFolderPath.toFile();
-    }
-
-    private String fixMsgParams(String message) {
-        return message.replaceAll("\\{\\d+}", "{}");
     }
 }

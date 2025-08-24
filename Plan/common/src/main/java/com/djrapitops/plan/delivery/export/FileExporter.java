@@ -16,8 +16,13 @@
  */
 package com.djrapitops.plan.delivery.export;
 
+import com.djrapitops.plan.delivery.formatting.PlaceholderReplacer;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.web.resource.WebResource;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.WebserverSettings;
+import com.djrapitops.plan.storage.file.PlanFiles;
+import com.djrapitops.plan.storage.file.Resource;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.ByteArrayInputStream;
@@ -60,9 +65,15 @@ abstract class FileExporter {
         export(to, Arrays.asList(StringUtils.split(content, "\r\n")));
     }
 
+    void export(Path to, Resource resource) throws IOException {
+        export(to, resource.asWebResource());
+    }
+
     void export(Path to, WebResource resource) throws IOException {
         Path dir = to.getParent();
-        if (!Files.isSymbolicLink(dir)) Files.createDirectories(dir);
+        if (!Files.isSymbolicLink(dir) && !Files.isDirectory(dir)) {
+            Files.createDirectories(dir);
+        }
 
         try (
                 InputStream in = resource.asStream();
@@ -90,6 +101,21 @@ abstract class FileExporter {
                 new String[]{".", "%2F", "%20"},
                 new String[]{"%2E", "-", " "}
         );
+    }
+
+    void exportReactRedirects(Path toDirectory, PlanFiles files, PlanConfig config, String[] redirections) throws IOException {
+        String redirectPageHtml = files.getResourceFromJar("web/export-redirect.html").asString();
+        PlaceholderReplacer placeholderReplacer = new PlaceholderReplacer();
+        placeholderReplacer.put("PLAN_ADDRESS", config.get(WebserverSettings.EXTERNAL_LINK));
+        redirectPageHtml = placeholderReplacer.apply(redirectPageHtml);
+
+        for (String redirection : redirections) {
+            exportReactRedirect(toDirectory, redirectPageHtml, redirection);
+        }
+    }
+
+    private void exportReactRedirect(Path toDirectory, String redirectHtml, String path) throws IOException {
+        export(toDirectory.resolve(path).resolve("index.html"), redirectHtml);
     }
 
 }

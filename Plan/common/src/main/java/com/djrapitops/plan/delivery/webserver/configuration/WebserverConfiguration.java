@@ -19,6 +19,7 @@ package com.djrapitops.plan.delivery.webserver.configuration;
 import com.djrapitops.plan.delivery.webserver.auth.AllowedIpList;
 import com.djrapitops.plan.delivery.webserver.http.AccessAddressPolicy;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.file.PlanFiles;
 
@@ -46,6 +47,10 @@ public class WebserverConfiguration {
 
     public WebserverLogMessages getWebserverLogMessages() {
         return webserverLogMessages;
+    }
+
+    public boolean isDevMode() {
+        return config.isTrue(PluginSettings.DEV_MODE);
     }
 
     public boolean logAccessToConsole() {
@@ -118,5 +123,9 @@ public class WebserverConfiguration {
 
     public boolean isProxyModeHttps() {
         return "proxy".equals(config.get(WebserverSettings.CERTIFICATE_PATH));
+    }
+
+    public boolean isRegistrationEnabled() {
+        return config.isFalse(WebserverSettings.DISABLED_REGISTRATION);
     }
 }

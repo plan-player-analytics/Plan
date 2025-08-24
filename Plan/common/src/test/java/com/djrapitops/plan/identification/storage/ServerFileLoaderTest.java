@@ -19,12 +19,12 @@ package com.djrapitops.plan.identification.storage;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
-import org.testcontainers.shaded.org.awaitility.Awaitility;
 import utilities.TestConstants;
 import utilities.mocks.PluginMockComponent;
 

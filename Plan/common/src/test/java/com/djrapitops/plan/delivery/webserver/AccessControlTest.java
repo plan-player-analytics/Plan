@@ -18,24 +18,29 @@ package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.domain.auth.User;
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.extension.Caller;
 import com.djrapitops.plan.identification.Server;
-import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.changes.ConfigUpdater;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
+import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.ExtensionsDatabaseTest;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
+import com.djrapitops.plan.storage.database.transactions.webuser.StoreWebGroupTransaction;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
-import org.apache.commons.compress.utils.IOUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import utilities.HTTPConnector;
 import utilities.RandomData;
 import utilities.TestConstants;
@@ -51,10 +56,13 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.concurrent.ExecutionException;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Tests for limiting user access control based on permissions.
@@ -62,16 +70,111 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class AccessControlTest {
 
     private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
+    private static final String QUERY_VIEW_SIMPLE = "%7B%22afterDate%22%3A%2201%2F01%2F1970%22%2C%22afterTime%22%3A%2200%3A00%22%2C%22beforeDate%22%3A%2201%2F01%2F2024%22%2C%22beforeTime%22%3A%2200%3A00%22%2C%22servers%22%3A%5B%5D%7D";
 
     private static final HTTPConnector CONNECTOR = new HTTPConnector();
 
     private static PlanSystem system;
     private static String address;
-    private static String cookieLevel0;
-    private static String cookieLevel1;
-    private static String cookieLevel2;
-    private static ServerUUID serverUUID;
-    private static String cookieLevel100;
+    private static String cookieNoAccess;
+
+
+    static Stream<Arguments> testCases() {
+        return Stream.of(
+                Arguments.of("/", WebPermission.ACCESS, 302, 403),
+                Arguments.of("/pageExtensionApi.js", WebPermission.ACCESS, 200, 200),
+                Arguments.of("/server", WebPermission.ACCESS_SERVER, 302, 403),
+                Arguments.of("/server/" + TestConstants.SERVER_UUID_STRING + "", WebPermission.ACCESS_SERVER, 200, 403),
+                Arguments.of("/v1/serverOverview?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_OVERVIEW_NUMBERS, 200, 403),
+                Arguments.of("/v1/onlineOverview?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_OVERVIEW, 200, 403),
+                Arguments.of("/v1/sessionsOverview?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_SESSIONS, 200, 403),
+                Arguments.of("/v1/playerVersus?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_PLAYER_VERSUS, 200, 403),
+                Arguments.of("/v1/playerbaseOverview?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_PLAYERBASE_OVERVIEW, 200, 403),
+                Arguments.of("/v1/performanceOverview?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_PERFORMANCE_OVERVIEW, 200, 403),
+                Arguments.of("/v1/graph?type=optimizedPerformance&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS, 200, 403),
+                Arguments.of("/v1/graph?type=aggregatedPing&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS, 200, 403),
+                Arguments.of("/v1/graph?type=worldPie&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_SESSIONS_WORLD_PIE, 200, 403),
+                Arguments.of("/v1/graph?type=activity&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_PLAYERBASE_GRAPHS, 200, 403),
+                Arguments.of("/v1/graph?type=geolocation&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_GEOLOCATIONS_MAP, 200, 403),
+                Arguments.of("/v1/graph?type=uniqueAndNew&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_DAY_BY_DAY, 200, 403),
+                Arguments.of("/v1/graph?type=hourlyUniqueAndNew&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_HOUR_BY_HOUR, 200, 403),
+                Arguments.of("/v1/graph?type=serverCalendar&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_CALENDAR, 200, 403),
+                Arguments.of("/v1/graph?type=punchCard&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_PUNCHCARD, 200, 403),
+                Arguments.of("/v1/graph?type=joinAddressByDay&server=" + TestConstants.SERVER_UUID_STRING + "&after=0&before=" + 123456L + "", WebPermission.PAGE_SERVER_JOIN_ADDRESSES_GRAPHS_TIME, 200, 403),
+                Arguments.of("/v1/players?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_PLAYERS, 200, 403),
+                Arguments.of("/v1/kills?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_PLAYER_VERSUS_KILL_LIST, 200, 403),
+                Arguments.of("/v1/pingTable?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_GEOLOCATIONS_PING_PER_COUNTRY, 200, 403),
+                Arguments.of("/v1/sessions?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_SESSIONS_LIST, 200, 403),
+                Arguments.of("/v1/retention?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_RETENTION, 200, 403),
+                Arguments.of("/v1/joinAddresses", WebPermission.PAGE_NETWORK_RETENTION, 200, 403),
+                Arguments.of("/v1/joinAddresses?listOnly=true", WebPermission.PAGE_NETWORK_JOIN_ADDRESSES_GRAPHS_TIME, 200, 403),
+                Arguments.of("/v1/joinAddresses?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_RETENTION, 200, 403),
+                Arguments.of("/v1/joinAddresses?server=" + TestConstants.SERVER_UUID_STRING + "&listOnly=true", WebPermission.PAGE_SERVER_JOIN_ADDRESSES_GRAPHS_TIME, 200, 403),
+                Arguments.of("/network", WebPermission.ACCESS_NETWORK, 302, 403),
+                Arguments.of("/v1/network/overview", WebPermission.PAGE_NETWORK_OVERVIEW_NUMBERS, 200, 403),
+                Arguments.of("/v1/network/servers", WebPermission.PAGE_NETWORK_SERVER_LIST, 200, 403),
+                Arguments.of("/v1/network/sessionsOverview", WebPermission.PAGE_NETWORK_SESSIONS_OVERVIEW, 200, 403),
+                Arguments.of("/v1/network/playerbaseOverview", WebPermission.PAGE_NETWORK_PLAYERBASE_OVERVIEW, 200, 403),
+                Arguments.of("/v1/sessions", WebPermission.PAGE_NETWORK_SESSIONS_LIST, 200, 403),
+                Arguments.of("/v1/graph?type=playersOnline&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_OVERVIEW_PLAYERS_ONLINE_GRAPH, 200, 403),
+                Arguments.of("/v1/graph?type=uniqueAndNew", WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_DAY_BY_DAY, 200, 403),
+                Arguments.of("/v1/graph?type=hourlyUniqueAndNew", WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_HOUR_BY_HOUR, 200, 403),
+                Arguments.of("/v1/graph?type=serverCalendar", WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_CALENDAR, 200, 403),
+                Arguments.of("/v1/graph?type=serverPie", WebPermission.PAGE_NETWORK_SESSIONS_SERVER_PIE, 200, 403),
+                Arguments.of("/v1/graph?type=activity", WebPermission.PAGE_NETWORK_PLAYERBASE_GRAPHS, 200, 403),
+                Arguments.of("/v1/graph?type=geolocation", WebPermission.PAGE_NETWORK_GEOLOCATIONS_MAP, 200, 403),
+                Arguments.of("/v1/network/pingTable", WebPermission.PAGE_NETWORK_GEOLOCATIONS_PING_PER_COUNTRY, 200, 403),
+                Arguments.of("/player/" + TestConstants.PLAYER_ONE_NAME + "", WebPermission.ACCESS_PLAYER, 200, 403),
+                Arguments.of("/player/" + TestConstants.PLAYER_TWO_NAME + "", WebPermission.ACCESS_PLAYER, 404, 403),
+                Arguments.of("/player/" + TestConstants.PLAYER_ONE_UUID_STRING + "", WebPermission.ACCESS_PLAYER, 200, 403),
+                Arguments.of("/player/" + TestConstants.PLAYER_TWO_UUID_STRING + "", WebPermission.ACCESS_PLAYER, 404, 403),
+                Arguments.of("/v1/player?player=" + TestConstants.PLAYER_ONE_NAME + "", WebPermission.ACCESS_PLAYER, 200, 403),
+                Arguments.of("/v1/player?player=" + TestConstants.PLAYER_TWO_NAME + "", WebPermission.ACCESS_PLAYER, 400, 403),
+                Arguments.of("/players", WebPermission.ACCESS_PLAYERS, 200, 403),
+                Arguments.of("/v1/players", WebPermission.ACCESS_PLAYERS, 200, 403),
+                Arguments.of("/query", WebPermission.ACCESS_QUERY, 200, 403),
+                Arguments.of("/v1/filters", WebPermission.ACCESS_QUERY, 200, 403),
+                Arguments.of("/v1/query", WebPermission.ACCESS_QUERY, 400, 403),
+                Arguments.of("/v1/query?q=%5B%5D&view=%7B%22afterDate%22%3A%2224%2F10%2F2022%22%2C%22afterTime%22%3A%2218%3A21%22%2C%22beforeDate%22%3A%2223%2F11%2F2022%22%2C%22beforeTime%22%3A%2217%3A21%22%2C%22servers%22%3A%5B%0A%7B%22serverUUID%22%3A%22" + TestConstants.SERVER_UUID_STRING + "%22%2C%22serverName%22%3A%22" + TestConstants.SERVER_NAME + "%22%2C%22proxy%22%3Afalse%7D%5D%7D", WebPermission.ACCESS_QUERY, 200, 403),
+                Arguments.of("/v1/query?q=%5B%7B%22kind%22%3A%22playedBetween%22%2C%22parameters%22%3A%7B%22afterDate%22%3A%2201%2F01%2F1970%22%2C%22afterTime%22%3A%2200%3A00%22%2C%22beforeDate%22%3A%2201%2F01%2F2024%22%2C%22beforeTime%22%3A%2200%3A00%22%7D%7D%5D&view=" + QUERY_VIEW_SIMPLE, WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_CALENDAR, 200, 403),
+                Arguments.of("/v1/query?q=%5B%7B%22kind%22%3A%22playedBetween%22%2C%22parameters%22%3A%7B%22afterDate%22%3A%2201%2F01%2F1970%22%2C%22afterTime%22%3A%2200%3A00%22%2C%22beforeDate%22%3A%2201%2F01%2F2024%22%2C%22beforeTime%22%3A%2200%3A00%22%7D%7D%5D&view=" + QUERY_VIEW_SIMPLE, WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_CALENDAR, 200, 403),
+                Arguments.of("/v1/query?q=%5B%7B%22kind%22%3A%22geolocations%22%2C%22parameters%22%3A%7B%22selected%22%3A%22%5B%5C%22FIN%5C%22%5D%22%7D%7D%5D&view=" + QUERY_VIEW_SIMPLE, WebPermission.PAGE_NETWORK_GEOLOCATIONS_MAP, 200, 403),
+                Arguments.of("/v1/query?q=%5B%7B%22kind%22%3A%22geolocations%22%2C%22parameters%22%3A%7B%22selected%22%3A%22%5B%5C%22FIN%5C%22%5D%22%7D%7D%5D&view=" + QUERY_VIEW_SIMPLE, WebPermission.PAGE_SERVER_GEOLOCATIONS_MAP, 200, 403),
+                Arguments.of("/v1/errors", WebPermission.ACCESS_ERRORS, 200, 403),
+                Arguments.of("/errors", WebPermission.ACCESS_ERRORS, 200, 403),
+                Arguments.of("/v1/network/listServers", WebPermission.PAGE_NETWORK_PERFORMANCE, 200, 403),
+                Arguments.of("/v1/network/serverOptions", WebPermission.PAGE_NETWORK_PERFORMANCE, 200, 403),
+                Arguments.of("/v1/network/performanceOverview?servers=[" + TestConstants.SERVER_UUID_STRING + "]", WebPermission.PAGE_NETWORK_PERFORMANCE, 200, 403),
+                Arguments.of("/v1/version", WebPermission.ACCESS, 200, 200),
+                Arguments.of("/v1/whoami", WebPermission.ACCESS, 200, 200),
+                Arguments.of("/v1/metadata", WebPermission.ACCESS, 200, 200),
+                Arguments.of("/v1/networkMetadata", WebPermission.ACCESS, 200, 200),
+                Arguments.of("/v1/serverIdentity?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.ACCESS_SERVER, 200, 403),
+                Arguments.of("/v1/locale", WebPermission.ACCESS, 200, 200),
+                Arguments.of("/v1/locale/EN", WebPermission.ACCESS, 200, 200),
+                Arguments.of("/v1/locale/NonexistingLanguage", WebPermission.ACCESS, 404, 404),
+                Arguments.of("/docs/swagger.json", WebPermission.ACCESS_DOCS, 200, 403),
+                Arguments.of("/docs", WebPermission.ACCESS_DOCS, 200, 403),
+                Arguments.of("/pageExtensionApi.js", WebPermission.ACCESS, 200, 200),
+                Arguments.of("/manage", WebPermission.MANAGE_GROUPS, 200, 403),
+                Arguments.of("/v1/groupPermissions?group=admin", WebPermission.MANAGE_GROUPS, 200, 403),
+                Arguments.of("/v1/webGroups", WebPermission.MANAGE_GROUPS, 200, 403),
+                Arguments.of("/v1/deleteGroup?group=admin&moveTo=no_access", WebPermission.MANAGE_GROUPS, 405, 403),
+                Arguments.of("/v1/saveGroupPermissions?group=admin", WebPermission.MANAGE_GROUPS, 405, 403),
+                Arguments.of("/v1/preferences", WebPermission.ACCESS, 200, 200),
+                Arguments.of("/v1/storePreferences", WebPermission.ACCESS, 405, 405),
+                Arguments.of("/v1/pluginHistory?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_NETWORK_PLUGIN_HISTORY, 200, 403),
+                Arguments.of("/v1/pluginHistory?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_PLUGIN_HISTORY, 200, 403),
+                Arguments.of("/v1/gameAllowlistBounces?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_ALLOWLIST_BOUNCE, 200, 403),
+                Arguments.of("/v1/theme?theme=default", WebPermission.ACCESS, 200, 200),
+                Arguments.of("/v1/saveTheme?theme=default", WebPermission.MANAGE_THEMES, 405, 403),
+                Arguments.of("/v1/deleteTheme?theme=default", WebPermission.MANAGE_THEMES, 405, 403),
+                Arguments.of("/theme-editor", WebPermission.ACCESS_THEME_EDITOR, 200, 403),
+                Arguments.of("/theme-editor/new", WebPermission.ACCESS_THEME_EDITOR, 200, 403),
+                Arguments.of("/theme-editor/delete", WebPermission.ACCESS_THEME_EDITOR, 200, 403),
+                Arguments.of("/theme-editor/default", WebPermission.ACCESS_THEME_EDITOR, 200, 403)
+        );
+    }
 
     @BeforeAll
     static void setUpClass(@TempDir Path tempDir) throws Exception {
@@ -95,23 +198,19 @@ class AccessControlTest {
 
         system.enable();
 
-        User userLevel0 = new User("test0", "console", null, PassEncryptUtil.createHash("testPass"), 0, Collections.emptyList());
-        User userLevel1 = new User("test1", "console", null, PassEncryptUtil.createHash("testPass"), 1, Collections.emptyList());
-        User userLevel2 = new User("test2", TestConstants.PLAYER_ONE_NAME, TestConstants.PLAYER_ONE_UUID, PassEncryptUtil.createHash("testPass"), 2, Collections.emptyList());
-        User userLevel100 = new User("test100", "console", null, PassEncryptUtil.createHash("testPass"), 100, Collections.emptyList());
-        system.getDatabaseSystem().getDatabase().executeTransaction(new StoreWebUserTransaction(userLevel0));
-        system.getDatabaseSystem().getDatabase().executeTransaction(new StoreWebUserTransaction(userLevel1));
-        system.getDatabaseSystem().getDatabase().executeTransaction(new StoreWebUserTransaction(userLevel2));
-        system.getDatabaseSystem().getDatabase().executeTransaction(new StoreWebUserTransaction(userLevel100));
+        User userNoAccess = new User("test0", "console", null, PassEncryptUtil.createHash("testPass"), "no_access", Collections.emptyList());
 
-        system.getDatabaseSystem().getDatabase().executeTransaction(new PlayerRegisterTransaction(TestConstants.PLAYER_ONE_UUID, () -> 0L, TestConstants.PLAYER_ONE_NAME));
-        system.getDatabaseSystem().getDatabase().executeTransaction(new StoreServerInformationTransaction(new Server(
+        Database database = system.getDatabaseSystem().getDatabase();
+        database.executeTransaction(new StoreWebUserTransaction(userNoAccess));
+
+        database.executeTransaction(new PlayerRegisterTransaction(TestConstants.PLAYER_ONE_UUID, () -> 0L, TestConstants.PLAYER_ONE_NAME));
+        database.executeTransaction(new StoreServerInformationTransaction(new Server(
                 TestConstants.SERVER_UUID,
                 TestConstants.SERVER_NAME,
                 address,
                 TestConstants.VERSION)));
 
-        Caller caller = system.getExtensionService().register(new ExtensionsDatabaseTest.PlayerExtension())
+        Caller caller = system.getApiServices().getExtensionService().register(new ExtensionsDatabaseTest.PlayerExtension())
                 .orElseThrow(AssertionError::new);
         caller.updatePlayerData(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME);
 
@@ -119,10 +218,7 @@ class AccessControlTest {
         assertTrue(system.getWebServerSystem().getWebServer().isAuthRequired());
 
         address = "https://localhost:" + TEST_PORT_NUMBER;
-        cookieLevel0 = login(address, userLevel0.getUsername());
-        cookieLevel1 = login(address, userLevel1.getUsername());
-        cookieLevel2 = login(address, userLevel2.getUsername());
-        cookieLevel100 = login(address, userLevel100.getUsername());
+        cookieNoAccess = login(address, userNoAccess.getUsername());
     }
 
     @AfterAll
@@ -132,7 +228,7 @@ class AccessControlTest {
         }
     }
 
-    static String login(String address, String username) throws IOException, KeyManagementException, NoSuchAlgorithmException {
+    public static String login(String address, String username) throws IOException, KeyManagementException, NoSuchAlgorithmException {
         HttpURLConnection loginConnection = null;
         String cookie;
         try {
@@ -151,294 +247,56 @@ class AccessControlTest {
         return cookie;
     }
 
-    @DisplayName("Access control test, level 0:")
-    @ParameterizedTest(name = "{0}: expecting {1}")
-    @CsvSource({
-            "/,302",
-            "/server,302",
-            "/server/" + TestConstants.SERVER_UUID_STRING + ",200",
-            "/css/style.css,200",
-            "/js/color-selector.js,200",
-            "/v1/serverOverview?server=" + TestConstants.SERVER_UUID_STRING + ",200",
-            "/v1/onlineOverview?server=" + TestConstants.SERVER_UUID_STRING + ",200",
-            "/v1/sessionsOverview?server=" + TestConstants.SERVER_UUID_STRING + ",200",
-            "/v1/playerVersus?server=" + TestConstants.SERVER_UUID_STRING + ",200",
-            "/v1/playerbaseOverview?server=" + TestConstants.SERVER_UUID_STRING + ",200",
-            "/v1/performanceOverview?server=" + TestConstants.SERVER_UUID_STRING + ",200",
-            "/v1/graph?type=optimizedPerformance&server=" + TestConstants.SERVER_UUID_STRING + ",200",
-            "/v1/graph?type=aggregatedPing&server=" + TestConstants.SERVER_UUID_STRING + ",200",
-            "/v1/graph?type=worldPie&server=" + TestConstants.SERVER_UUID_STRING + ",200",
-            "/v1/graph?type=activity&server=" + TestConstants.SERVER_UUID_STRING + ",200",
-            "/v1/graph?type=joinAddressPie&server=" + TestConstants.SERVER_UUID_STRING + ",200",
-            "/v1/graph?type=geolocation&server=" + TestConstants.SERVER_UUID_STRING + ",200",
-            "/v1/graph?type=uniqueAndNew&server=" + TestConstants.SERVER_UUID_STRING + ",200",
-            "/v1/graph?type=hourlyUniqueAndNew&server=" + TestConstants.SERVER_UUID_STRING + ",200",
-            "/v1/graph?type=serverCalendar&server=" + TestConstants.SERVER_UUID_STRING + ",200",
-            "/v1/graph?type=punchCard&server=" + TestConstants.SERVER_UUID_STRING + ",200",
-            "/v1/graph?type=joinAddressByDay&server=" + TestConstants.SERVER_UUID_STRING + "&after=0&before=" + 123456L + ",200",
-            "/v1/players?server=" + TestConstants.SERVER_UUID_STRING + ",200",
-            "/v1/kills?server=" + TestConstants.SERVER_UUID_STRING + ",200",
-            "/v1/pingTable?server=" + TestConstants.SERVER_UUID_STRING + ",200",
-            "/v1/sessions?server=" + TestConstants.SERVER_UUID_STRING + ",200",
-            "/network,302",
-            "/v1/network/overview,200",
-            "/v1/network/servers,200",
-            "/v1/network/sessionsOverview,200",
-            "/v1/network/playerbaseOverview,200",
-            "/v1/sessions,200",
-            "/v1/graph?type=playersOnline&server=" + TestConstants.SERVER_UUID_STRING + ",200",
-            "/v1/graph?type=uniqueAndNew,200",
-            "/v1/graph?type=hourlyUniqueAndNew,200",
-            "/v1/graph?type=serverPie,200",
-            "/v1/graph?type=joinAddressPie,200",
-            "/v1/graph?type=activity,200",
-            "/v1/graph?type=geolocation,200",
-            "/v1/network/pingTable,200",
-            "/player/" + TestConstants.PLAYER_ONE_NAME + ",200",
-            "/player/" + TestConstants.PLAYER_TWO_NAME + ",404",
-            "/player/" + TestConstants.PLAYER_ONE_UUID_STRING + ",200",
-            "/player/" + TestConstants.PLAYER_TWO_UUID_STRING + ",404",
-            "/v1/player?player=" + TestConstants.PLAYER_ONE_NAME + ",200",
-            "/v1/player?player=" + TestConstants.PLAYER_TWO_NAME + ",400",
-            "/players,200",
-            "/v1/players,200",
-            "/query,200",
-            "/v1/filters,200",
-            "/v1/query,400",
-            "/v1/errors,200",
-            "/errors,200",
-            "/v1/network/listServers,200",
-            "/v1/network/serverOptions,200",
-            "/v1/network/performanceOverview?servers=[" + TestConstants.SERVER_UUID_STRING + "],200",
-            "/v1/version,200",
-            "/v1/whoami,200",
-            "/v1/metadata,200",
-            "/v1/locale,200",
-            "/v1/locale/EN,200",
-            "/v1/locale/NonexistingLanguage,404",
-            "/docs/swagger.json,500", // swagger.json not available during tests
-            "/docs,200",
-    })
-    void levelZeroCanAccess(String resource, String expectedResponseCode) throws NoSuchAlgorithmException, IOException, KeyManagementException {
-        int responseCode = access(resource, cookieLevel0);
-        assertEquals(Integer.parseInt(expectedResponseCode), responseCode, () -> "User level 0, Wrong response code for " + resource + ", expected " + expectedResponseCode + " but was " + responseCode);
+    @DisplayName("Access control test")
+    @ParameterizedTest(name = "{0}: Permission {1}, expecting {2} with & {3} without permission")
+    @MethodSource("testCases")
+    void accessControlTest(String resource, WebPermission permission, int expectedWithPermission, int expectedWithout) throws Exception {
+        String cookie = login(address, createUserWithPermissions(resource, permission).getUsername());
+        int responseCodeWithPermission = access(resource, cookie);
+        int responseCodeWithout = access(resource, cookieNoAccess);
+
+        assertAll(
+                () -> assertEquals(expectedWithPermission, responseCodeWithPermission,
+                        () -> "Permission '" + permission.getPermission() + "', Wrong response code for " + resource + ", expected " + expectedWithPermission + " but was " + responseCodeWithPermission),
+                () -> assertEquals(expectedWithout, responseCodeWithout,
+                        () -> "No Permissions, Wrong response code for " + resource + ", expected " + expectedWithout + " but was " + responseCodeWithout)
+        );
     }
 
-    @DisplayName("Access control test, level 1:")
-    @ParameterizedTest(name = "{0}: expecting {1}")
-    @CsvSource({
-            "/,302",
-            "/server,403",
-            "/server/" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/css/style.css,200",
-            "/js/color-selector.js,200",
-            "/v1/serverOverview?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/onlineOverview?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/sessionsOverview?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/playerVersus?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/playerbaseOverview?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/performanceOverview?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=optimizedPerformance&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=aggregatedPing&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=worldPie&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=activity&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=joinAddressPie&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=geolocation&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=uniqueAndNew&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=hourlyUniqueAndNew&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=serverCalendar&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=punchCard&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/players?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/kills?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/pingTable?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/sessions?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=joinAddressByDay&server=" + TestConstants.SERVER_UUID_STRING + "&after=0&before=" + 123456L + ",403",
-            "/network,403",
-            "/v1/network/overview,403",
-            "/v1/network/servers,403",
-            "/v1/network/sessionsOverview,403",
-            "/v1/network/playerbaseOverview,403",
-            "/v1/sessions,403",
-            "/v1/graph?type=playersOnline&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=uniqueAndNew,403",
-            "/v1/graph?type=hourlyUniqueAndNew,403",
-            "/v1/graph?type=serverPie,403",
-            "/v1/graph?type=joinAddressPie,403",
-            "/v1/graph?type=activity,403",
-            "/v1/graph?type=geolocation,403",
-            "/v1/network/pingTable,403",
-            "/player/" + TestConstants.PLAYER_ONE_NAME + ",200",
-            "/player/" + TestConstants.PLAYER_TWO_NAME + ",404",
-            "/player/" + TestConstants.PLAYER_ONE_UUID_STRING + ",200",
-            "/player/" + TestConstants.PLAYER_TWO_UUID_STRING + ",404",
-            "/v1/player?player=" + TestConstants.PLAYER_ONE_NAME + ",200",
-            "/v1/player?player=" + TestConstants.PLAYER_TWO_NAME + ",400",
-            "/players,200",
-            "/v1/players,200",
-            "/query,200",
-            "/v1/filters,200",
-            "/v1/query,400",
-            "/v1/errors,403",
-            "/errors,403",
-            "/v1/network/listServers,403",
-            "/v1/network/serverOptions,403",
-            "/v1/network/performanceOverview?servers=[" + TestConstants.SERVER_UUID_STRING + "],403",
-            "/v1/version,200",
-            "/v1/whoami,200",
-            "/v1/metadata,200",
-            "/v1/locale,200",
-            "/v1/locale/EN,200",
-            "/v1/locale/NonexistingLanguage,404",
-            "/docs/swagger.json,403",
-            "/docs,403",
-    })
-    void levelOneCanAccess(String resource, String expectedResponseCode) throws NoSuchAlgorithmException, IOException, KeyManagementException {
-        int responseCode = access(resource, cookieLevel1);
-        assertEquals(Integer.parseInt(expectedResponseCode), responseCode, () -> "User level 1, Wrong response code for " + resource + ", expected " + expectedResponseCode + " but was " + responseCode);
+    @DisplayName("Access test player/uuid/raw")
+    @Test
+    void playerRawAccess() throws Exception {
+        String resource = "/player/" + TestConstants.PLAYER_ONE_UUID + "/raw";
+        int expectedWithPermission = 200;
+        int expectedWithout = 403;
+        String cookie = login(address, createUserWithPermissions(resource, WebPermission.ACCESS_PLAYER, WebPermission.ACCESS_RAW_PLAYER_DATA).getUsername());
+        String cookieJustPage = login(address, createUserWithPermissions(resource, WebPermission.ACCESS_PLAYER).getUsername());
+        int responseCodeWithPermission = access(resource, cookie);
+        int responseCodeJustPage = access(resource, cookieJustPage);
+        int responseCodeWithout = access(resource, cookieNoAccess);
+
+        assertAll(
+                () -> assertEquals(expectedWithPermission, responseCodeWithPermission,
+                        () -> "Permission 'access.player', 'access.raw.player.data', Wrong response code for " + resource + ", expected " + expectedWithPermission + " but was " + responseCodeWithPermission),
+                () -> assertEquals(expectedWithout, responseCodeJustPage,
+                        () -> "Just page visibility permissions, Wrong response code for " + resource + ", expected " + expectedWithout + " but was " + responseCodeJustPage),
+                () -> assertEquals(expectedWithout, responseCodeWithout,
+                        () -> "No Permissions, Wrong response code for " + resource + ", expected " + expectedWithout + " but was " + responseCodeWithout)
+        );
     }
 
-    @DisplayName("Access control test, level 2:")
-    @ParameterizedTest(name = "{0}: expecting {1}")
-    @CsvSource({
-            "/,302",
-            "/server,403",
-            "/server/" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/css/style.css,200",
-            "/js/color-selector.js,200",
-            "/v1/serverOverview?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/onlineOverview?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/sessionsOverview?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/playerVersus?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/playerbaseOverview?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/performanceOverview?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=optimizedPerformance&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=aggregatedPing&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=worldPie&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=activity&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=joinAddressPie&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=geolocation&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=uniqueAndNew&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=hourlyUniqueAndNew&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=serverCalendar&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=punchCard&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=joinAddressByDay&server=" + TestConstants.SERVER_UUID_STRING + "&after=0&before=" + 123456L + ",403",
-            "/v1/players?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/kills?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/pingTable?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/sessions?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/network,403",
-            "/v1/network/overview,403",
-            "/v1/network/servers,403",
-            "/v1/network/sessionsOverview,403",
-            "/v1/network/playerbaseOverview,403",
-            "/v1/sessions,403",
-            "/v1/graph?type=playersOnline&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=uniqueAndNew,403",
-            "/v1/graph?type=hourlyUniqueAndNew,403",
-            "/v1/graph?type=serverPie,403",
-            "/v1/graph?type=joinAddressPie,403",
-            "/v1/graph?type=activity,403",
-            "/v1/graph?type=geolocation,403",
-            "/v1/network/pingTable,403",
-            "/player/" + TestConstants.PLAYER_ONE_NAME + ",200",
-            "/player/" + TestConstants.PLAYER_TWO_NAME + ",403",
-            "/player/" + TestConstants.PLAYER_ONE_UUID_STRING + ",200",
-            "/player/" + TestConstants.PLAYER_TWO_UUID_STRING + ",403",
-            "/v1/player?player=" + TestConstants.PLAYER_ONE_NAME + ",200",
-            "/v1/player?player=" + TestConstants.PLAYER_TWO_NAME + ",403",
-            "/players,403",
-            "/v1/players,403",
-            "/query,403",
-            "/v1/filters,403",
-            "/v1/query,403",
-            "/v1/errors,403",
-            "/errors,403",
-            "/v1/network/listServers,403",
-            "/v1/network/serverOptions,403",
-            "/v1/network/performanceOverview?servers=[" + TestConstants.SERVER_UUID_STRING + "],403",
-            "/v1/version,200",
-            "/v1/whoami,200",
-            "/v1/metadata,200",
-            "/v1/locale,200",
-            "/v1/locale/EN,200",
-            "/v1/locale/NonexistingLanguage,404",
-            "/docs/swagger.json,403",
-            "/docs,403",
-    })
-    void levelTwoCanAccess(String resource, String expectedResponseCode) throws NoSuchAlgorithmException, IOException, KeyManagementException {
-        int responseCode = access(resource, cookieLevel2);
-        assertEquals(Integer.parseInt(expectedResponseCode), responseCode, () -> "User level 2, Wrong response code for " + resource + ", expected " + expectedResponseCode + " but was " + responseCode);
-    }
+    private User createUserWithPermissions(String resource, WebPermission... permissions) throws ExecutionException, InterruptedException {
+        Database db = system.getDatabaseSystem().getDatabase();
 
-    @DisplayName("Access control test, level 100:")
-    @ParameterizedTest(name = "{0}: expecting {1}")
-    @CsvSource({
-            "/,403",
-            "/server,403",
-            "/server/" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/css/style.css,200",
-            "/js/color-selector.js,200",
-            "/v1/serverOverview?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/onlineOverview?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/sessionsOverview?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/playerVersus?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/playerbaseOverview?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/performanceOverview?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=optimizedPerformance&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=aggregatedPing&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=worldPie&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=activity&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=joinAddressPie&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=geolocation&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=uniqueAndNew&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=hourlyUniqueAndNew&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=serverCalendar&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=punchCard&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=joinAddressByDay&server=" + TestConstants.SERVER_UUID_STRING + "&after=0&before=" + 123456L + ",403",
-            "/v1/players?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/kills?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/pingTable?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/sessions?server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/network,403",
-            "/v1/network/overview,403",
-            "/v1/network/servers,403",
-            "/v1/network/sessionsOverview,403",
-            "/v1/network/playerbaseOverview,403",
-            "/v1/sessions,403",
-            "/v1/graph?type=playersOnline&server=" + TestConstants.SERVER_UUID_STRING + ",403",
-            "/v1/graph?type=uniqueAndNew,403",
-            "/v1/graph?type=hourlyUniqueAndNew,403",
-            "/v1/graph?type=serverPie,403",
-            "/v1/graph?type=joinAddressPie,403",
-            "/v1/graph?type=activity,403",
-            "/v1/graph?type=geolocation,403",
-            "/v1/network/pingTable,403",
-            "/player/" + TestConstants.PLAYER_ONE_NAME + ",403",
-            "/player/" + TestConstants.PLAYER_TWO_NAME + ",403",
-            "/player/" + TestConstants.PLAYER_ONE_UUID_STRING + ",403",
-            "/player/" + TestConstants.PLAYER_TWO_UUID_STRING + ",403",
-            "/v1/player?player=" + TestConstants.PLAYER_ONE_NAME + ",403",
-            "/v1/player?player=" + TestConstants.PLAYER_TWO_NAME + ",403",
-            "/players,403",
-            "/v1/players,403",
-            "/query,403",
-            "/v1/filters,403",
-            "/v1/query,403",
-            "/v1/network/listServers,403",
-            "/v1/network/serverOptions,403",
-            "/v1/network/performanceOverview?servers=[" + TestConstants.SERVER_UUID_STRING + "],403",
-            "/v1/version,200",
-            "/v1/whoami,200",
-            "/v1/metadata,200",
-            "/v1/locale,200",
-            "/v1/locale/EN,200",
-            "/v1/locale/NonexistingLanguage,404",
-            "/docs/swagger.json,403",
-            "/docs,403",
-    })
-    void levelHundredCanNotAccess(String resource, String expectedResponseCode) throws NoSuchAlgorithmException, IOException, KeyManagementException {
-        int responseCode = access(resource, cookieLevel100);
-        assertEquals(Integer.parseInt(expectedResponseCode), responseCode, () -> "User level 100, Wrong response code for " + resource + ", expected " + expectedResponseCode + " but was " + responseCode);
+        String groupName = StringUtils.truncate(resource, 75);
+        db.executeTransaction(
+                new StoreWebGroupTransaction(groupName, Arrays.stream(permissions).map(WebPermission::getPermission).collect(Collectors.toList()))
+        ).get();
+
+        User user = new User(RandomData.randomString(45), "console", null, PassEncryptUtil.createHash("testPass"), groupName, Collections.emptyList());
+        db.executeTransaction(new StoreWebUserTransaction(user)).get();
+
+        return user;
     }
 
     private int access(String resource, String cookie) throws IOException, KeyManagementException, NoSuchAlgorithmException {

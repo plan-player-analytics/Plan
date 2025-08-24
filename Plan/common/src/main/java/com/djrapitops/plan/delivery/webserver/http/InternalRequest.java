@@ -23,8 +23,10 @@ import com.djrapitops.plan.delivery.webserver.auth.Authentication;
 import com.djrapitops.plan.delivery.webserver.auth.AuthenticationExtractor;
 import com.djrapitops.plan.delivery.webserver.auth.Cookie;
 import com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -36,12 +38,14 @@ public interface InternalRequest {
 
     long getTimestamp();
 
+    @Untrusted
     default String getAccessAddress(WebserverConfiguration webserverConfiguration) {
         AccessAddressPolicy accessAddressPolicy = webserverConfiguration.getAccessAddressPolicy();
         if (accessAddressPolicy == AccessAddressPolicy.X_FORWARDED_FOR_HEADER) {
-            String fromHeader = getAccessAddressFromHeader();
+            @Untrusted String fromHeader = getAccessAddressFromHeader();
             if (fromHeader == null) {
-                webserverConfiguration.getWebserverLogMessages().warnAboutXForwardedForSecurityIssue();
+                // TODO disabled temporarily
+//                webserverConfiguration.getWebserverLogMessages().warnAboutXForwardedForSecurityIssue();
                 return getAccessAddressFromSocketIp();
             } else {
                 return fromHeader;
@@ -50,7 +54,9 @@ public interface InternalRequest {
         return getAccessAddressFromSocketIp();
     }
 
-    Request toRequest();
+    Request toRequest(@Untrusted(reason = "from header sometimes") String accessAddress);
+
+    Map<String, String> getRequestHeaders();
 
     List<Cookie> getCookies();
 
@@ -62,7 +68,7 @@ public interface InternalRequest {
 
     String getRequestedURIString();
 
-    default WebUser getWebUser(WebserverConfiguration webserverConfiguration, AuthenticationExtractor authenticationExtractor) {
+    default WebUser getWebUser(WebserverConfiguration webserverConfiguration, AuthenticationExtractor authenticationExtractor, @Untrusted String accessAddress) {
         return getAuthentication(webserverConfiguration, authenticationExtractor)
                 .map(Authentication::getUser) // Can throw WebUserAuthException
                 .map(User::toWebUser)
@@ -75,4 +81,6 @@ public interface InternalRequest {
         }
         return authenticationExtractor.extractAuthentication(this);
     }
+
+    String getRequestedPath();
 }

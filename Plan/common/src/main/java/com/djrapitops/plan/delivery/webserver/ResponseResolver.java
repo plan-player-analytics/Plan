@@ -22,10 +22,12 @@ import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
+import com.djrapitops.plan.delivery.web.resolver.exception.MethodNotAllowedException;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
+import com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration;
 import com.djrapitops.plan.delivery.webserver.http.WebServer;
 import com.djrapitops.plan.delivery.webserver.resolver.*;
 import com.djrapitops.plan.delivery.webserver.resolver.auth.*;
@@ -33,7 +35,7 @@ import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.swagger.SwaggerJsonResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.swagger.SwaggerPageResolver;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
-import com.djrapitops.plan.exceptions.connection.ForbiddenException;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import dagger.Lazy;
@@ -59,7 +61,7 @@ import java.util.regex.Pattern;
  */
 @Singleton
 @OpenAPIDefinition(info = @Info(
-        title = "Plan API endpoints",
+        title = "Swagger Docs",
         description = "If authentication is enabled (see response of /v1/whoami) logging in is required for endpoints (/auth/login). Pass 'Cookie' header in the requests after login.",
         contact = @Contact(name = "Github Discussions", url = "https://github.com/plan-player-analytics/Plan/discussions/categories/apis-and-development"),
         license = @License(name = "GNU Lesser General Public License v3.0 (LGPLv3.0)", url = "https://github.com/plan-player-analytics/Plan/blob/master/LICENSE")
@@ -81,17 +83,22 @@ public class ResponseResolver {
     private final ErrorsPageResolver errorsPageResolver;
     private final SwaggerJsonResolver swaggerJsonResolver;
     private final SwaggerPageResolver swaggerPageResolver;
+    private final ManagePageResolver managePageResolver;
+    private final ThemeEditorResolver themeEditorResolver;
     private final ErrorLogger errorLogger;
 
     private final ResolverService resolverService;
     private final ResponseFactory responseFactory;
     private final Lazy<WebServer> webServer;
+    private final WebserverConfiguration webserverConfiguration;
+    private final PublicHtmlResolver publicHtmlResolver;
 
     @Inject
     public ResponseResolver(
             ResolverSvc resolverService,
             ResponseFactory responseFactory,
             Lazy<WebServer> webServer,
+            WebserverConfiguration webserverConfiguration,
 
             QueryPageResolver queryPageResolver,
             PlayersPageResolver playersPageResolver,
@@ -100,6 +107,8 @@ public class ResponseResolver {
             RootPageResolver rootPageResolver,
             RootJSONResolver rootJSONResolver,
             StaticResourceResolver staticResourceResolver,
+            ThemeEditorResolver themeEditorResolver,
+            PublicHtmlResolver publicHtmlResolver,
 
             LoginPageResolver loginPageResolver,
             RegisterPageResolver registerPageResolver,
@@ -111,11 +120,12 @@ public class ResponseResolver {
             SwaggerJsonResolver swaggerJsonResolver,
             SwaggerPageResolver swaggerPageResolver,
 
-            ErrorLogger errorLogger
+            ManagePageResolver managePageResolver, ErrorLogger errorLogger
     ) {
         this.resolverService = resolverService;
         this.responseFactory = responseFactory;
         this.webServer = webServer;
+        this.webserverConfiguration = webserverConfiguration;
         this.queryPageResolver = queryPageResolver;
         this.playersPageResolver = playersPageResolver;
         this.playerPageResolver = playerPageResolver;
@@ -123,6 +133,8 @@ public class ResponseResolver {
         this.rootPageResolver = rootPageResolver;
         this.rootJSONResolver = rootJSONResolver;
         this.staticResourceResolver = staticResourceResolver;
+        this.themeEditorResolver = themeEditorResolver;
+        this.publicHtmlResolver = publicHtmlResolver;
         this.loginPageResolver = loginPageResolver;
         this.registerPageResolver = registerPageResolver;
         this.loginResolver = loginResolver;
@@ -131,6 +143,7 @@ public class ResponseResolver {
         this.errorsPageResolver = errorsPageResolver;
         this.swaggerJsonResolver = swaggerJsonResolver;
         this.swaggerPageResolver = swaggerPageResolver;
+        this.managePageResolver = managePageResolver;
         this.errorLogger = errorLogger;
     }
 
@@ -138,25 +151,33 @@ public class ResponseResolver {
         String plugin = "Plan";
         resolverService.registerResolver(plugin, "/robots.txt", fileResolver(responseFactory::robotsResponse));
         resolverService.registerResolver(plugin, "/manifest.json", fileResolver(() -> responseFactory.jsonFileResponse("manifest.json")));
-        resolverService.registerResolver(plugin, "/asset-manifest.json", fileResolver(() -> responseFactory.jsonFileResponse("asset-manifest.json")));
         resolverService.registerResolver(plugin, "/favicon.ico", fileResolver(responseFactory::faviconResponse));
+        resolverService.registerResolver(plugin, "/logo192.png", fileResolver(() -> responseFactory.imageResponse("logo192.png")));
+        resolverService.registerResolver(plugin, "/logo512.png", fileResolver(() -> responseFactory.imageResponse("logo512.png")));
+        resolverService.registerResolver(plugin, "/pageExtensionApi.js", fileResolver(() -> responseFactory.javaScriptResponse("pageExtensionApi.js")));
 
         resolverService.registerResolver(plugin, "/query", queryPageResolver);
         resolverService.registerResolver(plugin, "/players", playersPageResolver);
         resolverService.registerResolver(plugin, "/player", playerPageResolver);
         resolverService.registerResolver(plugin, "/network", serverPageResolver);
         resolverService.registerResolver(plugin, "/server", serverPageResolver);
-
-        resolverService.registerResolver(plugin, "/login", loginPageResolver);
-        resolverService.registerResolver(plugin, "/register", registerPageResolver);
-        resolverService.registerResolver(plugin, "/auth/login", loginResolver);
-        resolverService.registerResolver(plugin, "/auth/logout", logoutResolver);
-        resolverService.registerResolver(plugin, "/auth/register", registerResolver);
+        resolverService.registerResolver(plugin, "/theme-editor", themeEditorResolver);
+        if (webServer.get().isAuthRequired()) {
+            resolverService.registerResolver(plugin, "/login", loginPageResolver);
+            resolverService.registerResolver(plugin, "/register", registerPageResolver);
+            resolverService.registerResolver(plugin, "/auth/login", loginResolver);
+            resolverService.registerResolver(plugin, "/auth/logout", logoutResolver);
+            if (webserverConfiguration.isRegistrationEnabled()) {
+                resolverService.registerResolver(plugin, "/auth/register", registerResolver);
+            }
+            resolverService.registerResolver(plugin, "/manage", managePageResolver);
+        }
 
         resolverService.registerResolver(plugin, "/errors", errorsPageResolver);
 
         resolverService.registerResolverForMatches(plugin, Pattern.compile("^/$"), rootPageResolver);
         resolverService.registerResolverForMatches(plugin, Pattern.compile(StaticResourceResolver.PATH_REGEX), staticResourceResolver);
+        resolverService.registerResolverForMatches(plugin, Pattern.compile(".*"), publicHtmlResolver);
 
         resolverService.registerResolver(plugin, "/v1", rootJSONResolver.getResolver());
         resolverService.registerResolver(plugin, "/docs/swagger.json", swaggerJsonResolver);
@@ -167,15 +188,15 @@ public class ResponseResolver {
         return request -> Optional.of(response.get());
     }
 
-    public Response getResponse(Request request) {
+    public Response getResponse(@Untrusted Request request) {
         try {
             return tryToGetResponse(request);
-        } catch (NotFoundException e) {
-            return responseFactory.notFound404(e.getMessage());
-        } catch (ForbiddenException e) {
-            return responseFactory.forbidden403(e.getMessage());
         } catch (BadRequestException e) {
             return responseFactory.badRequest(e.getMessage(), request.getPath().asString());
+        } catch (NotFoundException e) {
+            return responseFactory.notFound404(e.getMessage());
+        } catch (MethodNotAllowedException e) {
+            return responseFactory.methodNotAllowed405(e.getMessage(), e.getAllowedMethods());
         } catch (WebUserAuthException e) {
             throw e; // Pass along
         } catch (Exception e) {
@@ -186,10 +207,9 @@ public class ResponseResolver {
 
     /**
      * @throws NotFoundException   In some cases when page was not found, not all.
-     * @throws ForbiddenException  If the user is not allowed to see the page
      * @throws BadRequestException If the request did not have required things.
      */
-    private Response tryToGetResponse(Request request) {
+    private Response tryToGetResponse(@Untrusted Request request) {
         if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
             // https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/OPTIONS
             return Response.builder().setStatus(204).build();
@@ -215,7 +235,11 @@ public class ResponseResolver {
                     Optional<Response> resolved = resolver.resolve(request);
                     if (resolved.isPresent()) return resolved.get();
                 } else {
-                    return responseFactory.forbidden403();
+                    if (request.getPath().startsWith("/v1/")) {
+                        return responseFactory.forbidden403Json();
+                    } else {
+                        return responseFactory.forbidden403();
+                    }
                 }
             } else {
                 Optional<Response> resolved = resolver.resolve(request);

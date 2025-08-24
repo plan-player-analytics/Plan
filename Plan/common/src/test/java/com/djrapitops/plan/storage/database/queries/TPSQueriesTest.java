@@ -26,16 +26,22 @@ import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythi
 import com.djrapitops.plan.storage.database.transactions.events.TPSStoreTransaction;
 import com.djrapitops.plan.utilities.comparators.TPSComparator;
 import com.djrapitops.plan.utilities.java.Lists;
+import net.playeranalytics.plugin.server.PluginLogger;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import utilities.RandomData;
 
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 public interface TPSQueriesTest extends DatabaseTestPreparer {
 
@@ -71,6 +77,39 @@ public interface TPSQueriesTest extends DatabaseTestPreparer {
         int expected = tpsData.get(tpsData.size() - 1).getPlayers();
         int actual = db().query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID())).map(DateObj::getValue).orElse(-1);
         assertEquals(expected, actual, () -> "Wrong return value. " + Lists.map(tpsData, TPS::getPlayers).toString());
+    }
+
+    @Test
+    default void maxDateIsFetched() {
+        List<TPS> tpsData = RandomData.randomTPS();
+
+        for (TPS tps : tpsData) {
+            db().executeTransaction(new TPSStoreTransaction(serverUUID(), tps));
+        }
+
+        long expected = tpsData.stream()
+                .mapToLong(TPS::getDate)
+                .max()
+                .orElseThrow(AssertionError::new);
+        long result = db().query(TPSQueries.fetchLastStoredTpsDate(serverUUID()))
+                .orElseThrow(AssertionError::new);
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void sameServerIsDetected() {
+        int value = ThreadLocalRandom.current().nextInt();
+        long time = System.currentTimeMillis() - 50;
+        TPS tps = new TPS(time, time, value, time, time, value, value, time);
+        PluginLogger logger = Mockito.mock(PluginLogger.class);
+        db().executeTransaction(new TPSStoreTransaction(logger, serverUUID(), tps));
+
+        TPSStoreTransaction.setLastStorageCheck(0L);
+
+        db().executeTransaction(new TPSStoreTransaction(logger, serverUUID(), tps));
+        db().executeTransaction(new TPSStoreTransaction(logger, serverUUID(), tps));
+
+        verify(logger, times(1)).warn(anyString());
     }
 
     @Test
