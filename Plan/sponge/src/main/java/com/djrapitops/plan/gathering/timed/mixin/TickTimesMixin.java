@@ -22,8 +22,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 import java.util.Optional;
-import java.util.OptionalDouble;
-import java.util.stream.LongStream;
 
 /**
  * @author AuroraLS3
@@ -35,13 +33,8 @@ public class TickTimesMixin implements TickTimesAccess {
     @Final
     public long[] tickTimes;
 
-    public Optional<Double> getMsptAverage() {
-        return Optional.ofNullable(tickTimes)
-                .map(value -> {
-                    if (value.length <= 0) return null;
-                    OptionalDouble average = LongStream.of(value).filter(i -> i != 0L).average();
-                    return average.isPresent() ? average.getAsDouble() : null;
-                });
+    public Optional<long[]> getMspt() {
+        return Optional.ofNullable(tickTimes);
     }
 
 }

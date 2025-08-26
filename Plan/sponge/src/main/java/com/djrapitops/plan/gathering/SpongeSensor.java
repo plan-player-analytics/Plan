@@ -115,7 +115,7 @@ public class SpongeSensor implements ServerSensor<ServerWorld> {
     }
 
     @Override
-    public Optional<Double> getMsptAverage() {
-        return ((TickTimesAccess) game.server()).getMsptAverage();
+    public Optional<long[]> getMspt() {
+        return ((TickTimesAccess) game.server()).getMspt();
     }
 }

@@ -77,7 +77,14 @@ public interface ServerSensor<W> {
 
     default boolean isBanned(UUID playerUUID) {return false;}
 
-    default Optional<Double> getMsptAverage() {
+    /**
+     * Milliseconds per tick stored in the MinecraftServer class.
+     * <p>
+     * Contains 0 values that are initialized on server boot, which should be ignored.
+     *
+     * @return Optional empty if not supported on the platform.
+     */
+    default Optional<long[]> getMspt() {
         return Optional.empty();
     }
 }

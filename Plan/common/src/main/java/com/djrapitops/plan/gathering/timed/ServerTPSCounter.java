@@ -54,6 +54,8 @@ public class ServerTPSCounter<W> extends TPSCounter {
     private final Average mspt;
     private final Distribution msptDistribution;
 
+    private int pulseCounter = 0;
+
     @Inject
     public ServerTPSCounter(
             ServerSensor<W> serverSensor,
@@ -89,8 +91,16 @@ public class ServerTPSCounter<W> extends TPSCounter {
         playersOnline.add(serverSensor.getOnlinePlayerCount());
         cpu.add(systemUsage.getCpu());
         ram.add(systemUsage.getRam());
-        serverSensor.getMsptAverage().ifPresent(mspt::add);
+
+        // TPSCounter is pulsed once every 20 ticks, so this should prevent duplicate values.
+        if (pulseCounter > 0 && pulseCounter % 5 == 0) {
+            serverSensor.getMspt().ifPresent(last100ticks -> {
+                mspt.addPositive(last100ticks);
+                msptDistribution.addPositive(last100ticks);
+            });
+        }
         result.ifPresent(tps -> save(tps, time));
+        pulseCounter++;
     }
 
     private void save(double averageTPS, long time) {

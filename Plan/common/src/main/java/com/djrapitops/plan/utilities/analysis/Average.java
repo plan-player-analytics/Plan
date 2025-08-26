@@ -48,4 +48,10 @@ public class Average {
         count = 0;
         return average;
     }
+
+    public void addPositive(long[] values) {
+        for (long value : values) {
+            if (value > 0) add(value);
+        }
+    }
 }

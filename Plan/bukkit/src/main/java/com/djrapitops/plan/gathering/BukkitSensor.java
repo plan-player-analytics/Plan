@@ -17,7 +17,6 @@
 package com.djrapitops.plan.gathering;
 
 import com.djrapitops.plan.gathering.domain.PluginMetadata;
-import com.djrapitops.plan.gathering.timed.mspt.PaperMsptField;
 import com.djrapitops.plan.gathering.timed.mspt.SpigotMspt;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
@@ -42,8 +41,6 @@ public class BukkitSensor implements ServerSensor<World> {
     private final boolean hasTPSMethod;
     private final boolean hasEntityCountMethod;
     private final boolean hasChunkCountMethod;
-    private final boolean hasAverageTickTimeMethod;
-    private PaperMsptField paperMsptField;
 
     @Inject
     public BukkitSensor(
@@ -54,11 +51,6 @@ public class BukkitSensor implements ServerSensor<World> {
         hasTPSMethod = hasPaper && hasPaperMethod(Server.class, "getTPS");
         hasEntityCountMethod = hasPaper && hasPaperMethod(World.class, "getEntityCount");
         hasChunkCountMethod = hasPaper && hasPaperMethod(World.class, "getChunkCount");
-        hasAverageTickTimeMethod = hasPaper && hasPaperMethod(Bukkit.class, "getAverageTickTime");
-
-        if (hasAverageTickTimeMethod) {
-            paperMsptField = new PaperMsptField();
-        }
     }
 
     public static boolean isPaperAvailable() {
@@ -166,14 +158,7 @@ public class BukkitSensor implements ServerSensor<World> {
     }
 
     @Override
-    public Optional<Double> getMsptAverage() {
-        Optional<Double> msptAverage = Optional.empty();
-        if (hasAverageTickTimeMethod) {
-            msptAverage = paperMsptField.getAverageTickTime();
-        }
-        if (msptAverage.isEmpty()) {
-            msptAverage = SpigotMspt.getMsptAverage();
-        }
-        return msptAverage;
+    public Optional<long[]> getMspt() {
+        return SpigotMspt.getMspt();
     }
 }

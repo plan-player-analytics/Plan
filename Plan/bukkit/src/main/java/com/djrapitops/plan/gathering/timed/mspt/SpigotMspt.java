@@ -19,8 +19,6 @@ package com.djrapitops.plan.gathering.timed.mspt;
 import com.djrapitops.plan.utilities.java.Reflection;
 
 import java.util.Optional;
-import java.util.OptionalDouble;
-import java.util.stream.LongStream;
 
 /**
  * Accessor for the average MSPT field in MinecraftServer class which is a long[] array with 100 values.
@@ -29,13 +27,8 @@ import java.util.stream.LongStream;
  */
 public class SpigotMspt {
 
-    public static Optional<Double> getMsptAverage() {
-        return Optional.ofNullable(getValue())
-                .map(value -> {
-                    if (value.length <= 0) return null;
-                    OptionalDouble average = LongStream.of(value).filter(i -> i != 0L).average();
-                    return average.isPresent() ? average.getAsDouble() : null;
-                });
+    public static Optional<long[]> getMspt() {
+        return Optional.ofNullable(getValue());
     }
 
     private static long[] getValue() {

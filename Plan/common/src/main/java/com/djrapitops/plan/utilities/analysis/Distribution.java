@@ -50,4 +50,10 @@ public class Distribution {
         if (lastInPercentile <= 0) return Optional.empty();
         return Optional.of(values.get(lastInPercentile));
     }
+
+    public void addPositive(long[] values) {
+        for (long value : values) {
+            if (value > 0) add(value);
+        }
+    }
 }
