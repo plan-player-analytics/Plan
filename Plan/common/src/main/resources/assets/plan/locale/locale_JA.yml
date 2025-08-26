@@ -488,7 +488,7 @@ html:
         mostActiveGamemode: "最も使用したゲームモード"
         mostPlayedWorld: "よくプレイしているワールド"
         mspt: "MSPT"
-        msptAverage: "Average MSPT"
+        msptAverage: "MSPT Average"
         msptFull: "Milliseconds Per Tick"
         msptPercentile: "MSPT {{percentile}}th Percentile"
         name: "名前"

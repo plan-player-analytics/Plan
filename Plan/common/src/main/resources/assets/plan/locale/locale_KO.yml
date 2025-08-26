@@ -488,7 +488,7 @@ html:
         mostActiveGamemode: "가장 활동적인 게임모드"
         mostPlayedWorld: "가장 많이 플레이 한 맵"
         mspt: "MSPT"
-        msptAverage: "Average MSPT"
+        msptAverage: "MSPT Average"
         msptFull: "Milliseconds Per Tick"
         msptPercentile: "MSPT {{percentile}}th Percentile"
         name: "이름"

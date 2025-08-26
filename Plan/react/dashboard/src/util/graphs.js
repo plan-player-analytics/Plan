@@ -35,6 +35,10 @@ export const tooltip = {
     zeroDecimals: {valueDecimals: 0}
 }
 
+export const hasValuesInSeries = series => {
+    return Boolean(series.find(data => Boolean(data[1])))
+};
+
 export const mapPerformanceDataToSeries = performanceData => {
     const playersOnline = [];
     const tps = [];
@@ -43,6 +47,8 @@ export const mapPerformanceDataToSeries = performanceData => {
     const entities = [];
     const chunks = [];
     const disk = [];
+    const msptAverage = [];
+    const mspt95thPercentile = [];
 
     return new Promise((resolve => {
         let i = 0;
@@ -60,9 +66,11 @@ export const mapPerformanceDataToSeries = performanceData => {
                 entities[i] = [date, entry[5]];
                 chunks[i] = [date, entry[6]];
                 disk[i] = [date, entry[7]];
+                msptAverage[i] = [date, entry[8]];
+                mspt95thPercentile[i] = [date, entry[9]];
             }
             if (i >= length) {
-                resolve({playersOnline, tps, cpu, ram, entities, chunks, disk})
+                resolve({playersOnline, tps, cpu, ram, entities, chunks, disk, msptAverage, mspt95thPercentile});
             } else {
                 setTimeout(processNextThousand, 10);
             }

@@ -488,7 +488,7 @@ html:
         mostActiveGamemode: "Aktiivisin pelitila"
         mostPlayedWorld: "Eniten pelattu maailma"
         mspt: "MSPT"
-        msptAverage: "Average MSPT"
+        msptAverage: "MSPT Average"
         msptFull: "Milliseconds Per Tick"
         msptPercentile: "MSPT {{percentile}}th Percentile"
         name: "Nimi"

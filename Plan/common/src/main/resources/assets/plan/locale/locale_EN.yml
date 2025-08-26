@@ -488,7 +488,7 @@ html:
         mostActiveGamemode: "Most Active Gamemode"
         mostPlayedWorld: "Most played World"
         mspt: "MSPT"
-        msptAverage: "Average MSPT"
+        msptAverage: "MSPT Average"
         msptFull: "Milliseconds Per Tick"
         msptPercentile: "MSPT {{percentile}}th Percentile"
         name: "Name"

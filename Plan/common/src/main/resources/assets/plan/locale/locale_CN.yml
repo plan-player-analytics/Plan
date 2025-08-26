@@ -488,7 +488,7 @@ html:
         mostActiveGamemode: "最常玩的游戏模式"
         mostPlayedWorld: "玩的最多的世界"
         mspt: "MSPT"
-        msptAverage: "Average MSPT"
+        msptAverage: "MSPT Average"
         msptFull: "Milliseconds Per Tick"
         msptPercentile: "MSPT {{percentile}}th Percentile"
         name: "名称"
