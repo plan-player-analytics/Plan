@@ -18,6 +18,7 @@ import AsNumbersTable from "./AsNumbersTable";
 import {ChartLoader} from "../navigation/Loader";
 import FormattedTime from "../text/FormattedTime.jsx";
 import {localeService} from "../../service/localeService.js";
+import {orUnavailable} from "../../util/formatters.js";
 
 const PerformanceAsNumbersTable = ({data, servers}) => {
     const {t} = useTranslation();
@@ -83,9 +84,9 @@ const PerformanceAsNumbersTable = ({data, servers}) => {
             <TableRow icon={faStopwatch} color="mspt-average" text={t('html.label.msptAverage')}
                       title={t('html.label.msptFull')}
                       values={[
-                          <>{localeService.localizePing(data.mspt_average_30d || t('plugin.generic.unavailable'))} {noTPSOnProxies}</>,
-                          <>{localeService.localizePing(data.mspt_average_7d || t('plugin.generic.unavailable'))} {noTPSOnProxies}</>,
-                          <>{localeService.localizePing(data.mspt_average_24h || t('plugin.generic.unavailable'))} {noTPSOnProxies}</>
+                          <>{localeService.localizePing(orUnavailable(data.mspt_average_30d, t))} {noTPSOnProxies}</>,
+                          <>{localeService.localizePing(orUnavailable(data.mspt_average_7d, t))} {noTPSOnProxies}</>,
+                          <>{localeService.localizePing(orUnavailable(data.mspt_average_24h, t))} {noTPSOnProxies}</>
                       ]}/>
             <TableRow icon={faTachometerAlt} color="cpu" text={t('html.label.averageCpuUsage')}
                       values={[

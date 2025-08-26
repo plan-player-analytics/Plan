@@ -14,6 +14,7 @@ import {
     faInfoCircle,
     faLocationArrow,
     faSearch,
+    faSignsPost,
     faUserGroup,
     faUsers,
     faUsersViewfinder
@@ -205,7 +206,8 @@ const ServerPage = () => {
         if (identityLoadingError.status === 404) return <ErrorPage
             error={{
                 title: t('html.error.404NotFound'),
-                message: t(staticSite ? 'html.error.serverNotExported' : 'html.error.serverNotSeen')
+                message: t(staticSite ? 'html.error.serverNotExported' : 'html.error.serverNotSeen'),
+                icon: faSignsPost
             }}/>
         return <ErrorPage error={identityLoadingError}/>
     }

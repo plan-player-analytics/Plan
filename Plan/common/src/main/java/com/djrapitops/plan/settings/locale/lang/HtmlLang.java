@@ -221,6 +221,7 @@ public enum HtmlLang implements Lang {
     TITLE_TITLE_PLAYER_PUNCHCARD("html.label.punchcard", "Punchcard"),
     TITLE_ALL_TIME("html.label.allTime", "All Time"),
     LABEL_NAME("html.label.name", "Name"),
+    LABEL_ERROR_INFORMATION("html.label.errorInformation", "Error information"),
     // React
     LABEL_TITLE_SESSION_CALENDAR("html.label.sessionCalendar", "Session Calendar"),
     LABEL_TITLE_SERVER_CALENDAR("html.label.serverCalendar", "Server Calendar"),

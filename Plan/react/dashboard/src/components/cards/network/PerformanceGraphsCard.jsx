@@ -190,6 +190,14 @@ const PerformanceGraphsCard = ({data}) => {
             element: <Tab id={'mspt'} data={performanceSeries.msptAverage} yAxis={yAxisConfigurations.MSPT}/>,
             disabled: !dataIncludesGameServers
         }, {
+            name: t('html.label.msptPercentile', {percentile: 95}),
+            icon: faStopwatch,
+            color: 'mspt-percentile',
+            href: 'mspt-percentile',
+            element: <Tab id={'mspt-percentile'} data={performanceSeries.mspt95thPercentile}
+                          yAxis={yAxisConfigurations.MSPT}/>,
+            disabled: !dataIncludesGameServers
+        }, {
             name: t('html.label.cpu'), icon: faTachometerAlt, color: 'cpu', href: 'cpu',
             element: <Tab id={'cpu'} data={performanceSeries.cpu} yAxis={yAxisConfigurations.CPU}/>
         }, {
