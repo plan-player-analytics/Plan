@@ -49,6 +49,12 @@ public class Average {
         return average;
     }
 
+    public void addNonNull(Double value) {
+        if (value != null && !value.isNaN()) {
+            add(value);
+        }
+    }
+
     public void addPositive(long[] values) {
         for (long value : values) {
             if (value > 0) add(value);

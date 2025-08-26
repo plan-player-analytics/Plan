@@ -647,6 +647,14 @@
     color: var(--color-data-performance-tps);
 }
 
+.col-mspt-average {
+    color: var(--color-data-performance-mspt-average);
+}
+
+.col-mspt-percentile {
+    color: var(--color-data-performance-mspt-percentile);
+}
+
 .bg-tps {
     background-color: var(--color-data-performance-tps);
 }

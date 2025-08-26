@@ -128,6 +128,10 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
         numbers.put("min_disk_7d", formatBytes(tpsDataWeek.minFreeDisk()));
         numbers.put("min_disk_24h", formatBytes(tpsDataDay.minFreeDisk()));
 
+        numbers.put("mspt_average_30d", format(tpsDataMonth.averageMspt()));
+        numbers.put("mspt_average_7d", format(tpsDataWeek.averageMspt()));
+        numbers.put("mspt_average_24h", format(tpsDataDay.averageMspt()));
+
         return numbers;
     }
 
@@ -155,11 +159,13 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
         double averageCPU = lowTPS.averageCPU();
         double averageEntities = lowTPS.averageEntities();
         double averageChunks = lowTPS.averageChunks();
+        double averageMspt = lowTPS.averageMspt();
         insights.put("low_tps_players", avgPlayersOnline != -1 ? decimals.apply(avgPlayersOnline) : HtmlLang.TEXT_NO_LOW_TPS.getKey());
         insights.put("low_tps_tps", averageTPS != -1 ? decimals.apply(averageTPS) : "-");
         insights.put("low_tps_cpu", averageCPU != -1 ? decimals.apply(averageCPU) : "-");
         insights.put("low_tps_entities", averageEntities != -1 ? decimals.apply(averageEntities) : "-");
         insights.put("low_tps_chunks", averageChunks != -1 ? decimals.apply(averageChunks) : "-");
+        insights.put("low_tps_mspt", averageMspt > 0 ? decimals.apply(averageMspt) : "-");
 
         return insights;
     }

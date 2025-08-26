@@ -100,6 +100,16 @@ export const yAxisConfigurations = {
         softMin: 0,
         softMax: 20
     },
+    MSPT: {
+        opposite: true,
+        labels: {
+            formatter: function () {
+                return localeService.localizePing(this.value);
+            }
+        },
+        softMin: 0,
+        softMax: 50
+    },
     CPU: {
         opposite: true,
         labels: {
