@@ -58,8 +58,8 @@ public class TPSQueries {
                     max("t." + CPU_USAGE) + " as " + CPU_USAGE + ',' +
                     max("t." + ENTITIES) + " as " + ENTITIES + ',' +
                     max("t." + CHUNKS) + " as " + CHUNKS + ',' +
-                    max("t." + FREE_DISK) + " as " + FREE_DISK +
-                    min("t." + MSPT_AVERAGE) + " as " + MSPT_AVERAGE +
+                    max("t." + FREE_DISK) + " as " + FREE_DISK + ',' +
+                    min("t." + MSPT_AVERAGE) + " as " + MSPT_AVERAGE + ',' +
                     max("t." + MSPT_95TH_PERCENTILE) + " as " + MSPT_95TH_PERCENTILE +
                     FROM + TABLE_NAME + " t" +
                     WHERE + SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
