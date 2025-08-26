@@ -23,7 +23,7 @@ const PerformanceInsightsCard = ({data}) => {
                        value={data.low_tps_entities}/>
             <Datapoint name={t('html.label.averageTps')} icon={faTachometerAlt} color="tps-low-spikes"
                        value={data.low_tps_tps}/>
-            <Datapoint name={t('html.label.averageMspt')} icon={faStopwatch} color="tps-low-spikes"
+            <Datapoint name={t('html.label.msptAverage')} icon={faStopwatch} color="tps-low-spikes"
                        value={data.low_tps_mspt}/>
         </InsightsFor30DaysCard>
     )
