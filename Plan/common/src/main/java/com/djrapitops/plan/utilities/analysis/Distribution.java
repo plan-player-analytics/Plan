@@ -21,7 +21,7 @@ import java.util.List;
 import java.util.Optional;
 
 /**
- * Utility for calculating nth percentile values, eg 95th percentile.
+ * Utility for calculating nth percentile values, e.g. 95th percentile.
  *
  * @author AuroraLS3
  */
@@ -55,5 +55,9 @@ public class Distribution {
         for (long value : values) {
             if (value > 0) add(value);
         }
+    }
+
+    public void reset() {
+        values.clear();
     }
 }

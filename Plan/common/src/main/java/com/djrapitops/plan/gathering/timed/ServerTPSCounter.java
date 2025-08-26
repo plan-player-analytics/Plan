@@ -118,6 +118,7 @@ public class ServerTPSCounter<W> extends TPSCounter {
         Double msptAverage = mspt.getAverageAndReset();
         if (msptAverage <= 0) msptAverage = null;
         Double mspt95thPercentile = msptDistribution.getNthPercentile(0.95).orElse(null);
+        msptDistribution.reset();
 
         dbSystem.getDatabase().executeTransaction(new TPSStoreTransaction(
                 logger,
