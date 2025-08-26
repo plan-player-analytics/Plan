@@ -78,7 +78,7 @@ const AllPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
                 }
             },
             softMin: 0,
-            softMax: 2
+            softMax: 50
         },
     ]
 
