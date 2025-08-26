@@ -38,7 +38,8 @@ public class SpigotMspt {
             Class<?> minecraftServerClass = Reflection.getMinecraftClass("MinecraftServer");
             Object minecraftServer = Reflection.getField(minecraftServerClass, "SERVER", minecraftServerClass).get(null);
 
-            return Reflection.findField(minecraftServerClass, long[].class).get(minecraftServer);
+            Reflection.FieldAccessor<long[]> field = Reflection.findField(minecraftServerClass, long[].class);
+            return field.get(minecraftServer);
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError e) {
             return null;
         }

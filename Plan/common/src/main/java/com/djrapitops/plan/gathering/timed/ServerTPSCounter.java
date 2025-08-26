@@ -103,6 +103,10 @@ public class ServerTPSCounter<W> extends TPSCounter {
         pulseCounter++;
     }
 
+    private static double nanosToMillis(Double value) {
+        return value * 1.0E-6D;
+    }
+
     private void save(double averageTPS, long time) {
         long timeLastMinute = time - TimeUnit.MINUTES.toMillis(1L);
         int maxPlayers = playersOnline.getMaxAndReset();
@@ -115,9 +119,11 @@ public class ServerTPSCounter<W> extends TPSCounter {
             chunkCount += serverSensor.getChunkCount(world);
         }
         long freeDiskSpace = systemUsage.getFreeDiskSpace();
-        Double msptAverage = mspt.getAverageAndReset();
+        Double msptAverage = nanosToMillis(mspt.getAverageAndReset());
         if (msptAverage <= 0) msptAverage = null;
-        Double mspt95thPercentile = msptDistribution.getNthPercentile(0.95).orElse(null);
+        Double mspt95thPercentile = msptDistribution.getNthPercentile(0.95)
+                .map(ServerTPSCounter::nanosToMillis)
+                .orElse(null);
         msptDistribution.reset();
 
         dbSystem.getDatabase().executeTransaction(new TPSStoreTransaction(
