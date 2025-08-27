@@ -36,7 +36,7 @@ export const tooltip = {
 }
 
 export const hasValuesInSeries = series => {
-    return Boolean(series.find(data => Boolean(data[1])))
+    return Boolean(series?.find(data => Boolean(data[1])))
 };
 
 export const mapPerformanceDataToSeries = performanceData => {

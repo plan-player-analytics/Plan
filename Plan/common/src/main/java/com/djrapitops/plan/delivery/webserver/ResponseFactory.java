@@ -558,6 +558,7 @@ public class ResponseFactory {
             String resourceName = themeName + ".json";
             WebResource foundTheme = files.attemptToFind(themeDirectory, resourceName)
                     .map(file -> (Resource) new FileResource(file.getName(), file))
+                    .filter(file -> request.getQuery().get("jarOnly").isEmpty())
                     .orElseGet(() -> files.getResourceFromJar("themes/" + themeName + ".json"))
                     .asWebResource();
 
