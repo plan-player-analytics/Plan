@@ -19,6 +19,7 @@ package com.djrapitops.plan.utilities.analysis;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.UnaryOperator;
 
 /**
  * Utility for calculating nth percentile values, e.g. 95th percentile.
@@ -51,13 +52,13 @@ public class Distribution {
         return Optional.of(values.get(lastInPercentile));
     }
 
-    public void addPositive(long[] values) {
-        for (long value : values) {
-            if (value > 0) add(value);
-        }
-    }
-
     public void reset() {
         values.clear();
+    }
+
+    public void addPositive(long[] values, UnaryOperator<Long> mappingFunction) {
+        for (long value : values) {
+            if (value > 0) add(mappingFunction.apply(value));
+        }
     }
 }

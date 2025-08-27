@@ -84,6 +84,10 @@ public class ServerTPSCounter<W> extends TPSCounter {
         msptDistribution = new Distribution();
     }
 
+    private static long nanosToMillis(Long value) {
+        return value / 1000000L;
+    }
+
     @Override
     public void pulse() {
         long time = System.currentTimeMillis();
@@ -95,16 +99,12 @@ public class ServerTPSCounter<W> extends TPSCounter {
         // TPSCounter is pulsed once every 20 ticks, so this should prevent duplicate values.
         if (pulseCounter > 0 && pulseCounter % 5 == 0) {
             serverSensor.getMspt().ifPresent(last100ticks -> {
-                mspt.addPositive(last100ticks);
-                msptDistribution.addPositive(last100ticks);
+                mspt.addPositive(last100ticks, ServerTPSCounter::nanosToMillis);
+                msptDistribution.addPositive(last100ticks, ServerTPSCounter::nanosToMillis);
             });
         }
         result.ifPresent(tps -> save(tps, time));
         pulseCounter++;
-    }
-
-    private static double nanosToMillis(Double value) {
-        return value * 1.0E-6D;
     }
 
     private void save(double averageTPS, long time) {
@@ -119,10 +119,9 @@ public class ServerTPSCounter<W> extends TPSCounter {
             chunkCount += serverSensor.getChunkCount(world);
         }
         long freeDiskSpace = systemUsage.getFreeDiskSpace();
-        Double msptAverage = nanosToMillis(mspt.getAverageAndReset());
+        Double msptAverage = mspt.getAverageAndReset();
         if (msptAverage <= 0) msptAverage = null;
         Double mspt95thPercentile = msptDistribution.getNthPercentile(0.95)
-                .map(ServerTPSCounter::nanosToMillis)
                 .orElse(null);
         msptDistribution.reset();
 

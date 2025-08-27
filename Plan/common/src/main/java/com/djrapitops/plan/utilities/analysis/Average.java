@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.utilities.analysis;
 
+import java.util.function.UnaryOperator;
+
 /**
  * Utility for averaging data.
  *
@@ -55,9 +57,9 @@ public class Average {
         }
     }
 
-    public void addPositive(long[] values) {
+    public void addPositive(long[] values, UnaryOperator<Long> mappingFunction) {
         for (long value : values) {
-            if (value > 0) add(value);
+            if (value > 0) add(mappingFunction.apply(value));
         }
     }
 }
