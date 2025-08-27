@@ -33,8 +33,6 @@ public class SpigotMspt {
 
     private static long[] getValue() {
         try {
-            // Special thanks to Fuzzlemann for figuring out the methods required for this check.
-            // https://github.com/plan-player-analytics/Plan/issues/769#issuecomment-433898242
             Class<?> minecraftServerClass = Reflection.getMinecraftClass("MinecraftServer");
             Object minecraftServer = Reflection.getField(minecraftServerClass, "SERVER", minecraftServerClass).get(null);
 
