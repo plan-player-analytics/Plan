@@ -103,6 +103,7 @@ public enum WebPermission implements Supplier<String>, Lang {
     PAGE_SERVER_PERFORMANCE_GRAPHS_CHUNKS("See Chunk count data in Performance graphs"),
     PAGE_SERVER_PERFORMANCE_GRAPHS_DISK("See Disk Space usage Performance graphs"),
     PAGE_SERVER_PERFORMANCE_GRAPHS_PING("See Ping data in Performance graphs"),
+    PAGE_SERVER_PERFORMANCE_GRAPHS_MSPT("See MSPT data in Performance graphs"),
     PAGE_SERVER_PERFORMANCE_OVERVIEW("See Performance numbers"),
     PAGE_SERVER_PLUGIN_HISTORY("See Plugin History"),
     PAGE_SERVER_PLUGINS("See Plugins -tabs of servers"),
