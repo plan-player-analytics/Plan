@@ -2366,7 +2366,7 @@ lodash@^4.15.0, lodash@^4.17.20, lodash@^4.17.21:
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.21.tgz#679591c564c3bffaae8454cf0b3df370c3d6911c"
   integrity sha512-v2kDEe57lecTulaDIuNTPy3Ry4gLGJ6Z1O3vE1krgXZNrsQ+LFTGHVxVjcXPs17LhbZVGedAJv8XZ1tvj5FvSg==
 
-loose-envify@^1.0.0, loose-envify@^1.1.0, loose-envify@^1.4.0:
+loose-envify@^1.0.0, loose-envify@^1.4.0:
   version "1.4.0"
   resolved "https://registry.yarnpkg.com/loose-envify/-/loose-envify-1.4.0.tgz#71ee51fa7be4caec1a63839f7e682d8132d30caf"
   integrity sha512-lyuxPGr/Wfhrlem2CL/UcnUc1zcqKAImBDzukY7Y5F/yQiNdko6+fRLevlw1HgMySw7f611UIY408EtxRSoK3Q==
@@ -2774,15 +2774,7 @@ react-debounce-input@=3.3.0:
     lodash.debounce "^4"
     prop-types "^15.8.1"
 
-"react-dom@>=16.8.0 <19":
-  version "18.3.1"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-18.3.1.tgz#c2265d79511b57d479b3dd3fdfa51536494c5cb4"
-  integrity sha512-5m4nQKp+rZRb09LNH59GM4BxTh9251/ylbKIbpe7TpGxfJ+9kv6BLkLBXIjjspbgbnIBNqlI23tRnTWT0snUIw==
-  dependencies:
-    loose-envify "^1.1.0"
-    scheduler "^0.23.2"
-
-react-dom@^19.1.1:
+"react-dom@>=16.8.0 <20", react-dom@^19.1.1:
   version "19.1.1"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-19.1.1.tgz#2daa9ff7f3ae384aeb30e76d5ee38c046dc89893"
   integrity sha512-Dlq/5LAZgF0Gaz6yiqZCf6VCcZs1ghAJyrsu84Q/GT0gV+mCxbfmKNoGRKBYMJ8IEdGPqu49YWXD02GCknEDkw==
@@ -2887,14 +2879,7 @@ react-transition-group@^4.3.0, react-transition-group@^4.4.5:
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
 
-"react@>=16.8.0 <19":
-  version "18.3.1"
-  resolved "https://registry.yarnpkg.com/react/-/react-18.3.1.tgz#49ab892009c53933625bd16b2533fc754cab2891"
-  integrity sha512-wS+hAgJShR0KhEvPJArfuPVN1+Hz1t0Y6n5jLrGQbkb4urgPE/0Rve+1kMB1v/oWgHgm4WIcV+i7F2pTVj+2iQ==
-  dependencies:
-    loose-envify "^1.1.0"
-
-react@^19.1.1:
+"react@>=16.8.0 <20", react@^19.1.1:
   version "19.1.1"
   resolved "https://registry.yarnpkg.com/react/-/react-19.1.1.tgz#06d9149ec5e083a67f9a1e39ce97b06a03b644af"
   integrity sha512-w8nqGImo45dmMIfljjMwOGtbmC/mk4CMYhWIicdSflH91J9TyCyczcPFXJzrZ/ZXcgGRFeP6BU0BEJTw6tZdfQ==
@@ -3030,13 +3015,6 @@ sass@^1.90.0:
   optionalDependencies:
     "@parcel/watcher" "^2.4.1"
 
-scheduler@^0.23.2:
-  version "0.23.2"
-  resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.23.2.tgz#414ba64a3b282892e944cf2108ecc078d115cdc3"
-  integrity sha512-UOShsPwz7NrMUqhR6t0hWjFduvOzbtv7toDH1/hIrfRNIDBnnBWd0CwJTGvTpngVlmwGCdP9/Zl/tVrDqcuYzQ==
-  dependencies:
-    loose-envify "^1.1.0"
-
 scheduler@^0.26.0:
   version "0.26.0"
   resolved "https://registry.yarnpkg.com/scheduler/-/scheduler-0.26.0.tgz#4ce8a8c2a2095f13ea11bf9a445be50c555d6337"
@@ -3076,7 +3054,7 @@ set-function-length@^1.2.2:
     gopd "^1.0.1"
     has-property-descriptors "^1.0.2"
 
-sha.js@^2.4.11:
+sha.js@^2.4.12:
   version "2.4.12"
   resolved "https://registry.yarnpkg.com/sha.js/-/sha.js-2.4.12.tgz#eb8b568bf383dfd1867a32c3f2b74eb52bdbf23f"
   integrity sha512-8LzC5+bvI45BjpfXU8V5fdU2mfeKiQe1D1gIMn7XUlF3OTUrpdJpPPH4EMAnF0DsHHdSZqCdSss5qCmJKuiO3w==
@@ -3197,10 +3175,10 @@ swagger-client@^3.35.5:
     ramda "^0.30.1"
     ramda-adjunct "^5.1.0"
 
-swagger-ui@^5.27.1:
-  version "5.27.1"
-  resolved "https://registry.yarnpkg.com/swagger-ui/-/swagger-ui-5.27.1.tgz#44bc4dd0d2679874a374bfa420171beca0957c58"
-  integrity sha512-cGQyafnHLmVFiBeFrbUzUtMn+R0/XI7r69T/cxp5bkusTdLu1Ul8A+8j9hgThYLEH33LukOzldtiuu4gr8XE6g==
+swagger-ui@^5.28.0:
+  version "5.28.0"
+  resolved "https://registry.yarnpkg.com/swagger-ui/-/swagger-ui-5.28.0.tgz#7a103db8d5e260d8c9fe9b8a09165bd42087b453"
+  integrity sha512-JT3xJsQmnmBNXoklfsiTUZ4pGRUDGKtyhfSjBJQswfX1drAnZVmW3cb7DfLLTJ4l6zWAIeKwMF42513zvS48iA==
   dependencies:
     "@babel/runtime-corejs3" "^7.27.1"
     "@scarf/scarf" "=1.4.0"
@@ -3217,10 +3195,10 @@ swagger-ui@^5.27.1:
     prop-types "^15.8.1"
     randexp "^0.5.3"
     randombytes "^2.1.0"
-    react ">=16.8.0 <19"
+    react ">=16.8.0 <20"
     react-copy-to-clipboard "5.1.0"
     react-debounce-input "=3.3.0"
-    react-dom ">=16.8.0 <19"
+    react-dom ">=16.8.0 <20"
     react-immutable-proptypes "2.2.0"
     react-immutable-pure-component "^2.2.0"
     react-inspector "^6.0.1"
@@ -3231,7 +3209,7 @@ swagger-ui@^5.27.1:
     remarkable "^2.0.1"
     reselect "^5.1.1"
     serialize-error "^8.1.0"
-    sha.js "^2.4.11"
+    sha.js "^2.4.12"
     swagger-client "^3.35.5"
     url-parse "^1.5.10"
     xml "=1.0.1"
