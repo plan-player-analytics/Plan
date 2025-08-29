@@ -55,4 +55,10 @@ public abstract class WhereBuilder extends SqlBuilder {
         this.conditions++;
         return this;
     }
+
+    public WhereBuilder limit(int limit) {
+        append(LIMIT);
+        append(Integer.toString(limit));
+        return this;
+    }
 }

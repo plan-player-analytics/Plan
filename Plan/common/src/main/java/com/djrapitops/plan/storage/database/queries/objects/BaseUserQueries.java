@@ -117,4 +117,12 @@ public class BaseUserQueries {
 
         return db -> db.querySet(sql, RowExtractors.getUUID(UsersTable.USER_UUID));
     }
+
+    public static Query<List<BaseUser>> fetchBaseUsers(int afterId, int limit) {
+        String sql = Select.all(UsersTable.TABLE_NAME)
+                .where(UsersTable.ID + ">" + afterId)
+                .limit(limit)
+                .toString();
+        return db -> db.queryList(sql, BaseUserQueries::extractBaseUser);
+    }
 }
