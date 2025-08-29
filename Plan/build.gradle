@@ -80,7 +80,7 @@ subprojects {
         adventureVersion = "4.24.0"
         hikariVersion = "7.0.2"
         slf4jVersion = "2.0.17"
-        geoIpVersion = "4.3.1"
+        geoIpVersion = "4.4.0"
         gsonVersion = "2.13.1"
         dependencyDownloadVersion = "2.0.0"
         ipAddressMatcherVersion = "5.5.1"
