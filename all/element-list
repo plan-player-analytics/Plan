@@ -91,7 +91,9 @@ com.djrapitops.plan.gathering.listeners.bungee
 com.djrapitops.plan.gathering.listeners.nukkit
 com.djrapitops.plan.gathering.listeners.sponge
 com.djrapitops.plan.gathering.listeners.velocity
+com.djrapitops.plan.gathering.mixin
 com.djrapitops.plan.gathering.timed
+com.djrapitops.plan.gathering.timed.mspt
 com.djrapitops.plan.identification
 com.djrapitops.plan.identification.properties
 com.djrapitops.plan.identification.storage
@@ -154,8 +156,8 @@ net.playeranalytics.plan.gathering
 net.playeranalytics.plan.gathering.domain
 net.playeranalytics.plan.gathering.listeners
 net.playeranalytics.plan.gathering.listeners.events
-net.playeranalytics.plan.gathering.listeners.events.mixin
 net.playeranalytics.plan.gathering.listeners.fabric
+net.playeranalytics.plan.gathering.mixin
 net.playeranalytics.plan.gathering.timed
 net.playeranalytics.plan.identification.properties
 net.playeranalytics.plan.modules.fabric

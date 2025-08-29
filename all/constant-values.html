@@ -785,7 +785,13 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color"><code>"id"</code></div>
 <div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.TPSTable.INSERT_STATEMENT">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/TPSTable.html#INSERT_STATEMENT">INSERT_STATEMENT</a></code></div>
-<div class="col-last even-row-color"><code>"INSERT INTO plan_tps (server_id,date,tps,players_online,cpu_usage,ram_usage,entities,chunks_loaded,free_disk_space) VALUES ((SELECT plan_servers.id FROM plan_servers WHERE plan_servers.uuid=? LIMIT 1),?, ?, ?, ?, ?, ?, ?, ?)"</code></div>
+<div class="col-last even-row-color"><code>"INSERT INTO plan_tps (server_id,date,tps,players_online,cpu_usage,ram_usage,entities,chunks_loaded,free_disk_space,mspt_average,mspt_95th_percentile) VALUES ((SELECT plan_servers.id FROM plan_servers WHERE plan_servers.uuid=? LIMIT 1),?, ?, ?, ?, ?, ?, ?, ?, ?, ?)"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.TPSTable.MSPT_95TH_PERCENTILE">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/TPSTable.html#MSPT_95TH_PERCENTILE">MSPT_95TH_PERCENTILE</a></code></div>
+<div class="col-last odd-row-color"><code>"mspt_95th_percentile"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.TPSTable.MSPT_AVERAGE">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/TPSTable.html#MSPT_AVERAGE">MSPT_AVERAGE</a></code></div>
+<div class="col-last even-row-color"><code>"mspt_average"</code></div>
 <div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.TPSTable.PLAYERS_ONLINE">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/TPSTable.html#PLAYERS_ONLINE">PLAYERS_ONLINE</a></code></div>
 <div class="col-last odd-row-color"><code>"players_online"</code></div>
