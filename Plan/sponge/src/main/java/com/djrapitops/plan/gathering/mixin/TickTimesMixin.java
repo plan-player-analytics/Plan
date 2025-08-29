@@ -14,13 +14,17 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.gathering.timed.mixin;
+package com.djrapitops.plan.gathering.mixin;
 
-import java.util.Optional;
+import net.minecraft.server.MinecraftServer;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
 /**
  * @author AuroraLS3
  */
-public interface TickTimesAccess {
-    Optional<long[]> getMspt();
+@Mixin(MinecraftServer.class)
+public interface TickTimesMixin {
+    @Accessor
+    long[] getTickTimesNanos();
 }

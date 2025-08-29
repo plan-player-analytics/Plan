@@ -1,7 +1,7 @@
 {
   "required": true,
   "minVersion": "0.8",
-  "package": "net.playeranalytics.plan.gathering.listeners.events.mixin",
+  "package": "net.playeranalytics.plan.gathering.mixin",
   "compatibilityLevel": "JAVA_17",
   "refmap": "plan-fabric-refmap.json",
   "mixins": [
@@ -10,7 +10,8 @@
     "PlayerManagerMixin",
     "ServerCommandSourceMixin",
     "ServerPlayerEntityMixin",
-    "ServerPlayNetworkHandlerMixin"
+    "ServerPlayNetworkHandlerMixin",
+    "TickTimesMixin"
   ],
   "injectors": {
     "defaultRequire": 1

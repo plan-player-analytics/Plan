@@ -17,7 +17,7 @@
 package com.djrapitops.plan.gathering;
 
 import com.djrapitops.plan.gathering.domain.PluginMetadata;
-import com.djrapitops.plan.gathering.timed.mixin.TickTimesAccess;
+import com.djrapitops.plan.gathering.mixin.TickTimesMixin;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.service.ban.BanService;
@@ -116,6 +116,6 @@ public class SpongeSensor implements ServerSensor<ServerWorld> {
 
     @Override
     public Optional<long[]> getMspt() {
-        return ((TickTimesAccess) game.server()).getMspt();
+        return Optional.ofNullable(((TickTimesMixin) game.server()).getTickTimesNanos());
     }
 }

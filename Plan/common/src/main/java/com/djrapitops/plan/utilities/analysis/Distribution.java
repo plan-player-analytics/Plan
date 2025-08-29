@@ -45,6 +45,8 @@ public class Distribution {
      * @return Highest value that matches percentile
      */
     public Optional<Double> getNthPercentile(double percentile) {
+        if (values.isEmpty()) return Optional.empty();
+
         values.sort(Double::compareTo);
         int count = values.size();
         int lastInPercentile = (int) Math.floor(count * percentile) - 1;
