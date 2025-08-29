@@ -66,7 +66,6 @@ public class NetworkPerformanceJSONResolver implements Resolver {
     private final DBSystem dbSystem;
 
     private final Formatter<Double> decimals;
-    private final Formatter<Long> timeAmount;
     private final Formatter<Double> percentage;
     private final Formatter<Double> byteSize;
     private final Gson gson;
@@ -83,7 +82,6 @@ public class NetworkPerformanceJSONResolver implements Resolver {
 
         decimals = formatters.decimals();
         percentage = formatters.percentage();
-        timeAmount = formatters.timeAmount();
         byteSize = formatters.byteSize();
         this.gson = gson;
     }
@@ -213,6 +211,9 @@ public class NetworkPerformanceJSONResolver implements Resolver {
         numbers.put("chunks_30d", format((int) tpsDataMonth.averageChunks()));
         numbers.put("chunks_7d", format((int) tpsDataWeek.averageChunks()));
         numbers.put("chunks_24h", format((int) tpsDataDay.averageChunks()));
+        numbers.put("mspt_average_30d", format(tpsDataMonth.averageMspt()));
+        numbers.put("mspt_average_7d", format(tpsDataWeek.averageMspt()));
+        numbers.put("mspt_average_24h", format(tpsDataDay.averageMspt()));
 
         return numbers;
     }

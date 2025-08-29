@@ -19,6 +19,7 @@ package com.djrapitops.plan.delivery.domain.mutators;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.LineGraph;
 import com.djrapitops.plan.delivery.rendering.json.graphs.line.Point;
 import com.djrapitops.plan.gathering.domain.TPS;
+import com.djrapitops.plan.utilities.analysis.Average;
 import com.djrapitops.plan.utilities.comparators.TPSComparator;
 import com.djrapitops.plan.utilities.java.Lists;
 
@@ -299,5 +300,13 @@ public class TPSMutator {
             arrays.add(entry);
             iterate += gapStrategy.fillFrequencyMs;
         }
+    }
+
+    public double averageMspt() {
+        Average average = new Average();
+        for (TPS tps : tpsData) {
+            average.addNonNull(tps.getMsptAverage());
+        }
+        return average.getAverageAndReset();
     }
 }

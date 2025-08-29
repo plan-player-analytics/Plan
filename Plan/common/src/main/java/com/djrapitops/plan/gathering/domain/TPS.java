@@ -35,6 +35,8 @@ public class TPS implements DateHolder {
     private final int entityCount;
     private final int chunksLoaded;
     private final long freeDiskSpace;
+    private Double msptAverage = null;
+    private Double mspt95thPercentile = null;
 
     /**
      * Constructor.
@@ -136,37 +138,48 @@ public class TPS implements DateHolder {
         return freeDiskSpace;
     }
 
+    public Double getMsptAverage() {
+        return msptAverage;
+    }
+
+    public void setMsptAverage(Double msptAverage) {
+        this.msptAverage = msptAverage;
+    }
+
+    public Double getMspt95thPercentile() {
+        return mspt95thPercentile;
+    }
+
+    public void setMspt95thPercentile(Double mspt95thPercentile) {
+        this.mspt95thPercentile = mspt95thPercentile;
+    }
+
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         TPS tps = (TPS) o;
-        return date == tps.date &&
-                Double.compare(tps.ticksPerSecond, ticksPerSecond) == 0 &&
-                players == tps.players &&
-                Double.compare(tps.cpuUsage, cpuUsage) == 0 &&
-                usedMemory == tps.usedMemory &&
-                entityCount == tps.entityCount &&
-                chunksLoaded == tps.chunksLoaded &&
-                freeDiskSpace == tps.freeDiskSpace;
+        return getDate() == tps.getDate() && Double.compare(getTicksPerSecond(), tps.getTicksPerSecond()) == 0 && getPlayers() == tps.getPlayers() && Double.compare(cpuUsage, tps.cpuUsage) == 0 && getUsedMemory() == tps.getUsedMemory() && getEntityCount() == tps.getEntityCount() && getChunksLoaded() == tps.getChunksLoaded() && getFreeDiskSpace() == tps.getFreeDiskSpace() && Objects.equals(getMsptAverage(), tps.getMsptAverage()) && Objects.equals(getMspt95thPercentile(), tps.getMspt95thPercentile());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(date, ticksPerSecond, players, cpuUsage, usedMemory, entityCount, chunksLoaded, freeDiskSpace);
+        return Objects.hash(getDate(), getTicksPerSecond(), getPlayers(), cpuUsage, getUsedMemory(), getEntityCount(), getChunksLoaded(), getFreeDiskSpace(), getMsptAverage(), getMspt95thPercentile());
     }
 
     @Override
     public String toString() {
         return "TPS{" +
-                "date=" + date + ", " +
-                "ticksPerSecond=" + ticksPerSecond + ", " +
-                "players=" + players + ", " +
-                "cpuUsage=" + cpuUsage + ", " +
-                "usedMemory=" + usedMemory + ", " +
-                "entityCount=" + entityCount + ", " +
-                "chunksLoaded=" + chunksLoaded + ", " +
-                "freeDiskSpace=" + freeDiskSpace + '}';
+                "date=" + date +
+                ", ticksPerSecond=" + ticksPerSecond +
+                ", players=" + players +
+                ", cpuUsage=" + cpuUsage +
+                ", usedMemory=" + usedMemory +
+                ", entityCount=" + entityCount +
+                ", chunksLoaded=" + chunksLoaded +
+                ", freeDiskSpace=" + freeDiskSpace +
+                ", msptAverage=" + msptAverage +
+                ", mspt95thPercentile=" + mspt95thPercentile +
+                '}';
     }
 
     public Number[] toArray() {
@@ -184,7 +197,9 @@ public class TPS implements DateHolder {
                 ram >= 0 ? ram : null,
                 entities >= 0 ? entities : null,
                 chunks >= 0 ? chunks : null,
-                disk >= 0 ? disk : null
+                disk >= 0 ? disk : null,
+                msptAverage,
+                mspt95thPercentile
         };
     }
 }

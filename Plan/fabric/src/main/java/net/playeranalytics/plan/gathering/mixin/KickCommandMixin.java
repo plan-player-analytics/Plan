@@ -14,22 +14,26 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package net.playeranalytics.plan.gathering.listeners.events.mixin;
+package net.playeranalytics.plan.gathering.mixin;
 
-import net.minecraft.network.packet.c2s.handshake.HandshakeC2SPacket;
-import net.minecraft.server.network.ServerHandshakeNetworkHandler;
+import net.minecraft.server.command.KickCommand;
+import net.minecraft.server.command.ServerCommandSource;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.text.Text;
 import net.playeranalytics.plan.gathering.listeners.events.PlanFabricEvents;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(ServerHandshakeNetworkHandler.class)
-public class ClientToServerHandshakePacketMixin {
+import java.util.Collection;
 
-    @Inject(method = "onHandshake", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerHandshakeNetworkHandler;login(Lnet/minecraft/network/packet/c2s/handshake/HandshakeC2SPacket;Z)V"))
-    public void onClientHandshakeFromNetwork(HandshakeC2SPacket packet, CallbackInfo ci) {
-        PlanFabricEvents.ON_HANDSHAKE.invoker().onHandshake(packet);
+@Mixin(KickCommand.class)
+public class KickCommandMixin {
+
+    @Inject(method = "execute", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;disconnect(Lnet/minecraft/text/Text;)V"))
+    private static void onKickPlayer(ServerCommandSource source, Collection<ServerPlayerEntity> targets, Text reason, CallbackInfoReturnable<Integer> cir) {
+        PlanFabricEvents.ON_KICKED.invoker().onKicked(source, targets, reason);
     }
 
 }

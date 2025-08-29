@@ -14,25 +14,31 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package net.playeranalytics.plan.gathering.listeners.events.mixin;
+package net.playeranalytics.plan.gathering.mixin;
 
-import com.mojang.authlib.GameProfile;
-import net.minecraft.server.PlayerManager;
-import net.minecraft.text.Text;
+import net.minecraft.entity.damage.DamageSource;
+import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.GameMode;
 import net.playeranalytics.plan.gathering.listeners.events.PlanFabricEvents;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.net.SocketAddress;
+@Mixin(ServerPlayerEntity.class)
+public class ServerPlayerEntityMixin {
 
-@Mixin(PlayerManager.class)
-public class PlayerManagerMixin {
+    @Inject(method = "changeGameMode", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V"))
+    public void onGameModeChanged(GameMode gameMode, CallbackInfoReturnable<Boolean> cir) {
+        PlanFabricEvents.ON_GAMEMODE_CHANGE.invoker().onGameModeChange((ServerPlayerEntity) (Object) this, gameMode);
+    }
 
-    @Inject(method = "checkCanJoin", at = @At(value = "TAIL"))
-    public void onLogin(SocketAddress address, GameProfile profile, CallbackInfoReturnable<Text> cir) {
-        PlanFabricEvents.ON_LOGIN.invoker().onLogin(address, profile, cir.getReturnValue());
+    @Inject(method = "onDeath", at = @At(value = "TAIL"))
+    public void onKillSelf(DamageSource source, CallbackInfo ci) {
+        if (source.getAttacker() == null) {
+            PlanFabricEvents.ON_KILLED.invoker().onKilled((ServerPlayerEntity) (Object) this, null);
+        }
     }
 
 }

@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
@@ -257,6 +258,8 @@ public class DataStoreQueries {
                 statement.setDouble(7, tps.getEntityCount());
                 statement.setDouble(8, tps.getChunksLoaded());
                 statement.setLong(9, tps.getFreeDiskSpace());
+                Sql.setDoubleOrNull(statement, 10, tps.getMsptAverage());
+                Sql.setDoubleOrNull(statement, 11, tps.getMspt95thPercentile());
             }
         };
     }

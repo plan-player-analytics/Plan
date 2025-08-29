@@ -342,7 +342,7 @@ export const ThemeEditContextProvider = ({children}) => {
             discardPossible: somethingToSave,
             save
         }
-    }, [edits, name]);
+    }, [edits, name, currentColors, currentNightColors, currentUseCases, currentNightModeUseCases]);
     return (<ThemeEditContext.Provider value={sharedState}>
             {children}
         </ThemeEditContext.Provider>

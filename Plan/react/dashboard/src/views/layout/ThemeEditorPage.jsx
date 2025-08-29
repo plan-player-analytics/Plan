@@ -49,7 +49,7 @@ const ThemeEditorPage = () => {
                             <FontAwesomeIcon icon={faInfoCircle}/> {t('html.label.themeEditor.lightModeInfo')}
                         </Alert>}
                         <ThemeContextProvider themeOverride={identifier} key={identifier}>
-                            <ThemeStorageContextProvider>
+                            <ThemeStorageContextProvider loadMissing>
                                 <WaitUntilThemeLoads/>
                             </ThemeStorageContextProvider>
                         </ThemeContextProvider>

@@ -33,6 +33,8 @@ public class TPSBuilder {
     protected int entityCount = -1;
     protected int chunksLoaded = -1;
     protected long freeDiskSpace = -1;
+    protected Double msptAverage = null;
+    protected Double mspt95thPercentile = null;
 
     /**
      * Hides constructor.
@@ -45,7 +47,10 @@ public class TPSBuilder {
     }
 
     public TPS toTPS() {
-        return new TPS(date, ticksPerSecond, players, cpuUsage, usedMemory, entityCount, chunksLoaded, freeDiskSpace);
+        TPS tps = new TPS(date, ticksPerSecond, players, cpuUsage, usedMemory, entityCount, chunksLoaded, freeDiskSpace);
+        tps.setMsptAverage(msptAverage);
+        tps.setMspt95thPercentile(mspt95thPercentile);
+        return tps;
     }
 
     public TPSBuilder date(long date) {
@@ -85,6 +90,30 @@ public class TPSBuilder {
 
     public TPSBuilder freeDiskSpace(long freeDiskSpace) {
         this.freeDiskSpace = freeDiskSpace;
+        return this;
+    }
+
+    public TPSBuilder msptAverage(Double msptAverage) {
+        this.msptAverage = msptAverage;
+        return this;
+    }
+
+    public TPSBuilder msptAverage(double msptAverage, boolean wasNull) {
+        if (!wasNull) {
+            this.msptAverage = msptAverage;
+        }
+        return this;
+    }
+
+    public TPSBuilder mspt95thPercentile(Double mspt95thPercentile) {
+        this.mspt95thPercentile = mspt95thPercentile;
+        return this;
+    }
+
+    public TPSBuilder mspt95thPercentile(double mspt95thPercentile, boolean wasNull) {
+        if (!wasNull) {
+            this.mspt95thPercentile = mspt95thPercentile;
+        }
         return this;
     }
 }

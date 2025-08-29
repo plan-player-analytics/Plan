@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 
-import {tooltip, translateLinegraphButtons} from "../../../util/graphs";
+import {hasValuesInSeries, tooltip, translateLinegraphButtons} from "../../../util/graphs";
 import Highcharts from "highcharts/esm/highstock";
 import "highcharts/esm/modules/no-data-to-display"
 import "highcharts/esm/modules/accessibility";
@@ -42,7 +42,7 @@ const TpsPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
                 data: dataSeries.playersOnline,
                 color: "var(--color-graphs-players-online)",
                 yAxis: 0
-            } : {},
+            } : undefined,
             tps: hasPermission('page.server.performance.graphs.tps') ? {
                 name: t('html.label.tps'),
                 type: spline,
@@ -51,7 +51,23 @@ const TpsPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
                 tooltip: tooltip.twoDecimals,
                 data: dataSeries.tps,
                 yAxis: 1
-            } : {}
+            } : undefined,
+            msptAverage: hasPermission('page.server.performance.graphs.mspt') && hasValuesInSeries(dataSeries.msptAverage) ? {
+                name: t('html.label.msptAverage'),
+                type: spline,
+                tooltip: tooltip.twoDecimals,
+                data: dataSeries.msptAverage,
+                color: "var(--color-data-performance-mspt-average)",
+                yAxis: 2
+            } : undefined,
+            mspt: hasPermission('page.server.performance.graphs.mspt') && hasValuesInSeries(dataSeries.mspt95thPercentile) ? {
+                name: t('html.label.msptPercentile', {percentile: 95}),
+                type: spline,
+                tooltip: tooltip.twoDecimals,
+                data: dataSeries.mspt95thPercentile,
+                color: "var(--color-data-performance-mspt-percentile)",
+                yAxis: 2
+            } : undefined
         };
 
         Highcharts.setOptions({
@@ -83,6 +99,15 @@ const TpsPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
                         return this.value + ' ' + t('html.label.tps')
                     }
                 }
+            }, {
+                opposite: true,
+                labels: {
+                    formatter: function () {
+                        return localeService.localizePing(this.value);
+                    }
+                },
+                softMin: 0,
+                softMax: 2
             }], xAxis: {
                 events: {
                     afterSetExtremes: (event) => {
@@ -102,7 +127,7 @@ const TpsPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
             time: {
                 timezoneOffset: timeZoneOffsetMinutes
             },
-            series: [series.playersOnline, series.tps, pluginHistorySeries].filter(s => s)
+            series: [series.playersOnline, series.tps, series.msptAverage, series.mspt, pluginHistorySeries].filter(s => s)
         }));
     }, [data, dataSeries, graphTheming, nightModeEnabled, id, t, timeZoneOffsetMinutes, pluginHistorySeries])
     useEffect(() => {

@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package net.playeranalytics.plan.gathering.listeners.events.mixin;
+package net.playeranalytics.plan.gathering.mixin;
 
 import com.djrapitops.plan.commands.use.*;
 import com.mojang.authlib.GameProfile;

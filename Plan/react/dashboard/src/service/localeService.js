@@ -5,6 +5,7 @@ import I18NextHttpBackend from 'i18next-http-backend';
 import {initReactI18next} from 'react-i18next';
 import {fetchAvailableLocales} from "./metadataService";
 import {baseAddress, staticSite} from "./backendConfiguration";
+import {isNumber} from "../util/isNumber.js";
 
 /**
  * A locale system for localizing the website.
@@ -122,9 +123,12 @@ export const localeService = {
     },
 
     localizePing: (value) => {
-        return new Intl.DurationFormat(localeService.getIntlFriendlyLocale(), {style: 'narrow'})
-            .format({milliseconds: 1})
-            .replace('1', value);
+        if (isNumber(value)) {
+            return new Intl.DurationFormat(localeService.getIntlFriendlyLocale(), {style: 'narrow'})
+                .format({milliseconds: 1})
+                .replace('1', value);
+        }
+        return value;
     }
 }
 

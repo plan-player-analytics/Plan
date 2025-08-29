@@ -196,6 +196,10 @@ public enum HtmlLang implements Lang {
     LABEL_AVERAGE_SERVER_UPTIME("html.label.averageServerUptime", "Average Uptime / Server"),
     LABEL_DURING_LOW_TPS("html.label.duringLowTps", "During Low TPS Spikes:"),
     TEXT_NO_LOW_TPS("html.text.noLowTps", "No low tps spikes"),
+    LABEL_MSPT("html.label.mspt", "MSPT"),
+    LABEL_AVERAGE_MSPT("html.label.msptAverage", "MSPT Average"),
+    LABEL_MSPT_FULL("html.label.msptFull", "Milliseconds Per Tick"),
+    LABEL_MSPT_PERCENTILE("html.label.msptPercentile", "MSPT {{percentile}}th Percentile"),
     // Player Page
     TITLE_SEEN_NICKNAMES("html.label.seenNicknames", "Seen Nicknames"),
     LABEL_LAST_SEEN("html.label.lastSeen", "Last Seen"),
@@ -217,6 +221,7 @@ public enum HtmlLang implements Lang {
     TITLE_TITLE_PLAYER_PUNCHCARD("html.label.punchcard", "Punchcard"),
     TITLE_ALL_TIME("html.label.allTime", "All Time"),
     LABEL_NAME("html.label.name", "Name"),
+    LABEL_ERROR_INFORMATION("html.label.errorInformation", "Error information"),
     // React
     LABEL_TITLE_SESSION_CALENDAR("html.label.sessionCalendar", "Session Calendar"),
     LABEL_TITLE_SERVER_CALENDAR("html.label.serverCalendar", "Server Calendar"),

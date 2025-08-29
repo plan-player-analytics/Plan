@@ -22,6 +22,7 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.TPSStoreTransaction;
 import com.djrapitops.plan.utilities.analysis.Average;
+import com.djrapitops.plan.utilities.analysis.Distribution;
 import com.djrapitops.plan.utilities.analysis.Maximum;
 import com.djrapitops.plan.utilities.analysis.TimerAverage;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
@@ -50,6 +51,10 @@ public class ServerTPSCounter<W> extends TPSCounter {
     private final Maximum.ForInteger playersOnline;
     private final Average cpu;
     private final Average ram;
+    private final Average mspt;
+    private final Distribution msptDistribution;
+
+    private int pulseCounter = 0;
 
     @Inject
     public ServerTPSCounter(
@@ -75,6 +80,12 @@ public class ServerTPSCounter<W> extends TPSCounter {
         playersOnline = new Maximum.ForInteger(0);
         cpu = new Average();
         ram = new Average();
+        mspt = new Average();
+        msptDistribution = new Distribution();
+    }
+
+    private static long nanosToMillis(Long value) {
+        return value / 1000000L;
     }
 
     @Override
@@ -84,7 +95,16 @@ public class ServerTPSCounter<W> extends TPSCounter {
         playersOnline.add(serverSensor.getOnlinePlayerCount());
         cpu.add(systemUsage.getCpu());
         ram.add(systemUsage.getRam());
+
+        // TPSCounter is pulsed once every 20 ticks, so this should prevent duplicate values.
+        if (pulseCounter > 0 && pulseCounter % 5 == 0) {
+            serverSensor.getMspt().ifPresent(last100ticks -> {
+                mspt.addPositive(last100ticks, ServerTPSCounter::nanosToMillis);
+                msptDistribution.addPositive(last100ticks, ServerTPSCounter::nanosToMillis);
+            });
+        }
         result.ifPresent(tps -> save(tps, time));
+        pulseCounter++;
     }
 
     private void save(double averageTPS, long time) {
@@ -99,6 +119,11 @@ public class ServerTPSCounter<W> extends TPSCounter {
             chunkCount += serverSensor.getChunkCount(world);
         }
         long freeDiskSpace = systemUsage.getFreeDiskSpace();
+        Double msptAverage = mspt.getAverageAndReset();
+        if (msptAverage <= 0) msptAverage = null;
+        Double mspt95thPercentile = msptDistribution.getNthPercentile(0.95)
+                .orElse(null);
+        msptDistribution.reset();
 
         dbSystem.getDatabase().executeTransaction(new TPSStoreTransaction(
                 logger,
@@ -112,6 +137,8 @@ public class ServerTPSCounter<W> extends TPSCounter {
                         .entities(entityCount)
                         .chunksLoaded(chunkCount)
                         .freeDiskSpace(freeDiskSpace)
+                        .msptAverage(msptAverage)
+                        .mspt95thPercentile(mspt95thPercentile)
                         .toTPS()
         ));
     }

@@ -3,6 +3,7 @@ import React from "react";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faBug} from "@fortawesome/free-solid-svg-icons";
 import LoadIn from "../components/animation/LoadIn";
+import {useTranslation} from "react-i18next";
 
 export const ErrorViewText = ({error}) => {
     console.error(error);
@@ -25,12 +26,13 @@ export const ErrorViewBody = ({error}) => {
 }
 
 export const ErrorViewCard = ({error}) => {
+    const {t} = useTranslation();
     return (
         <LoadIn>
             <Card>
                 <Card.Header>
                     <h6 className="col-text">
-                        <Fa icon={error.icon ? error.icon : faBug}/> Error information
+                        <Fa icon={error.icon ? error.icon : faBug}/> {error.title || t('html.label.errorInformation')}
                     </h6>
                 </Card.Header>
                 <ErrorViewBody error={error}/>

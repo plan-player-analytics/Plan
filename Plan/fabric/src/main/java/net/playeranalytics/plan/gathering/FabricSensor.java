@@ -23,6 +23,7 @@ import net.fabricmc.loader.impl.FabricLoaderImpl;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.dedicated.MinecraftDedicatedServer;
 import net.minecraft.server.world.ServerWorld;
+import net.playeranalytics.plan.gathering.mixin.TickTimesMixin;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -102,5 +103,10 @@ public class FabricSensor implements ServerSensor<ServerWorld> {
                         Optional.ofNullable(metadata.getName()).orElse(metadata.getId()),
                         metadata.getVersion().getFriendlyString()))
                 .toList();
+    }
+
+    @Override
+    public Optional<long[]> getMspt() {
+        return Optional.ofNullable(((TickTimesMixin) server).getTickTimes());
     }
 }

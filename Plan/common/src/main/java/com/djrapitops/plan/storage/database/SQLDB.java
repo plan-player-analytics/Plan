@@ -32,8 +32,7 @@ import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.OperationCriticalTransaction;
-import com.djrapitops.plan.storage.database.transactions.init.RemoveIncorrectTebexPackageDataPatch;
-import com.djrapitops.plan.storage.database.transactions.patches.*;
+import com.djrapitops.plan.storage.database.transactions.patches.Patch;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.java.ThrowableUtils;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
@@ -205,61 +204,7 @@ public abstract class SQLDB extends AbstractDatabase {
     }
 
     Patch[] patches() {
-        return new Patch[]{
-                new Version10Patch(),
-                new GeoInfoLastUsedPatch(),
-                new SessionAFKTimePatch(),
-                new KillsServerIDPatch(),
-                new WorldTimesSeverIDPatch(),
-                new WorldsServerIDPatch(),
-                new NicknameLastSeenPatch(),
-                new VersionTableRemovalPatch(),
-                new DiskUsagePatch(),
-                new WorldsOptimizationPatch(),
-                new KillsOptimizationPatch(),
-                new NicknamesOptimizationPatch(),
-                new TransferTableRemovalPatch(),
-                // new BadAFKThresholdValuePatch(),
-                new DeleteIPsPatch(),
-                new ExtensionShowInPlayersTablePatch(),
-                new ExtensionTableRowValueLengthPatch(),
-                new CommandUsageTableRemovalPatch(),
-                new BadNukkitRegisterValuePatch(),
-                new LinkedToSecurityTablePatch(),
-                new LinkUsersToPlayersSecurityTablePatch(),
-                new LitebansTableHeaderPatch(),
-                new UserInfoHostnamePatch(),
-                new ServerIsProxyPatch(),
-                new ServerTableRowPatch(),
-                new PlayerTableRowPatch(),
-                new ExtensionTableProviderValuesForPatch(),
-                new RemoveIncorrectTebexPackageDataPatch(),
-                new ExtensionTableProviderFormattersPatch(),
-                new ServerPlanVersionPatch(),
-                new RemoveDanglingUserDataPatch(),
-                new RemoveDanglingServerDataPatch(),
-                new GeoInfoOptimizationPatch(),
-                new PingOptimizationPatch(),
-                new UserInfoOptimizationPatch(),
-                new WorldTimesOptimizationPatch(),
-                new SessionsOptimizationPatch(),
-                new UserInfoHostnameAllowNullPatch(),
-                new RegisterDateMinimizationPatch(),
-                new UsersTableNameLengthPatch(),
-                new SessionJoinAddressPatch(),
-                new RemoveUsernameFromAccessLogPatch(),
-                new ComponentColumnToExtensionDataPatch(),
-                new BadJoinAddressDataCorrectionPatch(),
-                new AfterBadJoinAddressDataCorrectionPatch(),
-                new CorrectWrongCharacterEncodingPatch(logger, config),
-                new UpdateWebPermissionsPatch(),
-                new WebGroupDefaultGroupsPatch(),
-                new WebGroupAddMissingAdminGroupPatch(),
-                new LegacyPermissionLevelGroupsPatch(),
-                new SecurityTableGroupPatch(),
-                new ExtensionStringValueLengthPatch(),
-                new CookieTableIpAddressPatch()
-        };
+        return Patches.getAll(logger, config);
     }
 
     /**

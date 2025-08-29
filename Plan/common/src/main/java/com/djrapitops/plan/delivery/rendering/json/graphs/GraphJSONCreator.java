@@ -162,7 +162,7 @@ public class GraphJSONCreator {
         )));
 
         return Maps.builder(String.class, Object.class)
-                .put("keys", new String[]{"date", "playersOnline", "tps", "cpu", "ram", "entities", "chunks", "disk"})
+                .put("keys", new String[]{"date", "playersOnline", "tps", "cpu", "ram", "entities", "chunks", "disk", "msptAverage", "mspt95thPercentile"})
                 .put("values", values)
                 .put("colors", Maps.builder(String.class, Object.class)
                         .put("playersOnline", ThemeVal.GRAPH_PLAYERS_ONLINE.getDefaultValue())
