@@ -21,6 +21,7 @@ import com.djrapitops.plan.gathering.domain.PluginMetadata;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.tables.PluginVersionTable;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import org.intellij.lang.annotations.Language;
@@ -94,5 +95,13 @@ public class PluginMetadataQueries {
         if (row.wasNull()) version = null;
         long modified = row.getLong(PluginVersionTable.MODIFIED);
         return new PluginHistoryMetadata(name, version, modified);
+    }
+
+    public static Query<List<PluginVersionTable.Row>> fetchRows(int currentId, int rowLimit) {
+        String sql = Select.all(PluginVersionTable.TABLE_NAME)
+                .where(PluginVersionTable.ID + '>' + currentId)
+                .limit(rowLimit)
+                .toString();
+        return db -> db.queryList(sql, PluginVersionTable.Row::extract);
     }
 }

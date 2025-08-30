@@ -26,6 +26,7 @@ import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.objects.JoinAddressQueries;
 import com.djrapitops.plan.storage.database.queries.objects.WorldTimesQueries;
+import com.djrapitops.plan.storage.database.queries.objects.lookup.LookupTable;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.sql.tables.webuser.*;
@@ -263,7 +264,7 @@ public class LargeStoreQueries {
      * @param ofUsers Collection of BaseUsers
      * @return Executable, use inside a {@link com.djrapitops.plan.storage.database.transactions.Transaction}
      */
-    public static Executable storeAllCommonUserInformation(Collection<BaseUser> ofUsers) {
+    public static Executable insertBaseUsers(Collection<BaseUser> ofUsers) {
         if (ofUsers == null || ofUsers.isEmpty()) return Executable.empty();
 
         return new ExecBatchStatement(UsersTable.INSERT_STATEMENT) {
@@ -499,6 +500,91 @@ public class LargeStoreQueries {
                     String preferences = entry.getValue();
                     statement.setString(1, preferences);
                     statement.setString(2, username);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable mergeBaseUsers(List<BaseUser> existingUsers, LookupTable<UUID> playerLookupTable) {
+        if (existingUsers.isEmpty()) return Executable.empty();
+
+        return new ExecBatchStatement(UsersTable.UPDATE_MERGE_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (BaseUser user : existingUsers) {
+                    Optional<Integer> playerId = playerLookupTable.find(user.getUuid());
+                    if (playerId.isPresent()) {
+                        statement.setInt(1, user.getTimesKicked());
+                        statement.setLong(2, user.getRegistered());
+                        statement.setLong(3, user.getRegistered());
+                        statement.setInt(4, playerId.get());
+                        statement.addBatch();
+                    }
+                }
+            }
+        };
+    }
+
+    public static Executable insertUserInfo(List<UserInfoTable.Row> rows) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(UserInfoTable.Row.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (UserInfoTable.Row row : rows) {
+                    UserInfoTable.Row.insert(statement, row);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable insertJoinAddresses(List<JoinAddressTable.Row> rows) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(JoinAddressTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (JoinAddressTable.Row row : rows) {
+                    JoinAddressTable.Row.insert(statement, row);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable insertPing(List<PingTable.Row> rows) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(PingTable.Row.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (PingTable.Row row : rows) {
+                    PingTable.Row.insert(statement, row);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable insertTps(List<TPSTable.Row> rows) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(TPSTable.Row.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (TPSTable.Row row : rows) {
+                    TPSTable.Row.insert(statement, row);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable insertPluginVersions(List<PluginVersionTable.Row> rows) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(PluginVersionTable.Row.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (PluginVersionTable.Row row : rows) {
+                    PluginVersionTable.Row.insert(statement, row);
                     statement.addBatch();
                 }
             }

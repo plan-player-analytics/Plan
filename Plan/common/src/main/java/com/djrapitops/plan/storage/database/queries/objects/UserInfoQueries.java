@@ -21,6 +21,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
@@ -231,5 +232,13 @@ public class UserInfoQueries {
                 return userIds;
             }
         };
+    }
+
+    public static Query<List<UserInfoTable.Row>> fetchUserInfoRows(int currentId, int rowLimit) {
+        String sql = Select.all(UserInfoTable.TABLE_NAME)
+                .where(UserInfoTable.ID + '>' + currentId)
+                .limit(rowLimit)
+                .toString();
+        return db -> db.queryList(sql, UserInfoTable.Row::extract);
     }
 }

@@ -19,40 +19,40 @@ package com.djrapitops.plan.processing.processors.move;
 import com.djrapitops.plan.gathering.domain.BaseUser;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.processing.CriticalRunnable;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.LargeStoreQueries;
-import com.djrapitops.plan.storage.database.queries.objects.BaseUserQueries;
-import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
+import com.djrapitops.plan.storage.database.queries.objects.*;
+import com.djrapitops.plan.storage.database.queries.objects.lookup.IdMapper;
 import com.djrapitops.plan.storage.database.queries.objects.lookup.LookupTable;
 import com.djrapitops.plan.storage.database.queries.objects.lookup.LookupTableQueries;
+import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.function.Consumer;
+import java.util.function.IntPredicate;
 import java.util.stream.Collectors;
 
 /**
  * @author AuroraLS3
  */
-public class DatabaseCopyProcessor implements Runnable {
-    private static final int ROW_LIMIT = 500;
+public class DatabaseCopyProcessor implements CriticalRunnable {
+    private static final int ROW_LIMIT = 1000;
 
     private final Locale locale;
     private final Database fromDB;
     private final Database toDB;
-    private final boolean clearDestinationDatabase;
-    private final boolean changeServerUUID;
+    private final Set<Strategy> strategies = Collections.newSetFromMap(new EnumMap<>(Strategy.class));
     private final Consumer<String> feedback;
 
-    public DatabaseCopyProcessor(Locale locale, Database fromDB, Database toDB, boolean clearDestinationDatabase, boolean changeServerUUID, Consumer<String> feedback) {
+    public DatabaseCopyProcessor(Locale locale, Database fromDB, Database toDB, Consumer<String> feedback, Strategy... strategies) {
         this.locale = locale;
         this.fromDB = fromDB;
         this.toDB = toDB;
-        this.clearDestinationDatabase = clearDestinationDatabase;
-        this.changeServerUUID = changeServerUUID;
+        this.strategies.addAll(Arrays.asList(strategies));
         this.feedback = feedback;
     }
 
@@ -66,7 +66,7 @@ public class DatabaseCopyProcessor implements Runnable {
             feedback.accept("Destination database is " + toDB.getState() + ", could not begin operation.");
             return;
         }
-        if (clearDestinationDatabase) {
+        if (strategies.contains(Strategy.CLEAR_DESTINATION_DATABASE)) {
             feedback.accept("Clearing destination database..");
             toDB.executeTransaction(new RemoveEverythingTransaction()).join();
             feedback.accept("Cleared destination database.");
@@ -74,29 +74,41 @@ public class DatabaseCopyProcessor implements Runnable {
 
         feedback.accept("Beginning database copy process..");
 
-        LookupTable<Integer> serverIdLookupTable = copyMissingServers();
-        LookupTable<Integer> userIdLookupTable = copyMissingUsers();
-        // TODO
-        // https://github.com/plan-player-analytics/Plan/wiki/Database-Schema
-        // copy plan_user_info
-        // copy join addresses
-        // merge geolocations
-        // merge nicknames
-        // copy ping
-        // copy sessions
-        // merge user info
-        // copy worlds
-        // copy world times
-        // copy kills
-        // copy tps
-        // copy allow list bounce
-        // copy plugin versions
-        // copy web groups
-        // copy permissions
-        // copy group to permission
-        // copy security table
-        // copy user preferences
-        // plan how to copy extension data
+        try {
+            LookupTable<Integer> serverIdLookupTable = copyMissingServers();
+
+            if (strategies.contains(Strategy.SERVER_UUID_CONFLICT_DELETE_SERVER)) {
+                // TODO delete existing servers' data that are to be copied over if correction wasn't done
+                //      this is to prevent issues where copy completed partially and queries expect fresh insert.
+            }
+
+            LookupTable<Integer> userIdLookupTable = copyMissingUsers();
+            copyUserInfo(serverIdLookupTable, userIdLookupTable);
+            LookupTable<Integer> joinAddressLookupTable = copyMissingJoinAddresses();
+            copyPing(serverIdLookupTable, userIdLookupTable);
+            copyTps(serverIdLookupTable);
+            copyPluginVersions(serverIdLookupTable);
+            // TODO
+            // https://github.com/plan-player-analytics/Plan/wiki/Database-Schema
+            // merge geolocations HARD (last used merging table)
+            // merge nicknames HARD (last used merging table)
+            // copy sessions
+            // copy worlds
+            // copy world times
+            // copy kills
+            // copy allow list bounce
+            // copy web groups
+            // copy permissions
+            // copy group to permission
+            // copy security table
+            // copy user preferences
+            // copy access log
+            // plan how to copy extension data
+
+            // TODO deal with CompletionException
+        } catch (IllegalStateException e) {
+            feedback.accept("Operation was aborted.");
+        }
     }
 
     private LookupTable<Integer> copyMissingServers() {
@@ -106,7 +118,13 @@ public class DatabaseCopyProcessor implements Runnable {
         for (Server server : servers) {
             if (serverLookupTable.find(server.getUuid()).isEmpty()) {
                 toDB.executeTransaction(new StoreServerInformationTransaction(server)).join();
-            } // TODO change server UUID if necessary
+            } else if (strategies.contains(Strategy.SERVER_UUID_CONFLICT_SWAP_UUID)) {
+                // TODO change server UUID
+            } else if (!strategies.contains(Strategy.SERVER_UUID_CONFLICT_DELETE_SERVER)) {
+                // No strategy to deal with uuid conflict selected.
+                feedback.accept("Server with " + server.getUuid() + " already exists. Choose a strategy to deal with it.");
+                throw new IllegalStateException();
+            }
         }
         return toDB.query(LookupTableQueries.serverLookupTable())
                 .constructIdToIdLookupTable(fromDB.query(LookupTableQueries.serverLookupTable()));
@@ -114,22 +132,92 @@ public class DatabaseCopyProcessor implements Runnable {
 
     private LookupTable<Integer> copyMissingUsers() {
         LookupTable<UUID> playerLookupTable = toDB.query(LookupTableQueries.playerLookupTable());
+
+        batching(currentId -> {
+            List<BaseUser> found = fromDB.query(BaseUserQueries.fetchBaseUsers(currentId, ROW_LIMIT));
+            Map<Boolean, List<BaseUser>> copied = found.stream()
+                    .collect(Collectors.partitioningBy(user -> playerLookupTable.find(user.getUuid()).isPresent()));
+            List<BaseUser> newUsers = copied.get(false);
+            toDB.executeInTransaction(LargeStoreQueries.insertBaseUsers(newUsers)).join();
+            List<BaseUser> existingUsers = copied.get(true);
+            toDB.executeInTransaction(LargeStoreQueries.mergeBaseUsers(existingUsers, playerLookupTable)).join();
+            return found.isEmpty();
+        });
+
+        return toDB.query(LookupTableQueries.playerLookupTable())
+                .constructIdToIdLookupTable(fromDB.query(LookupTableQueries.playerLookupTable()));
+    }
+
+    private void batching(IntPredicate batch) {
         int currentId = 0;
         while (currentId >= 0) {
-            List<BaseUser> found = fromDB.query(BaseUserQueries.fetchBaseUsers(currentId, ROW_LIMIT));
-            List<BaseUser> copied = found.stream()
-                    .filter(user -> playerLookupTable.find(user.getUuid()).isEmpty())
-                    .collect(Collectors.toList());
-            // TODO merge register dates and times_kicked
-            toDB.executeInTransaction(LargeStoreQueries.storeAllCommonUserInformation(copied)).join();
-            if (found.isEmpty()) {
+            boolean lastBatch = batch.test(currentId);
+            if (lastBatch) {
                 currentId = -1;
             } else {
                 currentId += ROW_LIMIT;
             }
         }
+    }
 
-        return toDB.query(LookupTableQueries.playerLookupTable())
-                .constructIdToIdLookupTable(fromDB.query(LookupTableQueries.playerLookupTable()));
+    private void copyUserInfo(LookupTable<Integer> serverIdLookupTable, LookupTable<Integer> userIdLookupTable) {
+        batching(currentId -> {
+            List<UserInfoTable.Row> rows = fromDB.query(UserInfoQueries.fetchUserInfoRows(currentId, ROW_LIMIT));
+            IdMapper.mapUserIds(rows, userIdLookupTable);
+            IdMapper.mapServerIds(rows, serverIdLookupTable);
+            toDB.executeInTransaction(LargeStoreQueries.insertUserInfo(rows)).join();
+            return rows.isEmpty();
+        });
+    }
+
+    private LookupTable<Integer> copyMissingJoinAddresses() {
+        LookupTable<String> joinAddressLookupTable = toDB.query(JoinAddressQueries.joinAddressLookupTable());
+        List<JoinAddressTable.Row> rows = fromDB.query(JoinAddressQueries.fetchRows());
+        List<JoinAddressTable.Row> newRows = rows.stream()
+                .filter(address -> joinAddressLookupTable.find(address.joinAddress).isEmpty())
+                .collect(Collectors.toList());
+        toDB.executeInTransaction(LargeStoreQueries.insertJoinAddresses(newRows)).join();
+
+        LookupTable<String> oldLookupTable = new LookupTable<>();
+        for (JoinAddressTable.Row row : rows) {
+            oldLookupTable.put(row.joinAddress, row.id);
+        }
+
+        return toDB.query(JoinAddressQueries.joinAddressLookupTable())
+                .constructIdToIdLookupTable(oldLookupTable);
+    }
+
+    private void copyPing(LookupTable<Integer> serverIdLookupTable, LookupTable<Integer> userIdLookupTable) {
+        batching(currentId -> {
+            List<PingTable.Row> rows = fromDB.query(PingQueries.fetchRows(currentId, ROW_LIMIT));
+            IdMapper.mapUserIds(rows, userIdLookupTable);
+            IdMapper.mapServerIds(rows, serverIdLookupTable);
+            toDB.executeInTransaction(LargeStoreQueries.insertPing(rows)).join();
+            return rows.isEmpty();
+        });
+    }
+
+    private void copyTps(LookupTable<Integer> serverIdLookupTable) {
+        batching(currentId -> {
+            List<TPSTable.Row> rows = fromDB.query(TPSQueries.fetchRows(currentId, ROW_LIMIT));
+            IdMapper.mapServerIds(rows, serverIdLookupTable);
+            toDB.executeInTransaction(LargeStoreQueries.insertTps(rows)).join();
+            return rows.isEmpty();
+        });
+    }
+
+    private void copyPluginVersions(LookupTable<Integer> serverIdLookupTable) {
+        batching(currentId -> {
+            List<PluginVersionTable.Row> rows = fromDB.query(PluginMetadataQueries.fetchRows(currentId, ROW_LIMIT));
+            IdMapper.mapServerIds(rows, serverIdLookupTable);
+            toDB.executeInTransaction(LargeStoreQueries.insertPluginVersions(rows)).join();
+            return rows.isEmpty();
+        });
+    }
+
+    public enum Strategy {
+        CLEAR_DESTINATION_DATABASE,
+        SERVER_UUID_CONFLICT_SWAP_UUID,
+        SERVER_UUID_CONFLICT_DELETE_SERVER
     }
 }

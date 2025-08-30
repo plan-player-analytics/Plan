@@ -109,7 +109,7 @@ public class BackupCopyTransaction extends RemoveEverythingTransaction {
     }
 
     private void copyCommonUserInformation() {
-        copy(LargeStoreQueries::storeAllCommonUserInformation, BaseUserQueries.fetchAllBaseUsers());
+        copy(LargeStoreQueries::insertBaseUsers, BaseUserQueries.fetchAllBaseUsers());
     }
 
     private void copySessionsWithKillAndWorldData() {

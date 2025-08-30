@@ -20,6 +20,10 @@ import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 public class JoinAddressTable {
@@ -43,4 +47,19 @@ public class JoinAddressTable {
                 .toString();
     }
 
+    public static class Row {
+        public int id;
+        public String joinAddress;
+
+        public static Row extract(ResultSet set) throws SQLException {
+            Row row = new Row();
+            row.id = set.getInt(ID);
+            row.joinAddress = set.getString(JOIN_ADDRESS);
+            return row;
+        }
+
+        public static void insert(PreparedStatement statement, Row row) throws SQLException {
+            statement.setString(1, row.joinAddress);
+        }
+    }
 }

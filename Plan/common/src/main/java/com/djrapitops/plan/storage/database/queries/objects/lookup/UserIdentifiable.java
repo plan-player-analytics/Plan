@@ -14,18 +14,15 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.utilities.java;
+package com.djrapitops.plan.storage.database.queries.objects.lookup;
 
 /**
- * Functional interface that performs an operation that might throw an exception.
- * <p>
- * Follows naming scheme of Java 8 functional interfaces.
- *
  * @author AuroraLS3
  */
-@FunctionalInterface
-public interface ThrowingConsumer<T, K extends Throwable> {
+public interface UserIdentifiable {
 
-    void accept(T consume) throws K;
+    public int getUserId();
+
+    public void setUserId(int id);
 
 }

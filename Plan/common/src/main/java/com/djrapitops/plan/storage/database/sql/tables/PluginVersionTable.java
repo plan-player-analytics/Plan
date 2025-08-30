@@ -17,8 +17,14 @@
 package com.djrapitops.plan.storage.database.sql.tables;
 
 import com.djrapitops.plan.storage.database.DBType;
+import com.djrapitops.plan.storage.database.queries.objects.lookup.ServerIdentifiable;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
+import com.djrapitops.plan.storage.database.sql.building.Insert;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Represents plan_plugin_versions table.
@@ -62,4 +68,40 @@ public class PluginVersionTable {
                 .toString();
     }
 
+    public static class Row implements ServerIdentifiable {
+        public static String INSERT_STATEMENT = Insert.values(TABLE_NAME, SERVER_ID, PLUGIN_NAME, VERSION, MODIFIED);
+
+        public int id;
+        public int serverId;
+        public String pluginName;
+        public String version;
+        public long modified;
+
+        public static Row extract(ResultSet set) throws SQLException {
+            Row row = new Row();
+            row.id = set.getInt(ID);
+            row.serverId = set.getInt(SERVER_ID);
+            row.pluginName = set.getString(PLUGIN_NAME);
+            row.version = set.getString(VERSION);
+            row.modified = set.getLong(MODIFIED);
+            return row;
+        }
+
+        public static void insert(PreparedStatement statement, Row row) throws SQLException {
+            statement.setInt(1, row.serverId);
+            statement.setString(2, row.pluginName);
+            statement.setString(3, row.version);
+            statement.setLong(4, row.modified);
+        }
+
+        @Override
+        public int getServerId() {
+            return serverId;
+        }
+
+        @Override
+        public void setServerId(int serverId) {
+            this.serverId = serverId;
+        }
+    }
 }

@@ -22,7 +22,9 @@ import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
+import com.djrapitops.plan.storage.database.sql.tables.TPSTable;
 import com.djrapitops.plan.utilities.dev.Benchmark;
 import com.djrapitops.plan.utilities.java.Lists;
 import org.intellij.lang.annotations.Language;
@@ -550,5 +552,13 @@ public class TPSQueries {
                 return startTime != 0 ? Optional.of(startTime) : Optional.empty();
             }
         };
+    }
+
+    public static Query<List<Row>> fetchRows(int currentId, int rowLimit) {
+        String sql = Select.all(TABLE_NAME)
+                .where(TPSTable.ID + '>' + currentId)
+                .limit(rowLimit)
+                .toString();
+        return db -> db.queryList(sql, Row::extract);
     }
 }

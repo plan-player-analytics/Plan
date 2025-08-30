@@ -17,15 +17,11 @@
 package com.djrapitops.plan.utilities.java;
 
 /**
- * Functional interface that performs an operation that might throw an exception.
- * <p>
- * Follows naming scheme of Java 8 functional interfaces.
- *
  * @author AuroraLS3
  */
 @FunctionalInterface
-public interface ThrowingConsumer<T, K extends Throwable> {
+public interface ThrowingFunction<A, B, E extends Throwable> {
 
-    void accept(T consume) throws K;
+    public B apply(A a) throws E;
 
 }

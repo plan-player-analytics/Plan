@@ -20,6 +20,7 @@ import com.djrapitops.plan.storage.database.DBType;
 import org.apache.commons.text.TextStringBuilder;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.concurrent.TimeUnit;
@@ -112,6 +113,11 @@ public abstract class Sql {
             return one + " || " + two;
         }
         return one + two;
+    }
+
+    public static Double getDoubleOrNull(ResultSet set, String msptAverage) throws SQLException {
+        double value = set.getDouble(msptAverage);
+        return set.wasNull() ? null : value;
     }
 
     public abstract String epochSecondToDate(String sql);
