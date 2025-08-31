@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * @author AuroraLS3
@@ -58,4 +59,5 @@ public class LookupTable<I> {
         return oldIdToNewId;
     }
 
+    public Set<I> keySet() {return identifierToId.keySet();}
 }

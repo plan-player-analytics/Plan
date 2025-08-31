@@ -27,11 +27,14 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.objects.JoinAddressQueries;
 import com.djrapitops.plan.storage.database.queries.objects.WorldTimesQueries;
 import com.djrapitops.plan.storage.database.queries.objects.lookup.LookupTable;
+import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
+import com.djrapitops.plan.storage.database.sql.building.Insert;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.sql.tables.webuser.*;
 import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
+import com.djrapitops.plan.storage.database.transactions.Transaction;
 import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.Language;
 
@@ -41,6 +44,8 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Static method class for large storage queries.
@@ -587,6 +592,75 @@ public class LargeStoreQueries {
                     PluginVersionTable.Row.insert(statement, row);
                     statement.addBatch();
                 }
+            }
+        };
+    }
+
+    public static Executable insertSessionsWithOldIds(List<SessionsTable.Row> rows) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(SessionsTable.Row.INSERT_STATEMENT_WITH_OLD_ID) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (SessionsTable.Row row : rows) {
+                    SessionsTable.Row.insert(statement, row, true);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Transaction insertWorldTimesWithOldSessionIds(List<WorldTimesTable.Row> rows) {
+        return new Transaction() {
+            @Override
+            protected void performOperations() {
+                String batchTableName = "world_times_batch";
+                execute(CreateTableBuilder.createTemporary(batchTableName, dbType)
+                        .column(WorldTimesTable.USER_ID, Sql.INT).notNull()
+                        .column(WorldTimesTable.WORLD_ID, Sql.INT).notNull()
+                        .column(WorldTimesTable.SERVER_ID, Sql.INT).notNull()
+                        .column(WorldTimesTable.SESSION_ID, Sql.INT).notNull()
+                        .column(WorldTimesTable.SURVIVAL, Sql.LONG).notNull().defaultValue("0")
+                        .column(WorldTimesTable.CREATIVE, Sql.LONG).notNull().defaultValue("0")
+                        .column(WorldTimesTable.ADVENTURE, Sql.LONG).notNull().defaultValue("0")
+                        .column(WorldTimesTable.SPECTATOR, Sql.LONG).notNull().defaultValue("0")
+                        .build());
+
+                Insert insertBuilder = Insert.into(batchTableName,
+                        WorldTimesTable.USER_ID,
+                        WorldTimesTable.WORLD_ID,
+                        WorldTimesTable.SERVER_ID,
+                        WorldTimesTable.SESSION_ID,
+                        WorldTimesTable.SURVIVAL,
+                        WorldTimesTable.CREATIVE,
+                        WorldTimesTable.ADVENTURE,
+                        WorldTimesTable.SPECTATOR
+                );
+
+                for (WorldTimesTable.Row row : rows) {
+                    insertBuilder.appendRow(row.userId, row.worldId, row.serverId, row.sessionId,
+                            row.survivalTime, row.creativeTime, row.adventureTime, row.spectatorTime);
+                }
+                execute(insertBuilder.build());
+
+                String batchCopyStatement = "INSERT INTO " + WorldTimesTable.TABLE_NAME + " (" +
+                        WorldTimesTable.USER_ID + ", " +
+                        WorldTimesTable.WORLD_ID + ", " +
+                        WorldTimesTable.SERVER_ID + ", " +
+                        WorldTimesTable.SESSION_ID + ", " +
+                        WorldTimesTable.SURVIVAL + ", " +
+                        WorldTimesTable.CREATIVE + ", " +
+                        WorldTimesTable.ADVENTURE + ", " +
+                        WorldTimesTable.SPECTATOR +
+                        ")" + SELECT +
+                        WorldTimesTable.USER_ID + ',' + WorldTimesTable.WORLD_ID + ',' + WorldTimesTable.SERVER_ID + ',' +
+                        SessionsTable.Row.OLD_ID + ',' +
+                        WorldTimesTable.SURVIVAL + ',' + WorldTimesTable.CREATIVE + ',' +
+                        WorldTimesTable.ADVENTURE + ',' + WorldTimesTable.SPECTATOR +
+                        FROM + batchTableName + " a" +
+                        INNER_JOIN + SessionsTable.TABLE_NAME + " b ON a." + WorldTimesTable.SESSION_ID + "=s." + SessionsTable.Row.OLD_ID;
+                execute(batchCopyStatement);
+
+                execute(DELETE_FROM + batchTableName);
             }
         };
     }

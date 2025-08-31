@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries.objects.lookup;
 
-import java.util.List;
+import java.util.Collection;
 
 /**
  * @author AuroraLS3
@@ -27,19 +27,35 @@ public class IdMapper {
         // Static method class
     }
 
-    public static void mapUserIds(List<? extends UserIdentifiable> userIdentifiables, LookupTable<Integer> userIdLookupTable) {
-        userIdentifiables.forEach(
+    public static void mapUserIds(Collection<? extends UserIdentifiable> rows, LookupTable<Integer> userIdLookupTable) {
+        rows.forEach(
                 userIdentifiable -> userIdentifiable.setUserId(
                         userIdLookupTable.find(userIdentifiable.getUserId())
-                                .orElse(userIdentifiable.getUserId()))
+                                .orElseGet(userIdentifiable::getUserId))
         );
     }
 
-    public static void mapServerIds(List<? extends ServerIdentifiable> userIdentifiables, LookupTable<Integer> serverIdLookupTable) {
-        userIdentifiables.forEach(
+    public static void mapServerIds(Collection<? extends ServerIdentifiable> rows, LookupTable<Integer> serverIdLookupTable) {
+        rows.forEach(
                 userIdentifiable -> userIdentifiable.setServerId(
                         serverIdLookupTable.find(userIdentifiable.getServerId())
-                                .orElse(userIdentifiable.getServerId()))
+                                .orElseGet(userIdentifiable::getServerId))
+        );
+    }
+
+    public static void mapJoinAddressIds(Collection<? extends JoinAddressIdentifiable> rows, LookupTable<Integer> joinAddressLookupTable) {
+        rows.forEach(
+                userIdentifiable -> userIdentifiable.setJoinAddressId(
+                        joinAddressLookupTable.find(userIdentifiable.getJoinAddressId())
+                                .orElseGet(userIdentifiable::getJoinAddressId))
+        );
+    }
+
+    public static void mapWorldIds(Collection<? extends WorldIdentifiable> rows, LookupTable<Integer> worldIdLookupTable) {
+        rows.forEach(
+                userIdentifiable -> userIdentifiable.setWorldId(
+                        worldIdLookupTable.find(userIdentifiable.getWorldId())
+                                .orElseGet(userIdentifiable::getWorldId))
         );
     }
 }

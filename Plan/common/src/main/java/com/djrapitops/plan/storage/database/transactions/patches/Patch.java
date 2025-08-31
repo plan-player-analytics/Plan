@@ -87,6 +87,10 @@ public abstract class Patch extends OperationCriticalTransaction {
         execute(ALTER_TABLE + tableName + " ADD " + (dbType.supportsMySQLQueries() ? "" : "COLUMN ") + columnInfo);
     }
 
+    protected void dropColumn(String tableName, String columnName) {
+        execute(ALTER_TABLE + tableName + " DROP COLUMN " + columnName);
+    }
+
     protected void dropTable(String name) {
         execute("DROP TABLE IF EXISTS " + name);
     }

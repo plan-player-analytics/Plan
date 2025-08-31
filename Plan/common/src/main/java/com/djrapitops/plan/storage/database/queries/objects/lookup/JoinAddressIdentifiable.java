@@ -16,13 +16,16 @@
  */
 package com.djrapitops.plan.storage.database.queries.objects.lookup;
 
+import org.jspecify.annotations.Nullable;
+
 /**
  * @author AuroraLS3
  */
-public interface UserIdentifiable {
+public interface JoinAddressIdentifiable {
 
-    int getUserId();
+    @Nullable
+    public Integer getJoinAddressId();
 
-    void setUserId(int id);
+    public void setJoinAddressId(@Nullable Integer joinAddressId);
 
 }

@@ -28,6 +28,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
@@ -1025,5 +1026,13 @@ public class SessionQueries {
                 UUID.fromString(set.getString(UsersTable.USER_UUID)),
                 set.getLong("last_seen")
         ), serverUUID);
+    }
+
+    public static Query<List<SessionsTable.Row>> fetchRows(int currentId, int rowLimit) {
+        String sql = Select.all(SessionsTable.TABLE_NAME)
+                .where(SessionsTable.ID + '>' + currentId)
+                .limit(rowLimit)
+                .toString();
+        return db -> db.queryList(sql, SessionsTable.Row::extract);
     }
 }

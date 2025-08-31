@@ -19,10 +19,10 @@ package com.djrapitops.plan.storage.database.queries.objects.lookup;
 /**
  * @author AuroraLS3
  */
-public interface UserIdentifiable {
+public interface WorldIdentifiable {
 
-    int getUserId();
+    int getWorldId();
 
-    void setUserId(int id);
+    void setWorldId(int worldId);
 
 }

@@ -21,6 +21,9 @@ import com.djrapitops.plan.gathering.domain.GMTimes;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBType;
+import com.djrapitops.plan.storage.database.queries.objects.lookup.ServerIdentifiable;
+import com.djrapitops.plan.storage.database.queries.objects.lookup.UserIdentifiable;
+import com.djrapitops.plan.storage.database.queries.objects.lookup.WorldIdentifiable;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.transactions.patches.Version10Patch;
@@ -29,6 +32,7 @@ import com.djrapitops.plan.storage.database.transactions.patches.WorldTimesSever
 import com.djrapitops.plan.storage.database.transactions.patches.WorldsServerIDPatch;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Map;
 import java.util.Optional;
@@ -124,6 +128,62 @@ public class WorldTimesTable {
             statement.setLong(11, gmTimes.getTime(gms[2]));
             statement.setLong(12, gmTimes.getTime(gms[3]));
             statement.addBatch();
+        }
+    }
+
+    public static class Row implements ServerIdentifiable, UserIdentifiable, WorldIdentifiable {
+        public int id;
+        public int sessionId;
+        public int serverId;
+        public int userId;
+        public int worldId;
+        public long survivalTime;
+        public long creativeTime;
+        public long adventureTime;
+        public long spectatorTime;
+
+        public static Row extract(ResultSet set) throws SQLException {
+            Row row = new Row();
+            row.id = set.getInt(ID);
+            row.sessionId = set.getInt(SESSION_ID);
+            row.serverId = set.getInt(SERVER_ID);
+            row.userId = set.getInt(USER_ID);
+            row.worldId = set.getInt(WORLD_ID);
+            row.survivalTime = set.getLong(SURVIVAL);
+            row.creativeTime = set.getLong(CREATIVE);
+            row.adventureTime = set.getLong(ADVENTURE);
+            row.spectatorTime = set.getLong(SPECTATOR);
+            return row;
+        }
+
+        @Override
+        public int getServerId() {
+            return serverId;
+        }
+
+        @Override
+        public void setServerId(int serverId) {
+            this.serverId = serverId;
+        }
+
+        @Override
+        public int getUserId() {
+            return userId;
+        }
+
+        @Override
+        public void setUserId(int userId) {
+            this.userId = userId;
+        }
+
+        @Override
+        public int getWorldId() {
+            return worldId;
+        }
+
+        @Override
+        public void setWorldId(int worldId) {
+            this.worldId = worldId;
         }
     }
 }

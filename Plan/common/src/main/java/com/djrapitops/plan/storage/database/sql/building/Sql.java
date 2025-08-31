@@ -106,6 +106,14 @@ public abstract class Sql {
         }
     }
 
+    public static void setIntOrNull(PreparedStatement statement, int index, Integer value) throws SQLException {
+        if (value != null) {
+            statement.setInt(index, value);
+        } else {
+            statement.setNull(index, Types.INTEGER);
+        }
+    }
+
     public static String concat(DBType dbType, String one, String two) {
         if (dbType == DBType.MYSQL) {
             return "CONCAT(" + one + ',' + two + ")";
@@ -115,8 +123,13 @@ public abstract class Sql {
         return one + two;
     }
 
-    public static Double getDoubleOrNull(ResultSet set, String msptAverage) throws SQLException {
-        double value = set.getDouble(msptAverage);
+    public static Double getDoubleOrNull(ResultSet set, String column) throws SQLException {
+        double value = set.getDouble(column);
+        return set.wasNull() ? null : value;
+    }
+
+    public static Integer getIntOrNull(ResultSet set, String column) throws SQLException {
+        int value = set.getInt(column);
         return set.wasNull() ? null : value;
     }
 

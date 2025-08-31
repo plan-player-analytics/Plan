@@ -21,8 +21,8 @@ package com.djrapitops.plan.storage.database.queries.objects.lookup;
  */
 public interface ServerIdentifiable {
 
-    public int getServerId();
+    int getServerId();
 
-    public void setServerId(int id);
+    void setServerId(int id);
 
 }

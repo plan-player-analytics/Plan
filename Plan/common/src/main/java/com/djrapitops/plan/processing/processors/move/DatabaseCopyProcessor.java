@@ -28,9 +28,13 @@ import com.djrapitops.plan.storage.database.queries.objects.lookup.IdMapper;
 import com.djrapitops.plan.storage.database.queries.objects.lookup.LookupTable;
 import com.djrapitops.plan.storage.database.queries.objects.lookup.LookupTableQueries;
 import com.djrapitops.plan.storage.database.sql.tables.*;
+import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
+import com.djrapitops.plan.storage.database.transactions.init.CreateTemporarySessionIdLookupTable;
 
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.IntPredicate;
@@ -48,12 +52,18 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
     private final Set<Strategy> strategies = Collections.newSetFromMap(new EnumMap<>(Strategy.class));
     private final Consumer<String> feedback;
 
+    private final Map<ServerUUID, ServerUUID> serverUuidLookupTable = new HashMap<>();
+
     public DatabaseCopyProcessor(Locale locale, Database fromDB, Database toDB, Consumer<String> feedback, Strategy... strategies) {
         this.locale = locale;
         this.fromDB = fromDB;
         this.toDB = toDB;
         this.strategies.addAll(Arrays.asList(strategies));
         this.feedback = feedback;
+    }
+
+    public ServerUUID mapServerUUID(ServerUUID serverUUID) {
+        return serverUuidLookupTable.getOrDefault(serverUUID, serverUUID);
     }
 
     @Override
@@ -88,13 +98,14 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             copyPing(serverIdLookupTable, userIdLookupTable);
             copyTps(serverIdLookupTable);
             copyPluginVersions(serverIdLookupTable);
+            copySessions(serverIdLookupTable, userIdLookupTable, joinAddressLookupTable);
+            LookupTable<Integer> worldIdLookupTable = copyWorlds();
+            copyWorldTimes(serverIdLookupTable, userIdLookupTable, worldIdLookupTable);
             // TODO
             // https://github.com/plan-player-analytics/Plan/wiki/Database-Schema
             // merge geolocations HARD (last used merging table)
             // merge nicknames HARD (last used merging table)
-            // copy sessions
             // copy worlds
-            // copy world times
             // copy kills
             // copy allow list bounce
             // copy web groups
@@ -108,6 +119,14 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             // TODO deal with CompletionException
         } catch (IllegalStateException e) {
             feedback.accept("Operation was aborted.");
+        } finally {
+            toDB.executeInTransaction(new ExecStatement(SessionsTable.TemporaryIdLookupTable.DROP_TABLE_STATEMENT) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    // Nothing to prepare
+                }
+            }).join();
+            toDB.executeTransaction(SessionsTable.Row.removeOldIdPatch()).join();
         }
     }
 
@@ -119,7 +138,11 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             if (serverLookupTable.find(server.getUuid()).isEmpty()) {
                 toDB.executeTransaction(new StoreServerInformationTransaction(server)).join();
             } else if (strategies.contains(Strategy.SERVER_UUID_CONFLICT_SWAP_UUID)) {
-                // TODO change server UUID
+                ServerUUID newUUID = ServerUUID.randomUUID();
+                serverUuidLookupTable.put(server.getUuid(), newUUID);
+                toDB.executeTransaction(new StoreServerInformationTransaction(
+                        new Server(server.getId().orElse(null), newUUID, server.getName(), server.getWebAddress(), server.isProxy(), server.getPlanVersion())
+                )).join();
             } else if (!strategies.contains(Strategy.SERVER_UUID_CONFLICT_DELETE_SERVER)) {
                 // No strategy to deal with uuid conflict selected.
                 feedback.accept("Server with " + server.getUuid() + " already exists. Choose a strategy to deal with it.");
@@ -211,6 +234,43 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             List<PluginVersionTable.Row> rows = fromDB.query(PluginMetadataQueries.fetchRows(currentId, ROW_LIMIT));
             IdMapper.mapServerIds(rows, serverIdLookupTable);
             toDB.executeInTransaction(LargeStoreQueries.insertPluginVersions(rows)).join();
+            return rows.isEmpty();
+        });
+    }
+
+    private void copySessions(LookupTable<Integer> serverIdLookupTable, LookupTable<Integer> userIdLookupTable, LookupTable<Integer> joinAddressLookupTable) {
+        toDB.executeTransaction(new CreateTemporarySessionIdLookupTable()).join();
+        toDB.executeTransaction(SessionsTable.Row.addOldIdPatch()).join();
+
+        batching(currentId -> {
+            List<SessionsTable.Row> rows = fromDB.query(SessionQueries.fetchRows(currentId, ROW_LIMIT));
+            IdMapper.mapUserIds(rows, userIdLookupTable);
+            IdMapper.mapServerIds(rows, serverIdLookupTable);
+            IdMapper.mapJoinAddressIds(rows, joinAddressLookupTable);
+            toDB.executeInTransaction(LargeStoreQueries.insertSessionsWithOldIds(rows)).join();
+            return rows.isEmpty();
+        });
+
+        toDB.executeInTransaction(new ExecStatement(SessionsTable.TemporaryIdLookupTable.INSERT_ALL_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) {
+                // Nothing to prepare
+            }
+        }).join();
+    }
+
+    private LookupTable<Integer> copyWorlds() {
+        // TODO
+        return null;
+    }
+
+    private void copyWorldTimes(LookupTable<Integer> serverIdLookupTable, LookupTable<Integer> userIdLookupTable, LookupTable<Integer> worldIdLookupTable) {
+        batching(currentId -> {
+            List<WorldTimesTable.Row> rows = fromDB.query(WorldTimesQueries.fetchRows(currentId, ROW_LIMIT));
+            IdMapper.mapUserIds(rows, userIdLookupTable);
+            IdMapper.mapServerIds(rows, serverIdLookupTable);
+            IdMapper.mapWorldIds(rows, worldIdLookupTable);
+            toDB.executeTransaction(LargeStoreQueries.insertWorldTimesWithOldSessionIds(rows)).join();
             return rows.isEmpty();
         });
     }

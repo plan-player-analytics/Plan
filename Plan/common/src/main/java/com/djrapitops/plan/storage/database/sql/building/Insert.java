@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.storage.database.sql.building;
 
+import java.util.Objects;
+
 public class Insert extends SqlBuilder {
 
     public Insert(String table) {
@@ -41,5 +43,44 @@ public class Insert extends SqlBuilder {
         }
         builder.append(')');
         return builder.toString();
+    }
+
+    public static Insert into(String table, String... columns) {
+        Insert builder = new Insert(table);
+        builder.append('(');
+        int size = columns.length;
+        for (int i = 0; i < size; i++) {
+            if (size > 1 && i > 0) {
+                builder.append(',');
+            }
+            builder.append(columns[i]);
+        }
+        builder.append(") VALUES (");
+        return builder;
+    }
+
+    /**
+     * Appends values directly into the sql statement.
+     * <p>
+     * Should be used with care to avoid SQL injection.
+     *
+     * @param values Values to insert
+     * @return This builder.
+     */
+    public Insert appendRow(Object... values) {
+        int size = values.length;
+        append('(');
+        for (int i = 0; i < size; i++) {
+            if (size > 1 && i > 0) {
+                append(',');
+            }
+            append(Objects.toString(values[i]));
+        }
+        append(')');
+        return this;
+    }
+
+    public String build() {
+        return append(")").toString();
     }
 }

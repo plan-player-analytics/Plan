@@ -14,15 +14,18 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.storage.database.queries.objects.lookup;
+package com.djrapitops.plan.storage.database.transactions.init;
+
+import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
+import com.djrapitops.plan.storage.database.transactions.Transaction;
 
 /**
  * @author AuroraLS3
  */
-public interface UserIdentifiable {
+public class CreateTemporarySessionIdLookupTable extends Transaction {
 
-    int getUserId();
-
-    void setUserId(int id);
-
+    @Override
+    protected void performOperations() {
+        execute(SessionsTable.TemporaryIdLookupTable.createTableSQL(dbType));
+    }
 }
