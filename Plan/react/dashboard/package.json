@@ -42,7 +42,7 @@
     "react-router": "^7.8.2",
     "react-select": "^5.10.2",
     "react-transition-group": "^4.4.5",
-    "sass": "^1.90.0",
+    "sass": "^1.91.0",
     "source-map-explorer": "^2.5.2",
     "swagger-ui": "^5.28.0",
     "web-vitals": "^5.1.0"
