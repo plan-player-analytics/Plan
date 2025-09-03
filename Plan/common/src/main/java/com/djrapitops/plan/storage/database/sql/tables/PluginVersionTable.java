@@ -87,11 +87,11 @@ public class PluginVersionTable {
             return row;
         }
 
-        public static void insert(PreparedStatement statement, Row row) throws SQLException {
-            statement.setInt(1, row.serverId);
-            statement.setString(2, row.pluginName);
-            statement.setString(3, row.version);
-            statement.setLong(4, row.modified);
+        public void insert(PreparedStatement statement) throws SQLException {
+            statement.setInt(1, serverId);
+            statement.setString(2, pluginName);
+            statement.setString(3, version);
+            statement.setLong(4, modified);
         }
 
         @Override

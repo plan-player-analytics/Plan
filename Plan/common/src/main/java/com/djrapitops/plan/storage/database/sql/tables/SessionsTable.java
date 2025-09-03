@@ -127,17 +127,17 @@ public class SessionsTable {
             return row;
         }
 
-        public static void insert(PreparedStatement statement, Row row, boolean withOldId) throws SQLException {
-            statement.setInt(1, row.userId);
-            statement.setInt(2, row.serverId);
-            statement.setLong(3, row.sessionStart);
-            statement.setLong(4, row.sessionEnd);
-            statement.setInt(5, row.mobKills);
-            statement.setInt(6, row.deaths);
-            statement.setLong(7, row.afkTime);
-            Sql.setIntOrNull(statement, 8, row.joinAddressId);
+        public void insert(PreparedStatement statement, boolean withOldId) throws SQLException {
+            statement.setInt(1, userId);
+            statement.setInt(2, serverId);
+            statement.setLong(3, sessionStart);
+            statement.setLong(4, sessionEnd);
+            statement.setInt(5, mobKills);
+            statement.setInt(6, deaths);
+            statement.setLong(7, afkTime);
+            Sql.setIntOrNull(statement, 8, joinAddressId);
             if (withOldId) {
-                statement.setInt(9, row.id);
+                statement.setInt(9, id);
             }
         }
 

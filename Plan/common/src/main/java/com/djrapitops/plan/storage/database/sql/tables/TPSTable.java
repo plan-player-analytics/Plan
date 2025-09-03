@@ -120,18 +120,18 @@ public class TPSTable {
             return row;
         }
 
-        public static void insert(PreparedStatement statement, Row row) throws SQLException {
-            statement.setInt(1, row.serverId);
-            statement.setLong(2, row.date);
-            statement.setDouble(3, row.tps);
-            statement.setInt(4, row.playersOnline);
-            statement.setDouble(5, row.cpuUsage);
-            statement.setLong(6, row.ramUsage);
-            statement.setInt(7, row.entities);
-            statement.setInt(8, row.chunksLoaded);
-            statement.setLong(9, row.freeDiskSpace);
-            Sql.setDoubleOrNull(statement, 10, row.msptAverage);
-            Sql.setDoubleOrNull(statement, 11, row.mspt95thPercentile);
+        public void insert(PreparedStatement statement) throws SQLException {
+            statement.setInt(1, serverId);
+            statement.setLong(2, date);
+            statement.setDouble(3, tps);
+            statement.setInt(4, playersOnline);
+            statement.setDouble(5, cpuUsage);
+            statement.setLong(6, ramUsage);
+            statement.setInt(7, entities);
+            statement.setInt(8, chunksLoaded);
+            statement.setLong(9, freeDiskSpace);
+            Sql.setDoubleOrNull(statement, 10, msptAverage);
+            Sql.setDoubleOrNull(statement, 11, mspt95thPercentile);
         }
 
         @Override

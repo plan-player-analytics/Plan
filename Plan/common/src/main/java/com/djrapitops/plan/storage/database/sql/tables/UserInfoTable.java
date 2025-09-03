@@ -93,13 +93,13 @@ public class UserInfoTable {
         public boolean op;
         public boolean banned;
 
-        public static void insert(PreparedStatement statement, Row user) throws SQLException {
-            statement.setInt(1, user.userId);
-            statement.setInt(2, user.serverId);
-            statement.setString(3, user.joinAddress);
-            statement.setLong(4, user.registered);
-            statement.setBoolean(5, user.op);
-            statement.setBoolean(6, user.banned);
+        public void insert(PreparedStatement statement) throws SQLException {
+            statement.setInt(1, userId);
+            statement.setInt(2, serverId);
+            statement.setString(3, joinAddress);
+            statement.setLong(4, registered);
+            statement.setBoolean(5, op);
+            statement.setBoolean(6, banned);
         }
 
         public static Row extract(ResultSet set) throws SQLException {

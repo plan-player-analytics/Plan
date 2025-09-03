@@ -46,6 +46,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.tables.KillsTable.*;
 
 /**
  * Static method class for large storage queries.
@@ -537,7 +538,7 @@ public class LargeStoreQueries {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (UserInfoTable.Row row : rows) {
-                    UserInfoTable.Row.insert(statement, row);
+                    row.insert(statement);
                     statement.addBatch();
                 }
             }
@@ -550,7 +551,7 @@ public class LargeStoreQueries {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (JoinAddressTable.Row row : rows) {
-                    JoinAddressTable.Row.insert(statement, row);
+                    row.insert(statement);
                     statement.addBatch();
                 }
             }
@@ -563,7 +564,7 @@ public class LargeStoreQueries {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (PingTable.Row row : rows) {
-                    PingTable.Row.insert(statement, row);
+                    row.insert(statement);
                     statement.addBatch();
                 }
             }
@@ -576,7 +577,7 @@ public class LargeStoreQueries {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (TPSTable.Row row : rows) {
-                    TPSTable.Row.insert(statement, row);
+                    row.insert(statement);
                     statement.addBatch();
                 }
             }
@@ -589,7 +590,7 @@ public class LargeStoreQueries {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (PluginVersionTable.Row row : rows) {
-                    PluginVersionTable.Row.insert(statement, row);
+                    row.insert(statement);
                     statement.addBatch();
                 }
             }
@@ -602,7 +603,7 @@ public class LargeStoreQueries {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (SessionsTable.Row row : rows) {
-                    SessionsTable.Row.insert(statement, row, true);
+                    row.insert(statement, true);
                     statement.addBatch();
                 }
             }
@@ -653,14 +654,91 @@ public class LargeStoreQueries {
                         WorldTimesTable.SPECTATOR +
                         ")" + SELECT +
                         WorldTimesTable.USER_ID + ',' + WorldTimesTable.WORLD_ID + ',' + WorldTimesTable.SERVER_ID + ',' +
-                        SessionsTable.Row.OLD_ID + ',' +
+                        "s." + SessionsTable.ID + ',' +
                         WorldTimesTable.SURVIVAL + ',' + WorldTimesTable.CREATIVE + ',' +
                         WorldTimesTable.ADVENTURE + ',' + WorldTimesTable.SPECTATOR +
                         FROM + batchTableName + " a" +
-                        INNER_JOIN + SessionsTable.TABLE_NAME + " b ON a." + WorldTimesTable.SESSION_ID + "=s." + SessionsTable.Row.OLD_ID;
+                        INNER_JOIN + SessionsTable.TABLE_NAME + " s ON a." + WorldTimesTable.SESSION_ID + "=s." + SessionsTable.Row.OLD_ID;
                 execute(batchCopyStatement);
 
                 execute(DELETE_FROM + batchTableName);
+            }
+        };
+    }
+
+    public static Executable insertWorlds(List<WorldTable.Row> rows) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(WorldTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (WorldTable.Row row : rows) {
+                    row.insert(statement);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Transaction insertKillsWithOldSessionIds(List<KillsTable.Row> rows) {
+        return new Transaction() {
+            @Override
+            protected void performOperations() {
+                String batchTableName = "kills_batch";
+                execute(CreateTableBuilder.createTemporary(batchTableName, dbType)
+                        .column(KILLER_UUID, Sql.varchar(36)).notNull()
+                        .column(VICTIM_UUID, Sql.varchar(36)).notNull()
+                        .column(SERVER_UUID, Sql.varchar(36)).notNull()
+                        .column(WEAPON, Sql.varchar(WEAPON_COLUMN_LENGTH)).notNull()
+                        .column(DATE, Sql.LONG).notNull()
+                        .column(SESSION_ID, Sql.INT).notNull()
+                        .build());
+
+                Insert insertBuilder = Insert.into(batchTableName,
+                        KILLER_UUID,
+                        VICTIM_UUID,
+                        SERVER_UUID,
+                        WEAPON,
+                        DATE,
+                        SESSION_ID
+                );
+
+                for (KillsTable.Row row : rows) {
+                    insertBuilder.appendRow(row.killerUUID, row.victimUUID, row.serverUUID, row.weapon, row.date, row.sessionId);
+                }
+                execute(insertBuilder.build());
+
+                String batchCopyStatement = "INSERT INTO " + TABLE_NAME + " (" +
+                        SESSION_ID + ", " +
+                        KILLER_UUID + ", " +
+                        VICTIM_UUID + ", " +
+                        SERVER_UUID + ", " +
+                        WEAPON + ", " +
+                        DATE +
+                        ")" + SELECT +
+                        "s." + SessionsTable.ID + ',' +
+                        KILLER_UUID + ',' +
+                        VICTIM_UUID + ',' +
+                        SERVER_UUID + ',' +
+                        WEAPON + ',' +
+                        DATE +
+                        FROM + batchTableName + " a" +
+                        INNER_JOIN + SessionsTable.TABLE_NAME + " s ON a." + SESSION_ID + "=s." + SessionsTable.Row.OLD_ID;
+                execute(batchCopyStatement);
+
+                execute(DELETE_FROM + batchTableName);
+            }
+        };
+    }
+
+    public static Executable insertAccessLog(List<AccessLogTable.Row> rows) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(AccessLogTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (AccessLogTable.Row row : rows) {
+                    row.insert(statement);
+                    statement.addBatch();
+                }
             }
         };
     }

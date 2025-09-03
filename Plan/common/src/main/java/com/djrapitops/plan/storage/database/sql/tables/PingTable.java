@@ -98,13 +98,13 @@ public class PingTable {
             return row;
         }
 
-        public static void insert(PreparedStatement statement, Row row) throws SQLException {
-            statement.setInt(1, row.userId);
-            statement.setInt(2, row.serverId);
-            statement.setLong(3, row.date);
-            statement.setInt(4, row.maxPing);
-            statement.setInt(5, row.minPing);
-            statement.setDouble(6, row.avgPing);
+        public void insert(PreparedStatement statement) throws SQLException {
+            statement.setInt(1, userId);
+            statement.setInt(2, serverId);
+            statement.setLong(3, date);
+            statement.setInt(4, maxPing);
+            statement.setInt(5, minPing);
+            statement.setDouble(6, avgPing);
         }
 
         @Override

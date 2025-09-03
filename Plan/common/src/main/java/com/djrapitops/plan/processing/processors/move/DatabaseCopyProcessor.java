@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.processing.processors.move;
 
+import com.djrapitops.plan.delivery.domain.World;
 import com.djrapitops.plan.gathering.domain.BaseUser;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
@@ -27,6 +28,7 @@ import com.djrapitops.plan.storage.database.queries.objects.*;
 import com.djrapitops.plan.storage.database.queries.objects.lookup.IdMapper;
 import com.djrapitops.plan.storage.database.queries.objects.lookup.LookupTable;
 import com.djrapitops.plan.storage.database.queries.objects.lookup.LookupTableQueries;
+import com.djrapitops.plan.storage.database.queries.objects.lookup.ServerUUIDIdentifiable;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
@@ -38,6 +40,7 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.IntPredicate;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
@@ -101,19 +104,18 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             copySessions(serverIdLookupTable, userIdLookupTable, joinAddressLookupTable);
             LookupTable<Integer> worldIdLookupTable = copyWorlds();
             copyWorldTimes(serverIdLookupTable, userIdLookupTable, worldIdLookupTable);
+            copyKills();
+            copyAccessLog();
+            LookupTable<Integer> webGroupLookupTable = copyGroups();
+            LookupTable<Integer> webPermissionLookupTable = copyPermissions();
             // TODO
             // https://github.com/plan-player-analytics/Plan/wiki/Database-Schema
             // merge geolocations HARD (last used merging table)
             // merge nicknames HARD (last used merging table)
-            // copy worlds
-            // copy kills
-            // copy allow list bounce
-            // copy web groups
-            // copy permissions
+            // merge allow list bounce HARD (last used merging table)
             // copy group to permission
             // copy security table
             // copy user preferences
-            // copy access log
             // plan how to copy extension data
 
             // TODO deal with CompletionException
@@ -128,6 +130,26 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             }).join();
             toDB.executeTransaction(SessionsTable.Row.removeOldIdPatch()).join();
         }
+    }
+
+    private LookupTable<Integer> copyGroups() {
+        LookupTable<String> lookupTable = toDB.query(LookupTableQueries.webGroupLookupTable());
+        List<String> groups = fromDB.query(LookupTableQueries.webGroupLookupTable()).keySet()
+                .stream().filter(Predicate.not(lookupTable::contains))
+                .collect(Collectors.toList());
+        toDB.executeInTransaction(LargeStoreQueries.storeGroupNames(groups)).join();
+        return toDB.query(LookupTableQueries.webGroupLookupTable())
+                .constructIdToIdLookupTable(fromDB.query(LookupTableQueries.webPermissionLookupTable()));
+    }
+
+    private LookupTable<Integer> copyPermissions() {
+        LookupTable<String> lookupTable = toDB.query(LookupTableQueries.webPermissionLookupTable());
+        List<String> permissions = fromDB.query(LookupTableQueries.webPermissionLookupTable()).keySet()
+                .stream().filter(Predicate.not(lookupTable::contains))
+                .collect(Collectors.toList());
+        toDB.executeInTransaction(LargeStoreQueries.storePermissions(permissions)).join();
+        return toDB.query(LookupTableQueries.webPermissionLookupTable())
+                .constructIdToIdLookupTable(fromDB.query(LookupTableQueries.webPermissionLookupTable()));
     }
 
     private LookupTable<Integer> copyMissingServers() {
@@ -194,7 +216,7 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
     }
 
     private LookupTable<Integer> copyMissingJoinAddresses() {
-        LookupTable<String> joinAddressLookupTable = toDB.query(JoinAddressQueries.joinAddressLookupTable());
+        LookupTable<String> joinAddressLookupTable = toDB.query(LookupTableQueries.joinAddressLookupTable());
         List<JoinAddressTable.Row> rows = fromDB.query(JoinAddressQueries.fetchRows());
         List<JoinAddressTable.Row> newRows = rows.stream()
                 .filter(address -> joinAddressLookupTable.find(address.joinAddress).isEmpty())
@@ -206,7 +228,7 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             oldLookupTable.put(row.joinAddress, row.id);
         }
 
-        return toDB.query(JoinAddressQueries.joinAddressLookupTable())
+        return toDB.query(LookupTableQueries.joinAddressLookupTable())
                 .constructIdToIdLookupTable(oldLookupTable);
     }
 
@@ -260,8 +282,23 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
     }
 
     private LookupTable<Integer> copyWorlds() {
-        // TODO
-        return null;
+        LookupTable<World> worldLookupTable = toDB.query(LookupTableQueries.worldLookupTable());
+        batching(currentId -> {
+            List<WorldTable.Row> rows = fromDB.query(WorldTimesQueries.fetchWorldRows(currentId, ROW_LIMIT))
+                    .stream().filter(row -> !worldLookupTable.contains(world ->
+                            world.getWorldName().equals(row.name)
+                                    && world.getServerUUID().equals(row.serverUUID)))
+                    .collect(Collectors.toList());
+            mapServerUUIDs(rows);
+            toDB.executeInTransaction(LargeStoreQueries.insertWorlds(rows)).join();
+            return rows.isEmpty();
+        });
+        return toDB.query(LookupTableQueries.worldLookupTable())
+                .constructIdToIdLookupTable(fromDB.query(LookupTableQueries.worldLookupTable()));
+    }
+
+    private void mapServerUUIDs(List<? extends ServerUUIDIdentifiable> rows) {
+        rows.forEach(row -> row.setServerUUID(mapServerUUID(row.getServerUUID())));
     }
 
     private void copyWorldTimes(LookupTable<Integer> serverIdLookupTable, LookupTable<Integer> userIdLookupTable, LookupTable<Integer> worldIdLookupTable) {
@@ -271,6 +308,23 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             IdMapper.mapServerIds(rows, serverIdLookupTable);
             IdMapper.mapWorldIds(rows, worldIdLookupTable);
             toDB.executeTransaction(LargeStoreQueries.insertWorldTimesWithOldSessionIds(rows)).join();
+            return rows.isEmpty();
+        });
+    }
+
+    private void copyKills() {
+        batching(currentId -> {
+            List<KillsTable.Row> rows = fromDB.query(KillQueries.fetchRows(currentId, ROW_LIMIT));
+            mapServerUUIDs(rows);
+            toDB.executeTransaction(LargeStoreQueries.insertKillsWithOldSessionIds(rows)).join();
+            return rows.isEmpty();
+        });
+    }
+
+    private void copyAccessLog() {
+        batching(currentId -> {
+            List<AccessLogTable.Row> rows = fromDB.query(AccessLogTable.fetchRows(currentId, ROW_LIMIT));
+            toDB.executeInTransaction(LargeStoreQueries.insertAccessLog(rows)).join();
             return rows.isEmpty();
         });
     }

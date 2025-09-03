@@ -223,4 +223,13 @@ public class WorldTimesQueries {
                 .toString();
         return db -> db.queryList(sql, WorldTimesTable.Row::extract);
     }
+
+    public static Query<List<WorldTable.Row>> fetchWorldRows(int currentId, int rowLimit) {
+        String sql = Select.all(WorldTable.TABLE_NAME)
+                .where(WorldTable.ID + '>' + currentId)
+                .limit(rowLimit)
+                .toString();
+        return db -> db.queryList(sql, WorldTable.Row::extract);
+    }
+
 }

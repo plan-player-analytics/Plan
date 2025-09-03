@@ -22,6 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.function.Predicate;
 
 /**
  * @author AuroraLS3
@@ -50,6 +51,21 @@ public class LookupTable<I> {
         return Optional.ofNullable(identifierToId.get(id));
     }
 
+    public Optional<Integer> find(Predicate<I> predicate) {
+        return identifierToId.entrySet().stream()
+                .filter(entry -> predicate.test(entry.getKey()))
+                .map(Map.Entry::getValue)
+                .findFirst();
+    }
+
+    public boolean contains(Predicate<I> predicate) {
+        return find(predicate).isPresent();
+    }
+
+    public boolean contains(I identifier) {
+        return identifierToId.containsKey(identifier);
+    }
+
     public LookupTable<Integer> constructIdToIdLookupTable(LookupTable<I> oldIds) {
         LookupTable<Integer> oldIdToNewId = new LookupTable<>();
         oldIds.identifierToId.forEach((identifier, oldId) -> find(identifier)
@@ -60,4 +76,5 @@ public class LookupTable<I> {
     }
 
     public Set<I> keySet() {return identifierToId.keySet();}
+
 }

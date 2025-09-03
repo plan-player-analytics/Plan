@@ -58,8 +58,8 @@ public class JoinAddressTable {
             return row;
         }
 
-        public static void insert(PreparedStatement statement, Row row) throws SQLException {
-            statement.setString(1, row.joinAddress);
+        public void insert(PreparedStatement statement) throws SQLException {
+            statement.setString(1, joinAddress);
         }
     }
 }

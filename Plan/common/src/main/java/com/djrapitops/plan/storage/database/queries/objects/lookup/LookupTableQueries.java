@@ -16,10 +16,16 @@
  */
 package com.djrapitops.plan.storage.database.queries.objects.lookup;
 
+import com.djrapitops.plan.delivery.domain.World;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.sql.building.Select;
+import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
+import com.djrapitops.plan.storage.database.sql.tables.WorldTable;
+import com.djrapitops.plan.storage.database.sql.tables.webuser.WebGroupTable;
+import com.djrapitops.plan.storage.database.sql.tables.webuser.WebPermissionTable;
 
 import java.util.HashMap;
 import java.util.UUID;
@@ -56,4 +62,35 @@ public class LookupTableQueries {
                 ), HashMap::new));
     }
 
+    public static Query<LookupTable<String>> joinAddressLookupTable() {
+        return db -> new LookupTable<>(db.queryMap(Select.all(JoinAddressTable.TABLE_NAME).toString(),
+                (set, map) -> map.put(
+                        set.getString(JoinAddressTable.JOIN_ADDRESS),
+                        set.getInt(JoinAddressTable.ID)
+                )));
+    }
+
+    public static Query<LookupTable<World>> worldLookupTable() {
+        return db -> new LookupTable<>(db.queryMap(Select.all(WorldTable.TABLE_NAME).toString(),
+                (set, map) -> map.put(
+                        new World(set.getString(WorldTable.NAME), ServerUUID.fromString(set.getString(WorldTable.SERVER_UUID))),
+                        set.getInt(WorldTable.ID)
+                )));
+    }
+
+    public static Query<LookupTable<String>> webGroupLookupTable() {
+        return db -> new LookupTable<>(db.queryMap(Select.all(WebGroupTable.TABLE_NAME).toString(),
+                (set, map) -> map.put(
+                        set.getString(WebGroupTable.NAME),
+                        set.getInt(WebGroupTable.ID)
+                )));
+    }
+
+    public static Query<LookupTable<String>> webPermissionLookupTable() {
+        return db -> new LookupTable<>(db.queryMap(Select.all(WebPermissionTable.TABLE_NAME).toString(),
+                (set, map) -> map.put(
+                        set.getString(WebPermissionTable.PERMISSION),
+                        set.getInt(WebPermissionTable.ID)
+                )));
+    }
 }

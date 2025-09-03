@@ -22,7 +22,6 @@ import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.queries.RowExtractors;
-import com.djrapitops.plan.storage.database.queries.objects.lookup.LookupTable;
 import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
@@ -317,13 +316,5 @@ public class JoinAddressQueries {
 
     public static Query<List<JoinAddressTable.Row>> fetchRows() {
         return db -> db.queryList(Select.all(JoinAddressTable.TABLE_NAME).toString(), JoinAddressTable.Row::extract);
-    }
-
-    public static Query<LookupTable<String>> joinAddressLookupTable() {
-        return db -> new LookupTable<>(db.queryMap(Select.all(JoinAddressTable.TABLE_NAME).toString(),
-                (set, map) -> map.put(
-                        set.getString(JoinAddressTable.JOIN_ADDRESS),
-                        set.getInt(JoinAddressTable.ID)
-                )));
     }
 }
