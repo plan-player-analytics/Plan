@@ -9,7 +9,7 @@ buildscript {
 
 plugins {
     id("base")
-    id "org.sonarqube" version "6.2.0.5505"
+    id "org.sonarqube" version "6.3.1.5724"
     id "com.gradleup.shadow" version "9.0.0-beta6" apply false
     id "fabric-loom" version "1.9-SNAPSHOT" apply false
 }
@@ -75,13 +75,13 @@ subprojects {
         jetbrainsAnnotationsVersion = "26.0.2"
         jettyVersion = "11.0.26"
         mysqlVersion = "9.4.0"
-        mariadbVersion = "3.5.5"
+        mariadbVersion = "3.5.6"
         sqliteVersion = "3.42.0.1"
         adventureVersion = "4.24.0"
         hikariVersion = "7.0.2"
         slf4jVersion = "2.0.17"
-        geoIpVersion = "4.3.1"
-        gsonVersion = "2.13.1"
+        geoIpVersion = "4.4.0"
+        gsonVersion = "2.13.2"
         dependencyDownloadVersion = "2.0.0"
         ipAddressMatcherVersion = "5.5.1"
         jasyptVersion = "1.9.3"
