@@ -10,7 +10,7 @@ buildscript {
 plugins {
     id("base")
     id "org.sonarqube" version "6.3.1.5724"
-    id "com.gradleup.shadow" version "9.0.0-beta6" apply false
+    id "com.gradleup.shadow" version "9.2.2-SNAPSHOT" apply false
     id "fabric-loom" version "1.9-SNAPSHOT" apply false
 }
 
