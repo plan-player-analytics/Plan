@@ -258,7 +258,7 @@ html:
         noServersLong: '看起来 Plan 没有安装在任何游戏服务器上或者游戏服务器未连接到相同的数据库。 群组网络教程请参见：<a href="https://github.com/plan-player-analytics/Plan/wiki">wiki</a>'
         noSpongeChunks: "区块数据在 Sponge 服务端不可用"
         noUptimeCalculation: "服务器离线，或者从未安装Plan后重新启动过。"
-        performanceNoGameServers: "TPS、实体或块数据不是从代理服务器收集的，因为它们没有游戏滴答循环。"
+        performanceNoGameServers: "TPS、实体或块数据不是从代理服务器收集的，因为它们没有游戏tick循环。"
         predictedNewPlayerRetention: "这个数值是基于之前的玩家数据预测的"
     error:
         401Unauthorized: "未认证"
