@@ -16,13 +16,13 @@
  */
 package net.playeranalytics.plan.gathering.listeners.events;
 
-import com.mojang.authlib.GameProfile;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.network.packet.c2s.handshake.HandshakeC2SPacket;
 import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
+import net.minecraft.server.PlayerConfigEntry;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayNetworkHandler;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -173,7 +173,7 @@ public class PlanFabricEvents {
          * @param profile the profile of the player
          * @param reason  the provided kick reason (null if player is permitted to join)
          */
-        void onLogin(SocketAddress address, GameProfile profile, Text reason);
+        void onLogin(SocketAddress address, PlayerConfigEntry profile, Text reason);
     }
 
     @FunctionalInterface
