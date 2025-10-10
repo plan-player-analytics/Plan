@@ -1342,6 +1342,11 @@
   resolved "https://registry.yarnpkg.com/@uiw/color-convert/-/color-convert-2.8.0.tgz#f6aff6496bdaa995a33bf0e5290375c8f99e4d51"
   integrity sha512-eRErVaYCkhtd+lltuGykQSwmxvFU7gTjF3AHHWsTQNa3o+sEBeRNY4urjpvRZRhsV6XgAbwsKe/IAZzuBBLx7g==
 
+"@uiw/color-convert@2.9.0":
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/@uiw/color-convert/-/color-convert-2.9.0.tgz#35f16477fc4e7239838d6b6bf25cf0756526d049"
+  integrity sha512-tFm6iac8iN3VL9IIAXKAVpBX6ZQH7ucCvb+EgZNM5y8prRWlk53cERnP4RycE3wnYb/HUKW0lrngoygQnEWAHg==
+
 "@uiw/react-color-alpha@2.8.0":
   version "2.8.0"
   resolved "https://registry.yarnpkg.com/@uiw/react-color-alpha/-/react-color-alpha-2.8.0.tgz#8da68523c0cf5d59a692826aafaad4ec6badb797"
@@ -1416,18 +1421,23 @@
   dependencies:
     "@uiw/color-convert" "2.8.0"
 
-"@uiw/react-color-wheel@^2.8.0":
-  version "2.8.0"
-  resolved "https://registry.yarnpkg.com/@uiw/react-color-wheel/-/react-color-wheel-2.8.0.tgz#83f7053fdb3bc287c10fdf9c871120812406cdce"
-  integrity sha512-yajL/ckt9xopU1nf/Z5Fpw6iMuuW7knF3FCh/dCPsuzPB+lrqPi9zZmrgRnbl6H2pMYtXG/KqH5DDeryIDXfpg==
+"@uiw/react-color-wheel@^2.9.0":
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/@uiw/react-color-wheel/-/react-color-wheel-2.9.0.tgz#7a24402bcc1b762953158a0a1e0b6b17ba0e727e"
+  integrity sha512-/YYlqqppYtZbet2NLU5Pk1eR4WZ71O8YCwxFGYtJEIXLkyDjsBuznnobYr5MM4YHsJBPNrml3PCoSVoYVki4KQ==
   dependencies:
-    "@uiw/color-convert" "2.8.0"
-    "@uiw/react-drag-event-interactive" "2.8.0"
+    "@uiw/color-convert" "2.9.0"
+    "@uiw/react-drag-event-interactive" "2.9.0"
 
 "@uiw/react-drag-event-interactive@2.8.0":
   version "2.8.0"
   resolved "https://registry.yarnpkg.com/@uiw/react-drag-event-interactive/-/react-drag-event-interactive-2.8.0.tgz#108abafcf5a5fec4bcb95fd6cecf8e2c63c77dfd"
   integrity sha512-BE9eakoBxGtIk267weYvFm13NrGa+4k/6Iv5e3XxW6gToCGVc4QODQBoRFSNpR28W7JIekgqVjlNyvBUAmRwMg==
+
+"@uiw/react-drag-event-interactive@2.9.0":
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/@uiw/react-drag-event-interactive/-/react-drag-event-interactive-2.9.0.tgz#55f863f88576aab99b989f34043295d6c1f3f6ab"
+  integrity sha512-oBqrClsSuYA3IjkSHp4uHOBLgPkR98KeKeheqCRltF8w/a1CPaFCl43pyKyxwXaTV6qM6cb3VkT3JRCHMNqTzA==
 
 "@vitejs/plugin-react@^5.0.2":
   version "5.0.2"
