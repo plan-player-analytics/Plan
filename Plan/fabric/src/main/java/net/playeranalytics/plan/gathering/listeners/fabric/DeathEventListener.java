@@ -66,7 +66,7 @@ public class DeathEventListener implements FabricListener {
             return;
         }
 
-        ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register((world, killer, killedEntity) ->
+        ServerEntityCombatEvents.AFTER_KILLED_OTHER_ENTITY.register((world, killer, killedEntity, damageSource) ->
                 {
                     if (!this.isEnabled) {
                         return;

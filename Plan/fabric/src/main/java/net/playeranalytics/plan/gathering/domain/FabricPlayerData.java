@@ -46,7 +46,7 @@ public class FabricPlayerData implements PlatformPlayerData {
 
     @Override
     public String getName() {
-        return player.getGameProfile().getName();
+        return player.getGameProfile().name();
     }
 
     @Override
@@ -56,12 +56,12 @@ public class FabricPlayerData implements PlatformPlayerData {
 
     @Override
     public Optional<Boolean> isOperator() {
-        return Optional.of(server.getPlayerManager().getOpList().get(player.getGameProfile()) != null);
+        return Optional.of(server.getPlayerManager().getOpList().get(player.getPlayerConfigEntry()) != null);
     }
 
     @Override
     public Optional<String> getCurrentWorld() {
-        return Optional.of(player.getWorld().getRegistryKey().getValue().toString());
+        return Optional.of(player.getEntityWorld().getRegistryKey().getValue().toString());
     }
 
     @Override
