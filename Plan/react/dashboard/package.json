@@ -44,7 +44,7 @@
     "react-transition-group": "^4.4.5",
     "sass": "^1.92.1",
     "source-map-explorer": "^2.5.2",
-    "swagger-ui": "^5.29.0",
+    "swagger-ui": "^5.30.0",
     "web-vitals": "^5.1.0"
   },
   "scripts": {
