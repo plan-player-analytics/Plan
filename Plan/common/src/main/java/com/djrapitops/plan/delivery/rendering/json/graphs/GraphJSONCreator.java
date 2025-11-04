@@ -64,6 +64,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -474,11 +475,13 @@ public class GraphJSONCreator {
         return mapToJson(pieColors, joinAddresses);
     }
 
-    private static void removeFilteredAddresses(List<JoinAddressCount> addresses, List<String> filteredJoinAddresses) {
-        if (filteredJoinAddresses.isEmpty() || filteredJoinAddresses.equals(List.of("play.example.com"))) return;
+    private static void removeFilteredAddresses(List<JoinAddressCount> addresses, List<Pattern> filteredJoinAddresses) {
+        if (filteredJoinAddresses.isEmpty() || filteredJoinAddresses.equals(List.of(Pattern.compile("play\\.example\\.com")))) return;
 
         List<JoinAddressCount> addressesToRemove = addresses.stream()
-                .filter(address -> filteredJoinAddresses.contains(address.getJoinAddress()))
+                .filter(address ->
+                        filteredJoinAddresses.stream().anyMatch(p -> p.matcher(address.getJoinAddress()).matches())
+                )
                 .collect(Collectors.toList());
 
         if (!addressesToRemove.isEmpty()) {
@@ -505,7 +508,7 @@ public class GraphJSONCreator {
             translateUnknown(addressesByDate.getValue());
         }
 
-        List<String> filteredJoinAddresses = config.get(DataGatheringSettings.FILTER_JOIN_ADDRESSES);
+        List<Pattern> filteredJoinAddresses = Lists.map(config.get(DataGatheringSettings.FILTER_JOIN_ADDRESSES), Pattern::compile);
 
         List<JoinAddressCounts> joinAddressCounts = joinAddresses.stream()
                 .map(addressesOnDay -> {
