@@ -118,7 +118,8 @@ public class Contributors {
             new Contributor("Zaemong", LANG),
             new Contributor("TWJohnJohn20116", LANG),
             new Contributor("YannicHock", CODE),
-            new Contributor("SaolGhra", CODE)
+            new Contributor("SaolGhra", CODE),
+            new Contributor("Jsinco", CODE)
     };
 
     private Contributors() {

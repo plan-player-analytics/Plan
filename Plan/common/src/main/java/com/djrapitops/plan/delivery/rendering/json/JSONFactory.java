@@ -52,12 +52,14 @@ import com.djrapitops.plan.storage.database.queries.objects.playertable.ServerTa
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import com.djrapitops.plan.utilities.dev.Untrusted;
+import com.djrapitops.plan.utilities.java.Lists;
 import com.djrapitops.plan.utilities.java.Maps;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -159,13 +161,13 @@ public class JSONFactory {
         return db.query(PlayerRetentionQueries.fetchRetentionData());
     }
 
-    private static void removeFiltered(Map<UUID, String> addressByPlayerUUID, List<String> filteredJoinAddresses) {
-        if (filteredJoinAddresses.isEmpty() || filteredJoinAddresses.equals(List.of("play.example.com"))) return;
+    private static void removeFiltered(Map<UUID, String> addressByPlayerUUID, List<Pattern> filteredJoinAddresses) {
+        if (filteredJoinAddresses.isEmpty() || filteredJoinAddresses.equals(List.of(Pattern.compile("play\\.example\\.com")))) return;
 
         Set<UUID> toRemove = new HashSet<>();
         // Remove filtered addresses from the data
         for (Map.Entry<UUID, String> entry : addressByPlayerUUID.entrySet()) {
-            if (filteredJoinAddresses.contains(entry.getValue())) {
+            if (filteredJoinAddresses.stream().anyMatch(pattern -> pattern.matcher(entry.getValue()).matches())) {
                 toRemove.add(entry.getKey());
             }
         }
@@ -176,7 +178,7 @@ public class JSONFactory {
 
     public PlayerJoinAddresses playerJoinAddresses(ServerUUID serverUUID, boolean includeByPlayerMap) {
         Database db = dbSystem.getDatabase();
-        List<String> filteredJoinAddresses = config.get(DataGatheringSettings.FILTER_JOIN_ADDRESSES);
+        List<Pattern> filteredJoinAddresses = Lists.map(config.get(DataGatheringSettings.FILTER_JOIN_ADDRESSES), Pattern::compile);
         if (includeByPlayerMap) {
             Map<UUID, String> addresses = db.query(JoinAddressQueries.latestJoinAddressesOfPlayers(serverUUID));
 
@@ -188,16 +190,20 @@ public class JSONFactory {
             );
         } else {
             List<String> addresses = db.query(JoinAddressQueries.uniqueJoinAddresses(serverUUID));
-            addresses.removeAll(filteredJoinAddresses);
+            addresses.removeIf(address ->
+                    filteredJoinAddresses.stream().anyMatch(pattern -> pattern.matcher(address).matches())
+            );
             return new PlayerJoinAddresses(addresses, null);
         }
     }
 
     public PlayerJoinAddresses playerJoinAddresses(boolean includeByPlayerMap) {
         Database db = dbSystem.getDatabase();
-        List<String> filteredJoinAddresses = config.get(DataGatheringSettings.FILTER_JOIN_ADDRESSES);
+        List<Pattern> filteredJoinAddresses = Lists.map(config.get(DataGatheringSettings.FILTER_JOIN_ADDRESSES), Pattern::compile);
         List<String> unique = db.query(JoinAddressQueries.uniqueJoinAddresses());
-        unique.removeAll(filteredJoinAddresses);
+        unique.removeIf(address ->
+                filteredJoinAddresses.stream().anyMatch(pattern -> pattern.matcher(address).matches())
+        );
         if (includeByPlayerMap) {
             Map<UUID, String> latest = db.query(JoinAddressQueries.latestJoinAddressesOfPlayers());
             removeFiltered(latest, filteredJoinAddresses);

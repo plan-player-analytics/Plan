@@ -19,6 +19,7 @@ package com.djrapitops.plan.gathering;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.utilities.dev.Untrusted;
+import com.djrapitops.plan.utilities.java.Lists;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
@@ -26,7 +27,9 @@ import javax.inject.Singleton;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.regex.Pattern;
 
 /**
  * Utility for validating and sanitizing join addresses.
@@ -37,7 +40,7 @@ import java.util.List;
 public class JoinAddressValidator {
 
     private final PlanConfig config;
-    private List<String> filteredAddresses;
+    private List<Pattern> filteredAddresses;
 
     @Inject
     public JoinAddressValidator(PlanConfig config) {
@@ -46,9 +49,13 @@ public class JoinAddressValidator {
     }
 
     private void prepareFilteredAddresses() {
-        if (filteredAddresses == null) {
-            filteredAddresses = config.get(DataGatheringSettings.FILTER_JOIN_ADDRESSES);
-            if (filteredAddresses == null) filteredAddresses = new ArrayList<>();
+        if (filteredAddresses != null) return;
+
+        List<String> unCompiledFilteredAddresses = config.get(DataGatheringSettings.FILTER_JOIN_ADDRESSES);
+        if (unCompiledFilteredAddresses != null) {
+            filteredAddresses = Lists.map(unCompiledFilteredAddresses, Pattern::compile);
+        } else {
+            filteredAddresses = new ArrayList<>();
         }
     }
 
@@ -72,7 +79,8 @@ public class JoinAddressValidator {
                 address = StringUtils.lowerCase(address);
             }
             prepareFilteredAddresses();
-            if (filteredAddresses.contains(address)) {
+            @Untrusted final String finalAddress = address;
+            if (filteredAddresses.stream().anyMatch(pattern -> pattern.matcher(finalAddress).matches())) {
                 address = "";
             }
         }

@@ -11,7 +11,7 @@ plugins {
     id("base")
     id "org.sonarqube" version "6.3.1.5724"
     id "com.gradleup.shadow" version "9.0.0-beta6" apply false
-    id "fabric-loom" version "1.9-SNAPSHOT" apply false
+    id "fabric-loom" version "1.11-SNAPSHOT" apply false
 }
 
 apply plugin: "nebula-aggregate-javadocs"
@@ -90,7 +90,7 @@ subprojects {
         placeholderapiVersion = "2.11.5"
         nkPlaceholderapiVersion = "1.4-SNAPSHOT"
 
-        junitVersion = "5.13.4"
+        junitVersion = "6.0.1"
         mockitoVersion = "5.19.0"
         seleniumVersion = "4.35.0"
         testContainersVersion = "1.21.3"
@@ -121,7 +121,7 @@ subprojects {
         }
 
         // Required for JUnit to discover tests in modules.
-        testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+        testRuntimeOnly("org.junit.platform:junit-platform-launcher:$junitVersion")
     }
 
     test {
