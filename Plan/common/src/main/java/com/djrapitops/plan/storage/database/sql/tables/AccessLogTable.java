@@ -27,6 +27,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
+import static com.djrapitops.plan.storage.database.sql.building.Sql.INSERT_INTO;
+
 /**
  * Represents plan_access_log table.
  *
@@ -41,7 +43,7 @@ public class AccessLogTable {
     public static final String REQUEST_METHOD = "request_method";
     public static final String REQUEST_URI = "request_uri";
     public static final String RESPONSE_CODE = "response_code";
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " (" +
             TIME + ',' + FROM_IP + ',' + REQUEST_METHOD + ',' + REQUEST_URI + ',' + RESPONSE_CODE +
             ") VALUES (?, ?, ?, ?, ?)";
 

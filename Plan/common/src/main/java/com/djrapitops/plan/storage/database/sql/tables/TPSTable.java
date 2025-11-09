@@ -26,6 +26,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static com.djrapitops.plan.storage.database.sql.building.Sql.INSERT_INTO;
+
 /**
  * Table information about 'plan_tps'.
  *
@@ -48,7 +50,7 @@ public class TPSTable {
     public static final String MSPT_AVERAGE = "mspt_average";
     public static final String MSPT_95TH_PERCENTILE = "mspt_95th_percentile";
 
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " ("
             + SERVER_ID + ','
             + DATE + ','
             + TPS + ','

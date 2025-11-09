@@ -114,7 +114,7 @@ public class StoreServerTableResultTransaction extends ThrowawayTransaction {
     }
 
     private void insertNewRows(Integer tableID, Integer afterRow, List<Object[]> rows) {
-        String sql = "INSERT INTO " + TABLE_NAME + '(' +
+        String sql = INSERT_INTO + TABLE_NAME + '(' +
                 TABLE_ID + ',' +
                 SERVER_UUID + ',' +
                 VALUE_1 + ',' +

@@ -20,6 +20,7 @@ import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.FROM;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.INSERT_INTO;
 
 /**
  * Replaces user_id and server_id foreign keys with respective uuid fields in sessions table.
@@ -57,7 +58,7 @@ public class SessionsOptimizationPatch extends Patch {
 
             execute(SessionsTable.createTableSQL(dbType));
 
-            execute("INSERT INTO " + tableName + " (" +
+            execute(INSERT_INTO + tableName + " (" +
                     SessionsTable.USER_ID + ',' +
                     SessionsTable.SERVER_ID + ',' +
                     SessionsTable.ID + ',' +

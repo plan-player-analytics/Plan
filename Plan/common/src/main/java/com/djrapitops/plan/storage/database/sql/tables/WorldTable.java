@@ -49,7 +49,7 @@ public class WorldTable {
     public static final String SERVER_UUID = "server_uuid";
     public static final String NAME = "world_name";
 
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " ("
             + NAME + ','
             + SERVER_UUID
             + ") VALUES (?, ?)";

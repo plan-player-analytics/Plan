@@ -35,6 +35,8 @@ import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.djrapitops.plan.storage.database.sql.building.Sql.INSERT_INTO;
+
 /**
  * Table information about 'plan_kills'.
  * <p>
@@ -59,7 +61,7 @@ public class KillsTable {
 
     public static final int WEAPON_COLUMN_LENGTH = 30;
 
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " ("
             + SESSION_ID + ','
             + KILLER_UUID + ','
             + VICTIM_UUID + ','
@@ -128,6 +130,15 @@ public class KillsTable {
             row.sessionId = set.getInt(SESSION_ID);
             row.weapon = set.getString(WEAPON);
             return row;
+        }
+
+        public void insert(PreparedStatement statement) throws SQLException {
+            statement.setString(1, killerUUID.toString());
+            statement.setString(2, victimUUID.toString());
+            statement.setString(3, serverUUID.toString());
+            statement.setLong(4, date);
+            statement.setInt(5, sessionId);
+            statement.setString(6, weapon);
         }
 
         @Override

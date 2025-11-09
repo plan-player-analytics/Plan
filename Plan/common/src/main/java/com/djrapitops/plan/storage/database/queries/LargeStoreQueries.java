@@ -615,8 +615,8 @@ public class LargeStoreQueries {
         return new Transaction() {
             @Override
             protected void performOperations() {
-                String batchTableName = "world_times_batch";
-                execute(CreateTableBuilder.createTemporary(batchTableName, dbType)
+                String batchTableName = "plan_world_times_batch";
+                execute(CreateTableBuilder.create(batchTableName, dbType)
                         .column(WorldTimesTable.USER_ID, Sql.INT).notNull()
                         .column(WorldTimesTable.WORLD_ID, Sql.INT).notNull()
                         .column(WorldTimesTable.SERVER_ID, Sql.INT).notNull()
@@ -627,7 +627,7 @@ public class LargeStoreQueries {
                         .column(WorldTimesTable.SPECTATOR, Sql.LONG).notNull().defaultValue("0")
                         .build());
 
-                Insert insertBuilder = Insert.into(batchTableName,
+                String insertSql = Insert.values(batchTableName,
                         WorldTimesTable.USER_ID,
                         WorldTimesTable.WORLD_ID,
                         WorldTimesTable.SERVER_ID,
@@ -638,11 +638,15 @@ public class LargeStoreQueries {
                         WorldTimesTable.SPECTATOR
                 );
 
-                for (WorldTimesTable.Row row : rows) {
-                    insertBuilder.appendRow(row.userId, row.worldId, row.serverId, row.sessionId,
-                            row.survivalTime, row.creativeTime, row.adventureTime, row.spectatorTime);
-                }
-                execute(insertBuilder.build());
+                execute(new ExecBatchStatement(insertSql) {
+                    @Override
+                    public void prepare(PreparedStatement statement) throws SQLException {
+                        for (WorldTimesTable.Row row : rows) {
+                            row.insert(statement);
+                            statement.addBatch();
+                        }
+                    }
+                });
 
                 String batchCopyStatement = INSERT_INTO + WorldTimesTable.TABLE_NAME + " (" +
                         WorldTimesTable.USER_ID + ", " +
@@ -654,7 +658,7 @@ public class LargeStoreQueries {
                         WorldTimesTable.ADVENTURE + ", " +
                         WorldTimesTable.SPECTATOR +
                         ")" + SELECT +
-                        WorldTimesTable.USER_ID + ',' + WorldTimesTable.WORLD_ID + ',' + WorldTimesTable.SERVER_ID + ',' +
+                        "a." + WorldTimesTable.USER_ID + ',' + WorldTimesTable.WORLD_ID + ",a." + WorldTimesTable.SERVER_ID + ',' +
                         "s." + SessionsTable.ID + ',' +
                         WorldTimesTable.SURVIVAL + ',' + WorldTimesTable.CREATIVE + ',' +
                         WorldTimesTable.ADVENTURE + ',' + WorldTimesTable.SPECTATOR +
@@ -694,19 +698,24 @@ public class LargeStoreQueries {
                         .column(SESSION_ID, Sql.INT).notNull()
                         .build());
 
-                Insert insertBuilder = Insert.into(batchTableName,
+                String insertSql = Insert.values(batchTableName,
                         KILLER_UUID,
                         VICTIM_UUID,
                         SERVER_UUID,
-                        WEAPON,
                         DATE,
-                        SESSION_ID
+                        SESSION_ID,
+                        WEAPON
                 );
 
-                for (KillsTable.Row row : rows) {
-                    insertBuilder.appendRow(row.killerUUID, row.victimUUID, row.serverUUID, row.weapon, row.date, row.sessionId);
-                }
-                execute(insertBuilder.build());
+                execute(new ExecBatchStatement(insertSql) {
+                    @Override
+                    public void prepare(PreparedStatement statement) throws SQLException {
+                        for (KillsTable.Row row : rows) {
+                            row.insert(statement);
+                            statement.addBatch();
+                        }
+                    }
+                });
 
                 String batchCopyStatement = INSERT_INTO + TABLE_NAME + " (" +
                         SESSION_ID + ", " +

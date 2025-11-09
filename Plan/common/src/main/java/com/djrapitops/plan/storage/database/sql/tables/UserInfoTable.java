@@ -29,6 +29,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static com.djrapitops.plan.storage.database.sql.building.Sql.INSERT_INTO;
+
 /**
  * Table information about 'plan_user_info'.
  * <p>
@@ -55,7 +57,7 @@ public class UserInfoTable {
     @Deprecated(since = "5.4 build 1722")
     public static final String JOIN_ADDRESS = "join_address";
 
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " (" +
             USER_ID + ',' +
             REGISTERED + ',' +
             SERVER_ID + ',' +
@@ -83,7 +85,7 @@ public class UserInfoTable {
     }
 
     public static class Row implements UserIdentifiable, ServerIdentifiable {
-        public static final String INSERT_STATEMENT = Insert.values(TABLE_NAME, USER_ID, SERVER_ID, JOIN_ADDRESS, OP, BANNED);
+        public static final String INSERT_STATEMENT = Insert.values(TABLE_NAME, USER_ID, SERVER_ID, JOIN_ADDRESS, REGISTERED, OP, BANNED);
 
         public int id;
         public int userId;

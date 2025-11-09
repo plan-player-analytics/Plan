@@ -60,7 +60,7 @@ public class SessionsTable {
     public static final String AFK_TIME = "afk_time";
     public static final String JOIN_ADDRESS_ID = "join_address_id";
 
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " ("
             + USER_ID + ','
             + SESSION_START + ','
             + SESSION_END + ','
@@ -205,8 +205,8 @@ public class SessionsTable {
         public static String OLD_ID = "old_id";
         public static String NEW_ID = "new_id";
 
-        public static String REMOVE_ALL_STATEMENT = "DELETE FROM " + TABLE_NAME;
-        public static String INSERT_ALL_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" + OLD_ID + ", " + NEW_ID + ")" +
+        public static String REMOVE_ALL_STATEMENT = DELETE_FROM + TABLE_NAME;
+        public static String INSERT_ALL_STATEMENT = INSERT_INTO + TABLE_NAME + " (" + OLD_ID + ", " + NEW_ID + ")" +
                 SELECT + Row.OLD_ID + ',' + SessionsTable.ID + FROM + SessionsTable.TABLE_NAME;
         public static String DROP_TABLE_STATEMENT = "DROP TABLE IF EXISTS " + TABLE_NAME;
 

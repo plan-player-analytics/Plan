@@ -19,6 +19,7 @@ package com.djrapitops.plan.storage.database;
 import com.djrapitops.plan.exceptions.database.DBInitException;
 import com.djrapitops.plan.storage.database.queries.*;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
+import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 
@@ -133,6 +134,15 @@ public interface Database {
             @Override
             protected void performOperations() {
                 execute(executable);
+            }
+        });
+    }
+
+    default CompletableFuture<?> executeInTransaction(String sql) {
+        return executeInTransaction(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) {
+                // Nothing to prepare
             }
         });
     }

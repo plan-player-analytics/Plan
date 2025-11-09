@@ -117,7 +117,7 @@ public class StorePlayerTableResultTransaction extends ThrowawayTransaction {
     }
 
     private void insertNewRows(Integer tableID, Integer afterRow, List<Object[]> rows) {
-        String sql = "INSERT INTO " + TABLE_NAME + '(' +
+        String sql = INSERT_INTO + TABLE_NAME + '(' +
                 TABLE_ID + ',' +
                 USER_UUID + ',' +
                 VALUE_1 + ',' +

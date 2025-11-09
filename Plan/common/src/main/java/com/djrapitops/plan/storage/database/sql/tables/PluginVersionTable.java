@@ -26,6 +26,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static com.djrapitops.plan.storage.database.sql.building.Sql.INSERT_INTO;
+
 /**
  * Represents plan_plugin_versions table.
  * <p>
@@ -46,7 +48,7 @@ public class PluginVersionTable {
     public static final int MAX_NAME_LENGTH = 100;
     public static final int MAX_VERSION_LENGTH = 255;
 
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " ("
             + SERVER_ID + ','
             + PLUGIN_NAME + ','
             + VERSION + ','

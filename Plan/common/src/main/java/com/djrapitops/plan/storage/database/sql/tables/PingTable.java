@@ -28,6 +28,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+import static com.djrapitops.plan.storage.database.sql.building.Sql.INSERT_INTO;
+
 /**
  * Table information about 'plan_ping'.
  * <p>
@@ -48,7 +50,7 @@ public class PingTable {
     public static final String AVG_PING = "avg_ping";
     public static final String MIN_PING = "min_ping";
 
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " (" +
             USER_ID + ',' +
             SERVER_ID + ',' +
             DATE + ',' +

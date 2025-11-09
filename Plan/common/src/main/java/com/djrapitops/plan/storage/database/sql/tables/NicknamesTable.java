@@ -54,7 +54,7 @@ public class NicknamesTable {
     public static final String NICKNAME = "nickname";
     public static final String LAST_USED = "last_used";
 
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " (" +
             USER_UUID + ',' +
             SERVER_UUID + ',' +
             NICKNAME + ',' +
@@ -71,7 +71,7 @@ public class NicknamesTable {
             "ON DUPLICATE KEY UPDATE " +
             LAST_USED + " = GREATEST(VALUES(" + LAST_USED + "), " + LAST_USED + ");";
     public static final String UPSERT_STATEMENT_SQLITE = INSERT_INTO + TABLE_NAME + " (" + USER_UUID + ", " + SERVER_UUID + ", " + NICKNAME + ", " + LAST_USED + ") " +
-            "VALUES (?, ?, ?) " +
+            "VALUES (?, ?, ?, ?) " +
             "ON CONFLICT(" + USER_UUID + ',' + SERVER_UUID + ',' + NICKNAME + ") DO UPDATE SET " +
             LAST_USED + " = MAX(excluded." + LAST_USED + ", " + TABLE_NAME + "." + LAST_USED + ");";
 

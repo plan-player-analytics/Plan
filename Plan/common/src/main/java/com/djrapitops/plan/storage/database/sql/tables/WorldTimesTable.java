@@ -38,6 +38,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
 
+import static com.djrapitops.plan.storage.database.sql.building.Sql.INSERT_INTO;
+
 /**
  * Information about database table 'plan_world_times'.
  * <p>
@@ -63,7 +65,7 @@ public class WorldTimesTable {
     public static final String ADVENTURE = "adventure_time";
     public static final String SPECTATOR = "spectator_time";
 
-    public static final String INSERT_STATEMENT = "INSERT INTO " + WorldTimesTable.TABLE_NAME + " (" +
+    public static final String INSERT_STATEMENT = INSERT_INTO + WorldTimesTable.TABLE_NAME + " (" +
             WorldTimesTable.SESSION_ID + ',' +
             WorldTimesTable.WORLD_ID + ',' +
             WorldTimesTable.USER_ID + ',' +
@@ -184,6 +186,17 @@ public class WorldTimesTable {
         @Override
         public void setWorldId(int worldId) {
             this.worldId = worldId;
+        }
+
+        public void insert(PreparedStatement statement) throws SQLException {
+            statement.setInt(1, userId);
+            statement.setInt(2, worldId);
+            statement.setInt(3, serverId);
+            statement.setInt(4, sessionId);
+            statement.setLong(5, survivalTime);
+            statement.setLong(6, creativeTime);
+            statement.setLong(7, adventureTime);
+            statement.setLong(8, spectatorTime);
         }
     }
 }

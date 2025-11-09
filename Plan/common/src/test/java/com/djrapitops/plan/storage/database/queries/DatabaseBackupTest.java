@@ -22,6 +22,8 @@ import com.djrapitops.plan.delivery.domain.datatransfer.preferences.Preferences;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.GeoInfo;
 import com.djrapitops.plan.gathering.domain.TPS;
+import com.djrapitops.plan.processing.processors.move.DatabaseCopyProcessor;
+import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.SQLiteDB;
@@ -34,14 +36,17 @@ import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.function.Executable;
 import utilities.RandomData;
 import utilities.TestConstants;
 
 import java.io.File;
 import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public interface DatabaseBackupTest extends DatabaseTestPreparer {
@@ -93,25 +98,66 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
 
             backup.executeTransaction(new BackupCopyTransaction(db(), backup));
 
-            assertQueryResultIsEqual(db(), backup, BaseUserQueries.fetchAllBaseUsers());
-            assertQueryResultIsEqual(db(), backup, UserInfoQueries.fetchAllUserInformation());
-            assertQueryResultIsEqual(db(), backup, NicknameQueries.fetchAllNicknameData());
-            assertQueryResultIsEqual(db(), backup, GeoInfoQueries.fetchAllGeoInformation());
-            assertQueryResultIsEqual(db(), backup, SessionQueries.fetchAllSessions());
-            assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllWorldNames());
-            assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllTPSData());
-            assertQueryResultIsEqual(db(), backup, ServerQueries.fetchPlanServerInformation());
-            assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchAllUsers());
-            assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchGroupNames());
-            assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchAvailablePermissions());
-            assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchAllPreferences());
+            assertAll(
+                    assertQueryResultIsEqual(db(), backup, BaseUserQueries.fetchAllBaseUsers()),
+                    assertQueryResultIsEqual(db(), backup, UserInfoQueries.fetchAllUserInformation()),
+                    assertQueryResultIsEqual(db(), backup, NicknameQueries.fetchAllNicknameData()),
+                    assertQueryResultIsEqual(db(), backup, GeoInfoQueries.fetchAllGeoInformation()),
+                    assertQueryResultIsEqual(db(), backup, SessionQueries.fetchAllSessions()),
+                    assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllWorldNames()),
+                    assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllTPSData()),
+                    assertQueryResultIsEqual(db(), backup, ServerQueries.fetchPlanServerInformation()),
+                    assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchAllUsers()),
+                    assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchGroupNames()),
+                    assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchAvailablePermissions()),
+                    assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchAllPreferences())
+            );
+        } finally {
+            backup.close();
+        }
+    }
+
+    @Test
+    default void testNewBackupAndRestoreSQLite() throws Exception {
+        File tempFile = Files.createTempFile(system().getPlanFiles().getDataFolder().toPath(), "backup-", ".db").toFile();
+        tempFile.deleteOnExit();
+        SQLiteDB backup = dbSystem().getSqLiteFactory().usingFile(tempFile);
+        backup.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
+        try {
+            backup.init();
+
+            saveDataForBackup();
+
+            List<String> feedback = new ArrayList<>();
+
+            new DatabaseCopyProcessor(new Locale(), db(), backup, feedback::add, DatabaseCopyProcessor.Strategy.CLEAR_DESTINATION_DATABASE)
+                    .run();
+
+            for (String s : feedback) {
+                System.out.println(s);
+            }
+
+            assertAll(
+                    assertQueryResultIsEqual(db(), backup, BaseUserQueries.fetchAllBaseUsers()),
+                    assertQueryResultIsEqual(db(), backup, UserInfoQueries.fetchAllUserInformation()),
+                    assertQueryResultIsEqual(db(), backup, NicknameQueries.fetchAllNicknameData()),
+                    assertQueryResultIsEqual(db(), backup, GeoInfoQueries.fetchAllGeoInformation()),
+                    assertQueryResultIsEqual(db(), backup, SessionQueries.fetchAllSessions()),
+                    assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllWorldNames()),
+                    assertQueryResultIsEqual(db(), backup, LargeFetchQueries.fetchAllTPSData()),
+                    assertQueryResultIsEqual(db(), backup, ServerQueries.fetchPlanServerInformation()),
+                    assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchAllUsers()),
+                    assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchGroupNames()),
+                    assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchAvailablePermissions()),
+                    assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchAllPreferences())
+            );
 
         } finally {
             backup.close();
         }
     }
 
-    default <T> void assertQueryResultIsEqual(Database one, Database two, Query<T> query) {
-        assertEquals(one.query(query), two.query(query));
+    default <T> Executable assertQueryResultIsEqual(Database one, Database two, Query<T> query) {
+        return () -> assertEquals(one.query(query), two.query(query));
     }
 }

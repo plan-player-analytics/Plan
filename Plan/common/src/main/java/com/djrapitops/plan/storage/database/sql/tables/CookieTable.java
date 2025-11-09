@@ -20,8 +20,7 @@ import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 
-import static com.djrapitops.plan.storage.database.sql.building.Sql.DELETE_FROM;
-import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Table information about 'plan_cookies'
@@ -38,7 +37,7 @@ public class CookieTable {
     public static final String IP_ADDRESS = "ip_address";
     public static final String EXPIRES = "expires";
 
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " (" +
             WEB_USERNAME + ',' +
             COOKIE + ',' +
             EXPIRES + ',' +

@@ -48,7 +48,7 @@ public class AllowlistBounceTable {
     public static final String LAST_BOUNCE = "last_bounce";
 
     @Language("SQL")
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " (" +
             UUID + ',' +
             USER_NAME + ',' +
             SERVER_ID + ',' +

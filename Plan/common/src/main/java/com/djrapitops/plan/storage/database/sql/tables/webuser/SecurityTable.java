@@ -40,7 +40,7 @@ public class SecurityTable {
     public static final String GROUP_ID = "group_id";
 
     public static final String SELECT_ID_BY_USERNAME = SELECT + ID + FROM + TABLE_NAME + WHERE + USERNAME + "=?";
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " (" +
             USERNAME + ',' +
             LINKED_TO + ',' +
             SALT_PASSWORD_HASH + ',' +

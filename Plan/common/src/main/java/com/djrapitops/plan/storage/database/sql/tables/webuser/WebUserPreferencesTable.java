@@ -35,7 +35,7 @@ public class WebUserPreferencesTable {
     public static final String WEB_USER_ID = "web_user_id";
     public static final String PREFERENCES = "preferences";
 
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" + PREFERENCES + ',' + WEB_USER_ID +
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " (" + PREFERENCES + ',' + WEB_USER_ID +
             ") VALUES (?, (" + SecurityTable.SELECT_ID_BY_USERNAME + "))";
     public static final String SELECT_BY_WEB_USERNAME = SELECT + PREFERENCES + FROM + TABLE_NAME +
             WHERE + WEB_USER_ID + "=(" + SecurityTable.SELECT_ID_BY_USERNAME + ")";

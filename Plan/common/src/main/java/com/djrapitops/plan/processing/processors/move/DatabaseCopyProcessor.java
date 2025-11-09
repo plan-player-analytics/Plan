@@ -37,7 +37,6 @@ import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythi
 import com.djrapitops.plan.storage.database.transactions.init.CreateTemporarySessionIdLookupTable;
 
 import java.sql.PreparedStatement;
-import java.sql.SQLException;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.IntPredicate;
@@ -123,12 +122,8 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
         } catch (IllegalStateException e) {
             feedback.accept("Operation was aborted.");
         } finally {
-            toDB.executeInTransaction(new ExecStatement(SessionsTable.TemporaryIdLookupTable.DROP_TABLE_STATEMENT) {
-                @Override
-                public void prepare(PreparedStatement statement) throws SQLException {
-                    // Nothing to prepare
-                }
-            }).join();
+            toDB.executeInTransaction(SessionsTable.TemporaryIdLookupTable.DROP_TABLE_STATEMENT).join();
+            toDB.executeInTransaction("DROP TABLE IF EXISTS plan_world_times_batch").join();
             toDB.executeTransaction(SessionsTable.Row.removeOldIdPatch()).join();
         }
     }
