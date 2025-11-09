@@ -24,6 +24,7 @@ import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.queries.objects.JoinAddressQueries;
 import com.djrapitops.plan.storage.database.queries.objects.WorldTimesQueries;
 import com.djrapitops.plan.storage.database.queries.objects.lookup.LookupTable;
@@ -474,7 +475,7 @@ public class LargeStoreQueries {
         if (groupPermissions == null || groupPermissions.isEmpty()) return Executable.empty();
 
         @Language("SQL")
-        String sql = "INSERT INTO " + WebGroupToPermissionTable.TABLE_NAME + " (" +
+        String sql = INSERT_INTO + WebGroupToPermissionTable.TABLE_NAME + " (" +
                 WebGroupToPermissionTable.GROUP_ID + ',' + WebGroupToPermissionTable.PERMISSION_ID +
                 ") VALUES ((" +
                 WebGroupTable.SELECT_GROUP_ID + "),(" + WebPermissionTable.SELECT_PERMISSION_ID +
@@ -643,7 +644,7 @@ public class LargeStoreQueries {
                 }
                 execute(insertBuilder.build());
 
-                String batchCopyStatement = "INSERT INTO " + WorldTimesTable.TABLE_NAME + " (" +
+                String batchCopyStatement = INSERT_INTO + WorldTimesTable.TABLE_NAME + " (" +
                         WorldTimesTable.USER_ID + ", " +
                         WorldTimesTable.WORLD_ID + ", " +
                         WorldTimesTable.SERVER_ID + ", " +
@@ -707,7 +708,7 @@ public class LargeStoreQueries {
                 }
                 execute(insertBuilder.build());
 
-                String batchCopyStatement = "INSERT INTO " + TABLE_NAME + " (" +
+                String batchCopyStatement = INSERT_INTO + TABLE_NAME + " (" +
                         SESSION_ID + ", " +
                         KILLER_UUID + ", " +
                         VICTIM_UUID + ", " +
@@ -737,6 +738,45 @@ public class LargeStoreQueries {
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (AccessLogTable.Row row : rows) {
                     row.insert(statement);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable upsertGeoInfo(List<GeoInfoTable.Row> rows, DBType dbType) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(dbType == DBType.MYSQL ? GeoInfoTable.UPSERT_STATEMENT_MYSQL : GeoInfoTable.UPSERT_STATEMENT_SQLITE) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (GeoInfoTable.Row row : rows) {
+                    row.upsert(statement);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable upsertNicknames(List<NicknamesTable.Row> rows, DBType dbType) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(dbType == DBType.MYSQL ? NicknamesTable.UPSERT_STATEMENT_MYSQL : NicknamesTable.UPSERT_STATEMENT_SQLITE) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (NicknamesTable.Row row : rows) {
+                    row.upsert(statement);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable upsertAllowlistBounces(List<AllowlistBounceTable.Row> rows, DBType dbType) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(dbType == DBType.MYSQL ? AllowlistBounceTable.UPSERT_MYSQL : AllowlistBounceTable.UPSERT_SQLITE) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (AllowlistBounceTable.Row row : rows) {
+                    row.upsert(statement);
                     statement.addBatch();
                 }
             }

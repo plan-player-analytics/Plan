@@ -22,6 +22,7 @@ import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.processing.CriticalRunnable;
 import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.LargeStoreQueries;
 import com.djrapitops.plan.storage.database.queries.objects.*;
@@ -105,14 +106,14 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             LookupTable<Integer> worldIdLookupTable = copyWorlds();
             copyWorldTimes(serverIdLookupTable, userIdLookupTable, worldIdLookupTable);
             copyKills();
+            copyGeolocations(userIdLookupTable);
+            copyNicknames();
+            copyAllowlistBounces(serverIdLookupTable);
             copyAccessLog();
             LookupTable<Integer> webGroupLookupTable = copyGroups();
             LookupTable<Integer> webPermissionLookupTable = copyPermissions();
             // TODO
             // https://github.com/plan-player-analytics/Plan/wiki/Database-Schema
-            // merge geolocations HARD (last used merging table)
-            // merge nicknames HARD (last used merging table)
-            // merge allow list bounce HARD (last used merging table)
             // copy group to permission
             // copy security table
             // copy user preferences
@@ -327,6 +328,48 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             toDB.executeInTransaction(LargeStoreQueries.insertAccessLog(rows)).join();
             return rows.isEmpty();
         });
+    }
+
+    private void copyGeolocations(LookupTable<Integer> userIdLookupTable) {
+        createUniqueConstraint(GeoInfoTable.TABLE_NAME, GeoInfoTable.USER_ID + ',' + GeoInfoTable.GEOLOCATION);
+        batching(currentId -> {
+            List<GeoInfoTable.Row> rows = fromDB.query(GeoInfoTable.fetchRows(currentId, ROW_LIMIT));
+            IdMapper.mapUserIds(rows, userIdLookupTable);
+            toDB.executeInTransaction(LargeStoreQueries.upsertGeoInfo(rows, toDB.getType())).join();
+            return rows.isEmpty();
+        });
+    }
+
+    private void copyNicknames() {
+        createUniqueConstraint(NicknamesTable.TABLE_NAME, NicknamesTable.SERVER_UUID + ',' + NicknamesTable.USER_UUID + ',' + NicknamesTable.NICKNAME);
+        batching(currentId -> {
+            List<NicknamesTable.Row> rows = fromDB.query(NicknamesTable.fetchRows(currentId, ROW_LIMIT));
+            mapServerUUIDs(rows);
+            toDB.executeInTransaction(LargeStoreQueries.upsertNicknames(rows, toDB.getType())).join();
+            return rows.isEmpty();
+        });
+    }
+
+    private void copyAllowlistBounces(LookupTable<Integer> serverIdLookupTable) {
+        createUniqueConstraint(AllowlistBounceTable.TABLE_NAME, AllowlistBounceTable.UUID + ',' + AllowlistBounceTable.SERVER_ID);
+        batching(currentId -> {
+            List<AllowlistBounceTable.Row> rows = fromDB.query(AllowlistBounceTable.fetchRows(currentId, ROW_LIMIT));
+            IdMapper.mapServerIds(rows, serverIdLookupTable);
+            toDB.executeInTransaction(LargeStoreQueries.upsertAllowlistBounces(rows, toDB.getType())).join();
+            return rows.isEmpty();
+        });
+    }
+
+    private void createUniqueConstraint(String tableName, String columns) {
+        String indexName = "idx_unique_" + tableName + "_" + columns.replace(',', '_');
+        String uniqueConstraintMySQL = "ALTER TABLE " + tableName + " ADD UNIQUE INDEX " + indexName + " (" + columns + ")";
+        String uniqueConstraintSQLite = "CREATE UNIQUE INDEX IF NOT EXISTS " + indexName + " ON " + tableName + " (" + columns + ")";
+        toDB.executeInTransaction(new ExecStatement(toDB.getType() == DBType.MYSQL ? uniqueConstraintMySQL : uniqueConstraintSQLite) {
+            @Override
+            public void prepare(PreparedStatement statement) {
+                // Nothing to prep
+            }
+        }).join();
     }
 
     public enum Strategy {

@@ -42,6 +42,9 @@ public abstract class Sql {
     public static final String DISTINCT = "DISTINCT ";
     public static final String FROM = " FROM ";
     public static final String DELETE_FROM = "DELETE" + FROM;
+    public static final String INSERT_INTO = "INSERT INTO ";
+    public static final String UPDATE = "UPDATE ";
+    public static final String SET = " SET ";
     public static final String WHERE = " WHERE ";
     public static final String GROUP_BY = " GROUP BY ";
     public static final String ORDER_BY = " ORDER BY ";
