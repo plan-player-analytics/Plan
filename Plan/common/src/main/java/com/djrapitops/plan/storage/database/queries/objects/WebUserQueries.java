@@ -22,6 +22,7 @@ import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.auth.CookieMetadata;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
+import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.CookieTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
@@ -273,5 +274,13 @@ public class WebUserQueries {
                 INNER_JOIN + SecurityTable.TABLE_NAME + " s ON s." + SecurityTable.ID + "=p." + WebUserPreferencesTable.WEB_USER_ID;
         return db -> db.queryMap(sql, (results, to) ->
                 to.put(results.getString(SecurityTable.USERNAME), results.getString(WebUserPreferencesTable.PREFERENCES)));
+    }
+
+    public static Query<List<SecurityTable.Row>> fetchRows(int currentId, int rowLimit) {
+        String sql = Select.all(SecurityTable.TABLE_NAME)
+                .where(SecurityTable.ID + '>' + currentId)
+                .limit(rowLimit)
+                .toString();
+        return db -> db.queryList(sql, SecurityTable.Row::extract);
     }
 }

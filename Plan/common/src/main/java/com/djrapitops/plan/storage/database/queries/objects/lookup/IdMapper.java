@@ -17,6 +17,10 @@
 package com.djrapitops.plan.storage.database.queries.objects.lookup;
 
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 /**
  * @author AuroraLS3
@@ -56,6 +60,25 @@ public class IdMapper {
                 userIdentifiable -> userIdentifiable.setWorldId(
                         worldIdLookupTable.find(userIdentifiable.getWorldId())
                                 .orElseGet(userIdentifiable::getWorldId))
+        );
+    }
+
+    public static Map<Integer, List<Integer>> mapGroupPermissionIds(Map<Integer, List<Integer>> permissionsByGroup, LookupTable<Integer> webGroupLookupTable, LookupTable<Integer> webPermissionLookupTable) {
+        return permissionsByGroup.entrySet().stream()
+                .filter(entry -> webGroupLookupTable.contains(entry.getKey()))
+                .collect(Collectors.toMap(groupId -> webGroupLookupTable.find(groupId.getKey()).orElse(null),
+                        value -> value.getValue().stream()
+                                .map(id -> webPermissionLookupTable.find(id).orElse(null))
+                                .filter(Objects::nonNull)
+                                .sorted()
+                                .collect(Collectors.toList())));
+    }
+
+    public static void mapGroupIds(Collection<? extends GroupIdentifiable> rows, LookupTable<Integer> groupIdLookupTable) {
+        rows.forEach(
+                userIdentifiable -> userIdentifiable.setGroupId(
+                        groupIdLookupTable.find(userIdentifiable.getGroupId())
+                                .orElseGet(userIdentifiable::getGroupId))
         );
     }
 }

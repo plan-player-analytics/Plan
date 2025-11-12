@@ -30,6 +30,7 @@ import java.util.function.Function;
  *
  * @author AuroraLS3
  */
+@Deprecated
 public class BackupCopyTransaction extends RemoveEverythingTransaction {
 
     private final Database sourceDB;

@@ -24,10 +24,15 @@ import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import com.djrapitops.plan.storage.database.sql.tables.WorldTable;
+import com.djrapitops.plan.storage.database.sql.tables.webuser.SecurityTable;
 import com.djrapitops.plan.storage.database.sql.tables.webuser.WebGroupTable;
+import com.djrapitops.plan.storage.database.sql.tables.webuser.WebGroupToPermissionTable;
 import com.djrapitops.plan.storage.database.sql.tables.webuser.WebPermissionTable;
+import com.djrapitops.plan.utilities.java.Lists;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.FROM;
@@ -91,6 +96,20 @@ public class LookupTableQueries {
                 (set, map) -> map.put(
                         set.getString(WebPermissionTable.PERMISSION),
                         set.getInt(WebPermissionTable.ID)
+                )));
+    }
+
+    public static Query<Map<Integer, List<Integer>>> webGroupToPermissionIds() {
+        return db -> db.queryMap(WebGroupToPermissionTable.SELECT_IDS, (set, map) ->
+                map.computeIfAbsent(set.getInt(WebGroupToPermissionTable.GROUP_ID), Lists::create)
+                        .add(set.getInt(WebGroupToPermissionTable.PERMISSION_ID)));
+    }
+
+    public static Query<LookupTable<String>> webUserLookupTable() {
+        return db -> new LookupTable<>(db.queryMap(Select.all(SecurityTable.TABLE_NAME).toString(),
+                (set, map) -> map.put(
+                        set.getString(SecurityTable.USERNAME),
+                        set.getInt(SecurityTable.ID)
                 )));
     }
 }

@@ -31,6 +31,8 @@ import com.djrapitops.plan.storage.database.queries.objects.lookup.LookupTable;
 import com.djrapitops.plan.storage.database.queries.objects.lookup.LookupTableQueries;
 import com.djrapitops.plan.storage.database.queries.objects.lookup.ServerUUIDIdentifiable;
 import com.djrapitops.plan.storage.database.sql.tables.*;
+import com.djrapitops.plan.storage.database.sql.tables.webuser.SecurityTable;
+import com.djrapitops.plan.storage.database.sql.tables.webuser.WebUserPreferencesTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
@@ -111,12 +113,10 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             copyAccessLog();
             LookupTable<Integer> webGroupLookupTable = copyGroups();
             LookupTable<Integer> webPermissionLookupTable = copyPermissions();
-            // TODO
-            // https://github.com/plan-player-analytics/Plan/wiki/Database-Schema
-            // copy group to permission
-            // copy security table
-            // copy user preferences
-            // plan how to copy extension data
+            copyGroupsToPermissions(webGroupLookupTable, webPermissionLookupTable);
+            LookupTable<Integer> webUserIdLookupTable = copyWebUsers(webGroupLookupTable);
+            copyUserPreferences(webUserIdLookupTable);
+            // TODO plan how to copy extension data https://github.com/plan-player-analytics/Plan/wiki/Database-Schema
 
             // TODO deal with CompletionException
         } catch (IllegalStateException e) {
@@ -135,7 +135,7 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
                 .collect(Collectors.toList());
         toDB.executeInTransaction(LargeStoreQueries.storeGroupNames(groups)).join();
         return toDB.query(LookupTableQueries.webGroupLookupTable())
-                .constructIdToIdLookupTable(fromDB.query(LookupTableQueries.webPermissionLookupTable()));
+                .constructIdToIdLookupTable(fromDB.query(LookupTableQueries.webGroupLookupTable()));
     }
 
     private LookupTable<Integer> copyPermissions() {
@@ -351,6 +351,43 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             List<AllowlistBounceTable.Row> rows = fromDB.query(AllowlistBounceTable.fetchRows(currentId, ROW_LIMIT));
             IdMapper.mapServerIds(rows, serverIdLookupTable);
             toDB.executeInTransaction(LargeStoreQueries.upsertAllowlistBounces(rows, toDB.getType())).join();
+            return rows.isEmpty();
+        });
+    }
+
+    private void copyGroupsToPermissions(LookupTable<Integer> webGroupLookupTable, LookupTable<Integer> webPermissionLookupTable) {
+        Map<Integer, List<Integer>> idsToCopy = IdMapper.mapGroupPermissionIds(fromDB.query(LookupTableQueries.webGroupToPermissionIds()), webGroupLookupTable, webPermissionLookupTable);
+        Map<Integer, List<Integer>> existingIds = toDB.query(LookupTableQueries.webGroupToPermissionIds());
+        // Filter out existing ids
+        existingIds.forEach((id, ids) -> {
+            if (Objects.equals(idsToCopy.get(id), ids)) {
+                idsToCopy.remove(id);
+            } else {
+                idsToCopy.get(id).removeAll(ids);
+            }
+        });
+
+        toDB.executeInTransaction(LargeStoreQueries.storeGroupPermissionIdRelations(idsToCopy)).join();
+    }
+
+    private LookupTable<Integer> copyWebUsers(LookupTable<Integer> webGroupLookupTable) {
+        LookupTable<String> lookupTable = toDB.query(LookupTableQueries.webUserLookupTable());
+        batching(currentId -> {
+            List<SecurityTable.Row> rows = fromDB.query(WebUserQueries.fetchRows(currentId, ROW_LIMIT));
+            IdMapper.mapGroupIds(rows, webGroupLookupTable);
+            rows.removeIf(row -> lookupTable.contains(row.username));
+            toDB.executeInTransaction(LargeStoreQueries.storeUsers(rows)).join();
+            return rows.isEmpty();
+        });
+        return toDB.query(LookupTableQueries.webUserLookupTable())
+                .constructIdToIdLookupTable(fromDB.query(LookupTableQueries.webUserLookupTable()));
+    }
+
+    private void copyUserPreferences(LookupTable<Integer> webUserIdLookupTable) {
+        batching(currentId -> {
+            List<WebUserPreferencesTable.Row> rows = fromDB.query(WebUserPreferencesTable.fetchRows(currentId, ROW_LIMIT));
+            IdMapper.mapUserIds(rows, webUserIdLookupTable);
+            toDB.executeInTransaction(LargeStoreQueries.insertPreferences(rows)).join();
             return rows.isEmpty();
         });
     }

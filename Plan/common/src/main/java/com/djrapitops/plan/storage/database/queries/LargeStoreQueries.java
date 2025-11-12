@@ -496,6 +496,29 @@ public class LargeStoreQueries {
         };
     }
 
+    public static Executable storeGroupPermissionIdRelations(Map<Integer, List<Integer>> groupPermissions) {
+        if (groupPermissions == null || groupPermissions.isEmpty()) return Executable.empty();
+
+        @Language("SQL")
+        String sql = INSERT_INTO + WebGroupToPermissionTable.TABLE_NAME + " (" +
+                WebGroupToPermissionTable.GROUP_ID + ',' + WebGroupToPermissionTable.PERMISSION_ID +
+                ") VALUES (?, ?)";
+
+        return new ExecBatchStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (var permissionsOfGroup : groupPermissions.entrySet()) {
+                    Integer groupId = permissionsOfGroup.getKey();
+                    for (Integer permissionId : permissionsOfGroup.getValue()) {
+                        statement.setInt(1, groupId);
+                        statement.setInt(2, permissionId);
+                        statement.addBatch();
+                    }
+                }
+            }
+        };
+    }
+
     public static Executable storeAllPreferences(Map<String, String> preferencesByUsername) {
         if (preferencesByUsername.isEmpty()) return Executable.empty();
 
@@ -786,6 +809,32 @@ public class LargeStoreQueries {
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (AllowlistBounceTable.Row row : rows) {
                     row.upsert(statement);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable storeUsers(List<SecurityTable.Row> rows) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(SecurityTable.Row.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (SecurityTable.Row row : rows) {
+                    row.insert(statement);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable insertPreferences(List<WebUserPreferencesTable.Row> rows) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(WebUserPreferencesTable.Row.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (WebUserPreferencesTable.Row row : rows) {
+                    row.insert(statement);
                     statement.addBatch();
                 }
             }

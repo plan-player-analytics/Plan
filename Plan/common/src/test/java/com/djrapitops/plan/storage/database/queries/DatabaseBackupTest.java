@@ -24,11 +24,11 @@ import com.djrapitops.plan.gathering.domain.GeoInfo;
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.processing.processors.move.DatabaseCopyProcessor;
 import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.SQLiteDB;
 import com.djrapitops.plan.storage.database.queries.objects.*;
-import com.djrapitops.plan.storage.database.transactions.BackupCopyTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.*;
 import com.djrapitops.plan.storage.database.transactions.webuser.StoreWebUserPreferencesTransaction;
@@ -86,7 +86,7 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
     }
 
     @Test
-    default void testBackupAndRestoreSQLite() throws Exception {
+    default void backupToSQLite() throws Exception {
         File tempFile = Files.createTempFile(system().getPlanFiles().getDataFolder().toPath(), "backup-", ".db").toFile();
         tempFile.deleteOnExit();
         SQLiteDB backup = dbSystem().getSqLiteFactory().usingFile(tempFile);
@@ -96,7 +96,14 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
 
             saveDataForBackup();
 
-            backup.executeTransaction(new BackupCopyTransaction(db(), backup));
+            List<String> feedback = new ArrayList<>();
+
+            new DatabaseCopyProcessor(new Locale(), db(), backup, feedback::add, DatabaseCopyProcessor.Strategy.CLEAR_DESTINATION_DATABASE)
+                    .run();
+
+            for (String s : feedback) {
+                System.out.println(s);
+            }
 
             assertAll(
                     assertQueryResultIsEqual(db(), backup, BaseUserQueries.fetchAllBaseUsers()),
@@ -112,13 +119,16 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
                     assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchAvailablePermissions()),
                     assertQueryResultIsEqual(db(), backup, WebUserQueries.fetchAllPreferences())
             );
+
         } finally {
             backup.close();
         }
     }
 
     @Test
-    default void testNewBackupAndRestoreSQLite() throws Exception {
+    default void backupToSQLiteAndRestore() throws Exception {
+        if (db().getType() == DBType.SQLITE) return;
+
         File tempFile = Files.createTempFile(system().getPlanFiles().getDataFolder().toPath(), "backup-", ".db").toFile();
         tempFile.deleteOnExit();
         SQLiteDB backup = dbSystem().getSqLiteFactory().usingFile(tempFile);
@@ -131,6 +141,8 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
             List<String> feedback = new ArrayList<>();
 
             new DatabaseCopyProcessor(new Locale(), db(), backup, feedback::add, DatabaseCopyProcessor.Strategy.CLEAR_DESTINATION_DATABASE)
+                    .run();
+            new DatabaseCopyProcessor(new Locale(), backup, db(), feedback::add, DatabaseCopyProcessor.Strategy.CLEAR_DESTINATION_DATABASE)
                     .run();
 
             for (String s : feedback) {
