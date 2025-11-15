@@ -28,12 +28,10 @@ import com.djrapitops.plan.storage.database.sql.tables.webuser.SecurityTable;
 import com.djrapitops.plan.storage.database.sql.tables.webuser.WebGroupTable;
 import com.djrapitops.plan.storage.database.sql.tables.webuser.WebGroupToPermissionTable;
 import com.djrapitops.plan.storage.database.sql.tables.webuser.WebPermissionTable;
+import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.utilities.java.Lists;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.FROM;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.SELECT;
@@ -111,5 +109,13 @@ public class LookupTableQueries {
                         set.getString(SecurityTable.USERNAME),
                         set.getInt(SecurityTable.ID)
                 )));
+    }
+
+    public static Query<Map<String, Integer>> tableCounts() {
+        return db -> db.queryMap(Select.counts(CreateTablesTransaction.tableNames()),
+                (row, map) -> map.put(
+                        row.getString(Select.COLUMN_TABLE_NAME),
+                        row.getInt(Select.COLUMN_COUNT)
+                ), TreeMap::new);
     }
 }

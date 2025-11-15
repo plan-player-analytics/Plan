@@ -88,6 +88,13 @@ public class PluginMetadataQueries {
         return db -> db.queryList(sql, PluginMetadataQueries::extractHistoryMetadata, serverUUID);
     }
 
+    public static Query<List<PluginHistoryMetadata>> getPluginHistory() {
+        @Language("SQL")
+        String sql = SELECT + "*" + FROM + PluginVersionTable.TABLE_NAME +
+                ORDER_BY + PluginVersionTable.MODIFIED + " DESC, " + PluginVersionTable.PLUGIN_NAME;
+        return db -> db.queryList(sql, PluginMetadataQueries::extractHistoryMetadata);
+    }
+
     @NotNull
     private static PluginHistoryMetadata extractHistoryMetadata(ResultSet row) throws SQLException {
         String name = row.getString(PluginVersionTable.PLUGIN_NAME);

@@ -48,7 +48,7 @@ public class UsersTable {
     public static final String INSERT_STATEMENT = Insert.values(TABLE_NAME, USER_UUID, USER_NAME, REGISTERED, TIMES_KICKED);
     public static final String UPDATE_MERGE_STATEMENT = "UPDATE " + TABLE_NAME + " SET " +
             TIMES_KICKED + "=" + TIMES_KICKED + "+?," +
-            REGISTERED + "= CASE " + REGISTERED + ">? THEN " + REGISTERED + " ELSE ? END" +
+            REGISTERED + "= CASE WHEN " + REGISTERED + "<=? THEN " + REGISTERED + " ELSE ? END" +
             WHERE + ID + "=?";
     public static final String SELECT_USER_ID = '(' + SELECT + TABLE_NAME + '.' + ID +
             FROM + TABLE_NAME +

@@ -32,13 +32,12 @@ import com.djrapitops.plan.storage.database.queries.objects.lookup.LookupTableQu
 import com.djrapitops.plan.storage.database.queries.objects.lookup.ServerUUIDIdentifiable;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.sql.tables.webuser.SecurityTable;
+import com.djrapitops.plan.storage.database.sql.tables.webuser.WebGroupToPermissionTable;
 import com.djrapitops.plan.storage.database.sql.tables.webuser.WebUserPreferencesTable;
-import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.CreateTemporarySessionIdLookupTable;
 
-import java.sql.PreparedStatement;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.IntPredicate;
@@ -58,6 +57,7 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
     private final Consumer<String> feedback;
 
     private final Map<ServerUUID, ServerUUID> serverUuidLookupTable = new HashMap<>();
+    private Map<String, Integer> tableCounts;
 
     public DatabaseCopyProcessor(Locale locale, Database fromDB, Database toDB, Consumer<String> feedback, Strategy... strategies) {
         this.locale = locale;
@@ -81,15 +81,25 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             feedback.accept("Destination database is " + toDB.getState() + ", could not begin operation.");
             return;
         }
+
+        tableCounts = fromDB.query(LookupTableQueries.tableCounts());
+        feedback.accept("Data to be copied:");
+        tableCounts.forEach((key, value) -> feedback.accept("  " + key + " - " + value + " rows"));
+
         if (strategies.contains(Strategy.CLEAR_DESTINATION_DATABASE)) {
             feedback.accept("Clearing destination database..");
             toDB.executeTransaction(new RemoveEverythingTransaction()).join();
             feedback.accept("Cleared destination database.");
+        } else {
+            Map<String, Integer> existing = toDB.query(LookupTableQueries.tableCounts());
+            feedback.accept("Data in existing database:");
+            existing.forEach((key, value) -> feedback.accept("  " + key + " - " + value + " rows"));
         }
 
         feedback.accept("Beginning database copy process..");
 
         try {
+            removeTemporaryTables();
             LookupTable<Integer> serverIdLookupTable = copyMissingServers();
 
             if (strategies.contains(Strategy.SERVER_UUID_CONFLICT_DELETE_SERVER)) {
@@ -122,10 +132,18 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
         } catch (IllegalStateException e) {
             feedback.accept("Operation was aborted.");
         } finally {
-            toDB.executeInTransaction(SessionsTable.TemporaryIdLookupTable.DROP_TABLE_STATEMENT).join();
-            toDB.executeInTransaction("DROP TABLE IF EXISTS plan_world_times_batch").join();
-            toDB.executeTransaction(SessionsTable.Row.removeOldIdPatch()).join();
+            removeTemporaryTables();
         }
+    }
+
+    private void removeTemporaryTables() {
+        toDB.executeInTransaction(SessionsTable.TemporaryIdLookupTable.DROP_TABLE_STATEMENT).join();
+        toDB.executeInTransaction("DROP TABLE IF EXISTS plan_world_times_batch").join();
+        toDB.executeInTransaction("DROP TABLE IF EXISTS plan_kills_batch").join();
+        toDB.executeTransaction(SessionsTable.Row.removeOldIdPatch()).join();
+        toDB.executeInTransaction(dropUniqueConstraint(GeoInfoTable.TABLE_NAME, GeoInfoTable.USER_ID + ',' + GeoInfoTable.GEOLOCATION)).join();
+        toDB.executeInTransaction(dropUniqueConstraint(NicknamesTable.TABLE_NAME, NicknamesTable.SERVER_UUID + ',' + NicknamesTable.USER_UUID + ',' + NicknamesTable.NICKNAME)).join();
+        toDB.executeInTransaction(dropUniqueConstraint(AllowlistBounceTable.TABLE_NAME, AllowlistBounceTable.UUID + ',' + AllowlistBounceTable.SERVER_ID)).join();
     }
 
     private LookupTable<Integer> copyGroups() {
@@ -151,7 +169,7 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
     private LookupTable<Integer> copyMissingServers() {
         LookupTable<ServerUUID> serverLookupTable = toDB.query(LookupTableQueries.serverLookupTable());
         List<Server> servers = fromDB.query(ServerQueries.fetchAllServers());
-        feedback.accept("Copying plan_servers, " + servers.size() + " rows");
+        logCopyMessage(ServerTable.TABLE_NAME);
         for (Server server : servers) {
             if (serverLookupTable.find(server.getUuid()).isEmpty()) {
                 toDB.executeTransaction(new StoreServerInformationTransaction(server)).join();
@@ -167,13 +185,21 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
                 throw new IllegalStateException();
             }
         }
+        logProgress(servers.size(), ServerTable.TABLE_NAME, servers.isEmpty());
         return toDB.query(LookupTableQueries.serverLookupTable())
                 .constructIdToIdLookupTable(fromDB.query(LookupTableQueries.serverLookupTable()));
+    }
+
+    private void logProgress(int current, String tableName, boolean empty) {
+        if (!empty) {
+            feedback.accept("  " + current + '/' + tableCounts.get(tableName) + " copied.");
+        }
     }
 
     private LookupTable<Integer> copyMissingUsers() {
         LookupTable<UUID> playerLookupTable = toDB.query(LookupTableQueries.playerLookupTable());
 
+        logCopyMessage(UsersTable.TABLE_NAME);
         batching(currentId -> {
             List<BaseUser> found = fromDB.query(BaseUserQueries.fetchBaseUsers(currentId, ROW_LIMIT));
             Map<Boolean, List<BaseUser>> copied = found.stream()
@@ -182,6 +208,7 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             toDB.executeInTransaction(LargeStoreQueries.insertBaseUsers(newUsers)).join();
             List<BaseUser> existingUsers = copied.get(true);
             toDB.executeInTransaction(LargeStoreQueries.mergeBaseUsers(existingUsers, playerLookupTable)).join();
+            logProgress(currentId + found.size(), UsersTable.TABLE_NAME, found.isEmpty());
             return found.isEmpty();
         });
 
@@ -202,16 +229,19 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
     }
 
     private void copyUserInfo(LookupTable<Integer> serverIdLookupTable, LookupTable<Integer> userIdLookupTable) {
+        logCopyMessage(UserInfoTable.TABLE_NAME);
         batching(currentId -> {
             List<UserInfoTable.Row> rows = fromDB.query(UserInfoQueries.fetchUserInfoRows(currentId, ROW_LIMIT));
             IdMapper.mapUserIds(rows, userIdLookupTable);
             IdMapper.mapServerIds(rows, serverIdLookupTable);
             toDB.executeInTransaction(LargeStoreQueries.insertUserInfo(rows)).join();
+            logProgress(currentId + rows.size(), UserInfoTable.TABLE_NAME, rows.isEmpty());
             return rows.isEmpty();
         });
     }
 
     private LookupTable<Integer> copyMissingJoinAddresses() {
+        logCopyMessage(JoinAddressTable.TABLE_NAME);
         LookupTable<String> joinAddressLookupTable = toDB.query(LookupTableQueries.joinAddressLookupTable());
         List<JoinAddressTable.Row> rows = fromDB.query(JoinAddressQueries.fetchRows());
         List<JoinAddressTable.Row> newRows = rows.stream()
@@ -223,35 +253,46 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
         for (JoinAddressTable.Row row : rows) {
             oldLookupTable.put(row.joinAddress, row.id);
         }
+        logProgress(rows.size(), JoinAddressTable.TABLE_NAME, rows.isEmpty());
 
         return toDB.query(LookupTableQueries.joinAddressLookupTable())
                 .constructIdToIdLookupTable(oldLookupTable);
     }
 
+    private void logCopyMessage(String tableName) {
+        feedback.accept("Copying " + tableName + "..");
+    }
+
     private void copyPing(LookupTable<Integer> serverIdLookupTable, LookupTable<Integer> userIdLookupTable) {
+        logCopyMessage(PingTable.TABLE_NAME);
         batching(currentId -> {
             List<PingTable.Row> rows = fromDB.query(PingQueries.fetchRows(currentId, ROW_LIMIT));
             IdMapper.mapUserIds(rows, userIdLookupTable);
             IdMapper.mapServerIds(rows, serverIdLookupTable);
             toDB.executeInTransaction(LargeStoreQueries.insertPing(rows)).join();
+            logProgress(currentId + rows.size(), PingTable.TABLE_NAME, rows.isEmpty());
             return rows.isEmpty();
         });
     }
 
     private void copyTps(LookupTable<Integer> serverIdLookupTable) {
+        logCopyMessage(TPSTable.TABLE_NAME);
         batching(currentId -> {
             List<TPSTable.Row> rows = fromDB.query(TPSQueries.fetchRows(currentId, ROW_LIMIT));
             IdMapper.mapServerIds(rows, serverIdLookupTable);
             toDB.executeInTransaction(LargeStoreQueries.insertTps(rows)).join();
+            logProgress(currentId + rows.size(), TPSTable.TABLE_NAME, rows.isEmpty());
             return rows.isEmpty();
         });
     }
 
     private void copyPluginVersions(LookupTable<Integer> serverIdLookupTable) {
+        logCopyMessage(PluginVersionTable.TABLE_NAME);
         batching(currentId -> {
             List<PluginVersionTable.Row> rows = fromDB.query(PluginMetadataQueries.fetchRows(currentId, ROW_LIMIT));
             IdMapper.mapServerIds(rows, serverIdLookupTable);
             toDB.executeInTransaction(LargeStoreQueries.insertPluginVersions(rows)).join();
+            logProgress(currentId + rows.size(), PluginVersionTable.TABLE_NAME, rows.isEmpty());
             return rows.isEmpty();
         });
     }
@@ -260,25 +301,23 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
         toDB.executeTransaction(new CreateTemporarySessionIdLookupTable()).join();
         toDB.executeTransaction(SessionsTable.Row.addOldIdPatch()).join();
 
+        logCopyMessage(SessionsTable.TABLE_NAME);
         batching(currentId -> {
             List<SessionsTable.Row> rows = fromDB.query(SessionQueries.fetchRows(currentId, ROW_LIMIT));
             IdMapper.mapUserIds(rows, userIdLookupTable);
             IdMapper.mapServerIds(rows, serverIdLookupTable);
             IdMapper.mapJoinAddressIds(rows, joinAddressLookupTable);
             toDB.executeInTransaction(LargeStoreQueries.insertSessionsWithOldIds(rows)).join();
+            logProgress(currentId + rows.size(), SessionsTable.TABLE_NAME, rows.isEmpty());
             return rows.isEmpty();
         });
 
-        toDB.executeInTransaction(new ExecStatement(SessionsTable.TemporaryIdLookupTable.INSERT_ALL_STATEMENT) {
-            @Override
-            public void prepare(PreparedStatement statement) {
-                // Nothing to prepare
-            }
-        }).join();
+        toDB.executeInTransaction(SessionsTable.TemporaryIdLookupTable.INSERT_ALL_STATEMENT).join();
     }
 
     private LookupTable<Integer> copyWorlds() {
         LookupTable<World> worldLookupTable = toDB.query(LookupTableQueries.worldLookupTable());
+        logCopyMessage(WorldTable.TABLE_NAME);
         batching(currentId -> {
             List<WorldTable.Row> rows = fromDB.query(WorldTimesQueries.fetchWorldRows(currentId, ROW_LIMIT))
                     .stream().filter(row -> !worldLookupTable.contains(world ->
@@ -287,6 +326,7 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
                     .collect(Collectors.toList());
             mapServerUUIDs(rows);
             toDB.executeInTransaction(LargeStoreQueries.insertWorlds(rows)).join();
+            logProgress(currentId + rows.size(), WorldTable.TABLE_NAME, rows.isEmpty());
             return rows.isEmpty();
         });
         return toDB.query(LookupTableQueries.worldLookupTable())
@@ -298,59 +338,71 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
     }
 
     private void copyWorldTimes(LookupTable<Integer> serverIdLookupTable, LookupTable<Integer> userIdLookupTable, LookupTable<Integer> worldIdLookupTable) {
+        logCopyMessage(WorldTimesTable.TABLE_NAME);
         batching(currentId -> {
             List<WorldTimesTable.Row> rows = fromDB.query(WorldTimesQueries.fetchRows(currentId, ROW_LIMIT));
             IdMapper.mapUserIds(rows, userIdLookupTable);
             IdMapper.mapServerIds(rows, serverIdLookupTable);
             IdMapper.mapWorldIds(rows, worldIdLookupTable);
             toDB.executeTransaction(LargeStoreQueries.insertWorldTimesWithOldSessionIds(rows)).join();
+            logProgress(currentId + rows.size(), WorldTimesTable.TABLE_NAME, rows.isEmpty());
             return rows.isEmpty();
         });
     }
 
     private void copyKills() {
+        logCopyMessage(KillsTable.TABLE_NAME);
         batching(currentId -> {
             List<KillsTable.Row> rows = fromDB.query(KillQueries.fetchRows(currentId, ROW_LIMIT));
             mapServerUUIDs(rows);
             toDB.executeTransaction(LargeStoreQueries.insertKillsWithOldSessionIds(rows)).join();
+            logProgress(currentId + rows.size(), KillsTable.TABLE_NAME, rows.isEmpty());
             return rows.isEmpty();
         });
     }
 
     private void copyAccessLog() {
+        logCopyMessage(AccessLogTable.TABLE_NAME);
         batching(currentId -> {
             List<AccessLogTable.Row> rows = fromDB.query(AccessLogTable.fetchRows(currentId, ROW_LIMIT));
             toDB.executeInTransaction(LargeStoreQueries.insertAccessLog(rows)).join();
+            logProgress(currentId + rows.size(), AccessLogTable.TABLE_NAME, rows.isEmpty());
             return rows.isEmpty();
         });
     }
 
     private void copyGeolocations(LookupTable<Integer> userIdLookupTable) {
         createUniqueConstraint(GeoInfoTable.TABLE_NAME, GeoInfoTable.USER_ID + ',' + GeoInfoTable.GEOLOCATION);
+        logCopyMessage(GeoInfoTable.TABLE_NAME);
         batching(currentId -> {
             List<GeoInfoTable.Row> rows = fromDB.query(GeoInfoTable.fetchRows(currentId, ROW_LIMIT));
             IdMapper.mapUserIds(rows, userIdLookupTable);
             toDB.executeInTransaction(LargeStoreQueries.upsertGeoInfo(rows, toDB.getType())).join();
+            logProgress(currentId + rows.size(), GeoInfoTable.TABLE_NAME, rows.isEmpty());
             return rows.isEmpty();
         });
     }
 
     private void copyNicknames() {
         createUniqueConstraint(NicknamesTable.TABLE_NAME, NicknamesTable.SERVER_UUID + ',' + NicknamesTable.USER_UUID + ',' + NicknamesTable.NICKNAME);
+        logCopyMessage(NicknamesTable.TABLE_NAME);
         batching(currentId -> {
             List<NicknamesTable.Row> rows = fromDB.query(NicknamesTable.fetchRows(currentId, ROW_LIMIT));
             mapServerUUIDs(rows);
             toDB.executeInTransaction(LargeStoreQueries.upsertNicknames(rows, toDB.getType())).join();
+            logProgress(currentId + rows.size(), NicknamesTable.TABLE_NAME, rows.isEmpty());
             return rows.isEmpty();
         });
     }
 
     private void copyAllowlistBounces(LookupTable<Integer> serverIdLookupTable) {
         createUniqueConstraint(AllowlistBounceTable.TABLE_NAME, AllowlistBounceTable.UUID + ',' + AllowlistBounceTable.SERVER_ID);
+        logCopyMessage(AllowlistBounceTable.TABLE_NAME);
         batching(currentId -> {
             List<AllowlistBounceTable.Row> rows = fromDB.query(AllowlistBounceTable.fetchRows(currentId, ROW_LIMIT));
             IdMapper.mapServerIds(rows, serverIdLookupTable);
             toDB.executeInTransaction(LargeStoreQueries.upsertAllowlistBounces(rows, toDB.getType())).join();
+            logProgress(currentId + rows.size(), AllowlistBounceTable.TABLE_NAME, rows.isEmpty());
             return rows.isEmpty();
         });
     }
@@ -358,6 +410,7 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
     private void copyGroupsToPermissions(LookupTable<Integer> webGroupLookupTable, LookupTable<Integer> webPermissionLookupTable) {
         Map<Integer, List<Integer>> idsToCopy = IdMapper.mapGroupPermissionIds(fromDB.query(LookupTableQueries.webGroupToPermissionIds()), webGroupLookupTable, webPermissionLookupTable);
         Map<Integer, List<Integer>> existingIds = toDB.query(LookupTableQueries.webGroupToPermissionIds());
+        int toCopy = idsToCopy.size();
         // Filter out existing ids
         existingIds.forEach((id, ids) -> {
             if (Objects.equals(idsToCopy.get(id), ids)) {
@@ -367,16 +420,21 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             }
         });
 
+        logCopyMessage(WebGroupToPermissionTable.TABLE_NAME);
         toDB.executeInTransaction(LargeStoreQueries.storeGroupPermissionIdRelations(idsToCopy)).join();
+        logProgress(toCopy, WebGroupToPermissionTable.TABLE_NAME, toCopy != 0);
     }
 
     private LookupTable<Integer> copyWebUsers(LookupTable<Integer> webGroupLookupTable) {
         LookupTable<String> lookupTable = toDB.query(LookupTableQueries.webUserLookupTable());
+        logCopyMessage(SecurityTable.TABLE_NAME);
         batching(currentId -> {
             List<SecurityTable.Row> rows = fromDB.query(WebUserQueries.fetchRows(currentId, ROW_LIMIT));
+            int toCopy = rows.size();
             IdMapper.mapGroupIds(rows, webGroupLookupTable);
             rows.removeIf(row -> lookupTable.contains(row.username));
             toDB.executeInTransaction(LargeStoreQueries.storeUsers(rows)).join();
+            logProgress(currentId + toCopy, SecurityTable.TABLE_NAME, toCopy != 0);
             return rows.isEmpty();
         });
         return toDB.query(LookupTableQueries.webUserLookupTable())
@@ -384,10 +442,15 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
     }
 
     private void copyUserPreferences(LookupTable<Integer> webUserIdLookupTable) {
+        logCopyMessage(WebUserPreferencesTable.TABLE_NAME);
+        Set<Integer> existingIds = toDB.query(WebUserQueries.fetchPreferencesUserIds());
         batching(currentId -> {
             List<WebUserPreferencesTable.Row> rows = fromDB.query(WebUserPreferencesTable.fetchRows(currentId, ROW_LIMIT));
+            int toCopy = rows.size();
             IdMapper.mapUserIds(rows, webUserIdLookupTable);
+            rows.removeIf(row -> existingIds.contains(row.webUserId)); // Don't override
             toDB.executeInTransaction(LargeStoreQueries.insertPreferences(rows)).join();
+            logProgress(currentId + toCopy, WebUserPreferencesTable.TABLE_NAME, toCopy != 0);
             return rows.isEmpty();
         });
     }
@@ -396,12 +459,12 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
         String indexName = "idx_unique_" + tableName + "_" + columns.replace(',', '_');
         String uniqueConstraintMySQL = "ALTER TABLE " + tableName + " ADD UNIQUE INDEX " + indexName + " (" + columns + ")";
         String uniqueConstraintSQLite = "CREATE UNIQUE INDEX IF NOT EXISTS " + indexName + " ON " + tableName + " (" + columns + ")";
-        toDB.executeInTransaction(new ExecStatement(toDB.getType() == DBType.MYSQL ? uniqueConstraintMySQL : uniqueConstraintSQLite) {
-            @Override
-            public void prepare(PreparedStatement statement) {
-                // Nothing to prep
-            }
-        }).join();
+        toDB.executeInTransaction(toDB.getType() == DBType.MYSQL ? uniqueConstraintMySQL : uniqueConstraintSQLite).join();
+    }
+
+    private String dropUniqueConstraint(String tableName, String columns) {
+        String indexName = "idx_unique_" + tableName + "_" + columns.replace(',', '_');
+        return "DROP INDEX IF EXISTS " + indexName;
     }
 
     public enum Strategy {

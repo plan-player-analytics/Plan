@@ -711,8 +711,8 @@ public class LargeStoreQueries {
         return new Transaction() {
             @Override
             protected void performOperations() {
-                String batchTableName = "kills_batch";
-                execute(CreateTableBuilder.createTemporary(batchTableName, dbType)
+                String batchTableName = "plan_kills_batch";
+                execute(CreateTableBuilder.create(batchTableName, dbType)
                         .column(KILLER_UUID, Sql.varchar(36)).notNull()
                         .column(VICTIM_UUID, Sql.varchar(36)).notNull()
                         .column(SERVER_UUID, Sql.varchar(36)).notNull()

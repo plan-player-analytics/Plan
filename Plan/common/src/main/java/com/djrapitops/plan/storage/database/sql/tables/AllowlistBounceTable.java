@@ -80,7 +80,7 @@ public class AllowlistBounceTable {
     public static String createTableSQL(DBType dbType) {
         return CreateTableBuilder.create(TABLE_NAME, dbType)
                 .column(ID, Sql.INT).primaryKey()
-                .column(UUID, Sql.varchar(36)).notNull().unique()
+                .column(UUID, Sql.varchar(36)).notNull()
                 .column(USER_NAME, Sql.varchar(36)).notNull()
                 .column(SERVER_ID, Sql.INT).notNull()
                 .column(TIMES, Sql.INT).notNull().defaultValue("0")

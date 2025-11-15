@@ -283,4 +283,9 @@ public class WebUserQueries {
                 .toString();
         return db -> db.queryList(sql, SecurityTable.Row::extract);
     }
+
+    public static Query<Set<Integer>> fetchPreferencesUserIds() {
+        String sql = SELECT + WebUserPreferencesTable.WEB_USER_ID + FROM + WebUserPreferencesTable.TABLE_NAME;
+        return db -> db.querySet(sql, row -> row.getInt(WebUserPreferencesTable.WEB_USER_ID));
+    }
 }

@@ -87,7 +87,8 @@ public class Patches {
                 new SecurityTableGroupPatch(),
                 new ExtensionStringValueLengthPatch(),
                 new CookieTableIpAddressPatch(),
-                new TPSTableMSPTPatch()
+                new TPSTableMSPTPatch(),
+                new AllowlistIncorrectUniqueConstraintPatch()
         };
     }
 }

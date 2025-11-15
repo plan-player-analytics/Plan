@@ -127,20 +127,6 @@ public class SessionsTable {
             return row;
         }
 
-        public void insert(PreparedStatement statement, boolean withOldId) throws SQLException {
-            statement.setInt(1, userId);
-            statement.setInt(2, serverId);
-            statement.setLong(3, sessionStart);
-            statement.setLong(4, sessionEnd);
-            statement.setInt(5, mobKills);
-            statement.setInt(6, deaths);
-            statement.setLong(7, afkTime);
-            Sql.setIntOrNull(statement, 8, joinAddressId);
-            if (withOldId) {
-                statement.setInt(9, id);
-            }
-        }
-
         public static Patch addOldIdPatch() {
             return new Patch() {
                 @Override
@@ -167,6 +153,20 @@ public class SessionsTable {
                     dropColumn(TABLE_NAME, OLD_ID);
                 }
             };
+        }
+
+        public void insert(PreparedStatement statement, boolean withOldId) throws SQLException {
+            statement.setInt(1, userId);
+            statement.setInt(2, serverId);
+            statement.setLong(3, sessionStart);
+            statement.setLong(4, sessionEnd);
+            statement.setInt(5, mobKills);
+            statement.setInt(6, deaths);
+            statement.setLong(7, afkTime);
+            Sql.setIntOrNull(statement, 8, joinAddressId);
+            if (withOldId) {
+                statement.setInt(9, id);
+            }
         }
 
         @Override
@@ -207,7 +207,8 @@ public class SessionsTable {
 
         public static String REMOVE_ALL_STATEMENT = DELETE_FROM + TABLE_NAME;
         public static String INSERT_ALL_STATEMENT = INSERT_INTO + TABLE_NAME + " (" + OLD_ID + ", " + NEW_ID + ")" +
-                SELECT + Row.OLD_ID + ',' + SessionsTable.ID + FROM + SessionsTable.TABLE_NAME;
+                SELECT + Row.OLD_ID + ',' + SessionsTable.ID + FROM + SessionsTable.TABLE_NAME +
+                WHERE + Row.OLD_ID + IS_NOT_NULL;
         public static String DROP_TABLE_STATEMENT = "DROP TABLE IF EXISTS " + TABLE_NAME;
 
         private TemporaryIdLookupTable() {
