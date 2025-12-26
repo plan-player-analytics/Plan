@@ -463,10 +463,10 @@
   resolved "https://registry.yarnpkg.com/@fullcalendar/bootstrap/-/bootstrap-6.1.19.tgz#e0e721db09cb66216d0ce58040b7bcfa7a36d34e"
   integrity sha512-yzhPXP3BKi9Lfp1C5okVNRTucFXYICeRigmisQrHnB408OHuz/D9ZXZGrzLrmpKT9Ok3rt7QuVKv0h8/wZpIPw==
 
-"@fullcalendar/core@^6.1.19":
-  version "6.1.19"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/core/-/core-6.1.19.tgz#60379111ba0cfb9fd9bc6594fee47cf855fc77b2"
-  integrity sha512-z0aVlO5e4Wah6p6mouM0UEqtRf1MZZPt4mwzEyU6kusaNL+dlWQgAasF2cK23hwT4cmxkEmr4inULXgpyeExdQ==
+"@fullcalendar/core@^6.1.20":
+  version "6.1.20"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/core/-/core-6.1.20.tgz#e4cfa767a9b8b7dad015b33fcb8acb0fac986a85"
+  integrity sha512-1cukXLlePFiJ8YKXn/4tMKsy0etxYLCkXk8nUCFi11nRONF2Ba2CD5b21/ovtOO2tL6afTJfwmc1ed3HG7eB1g==
   dependencies:
     preact "~10.12.1"
 
