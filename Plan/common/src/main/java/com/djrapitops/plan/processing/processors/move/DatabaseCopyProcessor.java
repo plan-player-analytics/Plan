@@ -36,9 +36,13 @@ import com.djrapitops.plan.storage.database.sql.tables.webuser.WebGroupToPermiss
 import com.djrapitops.plan.storage.database.sql.tables.webuser.WebUserPreferencesTable;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
+import com.djrapitops.plan.storage.database.transactions.commands.RemoveServerTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.CreateTemporarySessionIdLookupTable;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 
 import java.util.*;
+import java.util.concurrent.CompletionException;
 import java.util.function.Consumer;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
@@ -51,6 +55,7 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
     private static final int ROW_LIMIT = 1000;
 
     private final Locale locale;
+    private final ErrorLogger errorLogger;
     private final Database fromDB;
     private final Database toDB;
     private final Set<Strategy> strategies = Collections.newSetFromMap(new EnumMap<>(Strategy.class));
@@ -59,8 +64,9 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
     private final Map<ServerUUID, ServerUUID> serverUuidLookupTable = new HashMap<>();
     private Map<String, Integer> tableCounts;
 
-    public DatabaseCopyProcessor(Locale locale, Database fromDB, Database toDB, Consumer<String> feedback, Strategy... strategies) {
+    public DatabaseCopyProcessor(Locale locale, ErrorLogger errorLogger, Database fromDB, Database toDB, Consumer<String> feedback, Strategy... strategies) {
         this.locale = locale;
+        this.errorLogger = errorLogger;
         this.fromDB = fromDB;
         this.toDB = toDB;
         this.strategies.addAll(Arrays.asList(strategies));
@@ -102,11 +108,6 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             removeTemporaryTables();
             LookupTable<Integer> serverIdLookupTable = copyMissingServers();
 
-            if (strategies.contains(Strategy.SERVER_UUID_CONFLICT_DELETE_SERVER)) {
-                // TODO delete existing servers' data that are to be copied over if correction wasn't done
-                //      this is to prevent issues where copy completed partially and queries expect fresh insert.
-            }
-
             LookupTable<Integer> userIdLookupTable = copyMissingUsers();
             copyUserInfo(serverIdLookupTable, userIdLookupTable);
             LookupTable<Integer> joinAddressLookupTable = copyMissingJoinAddresses();
@@ -127,8 +128,11 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             LookupTable<Integer> webUserIdLookupTable = copyWebUsers(webGroupLookupTable);
             copyUserPreferences(webUserIdLookupTable);
             // TODO plan how to copy extension data https://github.com/plan-player-analytics/Plan/wiki/Database-Schema
-
-            // TODO deal with CompletionException
+        } catch (CompletionException e) {
+            feedback.accept("Ran into an issue, error logged to file: " + e.getMessage());
+            errorLogger.error(e, ErrorContext.builder()
+                    .related("Database copy operation", fromDB.getType(), toDB.getType(), strategies)
+                    .build());
         } catch (IllegalStateException e) {
             feedback.accept("Operation was aborted.");
         } finally {
@@ -169,6 +173,7 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
     private LookupTable<Integer> copyMissingServers() {
         LookupTable<ServerUUID> serverLookupTable = toDB.query(LookupTableQueries.serverLookupTable());
         List<Server> servers = fromDB.query(ServerQueries.fetchAllServers());
+
         logCopyMessage(ServerTable.TABLE_NAME);
         for (Server server : servers) {
             if (serverLookupTable.find(server.getUuid()).isEmpty()) {
@@ -176,18 +181,24 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             } else if (strategies.contains(Strategy.SERVER_UUID_CONFLICT_SWAP_UUID)) {
                 ServerUUID newUUID = ServerUUID.randomUUID();
                 serverUuidLookupTable.put(server.getUuid(), newUUID);
+                feedback.accept("Swapping server uuid " + server.getUuid() + " with " + newUUID);
                 toDB.executeTransaction(new StoreServerInformationTransaction(
                         new Server(server.getId().orElse(null), newUUID, server.getName(), server.getWebAddress(), server.isProxy(), server.getPlanVersion())
                 )).join();
-            } else if (!strategies.contains(Strategy.SERVER_UUID_CONFLICT_DELETE_SERVER)) {
+            } else if (strategies.contains(Strategy.SERVER_UUID_CONFLICT_DELETE_SERVER)) {
+                toDB.executeTransaction(new RemoveServerTransaction(server.getUuid())).join();
+            } else {
                 // No strategy to deal with uuid conflict selected.
                 feedback.accept("Server with " + server.getUuid() + " already exists. Choose a strategy to deal with it.");
                 throw new IllegalStateException();
             }
         }
         logProgress(servers.size(), ServerTable.TABLE_NAME, servers.isEmpty());
+
+        // Replaces Server UUID with the new ones
+        LookupTable<ServerUUID> oldIds = new LookupTable<>(fromDB.query(LookupTableQueries.serverLookupTable()), serverUuidLookupTable::get);
         return toDB.query(LookupTableQueries.serverLookupTable())
-                .constructIdToIdLookupTable(fromDB.query(LookupTableQueries.serverLookupTable()));
+                .constructIdToIdLookupTable(oldIds);
     }
 
     private void logProgress(int current, String tableName, boolean empty) {
@@ -231,7 +242,7 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
     private void copyUserInfo(LookupTable<Integer> serverIdLookupTable, LookupTable<Integer> userIdLookupTable) {
         logCopyMessage(UserInfoTable.TABLE_NAME);
         batching(currentId -> {
-            List<UserInfoTable.Row> rows = fromDB.query(UserInfoQueries.fetchUserInfoRows(currentId, ROW_LIMIT));
+            List<UserInfoTable.Row> rows = fromDB.query(UserInfoQueries.fetchRows(currentId, ROW_LIMIT));
             IdMapper.mapUserIds(rows, userIdLookupTable);
             IdMapper.mapServerIds(rows, serverIdLookupTable);
             toDB.executeInTransaction(LargeStoreQueries.insertUserInfo(rows)).join();

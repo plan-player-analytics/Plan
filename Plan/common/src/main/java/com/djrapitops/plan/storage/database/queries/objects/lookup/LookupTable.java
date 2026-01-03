@@ -23,6 +23,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Predicate;
+import java.util.function.UnaryOperator;
+import java.util.stream.Collectors;
 
 /**
  * @author AuroraLS3
@@ -37,6 +39,15 @@ public class LookupTable<I> {
 
     public LookupTable(Map<I, Integer> identifierToId) {
         this.identifierToId = identifierToId;
+    }
+
+    public LookupTable(LookupTable<I> lookupTable, UnaryOperator<I> keyMapper) {
+        this.identifierToId = new HashMap<>(lookupTable.identifierToId.entrySet()
+                .stream()
+                .collect(Collectors.toMap(entry -> {
+                    I found = keyMapper.apply(entry.getKey());
+                    return found != null ? found : entry.getKey();
+                }, Map.Entry::getValue)));
     }
 
     public Integer put(I identifier, Integer id) {return identifierToId.put(identifier, id);}

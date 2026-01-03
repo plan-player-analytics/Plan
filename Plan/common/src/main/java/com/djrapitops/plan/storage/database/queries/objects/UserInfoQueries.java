@@ -234,7 +234,7 @@ public class UserInfoQueries {
         };
     }
 
-    public static Query<List<UserInfoTable.Row>> fetchUserInfoRows(int currentId, int rowLimit) {
+    public static Query<List<UserInfoTable.Row>> fetchRows(int currentId, int rowLimit) {
         String sql = Select.all(UserInfoTable.TABLE_NAME)
                 .where(UserInfoTable.ID + '>' + currentId)
                 .limit(rowLimit)

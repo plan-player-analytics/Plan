@@ -50,6 +50,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import utilities.RandomData;
 import utilities.TestConstants;
+import utilities.TestErrorLogger;
 
 import java.io.File;
 import java.nio.file.Files;
@@ -122,7 +123,7 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
 
             List<String> feedback = new ArrayList<>();
 
-            new DatabaseCopyProcessor(new Locale(), db(), backup, feedback::add, DatabaseCopyProcessor.Strategy.CLEAR_DESTINATION_DATABASE)
+            new DatabaseCopyProcessor(new Locale(), new TestErrorLogger(), db(), backup, feedback::add, DatabaseCopyProcessor.Strategy.CLEAR_DESTINATION_DATABASE)
                     .run();
 
             for (String s : feedback) {
@@ -150,9 +151,9 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
 
             List<String> feedback = new ArrayList<>();
 
-            new DatabaseCopyProcessor(new Locale(), db(), backup, feedback::add, DatabaseCopyProcessor.Strategy.CLEAR_DESTINATION_DATABASE)
+            new DatabaseCopyProcessor(new Locale(), new TestErrorLogger(), db(), backup, feedback::add, DatabaseCopyProcessor.Strategy.CLEAR_DESTINATION_DATABASE)
                     .run();
-            new DatabaseCopyProcessor(new Locale(), backup, db(), feedback::add, DatabaseCopyProcessor.Strategy.CLEAR_DESTINATION_DATABASE)
+            new DatabaseCopyProcessor(new Locale(), new TestErrorLogger(), backup, db(), feedback::add, DatabaseCopyProcessor.Strategy.CLEAR_DESTINATION_DATABASE)
                     .run();
 
             for (String s : feedback) {
@@ -183,7 +184,7 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
             joinAddresses.addAll(db().query(JoinAddressQueries.allJoinAddresses()));
             List<String> feedback = new ArrayList<>();
 
-            new DatabaseCopyProcessor(new Locale(), db(), backup, feedback::add)
+            new DatabaseCopyProcessor(new Locale(), new TestErrorLogger(), db(), backup, feedback::add)
                     .run();
 
             for (String s : feedback) {
