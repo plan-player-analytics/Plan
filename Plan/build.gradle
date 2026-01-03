@@ -54,7 +54,7 @@ subprojects {
     }
 
     ext {
-        daggerVersion = "2.57.1"
+        daggerVersion = "2.57.2"
 
         palVersion = "5.3.0"
 
