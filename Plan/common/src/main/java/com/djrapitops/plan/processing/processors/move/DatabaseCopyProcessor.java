@@ -22,6 +22,7 @@ import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.processing.CriticalRunnable;
 import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.CommandLang;
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.LargeStoreQueries;
@@ -49,6 +50,10 @@ import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 /**
+ * All the logic for copying or merging two databases into another.
+ * <p>
+ * Databases given must be in {@link Database.State#OPEN}
+ *
  * @author AuroraLS3
  */
 public class DatabaseCopyProcessor implements CriticalRunnable {
@@ -128,6 +133,8 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             LookupTable<Integer> webUserIdLookupTable = copyWebUsers(webGroupLookupTable);
             copyUserPreferences(webUserIdLookupTable);
             // TODO plan how to copy extension data https://github.com/plan-player-analytics/Plan/wiki/Database-Schema
+
+            feedback.accept(locale.getString(CommandLang.PROGRESS_SUCCESS));
         } catch (CompletionException e) {
             feedback.accept("Ran into an issue, error logged to file: " + e.getMessage());
             errorLogger.error(e, ErrorContext.builder()
@@ -186,10 +193,13 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
                         new Server(server.getId().orElse(null), newUUID, server.getName(), server.getWebAddress(), server.isProxy(), server.getPlanVersion())
                 )).join();
             } else if (strategies.contains(Strategy.SERVER_UUID_CONFLICT_DELETE_SERVER)) {
+                feedback.accept("Deleting conflicting server " + server.getUuid() + " from destination before insert");
                 toDB.executeTransaction(new RemoveServerTransaction(server.getUuid())).join();
             } else {
                 // No strategy to deal with uuid conflict selected.
                 feedback.accept("Server with " + server.getUuid() + " already exists. Choose a strategy to deal with it.");
+                feedback.accept("  --on-conflict-swap - swaps the server uuid for inserted server");
+                feedback.accept("  --on-conflict-delete - deletes the server from destination db (Use when previous merge failed)");
                 throw new IllegalStateException();
             }
         }

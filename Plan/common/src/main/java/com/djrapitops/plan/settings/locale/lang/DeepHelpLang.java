@@ -40,6 +40,7 @@ public enum DeepHelpLang implements Lang {
     DB_BACKUP("command.help.dbBackup.inDepth", "In Depth Help - /plan db backup", "Uses SQLite to backup the target database to a file."),
     DB_RESTORE("command.help.dbRestore.inDepth", "In Depth Help - /plan db restore", "Uses SQLite backup file and overwrites contents of the target database."),
     DB_MOVE("command.help.dbMove.inDepth", "In Depth Help - /plan db move", "Overwrites contents in the other database with the contents in another."),
+    DB_MERGE("command.help.dbMerge.inDepth", "In Depth Help - /plan db merge", "Merges contents in one database with the contents in another. Source data will be inserted to destination database."),
     DB_HOTSWAP("command.help.dbHotswap.inDepth", "In Depth Help - /plan db hotswap", "Reloads the plugin with the other database and changes the config to match."),
     DB_CLEAR("command.help.dbClear.inDepth", "In Depth Help - /plan db clear", "Clears all Plan tables, removing all Plan-data in the process."),
     DB_REMOVE("command.help.dbRemove.inDepth", "In Depth Help - /plan db remove", "Removes all data linked to a player from the Current database."),
@@ -66,7 +67,7 @@ public enum DeepHelpLang implements Lang {
     }
 
     @Override
-    public String getKey() { return key; }
+    public String getKey() {return key;}
 
     @Override
     public String getDefault() {

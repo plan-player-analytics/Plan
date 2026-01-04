@@ -29,6 +29,7 @@ import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.processing.Processing;
+import com.djrapitops.plan.processing.processors.move.DatabaseCopyProcessor;
 import com.djrapitops.plan.query.QuerySvc;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
@@ -41,7 +42,6 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.SQLiteDB;
 import com.djrapitops.plan.storage.database.queries.objects.BaseUserQueries;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
-import com.djrapitops.plan.storage.database.transactions.BackupCopyTransaction;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.commands.*;
 import com.djrapitops.plan.storage.database.transactions.patches.BadFabricJoinAddressValuePatch;
@@ -129,7 +129,6 @@ public class DatabaseCommands {
         if (fromDB.getState() != Database.State.OPEN) fromDB.init();
 
         performBackup(sender, arguments, dbName, fromDB);
-        sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS));
     }
 
     public void performBackup(CMDSender sender, @Untrusted Arguments arguments, String dbName, Database fromDB) {
@@ -140,12 +139,11 @@ public class DatabaseCommands {
             sender.send(locale.getString(CommandLang.DB_BACKUP_CREATE, fileName, dbName));
             toDB = sqliteFactory.usingFileCalled(fileName);
             toDB.init();
-            toDB.executeTransaction(new BackupCopyTransaction(fromDB, toDB)).get();
-        } catch (DBOpException | ExecutionException e) {
+
+            DatabaseCopyProcessor databaseCopyProcessor = new DatabaseCopyProcessor(locale, errorLogger, fromDB, toDB, sender::send);
+            processing.submit(databaseCopyProcessor);
+        } catch (DBOpException e) {
             errorLogger.error(e, ErrorContext.builder().related(sender, arguments).build());
-        } catch (InterruptedException e) {
-            toDB.close();
-            Thread.currentThread().interrupt();
         } finally {
             if (toDB != null) {
                 toDB.close();
@@ -199,11 +197,9 @@ public class DatabaseCommands {
             fromDB.init();
 
             sender.send(locale.getString(CommandLang.DB_WRITE, toDB.getType().getName()));
-            toDB.executeTransaction(new BackupCopyTransaction(fromDB, toDB)).get();
-            sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS));
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        } catch (DBOpException | ExecutionException e) {
+            DatabaseCopyProcessor databaseCopyProcessor = new DatabaseCopyProcessor(locale, errorLogger, fromDB, toDB, sender::send, DatabaseCopyProcessor.Strategy.CLEAR_DESTINATION_DATABASE);
+            processing.submit(databaseCopyProcessor);
+        } catch (DBOpException e) {
             errorLogger.error(e, ErrorContext.builder().related(backupDBFile, toDB.getType(), toDB.getState()).build());
             sender.send(locale.getString(CommandLang.PROGRESS_FAIL, e.getMessage()));
         }
@@ -226,14 +222,51 @@ public class DatabaseCommands {
 
         confirmation.confirm(sender, prompt, choice -> {
             if (Boolean.TRUE.equals(choice)) {
-                performMove(sender, fromDB, toDB);
+                performMove(sender, fromDB, toDB, DatabaseCopyProcessor.Strategy.CLEAR_DESTINATION_DATABASE);
             } else {
                 sender.send(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CANCELLED_DATA));
             }
         });
     }
 
-    private void performMove(CMDSender sender, DBType fromDB, DBType toDB) {
+    public void onMerge(CMDSender sender, @Untrusted Arguments arguments) {
+        DBType fromDB = arguments.get(0).flatMap(DBType::getForName)
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_INCORRECT_DB, arguments.get(0).orElse(SUPPORTED_DB_OPTIONS))));
+
+        DBType toDB = arguments.get(1).flatMap(DBType::getForName)
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_INCORRECT_DB, arguments.get(0).orElse(SUPPORTED_DB_OPTIONS))));
+
+        if (fromDB == toDB) {
+            throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_SAME_DB));
+        }
+
+        List<DatabaseCopyProcessor.Strategy> strategies = new ArrayList<>();
+        if (arguments.contains("--on-conflict-delete")) {
+            strategies.add(DatabaseCopyProcessor.Strategy.SERVER_UUID_CONFLICT_DELETE_SERVER);
+        }
+        if (arguments.contains("--on-conflict-swap")) {
+            strategies.add(DatabaseCopyProcessor.Strategy.SERVER_UUID_CONFLICT_SWAP_UUID);
+        }
+        if (strategies.size() >= 2) {
+            throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_DB_TOO_MANY_STRATEGIES));
+        }
+
+        DatabaseCopyProcessor.Strategy[] chosenStrategies = strategies.toArray(new DatabaseCopyProcessor.Strategy[0]);
+
+        String prompt = locale.getString(CommandLang.CONFIRM_OVERWRITE_DB,
+                toDB.getName(),
+                fromDB.getName());
+
+        confirmation.confirm(sender, prompt, choice -> {
+            if (Boolean.TRUE.equals(choice)) {
+                performMove(sender, fromDB, toDB, chosenStrategies);
+            } else {
+                sender.send(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CANCELLED_DATA));
+            }
+        });
+    }
+
+    private void performMove(CMDSender sender, DBType fromDB, DBType toDB, DatabaseCopyProcessor.Strategy... chosenStrategies) {
         try {
             Database fromDatabase = dbSystem.getActiveDatabaseByType(fromDB);
             Database toDatabase = dbSystem.getActiveDatabaseByType(toDB);
@@ -242,16 +275,13 @@ public class DatabaseCommands {
 
             sender.send(locale.getString(CommandLang.DB_WRITE, toDB.getName()));
 
-            toDatabase.executeTransaction(new BackupCopyTransaction(fromDatabase, toDatabase)).get();
-
-            sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS));
+            DatabaseCopyProcessor databaseCopyProcessor = new DatabaseCopyProcessor(locale, errorLogger, fromDatabase, toDatabase, sender::send, chosenStrategies);
+            processing.submit(databaseCopyProcessor);
 
             boolean movingToCurrentDB = toDatabase.getType() == dbSystem.getDatabase().getType();
             if (movingToCurrentDB) {
                 sender.send(locale.getString(CommandLang.HOTSWAP_REMINDER, toDatabase.getType().getConfigName()));
             }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
         } catch (Exception e) {
             errorLogger.error(e, ErrorContext.builder().related(sender, fromDB.getName() + "->" + toDB.getName()).build());
             sender.send(locale.getString(CommandLang.PROGRESS_FAIL, e.getMessage()));

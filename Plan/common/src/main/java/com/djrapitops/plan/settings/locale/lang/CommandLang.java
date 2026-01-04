@@ -134,7 +134,7 @@ public enum CommandLang implements Lang {
     FAIL_EXPORTER_NOT_FOUND("command.general.failNoExporter", "Manage - Fail No Exporter", "§eExporter '${0}' doesn't exist"),
     NO_SERVER("command.database.manage.failNoServer", "Manage - Fail No Server", "No server found with given parameters."),
     UNINSTALLING_SAME_SERVER("command.database.manage.failSameServer", "Manage - Fail Same server", "Can not mark this server as uninstalled (You are on it)"),
-    ;
+    FAIL_DB_TOO_MANY_STRATEGIES("command.database.manage.failTooManyStrategies", "Manage - Fail too many strategies", "Only one strategy can be selected to deal with merge conflict.");
 
     private final String key;
     private final String identifier;
