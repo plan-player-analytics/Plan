@@ -70,7 +70,7 @@ public class WorldChangeListener implements FabricListener {
 
         UUID uuid = player.getUuid();
 
-        String worldName = player.getWorld().getRegistryKey().getValue().toString();
+        String worldName = player.getEntityWorld().getRegistryKey().getValue().toString();
         String gameMode = player.interactionManager.getGameMode().name();
 
         dbSystem.getDatabase().executeTransaction(new StoreWorldNameTransaction(serverInfo.getServerUUID(), worldName));

@@ -16,7 +16,7 @@
  */
 package net.playeranalytics.plan.gathering.mixin;
 
-import com.mojang.authlib.GameProfile;
+import net.minecraft.server.PlayerConfigEntry;
 import net.minecraft.server.PlayerManager;
 import net.minecraft.text.Text;
 import net.playeranalytics.plan.gathering.listeners.events.PlanFabricEvents;
@@ -31,7 +31,7 @@ import java.net.SocketAddress;
 public class PlayerManagerMixin {
 
     @Inject(method = "checkCanJoin", at = @At(value = "TAIL"))
-    public void onLogin(SocketAddress address, GameProfile profile, CallbackInfoReturnable<Text> cir) {
+    public void onLogin(SocketAddress address, PlayerConfigEntry profile, CallbackInfoReturnable<Text> cir) {
         PlanFabricEvents.ON_LOGIN.invoker().onLogin(address, profile, cir.getReturnValue());
     }
 

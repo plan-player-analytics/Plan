@@ -119,7 +119,7 @@ Data_gathering:
     # Does not affect already gathered data
     Preserve_case: false
     Preserve_invalid: false
-    # Replaces these join addresses with unknown
+    # Replaces these join addresses with unknown, supports regex
     Filter_out_from_data:
       - "play.example.com"
 # -----------------------------------------------------

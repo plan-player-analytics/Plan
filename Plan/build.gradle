@@ -9,9 +9,9 @@ buildscript {
 
 plugins {
     id("base")
-    id "org.sonarqube" version "6.3.1.5724"
+    id "org.sonarqube" version "7.2.2.6593"
     id "com.gradleup.shadow" version "9.0.0-beta6" apply false
-    id "fabric-loom" version "1.9-SNAPSHOT" apply false
+    id "fabric-loom" version "1.11-SNAPSHOT" apply false
 }
 
 apply plugin: "nebula-aggregate-javadocs"
@@ -54,7 +54,7 @@ subprojects {
     }
 
     ext {
-        daggerVersion = "2.57.1"
+        daggerVersion = "2.57.2"
 
         palVersion = "5.3.0"
 
@@ -68,14 +68,14 @@ subprojects {
         redisBungeeVersion = "0.3.8-SNAPSHOT"
         redisBungeeProxioDevVersion = "0.7.3"
 
-        commonsTextVersion = "1.14.0"
+        commonsTextVersion = "1.15.0"
         commonsCompressVersion = "1.28.0"
-        commonsCodecVersion = "1.19.0"
-        caffeineVersion = "3.2.2"
+        commonsCodecVersion = "1.20.0"
+        caffeineVersion = "3.2.3"
         jetbrainsAnnotationsVersion = "26.0.2"
         jettyVersion = "11.0.26"
-        mysqlVersion = "9.4.0"
-        mariadbVersion = "3.5.6"
+        mysqlVersion = "9.5.0"
+        mariadbVersion = "3.5.7"
         sqliteVersion = "3.42.0.1"
         adventureVersion = "4.24.0"
         hikariVersion = "7.0.2"
@@ -90,12 +90,12 @@ subprojects {
         placeholderapiVersion = "2.11.5"
         nkPlaceholderapiVersion = "1.4-SNAPSHOT"
 
-        junitVersion = "5.13.4"
-        mockitoVersion = "5.19.0"
-        seleniumVersion = "4.35.0"
+        junitVersion = "6.0.1"
+        mockitoVersion = "5.21.0"
+        seleniumVersion = "4.39.0"
         testContainersVersion = "1.21.3"
         awaitilityVersion = "4.3.0"
-        swaggerVersion = "2.2.36"
+        swaggerVersion = "2.2.40"
         guavaVersion = "33.4.8-jre"
     }
 
@@ -121,7 +121,7 @@ subprojects {
         }
 
         // Required for JUnit to discover tests in modules.
-        testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+        testRuntimeOnly("org.junit.platform:junit-platform-launcher:$junitVersion")
     }
 
     test {

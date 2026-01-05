@@ -3,7 +3,7 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {
     faAngleRight,
     faCrosshairs,
-    faKhanda,
+    faHandSparkles,
     faServer,
     faSkull,
     faSkullCrossbones
@@ -57,7 +57,7 @@ const KillsTable = ({kills, deaths}) => {
             icon={deaths ? faSkull : faCrosshairs}/> {t(deaths ? 'html.label.deaths' : 'html.label.playerKills')}</>,
         data: {_: "killText", display: "kill"}
     }, {
-        title: <><Fa icon={faKhanda}/> {t('html.label.weapon')}</>,
+        title: <><Fa icon={faHandSparkles}/> {t('html.label.weapon')}</>,
         data: "weapon"
     }, {
         title: <><Fa icon={faServer}/> {t('html.label.server')}</>,
