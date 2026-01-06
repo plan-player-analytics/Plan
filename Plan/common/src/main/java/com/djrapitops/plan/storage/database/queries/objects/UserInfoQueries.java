@@ -237,6 +237,7 @@ public class UserInfoQueries {
     public static Query<List<UserInfoTable.Row>> fetchRows(int currentId, int rowLimit) {
         String sql = Select.all(UserInfoTable.TABLE_NAME)
                 .where(UserInfoTable.ID + '>' + currentId)
+                .orderBy(UserInfoTable.ID)
                 .limit(rowLimit)
                 .toString();
         return db -> db.queryList(sql, UserInfoTable.Row::extract);

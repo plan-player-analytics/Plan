@@ -128,31 +128,11 @@ public class SessionsTable {
         }
 
         public static Patch addOldIdPatch() {
-            return new Patch() {
-                @Override
-                public boolean hasBeenApplied() {
-                    return hasColumn(TABLE_NAME, OLD_ID);
-                }
-
-                @Override
-                protected void applyPatch() {
-                    addColumn(TABLE_NAME, OLD_ID + " " + INT);
-                }
-            };
+            return new AddOldIdColumnPatch();
         }
 
         public static Patch removeOldIdPatch() {
-            return new Patch() {
-                @Override
-                public boolean hasBeenApplied() {
-                    return !hasColumn(TABLE_NAME, OLD_ID);
-                }
-
-                @Override
-                protected void applyPatch() {
-                    dropColumn(TABLE_NAME, OLD_ID);
-                }
-            };
+            return new RemoveOldIdColumnPatch();
         }
 
         public void insert(PreparedStatement statement, boolean withOldId) throws SQLException {
@@ -197,6 +177,30 @@ public class SessionsTable {
         @Override
         public void setJoinAddressId(Integer joinAddressId) {
             this.joinAddressId = joinAddressId;
+        }
+
+        public static class AddOldIdColumnPatch extends Patch {
+            @Override
+            public boolean hasBeenApplied() {
+                return hasColumn(TABLE_NAME, OLD_ID);
+            }
+
+            @Override
+            protected void applyPatch() {
+                addColumn(TABLE_NAME, OLD_ID + " " + INT);
+            }
+        }
+
+        public static class RemoveOldIdColumnPatch extends Patch {
+            @Override
+            public boolean hasBeenApplied() {
+                return !hasColumn(TABLE_NAME, OLD_ID);
+            }
+
+            @Override
+            protected void applyPatch() {
+                dropColumn(TABLE_NAME, OLD_ID);
+            }
         }
     }
 

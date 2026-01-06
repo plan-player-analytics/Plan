@@ -219,6 +219,7 @@ public class WorldTimesQueries {
     public static Query<List<WorldTimesTable.Row>> fetchRows(int currentId, int rowLimit) {
         String sql = Select.all(WorldTimesTable.TABLE_NAME)
                 .where(WorldTimesTable.ID + '>' + currentId)
+                .orderBy(WorldTimesTable.ID)
                 .limit(rowLimit)
                 .toString();
         return db -> db.queryList(sql, WorldTimesTable.Row::extract);
@@ -227,6 +228,7 @@ public class WorldTimesQueries {
     public static Query<List<WorldTable.Row>> fetchWorldRows(int currentId, int rowLimit) {
         String sql = Select.all(WorldTable.TABLE_NAME)
                 .where(WorldTable.ID + '>' + currentId)
+                .orderBy(WorldTable.ID)
                 .limit(rowLimit)
                 .toString();
         return db -> db.queryList(sql, WorldTable.Row::extract);

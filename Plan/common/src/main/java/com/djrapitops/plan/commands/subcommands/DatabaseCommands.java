@@ -132,22 +132,17 @@ public class DatabaseCommands {
     }
 
     public void performBackup(CMDSender sender, @Untrusted Arguments arguments, String dbName, Database fromDB) {
-        Database toDB = null;
         try {
             String timeStamp = timestamp.apply(System.currentTimeMillis());
             String fileName = dbName + "-backup-" + timeStamp;
             sender.send(locale.getString(CommandLang.DB_BACKUP_CREATE, fileName, dbName));
-            toDB = sqliteFactory.usingFileCalled(fileName);
+            Database toDB = sqliteFactory.usingFileCalled(fileName);
             toDB.init();
 
-            DatabaseCopyProcessor databaseCopyProcessor = new DatabaseCopyProcessor(locale, errorLogger, fromDB, toDB, sender::send);
+            DatabaseCopyProcessor databaseCopyProcessor = new DatabaseCopyProcessor(locale, errorLogger, fromDB, toDB, sender::send, toDB::close, DatabaseCopyProcessor.Strategy.CLEAR_DESTINATION_DATABASE);
             processing.submit(databaseCopyProcessor);
         } catch (DBOpException e) {
             errorLogger.error(e, ErrorContext.builder().related(sender, arguments).build());
-        } finally {
-            if (toDB != null) {
-                toDB.close();
-            }
         }
     }
 
@@ -197,7 +192,7 @@ public class DatabaseCommands {
             fromDB.init();
 
             sender.send(locale.getString(CommandLang.DB_WRITE, toDB.getType().getName()));
-            DatabaseCopyProcessor databaseCopyProcessor = new DatabaseCopyProcessor(locale, errorLogger, fromDB, toDB, sender::send, DatabaseCopyProcessor.Strategy.CLEAR_DESTINATION_DATABASE);
+            DatabaseCopyProcessor databaseCopyProcessor = new DatabaseCopyProcessor(locale, errorLogger, fromDB, toDB, sender::send, fromDB::close, DatabaseCopyProcessor.Strategy.CLEAR_DESTINATION_DATABASE);
             processing.submit(databaseCopyProcessor);
         } catch (DBOpException e) {
             errorLogger.error(e, ErrorContext.builder().related(backupDBFile, toDB.getType(), toDB.getState()).build());

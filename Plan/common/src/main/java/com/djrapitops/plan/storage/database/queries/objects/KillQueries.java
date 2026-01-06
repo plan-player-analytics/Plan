@@ -288,6 +288,7 @@ public class KillQueries {
     public static Query<List<KillsTable.Row>> fetchRows(int currentId, int rowLimit) {
         String sql = Select.all(KillsTable.TABLE_NAME)
                 .where(KillsTable.ID + '>' + currentId)
+                .orderBy(KillsTable.ID)
                 .limit(rowLimit)
                 .toString();
         return db -> db.queryList(sql, KillsTable.Row::extract);

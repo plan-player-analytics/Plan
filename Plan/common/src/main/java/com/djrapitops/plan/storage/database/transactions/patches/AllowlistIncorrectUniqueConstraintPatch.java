@@ -27,13 +27,16 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 import static com.djrapitops.plan.storage.database.sql.tables.AllowlistBounceTable.*;
 
 /**
+ * Removes unique constraint from uuid column on plan_allowlist_bounce table.
+ *
  * @author AuroraLS3
  */
 public class AllowlistIncorrectUniqueConstraintPatch extends Patch {
 
     @Override
     public boolean hasBeenApplied() {
-        return dbType == DBType.SQLITE ? hasUniqueIndexSqlite() : hasUniqueIndexMySQL() && !hasTable("temp_" + TABLE_NAME);
+        return (dbType == DBType.SQLITE ? !hasUniqueIndexSqlite() : !hasUniqueIndexMySQL())
+                && !hasTable("temp_" + TABLE_NAME);
     }
 
     private boolean hasUniqueIndexSqlite() {
@@ -63,6 +66,8 @@ public class AllowlistIncorrectUniqueConstraintPatch extends Patch {
     protected void applyPatch() {
         if (!hasTable("temp_" + TABLE_NAME)) {
             renameTable(TABLE_NAME, "temp_" + TABLE_NAME);
+        } else {
+            dropTable(TABLE_NAME);
         }
         execute(AllowlistBounceTable.createTableSQL(dbType));
         execute(INSERT_INTO + TABLE_NAME + "(" +

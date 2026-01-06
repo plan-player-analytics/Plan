@@ -66,6 +66,7 @@ public class WebUserPreferencesTable {
     public static Query<List<Row>> fetchRows(int currentId, int rowLimit) {
         return db -> db.queryList(Select.all(TABLE_NAME)
                 .where(ID + '>' + currentId)
+                .orderBy(ID)
                 .limit(rowLimit)
                 .toString(), Row::extract);
     }

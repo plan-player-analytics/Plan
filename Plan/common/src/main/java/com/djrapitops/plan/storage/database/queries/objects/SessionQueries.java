@@ -50,10 +50,6 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  */
 public class SessionQueries {
 
-    private SessionQueries() {
-        /* Static method class */
-    }
-
     private static final String SELECT_SESSIONS_STATEMENT = SELECT +
             "s." + SessionsTable.ID + ',' +
             "u." + UsersTable.USER_NAME + " as name," +
@@ -90,8 +86,11 @@ public class SessionQueries {
             LEFT_JOIN + UsersTable.TABLE_NAME + " k on k." + UsersTable.USER_UUID + '=' + KillsTable.KILLER_UUID +
             INNER_JOIN + WorldTimesTable.TABLE_NAME + " ON s." + SessionsTable.ID + '=' + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SESSION_ID +
             INNER_JOIN + WorldTable.TABLE_NAME + " ON " + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.WORLD_ID + '=' + WorldTable.TABLE_NAME + '.' + WorldTable.ID;
-
     private static final String ORDER_BY_SESSION_START_DESC = ORDER_BY + SessionsTable.SESSION_START + " DESC";
+
+    private SessionQueries() {
+        /* Static method class */
+    }
 
     /**
      * Query the database for Session data with kill, death or world data.
@@ -1031,6 +1030,7 @@ public class SessionQueries {
     public static Query<List<SessionsTable.Row>> fetchRows(int currentId, int rowLimit) {
         String sql = Select.all(SessionsTable.TABLE_NAME)
                 .where(SessionsTable.ID + '>' + currentId)
+                .orderBy(SessionsTable.ID)
                 .limit(rowLimit)
                 .toString();
         return db -> db.queryList(sql, SessionsTable.Row::extract);

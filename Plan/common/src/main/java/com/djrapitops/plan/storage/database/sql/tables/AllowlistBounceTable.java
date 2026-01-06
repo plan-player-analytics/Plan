@@ -92,6 +92,7 @@ public class AllowlistBounceTable {
     public static Query<List<Row>> fetchRows(int currentId, int rowLimit) {
         String sql = Select.all(TABLE_NAME)
                 .where(ID + '>' + currentId)
+                .orderBy(ID)
                 .limit(rowLimit)
                 .toString();
         return db -> db.queryList(sql, Row::extract);
@@ -130,8 +131,8 @@ public class AllowlistBounceTable {
             statement.setString(1, uuid);
             statement.setString(2, userName);
             statement.setInt(3, times);
-            statement.setInt(4, serverId);
-            statement.setLong(5, lastBounce);
+            statement.setLong(4, lastBounce);
+            statement.setInt(5, serverId);
         }
     }
 }

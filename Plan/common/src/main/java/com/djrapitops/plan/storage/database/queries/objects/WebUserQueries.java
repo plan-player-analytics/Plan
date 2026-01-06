@@ -175,7 +175,7 @@ public class WebUserQueries {
     }
 
     public static Query<List<String>> fetchGroupNames() {
-        String sql = SELECT + WebGroupTable.NAME + FROM + WebGroupTable.TABLE_NAME;
+        String sql = SELECT + WebGroupTable.NAME + FROM + WebGroupTable.TABLE_NAME + ORDER_BY + WebGroupTable.NAME;
         return db -> db.queryList(sql, row -> row.getString(WebGroupTable.NAME));
     }
 
@@ -189,7 +189,7 @@ public class WebUserQueries {
     }
 
     public static Query<List<String>> fetchAvailablePermissions() {
-        String sql = SELECT + WebPermissionTable.PERMISSION + FROM + WebPermissionTable.TABLE_NAME;
+        String sql = SELECT + WebPermissionTable.PERMISSION + FROM + WebPermissionTable.TABLE_NAME + ORDER_BY + WebPermissionTable.PERMISSION;
         return db -> db.queryList(sql, row -> row.getString(WebPermissionTable.PERMISSION));
     }
 
@@ -279,6 +279,7 @@ public class WebUserQueries {
     public static Query<List<SecurityTable.Row>> fetchRows(int currentId, int rowLimit) {
         String sql = Select.all(SecurityTable.TABLE_NAME)
                 .where(SecurityTable.ID + '>' + currentId)
+                .orderBy(SecurityTable.ID)
                 .limit(rowLimit)
                 .toString();
         return db -> db.queryList(sql, SecurityTable.Row::extract);

@@ -56,6 +56,19 @@ public abstract class WhereBuilder extends SqlBuilder {
         return this;
     }
 
+    public WhereBuilder orderBy(String... columns) {
+        int i = 0;
+        append(ORDER_BY);
+        for (String column : columns) {
+            if (i > 0) {
+                append(',');
+            }
+            append(column).append(" ASC");
+            i++;
+        }
+        return this;
+    }
+
     public WhereBuilder limit(int limit) {
         append(LIMIT);
         append(Integer.toString(limit));

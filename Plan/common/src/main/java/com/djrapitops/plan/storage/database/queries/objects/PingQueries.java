@@ -273,6 +273,7 @@ public class PingQueries {
     public static Query<List<PingTable.Row>> fetchRows(int currentId, int rowLimit) {
         String sql = Select.all(PingTable.TABLE_NAME)
                 .where(PingTable.ID + '>' + currentId)
+                .orderBy(PingTable.ID)
                 .limit(rowLimit)
                 .toString();
         return db -> db.queryList(sql, PingTable.Row::extract);

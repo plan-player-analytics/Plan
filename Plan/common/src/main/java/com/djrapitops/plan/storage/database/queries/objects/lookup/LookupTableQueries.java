@@ -118,4 +118,13 @@ public class LookupTableQueries {
                         row.getInt(Select.COLUMN_COUNT)
                 ), TreeMap::new);
     }
+
+    public static Query<Map<String, Integer>> tableMinIds() {
+        String[] tables = CreateTablesTransaction.tableNames();
+        return db -> db.queryMap(Select.minIds(tables),
+                (row, map) -> map.put(
+                        row.getString(Select.COLUMN_TABLE_NAME),
+                        row.getInt(Select.COLUMN_MIN_ID)
+                ), TreeMap::new);
+    }
 }

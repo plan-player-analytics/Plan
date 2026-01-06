@@ -557,6 +557,7 @@ public class TPSQueries {
     public static Query<List<Row>> fetchRows(int currentId, int rowLimit) {
         String sql = Select.all(TABLE_NAME)
                 .where(TPSTable.ID + '>' + currentId)
+                .orderBy(TPSTable.ID)
                 .limit(rowLimit)
                 .toString();
         return db -> db.queryList(sql, Row::extract);

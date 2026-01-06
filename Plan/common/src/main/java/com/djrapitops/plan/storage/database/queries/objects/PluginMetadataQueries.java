@@ -107,6 +107,7 @@ public class PluginMetadataQueries {
     public static Query<List<PluginVersionTable.Row>> fetchRows(int currentId, int rowLimit) {
         String sql = Select.all(PluginVersionTable.TABLE_NAME)
                 .where(PluginVersionTable.ID + '>' + currentId)
+                .orderBy(PluginVersionTable.ID)
                 .limit(rowLimit)
                 .toString();
         return db -> db.queryList(sql, PluginVersionTable.Row::extract);

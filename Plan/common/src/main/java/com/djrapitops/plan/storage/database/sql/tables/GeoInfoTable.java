@@ -89,6 +89,7 @@ public class GeoInfoTable {
     public static Query<List<Row>> fetchRows(int currentId, int rowLimit) {
         String sql = Select.all(TABLE_NAME)
                 .where(ID + '>' + currentId)
+                .orderBy(ID)
                 .limit(rowLimit)
                 .toString();
         return db -> db.queryList(sql, Row::extract);

@@ -88,7 +88,8 @@ public class Patches {
                 new ExtensionStringValueLengthPatch(),
                 new CookieTableIpAddressPatch(),
                 new TPSTableMSPTPatch(),
-                new AllowlistIncorrectUniqueConstraintPatch()
+                new AllowlistIncorrectUniqueConstraintPatch(),
+                new TPSTableIdPatch()
         };
     }
 }

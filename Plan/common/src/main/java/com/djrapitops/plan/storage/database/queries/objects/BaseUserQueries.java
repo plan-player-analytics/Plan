@@ -69,7 +69,9 @@ public class BaseUserQueries {
         long registered = set.getLong(UsersTable.REGISTERED);
         int kicked = set.getInt(UsersTable.TIMES_KICKED);
 
-        return new BaseUser(playerUUID, name, registered, kicked);
+        BaseUser user = new BaseUser(playerUUID, name, registered, kicked);
+        user.setId(set.getInt(UsersTable.ID));
+        return user;
     }
 
     /**
@@ -121,6 +123,7 @@ public class BaseUserQueries {
     public static Query<List<BaseUser>> fetchBaseUsers(int afterId, int limit) {
         String sql = Select.all(UsersTable.TABLE_NAME)
                 .where(UsersTable.ID + ">" + afterId)
+                .orderBy(UsersTable.ID)
                 .limit(limit)
                 .toString();
         return db -> db.queryList(sql, BaseUserQueries::extractBaseUser);
