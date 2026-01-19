@@ -50,6 +50,9 @@ import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.player.UUIDFetcher;
+import net.playeranalytics.plugin.server.PluginLogger;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.jspecify.annotations.NonNull;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -57,6 +60,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Singleton
@@ -75,6 +79,7 @@ public class DatabaseCommands {
     private final ServerInfo serverInfo;
     private final Identifiers identifiers;
     private final PluginStatusCommands statusCommands;
+    private final PluginLogger logger;
     private final ErrorLogger errorLogger;
     private final Processing processing;
 
@@ -95,6 +100,7 @@ public class DatabaseCommands {
             Formatters formatters,
             Identifiers identifiers,
             PluginStatusCommands statusCommands,
+            PluginLogger logger,
             ErrorLogger errorLogger,
             Processing processing
     ) {
@@ -109,11 +115,27 @@ public class DatabaseCommands {
         this.serverInfo = serverInfo;
         this.identifiers = identifiers;
         this.statusCommands = statusCommands;
+        this.logger = logger;
         this.errorLogger = errorLogger;
 
         this.timestamp = formatters.iso8601NoClockLong();
         clock = formatters.clockLong();
         this.processing = processing;
+    }
+
+    private @NonNull Consumer<String> getFeedbackFor(CMDSender sender) {
+        if (sender.isPlayer()) {
+            String processTracker = DigestUtils.sha256Hex(sender.getUUID().orElse(UUID.randomUUID()).toString() + System.currentTimeMillis()).substring(0, 12);
+            logger.info(locale.getString(CommandLang.DB_COPY_TRACK_PLAYER_START,
+                    sender.getPlayerName().orElse("unknown player"),
+                    processTracker));
+            return message -> {
+                logger.info(processTracker + " | " + message);
+                sender.send(message);
+            };
+        } else {
+            return sender::send;
+        }
     }
 
     public void onBackup(CMDSender sender, @Untrusted Arguments arguments) {
@@ -139,7 +161,7 @@ public class DatabaseCommands {
             Database toDB = sqliteFactory.usingFileCalled(fileName);
             toDB.init();
 
-            DatabaseCopyProcessor databaseCopyProcessor = new DatabaseCopyProcessor(locale, errorLogger, fromDB, toDB, sender::send, toDB::close, DatabaseCopyProcessor.Strategy.CLEAR_DESTINATION_DATABASE);
+            DatabaseCopyProcessor databaseCopyProcessor = new DatabaseCopyProcessor(locale, errorLogger, fromDB, toDB, getFeedbackFor(sender), toDB::close, DatabaseCopyProcessor.Strategy.CLEAR_DESTINATION_DATABASE);
             processing.submit(databaseCopyProcessor);
         } catch (DBOpException e) {
             errorLogger.error(e, ErrorContext.builder().related(sender, arguments).build());
@@ -192,7 +214,7 @@ public class DatabaseCommands {
             fromDB.init();
 
             sender.send(locale.getString(CommandLang.DB_WRITE, toDB.getType().getName()));
-            DatabaseCopyProcessor databaseCopyProcessor = new DatabaseCopyProcessor(locale, errorLogger, fromDB, toDB, sender::send, fromDB::close, DatabaseCopyProcessor.Strategy.CLEAR_DESTINATION_DATABASE);
+            DatabaseCopyProcessor databaseCopyProcessor = new DatabaseCopyProcessor(locale, errorLogger, fromDB, toDB, getFeedbackFor(sender), fromDB::close, DatabaseCopyProcessor.Strategy.CLEAR_DESTINATION_DATABASE);
             processing.submit(databaseCopyProcessor);
         } catch (DBOpException e) {
             errorLogger.error(e, ErrorContext.builder().related(backupDBFile, toDB.getType(), toDB.getState()).build());
@@ -270,7 +292,7 @@ public class DatabaseCommands {
 
             sender.send(locale.getString(CommandLang.DB_WRITE, toDB.getName()));
 
-            DatabaseCopyProcessor databaseCopyProcessor = new DatabaseCopyProcessor(locale, errorLogger, fromDatabase, toDatabase, sender::send, () -> {
+            DatabaseCopyProcessor databaseCopyProcessor = new DatabaseCopyProcessor(locale, errorLogger, fromDatabase, toDatabase, getFeedbackFor(sender), () -> {
                 boolean movingToCurrentDB = toDatabase.getType() == dbSystem.getDatabase().getType();
                 if (movingToCurrentDB) {
                     sender.send(locale.getString(CommandLang.HOTSWAP_REMINDER, toDatabase.getType().getConfigName()));
@@ -282,7 +304,6 @@ public class DatabaseCommands {
             sender.send(locale.getString(CommandLang.PROGRESS_FAIL, e.getMessage()));
         }
     }
-
 
     public void onClear(CMDSender sender, @Untrusted Arguments arguments) {
         DBType fromDB = arguments.get(0).flatMap(DBType::getForName)

@@ -121,6 +121,7 @@ public enum CommandLang implements Lang {
     DB_COPY_TABLE("command.database.copy.table", "Copying ${0}.."),
     DB_COPY_PROGRESS("command.database.copy.progress", "  ${0}: ${1}/${2} (${3}%) copied."),
     DB_COPY_ALL_DATA_EXISTED("command.database.copy.allDataExisted", "  all the data already existed."),
+    DB_COPY_TRACK_PLAYER_START("command.database.copy.trackPlayerStart", "Database copy started by player ${0} - process identifier: ${1}"),
 
     DB_BACKUP_CREATE("command.database.creatingBackup", "Cmd db - creating backup", "Creating a backup file '${0}.db' with contents of ${1}"),
     DB_WRITE("command.database.write", "Cmd db - write", "Writing to ${0}.."),
