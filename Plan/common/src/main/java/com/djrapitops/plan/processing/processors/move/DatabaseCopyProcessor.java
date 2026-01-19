@@ -56,7 +56,8 @@ import java.util.stream.Collectors;
  * @author AuroraLS3
  */
 public class DatabaseCopyProcessor implements CriticalRunnable {
-    private static final int ROW_LIMIT = 10000;
+    private static final int ROW_LIMIT = 100000;
+    private static final int DONE_SIGNAL = -1;
 
     private final Locale locale;
     private final ErrorLogger errorLogger;
@@ -67,7 +68,6 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
     private final Runnable doAfter;
 
     private final Map<ServerUUID, ServerUUID> serverUuidLookupTable = new HashMap<>();
-    private final int DONE_SIGNAL = -1;
     private final ProgressTracker progressTracker;
     private Map<String, Integer> tableCounts;
 
@@ -93,40 +93,43 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
     @Override
     public void run() {
         try {
-            while (fromDB.getState() == Database.State.PATCHING) {
+            int i = 0;
+            while (fromDB.getState() == Database.State.PATCHING && i < 200) {
                 Thread.sleep(500);
+                i++;
             }
-            while (toDB.getState() == Database.State.PATCHING) {
+            while (toDB.getState() == Database.State.PATCHING && i < 200) {
                 Thread.sleep(500);
+                i++;
             }
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
         }
 
         if (fromDB.getState() != Database.State.OPEN) {
-            feedback.accept("Source database is " + fromDB.getState() + ", could not begin operation.");
+            feedback.accept(locale.getString(CommandLang.DB_COPY_SOURCE_STATE, fromDB.getState()));
             return;
         }
         if (toDB.getState() != Database.State.OPEN) {
-            feedback.accept("Destination database is " + toDB.getState() + ", could not begin operation.");
+            feedback.accept(locale.getString(CommandLang.DB_COPY_DESTINATION_STATE, toDB.getState()));
             return;
         }
 
         tableCounts = fromDB.query(LookupTableQueries.tableCounts());
-        feedback.accept("Data to be copied:");
-        tableCounts.forEach((key, value) -> feedback.accept("  " + key + " - " + value + " rows"));
+        feedback.accept(locale.getString(CommandLang.DB_COPY_LIST_TITLE_SOURCE));
+        tableCounts.forEach((key, value) -> feedback.accept(locale.getString(CommandLang.DB_COPY_LIST_ROW, key, value)));
 
         if (strategies.contains(Strategy.CLEAR_DESTINATION_DATABASE)) {
-            feedback.accept("Clearing destination database..");
+            feedback.accept(locale.getString(CommandLang.DB_COPY_CLEAR_START));
             toDB.executeTransaction(new RemoveEverythingTransaction()).join();
-            feedback.accept("Cleared destination database.");
+            feedback.accept(locale.getString(CommandLang.DB_COPY_CLEAR_FINISH));
         } else {
             Map<String, Integer> existing = toDB.query(LookupTableQueries.tableCounts());
-            feedback.accept("Data in existing database:");
-            existing.forEach((key, value) -> feedback.accept("  " + key + " - " + value + " rows"));
+            feedback.accept(locale.getString(CommandLang.DB_COPY_LIST_TITLE_DESTINATION));
+            existing.forEach((key, value) -> feedback.accept(locale.getString(CommandLang.DB_COPY_LIST_ROW, key, value)));
         }
 
-        feedback.accept("Beginning database copy process..");
+        feedback.accept(locale.getString(CommandLang.PROGRESS_START));
 
         try {
             removeTemporaryTables();
@@ -155,12 +158,12 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
 
             feedback.accept(locale.getString(CommandLang.PROGRESS_SUCCESS));
         } catch (CompletionException e) {
-            feedback.accept("Ran into an issue, error logged to file: " + e.getMessage());
+            feedback.accept(locale.getString(CommandLang.DB_COPY_ERROR, e.getMessage()));
             errorLogger.error(e, ErrorContext.builder()
                     .related("Database copy operation", fromDB.getType(), toDB.getType(), strategies)
                     .build());
         } catch (IllegalStateException e) {
-            feedback.accept("Operation was aborted.");
+            feedback.accept(locale.getString(CommandLang.DB_COPY_ABORT));
         } finally {
             removeTemporaryTables();
             doAfter.run();
@@ -212,18 +215,18 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             } else if (strategies.contains(Strategy.SERVER_UUID_CONFLICT_SWAP_UUID)) {
                 ServerUUID newUUID = ServerUUID.randomUUID();
                 serverUuidLookupTable.put(server.getUuid(), newUUID);
-                feedback.accept("Swapping server uuid " + server.getUuid() + " with " + newUUID);
+                feedback.accept(locale.getString(CommandLang.DB_COPY_CONFLICT_SWAP, server.getUuid(), newUUID));
                 toDB.executeTransaction(new StoreServerInformationTransaction(
                         new Server(server.getId().orElse(null), newUUID, server.getName(), server.getWebAddress(), server.isProxy(), server.getPlanVersion())
                 )).join();
             } else if (strategies.contains(Strategy.SERVER_UUID_CONFLICT_DELETE_SERVER)) {
-                feedback.accept("Deleting conflicting server " + server.getUuid() + " from destination before insert");
+                feedback.accept(locale.getString(CommandLang.DB_COPY_CONFLICT_DELETE, server.getUuid()));
                 toDB.executeTransaction(new RemoveServerTransaction(server.getUuid())).join();
             } else {
                 // No strategy to deal with uuid conflict selected.
-                feedback.accept("Server with " + server.getUuid() + " already exists. Choose a strategy to deal with it.");
-                feedback.accept("  --on-conflict-swap - swaps the server uuid for inserted server");
-                feedback.accept("  --on-conflict-delete - deletes the server from destination db (Use when previous merge failed)");
+                feedback.accept(locale.getString(CommandLang.DB_COPY_CONFLICT_INFO_1, server.getUuid()));
+                feedback.accept(locale.getString(CommandLang.DB_COPY_CONFLICT_INFO_2));
+                feedback.accept(locale.getString(CommandLang.DB_COPY_CONFLICT_INFO_3));
                 throw new IllegalStateException();
             }
         }
@@ -246,7 +249,7 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             }
             progressTracker.add(count);
             if (progressTracker.shouldShowPercentage() || of != total) {
-                feedback.accept("  " + tableName + ": " + progressTracker.getCount() + '/' + progressTracker.getTotal() + " (" + progressTracker.getPercentage() + "%) copied.");
+                feedback.accept(locale.getString(CommandLang.DB_COPY_PROGRESS, tableName, progressTracker.getCount(), progressTracker.getTotal(), progressTracker.getPercentage()));
                 progressTracker.percentageShown();
             }
             return progressTracker.getCount() == of;
@@ -315,7 +318,7 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
     }
 
     private void logCopyMessage(String tableName) {
-        feedback.accept("Copying " + tableName + "..");
+        feedback.accept(locale.getString(CommandLang.DB_COPY_TABLE, tableName));
     }
 
     private void copyPing(LookupTable<Integer> serverIdLookupTable, LookupTable<Integer> userIdLookupTable) {
@@ -479,7 +482,7 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
         toDB.executeInTransaction(LargeStoreQueries.storeGroupPermissionIdRelations(idsToCopy)).join();
         logProgress(tableCounts.get(WebGroupToPermissionTable.TABLE_NAME), WebGroupToPermissionTable.TABLE_NAME, false);
         if (toCopy == 0) {
-            feedback.accept("  all the data already existed.");
+            feedback.accept(locale.getString(CommandLang.DB_COPY_ALL_DATA_EXISTED));
         }
     }
 
@@ -488,7 +491,6 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
         logCopyMessage(SecurityTable.TABLE_NAME);
         batching(currentId -> {
             List<SecurityTable.Row> rows = fromDB.query(WebUserQueries.fetchRows(currentId, ROW_LIMIT));
-            int toCopy = rows.size();
             IdMapper.mapGroupIds(rows, webGroupLookupTable);
             rows.removeIf(row -> lookupTable.contains(row.username));
             toDB.executeInTransaction(LargeStoreQueries.storeUsers(rows)).join();

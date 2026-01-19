@@ -248,9 +248,9 @@ public class DatabaseCommands {
 
         DatabaseCopyProcessor.Strategy[] chosenStrategies = strategies.toArray(new DatabaseCopyProcessor.Strategy[0]);
 
-        String prompt = locale.getString(CommandLang.CONFIRM_OVERWRITE_DB,
-                toDB.getName(),
-                fromDB.getName());
+        String prompt = locale.getString(CommandLang.CONFIRM_MERGE_DB,
+                fromDB.getName(),
+                toDB.getName());
 
         confirmation.confirm(sender, prompt, choice -> {
             if (Boolean.TRUE.equals(choice)) {
@@ -270,13 +270,13 @@ public class DatabaseCommands {
 
             sender.send(locale.getString(CommandLang.DB_WRITE, toDB.getName()));
 
-            DatabaseCopyProcessor databaseCopyProcessor = new DatabaseCopyProcessor(locale, errorLogger, fromDatabase, toDatabase, sender::send, chosenStrategies);
+            DatabaseCopyProcessor databaseCopyProcessor = new DatabaseCopyProcessor(locale, errorLogger, fromDatabase, toDatabase, sender::send, () -> {
+                boolean movingToCurrentDB = toDatabase.getType() == dbSystem.getDatabase().getType();
+                if (movingToCurrentDB) {
+                    sender.send(locale.getString(CommandLang.HOTSWAP_REMINDER, toDatabase.getType().getConfigName()));
+                }
+            }, chosenStrategies);
             processing.submit(databaseCopyProcessor);
-
-            boolean movingToCurrentDB = toDatabase.getType() == dbSystem.getDatabase().getType();
-            if (movingToCurrentDB) {
-                sender.send(locale.getString(CommandLang.HOTSWAP_REMINDER, toDatabase.getType().getConfigName()));
-            }
         } catch (Exception e) {
             errorLogger.error(e, ErrorContext.builder().related(sender, fromDB.getName() + "->" + toDB.getName()).build());
             sender.send(locale.getString(CommandLang.PROGRESS_FAIL, e.getMessage()));
