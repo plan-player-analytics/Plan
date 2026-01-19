@@ -21,6 +21,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.tables.GeoInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.PingTable;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
@@ -267,5 +268,14 @@ public class PingQueries {
                 AND + PingTable.DATE + ">=?" +
                 AND + PingTable.DATE + "<=?";
         return db -> db.queryOptional(sql, set -> set.getDouble("average"), after, before).orElse(-1.0);
+    }
+
+    public static Query<List<PingTable.Row>> fetchRows(int currentId, int rowLimit) {
+        String sql = Select.all(PingTable.TABLE_NAME)
+                .where(PingTable.ID + '>' + currentId)
+                .orderBy(PingTable.ID)
+                .limit(rowLimit)
+                .toString();
+        return db -> db.queryList(sql, PingTable.Row::extract);
     }
 }

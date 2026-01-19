@@ -56,7 +56,7 @@ public class StoreIconTransaction extends ThrowawayTransaction {
     }
 
     private ExecStatement insertIcon() {
-        String sql = "INSERT INTO " + ExtensionIconTable.TABLE_NAME + "(" +
+        String sql = INSERT_INTO + ExtensionIconTable.TABLE_NAME + "(" +
                 ExtensionIconTable.ICON_NAME + "," +
                 ExtensionIconTable.FAMILY + "," +
                 ExtensionIconTable.COLOR +

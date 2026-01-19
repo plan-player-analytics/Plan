@@ -67,6 +67,10 @@ public class RemoveEverythingTransaction extends Patch {
         clearTable(ExtensionPluginTable.TABLE_NAME);
         clearTable(ExtensionIconTable.TABLE_NAME);
 
+        execute("DROP TABLE IF EXISTS plan_world_times_batch");
+        execute("DROP TABLE IF EXISTS plan_kills_batch");
+        execute(SessionsTable.TemporaryIdLookupTable.DROP_TABLE_STATEMENT);
+
         executeOther(new StoreJoinAddressTransaction(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP));
     }
 

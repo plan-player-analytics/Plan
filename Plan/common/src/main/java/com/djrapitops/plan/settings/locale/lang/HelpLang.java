@@ -47,6 +47,8 @@ public enum HelpLang implements Lang {
     DESC_ARG_DB_MOVE_TO("command.argument.dbTypeMoveTo.description", "CMD Arg - db type move to", "Type of the database to move data to. Can not be same as previous."),
     DESC_ARG_DB_HOTSWAP("command.argument.dbTypeHotswap.description", "CMD Arg - db type hotswap", "Type of the database to start using."),
     DESC_ARG_DB_REMOVE("command.argument.dbTypeRemove.description", "CMD Arg - db type clear", "Type of the database to remove all data from."),
+    DESC_ARG_DB_MERGE_DELETE("command.argument.dbMergeStrategyDelete", "DESC_ARG_DB_MERGE_DELETE", "Delete conflicting server from destination database"),
+    DESC_ARG_DB_MERGE_SWAP("command.argument.dbMergeStrategySwap", "DESC_ARG_DB_MERGE_SWAP", "Swap UUID of inserted conflicting server in destination database"),
 
     SERVER("command.help.server.description", "Command Help - /plan server", "View the Server Page"),
     SERVERS("command.help.servers.description", "Command Help - /plan servers", "List servers in Database"),
@@ -65,6 +67,7 @@ public enum HelpLang implements Lang {
     DB_BACKUP("command.help.dbBackup.description", "Command Help - /plan db backup", "Backup data of a database to a file"),
     DB_RESTORE("command.help.dbRestore.description", "Command Help - /plan db restore", "Restore data from a file to a database"),
     DB_MOVE("command.help.dbMove.description", "Command Help - /plan db move", "Move data between databases"),
+    DB_MERGE("command.help.dbMerge.description", "Command Help - /plan db merge", "Merge data of two databases"),
     DB_HOTSWAP("command.help.dbHotswap.description", "Command Help - /plan db hotswap", "Change Database quickly"),
     DB_CLEAR("command.help.dbClear.description", "Command Help - /plan db clear", "Remove ALL Plan data from a database"),
     DB_REMOVE("command.help.dbRemove.description", "Command Help - /plan db remove", "Remove player's data from Current database"),
@@ -94,7 +97,7 @@ public enum HelpLang implements Lang {
     }
 
     @Override
-    public String getKey() { return key; }
+    public String getKey() {return key;}
 
     @Override
     public String getDefault() {

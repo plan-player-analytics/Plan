@@ -19,6 +19,8 @@ package com.djrapitops.plan.storage.database;
 import com.djrapitops.plan.exceptions.database.DBInitException;
 import com.djrapitops.plan.storage.database.queries.*;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
+import com.djrapitops.plan.storage.database.transactions.ExecStatement;
+import com.djrapitops.plan.storage.database.transactions.Executable;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 
 import java.sql.PreparedStatement;
@@ -126,6 +128,24 @@ public interface Database {
      * @return Future that is finished when the transaction has been executed.
      */
     CompletableFuture<?> executeTransaction(Transaction transaction);
+
+    default CompletableFuture<?> executeInTransaction(Executable executable) {
+        return executeTransaction(new Transaction() {
+            @Override
+            protected void performOperations() {
+                execute(executable);
+            }
+        });
+    }
+
+    default CompletableFuture<?> executeInTransaction(String sql) {
+        return executeInTransaction(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) {
+                // Nothing to prepare
+            }
+        });
+    }
 
     /**
      * Used to get the {@code DBType} of the Database

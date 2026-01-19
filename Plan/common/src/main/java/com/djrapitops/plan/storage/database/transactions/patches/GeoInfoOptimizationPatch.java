@@ -49,7 +49,7 @@ public class GeoInfoOptimizationPatch extends Patch {
         tempOldTable();
         execute(GeoInfoTable.createTableSQL(dbType));
 
-        execute("INSERT INTO " + GeoInfoTable.TABLE_NAME + " (" +
+        execute(INSERT_INTO + GeoInfoTable.TABLE_NAME + " (" +
                 GeoInfoTable.USER_ID + ',' +
                 GeoInfoTable.LAST_USED + ',' +
                 GeoInfoTable.GEOLOCATION +

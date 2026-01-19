@@ -53,7 +53,7 @@ public class StoreRequestTransaction extends ThrowawayTransaction {
 
     @Override
     protected void performOperations() {
-        execute(new ExecStatement(AccessLogTable.INSERT_NO_USER) {
+        execute(new ExecStatement(AccessLogTable.INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, timestamp);

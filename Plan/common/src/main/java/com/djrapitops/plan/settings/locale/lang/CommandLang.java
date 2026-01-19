@@ -29,6 +29,7 @@ public enum CommandLang implements Lang {
     CONFIRM_ACCEPT("command.confirmation.accept", "Cmd Confirm - accept", "Accept"),
     CONFIRM_DENY("command.confirmation.deny", "Cmd Confirm - deny", "Cancel"),
     CONFIRM_OVERWRITE_DB("command.confirmation.dbOverwrite", "Cmd Confirm - overwriting db", "You are about to overwrite data in Plan ${0} with data in ${1}"),
+    CONFIRM_MERGE_DB("command.confirmation.dbMerge", "You are about to merge data in ${0} to data in ${1}"),
     CONFIRM_CLEAR_DB("command.confirmation.dbClear", "Cmd Confirm - clearing db", "You are about to remove all Plan-data in ${0}"),
     CONFIRM_REMOVE_PLAYER_DB("command.confirmation.dbRemovePlayer", "Cmd Confirm - remove player db", "You are about to remove data of ${0} from ${1}"),
     CONFIRM_UNREGISTER("command.confirmation.unregister", "Cmd Confirm - unregister", "You are about to unregister '${0}' linked to ${1}"),
@@ -103,6 +104,25 @@ public enum CommandLang implements Lang {
     INGAME_MOB_KILLS("command.ingame.mobKills", "Cmd Qinspect - Mob Kills", "  §2Mob Kills: §f${0}"),
     INGAME_DEATHS("command.ingame.deaths", "Cmd Qinspect - Deaths", "  §2Deaths: §f${0}"),
 
+    DB_COPY_SOURCE_STATE("command.database.copy.sourceState", "Source database is ${0}, could not begin operation"),
+    DB_COPY_DESTINATION_STATE("command.database.copy.destinationState", "Destination database is ${0}, could not begin operation"),
+    DB_COPY_LIST_TITLE_SOURCE("command.database.copy.list.titleSource", "Data to be copied:"),
+    DB_COPY_LIST_TITLE_DESTINATION("command.database.copy.list.titleDestination", "Data in existing database:"),
+    DB_COPY_LIST_ROW("command.database.copy.list.row", "   ${0} - ${1} rows"),
+    DB_COPY_CLEAR_START("command.database.copy.clearStart", "Clearing destination database.."),
+    DB_COPY_CLEAR_FINISH("command.database.copy.clearFinish", "Cleared destination database."),
+    DB_COPY_ERROR("command.database.copy.error", "Ran into an issue, error was logged to a file, error: ${0}"),
+    DB_COPY_ABORT("command.database.copy.abort", "Operation was aborted."),
+    DB_COPY_CONFLICT_SWAP("command.database.copy.conflict.swap", "Swapping server uuid ${0} with ${1}"),
+    DB_COPY_CONFLICT_DELETE("command.database.copy.conflict.delete", "Deleting conflicting server ${0} from destination before insert"),
+    DB_COPY_CONFLICT_INFO_1("command.database.copy.conflict.info1", "Server with uuid ${0} already exists. Choose a strategy to deal with it."),
+    DB_COPY_CONFLICT_INFO_2("command.database.copy.conflict.info2", "  --on-conflict-swap - swaps the server uuid for inserted server (Use if multiple servers shared uuid at some point)"),
+    DB_COPY_CONFLICT_INFO_3("command.database.copy.conflict.info3", "  --on-conflict-delete - deletes the server from destination db (Use when previous merge failed)"),
+    DB_COPY_TABLE("command.database.copy.table", "Copying ${0}.."),
+    DB_COPY_PROGRESS("command.database.copy.progress", "  ${0}: ${1}/${2} (${3}%) copied."),
+    DB_COPY_ALL_DATA_EXISTED("command.database.copy.allDataExisted", "  all the data already existed."),
+    DB_COPY_TRACK_PLAYER_START("command.database.copy.trackPlayerStart", "Database copy started by player ${0} - process identifier: ${1}"),
+
     DB_BACKUP_CREATE("command.database.creatingBackup", "Cmd db - creating backup", "Creating a backup file '${0}.db' with contents of ${1}"),
     DB_WRITE("command.database.write", "Cmd db - write", "Writing to ${0}.."),
     DB_REMOVAL("command.database.removal", "Cmd db - removal", "Removing Plan-data from ${0}.."),
@@ -134,11 +154,15 @@ public enum CommandLang implements Lang {
     FAIL_EXPORTER_NOT_FOUND("command.general.failNoExporter", "Manage - Fail No Exporter", "§eExporter '${0}' doesn't exist"),
     NO_SERVER("command.database.manage.failNoServer", "Manage - Fail No Server", "No server found with given parameters."),
     UNINSTALLING_SAME_SERVER("command.database.manage.failSameServer", "Manage - Fail Same server", "Can not mark this server as uninstalled (You are on it)"),
-    ;
+    FAIL_DB_TOO_MANY_STRATEGIES("command.database.manage.failTooManyStrategies", "Manage - Fail too many strategies", "Only one strategy can be selected to deal with merge conflict.");
 
     private final String key;
     private final String identifier;
     private final String defaultValue;
+
+    CommandLang(String key, String defaultValue) {
+        this(key, null, defaultValue);
+    }
 
     CommandLang(String key, String identifier, String defaultValue) {
         this.key = key;

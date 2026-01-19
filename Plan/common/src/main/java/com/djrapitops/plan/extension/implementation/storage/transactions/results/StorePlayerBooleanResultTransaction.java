@@ -35,8 +35,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.djrapitops.plan.storage.database.sql.building.Sql.AND;
-import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 import static com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPlayerValueTable.*;
 
 /**
@@ -104,7 +103,7 @@ public class StorePlayerBooleanResultTransaction extends ThrowawayTransaction {
     }
 
     private Executable insertValue() {
-        String sql = "INSERT INTO " + TABLE_NAME + "(" +
+        String sql = INSERT_INTO + TABLE_NAME + "(" +
                 BOOLEAN_VALUE + "," +
                 USER_UUID + "," +
                 PROVIDER_ID +

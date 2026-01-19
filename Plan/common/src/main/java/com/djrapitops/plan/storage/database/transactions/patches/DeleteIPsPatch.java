@@ -57,7 +57,7 @@ public class DeleteIPsPatch extends Patch {
         dropTable(GeoInfoTable.TABLE_NAME);
         execute(GeoInfoTable.createTableSQL(dbType));
 
-        execute("INSERT INTO " + GeoInfoTable.TABLE_NAME + " (" +
+        execute(INSERT_INTO + GeoInfoTable.TABLE_NAME + " (" +
                 GeoInfoTable.USER_ID + ',' +
                 GeoInfoTable.LAST_USED + ',' +
                 GeoInfoTable.GEOLOCATION +
