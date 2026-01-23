@@ -165,7 +165,7 @@
   dependencies:
     core-js-pure "^3.43.0"
 
-"@babel/runtime@^7.12.0", "@babel/runtime@^7.12.5", "@babel/runtime@^7.18.3", "@babel/runtime@^7.23.2", "@babel/runtime@^7.24.7", "@babel/runtime@^7.26.0", "@babel/runtime@^7.28.4", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.3", "@babel/runtime@^7.8.7":
+"@babel/runtime@^7.12.0", "@babel/runtime@^7.12.5", "@babel/runtime@^7.18.3", "@babel/runtime@^7.24.7", "@babel/runtime@^7.26.0", "@babel/runtime@^7.28.4", "@babel/runtime@^7.5.5", "@babel/runtime@^7.6.3", "@babel/runtime@^7.8.7":
   version "7.28.4"
   resolved "https://registry.yarnpkg.com/@babel/runtime/-/runtime-7.28.4.tgz#a70226016fabe25c5783b2f22d3e1c9bc5ca3326"
   integrity sha512-Q/N6JNWvIvPnLDvjlE1OUBLPQHH6l3CltCEsHIujp45zQUSSh8K+gHnaEX45yAT1nyngnINhvWtzN+Nb9D8RAQ==
@@ -2269,12 +2269,12 @@ html-parse-stringify@^3.0.1:
   dependencies:
     void-elements "3.1.0"
 
-i18next-chained-backend@^4.6.3:
-  version "4.6.3"
-  resolved "https://registry.yarnpkg.com/i18next-chained-backend/-/i18next-chained-backend-4.6.3.tgz#3a4cc3a396dd04f50846743ea4e987489dd8a0cf"
-  integrity sha512-Yg4hAKg/98zRAMQs87vJSNevTzaPPrYF3Eb7Kpx+UEaaXLd3p69g7dulAL+hpmZQHeMQ/5gFqHVtdwva53mB0Q==
+i18next-chained-backend@^5.0.2:
+  version "5.0.2"
+  resolved "https://registry.yarnpkg.com/i18next-chained-backend/-/i18next-chained-backend-5.0.2.tgz#75628886de83984458eae7d2c2cb102ab3339171"
+  integrity sha512-PiTQAfAfXldDXRl2m+mHXxbqV94rloxX0Sb++da/EmJdHoiNEwlT4BtFoUhjsm7lrJ62mtgbwglENrFH2lUNow==
   dependencies:
-    "@babel/runtime" "^7.23.2"
+    "@babel/runtime" "^7.28.4"
 
 i18next-http-backend@^3.0.2:
   version "3.0.2"
