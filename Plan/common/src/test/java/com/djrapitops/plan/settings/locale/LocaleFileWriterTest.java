@@ -34,11 +34,11 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 class LocaleFileWriterTest {
 
     @Test
-    void writesAllIdentifiers(@TempDir Path tempDir) throws IOException {
+    void writesAllKeys(@TempDir Path tempDir) throws IOException {
         File file = tempDir.resolve("localeFile.yml").toFile();
         new LocaleFileWriter(new Locale()).writeToFile(file);
 
-        long expected = LocaleSystem.getIdentifiers().size();
+        long expected = LocaleSystem.getKeys().size();
         long result = FileResource.lines(file).stream().filter(line -> !line.endsWith(":")).count();
         assertEquals(expected, result);
     }

@@ -31,6 +31,7 @@ import com.djrapitops.plan.storage.database.queries.objects.lookup.IdMapper;
 import com.djrapitops.plan.storage.database.queries.objects.lookup.LookupTable;
 import com.djrapitops.plan.storage.database.queries.objects.lookup.LookupTableQueries;
 import com.djrapitops.plan.storage.database.queries.objects.lookup.ServerUUIDIdentifiable;
+import com.djrapitops.plan.storage.database.queries.schema.MySQLSchemaQueries;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.sql.tables.webuser.*;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
@@ -175,9 +176,9 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
         toDB.executeInTransaction("DROP TABLE IF EXISTS plan_world_times_batch").join();
         toDB.executeInTransaction("DROP TABLE IF EXISTS plan_kills_batch").join();
         toDB.executeTransaction(SessionsTable.Row.removeOldIdPatch()).join();
-        toDB.executeInTransaction(dropUniqueConstraint(GeoInfoTable.TABLE_NAME, GeoInfoTable.USER_ID + ',' + GeoInfoTable.GEOLOCATION)).join();
-        toDB.executeInTransaction(dropUniqueConstraint(NicknamesTable.TABLE_NAME, NicknamesTable.SERVER_UUID + ',' + NicknamesTable.USER_UUID + ',' + NicknamesTable.NICKNAME)).join();
-        toDB.executeInTransaction(dropUniqueConstraint(AllowlistBounceTable.TABLE_NAME, AllowlistBounceTable.UUID + ',' + AllowlistBounceTable.SERVER_ID)).join();
+        dropUniqueConstraint(toDB.getType(), GeoInfoTable.TABLE_NAME, GeoInfoTable.USER_ID + ',' + GeoInfoTable.GEOLOCATION);
+        dropUniqueConstraint(toDB.getType(), NicknamesTable.TABLE_NAME, NicknamesTable.SERVER_UUID + ',' + NicknamesTable.USER_UUID + ',' + NicknamesTable.NICKNAME);
+        dropUniqueConstraint(toDB.getType(), AllowlistBounceTable.TABLE_NAME, AllowlistBounceTable.UUID + ',' + AllowlistBounceTable.SERVER_ID);
     }
 
     private LookupTable<Integer> copyGroups() {
@@ -522,9 +523,17 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
         toDB.executeInTransaction(toDB.getType() == DBType.MYSQL ? uniqueConstraintMySQL : uniqueConstraintSQLite).join();
     }
 
-    private String dropUniqueConstraint(String tableName, String columns) {
+    private void dropUniqueConstraint(DBType dbType, String tableName, String columns) {
         String indexName = "idx_unique_" + tableName + "_" + columns.replace(',', '_');
-        return "DROP INDEX IF EXISTS " + indexName;
+
+        boolean isMySQL = dbType == DBType.MYSQL;
+        if (isMySQL) {
+            boolean indexExists = toDB.query(MySQLSchemaQueries.doesIndexExist(indexName, tableName));
+            if (!indexExists) return;
+            toDB.executeInTransaction("DROP INDEX " + indexName + " ON " + tableName).join();
+        } else {
+            toDB.executeInTransaction("DROP INDEX IF EXISTS " + indexName).join();
+        }
     }
 
     public enum Strategy {
