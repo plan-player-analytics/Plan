@@ -151,8 +151,12 @@ class DBPatchMySQLRegressionTest extends DBPatchRegressionTest {
 
     @Test
     void mysqlPatchesAreOnlyAppliedOnce() {
-        mysqlPatchesAreApplied();
         Patch[] patches = underTest.patches();
+        for (Patch patch : patches) {
+            underTest.executeTransaction(patch);
+        }
+        assertPatchesHaveBeenApplied(patches);
+        patches = underTest.patches();
         for (Patch patch : patches) {
             underTest.executeTransaction(patch);
         }

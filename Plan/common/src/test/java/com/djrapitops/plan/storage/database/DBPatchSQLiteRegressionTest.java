@@ -123,8 +123,12 @@ class DBPatchSQLiteRegressionTest extends DBPatchRegressionTest {
 
     @Test
     void sqlitePatchesAreOnlyAppliedOnce() {
-        sqlitePatchesAreApplied();
         Patch[] patches = underTest.patches();
+        for (Patch patch : patches) {
+            underTest.executeTransaction(patch);
+        }
+        assertPatchesHaveBeenApplied(patches);
+        patches = underTest.patches();
         for (Patch patch : patches) {
             underTest.executeTransaction(patch);
         }
