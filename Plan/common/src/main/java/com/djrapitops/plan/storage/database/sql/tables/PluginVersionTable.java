@@ -71,7 +71,7 @@ public class PluginVersionTable {
     }
 
     public static class Row implements ServerIdentifiable {
-        public static String INSERT_STATEMENT = Insert.values(TABLE_NAME, SERVER_ID, PLUGIN_NAME, VERSION, MODIFIED);
+        public static final String INSERT_STATEMENT = Insert.values(TABLE_NAME, SERVER_ID, PLUGIN_NAME, VERSION, MODIFIED);
 
         public int id;
         public int serverId;

@@ -28,7 +28,6 @@ import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.processing.processors.move.DatabaseCopyProcessor;
 import com.djrapitops.plan.settings.locale.Locale;
-import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.SQLiteDB;
@@ -138,8 +137,6 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
 
     @Test
     default void backupToSQLiteAndRestore() throws Exception {
-        if (db().getType() == DBType.SQLITE) return;
-
         File tempFile = Files.createTempFile(system().getPlanFiles().getDataFolder().toPath(), "backup-", ".db").toFile();
         tempFile.deleteOnExit();
         SQLiteDB backup = dbSystem().getSqLiteFactory().usingFile(tempFile);
@@ -152,6 +149,36 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
             List<String> feedback = new ArrayList<>();
 
             new DatabaseCopyProcessor(new Locale(), new TestErrorLogger(), db(), backup, feedback::add, DatabaseCopyProcessor.Strategy.CLEAR_DESTINATION_DATABASE)
+                    .run();
+            new DatabaseCopyProcessor(new Locale(), new TestErrorLogger(), backup, db(), feedback::add, DatabaseCopyProcessor.Strategy.CLEAR_DESTINATION_DATABASE)
+                    .run();
+
+            for (String s : feedback) {
+                System.out.println(s);
+            }
+
+            assertSame(db(), backup);
+        } finally {
+            backup.close();
+        }
+    }
+
+    @Test
+    default void backupToSQLiteAndRestoreTwice() throws Exception {
+        File tempFile = Files.createTempFile(system().getPlanFiles().getDataFolder().toPath(), "backup-", ".db").toFile();
+        tempFile.deleteOnExit();
+        SQLiteDB backup = dbSystem().getSqLiteFactory().usingFile(tempFile);
+        backup.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
+        try {
+            backup.init();
+
+            saveDataForBackup(db(), serverUUID());
+
+            List<String> feedback = new ArrayList<>();
+
+            new DatabaseCopyProcessor(new Locale(), new TestErrorLogger(), db(), backup, feedback::add, DatabaseCopyProcessor.Strategy.CLEAR_DESTINATION_DATABASE)
+                    .run();
+            new DatabaseCopyProcessor(new Locale(), new TestErrorLogger(), backup, db(), feedback::add, DatabaseCopyProcessor.Strategy.CLEAR_DESTINATION_DATABASE)
                     .run();
             new DatabaseCopyProcessor(new Locale(), new TestErrorLogger(), backup, db(), feedback::add, DatabaseCopyProcessor.Strategy.CLEAR_DESTINATION_DATABASE)
                     .run();
@@ -244,5 +271,19 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
 
     default <T> Executable assertQueryResultIsEqual(Database one, Database two, Query<T> query) {
         return () -> assertEquals(one.query(query), two.query(query));
+    }
+
+    @Test
+    default void removeEverythingRemovesEverything() {
+        saveDataForBackup(db(), serverUUID());
+
+        db().executeTransaction(new RemoveEverythingTransaction()).join();
+
+        Map<String, Integer> tableCounts = db().query(LookupTableQueries.tableCounts());
+        assertAll(tableCounts.entrySet().stream()
+                .filter(entry -> !JoinAddressTable.TABLE_NAME.equals(entry.getKey()))
+                .map(
+                        entry -> () -> assertEquals(0, entry.getValue(), () -> entry.getKey() + " was not empty: " + entry.getValue() + " rows.")
+                ));
     }
 }

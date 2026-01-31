@@ -44,6 +44,7 @@ public class RemoveEverythingTransaction extends Patch {
         clearTable(SessionsTable.TABLE_NAME);
         clearTable(JoinAddressTable.TABLE_NAME);
         clearTable(AllowlistBounceTable.TABLE_NAME);
+        clearTable(PluginVersionTable.TABLE_NAME);
         clearTable(WorldTable.TABLE_NAME);
         clearTable(PingTable.TABLE_NAME);
         clearTable(UserInfoTable.TABLE_NAME);

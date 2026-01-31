@@ -41,6 +41,7 @@ import com.djrapitops.plan.storage.database.transactions.init.CreateTemporarySes
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import com.djrapitops.plan.utilities.logging.ProgressTracker;
+import org.jspecify.annotations.NonNull;
 
 import java.util.*;
 import java.util.concurrent.CompletionException;
@@ -176,9 +177,6 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
         toDB.executeInTransaction("DROP TABLE IF EXISTS plan_world_times_batch").join();
         toDB.executeInTransaction("DROP TABLE IF EXISTS plan_kills_batch").join();
         toDB.executeTransaction(SessionsTable.Row.removeOldIdPatch()).join();
-        dropUniqueConstraint(toDB.getType(), GeoInfoTable.TABLE_NAME, GeoInfoTable.USER_ID + ',' + GeoInfoTable.GEOLOCATION);
-        dropUniqueConstraint(toDB.getType(), NicknamesTable.TABLE_NAME, NicknamesTable.SERVER_UUID + ',' + NicknamesTable.USER_UUID + ',' + NicknamesTable.NICKNAME);
-        dropUniqueConstraint(toDB.getType(), AllowlistBounceTable.TABLE_NAME, AllowlistBounceTable.UUID + ',' + AllowlistBounceTable.SERVER_ID);
     }
 
     private LookupTable<Integer> copyGroups() {
@@ -517,23 +515,22 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
     }
 
     private void createUniqueConstraint(String tableName, String columns) {
-        String indexName = "idx_unique_" + tableName + "_" + columns.replace(',', '_');
+        String indexName = getIndexName(tableName, columns);
         String uniqueConstraintMySQL = "ALTER TABLE " + tableName + " ADD UNIQUE INDEX " + indexName + " (" + columns + ")";
         String uniqueConstraintSQLite = "CREATE UNIQUE INDEX IF NOT EXISTS " + indexName + " ON " + tableName + " (" + columns + ")";
-        toDB.executeInTransaction(toDB.getType() == DBType.MYSQL ? uniqueConstraintMySQL : uniqueConstraintSQLite).join();
-    }
 
-    private void dropUniqueConstraint(DBType dbType, String tableName, String columns) {
-        String indexName = "idx_unique_" + tableName + "_" + columns.replace(',', '_');
-
-        boolean isMySQL = dbType == DBType.MYSQL;
+        boolean isMySQL = toDB.getType() == DBType.MYSQL;
         if (isMySQL) {
             boolean indexExists = toDB.query(MySQLSchemaQueries.doesIndexExist(indexName, tableName));
-            if (!indexExists) return;
-            toDB.executeInTransaction("DROP INDEX " + indexName + " ON " + tableName).join();
+            if (indexExists) return;
+            toDB.executeInTransaction(uniqueConstraintMySQL).join();
         } else {
-            toDB.executeInTransaction("DROP INDEX IF EXISTS " + indexName).join();
+            toDB.executeInTransaction(uniqueConstraintSQLite).join();
         }
+    }
+
+    private @NonNull String getIndexName(String tableName, String columns) {
+        return "idx_unique_" + tableName + "_" + columns.replace(',', '_');
     }
 
     public enum Strategy {
