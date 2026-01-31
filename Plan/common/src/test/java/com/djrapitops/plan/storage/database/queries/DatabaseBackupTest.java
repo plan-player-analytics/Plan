@@ -47,6 +47,7 @@ import com.google.common.util.concurrent.MoreExecutors;
 import com.google.gson.Gson;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
+import org.testcontainers.shaded.org.awaitility.Awaitility;
 import utilities.RandomData;
 import utilities.TestConstants;
 import utilities.TestErrorLogger;
@@ -54,6 +55,7 @@ import utilities.TestErrorLogger;
 import java.io.File;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -117,6 +119,8 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
         backup.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
         try {
             backup.init();
+            Awaitility.await().atMost(5, TimeUnit.SECONDS).until(() -> db().getState() == Database.State.OPEN);
+            Awaitility.await().atMost(5, TimeUnit.SECONDS).until(() -> backup.getState() == Database.State.OPEN);
 
             saveDataForBackup(db(), serverUUID());
 
@@ -143,6 +147,8 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
         backup.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
         try {
             backup.init();
+            Awaitility.await().atMost(5, TimeUnit.SECONDS).until(() -> db().getState() == Database.State.OPEN);
+            Awaitility.await().atMost(5, TimeUnit.SECONDS).until(() -> backup.getState() == Database.State.OPEN);
 
             saveDataForBackup(db(), serverUUID());
 
@@ -171,6 +177,8 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
         backup.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
         try {
             backup.init();
+            Awaitility.await().atMost(5, TimeUnit.SECONDS).until(() -> db().getState() == Database.State.OPEN);
+            Awaitility.await().atMost(5, TimeUnit.SECONDS).until(() -> backup.getState() == Database.State.OPEN);
 
             saveDataForBackup(db(), serverUUID());
 
@@ -201,6 +209,8 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
         backup.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
         try {
             backup.init();
+            Awaitility.await().atMost(5, TimeUnit.SECONDS).until(() -> db().getState() == Database.State.OPEN);
+            Awaitility.await().atMost(5, TimeUnit.SECONDS).until(() -> backup.getState() == Database.State.OPEN);
 
             saveDataForBackup(db(), serverUUID());
             saveDataForBackup(backup, TestConstants.SERVER_TWO_UUID);

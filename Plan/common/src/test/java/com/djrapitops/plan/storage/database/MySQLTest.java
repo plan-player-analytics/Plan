@@ -81,7 +81,7 @@ class MySQLTest implements DatabaseTest, DatabaseTestAggregate {
         Optional<Database> mysql = preparer.prepareMySQL();
         Assumptions.assumeTrue(mysql.isPresent());
         database = mysql.get();
-        database.executeTransaction(new CreateTablesTransaction());
+        database.executeTransaction(new CreateTablesTransaction()).join();
         // Enables more strict query mode to prevent errors from it going unnoticed.
         database.executeTransaction(new Transaction() {
             @Override
@@ -96,7 +96,14 @@ class MySQLTest implements DatabaseTest, DatabaseTestAggregate {
                     execute("SET GLOBAL sql_mode=(SELECT CONCAT(@@GLOBAL.sql_mode, ',ONLY_FULL_GROUP_BY'))");
                 }
             }
-        });
+        }).join();
+    }
+
+    @AfterAll
+    static void disableSystem() {
+        preparer.prepareMySQL().ifPresent(Database::close);
+        if (database != null) database.close();
+        preparer.tearDown();
     }
 
     @BeforeEach
@@ -106,13 +113,6 @@ class MySQLTest implements DatabaseTest, DatabaseTestAggregate {
 
         db().executeTransaction(new StoreServerInformationTransaction(new Server(serverUUID(), TestConstants.SERVER_NAME, "", TestConstants.VERSION)));
         assertEquals(serverUUID(), ((SQLDB) db()).getServerUUIDSupplier().get());
-    }
-
-    @AfterAll
-    static void disableSystem() {
-        preparer.prepareMySQL().ifPresent(Database::close);
-        if (database != null) database.close();
-        preparer.tearDown();
     }
 
     @Override
