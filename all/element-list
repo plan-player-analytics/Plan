@@ -105,6 +105,7 @@ com.djrapitops.plan.modules.sponge
 com.djrapitops.plan.modules.velocity
 com.djrapitops.plan.placeholder
 com.djrapitops.plan.processing
+com.djrapitops.plan.processing.processors.move
 com.djrapitops.plan.processing.processors.player
 com.djrapitops.plan.query
 com.djrapitops.plan.settings
@@ -124,6 +125,7 @@ com.djrapitops.plan.storage.database.queries.containers
 com.djrapitops.plan.storage.database.queries.filter
 com.djrapitops.plan.storage.database.queries.filter.filters
 com.djrapitops.plan.storage.database.queries.objects
+com.djrapitops.plan.storage.database.queries.objects.lookup
 com.djrapitops.plan.storage.database.queries.objects.playertable
 com.djrapitops.plan.storage.database.queries.schema
 com.djrapitops.plan.storage.database.sql.building

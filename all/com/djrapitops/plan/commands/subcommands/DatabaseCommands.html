@@ -104,7 +104,7 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.commands.subcommands.Confirmation,com.djrapitops.plan.commands.use.ColorScheme,com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.storage.database.SQLiteDB.Factory,com.djrapitops.plan.query.QuerySvc,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.delivery.formatting.Formatters,com.djrapitops.plan.identification.Identifiers,com.djrapitops.plan.commands.subcommands.PluginStatusCommands,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.processing.Processing)" class="member-name-link">DatabaseCommands</a><wbr>(<a href="../../settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.commands.subcommands.Confirmation,com.djrapitops.plan.commands.use.ColorScheme,com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.storage.database.SQLiteDB.Factory,com.djrapitops.plan.query.QuerySvc,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.delivery.formatting.Formatters,com.djrapitops.plan.identification.Identifiers,com.djrapitops.plan.commands.subcommands.PluginStatusCommands,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.processing.Processing)" class="member-name-link">DatabaseCommands</a><wbr>(<a href="../../settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
  <a href="Confirmation.html" title="class in com.djrapitops.plan.commands.subcommands">Confirmation</a>&nbsp;confirmation,
  <a href="../use/ColorScheme.html" title="class in com.djrapitops.plan.commands.use">ColorScheme</a>&nbsp;colors,
  <a href="../../storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
@@ -116,6 +116,7 @@ loadScripts(document, 'script');</script>
  <a href="../../delivery/formatting/Formatters.html" title="class in com.djrapitops.plan.delivery.formatting">Formatters</a>&nbsp;formatters,
  <a href="../../identification/Identifiers.html" title="class in com.djrapitops.plan.identification">Identifiers</a>&nbsp;identifiers,
  <a href="PluginStatusCommands.html" title="class in com.djrapitops.plan.commands.subcommands">PluginStatusCommands</a>&nbsp;statusCommands,
+ net.playeranalytics.plugin.server.PluginLogger&nbsp;logger,
  <a href="../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger,
  <a href="../../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
@@ -150,36 +151,40 @@ loadScripts(document, 'script');</script>
  <a href="../use/Arguments.html" title="class in com.djrapitops.plan.commands.use">Arguments</a>&nbsp;arguments)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onMove(com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)" class="member-name-link">onMove</a><wbr>(<a href="../use/CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>&nbsp;sender,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onMerge(com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)" class="member-name-link">onMerge</a><wbr>(<a href="../use/CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>&nbsp;sender,
  <a href="../use/Arguments.html" title="class in com.djrapitops.plan.commands.use">Arguments</a>&nbsp;arguments)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onOnlineConversion(com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)" class="member-name-link">onOnlineConversion</a><wbr>(<a href="../use/CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>&nbsp;sender,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onMove(com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)" class="member-name-link">onMove</a><wbr>(<a href="../use/CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>&nbsp;sender,
  <a href="../use/Arguments.html" title="class in com.djrapitops.plan.commands.use">Arguments</a>&nbsp;arguments)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onRemove(com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)" class="member-name-link">onRemove</a><wbr>(<a href="../use/CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>&nbsp;sender,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onOnlineConversion(com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)" class="member-name-link">onOnlineConversion</a><wbr>(<a href="../use/CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>&nbsp;sender,
  <a href="../use/Arguments.html" title="class in com.djrapitops.plan.commands.use">Arguments</a>&nbsp;arguments)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onRestore(com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)" class="member-name-link">onRestore</a><wbr>(<a href="../use/CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>&nbsp;sender,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onRemove(com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)" class="member-name-link">onRemove</a><wbr>(<a href="../use/CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>&nbsp;sender,
  <a href="../use/Arguments.html" title="class in com.djrapitops.plan.commands.use">Arguments</a>&nbsp;arguments)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onUninstalled(com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)" class="member-name-link">onUninstalled</a><wbr>(<a href="../use/CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>&nbsp;sender,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onRestore(com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)" class="member-name-link">onRestore</a><wbr>(<a href="../use/CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>&nbsp;sender,
  <a href="../use/Arguments.html" title="class in com.djrapitops.plan.commands.use">Arguments</a>&nbsp;arguments)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#performBackup(com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments,java.lang.String,com.djrapitops.plan.storage.database.Database)" class="member-name-link">performBackup</a><wbr>(<a href="../use/CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>&nbsp;sender,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onUninstalled(com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)" class="member-name-link">onUninstalled</a><wbr>(<a href="../use/CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>&nbsp;sender,
+ <a href="../use/Arguments.html" title="class in com.djrapitops.plan.commands.use">Arguments</a>&nbsp;arguments)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#performBackup(com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments,java.lang.String,com.djrapitops.plan.storage.database.Database)" class="member-name-link">performBackup</a><wbr>(<a href="../use/CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>&nbsp;sender,
  <a href="../use/Arguments.html" title="class in com.djrapitops.plan.commands.use">Arguments</a>&nbsp;arguments,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;dbName,
  <a href="../../storage/database/Database.html" title="interface in com.djrapitops.plan.storage.database">Database</a>&nbsp;fromDB)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#performRestore(com.djrapitops.plan.commands.use.CMDSender,java.io.File,com.djrapitops.plan.storage.database.Database)" class="member-name-link">performRestore</a><wbr>(<a href="../use/CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>&nbsp;sender,
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#performRestore(com.djrapitops.plan.commands.use.CMDSender,java.io.File,com.djrapitops.plan.storage.database.Database)" class="member-name-link">performRestore</a><wbr>(<a href="../use/CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>&nbsp;sender,
  <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/io/File.html" title="class or interface in java.io" class="external-link">File</a>&nbsp;backupDBFile,
  <a href="../../storage/database/Database.html" title="interface in com.djrapitops.plan.storage.database">Database</a>&nbsp;toDB)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -198,7 +203,7 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.commands.subcommands.Confirmation,com.djrapitops.plan.commands.use.ColorScheme,com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.storage.database.SQLiteDB.Factory,com.djrapitops.plan.query.QuerySvc,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.delivery.formatting.Formatters,com.djrapitops.plan.identification.Identifiers,com.djrapitops.plan.commands.subcommands.PluginStatusCommands,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.processing.Processing)">
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.commands.subcommands.Confirmation,com.djrapitops.plan.commands.use.ColorScheme,com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.storage.database.SQLiteDB.Factory,com.djrapitops.plan.query.QuerySvc,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.delivery.formatting.Formatters,com.djrapitops.plan.identification.Identifiers,com.djrapitops.plan.commands.subcommands.PluginStatusCommands,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.processing.Processing)">
 <h3>DatabaseCommands</h3>
 <div class="member-signature"><span class="annotations">@Inject
 </span><span class="modifiers">public</span>&nbsp;<span class="element-name">DatabaseCommands</span><wbr><span class="parameters">(<a href="../../settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
@@ -213,6 +218,7 @@ loadScripts(document, 'script');</script>
  <a href="../../delivery/formatting/Formatters.html" title="class in com.djrapitops.plan.delivery.formatting">Formatters</a>&nbsp;formatters,
  <a href="../../identification/Identifiers.html" title="class in com.djrapitops.plan.identification">Identifiers</a>&nbsp;identifiers,
  <a href="PluginStatusCommands.html" title="class in com.djrapitops.plan.commands.subcommands">PluginStatusCommands</a>&nbsp;statusCommands,
+ net.playeranalytics.plugin.server.PluginLogger&nbsp;logger,
  <a href="../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger,
  <a href="../../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing)</span></div>
 </section>
@@ -260,6 +266,13 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="onMove(com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)">
 <h3>onMove</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onMove</span><wbr><span class="parameters">(<a href="../use/CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>&nbsp;sender,
+ <a href="../use/Arguments.html" title="class in com.djrapitops.plan.commands.use">Arguments</a>&nbsp;arguments)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="onMerge(com.djrapitops.plan.commands.use.CMDSender,com.djrapitops.plan.commands.use.Arguments)">
+<h3>onMerge</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onMerge</span><wbr><span class="parameters">(<a href="../use/CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>&nbsp;sender,
  <a href="../use/Arguments.html" title="class in com.djrapitops.plan.commands.use">Arguments</a>&nbsp;arguments)</span></div>
 </section>
 </li>

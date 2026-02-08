@@ -38,7 +38,7 @@ loadScripts(document, 'script');</script>
 <li>
 <p>Summary:</p>
 <ul>
-<li>Nested</li>
+<li><a href="#nested-class-summary">Nested</a></li>
 <li><a href="#field-summary">Field</a></li>
 <li>Constr</li>
 <li><a href="#method-summary">Method</a></li>
@@ -58,7 +58,7 @@ loadScripts(document, 'script');</script>
 <div id="navbar-sub-list">
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
 <li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
 <li>Constr&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
@@ -104,6 +104,21 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested-class-summary">
+<h2>Nested Class Summary</h2>
+<div class="caption"><span>Nested Classes</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Class</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="AccessLogTable.Row.html" class="type-name-link" title="class in com.djrapitops.plan.storage.database.sql.tables">AccessLogTable.Row</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+</div>
+</section>
+</li>
 <!-- =========== FIELD SUMMARY =========== -->
 <li>
 <section class="field-summary" id="field-summary">
@@ -120,7 +135,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color"><code><a href="#ID" class="member-name-link">ID</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color"><code><a href="#INSERT_NO_USER" class="member-name-link">INSERT_NO_USER</a></code></div>
+<div class="col-second even-row-color"><code><a href="#INSERT_STATEMENT" class="member-name-link">INSERT_STATEMENT</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color"><code><a href="#REQUEST_METHOD" class="member-name-link">REQUEST_METHOD</a></code></div>
@@ -154,6 +169,10 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#createTableSql(com.djrapitops.plan.storage.database.DBType)" class="member-name-link">createTableSql</a><wbr>(<a href="../../DBType.html" title="enum class in com.djrapitops.plan.storage.database">DBType</a>&nbsp;dbType)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../../queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="AccessLogTable.Row.html" title="class in com.djrapitops.plan.storage.database.sql.tables">AccessLogTable.Row</a>&gt;&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fetchRows(int,int)" class="member-name-link">fetchRows</a><wbr>(int&nbsp;currentId,
+ int&nbsp;rowLimit)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -270,14 +289,14 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="INSERT_NO_USER">
-<h3>INSERT_NO_USER</h3>
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">INSERT_NO_USER</span></div>
+<section class="detail" id="INSERT_STATEMENT">
+<h3>INSERT_STATEMENT</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">INSERT_STATEMENT</span></div>
 <dl class="notes">
 <dt>See Also:</dt>
 <dd>
 <ul class="tag-list">
-<li><a href="../../../../../../../constant-values.html#com.djrapitops.plan.storage.database.sql.tables.AccessLogTable.INSERT_NO_USER">Constant Field Values</a></li>
+<li><a href="../../../../../../../constant-values.html#com.djrapitops.plan.storage.database.sql.tables.AccessLogTable.INSERT_STATEMENT">Constant Field Values</a></li>
 </ul>
 </dd>
 </dl>
@@ -295,6 +314,13 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="createTableSql(com.djrapitops.plan.storage.database.DBType)">
 <h3>createTableSql</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">createTableSql</span><wbr><span class="parameters">(<a href="../../DBType.html" title="enum class in com.djrapitops.plan.storage.database">DBType</a>&nbsp;dbType)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="fetchRows(int,int)">
+<h3>fetchRows</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../../queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="AccessLogTable.Row.html" title="class in com.djrapitops.plan.storage.database.sql.tables">AccessLogTable.Row</a>&gt;&gt;</span>&nbsp;<span class="element-name">fetchRows</span><wbr><span class="parameters">(int&nbsp;currentId,
+ int&nbsp;rowLimit)</span></div>
 </section>
 </li>
 </ul>

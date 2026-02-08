@@ -122,11 +122,19 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Find total world times of the player on servers.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="../../../../gathering/domain/WorldTimes.html" title="class in com.djrapitops.plan.gathering.domain">WorldTimes</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fetchServerTotalWorldTimes(com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">fetchServerTotalWorldTimes</a><wbr>(<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../sql/tables/WorldTimesTable.Row.html" title="class in com.djrapitops.plan.storage.database.sql.tables">WorldTimesTable.Row</a>&gt;&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fetchRows(int,int)" class="member-name-link">fetchRows</a><wbr>(int&nbsp;currentId,
+ int&nbsp;rowLimit)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="../../../../gathering/domain/WorldTimes.html" title="class in com.djrapitops.plan.gathering.domain">WorldTimes</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fetchServerTotalWorldTimes(com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">fetchServerTotalWorldTimes</a><wbr>(<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Sum total playtime per world on a server.</div>
 </div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../sql/tables/WorldTable.Row.html" title="class in com.djrapitops.plan.storage.database.sql.tables">WorldTable.Row</a>&gt;&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fetchWorldRows(int,int)" class="member-name-link">fetchWorldRows</a><wbr>(int&nbsp;currentId,
+ int&nbsp;rowLimit)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../QueryStatement.html" title="class in com.djrapitops.plan.storage.database.queries">QueryStatement</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="../../../../delivery/domain/World.html" title="class in com.djrapitops.plan.delivery.domain">World</a>&gt;&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fetchWorlds()" class="member-name-link">fetchWorlds</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
@@ -198,6 +206,20 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="fetchWorlds()">
 <h3>fetchWorlds</h3>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../QueryStatement.html" title="class in com.djrapitops.plan.storage.database.queries">QueryStatement</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="../../../../delivery/domain/World.html" title="class in com.djrapitops.plan.delivery.domain">World</a>&gt;&gt;</span>&nbsp;<span class="element-name">fetchWorlds</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="fetchRows(int,int)">
+<h3>fetchRows</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../sql/tables/WorldTimesTable.Row.html" title="class in com.djrapitops.plan.storage.database.sql.tables">WorldTimesTable.Row</a>&gt;&gt;</span>&nbsp;<span class="element-name">fetchRows</span><wbr><span class="parameters">(int&nbsp;currentId,
+ int&nbsp;rowLimit)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="fetchWorldRows(int,int)">
+<h3>fetchWorldRows</h3>
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../sql/tables/WorldTable.Row.html" title="class in com.djrapitops.plan.storage.database.sql.tables">WorldTable.Row</a>&gt;&gt;</span>&nbsp;<span class="element-name">fetchWorldRows</span><wbr><span class="parameters">(int&nbsp;currentId,
+ int&nbsp;rowLimit)</span></div>
 </section>
 </li>
 </ul>
