@@ -96,7 +96,7 @@ class MySQLTest implements DatabaseTest, DatabaseTestAggregate {
                     execute("SET GLOBAL sql_mode=(SELECT CONCAT(@@GLOBAL.sql_mode, ',ONLY_FULL_GROUP_BY'))");
                 }
             }
-        });
+        }).join();
     }
 
     @AfterAll
