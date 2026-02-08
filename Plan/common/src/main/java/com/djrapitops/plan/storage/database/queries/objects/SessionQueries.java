@@ -520,7 +520,7 @@ public class SessionQueries {
                 WHERE + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
                 AND + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?" +
-                GROUP_BY + SessionsTable.SERVER_ID;
+                GROUP_BY + SessionsTable.SERVER_ID + ",se." + ServerTable.SERVER_UUID;
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

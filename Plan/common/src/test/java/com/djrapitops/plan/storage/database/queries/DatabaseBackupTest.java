@@ -45,6 +45,7 @@ import com.djrapitops.plan.storage.database.transactions.webuser.StoreWebUserPre
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.google.common.util.concurrent.MoreExecutors;
 import com.google.gson.Gson;
+import org.jspecify.annotations.NonNull;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.function.Executable;
 import org.testcontainers.shaded.org.awaitility.Awaitility;
@@ -221,6 +222,9 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
             joinAddresses.addAll(db().query(JoinAddressQueries.allJoinAddresses()));
             List<String> feedback = new ArrayList<>();
 
+            Map<String, Object> beforeBackupDataFrom = getDataCorrectnessSet(db());
+            Map<String, Object> beforeBackupDataTo = getDataCorrectnessSet(backup);
+
             new DatabaseCopyProcessor(new Locale(), new TestErrorLogger(), db(), backup, feedback::add)
                     .run();
 
@@ -254,9 +258,39 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
             expected.put(WebGroupToPermissionTable.TABLE_NAME, beforeBackupTo.get(WebGroupToPermissionTable.TABLE_NAME));
             Map<String, Integer> result = backup.query(LookupTableQueries.tableCounts());
             assertEquals(expected, result);
+
+            Map<String, Object> expectedData = mergeCorrectnessSet(beforeBackupDataFrom, beforeBackupDataTo);
+            Map<String, Object> resultData = getDataCorrectnessSet(backup);
+            assertEquals(expectedData, resultData);
         } finally {
             backup.close();
         }
+    }
+
+    private @NonNull Map<String, Object> getDataCorrectnessSet(Database db) {
+        return Map.of(
+                "playtime", db.query(SessionQueries.playtime(0, Long.MAX_VALUE)),
+                "playtime_uuid1_1", db.query(SessionQueries.playtimeOfPlayer(0, Long.MAX_VALUE, TestConstants.PLAYER_ONE_UUID)).getOrDefault(serverUUID(), 0L),
+                "playtime_uuid1_2", db.query(SessionQueries.playtimeOfPlayer(0, Long.MAX_VALUE, TestConstants.PLAYER_ONE_UUID)).getOrDefault(TestConstants.SERVER_TWO_UUID, 0L),
+                "playtime_uuid2_1", db.query(SessionQueries.playtimeOfPlayer(0, Long.MAX_VALUE, TestConstants.PLAYER_TWO_UUID)).getOrDefault(serverUUID(), 0L),
+                "playtime_uuid2_2", db.query(SessionQueries.playtimeOfPlayer(0, Long.MAX_VALUE, TestConstants.PLAYER_TWO_UUID)).getOrDefault(TestConstants.SERVER_TWO_UUID, 0L),
+                "seen_uuid1", db.query(SessionQueries.lastSeen(TestConstants.PLAYER_ONE_UUID)),
+                "seen_uuid2", db.query(SessionQueries.lastSeen(TestConstants.PLAYER_TWO_UUID)),
+                "registered1", db.query(BaseUserQueries.fetchBaseUserOfPlayer(TestConstants.PLAYER_ONE_UUID)).get().getRegistered()
+        );
+    }
+
+    private Map<String, Object> mergeCorrectnessSet(Map<String, Object> one, Map<String, Object> two) {
+        return Map.of(
+                "playtime", (long) one.get("playtime") + (long) two.get("playtime"),
+                "playtime_uuid1_1", (long) one.get("playtime_uuid1_1") + (long) two.get("playtime_uuid1_1"),
+                "playtime_uuid1_2", (long) one.get("playtime_uuid1_2") + (long) two.get("playtime_uuid1_2"),
+                "playtime_uuid2_1", (long) one.get("playtime_uuid2_1") + (long) two.get("playtime_uuid2_1"),
+                "playtime_uuid2_2", (long) one.get("playtime_uuid2_2") + (long) two.get("playtime_uuid2_2"),
+                "seen_uuid1", Math.max((long) one.get("seen_uuid1"), (long) two.get("seen_uuid1")),
+                "seen_uuid2", Math.max((long) one.get("seen_uuid2"), (long) two.get("seen_uuid2")),
+                "registered1", Math.min((long) one.get("registered1"), (long) two.get("registered1"))
+        );
     }
 
     private void assertSame(Database from, Database to) {
