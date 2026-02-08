@@ -34,7 +34,7 @@ public class WebGroupTable {
     public static final String ID = "id";
     public static final String NAME = "group_name";
 
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" + NAME + ") VALUES (?)";
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " (" + NAME + ") VALUES (?)";
 
     public static final String SELECT_GROUP_ID = SELECT + ID + FROM + TABLE_NAME + WHERE + NAME + "=?";
 

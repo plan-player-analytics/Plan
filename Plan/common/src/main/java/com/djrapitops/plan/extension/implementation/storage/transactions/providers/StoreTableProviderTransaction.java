@@ -34,8 +34,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Types;
 
-import static com.djrapitops.plan.storage.database.sql.building.Sql.AND;
-import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 import static com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionTableProviderTable.*;
 
 /**
@@ -145,7 +144,7 @@ public class StoreTableProviderTransaction extends ThrowawayTransaction {
         Icon[] icons = table.getIcons();
         TableColumnFormat[] formats = table.getTableColumnFormats();
 
-        String sql = "INSERT INTO " + TABLE_NAME + '(' +
+        String sql = INSERT_INTO + TABLE_NAME + '(' +
                 PROVIDER_NAME + ',' +
                 COLOR + ',' +
                 COL_1 + ',' +

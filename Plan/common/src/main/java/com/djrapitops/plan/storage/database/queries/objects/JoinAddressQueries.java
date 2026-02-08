@@ -22,6 +22,7 @@ import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.queries.RowExtractors;
+import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
@@ -311,5 +312,9 @@ public class JoinAddressQueries {
         String sql = SELECT + JoinAddressTable.ID + FROM + JoinAddressTable.TABLE_NAME + WHERE + JoinAddressTable.JOIN_ADDRESS + "=?";
         return db -> db.queryOptional(sql,
                 results -> results.getInt(JoinAddressTable.ID), correctedAddress);
+    }
+
+    public static Query<List<JoinAddressTable.Row>> fetchRows() {
+        return db -> db.queryList(Select.all(JoinAddressTable.TABLE_NAME).toString(), JoinAddressTable.Row::extract);
     }
 }

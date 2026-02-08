@@ -39,13 +39,12 @@ import com.djrapitops.plan.storage.database.queries.objects.*;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.NetworkTablePlayersQuery;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.ServerTablePlayersQuery;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
-import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
-import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
-import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
+import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.transactions.StoreConfigTransaction;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemovePlayerTransaction;
+import com.djrapitops.plan.storage.database.transactions.commands.RemoveServerTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.*;
 import com.djrapitops.plan.storage.database.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.storage.database.transactions.patches.BadFabricJoinAddressValuePatch;
@@ -124,10 +123,45 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         assertFalse(db().query(PlayerFetchQueries.isPlayerRegisteredOnServer(playerUUID, serverUUID())));
         assertTrue(db().query(NicknameQueries.fetchNicknameDataOfPlayer(playerUUID)).isEmpty());
         assertTrue(db().query(GeoInfoQueries.fetchPlayerGeoInformation(playerUUID)).isEmpty());
-        assertQueryIsEmpty(db(), SessionQueries.fetchSessionsOfPlayer(playerUUID));
+        assertMapIsEmpty(db(), SessionQueries.fetchSessionsOfPlayer(playerUUID));
     }
 
-    default <T extends Map<?, ?>> void assertQueryIsEmpty(Database database, Query<T> query) {
+    @Test
+    default void serverDataIsRemoved() {
+        saveUserTwo();
+
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, RandomData::randomTime,
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
+        saveTwoWorlds();
+
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+
+        db().executeTransaction(new StoreSessionTransaction(session));
+        db().executeTransaction(new StoreNicknameTransaction(playerUUID, new Nickname("TestNick", RandomData.randomTime(), serverUUID()), (uuid, name) -> false /* Not cached */));
+        db().executeTransaction(new StoreGeoInfoTransaction(playerUUID, new GeoInfo("TestLoc", RandomData.randomTime())));
+
+        db().executeTransaction(new RemoveServerTransaction(serverUUID()));
+
+        assertMapIsEmpty(db(), ServerQueries.fetchServerNamesToUUIDs());
+        assertMapIsEmpty(db(), UserInfoQueries.fetchAllUserInformation());
+        assertIsEmpty(db(), ServerQueries.fetchAllServers());
+        assertIsEmpty(db(), UserInfoQueries.fetchRows(0, Integer.MAX_VALUE));
+        assertIsEmpty(db(), PingQueries.fetchRows(0, Integer.MAX_VALUE));
+        assertIsEmpty(db(), SessionQueries.fetchRows(0, Integer.MAX_VALUE));
+        assertIsEmpty(db(), NicknamesTable.fetchRows(0, Integer.MAX_VALUE));
+        assertIsEmpty(db(), KillQueries.fetchRows(0, Integer.MAX_VALUE));
+        assertIsEmpty(db(), WorldTimesQueries.fetchRows(0, Integer.MAX_VALUE));
+        assertIsEmpty(db(), WorldTimesQueries.fetchWorldRows(0, Integer.MAX_VALUE));
+        assertIsEmpty(db(), TPSQueries.fetchRows(0, Integer.MAX_VALUE));
+        assertIsEmpty(db(), AllowlistBounceTable.fetchRows(0, Integer.MAX_VALUE));
+        assertIsEmpty(db(), PluginMetadataQueries.fetchRows(0, Integer.MAX_VALUE));
+    }
+
+    default <T extends Collection<?>> void assertIsEmpty(Database database, Query<T> query) {
+        assertTrue(database.query(query).isEmpty());
+    }
+
+    default <T extends Map<?, ?>> void assertMapIsEmpty(Database database, Query<T> query) {
         assertTrue(database.query(query).isEmpty());
     }
 

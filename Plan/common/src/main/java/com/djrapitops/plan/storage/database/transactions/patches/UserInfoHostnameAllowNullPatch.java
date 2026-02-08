@@ -24,6 +24,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.FROM;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.INSERT_INTO;
 
 /**
  * Make sure hostname can be null.
@@ -47,7 +48,7 @@ public class UserInfoHostnameAllowNullPatch extends Patch {
         tempOldTable();
         execute(UserInfoTable.createTableSQL(dbType));
 
-        execute(new ExecStatement("INSERT INTO " + TABLE_NAME + " (" +
+        execute(new ExecStatement(INSERT_INTO + TABLE_NAME + " (" +
                 UserInfoTable.ID + ',' +
                 UserInfoTable.USER_ID + ',' +
                 UserInfoTable.SERVER_ID + ',' +

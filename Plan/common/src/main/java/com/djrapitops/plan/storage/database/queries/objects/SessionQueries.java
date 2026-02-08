@@ -28,6 +28,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
@@ -48,10 +49,6 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  * @author AuroraLS3
  */
 public class SessionQueries {
-
-    private SessionQueries() {
-        /* Static method class */
-    }
 
     private static final String SELECT_SESSIONS_STATEMENT = SELECT +
             "s." + SessionsTable.ID + ',' +
@@ -89,8 +86,11 @@ public class SessionQueries {
             LEFT_JOIN + UsersTable.TABLE_NAME + " k on k." + UsersTable.USER_UUID + '=' + KillsTable.KILLER_UUID +
             INNER_JOIN + WorldTimesTable.TABLE_NAME + " ON s." + SessionsTable.ID + '=' + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SESSION_ID +
             INNER_JOIN + WorldTable.TABLE_NAME + " ON " + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.WORLD_ID + '=' + WorldTable.TABLE_NAME + '.' + WorldTable.ID;
-
     private static final String ORDER_BY_SESSION_START_DESC = ORDER_BY + SessionsTable.SESSION_START + " DESC";
+
+    private SessionQueries() {
+        /* Static method class */
+    }
 
     /**
      * Query the database for Session data with kill, death or world data.
@@ -520,7 +520,7 @@ public class SessionQueries {
                 WHERE + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
                 AND + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?" +
-                GROUP_BY + SessionsTable.SERVER_ID;
+                GROUP_BY + SessionsTable.SERVER_ID + ",se." + ServerTable.SERVER_UUID;
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -1025,5 +1025,14 @@ public class SessionQueries {
                 UUID.fromString(set.getString(UsersTable.USER_UUID)),
                 set.getLong("last_seen")
         ), serverUUID);
+    }
+
+    public static Query<List<SessionsTable.Row>> fetchRows(int currentId, int rowLimit) {
+        String sql = Select.all(SessionsTable.TABLE_NAME)
+                .where(SessionsTable.ID + '>' + currentId)
+                .orderBy(SessionsTable.ID)
+                .limit(rowLimit)
+                .toString();
+        return db -> db.queryList(sql, SessionsTable.Row::extract);
     }
 }

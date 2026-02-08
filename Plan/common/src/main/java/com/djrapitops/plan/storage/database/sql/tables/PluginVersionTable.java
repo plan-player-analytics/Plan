@@ -17,8 +17,16 @@
 package com.djrapitops.plan.storage.database.sql.tables;
 
 import com.djrapitops.plan.storage.database.DBType;
+import com.djrapitops.plan.storage.database.queries.objects.lookup.ServerIdentifiable;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
+import com.djrapitops.plan.storage.database.sql.building.Insert;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import static com.djrapitops.plan.storage.database.sql.building.Sql.INSERT_INTO;
 
 /**
  * Represents plan_plugin_versions table.
@@ -40,7 +48,7 @@ public class PluginVersionTable {
     public static final int MAX_NAME_LENGTH = 100;
     public static final int MAX_VERSION_LENGTH = 255;
 
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " ("
             + SERVER_ID + ','
             + PLUGIN_NAME + ','
             + VERSION + ','
@@ -62,4 +70,40 @@ public class PluginVersionTable {
                 .toString();
     }
 
+    public static class Row implements ServerIdentifiable {
+        public static final String INSERT_STATEMENT = Insert.values(TABLE_NAME, SERVER_ID, PLUGIN_NAME, VERSION, MODIFIED);
+
+        public int id;
+        public int serverId;
+        public String pluginName;
+        public String version;
+        public long modified;
+
+        public static Row extract(ResultSet set) throws SQLException {
+            Row row = new Row();
+            row.id = set.getInt(ID);
+            row.serverId = set.getInt(SERVER_ID);
+            row.pluginName = set.getString(PLUGIN_NAME);
+            row.version = set.getString(VERSION);
+            row.modified = set.getLong(MODIFIED);
+            return row;
+        }
+
+        public void insert(PreparedStatement statement) throws SQLException {
+            statement.setInt(1, serverId);
+            statement.setString(2, pluginName);
+            statement.setString(3, version);
+            statement.setLong(4, modified);
+        }
+
+        @Override
+        public int getServerId() {
+            return serverId;
+        }
+
+        @Override
+        public void setServerId(int serverId) {
+            this.serverId = serverId;
+        }
+    }
 }

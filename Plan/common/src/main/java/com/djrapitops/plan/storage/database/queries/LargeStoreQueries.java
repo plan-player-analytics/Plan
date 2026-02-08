@@ -24,13 +24,18 @@ import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.queries.objects.JoinAddressQueries;
 import com.djrapitops.plan.storage.database.queries.objects.WorldTimesQueries;
+import com.djrapitops.plan.storage.database.queries.objects.lookup.LookupTable;
+import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
+import com.djrapitops.plan.storage.database.sql.building.Insert;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.sql.tables.webuser.*;
 import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
 import com.djrapitops.plan.storage.database.transactions.Executable;
+import com.djrapitops.plan.storage.database.transactions.Transaction;
 import org.apache.commons.lang3.StringUtils;
 import org.intellij.lang.annotations.Language;
 
@@ -40,6 +45,9 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.tables.KillsTable.*;
 
 /**
  * Static method class for large storage queries.
@@ -263,7 +271,7 @@ public class LargeStoreQueries {
      * @param ofUsers Collection of BaseUsers
      * @return Executable, use inside a {@link com.djrapitops.plan.storage.database.transactions.Transaction}
      */
-    public static Executable storeAllCommonUserInformation(Collection<BaseUser> ofUsers) {
+    public static Executable insertBaseUsers(Collection<BaseUser> ofUsers) {
         if (ofUsers == null || ofUsers.isEmpty()) return Executable.empty();
 
         return new ExecBatchStatement(UsersTable.INSERT_STATEMENT) {
@@ -467,7 +475,7 @@ public class LargeStoreQueries {
         if (groupPermissions == null || groupPermissions.isEmpty()) return Executable.empty();
 
         @Language("SQL")
-        String sql = "INSERT INTO " + WebGroupToPermissionTable.TABLE_NAME + " (" +
+        String sql = INSERT_INTO + WebGroupToPermissionTable.TABLE_NAME + " (" +
                 WebGroupToPermissionTable.GROUP_ID + ',' + WebGroupToPermissionTable.PERMISSION_ID +
                 ") VALUES ((" +
                 WebGroupTable.SELECT_GROUP_ID + "),(" + WebPermissionTable.SELECT_PERMISSION_ID +
@@ -488,6 +496,29 @@ public class LargeStoreQueries {
         };
     }
 
+    public static Executable storeGroupPermissionIdRelations(Map<Integer, List<Integer>> groupPermissions) {
+        if (groupPermissions == null || groupPermissions.isEmpty()) return Executable.empty();
+
+        @Language("SQL")
+        String sql = INSERT_INTO + WebGroupToPermissionTable.TABLE_NAME + " (" +
+                WebGroupToPermissionTable.GROUP_ID + ',' + WebGroupToPermissionTable.PERMISSION_ID +
+                ") VALUES (?, ?)";
+
+        return new ExecBatchStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (var permissionsOfGroup : groupPermissions.entrySet()) {
+                    Integer groupId = permissionsOfGroup.getKey();
+                    for (Integer permissionId : permissionsOfGroup.getValue()) {
+                        statement.setInt(1, groupId);
+                        statement.setInt(2, permissionId);
+                        statement.addBatch();
+                    }
+                }
+            }
+        };
+    }
+
     public static Executable storeAllPreferences(Map<String, String> preferencesByUsername) {
         if (preferencesByUsername.isEmpty()) return Executable.empty();
 
@@ -499,6 +530,311 @@ public class LargeStoreQueries {
                     String preferences = entry.getValue();
                     statement.setString(1, preferences);
                     statement.setString(2, username);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable mergeBaseUsers(List<BaseUser> existingUsers, LookupTable<UUID> playerLookupTable) {
+        if (existingUsers.isEmpty()) return Executable.empty();
+
+        return new ExecBatchStatement(UsersTable.UPDATE_MERGE_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (BaseUser user : existingUsers) {
+                    Optional<Integer> playerId = playerLookupTable.find(user.getUuid());
+                    if (playerId.isPresent()) {
+                        statement.setInt(1, user.getTimesKicked());
+                        statement.setLong(2, user.getRegistered());
+                        statement.setLong(3, user.getRegistered());
+                        statement.setInt(4, playerId.get());
+                        statement.addBatch();
+                    }
+                }
+            }
+        };
+    }
+
+    public static Executable insertUserInfo(List<UserInfoTable.Row> rows) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(UserInfoTable.Row.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (UserInfoTable.Row row : rows) {
+                    row.insert(statement);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable insertJoinAddresses(List<JoinAddressTable.Row> rows) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(JoinAddressTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (JoinAddressTable.Row row : rows) {
+                    row.insert(statement);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable insertPing(List<PingTable.Row> rows) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(PingTable.Row.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (PingTable.Row row : rows) {
+                    row.insert(statement);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable insertTps(List<TPSTable.Row> rows) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(TPSTable.Row.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (TPSTable.Row row : rows) {
+                    row.insert(statement);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable insertPluginVersions(List<PluginVersionTable.Row> rows) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(PluginVersionTable.Row.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (PluginVersionTable.Row row : rows) {
+                    row.insert(statement);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable insertSessionsWithOldIds(List<SessionsTable.Row> rows) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(SessionsTable.Row.INSERT_STATEMENT_WITH_OLD_ID) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (SessionsTable.Row row : rows) {
+                    row.insert(statement, true);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Transaction insertWorldTimesWithOldSessionIds(List<WorldTimesTable.Row> rows) {
+        return new Transaction() {
+            @Override
+            protected void performOperations() {
+                String batchTableName = "plan_world_times_batch";
+                execute(CreateTableBuilder.create(batchTableName, dbType)
+                        .column(WorldTimesTable.USER_ID, Sql.INT).notNull()
+                        .column(WorldTimesTable.WORLD_ID, Sql.INT).notNull()
+                        .column(WorldTimesTable.SERVER_ID, Sql.INT).notNull()
+                        .column(WorldTimesTable.SESSION_ID, Sql.INT).notNull()
+                        .column(WorldTimesTable.SURVIVAL, Sql.LONG).notNull().defaultValue("0")
+                        .column(WorldTimesTable.CREATIVE, Sql.LONG).notNull().defaultValue("0")
+                        .column(WorldTimesTable.ADVENTURE, Sql.LONG).notNull().defaultValue("0")
+                        .column(WorldTimesTable.SPECTATOR, Sql.LONG).notNull().defaultValue("0")
+                        .build());
+
+                String insertSql = Insert.values(batchTableName,
+                        WorldTimesTable.USER_ID,
+                        WorldTimesTable.WORLD_ID,
+                        WorldTimesTable.SERVER_ID,
+                        WorldTimesTable.SESSION_ID,
+                        WorldTimesTable.SURVIVAL,
+                        WorldTimesTable.CREATIVE,
+                        WorldTimesTable.ADVENTURE,
+                        WorldTimesTable.SPECTATOR
+                );
+
+                execute(new ExecBatchStatement(insertSql) {
+                    @Override
+                    public void prepare(PreparedStatement statement) throws SQLException {
+                        for (WorldTimesTable.Row row : rows) {
+                            row.insert(statement);
+                            statement.addBatch();
+                        }
+                    }
+                });
+
+                String batchCopyStatement = INSERT_INTO + WorldTimesTable.TABLE_NAME + " (" +
+                        WorldTimesTable.USER_ID + ", " +
+                        WorldTimesTable.WORLD_ID + ", " +
+                        WorldTimesTable.SERVER_ID + ", " +
+                        WorldTimesTable.SESSION_ID + ", " +
+                        WorldTimesTable.SURVIVAL + ", " +
+                        WorldTimesTable.CREATIVE + ", " +
+                        WorldTimesTable.ADVENTURE + ", " +
+                        WorldTimesTable.SPECTATOR +
+                        ")" + SELECT +
+                        "a." + WorldTimesTable.USER_ID + ',' + WorldTimesTable.WORLD_ID + ",a." + WorldTimesTable.SERVER_ID + ',' +
+                        "s." + SessionsTable.ID + ',' +
+                        WorldTimesTable.SURVIVAL + ',' + WorldTimesTable.CREATIVE + ',' +
+                        WorldTimesTable.ADVENTURE + ',' + WorldTimesTable.SPECTATOR +
+                        FROM + batchTableName + " a" +
+                        INNER_JOIN + SessionsTable.TABLE_NAME + " s ON a." + WorldTimesTable.SESSION_ID + "=s." + SessionsTable.Row.OLD_ID;
+                execute(batchCopyStatement);
+
+                execute(DELETE_FROM + batchTableName);
+            }
+        };
+    }
+
+    public static Executable insertWorlds(List<WorldTable.Row> rows) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(WorldTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (WorldTable.Row row : rows) {
+                    row.insert(statement);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Transaction insertKillsWithOldSessionIds(List<KillsTable.Row> rows) {
+        return new Transaction() {
+            @Override
+            protected void performOperations() {
+                String batchTableName = "plan_kills_batch";
+                execute(CreateTableBuilder.create(batchTableName, dbType)
+                        .column(KILLER_UUID, Sql.varchar(36)).notNull()
+                        .column(VICTIM_UUID, Sql.varchar(36)).notNull()
+                        .column(SERVER_UUID, Sql.varchar(36)).notNull()
+                        .column(WEAPON, Sql.varchar(WEAPON_COLUMN_LENGTH)).notNull()
+                        .column(DATE, Sql.LONG).notNull()
+                        .column(SESSION_ID, Sql.INT).notNull()
+                        .build());
+
+                String insertSql = Insert.values(batchTableName,
+                        KILLER_UUID,
+                        VICTIM_UUID,
+                        SERVER_UUID,
+                        DATE,
+                        SESSION_ID,
+                        WEAPON
+                );
+
+                execute(new ExecBatchStatement(insertSql) {
+                    @Override
+                    public void prepare(PreparedStatement statement) throws SQLException {
+                        for (KillsTable.Row row : rows) {
+                            row.insert(statement);
+                            statement.addBatch();
+                        }
+                    }
+                });
+
+                String batchCopyStatement = INSERT_INTO + TABLE_NAME + " (" +
+                        SESSION_ID + ", " +
+                        KILLER_UUID + ", " +
+                        VICTIM_UUID + ", " +
+                        SERVER_UUID + ", " +
+                        WEAPON + ", " +
+                        DATE +
+                        ")" + SELECT +
+                        "s." + SessionsTable.ID + ',' +
+                        KILLER_UUID + ',' +
+                        VICTIM_UUID + ',' +
+                        SERVER_UUID + ',' +
+                        WEAPON + ',' +
+                        DATE +
+                        FROM + batchTableName + " a" +
+                        INNER_JOIN + SessionsTable.TABLE_NAME + " s ON a." + SESSION_ID + "=s." + SessionsTable.Row.OLD_ID;
+                execute(batchCopyStatement);
+
+                execute(DELETE_FROM + batchTableName);
+            }
+        };
+    }
+
+    public static Executable insertAccessLog(List<AccessLogTable.Row> rows) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(AccessLogTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (AccessLogTable.Row row : rows) {
+                    row.insert(statement);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable upsertGeoInfo(List<GeoInfoTable.Row> rows, DBType dbType) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(dbType == DBType.MYSQL ? GeoInfoTable.UPSERT_STATEMENT_MYSQL : GeoInfoTable.UPSERT_STATEMENT_SQLITE) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (GeoInfoTable.Row row : rows) {
+                    row.upsert(statement);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable upsertNicknames(List<NicknamesTable.Row> rows, DBType dbType) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(dbType == DBType.MYSQL ? NicknamesTable.UPSERT_STATEMENT_MYSQL : NicknamesTable.UPSERT_STATEMENT_SQLITE) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (NicknamesTable.Row row : rows) {
+                    row.upsert(statement);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable upsertAllowlistBounces(List<AllowlistBounceTable.Row> rows, DBType dbType) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(dbType == DBType.MYSQL ? AllowlistBounceTable.UPSERT_MYSQL : AllowlistBounceTable.UPSERT_SQLITE) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (AllowlistBounceTable.Row row : rows) {
+                    row.upsert(statement);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable storeUsers(List<SecurityTable.Row> rows) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(SecurityTable.Row.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (SecurityTable.Row row : rows) {
+                    row.insert(statement);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable insertPreferences(List<WebUserPreferencesTable.Row> rows) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(WebUserPreferencesTable.Row.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (WebUserPreferencesTable.Row row : rows) {
+                    row.insert(statement);
                     statement.addBatch();
                 }
             }

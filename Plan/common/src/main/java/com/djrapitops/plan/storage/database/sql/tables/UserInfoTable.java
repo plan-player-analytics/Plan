@@ -17,10 +17,19 @@
 package com.djrapitops.plan.storage.database.sql.tables;
 
 import com.djrapitops.plan.storage.database.DBType;
+import com.djrapitops.plan.storage.database.queries.objects.lookup.ServerIdentifiable;
+import com.djrapitops.plan.storage.database.queries.objects.lookup.UserIdentifiable;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
+import com.djrapitops.plan.storage.database.sql.building.Insert;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.transactions.patches.UserInfoOptimizationPatch;
 import com.djrapitops.plan.storage.database.transactions.patches.Version10Patch;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import static com.djrapitops.plan.storage.database.sql.building.Sql.INSERT_INTO;
 
 /**
  * Table information about 'plan_user_info'.
@@ -48,7 +57,7 @@ public class UserInfoTable {
     @Deprecated(since = "5.4 build 1722")
     public static final String JOIN_ADDRESS = "join_address";
 
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " (" +
             USER_ID + ',' +
             REGISTERED + ',' +
             SERVER_ID + ',' +
@@ -74,4 +83,58 @@ public class UserInfoTable {
                 .foreignKey(SERVER_ID, ServerTable.TABLE_NAME, ServerTable.ID)
                 .toString();
     }
+
+    public static class Row implements UserIdentifiable, ServerIdentifiable {
+        public static final String INSERT_STATEMENT = Insert.values(TABLE_NAME, USER_ID, SERVER_ID, JOIN_ADDRESS, REGISTERED, OP, BANNED);
+
+        public int id;
+        public int userId;
+        public int serverId;
+        public String joinAddress;
+        public long registered;
+        public boolean op;
+        public boolean banned;
+
+        public void insert(PreparedStatement statement) throws SQLException {
+            statement.setInt(1, userId);
+            statement.setInt(2, serverId);
+            statement.setString(3, joinAddress);
+            statement.setLong(4, registered);
+            statement.setBoolean(5, op);
+            statement.setBoolean(6, banned);
+        }
+
+        public static Row extract(ResultSet set) throws SQLException {
+            Row row = new Row();
+            row.id = set.getInt(ID);
+            row.userId = set.getInt(USER_ID);
+            row.serverId = set.getInt(SERVER_ID);
+            row.joinAddress = set.getString(JOIN_ADDRESS);
+            row.registered = set.getLong(REGISTERED);
+            row.op = set.getBoolean(OP);
+            row.banned = set.getBoolean(BANNED);
+            return row;
+        }
+
+        @Override
+        public int getUserId() {
+            return userId;
+        }
+
+        @Override
+        public void setUserId(int userId) {
+            this.userId = userId;
+        }
+
+        @Override
+        public int getServerId() {
+            return serverId;
+        }
+
+        @Override
+        public void setServerId(int serverId) {
+            this.serverId = serverId;
+        }
+    }
+
 }

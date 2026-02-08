@@ -21,6 +21,7 @@ import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.gathering.domain.PlayerKills;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBType;
+import com.djrapitops.plan.storage.database.queries.objects.lookup.ServerUUIDIdentifiable;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.transactions.patches.KillsOptimizationPatch;
@@ -29,9 +30,12 @@ import com.djrapitops.plan.storage.database.transactions.patches.Version10Patch;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
+
+import static com.djrapitops.plan.storage.database.sql.building.Sql.INSERT_INTO;
 
 /**
  * Table information about 'plan_kills'.
@@ -57,7 +61,7 @@ public class KillsTable {
 
     public static final int WEAPON_COLUMN_LENGTH = 30;
 
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " ("
             + SESSION_ID + ','
             + KILLER_UUID + ','
             + VICTIM_UUID + ','
@@ -104,6 +108,47 @@ public class KillsTable {
             statement.setLong(8, kill.getDate());
             statement.setString(9, StringUtils.truncate(kill.getWeapon(), WEAPON_COLUMN_LENGTH));
             statement.addBatch();
+        }
+    }
+
+    public static class Row implements ServerUUIDIdentifiable {
+        public int id;
+        public UUID killerUUID;
+        public UUID victimUUID;
+        public ServerUUID serverUUID;
+        public long date;
+        public int sessionId;
+        public String weapon;
+
+        public static Row extract(ResultSet set) throws SQLException {
+            Row row = new Row();
+            row.id = set.getInt(ID);
+            row.killerUUID = UUID.fromString(set.getString(KILLER_UUID));
+            row.victimUUID = UUID.fromString(set.getString(VICTIM_UUID));
+            row.serverUUID = ServerUUID.fromString(set.getString(SERVER_UUID));
+            row.date = set.getLong(DATE);
+            row.sessionId = set.getInt(SESSION_ID);
+            row.weapon = set.getString(WEAPON);
+            return row;
+        }
+
+        public void insert(PreparedStatement statement) throws SQLException {
+            statement.setString(1, killerUUID.toString());
+            statement.setString(2, victimUUID.toString());
+            statement.setString(3, serverUUID.toString());
+            statement.setLong(4, date);
+            statement.setInt(5, sessionId);
+            statement.setString(6, weapon);
+        }
+
+        @Override
+        public ServerUUID getServerUUID() {
+            return serverUUID;
+        }
+
+        @Override
+        public void setServerUUID(ServerUUID serverUUID) {
+            this.serverUUID = serverUUID;
         }
     }
 }

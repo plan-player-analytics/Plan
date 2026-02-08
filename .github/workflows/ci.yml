@@ -100,7 +100,7 @@ jobs:
       - name: 🩺 Test 
         env:
           MYSQL_DB: test
-          MYSQL_USER: user
+          MYSQL_USER: root
           MYSQL_PASS: password
           MYSQL_PORT: ${{ job.services.mariadb.ports[3306] }}
           CHROMEDRIVER: /usr/local/bin/chromedriver

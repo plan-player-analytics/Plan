@@ -52,6 +52,17 @@ public class AllowlistQueries {
         return db -> db.queryList(sql, AllowlistQueries::extract, serverUUID);
     }
 
+    public static Query<List<AllowlistBounce>> getBounces() {
+        @Language("SQL") String sql = SELECT +
+                AllowlistBounceTable.UUID + ',' +
+                AllowlistBounceTable.USER_NAME + ',' +
+                AllowlistBounceTable.TIMES + ',' +
+                AllowlistBounceTable.LAST_BOUNCE +
+                FROM + AllowlistBounceTable.TABLE_NAME +
+                ORDER_BY + AllowlistBounceTable.USER_NAME;
+        return db -> db.queryList(sql, AllowlistQueries::extract);
+    }
+
     private static AllowlistBounce extract(ResultSet set) throws SQLException {
         return new AllowlistBounce(
                 UUID.fromString(set.getString(AllowlistBounceTable.UUID)),

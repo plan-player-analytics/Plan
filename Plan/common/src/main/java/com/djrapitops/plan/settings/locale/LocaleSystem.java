@@ -80,6 +80,7 @@ public class LocaleSystem implements SubSystem {
     public static Map<String, Lang> getIdentifiers() {
         return Arrays.stream(getValuesArray())
                 .flatMap(Arrays::stream)
+                .filter(lang -> lang.getIdentifier() != null)
                 .collect(Collectors.toMap(Lang::getIdentifier, Function.identity()));
     }
 

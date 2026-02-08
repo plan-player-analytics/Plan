@@ -17,7 +17,12 @@
 package com.djrapitops.plan.storage.database.sql.tables.webuser;
 
 import com.djrapitops.plan.storage.database.DBType;
+import com.djrapitops.plan.storage.database.queries.objects.lookup.GroupIdentifiable;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -40,7 +45,7 @@ public class SecurityTable {
     public static final String GROUP_ID = "group_id";
 
     public static final String SELECT_ID_BY_USERNAME = SELECT + ID + FROM + TABLE_NAME + WHERE + USERNAME + "=?";
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " (" +
             USERNAME + ',' +
             LINKED_TO + ',' +
             SALT_PASSWORD_HASH + ',' +
@@ -59,5 +64,46 @@ public class SecurityTable {
                 .column(GROUP_ID, INT).notNull()
                 .foreignKey(GROUP_ID, WebGroupTable.TABLE_NAME, WebGroupTable.ID)
                 .toString();
+    }
+
+    public static class Row implements GroupIdentifiable {
+        public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " (" +
+                USERNAME + ',' +
+                LINKED_TO + ',' +
+                SALT_PASSWORD_HASH + ',' +
+                GROUP_ID + ") VALUES (?,?,?,?)";
+
+        public int id;
+        public String username;
+        public String linkedToUuid;
+        public String saltedPassHash;
+        public int groupId;
+
+        public static Row extract(ResultSet set) throws SQLException {
+            Row row = new Row();
+            row.id = set.getInt(ID);
+            row.username = set.getString(USERNAME);
+            row.linkedToUuid = set.getString(LINKED_TO);
+            row.saltedPassHash = set.getString(SALT_PASSWORD_HASH);
+            row.groupId = set.getInt(GROUP_ID);
+            return row;
+        }
+
+        @Override
+        public int getGroupId() {
+            return groupId;
+        }
+
+        @Override
+        public void setGroupId(int groupId) {
+            this.groupId = groupId;
+        }
+
+        public void insert(PreparedStatement statement) throws SQLException {
+            statement.setString(1, username);
+            statement.setString(2, linkedToUuid);
+            statement.setString(3, saltedPassHash);
+            statement.setInt(4, groupId);
+        }
     }
 }
