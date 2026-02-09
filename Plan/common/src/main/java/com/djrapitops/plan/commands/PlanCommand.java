@@ -440,7 +440,7 @@ public class PlanCommand {
     private Subcommand mergeCommand() {
         return Subcommand.builder()
                 .aliases("merge")
-                .requirePermission(Permissions.DATA_MOVE)
+                .requirePermission(Permissions.DATA_MERGE)
                 .requiredArgument(DB_ARG_OPTIONS, locale.getString(HelpLang.DESC_ARG_DB_MOVE_FROM))
                 .requiredArgument(DB_ARG_OPTIONS, locale.getString(HelpLang.DESC_ARG_DB_MOVE_TO))
                 .optionalArgument("--on-conflict-delete", locale.getString(HelpLang.DESC_ARG_DB_MERGE_DELETE))
