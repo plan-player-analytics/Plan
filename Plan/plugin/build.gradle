@@ -12,7 +12,8 @@ dependencies {
     implementation project(":nukkit")
     implementation project(":sponge")
     implementation project(":bungeecord")
-    implementation project(":velocity")
+    // Shadow configuration required to depend on Velocity due to newer Java version
+    implementation project(path: ":velocity", configuration: "shadow")
 
     // Shadow configuration required to depend on Folia due to newer Java version
     implementation project(path: ":folia", configuration: "shadow")
