@@ -9,6 +9,8 @@ command:
             name: "${code}"
         dbBackup:
             description: "Tipo de base de datos a respaldar. Se utilizara la base de datos actual en caso no especificar."
+        dbMergeStrategyDelete: "Delete conflicting server from destination database"
+        dbMergeStrategySwap: "Swap UUID of inserted conflicting server in destination database"
         dbRestore:
             description: "Tipo de base de datos a restaurar. Se utilizara la base de datos actual en caso no especificar."
         dbTypeHotswap:
@@ -46,12 +48,34 @@ command:
         cancelNoUnregister: "Cancelado. '${0}' no se encuentra en el registro."
         confirm: "Confirmar: "
         dbClear: "Eliminaras todos los datos de plan en ${0}"
+        dbMerge: "You are about to merge data in ${0} to data in ${1}"
         dbOverwrite: "Estas a punto de sobreescribir datos en Plan ${0} con los datos en ${1}"
         dbRemovePlayer: "Eliminaras los datos de ${0} desde ${1}"
         deny: "Cancelar"
         expired: "Confirmación expirada, vuelve a usar el comando"
         unregister: "Estas a punto de quitar del registro a '${0}' vinculado con ${1}"
     database:
+        copy:
+            abort: "Operation was aborted."
+            allDataExisted: "  all the data already existed."
+            clearFinish: "Cleared destination database."
+            clearStart: "Clearing destination database.."
+            conflict:
+                delete: "Deleting conflicting server ${0} from destination before insert"
+                info1: "Server with uuid ${0} already exists. Choose a strategy to deal with it."
+                info2: "  --on-conflict-swap - swaps the server uuid for inserted server (Use if multiple servers shared uuid at some point)"
+                info3: "  --on-conflict-delete - deletes the server from destination db (Use when previous merge failed)"
+                swap: "Swapping server uuid ${0} with ${1}"
+            destinationState: "Destination database is ${0}, could not begin operation"
+            error: "Ran into an issue, error was logged to a file, error: ${0}"
+            list:
+                row: "   ${0} - ${1} rows"
+                titleDestination: "Data in existing database:"
+                titleSource: "Data to be copied:"
+            progress: "  ${0}: ${1}/${2} (${3}%) copied."
+            sourceState: "Source database is ${0}, could not begin operation"
+            table: "Copying ${0}.."
+            trackPlayerStart: "Database copy started by player ${0} - process identifier: ${1}"
         creatingBackup: "Creando una copia de seguridad de '${0}.db' que contiene ${1}"
         failDbNotOpen: "§cLa base de datos es ${0} - Por favor, prueba un poco más tarde."
         manage:
@@ -65,6 +89,7 @@ command:
             failNoServer: "Ningún servidor encontrado con los parámetros dados."
             failSameDB: "> §c¡No se puede operar desde y para la misma base de datos!"
             failSameServer: "No se ha podido marcar el servidor como desinstalado (Estas en el)"
+            failTooManyStrategies: "Only one strategy can be selected to deal with merge conflict."
             hotswap: "§eRecuerda cambiarte a la nueva base de datos (/plan db hotswap ${0}) & recarga el plugin."
             importers: "Importadores: "
             preparing: "Preparing.."
@@ -135,6 +160,9 @@ command:
         dbHotswap:
             description: "Cambia la base de datos rápidamente"
             inDepth: "Recarga el plugin con otra base de datos y cambia la configuración para coincidir los cambios."
+        dbMerge:
+            description: "Merge data of two databases"
+            inDepth: "Merges contents in one database with the contents in another. Source data will be inserted to destination database."
         dbMove:
             description: "Mueve los datos entre base de datos"
             inDepth: "Sobreescribe el contenido de una base de datos con el contenido que se encuentra en otra base de datos."

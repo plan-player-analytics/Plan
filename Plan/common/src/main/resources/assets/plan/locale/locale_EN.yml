@@ -9,6 +9,8 @@ command:
             name: "${code}"
         dbBackup:
             description: "Type of the database to backup. Current database is used if not specified."
+        dbMergeStrategyDelete: "Delete conflicting server from destination database"
+        dbMergeStrategySwap: "Swap UUID of inserted conflicting server in destination database"
         dbRestore:
             description: "Type of the database to restore to. Current database is used if not specified."
         dbTypeHotswap:
@@ -46,12 +48,34 @@ command:
         cancelNoUnregister: "Cancelled. '${0}' was not unregistered"
         confirm: "Confirm: "
         dbClear: "You are about to remove all Plan-data in ${0}"
+        dbMerge: "You are about to merge data in ${0} to data in ${1}"
         dbOverwrite: "You are about to overwrite data in Plan ${0} with data in ${1}"
         dbRemovePlayer: "You are about to remove data of ${0} from ${1}"
         deny: "Cancel"
         expired: "Confirmation expired, use the command again"
         unregister: "You are about to unregister '${0}' linked to ${1}"
     database:
+        copy:
+            abort: "Operation was aborted."
+            allDataExisted: "  all the data already existed."
+            clearFinish: "Cleared destination database."
+            clearStart: "Clearing destination database.."
+            conflict:
+                delete: "Deleting conflicting server ${0} from destination before insert"
+                info1: "Server with uuid ${0} already exists. Choose a strategy to deal with it."
+                info2: "  --on-conflict-swap - swaps the server uuid for inserted server (Use if multiple servers shared uuid at some point)"
+                info3: "  --on-conflict-delete - deletes the server from destination db (Use when previous merge failed)"
+                swap: "Swapping server uuid ${0} with ${1}"
+            destinationState: "Destination database is ${0}, could not begin operation"
+            error: "Ran into an issue, error was logged to a file, error: ${0}"
+            list:
+                row: "   ${0} - ${1} rows"
+                titleDestination: "Data in existing database:"
+                titleSource: "Data to be copied:"
+            progress: "  ${0}: ${1}/${2} (${3}%) copied."
+            sourceState: "Source database is ${0}, could not begin operation"
+            table: "Copying ${0}.."
+            trackPlayerStart: "Database copy started by player ${0} - process identifier: ${1}"
         creatingBackup: "Creating a backup file '${0}.db' with contents of ${1}"
         failDbNotOpen: "§cDatabase is ${0} - Please try again a bit later."
         manage:
@@ -65,6 +89,7 @@ command:
             failNoServer: "No server found with given parameters."
             failSameDB: "> §cCan not operate on to and from the same database!"
             failSameServer: "Can not mark this server as uninstalled (You are on it)"
+            failTooManyStrategies: "Only one strategy can be selected to deal with merge conflict."
             hotswap: "§eRemember to swap to the new database (/plan db hotswap ${0}) & reload the plugin."
             importers: "Importers:"
             preparing: "Preparing.."
@@ -135,6 +160,9 @@ command:
         dbHotswap:
             description: "Change Database quickly"
             inDepth: "Reloads the plugin with the other database and changes the config to match."
+        dbMerge:
+            description: "Merge data of two databases"
+            inDepth: "Merges contents in one database with the contents in another. Source data will be inserted to destination database."
         dbMove:
             description: "Move data between Databases"
             inDepth: "Overwrites contents in the other database with the contents in another."

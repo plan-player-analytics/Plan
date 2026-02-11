@@ -149,7 +149,8 @@ public class LocaleSystem implements SubSystem {
                 "html.label.afk",
                 "html.label.totalAfk",
                 "html.label.tps",
-                "html.label.kdr"
+                "html.label.kdr",
+                "html.label.mspt"
         ));
         Map<String, Lang> keys = getKeys();
         List<String> untranslatedKeys = new ArrayList<>();
