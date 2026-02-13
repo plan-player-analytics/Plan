@@ -87,7 +87,7 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
         String selectSessionData = SELECT + "s." + SessionsTable.USER_ID + ',' +
                 "MAX(" + SessionsTable.SESSION_END + ") as last_seen," +
                 "COUNT(1) as count," +
-                "SUM(LEAST(" + SessionsTable.SESSION_END + "," + beforeDate + ")-GREATEST(" + SessionsTable.SESSION_START + "," + afterDate + ")-" + SessionsTable.AFK_TIME + ") as active_playtime" +
+                "SUM(" + db.getSql().least(SessionsTable.SESSION_END + "," + beforeDate) + "-" + db.getSql().greatest(SessionsTable.SESSION_START + "," + afterDate) + "-" + SessionsTable.AFK_TIME + ") as active_playtime" +
                 FROM + SessionsTable.TABLE_NAME + " s" +
                 (serverUUIDs.isEmpty() ? "" : INNER_JOIN + '(' + selectServerIds + ") sel_servers on sel_servers." + ServerTable.ID + "=s." + SessionsTable.SERVER_ID) +
                 WHERE + "s." + SessionsTable.SESSION_END + ">=?" +

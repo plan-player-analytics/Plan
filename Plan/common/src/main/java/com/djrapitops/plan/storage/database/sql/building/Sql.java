@@ -150,6 +150,10 @@ public abstract class Sql {
 
     public abstract String insertOrIgnore();
 
+    public abstract String least(String values);
+
+    public abstract String greatest(String values);
+
     // https://dev.mysql.com/doc/refman/5.7/en/date-and-time-functions.html
     public static class MySQL extends Sql {
 
@@ -186,6 +190,16 @@ public abstract class Sql {
         @Override
         public String insertOrIgnore() {
             return "INSERT IGNORE INTO ";
+        }
+
+        @Override
+        public String least(String values) {
+            return "LEAST(" + values + ")";
+        }
+
+        @Override
+        public String greatest(String values) {
+            return "GREATEST(" + values + ")";
         }
     }
 
@@ -225,6 +239,16 @@ public abstract class Sql {
         @Override
         public String insertOrIgnore() {
             return "INSERT OR IGNORE INTO ";
+        }
+
+        @Override
+        public String least(String values) {
+            return "MIN(" + values + ")";
+        }
+
+        @Override
+        public String greatest(String values) {
+            return "MAX(" + values + ")";
         }
     }
 }
