@@ -34,6 +34,7 @@ import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plan.utilities.java.Maps;
 import org.apache.commons.text.TextStringBuilder;
+import org.jspecify.annotations.NonNull;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -493,7 +494,8 @@ public class SessionQueries {
     }
 
     public static Query<Long> playtime(long after, long before, ServerUUID serverUUID) {
-        String sql = SELECT + "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
+        String sql = SELECT +
+                playtimeColumn(after, before) +
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + SessionsTable.SESSION_END + ">=?" +
@@ -513,8 +515,14 @@ public class SessionQueries {
         };
     }
 
+    private static @NonNull String playtimeColumn(long after, long before) {
+        return "SUM(LEAST(" + SessionsTable.SESSION_END + "," + before + ")-GREATEST(" + SessionsTable.SESSION_START + "," + after + ")) as playtime";
+    }
+
     public static Query<Map<ServerUUID, Long>> playtimeOfPlayer(long after, long before, UUID playerUUID) {
-        String sql = SELECT + ServerTable.SERVER_UUID + ",SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
+        String sql = SELECT +
+                ServerTable.SERVER_UUID + "," +
+                playtimeColumn(after, before) +
                 FROM + SessionsTable.TABLE_NAME +
                 INNER_JOIN + ServerTable.TABLE_NAME + " se on se." + ServerTable.ID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_ID +
                 WHERE + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
@@ -541,7 +549,8 @@ public class SessionQueries {
     }
 
     public static Query<Long> playtime(long after, long before) {
-        String sql = SELECT + "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
+        String sql = SELECT +
+                playtimeColumn(after, before) +
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?";
@@ -677,10 +686,10 @@ public class SessionQueries {
         return database -> {
             String selectPlaytimePerPlayer = SELECT +
                     SessionsTable.USER_ID + "," +
-                    "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
+                    playtimeColumn(after, before) +
                     FROM + SessionsTable.TABLE_NAME +
-                    WHERE + SessionsTable.SESSION_END + "<=?" +
-                    AND + SessionsTable.SESSION_START + ">=?" +
+                    WHERE + SessionsTable.SESSION_START + "<=?" +
+                    AND + SessionsTable.SESSION_END + ">=?" +
                     AND + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                     GROUP_BY + SessionsTable.USER_ID;
             String selectAverage = SELECT + "AVG(playtime) as average" + FROM + '(' + selectPlaytimePerPlayer + ") q1";
@@ -712,10 +721,10 @@ public class SessionQueries {
         return database -> {
             String selectPlaytimePerPlayer = SELECT +
                     SessionsTable.USER_ID + "," +
-                    "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
+                    playtimeColumn(after, before) +
                     FROM + SessionsTable.TABLE_NAME +
-                    WHERE + SessionsTable.SESSION_END + "<=?" +
-                    AND + SessionsTable.SESSION_START + ">=?" +
+                    WHERE + SessionsTable.SESSION_START + "<=?" +
+                    AND + SessionsTable.SESSION_END + ">=?" +
                     GROUP_BY + SessionsTable.USER_ID;
             String selectAverage = SELECT + "AVG(playtime) as average" + FROM + '(' + selectPlaytimePerPlayer + ") q1";
 
@@ -740,8 +749,8 @@ public class SessionQueries {
                     SessionsTable.USER_ID + "," +
                     "SUM(" + SessionsTable.AFK_TIME + ") as afk" +
                     FROM + SessionsTable.TABLE_NAME +
-                    WHERE + SessionsTable.SESSION_END + "<=?" +
-                    AND + SessionsTable.SESSION_START + ">=?" +
+                    WHERE + SessionsTable.SESSION_START + "<=?" +
+                    AND + SessionsTable.SESSION_END + ">=?" +
                     AND + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                     GROUP_BY + SessionsTable.USER_ID;
             String selectAverage = SELECT + "AVG(afk) as average" + FROM + '(' + selectAfkPerPlayer + ") q1";
@@ -775,8 +784,8 @@ public class SessionQueries {
                     SessionsTable.USER_ID + "," +
                     "SUM(" + SessionsTable.AFK_TIME + ") as afk" +
                     FROM + SessionsTable.TABLE_NAME +
-                    WHERE + SessionsTable.SESSION_END + "<=?" +
-                    AND + SessionsTable.SESSION_START + ">=?" +
+                    WHERE + SessionsTable.SESSION_START + "<=?" +
+                    AND + SessionsTable.SESSION_END + ">=?" +
                     GROUP_BY + SessionsTable.USER_ID;
             String selectAverage = SELECT + "AVG(afk) as average" + FROM + '(' + selectAfkPerPlayer + ") q1";
 
@@ -837,7 +846,7 @@ public class SessionQueries {
 
     public static Query<Map<String, Long>> playtimePerServer(long after, long before) {
         String sql = SELECT +
-                "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime," +
+                playtimeColumn(after, before) + "," +
                 "s." + ServerTable.ID + ',' +
                 "s." + ServerTable.NAME +
                 FROM + SessionsTable.TABLE_NAME +
@@ -896,8 +905,8 @@ public class SessionQueries {
     }
 
     public static Query<Long> activePlaytime(long after, long before, ServerUUID serverUUID) {
-        String sql = SELECT + "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME +
-                ") as playtime" +
+        String sql = SELECT +
+                activePlaytimeColumn(after, before) +
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                 AND + SessionsTable.SESSION_END + ">=?" +
@@ -912,18 +921,22 @@ public class SessionQueries {
 
             @Override
             public Long processResults(ResultSet set) throws SQLException {
-                return set.next() ? set.getLong("playtime") : 0L;
+                return set.next() ? set.getLong("active_playtime") : 0L;
             }
         };
     }
 
+    private static @NonNull String activePlaytimeColumn(long after, long before) {
+        return "SUM(LEAST(" + SessionsTable.SESSION_END + "," + before + ")-GREATEST(" + SessionsTable.SESSION_START + "," + after + ")-" + SessionsTable.AFK_TIME + ") as active_playtime";
+    }
+
     public static Query<Long> activePlaytime(long after, long before) {
-        String sql = SELECT + "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME +
-                ") as playtime" +
+        String sql = SELECT +
+                activePlaytimeColumn(after, before) +
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?";
-        return db -> db.queryOptional(sql, set -> set.getLong("playtime"), after, before)
+        return db -> db.queryOptional(sql, set -> set.getLong("active_playtime"), after, before)
                 .orElse(0L);
     }
 
@@ -963,12 +976,12 @@ public class SessionQueries {
                 WHERE + ServerTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')";
 
         String selectAggregates = SELECT +
-                "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime," +
-                "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME + ") as active_playtime," +
+                playtimeColumn(after, before) + ',' +
+                activePlaytimeColumn(after, before) + ',' +
                 "COUNT(1) as session_count" +
                 FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.SESSION_START + ">?" +
-                AND + SessionsTable.SESSION_END + "<?" +
+                WHERE + SessionsTable.SESSION_END + ">?" +
+                AND + SessionsTable.SESSION_START + "<?" +
                 AND + SessionsTable.USER_ID + uuidsInSet +
                 (serverUUIDs.isEmpty() ? "" : AND + SessionsTable.SERVER_ID + " IN (" + selectServerIds + ")");
 
