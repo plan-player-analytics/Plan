@@ -6,7 +6,6 @@ import "highcharts/esm/modules/no-data-to-display"
 import "highcharts/esm/modules/accessibility";
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../../hooks/themeHook";
-import {withReducedSaturation} from "../../../util/colors";
 import {useMetadata} from "../../../hooks/metadataHook";
 import {useAuth} from "../../../hooks/authenticationHook.jsx";
 import {useGraphExtremesContext} from "../../../hooks/interaction/graphExtremesContextHook.jsx";
@@ -134,7 +133,7 @@ const AllPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
             tps: hasPermission('page.server.performance.graphs.tps') ? {
                 name: t('html.label.tps'),
                 type: spline,
-                color: nightModeEnabled ? withReducedSaturation(data.colors.high) : data.colors.high,
+                color: "var(--color-graphs-tps-high)",
                 zones: zones.tps,
                 tooltip: tooltip.twoDecimals,
                 data: dataSeries.tps,
