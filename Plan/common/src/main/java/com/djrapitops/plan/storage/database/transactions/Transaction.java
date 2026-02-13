@@ -46,15 +46,12 @@ public abstract class Transaction {
     private static final AtomicBoolean SUPPORTS_SAVE_POINTS = new AtomicBoolean(true);
     // Limit for Deadlock attempts.
     private static final int ATTEMPT_LIMIT = 5;
-
-    private SQLDB db;
     protected DBType dbType;
-
-    private Connection connection;
-    private Savepoint savepoint;
-
     protected boolean success;
     protected int attempts;
+    private SQLDB db;
+    private Connection connection;
+    private Savepoint savepoint;
 
     protected Transaction() {
         success = false;
@@ -107,7 +104,8 @@ public abstract class Transaction {
         boolean mySQLDeadlock = dbType == DBType.MYSQL && errorCode == 1213;
         boolean deadlocked = mySQLDeadlock || statementFail instanceof SQLTransactionRollbackException;
         boolean lockWaitTimeout = errorCode == 1205;
-        if (mysqlOutdatedRead || deadlocked || lockWaitTimeout && attempts < ATTEMPT_LIMIT) {
+        boolean duplicateEntry = errorCode == 1062;
+        if (mysqlOutdatedRead || deadlocked || duplicateEntry || lockWaitTimeout && attempts < ATTEMPT_LIMIT) {
             executeTransaction(db); // Recurse to attempt again.
             return;
         }

@@ -313,7 +313,7 @@ public class LargeStoreQueries {
     public static Executable storeAllSessionsWithKillAndWorldData(Collection<FinishedSession> sessions) {
         return connection -> {
             Set<World> existingWorlds = WorldTimesQueries.fetchWorlds().executeWithConnection(connection);
-            tryStoreAllJoinAddresses(sessions, connection, 0);
+            storeAllJoinAddresses(sessions, connection);
             storeAllWorldNames(sessions, existingWorlds).execute(connection);
             storeAllSessionsWithoutKillOrWorldData(sessions).execute(connection);
             storeSessionKillData(sessions).execute(connection);
@@ -321,17 +321,9 @@ public class LargeStoreQueries {
         };
     }
 
-    private static void tryStoreAllJoinAddresses(Collection<FinishedSession> sessions, Connection connection, int attempt) {
-        try {
-            List<String> existingJoinAddresses = JoinAddressQueries.allJoinAddresses().executeWithConnection(connection);
-            storeAllJoinAddresses(sessions, existingJoinAddresses).execute(connection);
-        } catch (DBOpException e) {
-            if (e.getMessage().contains("Duplicate entry") && attempt < 3) {
-                tryStoreAllJoinAddresses(sessions, connection, attempt + 1);
-            } else {
-                throw e;
-            }
-        }
+    private static void storeAllJoinAddresses(Collection<FinishedSession> sessions, Connection connection) {
+        List<String> existingJoinAddresses = JoinAddressQueries.allJoinAddresses().executeWithConnection(connection);
+        storeAllJoinAddresses(sessions, existingJoinAddresses).execute(connection);
     }
 
     private static Executable storeAllJoinAddresses(Collection<FinishedSession> sessions, List<String> existingJoinAddresses) {
