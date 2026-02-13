@@ -27,7 +27,7 @@
     "bootstrap": "^5.3.8",
     "export-to-csv": "^1.3.0",
     "highcharts": "^12.5.0",
-    "i18next": "^25.7.3",
+    "i18next": "^25.8.6",
     "i18next-chained-backend": "^5.0.2",
     "i18next-http-backend": "^3.0.2",
     "i18next-localstorage-backend": "^4.3.1",
