@@ -133,12 +133,16 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">
 <div class="block">This event represents a call to player methods on a Player Leave event.</div>
 </div>
-<div class="col-first odd-row-color"><code><a href="#SERVER_EXTENSION_REGISTER" class="member-name-link">SERVER_EXTENSION_REGISTER</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PLAYER_PERIODICAL" class="member-name-link">PLAYER_PERIODICAL</a></code></div>
 <div class="col-last odd-row-color">
+<div class="block">This event represents call to player methods while player is online.</div>
+</div>
+<div class="col-first even-row-color"><code><a href="#SERVER_EXTENSION_REGISTER" class="member-name-link">SERVER_EXTENSION_REGISTER</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">This event represents a call to server methods when the <a href="DataExtension.html" title="interface in com.djrapitops.plan.extension"><code>DataExtension</code></a> is registered.</div>
 </div>
-<div class="col-first even-row-color"><code><a href="#SERVER_PERIODICAL" class="member-name-link">SERVER_PERIODICAL</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first odd-row-color"><code><a href="#SERVER_PERIODICAL" class="member-name-link">SERVER_PERIODICAL</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">This event represents a call to server methods via a periodical task.</div>
 </div>
 </div>
@@ -202,6 +206,15 @@ the order they are declared.</div>
  <p>
  The call is made from a listener at the last event priority (Bukkit/Bungee: MONITOR, Sponge: POST).
  Method calls are asynchronous.</div>
+</section>
+</li>
+<li>
+<section class="detail" id="PLAYER_PERIODICAL">
+<h3>PLAYER_PERIODICAL</h3>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="CallEvents.html" title="enum class in com.djrapitops.plan.extension">CallEvents</a></span>&nbsp;<span class="element-name">PLAYER_PERIODICAL</span></div>
+<div class="block">This event represents call to player methods while player is online.
+ <p>
+ The call is made periodically from an async task.</div>
 </section>
 </li>
 <li>
