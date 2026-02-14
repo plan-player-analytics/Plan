@@ -143,6 +143,7 @@ public class PlayersTableJSONCreator {
                         .withCountry(player.getGeolocation().orElse(null))
                         .withExtensionValues(mapToExtensionValues(extensionData.get(player.getPlayerUUID())))
                         .withPing(player.getPing())
+                        .withNicknames(player.getNicknames())
                         .build()
                 ).collect(Collectors.toList());
     }

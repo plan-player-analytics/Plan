@@ -112,6 +112,13 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
                 (serverUUIDs.isEmpty() ? "" : AND + "p." + PingTable.SERVER_ID + " IN (" + selectServerIds + ")") +
                 GROUP_BY + "p." + PingTable.USER_ID;
 
+        String selectNicknames = SELECT +
+                "un." + UsersTable.ID + ',' +
+                "GROUP_CONCAT(DISTINCT " + "n." + NicknamesTable.NICKNAME + ",',') as nicknames" +
+                FROM + NicknamesTable.TABLE_NAME + " n" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " un ON n." + NicknamesTable.USER_UUID + "=un." + UsersTable.USER_UUID +
+                GROUP_BY + "un." + UsersTable.ID;
+
         String selectBaseUsers = SELECT +
                 "u." + UsersTable.USER_UUID + ',' +
                 "u." + UsersTable.USER_NAME + ',' +
@@ -124,13 +131,15 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
                 "act.activity_index," +
                 "pi.min_ping," +
                 "pi.max_ping," +
-                "pi.avg_ping" +
+                "pi.avg_ping," +
+                "ni.nicknames" +
                 FROM + UsersTable.TABLE_NAME + " u" +
                 LEFT_JOIN + '(' + selectBanned + ") ban on ban." + UserInfoTable.USER_ID + "=u." + UsersTable.ID +
                 LEFT_JOIN + '(' + selectLatestGeolocations + ") geo on geo." + GeoInfoTable.USER_ID + "=u." + UsersTable.ID +
                 LEFT_JOIN + '(' + selectSessionData + ") ses on ses." + SessionsTable.USER_ID + "=u." + UsersTable.ID +
                 LEFT_JOIN + '(' + NetworkActivityIndexQueries.selectActivityIndexSQL() + ") act on u." + UsersTable.ID + "=act." + UserInfoTable.USER_ID +
                 LEFT_JOIN + '(' + selectPingData + ") pi on pi." + PingTable.USER_ID + "=u." + UsersTable.ID +
+                LEFT_JOIN + '(' + selectNicknames + ") ni on ni." + UsersTable.ID + "=u." + UsersTable.ID +
                 WHERE + "u." + UsersTable.ID + userIdsInSet +
                 ORDER_BY + "ses.last_seen DESC";
 
@@ -159,7 +168,8 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
                             .ping(new Ping(0L, null,
                                     set.getInt(PingTable.MIN_PING),
                                     set.getInt(PingTable.MAX_PING),
-                                    set.getDouble(PingTable.AVG_PING)));
+                                    set.getDouble(PingTable.AVG_PING)))
+                            .nicknames(set.getString("nicknames"));
                     if (set.getString("banned") != null) {
                         player.banned();
                     }
