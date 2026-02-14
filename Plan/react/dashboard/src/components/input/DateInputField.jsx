@@ -17,16 +17,29 @@ const isValidDate = value => {
 };
 
 const correctDate = value => {
-    const d = value.match(
+    const ddmmyyyy = value.match(
         /^(0\d|\d{2})[/|-]?(0\d|\d{2})[/|-]?(\d{4,5})$/
     );
-    if (!d) return value;
+    const yyyymmdd = value.match(
+        /^(\d{4,5})[/|-](0\d|\d{2})[/|-]?(0\d|\d{2})$/
+    );
+    if (!ddmmyyyy && !yyyymmdd) return value;
 
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
-    const parsedDay = Number(d[1]);
-    const parsedMonth = Number(d[2]) - 1; // 0=January, 11=December
-    const parsedYear = Number(d[3]);
-    const date = d ? new Date(parsedYear, parsedMonth, parsedDay) : null;
+    let date = null;
+    if (ddmmyyyy) {
+        const day = Number(ddmmyyyy[1]);
+        const month = Number(ddmmyyyy[2]) - 1; // 0=January, 11=December
+        const year = Number(ddmmyyyy[3]);
+        date = new Date(year, month, day);
+    }
+    if (yyyymmdd) {
+        const year = Number(yyyymmdd[1]);
+        const month = Number(yyyymmdd[2]) - 1; // 0=January, 11=December
+        const day = Number(yyyymmdd[3]);
+        date = new Date(year, month, day);
+    }
+    if (!date) return value;
 
     const day = `${date.getDate()}`;
     const month = `${date.getMonth() + 1}`;

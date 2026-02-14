@@ -21,21 +21,22 @@ import {useQueryResultContext} from "../../../hooks/queryResultContext";
 import {useNavigate} from "react-router";
 import {useNavigation} from "../../../hooks/navigationHook.jsx";
 import ActionButton from "../../input/button/ActionButton.jsx";
+import {useMetadata} from "../../../hooks/metadataHook.jsx";
 
-const parseTime = (dateString, timeString) => {
+const parseTimeAsUTC = (dateString, timeString) => {
     const d = dateString.match(
         /^(0\d|\d{2})[/|-]?(0\d|\d{2})[/|-]?(\d{4,5})$/
     );
     const t = timeString.match(/^(0\d|\d{2}):?(0\d|\d{2})$/);
 
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
-    const parsedDay = Number(d[1]);
-    const parsedMonth = Number(d[2]) - 1; // 0=January, 11=December
-    const parsedYear = Number(d[3]);
-    let hour = Number(t[1]);
-    let minute = Number(t[2]);
-    const date = new Date(parsedYear, parsedMonth, parsedDay, hour, minute);
-    return date.getTime() - (date.getTimezoneOffset() * 60000);
+    const year = d[3];
+    const month = d[2];
+    const day = d[1];
+    const hour = t[1];
+    const minute = t[2];
+    const date = new Date(`${year}-${month}-${day}T${hour}:${minute}:00+0000`);
+    return date.getTime();
 };
 
 const QueryOptionsCard = () => {
@@ -43,6 +44,7 @@ const QueryOptionsCard = () => {
     const navigate = useNavigate()
     const {result, setResult} = useQueryResultContext();
     const {setCurrentTab} = useNavigation();
+    const {timeZoneOffsetMinutes} = useMetadata();
 
     const [loadingResults, setLoadingResults] = useState(false);
 
@@ -78,11 +80,11 @@ const QueryOptionsCard = () => {
         if (!fromDate && !fromTime && !toDate && !toTime) return;
 
         setExtremes({
-            min: parseTime(
+            min: parseTimeAsUTC(
                 fromDate || options.view.afterDate,
                 fromTime || options.view.afterTime
             ),
-            max: parseTime(
+            max: parseTimeAsUTC(
                 toDate || options.view.beforeDate,
                 toTime || options.view.beforeTime
             )
@@ -94,9 +96,9 @@ const QueryOptionsCard = () => {
     const onSetExtremes = useCallback((event) => {
         if (event?.trigger) {
             const afterDate = Highcharts.dateFormat('%d/%m/%Y', event.min);
-            const afterTime = Highcharts.dateFormat('%H:%M', event.min);
+            const afterTime = Highcharts.dateFormat('%H:%M', event.min - timeZoneOffsetMinutes * 60000);
             const beforeDate = Highcharts.dateFormat('%d/%m/%Y', event.max);
-            const beforeTime = Highcharts.dateFormat('%H:%M', event.max);
+            const beforeTime = Highcharts.dateFormat('%H:%M', event.max - timeZoneOffsetMinutes * 60000);
             setFromDate(afterDate);
             setFromTime(afterTime);
             setToDate(beforeDate);
@@ -119,11 +121,11 @@ const QueryOptionsCard = () => {
         setFilters(existingFilters);
 
         setExtremes({
-            min: parseTime(
+            min: parseTimeAsUTC(
                 result.view.afterDate || options.view.afterDate,
                 result.view.afterTime || options.view.afterTime
             ),
-            max: parseTime(
+            max: parseTimeAsUTC(
                 result.view.beforeDate || options.view.beforeDate,
                 result.view.beforeTime || options.view.beforeTime
             )
