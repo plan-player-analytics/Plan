@@ -114,7 +114,7 @@ public class QueryTablePlayersQuery implements Query<List<TablePlayer>> {
 
         String selectNicknames = SELECT +
                 "un." + UsersTable.ID + ',' +
-                "GROUP_CONCAT(DISTINCT " + "n." + NicknamesTable.NICKNAME + ",',') as nicknames" +
+                "GROUP_CONCAT(DISTINCT " + "n." + NicknamesTable.NICKNAME + ") as nicknames" +
                 FROM + NicknamesTable.TABLE_NAME + " n" +
                 INNER_JOIN + UsersTable.TABLE_NAME + " un ON n." + NicknamesTable.USER_UUID + "=un." + UsersTable.USER_UUID +
                 GROUP_BY + "un." + UsersTable.ID;
