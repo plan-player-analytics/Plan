@@ -62,11 +62,11 @@ const FormsUseCase = () => {
                     </Col>
                 </Row>
                 <hr/>
-                <Checkbox indeterminate={false} checked={false} className={"ms-2"}>{label}</Checkbox>
-                <Checkbox indeterminate={false} checked={true} className={"ms-2"}>{label}</Checkbox>
-                <Checkbox indeterminate={true} checked={false} className={"ms-2"}>{label}</Checkbox>
-                <Toggle value={true} inline className={"ms-2"}>{label}</Toggle>
-                <Toggle value={false} inline className={"ms-2"}>{label}</Toggle>
+                <Checkbox indeterminate={false} checked={false} className={"ms-2"} readOnly>{label}</Checkbox>
+                <Checkbox indeterminate={false} checked={true} className={"ms-2"} readOnly>{label}</Checkbox>
+                <Checkbox indeterminate={true} checked={false} className={"ms-2"} readOnly>{label}</Checkbox>
+                <Toggle value={true} inline className={"ms-2"} readOnly>{label}</Toggle>
+                <Toggle value={false} inline className={"ms-2"} readOnly>{label}</Toggle>
                 <hr/>
                 <Row>
                     <Col md={12}>

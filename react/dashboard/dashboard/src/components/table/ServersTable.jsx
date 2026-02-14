@@ -17,7 +17,7 @@ import {
 import {useTheme} from "../../hooks/themeHook";
 import {useTranslation} from "react-i18next";
 import Scrollable from "../Scrollable";
-import {NavLink} from "react-router-dom";
+import {NavLink} from "react-router";
 import ActionButton from "../input/button/ActionButton.jsx";
 
 const ServerRow = ({server, onQuickView}) => {

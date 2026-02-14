@@ -1,4 +1,4 @@
-import {useParams} from "react-router-dom";
+import {useParams} from "react-router";
 import {useDataRequest} from "../../../../hooks/dataFetchHook";
 import {fetchOptimizedPerformance, fetchPingGraph, fetchPluginHistory} from "../../../../service/serverService";
 import {ErrorViewBody} from "../../../../views/ErrorView";
@@ -110,7 +110,7 @@ const PerformanceGraphsCard = () => {
                         x: entry[0],
                         title: entry[1].length,
                         text: (installedLines.length ? '<b>' + t('html.label.installed') + '</b><br>' + installedLines : '') +
-                            (uninstalledLines.length ? '<b>' + t('html.label.uninstalled') + '</b><br>' + uninstalledLines : '')
+                            (uninstalledLines.length ? '<br><b>' + t('html.label.uninstalled') + '</b><br>' + uninstalledLines : '')
                     }
                 })
             })

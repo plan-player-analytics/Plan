@@ -2,7 +2,7 @@ import React from 'react';
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faServer} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
-import {Link} from "react-router-dom";
+import {Link} from "react-router";
 import {useAuth} from "../../../hooks/authenticationHook.jsx";
 
 const ServerPageLinkButton = ({uuid, className}) => {

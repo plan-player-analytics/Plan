@@ -203,6 +203,8 @@
     --color-data-performance-chunks: var(--color-blue-grey);
     --color-data-performance-disk: var(--color-green);
     --color-data-performance-ping: var(--color-amber);
+    --color-data-performance-mspt-average: var(--color-orange);
+    --color-data-performance-mspt-percentile: var(--color-deep-orange);
     --color-data-calculated-insights: var(--color-red);
     --color-data-calculated-join-addresses: var(--color-amber);
     --color-data-calculated-retention: var(--color-indigo);
@@ -643,6 +645,14 @@
 
 .col-tps {
     color: var(--color-data-performance-tps);
+}
+
+.col-mspt-average {
+    color: var(--color-data-performance-mspt-average);
+}
+
+.col-mspt-percentile {
+    color: var(--color-data-performance-mspt-percentile);
 }
 
 .bg-tps {

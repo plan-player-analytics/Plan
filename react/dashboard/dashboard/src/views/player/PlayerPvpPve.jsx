@@ -2,7 +2,7 @@ import React from "react";
 import {Card, Col} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faLifeRing} from "@fortawesome/free-regular-svg-icons";
-import {faKhanda, faSkull} from "@fortawesome/free-solid-svg-icons";
+import {faHandSparkles, faSkull} from "@fortawesome/free-solid-svg-icons";
 import Datapoint from "../../components/Datapoint";
 import KillsTable from "../../components/table/KillsTable";
 import {usePlayer} from "../layout/PlayerPage";
@@ -23,11 +23,11 @@ const InsightsCard = ({player}) => {
                 </h6>
             </Card.Header>
             <Card.Body>
-                <Datapoint icon={faKhanda} color="top-3-first" name={t('html.label.deadliestWeapon')}
+                <Datapoint icon={faHandSparkles} color="top-3-first" name={t('html.label.deadliestWeapon')}
                            value={player.kill_data.weapon_1st}/>
-                <Datapoint icon={faKhanda} color="top-3-second" name={t('html.label.secondDeadliestWeapon')}
+                <Datapoint icon={faHandSparkles} color="top-3-second" name={t('html.label.secondDeadliestWeapon')}
                            value={player.kill_data.weapon_2nd}/>
-                <Datapoint icon={faKhanda} color="top-3-third" name={t('html.label.thirdDeadliestWeapon')}
+                <Datapoint icon={faHandSparkles} color="top-3-third" name={t('html.label.thirdDeadliestWeapon')}
                            value={player.kill_data.weapon_3rd}/>
             </Card.Body>
         </Card>

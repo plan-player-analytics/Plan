@@ -6,7 +6,7 @@ import {usePreferences} from "../../hooks/preferencesHook.jsx";
 import DataTablesTable from "./DataTablesTable.jsx";
 import FormattedDate from "../text/FormattedDate.jsx";
 import {faCalendarCheck, faCalendarTimes} from "@fortawesome/free-regular-svg-icons";
-import {Link} from "react-router-dom";
+import {Link} from "react-router";
 
 const AllowlistBounceTable = ({bounces, lastSeen}) => {
     const {t} = useTranslation();

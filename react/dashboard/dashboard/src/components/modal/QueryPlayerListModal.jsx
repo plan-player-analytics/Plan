@@ -5,7 +5,7 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faArrowRight, faSearch} from "@fortawesome/free-solid-svg-icons";
 import {getViewTitle} from "../../views/query/QueryResultView";
 import {ChartLoader} from "../navigation/Loader";
-import {useNavigation} from "react-router-dom";
+import {useNavigation} from "react-router";
 import {useAuth} from "../../hooks/authenticationHook";
 import PlayerTable from "../table/PlayerTable.jsx";
 import ActionButton from "../input/button/ActionButton.jsx";

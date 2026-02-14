@@ -12,7 +12,7 @@ const ThemeStorageContext = createContext({});
 // Reduce refetching theme inside the theme editor to avoid rate-limit issues.
 const themeCache = {};
 
-export const ThemeStorageContextProvider = ({children}) => {
+export const ThemeStorageContextProvider = ({children, loadMissing}) => {
     const theme = useTheme();
     const {currentTheme, color} = theme;
     const {addAlert} = useAlertPopupContext();
@@ -22,6 +22,26 @@ export const ThemeStorageContextProvider = ({children}) => {
     const [currentUseCases, setCurrentUseCases] = useState({});
     const [currentNightModeUseCases, setCurrentNightModeUseCases] = useState({});
     const [error, setError] = useState(null);
+
+    const loadMissingDefaults = async (original) => {
+        let theme
+        if (themeCache['defaultInJar']) {
+            theme = themeCache['defaultInJar']
+        } else {
+            const response = await fetchTheme('default', true);
+            if (response.error) {
+                console.error(response.error);
+                return;
+            }
+            theme = response.data;
+            themeCache['defaultInJar'] = theme;
+        }
+
+        return {
+            ...original,
+            useCases: mergeUseCases(theme.useCases, original.useCases)
+        };
+    }
 
     const loadTheme = useCallback(async (name) => {
         setError(null);
@@ -44,6 +64,9 @@ export const ThemeStorageContextProvider = ({children}) => {
                 theme = response.data;
                 themeCache[name] = theme;
             }
+        }
+        if (loadMissing) {
+            theme = await loadMissingDefaults(theme);
         }
         setCurrentColors(theme.colors);
         setCurrentNightColors(theme.nightColors);

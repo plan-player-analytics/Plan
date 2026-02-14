@@ -6,7 +6,7 @@ import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
 import {ThemeStyleCss} from "../../components/theme/ThemeStyleCss";
 import {ThemeEditContextProvider} from "../../hooks/context/themeEditContextHook.jsx";
 import {SwitchTransition} from "react-transition-group";
-import {Outlet, useParams} from "react-router-dom";
+import {Outlet, useParams} from "react-router";
 import {ThemeContextProvider, useTheme} from "../../hooks/themeHook.jsx";
 import {ThemeStorageContextProvider, useThemeStorage} from "../../hooks/context/themeContextHook.jsx";
 import {ChartLoader} from "../../components/navigation/Loader.jsx";
@@ -49,7 +49,7 @@ const ThemeEditorPage = () => {
                             <FontAwesomeIcon icon={faInfoCircle}/> {t('html.label.themeEditor.lightModeInfo')}
                         </Alert>}
                         <ThemeContextProvider themeOverride={identifier} key={identifier}>
-                            <ThemeStorageContextProvider>
+                            <ThemeStorageContextProvider loadMissing>
                                 <WaitUntilThemeLoads/>
                             </ThemeStorageContextProvider>
                         </ThemeContextProvider>

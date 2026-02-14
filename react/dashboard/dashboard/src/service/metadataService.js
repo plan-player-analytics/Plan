@@ -47,8 +47,8 @@ export const savePreferences = async preferences => {
     return doSomePostRequest(url, [standard200option], preferences);
 }
 
-export const fetchTheme = async name => {
-    let url = `/v1/theme?theme=${name}`;
+export const fetchTheme = async (name, onlyJar) => {
+    let url = `/v1/theme?theme=${name}${onlyJar ? '&onlyJar=true' : ''}`;
     if (staticSite) url = `/theme/${name}.json`
     return doGetRequest(url);
 }

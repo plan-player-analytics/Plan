@@ -8,7 +8,7 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import End from "../layout/End";
 import {MinecraftChat} from "react-mcjsonchat";
 import ColoredText from "../text/ColoredText";
-import {Link} from "react-router-dom";
+import {Link} from "react-router";
 import FormattedTime from "../text/FormattedTime.jsx";
 import FormattedDate from "../text/FormattedDate.jsx";
 
@@ -95,20 +95,25 @@ const ExtensionValue = ({data}) => {
             {icon && <Fa icon={icon} className={colorClass}/>} {name}
             <End><MinecraftChat component={JSON.parse(data.value)}/></End>
         </p>)
+    } else if (data.type === 'BOOLEAN') {
+        return <p title={title}>
+            {icon && <Fa icon={icon} className={colorClass}/>} {name}
+            <End>{t(data.value ? 'plugin.generic.yes' : 'plugin.generic.no')}</End>
+        </p>;
     } else if (data.type === 'TIME_MILLISECONDS') {
         return <p title={title}>
             {icon && <Fa icon={icon} className={colorClass}/>} {name}
-            <End><FormattedTime timeMs={value}/></End>
+            <End><FormattedTime timeMs={data.value}/></End>
         </p>;
     } else if (data.type === 'DATE_YEAR') {
         return <p title={title}>
             {icon && <Fa icon={icon} className={colorClass}/>} {name}
-            <End><FormattedDate date={value}/></End>
+            <End><FormattedDate date={data.value}/></End>
         </p>;
     } else if (data.type === 'DATE_SECOND') {
         return <p title={title}>
             {icon && <Fa icon={icon} className={colorClass}/>} {name}
-            <End><FormattedDate date={value} includeSeconds/></End>
+            <End><FormattedDate date={data.value} includeSeconds/></End>
         </p>;
     } else {
         return (<Datapoint name={name}

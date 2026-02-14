@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import ExtensionIcon from "./ExtensionIcon";
 import DataTablesTable from "../table/DataTablesTable";
 import ColoredText from "../text/ColoredText";
-import {Link} from "react-router-dom";
+import {Link} from "react-router";
 import FormattedTime from "../text/FormattedTime.jsx";
 import FormattedDate from "../text/FormattedDate.jsx";
 
@@ -11,6 +11,8 @@ const ExtensionDataTable = ({table}) => {
     const mapToCell = (cell, j) => {
         const value = cell.value;
         switch (cell.format) {
+            case 'BOOLEAN':
+                return t(Boolean(value) ? 'plugin.generic.yes' : 'plugin.generic.no')
             case 'TIME_MILLISECONDS':
                 return <FormattedTime timeMs={value}/>;
             case 'DATE_YEAR':

@@ -18,7 +18,7 @@ import CollapseWithButton from "../../layout/CollapseWithButton";
 import FilterDropdown from "./FilterDropdown";
 import FilterList from "./FilterList";
 import {useQueryResultContext} from "../../../hooks/queryResultContext";
-import {useNavigate} from "react-router-dom";
+import {useNavigate} from "react-router";
 import {useNavigation} from "../../../hooks/navigationHook.jsx";
 import ActionButton from "../../input/button/ActionButton.jsx";
 

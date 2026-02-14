@@ -6,6 +6,7 @@ import {
     faMap,
     faMicrochip,
     faSignal,
+    faStopwatch,
     faTachometerAlt,
     faUser
 } from "@fortawesome/free-solid-svg-icons";
@@ -53,7 +54,9 @@ const PerformanceGraphsCard = ({data}) => {
         ram: [],
         entities: [],
         chunks: [],
-        disk: []
+        disk: [],
+        msptAverage: [],
+        mspt95thPercentile: []
     });
 
     useEffect(() => {
@@ -99,7 +102,9 @@ const PerformanceGraphsCard = ({data}) => {
             ram: [],
             entities: [],
             chunks: [],
-            disk: []
+            disk: [],
+            msptAverage: [],
+            mspt95thPercentile: []
         }
 
         const spline = 'spline';
@@ -125,6 +130,8 @@ const PerformanceGraphsCard = ({data}) => {
             const entitiesColor = changeColor("var(--color-graphs-entities)", i);
             const chunksColor = changeColor("var(--color-graphs-chunks)", i);
             const diskColor = changeColor("var(--color-graphs-disk-high)", i);
+            const msptAverageColor = changeColor("var(--color-data-performance-mspt-average)", i);
+            const msptPercentileColor = changeColor("var(--color-data-performance-mspt-percentile)", i);
             const diskZones = zones.disk;
 
             series.players.push({
@@ -155,6 +162,14 @@ const PerformanceGraphsCard = ({data}) => {
                 name: server.serverName, type: spline, tooltip: tooltip.zeroDecimals,
                 data: server.values.disk.map(minuteResolution), color: diskColor, zones: diskZones, yAxis: 0
             });
+            series.msptAverage.push({
+                name: server.serverName, type: spline, tooltip: tooltip.twoDecimals,
+                data: server.values.msptAverage.map(minuteResolution), color: msptAverageColor, yAxis: 0
+            });
+            series.mspt95thPercentile.push({
+                name: server.serverName, type: spline, tooltip: tooltip.twoDecimals,
+                data: server.values.mspt95thPercentile.map(minuteResolution), color: msptPercentileColor, yAxis: 0
+            });
         });
         setPerformanceSeries(series);
     }, [data, setPerformanceSeries])
@@ -169,6 +184,18 @@ const PerformanceGraphsCard = ({data}) => {
         }, {
             name: t('html.label.tps'), icon: faTachometerAlt, color: 'tps', href: 'tps',
             element: <Tab id={'tps'} data={performanceSeries.tps} yAxis={yAxisConfigurations.TPS}/>,
+            disabled: !dataIncludesGameServers
+        }, {
+            name: t('html.label.msptAverage'), icon: faStopwatch, color: 'mspt-average', href: 'mspt',
+            element: <Tab id={'mspt'} data={performanceSeries.msptAverage} yAxis={yAxisConfigurations.MSPT}/>,
+            disabled: !dataIncludesGameServers
+        }, {
+            name: t('html.label.msptPercentile', {percentile: 95}),
+            icon: faStopwatch,
+            color: 'mspt-percentile',
+            href: 'mspt-percentile',
+            element: <Tab id={'mspt-percentile'} data={performanceSeries.mspt95thPercentile}
+                          yAxis={yAxisConfigurations.MSPT}/>,
             disabled: !dataIncludesGameServers
         }, {
             name: t('html.label.cpu'), icon: faTachometerAlt, color: 'cpu', href: 'cpu',

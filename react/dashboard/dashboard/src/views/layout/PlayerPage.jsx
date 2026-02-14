@@ -1,6 +1,6 @@
 import React, {useEffect} from "react";
 import Sidebar from "../../components/navigation/Sidebar";
-import {Outlet, useOutletContext, useParams} from "react-router-dom";
+import {Outlet, useOutletContext, useParams} from "react-router";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
 import {fetchPlayer} from "../../service/playerService";
 import {faCampground, faCubes, faInfoCircle, faNetworkWired} from "@fortawesome/free-solid-svg-icons";
