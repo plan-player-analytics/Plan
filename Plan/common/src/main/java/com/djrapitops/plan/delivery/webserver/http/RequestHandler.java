@@ -57,7 +57,7 @@ public class RequestHandler {
 
     public Response getResponse(InternalRequest internalRequest) {
         @Untrusted(reason = "from header") String accessAddress = internalRequest.getAccessAddress(webserverConfiguration);
-        @Untrusted String requestedPath = internalRequest.getRequestedPath();
+        @Untrusted String requestedPath = internalRequest.getRequestedPathAndQuery();
 
         boolean blocked = false;
         Response response;

@@ -130,8 +130,8 @@ public class JettyInternalRequest implements InternalRequest {
     }
 
     @Override
-    public String getRequestedPath() {
-        return baseRequest.getHttpURI().getDecodedPath();
+    public String getRequestedPathAndQuery() {
+        return baseRequest.getHttpURI().getDecodedPath() + baseRequest.getHttpURI().getQuery();
     }
 
     @Override

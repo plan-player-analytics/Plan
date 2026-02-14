@@ -31,7 +31,7 @@ const SingleProxyPlayersOnlineGraph = ({serverUUID}) => {
     if (loadingError) return <ErrorViewBody error={loadingError}/>
     if (!serverUUID || !data) return <ChartLoader/>;
 
-    return <PlayersOnlineGraph data={data}/>
+    return <PlayersOnlineGraph data={data} showPlayersOnline/>
 }
 
 const MultiProxyPlayersOnlineGraph = () => {

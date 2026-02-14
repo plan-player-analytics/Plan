@@ -16,10 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries.objects;
 
-import com.djrapitops.plan.delivery.domain.DateHolder;
-import com.djrapitops.plan.delivery.domain.PlayerName;
-import com.djrapitops.plan.delivery.domain.ServerIdentifier;
-import com.djrapitops.plan.delivery.domain.ServerName;
+import com.djrapitops.plan.delivery.domain.*;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.gathering.domain.event.JoinAddress;
@@ -1061,5 +1058,36 @@ public class SessionQueries {
                 .limit(rowLimit)
                 .toString();
         return db -> db.queryList(sql, SessionsTable.Row::extract);
+    }
+
+    public static Query<List<PlayerIdentifier>> playersOnlineOn(long date) {
+        String sql = SELECT + DISTINCT + UsersTable.USER_UUID + ',' + UsersTable.USER_NAME +
+                FROM + SessionsTable.TABLE_NAME + " s" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u ON u." + UsersTable.ID + "=s." + SessionsTable.USER_ID +
+                WHERE + SessionsTable.SESSION_START + "<?" +
+                AND + SessionsTable.SESSION_END + ">?";
+        return db -> db.queryList(sql,
+                row -> new PlayerIdentifier(
+                        UUID.fromString(row.getString(UsersTable.USER_UUID)),
+                        row.getString(UsersTable.USER_NAME)
+                ), date, date);
+    }
+
+    public static Query<List<PlayerIdentifier>> playersOnlineOn(long date, ServerUUID serverUUID) {
+        String sql = SELECT + DISTINCT + UsersTable.USER_UUID + ',' + UsersTable.USER_NAME +
+                FROM + SessionsTable.TABLE_NAME + " s" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u ON u." + UsersTable.ID + "=s." + SessionsTable.USER_ID +
+                WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                AND + SessionsTable.SESSION_START + "<?" +
+                AND + SessionsTable.SESSION_END + ">?";
+        return db -> db.queryList(sql,
+                row -> new PlayerIdentifier(
+                        UUID.fromString(row.getString(UsersTable.USER_UUID)),
+                        row.getString(UsersTable.USER_NAME)
+                ), serverUUID, date, date);
+
+        // Start Sat Feb 14 2026 14:57:57.247
+        // Sat Feb 14 2026 15:10:00.299
+        // Sat Feb 14 2026 15:01:35.661
     }
 }
