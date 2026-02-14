@@ -44,8 +44,8 @@ export const PlayersOnlineTooltip = ({id, hoveredDate, identifier}) => {
         <aside className="overlay"
                style={{
                    position: "absolute",
-                   top: "100%",
-                   left: left ? left + 80 - spaceRemoved / 2 : "calc(100%-2rem)",
+                   top: "calc(100% - 6rem)",
+                   left: left ? left + 105 - spaceRemoved / 2 : "calc(100%-2rem)",
                    zIndex: 1,
                    fontSize: "12px",
                    lineBreak: "strict",
