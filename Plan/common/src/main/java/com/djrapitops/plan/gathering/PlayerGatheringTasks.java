@@ -19,6 +19,7 @@ package com.djrapitops.plan.gathering;
 import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.utilities.java.Lists;
 
+import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,7 @@ public class PlayerGatheringTasks {
 
     private final Map<UUID, List<TaskSystem.Task>> tasks;
 
+    @Inject
     public PlayerGatheringTasks() {
         tasks = new ConcurrentHashMap<>();
     }
