@@ -4,246 +4,249 @@
 # https://github.com/plan-player-analytics/Plan/wiki/Bukkit-Configuration
 # -----------------------------------------------------
 Server:
-  ServerName: Plan
+    ServerName: Plan
 # -----------------------------------------------------
 Plugin:
-  Logging:
-    # More information about Locale
-    # https://github.com/plan-player-analytics/Plan/wiki/Localization
-    Locale: default
-    Create_new_locale_file_on_next_enable: false
-    Log_untranslated_locale_keys: false
-    Dev: false
-    Delete_logs_after_days: 7
-  Update_notifications:
-    # Display update notification on the website
-    Check_for_updates: true
-    Notify_about_DEV_releases: false
-  Configuration:
-    Allow_proxy_to_manage_settings: true
+    Logging:
+        # More information about Locale
+        # https://github.com/plan-player-analytics/Plan/wiki/Localization
+        Locale: default
+        Create_new_locale_file_on_next_enable: false
+        Log_untranslated_locale_keys: false
+        Dev: false
+        Delete_logs_after_days: 7
+    Update_notifications:
+        # Display update notification on the website
+        Check_for_updates: true
+        Notify_about_DEV_releases: false
+    Configuration:
+        Allow_proxy_to_manage_settings: true
 # -----------------------------------------------------
 # Supported databases: SQLite, MySQL
 # -----------------------------------------------------
 Database:
-  Type: SQLite
-  MySQL:
-    Host: localhost
-    Port: 3306
-    User: root
-    Password: minecraft
-    Database: Plan
-    # Launch options to append after mysql driver address
-    Launch_options: "?rewriteBatchedStatements=true&serverTimezone=UTC"
-    Max_connections: 8
-    Max_Lifetime:
-      Time: 25
-      Unit: MINUTES
+    Type: SQLite
+    MySQL:
+        Host: localhost
+        Port: 3306
+        User: root
+        Password: minecraft
+        Database: Plan
+        # Launch options to append after mysql driver address
+        Launch_options: "?rewriteBatchedStatements=true&serverTimezone=UTC"
+        Max_connections: 8
+        Max_Lifetime:
+            Time: 25
+            Unit: MINUTES
 # -----------------------------------------------------
 # More information about SSL Certificate Settings:
 # https://github.com/plan-player-analytics/Plan/wiki/SSL-Certificate-%28HTTPS%29-Set-Up
 # -----------------------------------------------------
 Webserver:
-  Port: 8804
-  Alternative_IP:
-    Enabled: false
-    # %port% is replaced automatically with Webserver.Port
-    Address: your.domain.here:%port%
-  # Internal IP usually does not need to be changed, only change it if you know what you're doing!
-  # 0.0.0.0 allocates Internal (local) IP automatically for the WebServer.
-  Internal_IP: 0.0.0.0
-  # Use absolute path ("C:\Example\Path", "/var/example/path") or relative ("public_html" -> {server}/plugins/Plan/public_html)
-  # NOTE: All files in this directory can be read by anyone who can access the webserver.
-  # This can be used to host certbot http challenge file, or for customizing Plan React-bundle
-  Public_html_directory: "public_html"
-  Security:
-    SSL_certificate:
-      KeyStore_path: Cert.jks
-      Key_pass: default
-      Store_pass: default
-      Alias: alias
-    # HTTPS is required for Login.
-    Disable_authentication: false
-    # Disable /auth/register endpoint
-    Disable_registration: false
-    # Cross-Origin Resource Sharing (Requests from non-Plan web pages)
-    # https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
-    CORS:
-      Allow_origin: "*"
-    # Allows using the whitelist with a reverse-proxy.
-    # ! Make sure non-proxy access is not possible, it would allow IP spoofing !
-    Use_X-Forwarded-For_Header: false
-    Access_log:
-      Print_to_console: false
-      Remove_logs_after_days: 30
-    IP_whitelist:
-      Enabled: false
-      # Supported formats:
-      # IPv4 exact: "192.168.0.1", wildcard: "192.168.*.*", cidr: "192.168.0.0/16"
-      # IPv6 exact: "0:0:0:0:0:0:0:1", compressed: "1::1", cidr: "1234:db8:1234:1a:20::/64"
-      # More: https://seancfoley.github.io/IPAddress/ipaddress.html#supported-ip-address-parsing-formats
-      # Dynamic DNS hostname: "dns:intranet.example.com", updated once per minute
-      Whitelist:
-        - "192.168.0.0"
-        - "0:0:0:0:0:0:0:1"
-    # Does not affect existing cookies
-    Cookies_expire_after:
-      Time: 2
-      Unit: HOURS
-  Disable_Webserver: false
-  External_Webserver_address: https://www.example.address
-  Cache:
-    Reduced_refresh_barrier:
-      Time: 15
-      Unit: SECONDS
-    Invalidate_query_results_on_disk_after:
-      Time: 7
-      Unit: DAYS
-    Invalidate_disk_cache_after:
-      Time: 2
-      Unit: DAYS
-    Invalidate_memory_cache_after:
-      Time: 5
-      Unit: MINUTES
+    Port: 8804
+    Alternative_IP:
+        Enabled: false
+        # %port% is replaced automatically with Webserver.Port
+        Address: your.domain.here:%port%
+    # Internal IP usually does not need to be changed, only change it if you know what you're doing!
+    # 0.0.0.0 allocates Internal (local) IP automatically for the WebServer.
+    Internal_IP: 0.0.0.0
+    # Use absolute path ("C:\Example\Path", "/var/example/path") or relative ("public_html" -> {server}/plugins/Plan/public_html)
+    # NOTE: All files in this directory can be read by anyone who can access the webserver.
+    # This can be used to host certbot http challenge file, or for customizing Plan React-bundle
+    Public_html_directory: "public_html"
+    Security:
+        SSL_certificate:
+            KeyStore_path: Cert.jks
+            Key_pass: default
+            Store_pass: default
+            Alias: alias
+        # HTTPS is required for Login.
+        Disable_authentication: false
+        # Disable /auth/register endpoint
+        Disable_registration: false
+        # Cross-Origin Resource Sharing (Requests from non-Plan web pages)
+        # https://developer.mozilla.org/en-US/docs/Web/HTTP/CORS
+        CORS:
+            Allow_origin: "*"
+        # Allows using the whitelist with a reverse-proxy.
+        # ! Make sure non-proxy access is not possible, it would allow IP spoofing !
+        Use_X-Forwarded-For_Header: false
+        Access_log:
+            Print_to_console: false
+            Remove_logs_after_days: 30
+        IP_whitelist:
+            Enabled: false
+            # Supported formats:
+            # IPv4 exact: "192.168.0.1", wildcard: "192.168.*.*", cidr: "192.168.0.0/16"
+            # IPv6 exact: "0:0:0:0:0:0:0:1", compressed: "1::1", cidr: "1234:db8:1234:1a:20::/64"
+            # More: https://seancfoley.github.io/IPAddress/ipaddress.html#supported-ip-address-parsing-formats
+            # Dynamic DNS hostname: "dns:intranet.example.com", updated once per minute
+            Whitelist:
+                - "192.168.0.0"
+                - "0:0:0:0:0:0:0:1"
+        # Does not affect existing cookies
+        Cookies_expire_after:
+            Time: 2
+            Unit: HOURS
+    Disable_Webserver: false
+    External_Webserver_address: https://www.example.address
+    Cache:
+        Reduced_refresh_barrier:
+            Time: 15
+            Unit: SECONDS
+        Invalidate_query_results_on_disk_after:
+            Time: 7
+            Unit: DAYS
+        Invalidate_disk_cache_after:
+            Time: 2
+            Unit: DAYS
+        Invalidate_memory_cache_after:
+            Time: 5
+            Unit: MINUTES
 # -----------------------------------------------------
 Data_gathering:
-  Geolocations: true
-  # Please accept the EULA to download GeoLite2 IP-Country Database
-  # https://www.maxmind.com/en/geolite2/eula
-  Accept_GeoLite2_EULA: false
-  # This can be changed to your own MaxMind URL if you have license https://dev.maxmind.com/geoip/updating-databases?lang=en#directly-downloading-databases
-  # e.g. https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&license_key=YOUR_KEY&suffix=tar.gz
-  Geolocation_Download_URL: "https://geodb.playeranalytics.net/GeoLite2-Country.mmdb"
-  Ping: true
-  Disk_space: true
-  Commands:
-    Log_unknown: false
-    Log_aliases_as_main_command: true
-  Join_addresses:
-    Enabled: true
-    # Does not affect already gathered data
-    Preserve_case: false
-    Preserve_invalid: false
-    # Replaces these join addresses with unknown, supports regex
-    Filter_out_from_data:
-      - "play.example.com"
+    Geolocations: true
+    # Please accept the EULA to download GeoLite2 IP-Country Database
+    # https://www.maxmind.com/en/geolite2/eula
+    Accept_GeoLite2_EULA: false
+    # This can be changed to your own MaxMind URL if you have license https://dev.maxmind.com/geoip/updating-databases?lang=en#directly-downloading-databases
+    # e.g. https://download.maxmind.com/app/geoip_download?edition_id=GeoLite2-Country&license_key=YOUR_KEY&suffix=tar.gz
+    Geolocation_Download_URL: "https://geodb.playeranalytics.net/GeoLite2-Country.mmdb"
+    Ping: true
+    Disk_space: true
+    Commands:
+        Log_unknown: false
+        Log_aliases_as_main_command: true
+    Join_addresses:
+        Enabled: true
+        # Does not affect already gathered data
+        Preserve_case: false
+        Preserve_invalid: false
+        # Replaces these join addresses with unknown, supports regex
+        Filter_out_from_data:
+            - "play.example.com"
 # -----------------------------------------------------
 # Supported time units: MILLISECONDS, SECONDS, MINUTES, HOURS, DAYS
 # -----------------------------------------------------
 Time:
-  Delays:
-    Ping_server_enable_delay:
-      Time: 300
-      Unit: SECONDS
-    Ping_player_join_delay:
-      Time: 30
-      Unit: SECONDS
-    Wait_for_DB_Transactions_on_disable:
-      Time: 20
-      Unit: SECONDS
-  Thresholds:
-    # How long player needs to be idle until Plan considers them AFK
-    AFK_threshold:
-      Time: 3
-      Unit: MINUTES
-    # Activity Index considers last 3 weeks and uses these thresholds in the calculation
-    # The index is a number from 0 to 5.
-    # These numbers were calibrated with data of 250 players (Small sample size).
-    Activity_index:
-      Playtime_threshold:
-        Time: 30
-        Unit: MINUTES
-    Remove_inactive_player_data_after:
-      Time: 3650
-      Unit: DAYS
-    # Includes players online, tps and performance time series
-    Remove_time_series_data_after:
-      Time: 3650
-      Unit: DAYS
-    Remove_ping_data_after:
-      Time: 14
-      Unit: DAYS
-    Remove_disabled_extension_data_after:
-      Time: 2
-      Unit: DAYS
-  Periodic_tasks:
-    Extension_data_refresh_every:
-      Time: 1
-      Unit: HOURS
-    Check_DB_for_server_config_files_every:
-      Time: 1
-      Unit: MINUTES
-    Clean_Database_every:
-      Time: 1
-      Unit: HOURS
+    Delays:
+        Ping_server_enable_delay:
+            Time: 300
+            Unit: SECONDS
+        Ping_player_join_delay:
+            Time: 30
+            Unit: SECONDS
+        Wait_for_DB_Transactions_on_disable:
+            Time: 20
+            Unit: SECONDS
+    Thresholds:
+        # How long player needs to be idle until Plan considers them AFK
+        AFK_threshold:
+            Time: 3
+            Unit: MINUTES
+        # Activity Index considers last 3 weeks and uses these thresholds in the calculation
+        # The index is a number from 0 to 5.
+        # These numbers were calibrated with data of 250 players (Small sample size).
+        Activity_index:
+            Playtime_threshold:
+                Time: 30
+                Unit: MINUTES
+        Remove_inactive_player_data_after:
+            Time: 3650
+            Unit: DAYS
+        # Includes players online, tps and performance time series
+        Remove_time_series_data_after:
+            Time: 3650
+            Unit: DAYS
+        Remove_ping_data_after:
+            Time: 14
+            Unit: DAYS
+        Remove_disabled_extension_data_after:
+            Time: 2
+            Unit: DAYS
+    Periodic_tasks:
+        Extension_server_data_refresh_every:
+            Time: 1
+            Unit: HOURS
+        Extension_player_data_refresh_every:
+            Time: 15
+            Unit: MINUTES
+        Check_DB_for_server_config_files_every:
+            Time: 1
+            Unit: MINUTES
+        Clean_Database_every:
+            Time: 1
+            Unit: HOURS
 # -----------------------------------------------------
 Display_options:
-  # More information about Themes:
-  # https://github.com/plan-player-analytics/Plan/wiki/Themes
-  Theme: default
-  Night_mode: false
-  # Can use ${playerName} or ${playerUUID} or ${playerUUIDNoDash}
-  Player_head_image_url: "https://crafatar.com/avatars/${playerUUID}?size=120&default=MHF_Steve&overlay"
-  Sessions:
-    Show_on_page: 50
-    # By Default World playtime pie is ordered alphabetically.
-    # Colors will be determined alphabetically in any case.
-    Order_world_pies_by_percentage: false
-  Players_table:
-    Show_on_server_page: 2500
-    Show_on_players_page: 25000
-  Open_player_links_in_new_tab: false
-  Graphs:
-    Show_gaps_in_data: false
-    TPS:
-      High_threshold: 18
-      Medium_threshold: 10
-    Disk_space:
-      High_threshold: 500
-      Medium_threshold: 100
-  Command_colors:
-    Main: '&2'
-    Secondary: '&7'
-    Highlight: '&f'
-  WorldPie: '"#0099C6", "#66AA00", "#316395", "#994499", "#22AA99", "#AAAA11", "#6633CC", "#E67300", "#329262", "#5574A6"'
+    # More information about Themes:
+    # https://github.com/plan-player-analytics/Plan/wiki/Themes
+    Theme: default
+    Night_mode: false
+    # Can use ${playerName} or ${playerUUID} or ${playerUUIDNoDash}
+    Player_head_image_url: "https://crafatar.com/avatars/${playerUUID}?size=120&default=MHF_Steve&overlay"
+    Sessions:
+        Show_on_page: 50
+        # By Default World playtime pie is ordered alphabetically.
+        # Colors will be determined alphabetically in any case.
+        Order_world_pies_by_percentage: false
+    Players_table:
+        Show_on_server_page: 2500
+        Show_on_players_page: 25000
+    Open_player_links_in_new_tab: false
+    Graphs:
+        Show_gaps_in_data: false
+        TPS:
+            High_threshold: 18
+            Medium_threshold: 10
+        Disk_space:
+            High_threshold: 500
+            Medium_threshold: 100
+    Command_colors:
+        Main: '&2'
+        Secondary: '&7'
+        Highlight: '&f'
+    WorldPie: '"#0099C6", "#66AA00", "#316395", "#994499", "#22AA99", "#AAAA11", "#6633CC", "#E67300", "#329262", "#5574A6"'
 # -----------------------------------------------------
 Formatting:
-  Decimal_points: '#.##'
-  Time_amount:
-    Year: '1 year, '
-    Years: '%years% years, '
-    Month: '1 month, '
-    Months: '%months% months, '
-    Day: '1d '
-    Days: '%days%d '
-    Hours: '%hours%h '
-    Minutes: '%minutes%m '
-    Seconds: %seconds%s
-    Zero: 0s
-  # Dates settings use Java SimpleDateFormat.
-  # You can find the patterns & examples here:
-  # https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
-  Dates:
-    # Show_recent_day_names replaces day number with Today, Yesterday, Wednesday etc.
-    Show_recent_day_names: true
-    # Non-regex pattern to replace
-    Show_recent_day_names_date_pattern: 'MMM d YYYY'
-    Full: 'MMM d YYYY, HH:mm:ss'
-    NoSeconds: 'MMM d YYYY, HH:mm'
-    JustClock: HH:mm:ss
-    # TimeZone Option uses format 'GMT+2' or 'GMT-04:30'
-    # Other valid options are 'server' and 'UTC'
-    TimeZone: 'server'
+    Decimal_points: '#.##'
+    Time_amount:
+        Year: '1 year, '
+        Years: '%years% years, '
+        Month: '1 month, '
+        Months: '%months% months, '
+        Day: '1d '
+        Days: '%days%d '
+        Hours: '%hours%h '
+        Minutes: '%minutes%m '
+        Seconds: %seconds%s
+        Zero: 0s
+    # Dates settings use Java SimpleDateFormat.
+    # You can find the patterns & examples here:
+    # https://docs.oracle.com/javase/7/docs/api/java/text/SimpleDateFormat.html
+    Dates:
+        # Show_recent_day_names replaces day number with Today, Yesterday, Wednesday etc.
+        Show_recent_day_names: true
+        # Non-regex pattern to replace
+        Show_recent_day_names_date_pattern: 'MMM d YYYY'
+        Full: 'MMM d YYYY, HH:mm:ss'
+        NoSeconds: 'MMM d YYYY, HH:mm'
+        JustClock: HH:mm:ss
+        # TimeZone Option uses format 'GMT+2' or 'GMT-04:30'
+        # Other valid options are 'server' and 'UTC'
+        TimeZone: 'server'
 # -----------------------------------------------------
 # World aliases can be used to rename worlds and to combine multiple worlds into a group.
 # -----------------------------------------------------
 World_aliases:
-  # List of world names: aliases, case sensitive. Set alias of two worlds to same one to group them.
-  # Automatically generated, if regex matches world will not be added here.
-  List:
-    world: world
-  # List of - "alias:regex" rules, Set alias of multiple worlds that match regex to group them
-  Regex:
-    - "Alias for world:^abc$"
+    # List of world names: aliases, case sensitive. Set alias of two worlds to same one to group them.
+    # Automatically generated, if regex matches world will not be added here.
+    List:
+        world: world
+    # List of - "alias:regex" rules, Set alias of multiple worlds that match regex to group them
+    Regex:
+        - "Alias for world:^abc$"
 # -----------------------------------------------------
 # These settings will make Plan write .js, .css, .json and .html files to some location on disk.
 # Relative path will render to /plugins/Plan/path
@@ -251,35 +254,35 @@ World_aliases:
 # On networks export is disabled on Bukkit/Sponge servers.
 # -----------------------------------------------------
 Export:
-  HTML_Export_path: 'Analysis Results'
-  JSON_Export_path: 'Raw JSON'
-  Parts:
-    # Player pages/JSON are only written on join/leave.
-    Player_pages: false
-    Player_JSON: false
-    Players_page: false
-    Server_page: false
-    Server_JSON: false
-  # All player pages/JSON can be exported by using /plan m export players
-  Export_player_on_login_and_logout: false
-  # If there are multiple servers the period is divided evenly to avoid export of all servers at once
-  # Also affects Players page export
-  Server_refresh_period:
-    Time: 20
-    Unit: MINUTES
+    HTML_Export_path: 'Analysis Results'
+    JSON_Export_path: 'Raw JSON'
+    Parts:
+        # Player pages/JSON are only written on join/leave.
+        Player_pages: false
+        Player_JSON: false
+        Players_page: false
+        Server_page: false
+        Server_JSON: false
+    # All player pages/JSON can be exported by using /plan m export players
+    Export_player_on_login_and_logout: false
+    # If there are multiple servers the period is divided evenly to avoid export of all servers at once
+    # Also affects Players page export
+    Server_refresh_period:
+        Time: 20
+        Unit: MINUTES
 # -----------------------------------------------------
 # These settings affect Plugin data integration.
 # If a plugin is causing issues the integration can be disabled by setting Plugin_name.Enabled: false
 # -----------------------------------------------------
 Plugins:
-  Buycraft:
-    # https://docs.tebex.io/store/faq#how-can-i-find-my-secret-key
-    Secret: '-'
-  Factions:
-    HideFactions:
-      - ExampleFaction
-  Towny:
-    HideTowns:
-      - ExampleTown
+    Buycraft:
+        # https://docs.tebex.io/store/faq#how-can-i-find-my-secret-key
+        Secret: '-'
+    Factions:
+        HideFactions:
+            - ExampleFaction
+    Towny:
+        HideTowns:
+            - ExampleTown
 Customized_files:
-  Path: "web"
+    Path: "web"

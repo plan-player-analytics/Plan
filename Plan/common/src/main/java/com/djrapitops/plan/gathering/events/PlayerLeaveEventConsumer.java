@@ -19,6 +19,7 @@ package com.djrapitops.plan.gathering.events;
 import com.djrapitops.plan.delivery.export.Exporter;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.ExtensionSvc;
+import com.djrapitops.plan.gathering.PlayerGatheringTasks;
 import com.djrapitops.plan.gathering.cache.JoinAddressCache;
 import com.djrapitops.plan.gathering.cache.NicknameCache;
 import com.djrapitops.plan.gathering.cache.SessionCache;
@@ -50,9 +51,10 @@ public class PlayerLeaveEventConsumer {
 
     private final ExtensionSvc extensionService;
     private final Exporter exporter;
+    private final PlayerGatheringTasks playerGatheringTasks;
 
     @Inject
-    public PlayerLeaveEventConsumer(Processing processing, PlanConfig config, DBSystem dbSystem, JoinAddressCache joinAddressCache, NicknameCache nicknameCache, SessionCache sessionCache, ExtensionSvc extensionService, Exporter exporter) {
+    public PlayerLeaveEventConsumer(Processing processing, PlanConfig config, DBSystem dbSystem, JoinAddressCache joinAddressCache, NicknameCache nicknameCache, SessionCache sessionCache, ExtensionSvc extensionService, Exporter exporter, PlayerGatheringTasks playerGatheringTasks) {
         this.processing = processing;
         this.config = config;
         this.dbSystem = dbSystem;
@@ -61,6 +63,7 @@ public class PlayerLeaveEventConsumer {
         this.sessionCache = sessionCache;
         this.extensionService = extensionService;
         this.exporter = exporter;
+        this.playerGatheringTasks = playerGatheringTasks;
     }
 
     public void beforeLeave(PlayerLeave leave) {
@@ -121,5 +124,6 @@ public class PlayerLeaveEventConsumer {
         UUID playerUUID = leave.getPlayerUUID();
         nicknameCache.removeDisplayName(playerUUID);
         joinAddressCache.remove(playerUUID);
+        playerGatheringTasks.unregister(playerUUID);
     }
 }

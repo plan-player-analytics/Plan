@@ -35,7 +35,8 @@ public class TimeSettings {
     public static final Setting<Long> DELETE_TPS_DATA_AFTER = new TimeSetting("Time.Thresholds.Remove_time_series_data_after");
     public static final Setting<Long> DELETE_PING_DATA_AFTER = new TimeSetting("Time.Thresholds.Remove_ping_data_after");
     public static final Setting<Long> DELETE_EXTENSION_DATA_AFTER = new TimeSetting("Time.Thresholds.Remove_disabled_extension_data_after");
-    public static final Setting<Long> EXTENSION_DATA_REFRESH_PERIOD = new TimeSetting("Time.Periodic_tasks.Extension_data_refresh_every");
+    public static final Setting<Long> EXTENSION_SERVER_DATA_REFRESH_PERIOD = new TimeSetting("Time.Periodic_tasks.Extension_server_data_refresh_every");
+    public static final Setting<Long> EXTENSION_PLAYER_DATA_REFRESH_PERIOD = new TimeSetting("Time.Periodic_tasks.Extension_player_data_refresh_every");
     public static final Setting<Long> CLEAN_DATABASE_PERIOD = new TimeSetting("Time.Periodic_tasks.Clean_Database_every");
     public static final Setting<Long> CONFIG_UPDATE_INTERVAL = new TimeSetting("Time.Periodic_tasks.Check_DB_for_server_config_files_every");
 
