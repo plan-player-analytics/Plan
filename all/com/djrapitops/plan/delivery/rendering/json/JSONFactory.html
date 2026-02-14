@@ -158,6 +158,13 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../../domain/RetentionData.html" title="class in com.djrapitops.plan.delivery.domain">RetentionData</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#playerRetentionAsJSONMap(com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">playerRetentionAsJSONMap</a><wbr>(<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../../domain/PlayerIdentifier.html" title="class in com.djrapitops.plan.delivery.domain">PlayerIdentifier</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#playersOnlineOn(long)" class="member-name-link">playersOnlineOn</a><wbr>(long&nbsp;date)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../../domain/PlayerIdentifier.html" title="class in com.djrapitops.plan.delivery.domain">PlayerIdentifier</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#playersOnlineOn(long,com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">playersOnlineOn</a><wbr>(long&nbsp;date,
+ <a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../../domain/datatransfer/ServerDto.html" title="class in com.djrapitops.plan.delivery.domain.datatransfer">ServerDto</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#serverForIdentifier(java.lang.String)" class="member-name-link">serverForIdentifier</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;identifier)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -300,6 +307,19 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="listServers()">
 <h3>listServers</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../domain/datatransfer/ServerDto.html" title="class in com.djrapitops.plan.delivery.domain.datatransfer">ServerDto</a>&gt;&gt;</span>&nbsp;<span class="element-name">listServers</span>()</div>
+</section>
+</li>
+<li>
+<section class="detail" id="playersOnlineOn(long)">
+<h3>playersOnlineOn</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../domain/PlayerIdentifier.html" title="class in com.djrapitops.plan.delivery.domain">PlayerIdentifier</a>&gt;</span>&nbsp;<span class="element-name">playersOnlineOn</span><wbr><span class="parameters">(long&nbsp;date)</span></div>
+</section>
+</li>
+<li>
+<section class="detail" id="playersOnlineOn(long,com.djrapitops.plan.identification.ServerUUID)">
+<h3>playersOnlineOn</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../domain/PlayerIdentifier.html" title="class in com.djrapitops.plan.delivery.domain">PlayerIdentifier</a>&gt;</span>&nbsp;<span class="element-name">playersOnlineOn</span><wbr><span class="parameters">(long&nbsp;date,
+ <a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</span></div>
 </section>
 </li>
 </ul>
