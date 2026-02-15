@@ -4,7 +4,7 @@ import {useTheme} from "../../hooks/themeHook";
 import Highcharts from "highcharts/esm/highstock";
 import "highcharts/esm/modules/no-data-to-display";
 import "highcharts/esm/modules/accessibility";
-import {nameToCssVariable, withReducedSaturation} from "../../util/colors";
+import {nameToCssVariable} from "../../util/colors";
 import {formatDateWithPreferences, useDatePreferences} from "../text/FormattedDate.jsx";
 import {localeService} from "../../service/localeService.js";
 
@@ -33,10 +33,6 @@ const PlayerbaseGraph = ({data}) => {
     const id = 'playerbase-graph';
 
     useEffect(() => {
-        const reduceColors = (lines) => lines.map(line => {
-            return {...line, color: withReducedSaturation(line.color)}
-        });
-
         Highcharts.setOptions({
             lang: {
                 locale: localeService.getIntlFriendlyLocale(),
@@ -82,7 +78,7 @@ const PlayerbaseGraph = ({data}) => {
                     lineWidth: 1
                 }
             },
-            series: nightModeEnabled ? reduceColors(series) : series
+            series: series
         })
     }, [data, graphTheming, id, t, nightModeEnabled, datePreferences])
 

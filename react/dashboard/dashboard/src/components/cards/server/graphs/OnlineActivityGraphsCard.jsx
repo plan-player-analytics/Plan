@@ -67,7 +67,9 @@ const ServerCalendarTab = () => {
                 kind: "playedBetween",
                 parameters: {
                     afterDate: start, afterTime: "00:00",
-                    beforeDate: end, beforeTime: "00:00"
+                    beforeDate: end, beforeTime: "00:00",
+                    servers: JSON.stringify(networkMetadata?.servers.filter(server => server.serverUUID === identifier)
+                        .map(server => server.serverName))
                 }
             }],
             view: {

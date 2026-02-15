@@ -26,6 +26,8 @@ const QueryPath = ({newQuery}) => {
                 return t('html.query.filter.generic.allPlayers')
             case "activityIndexNow":
                 return t('html.query.filter.title.activityGroup');
+            case "activityIndexOn":
+                return t('html.query.filter.title.activityGroupOnDate');
             case "banned":
                 return t('html.query.filter.banStatus.name');
             case "operators":
@@ -38,12 +40,16 @@ const QueryPath = ({newQuery}) => {
                 return t('html.query.filter.playedBetween.text');
             case "registeredBetween":
                 return t('html.query.filter.registeredBetween.text');
+            case "lastSeenBetween":
+                return t('html.query.filter.lastSeenBetween.text');
             case "pluginsBooleanGroups":
                 return t('html.query.filter.hasPluginBooleanValue.name');
             case "playedOnServer":
                 return t('html.query.filter.hasPlayedOnServers.name');
+            case "playedOn":
+                return t('html.query.filter.hasPlayedOnDate.name');
             default:
-                return kind.kind;
+                return kind;
         }
     };
 

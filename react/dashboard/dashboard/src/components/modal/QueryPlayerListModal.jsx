@@ -5,7 +5,7 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faArrowRight, faSearch} from "@fortawesome/free-solid-svg-icons";
 import {getViewTitle} from "../../views/query/QueryResultView";
 import {ChartLoader} from "../navigation/Loader";
-import {useNavigation} from "react-router";
+import {useNavigate} from "react-router";
 import {useAuth} from "../../hooks/authenticationHook";
 import PlayerTable from "../table/PlayerTable.jsx";
 import ActionButton from "../input/button/ActionButton.jsx";
@@ -13,7 +13,7 @@ import ModalCloseButton from "../input/button/ModalCloseButton.jsx";
 
 const QueryPlayerListModal = ({open, toggle, queryData, title}) => {
     const {t} = useTranslation();
-    const navigate = useNavigation();
+    const navigate = useNavigate();
     const {hasPermission} = useAuth();
     return (
         <Modal id="queryModal" aria-labelledby="queryModalLabel" show={open} onHide={toggle} size="xl">

@@ -28,7 +28,7 @@ const OnlineActivityCard = () => {
                     <Fa className="col-players-online" icon={faChartArea}/> {t('html.label.onlineActivity')}
                 </h6>
             </Card.Header>
-            <PlayersOnlineGraph data={data}/>
+            <PlayersOnlineGraph data={data} identifier={identifier} showPlayersOnline/>
         </Card>
     )
 }

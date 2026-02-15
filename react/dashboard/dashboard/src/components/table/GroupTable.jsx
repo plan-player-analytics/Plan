@@ -20,7 +20,7 @@ const GroupTable = ({groups, colors}) => {
 
     function getColor(i) {
         if (groups[i].color) {
-            return nightModeEnabled ? withReducedSaturation(groups[i].color) : groups[i].color;
+            return groups[i].color;
         }
         const index = i % colors.length;
         return nightModeEnabled ? withReducedSaturation(colors[index]) : colors[index];

@@ -104,7 +104,8 @@ const PlayerTable = ({data, orderBy}) => {
                 pingMax: player.pingMax,
                 pingMaxFormatted: localeService.localizePing(player.pingMax),
                 pingMin: player.pingMin,
-                pingMinFormatted: localeService.localizePing(player.pingMin)
+                pingMinFormatted: localeService.localizePing(player.pingMin),
+                nicknames: player.nicknames,
             };
             data.extensionDescriptors.forEach(descriptor => {
                 row[descriptor.name] = <ExtensionValueTableCell data={player.extensionValues[descriptor.name]}/>;
