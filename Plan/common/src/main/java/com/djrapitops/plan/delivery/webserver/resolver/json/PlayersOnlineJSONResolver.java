@@ -80,7 +80,7 @@ public class PlayersOnlineJSONResolver implements Resolver {
                     @ApiResponse(responseCode = "400", description = "If 'date' parameter is not specified or invalid")
             },
             parameters = {
-                    @Parameter(in = ParameterIn.QUERY, name = "date", description = "Epoch millisecond", required = true),
+                    @Parameter(in = ParameterIn.QUERY, name = "date", description = "Epoch millisecond"),
                     @Parameter(in = ParameterIn.QUERY, name = "server", description = "Server UUID")
             },
             requestBody = @RequestBody(content = @Content(examples = @ExampleObject()))
@@ -95,8 +95,7 @@ public class PlayersOnlineJSONResolver implements Resolver {
     private List<PlayerIdentifier> getResponse(Request request) {
         URIQuery query = request.getQuery();
         try {
-            Long date = query.get("date").map(Long::parseLong)
-                    .orElseThrow(() -> new BadRequestException("Missing date"));
+            long date = query.get("date").map(Long::parseLong).orElseGet(System::currentTimeMillis);
             if (query.get("server").isPresent()) {
                 ServerUUID serverUUID = identifiers.getServerUUID(request);
                 return jsonFactory.playersOnlineOn(date, serverUUID);

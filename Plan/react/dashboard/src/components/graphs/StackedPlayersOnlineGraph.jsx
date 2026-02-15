@@ -1,10 +1,10 @@
-import React, {useEffect, useMemo, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {tooltip, translateLinegraphButtons} from "../../util/graphs";
 import LineGraph from './LineGraph'
 import {ChartLoader} from "../navigation/Loader";
 import {useTheme} from "../../hooks/themeHook";
-import {PlayersOnlineTooltip} from "./tooltip/PlayersOnlineTooltip.jsx";
+import {PlayersOnlineTooltip, useTooltipOptions} from "./tooltip/PlayersOnlineTooltip.jsx";
 
 const StackedPlayersOnlineGraph = ({data}) => {
     const {t} = useTranslation();
@@ -66,31 +66,14 @@ const StackedPlayersOnlineGraph = ({data}) => {
 
     const [hoveredDate, setHoveredDate] = useState(undefined);
     const onMouseLeave = () => setHoveredDate(undefined);
-    const extraOptions = useMemo(() => {
-        return showPlayersOnline ? {
-            plotOptions: {
-                series: {
-                    point: {
-                        events: {
-                            mouseOver: e => {
-                                setHoveredDate(e.target.x)
-                            },
-                            click: e => {
-                                setHoveredDate(e.target.point.x)
-                            }
-                        }
-                    }
-                }
-            }
-        } : {};
-    }, [showPlayersOnline, setHoveredDate]);
+
+    const extraOptions = useTooltipOptions(showPlayersOnline, setHoveredDate);
 
     if (!data) return <ChartLoader/>;
 
     return (
         <>
-            {showPlayersOnline && (<PlayersOnlineTooltip id="stacked-players-online-graph" hoveredDate={hoveredDate}
-                                                         identifier={null}/>)}
+            <PlayersOnlineTooltip id="stacked-players-online-graph" hoveredDate={hoveredDate} identifier={null}/>
             <LineGraph id="stacked-players-online-graph"
                        options={graphOptions} extraOptions={extraOptions} onMouseLeave={onMouseLeave}/>
         </>

@@ -1,8 +1,29 @@
 import {useTranslation} from "react-i18next";
-import React, {useCallback, useEffect, useState} from "react";
+import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {fetchPlayersOnline} from "../../../service/serverService.js";
 import {Card, CardBody} from "react-bootstrap";
 import FormattedDate from "../../text/FormattedDate.jsx";
+
+export const useTooltipOptions = (showPlayersOnline, setHoveredDate) => {
+    return useMemo(() => {
+        return showPlayersOnline ? {
+            plotOptions: {
+                series: {
+                    point: {
+                        events: {
+                            mouseOver: e => {
+                                setHoveredDate(e.target.y > 0 ? e.target.x : undefined)
+                            },
+                            click: e => {
+                                setHoveredDate(e.target.point.y > 0 ? e.target.point.x : undefined)
+                            }
+                        }
+                    }
+                }
+            }
+        } : {};
+    }, [showPlayersOnline, setHoveredDate]);
+}
 
 export const PlayersOnlineTooltip = ({id, hoveredDate, identifier}) => {
     const {t} = useTranslation();

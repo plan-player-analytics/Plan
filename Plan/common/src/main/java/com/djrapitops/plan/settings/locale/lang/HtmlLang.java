@@ -537,7 +537,7 @@ public enum HtmlLang implements Lang {
     LABEL_WEEK_DAYS("html.label.weekdays", "'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'"),
     QUERY_ARE_ACTIVITY_GROUP("html.query.filter.activity.text", "are in Activity Groups"),
     QUERY_ON_DATE("html.query.filter.onDate", "on"),
-    QUERY_ON_SERVER("html.query.filter.onDate", "on server(s)"),
+    QUERY_ON_SERVER("html.query.filter.onServer", "on server(s)"),
     QUERY_ANY_SERVER("html.query.filter.anyServer", "any server"),
     QUERY_JOINED_WITH_ADDRESS("html.query.filter.joinAddress.text", "joined with address"),
     QUERY_JOINED_FROM_COUNTRY("html.query.filter.country.text", "have joined from country"),

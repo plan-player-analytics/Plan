@@ -3,7 +3,7 @@ import {useTranslation} from "react-i18next";
 import {tooltip} from "../../util/graphs";
 import LineGraph from "./LineGraph";
 import {ChartLoader} from "../navigation/Loader";
-import {PlayersOnlineTooltip} from "./tooltip/PlayersOnlineTooltip.jsx";
+import {PlayersOnlineTooltip, useTooltipOptions} from "./tooltip/PlayersOnlineTooltip.jsx";
 
 
 const PlayersOnlineGraph = ({data, identifier, selectedRange, extremes, onSetExtremes, color, showPlayersOnline}) => {
@@ -24,31 +24,15 @@ const PlayersOnlineGraph = ({data, identifier, selectedRange, extremes, onSetExt
 
     const [hoveredDate, setHoveredDate] = useState(undefined);
     const onMouseLeave = () => setHoveredDate(undefined);
-    const extraOptions = useMemo(() => {
-        return showPlayersOnline ? {
-            plotOptions: {
-                series: {
-                    point: {
-                        events: {
-                            mouseOver: e => {
-                                setHoveredDate(e.target.x)
-                            },
-                            click: e => {
-                                setHoveredDate(e.target.point.x)
-                            }
-                        }
-                    }
-                }
-            }
-        } : {};
-    }, [showPlayersOnline, setHoveredDate]);
+    const extraOptions = useTooltipOptions(showPlayersOnline, setHoveredDate);
 
     if (!data) return <ChartLoader/>;
 
     return (
         <>
             {showPlayersOnline && (
-                <PlayersOnlineTooltip id="players-online-graph" hoveredDate={hoveredDate} identifier={identifier}/>)}
+                <PlayersOnlineTooltip id="players-online-graph" hoveredDate={hoveredDate} identifier={identifier}/>
+            )}
             <LineGraph id="players-online-graph"
                        series={series}
                        selectedRange={selectedRange}
