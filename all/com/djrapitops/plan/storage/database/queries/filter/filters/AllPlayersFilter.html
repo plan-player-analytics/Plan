@@ -137,7 +137,9 @@ implements <a href="../Filter.html" title="interface in com.djrapitops.plan.stor
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getExpectedParameters()" class="member-name-link">getExpectedParameters</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">List of expected parameters that is given to frontend, but not necessarily enforced on a per-filter basis.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getKind()" class="member-name-link">getKind</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -195,9 +197,13 @@ implements <a href="../Filter.html" title="interface in com.djrapitops.plan.stor
 <section class="detail" id="getExpectedParameters()">
 <h3>getExpectedParameters</h3>
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</span>&nbsp;<span class="element-name">getExpectedParameters</span>()</div>
+<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../Filter.html#getExpectedParameters()">Filter</a></code></span></div>
+<div class="block">List of expected parameters that is given to frontend, but not necessarily enforced on a per-filter basis.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../Filter.html#getExpectedParameters()">getExpectedParameters</a></code>&nbsp;in interface&nbsp;<code><a href="../Filter.html" title="interface in com.djrapitops.plan.storage.database.queries.filter">Filter</a></code></dd>
+<dt>Returns:</dt>
+<dd>Names of the parameters inside options.</dd>
 </dl>
 </section>
 </li>
