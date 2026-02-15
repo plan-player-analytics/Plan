@@ -50,7 +50,7 @@ const Filter = ({index, filter, setFilterOptions, removeFilter, setAsInvalid, se
                                        setAsInvalid={setAsInvalid} setAsValid={setAsValid}/>
         case "playedOn":
             return <SingleDateFilter index={index} filter={filter}
-                                     label={'html.query.filter.playedOn.text'}
+                                     label={'html.query.filter.hasPlayedOnDate.name'}
                                      setFilterOptions={setFilterOptions} removeFilter={removeFilter}
                                      setAsInvalid={setAsInvalid} setAsValid={setAsValid}/>
         case "registeredBetween":

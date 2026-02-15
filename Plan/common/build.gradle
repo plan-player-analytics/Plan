@@ -1,3 +1,5 @@
+import com.github.gradle.node.yarn.task.YarnInstallTask
+import com.github.gradle.node.yarn.task.YarnSetupTask
 import dev.vankka.dependencydownload.task.GenerateDependencyDownloadResourceTask
 
 plugins {
@@ -132,6 +134,9 @@ node {
 }
 
 tasks.register("bundle", YarnTask) {
+    // Skip Yarn build on Jitpack since Jitpack doesn't offer gclib version compatible with Node 20
+    // Jitpack build is used mainly for java dependencies.
+    onlyIf("not running in Jitpack") { !project.hasProperty("isJitpack") }
     dependsOn yarn
     inputs.files(fileTree("$rootDir/react/dashboard/src"))
     inputs.file("$rootDir/react/dashboard/package.json")
@@ -148,6 +153,17 @@ tasks.register("yarnStart", YarnTask) {
 
     dependsOn yarn
     args = ["run", "start"]
+}
+
+tasks.withType(YarnSetupTask).configureEach {
+    // Skip Yarn build on Jitpack since Jitpack doesn't offer gclib version compatible with Node 20
+    // Jitpack build is used mainly for java dependencies.
+    onlyIf("not running in Jitpack") { !project.hasProperty("isJitpack") }
+}
+tasks.withType(YarnInstallTask).configureEach {
+    // Skip Yarn build on Jitpack since Jitpack doesn't offer gclib version compatible with Node 20
+    // Jitpack build is used mainly for java dependencies.
+    onlyIf("not running in Jitpack") { !project.hasProperty("isJitpack") }
 }
 
 tasks.register("copyYarnBuildResults") {
