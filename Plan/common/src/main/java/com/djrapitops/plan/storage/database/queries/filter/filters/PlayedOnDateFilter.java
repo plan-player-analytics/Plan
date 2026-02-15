@@ -18,40 +18,38 @@ package com.djrapitops.plan.storage.database.queries.filter.filters;
 
 import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.queries.objects.JoinAddressQueries;
-import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
+/**
+ * Filter for getting who played on specific time on.
+ *
+ * @author AuroraLS3
+ */
 @Singleton
-public class JoinAddressFilter implements MultiOptionFilter {
-
-    private final DBSystem dbSystem;
+public class PlayedOnDateFilter extends PlayedBetweenDateRangeFilter {
 
     @Inject
-    public JoinAddressFilter(DBSystem dbSystem) {this.dbSystem = dbSystem;}
+    public PlayedOnDateFilter(DBSystem dbSystem) {
+        super(dbSystem);
+    }
 
     @Override
     public String getKind() {
-        return "joinAddresses";
+        return "playedOn";
     }
 
     @Override
-    public Map<String, Object> getOptions() {
-        return Collections.singletonMap("options", getSelectionOptions());
-    }
-
-    private List<String> getSelectionOptions() {
-        return dbSystem.getDatabase().query(JoinAddressQueries.uniqueJoinAddresses());
+    public String[] getExpectedParameters() {
+        return new String[]{
+                DateRangeFilter.AFTER_DATE,
+                DateRangeFilter.AFTER_TIME
+        };
     }
 
     @Override
-    public Set<Integer> getMatchingUserIds(@Untrusted InputFilterDto query) {
-        return dbSystem.getDatabase().query(JoinAddressQueries.userIdsOfPlayersWithJoinAddresses(getSelected(query)));
+    protected long getBefore(InputFilterDto query) {
+        return super.getAfter(query);
     }
 }

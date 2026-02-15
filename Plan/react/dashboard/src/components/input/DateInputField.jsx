@@ -53,7 +53,7 @@ const correctDate = value => {
     );
 };
 
-const DateInputField = ({id, setValue, value, placeholder, setAsInvalid, setAsValid}) => {
+const DateInputField = ({id, setValue, value, placeholder, setAsInvalid, setAsValid, disabled}) => {
     const [invalid, setInvalid] = useState(false);
 
     const onChange = (event) => {
@@ -81,6 +81,7 @@ const DateInputField = ({id, setValue, value, placeholder, setAsInvalid, setAsVa
                    placeholder={placeholder}
                    value={value}
                    onChange={onChange}
+                   disabled={disabled}
             />
         </InputGroup>
     )

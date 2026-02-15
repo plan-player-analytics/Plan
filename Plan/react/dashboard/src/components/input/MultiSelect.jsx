@@ -94,8 +94,8 @@ const MultiSelect = ({options, selectedIndexes, setSelectedIndexes, className, s
             className={className}
             classNamePrefix="react-select"
             styles={bootstrapStyles}
-            noOptionsMessage={t('html.label.select.noOptions')}
             placeholder={t('html.label.select.select')}
+            noOptionsMessage={() => t('html.label.select.noOptions')}
         />
     );
 };

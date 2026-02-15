@@ -954,9 +954,8 @@ public class SessionQueries {
                 FROM + ServerTable.TABLE_NAME +
                 WHERE + ServerTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')";
 
-        String sql = SELECT + DISTINCT + "u." + UsersTable.ID +
+        String sql = SELECT + DISTINCT + SessionsTable.USER_ID +
                 FROM + SessionsTable.TABLE_NAME +
-                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + '=' + SessionsTable.USER_ID +
                 WHERE + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?" +
                 (serverUUIDs.isEmpty() ? "" : AND + SessionsTable.SERVER_ID + " IN (" + selectServerIds + ")");
@@ -971,7 +970,7 @@ public class SessionQueries {
             public Set<Integer> processResults(ResultSet set) throws SQLException {
                 Set<Integer> userIds = new HashSet<>();
                 while (set.next()) {
-                    userIds.add(set.getInt(UsersTable.ID));
+                    userIds.add(set.getInt(SessionsTable.USER_ID));
                 }
                 return userIds;
             }
@@ -1085,9 +1084,37 @@ public class SessionQueries {
                         UUID.fromString(row.getString(UsersTable.USER_UUID)),
                         row.getString(UsersTable.USER_NAME)
                 ), serverUUID, date, date);
+    }
 
-        // Start Sat Feb 14 2026 14:57:57.247
-        // Sat Feb 14 2026 15:10:00.299
-        // Sat Feb 14 2026 15:01:35.661
+    public static Query<Set<Integer>> userIdsOfLastSeenBetween(long after, long before, List<ServerUUID> serverUUIDs) {
+        String selectServerIds = SELECT + ServerTable.ID +
+                FROM + ServerTable.TABLE_NAME +
+                WHERE + ServerTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')";
+
+        String selectLastSeen = SELECT + SessionsTable.USER_ID + ",MAX(" + SessionsTable.SESSION_END + ") as last_seen" +
+                FROM + SessionsTable.TABLE_NAME + " s" +
+                (serverUUIDs.isEmpty() ? "" : WHERE + SessionsTable.SERVER_ID + " IN (" + selectServerIds + ")") +
+                GROUP_BY + SessionsTable.USER_ID;
+
+        String sql = SELECT + SessionsTable.USER_ID +
+                FROM + '(' + selectLastSeen + ") q1" +
+                WHERE + "last_seen>=?" +
+                AND + "last_seen<=?";
+        return new QueryStatement<>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, after);
+                statement.setLong(2, before);
+            }
+
+            @Override
+            public Set<Integer> processResults(ResultSet set) throws SQLException {
+                Set<Integer> userIds = new HashSet<>();
+                while (set.next()) {
+                    userIds.add(set.getInt(SessionsTable.USER_ID));
+                }
+                return userIds;
+            }
+        };
     }
 }

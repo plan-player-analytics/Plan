@@ -17,41 +17,37 @@
 package com.djrapitops.plan.storage.database.queries.filter.filters;
 
 import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
+import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.queries.objects.JoinAddressQueries;
-import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collections;
-import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
+/**
+ * Filter for current activity index group.
+ */
 @Singleton
-public class JoinAddressFilter implements MultiOptionFilter {
-
-    private final DBSystem dbSystem;
+public class ActivityIndexNowFilter extends ActivityIndexOnDateFilter {
 
     @Inject
-    public JoinAddressFilter(DBSystem dbSystem) {this.dbSystem = dbSystem;}
+    public ActivityIndexNowFilter(PlanConfig config, DBSystem dbSystem) {
+        super(config, dbSystem);
+    }
 
     @Override
     public String getKind() {
-        return "joinAddresses";
+        return "activityIndexNow";
     }
 
     @Override
     public Map<String, Object> getOptions() {
-        return Collections.singletonMap("options", getSelectionOptions());
-    }
-
-    private List<String> getSelectionOptions() {
-        return dbSystem.getDatabase().query(JoinAddressQueries.uniqueJoinAddresses());
+        return Collections.singletonMap("options", getOptionsArray());
     }
 
     @Override
-    public Set<Integer> getMatchingUserIds(@Untrusted InputFilterDto query) {
-        return dbSystem.getDatabase().query(JoinAddressQueries.userIdsOfPlayersWithJoinAddresses(getSelected(query)));
+    protected long getDate(InputFilterDto query) {
+        return System.currentTimeMillis();
     }
 }

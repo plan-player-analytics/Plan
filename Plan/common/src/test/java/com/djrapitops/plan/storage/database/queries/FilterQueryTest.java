@@ -28,8 +28,9 @@ import org.junit.jupiter.api.TestFactory;
 import utilities.TestConstants;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
+import static com.djrapitops.plan.storage.database.queries.filter.filters.DateRangeFilter.*;
+import static com.djrapitops.plan.storage.database.queries.filter.filters.MultiOptionFilter.SELECTED;
 import static org.junit.jupiter.api.Assertions.*;
 
 public interface FilterQueryTest extends DatabaseTestPreparer {
@@ -41,31 +42,70 @@ public interface FilterQueryTest extends DatabaseTestPreparer {
         return filters.entrySet().stream()
                 .map(entry -> DynamicTest.dynamicTest("Filter " + entry.getKey() + " gets options",
                         () -> assertNotNull(entry.getValue().getOptions())))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @TestFactory
     default Collection<DynamicTest> filterGetsResults() {
         Map<String, Map> filtersAndOptions = Maps.builder(String.class, Map.class)
                 .put("playedBetween", Maps.builder(String.class, String.class)
-                        .put("afterDate", "10/10/10")
-                        .put("afterTime", "00:00")
-                        .put("beforeDate", "10/10/10")
-                        .put("beforeTime", "00:00")
+                        .put(AFTER_DATE, "10/10/10")
+                        .put(AFTER_TIME, "00:00")
+                        .put(BEFORE_DATE, "10/10/10")
+                        .put(BEFORE_TIME, "00:00")
+                        .build())
+                .put("playedBetween", Maps.builder(String.class, String.class)
+                        .put(AFTER_DATE, "10/10/10")
+                        .put(AFTER_TIME, "00:00")
+                        .build())
+                .put("playedBetween", Maps.builder(String.class, String.class)
+                        .put(BEFORE_DATE, "10/10/10")
+                        .put(BEFORE_TIME, "00:00")
                         .build())
                 .put("registeredBetween", Maps.builder(String.class, String.class)
-                        .put("afterDate", "10/10/10")
-                        .put("afterTime", "00:00")
-                        .put("beforeDate", "10/10/10")
-                        .put("beforeTime", "00:00")
+                        .put(AFTER_DATE, "10/10/10")
+                        .put(AFTER_TIME, "00:00")
+                        .put(BEFORE_DATE, "10/10/10")
+                        .put(BEFORE_TIME, "00:00")
                         .build())
-                .put("operators", Map.of("selected", "[" + FilterLang.OPERATORS.getDefault() + "]"))
-                .put("playedOnServer", Map.of("selected", "[" + TestConstants.SERVER_NAME + "]"))
-                .put("activityIndexNow", Map.of("selected", "[" + HtmlLang.INDEX_ACTIVE.getDefault() + "]"))
-                .put("banned", Map.of("selected", "[" + FilterLang.BANNED.getDefault() + "]"))
-                .put("geolocations", Map.of("selected", "[Finland]"))
-                .put("joinAddresses", Map.of("selected", "[unknown]"))
-                .put("pluginsBooleanGroups", Map.of("selected", "[\"" + new PluginBooleanGroupFilter.PluginBooleanOption(TestConstants.SERVER_NAME, "TestExtension", "isJailed").format() + ": false\"]"))
+                .put("registeredBetween", Maps.builder(String.class, String.class)
+                        .put(AFTER_DATE, "10/10/10")
+                        .put(AFTER_TIME, "00:00")
+                        .build())
+                .put("registeredBetween", Maps.builder(String.class, String.class)
+                        .put(BEFORE_DATE, "10/10/10")
+                        .put(BEFORE_TIME, "00:00")
+                        .build())
+                .put("lastSeenBetween", Maps.builder(String.class, String.class)
+                        .put(AFTER_DATE, "10/10/10")
+                        .put(AFTER_TIME, "00:00")
+                        .put(BEFORE_DATE, "10/10/10")
+                        .put(BEFORE_TIME, "00:00")
+                        .build())
+                .put("lastSeenBetween", Maps.builder(String.class, String.class)
+                        .put(AFTER_DATE, "10/10/10")
+                        .put(AFTER_TIME, "00:00")
+                        .build())
+                .put("lastSeenBetween", Maps.builder(String.class, String.class)
+                        .put(BEFORE_DATE, "10/10/10")
+                        .put(BEFORE_TIME, "00:00")
+                        .build())
+                .put("playedOn", Maps.builder(String.class, String.class)
+                        .put(AFTER_DATE, "10/10/10")
+                        .put(AFTER_TIME, "00:00")
+                        .build())
+                .put("operators", Map.of(SELECTED, "[" + FilterLang.OPERATORS.getDefault() + "]"))
+                .put("playedOnServer", Map.of(SELECTED, "[" + TestConstants.SERVER_NAME + "]"))
+                .put("activityIndexNow", Map.of(SELECTED, "[" + HtmlLang.INDEX_ACTIVE.getDefault() + "]"))
+                .put("activityIndexOn", Map.of(
+                        SELECTED, "[" + HtmlLang.INDEX_ACTIVE.getDefault() + "]",
+                        "date", "10/10/10",
+                        "time", "00:00"
+                ))
+                .put("banned", Map.of(SELECTED, "[" + FilterLang.BANNED.getDefault() + "]"))
+                .put("geolocations", Map.of(SELECTED, "[Finland]"))
+                .put("joinAddresses", Map.of(SELECTED, "[unknown]"))
+                .put("pluginsBooleanGroups", Map.of(SELECTED, "[\"" + new PluginBooleanGroupFilter.PluginBooleanOption(TestConstants.SERVER_NAME, "TestExtension", "isJailed").format() + ": false\"]"))
                 .build();
 
         List<DynamicTest> tests = new ArrayList<>();
@@ -98,11 +138,6 @@ public interface FilterQueryTest extends DatabaseTestPreparer {
     }
 
     private void testFilter(Filter filter, InputFilterDto input) {
-        Set<String> setParameters = input.getSetParameters();
-        assertAll(Arrays.stream(filter.getExpectedParameters())
-                .map(parameter -> () -> assertTrue(setParameters.contains(parameter), () -> "Incorrect test setup: Parameter '" + parameter + "' was not set for filter " + filter.getKind())));
-
-        Set<Integer> matchingUserIds = filter.getMatchingUserIds(input);
-        assertNotNull(matchingUserIds);
+        assertNotNull(filter.getMatchingUserIds(input));
     }
 }

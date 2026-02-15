@@ -39,7 +39,7 @@ import java.util.*;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
-public class PluginGroupsFilter extends MultiOptionFilter {
+public class PluginGroupsFilter implements MultiOptionFilter {
 
     private final DBSystem dbSystem;
     private final List<String> groups;

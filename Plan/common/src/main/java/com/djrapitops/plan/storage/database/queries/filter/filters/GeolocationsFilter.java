@@ -31,7 +31,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Singleton
-public class GeolocationsFilter extends MultiOptionFilter {
+public class GeolocationsFilter implements MultiOptionFilter {
 
     private final DBSystem dbSystem;
     private final SpecialGraphFactory specialGraphFactory;

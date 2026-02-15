@@ -20,45 +20,46 @@ import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
-import com.djrapitops.plan.storage.database.queries.objects.UserInfoQueries;
+import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.utilities.dev.Untrusted;
+import com.google.gson.Gson;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 @Singleton
-public class PlayedOnServerFilter implements MultiOptionFilter {
+public class LastSeenBetweenDateRangeFilter extends DateRangeFilter {
 
     private final DBSystem dbSystem;
 
     @Inject
-    public PlayedOnServerFilter(DBSystem dbSystem) {
+    public LastSeenBetweenDateRangeFilter(DBSystem dbSystem) {
+        super(dbSystem);
         this.dbSystem = dbSystem;
     }
 
     @Override
     public String getKind() {
-        return "playedOnServer";
-    }
-
-    @Override
-    public Map<String, Object> getOptions() {
-        return Collections.singletonMap("options", getSelectionOptions());
-    }
-
-    private List<String> getSelectionOptions() {
-        return dbSystem.getDatabase().query(ServerQueries.fetchGameServerNames());
+        return "lastSeenBetween";
     }
 
     @Override
     public Set<Integer> getMatchingUserIds(@Untrusted InputFilterDto query) {
-        @Untrusted List<String> serverNames = getSelected(query);
+        long after = getAfter(query);
+        long before = getBefore(query);
+        @Untrusted List<String> serverNames = getServerNames(query);
         List<ServerUUID> serverUUIDs = serverNames.isEmpty() ? Collections.emptyList() : dbSystem.getDatabase().query(ServerQueries.fetchServersMatchingIdentifiers(serverNames));
+        return dbSystem.getDatabase().query(SessionQueries.userIdsOfLastSeenBetween(after, before, serverUUIDs));
+    }
 
-        return dbSystem.getDatabase().query(UserInfoQueries.userIdsOfRegisteredBetween(0, System.currentTimeMillis(), serverUUIDs));
+    private List<String> getServerNames(InputFilterDto query) {
+        return query.get("servers")
+                .map(serversList -> new Gson().fromJson(serversList, String[].class))
+                .map(Arrays::asList)
+                .orElseGet(Collections::emptyList);
     }
 }
