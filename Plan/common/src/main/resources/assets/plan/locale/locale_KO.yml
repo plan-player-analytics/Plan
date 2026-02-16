@@ -860,6 +860,7 @@ html:
         filter:
             activity:
                 text: "are in Activity Groups"
+            anyServer: "any server"
             banStatus:
                 name: "Ban status"
             banned: "Banned"
@@ -869,6 +870,8 @@ html:
                 allPlayers: "All players"
                 and: "and "
                 start: "of Players who "
+            hasPlayedOnDate:
+                name: "Has played on date"
             hasPlayedOnServers:
                 name: "Has played on one of servers"
                 text: "have played on at least one of"
@@ -877,21 +880,38 @@ html:
                 text: "have Plugin boolean value"
             joinAddress:
                 text: "joined with address"
+            lastSeenAfter:
+                text: "Last seen after"
+            lastSeenBefore:
+                text: "Last seen before"
+            lastSeenBetween:
+                text: "Last seen between"
             nonOperators: "Non operators"
             notBanned: "Not banned"
+            onDate: "on"
+            onServer: "on server(s)"
             operatorStatus:
                 name: "Operator status"
             operators: "Operators"
+            playedAfter:
+                text: "Played after"
+            playedBefore:
+                text: "Played before"
             playedBetween:
                 text: "Played between"
             pluginGroup:
                 name: "Group: "
                 text: "are in {{plugin}}'s {{group}} Groups"
+            registeredAfter:
+                text: "Registered after"
+            registeredBefore:
+                text: "Registered before"
             registeredBetween:
                 text: "Registered between"
             skipped: "Skipped"
             title:
                 activityGroup: "Current activity group"
+                activityGroupOnDate: "Activity group on date"
             view: "  View:"
         filters:
             add: "Add a filter.."

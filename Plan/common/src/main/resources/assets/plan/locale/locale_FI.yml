@@ -860,6 +860,7 @@ html:
         filter:
             activity:
                 text: "ovat Aktiivisuus Luokissa"
+            anyServer: "any server"
             banStatus:
                 name: "Pannan tila"
             banned: "Pannassa"
@@ -869,6 +870,8 @@ html:
                 allPlayers: "Kaikki pelaajat"
                 and: "ja"
                 start: "pelaajista ketkä"
+            hasPlayedOnDate:
+                name: "Has played on date"
             hasPlayedOnServers:
                 name: "Ovat pelanneet yhdellä palvelimista"
                 text: "ovat pelanneet ainakin yhdellä palvelimista"
@@ -877,21 +880,38 @@ html:
                 text: "jolla on Lisäosan boolean-arvo"
             joinAddress:
                 text: "liittyi osoitteella"
+            lastSeenAfter:
+                text: "Last seen after"
+            lastSeenBefore:
+                text: "Last seen before"
+            lastSeenBetween:
+                text: "Last seen between"
             nonOperators: "Ei-operaattoreita"
             notBanned: "Ei-pannassa"
+            onDate: "on"
+            onServer: "on server(s)"
             operatorStatus:
                 name: "Operaattoristatuksen tila"
             operators: "Operaattoreita"
+            playedAfter:
+                text: "Played after"
+            playedBefore:
+                text: "Played before"
             playedBetween:
                 text: "Pelasivat välillä"
             pluginGroup:
                 name: "Luokka: "
                 text: "ovat {{plugin}}:n {{group}} Luokissa"
+            registeredAfter:
+                text: "Registered after"
+            registeredBefore:
+                text: "Registered before"
             registeredBetween:
                 text: "Rekisteröityvät välillä"
             skipped: "Ohitettu"
             title:
                 activityGroup: "Nykyinen aktiivisuusluokka"
+                activityGroupOnDate: "Activity group on date"
             view: "  Näkymä:"
         filters:
             add: "Lisää suodatin.."

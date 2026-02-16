@@ -860,6 +860,7 @@ html:
         filter:
             activity:
                 text: "в Активних групах"
+            anyServer: "any server"
             banStatus:
                 name: "Блок статус"
             banned: "Заблокований"
@@ -869,6 +870,8 @@ html:
                 allPlayers: "Усі гравці"
                 and: "додати "
                 start: "з гравців, хто "
+            hasPlayedOnDate:
+                name: "Has played on date"
             hasPlayedOnServers:
                 name: "Грав на одному з серверів"
                 text: "грали хоча б на одному з"
@@ -877,21 +880,38 @@ html:
                 text: "мають булеве значення плагіна"
             joinAddress:
                 text: "зайшов за адресою"
+            lastSeenAfter:
+                text: "Last seen after"
+            lastSeenBefore:
+                text: "Last seen before"
+            lastSeenBetween:
+                text: "Last seen between"
             nonOperators: "Немає операторів"
             notBanned: "Немає заблокованих"
+            onDate: "on"
+            onServer: "on server(s)"
             operatorStatus:
                 name: "Оп-статус"
             operators: "Оператори"
+            playedAfter:
+                text: "Played after"
+            playedBefore:
+                text: "Played before"
             playedBetween:
                 text: "Грав між"
             pluginGroup:
                 name: "Група: "
                 text: "в {{plugin}} {{group}} Групах"
+            registeredAfter:
+                text: "Registered after"
+            registeredBefore:
+                text: "Registered before"
             registeredBetween:
                 text: "Зареєструвався між"
             skipped: "Пропущено"
             title:
                 activityGroup: "Група поточної діяльності"
+                activityGroupOnDate: "Activity group on date"
             view: "  Перегляд:"
         filters:
             add: "Додати фільтр.."

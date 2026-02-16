@@ -860,6 +860,7 @@ html:
         filter:
             activity:
                 text: "在活跃度分组中"
+            anyServer: "any server"
             banStatus:
                 name: "封禁状态"
             banned: "被封禁"
@@ -869,6 +870,8 @@ html:
                 allPlayers: "全体玩家"
                 and: "外加 "
                 start: "查询玩家："
+            hasPlayedOnDate:
+                name: "Has played on date"
             hasPlayedOnServers:
                 name: "在其中一个服务器上玩过"
                 text: "至少在其中一个服务器上玩过"
@@ -877,21 +880,38 @@ html:
                 text: "插件布尔值"
             joinAddress:
                 text: "加入地址"
+            lastSeenAfter:
+                text: "Last seen after"
+            lastSeenBefore:
+                text: "Last seen before"
+            lastSeenBetween:
+                text: "Last seen between"
             nonOperators: "非管理员"
             notBanned: "未被封禁"
+            onDate: "on"
+            onServer: "on server(s)"
             operatorStatus:
                 name: "管理员状态"
             operators: "管理员"
+            playedAfter:
+                text: "Played after"
+            playedBefore:
+                text: "Played before"
             playedBetween:
                 text: "在此期间游玩过"
             pluginGroup:
                 name: "分组："
                 text: "在 {{plugin}} 插件的 {{group}} 分组中"
+            registeredAfter:
+                text: "Registered after"
+            registeredBefore:
+                text: "Registered before"
             registeredBetween:
                 text: "在此期间注册"
             skipped: "已跳过"
             title:
                 activityGroup: "活跃度分组"
+                activityGroupOnDate: "Activity group on date"
             view: "  日期范围:"
         filters:
             add: "添加过滤器.."
