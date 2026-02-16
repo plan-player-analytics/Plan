@@ -116,7 +116,7 @@ loadScripts(document, 'script');</script>
 <h2>Field Summary</h2>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-com.djrapitops.plan.storage.database.sql.building.Sql">Fields inherited from class&nbsp;com.djrapitops.plan.storage.database.sql.building.<a href="Sql.html" title="class in com.djrapitops.plan.storage.database.sql.building">Sql</a></h3>
-<code><a href="Sql.html#AND">AND</a>, <a href="Sql.html#BOOL">BOOL</a>, <a href="Sql.html#DELETE_FROM">DELETE_FROM</a>, <a href="Sql.html#DISTINCT">DISTINCT</a>, <a href="Sql.html#DOUBLE">DOUBLE</a>, <a href="Sql.html#FROM">FROM</a>, <a href="Sql.html#GROUP_BY">GROUP_BY</a>, <a href="Sql.html#ID">ID</a>, <a href="Sql.html#INNER_JOIN">INNER_JOIN</a>, <a href="Sql.html#INSERT_INTO">INSERT_INTO</a>, <a href="Sql.html#INT">INT</a>, <a href="Sql.html#IS_NOT_NULL">IS_NOT_NULL</a>, <a href="Sql.html#IS_NULL">IS_NULL</a>, <a href="Sql.html#LEFT_JOIN">LEFT_JOIN</a>, <a href="Sql.html#LIMIT">LIMIT</a>, <a href="Sql.html#LONG">LONG</a>, <a href="Sql.html#OFFSET">OFFSET</a>, <a href="Sql.html#OR">OR</a>, <a href="Sql.html#ORDER_BY">ORDER_BY</a>, <a href="Sql.html#P_UUID">P_UUID</a>, <a href="Sql.html#SELECT">SELECT</a>, <a href="Sql.html#SET">SET</a>, <a href="Sql.html#TEXT">TEXT</a>, <a href="Sql.html#UNION">UNION</a>, <a href="Sql.html#UNION_ALL">UNION_ALL</a>, <a href="Sql.html#UPDATE">UPDATE</a>, <a href="Sql.html#WHERE">WHERE</a></code></div>
+<code><a href="Sql.html#AND">AND</a>, <a href="Sql.html#BOOL">BOOL</a>, <a href="Sql.html#DELETE_FROM">DELETE_FROM</a>, <a href="Sql.html#DISTINCT">DISTINCT</a>, <a href="Sql.html#DOUBLE">DOUBLE</a>, <a href="Sql.html#FROM">FROM</a>, <a href="Sql.html#GROUP_BY">GROUP_BY</a>, <a href="Sql.html#ID">ID</a>, <a href="Sql.html#INNER_JOIN">INNER_JOIN</a>, <a href="Sql.html#INSERT_INTO">INSERT_INTO</a>, <a href="Sql.html#INT">INT</a>, <a href="Sql.html#IS_NOT_NULL">IS_NOT_NULL</a>, <a href="Sql.html#IS_NULL">IS_NULL</a>, <a href="Sql.html#LEFT_JOIN">LEFT_JOIN</a>, <a href="Sql.html#LIMIT">LIMIT</a>, <a href="Sql.html#LIMIT_1">LIMIT_1</a>, <a href="Sql.html#LONG">LONG</a>, <a href="Sql.html#OFFSET">OFFSET</a>, <a href="Sql.html#OR">OR</a>, <a href="Sql.html#ORDER_BY">ORDER_BY</a>, <a href="Sql.html#P_UUID">P_UUID</a>, <a href="Sql.html#SELECT">SELECT</a>, <a href="Sql.html#SET">SET</a>, <a href="Sql.html#TEXT">TEXT</a>, <a href="Sql.html#UNION">UNION</a>, <a href="Sql.html#UNION_ALL">UNION_ALL</a>, <a href="Sql.html#UPDATE">UPDATE</a>, <a href="Sql.html#WHERE">WHERE</a></code></div>
 </section>
 </li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
@@ -170,6 +170,9 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#least(java.lang.String)" class="member-name-link">least</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;values)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#lockForUpdate()" class="member-name-link">lockForUpdate</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -291,6 +294,16 @@ loadScripts(document, 'script');</script>
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="Sql.html#greatest(java.lang.String)">greatest</a></code>&nbsp;in class&nbsp;<code><a href="Sql.html" title="class in com.djrapitops.plan.storage.database.sql.building">Sql</a></code></dd>
+</dl>
+</section>
+</li>
+<li>
+<section class="detail" id="lockForUpdate()">
+<h3>lockForUpdate</h3>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">lockForUpdate</span>()</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="Sql.html#lockForUpdate()">lockForUpdate</a></code>&nbsp;in class&nbsp;<code><a href="Sql.html" title="class in com.djrapitops.plan.storage.database.sql.building">Sql</a></code></dd>
 </dl>
 </section>
 </li>
