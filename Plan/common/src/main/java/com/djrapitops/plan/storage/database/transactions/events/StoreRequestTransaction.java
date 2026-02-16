@@ -17,29 +17,23 @@
 package com.djrapitops.plan.storage.database.transactions.events;
 
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.webserver.http.AccessLogger;
 import com.djrapitops.plan.delivery.webserver.http.InternalRequest;
 import com.djrapitops.plan.storage.database.sql.tables.AccessLogTable;
-import com.djrapitops.plan.storage.database.transactions.ExecStatement;
+import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
 import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 import org.apache.commons.lang3.StringUtils;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.Set;
 
 public class StoreRequestTransaction extends ThrowawayTransaction {
 
-    private final long timestamp;
-    private final String accessAddress;
-    private final String method;
-    private final String url;
-    private final int responseCode;
+    private final Set<AccessLogger.LoggedRequest> loggedRequests;
 
-    public StoreRequestTransaction(long timestamp, String accessAddress, String method, String url, int responseCode) {
-        this.timestamp = timestamp;
-        this.accessAddress = accessAddress;
-        this.method = method;
-        this.url = url;
-        this.responseCode = responseCode;
+    public StoreRequestTransaction(Set<AccessLogger.LoggedRequest> loggedRequests) {
+        this.loggedRequests = loggedRequests;
     }
 
     public static String getTruncatedURI(Request request, InternalRequest internalRequest) {
@@ -53,14 +47,17 @@ public class StoreRequestTransaction extends ThrowawayTransaction {
 
     @Override
     protected void performOperations() {
-        execute(new ExecStatement(AccessLogTable.INSERT_STATEMENT) {
+        execute(new ExecBatchStatement(AccessLogTable.INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, timestamp);
-                statement.setString(2, StringUtils.truncate(accessAddress, 45));
-                statement.setString(3, method);
-                statement.setString(4, url);
-                statement.setInt(5, responseCode);
+                for (AccessLogger.LoggedRequest loggedRequest : loggedRequests) {
+                    statement.setLong(1, loggedRequest.getTimestamp());
+                    statement.setString(2, StringUtils.truncate(loggedRequest.getAccessAddress(), 45));
+                    statement.setString(3, loggedRequest.getMethod());
+                    statement.setString(4, loggedRequest.getUrl());
+                    statement.setInt(5, loggedRequest.getResponseCode());
+                    statement.addBatch();
+                }
             }
         });
     }

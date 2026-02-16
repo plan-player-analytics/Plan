@@ -17,6 +17,7 @@
 package com.djrapitops.plan.modules.sponge;
 
 import com.djrapitops.plan.TaskSystem;
+import com.djrapitops.plan.delivery.AccessLogBatchTask;
 import com.djrapitops.plan.delivery.web.ResourceWriteTask;
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieExpiryCleanupTask;
 import com.djrapitops.plan.delivery.webserver.cache.JSONFileStorage;
@@ -104,4 +105,8 @@ public interface SpongeTaskModule {
     @Binds
     @IntoSet
     TaskSystem.Task bindBanStatusUpkeepTask(BanStatusUpkeepTask banStatusUpkeepTask);
+
+    @Binds
+    @IntoSet
+    TaskSystem.Task bindAccessLogBatchTask(AccessLogBatchTask accessLogBatchTask);
 }
