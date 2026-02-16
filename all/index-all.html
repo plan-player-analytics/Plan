@@ -113,9 +113,15 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/AbstractDatabase.html#accessLock" class="member-name-link">accessLock</a> - Variable in class com.djrapitops.plan.storage.database.<a href="com/djrapitops/plan/storage/database/AbstractDatabase.html" title="class in com.djrapitops.plan.storage.database">AbstractDatabase</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/AccessLogBatchTask.html" class="type-name-link" title="class in com.djrapitops.plan.delivery">AccessLogBatchTask</a> - Class in <a href="com/djrapitops/plan/delivery/package-summary.html">com.djrapitops.plan.delivery</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/AccessLogBatchTask.html#%3Cinit%3E(com.djrapitops.plan.storage.database.DBSystem)" class="member-name-link">AccessLogBatchTask(DBSystem)</a> - Constructor for class com.djrapitops.plan.delivery.<a href="com/djrapitops/plan/delivery/AccessLogBatchTask.html" title="class in com.djrapitops.plan.delivery">AccessLogBatchTask</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/http/AccessLogger.html" class="type-name-link" title="class in com.djrapitops.plan.delivery.webserver.http">AccessLogger</a> - Class in <a href="com/djrapitops/plan/delivery/webserver/http/package-summary.html">com.djrapitops.plan.delivery.webserver.http</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/delivery/webserver/http/AccessLogger.html#%3Cinit%3E(com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration,com.djrapitops.plan.storage.database.DBSystem,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">AccessLogger(WebserverConfiguration, DBSystem, PluginLogger, ErrorLogger)</a> - Constructor for class com.djrapitops.plan.delivery.webserver.http.<a href="com/djrapitops/plan/delivery/webserver/http/AccessLogger.html" title="class in com.djrapitops.plan.delivery.webserver.http">AccessLogger</a></dt>
+<dt><a href="com/djrapitops/plan/delivery/webserver/http/AccessLogger.html#%3Cinit%3E(com.djrapitops.plan.delivery.AccessLogBatchTask,com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">AccessLogger(AccessLogBatchTask, WebserverConfiguration, PluginLogger, ErrorLogger)</a> - Constructor for class com.djrapitops.plan.delivery.webserver.http.<a href="com/djrapitops/plan/delivery/webserver/http/AccessLogger.html" title="class in com.djrapitops.plan.delivery.webserver.http">AccessLogger</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/http/AccessLogger.LoggedRequest.html" class="type-name-link" title="class in com.djrapitops.plan.delivery.webserver.http">AccessLogger.LoggedRequest</a> - Class in <a href="com/djrapitops/plan/delivery/webserver/http/package-summary.html">com.djrapitops.plan.delivery.webserver.http</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/sql/tables/AccessLogTable.html" class="type-name-link" title="class in com.djrapitops.plan.storage.database.sql.tables">AccessLogTable</a> - Class in <a href="com/djrapitops/plan/storage/database/sql/tables/package-summary.html">com.djrapitops.plan.storage.database.sql.tables</a></dt>
 <dd>
@@ -289,6 +295,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Add javascript to load in a html resource.</div>
 </dd>
+<dt><a href="com/djrapitops/plan/delivery/AccessLogBatchTask.html#addLoggedRequest(com.djrapitops.plan.delivery.webserver.http.AccessLogger.LoggedRequest)" class="member-name-link">addLoggedRequest(AccessLogger.LoggedRequest)</a> - Method in class com.djrapitops.plan.delivery.<a href="com/djrapitops/plan/delivery/AccessLogBatchTask.html" title="class in com.djrapitops.plan.delivery">AccessLogBatchTask</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/domain/mutators/MutatorFunctions.html#addMissing(java.util.List,com.djrapitops.plan.delivery.rendering.json.graphs.line.LineGraph.GapStrategy)" class="member-name-link">addMissing(List&lt;Point&gt;, LineGraph.GapStrategy)</a> - Static method in class com.djrapitops.plan.delivery.domain.mutators.<a href="com/djrapitops/plan/delivery/domain/mutators/MutatorFunctions.html" title="class in com.djrapitops.plan.delivery.domain.mutators">MutatorFunctions</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/domain/mutators/MutatorFunctions.html#addMissing(java.util.NavigableMap,long,java.lang.Integer)" class="member-name-link">addMissing(NavigableMap&lt;Long, Integer&gt;, long, Integer)</a> - Static method in class com.djrapitops.plan.delivery.domain.mutators.<a href="com/djrapitops/plan/delivery/domain/mutators/MutatorFunctions.html" title="class in com.djrapitops.plan.delivery.domain.mutators">MutatorFunctions</a></dt>
@@ -1285,6 +1293,18 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/utilities/dev/Benchmark.html" class="type-name-link" title="class in com.djrapitops.plan.utilities.dev">Benchmark</a> - Class in <a href="com/djrapitops/plan/utilities/dev/package-summary.html">com.djrapitops.plan.utilities.dev</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/utilities/dev/Benchmark.Slow.html" class="type-name-link" title="annotation interface in com.djrapitops.plan.utilities.dev">Benchmark.Slow</a> - Annotation Interface in <a href="com/djrapitops/plan/utilities/dev/package-summary.html">com.djrapitops.plan.utilities.dev</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/modules/bukkit/BukkitTaskModule.html#bindAccessLogBatchTask(com.djrapitops.plan.delivery.AccessLogBatchTask)" class="member-name-link">bindAccessLogBatchTask(AccessLogBatchTask)</a> - Method in interface com.djrapitops.plan.modules.bukkit.<a href="com/djrapitops/plan/modules/bukkit/BukkitTaskModule.html" title="interface in com.djrapitops.plan.modules.bukkit">BukkitTaskModule</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/modules/bungee/BungeeTaskModule.html#bindAccessLogBatchTask(com.djrapitops.plan.delivery.AccessLogBatchTask)" class="member-name-link">bindAccessLogBatchTask(AccessLogBatchTask)</a> - Method in interface com.djrapitops.plan.modules.bungee.<a href="com/djrapitops/plan/modules/bungee/BungeeTaskModule.html" title="interface in com.djrapitops.plan.modules.bungee">BungeeTaskModule</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/modules/nukkit/NukkitTaskModule.html#bindAccessLogBatchTask(com.djrapitops.plan.delivery.AccessLogBatchTask)" class="member-name-link">bindAccessLogBatchTask(AccessLogBatchTask)</a> - Method in interface com.djrapitops.plan.modules.nukkit.<a href="com/djrapitops/plan/modules/nukkit/NukkitTaskModule.html" title="interface in com.djrapitops.plan.modules.nukkit">NukkitTaskModule</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/modules/sponge/SpongeTaskModule.html#bindAccessLogBatchTask(com.djrapitops.plan.delivery.AccessLogBatchTask)" class="member-name-link">bindAccessLogBatchTask(AccessLogBatchTask)</a> - Method in interface com.djrapitops.plan.modules.sponge.<a href="com/djrapitops/plan/modules/sponge/SpongeTaskModule.html" title="interface in com.djrapitops.plan.modules.sponge">SpongeTaskModule</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/modules/velocity/VelocityTaskModule.html#bindAccessLogBatchTask(com.djrapitops.plan.delivery.AccessLogBatchTask)" class="member-name-link">bindAccessLogBatchTask(AccessLogBatchTask)</a> - Method in interface com.djrapitops.plan.modules.velocity.<a href="com/djrapitops/plan/modules/velocity/VelocityTaskModule.html" title="interface in com.djrapitops.plan.modules.velocity">VelocityTaskModule</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="net/playeranalytics/plan/modules/fabric/FabricTaskModule.html#bindAccessLogBatchTask(com.djrapitops.plan.delivery.AccessLogBatchTask)" class="member-name-link">bindAccessLogBatchTask(AccessLogBatchTask)</a> - Method in interface net.playeranalytics.plan.modules.fabric.<a href="net/playeranalytics/plan/modules/fabric/FabricTaskModule.html" title="interface in net.playeranalytics.plan.modules.fabric">FabricTaskModule</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/modules/bukkit/BukkitTaskModule.html#bindActiveCookieStoreExpiryTask(com.djrapitops.plan.delivery.webserver.auth.ActiveCookieExpiryCleanupTask)" class="member-name-link">bindActiveCookieStoreExpiryTask(ActiveCookieExpiryCleanupTask)</a> - Method in interface com.djrapitops.plan.modules.bukkit.<a href="com/djrapitops/plan/modules/bukkit/BukkitTaskModule.html" title="interface in com.djrapitops.plan.modules.bukkit">BukkitTaskModule</a></dt>
 <dd>&nbsp;</dd>
@@ -7012,6 +7032,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/Addresses.html#getAccessAddress()" class="member-name-link">getAccessAddress()</a> - Method in class com.djrapitops.plan.delivery.webserver.<a href="com/djrapitops/plan/delivery/webserver/Addresses.html" title="class in com.djrapitops.plan.delivery.webserver">Addresses</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/http/AccessLogger.LoggedRequest.html#getAccessAddress()" class="member-name-link">getAccessAddress()</a> - Method in class com.djrapitops.plan.delivery.webserver.http.<a href="com/djrapitops/plan/delivery/webserver/http/AccessLogger.LoggedRequest.html" title="class in com.djrapitops.plan.delivery.webserver.http">AccessLogger.LoggedRequest</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/http/InternalRequest.html#getAccessAddress(com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration)" class="member-name-link">getAccessAddress(WebserverConfiguration)</a> - Method in interface com.djrapitops.plan.delivery.webserver.http.<a href="com/djrapitops/plan/delivery/webserver/http/InternalRequest.html" title="interface in com.djrapitops.plan.delivery.webserver.http">InternalRequest</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/http/InternalRequest.html#getAccessAddressFromHeader()" class="member-name-link">getAccessAddressFromHeader()</a> - Method in interface com.djrapitops.plan.delivery.webserver.http.<a href="com/djrapitops/plan/delivery/webserver/http/InternalRequest.html" title="interface in com.djrapitops.plan.delivery.webserver.http">InternalRequest</a></dt>
@@ -8414,6 +8436,8 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">Get HTTP method.</div>
 </dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/http/AccessLogger.LoggedRequest.html#getMethod()" class="member-name-link">getMethod()</a> - Method in class com.djrapitops.plan.delivery.webserver.http.<a href="com/djrapitops/plan/delivery/webserver/http/AccessLogger.LoggedRequest.html" title="class in com.djrapitops.plan.delivery.webserver.http">AccessLogger.LoggedRequest</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/http/InternalRequest.html#getMethod()" class="member-name-link">getMethod()</a> - Method in interface com.djrapitops.plan.delivery.webserver.http.<a href="com/djrapitops/plan/delivery/webserver/http/InternalRequest.html" title="interface in com.djrapitops.plan.delivery.webserver.http">InternalRequest</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/http/JettyInternalRequest.html#getMethod()" class="member-name-link">getMethod()</a> - Method in class com.djrapitops.plan.delivery.webserver.http.<a href="com/djrapitops/plan/delivery/webserver/http/JettyInternalRequest.html" title="class in com.djrapitops.plan.delivery.webserver.http">JettyInternalRequest</a></dt>
@@ -9152,6 +9176,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/resolver/auth/LoginResolver.html#getResponse(java.lang.String)" class="member-name-link">getResponse(String)</a> - Method in class com.djrapitops.plan.delivery.webserver.resolver.auth.<a href="com/djrapitops/plan/delivery/webserver/resolver/auth/LoginResolver.html" title="class in com.djrapitops.plan.delivery.webserver.resolver.auth">LoginResolver</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/http/AccessLogger.LoggedRequest.html#getResponseCode()" class="member-name-link">getResponseCode()</a> - Method in class com.djrapitops.plan.delivery.webserver.http.<a href="com/djrapitops/plan/delivery/webserver/http/AccessLogger.LoggedRequest.html" title="class in com.djrapitops.plan.delivery.webserver.http">AccessLogger.LoggedRequest</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/queries/filter/Filter.Result.html#getResultUserIds()" class="member-name-link">getResultUserIds()</a> - Method in class com.djrapitops.plan.storage.database.queries.filter.<a href="com/djrapitops/plan/storage/database/queries/filter/Filter.Result.html" title="class in com.djrapitops.plan.storage.database.queries.filter">Filter.Result</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/extension/extractor/ExtensionMethod.html#getReturnType()" class="member-name-link">getReturnType()</a> - Method in class com.djrapitops.plan.extension.extractor.<a href="com/djrapitops/plan/extension/extractor/ExtensionMethod.html" title="class in com.djrapitops.plan.extension.extractor">ExtensionMethod</a></dt>
@@ -9536,6 +9562,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/cache/JSONStorage.StoredJSON.html#getTimestamp()" class="member-name-link">getTimestamp()</a> - Method in class com.djrapitops.plan.delivery.webserver.cache.<a href="com/djrapitops/plan/delivery/webserver/cache/JSONStorage.StoredJSON.html" title="class in com.djrapitops.plan.delivery.webserver.cache">JSONStorage.StoredJSON</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/http/AccessLogger.LoggedRequest.html#getTimestamp()" class="member-name-link">getTimestamp()</a> - Method in class com.djrapitops.plan.delivery.webserver.http.<a href="com/djrapitops/plan/delivery/webserver/http/AccessLogger.LoggedRequest.html" title="class in com.djrapitops.plan.delivery.webserver.http">AccessLogger.LoggedRequest</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/http/InternalRequest.html#getTimestamp()" class="member-name-link">getTimestamp()</a> - Method in interface com.djrapitops.plan.delivery.webserver.http.<a href="com/djrapitops/plan/delivery/webserver/http/InternalRequest.html" title="interface in com.djrapitops.plan.delivery.webserver.http">InternalRequest</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/http/JettyInternalRequest.html#getTimestamp()" class="member-name-link">getTimestamp()</a> - Method in class com.djrapitops.plan.delivery.webserver.http.<a href="com/djrapitops/plan/delivery/webserver/http/JettyInternalRequest.html" title="class in com.djrapitops.plan.delivery.webserver.http">JettyInternalRequest</a></dt>
@@ -9607,6 +9635,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/delivery/domain/container/RawDataContainer.html#getUnsafe(com.djrapitops.plan.delivery.domain.keys.Key)" class="member-name-link">getUnsafe(Key&lt;T&gt;)</a> - Method in class com.djrapitops.plan.delivery.domain.container.<a href="com/djrapitops/plan/delivery/domain/container/RawDataContainer.html" title="class in com.djrapitops.plan.delivery.domain.container">RawDataContainer</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/domain/container/SupplierDataContainer.html#getUnsafe(com.djrapitops.plan.delivery.domain.keys.Key)" class="member-name-link">getUnsafe(Key&lt;T&gt;)</a> - Method in class com.djrapitops.plan.delivery.domain.container.<a href="com/djrapitops/plan/delivery/domain/container/SupplierDataContainer.html" title="class in com.djrapitops.plan.delivery.domain.container">SupplierDataContainer</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/http/AccessLogger.LoggedRequest.html#getUrl()" class="member-name-link">getUrl()</a> - Method in class com.djrapitops.plan.delivery.webserver.http.<a href="com/djrapitops/plan/delivery/webserver/http/AccessLogger.LoggedRequest.html" title="class in com.djrapitops.plan.delivery.webserver.http">AccessLogger.LoggedRequest</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/domain/datatransfer/ThemeDto.html#getUseCases()" class="member-name-link">getUseCases()</a> - Method in class com.djrapitops.plan.delivery.domain.datatransfer.<a href="com/djrapitops/plan/delivery/domain/datatransfer/ThemeDto.html" title="class in com.djrapitops.plan.delivery.domain.datatransfer">ThemeDto</a></dt>
 <dd>&nbsp;</dd>
@@ -12729,6 +12759,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/utilities/logging/ErrorContext.Builder.html#logErrorMessage()" class="member-name-link">logErrorMessage()</a> - Method in class com.djrapitops.plan.utilities.logging.<a href="com/djrapitops/plan/utilities/logging/ErrorContext.Builder.html" title="class in com.djrapitops.plan.utilities.logging">ErrorContext.Builder</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/afk/AFKTracker.html#loggedOut(java.util.UUID,long)" class="member-name-link">loggedOut(UUID, long)</a> - Method in class com.djrapitops.plan.gathering.afk.<a href="com/djrapitops/plan/gathering/afk/AFKTracker.html" title="class in com.djrapitops.plan.gathering.afk">AFKTracker</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/webserver/http/AccessLogger.LoggedRequest.html#%3Cinit%3E(long,java.lang.String,java.lang.String,java.lang.String,int)" class="member-name-link">LoggedRequest(long, String, String, String, int)</a> - Constructor for class com.djrapitops.plan.delivery.webserver.http.<a href="com/djrapitops/plan/delivery/webserver/http/AccessLogger.LoggedRequest.html" title="class in com.djrapitops.plan.delivery.webserver.http">AccessLogger.LoggedRequest</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/ServerShutdownSave.html#logger" class="member-name-link">logger</a> - Variable in class com.djrapitops.plan.gathering.<a href="com/djrapitops/plan/gathering/ServerShutdownSave.html" title="class in com.djrapitops.plan.gathering">ServerShutdownSave</a></dt>
 <dd>&nbsp;</dd>
@@ -16442,6 +16474,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/addons/placeholderapi/PlaceholderCacheRefreshTask.html#register(net.playeranalytics.plugin.scheduling.RunnableFactory)" class="member-name-link">register(RunnableFactory)</a> - Method in class com.djrapitops.plan.addons.placeholderapi.<a href="com/djrapitops/plan/addons/placeholderapi/PlaceholderCacheRefreshTask.html" title="class in com.djrapitops.plan.addons.placeholderapi">PlaceholderCacheRefreshTask</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/AccessLogBatchTask.html#register(net.playeranalytics.plugin.scheduling.RunnableFactory)" class="member-name-link">register(RunnableFactory)</a> - Method in class com.djrapitops.plan.delivery.<a href="com/djrapitops/plan/delivery/AccessLogBatchTask.html" title="class in com.djrapitops.plan.delivery">AccessLogBatchTask</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/web/ResourceWriteTask.html#register(net.playeranalytics.plugin.scheduling.RunnableFactory)" class="member-name-link">register(RunnableFactory)</a> - Method in class com.djrapitops.plan.delivery.web.<a href="com/djrapitops/plan/delivery/web/ResourceWriteTask.html" title="class in com.djrapitops.plan.delivery.web">ResourceWriteTask</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/webserver/auth/ActiveCookieExpiryCleanupTask.html#register(net.playeranalytics.plugin.scheduling.RunnableFactory)" class="member-name-link">register(RunnableFactory)</a> - Method in class com.djrapitops.plan.delivery.webserver.auth.<a href="com/djrapitops/plan/delivery/webserver/auth/ActiveCookieExpiryCleanupTask.html" title="class in com.djrapitops.plan.delivery.webserver.auth">ActiveCookieExpiryCleanupTask</a></dt>
@@ -17341,6 +17375,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/addons/placeholderapi/PlaceholderCacheRefreshTask.html#run()" class="member-name-link">run()</a> - Method in class com.djrapitops.plan.addons.placeholderapi.<a href="com/djrapitops/plan/addons/placeholderapi/PlaceholderCacheRefreshTask.html" title="class in com.djrapitops.plan.addons.placeholderapi">PlaceholderCacheRefreshTask</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/BStatsSponge.html#run()" class="member-name-link">run()</a> - Method in class com.djrapitops.plan.<a href="com/djrapitops/plan/BStatsSponge.html" title="class in com.djrapitops.plan">BStatsSponge</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/delivery/AccessLogBatchTask.html#run()" class="member-name-link">run()</a> - Method in class com.djrapitops.plan.delivery.<a href="com/djrapitops/plan/delivery/AccessLogBatchTask.html" title="class in com.djrapitops.plan.delivery">AccessLogBatchTask</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/export/ExportScheduler.html#run()" class="member-name-link">run()</a> - Method in class com.djrapitops.plan.delivery.export.<a href="com/djrapitops/plan/delivery/export/ExportScheduler.html" title="class in com.djrapitops.plan.delivery.export">ExportScheduler</a></dt>
 <dd>&nbsp;</dd>
@@ -19094,7 +19130,7 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/events/StoreRequestTransaction.html" class="type-name-link" title="class in com.djrapitops.plan.storage.database.transactions.events">StoreRequestTransaction</a> - Class in <a href="com/djrapitops/plan/storage/database/transactions/events/package-summary.html">com.djrapitops.plan.storage.database.transactions.events</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/storage/database/transactions/events/StoreRequestTransaction.html#%3Cinit%3E(long,java.lang.String,java.lang.String,java.lang.String,int)" class="member-name-link">StoreRequestTransaction(long, String, String, String, int)</a> - Constructor for class com.djrapitops.plan.storage.database.transactions.events.<a href="com/djrapitops/plan/storage/database/transactions/events/StoreRequestTransaction.html" title="class in com.djrapitops.plan.storage.database.transactions.events">StoreRequestTransaction</a></dt>
+<dt><a href="com/djrapitops/plan/storage/database/transactions/events/StoreRequestTransaction.html#%3Cinit%3E(java.util.Set)" class="member-name-link">StoreRequestTransaction(Set&lt;AccessLogger.LoggedRequest&gt;)</a> - Constructor for class com.djrapitops.plan.storage.database.transactions.events.<a href="com/djrapitops/plan/storage/database/transactions/events/StoreRequestTransaction.html" title="class in com.djrapitops.plan.storage.database.transactions.events">StoreRequestTransaction</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/extension/implementation/storage/transactions/results/StoreServerBooleanResultTransaction.html" class="type-name-link" title="class in com.djrapitops.plan.extension.implementation.storage.transactions.results">StoreServerBooleanResultTransaction</a> - Class in <a href="com/djrapitops/plan/extension/implementation/storage/transactions/results/package-summary.html">com.djrapitops.plan.extension.implementation.storage.transactions.results</a></dt>
 <dd>
