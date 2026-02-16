@@ -66,7 +66,7 @@ public class StoreConfigTransaction extends Transaction {
     private Query<Boolean> isConfigStored() {
         String sql = SELECT + "COUNT(1) as c" +
                 FROM + SettingsTable.TABLE_NAME +
-                WHERE + SettingsTable.SERVER_UUID + "=? LIMIT 1";
+                WHERE + SettingsTable.SERVER_UUID + "=? LIMIT 1" + lockForUpdate();
         return new HasMoreThanZeroQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

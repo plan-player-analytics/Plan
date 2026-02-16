@@ -157,7 +157,7 @@ public class StorePlayerBooleanResultTransaction extends ThrowawayTransaction {
                 (value ? Sql.concat(dbType, "'not_'", "indb.provided_condition") : "indb.provided_condition") +
                 " AND indb.plugin_id=unfulfilled.plugin_id" +
                 " WHERE indb.id=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID +
-                " AND indb.provided_condition IS NOT NULL";
+                " AND indb.provided_condition IS NOT NULL" + lockForUpdate();
 
         return extractIds(selectUnsatisfiedProviderIds);
     }
@@ -183,7 +183,7 @@ public class StorePlayerBooleanResultTransaction extends ThrowawayTransaction {
                 (value ? Sql.concat(dbType, "'not_'", "indb.provided_condition") : "indb.provided_condition") +
                 " AND indb.plugin_id=unfulfilled.plugin_id" +
                 " WHERE indb.id=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID +
-                " AND indb.provided_condition IS NOT NULL";
+                " AND indb.provided_condition IS NOT NULL" + lockForUpdate();
 
         return extractIds(selectUnsatisfiedProviderIds);
     }

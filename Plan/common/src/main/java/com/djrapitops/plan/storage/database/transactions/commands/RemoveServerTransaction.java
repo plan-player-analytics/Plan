@@ -59,14 +59,14 @@ public class RemoveServerTransaction extends ThrowawayTransaction {
         String selectProviderIdsOfServer = SELECT + "p." + ExtensionProviderTable.ID +
                 FROM + ExtensionProviderTable.TABLE_NAME + " p" +
                 INNER_JOIN + ExtensionPluginTable.TABLE_NAME + " pl on pl." + ExtensionPluginTable.ID + "=p." + ExtensionProviderTable.PLUGIN_ID +
-                WHERE + ExtensionPluginTable.SERVER_UUID + "=?";
+                WHERE + ExtensionPluginTable.SERVER_UUID + "=?" + lockForUpdate();
         String selectTableIdsOfServer = SELECT + "p." + ExtensionTableProviderTable.ID +
                 FROM + ExtensionTableProviderTable.TABLE_NAME + " p" +
                 INNER_JOIN + ExtensionPluginTable.TABLE_NAME + " pl on pl." + ExtensionPluginTable.ID + "=p." + ExtensionTableProviderTable.PLUGIN_ID +
-                WHERE + ExtensionPluginTable.SERVER_UUID + "=?";
+                WHERE + ExtensionPluginTable.SERVER_UUID + "=?" + lockForUpdate();
         String selectPluginIdOfServer = SELECT + "p." + ExtensionPluginTable.ID +
                 FROM + ExtensionPluginTable.TABLE_NAME + " p" +
-                WHERE + ExtensionPluginTable.SERVER_UUID + "=?";
+                WHERE + ExtensionPluginTable.SERVER_UUID + "=?" + lockForUpdate();
 
         // Provider values
         String in = " IN (";

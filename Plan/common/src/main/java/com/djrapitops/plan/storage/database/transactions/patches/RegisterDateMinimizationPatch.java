@@ -56,12 +56,12 @@ public class RegisterDateMinimizationPatch extends Patch {
                 "MIN(" + UserInfoTable.REGISTERED + ") as min_registered" +
                 FROM + UserInfoTable.TABLE_NAME +
                 WHERE + UserInfoTable.REGISTERED + "!=0" +
-                GROUP_BY + UserInfoTable.USER_ID;
+                GROUP_BY + UserInfoTable.USER_ID + lockForUpdate();
 
         String sql = SELECT + UsersTable.USER_UUID + ",u1." + UsersTable.REGISTERED + ",min_registered" +
                 FROM + '(' + selectSmallestRegisterDates + ") u2" +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u1 on u1." + UsersTable.ID + "=u2." + UserInfoTable.USER_ID +
-                WHERE + "u1." + UsersTable.REGISTERED + ">min_registered OR u1." + UsersTable.REGISTERED + "=0";
+                WHERE + "u1." + UsersTable.REGISTERED + ">min_registered OR u1." + UsersTable.REGISTERED + "=0" + lockForUpdate();
 
         return new QueryAllStatement<>(sql, 500) {
             @Override

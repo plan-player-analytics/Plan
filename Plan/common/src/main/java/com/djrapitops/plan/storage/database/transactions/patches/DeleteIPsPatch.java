@@ -72,13 +72,13 @@ public class DeleteIPsPatch extends Patch {
     }
 
     private boolean hasLessDataInPlanIPs() {
-        Integer inIPs = query(new QueryAllStatement<>(SELECT + "COUNT(1) as c" + FROM + oldTableName) {
+        Integer inIPs = query(new QueryAllStatement<>(SELECT + "COUNT(1) as c" + FROM + oldTableName + lockForUpdate()) {
             @Override
             public Integer processResults(ResultSet set) throws SQLException {
                 return set.next() ? set.getInt("c") : 0;
             }
         });
-        Integer inGeoInfo = query(new QueryAllStatement<>(SELECT + "COUNT(1) as c" + FROM + GeoInfoTable.TABLE_NAME) {
+        Integer inGeoInfo = query(new QueryAllStatement<>(SELECT + "COUNT(1) as c" + FROM + GeoInfoTable.TABLE_NAME + lockForUpdate()) {
             @Override
             public Integer processResults(ResultSet set) throws SQLException {
                 return set.next() ? set.getInt("c") : 0;

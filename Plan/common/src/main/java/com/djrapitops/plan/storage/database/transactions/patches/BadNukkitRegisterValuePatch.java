@@ -41,7 +41,7 @@ public class BadNukkitRegisterValuePatch extends Patch {
     }
 
     public boolean hasNoWrongRegisterDates(String tableName, String registered) {
-        String sql = SELECT + "COUNT(*) as c" + FROM + tableName + WHERE + registered + "<?";
+        String sql = SELECT + "COUNT(*) as c" + FROM + tableName + WHERE + registered + "<?" + lockForUpdate();
         Boolean foundWrongRegisterDates = query(new HasMoreThanZeroQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

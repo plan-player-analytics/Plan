@@ -74,7 +74,7 @@ public class StoreIconTransaction extends ThrowawayTransaction {
                 FROM + ExtensionIconTable.TABLE_NAME +
                 WHERE + ExtensionIconTable.ICON_NAME + "=?" +
                 AND + ExtensionIconTable.FAMILY + "=?" +
-                AND + ExtensionIconTable.COLOR + "=?";
+                AND + ExtensionIconTable.COLOR + "=?" + lockForUpdate();
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

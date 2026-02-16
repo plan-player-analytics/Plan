@@ -43,10 +43,10 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  */
 public class SessionJoinAddressPatch extends Patch {
 
-    public static Query<List<String>> uniqueJoinAddressesOld() {
+    private Query<List<String>> uniqueJoinAddressesOld() {
         String sql = SELECT + DISTINCT + "COALESCE(" + UserInfoTable.JOIN_ADDRESS + ", ?) as address" +
                 FROM + UserInfoTable.TABLE_NAME +
-                ORDER_BY + "address ASC";
+                ORDER_BY + "address ASC" + lockForUpdate();
         return new QueryStatement<>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -77,9 +77,10 @@ public class SessionJoinAddressPatch extends Patch {
     }
 
     private Integer getDefaultAddressId() {
-        return query(new QueryStatement<>(SELECT + ID +
+        String sql = SELECT + ID +
                 FROM + JoinAddressTable.TABLE_NAME +
-                WHERE + JoinAddressTable.JOIN_ADDRESS + "=?") {
+                WHERE + JoinAddressTable.JOIN_ADDRESS + "=?" + lockForUpdate();
+        return query(new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
@@ -115,14 +116,15 @@ public class SessionJoinAddressPatch extends Patch {
                 FROM + UserInfoTable.TABLE_NAME + " u" +
                 INNER_JOIN + SessionsTable.TABLE_NAME + " s on s." + SessionsTable.USER_ID + "=u." + UserInfoTable.USER_ID +
                 AND + "s." + SessionsTable.SERVER_ID + "=u." + UserInfoTable.SERVER_ID +
-                GROUP_BY + "u." + UserInfoTable.USER_ID + ',' + "u." + UserInfoTable.SERVER_ID + ',' + "u." + UserInfoTable.JOIN_ADDRESS;
+                GROUP_BY + "u." + UserInfoTable.USER_ID + ',' + "u." + UserInfoTable.SERVER_ID + ',' + "u." + UserInfoTable.JOIN_ADDRESS +
+                lockForUpdate();
 
         String sql = SELECT +
                 "session_id," +
                 "j." + JoinAddressTable.ID + " as join_address_id" +
                 FROM + '(' + selectLatestSessionIds + ") q1 " +
                 INNER_JOIN + JoinAddressTable.TABLE_NAME + " j on " +
-                "j." + JoinAddressTable.JOIN_ADDRESS + "=q1." + UserInfoTable.JOIN_ADDRESS;
+                "j." + JoinAddressTable.JOIN_ADDRESS + "=q1." + UserInfoTable.JOIN_ADDRESS + lockForUpdate();
 
         Map<Integer, Integer> joinAddressIdsBySessionId = query(new QueryAllStatement<>(sql) {
             @Override

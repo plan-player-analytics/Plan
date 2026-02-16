@@ -42,7 +42,7 @@ public class ExtensionTableProviderValuesForPatch extends Patch {
 
         String selectServerTableIDs = SELECT + DISTINCT +
                 ExtensionServerTableValueTable.TABLE_ID +
-                FROM + ExtensionServerTableValueTable.TABLE_NAME;
+                FROM + ExtensionServerTableValueTable.TABLE_NAME + lockForUpdate();
 
         String updateSql = "UPDATE " + TABLE_NAME + " SET " + VALUES_FOR + "=" + VALUES_FOR_SERVER +
                 WHERE + ExtensionTableProviderTable.ID + " IN (" + selectServerTableIDs + ")";

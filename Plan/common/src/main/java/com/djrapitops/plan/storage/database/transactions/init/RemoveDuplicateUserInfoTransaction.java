@@ -66,7 +66,7 @@ public class RemoveDuplicateUserInfoTransaction extends ThrowawayTransaction {
     }
 
     private Collection<Integer> getDuplicates() {
-        return query(new QueryAllStatement<>(STATEMENT_SELECT_DUPLICATE_IDS) {
+        return query(new QueryAllStatement<>(STATEMENT_SELECT_DUPLICATE_IDS + lockForUpdate()) {
             @Override
             public Collection<Integer> processResults(ResultSet set) throws SQLException {
                 Set<Integer> duplicateIDs = new HashSet<>();

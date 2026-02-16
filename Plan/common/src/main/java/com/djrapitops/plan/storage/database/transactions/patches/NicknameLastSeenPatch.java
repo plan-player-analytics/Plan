@@ -95,7 +95,7 @@ public class NicknameLastSeenPatch extends Patch {
     }
 
     private Map<Integer, Set<Nickname>> getNicknamesByUserID(Map<Integer, ServerUUID> serverUUIDsByID) {
-        String fetchSQL = "SELECT * FROM plan_actions WHERE action_id=3 ORDER BY date DESC";
+        String fetchSQL = "SELECT * FROM plan_actions WHERE action_id=3 ORDER BY date DESC" + lockForUpdate();
         return query(new QueryAllStatement<>(fetchSQL, 10000) {
             @Override
             public Map<Integer, Set<Nickname>> processResults(ResultSet set) throws SQLException {

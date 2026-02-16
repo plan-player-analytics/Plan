@@ -57,6 +57,7 @@ public abstract class Sql {
     public static final String IS_NULL = " IS NULL";
     public static final String IS_NOT_NULL = " IS NOT NULL";
     public static final String LIMIT = " LIMIT ";
+    public static final String LIMIT_1 = " LIMIT 1 ";
     public static final String OFFSET = " OFFSET ";
     public static final String TEXT = "TEXT";
 
@@ -154,6 +155,10 @@ public abstract class Sql {
 
     public abstract String greatest(String values);
 
+    public String lockForUpdate() {
+        return "";
+    }
+
     // https://dev.mysql.com/doc/refman/5.7/en/date-and-time-functions.html
     public static class MySQL extends Sql {
 
@@ -200,6 +205,11 @@ public abstract class Sql {
         @Override
         public String greatest(String values) {
             return "GREATEST(" + values + ")";
+        }
+
+        @Override
+        public String lockForUpdate() {
+            return " FOR UPDATE";
         }
     }
 

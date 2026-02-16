@@ -137,7 +137,7 @@ public abstract class Patch extends OperationCriticalTransaction {
     }
 
     protected boolean allValuesHaveValueZero(String tableName, String column) {
-        String sql = SELECT + '*' + FROM + tableName + WHERE + column + "=? LIMIT 1";
+        String sql = SELECT + '*' + FROM + tableName + WHERE + column + "=? LIMIT 1" + lockForUpdate();
         return query(new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

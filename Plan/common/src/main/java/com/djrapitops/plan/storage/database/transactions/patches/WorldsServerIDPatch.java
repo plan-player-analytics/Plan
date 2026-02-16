@@ -84,7 +84,7 @@ public class WorldsServerIDPatch extends Patch {
                 INNER_JOIN + WorldTimesTable.TABLE_NAME + " on " + worldIDColumn + "=" + WorldTable.TABLE_NAME + '.' + WorldTable.ID +
                 INNER_JOIN + SessionsTable.TABLE_NAME + " on " + worldSessionIDColumn + "=" + sessionIDColumn +
                 INNER_JOIN + ServerTable.TABLE_NAME + " on " + serverIDColumn + "=" + sessionServerIDColumn +
-                WHERE + serverUUIDColumn + "=?";
+                WHERE + serverUUIDColumn + "=?" + lockForUpdate();
 
         return query(new QueryStatement<>(sql, 1000) {
             @Override
@@ -136,8 +136,8 @@ public class WorldsServerIDPatch extends Patch {
         });
     }
 
-    public List<WorldObj> getWorldObjects() {
-        String sql = SELECT + '*' + FROM + WorldTable.TABLE_NAME;
+    private List<WorldObj> getWorldObjects() {
+        String sql = SELECT + '*' + FROM + WorldTable.TABLE_NAME + lockForUpdate();
         return query(new QueryAllStatement<>(sql, 100) {
             @Override
             public List<WorldObj> processResults(ResultSet set) throws SQLException {

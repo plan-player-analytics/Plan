@@ -42,7 +42,7 @@ public class LinkUsersToPlayersSecurityTablePatch extends Patch {
     @Override
     public boolean hasBeenApplied() {
         String sql = SELECT + "COUNT(1) as c" + FROM + SecurityTable.TABLE_NAME +
-                WHERE + SecurityTable.LINKED_TO + "=''";
+                WHERE + SecurityTable.LINKED_TO + "=''" + lockForUpdate();
         return !query(new HasMoreThanZeroQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) {
@@ -56,7 +56,7 @@ public class LinkUsersToPlayersSecurityTablePatch extends Patch {
         String querySQL = SELECT + UsersTable.USER_UUID + ',' + SecurityTable.USERNAME +
                 FROM + SecurityTable.TABLE_NAME +
                 LEFT_JOIN + UsersTable.TABLE_NAME + " on " + UsersTable.USER_NAME + "=" + SecurityTable.USERNAME +
-                WHERE + SecurityTable.LINKED_TO + "=''";
+                WHERE + SecurityTable.LINKED_TO + "=''" + lockForUpdate();
         String sql = "UPDATE " + SecurityTable.TABLE_NAME + " SET " + SecurityTable.LINKED_TO + "=?" +
                 WHERE + SecurityTable.USERNAME + "=?";
 

@@ -296,4 +296,6 @@ public abstract class Transaction {
                 throw new IllegalStateException("Unsupported Database Type: " + dbType.getName());
         }
     }
+
+    protected String lockForUpdate() {return db.getSql().lockForUpdate();}
 }

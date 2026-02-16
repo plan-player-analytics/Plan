@@ -193,7 +193,7 @@ public class StorePlayerTableResultTransaction extends ThrowawayTransaction {
         String sql = SELECT + "COALESCE(MAX(" + TABLE_ROW + "), -1) as m" +
                 FROM + TABLE_NAME +
                 WHERE + TABLE_ID + "=?" +
-                AND + USER_UUID + "=?";
+                AND + USER_UUID + "=?" + lockForUpdate();
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -222,7 +222,7 @@ public class StorePlayerTableResultTransaction extends ThrowawayTransaction {
                 FROM + ExtensionTableProviderTable.TABLE_NAME +
                 WHERE + ExtensionTableProviderTable.PROVIDER_NAME + "=?" +
                 AND + ExtensionTableProviderTable.PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID +
-                " LIMIT 1";
+                " LIMIT 1" + lockForUpdate();
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
