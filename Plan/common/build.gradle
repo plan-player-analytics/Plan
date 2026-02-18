@@ -6,7 +6,7 @@ plugins {
     id("java-test-fixtures")
     id "dev.vankka.dependencydownload.plugin" version "$dependencyDownloadVersion"
     id "com.github.node-gradle.node" version "7.1.0"
-    id "io.swagger.core.v3.swagger-gradle-plugin" version "2.2.41"
+    id "io.swagger.core.v3.swagger-gradle-plugin" version "2.2.42"
 }
 
 configurations {
