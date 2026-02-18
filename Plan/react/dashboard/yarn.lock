@@ -485,48 +485,48 @@
   resolved "https://registry.yarnpkg.com/@floating-ui/utils/-/utils-0.2.10.tgz#a2a1e3812d14525f725d011a73eceb41fef5bc1c"
   integrity sha512-aGTxbpbg8/b5JfU1HXSrbH3wXZuLPJcNEcZQFMxLs3oSzgtVu6nFPkbbGGUvBcUjKV2YyB9Wxxabo+HEH9tcRQ==
 
-"@fortawesome/fontawesome-common-types@7.1.0":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-7.1.0.tgz#a4e0b7e40073d5fdef41182da1bc216a05875659"
-  integrity sha512-l/BQM7fYntsCI//du+6sEnHOP6a74UixFyOYUyz2DLMXKx+6DEhfR3F2NYGE45XH1JJuIamacb4IZs9S0ZOWLA==
+"@fortawesome/fontawesome-common-types@7.2.0":
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-7.2.0.tgz#ae54831ab5974bc1a64e8b07410f2da2b4abf87f"
+  integrity sha512-IpR0bER9FY25p+e7BmFH25MZKEwFHTfRAfhOyJubgiDnoJNsSvJ7nigLraHtp4VOG/cy8D7uiV0dLkHOne5Fhw==
 
-"@fortawesome/fontawesome-free@^7.1.0":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-7.1.0.tgz#8eb76278515341720aa74485266f8be121089529"
-  integrity sha512-+WxNld5ZCJHvPQCr/GnzCTVREyStrAJjisUPtUxG5ngDA8TMlPnKp6dddlTpai4+1GNmltAeuk1hJEkBohwZYA==
+"@fortawesome/fontawesome-free@^7.2.0":
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-free/-/fontawesome-free-7.2.0.tgz#188c1053ce422ad1f934d7df242a973fcb89636d"
+  integrity sha512-3DguDv/oUE+7vjMeTSOjCSG+KeawgVQOHrKRnvUuqYh1mfArrh7s+s8hXW3e4RerBA1+Wh+hBqf8sJNpqNrBWg==
 
-"@fortawesome/fontawesome-svg-core@^7.1.0":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-svg-core/-/fontawesome-svg-core-7.1.0.tgz#b0a45363a4e95ec985130393c0b1b95717ef0760"
-  integrity sha512-fNxRUk1KhjSbnbuBxlWSnBLKLBNun52ZBTcs22H/xEEzM6Ap81ZFTQ4bZBxVQGQgVY0xugKGoRcCbaKjLQ3XZA==
+"@fortawesome/fontawesome-svg-core@^7.2.0":
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-svg-core/-/fontawesome-svg-core-7.2.0.tgz#813550a5e8946a798e170d3f7331a685f8f8a550"
+  integrity sha512-6639htZMjEkwskf3J+e6/iar+4cTNM9qhoWuRfj9F3eJD6r7iCzV1SWnQr2Mdv0QT0suuqU8BoJCZUyCtP9R4Q==
   dependencies:
-    "@fortawesome/fontawesome-common-types" "7.1.0"
+    "@fortawesome/fontawesome-common-types" "7.2.0"
 
-"@fortawesome/free-brands-svg-icons@^7.1.0":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@fortawesome/free-brands-svg-icons/-/free-brands-svg-icons-7.1.0.tgz#68e08b05a99566782cff8e5a62b1cb69bdec2d35"
-  integrity sha512-9byUd9bgNfthsZAjBl6GxOu1VPHgBuRUP9juI7ZoM98h8xNPTCTagfwUFyYscdZq4Hr7gD1azMfM9s5tIWKZZA==
+"@fortawesome/free-brands-svg-icons@^7.2.0":
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/@fortawesome/free-brands-svg-icons/-/free-brands-svg-icons-7.2.0.tgz#36f4306e671ad0acd23c1db96bde72e47d93e596"
+  integrity sha512-VNG8xqOip1JuJcC3zsVsKRQ60oXG9+oYNDCosjoU/H9pgYmLTEwWw8pE0jhPz/JWdHeUuK6+NQ3qsM4gIbdbYQ==
   dependencies:
-    "@fortawesome/fontawesome-common-types" "7.1.0"
+    "@fortawesome/fontawesome-common-types" "7.2.0"
 
-"@fortawesome/free-regular-svg-icons@^7.1.0":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@fortawesome/free-regular-svg-icons/-/free-regular-svg-icons-7.1.0.tgz#e57c5eb63e6a30bb4fe2276aba851e3470452680"
-  integrity sha512-0e2fdEyB4AR+e6kU4yxwA/MonnYcw/CsMEP9lH82ORFi9svA6/RhDyhxIv5mlJaldmaHLLYVTb+3iEr+PDSZuQ==
+"@fortawesome/free-regular-svg-icons@^7.2.0":
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/@fortawesome/free-regular-svg-icons/-/free-regular-svg-icons-7.2.0.tgz#9f2f0af03b851e8b261514dd495cf30653de2fbd"
+  integrity sha512-iycmlN51EULlQ4D/UU9WZnHiN0CvjJ2TuuCrAh+1MVdzD+4ViKYH2deNAll4XAAYlZa8WAefHR5taSK8hYmSMw==
   dependencies:
-    "@fortawesome/fontawesome-common-types" "7.1.0"
+    "@fortawesome/fontawesome-common-types" "7.2.0"
 
-"@fortawesome/free-solid-svg-icons@^7.1.0":
-  version "7.1.0"
-  resolved "https://registry.yarnpkg.com/@fortawesome/free-solid-svg-icons/-/free-solid-svg-icons-7.1.0.tgz#cb9d149cefd3419a7a3fd041106e3a2315463e3e"
-  integrity sha512-Udu3K7SzAo9N013qt7qmm22/wo2hADdheXtBfxFTecp+ogsc0caQNRKEb7pkvvagUGOpG9wJC1ViH6WXs8oXIA==
+"@fortawesome/free-solid-svg-icons@^7.2.0":
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/@fortawesome/free-solid-svg-icons/-/free-solid-svg-icons-7.2.0.tgz#9c761f7ab393e281f750c54d9ed1ebbcd4d581fa"
+  integrity sha512-YTVITFGN0/24PxzXrwqCgnyd7njDuzp5ZvaCx5nq/jg55kUYd94Nj8UTchBdBofi/L0nwRfjGOg0E41d2u9T1w==
   dependencies:
-    "@fortawesome/fontawesome-common-types" "7.1.0"
+    "@fortawesome/fontawesome-common-types" "7.2.0"
 
-"@fortawesome/react-fontawesome@^3.1.1":
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/@fortawesome/react-fontawesome/-/react-fontawesome-3.1.1.tgz#41c5abe775f916954df3e5abf5dc9cb28f6b4899"
-  integrity sha512-EDllr9hpodc21odmUywHS1alXNiCd4E8sp5GJ5s7wYINz8vSmMiNWpALTiuYODb865YyQ/NlyiN4mbXp7HCNqg==
+"@fortawesome/react-fontawesome@^3.2.0":
+  version "3.2.0"
+  resolved "https://registry.yarnpkg.com/@fortawesome/react-fontawesome/-/react-fontawesome-3.2.0.tgz#e30278eac8a0d1746e5dd6835faef91ad87eabf2"
+  integrity sha512-E9Gu1hqd6JussVO26EC4WqRZssXMnQr2ol7ZNWkkFOH8jZUaxDJ9Z9WF9wIVkC+kJGXUdY3tlffpDwEKfgQrQw==
 
 "@fullcalendar/bootstrap@^6.1.20":
   version "6.1.20"
@@ -724,10 +724,10 @@
     uncontrollable "^8.0.4"
     warning "^4.0.3"
 
-"@rolldown/pluginutils@1.0.0-rc.2":
-  version "1.0.0-rc.2"
-  resolved "https://registry.yarnpkg.com/@rolldown/pluginutils/-/pluginutils-1.0.0-rc.2.tgz#10324e74cb3396cb7b616042ea7e9e6aa7d8d458"
-  integrity sha512-izyXV/v+cHiRfozX62W9htOAvwMo4/bXKDrQ+vom1L1qRuexPock/7VZDAhnpHCLNejd3NJ6hiab+tO0D44Rgw==
+"@rolldown/pluginutils@1.0.0-rc.3":
+  version "1.0.0-rc.3"
+  resolved "https://registry.yarnpkg.com/@rolldown/pluginutils/-/pluginutils-1.0.0-rc.3.tgz#8a88cc92a0f741befc7bc109cb1a4c6b9408e1c5"
+  integrity sha512-eybk3TjzzzV97Dlj5c+XrBFW57eTNhzod66y9HrBlzJ6NsCrWCp/2kaPS3K9wJmurBC0Tdw4yPjXKZqlznim3Q==
 
 "@rollup/rollup-android-arm-eabi@4.50.1":
   version "4.50.1"
@@ -1458,107 +1458,107 @@
   resolved "https://registry.yarnpkg.com/@types/warning/-/warning-3.0.3.tgz#d1884c8cc4a426d1ac117ca2611bf333834c6798"
   integrity sha512-D1XC7WK8K+zZEveUPY+cf4+kgauk8N4eHr/XIHXGlGYkHLud6hK9lYfZk1ry1TNh798cZUCgb6MqGEG8DkJt6Q==
 
-"@uiw/color-convert@2.9.2":
-  version "2.9.2"
-  resolved "https://registry.yarnpkg.com/@uiw/color-convert/-/color-convert-2.9.2.tgz#b2330d7928d1a4fefaacabafc9743a5b014fa9b5"
-  integrity sha512-ibw9OS29S7GlL+vDwU3p5XG3vhR7XdzUecydpZbakUeg2Td6nfsnrCAX9sbLwQ73p0abO42v+V4qRaWq+7/BjQ==
+"@uiw/color-convert@2.9.5":
+  version "2.9.5"
+  resolved "https://registry.yarnpkg.com/@uiw/color-convert/-/color-convert-2.9.5.tgz#6b6cf276074a71ef66a58c45cc2d43b1a6c418ac"
+  integrity sha512-h0PJU/wEfuCPYwY4Lcj8soGKndXq/NIOMkOfKajW4C8JmuyMbsViXSQs3c8c7auztxhQyKMDoSQ8U8kprlLUYw==
 
-"@uiw/react-color-alpha@2.9.2":
-  version "2.9.2"
-  resolved "https://registry.yarnpkg.com/@uiw/react-color-alpha/-/react-color-alpha-2.9.2.tgz#dc05cab8242a797001904dfbeb2e215db863465d"
-  integrity sha512-a2ACkE2vZIS4xnN9DaRfkQtAX/t8oK5NRSbX2QeOL23WIMHP1VNs7Yq5gXB68RHYenFgvs2JHuMOxZ2mK1W5Mw==
+"@uiw/react-color-alpha@2.9.5":
+  version "2.9.5"
+  resolved "https://registry.yarnpkg.com/@uiw/react-color-alpha/-/react-color-alpha-2.9.5.tgz#def1df4d7782a7f1dd2c08dd7229eff241f60c9e"
+  integrity sha512-PC+qf/qJi1V0QwYBAOqWHJrTVXFWU0a1Ai0dKnX9v+++kj1oO44K8W7W6tK7xvTmCDzRY57RTE+6qXAMC3u7cQ==
   dependencies:
-    "@uiw/color-convert" "2.9.2"
-    "@uiw/react-drag-event-interactive" "2.9.2"
+    "@uiw/color-convert" "2.9.5"
+    "@uiw/react-drag-event-interactive" "2.9.5"
 
-"@uiw/react-color-chrome@^2.9.2":
-  version "2.9.2"
-  resolved "https://registry.yarnpkg.com/@uiw/react-color-chrome/-/react-color-chrome-2.9.2.tgz#e671b7eb89bff3bbc735ce52a1cfd2672255750a"
-  integrity sha512-p7OZB7VWrkVbHxcTHsAq5U2vt3hAP3VvKEiDi592LKxS11IMnSd15ta8ngbJaXZWatqEpJSNgj12581yHtx+Bg==
+"@uiw/react-color-chrome@^2.9.5":
+  version "2.9.5"
+  resolved "https://registry.yarnpkg.com/@uiw/react-color-chrome/-/react-color-chrome-2.9.5.tgz#ca2bb42329eef0050e6849f6758942737dc95b45"
+  integrity sha512-Yb8+4jTVwI/yeyAzDDkH7Tbeqrvc5/Dlnrc+uofmSm9InnubHrdGCMGWC53NXn8+JajoyplaU9HcdiPT4J8l8g==
   dependencies:
-    "@uiw/color-convert" "2.9.2"
-    "@uiw/react-color-alpha" "2.9.2"
-    "@uiw/react-color-editable-input" "2.9.2"
-    "@uiw/react-color-editable-input-hsla" "2.9.2"
-    "@uiw/react-color-editable-input-rgba" "2.9.2"
-    "@uiw/react-color-github" "2.9.2"
-    "@uiw/react-color-hue" "2.9.2"
-    "@uiw/react-color-saturation" "2.9.2"
+    "@uiw/color-convert" "2.9.5"
+    "@uiw/react-color-alpha" "2.9.5"
+    "@uiw/react-color-editable-input" "2.9.5"
+    "@uiw/react-color-editable-input-hsla" "2.9.5"
+    "@uiw/react-color-editable-input-rgba" "2.9.5"
+    "@uiw/react-color-github" "2.9.5"
+    "@uiw/react-color-hue" "2.9.5"
+    "@uiw/react-color-saturation" "2.9.5"
 
-"@uiw/react-color-editable-input-hsla@2.9.2":
-  version "2.9.2"
-  resolved "https://registry.yarnpkg.com/@uiw/react-color-editable-input-hsla/-/react-color-editable-input-hsla-2.9.2.tgz#a85fc3f42cb5ce3672e63567f9c6c69af311d56a"
-  integrity sha512-kZfj3W20msLeP8/HY498rG30eBHRPAyxduhu94HLa9XggT/0ogwA9xZJZgWd6B7FYPeRlhRDY7dnF7caND63GQ==
+"@uiw/react-color-editable-input-hsla@2.9.5":
+  version "2.9.5"
+  resolved "https://registry.yarnpkg.com/@uiw/react-color-editable-input-hsla/-/react-color-editable-input-hsla-2.9.5.tgz#ceb26e4e094be6a4653f934741d3272664441450"
+  integrity sha512-IysIxClKo85W7XpHQ71q7BrHA4ZzXcvFO7qInyfn2H62F2SiKawX6IXWRs+OfTOB/SO0+3Z8BVGGnhC42XDUjw==
   dependencies:
-    "@uiw/color-convert" "2.9.2"
-    "@uiw/react-color-editable-input-rgba" "2.9.2"
+    "@uiw/color-convert" "2.9.5"
+    "@uiw/react-color-editable-input-rgba" "2.9.5"
 
-"@uiw/react-color-editable-input-rgba@2.9.2":
-  version "2.9.2"
-  resolved "https://registry.yarnpkg.com/@uiw/react-color-editable-input-rgba/-/react-color-editable-input-rgba-2.9.2.tgz#00c0db5370ff95ec3793da0a85d90a86b794f9c9"
-  integrity sha512-sQW3tSao754954aQuVK4qvn1i+KC2piE4UftaBubD3QxC02gg5VfgZRoI6AV+nLr73Ifv3mCXewjN1BcP/+x4A==
+"@uiw/react-color-editable-input-rgba@2.9.5":
+  version "2.9.5"
+  resolved "https://registry.yarnpkg.com/@uiw/react-color-editable-input-rgba/-/react-color-editable-input-rgba-2.9.5.tgz#f184e5e4177356135954efbced790363d8b0e51a"
+  integrity sha512-l4XZlyopZpfMLzKL0YLk/i9AcQb3wN33oBXOw8jqCVvFTIejpfMa5iqhuGA+e4UdYvTXFv/y1nwUN1xSxSpGrQ==
   dependencies:
-    "@uiw/color-convert" "2.9.2"
-    "@uiw/react-color-editable-input" "2.9.2"
+    "@uiw/color-convert" "2.9.5"
+    "@uiw/react-color-editable-input" "2.9.5"
 
-"@uiw/react-color-editable-input@2.9.2":
-  version "2.9.2"
-  resolved "https://registry.yarnpkg.com/@uiw/react-color-editable-input/-/react-color-editable-input-2.9.2.tgz#6b33a3200df4a409a013907871b96d7a0569c04b"
-  integrity sha512-DY7pu12+LDRn6cxDMvsy1/quaPTxicAPz/kfODV7KBf8+Hq4rFWeJ4KS6m22IKIbQxrBQgmQG0WFJLaPeY7cPw==
+"@uiw/react-color-editable-input@2.9.5":
+  version "2.9.5"
+  resolved "https://registry.yarnpkg.com/@uiw/react-color-editable-input/-/react-color-editable-input-2.9.5.tgz#20e7cf339da8258edd2e0b2c6d259a53dbff08a1"
+  integrity sha512-zg/TQvp/VuALhOdihLb/bmp+7lXGuEYQz79MDfeEd8t9epQjM2tpvX4hd6MmYwDZiVOhZJhMnLWcX4Br6cm8CQ==
 
-"@uiw/react-color-github@2.9.2":
-  version "2.9.2"
-  resolved "https://registry.yarnpkg.com/@uiw/react-color-github/-/react-color-github-2.9.2.tgz#dbbc3103a968e49817bf9fc2ac4f8b6b01f24ce9"
-  integrity sha512-pKR94swzWxqRFUEZJBQ8WHcw6CklxLWhDyjvGpxiieAlwUAL0mlmtCcctRgsmJRuAKQlZx4WNslRgNX5aVcoZw==
+"@uiw/react-color-github@2.9.5":
+  version "2.9.5"
+  resolved "https://registry.yarnpkg.com/@uiw/react-color-github/-/react-color-github-2.9.5.tgz#89f3e9d4586bab4475c92066aa0c002d64259468"
+  integrity sha512-0Av4OfIM4+Kca7NgbLCO8pQX1J52EIoCCTHbbGn+ufsodYr/7NQHRC+j/C4wwQNFPtkzdpENM/H+Z3RcbS/oCA==
   dependencies:
-    "@uiw/color-convert" "2.9.2"
-    "@uiw/react-color-swatch" "2.9.2"
+    "@uiw/color-convert" "2.9.5"
+    "@uiw/react-color-swatch" "2.9.5"
 
-"@uiw/react-color-hue@2.9.2":
-  version "2.9.2"
-  resolved "https://registry.yarnpkg.com/@uiw/react-color-hue/-/react-color-hue-2.9.2.tgz#a422743d826ca882c42872631da83341b9225f3f"
-  integrity sha512-vDGN5YCzw09BfxkQeDvAeQ7zAy141uJ3HkFk1lsXL7ha8xZ35AItE1s/C6d60vFjGdoloKShh0yA7df3pnjmxA==
+"@uiw/react-color-hue@2.9.5":
+  version "2.9.5"
+  resolved "https://registry.yarnpkg.com/@uiw/react-color-hue/-/react-color-hue-2.9.5.tgz#1099697b1f42e510904dcf127a786ee5d9b6f685"
+  integrity sha512-S+ejC6oz6pbSzY8CzUX3eZJzA8tTEErXeG4KGgabGiv4bpjXX1BxEN7aLkADVSmucYhI4kHfUItld0RIHWnViA==
   dependencies:
-    "@uiw/color-convert" "2.9.2"
-    "@uiw/react-color-alpha" "2.9.2"
+    "@uiw/color-convert" "2.9.5"
+    "@uiw/react-color-alpha" "2.9.5"
 
-"@uiw/react-color-saturation@2.9.2":
-  version "2.9.2"
-  resolved "https://registry.yarnpkg.com/@uiw/react-color-saturation/-/react-color-saturation-2.9.2.tgz#0d1ed412224fbb13699bb7a4278b35e4d6330669"
-  integrity sha512-w1aUU+g6Axwbr1nLvF8k/zg5v7UW8z80eH6C7w+tdiOFOQKkKQlXqeOG0IIUUIj3v/ji+yM90IuOH+Ku7zsJrg==
+"@uiw/react-color-saturation@2.9.5":
+  version "2.9.5"
+  resolved "https://registry.yarnpkg.com/@uiw/react-color-saturation/-/react-color-saturation-2.9.5.tgz#9aff76b2e0efde5a99096dcd3906ea0143f2f70c"
+  integrity sha512-CzZzMRauJv4AziHzlFO+YfFvel3DtHkK+JfPiFO5SjRWemckn9bIDw7Dl7j4dhbZdf87lJziLCMZWccYwdVMdA==
   dependencies:
-    "@uiw/color-convert" "2.9.2"
-    "@uiw/react-drag-event-interactive" "2.9.2"
+    "@uiw/color-convert" "2.9.5"
+    "@uiw/react-drag-event-interactive" "2.9.5"
 
-"@uiw/react-color-swatch@2.9.2":
-  version "2.9.2"
-  resolved "https://registry.yarnpkg.com/@uiw/react-color-swatch/-/react-color-swatch-2.9.2.tgz#92273db0256a6d51c1d6e534dfdd4a2fb676ade0"
-  integrity sha512-6zBy+E9NzZR672M2wPsbbNRqKy9Wi9jOuuxxyzov1CEZp+pPX7UwMlCX6RUhKdO0PzTSPCVQmbz5bplu5vsW0w==
+"@uiw/react-color-swatch@2.9.5":
+  version "2.9.5"
+  resolved "https://registry.yarnpkg.com/@uiw/react-color-swatch/-/react-color-swatch-2.9.5.tgz#8152b97a6940b524fd537730e193101e4b7220cf"
+  integrity sha512-Jp5sUR0WsKZmNo7A/DAZe7TER8cjEjMffTD+UPWVYWbj59wzEiEKMGy2VtdD9RGE1RKAXla9Qd2gXxVVXiOZBg==
   dependencies:
-    "@uiw/color-convert" "2.9.2"
+    "@uiw/color-convert" "2.9.5"
 
-"@uiw/react-color-wheel@^2.9.2":
-  version "2.9.2"
-  resolved "https://registry.yarnpkg.com/@uiw/react-color-wheel/-/react-color-wheel-2.9.2.tgz#e21154b1a875c80dd6aee1d3336b895d3b438211"
-  integrity sha512-ayGzQyMZM3Cp+sX7LNElQ/QQWMO7YG4k/RQwVJAhxNQ+4lJ/p4LLSnI85D7NxILkk+jiXnjxRroxxZ2eJhWo+g==
+"@uiw/react-color-wheel@^2.9.5":
+  version "2.9.5"
+  resolved "https://registry.yarnpkg.com/@uiw/react-color-wheel/-/react-color-wheel-2.9.5.tgz#6b7e7fb3928543642169586a44a09cb1d1fa112a"
+  integrity sha512-vR7zYfJeFsNd+BCd2LBvbvqUF2V84WawoQPIt1MMTt4lz+EC9YUbLTRVe5QP+jngr5FfXU1TC9n/91UtqYypsQ==
   dependencies:
-    "@uiw/color-convert" "2.9.2"
-    "@uiw/react-drag-event-interactive" "2.9.2"
+    "@uiw/color-convert" "2.9.5"
+    "@uiw/react-drag-event-interactive" "2.9.5"
 
-"@uiw/react-drag-event-interactive@2.9.2":
-  version "2.9.2"
-  resolved "https://registry.yarnpkg.com/@uiw/react-drag-event-interactive/-/react-drag-event-interactive-2.9.2.tgz#1b6019cdd55f069cb8c203a618ca665f759f0ecf"
-  integrity sha512-6gxQz+Ij7JkXlEOpfZhOu+Gdp/sI9VnMeDl8AJeYl3+0YXP31lXGmyb0NkNYnoUmJO+RrAf68c1raMpaDWs+Ow==
+"@uiw/react-drag-event-interactive@2.9.5":
+  version "2.9.5"
+  resolved "https://registry.yarnpkg.com/@uiw/react-drag-event-interactive/-/react-drag-event-interactive-2.9.5.tgz#4e360cc42778bacecc5864353ee5338c6435770f"
+  integrity sha512-2LK/lsWsNLG9is1uJ/p14JVOR+YfCu8gpHFJ+2m+I/DPXVOln7VGoYPzcS6hwYOt9tPPJF4uqonnIUCBQ4Xa2w==
 
-"@vitejs/plugin-react@^5.1.3":
-  version "5.1.3"
-  resolved "https://registry.yarnpkg.com/@vitejs/plugin-react/-/plugin-react-5.1.3.tgz#05eba092cc89a6ff89668d3f62258e2c5a8a9122"
-  integrity sha512-NVUnA6gQCl8jfoYqKqQU5Clv0aPw14KkZYCsX6T9Lfu9slI0LOU10OTwFHS/WmptsMMpshNd/1tuWsHQ2Uk+cg==
+"@vitejs/plugin-react@^5.1.4":
+  version "5.1.4"
+  resolved "https://registry.yarnpkg.com/@vitejs/plugin-react/-/plugin-react-5.1.4.tgz#5b477e060bf612a7394c4febacc5de33a219b0e4"
+  integrity sha512-VIcFLdRi/VYRU8OL/puL7QXMYafHmqOnwTZY50U1JPlCNj30PxCMx65c494b1K9be9hX83KVt0+gTEwTWLqToA==
   dependencies:
     "@babel/core" "^7.29.0"
     "@babel/plugin-transform-react-jsx-self" "^7.27.1"
     "@babel/plugin-transform-react-jsx-source" "^7.27.1"
-    "@rolldown/pluginutils" "1.0.0-rc.2"
+    "@rolldown/pluginutils" "1.0.0-rc.3"
     "@types/babel__core" "^7.20.5"
     react-refresh "^0.18.0"
 
@@ -1620,13 +1620,22 @@ available-typed-arrays@^1.0.7:
   dependencies:
     possible-typed-array-names "^1.0.0"
 
-axios@^1.12.2, axios@^1.13.4:
+axios@^1.12.2:
   version "1.13.4"
   resolved "https://registry.yarnpkg.com/axios/-/axios-1.13.4.tgz#15d109a4817fb82f73aea910d41a2c85606076bc"
   integrity sha512-1wVkUaAO6WyaYtCkcYCOx12ZgpGf9Zif+qXa4n+oYzK558YryKqiL6UWwd5DqiH3VRW0GYhTZQ/vlgJrCoNQlg==
   dependencies:
     follow-redirects "^1.15.6"
     form-data "^4.0.4"
+    proxy-from-env "^1.1.0"
+
+axios@^1.13.5:
+  version "1.13.5"
+  resolved "https://registry.yarnpkg.com/axios/-/axios-1.13.5.tgz#5e464688fa127e11a660a2c49441c009f6567a43"
+  integrity sha512-cz4ur7Vb0xS4/KUN0tPWe44eqxrIu31me+fbang3ijiNscE129POzipJJA6zniq2C/Z6sJCjMimjS8Lc/GAs8Q==
+  dependencies:
+    follow-redirects "^1.15.11"
+    form-data "^4.0.5"
     proxy-from-env "^1.1.0"
 
 babel-plugin-macros@^3.1.0:
@@ -2111,7 +2120,7 @@ fizzy-ui-utils@^2.0.0:
   dependencies:
     desandro-matches-selector "^2.0.0"
 
-follow-redirects@^1.15.6:
+follow-redirects@^1.15.11, follow-redirects@^1.15.6:
   version "1.15.11"
   resolved "https://registry.yarnpkg.com/follow-redirects/-/follow-redirects-1.15.11.tgz#777d73d72a92f8ec4d2e410eb47352a56b8e8340"
   integrity sha512-deG2P0JfjrTxl50XGCDyfI97ZGVCxIpfKYmfyrQ54n5FO/0gfIES8C/Psl6kWVDolizcaaxZJnTS0QSMxvnsBQ==
@@ -2127,6 +2136,17 @@ form-data@^4.0.4:
   version "4.0.4"
   resolved "https://registry.yarnpkg.com/form-data/-/form-data-4.0.4.tgz#784cdcce0669a9d68e94d11ac4eea98088edd2c4"
   integrity sha512-KrGhL9Q4zjj0kiUt5OO4Mr/A/jlI2jDYs5eHBpYHPcBEVSiipAvn2Ko2HnPe20rmcuuvMHNdZFp+4IlGTMF0Ow==
+  dependencies:
+    asynckit "^0.4.0"
+    combined-stream "^1.0.8"
+    es-set-tostringtag "^2.1.0"
+    hasown "^2.0.2"
+    mime-types "^2.1.12"
+
+form-data@^4.0.5:
+  version "4.0.5"
+  resolved "https://registry.yarnpkg.com/form-data/-/form-data-4.0.5.tgz#b49e48858045ff4cbf6b03e1805cebcad3679053"
+  integrity sha512-8RipRLol37bNs2bhoV67fiTEvdTrbMUYcFTiy3+wuuOnUog2QBHCZWXDRijWQfAkhBj2Uf5UnVaiWwA5vdd82w==
   dependencies:
     asynckit "^0.4.0"
     combined-stream "^1.0.8"
@@ -2316,10 +2336,10 @@ i18next-localstorage-backend@^4.3.1:
   dependencies:
     "@babel/runtime" "^7.28.4"
 
-i18next@^25.7.3:
-  version "25.7.3"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-25.7.3.tgz#88bf15b414012a53ca87b9d408108aa81cb627cc"
-  integrity sha512-2XaT+HpYGuc2uTExq9TVRhLsso+Dxym6PWaKpn36wfBmTI779OQ7iP/XaZHzrnGyzU4SHpFrTYLKfVyBfAhVNA==
+i18next@^25.8.11:
+  version "25.8.11"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-25.8.11.tgz#c7d4d876181f63d76248da44e0e92a55a65fe2d2"
+  integrity sha512-LZ32llTLGludnddjLoijHV7TbmVubU5eJnsWf8taiuM3jmSfUuvBLuyDeubJKS1yBjLBgb7As124M4KWNcBvpw==
   dependencies:
     "@babel/runtime" "^7.28.4"
 
