@@ -73,11 +73,11 @@ public class SecurityTable {
                 SALT_PASSWORD_HASH + ',' +
                 GROUP_ID + ") VALUES (?,?,?,?)";
 
-        public int id;
-        public String username;
-        public String linkedToUuid;
-        public String saltedPassHash;
-        public int groupId;
+        private int id;
+        private String username;
+        private String linkedToUuid;
+        private String saltedPassHash;
+        private int groupId;
 
         public static Row extract(ResultSet set) throws SQLException {
             Row row = new Row();
@@ -87,6 +87,14 @@ public class SecurityTable {
             row.saltedPassHash = set.getString(SALT_PASSWORD_HASH);
             row.groupId = set.getInt(GROUP_ID);
             return row;
+        }
+
+        public String getUsername() {
+            return username;
+        }
+
+        public int getId() {
+            return id;
         }
 
         @Override

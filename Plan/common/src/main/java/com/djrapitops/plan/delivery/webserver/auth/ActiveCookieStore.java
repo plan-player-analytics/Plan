@@ -41,6 +41,7 @@ import java.util.concurrent.TimeUnit;
 @Singleton
 public class ActiveCookieStore implements SubSystem {
 
+    private static final SecureRandom SECURE_RANDOM = new SecureRandom();
     private static final Map<String, CookieMetadata> USERS_BY_COOKIE = new ConcurrentHashMap<>();
     private static long cookieExpiresAfterMs = TimeUnit.HOURS.toMillis(2L);
 
@@ -118,8 +119,7 @@ public class ActiveCookieStore implements SubSystem {
     }
 
     public String generateNewCookie(User user, String ipAddress) {
-        SecureRandom secureRandom = new SecureRandom();
-        String cookie = DigestUtils.sha256Hex(user.getUsername() + UUID.randomUUID() + System.currentTimeMillis() + secureRandom.nextLong());
+        String cookie = DigestUtils.sha256Hex(user.getUsername() + UUID.randomUUID() + System.currentTimeMillis() + SECURE_RANDOM.nextLong());
         long expiresAt = System.currentTimeMillis() + cookieExpiresAfterMs;
         USERS_BY_COOKIE.put(cookie, new CookieMetadata(user, expiresAt, ipAddress));
         saveNewCookie(user, cookie, System.currentTimeMillis(), ipAddress);

@@ -73,11 +73,11 @@ public class PluginVersionTable {
     public static class Row implements ServerIdentifiable {
         public static final String INSERT_STATEMENT = Insert.values(TABLE_NAME, SERVER_ID, PLUGIN_NAME, VERSION, MODIFIED);
 
-        public int id;
-        public int serverId;
-        public String pluginName;
-        public String version;
-        public long modified;
+        private int id;
+        private int serverId;
+        private String pluginName;
+        private String version;
+        private long modified;
 
         public static Row extract(ResultSet set) throws SQLException {
             Row row = new Row();
@@ -87,6 +87,10 @@ public class PluginVersionTable {
             row.version = set.getString(VERSION);
             row.modified = set.getLong(MODIFIED);
             return row;
+        }
+
+        public int getId() {
+            return id;
         }
 
         public void insert(PreparedStatement statement) throws SQLException {

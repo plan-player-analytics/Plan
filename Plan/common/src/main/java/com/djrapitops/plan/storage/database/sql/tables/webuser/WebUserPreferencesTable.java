@@ -74,9 +74,9 @@ public class WebUserPreferencesTable {
     public static class Row implements UserIdentifiable {
         public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " (" + PREFERENCES + ',' + WEB_USER_ID + ") VALUES (?, ?)";
 
-        public int id;
-        public int webUserId;
-        public String preferences;
+        private int id;
+        private int webUserId;
+        private String preferences;
 
         public static Row extract(ResultSet set) throws SQLException {
             Row row = new Row();
@@ -84,6 +84,10 @@ public class WebUserPreferencesTable {
             row.webUserId = set.getInt(WEB_USER_ID);
             row.preferences = set.getString(PREFERENCES);
             return row;
+        }
+
+        public int getId() {
+            return id;
         }
 
         @Override

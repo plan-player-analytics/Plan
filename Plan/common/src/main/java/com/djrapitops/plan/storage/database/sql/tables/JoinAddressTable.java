@@ -48,14 +48,22 @@ public class JoinAddressTable {
     }
 
     public static class Row {
-        public int id;
-        public String joinAddress;
+        private int id;
+        private String joinAddress;
 
         public static Row extract(ResultSet set) throws SQLException {
             Row row = new Row();
             row.id = set.getInt(ID);
             row.joinAddress = set.getString(JOIN_ADDRESS);
             return row;
+        }
+
+        public String getJoinAddress() {
+            return joinAddress;
+        }
+
+        public int getId() {
+            return id;
         }
 
         public void insert(PreparedStatement statement) throws SQLException {

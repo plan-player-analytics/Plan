@@ -96,10 +96,10 @@ public class GeoInfoTable {
     }
 
     public static class Row implements UserIdentifiable {
-        public int id;
-        public int userId;
-        public String geolocation;
-        public long lastUsed;
+        private int id;
+        private int userId;
+        private String geolocation;
+        private long lastUsed;
 
         public static Row extract(ResultSet set) throws SQLException {
             Row row = new Row();
@@ -108,6 +108,10 @@ public class GeoInfoTable {
             row.geolocation = set.getString(GEOLOCATION);
             row.lastUsed = set.getLong(LAST_USED);
             return row;
+        }
+
+        public int getId() {
+            return id;
         }
 
         public void upsert(PreparedStatement statement) throws SQLException {

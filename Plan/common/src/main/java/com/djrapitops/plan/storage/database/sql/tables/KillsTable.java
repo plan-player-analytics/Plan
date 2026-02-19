@@ -112,13 +112,13 @@ public class KillsTable {
     }
 
     public static class Row implements ServerUUIDIdentifiable {
-        public int id;
-        public UUID killerUUID;
-        public UUID victimUUID;
-        public ServerUUID serverUUID;
-        public long date;
-        public int sessionId;
-        public String weapon;
+        private int id;
+        private UUID killerUUID;
+        private UUID victimUUID;
+        private ServerUUID serverUUID;
+        private long date;
+        private int sessionId;
+        private String weapon;
 
         public static Row extract(ResultSet set) throws SQLException {
             Row row = new Row();
@@ -130,6 +130,10 @@ public class KillsTable {
             row.sessionId = set.getInt(SESSION_ID);
             row.weapon = set.getString(WEAPON);
             return row;
+        }
+
+        public int getId() {
+            return id;
         }
 
         public void insert(PreparedStatement statement) throws SQLException {

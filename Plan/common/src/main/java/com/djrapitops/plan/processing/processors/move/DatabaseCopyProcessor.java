@@ -291,7 +291,7 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             IdMapper.mapServerIds(rows, serverIdLookupTable);
             toDB.executeInTransaction(LargeStoreQueries.insertUserInfo(rows)).join();
             logProgress(rows.size(), UserInfoTable.TABLE_NAME, rows.isEmpty());
-            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).id;
+            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).getId();
         });
     }
 
@@ -300,13 +300,13 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
         LookupTable<String> joinAddressLookupTable = toDB.query(LookupTableQueries.joinAddressLookupTable());
         List<JoinAddressTable.Row> rows = fromDB.query(JoinAddressQueries.fetchRows());
         List<JoinAddressTable.Row> newRows = rows.stream()
-                .filter(address -> joinAddressLookupTable.find(address.joinAddress).isEmpty())
+                .filter(address -> joinAddressLookupTable.find(address.getJoinAddress()).isEmpty())
                 .collect(Collectors.toList());
         toDB.executeInTransaction(LargeStoreQueries.insertJoinAddresses(newRows)).join();
 
         LookupTable<String> oldLookupTable = new LookupTable<>();
         for (JoinAddressTable.Row row : rows) {
-            oldLookupTable.put(row.joinAddress, row.id);
+            oldLookupTable.put(row.getJoinAddress(), row.getId());
         }
         if (!rows.isEmpty()) {
             logProgress(rows.size(), JoinAddressTable.TABLE_NAME, false);
@@ -328,7 +328,7 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             IdMapper.mapServerIds(rows, serverIdLookupTable);
             toDB.executeInTransaction(LargeStoreQueries.insertPing(rows)).join();
             logProgress(rows.size(), PingTable.TABLE_NAME, rows.isEmpty());
-            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).id;
+            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).getId();
         });
     }
 
@@ -339,7 +339,7 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             IdMapper.mapServerIds(rows, serverIdLookupTable);
             toDB.executeInTransaction(LargeStoreQueries.insertTps(rows)).join();
             logProgress(rows.size(), TPSTable.TABLE_NAME, rows.isEmpty());
-            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).id;
+            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).getId();
         });
     }
 
@@ -350,7 +350,7 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             IdMapper.mapServerIds(rows, serverIdLookupTable);
             toDB.executeInTransaction(LargeStoreQueries.insertPluginVersions(rows)).join();
             logProgress(rows.size(), PluginVersionTable.TABLE_NAME, rows.isEmpty());
-            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).id;
+            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).getId();
         });
     }
 
@@ -366,7 +366,7 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             IdMapper.mapJoinAddressIds(rows, joinAddressLookupTable);
             toDB.executeInTransaction(LargeStoreQueries.insertSessionsWithOldIds(rows)).join();
             logProgress(rows.size(), SessionsTable.TABLE_NAME, rows.isEmpty());
-            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).id;
+            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).getId();
         });
 
         toDB.executeInTransaction(SessionsTable.TemporaryIdLookupTable.INSERT_ALL_STATEMENT).join();
@@ -378,13 +378,13 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
         batching(currentId -> {
             List<WorldTable.Row> rows = fromDB.query(WorldTimesQueries.fetchWorldRows(currentId, ROW_LIMIT))
                     .stream().filter(row -> !worldLookupTable.contains(world ->
-                            world.getWorldName().equals(row.name)
-                                    && world.getServerUUID().equals(row.serverUUID)))
+                            world.getWorldName().equals(row.getName())
+                                    && world.getServerUUID().equals(row.getServerUUID())))
                     .collect(Collectors.toList());
             mapServerUUIDs(rows);
             toDB.executeInTransaction(LargeStoreQueries.insertWorlds(rows)).join();
             logProgress(rows.size(), WorldTable.TABLE_NAME, rows.isEmpty());
-            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).id;
+            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).getId();
         });
         return toDB.query(LookupTableQueries.worldLookupTable())
                 .constructIdToIdLookupTable(fromDB.query(LookupTableQueries.worldLookupTable()));
@@ -403,7 +403,7 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             IdMapper.mapWorldIds(rows, worldIdLookupTable);
             toDB.executeTransaction(LargeStoreQueries.insertWorldTimesWithOldSessionIds(rows)).join();
             logProgress(rows.size(), WorldTimesTable.TABLE_NAME, rows.isEmpty());
-            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).id;
+            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).getId();
         });
     }
 
@@ -414,7 +414,7 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             mapServerUUIDs(rows);
             toDB.executeTransaction(LargeStoreQueries.insertKillsWithOldSessionIds(rows)).join();
             logProgress(rows.size(), KillsTable.TABLE_NAME, rows.isEmpty());
-            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).id;
+            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).getId();
         });
     }
 
@@ -424,7 +424,7 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             List<AccessLogTable.Row> rows = fromDB.query(AccessLogTable.fetchRows(currentId, ROW_LIMIT));
             toDB.executeInTransaction(LargeStoreQueries.insertAccessLog(rows)).join();
             logProgress(rows.size(), AccessLogTable.TABLE_NAME, rows.isEmpty());
-            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).id;
+            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).getId();
         });
     }
 
@@ -436,7 +436,7 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             IdMapper.mapUserIds(rows, userIdLookupTable);
             toDB.executeInTransaction(LargeStoreQueries.upsertGeoInfo(rows, toDB.getType())).join();
             logProgress(rows.size(), GeoInfoTable.TABLE_NAME, rows.isEmpty());
-            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).id;
+            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).getId();
         });
     }
 
@@ -448,7 +448,7 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             mapServerUUIDs(rows);
             toDB.executeInTransaction(LargeStoreQueries.upsertNicknames(rows, toDB.getType())).join();
             logProgress(rows.size(), NicknamesTable.TABLE_NAME, rows.isEmpty());
-            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).id;
+            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).getId();
         });
     }
 
@@ -460,7 +460,7 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             IdMapper.mapServerIds(rows, serverIdLookupTable);
             toDB.executeInTransaction(LargeStoreQueries.upsertAllowlistBounces(rows, toDB.getType())).join();
             logProgress(rows.size(), AllowlistBounceTable.TABLE_NAME, rows.isEmpty());
-            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).id;
+            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).getId();
         });
     }
 
@@ -491,10 +491,10 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
         batching(currentId -> {
             List<SecurityTable.Row> rows = fromDB.query(WebUserQueries.fetchRows(currentId, ROW_LIMIT));
             IdMapper.mapGroupIds(rows, webGroupLookupTable);
-            rows.removeIf(row -> lookupTable.contains(row.username));
+            rows.removeIf(row -> lookupTable.contains(row.getUsername()));
             toDB.executeInTransaction(LargeStoreQueries.storeUsers(rows)).join();
             logProgress(tableCounts.get(SessionsTable.TABLE_NAME), SecurityTable.TABLE_NAME, false);
-            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).id;
+            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).getId();
         });
         return toDB.query(LookupTableQueries.webUserLookupTable())
                 .constructIdToIdLookupTable(fromDB.query(LookupTableQueries.webUserLookupTable()));
@@ -507,10 +507,10 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             List<WebUserPreferencesTable.Row> rows = fromDB.query(WebUserPreferencesTable.fetchRows(currentId, ROW_LIMIT));
             int toCopy = rows.size();
             IdMapper.mapUserIds(rows, webUserIdLookupTable);
-            rows.removeIf(row -> existingIds.contains(row.webUserId)); // Don't override
+            rows.removeIf(row -> existingIds.contains(row.getUserId())); // Don't override
             toDB.executeInTransaction(LargeStoreQueries.insertPreferences(rows)).join();
             logProgress(toCopy, WebUserPreferencesTable.TABLE_NAME, toCopy != 0);
-            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).id;
+            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).getId();
         });
     }
 

@@ -100,18 +100,18 @@ public class SessionsTable {
     public static class Row implements ServerIdentifiable, UserIdentifiable, JoinAddressIdentifiable {
         public static final String OLD_ID = "old_id";
 
-        public static String INSERT_STATEMENT_WITH_OLD_ID = Insert.values(TABLE_NAME, USER_ID, SERVER_ID, SESSION_START, SESSION_END,
+        public static final String INSERT_STATEMENT_WITH_OLD_ID = Insert.values(TABLE_NAME, USER_ID, SERVER_ID, SESSION_START, SESSION_END,
                 MOB_KILLS, DEATHS, AFK_TIME, JOIN_ADDRESS_ID, OLD_ID);
 
-        public int id;
-        public int userId;
-        public int serverId;
-        public long sessionStart;
-        public long sessionEnd;
-        public int mobKills;
-        public int deaths;
-        public long afkTime;
-        public Integer joinAddressId;
+        private int id;
+        private int userId;
+        private int serverId;
+        private long sessionStart;
+        private long sessionEnd;
+        private int mobKills;
+        private int deaths;
+        private long afkTime;
+        private Integer joinAddressId;
 
         public static Row extract(ResultSet set) throws SQLException {
             Row row = new Row();
@@ -133,6 +133,10 @@ public class SessionsTable {
 
         public static Patch removeOldIdPatch() {
             return new RemoveOldIdColumnPatch();
+        }
+
+        public int getId() {
+            return id;
         }
 
         public void insert(PreparedStatement statement, boolean withOldId) throws SQLException {
@@ -205,15 +209,14 @@ public class SessionsTable {
     }
 
     public static class TemporaryIdLookupTable {
-        public static String TABLE_NAME = "plan_temp_session_id_lookup";
-        public static String OLD_ID = "old_id";
-        public static String NEW_ID = "new_id";
+        public static final String TABLE_NAME = "plan_temp_session_id_lookup";
+        public static final String OLD_ID = "old_id";
+        public static final String NEW_ID = "new_id";
 
-        public static String REMOVE_ALL_STATEMENT = DELETE_FROM + TABLE_NAME;
-        public static String INSERT_ALL_STATEMENT = INSERT_INTO + TABLE_NAME + " (" + OLD_ID + ", " + NEW_ID + ")" +
+        public static final String INSERT_ALL_STATEMENT = INSERT_INTO + TABLE_NAME + " (" + OLD_ID + ", " + NEW_ID + ")" +
                 SELECT + Row.OLD_ID + ',' + SessionsTable.ID + FROM + SessionsTable.TABLE_NAME +
                 WHERE + Row.OLD_ID + IS_NOT_NULL;
-        public static String DROP_TABLE_STATEMENT = "DROP TABLE IF EXISTS " + TABLE_NAME;
+        public static final String DROP_TABLE_STATEMENT = "DROP TABLE IF EXISTS " + TABLE_NAME;
 
         private TemporaryIdLookupTable() {
             /* Static method class */

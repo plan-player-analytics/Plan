@@ -99,11 +99,11 @@ public class NicknamesTable {
     }
 
     public static class Row implements ServerUUIDIdentifiable {
-        public int id;
-        public String userUUID;
-        public String serverUUID;
-        public String nickname;
-        public long lastUsed;
+        private int id;
+        private String userUUID;
+        private String serverUUID;
+        private String nickname;
+        private long lastUsed;
 
         public static Row extract(ResultSet set) throws SQLException {
             Row row = new Row();
@@ -113,6 +113,10 @@ public class NicknamesTable {
             row.userUUID = set.getString(USER_UUID);
             row.lastUsed = set.getLong(LAST_USED);
             return row;
+        }
+
+        public int getId() {
+            return id;
         }
 
         public void upsert(PreparedStatement statement) throws SQLException {

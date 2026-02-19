@@ -134,15 +134,15 @@ public class WorldTimesTable {
     }
 
     public static class Row implements ServerIdentifiable, UserIdentifiable, WorldIdentifiable {
-        public int id;
-        public int sessionId;
-        public int serverId;
-        public int userId;
-        public int worldId;
-        public long survivalTime;
-        public long creativeTime;
-        public long adventureTime;
-        public long spectatorTime;
+        private int id;
+        private int sessionId;
+        private int serverId;
+        private int userId;
+        private int worldId;
+        private long survivalTime;
+        private long creativeTime;
+        private long adventureTime;
+        private long spectatorTime;
 
         public static Row extract(ResultSet set) throws SQLException {
             Row row = new Row();
@@ -156,6 +156,10 @@ public class WorldTimesTable {
             row.adventureTime = set.getLong(ADVENTURE);
             row.spectatorTime = set.getLong(SPECTATOR);
             return row;
+        }
+
+        public int getId() {
+            return id;
         }
 
         @Override

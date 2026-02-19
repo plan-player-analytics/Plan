@@ -89,21 +89,21 @@ public class TPSTable {
     }
 
     public static class Row implements ServerIdentifiable {
-        public static String INSERT_STATEMENT = Insert.values(TABLE_NAME, SERVER_ID, DATE, TPS, PLAYERS_ONLINE,
+        public static final String INSERT_STATEMENT = Insert.values(TABLE_NAME, SERVER_ID, DATE, TPS, PLAYERS_ONLINE,
                 CPU_USAGE, RAM_USAGE, ENTITIES, CHUNKS, FREE_DISK, MSPT_AVERAGE, MSPT_95TH_PERCENTILE);
 
-        public int id;
-        public int serverId;
-        public long date;
-        public double tps;
-        public int playersOnline;
-        public double cpuUsage;
-        public long ramUsage;
-        public int entities;
-        public int chunksLoaded;
-        public long freeDiskSpace;
-        public Double msptAverage;
-        public Double mspt95thPercentile;
+        private int id;
+        private int serverId;
+        private long date;
+        private double tps;
+        private int playersOnline;
+        private double cpuUsage;
+        private long ramUsage;
+        private int entities;
+        private int chunksLoaded;
+        private long freeDiskSpace;
+        private Double msptAverage;
+        private Double mspt95thPercentile;
 
         public static Row extract(ResultSet set) throws SQLException {
             Row row = new Row();
@@ -120,6 +120,10 @@ public class TPSTable {
             row.msptAverage = Sql.getDoubleOrNull(set, MSPT_AVERAGE);
             row.mspt95thPercentile = Sql.getDoubleOrNull(set, MSPT_95TH_PERCENTILE);
             return row;
+        }
+
+        public int getId() {
+            return id;
         }
 
         public void insert(PreparedStatement statement) throws SQLException {

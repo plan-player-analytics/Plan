@@ -72,12 +72,12 @@ public class AccessLogTable {
     }
 
     public static class Row {
-        public int id;
-        public long time;
-        public String fromIp;
-        public String requestMethod;
-        public String requestUri;
-        public int responseCode;
+        private int id;
+        private long time;
+        private String fromIp;
+        private String requestMethod;
+        private String requestUri;
+        private int responseCode;
 
         public static Row extract(ResultSet set) throws SQLException {
             Row row = new Row();
@@ -88,6 +88,10 @@ public class AccessLogTable {
             row.requestUri = set.getString(REQUEST_URI);
             row.responseCode = set.getInt(RESPONSE_CODE);
             return row;
+        }
+
+        public int getId() {
+            return id;
         }
 
         public void insert(PreparedStatement statement) throws SQLException {

@@ -73,9 +73,9 @@ public class WorldTable {
     }
 
     public static class Row implements ServerUUIDIdentifiable {
-        public int id;
-        public String name;
-        public ServerUUID serverUUID;
+        private int id;
+        private String name;
+        private ServerUUID serverUUID;
 
         public static Row extract(ResultSet set) throws SQLException {
             Row row = new Row();
@@ -83,6 +83,14 @@ public class WorldTable {
             row.name = set.getString(NAME);
             row.serverUUID = ServerUUID.fromString(set.getString(SERVER_UUID));
             return row;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getId() {
+            return id;
         }
 
         @Override

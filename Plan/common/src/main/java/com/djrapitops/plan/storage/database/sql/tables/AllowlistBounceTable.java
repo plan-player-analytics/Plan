@@ -99,12 +99,12 @@ public class AllowlistBounceTable {
     }
 
     public static class Row implements ServerIdentifiable {
-        public int id;
-        public String uuid;
-        public String userName;
-        public int serverId;
-        public int times;
-        public long lastBounce;
+        private int id;
+        private String uuid;
+        private String userName;
+        private int serverId;
+        private int times;
+        private long lastBounce;
 
         public static Row extract(ResultSet set) throws SQLException {
             Row row = new Row();
@@ -115,6 +115,10 @@ public class AllowlistBounceTable {
             row.times = set.getInt(TIMES);
             row.lastBounce = set.getLong(LAST_BOUNCE);
             return row;
+        }
+
+        public int getId() {
+            return id;
         }
 
         @Override

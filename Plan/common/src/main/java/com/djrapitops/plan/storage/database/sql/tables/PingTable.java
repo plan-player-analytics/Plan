@@ -78,15 +78,15 @@ public class PingTable {
     }
 
     public static class Row implements UserIdentifiable, ServerIdentifiable {
-        public static String INSERT_STATEMENT = Insert.values(TABLE_NAME, USER_ID, SERVER_ID, DATE, MAX_PING, MIN_PING, AVG_PING);
+        public static final String INSERT_STATEMENT = Insert.values(TABLE_NAME, USER_ID, SERVER_ID, DATE, MAX_PING, MIN_PING, AVG_PING);
 
-        public int id;
-        public int userId;
-        public int serverId;
-        public long date;
-        public int maxPing;
-        public int minPing;
-        public double avgPing;
+        private int id;
+        private int userId;
+        private int serverId;
+        private long date;
+        private int maxPing;
+        private int minPing;
+        private double avgPing;
 
         public static Row extract(ResultSet set) throws SQLException {
             Row row = new Row();
@@ -98,6 +98,10 @@ public class PingTable {
             row.minPing = set.getInt(MIN_PING);
             row.avgPing = set.getDouble(AVG_PING);
             return row;
+        }
+
+        public int getId() {
+            return id;
         }
 
         public void insert(PreparedStatement statement) throws SQLException {

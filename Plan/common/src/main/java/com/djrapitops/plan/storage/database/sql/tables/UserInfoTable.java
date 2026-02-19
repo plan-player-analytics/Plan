@@ -87,22 +87,13 @@ public class UserInfoTable {
     public static class Row implements UserIdentifiable, ServerIdentifiable {
         public static final String INSERT_STATEMENT = Insert.values(TABLE_NAME, USER_ID, SERVER_ID, JOIN_ADDRESS, REGISTERED, OP, BANNED);
 
-        public int id;
-        public int userId;
-        public int serverId;
-        public String joinAddress;
-        public long registered;
-        public boolean op;
-        public boolean banned;
-
-        public void insert(PreparedStatement statement) throws SQLException {
-            statement.setInt(1, userId);
-            statement.setInt(2, serverId);
-            statement.setString(3, joinAddress);
-            statement.setLong(4, registered);
-            statement.setBoolean(5, op);
-            statement.setBoolean(6, banned);
-        }
+        private int id;
+        private int userId;
+        private int serverId;
+        private String joinAddress;
+        private long registered;
+        private boolean op;
+        private boolean banned;
 
         public static Row extract(ResultSet set) throws SQLException {
             Row row = new Row();
@@ -114,6 +105,19 @@ public class UserInfoTable {
             row.op = set.getBoolean(OP);
             row.banned = set.getBoolean(BANNED);
             return row;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void insert(PreparedStatement statement) throws SQLException {
+            statement.setInt(1, userId);
+            statement.setInt(2, serverId);
+            statement.setString(3, joinAddress);
+            statement.setLong(4, registered);
+            statement.setBoolean(5, op);
+            statement.setBoolean(6, banned);
         }
 
         @Override
