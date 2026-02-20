@@ -90,7 +90,7 @@ subprojects {
         placeholderapiVersion = "2.11.5"
         nkPlaceholderapiVersion = "1.4-SNAPSHOT"
 
-        junitVersion = "6.0.2"
+        junitVersion = "6.0.3"
         mockitoVersion = "5.21.0"
         seleniumVersion = "4.40.0"
         testContainersVersion = "1.21.3"
