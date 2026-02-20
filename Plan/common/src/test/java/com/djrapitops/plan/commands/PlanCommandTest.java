@@ -46,7 +46,6 @@ import java.util.Collections;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.ExecutionException;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -156,7 +155,7 @@ class PlanCommandTest {
     }
 
     @Test
-    void networkCommandSendsLink(Database database) throws ExecutionException, InterruptedException {
+    void networkCommandSendsLink(Database database) {
         try {
             Server server = new Server(ServerUUID.randomUUID(), "Serve", "", "");
             server.setProxy(true);
