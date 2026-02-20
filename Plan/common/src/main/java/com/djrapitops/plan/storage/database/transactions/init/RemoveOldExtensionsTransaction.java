@@ -66,12 +66,7 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
                 ExtensionServerValueTable.TABLE_NAME,
                 ExtensionGroupsTable.TABLE_NAME
         }) {
-            execute(new ExecStatement(DELETE_FROM + table + WHERE + "provider_id=?") {
-                @Override
-                public void prepare(PreparedStatement statement) throws SQLException {
-                    statement.setInt(1, providerID);
-                }
-            });
+            execute(DELETE_FROM + table + WHERE + "provider_id=" + providerID);
         }
     }
 
@@ -80,12 +75,7 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
                 ExtensionPlayerTableValueTable.TABLE_NAME,
                 ExtensionServerTableValueTable.TABLE_NAME
         }) {
-            execute(new ExecStatement(DELETE_FROM + table + WHERE + "table_id=?") {
-                @Override
-                public void prepare(PreparedStatement statement) throws SQLException {
-                    statement.setInt(1, providerID);
-                }
-            });
+            execute(DELETE_FROM + table + WHERE + "table_id=" + providerID);
         }
     }
 

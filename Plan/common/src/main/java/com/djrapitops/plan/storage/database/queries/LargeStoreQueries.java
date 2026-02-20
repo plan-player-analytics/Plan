@@ -157,6 +157,7 @@ public class LargeStoreQueries {
         return new ExecBatchStatement(ServerTable.INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setBoolean(4, true);
                 for (Server server : servers) {
                     ServerUUID serverUUID = server.getUuid();
                     if (serverUUID == null) {
@@ -166,7 +167,6 @@ public class LargeStoreQueries {
                     statement.setString(1, serverUUID.toString());
                     statement.setString(2, server.getName());
                     statement.setString(3, server.getWebAddress());
-                    statement.setBoolean(4, true);
                     statement.setBoolean(5, server.isProxy());
                     statement.setString(6, server.getPlanVersion());
                     statement.addBatch();
@@ -478,8 +478,8 @@ public class LargeStoreQueries {
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (var permissionsOfGroup : groupPermissions.entrySet()) {
                     String group = permissionsOfGroup.getKey();
+                    statement.setString(1, group);
                     for (String permission : permissionsOfGroup.getValue()) {
-                        statement.setString(1, group);
                         statement.setString(2, permission);
                         statement.addBatch();
                     }
@@ -501,8 +501,8 @@ public class LargeStoreQueries {
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (var permissionsOfGroup : groupPermissions.entrySet()) {
                     Integer groupId = permissionsOfGroup.getKey();
+                    statement.setInt(1, groupId);
                     for (Integer permissionId : permissionsOfGroup.getValue()) {
-                        statement.setInt(1, groupId);
                         statement.setInt(2, permissionId);
                         statement.addBatch();
                     }

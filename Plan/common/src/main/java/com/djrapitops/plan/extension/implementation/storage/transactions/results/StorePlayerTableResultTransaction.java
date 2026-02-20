@@ -132,9 +132,9 @@ public class StorePlayerTableResultTransaction extends ThrowawayTransaction {
             public void prepare(PreparedStatement statement) throws SQLException {
                 int maxColumnSize = Math.min(table.getMaxColumnSize(), 4); // Limit to maximum 4 columns, or how many column names there are.
 
+                statement.setInt(1, tableID);
                 for (int rowNumber = afterRow; rowNumber < rows.size(); rowNumber++) {
                     Object[] row = rows.get(rowNumber);
-                    statement.setInt(1, tableID);
                     statement.setString(2, playerUUID.toString());
                     for (int i = 0; i < maxColumnSize; i++) {
                         Object value = row[i];
@@ -167,6 +167,7 @@ public class StorePlayerTableResultTransaction extends ThrowawayTransaction {
             public void prepare(PreparedStatement statement) throws SQLException {
                 int maxColumnSize = Math.min(table.getMaxColumnSize(), 4); // Limit to maximum 4 columns, or how many column names there are.
 
+                statement.setInt(5, tableID);
                 for (int rowNumber = 0; rowNumber < untilRow; rowNumber++) {
                     Object[] row = rows.get(rowNumber);
 
@@ -179,7 +180,6 @@ public class StorePlayerTableResultTransaction extends ThrowawayTransaction {
                         statement.setNull(1 + valueIndex, Types.VARCHAR);
                     }
 
-                    statement.setInt(5, tableID);
                     statement.setString(6, playerUUID.toString());
                     statement.setInt(7, rowNumber);
 

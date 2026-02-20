@@ -62,9 +62,9 @@ public class GrantWebPermissionToGroupsWithPermissionTransaction extends Transac
         execute(new ExecBatchStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setInt(2, permissionId);
                 for (Integer groupId : groupIds) {
                     statement.setInt(1, groupId);
-                    statement.setInt(2, permissionId);
                     statement.addBatch();
                 }
             }
