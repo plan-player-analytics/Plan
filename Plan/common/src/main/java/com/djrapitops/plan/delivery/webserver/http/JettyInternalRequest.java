@@ -111,7 +111,7 @@ public class JettyInternalRequest implements InternalRequest {
         @Untrusted List<String> textCookies = getCookieHeaders();
         List<Cookie> cookies = new ArrayList<>();
         if (!textCookies.isEmpty()) {
-            String[] separated = new TextStringBuilder().appendWithSeparators(textCookies, ";").build().split(";");
+            String[] separated = new TextStringBuilder().appendWithSeparators(textCookies, ";").get().split(";");
             for (String textCookie : separated) {
                 cookies.add(new Cookie(textCookie.trim()));
             }

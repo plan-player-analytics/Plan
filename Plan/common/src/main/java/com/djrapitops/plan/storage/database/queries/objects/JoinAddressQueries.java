@@ -218,7 +218,7 @@ public class JoinAddressQueries {
                     AND + SessionsTable.SESSION_START + ">?" +
                     AND + SessionsTable.SESSION_START + "<=?" +
                     (ids == null ? "" : AND + "j." + JoinAddressTable.ID +
-                            " IN (" + new TextStringBuilder().appendWithSeparators(ids, ",").build() + ")") +
+                            " IN (" + new TextStringBuilder().appendWithSeparators(ids, ",").get() + ")") +
                     GROUP_BY + "date,j." + JoinAddressTable.JOIN_ADDRESS + ',' + SessionsTable.USER_ID;
 
             return db.query(new QueryStatement<>(selectAddresses, 1000) {
@@ -278,7 +278,7 @@ public class JoinAddressQueries {
                     WHERE + SessionsTable.SESSION_START + ">?" +
                     AND + SessionsTable.SESSION_START + "<=?" +
                     (ids == null ? "" : AND + "j." + JoinAddressTable.ID +
-                            " IN (" + new TextStringBuilder().appendWithSeparators(ids, ",").build() + ")") +
+                            " IN (" + new TextStringBuilder().appendWithSeparators(ids, ",").get() + ")") +
                     GROUP_BY + "date,j." + JoinAddressTable.JOIN_ADDRESS + ',' + SessionsTable.USER_ID;
 
             return db.query(new QueryStatement<>(selectAddresses, 1000) {

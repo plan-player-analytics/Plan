@@ -81,7 +81,7 @@ class BungeePartBuilder implements MessageBuilder {
     @Override
     public MessageBuilder hover(Collection<String> lines) {
         ComponentBuilder hoverMsg = new ComponentBuilder("");
-        hoverMsg.append(new TextStringBuilder().appendWithSeparators(lines, "\n").build());
+        hoverMsg.append(new TextStringBuilder().appendWithSeparators(lines, "\n").get());
         part.event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(hoverMsg.create())));
         return this;
     }

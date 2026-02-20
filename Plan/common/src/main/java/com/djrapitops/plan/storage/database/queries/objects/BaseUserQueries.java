@@ -115,7 +115,7 @@ public class BaseUserQueries {
     public static Query<Set<UUID>> fetchExistingUUIDs(Set<UUID> outOfPlayerUUIDs) {
         String sql = SELECT + UsersTable.USER_UUID +
                 FROM + UsersTable.TABLE_NAME +
-                WHERE + UsersTable.USER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(outOfPlayerUUIDs, "','").build() + "')";
+                WHERE + UsersTable.USER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(outOfPlayerUUIDs, "','").get() + "')";
 
         return db -> db.querySet(sql, RowExtractors.getUUID(UsersTable.USER_UUID));
     }

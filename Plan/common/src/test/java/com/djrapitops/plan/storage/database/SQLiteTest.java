@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.storage.database;
 
-import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.component.ComponentSvc;
 import com.djrapitops.plan.delivery.DeliveryUtilities;
 import com.djrapitops.plan.extension.ExtensionSvc;
@@ -35,17 +34,16 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import utilities.DBPreparer;
 import utilities.RandomData;
 import utilities.TestConstants;
 import utilities.TestErrorLogger;
 
+import java.io.File;
 import java.nio.file.Path;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 
 /**
  * Tests for SQLite Database.
@@ -73,6 +71,12 @@ public class SQLiteTest implements DatabaseTest, DatabaseTestAggregate {
                 .orElseThrow(IllegalStateException::new);
     }
 
+    @AfterAll
+    static void disableSystem() {
+        if (database != null) database.close();
+        preparer.tearDown();
+    }
+
     @BeforeEach
     void setUp() {
         TestErrorLogger.throwErrors(true);
@@ -96,12 +100,6 @@ public class SQLiteTest implements DatabaseTest, DatabaseTestAggregate {
 
         db().executeTransaction(new StoreServerInformationTransaction(new Server(serverUUID(), "ServerName", "", TestConstants.VERSION)));
         assertEquals(serverUUID(), ((SQLDB) db()).getServerUUIDSupplier().get());
-    }
-
-    @AfterAll
-    static void disableSystem() {
-        if (database != null) database.close();
-        preparer.tearDown();
     }
 
     @Override
@@ -150,9 +148,8 @@ public class SQLiteTest implements DatabaseTest, DatabaseTestAggregate {
     }
 
     @Override
-    public PlanSystem system() {
-        PlanSystem mockSystem = Mockito.mock(PlanSystem.class);
-        when(mockSystem.getPlanFiles()).thenReturn(component.files());
-        return mockSystem;
+    public File dataFolder() {
+        return component.files().getDataFolder();
     }
+
 }

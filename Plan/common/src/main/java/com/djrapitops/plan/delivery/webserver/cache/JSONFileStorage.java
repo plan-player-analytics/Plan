@@ -26,7 +26,7 @@ import com.djrapitops.plan.utilities.ReentrantLockHelper;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.scheduling.TimeAmount;
 import net.playeranalytics.plugin.server.PluginLogger;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -54,14 +54,11 @@ import java.util.stream.Stream;
 @Singleton
 public class JSONFileStorage implements JSONStorage {
 
+    private static final String JSON_FILE_EXTENSION = ".json";
     private final PluginLogger logger;
-
     private final Path jsonDirectory;
-
     private final ReentrantLockHelper readWriteProtectionLock = new ReentrantLockHelper();
     private final Pattern timestampRegex = Pattern.compile(".*-(\\d*).json");
-    private static final String JSON_FILE_EXTENSION = ".json";
-
     private final Formatter<Long> dateFormatter;
 
     @Inject
@@ -110,7 +107,7 @@ public class JSONFileStorage implements JSONStorage {
         String writtenJSON;
         if (!json.startsWith("{\"") || json.contains("timestamp")) {
             if (!json.contains("timestamp_f")) {
-                writtenJSON = StringUtils.replaceOnce(json,
+                writtenJSON = Strings.CS.replaceOnce(json,
                         "\"timestamp\"",
                         "\"timestamp_f\":\"" + dateFormatter.apply(timestamp) + "\",\"timestamp\""
                 );

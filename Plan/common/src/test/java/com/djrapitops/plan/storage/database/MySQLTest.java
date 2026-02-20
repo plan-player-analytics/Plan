@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.storage.database;
 
-import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.component.ComponentSvc;
 import com.djrapitops.plan.delivery.DeliveryUtilities;
 import com.djrapitops.plan.extension.ExtensionSvc;
@@ -37,20 +36,19 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import utilities.DBPreparer;
 import utilities.RandomData;
 import utilities.TestConstants;
 import utilities.TestErrorLogger;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 
 /**
  * Tests for MySQL database.
@@ -161,9 +159,8 @@ class MySQLTest implements DatabaseTest, DatabaseTestAggregate {
     }
 
     @Override
-    public PlanSystem system() {
-        PlanSystem mockSystem = Mockito.mock(PlanSystem.class);
-        when(mockSystem.getPlanFiles()).thenReturn(component.files());
-        return mockSystem;
+    public File dataFolder() {
+        return component.files().getDataFolder();
     }
+
 }

@@ -27,6 +27,7 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.PlayerFetchQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -135,7 +136,7 @@ public class PlayerPageExporter extends FileExporter {
     }
 
     private String toNonRelativePath(String resourceName) {
-        return StringUtils.remove(StringUtils.remove(resourceName, "../"), "./");
+        return Strings.CI.remove(Strings.CI.remove(resourceName, "../"), "./");
     }
 
 }

@@ -114,7 +114,7 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
 
     @Test
     default void backupToSQLite() throws Exception {
-        File tempFile = Files.createTempFile(system().getPlanFiles().getDataFolder().toPath(), "backup-", ".db").toFile();
+        File tempFile = Files.createTempFile(dataFolder().toPath(), "backup-", ".db").toFile();
         tempFile.deleteOnExit();
         SQLiteDB backup = dbSystem().getSqLiteFactory().usingFile(tempFile);
         backup.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
@@ -142,7 +142,7 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
 
     @Test
     default void backupToSQLiteAndRestore() throws Exception {
-        File tempFile = Files.createTempFile(system().getPlanFiles().getDataFolder().toPath(), "backup-", ".db").toFile();
+        File tempFile = Files.createTempFile(dataFolder().toPath(), "backup-", ".db").toFile();
         tempFile.deleteOnExit();
         SQLiteDB backup = dbSystem().getSqLiteFactory().usingFile(tempFile);
         backup.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
@@ -172,7 +172,7 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
 
     @Test
     default void backupToSQLiteAndRestoreTwice() throws Exception {
-        File tempFile = Files.createTempFile(system().getPlanFiles().getDataFolder().toPath(), "backup-", ".db").toFile();
+        File tempFile = Files.createTempFile(dataFolder().toPath(), "backup-", ".db").toFile();
         tempFile.deleteOnExit();
         SQLiteDB backup = dbSystem().getSqLiteFactory().usingFile(tempFile);
         backup.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
@@ -204,7 +204,7 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
 
     @Test
     default void databaseMerge() throws Exception {
-        File tempFile = Files.createTempFile(system().getPlanFiles().getDataFolder().toPath(), "backup-", ".db").toFile();
+        File tempFile = Files.createTempFile(dataFolder().toPath(), "backup-", ".db").toFile();
         tempFile.deleteOnExit();
         SQLiteDB backup = dbSystem().getSqLiteFactory().usingFile(tempFile);
         backup.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);

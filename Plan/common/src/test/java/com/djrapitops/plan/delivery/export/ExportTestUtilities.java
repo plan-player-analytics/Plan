@@ -25,7 +25,7 @@ import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTr
 import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
 import com.djrapitops.plan.utilities.java.Lists;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.awaitility.Awaitility;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -69,7 +69,7 @@ public class ExportTestUtilities {
     }
 
     private static boolean ignoredLogLines(String log) {
-        return !StringUtils.containsAny(log,
+        return !Strings.CI.containsAny(log,
                 "fonts.gstatic.com", "fonts.googleapis.com", "cdn.jsdelivr.net", "manifest.json"
         );
     }

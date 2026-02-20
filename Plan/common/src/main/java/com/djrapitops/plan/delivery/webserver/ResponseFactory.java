@@ -47,7 +47,7 @@ import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.java.Maps;
 import com.djrapitops.plan.utilities.java.UnaryChain;
 import dagger.Lazy;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.text.StringEscapeUtils;
 import org.eclipse.jetty.http.HttpHeader;
 
@@ -100,6 +100,13 @@ public class ResponseFactory {
         this.bundleAddressCorrection = bundleAddressCorrection;
     }
 
+    private static Response browserCachedNotChangedResponse() {
+        return Response.builder()
+                .setStatus(304)
+                .setContent(new byte[0])
+                .build();
+    }
+
     /**
      * @throws UncheckedIOException If reading the resource fails
      */
@@ -107,13 +114,6 @@ public class ResponseFactory {
         return publicHtmlFiles.findPublicHtmlResource(resourceName)
                 .orElseGet(() -> files.getResourceFromJar("web/" + resourceName))
                 .asWebResource();
-    }
-
-    private static Response browserCachedNotChangedResponse() {
-        return Response.builder()
-                .setStatus(304)
-                .setContent(new byte[0])
-                .build();
     }
 
     private Response forPage(@Untrusted Request request, Page page) {
@@ -236,7 +236,7 @@ public class ResponseFactory {
     private String replaceMainAddressPlaceholder(String resource) {
         String address = addresses.get().getAccessAddress()
                 .orElseGet(addresses.get()::getFallbackLocalhostAddress);
-        return StringUtils.replace(resource, "PLAN_BASE_ADDRESS", address);
+        return Strings.CS.replace(resource, "PLAN_BASE_ADDRESS", address);
     }
 
     public Response cssResponse(long modified, @Untrusted String fileName) {

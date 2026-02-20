@@ -35,6 +35,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
+import java.net.URI;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
@@ -94,7 +95,7 @@ public class GeoLite2Geolocator implements Geolocator {
         properties.setProperty("sun.net.http.retryPost", Boolean.toString(false));
 
         String downloadURL = config.get(DataGatheringSettings.GEOLOCATION_DOWNLOAD_URL);
-        URL downloadSite = new URL(downloadURL);
+        URL downloadSite = URI.create(downloadURL).toURL();
         if (downloadURL.startsWith("https://download.maxmind.com/app/geoip_download")) {
             try (
                     InputStream in = downloadSite.openStream();

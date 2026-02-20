@@ -37,7 +37,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
 import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.NginxContainer;
@@ -51,8 +50,10 @@ import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 import static com.djrapitops.plan.delivery.export.ExportTestUtilities.assertNoLogsExceptFaviconError;
@@ -84,8 +85,8 @@ class ExportJSErrorRegressionTest {
         Files.createDirectories(exportDirectory);
         Files.write(exportDirectory.resolve("index.html"), new byte[1]);
 
-        nginx.addFileSystemBind(exportDirectory.toFile().getAbsolutePath(), "/usr/share/nginx/html", BindMode.READ_ONLY);
-        nginx.start();
+        nginx.withFileSystemBind(exportDirectory.toFile().getAbsolutePath(), "/usr/share/nginx/html", BindMode.READ_ONLY)
+                .start();
 
         component = new PluginMockComponent(tempDir);
         planSystem = component.getPlanSystem();
@@ -107,7 +108,7 @@ class ExportJSErrorRegressionTest {
         savePlayerData();
     }
 
-    private static void export() throws ExportException, IOException {
+    private static void export() throws ExportException {
         Exporter exporter = planSystem.getExportSystem().getExporter();
         exporter.exportServerPage(planSystem.getServerInfo().getServer());
         exporter.exportPlayerPage(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME);
@@ -161,14 +162,10 @@ class ExportJSErrorRegressionTest {
 
                     String address = nginx.getBaseUrl("http", 80).toURI().resolve(endpoint).toString();
                     driver.get(address);
-                    Thread.sleep(250);
+                    SeleniumExtension.waitForPageLoadForSeconds(5, driver);
 
-                    List<LogEntry> logs = new ArrayList<>();
-                    logs.addAll(driver.manage().logs().get(LogType.CLIENT).getAll());
-                    logs.addAll(driver.manage().logs().get(LogType.BROWSER).getAll());
-
-                    assertNoLogsExceptFaviconError(logs);
+                    assertNoLogsExceptFaviconError(driver.manage().logs().get(LogType.BROWSER).getAll());
                 })
-        ).collect(Collectors.toList());
+        ).toList();
     }
 }

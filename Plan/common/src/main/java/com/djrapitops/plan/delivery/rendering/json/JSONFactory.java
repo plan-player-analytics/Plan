@@ -43,7 +43,6 @@ import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.settings.locale.lang.HtmlLang;
-import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
@@ -311,7 +310,7 @@ public class JSONFactory {
                     Map<String, Object> server = new HashMap<>();
                     server.put("name", entry.getValue().getIdentifiableName());
                     server.put("serverUUID", entry.getValue().getUuid().toString());
-                    server.put("playersOnlineColor", ThemeVal.GRAPH_PLAYERS_ONLINE.getDefaultValue());
+                    server.put("playersOnlineColor", "#1E90FF");
 
                     Optional<DateObj<Integer>> recentPeak = db.query(TPSQueries.fetchPeakPlayerCount(serverUUID, now - TimeUnit.DAYS.toMillis(2L)));
                     Optional<DateObj<Integer>> allTimePeak = db.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID));

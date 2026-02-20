@@ -26,7 +26,7 @@ import com.djrapitops.plan.delivery.webserver.auth.FailReason;
 import com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.utilities.dev.Untrusted;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.eclipse.jetty.http.HttpHeader;
 
 import javax.inject.Inject;
@@ -121,7 +121,7 @@ public class RequestHandler {
             return processWrongPassword(accessAddress, failReason);
         } else {
             @Untrusted String from = internalRequest.getRequestedURIString();
-            String directTo = StringUtils.startsWithAny(from, "/auth/", "/login") ? "/login" : "/login?from=." + from;
+            String directTo = Strings.CI.startsWithAny(from, "/auth/", "/login") ? "/login" : "/login?from=." + from;
             return Response.builder()
                     .redirectTo(directTo)
                     .setHeader("Set-Cookie", "auth=expired; Path=/; Max-Age=0; SameSite=Lax; Secure;")

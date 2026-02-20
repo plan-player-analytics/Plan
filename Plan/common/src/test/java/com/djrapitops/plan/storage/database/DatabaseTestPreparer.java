@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.storage.database;
 
-import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.component.ComponentSvc;
 import com.djrapitops.plan.delivery.DeliveryUtilities;
 import com.djrapitops.plan.extension.ExtensionSvc;
@@ -28,6 +27,7 @@ import com.djrapitops.plan.storage.database.transactions.Executable;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import utilities.TestConstants;
 
+import java.io.File;
 import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 
@@ -42,33 +42,21 @@ public interface DatabaseTestPreparer {
 
     ServerUUID serverUUID();
 
-    /**
-     * @deprecated Dependencies may not include the full system in the future.
-     */
-    @Deprecated
-    PlanSystem system();
+    PlanConfig config();
 
-    default PlanConfig config() {
-        return system().getConfigSystem().getConfig();
-    }
+    DBSystem dbSystem();
 
-    default DBSystem dbSystem() {
-        return system().getDatabaseSystem();
-    }
+    ServerInfo serverInfo();
 
-    default ServerInfo serverInfo() {
-        return system().getServerInfo();
-    }
+    DeliveryUtilities deliveryUtilities();
 
-    default DeliveryUtilities deliveryUtilities() {
-        return system().getDeliveryUtilities();
-    }
+    ExtensionSvc extensionService();
 
-    default ExtensionSvc extensionService() {return system().getApiServices().getExtensionService();}
-
-    default ComponentSvc componentService() {return system().getApiServices().getComponentService();}
+    ComponentSvc componentService();
 
     QueryFilters queryFilters();
+
+    File dataFolder();
 
     default void execute(Executable executable) {
         try {
