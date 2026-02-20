@@ -19,7 +19,6 @@ package com.djrapitops.plan.delivery.webserver;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
-import com.djrapitops.plan.delivery.export.ExportTestUtilities;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -48,8 +47,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.logging.LogEntry;
-import org.openqa.selenium.logging.LogType;
 import utilities.RandomData;
 import utilities.TestConstants;
 import utilities.TestResources;
@@ -58,12 +55,15 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.djrapitops.plan.delivery.export.ExportTestUtilities.assertNoLogs;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
@@ -93,31 +93,9 @@ class AccessControlVisibilityTest {
         system.enable();
     }
 
-    @AfterEach
-    void tearDownTest(WebDriver driver) {
-        String address = "https://localhost:" + TEST_PORT_NUMBER + "/auth/logout";
-        driver.get(address);
-        SeleniumExtension.newTab(driver);
-        driver.manage().deleteAllCookies();
-    }
-
     @AfterAll
     static void tearDown(PlanSystem system) {
         system.disable();
-    }
-
-    User registerUser(Database db, WebPermission... permissions) throws Exception {
-        String groupName = RandomData.randomString(75);
-        db.executeTransaction(
-                new StoreWebGroupTransaction(groupName, Arrays.stream(permissions)
-                        .map(WebPermission::getPermission)
-                        .collect(Collectors.toList()))
-        ).get();
-
-        User user = new User(RandomData.randomString(45), "console", null, PassEncryptUtil.createHash(PASSWORD), groupName, Collections.emptyList());
-        db.executeTransaction(new StoreWebUserTransaction(user)).get();
-
-        return user;
     }
 
     static Stream<Arguments> serverPageElementVisibleCases() {
@@ -208,6 +186,37 @@ class AccessControlVisibilityTest {
         );
     }
 
+    private static void storePlayer(Database database, ServerUUID serverUUID) throws ExecutionException, InterruptedException {
+        storePlayer(database, serverUUID, TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME);
+    }
+
+    private static void storePlayer(Database database, ServerUUID serverUUID, UUID playerUUID, String playerName) throws ExecutionException, InterruptedException {
+        database.executeTransaction(new StoreServerPlayerTransaction(playerUUID, System.currentTimeMillis(), playerName, serverUUID, TestConstants.GET_PLAYER_HOSTNAME.get()))
+                .get();
+    }
+
+    @AfterEach
+    void tearDownTest(WebDriver driver) {
+        String address = "https://localhost:" + TEST_PORT_NUMBER + "/auth/logout";
+        driver.get(address);
+        SeleniumExtension.newTab(driver);
+        driver.manage().deleteAllCookies();
+    }
+
+    User registerUser(Database db, WebPermission... permissions) throws Exception {
+        String groupName = RandomData.randomString(75);
+        db.executeTransaction(
+                new StoreWebGroupTransaction(groupName, Arrays.stream(permissions)
+                        .map(WebPermission::getPermission)
+                        .collect(Collectors.toList()))
+        ).get();
+
+        User user = new User(RandomData.randomString(45), "console", null, PassEncryptUtil.createHash(PASSWORD), groupName, Collections.emptyList());
+        db.executeTransaction(new StoreWebUserTransaction(user)).get();
+
+        return user;
+    }
+
     @DisplayName("Whole page is visible with permission")
     @ParameterizedTest(name = "Access with visibility {0} can see element #{1} in /{2}")
     @MethodSource("pageLevelVisibleCases")
@@ -223,13 +232,6 @@ class AccessControlVisibilityTest {
         SeleniumExtension.waitForElementToBeVisible(By.id(element), driver);
         assertDoesNotThrow(() -> driver.findElement(By.id(element)), () -> "Did not see #" + element + " at " + address + " with permission '" + permission.getPermission() + "'");
         assertNoLogs(driver, address);
-    }
-
-    private static void assertNoLogs(ChromeDriver driver, String address) {
-        List<LogEntry> logs = new ArrayList<>();
-        logs.addAll(driver.manage().logs().get(LogType.CLIENT).getAll());
-        logs.addAll(driver.manage().logs().get(LogType.BROWSER).getAll());
-        ExportTestUtilities.assertNoLogs(logs, address);
     }
 
     @DisplayName("Whole page is not visible with permission")
@@ -272,15 +274,6 @@ class AccessControlVisibilityTest {
         SeleniumExtension.waitForElementToBeVisible(By.id(element), driver);
         assertDoesNotThrow(() -> driver.findElement(By.id(element)), () -> "Did not see #" + element + " at " + address + " with permission '" + permission.getPermission() + "'");
         assertNoLogs(driver, address);
-    }
-
-    private static void storePlayer(Database database, ServerUUID serverUUID) throws ExecutionException, InterruptedException {
-        storePlayer(database, serverUUID, TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME);
-    }
-
-    private static void storePlayer(Database database, ServerUUID serverUUID, UUID playerUUID, String playerName) throws ExecutionException, InterruptedException {
-        database.executeTransaction(new StoreServerPlayerTransaction(playerUUID, System.currentTimeMillis(), playerName, serverUUID, TestConstants.GET_PLAYER_HOSTNAME.get()))
-                .get();
     }
 
     @DisplayName("Server element is not visible without permission")

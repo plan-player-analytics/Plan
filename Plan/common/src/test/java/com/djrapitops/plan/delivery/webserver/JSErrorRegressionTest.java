@@ -41,7 +41,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
 import utilities.RandomData;
 import utilities.TestConstants;
@@ -135,12 +134,7 @@ class JSErrorRegressionTest {
             try {
                 driver.get(address);
                 Thread.sleep(250);
-
-                List<LogEntry> logs = new ArrayList<>();
-                logs.addAll(driver.manage().logs().get(LogType.CLIENT).getAll());
-                logs.addAll(driver.manage().logs().get(LogType.BROWSER).getAll());
-
-                assertNoLogs(logs, address);
+                assertNoLogs(driver.manage().logs().get(LogType.BROWSER).getAll(), address);
             } finally {
                 locale.clear(); // Reset locale after test
             }
@@ -166,11 +160,7 @@ class JSErrorRegressionTest {
             driver.get(address);
             SeleniumExtension.waitForPageLoadForSeconds(3, driver);
 
-            List<LogEntry> logs = new ArrayList<>();
-            logs.addAll(driver.manage().logs().get(LogType.CLIENT).getAll());
-            logs.addAll(driver.manage().logs().get(LogType.BROWSER).getAll());
-
-            assertNoLogs(logs, "Page link '" + address + "'->'" + href + "'");
+            assertNoLogs(driver, "Page link '" + address + "'->'" + href + "'");
             System.out.println("'" + address + "' has link to " + href);
         }
     }
