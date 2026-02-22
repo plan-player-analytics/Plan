@@ -185,7 +185,7 @@ Display_options:
   Theme: default
   Night_mode: false
   # Can use ${playerName} or ${playerUUID} or ${playerUUIDNoDash}
-  Player_head_image_url: "https://crafatar.com/avatars/${playerUUID}?size=120&default=MHF_Steve&overlay"
+  Player_head_image_url: "https://crafthead.net/helm/${playerUUIDNoDash}/120"
   Sessions:
     Show_on_page: 50
     # By Default World playtime pie is ordered alphabetically.
