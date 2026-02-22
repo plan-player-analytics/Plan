@@ -9,6 +9,10 @@ plugins {
     id "io.swagger.core.v3.swagger-gradle-plugin" version "2.2.43"
 }
 
+compileTestFixturesJava {
+    sourceCompatibility = "${JavaVersion.VERSION_17}"
+}
+
 configurations {
     // Runtime downloading scopes
     mysqlDriver
@@ -198,6 +202,12 @@ tasks.named("checkstyleTest").configure {
     it.dependsOn(copyYarnBuildResults)
 }
 
+// Add support for exec block https://stackoverflow.com/a/79720796/20825073
+interface InjectedExecOps {
+    @Inject
+    ExecOperations getExecOps()
+}
+
 tasks.register("determineAssetModifications") {
     // Skip Yarn build on Jitpack since Jitpack doesn't offer gclib version compatible with Node 20
     // Jitpack build is used mainly for java dependencies.
@@ -209,6 +219,7 @@ tasks.register("determineAssetModifications") {
     inputs.files(fileTree(dir: "src/main/resources/assets/plan/themes"))
     outputs.file("build/resources/main/assets/plan/AssetVersion.yml")
 
+    def execOps = project.objects.newInstance(InjectedExecOps).execOps
     doLast {
         mkdir "build/resources/main/assets/plan"
         def versionFile = file("build/resources/main/assets/plan/AssetVersion.yml")
@@ -216,7 +227,7 @@ tasks.register("determineAssetModifications") {
         ConfigurableFileTree tree = fileTree(dir: "src/main/resources/assets/plan/web")
         tree.forEach { File f ->
             def gitModified = new ByteArrayOutputStream()
-            exec {
+            execOps.exec {
                 commandLine "git", "log", "-1", "--pretty=%ct", f.toString()
                 standardOutput = gitModified
             }
@@ -232,7 +243,7 @@ tasks.register("determineAssetModifications") {
         tree = fileTree(dir: "src/main/resources/assets/plan/locale")
         tree.forEach { File f ->
             def gitModified = new ByteArrayOutputStream()
-            exec {
+            execOps.exec {
                 commandLine "git", "log", "-1", "--pretty=%ct", f.toString()
                 standardOutput = gitModified
             }
@@ -248,7 +259,7 @@ tasks.register("determineAssetModifications") {
         tree = fileTree(dir: "src/main/resources/assets/plan/themes")
         tree.forEach { File f ->
             def gitModified = new ByteArrayOutputStream()
-            exec {
+            execOps.exec {
                 commandLine "git", "log", "-1", "--pretty=%ct", f.toString()
                 standardOutput = gitModified
             }
