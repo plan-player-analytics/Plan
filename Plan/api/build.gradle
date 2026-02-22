@@ -9,6 +9,7 @@ dependencies {
 
 compileJava {
     options.release = 8
+    sourceCompatibility = "${JavaVersion.VERSION_1_8}"
 }
 
 def apiVersion = "5.7-R0.2"
