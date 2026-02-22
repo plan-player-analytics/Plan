@@ -9,7 +9,7 @@ import {calculateCssHexColor} from "../../util/colors.js";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCheck, faDesktop, faPencilAlt} from "@fortawesome/free-solid-svg-icons";
 import OutlineButton from "../input/button/OutlineButton.jsx";
-import {useAuth} from "../../hooks/authenticationHook.jsx";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 import {useNavigate} from "react-router";
 import {useTranslation} from "react-i18next";
 

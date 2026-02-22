@@ -17,7 +17,7 @@ import React, {useCallback, useState} from "react";
 import TimeByTimeGraph from "../../../graphs/TimeByTimeGraph";
 import ServerCalendar from "../../../calendar/ServerCalendar";
 import {ChartLoader} from "../../../navigation/Loader";
-import {useAuth} from "../../../../hooks/authenticationHook";
+import {useAuth} from "../../../../hooks/authenticationHook.tsx";
 import Highcharts from "highcharts/highstock";
 import "highcharts/modules/no-data-to-display"
 import "highcharts/modules/accessibility";

@@ -5,7 +5,7 @@ import SessionInsightsCard from "../../components/cards/server/insights/SessionI
 import LoadIn from "../../components/animation/LoadIn.tsx";
 import ServerPieCard from "../../components/cards/common/ServerPieCard";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const NetworkSessions = () => {
     const {hasPermission} = useAuth();

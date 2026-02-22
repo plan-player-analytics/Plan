@@ -11,7 +11,7 @@ import {useTranslation} from "react-i18next";
 import PlayerPingGraph from "../../components/graphs/PlayerPingGraph";
 import LoadIn from "../../components/animation/LoadIn.tsx";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const PingGraphCard = ({player}) => {
     const {t} = useTranslation();

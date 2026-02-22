@@ -7,7 +7,7 @@ import Loader from "../../components/navigation/Loader";
 import {useTranslation} from "react-i18next";
 import {useServerExtensionContext} from "../../hooks/serverExtensionDataContext";
 import ErrorView from "../ErrorView.tsx";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const ServerPluginData = () => {
     const {hasPermission} = useAuth();

@@ -9,7 +9,7 @@ import PlayerWorldPieCard from "../../components/cards/player/PlayerWorldPieCard
 import PlayerRecentSessionsCard from "../../components/cards/player/PlayerRecentSessionsCard";
 import LoadIn from "../../components/animation/LoadIn.tsx";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const SessionCalendarCard = ({player}) => {
     const {t} = useTranslation();

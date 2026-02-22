@@ -3,9 +3,9 @@ import {fetchAvailablePermissions, fetchGroupPermissions, saveGroupPermissions} 
 import {useConfigurationStorageContext} from "./configurationStorageContextHook";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCheck, faExclamationTriangle} from "@fortawesome/free-solid-svg-icons";
-import {useAlertPopupContext} from "./alertPopupContext";
+import {useAlertPopupContext} from "./alertPopupContext.tsx";
 import {Trans, useTranslation} from "react-i18next";
-import {useAuth} from "../authenticationHook.jsx";
+import {useAuth} from "../authenticationHook.tsx";
 
 const GroupEditContext = createContext({});
 

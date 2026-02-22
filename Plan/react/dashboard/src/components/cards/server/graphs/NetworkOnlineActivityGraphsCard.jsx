@@ -16,7 +16,7 @@ import TimeByTimeGraph from "../../../graphs/TimeByTimeGraph";
 import PlayersOnlineGraph from "../../../graphs/PlayersOnlineGraph";
 import {useMetadata} from "../../../../hooks/metadataHook";
 import StackedPlayersOnlineGraph from "../../../graphs/StackedPlayersOnlineGraph";
-import {useAuth} from "../../../../hooks/authenticationHook";
+import {useAuth} from "../../../../hooks/authenticationHook.tsx";
 import {faCalendar} from "@fortawesome/free-regular-svg-icons";
 import ServerCalendar from "../../../calendar/ServerCalendar";
 import {postQuery} from "../../../../service/queryService";

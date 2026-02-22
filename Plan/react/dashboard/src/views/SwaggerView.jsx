@@ -3,7 +3,7 @@ import SwaggerUI from "swagger-ui"
 import "swagger-ui/dist/swagger-ui.css"
 
 import {baseAddress} from "../service/backendConfiguration"
-import {useAuth} from "../hooks/authenticationHook";
+import {useAuth} from "../hooks/authenticationHook.tsx";
 
 const SwaggerView = () => {
     const {hasPermission} = useAuth();

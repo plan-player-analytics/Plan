@@ -9,7 +9,7 @@ import {fetchKills, fetchPvpPve} from "../../service/serverService";
 import ErrorView from "../ErrorView.tsx";
 import LoadIn from "../../components/animation/LoadIn.tsx";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const ServerPvpPve = () => {
     const {hasPermission} = useAuth();

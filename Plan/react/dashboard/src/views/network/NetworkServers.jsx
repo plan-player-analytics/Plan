@@ -7,7 +7,7 @@ import ServersTableCard from "../../components/cards/network/ServersTableCard";
 import QuickViewGraphCard from "../../components/cards/network/QuickViewGraphCard";
 import QuickViewDataCard from "../../components/cards/network/QuickViewDataCard";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const NetworkServers = () => {
     const {hasPermission} = useAuth();

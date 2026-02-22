@@ -9,7 +9,7 @@ import PlayerbaseInsightsCard from "../../components/cards/server/insights/Playe
 import LoadIn from "../../components/animation/LoadIn.tsx";
 import {fetchNetworkPlayerbaseOverview} from "../../service/networkService";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const NetworkPlayerbaseOverview = () => {
     const {hasPermission} = useAuth();

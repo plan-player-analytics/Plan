@@ -3,7 +3,7 @@ import LoadIn from "../../components/animation/LoadIn.tsx";
 import {Col, Row} from "react-bootstrap";
 import QueryOptionsCard from "../../components/cards/query/QueryOptionsCard";
 import QueryPath from "../../components/alert/QueryPath";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const NewQueryView = () => {
     const {hasPermission} = useAuth();

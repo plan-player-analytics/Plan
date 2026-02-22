@@ -1,14 +1,14 @@
 import {addToObject, flattenObject} from '../../util/mutator';
 import {nameToCssVariable} from '../../util/colors';
 import {getColorConverter, getContrastColor} from "../../util/Color.js";
-import {useThemeEditContext} from "../../hooks/context/themeEditContextHook.jsx";
+import {useThemeEditContext} from "../../hooks/context/themeEditContextHook.js";
 import {useThemeStorage} from "../../hooks/context/themeContextHook.js";
 import {ThemeConfig} from "./model/ThemeConfig";
 
 type ThemeGenerationParams = {
     applyToClass?: string;
-    color: string;
-} & ThemeConfig
+    color?: string;
+} & Omit<ThemeConfig, "defaultTheme">;
 
 // Function to generate CSS variables from theme data
 const generateThemeCSS = ({
@@ -24,8 +24,9 @@ const generateThemeCSS = ({
 
     // Helper to add both color and its contrast
     const addColorWithContrast = (name: string, color: string, variables: string[]) => {
-        variables.push(`--color-${name}: ${color}`);
-        variables.push(`--contrast-color-${name}: ${getContrastColor(color)}`);
+        variables.push(
+            `--color-${name}: ${color}`,
+            `--contrast-color-${name}: ${getContrastColor(color)}`);
     };
 
     // Add regular colors
@@ -105,7 +106,7 @@ export const ThemeStyleCss = ({editMode, applyToClass}: Props) => {
         loaded, color,
         currentColors: colors, currentNightColors: nightColors,
         currentUseCases: useCases, currentNightModeUseCases: nightModeUseCases
-    }: any/*TODO type conversion*/ = editMode ? useThemeEditContext() : useThemeStorage();
+    } = editMode ? useThemeEditContext() : useThemeStorage();
 
     if (!loaded) return <></>
     return (

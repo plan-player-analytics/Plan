@@ -7,7 +7,7 @@ import {useTheme} from "../../hooks/themeHook";
 import PluginInformationModal from "../modal/PluginInformationModal";
 import VersionInformationModal from "../modal/VersionInformationModal";
 import {fetchPlanVersion} from "../../service/metadataService";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 import {useNavigation} from "../../hooks/navigationHook";
 import {useTranslation} from "react-i18next";
 import {Collapse} from "react-bootstrap";

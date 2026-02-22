@@ -1,15 +1,48 @@
-import {createContext, useCallback, useContext, useEffect, useMemo, useState} from "react";
+import {createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {fetchWhoAmI} from "../service/authenticationService";
+import {PlanError} from "../views/ErrorView";
 
-const AuthenticationContext = createContext({});
+type Permission = string | string[];
 
-export const AuthenticationContextProvider = ({children}) => {
+type User = {
+    username: string;
+    playerName?: string;
+    playerUUID?: string;
+    permissions: string[];
+}
+
+type WhoAmI =
+    | {
+    loggedIn: false,
+    authRequired: boolean
+}
+    | {
+    loggedIn: true;
+    authRequired: boolean;
+    user: User
+}
+
+type AuthenticationContextValues = {
+    authLoaded: boolean;
+    authRequired: boolean;
+    loggedIn: boolean;
+    user?: User;
+    loginError?: PlanError;
+    hasPermission: (permission: Permission) => boolean;
+    hasChildPermission: (permission: Permission) => boolean;
+    hasPermissionOtherThan: (permission: Permission) => boolean;
+    updateLoginDetails: () => Promise<void>
+}
+
+const AuthenticationContext = createContext<AuthenticationContextValues | undefined>(undefined);
+
+export const AuthenticationContextProvider = ({children}: PropsWithChildren) => {
     const [loginError, setLoginError] = useState(undefined);
 
     const [authLoaded, setAuthLoaded] = useState(false)
     const [authRequired, setAuthRequired] = useState(false);
     const [loggedIn, setLoggedIn] = useState(false);
-    const [user, setUser] = useState(undefined);
+    const [user, setUser] = useState<User | undefined>(undefined);
 
     const updateLoginDetails = useCallback(async () => {
         const {data: whoAmI, error} = await fetchWhoAmI();
@@ -23,7 +56,7 @@ export const AuthenticationContextProvider = ({children}) => {
         }
     }, [])
 
-    const hasPermission = useCallback(permission => {
+    const hasPermission = useCallback((permission: Permission) => {
         if (Array.isArray(permission)) {
             for (const permissionOption of permission) {
                 if (hasPermission(permissionOption)) {
@@ -32,10 +65,10 @@ export const AuthenticationContextProvider = ({children}) => {
             }
             return false;
         }
-        return !authRequired || (loggedIn && user && Boolean(user.permissions.filter(perm => permission.includes(perm)).length));
+        return !authRequired || (loggedIn && !!user && Boolean(user.permissions.filter(perm => permission.includes(perm)).length));
     }, [authRequired, loggedIn, user]);
 
-    const hasChildPermission = useCallback(permission => {
+    const hasChildPermission = useCallback((permission: Permission) => {
         if (Array.isArray(permission)) {
             for (const permissionOption of permission) {
                 if (hasChildPermission(permissionOption)) {
@@ -44,11 +77,11 @@ export const AuthenticationContextProvider = ({children}) => {
             }
             return false;
         }
-        return !authRequired || (loggedIn && user && Boolean(user.permissions.filter(perm => perm.includes(permission) || permission.includes(perm)).length));
+        return !authRequired || (loggedIn && !!user && Boolean(user.permissions.filter(perm => perm.includes(permission) || permission.includes(perm)).length));
     }, [authRequired, loggedIn, user]);
 
-    const hasPermissionOtherThan = useCallback(permission => {
-        return !authRequired || (loggedIn && user && user.permissions.filter(perm => perm !== permission).length);
+    const hasPermissionOtherThan = useCallback((permission: Permission) => {
+        return !authRequired || (loggedIn && !!user && Boolean(user.permissions.filter(perm => perm !== permission).length));
     }, [authRequired, loggedIn, user]);
 
     useEffect(() => {
@@ -85,5 +118,7 @@ export const AuthenticationContextProvider = ({children}) => {
 }
 
 export const useAuth = () => {
-    return useContext(AuthenticationContext);
+    const context = useContext(AuthenticationContext);
+    if (!context) throw new Error('useAuth must be used inside AuthenticationContextProvider');
+    return context;
 }

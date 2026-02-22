@@ -21,7 +21,7 @@ import ServerWeekComparisonCard from "../../components/cards/server/tables/Serve
 import LoadIn from "../../components/animation/LoadIn.tsx";
 import {CardLoader} from "../../components/navigation/Loader";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import FormattedTime from "../../components/text/FormattedTime.jsx";
 

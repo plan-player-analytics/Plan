@@ -1,5 +1,5 @@
 import React from 'react';
-import {useAlertPopupContext} from "../../hooks/context/alertPopupContext";
+import {useAlertPopupContext} from "../../hooks/context/alertPopupContext.tsx";
 import LoadIn from "../animation/LoadIn.tsx";
 
 const Alert = ({alert}) => {

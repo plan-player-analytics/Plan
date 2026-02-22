@@ -3,14 +3,14 @@ import {getLocallyStoredThemes, useTheme} from "../themeHook.jsx";
 import {fetchTheme} from "../../service/metadataService.js";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons";
-import {useAlertPopupContext} from "./alertPopupContext.jsx";
+import {useAlertPopupContext} from "./alertPopupContext.js";
 import {Trans} from "react-i18next";
 import {mergeUseCases} from "../../util/mutator.js";
 import {ThemeContextValue} from "../../components/theme/model/ThemeContextValue";
 import {ColorPropertyMap, ThemeConfig, UseCaseMap} from "../../components/theme/model/ThemeConfig";
 import {PlanResponse} from "../../service/PlanResponse";
 
-const ThemeStorageContext = createContext<ThemeContextValue | {}>({});
+const ThemeStorageContext = createContext<ThemeContextValue | undefined>(undefined);
 
 type ThemeCache = {
     [key: string]: ThemeConfig | undefined;
@@ -20,10 +20,10 @@ type ThemeCache = {
 const themeCache: ThemeCache = {};
 
 type Props = {
-    loadMissing: boolean
+    loadMissing?: boolean
 } & PropsWithChildren;
 
-export const ThemeStorageContextProvider = ({children, loadMissing}: Props) => {
+export const ThemeStorageContextProvider = ({children, loadMissing = false}: Props) => {
     const theme = useTheme();
     const {currentTheme, color} = theme;
     const {addAlert} = useAlertPopupContext();
@@ -32,7 +32,7 @@ export const ThemeStorageContextProvider = ({children, loadMissing}: Props) => {
     const [currentNightColors, setCurrentNightColors] = useState<ColorPropertyMap | {}>({});
     const [currentUseCases, setCurrentUseCases] = useState<UseCaseMap | {}>({});
     const [currentNightModeUseCases, setCurrentNightModeUseCases] = useState<UseCaseMap | {}>({});
-    const [error, setError] = useState(null);
+    const [error, setError] = useState(undefined);
 
     const loadMissingDefaults = async (original: ThemeConfig) => {
         let theme
@@ -55,10 +55,10 @@ export const ThemeStorageContextProvider = ({children, loadMissing}: Props) => {
     }
 
     const loadTheme = useCallback(async (name: string) => {
-        setError(null);
+        setError(undefined);
         let theme;
         if (getLocallyStoredThemes().includes(name)) {
-            const found = window.localStorage.getItem(`locally-stored-theme-${name}`);
+            const found = globalThis.localStorage.getItem(`locally-stored-theme-${name}`);
             if (found) theme = JSON.parse(found); // TODO catch json parse error
         }
 
@@ -88,11 +88,11 @@ export const ThemeStorageContextProvider = ({children, loadMissing}: Props) => {
 
     const saveUploadedThemeLocally = (name: string, themeJson: ThemeConfig, originalName?: string) => {
         const locallyStoredThemes = getLocallyStoredThemes();
-        window.localStorage.setItem(`locally-stored-theme-${name}`, JSON.stringify(themeJson));
+        globalThis.localStorage.setItem(`locally-stored-theme-${name}`, JSON.stringify(themeJson));
         if (!locallyStoredThemes.includes(name)) {
             locallyStoredThemes.push(name);
         }
-        window.localStorage.setItem(`locally-stored-themes`, JSON.stringify(locallyStoredThemes));
+        globalThis.localStorage.setItem(`locally-stored-themes`, JSON.stringify(locallyStoredThemes));
         if (name !== originalName) {
             deleteThemeLocally(originalName);
         }
@@ -101,18 +101,18 @@ export const ThemeStorageContextProvider = ({children, loadMissing}: Props) => {
     const deleteThemeLocally = (name?: string) => {
         if (!name) return;
         const locallyStoredThemes = getLocallyStoredThemes();
-        window.localStorage.removeItem(`locally-stored-theme-${name}`);
+        globalThis.localStorage.removeItem(`locally-stored-theme-${name}`);
         const index = locallyStoredThemes.indexOf(name);
         if (index > -1) {
             locallyStoredThemes.splice(index, 1);
         }
-        window.localStorage.setItem(`locally-stored-themes`, JSON.stringify(locallyStoredThemes));
+        globalThis.localStorage.setItem(`locally-stored-themes`, JSON.stringify(locallyStoredThemes));
     }
 
     const cloneThemeLocally = async (themeToClone: string, name: string) => {
         let theme;
         if (getLocallyStoredThemes().includes(name)) {
-            const found = window.localStorage.getItem(`locally-stored-theme-${name}`);
+            const found = globalThis.localStorage.getItem(`locally-stored-theme-${name}`);
             if (found) theme = JSON.parse(found); // TODO catch json parse error
         }
         if (themeCache[name]) {
@@ -175,5 +175,7 @@ export const ThemeStorageContextProvider = ({children, loadMissing}: Props) => {
 }
 
 export const useThemeStorage = () => {
-    return useContext(ThemeStorageContext);
+    const context = useContext(ThemeStorageContext);
+    if (!context) throw new Error("useThemeStorage must be used within ThemeStorageContextProvider");
+    return context;
 }

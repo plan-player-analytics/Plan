@@ -5,7 +5,7 @@ import {useParams} from "react-router";
 import Masonry from "masonry-layout";
 import {usePlayer} from "../layout/PlayerPage";
 import LoadIn from "../../components/animation/LoadIn.tsx";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const PlayerPluginData = () => {
     const {hasPermission} = useAuth();

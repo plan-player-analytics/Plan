@@ -92,17 +92,17 @@ const ContextProviders = ({children}: React.PropsWithChildren) => (
     <AuthenticationContextProvider>
         <MetadataContextProvider>
             <PreferencesContextProvider>
-                <ThemeContextProvider>
-                    <ThemeStorageContextProvider>
-                        <NavigationContextProvider>
-                            <AlertPopupContextProvider>
+                <AlertPopupContextProvider>
+                    <ThemeContextProvider>
+                        <ThemeStorageContextProvider>
+                            <NavigationContextProvider>
                                 <PageExtensionContextProvider>
                                     {children}
                                 </PageExtensionContextProvider>
-                            </AlertPopupContextProvider>
-                        </NavigationContextProvider>
-                    </ThemeStorageContextProvider>
-                </ThemeContextProvider>
+                            </NavigationContextProvider>
+                        </ThemeStorageContextProvider>
+                    </ThemeContextProvider>
+                </AlertPopupContextProvider>
             </PreferencesContextProvider>
         </MetadataContextProvider>
     </AuthenticationContextProvider>

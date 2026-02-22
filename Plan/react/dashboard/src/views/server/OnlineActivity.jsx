@@ -9,7 +9,7 @@ import ErrorView from "../ErrorView.tsx";
 import OnlineActivityInsightsCard from "../../components/cards/server/insights/OnlineActivityInsightsCard";
 import LoadIn from "../../components/animation/LoadIn.tsx";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const OnlineActivity = () => {
     const {hasPermission, hasChildPermission} = useAuth();

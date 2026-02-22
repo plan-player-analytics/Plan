@@ -1,5 +1,5 @@
 import {createContext, useCallback, useContext, useEffect, useMemo, useState} from "react";
-import {useAuth} from "./authenticationHook";
+import {useAuth} from "./authenticationHook.tsx";
 import {fetchPreferences} from "../service/metadataService";
 
 const PreferencesContext = createContext({});

@@ -3,7 +3,7 @@ import React from "react";
 import LoadIn from "../../components/animation/LoadIn.tsx";
 import {useParams} from "react-router";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 import PluginHistoryCard from "../../components/cards/common/PluginHistoryCard";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import {fetchPluginHistory} from "../../service/serverService";

@@ -4,7 +4,7 @@ import Header from "../../components/navigation/Header";
 import {useTranslation} from "react-i18next";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
 import {ThemeStyleCss} from "../../components/theme/ThemeStyleCss.tsx";
-import {ThemeEditContextProvider} from "../../hooks/context/themeEditContextHook.jsx";
+import {ThemeEditContextProvider} from "../../hooks/context/themeEditContextHook.tsx";
 import {SwitchTransition} from "react-transition-group";
 import {Outlet, useParams} from "react-router";
 import {ThemeContextProvider, useTheme} from "../../hooks/themeHook.jsx";
@@ -17,7 +17,7 @@ import AlertPopupArea from "../../components/alert/AlertPopupArea.jsx";
 import ErrorPage from "./ErrorPage.jsx";
 import {Alert} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {useAuth} from "../../hooks/authenticationHook.jsx";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const ThemeEditorPage = () => {
     const {t} = useTranslation();

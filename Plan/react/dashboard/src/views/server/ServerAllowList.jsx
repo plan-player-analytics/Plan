@@ -6,7 +6,7 @@ import ErrorView from "../ErrorView.tsx";
 import {Col} from "react-bootstrap";
 import LoadIn from "../../components/animation/LoadIn.tsx";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 import AllowlistBounceTableCard from "../../components/cards/server/tables/AllowlistBounceTableCard.jsx";
 
 const ServerAllowList = () => {

@@ -14,7 +14,7 @@ import {useNavigate} from "react-router";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import LoadIn from "../../components/animation/LoadIn.tsx";
 import ErrorView from "../ErrorView.tsx";
-import {useAuth} from "../../hooks/authenticationHook.jsx";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const AddThemeView = () => {
     const {hasPermission} = useAuth();

@@ -13,7 +13,7 @@ import {TableRow} from "../../components/table/TableRow";
 import LoadIn from "../../components/animation/LoadIn.tsx";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 import ConnectionsCard from "../../components/cards/player/ConnectionsCard";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 import FormattedTime from "../../components/text/FormattedTime.jsx";
 
 const PunchCardCard = ({player}) => {

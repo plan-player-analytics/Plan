@@ -15,7 +15,7 @@ import WorldPerformanceGraph from "../../../graphs/performance/WorldPerformanceG
 import DiskPerformanceGraph from "../../../graphs/performance/DiskPerformanceGraph";
 import PingGraph from "../../../graphs/performance/PingGraph";
 import {mapPerformanceDataToSeries} from "../../../../util/graphs";
-import {useAuth} from "../../../../hooks/authenticationHook";
+import {useAuth} from "../../../../hooks/authenticationHook.tsx";
 import {GraphExtremesContextProvider} from "../../../../hooks/interaction/graphExtremesContextHook.jsx";
 
 const AllGraphTab = ({data, dataSeries, pluginHistorySeries, loadingError}) => {

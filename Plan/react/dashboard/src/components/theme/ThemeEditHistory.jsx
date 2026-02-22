@@ -1,5 +1,5 @@
 import React from 'react';
-import {useThemeEditContext} from "../../hooks/context/themeEditContextHook.jsx";
+import {useThemeEditContext} from "../../hooks/context/themeEditContextHook.tsx";
 import {useTranslation} from "react-i18next";
 
 const ThemeEditHistory = () => {

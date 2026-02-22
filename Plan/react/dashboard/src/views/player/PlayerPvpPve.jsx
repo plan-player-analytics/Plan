@@ -11,7 +11,7 @@ import PvpPveAsNumbersCard from "../../components/cards/player/PvpPveAsNumbersCa
 import PvpKillsTableCard from "../../components/cards/common/PvpKillsTableCard";
 import LoadIn from "../../components/animation/LoadIn.tsx";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const InsightsCard = ({player}) => {
     const {t} = useTranslation();

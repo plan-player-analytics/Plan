@@ -13,7 +13,7 @@ import {faUsers} from "@fortawesome/free-solid-svg-icons";
 import NetworkOnlineActivityGraphsCard from "../../components/cards/server/graphs/NetworkOnlineActivityGraphsCard";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 import ExtendableCardBody from "../../components/layout/extension/ExtendableCardBody";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 
 const RecentPlayersCard = ({data}) => {

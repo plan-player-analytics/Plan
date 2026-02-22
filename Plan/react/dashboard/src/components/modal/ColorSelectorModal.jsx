@@ -7,7 +7,7 @@ import {useTranslation} from "react-i18next";
 import {useThemeStorage} from "../../hooks/context/themeContextHook.tsx";
 import {useMetadata} from "../../hooks/metadataHook.jsx";
 import ThemeOption from "../theme/ThemeOption.jsx";
-import {useAuth} from "../../hooks/authenticationHook.jsx";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 import AddThemeButton from "../theme/AddThemeButton.jsx";
 import ActionButton from "../input/button/ActionButton.jsx";
 import ColorSelectorButton from "../theme/ColorSelectorButton.jsx";
