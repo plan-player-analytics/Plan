@@ -140,7 +140,9 @@ tasks.register("bundle", YarnTask) {
     dependsOn yarn
     inputs.files(fileTree("$rootDir/react/dashboard/src"))
     inputs.file("$rootDir/react/dashboard/package.json")
-    inputs.file("$rootDir/react/dashboard/vite.config.js")
+    inputs.file("$rootDir/react/dashboard/vite.config.ts")
+    inputs.file("$rootDir/react/dashboard/tsconfig.json")
+    inputs.file("$rootDir/react/dashboard/tsconfig.node.json")
 
     outputs.dir("$rootDir/react/dashboard/build")
 
