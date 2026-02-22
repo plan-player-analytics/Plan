@@ -3,7 +3,7 @@ import React from "react";
 import ServerWorldPieCard from "../../components/cards/server/graphs/ServerWorldPieCard";
 import ServerRecentSessionsCard from "../../components/cards/server/tables/ServerRecentSessionsCard";
 import SessionInsightsCard from "../../components/cards/server/insights/SessionInsightsCard";
-import LoadIn from "../../components/animation/LoadIn";
+import LoadIn from "../../components/animation/LoadIn.tsx";
 import {useParams} from "react-router";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 import {useAuth} from "../../hooks/authenticationHook";

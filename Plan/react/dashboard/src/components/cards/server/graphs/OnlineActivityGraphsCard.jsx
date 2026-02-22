@@ -6,7 +6,7 @@ import {
     fetchPunchCardGraph,
     fetchServerCalendarGraph
 } from "../../../../service/serverService";
-import {ErrorViewBody} from "../../../../views/ErrorView";
+import {ErrorViewBody} from "../../../../views/ErrorView.tsx";
 import PunchCard from "../../../graphs/PunchCard";
 import {useTranslation} from "react-i18next";
 import {Card} from "react-bootstrap";

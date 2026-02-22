@@ -10,7 +10,7 @@ import {useTranslation} from "react-i18next";
 import PlayerOverviewCard from "../../components/cards/player/PlayerOverviewCard";
 import NicknamesCard from "../../components/cards/player/NicknamesCard";
 import {TableRow} from "../../components/table/TableRow";
-import LoadIn from "../../components/animation/LoadIn";
+import LoadIn from "../../components/animation/LoadIn.tsx";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 import ConnectionsCard from "../../components/cards/player/ConnectionsCard";
 import {useAuth} from "../../hooks/authenticationHook";

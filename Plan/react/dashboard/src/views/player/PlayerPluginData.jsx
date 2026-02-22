@@ -4,7 +4,7 @@ import {Card, Col, Row} from "react-bootstrap";
 import {useParams} from "react-router";
 import Masonry from "masonry-layout";
 import {usePlayer} from "../layout/PlayerPage";
-import LoadIn from "../../components/animation/LoadIn";
+import LoadIn from "../../components/animation/LoadIn.tsx";
 import {useAuth} from "../../hooks/authenticationHook";
 
 const PlayerPluginData = () => {

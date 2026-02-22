@@ -1,7 +1,7 @@
 import {useParams} from "react-router";
 import {useDataRequest} from "../../../../hooks/dataFetchHook";
 import {fetchOptimizedPerformance, fetchPingGraph, fetchPluginHistory} from "../../../../service/serverService";
-import {ErrorViewBody} from "../../../../views/ErrorView";
+import {ErrorViewBody} from "../../../../views/ErrorView.tsx";
 import {useTranslation} from "react-i18next";
 import {Card} from "react-bootstrap";
 import CardTabs from "../../../CardTabs";

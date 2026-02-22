@@ -1,7 +1,7 @@
 import React from 'react';
 import {useDataRequest} from "../../hooks/dataFetchHook";
-import ErrorView from "../ErrorView";
-import LoadIn from "../../components/animation/LoadIn";
+import ErrorView from "../ErrorView.tsx";
+import LoadIn from "../../components/animation/LoadIn.tsx";
 import {Card, Col} from "react-bootstrap";
 import ServerAsNumbersCard from "../../components/cards/server/values/ServerAsNumbersCard";
 import ServerWeekComparisonCard from "../../components/cards/server/tables/ServerWeekComparisonCard";

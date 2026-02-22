@@ -2,10 +2,10 @@ import React from 'react';
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import {useParams} from "react-router";
 import {fetchPlayersTable} from "../../service/serverService";
-import ErrorView from "../ErrorView";
+import ErrorView from "../ErrorView.tsx";
 import {Col} from "react-bootstrap";
 import PlayerListCard from "../../components/cards/common/PlayerListCard";
-import LoadIn from "../../components/animation/LoadIn";
+import LoadIn from "../../components/animation/LoadIn.tsx";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 import {useAuth} from "../../hooks/authenticationHook";
 

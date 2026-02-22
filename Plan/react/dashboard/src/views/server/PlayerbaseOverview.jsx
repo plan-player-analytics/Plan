@@ -5,10 +5,10 @@ import CurrentPlayerbaseCard from "../../components/cards/server/graphs/CurrentP
 import {useParams} from "react-router";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import {fetchPlayerbaseOverview} from "../../service/serverService";
-import {ErrorViewCard} from "../ErrorView";
+import {ErrorViewCard} from "../ErrorView.tsx";
 import PlayerbaseTrendsCard from "../../components/cards/server/tables/PlayerbaseTrendsCard";
 import PlayerbaseInsightsCard from "../../components/cards/server/insights/PlayerbaseInsightsCard";
-import LoadIn from "../../components/animation/LoadIn";
+import LoadIn from "../../components/animation/LoadIn.tsx";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 import {useAuth} from "../../hooks/authenticationHook";
 

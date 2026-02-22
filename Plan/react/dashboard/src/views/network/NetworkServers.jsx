@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Col} from "react-bootstrap";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import {fetchServersOverview} from "../../service/networkService";
-import ErrorView from "../ErrorView";
+import ErrorView from "../ErrorView.tsx";
 import ServersTableCard from "../../components/cards/network/ServersTableCard";
 import QuickViewGraphCard from "../../components/cards/network/QuickViewGraphCard";
 import QuickViewDataCard from "../../components/cards/network/QuickViewDataCard";

@@ -1,5 +1,5 @@
 import React from 'react';
-import LoadIn from "../../components/animation/LoadIn";
+import LoadIn from "../../components/animation/LoadIn.tsx";
 import {Col, Row} from "react-bootstrap";
 import QueryOptionsCard from "../../components/cards/query/QueryOptionsCard";
 import QueryPath from "../../components/alert/QueryPath";

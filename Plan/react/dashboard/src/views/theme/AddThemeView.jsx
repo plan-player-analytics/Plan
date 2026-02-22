@@ -9,11 +9,11 @@ import {ChartLoader} from "../../components/navigation/Loader.jsx";
 import {useTheme} from "../../hooks/themeHook.jsx";
 import ActionButton from "../../components/input/button/ActionButton.jsx";
 import {useTranslation} from "react-i18next";
-import {useThemeStorage} from "../../hooks/context/themeContextHook.jsx";
+import {useThemeStorage} from "../../hooks/context/themeContextHook.tsx";
 import {useNavigate} from "react-router";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import LoadIn from "../../components/animation/LoadIn.jsx";
-import ErrorView from "../ErrorView.jsx";
+import LoadIn from "../../components/animation/LoadIn.tsx";
+import ErrorView from "../ErrorView.tsx";
 import {useAuth} from "../../hooks/authenticationHook.jsx";
 
 const AddThemeView = () => {

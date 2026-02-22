@@ -1,6 +1,6 @@
 import {Col} from "react-bootstrap";
 import React from "react";
-import LoadIn from "../../components/animation/LoadIn";
+import LoadIn from "../../components/animation/LoadIn.tsx";
 import {useParams} from "react-router";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 import {useAuth} from "../../hooks/authenticationHook";

@@ -3,7 +3,7 @@ import {Card, Col, Row} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
 import {useDataRequest} from "../../../hooks/dataFetchHook";
 import {fetchFilters, postQuery} from "../../../service/queryService";
-import {ErrorViewCard} from "../../../views/ErrorView";
+import {ErrorViewCard} from "../../../views/ErrorView.tsx";
 import {ChartLoader} from "../../navigation/Loader";
 import DateInputField from "../../input/DateInputField";
 import TimeInputField from "../../input/TimeInputField";

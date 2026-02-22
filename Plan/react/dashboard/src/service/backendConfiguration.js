@@ -80,6 +80,14 @@ export const doSomeRequest = async (url, statusOptions, axiosFunction) => {
             }
         };
     }
+    return {
+        data: undefined,
+        error: {
+            status: undefined,
+            message: 'Reached unknown section of the code',
+            url
+        }
+    };
 }
 
 export const standard200option = {status: 200, get: response => response.data}

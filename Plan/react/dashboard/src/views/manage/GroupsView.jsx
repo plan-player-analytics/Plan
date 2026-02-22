@@ -1,5 +1,5 @@
-import ErrorView from "../ErrorView";
-import LoadIn from "../../components/animation/LoadIn";
+import ErrorView from "../ErrorView.tsx";
+import LoadIn from "../../components/animation/LoadIn.tsx";
 import {Card, Col, InputGroup, Row} from "react-bootstrap";
 import React, {useCallback, useEffect, useState} from "react";
 import CardHeader from "../../components/cards/CardHeader";
@@ -241,7 +241,7 @@ const DiscardButton = () => {
     return (
         <>
             {dirty && <SecondaryActionButton className={"float-end"} style={{margin: "-0.5rem", marginRight: "0.5rem"}}
-                              onClick={requestDiscard}>
+                                             onClick={requestDiscard}>
                 <Fa icon={faTrash}/> {t('html.label.managePage.changes.discard')}
             </SecondaryActionButton>}
         </>
@@ -267,34 +267,34 @@ const AddGroupBody = ({groups, reloadGroupNames}) => {
                            setValue={newValue => setValue(newValue.toLowerCase().replace(" ", "_"))}
                 />
                 <ActionButton className={"mt-2"} disabled={invalid || !value || value.length === 0}
-                        onClick={() => {
-                            addGroup(value).then(({error}) => {
-                                if (error) {
-                                    addAlert({
-                                        timeout: 15000,
-                                        color: "danger",
-                                        content: <>
-                                            <Fa icon={faExclamationTriangle}/>
-                                            {" "}
-                                            <Trans i18nKey={"html.label.managePage.alert.groupAddFail"}
-                                                   values={{error: error?.message}}/>
-                                        </>
-                                    });
-                                } else {
-                                    addAlert({
-                                        timeout: 7500,
-                                        color: "success",
-                                        content: <>
-                                            <Fa icon={faCheck}/>
-                                            {" "}
-                                            <Trans i18nKey={"html.label.managePage.alert.groupAddSuccess"}
-                                                   values={{groupName: value}}/>
-                                        </>
-                                    });
-                                    reloadGroupNames();
-                                }
-                            })
-                        }}>
+                              onClick={() => {
+                                  addGroup(value).then(({error}) => {
+                                      if (error) {
+                                          addAlert({
+                                              timeout: 15000,
+                                              color: "danger",
+                                              content: <>
+                                                  <Fa icon={faExclamationTriangle}/>
+                                                  {" "}
+                                                  <Trans i18nKey={"html.label.managePage.alert.groupAddFail"}
+                                                         values={{error: error?.message}}/>
+                                              </>
+                                          });
+                                      } else {
+                                          addAlert({
+                                              timeout: 7500,
+                                              color: "success",
+                                              content: <>
+                                                  <Fa icon={faCheck}/>
+                                                  {" "}
+                                                  <Trans i18nKey={"html.label.managePage.alert.groupAddSuccess"}
+                                                         values={{groupName: value}}/>
+                                              </>
+                                          });
+                                          reloadGroupNames();
+                                      }
+                                  })
+                              }}>
                     <Fa icon={faFloppyDisk}/> {t('html.label.managePage.addGroup.header')}
                 </ActionButton>
             </Card.Body>

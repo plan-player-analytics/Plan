@@ -1,5 +1,5 @@
 import React, {createContext, useContext, useMemo, useState} from "react";
-import {useThemeStorage} from "./themeContextHook.jsx";
+import {useThemeStorage} from "./themeContextHook.tsx";
 import {cssVariableToName, nameToCssVariable} from "../../util/colors.js";
 import {flattenObject, recursiveFindAndReplaceValue} from "../../util/mutator.js";
 import {Trans, useTranslation} from "react-i18next";

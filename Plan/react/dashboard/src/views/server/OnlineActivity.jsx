@@ -5,9 +5,9 @@ import OnlineActivityAsNumbersCard from "../../components/cards/server/tables/On
 import {useParams} from "react-router";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import {fetchOnlineActivityOverview} from "../../service/serverService";
-import ErrorView from "../ErrorView";
+import ErrorView from "../ErrorView.tsx";
 import OnlineActivityInsightsCard from "../../components/cards/server/insights/OnlineActivityInsightsCard";
-import LoadIn from "../../components/animation/LoadIn";
+import LoadIn from "../../components/animation/LoadIn.tsx";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 import {useAuth} from "../../hooks/authenticationHook";
 

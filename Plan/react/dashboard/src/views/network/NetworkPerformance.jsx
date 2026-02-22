@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import LoadIn from "../../components/animation/LoadIn";
+import LoadIn from "../../components/animation/LoadIn.tsx";
 import {Card, Col} from "react-bootstrap";
 import {useMetadata} from "../../hooks/metadataHook";
 import CardHeader from "../../components/cards/CardHeader";

@@ -6,10 +6,10 @@ import './style/mobile.css';
 import 'react-bootstrap-range-slider/dist/react-bootstrap-range-slider.css';
 
 import {createBrowserRouter, createRoutesFromElements, Navigate, Route, RouterProvider} from "react-router";
-import React, {useCallback, useEffect} from "react";
+import React, {PropsWithChildren, useCallback, useEffect} from "react";
 import {ThemeContextProvider, useTheme} from "./hooks/themeHook";
 import axios from "axios";
-import ErrorView from "./views/ErrorView";
+import ErrorView, {PlanError} from "./views/ErrorView";
 import {faMapSigns} from "@fortawesome/free-solid-svg-icons";
 import {MetadataContextProvider} from "./hooks/metadataHook";
 import {AuthenticationContextProvider} from "./hooks/authenticationHook";
@@ -20,8 +20,8 @@ import {PageExtensionContextProvider} from "./hooks/pageExtensionHook";
 import ErrorBoundary from "./components/ErrorBoundary";
 import {AlertPopupContextProvider} from "./hooks/context/alertPopupContext";
 import {PreferencesContextProvider} from "./hooks/preferencesHook";
-import {ThemeStorageContextProvider} from "./hooks/context/themeContextHook.jsx";
-import {ThemeStyleCss} from "./components/theme/ThemeStyleCss.jsx";
+import {ThemeStorageContextProvider} from "./hooks/context/themeContextHook.js";
+import {ThemeStyleCss} from "./components/theme/ThemeStyleCss.js";
 
 const PlayerPage = React.lazy(() => import("./views/layout/PlayerPage"));
 const PlayerOverview = React.lazy(() => import("./views/player/PlayerOverview"));
@@ -88,7 +88,7 @@ const GroupsRedirect = () => {
     return (<Navigate to={"groups"} replace={true}/>)
 }
 
-const ContextProviders = ({children}) => (
+const ContextProviders = ({children}: React.PropsWithChildren) => (
     <AuthenticationContextProvider>
         <MetadataContextProvider>
             <PreferencesContextProvider>
@@ -108,8 +108,8 @@ const ContextProviders = ({children}) => (
     </AuthenticationContextProvider>
 )
 
-const Lazy = ({children}) => {
-    const fallbackFunction = useCallback((error) => <ErrorView error={error}/>, []);
+const Lazy = ({children}: React.PropsWithChildren) => {
+    const fallbackFunction = useCallback((error: PlanError) => <ErrorView error={error}/>, []);
     return (
         <React.Suspense fallback={<></>}>
             <ErrorBoundary fallbackFunction={fallbackFunction}>
@@ -226,7 +226,7 @@ const router = createBrowserRouter(
     ), {basename: getBasename()}
 );
 
-const Wrapper = ({children}) => {
+const Wrapper = ({children}: PropsWithChildren) => {
     const {nightModeEnabled} = useTheme();
 
     useEffect(() => {
