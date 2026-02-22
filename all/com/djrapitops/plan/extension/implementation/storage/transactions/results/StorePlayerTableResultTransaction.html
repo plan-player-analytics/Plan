@@ -38,7 +38,7 @@ loadScripts(document, 'script');</script>
 <li>
 <p>Summary:</p>
 <ul>
-<li>Nested</li>
+<li><a href="#nested-class-summary">Nested</a></li>
 <li><a href="#field-summary">Field</a></li>
 <li><a href="#constructor-summary">Constr</a></li>
 <li><a href="#method-summary">Method</a></li>
@@ -58,7 +58,7 @@ loadScripts(document, 'script');</script>
 <div id="navbar-sub-list">
 <ul class="sub-nav-list">
 <li>Summary:&nbsp;</li>
-<li>Nested&nbsp;|&nbsp;</li>
+<li><a href="#nested-class-summary">Nested</a>&nbsp;|&nbsp;</li>
 <li><a href="#field-summary">Field</a>&nbsp;|&nbsp;</li>
 <li><a href="#constructor-summary">Constr</a>&nbsp;|&nbsp;</li>
 <li><a href="#method-summary">Method</a></li>
@@ -100,6 +100,15 @@ loadScripts(document, 'script');</script>
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- ======== NESTED CLASS SUMMARY ======== -->
+<li>
+<section class="nested-class-summary" id="nested-class-summary">
+<h2>Nested Class Summary</h2>
+<div class="inherited-list">
+<h2 id="nested-classes-inherited-from-class-com.djrapitops.plan.storage.database.transactions.Transaction">Nested classes/interfaces inherited from class&nbsp;com.djrapitops.plan.storage.database.transactions.<a href="../../../../../storage/database/transactions/Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a></h2>
+<code><a href="../../../../../storage/database/transactions/Transaction.IsolationLevel.html" title="enum class in com.djrapitops.plan.storage.database.transactions">Transaction.IsolationLevel</a></code></div>
+</section>
+</li>
 <!-- =========== FIELD SUMMARY =========== -->
 <li>
 <section class="field-summary" id="field-summary">
@@ -141,9 +150,12 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#performOperations()" class="member-name-link">performOperations</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="../../../../../storage/database/transactions/Transaction.IsolationLevel.html" title="enum class in com.djrapitops.plan.storage.database.transactions">Transaction.IsolationLevel</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getDesiredIsolationLevel()" class="member-name-link">getDesiredIsolationLevel</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#performOperations()" class="member-name-link">performOperations</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Implement this method for transaction execution.</div>
 </div>
 </div>
@@ -195,6 +207,16 @@ loadScripts(document, 'script');</script>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="getDesiredIsolationLevel()">
+<h3>getDesiredIsolationLevel</h3>
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="../../../../../storage/database/transactions/Transaction.IsolationLevel.html" title="enum class in com.djrapitops.plan.storage.database.transactions">Transaction.IsolationLevel</a></span>&nbsp;<span class="element-name">getDesiredIsolationLevel</span>()</div>
+<dl class="notes">
+<dt>Overrides:</dt>
+<dd><code><a href="../../../../../storage/database/transactions/Transaction.html#getDesiredIsolationLevel()">getDesiredIsolationLevel</a></code>&nbsp;in class&nbsp;<code><a href="../../../../../storage/database/transactions/Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a></code></dd>
+</dl>
+</section>
+</li>
 <li>
 <section class="detail" id="performOperations()">
 <h3>performOperations</h3>
