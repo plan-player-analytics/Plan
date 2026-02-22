@@ -25,12 +25,9 @@ import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTr
 import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
 import com.djrapitops.plan.utilities.java.Lists;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.awaitility.Awaitility;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.logging.LogEntry;
 import org.openqa.selenium.logging.LogType;
@@ -43,7 +40,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -61,6 +57,10 @@ public class ExportTestUtilities {
         /* Static utility method class */
     }
 
+    public static void assertNoLogs(WebDriver driver, String endpoint) {
+        assertNoLogs(driver.manage().logs().get(LogType.BROWSER).getAll(), endpoint);
+    }
+
     public static void assertNoLogs(List<LogEntry> logs, String endpoint) {
         List<String> loggedLines = logs.stream()
                 .map(log -> "\n" + log.getLevel().getName() + " " + log.getMessage())
@@ -69,7 +69,7 @@ public class ExportTestUtilities {
     }
 
     private static boolean ignoredLogLines(String log) {
-        return !StringUtils.containsAny(log,
+        return !Strings.CI.containsAny(log,
                 "fonts.gstatic.com", "fonts.googleapis.com", "cdn.jsdelivr.net", "manifest.json"
         );
     }
@@ -112,10 +112,7 @@ public class ExportTestUtilities {
                 .atMost(Duration.of(10, ChronoUnit.SECONDS))
                 .until(() -> getMainPageElement(driver).map(WebElement::isDisplayed).orElse(false));
 
-        List<LogEntry> logs = new ArrayList<>();
-        logs.addAll(driver.manage().logs().get(LogType.CLIENT).getAll());
-        logs.addAll(driver.manage().logs().get(LogType.BROWSER).getAll());
-        return logs;
+        return driver.manage().logs().get(LogType.BROWSER).getAll();
     }
 
     static void export(Exporter exporter, Database database, ServerUUID serverUUID) throws Exception {

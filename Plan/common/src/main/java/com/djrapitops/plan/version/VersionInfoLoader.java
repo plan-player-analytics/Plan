@@ -19,6 +19,7 @@ package com.djrapitops.plan.version;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.util.*;
 
@@ -44,7 +45,7 @@ public class VersionInfoLoader {
      * @throws java.net.MalformedURLException If VERSION_TXT_URL is not valid.
      */
     public static List<VersionInfo> load() throws IOException {
-        URL url = new URL(VERSION_TXT_URL);
+        URL url = URI.create(VERSION_TXT_URL).toURL();
 
         List<VersionInfo> versionInfo = new ArrayList<>();
 

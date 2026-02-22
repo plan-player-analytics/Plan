@@ -48,6 +48,12 @@ const PageNavigationItem = ({page}) => {
                     href: "/docs",
                     permission: 'access.docs'
                 },
+                {
+                    id: 'theme-editor',
+                    displayName: t("html.label.themeEditor.title"),
+                    href: "/theme-editor",
+                    permission: 'access.theme.editor'
+                },
                 ...networkMetadata.servers
                     .filter(server => !server.proxy)
                     .map(server => {

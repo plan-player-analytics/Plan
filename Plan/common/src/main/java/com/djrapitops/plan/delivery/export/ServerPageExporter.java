@@ -29,6 +29,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.text.StringEscapeUtils;
 
 import javax.inject.Inject;
@@ -71,24 +72,6 @@ public class ServerPageExporter extends FileExporter {
         exportPaths = new ExportPaths();
     }
 
-    /**
-     * Perform export for a server page.
-     *
-     * @param toDirectory Path to Export directory
-     * @param server      Server to export
-     * @throws IOException       If a template can not be read from jar/disk or the result written
-     * @throws NotFoundException If a file or resource that is being exported can not be found
-     */
-    public void export(Path toDirectory, Server server) throws IOException {
-        Database.State dbState = dbSystem.getDatabase().getState();
-        if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
-
-        exportPaths.put("../network", toRelativePathFromRoot("network"));
-        exportJSON(toDirectory, server);
-        exportReactRedirects(toDirectory, server.getUuid());
-        exportPaths.clear();
-    }
-
     public static String[] getRedirections(ServerUUID serverUUID) {
         String server = "server/";
         return new String[]{
@@ -106,6 +89,24 @@ public class ServerPageExporter extends FileExporter {
                 server + serverUUID + "/performance",
                 server + serverUUID + "/plugins-overview",
         };
+    }
+
+    /**
+     * Perform export for a server page.
+     *
+     * @param toDirectory Path to Export directory
+     * @param server      Server to export
+     * @throws IOException       If a template can not be read from jar/disk or the result written
+     * @throws NotFoundException If a file or resource that is being exported can not be found
+     */
+    public void export(Path toDirectory, Server server) throws IOException {
+        Database.State dbState = dbSystem.getDatabase().getState();
+        if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
+
+        exportPaths.put("../network", toRelativePathFromRoot("network"));
+        exportJSON(toDirectory, server);
+        exportReactRedirects(toDirectory, server.getUuid());
+        exportPaths.clear();
     }
 
     private void exportReactRedirects(Path toDirectory, ServerUUID serverUUID) throws IOException {
@@ -167,7 +168,7 @@ public class ServerPageExporter extends FileExporter {
 
         export(toDirectory.resolve("data").resolve(jsonResourceName),
                 // Replace ../player in urls to fix player page links
-                StringUtils.replace(
+                Strings.CI.replace(
                         response.getAsString(),
                         StringEscapeUtils.escapeJson("../player"),
                         StringEscapeUtils.escapeJson(toRelativePathFromRoot("player"))
@@ -195,7 +196,7 @@ public class ServerPageExporter extends FileExporter {
     }
 
     private String toNonRelativePath(String resourceName) {
-        return StringUtils.remove(StringUtils.remove(resourceName, "../"), "./");
+        return Strings.CI.remove(Strings.CI.remove(resourceName, "../"), "./");
     }
 
 }

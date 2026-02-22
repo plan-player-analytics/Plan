@@ -180,6 +180,8 @@ public class ConfigUpdater {
 
                 new ConfigChange.Moved("Data_gathering.Preserve_join_address_case", "Data_gathering.Join_addresses.Preserve_case"),
                 new ConfigChange.Moved("Data_gathering.Preserve_invalid_join_addresses", "Data_gathering.Join_addresses.Preserve_invalid"),
+
+                new ConfigChange.Moved("Time.Periodic_tasks.Extension_data_refresh_every", "Time.Periodic_tasks.Extension_server_data_refresh_every")
         };
     }
 

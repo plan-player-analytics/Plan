@@ -9,6 +9,8 @@ command:
             name: "${code}"
         dbBackup:
             description: "バックアップするデータベース、空欄の場合は現在のデータベースが指定されます"
+        dbMergeStrategyDelete: "Delete conflicting server from destination database"
+        dbMergeStrategySwap: "Swap UUID of inserted conflicting server in destination database"
         dbRestore:
             description: "データをリストアするデータベース、空欄の場合は現在のデータベースが指定されます"
         dbTypeHotswap:
@@ -46,12 +48,34 @@ command:
         cancelNoUnregister: "キャンセルされました。「'${0}'」は登録済みです。"
         confirm: "確認: "
         dbClear: "「${0}」内に存在するPlanのデータを削除しようとしています"
+        dbMerge: "You are about to merge data in ${0} to data in ${1}"
         dbOverwrite: "Planのデータ「${0}」を「${1}」で上書きしようとしています"
         dbRemovePlayer: "「${0}」を「${1}」から削除しようとしています"
         deny: "キャンセル"
         expired: "有効期限切れのため、再度コマンドを使用してください"
         unregister: "「${1}」にリンクされている「${0}」を解除しようとしています"
     database:
+        copy:
+            abort: "Operation was aborted."
+            allDataExisted: "  all the data already existed."
+            clearFinish: "Cleared destination database."
+            clearStart: "Clearing destination database.."
+            conflict:
+                delete: "Deleting conflicting server ${0} from destination before insert"
+                info1: "Server with uuid ${0} already exists. Choose a strategy to deal with it."
+                info2: "  --on-conflict-swap - swaps the server uuid for inserted server (Use if multiple servers shared uuid at some point)"
+                info3: "  --on-conflict-delete - deletes the server from destination db (Use when previous merge failed)"
+                swap: "Swapping server uuid ${0} with ${1}"
+            destinationState: "Destination database is ${0}, could not begin operation"
+            error: "Ran into an issue, error was logged to a file, error: ${0}"
+            list:
+                row: "   ${0} - ${1} rows"
+                titleDestination: "Data in existing database:"
+                titleSource: "Data to be copied:"
+            progress: "  ${0}: ${1}/${2} (${3}%) copied."
+            sourceState: "Source database is ${0}, could not begin operation"
+            table: "Copying ${0}.."
+            trackPlayerStart: "Database copy started by player ${0} - process identifier: ${1}"
         creatingBackup: "「${1}」のデータを含むバックアップ「${0}.db」を作成中"
         failDbNotOpen: "§cデータベースは${0}です - しばらくしてからもう一度お試し下さい"
         manage:
@@ -65,6 +89,7 @@ command:
             failNoServer: "指定されたパラメーターを持つサーバーが存在しませんでした"
             failSameDB: "> §c同じデータベースを操作することはできません！"
             failSameServer: "このサーバーをアンインストールするサーバーとして指定することはできません(あなたがこのサーバーにログインしているため)"
+            failTooManyStrategies: "Only one strategy can be selected to deal with merge conflict."
             hotswap: "§e新しいデータベースに交換することを忘れないで下さい(/plan db hotswap ${0})。そして、プラグインをリロードして下さい"
             importers: "インポーター:"
             preparing: "準備中..."
@@ -135,6 +160,9 @@ command:
         dbHotswap:
             description: "データベースを高速で変更します"
             inDepth: "コンフィグの設定や異なるデータベースを設定時、設定が正しく反映されるようにプラグインをリロードします"
+        dbMerge:
+            description: "Merge data of two databases"
+            inDepth: "Merges contents in one database with the contents in another. Source data will be inserted to destination database."
         dbMove:
             description: "データベース間でデータを移動します"
             inDepth: "他のデータベースのデータを別データベースに移動させます。この時、別のデータベース内のデータは上書きされます"
@@ -832,6 +860,7 @@ html:
         filter:
             activity:
                 text: "アクティビティグループに属しています"
+            anyServer: "any server"
             banStatus:
                 name: "BAN状況"
             banned: "BAN済"
@@ -841,6 +870,8 @@ html:
                 allPlayers: "全てのプレイヤー"
                 and: "と"
                 start: "のプレイヤーの"
+            hasPlayedOnDate:
+                name: "Has played on date"
             hasPlayedOnServers:
                 name: "いずれかのサーバーでプレイしたことがある"
                 text: "少なくとも1つでプレイしたことがある"
@@ -849,21 +880,38 @@ html:
                 text: "プラグインのブール値を持つ"
             joinAddress:
                 text: "参加したアドレス"
+            lastSeenAfter:
+                text: "Last seen after"
+            lastSeenBefore:
+                text: "Last seen before"
+            lastSeenBetween:
+                text: "Last seen between"
             nonOperators: "オペレーターでない"
             notBanned: "BANされていない"
+            onDate: "on"
+            onServer: "on server(s)"
             operatorStatus:
                 name: "オペレーターステータス"
             operators: "オペレーター"
+            playedAfter:
+                text: "Played after"
+            playedBefore:
+                text: "Played before"
             playedBetween:
                 text: "プレイヤーの間"
             pluginGroup:
                 name: "グループ: "
                 text: "{{plugin}}の{{group}}に属しています"
+            registeredAfter:
+                text: "Registered after"
+            registeredBefore:
+                text: "Registered before"
             registeredBetween:
                 text: "の間に登録されました"
             skipped: "スキップ"
             title:
                 activityGroup: "活動時間のグループ"
+                activityGroupOnDate: "Activity group on date"
             view: "  ビュー:"
         filters:
             add: "フィルタを追加する.."

@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Singleton
-public class PlayedOnServerFilter extends MultiOptionFilter {
+public class PlayedOnServerFilter implements MultiOptionFilter {
 
     private final DBSystem dbSystem;
 

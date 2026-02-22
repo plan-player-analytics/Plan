@@ -61,14 +61,14 @@ public class BatchBanStatusTransaction extends Transaction {
         return new ExecBatchStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setBoolean(1, true);
                 for (UUID bannedPlayerUUID : bannedPlayerUUIDs) {
-                    statement.setBoolean(1, true);
                     statement.setString(2, bannedPlayerUUID.toString());
                     statement.setString(3, serverUUID.toString());
                     statement.addBatch();
                 }
+                statement.setBoolean(1, false);
                 for (UUID unbannedPlayerUUID : unbannedPlayerUUIDs) {
-                    statement.setBoolean(1, false);
                     statement.setString(2, unbannedPlayerUUID.toString());
                     statement.setString(3, serverUUID.toString());
                     statement.addBatch();

@@ -40,7 +40,6 @@ import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.settings.theme.Theme;
-import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.PlayerContainerQuery;
@@ -156,9 +155,9 @@ public class PlayerJSONCreator {
                 .put("avg_ping_series", pingGraph.getAvgGraph().getPointArrays())
                 .put("max_ping_series", pingGraph.getMaxGraph().getPointArrays())
                 .put("colors", Maps.builder(String.class, String.class)
-                        .put("min", ThemeVal.GRAPH_MIN_PING.getDefaultValue())
-                        .put("avg", ThemeVal.GRAPH_AVG_PING.getDefaultValue())
-                        .put("max", ThemeVal.GRAPH_MAX_PING.getDefaultValue())
+                        .put("min", "#ffd54f")
+                        .put("avg", "#ffc107")
+                        .put("max", "#ffa000")
                         .build())
                 .build();
     }

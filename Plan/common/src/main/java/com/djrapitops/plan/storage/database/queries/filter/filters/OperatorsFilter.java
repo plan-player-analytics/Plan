@@ -28,7 +28,7 @@ import javax.inject.Singleton;
 import java.util.*;
 
 @Singleton
-public class OperatorsFilter extends MultiOptionFilter {
+public class OperatorsFilter implements MultiOptionFilter {
 
     private final DBSystem dbSystem;
 

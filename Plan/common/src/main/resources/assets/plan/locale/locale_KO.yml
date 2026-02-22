@@ -9,6 +9,8 @@ command:
             name: "${code}"
         dbBackup:
             description: "백업할 데이터베이스 유형입니다. 지정하지 않으면 현재 데이터베이스로 사용됩니다."
+        dbMergeStrategyDelete: "Delete conflicting server from destination database"
+        dbMergeStrategySwap: "Swap UUID of inserted conflicting server in destination database"
         dbRestore:
             description: "복원할 데이터베이스의 유형입니다. 지정하지 않으면 현재 사용 중인 데이터베이스로 진행됩니다."
         dbTypeHotswap:
@@ -46,12 +48,34 @@ command:
         cancelNoUnregister: "취소되었습니다. '${0}' 이(가) 등록되지 않았습니다."
         confirm: "확인: "
         dbClear: "${0} 에 대한 모든 데이터를 삭제하려고 합니다."
+        dbMerge: "You are about to merge data in ${0} to data in ${1}"
         dbOverwrite: "Plan의 데이터를 덮어 쓰려고합니다. ${0} 데이터 포함 ${1}"
         dbRemovePlayer: "${1}에서 ${0}의 데이터를 제거하려고합니다."
         deny: "취소"
         expired: "확인이 만료되었습니다. 명령을 다시 사용하십시오."
         unregister: "${1}에 연결된 '${0}'의 등록을 취소하려고합니다."
     database:
+        copy:
+            abort: "Operation was aborted."
+            allDataExisted: "  all the data already existed."
+            clearFinish: "Cleared destination database."
+            clearStart: "Clearing destination database.."
+            conflict:
+                delete: "Deleting conflicting server ${0} from destination before insert"
+                info1: "Server with uuid ${0} already exists. Choose a strategy to deal with it."
+                info2: "  --on-conflict-swap - swaps the server uuid for inserted server (Use if multiple servers shared uuid at some point)"
+                info3: "  --on-conflict-delete - deletes the server from destination db (Use when previous merge failed)"
+                swap: "Swapping server uuid ${0} with ${1}"
+            destinationState: "Destination database is ${0}, could not begin operation"
+            error: "Ran into an issue, error was logged to a file, error: ${0}"
+            list:
+                row: "   ${0} - ${1} rows"
+                titleDestination: "Data in existing database:"
+                titleSource: "Data to be copied:"
+            progress: "  ${0}: ${1}/${2} (${3}%) copied."
+            sourceState: "Source database is ${0}, could not begin operation"
+            table: "Copying ${0}.."
+            trackPlayerStart: "Database copy started by player ${0} - process identifier: ${1}"
         creatingBackup: "${1} 내용으로 백업 파일 '${0}.db'만들기"
         failDbNotOpen: "§c데이터베이스는 ${0} - 입니다. 잠시 후 다시 시도하십시오."
         manage:
@@ -65,6 +89,7 @@ command:
             failNoServer: "주어진 매개 변수를 가진 서버가 없습니다."
             failSameDB: "> §c동일한 데이터베이스에서 작업할 수 없습니다!"
             failSameServer: "이 서버를 제거된 것으로 표시할 수 없습니다.(현재 사용 중입니다.)"
+            failTooManyStrategies: "Only one strategy can be selected to deal with merge conflict."
             hotswap: "§e새 데이터베이스 (/plan db hotswap ${0})로 교체하고 플러그인을 다시 로드해야합니다."
             importers: "Importers: "
             preparing: "Preparing.."
@@ -135,6 +160,9 @@ command:
         dbHotswap:
             description: "데이터베이스를 빠르게 변경합니다."
             inDepth: "Reloads the plugin with the other database and changes the config to match."
+        dbMerge:
+            description: "Merge data of two databases"
+            inDepth: "Merges contents in one database with the contents in another. Source data will be inserted to destination database."
         dbMove:
             description: "데이터베이스 간에 데이터 이동 합니다."
             inDepth: "Overwrites contents in the other database with the contents in another."
@@ -832,6 +860,7 @@ html:
         filter:
             activity:
                 text: "are in Activity Groups"
+            anyServer: "any server"
             banStatus:
                 name: "Ban status"
             banned: "Banned"
@@ -841,6 +870,8 @@ html:
                 allPlayers: "All players"
                 and: "and "
                 start: "of Players who "
+            hasPlayedOnDate:
+                name: "Has played on date"
             hasPlayedOnServers:
                 name: "Has played on one of servers"
                 text: "have played on at least one of"
@@ -849,21 +880,38 @@ html:
                 text: "have Plugin boolean value"
             joinAddress:
                 text: "joined with address"
+            lastSeenAfter:
+                text: "Last seen after"
+            lastSeenBefore:
+                text: "Last seen before"
+            lastSeenBetween:
+                text: "Last seen between"
             nonOperators: "Non operators"
             notBanned: "Not banned"
+            onDate: "on"
+            onServer: "on server(s)"
             operatorStatus:
                 name: "Operator status"
             operators: "Operators"
+            playedAfter:
+                text: "Played after"
+            playedBefore:
+                text: "Played before"
             playedBetween:
                 text: "Played between"
             pluginGroup:
                 name: "Group: "
                 text: "are in {{plugin}}'s {{group}} Groups"
+            registeredAfter:
+                text: "Registered after"
+            registeredBefore:
+                text: "Registered before"
             registeredBetween:
                 text: "Registered between"
             skipped: "Skipped"
             title:
                 activityGroup: "Current activity group"
+                activityGroupOnDate: "Activity group on date"
             view: "  View:"
         filters:
             add: "Add a filter.."

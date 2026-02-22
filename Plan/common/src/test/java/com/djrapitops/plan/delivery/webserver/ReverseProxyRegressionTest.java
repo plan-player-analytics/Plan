@@ -36,6 +36,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.logging.LogEntry;
+import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.Network;
 import org.testcontainers.containers.wait.strategy.HttpWaitStrategy;
@@ -82,7 +83,7 @@ class ReverseProxyRegressionTest {
                 .withNetwork(network)
                 .withNetworkAliases("foo")
                 .withExtraHost("host.docker.internal", "host-gateway")
-                .withFileSystemBind(nginxConfig.toFile().getAbsolutePath(), "/etc/nginx/conf.d/default.conf")
+                .withFileSystemBind(nginxConfig.toFile().getAbsolutePath(), "/etc/nginx/conf.d/default.conf", BindMode.READ_ONLY)
                 .waitingFor(new HttpWaitStrategy());
         TestResources.copyResourceToFile(nginxConfig.toFile(), new FileInputStream(TestResources.getTestResourceFile("nginx-reverse-proxy.conf", ReverseProxyRegressionTest.class)));
         webserver.start();

@@ -28,7 +28,7 @@ import javax.inject.Singleton;
 import java.util.*;
 
 @Singleton
-public class BannedFilter extends MultiOptionFilter {
+public class BannedFilter implements MultiOptionFilter {
 
     private final DBSystem dbSystem;
 

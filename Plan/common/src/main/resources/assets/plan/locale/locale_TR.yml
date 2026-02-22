@@ -9,6 +9,8 @@ command:
             name: "${code}"
         dbBackup:
             description: "Yedeklenecek veritabanının türü. Belirtilmezse mevcut veritabanı kullanılır."
+        dbMergeStrategyDelete: "Delete conflicting server from destination database"
+        dbMergeStrategySwap: "Swap UUID of inserted conflicting server in destination database"
         dbRestore:
             description: "Geri yüklenecek veritabanının türü. Belirtilmezse mevcut veritabanı kullanılır."
         dbTypeHotswap:
@@ -46,12 +48,34 @@ command:
         cancelNoUnregister: "İptal Edildi. '${0}' kayıt edilmemii"
         confirm: "Onayla:"
         dbClear: "${0} konumundaki tüm Plan verilerini kaldırmak üzeresiniz"
+        dbMerge: "You are about to merge data in ${0} to data in ${1}"
         dbOverwrite: "${1} verileriyle ${0} Planındaki verilerin üzerine yazmak üzeresiniz"
         dbRemovePlayer: "${0} verilerini ${1} hesabından kaldırmak üzeresiniz"
         deny: "İptal et"
         expired: "Onay süresi doldu, komutu tekrar kullanın"
         unregister: "${1} ile bağlantılı '${0}' kaydını iptal etmek üzeresiniz"
     database:
+        copy:
+            abort: "Operation was aborted."
+            allDataExisted: "  all the data already existed."
+            clearFinish: "Cleared destination database."
+            clearStart: "Clearing destination database.."
+            conflict:
+                delete: "Deleting conflicting server ${0} from destination before insert"
+                info1: "Server with uuid ${0} already exists. Choose a strategy to deal with it."
+                info2: "  --on-conflict-swap - swaps the server uuid for inserted server (Use if multiple servers shared uuid at some point)"
+                info3: "  --on-conflict-delete - deletes the server from destination db (Use when previous merge failed)"
+                swap: "Swapping server uuid ${0} with ${1}"
+            destinationState: "Destination database is ${0}, could not begin operation"
+            error: "Ran into an issue, error was logged to a file, error: ${0}"
+            list:
+                row: "   ${0} - ${1} rows"
+                titleDestination: "Data in existing database:"
+                titleSource: "Data to be copied:"
+            progress: "  ${0}: ${1}/${2} (${3}%) copied."
+            sourceState: "Source database is ${0}, could not begin operation"
+            table: "Copying ${0}.."
+            trackPlayerStart: "Database copy started by player ${0} - process identifier: ${1}"
         creatingBackup: "${1} içeriğine sahip bir yedek dosyası '${0} .db' oluşturma"
         failDbNotOpen: "§cVeritabanı ${0} - Lütfen bir süre sonra tekrar deneyin."
         manage:
@@ -65,6 +89,7 @@ command:
             failNoServer: "Verilen parametrelere sahip sunucu bulunamadı."
             failSameDB: "> §cAynı veritabanında veya benzerinde çalışamaz!"
             failSameServer: "Bu sunucuyu kaldırılmış olarak işaretleyemezsiniz (Siz buradasınız)"
+            failTooManyStrategies: "Only one strategy can be selected to deal with merge conflict."
             hotswap: "§eYeni veritabanına geçmeyi (/plan db hotswap ${0}) ve eklentiyi yeniden yüklemeyi unutmayın."
             importers: "İçe aktarıcılar:"
             preparing: "Preparing.."
@@ -135,6 +160,9 @@ command:
         dbHotswap:
             description: "Veritabının hızlıca değiştirir"
             inDepth: "Eklentiyi diğer veritabanıyla yeniden yükler ve eşleşecek şekilde yapılandırmayı değiştirir."
+        dbMerge:
+            description: "Merge data of two databases"
+            inDepth: "Merges contents in one database with the contents in another. Source data will be inserted to destination database."
         dbMove:
             description: "Veriyi Veritabanları arasında taşır"
             inDepth: "Diğer veritabanındaki içeriklerin üzerine başka bir veritabanındaki içeriklerin üzerine yazar."
@@ -832,6 +860,7 @@ html:
         filter:
             activity:
                 text: "Etkinlik Gruplarında"
+            anyServer: "any server"
             banStatus:
                 name: "Yasaklama durumu"
             banned: "Yasaklandı"
@@ -841,6 +870,8 @@ html:
                 allPlayers: "Tüm oyuncular"
                 and: "ve"
                 start: "Oyuncuların"
+            hasPlayedOnDate:
+                name: "Has played on date"
             hasPlayedOnServers:
                 name: "Has played on one of servers"
                 text: "have played on at least one of"
@@ -849,21 +880,38 @@ html:
                 text: "have Plugin boolean value"
             joinAddress:
                 text: "adresle katıldı"
+            lastSeenAfter:
+                text: "Last seen after"
+            lastSeenBefore:
+                text: "Last seen before"
+            lastSeenBetween:
+                text: "Last seen between"
             nonOperators: "Operatör olmayanlar"
             notBanned: "Yasaklı değil"
+            onDate: "on"
+            onServer: "on server(s)"
             operatorStatus:
                 name: "Yetkili durumu"
             operators: "Operators"
+            playedAfter:
+                text: "Played after"
+            playedBefore:
+                text: "Played before"
             playedBetween:
                 text: "Arasında oynanan"
             pluginGroup:
                 name: "Grup: "
                 text: "{{plugin}} adlı kişinin {{group}} Grubunda"
+            registeredAfter:
+                text: "Registered after"
+            registeredBefore:
+                text: "Registered before"
             registeredBetween:
                 text: "Arasında kayıtlı"
             skipped: "Skipped"
             title:
                 activityGroup: "Mevcut aktivite grubu"
+                activityGroupOnDate: "Activity group on date"
             view: "  Görünüm:"
         filters:
             add: "Filtre ekle"

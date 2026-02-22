@@ -44,6 +44,7 @@ public class RemoveEverythingTransaction extends Patch {
         clearTable(SessionsTable.TABLE_NAME);
         clearTable(JoinAddressTable.TABLE_NAME);
         clearTable(AllowlistBounceTable.TABLE_NAME);
+        clearTable(PluginVersionTable.TABLE_NAME);
         clearTable(WorldTable.TABLE_NAME);
         clearTable(PingTable.TABLE_NAME);
         clearTable(UserInfoTable.TABLE_NAME);
@@ -66,6 +67,10 @@ public class RemoveEverythingTransaction extends Patch {
         clearTable(ExtensionTabTable.TABLE_NAME);
         clearTable(ExtensionPluginTable.TABLE_NAME);
         clearTable(ExtensionIconTable.TABLE_NAME);
+
+        execute("DROP TABLE IF EXISTS plan_world_times_batch");
+        execute("DROP TABLE IF EXISTS plan_kills_batch");
+        execute(SessionsTable.TemporaryIdLookupTable.DROP_TABLE_STATEMENT);
 
         executeOther(new StoreJoinAddressTransaction(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP));
     }

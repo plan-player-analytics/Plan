@@ -29,6 +29,7 @@ import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.processing.Processing;
+import com.djrapitops.plan.processing.processors.move.DatabaseCopyProcessor;
 import com.djrapitops.plan.query.QuerySvc;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
@@ -41,7 +42,6 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.SQLiteDB;
 import com.djrapitops.plan.storage.database.queries.objects.BaseUserQueries;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
-import com.djrapitops.plan.storage.database.transactions.BackupCopyTransaction;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.commands.*;
 import com.djrapitops.plan.storage.database.transactions.patches.BadFabricJoinAddressValuePatch;
@@ -50,6 +50,9 @@ import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.player.UUIDFetcher;
+import net.playeranalytics.plugin.server.PluginLogger;
+import org.apache.commons.codec.digest.DigestUtils;
+import org.jspecify.annotations.NonNull;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -57,6 +60,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
+import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
 @Singleton
@@ -75,6 +79,7 @@ public class DatabaseCommands {
     private final ServerInfo serverInfo;
     private final Identifiers identifiers;
     private final PluginStatusCommands statusCommands;
+    private final PluginLogger logger;
     private final ErrorLogger errorLogger;
     private final Processing processing;
 
@@ -95,6 +100,7 @@ public class DatabaseCommands {
             Formatters formatters,
             Identifiers identifiers,
             PluginStatusCommands statusCommands,
+            PluginLogger logger,
             ErrorLogger errorLogger,
             Processing processing
     ) {
@@ -109,11 +115,27 @@ public class DatabaseCommands {
         this.serverInfo = serverInfo;
         this.identifiers = identifiers;
         this.statusCommands = statusCommands;
+        this.logger = logger;
         this.errorLogger = errorLogger;
 
         this.timestamp = formatters.iso8601NoClockLong();
         clock = formatters.clockLong();
         this.processing = processing;
+    }
+
+    private @NonNull Consumer<String> getFeedbackFor(CMDSender sender) {
+        if (sender.isPlayer()) {
+            String processTracker = DigestUtils.sha256Hex(sender.getUUID().orElse(UUID.randomUUID()).toString() + System.currentTimeMillis()).substring(0, 12);
+            logger.info(locale.getString(CommandLang.DB_COPY_TRACK_PLAYER_START,
+                    sender.getPlayerName().orElse("unknown player"),
+                    processTracker));
+            return message -> {
+                logger.info(processTracker + " | " + message);
+                sender.send(message);
+            };
+        } else {
+            return sender::send;
+        }
     }
 
     public void onBackup(CMDSender sender, @Untrusted Arguments arguments) {
@@ -129,27 +151,20 @@ public class DatabaseCommands {
         if (fromDB.getState() != Database.State.OPEN) fromDB.init();
 
         performBackup(sender, arguments, dbName, fromDB);
-        sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS));
     }
 
     public void performBackup(CMDSender sender, @Untrusted Arguments arguments, String dbName, Database fromDB) {
-        Database toDB = null;
         try {
             String timeStamp = timestamp.apply(System.currentTimeMillis());
             String fileName = dbName + "-backup-" + timeStamp;
             sender.send(locale.getString(CommandLang.DB_BACKUP_CREATE, fileName, dbName));
-            toDB = sqliteFactory.usingFileCalled(fileName);
+            Database toDB = sqliteFactory.usingFileCalled(fileName);
             toDB.init();
-            toDB.executeTransaction(new BackupCopyTransaction(fromDB, toDB)).get();
-        } catch (DBOpException | ExecutionException e) {
+
+            DatabaseCopyProcessor databaseCopyProcessor = new DatabaseCopyProcessor(locale, errorLogger, fromDB, toDB, getFeedbackFor(sender), toDB::close, DatabaseCopyProcessor.Strategy.CLEAR_DESTINATION_DATABASE);
+            processing.submit(databaseCopyProcessor);
+        } catch (DBOpException e) {
             errorLogger.error(e, ErrorContext.builder().related(sender, arguments).build());
-        } catch (InterruptedException e) {
-            toDB.close();
-            Thread.currentThread().interrupt();
-        } finally {
-            if (toDB != null) {
-                toDB.close();
-            }
         }
     }
 
@@ -199,11 +214,9 @@ public class DatabaseCommands {
             fromDB.init();
 
             sender.send(locale.getString(CommandLang.DB_WRITE, toDB.getType().getName()));
-            toDB.executeTransaction(new BackupCopyTransaction(fromDB, toDB)).get();
-            sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS));
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        } catch (DBOpException | ExecutionException e) {
+            DatabaseCopyProcessor databaseCopyProcessor = new DatabaseCopyProcessor(locale, errorLogger, fromDB, toDB, getFeedbackFor(sender), fromDB::close, DatabaseCopyProcessor.Strategy.CLEAR_DESTINATION_DATABASE);
+            processing.submit(databaseCopyProcessor);
+        } catch (DBOpException e) {
             errorLogger.error(e, ErrorContext.builder().related(backupDBFile, toDB.getType(), toDB.getState()).build());
             sender.send(locale.getString(CommandLang.PROGRESS_FAIL, e.getMessage()));
         }
@@ -226,14 +239,51 @@ public class DatabaseCommands {
 
         confirmation.confirm(sender, prompt, choice -> {
             if (Boolean.TRUE.equals(choice)) {
-                performMove(sender, fromDB, toDB);
+                performMove(sender, fromDB, toDB, DatabaseCopyProcessor.Strategy.CLEAR_DESTINATION_DATABASE);
             } else {
                 sender.send(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CANCELLED_DATA));
             }
         });
     }
 
-    private void performMove(CMDSender sender, DBType fromDB, DBType toDB) {
+    public void onMerge(CMDSender sender, @Untrusted Arguments arguments) {
+        DBType fromDB = arguments.get(0).flatMap(DBType::getForName)
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_INCORRECT_DB, arguments.get(0).orElse(SUPPORTED_DB_OPTIONS))));
+
+        DBType toDB = arguments.get(1).flatMap(DBType::getForName)
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_INCORRECT_DB, arguments.get(0).orElse(SUPPORTED_DB_OPTIONS))));
+
+        if (fromDB == toDB) {
+            throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_SAME_DB));
+        }
+
+        List<DatabaseCopyProcessor.Strategy> strategies = new ArrayList<>();
+        if (arguments.contains("--on-conflict-delete")) {
+            strategies.add(DatabaseCopyProcessor.Strategy.SERVER_UUID_CONFLICT_DELETE_SERVER);
+        }
+        if (arguments.contains("--on-conflict-swap")) {
+            strategies.add(DatabaseCopyProcessor.Strategy.SERVER_UUID_CONFLICT_SWAP_UUID);
+        }
+        if (strategies.size() >= 2) {
+            throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_DB_TOO_MANY_STRATEGIES));
+        }
+
+        DatabaseCopyProcessor.Strategy[] chosenStrategies = strategies.toArray(new DatabaseCopyProcessor.Strategy[0]);
+
+        String prompt = locale.getString(CommandLang.CONFIRM_MERGE_DB,
+                fromDB.getName(),
+                toDB.getName());
+
+        confirmation.confirm(sender, prompt, choice -> {
+            if (Boolean.TRUE.equals(choice)) {
+                performMove(sender, fromDB, toDB, chosenStrategies);
+            } else {
+                sender.send(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CANCELLED_DATA));
+            }
+        });
+    }
+
+    private void performMove(CMDSender sender, DBType fromDB, DBType toDB, DatabaseCopyProcessor.Strategy... chosenStrategies) {
         try {
             Database fromDatabase = dbSystem.getActiveDatabaseByType(fromDB);
             Database toDatabase = dbSystem.getActiveDatabaseByType(toDB);
@@ -242,22 +292,18 @@ public class DatabaseCommands {
 
             sender.send(locale.getString(CommandLang.DB_WRITE, toDB.getName()));
 
-            toDatabase.executeTransaction(new BackupCopyTransaction(fromDatabase, toDatabase)).get();
-
-            sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS));
-
-            boolean movingToCurrentDB = toDatabase.getType() == dbSystem.getDatabase().getType();
-            if (movingToCurrentDB) {
-                sender.send(locale.getString(CommandLang.HOTSWAP_REMINDER, toDatabase.getType().getConfigName()));
-            }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
+            DatabaseCopyProcessor databaseCopyProcessor = new DatabaseCopyProcessor(locale, errorLogger, fromDatabase, toDatabase, getFeedbackFor(sender), () -> {
+                boolean movingToCurrentDB = toDatabase.getType() == dbSystem.getDatabase().getType();
+                if (movingToCurrentDB) {
+                    sender.send(locale.getString(CommandLang.HOTSWAP_REMINDER, toDatabase.getType().getConfigName()));
+                }
+            }, chosenStrategies);
+            processing.submit(databaseCopyProcessor);
         } catch (Exception e) {
             errorLogger.error(e, ErrorContext.builder().related(sender, fromDB.getName() + "->" + toDB.getName()).build());
             sender.send(locale.getString(CommandLang.PROGRESS_FAIL, e.getMessage()));
         }
     }
-
 
     public void onClear(CMDSender sender, @Untrusted Arguments arguments) {
         DBType fromDB = arguments.get(0).flatMap(DBType::getForName)

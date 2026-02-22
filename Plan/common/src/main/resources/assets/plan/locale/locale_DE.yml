@@ -9,6 +9,8 @@ command:
             name: "${code}"
         dbBackup:
             description: "Datenbanktyp, von welchem ein Backup erstellt werden soll. Wenn keiner angegeben wird, wird die aktuell festgelegte Datenbank verwendet."
+        dbMergeStrategyDelete: "Delete conflicting server from destination database"
+        dbMergeStrategySwap: "Swap UUID of inserted conflicting server in destination database"
         dbRestore:
             description: "Datenbanktyp, welcher wiederhergestellt werden soll. Wenn keiner angegeben wird, wird die aktuell festgelegte Datenbank verwendet."
         dbTypeHotswap:
@@ -46,12 +48,34 @@ command:
         cancelNoUnregister: "Abgebrochen. '${0}' wurde nicht unregistriert"
         confirm: "Bestätigen: "
         dbClear: "Du bist dabei sämtliche Plan-Daten in ${0} zu entfernen."
+        dbMerge: "You are about to merge data in ${0} to data in ${1}"
         dbOverwrite: "Du bist dabei Daten in Plan ${0} mit Daten in ${1} zu überschreiben"
         dbRemovePlayer: "Du bist dabei Daten von ${0} aus ${1} zu entfernen"
         deny: "Abbrechen"
         expired: "Bestätigungsanfrage abgelaufen, nutze den Befehl erneut"
         unregister: "You are about to unregister '${0}' linked to ${1}"
     database:
+        copy:
+            abort: "Operation was aborted."
+            allDataExisted: "  all the data already existed."
+            clearFinish: "Cleared destination database."
+            clearStart: "Clearing destination database.."
+            conflict:
+                delete: "Deleting conflicting server ${0} from destination before insert"
+                info1: "Server with uuid ${0} already exists. Choose a strategy to deal with it."
+                info2: "  --on-conflict-swap - swaps the server uuid for inserted server (Use if multiple servers shared uuid at some point)"
+                info3: "  --on-conflict-delete - deletes the server from destination db (Use when previous merge failed)"
+                swap: "Swapping server uuid ${0} with ${1}"
+            destinationState: "Destination database is ${0}, could not begin operation"
+            error: "Ran into an issue, error was logged to a file, error: ${0}"
+            list:
+                row: "   ${0} - ${1} rows"
+                titleDestination: "Data in existing database:"
+                titleSource: "Data to be copied:"
+            progress: "  ${0}: ${1}/${2} (${3}%) copied."
+            sourceState: "Source database is ${0}, could not begin operation"
+            table: "Copying ${0}.."
+            trackPlayerStart: "Database copy started by player ${0} - process identifier: ${1}"
         creatingBackup: "Erstellen der Backupdatei '${0}.db' mit den Inhalten von ${1}"
         failDbNotOpen: "§cDatenbank ist ${0} - Bitte versuche es später erneut."
         manage:
@@ -65,6 +89,7 @@ command:
             failNoServer: "Es wurden keine Server mit diesen Angaben gefunden."
             failSameDB: "> §cKann nicht von und zu der gleichen Datenbank agieren!"
             failSameServer: "Server kann nicht als uninstallier markiert werden. (Du bist da dran)."
+            failTooManyStrategies: "Only one strategy can be selected to deal with merge conflict."
             hotswap: "§eDenk dran, zur neuen Datenbank zu wechseln (/plan db hotswap ${0}) und um das Plugin neu zu laden."
             importers: "Importer:"
             preparing: "Vorbereiten.."
@@ -135,6 +160,9 @@ command:
         dbHotswap:
             description: "Ändere die Datenbank schnell"
             inDepth: "Lädt das Plugin mit der anderen Datenbank neu und passt die config-Datei entsprechen an."
+        dbMerge:
+            description: "Merge data of two databases"
+            inDepth: "Merges contents in one database with the contents in another. Source data will be inserted to destination database."
         dbMove:
             description: "Bewege die Daten zwischen den Datenbanken"
             inDepth: "Überschreibt die Inhalte in der Datenbank mit den Inhalten der Anderen."
@@ -832,6 +860,7 @@ html:
         filter:
             activity:
                 text: "are in Activity Groups"
+            anyServer: "any server"
             banStatus:
                 name: "Bann-Status"
             banned: "Banned"
@@ -841,6 +870,8 @@ html:
                 allPlayers: "Alle Spieler"
                 and: "and "
                 start: "of Players who "
+            hasPlayedOnDate:
+                name: "Has played on date"
             hasPlayedOnServers:
                 name: "Has played on one of servers"
                 text: "have played on at least one of"
@@ -849,21 +880,38 @@ html:
                 text: "have Plugin boolean value"
             joinAddress:
                 text: "joined with address"
+            lastSeenAfter:
+                text: "Last seen after"
+            lastSeenBefore:
+                text: "Last seen before"
+            lastSeenBetween:
+                text: "Last seen between"
             nonOperators: "Non operators"
             notBanned: "Not banned"
+            onDate: "on"
+            onServer: "on server(s)"
             operatorStatus:
                 name: "Operator Status"
             operators: "Operators"
+            playedAfter:
+                text: "Played after"
+            playedBefore:
+                text: "Played before"
             playedBetween:
                 text: "Played between"
             pluginGroup:
                 name: "Gruppe: "
                 text: "are in {{plugin}}'s {{group}} Groups"
+            registeredAfter:
+                text: "Registered after"
+            registeredBefore:
+                text: "Registered before"
             registeredBetween:
                 text: "Registered between"
             skipped: "Skipped"
             title:
                 activityGroup: "Aktuelle Aktivitätsgruppe"
+                activityGroupOnDate: "Activity group on date"
             view: "  View:"
         filters:
             add: "Add a filter.."

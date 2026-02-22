@@ -17,6 +17,7 @@
 package com.djrapitops.plan.settings.config;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -116,7 +117,7 @@ public class ConfigWriter {
 
         if (value == null || value.isEmpty()) {
             addKey(key, lines);
-        } else if (StringUtils.contains(value, "\n")) {
+        } else if (Strings.CI.contains(value, "\n")) {
             // List values include newline characters,
             // see ConfigValueParser.StringListParser
             addListValue(key, StringUtils.split(value, "\n"), lines);

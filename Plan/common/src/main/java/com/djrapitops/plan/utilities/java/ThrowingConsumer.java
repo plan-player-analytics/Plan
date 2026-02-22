@@ -23,6 +23,7 @@ package com.djrapitops.plan.utilities.java;
  *
  * @author AuroraLS3
  */
+@FunctionalInterface
 public interface ThrowingConsumer<T, K extends Throwable> {
 
     void accept(T consume) throws K;

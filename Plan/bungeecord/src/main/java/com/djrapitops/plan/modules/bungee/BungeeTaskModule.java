@@ -17,6 +17,7 @@
 package com.djrapitops.plan.modules.bungee;
 
 import com.djrapitops.plan.TaskSystem;
+import com.djrapitops.plan.delivery.AccessLogBatchTask;
 import com.djrapitops.plan.delivery.web.ResourceWriteTask;
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieExpiryCleanupTask;
 import com.djrapitops.plan.delivery.webserver.cache.JSONFileStorage;
@@ -92,4 +93,8 @@ public interface BungeeTaskModule {
     @Binds
     @IntoSet
     TaskSystem.Task bindInstalledPluginGatheringTask(InstalledPluginGatheringTask installedPluginGatheringTask);
+
+    @Binds
+    @IntoSet
+    TaskSystem.Task bindAccessLogBatchTask(AccessLogBatchTask accessLogBatchTask);
 }

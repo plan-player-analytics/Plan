@@ -9,6 +9,8 @@ command:
             name: "${code}"
         dbBackup:
             description: "要備份的資料庫的類型。如果未指定，則使用目前資料庫。"
+        dbMergeStrategyDelete: "Delete conflicting server from destination database"
+        dbMergeStrategySwap: "Swap UUID of inserted conflicting server in destination database"
         dbRestore:
             description: "要還原的資料庫的類型。如果未指定，則使用目前資料庫。"
         dbTypeHotswap:
@@ -46,12 +48,34 @@ command:
         cancelNoUnregister: "已取消。 '${0}' 尚未註冊"
         confirm: "確認:"
         dbClear: "你將要刪除 ${0} 中的所有 Plan 的資料"
+        dbMerge: "You are about to merge data in ${0} to data in ${1}"
         dbOverwrite: "你將要用 ${1} 中的資料覆蓋 Plan ${0} 中的資料。"
         dbRemovePlayer: "你將從 ${1} 中刪除 ${0} 的資料。"
         deny: "取消"
         expired: "確認已過期，請再次使用指令"
         unregister: "您即將解除與 ${1} 連接的 '${0}' 的註冊。"
     database:
+        copy:
+            abort: "Operation was aborted."
+            allDataExisted: "  all the data already existed."
+            clearFinish: "Cleared destination database."
+            clearStart: "Clearing destination database.."
+            conflict:
+                delete: "Deleting conflicting server ${0} from destination before insert"
+                info1: "Server with uuid ${0} already exists. Choose a strategy to deal with it."
+                info2: "  --on-conflict-swap - swaps the server uuid for inserted server (Use if multiple servers shared uuid at some point)"
+                info3: "  --on-conflict-delete - deletes the server from destination db (Use when previous merge failed)"
+                swap: "Swapping server uuid ${0} with ${1}"
+            destinationState: "Destination database is ${0}, could not begin operation"
+            error: "Ran into an issue, error was logged to a file, error: ${0}"
+            list:
+                row: "   ${0} - ${1} rows"
+                titleDestination: "Data in existing database:"
+                titleSource: "Data to be copied:"
+            progress: "  ${0}: ${1}/${2} (${3}%) copied."
+            sourceState: "Source database is ${0}, could not begin operation"
+            table: "Copying ${0}.."
+            trackPlayerStart: "Database copy started by player ${0} - process identifier: ${1}"
         creatingBackup: "建立一個備份檔案 '${0}.db'，內容為 ${1}。"
         failDbNotOpen: "§c資料庫為 ${0} - 請稍後再試。"
         manage:
@@ -65,6 +89,7 @@ command:
             failNoServer: "沒有找到具有給定參數的伺服器。"
             failSameDB: "> §c不能在同一個資料庫中操作!"
             failSameServer: "不能將此伺服器標記為已解除安裝（你在這個伺服器上）。"
+            failTooManyStrategies: "Only one strategy can be selected to deal with merge conflict."
             hotswap: "§e請切換到新的資料庫(/plan db hotswap ${0})並重新載入插件。"
             importers: "匯入器："
             preparing: "準備中..."
@@ -135,6 +160,9 @@ command:
         dbHotswap:
             description: "熱交換資料庫並重啟插件"
             inDepth: "用另一個資料庫重新載入插件，並改變設定使其符合。"
+        dbMerge:
+            description: "Merge data of two databases"
+            inDepth: "Merges contents in one database with the contents in another. Source data will be inserted to destination database."
         dbMove:
             description: "在資料庫間移動資料"
             inDepth: "用一個資料庫中的內容覆蓋另一個資料庫中的內容。"
@@ -832,6 +860,7 @@ html:
         filter:
             activity:
                 text: "在活躍度分組中"
+            anyServer: "any server"
             banStatus:
                 name: "封禁狀態"
             banned: "被封禁"
@@ -841,6 +870,8 @@ html:
                 allPlayers: "全部玩家"
                 and: "外加"
                 start: "查詢玩家："
+            hasPlayedOnDate:
+                name: "Has played on date"
             hasPlayedOnServers:
                 name: "Has played on one of servers"
                 text: "have played on at least one of"
@@ -849,21 +880,38 @@ html:
                 text: "have Plugin boolean value"
             joinAddress:
                 text: "加入位址"
+            lastSeenAfter:
+                text: "Last seen after"
+            lastSeenBefore:
+                text: "Last seen before"
+            lastSeenBetween:
+                text: "Last seen between"
             nonOperators: "非管理員"
             notBanned: "未被封禁"
+            onDate: "on"
+            onServer: "on server(s)"
             operatorStatus:
                 name: "管理員狀態"
             operators: "管理員"
+            playedAfter:
+                text: "Played after"
+            playedBefore:
+                text: "Played before"
             playedBetween:
                 text: "在此期間遊玩過"
             pluginGroup:
                 name: "小組："
                 text: "在 {{plugin}} 插件的 {{group}} 分組中"
+            registeredAfter:
+                text: "Registered after"
+            registeredBefore:
+                text: "Registered before"
             registeredBetween:
                 text: "在此期間註冊"
             skipped: "Skipped"
             title:
                 activityGroup: "活躍度分組"
+                activityGroupOnDate: "Activity group on date"
             view: "  日期範圍:"
         filters:
             add: "增加過濾器.."

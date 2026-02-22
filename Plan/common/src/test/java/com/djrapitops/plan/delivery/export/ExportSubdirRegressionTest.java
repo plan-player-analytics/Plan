@@ -30,6 +30,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.logging.LogEntry;
+import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.HttpWaitStrategy;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -67,7 +68,7 @@ class ExportSubdirRegressionTest {
 
         webserver = new GenericContainer<>(DockerImageName.parse("halverneus/static-file-server:latest"))
                 .withExposedPorts(8080)
-                .withFileSystemBind(exportDir.toFile().getAbsolutePath(), "/web")
+                .withFileSystemBind(exportDir.toFile().getAbsolutePath(), "/web", BindMode.READ_ONLY)
                 .waitingFor(new HttpWaitStrategy());
         webserver.start();
 

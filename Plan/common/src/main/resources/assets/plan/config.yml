@@ -166,9 +166,12 @@ Time:
       Time: 2
       Unit: DAYS
   Periodic_tasks:
-    Extension_data_refresh_every:
+    Extension_server_data_refresh_every:
       Time: 1
       Unit: HOURS
+    Extension_player_data_refresh_every:
+      Time: 15
+      Unit: MINUTES
     Check_DB_for_server_config_files_every:
       Time: 1
       Unit: MINUTES

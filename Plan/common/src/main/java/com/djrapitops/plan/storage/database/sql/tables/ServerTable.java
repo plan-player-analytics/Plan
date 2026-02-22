@@ -88,7 +88,7 @@ public class ServerTable {
         return '(' + SELECT + TABLE_NAME + '.' + ID +
                 FROM + TABLE_NAME +
                 WHERE + TABLE_NAME + '.' + SERVER_UUID + " IN ('" +
-                new TextStringBuilder().appendWithSeparators(serverUUIDs, "','").build() +
+                new TextStringBuilder().appendWithSeparators(serverUUIDs, "','").get() +
                 "'))";
     }
 }

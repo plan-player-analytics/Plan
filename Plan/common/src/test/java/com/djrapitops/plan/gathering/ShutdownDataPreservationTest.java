@@ -40,7 +40,7 @@ class ShutdownDataPreservationTest {
     private ShutdownDataPreservation underTest;
 
     @BeforeEach
-    void setupPreservation(@TempDir Path temporaryFolder) throws Exception {
+    void setupPreservation(@TempDir Path temporaryFolder) {
         PluginMockComponent pluginMockComponent = new PluginMockComponent(temporaryFolder);
         PlanSystem system = pluginMockComponent.getPlanSystem();
         PlatformAbstractionLayer abstractionLayer = pluginMockComponent.getAbstractionLayer();
