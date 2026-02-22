@@ -69,6 +69,11 @@ public class StoreServerTableResultTransaction extends ThrowawayTransaction {
         execute(storeValue());
     }
 
+    @Override
+    protected IsolationLevel getDesiredIsolationLevel() {
+        return IsolationLevel.READ_COMMITTED;
+    }
+
     private Executable storeValue() {
         return connection -> {
             int maxColumnSize = table.getMaxColumnSize();
@@ -83,15 +88,15 @@ public class StoreServerTableResultTransaction extends ThrowawayTransaction {
             int newRowCount = rows.size();
 
             if (oldRowCount < newRowCount) {
-                updateRows(tableID, oldRowCount, rows);
                 insertNewRows(tableID, oldRowCount, rows);
+                updateRows(tableID, oldRowCount, rows);
             } else if (oldRowCount == newRowCount) {
                 // No need to delete or insert rows
                 updateRows(tableID, oldRowCount, rows);
             } else {
                 // oldRowCount > newRowCount
-                updateRows(tableID, newRowCount, rows);
                 deleteOldRows(tableID, newRowCount);
+                updateRows(tableID, newRowCount, rows);
             }
             return false;
         };

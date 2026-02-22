@@ -183,10 +183,20 @@ public abstract class Transaction {
     }
 
     private void initializeTransaction() {
+        setIsolationLevel();
         try {
             createSavePoint();
         } catch (SQLException e) {
             throw new DBOpException(getClass().getSimpleName() + " save point initialization failed: " + e.getMessage(), e);
+        }
+    }
+
+    private void setIsolationLevel() {
+        if (dbType == DBType.MYSQL && attempts == 1) {
+            IsolationLevel desiredIsolationLevel = getDesiredIsolationLevel();
+            if (desiredIsolationLevel != IsolationLevel.UNCHANGED) {
+                execute("SET TRANSACTION ISOLATION LEVEL " + desiredIsolationLevel.name().replace('_', ' '));
+            }
         }
     }
 
@@ -298,4 +308,13 @@ public abstract class Transaction {
     }
 
     protected String lockForUpdate() {return db.getSql().lockForUpdate();}
+
+    protected IsolationLevel getDesiredIsolationLevel() {
+        return IsolationLevel.UNCHANGED;
+    }
+
+    public enum IsolationLevel {
+        UNCHANGED,
+        READ_COMMITTED
+    }
 }

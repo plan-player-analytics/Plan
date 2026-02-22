@@ -68,6 +68,11 @@ public class StorePlayerTableResultTransaction extends ThrowawayTransaction {
     }
 
     @Override
+    protected IsolationLevel getDesiredIsolationLevel() {
+        return IsolationLevel.READ_COMMITTED;
+    }
+
+    @Override
     protected void performOperations() {
         execute(storeValue());
     }
@@ -80,23 +85,42 @@ public class StorePlayerTableResultTransaction extends ThrowawayTransaction {
             }
 
             Integer tableID = query(tableID());
+            query(lockRows(tableID));
 
             List<Object[]> rows = table.getRows();
             Integer oldRowCount = query(currentRowCount(tableID));
             int newRowCount = rows.size();
 
             if (oldRowCount < newRowCount) {
-                updateRows(tableID, oldRowCount, rows);
                 insertNewRows(tableID, oldRowCount, rows);
+                updateRows(tableID, oldRowCount, rows);
             } else if (oldRowCount == newRowCount) {
                 // No need to delete or insert rows
                 updateRows(tableID, oldRowCount, rows);
             } else {
                 // oldRowCount > newRowCount
-                updateRows(tableID, newRowCount, rows);
                 deleteOldRows(tableID, newRowCount);
+                updateRows(tableID, newRowCount, rows);
             }
             return false;
+        };
+    }
+
+    private Query<Object> lockRows(Integer tableID) {
+        String sql = SELECT + "*" + FROM + TABLE_NAME +
+                WHERE + TABLE_ID + "=?" +
+                AND + USER_UUID + "=?" + lockForUpdate();
+        return new QueryStatement<>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setInt(1, tableID);
+                statement.setString(2, playerUUID.toString());
+            }
+
+            @Override
+            public Object processResults(ResultSet set) {
+                return null;
+            }
         };
     }
 
