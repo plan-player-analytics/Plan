@@ -860,6 +860,7 @@ html:
         filter:
             activity:
                 text: "アクティビティグループに属しています"
+            anyServer: "any server"
             banStatus:
                 name: "BAN状況"
             banned: "BAN済"
@@ -869,6 +870,8 @@ html:
                 allPlayers: "全てのプレイヤー"
                 and: "と"
                 start: "のプレイヤーの"
+            hasPlayedOnDate:
+                name: "Has played on date"
             hasPlayedOnServers:
                 name: "いずれかのサーバーでプレイしたことがある"
                 text: "少なくとも1つでプレイしたことがある"
@@ -877,21 +880,38 @@ html:
                 text: "プラグインのブール値を持つ"
             joinAddress:
                 text: "参加したアドレス"
+            lastSeenAfter:
+                text: "Last seen after"
+            lastSeenBefore:
+                text: "Last seen before"
+            lastSeenBetween:
+                text: "Last seen between"
             nonOperators: "オペレーターでない"
             notBanned: "BANされていない"
+            onDate: "on"
+            onServer: "on server(s)"
             operatorStatus:
                 name: "オペレーターステータス"
             operators: "オペレーター"
+            playedAfter:
+                text: "Played after"
+            playedBefore:
+                text: "Played before"
             playedBetween:
                 text: "プレイヤーの間"
             pluginGroup:
                 name: "グループ: "
                 text: "{{plugin}}の{{group}}に属しています"
+            registeredAfter:
+                text: "Registered after"
+            registeredBefore:
+                text: "Registered before"
             registeredBetween:
                 text: "の間に登録されました"
             skipped: "スキップ"
             title:
                 activityGroup: "活動時間のグループ"
+                activityGroupOnDate: "Activity group on date"
             view: "  ビュー:"
         filters:
             add: "フィルタを追加する.."

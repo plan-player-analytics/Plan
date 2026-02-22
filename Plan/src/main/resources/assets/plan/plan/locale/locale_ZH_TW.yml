@@ -860,6 +860,7 @@ html:
         filter:
             activity:
                 text: "在活躍度分組中"
+            anyServer: "any server"
             banStatus:
                 name: "封禁狀態"
             banned: "被封禁"
@@ -869,6 +870,8 @@ html:
                 allPlayers: "全部玩家"
                 and: "外加"
                 start: "查詢玩家："
+            hasPlayedOnDate:
+                name: "Has played on date"
             hasPlayedOnServers:
                 name: "Has played on one of servers"
                 text: "have played on at least one of"
@@ -877,21 +880,38 @@ html:
                 text: "have Plugin boolean value"
             joinAddress:
                 text: "加入位址"
+            lastSeenAfter:
+                text: "Last seen after"
+            lastSeenBefore:
+                text: "Last seen before"
+            lastSeenBetween:
+                text: "Last seen between"
             nonOperators: "非管理員"
             notBanned: "未被封禁"
+            onDate: "on"
+            onServer: "on server(s)"
             operatorStatus:
                 name: "管理員狀態"
             operators: "管理員"
+            playedAfter:
+                text: "Played after"
+            playedBefore:
+                text: "Played before"
             playedBetween:
                 text: "在此期間遊玩過"
             pluginGroup:
                 name: "小組："
                 text: "在 {{plugin}} 插件的 {{group}} 分組中"
+            registeredAfter:
+                text: "Registered after"
+            registeredBefore:
+                text: "Registered before"
             registeredBetween:
                 text: "在此期間註冊"
             skipped: "Skipped"
             title:
                 activityGroup: "活躍度分組"
+                activityGroupOnDate: "Activity group on date"
             view: "  日期範圍:"
         filters:
             add: "增加過濾器.."

@@ -860,6 +860,7 @@ html:
         filter:
             activity:
                 text: "are in Activity Groups"
+            anyServer: "any server"
             banStatus:
                 name: "Estado de ban"
             banned: "Baneado"
@@ -869,6 +870,8 @@ html:
                 allPlayers: "Todos los jugadores"
                 and: "y "
                 start: "of Players who "
+            hasPlayedOnDate:
+                name: "Has played on date"
             hasPlayedOnServers:
                 name: "Has played on one of servers"
                 text: "have played on at least one of"
@@ -877,21 +880,38 @@ html:
                 text: "have Plugin boolean value"
             joinAddress:
                 text: "joined with address"
+            lastSeenAfter:
+                text: "Last seen after"
+            lastSeenBefore:
+                text: "Last seen before"
+            lastSeenBetween:
+                text: "Last seen between"
             nonOperators: "No se encuentran operadores"
             notBanned: "No se encuentran baneados"
+            onDate: "on"
+            onServer: "on server(s)"
             operatorStatus:
                 name: "Estado de Operador"
             operators: "Operadores"
+            playedAfter:
+                text: "Played after"
+            playedBefore:
+                text: "Played before"
             playedBetween:
                 text: "Jugado entre"
             pluginGroup:
                 name: "Grupo: "
                 text: "are in {{plugin}}'s {{group}} Groups"
+            registeredAfter:
+                text: "Registered after"
+            registeredBefore:
+                text: "Registered before"
             registeredBetween:
                 text: "Registrados entre"
             skipped: "Skipped"
             title:
                 activityGroup: "Actividad actual del grupo"
+                activityGroupOnDate: "Activity group on date"
             view: "  Vista:"
         filters:
             add: "Añadir un filtro.."

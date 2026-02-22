@@ -860,6 +860,7 @@ html:
         filter:
             activity:
                 text: "sont dans des Groupes d'Activité"
+            anyServer: "any server"
             banStatus:
                 name: "Statut de Bannissement"
             banned: "Banni(e)"
@@ -869,6 +870,8 @@ html:
                 allPlayers: "Tous les Joueurs"
                 and: "et"
                 start: "des Joueurs qui"
+            hasPlayedOnDate:
+                name: "Has played on date"
             hasPlayedOnServers:
                 name: "A joué sur l'un des serveurs"
                 text: "A joué sur au moins un de"
@@ -877,21 +880,38 @@ html:
                 text: "avoir une valeur booléenne de plugin"
             joinAddress:
                 text: "ont rejoint avec l'adresse"
+            lastSeenAfter:
+                text: "Last seen after"
+            lastSeenBefore:
+                text: "Last seen before"
+            lastSeenBetween:
+                text: "Last seen between"
             nonOperators: "Non Opérateur(trice)"
             notBanned: "Non Banni(e)"
+            onDate: "on"
+            onServer: "on server(s)"
             operatorStatus:
                 name: "Statut d'Opérateur"
             operators: "Opérateurs"
+            playedAfter:
+                text: "Played after"
+            playedBefore:
+                text: "Played before"
             playedBetween:
                 text: "Joués entre"
             pluginGroup:
                 name: "Groupe : "
                 text: "sont dans le groupe {group} de {{plugin}}"
+            registeredAfter:
+                text: "Registered after"
+            registeredBefore:
+                text: "Registered before"
             registeredBetween:
                 text: "Enregistrés entre"
             skipped: "Sautée"
             title:
                 activityGroup: "Groupe d'Activité actuel"
+                activityGroupOnDate: "Activity group on date"
             view: "  Vue :"
         filters:
             add: "Ajouter un filtre."

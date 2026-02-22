@@ -64,6 +64,7 @@ export const localeService = {
                     lng: this.clientLocale,
                     fallbackLng: false,
                     supportedLngs: Object.keys(this.availableLanguages),
+                    showSupportNotice: false,
                     backend: {
                         backends: [
                             I18NextLocalStorageBackend,

@@ -860,6 +860,7 @@ html:
         filter:
             activity:
                 text: "jsou ve skupinách aktivit"
+            anyServer: "any server"
             banStatus:
                 name: "Ban status"
             banned: "Zabanovaní"
@@ -869,6 +870,8 @@ html:
                 allPlayers: "Všichni hráči"
                 and: "a "
                 start: "hráčů, kteří"
+            hasPlayedOnDate:
+                name: "Has played on date"
             hasPlayedOnServers:
                 name: "Hrál na jednom ze serverů"
                 text: "hrál alespoň na jednom z"
@@ -877,21 +880,38 @@ html:
                 text: "plugin má logickou hodnotu"
             joinAddress:
                 text: "se připojil za pomoci ip"
+            lastSeenAfter:
+                text: "Last seen after"
+            lastSeenBefore:
+                text: "Last seen before"
+            lastSeenBetween:
+                text: "Last seen between"
             nonOperators: "Bez OP"
             notBanned: "Nezabanovaní"
+            onDate: "on"
+            onServer: "on server(s)"
             operatorStatus:
                 name: "OP status"
             operators: "Operátoři"
+            playedAfter:
+                text: "Played after"
+            playedBefore:
+                text: "Played before"
             playedBetween:
                 text: "Hrál mezi"
             pluginGroup:
                 name: "Skupina: "
                 text: "jsou v {{plugin}}'s {{group}} Skupiny"
+            registeredAfter:
+                text: "Registered after"
+            registeredBefore:
+                text: "Registered before"
             registeredBetween:
                 text: "Registrován mezi"
             skipped: "Skipped"
             title:
                 activityGroup: "Aktuální skupina aktivit"
+                activityGroupOnDate: "Activity group on date"
             view: "  Pohled:"
         filters:
             add: "Přidat filtr.."

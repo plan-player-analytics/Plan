@@ -860,6 +860,7 @@ html:
         filter:
             activity:
                 text: "Etkinlik Gruplarında"
+            anyServer: "any server"
             banStatus:
                 name: "Yasaklama durumu"
             banned: "Yasaklandı"
@@ -869,6 +870,8 @@ html:
                 allPlayers: "Tüm oyuncular"
                 and: "ve"
                 start: "Oyuncuların"
+            hasPlayedOnDate:
+                name: "Has played on date"
             hasPlayedOnServers:
                 name: "Has played on one of servers"
                 text: "have played on at least one of"
@@ -877,21 +880,38 @@ html:
                 text: "have Plugin boolean value"
             joinAddress:
                 text: "adresle katıldı"
+            lastSeenAfter:
+                text: "Last seen after"
+            lastSeenBefore:
+                text: "Last seen before"
+            lastSeenBetween:
+                text: "Last seen between"
             nonOperators: "Operatör olmayanlar"
             notBanned: "Yasaklı değil"
+            onDate: "on"
+            onServer: "on server(s)"
             operatorStatus:
                 name: "Yetkili durumu"
             operators: "Operators"
+            playedAfter:
+                text: "Played after"
+            playedBefore:
+                text: "Played before"
             playedBetween:
                 text: "Arasında oynanan"
             pluginGroup:
                 name: "Grup: "
                 text: "{{plugin}} adlı kişinin {{group}} Grubunda"
+            registeredAfter:
+                text: "Registered after"
+            registeredBefore:
+                text: "Registered before"
             registeredBetween:
                 text: "Arasında kayıtlı"
             skipped: "Skipped"
             title:
                 activityGroup: "Mevcut aktivite grubu"
+                activityGroupOnDate: "Activity group on date"
             view: "  Görünüm:"
         filters:
             add: "Filtre ekle"
