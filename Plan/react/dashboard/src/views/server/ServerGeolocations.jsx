@@ -3,7 +3,7 @@ import {useParams} from "react-router";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import {fetchGeolocations, fetchPingTable} from "../../service/serverService";
 import Geolocations from "../common/Geolocations";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const ServerGeolocations = () => {
     const {hasPermission} = useAuth();

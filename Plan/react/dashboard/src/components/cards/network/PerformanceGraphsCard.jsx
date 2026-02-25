@@ -17,7 +17,7 @@ import {tooltip, yAxisConfigurations} from "../../../util/graphs";
 import {useTranslation} from "react-i18next";
 import {CardLoader, ChartLoader} from "../../navigation/Loader";
 import LineGraph from "../../graphs/LineGraph";
-import {ErrorViewBody, ErrorViewCard} from "../../../views/ErrorView";
+import {ErrorViewBody, ErrorViewCard} from "../../../views/ErrorView.tsx";
 import PingGraph from "../../graphs/performance/PingGraph";
 import {useMetadata} from "../../../hooks/metadataHook";
 import {getColorConverter} from "../../../util/Color.js";

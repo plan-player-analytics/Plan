@@ -4,7 +4,7 @@ import {useMetadata} from "../../hooks/metadataHook";
 import {useNavigation} from "../../hooks/navigationHook";
 import {staticSite} from "../../service/backendConfiguration";
 import {faSearch, faUsersGear} from "@fortawesome/free-solid-svg-icons";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 import MainPageRedirect from "../../components/navigation/MainPageRedirect";
 import ErrorPage from "./ErrorPage";
 import Sidebar from "../../components/navigation/Sidebar";

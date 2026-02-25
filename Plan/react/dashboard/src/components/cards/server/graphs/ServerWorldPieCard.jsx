@@ -3,7 +3,7 @@ import WorldPieCard from "../../common/WorldPieCard";
 import {useParams} from "react-router";
 import {useDataRequest} from "../../../../hooks/dataFetchHook";
 import {fetchWorldPie} from "../../../../service/serverService";
-import {ErrorViewCard} from "../../../../views/ErrorView";
+import {ErrorViewCard} from "../../../../views/ErrorView.tsx";
 
 const ServerWorldPieCard = () => {
     const {identifier} = useParams();

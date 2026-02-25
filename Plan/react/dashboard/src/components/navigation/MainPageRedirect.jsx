@@ -1,4 +1,4 @@
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 import {useMetadata} from "../../hooks/metadataHook";
 import {Navigate} from "react-router";
 import React, {useEffect, useState} from "react";

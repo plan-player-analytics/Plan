@@ -1,6 +1,6 @@
 import React from 'react';
 import JoinAddresses from "../../components/cards/common/JoinAddresses.jsx";
-import {useAuth} from "../../hooks/authenticationHook.jsx";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const NetworkJoinAddresses = () => {
     const {hasPermission} = useAuth();

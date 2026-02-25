@@ -3,7 +3,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faDownload} from "@fortawesome/free-solid-svg-icons";
 import ActionButton from "../input/button/ActionButton.jsx";
 import {useTranslation} from "react-i18next";
-import {useThemeEditContext} from "../../hooks/context/themeEditContextHook.jsx";
+import {useThemeEditContext} from "../../hooks/context/themeEditContextHook.tsx";
 
 const DownloadButton = ({className, disabled}) => {
     const {t} = useTranslation();

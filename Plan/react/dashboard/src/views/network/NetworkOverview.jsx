@@ -1,7 +1,7 @@
 import React from 'react';
 import {useDataRequest} from "../../hooks/dataFetchHook";
-import ErrorView from "../ErrorView";
-import LoadIn from "../../components/animation/LoadIn";
+import ErrorView from "../ErrorView.tsx";
+import LoadIn from "../../components/animation/LoadIn.tsx";
 import {Card, Col} from "react-bootstrap";
 import ServerAsNumbersCard from "../../components/cards/server/values/ServerAsNumbersCard";
 import ServerWeekComparisonCard from "../../components/cards/server/tables/ServerWeekComparisonCard";
@@ -13,7 +13,7 @@ import {faUsers} from "@fortawesome/free-solid-svg-icons";
 import NetworkOnlineActivityGraphsCard from "../../components/cards/server/graphs/NetworkOnlineActivityGraphsCard";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 import ExtendableCardBody from "../../components/layout/extension/ExtendableCardBody";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 
 const RecentPlayersCard = ({data}) => {

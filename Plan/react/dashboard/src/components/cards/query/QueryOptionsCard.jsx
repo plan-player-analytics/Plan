@@ -1,9 +1,9 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Card, Col, Row} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
 import {useDataRequest} from "../../../hooks/dataFetchHook";
 import {fetchFilters, postQuery} from "../../../service/queryService";
-import {ErrorViewCard} from "../../../views/ErrorView";
+import {ErrorViewCard} from "../../../views/ErrorView.tsx";
 import {ChartLoader} from "../../navigation/Loader";
 import DateInputField from "../../input/DateInputField";
 import TimeInputField from "../../input/TimeInputField";
@@ -133,7 +133,8 @@ const QueryOptionsCard = () => {
         setCurrentTab('html.query.label.editQuery')
     }, [options, result, setFromDate, setFromTime, setToDate, setToTime, setFilters, setSelectedServers, setExtremes]);
 
-    const getServerSelectorMessage = () => {
+    const serverSelectorMessage = useMemo(() => {
+        if (!options?.view) return t('html.query.filters.loading');
         const selected = selectedServers.length;
         const available = options.view.servers.length;
         if (selected === 0 || selected === available) {
@@ -145,9 +146,11 @@ const QueryOptionsCard = () => {
         } else {
             return t('html.query.label.servers.many').replace('{number}', selected);
         }
-    }
+    }, [options, selectedServers]);
 
     const performQuery = async () => {
+        if (!options) return;
+
         const inputDto = {
             view: {
                 afterDate: fromDate || options.view.afterDate,
@@ -235,7 +238,7 @@ const QueryOptionsCard = () => {
                 </Row>
                 <Row>
                     <Col md={12}>
-                        <CollapseWithButton title={getServerSelectorMessage()}>
+                        <CollapseWithButton title={serverSelectorMessage}>
                             <MultiSelect options={view.servers.map(server => server.serverName)}
                                          selectedIndexes={selectedServers}
                                          setSelectedIndexes={setSelectedServers}/>

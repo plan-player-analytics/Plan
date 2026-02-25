@@ -36,7 +36,7 @@ export const doSomeDeleteRequest = async (url, statusOptions, body) => {
 }
 
 export const doSomeRequest = async (url, statusOptions, axiosFunction) => {
-    let response = undefined;
+    let response;
     try {
         response = await axiosFunction.call();
 
@@ -49,6 +49,16 @@ export const doSomeRequest = async (url, statusOptions, axiosFunction) => {
                 };
             }
         }
+
+        return {
+            status: response.status,
+            data: undefined,
+            error: {
+                status: response.status,
+                message: 'Server returned unexpected status code',
+                url
+            }
+        };
     } catch (e) {
         console.error(e);
         if (e.response !== undefined) {

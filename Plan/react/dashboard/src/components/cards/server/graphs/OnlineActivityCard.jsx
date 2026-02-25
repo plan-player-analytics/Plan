@@ -2,7 +2,7 @@ import {useTranslation} from "react-i18next";
 import {useParams} from "react-router";
 import {useDataRequest} from "../../../../hooks/dataFetchHook";
 import {fetchPlayersOnlineGraph} from "../../../../service/serverService";
-import {ErrorViewCard} from "../../../../views/ErrorView";
+import {ErrorViewCard} from "../../../../views/ErrorView.tsx";
 import {Card} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faChartArea} from "@fortawesome/free-solid-svg-icons";

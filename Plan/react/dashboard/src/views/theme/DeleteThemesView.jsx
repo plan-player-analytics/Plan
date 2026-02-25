@@ -7,14 +7,14 @@ import ThemeOption from "../../components/theme/ThemeOption.jsx";
 import {ChartLoader} from "../../components/navigation/Loader.jsx";
 import {getLocallyStoredThemes, ThemeContextProvider, useTheme} from "../../hooks/themeHook.jsx";
 import {useTranslation} from "react-i18next";
-import {ThemeStorageContextProvider, useThemeStorage} from "../../hooks/context/themeContextHook.jsx";
+import {ThemeStorageContextProvider, useThemeStorage} from "../../hooks/context/themeContextHook.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import LoadIn from "../../components/animation/LoadIn.jsx";
+import LoadIn from "../../components/animation/LoadIn.tsx";
 import Checkbox from "../../components/input/Checkbox.jsx";
 import DangerButton from "../../components/input/button/DangerButton.jsx";
-import {ThemeEditContextProvider} from "../../hooks/context/themeEditContextHook.jsx";
+import {ThemeEditContextProvider} from "../../hooks/context/themeEditContextHook.tsx";
 import DownloadButton from "../../components/theme/DownloadButton.jsx";
-import {useAuth} from "../../hooks/authenticationHook.jsx";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 import {deleteTheme} from "../../service/metadataService.js";
 
 const DeleteThemesView = () => {
