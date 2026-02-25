@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Card, Col, Row} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
 import {useDataRequest} from "../../../hooks/dataFetchHook";
@@ -149,6 +149,8 @@ const QueryOptionsCard = () => {
     }, [options, selectedServers]);
 
     const performQuery = async () => {
+        if (!options) return;
+
         const inputDto = {
             view: {
                 afterDate: fromDate || options.view.afterDate,
