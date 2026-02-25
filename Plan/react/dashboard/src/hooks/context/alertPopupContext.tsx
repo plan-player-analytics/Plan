@@ -18,9 +18,7 @@ type AlertPopupContextValue = {
 
 const AlertPopupContext = createContext<AlertPopupContextValue | undefined>(undefined);
 
-type Props = {} & PropsWithChildren
-
-export const AlertPopupContextProvider = ({children}: Props) => {
+export const AlertPopupContextProvider = ({children}: PropsWithChildren) => {
     const [alerts, setAlerts] = useState<AddedAlert[]>([]);
 
     const dismissAlert = useCallback((alert: AddedAlert) => {

@@ -133,7 +133,8 @@ const QueryOptionsCard = () => {
         setCurrentTab('html.query.label.editQuery')
     }, [options, result, setFromDate, setFromTime, setToDate, setToTime, setFilters, setSelectedServers, setExtremes]);
 
-    const getServerSelectorMessage = () => {
+    const serverSelectorMessage = useMemo(() => {
+        if (!options?.view) return t('html.query.filters.loading');
         const selected = selectedServers.length;
         const available = options.view.servers.length;
         if (selected === 0 || selected === available) {
@@ -145,7 +146,7 @@ const QueryOptionsCard = () => {
         } else {
             return t('html.query.label.servers.many').replace('{number}', selected);
         }
-    }
+    }, [options, selectedServers]);
 
     const performQuery = async () => {
         const inputDto = {
@@ -235,7 +236,7 @@ const QueryOptionsCard = () => {
                 </Row>
                 <Row>
                     <Col md={12}>
-                        <CollapseWithButton title={getServerSelectorMessage()}>
+                        <CollapseWithButton title={serverSelectorMessage}>
                             <MultiSelect options={view.servers.map(server => server.serverName)}
                                          selectedIndexes={selectedServers}
                                          setSelectedIndexes={setSelectedServers}/>
