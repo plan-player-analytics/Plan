@@ -25,6 +25,7 @@ import com.djrapitops.plan.extension.NotReadyException;
 import com.djrapitops.plan.extension.annotation.*;
 import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
 import com.djrapitops.plan.extension.icon.Color;
+import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.results.*;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
@@ -73,6 +74,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         extensionService.unregister(new ConditionalExtension());
         extensionService.unregister(new TableExtension());
         extensionService.unregister(new ThrowingExtension());
+        extensionService.unregister(new ClickEventTestExtension());
     }
 
     @Test
@@ -432,6 +434,43 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         assertEquals(5, TestErrorLogger.getCaught().size(), () -> "Not all exceptions got logged, logged exceptions: " + TestErrorLogger.getCaught().toString());
     }
 
+    @Test
+    default void clickEventsNotAllowed() {
+        ExtensionSvc extensionService = extensionService();
+        extensionService.register(new ClickEventTestExtension());
+
+        extensionService.updateServerValues(CallEvents.MANUAL);
+
+        String expected = "{\"text\":\"<Component contained disallowed words or characters>\"}";
+        String result = db().query(new ExtensionServerDataQuery(serverUUID()))
+                .get(0)
+                .getTabs()
+                .get(0)
+                .getComponent("clickEventComponent")
+                .orElseThrow(AssertionError::new)
+                .getFormattedValue();
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void clickEventsNotAllowedForPlayer() {
+        ExtensionSvc extensionService = extensionService();
+        extensionService.register(new ClickEventTestExtension());
+
+        extensionService.updatePlayerValues(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
+
+        String expected = "{\"text\":\"<Component contained disallowed words or characters>\"}";
+        String result = db().query(new ExtensionPlayerDataQuery(TestConstants.PLAYER_ONE_UUID))
+                .get(serverUUID())
+                .get(0)
+                .getTabs()
+                .get(0)
+                .getComponent("clickEventPlayerComponent")
+                .orElseThrow(AssertionError::new)
+                .getFormattedValue();
+        assertEquals(expected, result);
+    }
+
 
     @PluginInfo(name = "ConditionalExtension")
     class ConditionalExtension implements DataExtension {
@@ -652,6 +691,39 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         @DataBuilderProvider
         public ExtensionDataBuilder builder3() {
             throw new NoSuchMethodError();
+        }
+    }
+
+    @PluginInfo(
+            name = "Component with click event",
+            iconName = "bug",
+            iconFamily = Family.SOLID,
+            color = Color.RED
+    )
+    public class ClickEventTestExtension implements DataExtension {
+        @ComponentProvider(
+                text = "Component with click event",
+                description = "",
+                iconName = "bug",
+                iconFamily = Family.SOLID,
+                iconColor = Color.RED
+        )
+        public Component clickEventComponent() {
+            String json = "{\"text\":\"Click here\",\"color\":\"red\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"javascript:alert(document.cookie)\"}}";
+            return ComponentService.getInstance().fromJson(json);
+        }
+
+
+        @ComponentProvider(
+                text = "Component with click event",
+                description = "",
+                iconName = "bug",
+                iconFamily = Family.SOLID,
+                iconColor = Color.RED
+        )
+        public Component clickEventPlayerComponent(UUID playerUUID) {
+            String json = "{\"text\":\"Click here\",\"color\":\"red\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"javascript:alert(document.cookie)\"}}";
+            return ComponentService.getInstance().fromJson(json);
         }
     }
 }

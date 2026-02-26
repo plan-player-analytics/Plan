@@ -89,7 +89,8 @@ public class Patches {
                 new CookieTableIpAddressPatch(),
                 new TPSTableMSPTPatch(),
                 new AllowlistIncorrectUniqueConstraintPatch(),
-                new TPSTableIdPatch()
+                new TPSTableIdPatch(),
+                new DeleteUrlOpenEventsFromExtensionComponentsPatch()
         };
     }
 }
