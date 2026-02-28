@@ -20,7 +20,7 @@
     "@highcharts/map-collection": "^2.3.2",
     "@uiw/react-color-chrome": "^2.9.5",
     "@uiw/react-color-wheel": "^2.9.5",
-    "axios": "^1.13.5",
+    "axios": "^1.13.6",
     "bootstrap": "^5.3.8",
     "export-to-csv": "^1.3.0",
     "highcharts": "^12.5.0",
