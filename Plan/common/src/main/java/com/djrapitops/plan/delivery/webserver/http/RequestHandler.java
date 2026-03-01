@@ -124,7 +124,7 @@ public class RequestHandler {
             String directTo = Strings.CI.startsWithAny(from, "/auth/", "/login") ? "/login" : "/login?from=." + from;
             return Response.builder()
                     .redirectTo(directTo)
-                    .setHeader("Set-Cookie", "auth=expired; Path=/; Max-Age=0; SameSite=Lax; Secure;")
+                    .setHeader("Set-Cookie", "auth=expired; Path=/; Max-Age=0; SameSite=Lax; Secure; HTTPOnly;")
                     .build();
         }
     }
