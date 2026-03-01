@@ -7,7 +7,7 @@ import ExtendableCardBody from "../../layout/extension/ExtendableCardBody";
 import {BasicDropdown} from "../../input/BasicDropdown";
 import {useDataRequest} from "../../../hooks/dataFetchHook";
 import {fetchPlayerJoinAddresses, fetchRetentionData} from "../../../service/serverService";
-import {ErrorViewCard} from "../../../views/ErrorView";
+import {ErrorViewCard} from "../../../views/ErrorView.tsx";
 import {CardLoader} from "../../navigation/Loader";
 import {tooltip} from "../../../util/graphs";
 import {hsvToRgb, randomHSVColor, rgbToHexString} from "../../../util/colors";

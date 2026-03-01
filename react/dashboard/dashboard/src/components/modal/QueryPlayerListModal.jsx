@@ -6,7 +6,7 @@ import {faArrowRight, faSearch} from "@fortawesome/free-solid-svg-icons";
 import {getViewTitle} from "../../views/query/QueryResultView";
 import {ChartLoader} from "../navigation/Loader";
 import {useNavigate} from "react-router";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 import PlayerTable from "../table/PlayerTable.jsx";
 import ActionButton from "../input/button/ActionButton.jsx";
 import ModalCloseButton from "../input/button/ModalCloseButton.jsx";

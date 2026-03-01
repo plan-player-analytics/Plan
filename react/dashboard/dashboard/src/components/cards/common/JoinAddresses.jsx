@@ -1,4 +1,4 @@
-import LoadIn from "../../animation/LoadIn.jsx";
+import LoadIn from "../../animation/LoadIn.tsx";
 import ExtendableRow from "../../layout/extension/ExtendableRow.jsx";
 import JoinAddressGraphCard from "../server/graphs/JoinAddressGraphCard.jsx";
 import {Col} from "react-bootstrap";

@@ -2,7 +2,7 @@ import {createContext, useCallback, useContext, useEffect, useMemo, useState} fr
 import {fetchNetworkMetadata, fetchPlanMetadata} from "../service/metadataService";
 
 import terminal from '../Terminal-icon.png'
-import {useAuth} from "./authenticationHook";
+import {useAuth} from "./authenticationHook.tsx";
 
 import {getLocallyStoredThemes} from "./themeHook.jsx";
 

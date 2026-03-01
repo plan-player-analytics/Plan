@@ -1,4 +1,5 @@
-window.global ||= window;
+// NodeJS library workaround where global is used instead of window.
+(globalThis as any).global ||= globalThis;
 
 import React from 'react';
 import {createRoot} from "react-dom/client";
@@ -19,7 +20,7 @@ library.add(fas);
 library.add(far);
 
 localeService.init().then(() => {
-    const container = document.getElementById('root');
+    const container = document.getElementById('root')!;
     const root = createRoot(container, {
         onUncaughtError: (error, errorInfo) => {
             console.error(error, errorInfo);

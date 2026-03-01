@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import ErrorView from "../ErrorView";
-import LoadIn from "../../components/animation/LoadIn";
+import ErrorView from "../ErrorView.tsx";
+import LoadIn from "../../components/animation/LoadIn.tsx";
 import {Card, Col, Row} from "react-bootstrap";
 import ExtensionCard from "../../components/extensions/ExtensionCard";
 import {useParams} from "react-router";

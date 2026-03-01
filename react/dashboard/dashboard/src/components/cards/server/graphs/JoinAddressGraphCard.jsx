@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from "react-i18next";
 import {fetchJoinAddressByDay} from "../../../../service/serverService";
-import {ErrorViewCard} from "../../../../views/ErrorView";
+import {ErrorViewCard} from "../../../../views/ErrorView.tsx";
 import {ChartLoader} from "../../../navigation/Loader";
 import {Card} from "react-bootstrap";
 import {FontAwesomeIcon, FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";

@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import {useTranslation} from "react-i18next";
-import {useThemeEditContext} from "../../hooks/context/themeEditContextHook.jsx";
+import {useThemeEditContext} from "../../hooks/context/themeEditContextHook.tsx";
 import {Card, Col, Row} from "react-bootstrap";
 import EditorMenuToast from "../../components/theme/EditorMenuToast.jsx";
 import CardHeader from "../../components/cards/CardHeader.jsx";
@@ -18,7 +18,7 @@ import {MinHeightProvider} from "../../hooks/context/minHeightContextHook.jsx";
 import {useMetadata} from "../../hooks/metadataHook.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import DownloadButton from "../../components/theme/DownloadButton.jsx";
-import {useAuth} from "../../hooks/authenticationHook.jsx";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const ThemeEditorView = () => {
     const {hasPermission} = useAuth();

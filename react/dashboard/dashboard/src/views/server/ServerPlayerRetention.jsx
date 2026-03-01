@@ -1,6 +1,6 @@
 import React from 'react';
 import {useParams} from "react-router";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 import PlayerRetention from "../../components/cards/common/PlayerRetention.jsx";
 
 const ServerPlayerRetention = () => {

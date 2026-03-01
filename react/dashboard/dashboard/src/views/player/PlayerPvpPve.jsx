@@ -9,9 +9,9 @@ import {usePlayer} from "../layout/PlayerPage";
 import {useTranslation} from "react-i18next";
 import PvpPveAsNumbersCard from "../../components/cards/player/PvpPveAsNumbersCard";
 import PvpKillsTableCard from "../../components/cards/common/PvpKillsTableCard";
-import LoadIn from "../../components/animation/LoadIn";
+import LoadIn from "../../components/animation/LoadIn.tsx";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const InsightsCard = ({player}) => {
     const {t} = useTranslation();

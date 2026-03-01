@@ -2,7 +2,7 @@ import React from "react";
 import InsightsFor30DaysCard from "../../common/InsightsFor30DaysCard";
 import {useDataRequest} from "../../../../hooks/dataFetchHook";
 import {fetchSessionOverview} from "../../../../service/serverService";
-import {ErrorViewCard} from "../../../../views/ErrorView";
+import {ErrorViewCard} from "../../../../views/ErrorView.tsx";
 import Datapoint from "../../../Datapoint";
 import {useTranslation} from "react-i18next";
 import {faGamepad, faUsers} from "@fortawesome/free-solid-svg-icons";

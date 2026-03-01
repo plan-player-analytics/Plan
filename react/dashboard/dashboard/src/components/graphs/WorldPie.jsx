@@ -11,7 +11,7 @@ import {useTimePreferences} from "../text/FormattedTime.jsx";
 import {usePreferences} from "../../hooks/preferencesHook.jsx";
 import Loader from "../navigation/Loader.jsx";
 import {formatTimeAmount} from "../../util/format/TimeAmountFormat.js";
-import {useThemeStorage} from "../../hooks/context/themeContextHook.jsx";
+import {useThemeStorage} from "../../hooks/context/themeContextHook.tsx";
 
 const WorldPie = ({id, worldSeries, gmSeries}) => {
     const {t} = useTranslation();

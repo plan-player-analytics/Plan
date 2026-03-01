@@ -17,7 +17,7 @@ import {
     faUsers,
     faUsersViewfinder
 } from "@fortawesome/free-solid-svg-icons";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 import Sidebar from "../../components/navigation/Sidebar";
 import Header from "../../components/navigation/Header";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";

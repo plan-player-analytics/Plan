@@ -1,5 +1,5 @@
 import {createContext, useCallback, useContext, useMemo} from "react";
-import {useAuth} from "./authenticationHook";
+import {useAuth} from "./authenticationHook.tsx";
 import {useNavigation} from "./navigationHook";
 import {useTheme} from "./themeHook";
 import {useMetadata} from "./metadataHook";

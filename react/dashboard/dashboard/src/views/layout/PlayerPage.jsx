@@ -10,7 +10,7 @@ import {useTranslation} from "react-i18next";
 import {faCalendarCheck} from "@fortawesome/free-regular-svg-icons";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import ErrorPage from "./ErrorPage";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 import MainPageRedirect from "../../components/navigation/MainPageRedirect";
 import {SwitchTransition} from "react-transition-group";
 import {ChartLoader} from "../../components/navigation/Loader.jsx";

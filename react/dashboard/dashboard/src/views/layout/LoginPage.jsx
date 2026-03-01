@@ -11,7 +11,7 @@ import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
 import drawSine from "../../util/loginSineRenderer";
 import {fetchLogin} from "../../service/authenticationService";
 import ForgotPasswordModal from "../../components/modal/ForgotPasswordModal";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 import ActionButton from "../../components/input/button/ActionButton.jsx";
 
 const Logo = () => {
