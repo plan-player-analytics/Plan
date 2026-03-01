@@ -1,4 +1,4 @@
-403AccessDenied: "404접근 거부됨"
+403AccessDenied: "403 접근 거부됨"
 command:
     argument:
         backupFile:
