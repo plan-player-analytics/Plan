@@ -120,6 +120,7 @@ export const localeService = {
     },
 
     getIntlFriendlyLocale: () => {
+        if (localeService.clientLocale === 'CUSTOM') return 'en';
         return localeService.clientLocale === 'CN' ? 'zh-cn' : localeService.clientLocale.toLocaleLowerCase().replace('_', '-')
     },
 
