@@ -281,6 +281,10 @@ img {
     width: 100%;
 }
 
+.chart-pie.big {
+    height: 27rem;
+}
+
 /*!
  * Start Bootstrap - SB Admin 2 v4.1.3 (https://startbootstrap.com/theme/sb-admin-2)
  * Copyright 2013-2020 Start Bootstrap

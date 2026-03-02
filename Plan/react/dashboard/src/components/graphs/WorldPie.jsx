@@ -12,6 +12,7 @@ import {usePreferences} from "../../hooks/preferencesHook.jsx";
 import Loader from "../navigation/Loader.jsx";
 import {formatTimeAmount} from "../../util/format/TimeAmountFormat.js";
 import {useThemeStorage} from "../../hooks/context/themeContextHook.tsx";
+import {classNames} from "../../util/classNames.ts";
 
 const WorldPie = ({id, worldSeries, gmSeries}) => {
     const {t} = useTranslation();
@@ -88,7 +89,7 @@ const WorldPie = ({id, worldSeries, gmSeries}) => {
 
     if (!preferencesLoaded) return <Loader/>;
 
-    return (<div className="chart-pie" id={id}/>)
+    return (<div className={classNames("chart-pie", worldSeries.length > 7 ? 'big' : undefined)} id={id}/>)
 }
 
 export default WorldPie;

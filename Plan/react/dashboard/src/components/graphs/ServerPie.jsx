@@ -10,6 +10,7 @@ import {usePreferences} from "../../hooks/preferencesHook.jsx";
 import {useTimePreferences} from "../text/FormattedTime.jsx";
 import {formatTimeAmount} from "../../util/format/TimeAmountFormat.js";
 import {localeService} from "../../service/localeService.js";
+import {classNames} from "../../util/classNames.ts";
 
 const ServerPie = ({colors, series}) => {
     const {t} = useTranslation();
@@ -64,7 +65,7 @@ const ServerPie = ({colors, series}) => {
 
     if (!preferencesLoaded) return <Loader/>;
 
-    return (<div className="chart-pie" id="server-pie"/>);
+    return (<div className={classNames("chart-pie", series.length > 7 ? 'big' : undefined)} id="server-pie"/>);
 }
 
 export default ServerPie;
