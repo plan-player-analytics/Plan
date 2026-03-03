@@ -1,12 +1,12 @@
 import {useTranslation} from "react-i18next";
-import React, {useEffect} from "react";
+import React, {useEffect, useMemo} from "react";
 import {useTheme} from "../../hooks/themeHook";
 import Highcharts from "highcharts/esm/highstock";
 import "highcharts/esm/modules/no-data-to-display";
 import "highcharts/esm/modules/accessibility";
 import {nameToCssVariable} from "../../util/colors";
-import {formatDateWithPreferences, useDatePreferences} from "../text/FormattedDate.jsx";
-import {localeService} from "../../service/localeService.js";
+import {useI18nFriendlyLanguage} from "../../service/localeService.js";
+import {useDateFormatter} from "../../util/format/useDateFormatter.js";
 
 export const activityGroupToColor = label => {
     switch (label) {
@@ -27,25 +27,16 @@ export const activityGroupToColor = label => {
 
 const PlayerbaseGraph = ({data}) => {
     const {t} = useTranslation()
-    const {nightModeEnabled, graphTheming} = useTheme();
-    const datePreferences = useDatePreferences();
+    const {graphTheming} = useTheme();
+    const {formatDate} = useDateFormatter(false, {
+        pattern: 'MMMM dd',
+        recentDaysPattern: 'MMMM dd'
+    });
 
     const id = 'playerbase-graph';
 
-    useEffect(() => {
-        Highcharts.setOptions({
-            lang: {
-                locale: localeService.getIntlFriendlyLocale(),
-                noData: t('html.label.noDataToDisplay')
-            }
-        })
-        Highcharts.setOptions(graphTheming);
-
-        const labels = data?.activity_labels.map(date => formatDateWithPreferences({
-            ...datePreferences,
-            pattern: 'MMMM dd',
-            recentDaysPattern: 'MMMM dd'
-        }, date));
+    const graphOptions = useMemo(() => {
+        const labels = data?.activity_labels.map(formatDate);
         const series = data?.activity_series.map(dataSet => {
             return {
                 ...dataSet,
@@ -54,7 +45,7 @@ const PlayerbaseGraph = ({data}) => {
             }
         });
 
-        Highcharts.chart(id, {
+        return {
             chart: {
                 noData: t('html.label.noDataToDisplay'),
                 type: "area"
@@ -79,8 +70,22 @@ const PlayerbaseGraph = ({data}) => {
                 }
             },
             series: series
+        };
+    }, [t, data, formatDate]);
+
+    const locale = useI18nFriendlyLanguage();
+    useEffect(() => {
+        Highcharts.setOptions({
+            lang: {
+                locale: locale,
+                noData: t('html.label.noDataToDisplay')
+            }
         })
-    }, [data, graphTheming, id, t, nightModeEnabled, datePreferences])
+    }, [locale]);
+    useEffect(() => {
+        Highcharts.setOptions(graphTheming);
+        Highcharts.chart(id, graphOptions)
+    }, [graphTheming, id, t, graphOptions])
 
     return (
         <div className="chart-area" id={id}>

@@ -2,7 +2,7 @@
 import {isString} from "highcharts";
 
 export function isNumber(n) {
-    return !isNaN(parseFloat(n))
-        || isString(n) && !isNaN(parseFloat(n.replace(',', '.')))
-        && !isNaN(n - 0)
+    return !Number.isNaN(Number.parseFloat(n))
+        || isString(n) && !Number.isNaN(Number.parseFloat(n.replace(',', '.')))
+        && !Number.isNaN(n - 0)
 }

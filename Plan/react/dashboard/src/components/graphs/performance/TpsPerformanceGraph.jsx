@@ -10,11 +10,13 @@ import {useMetadata} from "../../../hooks/metadataHook";
 import {useAuth} from "../../../hooks/authenticationHook.tsx";
 import {useGraphExtremesContext} from "../../../hooks/interaction/graphExtremesContextHook.jsx";
 import {localeService} from "../../../service/localeService.js";
+import {usePingFormatter} from "../../../util/format/usePingFormatter.js";
 
 const TpsPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
     const {t} = useTranslation();
     const {graphTheming, nightModeEnabled} = useTheme();
     const {timeZoneOffsetMinutes} = useMetadata();
+    const {formatPing} = usePingFormatter();
     const {hasPermission} = useAuth();
     const {extremes, onSetExtremes} = useGraphExtremesContext();
     const [graph, setGraph] = useState(undefined);
@@ -103,7 +105,7 @@ const TpsPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
                 opposite: true,
                 labels: {
                     formatter: function () {
-                        return localeService.localizePing(this.value);
+                        return formatPing(this.value);
                     }
                 },
                 softMin: 0,

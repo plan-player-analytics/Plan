@@ -229,9 +229,9 @@ public class PlayerJSONCreator {
         int bestPing = ping.min();
 
         String unavailable = GenericLang.UNAVAILABLE.getKey();
-        info.put("average_ping", averagePing != -1.0 ? decimals.apply(averagePing) + " ms" : unavailable);
-        info.put("worst_ping", worstPing != -1.0 ? worstPing + " ms" : unavailable);
-        info.put("best_ping", bestPing != -1.0 ? bestPing + " ms" : unavailable);
+        info.put("average_ping", averagePing != -1.0 ? averagePing : unavailable);
+        info.put("worst_ping", worstPing != -1.0 ? worstPing : unavailable);
+        info.put("best_ping", bestPing != -1.0 ? bestPing : unavailable);
         info.put("registered", player.getValue(PlayerKeys.REGISTERED).map(Object.class::cast).orElse("-"));
         info.put("last_seen", player.getValue(PlayerKeys.LAST_SEEN).map(Object.class::cast).orElse("-"));
         info.put("last_seen_raw_value", player.getValue(PlayerKeys.LAST_SEEN).orElse(0L));

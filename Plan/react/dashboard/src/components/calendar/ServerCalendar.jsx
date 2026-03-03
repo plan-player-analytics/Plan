@@ -1,44 +1,43 @@
-import React from "react";
+import React, {useCallback, useMemo} from "react";
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import {useTranslation} from "react-i18next";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faHandPointer} from "@fortawesome/free-regular-svg-icons";
-import {useTimePreferences} from "../text/FormattedTime.jsx";
-import {formatTimeAmount} from "../../util/format/TimeAmountFormat.js";
 import {localeService} from "../../service/localeService.js";
+import {useTimeAmountFormatter} from "../../util/format/useTimeAmountFormatter.js";
 
 const ServerCalendar = ({series, firstDay, onSelect}) => {
     const {t} = useTranslation();
+    const {formatTime} = useTimeAmountFormatter();
 
     const explainerStyle = {
         position: "absolute",
         top: "0.5rem",
         right: "1rem"
     };
-    const timePreferences = useTimePreferences();
 
-    const formatTitle = entry => {
+    const formatTitle = useCallback(entry => {
         switch (entry.title) {
             case 'html.label.playtime':
-                return t(entry.title) + ": " + formatTimeAmount(timePreferences, entry.value)
+                return t(entry.title) + ": " + formatTime(entry.value)
             case 'html.calendar.unique':
             case 'html.calendar.new':
                 return t(entry.title) + " " + entry.value
             default:
                 return t(entry.title) + ": " + entry.value;
         }
-    }
+    }, [formatTime, t]);
 
-    const actualSeries = series.map(entry => {
+    const actualSeries = useMemo(() => series.map(entry => {
         return {
             title: formatTitle(entry),
             start: entry.start,
             end: entry.end,
             color: entry.color
         }
-    });
+    }), [series, formatTitle]);
 
     const buttonText = {
         today: t('plugin.generic.today').toLowerCase().replaceAll("'", ''),

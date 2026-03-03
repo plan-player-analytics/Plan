@@ -8,11 +8,12 @@ import {faCheck, faGlobe, faSignal, faUser, faUserPlus} from "@fortawesome/free-
 import {faCalendarCheck, faCalendarPlus, faClock} from "@fortawesome/free-regular-svg-icons";
 import ExtensionIcon from "../extensions/ExtensionIcon.jsx";
 import {Link} from "react-router";
-import {formatDecimals} from "../../util/formatters.js";
 import {ExtensionValueTableCell} from "../extensions/ExtensionCard.jsx";
 import {ChartLoader} from "../navigation/Loader.jsx";
 import DataTablesTable from "./DataTablesTable.jsx";
 import {localeService, reverseRegionLookupMap} from "../../service/localeService.js";
+import {usePingFormatter} from "../../util/format/usePingFormatter.js";
+import {useDecimalFormatter} from "../../util/format/useDecimalFormatter.js";
 
 const getActivityGroup = value => {
     const VERY_ACTIVE = 3.75;
@@ -34,7 +35,9 @@ const getActivityGroup = value => {
 
 const PlayerTable = ({data, orderBy}) => {
     const {t} = useTranslation();
-    const {preferencesLoaded, decimalFormat} = usePreferences();
+    const {formatPing} = usePingFormatter();
+    const {formatDecimals} = useDecimalFormatter();
+    const {preferencesLoaded} = usePreferences();
 
     const [options, setOptions] = useState(undefined);
 
@@ -90,7 +93,7 @@ const PlayerTable = ({data, orderBy}) => {
                 link: <Link to={"/player/" + player.playerUUID}>{player.playerName}</Link>,
                 activityIndex: player.activityIndex,
                 activityGroup: t(getActivityGroup(player.activityIndex)),
-                activityIndexAndGroup: formatDecimals(player.activityIndex, decimalFormat) + " (" + t(getActivityGroup(player.activityIndex)) + ")",
+                activityIndexAndGroup: formatDecimals(player.activityIndex) + " (" + t(getActivityGroup(player.activityIndex)) + ")",
                 activePlaytime: player.playtimeActive,
                 activePlaytimeFormatted: <FormattedTime timeMs={player.playtimeActive}/>,
                 sessions: player.sessionCount,
@@ -100,11 +103,11 @@ const PlayerTable = ({data, orderBy}) => {
                 lastSeenFormatted: <FormattedDate date={player.lastSeen} react/>,
                 country: location,
                 pingAverage: player.pingAverage,
-                pingAverageFormatted: localeService.localizePing(formatDecimals(player.pingAverage, decimalFormat)),
+                pingAverageFormatted: formatPing(formatDecimals(player.pingAverage)),
                 pingMax: player.pingMax,
-                pingMaxFormatted: localeService.localizePing(player.pingMax),
+                pingMaxFormatted: formatPing(player.pingMax),
                 pingMin: player.pingMin,
-                pingMinFormatted: localeService.localizePing(player.pingMin),
+                pingMinFormatted: formatPing(player.pingMin),
                 nicknames: player.nicknames,
             };
             data.extensionDescriptors.forEach(descriptor => {
@@ -121,7 +124,7 @@ const PlayerTable = ({data, orderBy}) => {
             data: rows,
             order: [[orderBy !== undefined ? orderBy : 5, "desc"]]
         });
-    }, [data, orderBy, t, decimalFormat]);
+    }, [data, orderBy, t, formatPing, formatDecimals]);
 
     const rowKeyFunction = useCallback((row, column) => {
         return row.uuid + "-" + (column ? JSON.stringify(column.data) : '');

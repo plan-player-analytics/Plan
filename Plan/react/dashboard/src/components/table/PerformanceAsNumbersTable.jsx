@@ -17,11 +17,12 @@ import {faEye, faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 import AsNumbersTable from "./AsNumbersTable";
 import {ChartLoader} from "../navigation/Loader";
 import FormattedTime from "../text/FormattedTime.jsx";
-import {localeService} from "../../service/localeService.js";
 import {orUnavailable} from "../../util/formatters.js";
+import {usePingFormatter} from "../../util/format/usePingFormatter.js";
 
 const PerformanceAsNumbersTable = ({data, servers}) => {
     const {t} = useTranslation();
+    const {formatPing} = usePingFormatter();
     if (!data) return <ChartLoader/>;
 
     const dataIncludesGameServers = servers && Boolean(servers.filter(server => !server.proxy).length);
@@ -84,9 +85,9 @@ const PerformanceAsNumbersTable = ({data, servers}) => {
             <TableRow icon={faStopwatch} color="mspt-average" text={t('html.label.msptAverage')}
                       title={t('html.label.msptFull')}
                       values={[
-                          <>{localeService.localizePing(orUnavailable(data.mspt_average_30d, t))} {noTPSOnProxies}</>,
-                          <>{localeService.localizePing(orUnavailable(data.mspt_average_7d, t))} {noTPSOnProxies}</>,
-                          <>{localeService.localizePing(orUnavailable(data.mspt_average_24h, t))} {noTPSOnProxies}</>
+                          <>{formatPing(orUnavailable(data.mspt_average_30d, t))} {noTPSOnProxies}</>,
+                          <>{formatPing(orUnavailable(data.mspt_average_7d, t))} {noTPSOnProxies}</>,
+                          <>{formatPing(orUnavailable(data.mspt_average_24h, t))} {noTPSOnProxies}</>
                       ]}/>
             <TableRow icon={faTachometerAlt} color="cpu" text={t('html.label.averageCpuUsage')}
                       values={[

@@ -14,18 +14,17 @@ import {usePreferences} from "../../hooks/preferencesHook.jsx";
 import FormattedDate from "../text/FormattedDate.jsx";
 import {faCalendar} from "@fortawesome/free-regular-svg-icons";
 import DataTablesTable from "./DataTablesTable.jsx";
-import {formatTimeAmount} from "../../util/format/TimeAmountFormat.js";
-import {useTimePreferences} from "../text/FormattedTime.jsx";
+import {useTimeAmountFormatter} from "../../util/format/useTimeAmountFormatter.js";
 
 const VictimName = ({kill}) => {
     const {t} = useTranslation();
-    const timePreferences = useTimePreferences();
+    const {formatTime} = useTimeAmountFormatter();
 
     const day = 24 * 60 * 60 * 1000;
     if (kill.timeSinceRegisterMillis > 0 && kill.timeSinceRegisterMillis < day) {
         return <span className={"col-first-seen"}
                      title={t('html.label.playerKillsVictimIndicator').replace("<>",
-                         formatTimeAmount(timePreferences, kill.timeSinceRegisterMillis))}>{kill.victimName}</span>
+                         formatTime(kill.timeSinceRegisterMillis))}>{kill.victimName}</span>
     }
 
     return <>{kill.victimName}</>

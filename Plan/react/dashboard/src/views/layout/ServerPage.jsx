@@ -31,7 +31,7 @@ import MainPageRedirect from "../../components/navigation/MainPageRedirect";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import {fetchServerIdentity} from "../../service/serverService";
 import {ServerExtensionContextProvider, useServerExtensionContext} from "../../hooks/serverExtensionDataContext";
-import {iconTypeToFontAwesomeClass} from "../../util/icons";
+import {iconTypeToFontAwesomeClass} from "../../util/icons.ts";
 import {staticSite} from "../../service/backendConfiguration";
 
 const HelpModal = React.lazy(() => import("../../components/modal/HelpModal"));
