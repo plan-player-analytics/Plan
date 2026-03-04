@@ -10,11 +10,18 @@ export const usePingFormatter = () => {
 
     const formatPing = useCallback((value) => {
         if (isNumber(value) && !String(value).includes("ms")) {
-            const parts = formatter.formatToParts({milliseconds: value});
+            const split = isNumber(value) ? [value] : value.split('.');
+            const parts = formatter.formatToParts({milliseconds: split[0]});
 
-            return parts.map((part) => {
+            const ints = parts.map((part, i) => part.type === 'integer' ? i : -1)
+                .filter((i) => i >= 0);
+            const lastIndex = ints[ints.length - 1];
+            return parts.map((part, i) => {
                 if (part.type === 'group') {
                     return '';
+                }
+                if (lastIndex === i && split.length > 1) {
+                    return part.value + '.' + split[1];
                 }
                 return part.value;
             }).join('');

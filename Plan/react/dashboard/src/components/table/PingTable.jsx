@@ -6,11 +6,13 @@ import {usePreferences} from "../../hooks/preferencesHook.jsx";
 import DataTablesTable from "./DataTablesTable.jsx";
 import {localeService, reverseRegionLookupMap} from "../../service/localeService.js";
 import {usePingFormatter} from "../../util/format/usePingFormatter.js";
+import {useDecimalFormatter} from "../../util/format/useDecimalFormatter.js";
 
 const PingTable = ({countries}) => {
     const {t} = useTranslation();
     const {preferencesLoaded} = usePreferences();
     const {formatPing} = usePingFormatter();
+    const {formatDecimals} = useDecimalFormatter();
 
     const columns = [{
         title: <><Fa icon={faGlobe}/> {t('html.label.country')}</>,
@@ -34,7 +36,7 @@ const PingTable = ({countries}) => {
         return {
             country: location,
             pingAverage: country.avg_ping,
-            pingAverageFormatted: formatPing(country.avg_ping),
+            pingAverageFormatted: formatPing(formatDecimals(country.avg_ping)),
             pingMax: country.max_ping,
             pingMaxFormatted: formatPing(country.max_ping),
             pingMin: country.min_ping,
