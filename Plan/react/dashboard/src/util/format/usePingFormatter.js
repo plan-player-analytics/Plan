@@ -11,7 +11,8 @@ export const usePingFormatter = () => {
     const formatPing = useCallback((value) => {
         if (isNumber(value) && !String(value).includes("ms")) {
             const split = isNumber(value) ? [value] : value.split('.');
-            const parts = formatter.formatToParts({milliseconds: split[0]});
+            const decimals = split.length > 1 ? split[1] : value % 1;
+            const parts = formatter.formatToParts({milliseconds: Math.floor(Number(split[0]))});
 
             const ints = parts.map((part, i) => part.type === 'integer' ? i : -1)
                 .filter((i) => i >= 0);
@@ -21,7 +22,7 @@ export const usePingFormatter = () => {
                     return '';
                 }
                 if (lastIndex === i && split.length > 1) {
-                    return part.value + '.' + split[1];
+                    return isNumber(decimals) ? Number(part.value) + decimals : part.value + '.' + decimals;
                 }
                 return part.value;
             }).join('');

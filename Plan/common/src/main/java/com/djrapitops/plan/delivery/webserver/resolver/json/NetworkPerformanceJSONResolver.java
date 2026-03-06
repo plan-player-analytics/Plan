@@ -65,7 +65,6 @@ public class NetworkPerformanceJSONResolver implements Resolver {
     private final PlanConfig config;
     private final DBSystem dbSystem;
 
-    private final Formatter<Double> decimals;
     private final Formatter<Double> percentage;
     private final Formatter<Double> byteSize;
     private final Gson gson;
@@ -80,7 +79,6 @@ public class NetworkPerformanceJSONResolver implements Resolver {
         this.config = config;
         this.dbSystem = dbSystem;
 
-        decimals = formatters.decimals();
         percentage = formatters.percentage();
         byteSize = formatters.byteSize();
         this.gson = gson;
@@ -193,27 +191,27 @@ public class NetworkPerformanceJSONResolver implements Resolver {
             numbers.put("avg_server_uptime_24h", "-");
         }
 
-        numbers.put("players_30d", format(tpsDataMonth.averagePlayers()));
-        numbers.put("players_7d", format(tpsDataWeek.averagePlayers()));
-        numbers.put("players_24h", format(tpsDataDay.averagePlayers()));
-        numbers.put("tps_30d", format(tpsDataMonth.averageTPS()));
-        numbers.put("tps_7d", format(tpsDataWeek.averageTPS()));
-        numbers.put("tps_24h", format(tpsDataDay.averageTPS()));
+        numbers.put("players_30d", tpsDataMonth.averagePlayers());
+        numbers.put("players_7d", tpsDataWeek.averagePlayers());
+        numbers.put("players_24h", tpsDataDay.averagePlayers());
+        numbers.put("tps_30d", tpsDataMonth.averageTPS());
+        numbers.put("tps_7d", tpsDataWeek.averageTPS());
+        numbers.put("tps_24h", tpsDataDay.averageTPS());
         numbers.put("cpu_30d", formatPercentage(tpsDataMonth.averageCPU()));
         numbers.put("cpu_7d", formatPercentage(tpsDataWeek.averageCPU()));
         numbers.put("cpu_24h", formatPercentage(tpsDataDay.averageCPU()));
         numbers.put("ram_30d", formatBytes(tpsDataMonth.averageRAM()));
         numbers.put("ram_7d", formatBytes(tpsDataWeek.averageRAM()));
         numbers.put("ram_24h", formatBytes(tpsDataDay.averageRAM()));
-        numbers.put("entities_30d", format((int) tpsDataMonth.averageEntities()));
-        numbers.put("entities_7d", format((int) tpsDataWeek.averageEntities()));
-        numbers.put("entities_24h", format((int) tpsDataDay.averageEntities()));
-        numbers.put("chunks_30d", format((int) tpsDataMonth.averageChunks()));
-        numbers.put("chunks_7d", format((int) tpsDataWeek.averageChunks()));
-        numbers.put("chunks_24h", format((int) tpsDataDay.averageChunks()));
-        numbers.put("mspt_average_30d", format(tpsDataMonth.averageMspt()));
-        numbers.put("mspt_average_7d", format(tpsDataWeek.averageMspt()));
-        numbers.put("mspt_average_24h", format(tpsDataDay.averageMspt()));
+        numbers.put("entities_30d", (int) tpsDataMonth.averageEntities());
+        numbers.put("entities_7d", (int) tpsDataWeek.averageEntities());
+        numbers.put("entities_24h", (int) tpsDataDay.averageEntities());
+        numbers.put("chunks_30d", (int) tpsDataMonth.averageChunks());
+        numbers.put("chunks_7d", (int) tpsDataWeek.averageChunks());
+        numbers.put("chunks_24h", (int) tpsDataDay.averageChunks());
+        numbers.put("mspt_average_30d", tpsDataMonth.averageMspt());
+        numbers.put("mspt_average_7d", tpsDataWeek.averageMspt());
+        numbers.put("mspt_average_24h", tpsDataDay.averageMspt());
 
         return numbers;
     }
@@ -224,10 +222,6 @@ public class NetworkPerformanceJSONResolver implements Resolver {
             downTime += transform.apply(tpsMutator);
         }
         return downTime;
-    }
-
-    private String format(double value) {
-        return value != -1 ? decimals.apply(value) : GenericLang.UNAVAILABLE.getKey();
     }
 
     private String formatBytes(double value) {

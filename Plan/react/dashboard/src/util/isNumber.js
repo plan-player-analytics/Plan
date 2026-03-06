@@ -2,7 +2,8 @@
 import {isString} from "highcharts";
 
 export function isNumber(n) {
-    return !Number.isNaN(Number.parseFloat(n))
-        || isString(n) && !Number.isNaN(Number.parseFloat(n.replace(',', '.')))
-        && !Number.isNaN(n - 0)
+    const parseableFloat = !Number.isNaN(Number.parseFloat(n));
+    const parseableFloatWithDelimeter = isString(n) && !Number.isNaN(Number.parseFloat(n.replace(',', '.')));
+    const convertableNumber = !Number.isNaN(n - 0);
+    return (parseableFloat || parseableFloatWithDelimeter) && convertableNumber
 }
