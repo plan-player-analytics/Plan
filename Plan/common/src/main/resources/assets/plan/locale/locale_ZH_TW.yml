@@ -838,7 +838,7 @@ html:
                 name: "封鎖狀態"
             banned: "已被封鎖"
             country:
-                text: "從國家加入"
+                text: "來源國家"
             generic:
                 allPlayers: "所有玩家"
                 and: "並且"
