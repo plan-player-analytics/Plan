@@ -27,6 +27,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.text.StringEscapeUtils;
 
 import javax.inject.Inject;
@@ -62,6 +63,21 @@ public class NetworkPageExporter extends FileExporter {
         this.jsonHandler = jsonHandler;
     }
 
+    public static String[] getRedirections() {
+        return new String[]{
+                "network",
+                "network/overview",
+                "network/serversOverview",
+                "network/sessions",
+                "network/playerbase",
+                "network/join-addresses",
+                "network/retention",
+                "network/players",
+                "network/geolocations",
+                "network/plugins-overview",
+        };
+    }
+
     /**
      * Perform export for a network page.
      *
@@ -78,21 +94,6 @@ public class NetworkPageExporter extends FileExporter {
         exportPaths.put("./players", toRelativePathFromRoot("players"));
         exportJSON(exportPaths, toDirectory, server);
         exportReactRedirects(toDirectory);
-    }
-
-    public static String[] getRedirections() {
-        return new String[]{
-                "network",
-                "network/overview",
-                "network/serversOverview",
-                "network/sessions",
-                "network/playerbase",
-                "network/join-addresses",
-                "network/retention",
-                "network/players",
-                "network/geolocations",
-                "network/plugins-overview",
-        };
     }
 
     private void exportReactRedirects(Path toDirectory) throws IOException {
@@ -177,7 +178,7 @@ public class NetworkPageExporter extends FileExporter {
     }
 
     private String toNonRelativePath(String resourceName) {
-        return StringUtils.remove(StringUtils.remove(resourceName, "../"), "./");
+        return Strings.CI.remove(Strings.CI.remove(resourceName, "../"), "./");
     }
 
 }

@@ -9,7 +9,7 @@ import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
 import {useMetadata} from "../../hooks/metadataHook";
 import ErrorPage from "./ErrorPage";
 import {QueryResultContextProvider} from "../../hooks/queryResultContext";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 import MainPageRedirect from "../../components/navigation/MainPageRedirect";
 
 const HelpModal = React.lazy(() => import("../../components/modal/HelpModal"));

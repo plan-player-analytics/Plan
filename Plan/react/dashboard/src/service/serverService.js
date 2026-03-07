@@ -326,3 +326,9 @@ export const fetchPluginHistory = async (timestamp, identifier) => {
     if (staticSite) url = `/data/pluginHistory-${identifier}.json`;
     return doGetRequest(url, timestamp);
 }
+
+export const fetchPlayersOnline = async (timestamp, identifier) => {
+    let url = identifier ? `/v1/playersOnline?date=${timestamp}&server=${identifier}`
+        : `/v1/playersOnline?date=${timestamp}`;
+    return doGetRequest(url, timestamp);
+}

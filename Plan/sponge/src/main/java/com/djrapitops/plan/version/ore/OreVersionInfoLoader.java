@@ -25,6 +25,7 @@ import com.google.gson.reflect.TypeToken;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -69,7 +70,7 @@ public class OreVersionInfoLoader {
     }
 
     private static List<OreVersionDto> loadOreVersions(String session) throws IOException {
-        URL url = new URL(ORE_VERSIONS_URL);
+        URL url = URI.create(ORE_VERSIONS_URL).toURL();
 
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         try {
@@ -89,7 +90,7 @@ public class OreVersionInfoLoader {
     }
 
     private static String newOreSession() throws IOException {
-        URL url = new URL(ORE_AUTHENTICATE_URL);
+        URL url = URI.create(ORE_AUTHENTICATE_URL).toURL();
 
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         try {

@@ -57,7 +57,7 @@ public class Processing implements SubSystem {
 
     protected ExecutorService createExecutor(int i, String s) {
         return Executors.newFixedThreadPool(i,
-                new BasicThreadFactory.Builder()
+                BasicThreadFactory.builder()
                         .namingPattern(s)
                         .uncaughtExceptionHandler((thread, throwable) ->
                                 errorLogger.warn(throwable, ErrorContext.builder().build())

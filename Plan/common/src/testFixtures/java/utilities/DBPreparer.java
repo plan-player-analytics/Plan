@@ -30,6 +30,7 @@ import org.awaitility.Awaitility;
 
 import java.time.Duration;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -47,11 +48,6 @@ public class DBPreparer {
         Awaitility.await()
                 .atMost(Duration.ofSeconds(10))
                 .until(() -> database.getTransactionQueueSize() == 0);
-    }
-
-    public Optional<Database> prepareSQLite() {
-        String dbName = DBType.SQLITE.getName();
-        return Optional.of(prepareDBByName(dbName));
     }
 
     public static void assertNoTempTables(SQLDB db) {
@@ -76,6 +72,11 @@ public class DBPreparer {
                 assertFalse(hasTable("temp_worlds"));
             }
         });
+    }
+
+    public Optional<Database> prepareSQLite() {
+        String dbName = DBType.SQLITE.getName();
+        return Optional.of(prepareDBByName(dbName));
     }
 
     public Optional<String> setUpMySQLSettings(PlanConfig config) {
@@ -130,6 +131,7 @@ public class DBPreparer {
         SQLDB db = (SQLDB) dbSystem.getActiveDatabaseByName(dbName);
         db.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
         db.init();
+        Awaitility.await().atMost(5, TimeUnit.SECONDS).until(() -> db.getState() == Database.State.OPEN);
         assertNoTempTables(db);
         return db;
     }

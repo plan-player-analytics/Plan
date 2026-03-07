@@ -44,13 +44,13 @@ command:
             name: "使用者名稱"
     confirmation:
         accept: "接受"
-        cancelNoChanges: "已取消，未更改任何資料"
-        cancelNoUnregister: "已取消，'${0}' 未被註銷"
-        confirm: "確認："
-        dbClear: "您即將刪除 ${0} 中的所有 Plan 資料"
+        cancelNoChanges: "已取消。沒有資料被更改。"
+        cancelNoUnregister: "已取消。 '${0}' 尚未註冊"
+        confirm: "確認:"
+        dbClear: "你將要刪除 ${0} 中的所有 Plan 的資料"
         dbMerge: "您即將把 ${0} 中的資料合併到 ${1} 中"
-        dbOverwrite: "您即將用 ${1} 中的資料覆蓋 ${0} 中的 Plan 資料"
-        dbRemovePlayer: "您即將從 ${1} 中刪除 ${0} 的資料"
+        dbOverwrite: "你將要用 ${1} 中的資料覆蓋 Plan ${0} 中的資料。"
+        dbRemovePlayer: "你將從 ${1} 中刪除 ${0} 的資料。"
         deny: "取消"
         expired: "確認已過期，請重新使用指令"
         unregister: "您即將解除 '${0}' 與 ${1} 的綁定"
@@ -158,8 +158,8 @@ command:
             description: "從資料庫中刪除所有 Plan 資料"
             inDepth: "清空所有 Plan 資料表，移除所有 Plan 資料"
         dbHotswap:
-            description: "快速切換資料庫"
-            inDepth: "用另一個資料庫重新載入插件，並自動調整設定以匹配"
+            description: "熱交換資料庫並重啟插件"
+            inDepth: "用另一個資料庫重新載入插件，並改變設定使其符合。"
         dbMerge:
             description: "合併兩個資料庫的資料"
             inDepth: "將一個資料庫中的內容合併到另一個資料庫中，來源資料會插入到目標資料庫。"
@@ -861,7 +861,7 @@ html:
     query:
         filter:
             activity:
-                text: "處於活躍度分組中"
+                text: "在活躍度分組中"
             anyServer: "任意伺服器"
             banStatus:
                 name: "封鎖狀態"
@@ -912,9 +912,9 @@ html:
                 text: "在此期間註冊"
             skipped: "已跳過"
             title:
-                activityGroup: "目前活躍度分組"
+                activityGroup: "活躍度分組"
                 activityGroupOnDate: "指定日期的活躍度分組"
-            view: "檢視範圍："
+            view: "日期範圍："
         filters:
             add: "新增過濾器..."
             loading: "載入過濾器中..."

@@ -27,39 +27,53 @@ import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+/**
+ * Filter for activity index group at a specific time.
+ */
 @Singleton
-public class ActivityIndexFilter extends MultiOptionFilter {
+public class ActivityIndexOnDateFilter implements MultiOptionFilter {
 
-    private final PlanConfig config;
-    private final DBSystem dbSystem;
+    protected final PlanConfig config;
+    protected final DBSystem dbSystem;
 
     @Inject
-    public ActivityIndexFilter(
-            PlanConfig config,
-            DBSystem dbSystem
-    ) {
+    public ActivityIndexOnDateFilter(PlanConfig config, DBSystem dbSystem) {
         this.dbSystem = dbSystem;
         this.config = config;
     }
 
-    @Override
-    public String getKind() {
-        return "activityIndexNow";
+    protected long getDate(@Untrusted InputFilterDto query) {
+        return DateRangeFilter.getTime(query, "date", "time", getKind());
     }
 
-    private String[] getOptionsArray() {
+    @Override
+    public String[] getExpectedParameters() {
+        return new String[]{
+                SELECTED,
+                "date",
+                "time"
+        };
+    }
+
+    @Override
+    public String getKind() {
+        return "activityIndexOn";
+    }
+
+    protected String[] getOptionsArray() {
         return ActivityIndex.getGroupLocaleKeys();
     }
 
     @Override
     public Map<String, Object> getOptions() {
-        return Collections.singletonMap("options", getOptionsArray());
+        Map<String, Object> options = DateRangeFilter.getOptions(dbSystem.getDatabase());
+        options.put("options", getOptionsArray());
+        return options;
     }
 
     @Override
@@ -76,7 +90,7 @@ public class ActivityIndexFilter extends MultiOptionFilter {
         if (includeVeryActive && includeActive && includeRegular && includeIrregular && includeInactive) {
             throw new CompleteSetException(); // Full set, no need for query
         }
-        long date = System.currentTimeMillis();
+        long date = getDate(query);
         long playtimeThreshold = config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD);
         Map<Integer, ActivityIndex> indexes = dbSystem.getDatabase().query(NetworkActivityIndexQueries.activityIndexForAllPlayers(date, playtimeThreshold));
 

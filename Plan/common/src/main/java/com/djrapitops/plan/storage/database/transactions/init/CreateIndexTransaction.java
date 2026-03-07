@@ -19,6 +19,8 @@ package com.djrapitops.plan.storage.database.transactions.init;
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.queries.schema.MySQLSchemaQueries;
 import com.djrapitops.plan.storage.database.sql.tables.*;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPlayerTableValueTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionServerTableValueTable;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import org.apache.commons.text.TextStringBuilder;
 
@@ -66,6 +68,13 @@ public class CreateIndexTransaction extends Transaction {
 
         createIndex(SessionsTable.TABLE_NAME, "plan_session_join_address_index",
                 SessionsTable.JOIN_ADDRESS_ID);
+
+        createIndex(ExtensionPlayerTableValueTable.TABLE_NAME, "plan_extension_player_table_value_player_index",
+                ExtensionPlayerTableValueTable.TABLE_ID,
+                ExtensionPlayerTableValueTable.USER_UUID);
+        createIndex(ExtensionServerTableValueTable.TABLE_NAME, "plan_extension_server_table_value_server_index",
+                ExtensionServerTableValueTable.TABLE_ID,
+                ExtensionServerTableValueTable.SERVER_UUID);
     }
 
     private void createIndex(String tableName, String indexName, String... indexedColumns) {

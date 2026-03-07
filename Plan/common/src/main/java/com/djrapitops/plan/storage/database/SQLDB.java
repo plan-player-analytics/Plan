@@ -65,15 +65,12 @@ import java.util.function.Supplier;
  */
 public abstract class SQLDB extends AbstractDatabase {
 
-    private static boolean downloadDriver = true;
-
     private static final List<Repository> DRIVER_REPOSITORIES = Arrays.asList(
             new MavenRepository("https://repo.papermc.io/repository/maven-public"),
             new MavenRepository("https://repo1.maven.org/maven2")
     );
-
-    private final Supplier<ServerUUID> serverUUIDSupplier;
-
+    private static final ThreadLocal<StackTraceElement[]> TRANSACTION_ORIGIN = new ThreadLocal<>();
+    private static boolean downloadDriver = true;
     protected final Locale locale;
     protected final PlanConfig config;
     protected final PlanFiles files;
@@ -81,16 +78,13 @@ public abstract class SQLDB extends AbstractDatabase {
     protected final PluginLogger logger;
     protected final ErrorLogger errorLogger;
     protected final ApplicationDependencyManager applicationDependencyManager;
-
-    protected ClassLoader driverClassLoader;
-
-    private Supplier<ExecutorService> transactionExecutorServiceProvider;
-    private ExecutorService transactionExecutor;
-    private static final ThreadLocal<StackTraceElement[]> TRANSACTION_ORIGIN = new ThreadLocal<>();
-
+    private final Supplier<ServerUUID> serverUUIDSupplier;
     private final AtomicInteger transactionQueueSize = new AtomicInteger(0);
     private final AtomicBoolean dropUnimportantTransactions = new AtomicBoolean(false);
     private final AtomicBoolean ranIntoFatalError = new AtomicBoolean(false);
+    protected ClassLoader driverClassLoader;
+    private Supplier<ExecutorService> transactionExecutorServiceProvider;
+    private ExecutorService transactionExecutor;
 
     protected SQLDB(
             Supplier<ServerUUID> serverUUIDSupplier,
@@ -113,7 +107,7 @@ public abstract class SQLDB extends AbstractDatabase {
 
         this.transactionExecutorServiceProvider = () -> {
             String nameFormat = "Plan " + getClass().getSimpleName() + "-transaction-thread-%d";
-            return Executors.newSingleThreadExecutor(new BasicThreadFactory.Builder()
+            return Executors.newSingleThreadExecutor(BasicThreadFactory.builder()
                     .namingPattern(nameFormat)
                     .uncaughtExceptionHandler((thread, throwable) -> {
                         if (config.isTrue(PluginSettings.DEV_MODE)) {
@@ -127,6 +121,10 @@ public abstract class SQLDB extends AbstractDatabase {
 
     public static void setDownloadDriver(boolean downloadDriver) {
         SQLDB.downloadDriver = downloadDriver;
+    }
+
+    public static ThreadLocal<StackTraceElement[]> getTransactionOrigin() {
+        return TRANSACTION_ORIGIN;
     }
 
     protected abstract List<String> getDependencyResource();
@@ -157,10 +155,6 @@ public abstract class SQLDB extends AbstractDatabase {
         } else {
             this.driverClassLoader = getClass().getClassLoader();
         }
-    }
-
-    public static ThreadLocal<StackTraceElement[]> getTransactionOrigin() {
-        return TRANSACTION_ORIGIN;
     }
 
     @Override

@@ -187,7 +187,7 @@ public class NetworkActivityIndexQueries {
                 LEFT_JOIN + '(' + selectActivityIndex + ") s on s." + SessionsTable.USER_ID + "=u." + UsersTable.ID +
                 WHERE + "u." + UsersTable.REGISTERED + "<=?" +
                 AND + "u." + UsersTable.ID + " IN (" +
-                new TextStringBuilder().appendWithSeparators(userIds, ",").build() + ")";
+                new TextStringBuilder().appendWithSeparators(userIds, ",").get() + ")";
 
         return new QueryStatement<>(selectIndexes) {
             @Override

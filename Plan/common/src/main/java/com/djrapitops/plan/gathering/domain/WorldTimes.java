@@ -204,7 +204,7 @@ public class WorldTimes {
         return "{\"times\": {" +
                 new TextStringBuilder().appendWithSeparators(times.entrySet().stream()
                         .map(entry -> "\"" + entry.getKey() + "\": " + entry.getValue().toJson())
-                        .iterator(), ",").build() +
+                        .iterator(), ",").get() +
                 "  }," +
                 (currentWorld != null ? "\"currentWorld\": \"" + currentWorld + "\"," : "\"currentWorld\": null,") +
                 (currentGamemode != null ? "\"currentGamemode\": \"" + currentGamemode + "\"" : "\"currentGamemode\": null") +

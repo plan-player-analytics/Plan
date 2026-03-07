@@ -16,12 +16,12 @@
  */
 package utilities.mocks;
 
+import com.djrapitops.plan.DaggerPlanSpongeComponent;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSpongeComponent;
 import com.djrapitops.plan.PlanSystem;
-import com.djrapitops.plan.DaggerPlanSpongeComponent;
-import net.kyori.adventure.text.TextComponent;
 import com.djrapitops.plan.storage.database.SQLDB;
+import net.kyori.adventure.text.TextComponent;
 import org.mockito.Mockito;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.MinecraftVersion;
@@ -54,7 +54,7 @@ public class SpongeMockComponent {
         SQLDB.setDownloadDriver(false);
     }
 
-    public PlanPlugin getPlanMock() throws Exception {
+    public PlanPlugin getPlanMock() {
         if (planMock == null) {
             planMock = PlanPluginMocker.setUp()
                     .withLogging()
@@ -64,7 +64,7 @@ public class SpongeMockComponent {
         return planMock;
     }
 
-    public PlanSystem getPlanSystem() throws Exception {
+    public PlanSystem getPlanSystem() {
         if (component == null) {
             PlanPlugin planMock = getPlanMock();
             component = DaggerPlanSpongeComponent.builder()

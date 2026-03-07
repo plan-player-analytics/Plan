@@ -57,7 +57,7 @@ public class DeleteIPsPatch extends Patch {
         dropTable(GeoInfoTable.TABLE_NAME);
         execute(GeoInfoTable.createTableSQL(dbType));
 
-        execute("INSERT INTO " + GeoInfoTable.TABLE_NAME + " (" +
+        execute(INSERT_INTO + GeoInfoTable.TABLE_NAME + " (" +
                 GeoInfoTable.USER_ID + ',' +
                 GeoInfoTable.LAST_USED + ',' +
                 GeoInfoTable.GEOLOCATION +
@@ -72,13 +72,13 @@ public class DeleteIPsPatch extends Patch {
     }
 
     private boolean hasLessDataInPlanIPs() {
-        Integer inIPs = query(new QueryAllStatement<>(SELECT + "COUNT(1) as c" + FROM + oldTableName) {
+        Integer inIPs = query(new QueryAllStatement<>(SELECT + "COUNT(1) as c" + FROM + oldTableName + lockForUpdate()) {
             @Override
             public Integer processResults(ResultSet set) throws SQLException {
                 return set.next() ? set.getInt("c") : 0;
             }
         });
-        Integer inGeoInfo = query(new QueryAllStatement<>(SELECT + "COUNT(1) as c" + FROM + GeoInfoTable.TABLE_NAME) {
+        Integer inGeoInfo = query(new QueryAllStatement<>(SELECT + "COUNT(1) as c" + FROM + GeoInfoTable.TABLE_NAME + lockForUpdate()) {
             @Override
             public Integer processResults(ResultSet set) throws SQLException {
                 return set.next() ? set.getInt("c") : 0;

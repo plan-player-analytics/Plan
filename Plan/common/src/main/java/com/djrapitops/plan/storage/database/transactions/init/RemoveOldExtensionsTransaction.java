@@ -66,12 +66,7 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
                 ExtensionServerValueTable.TABLE_NAME,
                 ExtensionGroupsTable.TABLE_NAME
         }) {
-            execute(new ExecStatement(DELETE_FROM + table + WHERE + "provider_id=?") {
-                @Override
-                public void prepare(PreparedStatement statement) throws SQLException {
-                    statement.setInt(1, providerID);
-                }
-            });
+            execute(DELETE_FROM + table + WHERE + "provider_id=" + providerID);
         }
     }
 
@@ -80,12 +75,7 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
                 ExtensionPlayerTableValueTable.TABLE_NAME,
                 ExtensionServerTableValueTable.TABLE_NAME
         }) {
-            execute(new ExecStatement(DELETE_FROM + table + WHERE + "table_id=?") {
-                @Override
-                public void prepare(PreparedStatement statement) throws SQLException {
-                    statement.setInt(1, providerID);
-                }
-            });
+            execute(DELETE_FROM + table + WHERE + "table_id=" + providerID);
         }
     }
 
@@ -97,7 +87,8 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
                         SELECT + ExtensionPluginTable.ID +
                         FROM + ExtensionPluginTable.TABLE_NAME +
                         WHERE + ExtensionPluginTable.LAST_UPDATED + "<?" +
-                        AND + ExtensionPluginTable.SERVER_UUID + "=?)"
+                        AND + ExtensionPluginTable.SERVER_UUID + "=?" + lockForUpdate() +
+                        ")"
         ) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -112,7 +103,8 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
                         SELECT + ExtensionPluginTable.ID +
                         FROM + ExtensionPluginTable.TABLE_NAME +
                         WHERE + ExtensionPluginTable.LAST_UPDATED + "<?" +
-                        AND + ExtensionPluginTable.SERVER_UUID + "=?)"
+                        AND + ExtensionPluginTable.SERVER_UUID + "=?" + lockForUpdate() +
+                        ")"
         ) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -128,7 +120,7 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
                 "pl." + ExtensionPluginTable.PLUGIN_NAME +
                 FROM + ExtensionProviderTable.TABLE_NAME + " pr" +
                 INNER_JOIN + ExtensionPluginTable.TABLE_NAME + " pl on pl." + ExtensionPluginTable.ID + "=pr." + ExtensionProviderTable.PLUGIN_ID +
-                WHERE + ExtensionPluginTable.SERVER_UUID + "=?";
+                WHERE + ExtensionPluginTable.SERVER_UUID + "=?" + lockForUpdate();
         return new QueryStatement<>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -155,7 +147,7 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
                 FROM + ExtensionTableProviderTable.TABLE_NAME + " pr" +
                 INNER_JOIN + ExtensionPluginTable.TABLE_NAME + " pl on pl." + ExtensionPluginTable.ID + "=pr." + ExtensionTableProviderTable.PLUGIN_ID +
                 WHERE + ExtensionPluginTable.LAST_UPDATED + "<?" +
-                AND + ExtensionPluginTable.SERVER_UUID + "=?";
+                AND + ExtensionPluginTable.SERVER_UUID + "=?" + lockForUpdate();
         return new QueryStatement<>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

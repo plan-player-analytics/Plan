@@ -20,7 +20,7 @@ import com.djrapitops.plan.delivery.web.resource.WebResource;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -33,6 +33,16 @@ import java.util.List;
  * @author AuroraLS3
  */
 public interface Resource {
+
+    /**
+     * Check if a resource is a text based file.
+     *
+     * @param resourceName Name of the resource
+     * @return true if the resource is text based.
+     */
+    static boolean isTextResource(String resourceName) {
+        return Strings.CI.endsWithAny(resourceName, ".html", ".js", ".css", ".yml", ".txt");
+    }
 
     /**
      * Get the name of this Resource.
@@ -88,16 +98,6 @@ public interface Resource {
                 throw new UncheckedIOException("Failed to read '" + getResourceName() + "'", e);
             }
         }, getLastModifiedDate());
-    }
-
-    /**
-     * Check if a resource is a text based file.
-     *
-     * @param resourceName Name of the resource
-     * @return true if the resource is text based.
-     */
-    static boolean isTextResource(String resourceName) {
-        return StringUtils.endsWithAny(resourceName, ".html", ".js", ".css", ".yml", ".txt");
     }
 
 }

@@ -25,15 +25,17 @@ import com.google.gson.reflect.TypeToken;
 
 import java.util.List;
 
-public abstract class MultiOptionFilter implements Filter {
+public interface MultiOptionFilter extends Filter {
+
+    static final String SELECTED = "selected";
 
     @Override
-    public String[] getExpectedParameters() {
-        return new String[]{"selected"};
+    default String[] getExpectedParameters() {
+        return new String[]{SELECTED};
     }
 
-    protected List<String> getSelected(@Untrusted InputFilterDto query) {
-        @Untrusted String selectedJSON = query.get("selected").orElseThrow(IllegalArgumentException::new);
+    default List<String> getSelected(@Untrusted InputFilterDto query) {
+        @Untrusted String selectedJSON = query.get(SELECTED).orElseThrow(IllegalArgumentException::new);
         @Untrusted List<String> selected = new Gson().fromJson(selectedJSON, new TypeToken<List<String>>() {}.getType());
         if (selected.isEmpty()) throw new CompleteSetException();
         return selected;

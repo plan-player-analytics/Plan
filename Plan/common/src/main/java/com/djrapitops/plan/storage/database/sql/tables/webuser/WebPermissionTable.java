@@ -34,7 +34,7 @@ public class WebPermissionTable {
     public static final String ID = "id";
     public static final String PERMISSION = "permission";
 
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" + PERMISSION + ") VALUES (?)";
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " (" + PERMISSION + ") VALUES (?)";
     public static final String SELECT_PERMISSION_ID = SELECT + ID + FROM + TABLE_NAME + WHERE + PERMISSION + "=?";
 
     private WebPermissionTable() {

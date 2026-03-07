@@ -1,13 +1,13 @@
 import React, {useEffect, useMemo} from 'react';
 import Masonry from "masonry-layout";
-import LoadIn from "../../components/animation/LoadIn";
+import LoadIn from "../../components/animation/LoadIn.tsx";
 import {Card, Col, Row} from "react-bootstrap";
 import ExtensionCard, {ExtensionCardWrapper} from "../../components/extensions/ExtensionCard";
 import Loader from "../../components/navigation/Loader";
 import {useTranslation} from "react-i18next";
 import {useServerExtensionContext} from "../../hooks/serverExtensionDataContext";
-import ErrorView from "../ErrorView";
-import {useAuth} from "../../hooks/authenticationHook";
+import ErrorView from "../ErrorView.tsx";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const ServerPluginData = () => {
     const {hasPermission} = useAuth();

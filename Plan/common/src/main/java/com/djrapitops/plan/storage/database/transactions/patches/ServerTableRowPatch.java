@@ -30,8 +30,8 @@ import java.util.List;
 import java.util.Map;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
-import static com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionServerTableValueTable.ID;
 import static com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionServerTableValueTable.*;
+import static com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionServerTableValueTable.ID;
 
 public class ServerTableRowPatch extends Patch {
 
@@ -46,7 +46,7 @@ public class ServerTableRowPatch extends Patch {
                 SERVER_UUID + ',' + TABLE_ID + ",COUNT(1) as c" +
                 FROM + TABLE_NAME +
                 WHERE + TABLE_ROW + "=?" +
-                GROUP_BY + TABLE_ID + ',' + SERVER_UUID;
+                GROUP_BY + TABLE_ID + ',' + SERVER_UUID + lockForUpdate();
         return query(new QueryStatement<>(columnCountPerTableSql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -91,7 +91,7 @@ public class ServerTableRowPatch extends Patch {
     }
 
     public Map<Integer, List<Integer>> fetchTableRowIds() {
-        String columnCountPerTableSql = SELECT + TABLE_ID + ',' + ID + FROM + TABLE_NAME;
+        String columnCountPerTableSql = SELECT + TABLE_ID + ',' + ID + FROM + TABLE_NAME + lockForUpdate();
         return query(new QueryAllStatement<>(columnCountPerTableSql) {
             @Override
             public Map<Integer, List<Integer>> processResults(ResultSet set) throws SQLException {

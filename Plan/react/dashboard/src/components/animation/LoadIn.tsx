@@ -1,10 +1,18 @@
-import React, {useEffect, useRef, useState} from 'react';
-import {Transition} from 'react-transition-group';
+import React, {CSSProperties, PropsWithChildren, RefObject, useEffect, useRef, useState} from 'react';
+import {Transition, TransitionStatus} from 'react-transition-group';
 
 const defaultDuration = 250;
 
-const LoadIn = ({children, duration}) => {
-    const nodeRef = useRef();
+type Props = {
+    duration?: number;
+} & PropsWithChildren;
+
+type Animation = {
+    [key in TransitionStatus]: CSSProperties;
+};
+
+const LoadIn = ({children, duration}: Props) => {
+    const nodeRef: RefObject<HTMLDivElement | null> = useRef(null);
 
     if (!duration) duration = defaultDuration;
     const reduceAnimations = window.matchMedia(`(prefers-reduced-motion: reduce)`).matches;
@@ -18,7 +26,7 @@ const LoadIn = ({children, duration}) => {
         transform: "scale(0.99)"
     }
 
-    const transitionStyles = reduceAnimations ? {
+    const transitionStyles: Animation = reduceAnimations ? {
         entering: {
             opacity: 1,
         },
@@ -30,7 +38,8 @@ const LoadIn = ({children, duration}) => {
         },
         exiting: {
             opacity: 0,
-        }
+        },
+        unmounted: {}
     } : {
         entering: {
             opacity: 1,
@@ -48,6 +57,7 @@ const LoadIn = ({children, duration}) => {
             opacity: 0,
             transform: "scale(0.99)"
         },
+        unmounted: {}
     };
 
     const [visible, setVisible] = useState(false);

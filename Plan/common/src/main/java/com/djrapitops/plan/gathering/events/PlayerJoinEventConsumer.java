@@ -22,6 +22,7 @@ import com.djrapitops.plan.delivery.domain.ServerName;
 import com.djrapitops.plan.delivery.export.Exporter;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.ExtensionSvc;
+import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.gathering.JoinAddressValidator;
 import com.djrapitops.plan.gathering.cache.NicknameCache;
 import com.djrapitops.plan.gathering.cache.SessionCache;
@@ -30,6 +31,7 @@ import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.gathering.domain.event.PlayerJoin;
 import com.djrapitops.plan.gathering.geolocation.GeolocationCache;
+import com.djrapitops.plan.gathering.timed.PlayerExtensionDataUpdateTask;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -59,6 +61,7 @@ public class PlayerJoinEventConsumer {
 
     private final ExtensionSvc extensionService;
     private final Exporter exporter;
+    private final PlayerExtensionDataUpdateTask.Factory playerExtensionUpdateTaskFactory;
 
     @Inject
     public PlayerJoinEventConsumer(
@@ -69,7 +72,8 @@ public class PlayerJoinEventConsumer {
             SessionCache sessionCache,
             NicknameCache nicknameCache,
             ExtensionSvc extensionService,
-            Exporter exporter
+            Exporter exporter,
+            PlayerExtensionDataUpdateTask.Factory playerExtensionUpdateTaskFactory
     ) {
         this.processing = processing;
         this.config = config;
@@ -80,6 +84,16 @@ public class PlayerJoinEventConsumer {
         this.nicknameCache = nicknameCache;
         this.extensionService = extensionService;
         this.exporter = exporter;
+        this.playerExtensionUpdateTaskFactory = playerExtensionUpdateTaskFactory;
+    }
+
+    private static long getRegisterDate(PlayerJoin join) {
+        long registerDate = join.getPlayer().getRegisterDate().orElseGet(join::getTime);
+        // Correct incorrect register dates https://github.com/plan-player-analytics/Plan/issues/2934
+        if (registerDate < System.currentTimeMillis() / 1000) {
+            registerDate = registerDate * 1000;
+        }
+        return registerDate;
     }
 
     public void onJoinGameServer(PlayerJoin join) {
@@ -95,8 +109,13 @@ public class PlayerJoinEventConsumer {
                         storeNickname(join);
                         updatePlayerDataExtensionValues(join);
                         updateExport(join);
+                        registerExtensionUpdateTask(join);
                     }, processing.getCriticalExecutor());
         });
+    }
+
+    private void registerExtensionUpdateTask(PlayerJoin join) {
+        playerExtensionUpdateTaskFactory.register(Parameters.player(join.getServer().getUuid(), join.getPlayerUUID(), join.getPlayer().getName()));
     }
 
     public void onJoinProxyServer(PlayerJoin join) {
@@ -131,15 +150,6 @@ public class PlayerJoinEventConsumer {
         join.getPlayer().getCurrentWorld()
                 .map(world -> new StoreWorldNameTransaction(serverUUID, world))
                 .ifPresent(dbSystem.getDatabase()::executeTransaction);
-    }
-
-    private static long getRegisterDate(PlayerJoin join) {
-        long registerDate = join.getPlayer().getRegisterDate().orElseGet(join::getTime);
-        // Correct incorrect register dates https://github.com/plan-player-analytics/Plan/issues/2934
-        if (registerDate < System.currentTimeMillis() / 1000) {
-            registerDate = registerDate * 1000;
-        }
-        return registerDate;
     }
 
     private CompletableFuture<?> storeGamePlayer(PlayerJoin join) {

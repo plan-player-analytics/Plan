@@ -23,6 +23,7 @@ import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.tables.KillsTable;
+import com.djrapitops.plan.utilities.comparators.GeoInfoComparator;
 import org.apache.commons.text.RandomStringGenerator;
 
 import java.util.*;
@@ -34,14 +35,13 @@ import java.util.stream.IntStream;
 
 public class RandomData {
 
+    private static final Random r = new Random();
+    private static final int JOIN_ADDRESS_COUNT = 50;
+    private static final List<JoinAddress> JOIN_ADDRESSES = generateJoinAddresses(JOIN_ADDRESS_COUNT);
+
     private RandomData() {
         /* Static method class */
     }
-
-    private static final Random r = new Random();
-
-    private static final int JOIN_ADDRESS_COUNT = 50;
-    private static final List<JoinAddress> JOIN_ADDRESSES = generateJoinAddresses(JOIN_ADDRESS_COUNT);
 
     public static int randomInt(int rangeStart, int rangeEnd) {
         return ThreadLocalRandom.current().nextInt(rangeStart, rangeEnd);
@@ -165,7 +165,9 @@ public class RandomData {
     }
 
     public static List<GeoInfo> randomGeoInfo() {
-        return pickMultiple(randomInt(15, 30), () -> new GeoInfo(randomString(10), randomTime()));
+        List<GeoInfo> geoInfos = pickMultiple(randomInt(15, 30), () -> new GeoInfo(randomString(10), randomTime()));
+        geoInfos.sort(new GeoInfoComparator());
+        return geoInfos;
     }
 
     public static WorldTimes randomWorldTimes(String... worlds) {

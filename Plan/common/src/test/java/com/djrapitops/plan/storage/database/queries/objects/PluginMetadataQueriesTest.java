@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database.queries.objects;
 
 import com.djrapitops.plan.gathering.domain.PluginMetadata;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
+import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StorePluginVersionsTransaction;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -51,4 +52,12 @@ public interface PluginMetadataQueriesTest extends DatabaseTestPreparer {
         assertEquals(expected, result);
     }
 
+    @Test
+    default void pluginMetadataIsRemovedByRemoveEverything() {
+        pluginMetadataIsStored();
+        db().executeTransaction(new RemoveEverythingTransaction()).join();
+        List<PluginMetadata> expected = List.of();
+        List<PluginMetadata> result = db().query(PluginMetadataQueries.getInstalledPlugins(serverUUID()));
+        assertEquals(expected, result);
+    }
 }

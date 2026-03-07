@@ -6,7 +6,7 @@ import {
     fetchPunchCardGraph,
     fetchServerCalendarGraph
 } from "../../../../service/serverService";
-import {ErrorViewBody} from "../../../../views/ErrorView";
+import {ErrorViewBody} from "../../../../views/ErrorView.tsx";
 import PunchCard from "../../../graphs/PunchCard";
 import {useTranslation} from "react-i18next";
 import {Card} from "react-bootstrap";
@@ -17,7 +17,7 @@ import React, {useCallback, useState} from "react";
 import TimeByTimeGraph from "../../../graphs/TimeByTimeGraph";
 import ServerCalendar from "../../../calendar/ServerCalendar";
 import {ChartLoader} from "../../../navigation/Loader";
-import {useAuth} from "../../../../hooks/authenticationHook";
+import {useAuth} from "../../../../hooks/authenticationHook.tsx";
 import Highcharts from "highcharts/highstock";
 import "highcharts/modules/no-data-to-display"
 import "highcharts/modules/accessibility";
@@ -67,7 +67,9 @@ const ServerCalendarTab = () => {
                 kind: "playedBetween",
                 parameters: {
                     afterDate: start, afterTime: "00:00",
-                    beforeDate: end, beforeTime: "00:00"
+                    beforeDate: end, beforeTime: "00:00",
+                    servers: JSON.stringify(networkMetadata?.servers.filter(server => server.serverUUID === identifier)
+                        .map(server => server.serverName))
                 }
             }],
             view: {

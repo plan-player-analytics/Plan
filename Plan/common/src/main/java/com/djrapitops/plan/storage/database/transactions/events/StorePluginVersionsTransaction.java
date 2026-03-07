@@ -50,6 +50,7 @@ public class StorePluginVersionsTransaction extends Transaction {
         execute(new ExecBatchStatement(PluginVersionTable.INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(4, time);
                 for (PluginMetadata plugin : changeList) {
                     statement.setString(1, serverUUID.toString());
                     statement.setString(2, StringUtils.truncate(plugin.getName(), PluginVersionTable.MAX_NAME_LENGTH));
@@ -58,7 +59,6 @@ public class StorePluginVersionsTransaction extends Transaction {
                     } else {
                         statement.setString(3, StringUtils.truncate(plugin.getVersion(), PluginVersionTable.MAX_VERSION_LENGTH));
                     }
-                    statement.setLong(4, time);
                     statement.addBatch();
                 }
             }

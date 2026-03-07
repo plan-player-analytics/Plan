@@ -19,7 +19,7 @@ package com.djrapitops.plan.delivery.formatting.time;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.FormatSettings;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 /**
  * Formatter for time amount in milliseconds.
@@ -74,7 +74,7 @@ public class TimeAmountFormatter implements Formatter<Long> {
         appendMinutes(builder, minutes, hours, hourFormat, minuteFormat);
         appendSeconds(builder, seconds, minutes, hours, hourFormat, minuteFormat, secondFormat);
 
-        String formattedTime = StringUtils.remove(builder.toString(), ZERO_PH);
+        String formattedTime = Strings.CS.remove(builder.toString(), ZERO_PH);
         if (formattedTime.isEmpty()) {
             return config.get(FormatSettings.ZERO_SECONDS);
         }

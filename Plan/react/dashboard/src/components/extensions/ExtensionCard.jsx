@@ -49,6 +49,23 @@ const ExtensionTab = ({tab}) => {
     </>);
 }
 
+const valueOrUndefined = (value) => {
+    return typeof value === "undefined" ? undefined : value;
+}
+const sanitizeComponent = (component) => {
+    if (!component) return undefined;
+    return {
+        extra: sanitizeComponent(component.extra),
+        color: valueOrUndefined(component.color),
+        bold: valueOrUndefined(component.bold),
+        italic: valueOrUndefined(component.italic),
+        underlined: valueOrUndefined(component.underlined),
+        strikethrough: valueOrUndefined(component.strikethrough),
+        obfuscation: valueOrUndefined(component.obfuscation),
+        text: valueOrUndefined(component.text)
+    };
+}
+
 export const ExtensionValueTableCell = ({data}) => {
     if (!data) return '-';
 
@@ -58,7 +75,7 @@ export const ExtensionValueTableCell = ({data}) => {
     } else if (data.type === 'LINK') {
         return (<Link to={data.value?.link}><ColoredText text={data.value?.text}/></Link>);
     } else if (data.type === 'COMPONENT') {
-        return (<MinecraftChat component={JSON.parse(data.value)}/>)
+        return (<MinecraftChat component={sanitizeComponent(JSON.parse(data.value))}/>)
     } else if (data.type === 'TIME_MILLISECONDS') {
         return <FormattedTime timeMs={value}/>;
     } else if (data.type === 'DATE_YEAR') {
@@ -93,7 +110,7 @@ const ExtensionValue = ({data}) => {
     } else if (data.type === 'COMPONENT') {
         return (<p title={title}>
             {icon && <Fa icon={icon} className={colorClass}/>} {name}
-            <End><MinecraftChat component={JSON.parse(data.value)}/></End>
+            <End><MinecraftChat component={sanitizeComponent(JSON.parse(data.value))}/></End>
         </p>)
     } else if (data.type === 'BOOLEAN') {
         return <p title={title}>

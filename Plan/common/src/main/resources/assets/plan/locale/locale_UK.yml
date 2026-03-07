@@ -9,6 +9,8 @@ command:
             name: "${code}"
         dbBackup:
             description: "Тип датабази для резервної копії. Поточна база даних, якщо не вказано."
+        dbMergeStrategyDelete: "Delete conflicting server from destination database"
+        dbMergeStrategySwap: "Swap UUID of inserted conflicting server in destination database"
         dbRestore:
             description: "Тип датабази для відновлення. Поточна база даних, якщо не вказано."
         dbTypeHotswap:
@@ -46,12 +48,34 @@ command:
         cancelNoUnregister: "Скасовано. '${0}' не було видалено"
         confirm: "Підтвердити: "
         dbClear: "Ви точно хочете видалити всю Plan-дату в ${0}"
+        dbMerge: "You are about to merge data in ${0} to data in ${1}"
         dbOverwrite: "Ви точно хочете переписати всю інформацію ${0} на ${1}"
         dbRemovePlayer: "Ви точно хочете видалити гравця ${0} з ${1}"
         deny: "Скасувати"
         expired: "Термін підтвердження закінчився, використовуйте команду заново"
         unregister: "Ви точно хочете видалити '${0}', прив`язаного до ${1}"
     database:
+        copy:
+            abort: "Operation was aborted."
+            allDataExisted: "  all the data already existed."
+            clearFinish: "Cleared destination database."
+            clearStart: "Clearing destination database.."
+            conflict:
+                delete: "Deleting conflicting server ${0} from destination before insert"
+                info1: "Server with uuid ${0} already exists. Choose a strategy to deal with it."
+                info2: "  --on-conflict-swap - swaps the server uuid for inserted server (Use if multiple servers shared uuid at some point)"
+                info3: "  --on-conflict-delete - deletes the server from destination db (Use when previous merge failed)"
+                swap: "Swapping server uuid ${0} with ${1}"
+            destinationState: "Destination database is ${0}, could not begin operation"
+            error: "Ran into an issue, error was logged to a file, error: ${0}"
+            list:
+                row: "   ${0} - ${1} rows"
+                titleDestination: "Data in existing database:"
+                titleSource: "Data to be copied:"
+            progress: "  ${0}: ${1}/${2} (${3}%) copied."
+            sourceState: "Source database is ${0}, could not begin operation"
+            table: "Copying ${0}.."
+            trackPlayerStart: "Database copy started by player ${0} - process identifier: ${1}"
         creatingBackup: "Створюємо резервну копію '${0}.db' з даними про ${1}"
         failDbNotOpen: "§cБаза даних ${0} - Будь ласка, спробуйте знову трохи пізніше."
         manage:
@@ -65,6 +89,7 @@ command:
             failNoServer: "Сервер із цими параметрами не знайдено."
             failSameDB: "> §cНе можна працювати з однією і тією ж базою даних!"
             failSameServer: "Неможливо позначити цей сервер як видалений (Ви на ньому)"
+            failTooManyStrategies: "Only one strategy can be selected to deal with merge conflict."
             hotswap: "§eНе забудьте змінити на нову базу даних (/plan db hotswap ${0}) і перезавантажити плагін."
             importers: "Імпортери:"
             preparing: "Підготовка..."
@@ -135,6 +160,9 @@ command:
         dbHotswap:
             description: "Швидка зміна бази даних"
             inDepth: "Перезавантажує плагін з іншою базою даних і змінює конфігурацію відповідно."
+        dbMerge:
+            description: "Merge data of two databases"
+            inDepth: "Merges contents in one database with the contents in another. Source data will be inserted to destination database."
         dbMove:
             description: "Переміщення даних між базами даних"
             inDepth: "Перезаписує вміст однієї бази даних вмістом іншої бази даних."
@@ -832,6 +860,7 @@ html:
         filter:
             activity:
                 text: "в Активних групах"
+            anyServer: "any server"
             banStatus:
                 name: "Блок статус"
             banned: "Заблокований"
@@ -841,6 +870,8 @@ html:
                 allPlayers: "Усі гравці"
                 and: "додати "
                 start: "з гравців, хто "
+            hasPlayedOnDate:
+                name: "Has played on date"
             hasPlayedOnServers:
                 name: "Грав на одному з серверів"
                 text: "грали хоча б на одному з"
@@ -849,21 +880,38 @@ html:
                 text: "мають булеве значення плагіна"
             joinAddress:
                 text: "зайшов за адресою"
+            lastSeenAfter:
+                text: "Last seen after"
+            lastSeenBefore:
+                text: "Last seen before"
+            lastSeenBetween:
+                text: "Last seen between"
             nonOperators: "Немає операторів"
             notBanned: "Немає заблокованих"
+            onDate: "on"
+            onServer: "on server(s)"
             operatorStatus:
                 name: "Оп-статус"
             operators: "Оператори"
+            playedAfter:
+                text: "Played after"
+            playedBefore:
+                text: "Played before"
             playedBetween:
                 text: "Грав між"
             pluginGroup:
                 name: "Група: "
                 text: "в {{plugin}} {{group}} Групах"
+            registeredAfter:
+                text: "Registered after"
+            registeredBefore:
+                text: "Registered before"
             registeredBetween:
                 text: "Зареєструвався між"
             skipped: "Пропущено"
             title:
                 activityGroup: "Група поточної діяльності"
+                activityGroupOnDate: "Activity group on date"
             view: "  Перегляд:"
         filters:
             add: "Додати фільтр.."

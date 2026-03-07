@@ -6,6 +6,8 @@ import {Col, Row} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTrashAlt} from "@fortawesome/free-regular-svg-icons";
 import OutlineButton from "../../../input/button/OutlineButton.jsx";
+import Checkbox from "../../../input/Checkbox.jsx";
+import {InlinedRow} from "../../../layout/InlinedRow.jsx";
 
 const BetweenDatesFilter = ({index, label, filter, removeFilter, setFilterOptions, setAsInvalid, setAsValid}) => {
     const {t} = useTranslation();
@@ -13,33 +15,60 @@ const BetweenDatesFilter = ({index, label, filter, removeFilter, setFilterOption
 
     const options = filter.options;
 
+    const [fromDateEnabled, setFromDateEnabled] = useState(true);
     const [fromDate, setFromDate] = useState(filter.parameters?.afterDate || options.after[0]);
     const [fromTime, setFromTime] = useState(filter.parameters?.afterTime || options.after[1]);
+    const [toDateEnabled, setToDateEnabled] = useState(true);
     const [toDate, setToDate] = useState(filter.parameters?.beforeDate || options.before[0]);
     const [toTime, setToTime] = useState(filter.parameters?.beforeTime || options.before[1]);
+
+    const toggleFromDate = () => {
+        if (!toDateEnabled && fromDateEnabled) {
+            setToDateEnabled(true);
+        }
+        setFromDateEnabled(!fromDateEnabled);
+    }
+    const toggleToDate = () => {
+        if (!fromDateEnabled && toDateEnabled) {
+            setFromDateEnabled(true);
+        }
+        setToDateEnabled(!toDateEnabled);
+    }
+
     useEffect(() => {
+        const after = fromDateEnabled ? {
+            afterDate: fromDate,
+            afterTime: fromTime
+        } : {};
+        const before = toDateEnabled ? {
+            beforeDate: toDate,
+            beforeTime: toTime
+        } : {}
         setFilterOptions({
             ...filter,
-            parameters: {
-                afterDate: fromDate,
-                afterTime: fromTime,
-                beforeDate: toDate,
-                beforeTime: toTime
-            }
+            parameters: {...after, ...before}
         })
-    }, [setFilterOptions, fromDate, fromTime, toDate, toTime, filter]);
+    }, [setFilterOptions, fromDateEnabled, fromDate, fromTime, toDateEnabled, toDate, toTime, filter]);
+
+    let actualLabel = label;
+    if (!toDateEnabled) actualLabel = label.replace('Between', 'After');
+    if (!fromDateEnabled) actualLabel = label.replace('Between', 'Before');
 
     return (
         <div id={'filter-' + index} className="mt-2">
-            <label>{select} {label}:</label>
+            <label>{select} {t(actualLabel)}:</label>
             <Row className={"my-2 justify-content-start"}>
                 <Col md={3} sm={6}>
-                    <DateInputField id={"filter-" + index + "-from-date"}
-                                    value={fromDate}
-                                    setValue={setFromDate}
-                                    placeholder={options.after[0]}
-                                    setAsInvalid={setAsInvalid} setAsValid={setAsValid}
-                    />
+                    <InlinedRow>
+                        <Checkbox checked={fromDateEnabled} onChange={toggleFromDate}/>
+                        <DateInputField id={"filter-" + index + "-from-date"}
+                                        value={fromDate}
+                                        setValue={setFromDate}
+                                        placeholder={options.after[0]}
+                                        setAsInvalid={setAsInvalid} setAsValid={setAsValid}
+                                        disabled={!fromDateEnabled}
+                        />
+                    </InlinedRow>
                 </Col>
                 <Col md={2} sm={6}>
                     <TimeInputField id={"filter-" + index + "-from-time"}
@@ -47,18 +76,23 @@ const BetweenDatesFilter = ({index, label, filter, removeFilter, setFilterOption
                                     setValue={setFromTime}
                                     placeholder={options.after[1]}
                                     setAsInvalid={setAsInvalid} setAsValid={setAsValid}
+                                    disabled={!fromDateEnabled}
                     />
                 </Col>
                 <Col md={1} sm={12} className={"text-center my-1 my-md-2 flex-fill"}>
                     <label htmlFor="inlineFormCustomSelectPref">&</label>
                 </Col>
                 <Col md={3} sm={6}>
-                    <DateInputField id={"filter-" + index + "-to-date"}
-                                    value={toDate}
-                                    setValue={setToDate}
-                                    placeholder={options.before[0]}
-                                    setAsInvalid={setAsInvalid} setAsValid={setAsValid}
-                    />
+                    <InlinedRow>
+                        <Checkbox checked={toDateEnabled} onChange={toggleToDate}/>
+                        <DateInputField id={"filter-" + index + "-to-date"}
+                                        value={toDate}
+                                        setValue={setToDate}
+                                        placeholder={options.before[0]}
+                                        setAsInvalid={setAsInvalid} setAsValid={setAsValid}
+                                        disabled={!toDateEnabled}
+                        />
+                    </InlinedRow>
                 </Col>
                 <Col md={2} sm={6}>
                     <TimeInputField id={"filter-" + index + "-to-time"}
@@ -66,6 +100,7 @@ const BetweenDatesFilter = ({index, label, filter, removeFilter, setFilterOption
                                     setValue={setToTime}
                                     placeholder={options.before[1]}
                                     setAsInvalid={setAsInvalid} setAsValid={setAsValid}
+                                    disabled={!toDateEnabled}
                     />
                 </Col>
                 <Col md={"auto"} sm={12} className={"my-1 my-md-auto"}>

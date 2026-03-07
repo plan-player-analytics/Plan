@@ -49,6 +49,13 @@ public class TabInformation {
         );
     }
 
+    public TabInformation(String tabName, Icon icon, List<ElementOrder> elementOrder, int tabPriority) {
+        this.tabName = tabName;
+        this.icon = icon;
+        this.elementOrder = elementOrder;
+        this.tabPriority = tabPriority;
+    }
+
     private static List<ElementOrder> createElementOrderList(ElementOrder[] elementOrder) {
         List<ElementOrder> list = new ArrayList<>();
         if (elementOrder != null) {
@@ -57,19 +64,12 @@ public class TabInformation {
         return list;
     }
 
-    public TabInformation(String tabName, Icon icon, List<ElementOrder> elementOrder, int tabPriority) {
-        this.tabName = tabName;
-        this.icon = icon;
-        this.elementOrder = elementOrder;
-        this.tabPriority = tabPriority;
+    public static Icon defaultIcon() {
+        return new Icon(Family.SOLID, "circle", Color.NONE);
     }
 
     public String getTabName() {
         return StringUtils.truncate(tabName, 50);
-    }
-
-    public static Icon defaultIcon() {
-        return new Icon(Family.SOLID, "circle", Color.NONE);
     }
 
     public Icon getTabIcon() {
@@ -112,6 +112,6 @@ public class TabInformation {
     }
 
     public String getSerializedTabElementOrder() {
-        return new TextStringBuilder().appendWithSeparators(getTabElementOrder(), ",").build();
+        return new TextStringBuilder().appendWithSeparators(getTabElementOrder(), ",").get();
     }
 }

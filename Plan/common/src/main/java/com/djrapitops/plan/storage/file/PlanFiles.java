@@ -21,7 +21,7 @@ import com.djrapitops.plan.delivery.web.AssetVersions;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import dagger.Lazy;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
@@ -61,6 +61,12 @@ public class PlanFiles implements SubSystem {
         this.getResourceStream = getResourceStream;
         this.assetVersions = assetVersions;
         this.configFile = getFileFromPluginFolder("config.yml");
+    }
+
+    public static OpenOption[] replaceIfExists() {
+        return new OpenOption[]{
+                StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE
+        };
     }
 
     public File getDataFolder() {
@@ -132,7 +138,7 @@ public class PlanFiles implements SubSystem {
 
     @NotNull
     protected Long getLastModifiedForJarResource(@Untrusted String resourceName) {
-        String webResourceName = StringUtils.remove(resourceName, "web/");
+        String webResourceName = Strings.CS.remove(resourceName, "web/");
         return assetVersions.get().getAssetVersion(webResourceName)
                 .orElseGet(System::currentTimeMillis);
     }
@@ -165,12 +171,6 @@ public class PlanFiles implements SubSystem {
 
     public Path getJSONStorageDirectory() {
         return getDataDirectory().resolve("cached_json");
-    }
-
-    public static OpenOption[] replaceIfExists() {
-        return new OpenOption[]{
-                StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE
-        };
     }
 
     public Path getThemeDirectory() {

@@ -9,6 +9,8 @@ command:
             name: "${code}"
         dbBackup:
             description: "Type de la base de données pour sauvegarder. Si non spécifié, la base de données actuelle est utilisée."
+        dbMergeStrategyDelete: "Delete conflicting server from destination database"
+        dbMergeStrategySwap: "Swap UUID of inserted conflicting server in destination database"
         dbRestore:
             description: "Type de la base de données pour restaurer. Si non spécifié, la base de données actuelle est utilisée."
         dbTypeHotswap:
@@ -46,12 +48,34 @@ command:
         cancelNoUnregister: "Annulé. '${0}' n'était pas enregistré"
         confirm: "Confirmer : "
         dbClear: "Vous êtes sur le point de supprimer toutes les données de Plan de ${0}"
+        dbMerge: "You are about to merge data in ${0} to data in ${1}"
         dbOverwrite: "Vous êtes sur le point d'écraser des données dans de Plan ${0} avec les données de ${1}"
         dbRemovePlayer: "Vous êtes sur le point de supprimer les données de ${0} depuis ${1}"
         deny: "Annuler"
         expired: "La confirmation a expiré, utilisez à nouveau la commande"
         unregister: "Vous êtes sur le point de désenregistrer '${0}' lié à ${1}"
     database:
+        copy:
+            abort: "Operation was aborted."
+            allDataExisted: "  all the data already existed."
+            clearFinish: "Cleared destination database."
+            clearStart: "Clearing destination database.."
+            conflict:
+                delete: "Deleting conflicting server ${0} from destination before insert"
+                info1: "Server with uuid ${0} already exists. Choose a strategy to deal with it."
+                info2: "  --on-conflict-swap - swaps the server uuid for inserted server (Use if multiple servers shared uuid at some point)"
+                info3: "  --on-conflict-delete - deletes the server from destination db (Use when previous merge failed)"
+                swap: "Swapping server uuid ${0} with ${1}"
+            destinationState: "Destination database is ${0}, could not begin operation"
+            error: "Ran into an issue, error was logged to a file, error: ${0}"
+            list:
+                row: "   ${0} - ${1} rows"
+                titleDestination: "Data in existing database:"
+                titleSource: "Data to be copied:"
+            progress: "  ${0}: ${1}/${2} (${3}%) copied."
+            sourceState: "Source database is ${0}, could not begin operation"
+            table: "Copying ${0}.."
+            trackPlayerStart: "Database copy started by player ${0} - process identifier: ${1}"
         creatingBackup: "Création d'un fichier de sauvegarde '${0}.db' avec les contenus de ${1}"
         failDbNotOpen: "§cLa base de données est : ${0} - Merci de réessayer plus tard."
         manage:
@@ -65,6 +89,7 @@ command:
             failNoServer: "Aucun serveur trouvé avec les paramètres suivants."
             failSameDB: "> §cNe peut pas opérer sur et depuis la même base de données !"
             failSameServer: "Impossible de marquer ce serveur comme désinstallé (vous y êtes)."
+            failTooManyStrategies: "Only one strategy can be selected to deal with merge conflict."
             hotswap: "§eN'oubliez pas de passer à la nouvelle base de données (/plan db hotswap ${0}) & de recharger Plan."
             importers: "Importateurs :"
             preparing: "Préparation..."
@@ -135,6 +160,9 @@ command:
         dbHotswap:
             description: "Changer rapidement de base de données"
             inDepth: "Recharge le plugin avec l'autre base de données et modifie la configuration en conséquence."
+        dbMerge:
+            description: "Merge data of two databases"
+            inDepth: "Merges contents in one database with the contents in another. Source data will be inserted to destination database."
         dbMove:
             description: "Déplacer des données entre bases de données"
             inDepth: "Écrase le contenu de l'autre base de données avec le contenu d'une autre."
@@ -832,6 +860,7 @@ html:
         filter:
             activity:
                 text: "sont dans des Groupes d'Activité"
+            anyServer: "any server"
             banStatus:
                 name: "Statut de Bannissement"
             banned: "Banni(e)"
@@ -841,6 +870,8 @@ html:
                 allPlayers: "Tous les Joueurs"
                 and: "et"
                 start: "des Joueurs qui"
+            hasPlayedOnDate:
+                name: "Has played on date"
             hasPlayedOnServers:
                 name: "A joué sur l'un des serveurs"
                 text: "A joué sur au moins un de"
@@ -849,21 +880,38 @@ html:
                 text: "avoir une valeur booléenne de plugin"
             joinAddress:
                 text: "ont rejoint avec l'adresse"
+            lastSeenAfter:
+                text: "Last seen after"
+            lastSeenBefore:
+                text: "Last seen before"
+            lastSeenBetween:
+                text: "Last seen between"
             nonOperators: "Non Opérateur(trice)"
             notBanned: "Non Banni(e)"
+            onDate: "on"
+            onServer: "on server(s)"
             operatorStatus:
                 name: "Statut d'Opérateur"
             operators: "Opérateurs"
+            playedAfter:
+                text: "Played after"
+            playedBefore:
+                text: "Played before"
             playedBetween:
                 text: "Joués entre"
             pluginGroup:
                 name: "Groupe : "
                 text: "sont dans le groupe {group} de {{plugin}}"
+            registeredAfter:
+                text: "Registered after"
+            registeredBefore:
+                text: "Registered before"
             registeredBetween:
                 text: "Enregistrés entre"
             skipped: "Sautée"
             title:
                 activityGroup: "Groupe d'Activité actuel"
+                activityGroupOnDate: "Activity group on date"
             view: "  Vue :"
         filters:
             add: "Ajouter un filtre."

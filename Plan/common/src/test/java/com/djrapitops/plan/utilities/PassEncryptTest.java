@@ -34,7 +34,7 @@ class PassEncryptTest {
     private static final Map<String, String> PASSWORD_MAP = new HashMap<>();
 
     @BeforeAll
-    static void setUpPasswords() throws Exception {
+    static void setUpPasswords() {
         for (int i = 0; i < RandomData.randomInt(1, 10); i++) {
             String password = RandomData.randomString(RandomData.randomInt(5, 16));
             PASSWORD_MAP.put(password, PassEncryptUtil.createHash(password));
@@ -42,7 +42,7 @@ class PassEncryptTest {
     }
 
     @Test
-    void testVerification() throws Exception {
+    void testVerification() {
         for (Map.Entry<String, String> entry : PASSWORD_MAP.entrySet()) {
             String password = entry.getKey();
             String hash = entry.getValue();

@@ -23,6 +23,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.queries.RowExtractors;
+import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.tables.KillsTable;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
@@ -282,5 +283,14 @@ public class KillQueries {
                 ORDER_BY + "kills DESC LIMIT ?";
 
         return db -> db.queryList(sql, RowExtractors.getString(KillsTable.WEAPON), playerUUID, after, before, limit);
+    }
+
+    public static Query<List<KillsTable.Row>> fetchRows(int currentId, int rowLimit) {
+        String sql = Select.all(KillsTable.TABLE_NAME)
+                .where(KillsTable.ID + '>' + currentId)
+                .orderBy(KillsTable.ID)
+                .limit(rowLimit)
+                .toString();
+        return db -> db.queryList(sql, KillsTable.Row::extract);
     }
 }

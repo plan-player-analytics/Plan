@@ -23,6 +23,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 
 import java.sql.PreparedStatement;
@@ -214,4 +215,23 @@ public class WorldTimesQueries {
             }
         };
     }
+
+    public static Query<List<WorldTimesTable.Row>> fetchRows(int currentId, int rowLimit) {
+        String sql = Select.all(WorldTimesTable.TABLE_NAME)
+                .where(WorldTimesTable.ID + '>' + currentId)
+                .orderBy(WorldTimesTable.ID)
+                .limit(rowLimit)
+                .toString();
+        return db -> db.queryList(sql, WorldTimesTable.Row::extract);
+    }
+
+    public static Query<List<WorldTable.Row>> fetchWorldRows(int currentId, int rowLimit) {
+        String sql = Select.all(WorldTable.TABLE_NAME)
+                .where(WorldTable.ID + '>' + currentId)
+                .orderBy(WorldTable.ID)
+                .limit(rowLimit)
+                .toString();
+        return db -> db.queryList(sql, WorldTable.Row::extract);
+    }
+
 }

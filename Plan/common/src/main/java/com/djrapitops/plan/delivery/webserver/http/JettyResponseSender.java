@@ -21,7 +21,7 @@ import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.webserver.Addresses;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.eclipse.jetty.http.HttpHeader;
 
 import java.io.ByteArrayInputStream;
@@ -60,7 +60,7 @@ public class JettyResponseSender {
     private boolean canGzip() {
         String method = servletRequest.getMethod();
         String mimeType = response.getHeaders().get(HttpHeader.CONTENT_TYPE.asString());
-        return "GET".equals(method) && StringUtils.containsAny(mimeType, MimeType.HTML, MimeType.CSS, MimeType.JS, MimeType.JSON, "text/plain");
+        return "GET".equals(method) && Strings.CS.containsAny(mimeType, MimeType.HTML, MimeType.CSS, MimeType.JS, MimeType.JSON, "text/plain");
     }
 
     public void sendHeadResponse() throws IOException {

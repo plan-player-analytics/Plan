@@ -16,10 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries.objects;
 
-import com.djrapitops.plan.delivery.domain.DateHolder;
-import com.djrapitops.plan.delivery.domain.PlayerName;
-import com.djrapitops.plan.delivery.domain.ServerIdentifier;
-import com.djrapitops.plan.delivery.domain.ServerName;
+import com.djrapitops.plan.delivery.domain.*;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.gathering.domain.event.JoinAddress;
@@ -28,11 +25,13 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plan.utilities.java.Maps;
 import org.apache.commons.text.TextStringBuilder;
+import org.jspecify.annotations.NonNull;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -48,10 +47,6 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  * @author AuroraLS3
  */
 public class SessionQueries {
-
-    private SessionQueries() {
-        /* Static method class */
-    }
 
     private static final String SELECT_SESSIONS_STATEMENT = SELECT +
             "s." + SessionsTable.ID + ',' +
@@ -89,8 +84,11 @@ public class SessionQueries {
             LEFT_JOIN + UsersTable.TABLE_NAME + " k on k." + UsersTable.USER_UUID + '=' + KillsTable.KILLER_UUID +
             INNER_JOIN + WorldTimesTable.TABLE_NAME + " ON s." + SessionsTable.ID + '=' + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SESSION_ID +
             INNER_JOIN + WorldTable.TABLE_NAME + " ON " + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.WORLD_ID + '=' + WorldTable.TABLE_NAME + '.' + WorldTable.ID;
-
     private static final String ORDER_BY_SESSION_START_DESC = ORDER_BY + SessionsTable.SESSION_START + " DESC";
+
+    private SessionQueries() {
+        /* Static method class */
+    }
 
     /**
      * Query the database for Session data with kill, death or world data.
@@ -493,69 +491,83 @@ public class SessionQueries {
     }
 
     public static Query<Long> playtime(long after, long before, ServerUUID serverUUID) {
-        String sql = SELECT + "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
-                FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
-                AND + SessionsTable.SESSION_END + ">=?" +
-                AND + SessionsTable.SESSION_START + "<=?";
-        return new QueryStatement<>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-                statement.setLong(2, after);
-                statement.setLong(3, before);
-            }
+        return db -> {
+            String sql = SELECT +
+                    playtimeColumn(db.getSql(), after, before) +
+                    FROM + SessionsTable.TABLE_NAME +
+                    WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                    AND + SessionsTable.SESSION_END + ">=?" +
+                    AND + SessionsTable.SESSION_START + "<=?";
+            return db.query(new QueryStatement<>(sql) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setString(1, serverUUID.toString());
+                    statement.setLong(2, after);
+                    statement.setLong(3, before);
+                }
 
-            @Override
-            public Long processResults(ResultSet set) throws SQLException {
-                return set.next() ? set.getLong("playtime") : 0L;
-            }
+                @Override
+                public Long processResults(ResultSet set) throws SQLException {
+                    return set.next() ? set.getLong("playtime") : 0L;
+                }
+            });
         };
     }
 
-    public static Query<Map<ServerUUID, Long>> playtimeOfPlayer(long after, long before, UUID playerUUID) {
-        String sql = SELECT + ServerTable.SERVER_UUID + ",SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
-                FROM + SessionsTable.TABLE_NAME +
-                INNER_JOIN + ServerTable.TABLE_NAME + " se on se." + ServerTable.ID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_ID +
-                WHERE + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
-                AND + SessionsTable.SESSION_END + ">=?" +
-                AND + SessionsTable.SESSION_START + "<=?" +
-                GROUP_BY + SessionsTable.SERVER_ID;
-        return new QueryStatement<>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, playerUUID.toString());
-                statement.setLong(2, after);
-                statement.setLong(3, before);
-            }
+    private static @NonNull String playtimeColumn(Sql sql, long after, long before) {
+        return "SUM(" + sql.least(SessionsTable.SESSION_END + "," + before) + "-" + sql.greatest(SessionsTable.SESSION_START + "," + after) + ") as playtime";
+    }
 
-            @Override
-            public Map<ServerUUID, Long> processResults(ResultSet set) throws SQLException {
-                Map<ServerUUID, Long> playtimeOfPlayer = new HashMap<>();
-                while (set.next()) {
-                    playtimeOfPlayer.put(ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)), set.getLong("playtime"));
+    public static Query<Map<ServerUUID, Long>> playtimeOfPlayer(long after, long before, UUID playerUUID) {
+        return db -> {
+            String sql = SELECT +
+                    ServerTable.SERVER_UUID + "," +
+                    playtimeColumn(db.getSql(), after, before) +
+                    FROM + SessionsTable.TABLE_NAME +
+                    INNER_JOIN + ServerTable.TABLE_NAME + " se on se." + ServerTable.ID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_ID +
+                    WHERE + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
+                    AND + SessionsTable.SESSION_END + ">=?" +
+                    AND + SessionsTable.SESSION_START + "<=?" +
+                    GROUP_BY + SessionsTable.SERVER_ID + ",se." + ServerTable.SERVER_UUID;
+            return db.query(new QueryStatement<>(sql) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setString(1, playerUUID.toString());
+                    statement.setLong(2, after);
+                    statement.setLong(3, before);
                 }
-                return playtimeOfPlayer;
-            }
+
+                @Override
+                public Map<ServerUUID, Long> processResults(ResultSet set) throws SQLException {
+                    Map<ServerUUID, Long> playtimeOfPlayer = new HashMap<>();
+                    while (set.next()) {
+                        playtimeOfPlayer.put(ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID)), set.getLong("playtime"));
+                    }
+                    return playtimeOfPlayer;
+                }
+            });
         };
     }
 
     public static Query<Long> playtime(long after, long before) {
-        String sql = SELECT + "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
-                FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.SESSION_END + ">=?" +
-                AND + SessionsTable.SESSION_START + "<=?";
-        return new QueryStatement<>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, after);
-                statement.setLong(2, before);
-            }
+        return db -> {
+            String sql = SELECT +
+                    playtimeColumn(db.getSql(), after, before) +
+                    FROM + SessionsTable.TABLE_NAME +
+                    WHERE + SessionsTable.SESSION_END + ">=?" +
+                    AND + SessionsTable.SESSION_START + "<=?";
+            return db.query(new QueryStatement<>(sql) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, after);
+                    statement.setLong(2, before);
+                }
 
-            @Override
-            public Long processResults(ResultSet set) throws SQLException {
-                return set.next() ? set.getLong("playtime") : 0L;
-            }
+                @Override
+                public Long processResults(ResultSet set) throws SQLException {
+                    return set.next() ? set.getLong("playtime") : 0L;
+                }
+            });
         };
     }
 
@@ -674,18 +686,18 @@ public class SessionQueries {
     }
 
     public static Query<Long> averagePlaytimePerPlayer(long after, long before, ServerUUID serverUUID) {
-        return database -> {
+        return db -> {
             String selectPlaytimePerPlayer = SELECT +
                     SessionsTable.USER_ID + "," +
-                    "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
+                    playtimeColumn(db.getSql(), after, before) +
                     FROM + SessionsTable.TABLE_NAME +
-                    WHERE + SessionsTable.SESSION_END + "<=?" +
-                    AND + SessionsTable.SESSION_START + ">=?" +
+                    WHERE + SessionsTable.SESSION_START + "<=?" +
+                    AND + SessionsTable.SESSION_END + ">=?" +
                     AND + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                     GROUP_BY + SessionsTable.USER_ID;
             String selectAverage = SELECT + "AVG(playtime) as average" + FROM + '(' + selectPlaytimePerPlayer + ") q1";
 
-            return database.query(new QueryStatement<Long>(selectAverage, 100) {
+            return db.query(new QueryStatement<Long>(selectAverage, 100) {
                 @Override
                 public void prepare(PreparedStatement statement) throws SQLException {
                     statement.setLong(1, before);
@@ -709,17 +721,17 @@ public class SessionQueries {
      * @return Average ms played / player, calculated with grouped sums from sessions table.
      */
     public static Query<Long> averagePlaytimePerPlayer(long after, long before) {
-        return database -> {
+        return db -> {
             String selectPlaytimePerPlayer = SELECT +
                     SessionsTable.USER_ID + "," +
-                    "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
+                    playtimeColumn(db.getSql(), after, before) +
                     FROM + SessionsTable.TABLE_NAME +
-                    WHERE + SessionsTable.SESSION_END + "<=?" +
-                    AND + SessionsTable.SESSION_START + ">=?" +
+                    WHERE + SessionsTable.SESSION_START + "<=?" +
+                    AND + SessionsTable.SESSION_END + ">=?" +
                     GROUP_BY + SessionsTable.USER_ID;
             String selectAverage = SELECT + "AVG(playtime) as average" + FROM + '(' + selectPlaytimePerPlayer + ") q1";
 
-            return database.query(new QueryStatement<Long>(selectAverage, 100) {
+            return db.query(new QueryStatement<Long>(selectAverage, 100) {
                 @Override
                 public void prepare(PreparedStatement statement) throws SQLException {
                     statement.setLong(1, before);
@@ -740,8 +752,8 @@ public class SessionQueries {
                     SessionsTable.USER_ID + "," +
                     "SUM(" + SessionsTable.AFK_TIME + ") as afk" +
                     FROM + SessionsTable.TABLE_NAME +
-                    WHERE + SessionsTable.SESSION_END + "<=?" +
-                    AND + SessionsTable.SESSION_START + ">=?" +
+                    WHERE + SessionsTable.SESSION_START + "<=?" +
+                    AND + SessionsTable.SESSION_END + ">=?" +
                     AND + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                     GROUP_BY + SessionsTable.USER_ID;
             String selectAverage = SELECT + "AVG(afk) as average" + FROM + '(' + selectAfkPerPlayer + ") q1";
@@ -775,8 +787,8 @@ public class SessionQueries {
                     SessionsTable.USER_ID + "," +
                     "SUM(" + SessionsTable.AFK_TIME + ") as afk" +
                     FROM + SessionsTable.TABLE_NAME +
-                    WHERE + SessionsTable.SESSION_END + "<=?" +
-                    AND + SessionsTable.SESSION_START + ">=?" +
+                    WHERE + SessionsTable.SESSION_START + "<=?" +
+                    AND + SessionsTable.SESSION_END + ">=?" +
                     GROUP_BY + SessionsTable.USER_ID;
             String selectAverage = SELECT + "AVG(afk) as average" + FROM + '(' + selectAfkPerPlayer + ") q1";
 
@@ -836,35 +848,37 @@ public class SessionQueries {
     }
 
     public static Query<Map<String, Long>> playtimePerServer(long after, long before) {
-        String sql = SELECT +
-                "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime," +
-                "s." + ServerTable.ID + ',' +
-                "s." + ServerTable.NAME +
-                FROM + SessionsTable.TABLE_NAME +
-                INNER_JOIN + ServerTable.TABLE_NAME + " s on s." + ServerTable.ID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_ID +
-                WHERE + SessionsTable.SESSION_END + ">=?" +
-                AND + SessionsTable.SESSION_START + "<=?" +
-                GROUP_BY + "s." + ServerTable.ID + ",s." + ServerTable.NAME;
-        return new QueryStatement<>(sql, 100) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, after);
-                statement.setLong(2, before);
-            }
-
-            @Override
-            public Map<String, Long> processResults(ResultSet set) throws SQLException {
-                Map<String, Long> playtimePerServer = new HashMap<>();
-                while (set.next()) {
-                    String name = Server.getIdentifiableName(
-                            set.getString(ServerTable.NAME),
-                            set.getInt(ServerTable.ID),
-                            false
-                    );
-                    playtimePerServer.put(name, set.getLong("playtime"));
+        return db -> {
+            String sql = SELECT +
+                    playtimeColumn(db.getSql(), after, before) + "," +
+                    "s." + ServerTable.ID + ',' +
+                    "s." + ServerTable.NAME +
+                    FROM + SessionsTable.TABLE_NAME +
+                    INNER_JOIN + ServerTable.TABLE_NAME + " s on s." + ServerTable.ID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.SERVER_ID +
+                    WHERE + SessionsTable.SESSION_END + ">=?" +
+                    AND + SessionsTable.SESSION_START + "<=?" +
+                    GROUP_BY + "s." + ServerTable.ID + ",s." + ServerTable.NAME;
+            return db.query(new QueryStatement<>(sql, 100) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, after);
+                    statement.setLong(2, before);
                 }
-                return playtimePerServer;
-            }
+
+                @Override
+                public Map<String, Long> processResults(ResultSet set) throws SQLException {
+                    Map<String, Long> playtimePerServer = new HashMap<>();
+                    while (set.next()) {
+                        String name = Server.getIdentifiableName(
+                                set.getString(ServerTable.NAME),
+                                set.getInt(ServerTable.ID),
+                                false
+                        );
+                        playtimePerServer.put(name, set.getLong("playtime"));
+                    }
+                    return playtimePerServer;
+                }
+            });
         };
     }
 
@@ -896,35 +910,43 @@ public class SessionQueries {
     }
 
     public static Query<Long> activePlaytime(long after, long before, ServerUUID serverUUID) {
-        String sql = SELECT + "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME +
-                ") as playtime" +
-                FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
-                AND + SessionsTable.SESSION_END + ">=?" +
-                AND + SessionsTable.SESSION_START + "<=?";
-        return new QueryStatement<>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-                statement.setLong(2, after);
-                statement.setLong(3, before);
-            }
+        return db -> {
+            String sql = SELECT +
+                    activePlaytimeColumn(db.getSql(), after, before) +
+                    FROM + SessionsTable.TABLE_NAME +
+                    WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                    AND + SessionsTable.SESSION_END + ">=?" +
+                    AND + SessionsTable.SESSION_START + "<=?";
+            return db.query(new QueryStatement<>(sql) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setString(1, serverUUID.toString());
+                    statement.setLong(2, after);
+                    statement.setLong(3, before);
+                }
 
-            @Override
-            public Long processResults(ResultSet set) throws SQLException {
-                return set.next() ? set.getLong("playtime") : 0L;
-            }
+                @Override
+                public Long processResults(ResultSet set) throws SQLException {
+                    return set.next() ? set.getLong("active_playtime") : 0L;
+                }
+            });
         };
     }
 
+    private static @NonNull String activePlaytimeColumn(Sql sql, long after, long before) {
+        return "SUM(" + sql.least(SessionsTable.SESSION_END + "," + before) + "-" + sql.greatest(SessionsTable.SESSION_START + "," + after) + "-" + SessionsTable.AFK_TIME + ") as active_playtime";
+    }
+
     public static Query<Long> activePlaytime(long after, long before) {
-        String sql = SELECT + "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME +
-                ") as playtime" +
-                FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.SESSION_END + ">=?" +
-                AND + SessionsTable.SESSION_START + "<=?";
-        return db -> db.queryOptional(sql, set -> set.getLong("playtime"), after, before)
-                .orElse(0L);
+        return db -> {
+            String sql = SELECT +
+                    activePlaytimeColumn(db.getSql(), after, before) +
+                    FROM + SessionsTable.TABLE_NAME +
+                    WHERE + SessionsTable.SESSION_END + ">=?" +
+                    AND + SessionsTable.SESSION_START + "<=?";
+            return db.queryOptional(sql, set -> set.getLong("active_playtime"), after, before)
+                    .orElse(0L);
+        };
     }
 
     public static Query<Set<Integer>> userIdsOfPlayedBetween(long after, long before, List<ServerUUID> serverUUIDs) {
@@ -932,9 +954,8 @@ public class SessionQueries {
                 FROM + ServerTable.TABLE_NAME +
                 WHERE + ServerTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')";
 
-        String sql = SELECT + DISTINCT + "u." + UsersTable.ID +
+        String sql = SELECT + DISTINCT + SessionsTable.USER_ID +
                 FROM + SessionsTable.TABLE_NAME +
-                INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + '=' + SessionsTable.USER_ID +
                 WHERE + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?" +
                 (serverUUIDs.isEmpty() ? "" : AND + SessionsTable.SERVER_ID + " IN (" + selectServerIds + ")");
@@ -949,7 +970,7 @@ public class SessionQueries {
             public Set<Integer> processResults(ResultSet set) throws SQLException {
                 Set<Integer> userIds = new HashSet<>();
                 while (set.next()) {
-                    userIds.add(set.getInt(UsersTable.ID));
+                    userIds.add(set.getInt(SessionsTable.USER_ID));
                 }
                 return userIds;
             }
@@ -962,45 +983,47 @@ public class SessionQueries {
                 FROM + ServerTable.TABLE_NAME +
                 WHERE + ServerTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')";
 
-        String selectAggregates = SELECT +
-                "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime," +
-                "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + '-' + SessionsTable.AFK_TIME + ") as active_playtime," +
-                "COUNT(1) as session_count" +
-                FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.SESSION_START + ">?" +
-                AND + SessionsTable.SESSION_END + "<?" +
-                AND + SessionsTable.USER_ID + uuidsInSet +
-                (serverUUIDs.isEmpty() ? "" : AND + SessionsTable.SERVER_ID + " IN (" + selectServerIds + ")");
+        return db -> {
+            String selectAggregates = SELECT +
+                    playtimeColumn(db.getSql(), after, before) + ',' +
+                    activePlaytimeColumn(db.getSql(), after, before) + ',' +
+                    "COUNT(1) as session_count" +
+                    FROM + SessionsTable.TABLE_NAME +
+                    WHERE + SessionsTable.SESSION_END + ">?" +
+                    AND + SessionsTable.SESSION_START + "<?" +
+                    AND + SessionsTable.USER_ID + uuidsInSet +
+                    (serverUUIDs.isEmpty() ? "" : AND + SessionsTable.SERVER_ID + " IN (" + selectServerIds + ")");
 
-        return new QueryStatement<>(selectAggregates) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, after);
-                statement.setLong(2, before);
-            }
-
-            @Override
-            public Map<String, Long> processResults(ResultSet set) throws SQLException {
-                if (set.next()) {
-                    long sessionCount = set.getLong("session_count");
-                    long playtime = set.getLong("playtime");
-                    long activePlaytime = set.getLong("active_playtime");
-                    int playerCount = userIds.size();
-                    return Maps.builder(String.class, Long.class)
-                            .put("total_playtime", playtime)
-                            .put("average_playtime", playerCount != 0 ? playtime / playerCount : -1L)
-                            .put("total_afk_playtime", playtime - activePlaytime)
-                            .put("average_afk_playtime", playerCount != 0 ? (playtime - activePlaytime) / playerCount : -1L)
-                            .put("total_active_playtime", activePlaytime)
-                            .put("average_active_playtime", playerCount != 0 ? activePlaytime / playerCount : -1L)
-                            .put("total_sessions", sessionCount)
-                            .put("average_sessions", playerCount != 0 ? sessionCount / playerCount : -1L)
-                            .put("average_session_length", sessionCount != 0 ? playtime / sessionCount : -1L)
-                            .build();
-                } else {
-                    return Collections.emptyMap();
+            return db.query(new QueryStatement<>(selectAggregates) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, after);
+                    statement.setLong(2, before);
                 }
-            }
+
+                @Override
+                public Map<String, Long> processResults(ResultSet set) throws SQLException {
+                    if (set.next()) {
+                        long sessionCount = set.getLong("session_count");
+                        long playtime = set.getLong("playtime");
+                        long activePlaytime = set.getLong("active_playtime");
+                        int playerCount = userIds.size();
+                        return Maps.builder(String.class, Long.class)
+                                .put("total_playtime", playtime)
+                                .put("average_playtime", playerCount != 0 ? playtime / playerCount : -1L)
+                                .put("total_afk_playtime", playtime - activePlaytime)
+                                .put("average_afk_playtime", playerCount != 0 ? (playtime - activePlaytime) / playerCount : -1L)
+                                .put("total_active_playtime", activePlaytime)
+                                .put("average_active_playtime", playerCount != 0 ? activePlaytime / playerCount : -1L)
+                                .put("total_sessions", sessionCount)
+                                .put("average_sessions", playerCount != 0 ? sessionCount / playerCount : -1L)
+                                .put("average_session_length", sessionCount != 0 ? playtime / sessionCount : -1L)
+                                .build();
+                    } else {
+                        return Collections.emptyMap();
+                    }
+                }
+            });
         };
     }
 
@@ -1025,5 +1048,73 @@ public class SessionQueries {
                 UUID.fromString(set.getString(UsersTable.USER_UUID)),
                 set.getLong("last_seen")
         ), serverUUID);
+    }
+
+    public static Query<List<SessionsTable.Row>> fetchRows(int currentId, int rowLimit) {
+        String sql = Select.all(SessionsTable.TABLE_NAME)
+                .where(SessionsTable.ID + '>' + currentId)
+                .orderBy(SessionsTable.ID)
+                .limit(rowLimit)
+                .toString();
+        return db -> db.queryList(sql, SessionsTable.Row::extract);
+    }
+
+    public static Query<List<PlayerIdentifier>> playersOnlineOn(long date) {
+        String sql = SELECT + DISTINCT + UsersTable.USER_UUID + ',' + UsersTable.USER_NAME +
+                FROM + SessionsTable.TABLE_NAME + " s" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u ON u." + UsersTable.ID + "=s." + SessionsTable.USER_ID +
+                WHERE + SessionsTable.SESSION_START + "<?" +
+                AND + SessionsTable.SESSION_END + ">?";
+        return db -> db.queryList(sql,
+                row -> new PlayerIdentifier(
+                        UUID.fromString(row.getString(UsersTable.USER_UUID)),
+                        row.getString(UsersTable.USER_NAME)
+                ), date, date);
+    }
+
+    public static Query<List<PlayerIdentifier>> playersOnlineOn(long date, ServerUUID serverUUID) {
+        String sql = SELECT + DISTINCT + UsersTable.USER_UUID + ',' + UsersTable.USER_NAME +
+                FROM + SessionsTable.TABLE_NAME + " s" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u ON u." + UsersTable.ID + "=s." + SessionsTable.USER_ID +
+                WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                AND + SessionsTable.SESSION_START + "<?" +
+                AND + SessionsTable.SESSION_END + ">?";
+        return db -> db.queryList(sql,
+                row -> new PlayerIdentifier(
+                        UUID.fromString(row.getString(UsersTable.USER_UUID)),
+                        row.getString(UsersTable.USER_NAME)
+                ), serverUUID, date, date);
+    }
+
+    public static Query<Set<Integer>> userIdsOfLastSeenBetween(long after, long before, List<ServerUUID> serverUUIDs) {
+        String selectServerIds = SELECT + ServerTable.ID +
+                FROM + ServerTable.TABLE_NAME +
+                WHERE + ServerTable.SERVER_UUID + " IN ('" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','") + "')";
+
+        String selectLastSeen = SELECT + SessionsTable.USER_ID + ",MAX(" + SessionsTable.SESSION_END + ") as last_seen" +
+                FROM + SessionsTable.TABLE_NAME + " s" +
+                (serverUUIDs.isEmpty() ? "" : WHERE + SessionsTable.SERVER_ID + " IN (" + selectServerIds + ")") +
+                GROUP_BY + SessionsTable.USER_ID;
+
+        String sql = SELECT + SessionsTable.USER_ID +
+                FROM + '(' + selectLastSeen + ") q1" +
+                WHERE + "last_seen>=?" +
+                AND + "last_seen<=?";
+        return new QueryStatement<>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, after);
+                statement.setLong(2, before);
+            }
+
+            @Override
+            public Set<Integer> processResults(ResultSet set) throws SQLException {
+                Set<Integer> userIds = new HashSet<>();
+                while (set.next()) {
+                    userIds.add(set.getInt(SessionsTable.USER_ID));
+                }
+                return userIds;
+            }
+        };
     }
 }

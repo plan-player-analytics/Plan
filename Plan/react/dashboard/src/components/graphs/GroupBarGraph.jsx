@@ -1,21 +1,17 @@
 import React, {useEffect} from 'react';
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../hooks/themeHook";
-import {withReducedSaturation} from "../../util/colors";
 import Highcharts from "highcharts/esm/highcharts";
 import "highcharts/esm/modules/accessibility";
 import "highcharts/esm/modules/no-data-to-display"
 
 const GroupBarGraph = ({id, groups, colors, horizontal, name}) => {
     const {t} = useTranslation();
-    const {nightModeEnabled, graphTheming} = useTheme();
+    const {graphTheming} = useTheme();
 
     useEffect(() => {
-        const reduceColors = (colorsToReduce) => colorsToReduce.map(color => withReducedSaturation(color));
-
         function getColors() {
-            const actualColors = colors ? colors : groups.map(group => group.color);
-            return nightModeEnabled ? reduceColors(actualColors) : actualColors;
+            return colors ? colors : groups.map(group => group.color);
         }
 
         const bars = groups.map(group => group.y);
@@ -51,7 +47,7 @@ const GroupBarGraph = ({id, groups, colors, horizontal, name}) => {
             },
             series: [barSeries]
         })
-    }, [id, groups, colors, horizontal, name, graphTheming, nightModeEnabled, t]);
+    }, [id, groups, colors, horizontal, name, graphTheming, t]);
 
     return (<div id={id} className="chart-area"/>);
 };

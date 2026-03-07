@@ -40,7 +40,6 @@ import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.settings.theme.Theme;
-import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.PlayerContainerQuery;
@@ -156,9 +155,9 @@ public class PlayerJSONCreator {
                 .put("avg_ping_series", pingGraph.getAvgGraph().getPointArrays())
                 .put("max_ping_series", pingGraph.getMaxGraph().getPointArrays())
                 .put("colors", Maps.builder(String.class, String.class)
-                        .put("min", ThemeVal.GRAPH_MIN_PING.getDefaultValue())
-                        .put("avg", ThemeVal.GRAPH_AVG_PING.getDefaultValue())
-                        .put("max", ThemeVal.GRAPH_MAX_PING.getDefaultValue())
+                        .put("min", "#ffd54f")
+                        .put("avg", "#ffc107")
+                        .put("max", "#ffa000")
                         .build())
                 .build();
     }
@@ -230,9 +229,9 @@ public class PlayerJSONCreator {
         int bestPing = ping.min();
 
         String unavailable = GenericLang.UNAVAILABLE.getKey();
-        info.put("average_ping", averagePing != -1.0 ? decimals.apply(averagePing) + " ms" : unavailable);
-        info.put("worst_ping", worstPing != -1.0 ? worstPing + " ms" : unavailable);
-        info.put("best_ping", bestPing != -1.0 ? bestPing + " ms" : unavailable);
+        info.put("average_ping", averagePing != -1.0 ? averagePing : unavailable);
+        info.put("worst_ping", worstPing != -1.0 ? worstPing : unavailable);
+        info.put("best_ping", bestPing != -1.0 ? bestPing : unavailable);
         info.put("registered", player.getValue(PlayerKeys.REGISTERED).map(Object.class::cast).orElse("-"));
         info.put("last_seen", player.getValue(PlayerKeys.LAST_SEEN).map(Object.class::cast).orElse("-"));
         info.put("last_seen_raw_value", player.getValue(PlayerKeys.LAST_SEEN).orElse(0L));

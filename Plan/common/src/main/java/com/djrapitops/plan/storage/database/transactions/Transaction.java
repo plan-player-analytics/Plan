@@ -46,15 +46,12 @@ public abstract class Transaction {
     private static final AtomicBoolean SUPPORTS_SAVE_POINTS = new AtomicBoolean(true);
     // Limit for Deadlock attempts.
     private static final int ATTEMPT_LIMIT = 5;
-
-    private SQLDB db;
     protected DBType dbType;
-
-    private Connection connection;
-    private Savepoint savepoint;
-
     protected boolean success;
     protected int attempts;
+    private SQLDB db;
+    private Connection connection;
+    private Savepoint savepoint;
 
     protected Transaction() {
         success = false;
@@ -107,7 +104,8 @@ public abstract class Transaction {
         boolean mySQLDeadlock = dbType == DBType.MYSQL && errorCode == 1213;
         boolean deadlocked = mySQLDeadlock || statementFail instanceof SQLTransactionRollbackException;
         boolean lockWaitTimeout = errorCode == 1205;
-        if (mysqlOutdatedRead || deadlocked || lockWaitTimeout && attempts < ATTEMPT_LIMIT) {
+        boolean duplicateEntry = errorCode == 1062;
+        if (mysqlOutdatedRead || deadlocked || duplicateEntry || lockWaitTimeout && attempts < ATTEMPT_LIMIT) {
             executeTransaction(db); // Recurse to attempt again.
             return;
         }
@@ -185,10 +183,20 @@ public abstract class Transaction {
     }
 
     private void initializeTransaction() {
+        setIsolationLevel();
         try {
             createSavePoint();
         } catch (SQLException e) {
             throw new DBOpException(getClass().getSimpleName() + " save point initialization failed: " + e.getMessage(), e);
+        }
+    }
+
+    private void setIsolationLevel() {
+        if (dbType == DBType.MYSQL && attempts == 1) {
+            IsolationLevel desiredIsolationLevel = getDesiredIsolationLevel();
+            if (desiredIsolationLevel != IsolationLevel.UNCHANGED) {
+                execute("SET TRANSACTION ISOLATION LEVEL " + desiredIsolationLevel.name().replace('_', ' '));
+            }
         }
     }
 
@@ -297,5 +305,16 @@ public abstract class Transaction {
             default:
                 throw new IllegalStateException("Unsupported Database Type: " + dbType.getName());
         }
+    }
+
+    protected String lockForUpdate() {return db.getSql().lockForUpdate();}
+
+    protected IsolationLevel getDesiredIsolationLevel() {
+        return IsolationLevel.UNCHANGED;
+    }
+
+    public enum IsolationLevel {
+        UNCHANGED,
+        READ_COMMITTED
     }
 }

@@ -17,9 +17,19 @@
 package com.djrapitops.plan.storage.database.sql.tables;
 
 import com.djrapitops.plan.storage.database.DBType;
+import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.queries.objects.lookup.ServerIdentifiable;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
+import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import org.intellij.lang.annotations.Language;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+import static com.djrapitops.plan.storage.database.sql.building.Sql.INSERT_INTO;
 
 /**
  * Represents plan_allowlist_bounce table.
@@ -38,7 +48,7 @@ public class AllowlistBounceTable {
     public static final String LAST_BOUNCE = "last_bounce";
 
     @Language("SQL")
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " (" +
             UUID + ',' +
             USER_NAME + ',' +
             SERVER_ID + ',' +
@@ -52,6 +62,17 @@ public class AllowlistBounceTable {
             " WHERE " + UUID + "=?" +
             " AND " + SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID;
 
+    public static final String UPSERT_MYSQL = INSERT_INTO + TABLE_NAME + " (" + UUID + ',' + USER_NAME + ',' + TIMES + ',' + LAST_BOUNCE + ',' + SERVER_ID + ')' +
+            " VALUES (?, ?, ?, ?, ?)" +
+            " ON DUPLICATE KEY UPDATE " +
+            TIMES + "=" + TIMES + "+VALUES(" + TIMES + ")," +
+            LAST_BOUNCE + "=GREATEST(VALUES(" + LAST_BOUNCE + ")," + LAST_BOUNCE + ")";
+    public static final String UPSERT_SQLITE = INSERT_INTO + TABLE_NAME + " (" + UUID + ',' + USER_NAME + ',' + TIMES + ',' + LAST_BOUNCE + ',' + SERVER_ID + ')' +
+            " VALUES (?, ?, ?, ?, ?)" +
+            " ON CONFLICT(uuid, server_id) DO UPDATE SET " +
+            TIMES + "=" + TABLE_NAME + '.' + TIMES + "+excluded." + TIMES + "," +
+            LAST_BOUNCE + "=MAX(excluded." + LAST_BOUNCE + "," + TABLE_NAME + '.' + LAST_BOUNCE + ")";
+
     private AllowlistBounceTable() {
         /* Static information class */
     }
@@ -59,12 +80,63 @@ public class AllowlistBounceTable {
     public static String createTableSQL(DBType dbType) {
         return CreateTableBuilder.create(TABLE_NAME, dbType)
                 .column(ID, Sql.INT).primaryKey()
-                .column(UUID, Sql.varchar(36)).notNull().unique()
+                .column(UUID, Sql.varchar(36)).notNull()
                 .column(USER_NAME, Sql.varchar(36)).notNull()
                 .column(SERVER_ID, Sql.INT).notNull()
                 .column(TIMES, Sql.INT).notNull().defaultValue("0")
                 .column(LAST_BOUNCE, Sql.LONG).notNull()
                 .foreignKey(SERVER_ID, ServerTable.TABLE_NAME, ServerTable.ID)
                 .toString();
+    }
+
+    public static Query<List<Row>> fetchRows(int currentId, int rowLimit) {
+        String sql = Select.all(TABLE_NAME)
+                .where(ID + '>' + currentId)
+                .orderBy(ID)
+                .limit(rowLimit)
+                .toString();
+        return db -> db.queryList(sql, Row::extract);
+    }
+
+    public static class Row implements ServerIdentifiable {
+        private int id;
+        private String uuid;
+        private String userName;
+        private int serverId;
+        private int times;
+        private long lastBounce;
+
+        public static Row extract(ResultSet set) throws SQLException {
+            Row row = new Row();
+            row.id = set.getInt(ID);
+            row.uuid = set.getString(UUID);
+            row.userName = set.getString(USER_NAME);
+            row.serverId = set.getInt(SERVER_ID);
+            row.times = set.getInt(TIMES);
+            row.lastBounce = set.getLong(LAST_BOUNCE);
+            return row;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        @Override
+        public int getServerId() {
+            return serverId;
+        }
+
+        @Override
+        public void setServerId(int id) {
+            serverId = id;
+        }
+
+        public void upsert(PreparedStatement statement) throws SQLException {
+            statement.setString(1, uuid);
+            statement.setString(2, userName);
+            statement.setInt(3, times);
+            statement.setLong(4, lastBounce);
+            statement.setInt(5, serverId);
+        }
     }
 }

@@ -34,7 +34,7 @@ public enum LangCode {
     IT("Italiano", "Malachiel & Mastory_Md5"),
     JA("\u65E5\u672C\u8A9E", "yukieji, inductor, lis2a, yu_solt, Jumala9163, Zaemong & ringoXD"),
     KO("\uD55C\uAD6D\uC5B4", "Guinness_Akihiko"),
-    NL("Nederlands", "Sander0542"),
+    NL("Nederlands", "Sander0542 & julianvdhogen"),
     RU("ру\u0441\u0441к\u0438\u0439", "Saph1s, Perhun_Pak, BratishkaErik & stashenko"),
     TR("Türkçe", "TDJisvan, BruilsiozPro & EyuphanMandiraci"),
     UK("україн\u0441ька \u043cо\u0432а", "xlanyleeet"),

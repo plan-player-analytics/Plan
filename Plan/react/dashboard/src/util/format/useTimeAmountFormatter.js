@@ -1,18 +1,15 @@
-import {localeService} from "../../service/localeService.js";
+import {useCallback, useMemo} from "react";
+import {useTimePreferences} from "../../components/text/FormattedTime.jsx";
+import {useI18nFriendlyLanguage} from "../../service/localeService.js";
+
 
 const ZERO_PH = "%zero%";
-const SECONDS_PH = "%seconds%";
-const MINUTES_PH = "%minutes%";
-const HOURS_PH = "%hours%";
-const DAYS_PH = "%days%";
-const MONTHS_PH = "%months%";
-const YEARS_PH = "%years%";
 
-/*
-* Based on the Java equivalent TimeAmountFormatter.java
-*/
-export function formatTimeAmount(options, timeMs) {
-    const apply = (ms) => {
+export const useTimeAmountFormatter = () => {
+    const locale = useI18nFriendlyLanguage();
+    const timePreferences = useTimePreferences();
+
+    const formatTime = useCallback((ms) => {
         if (ms === null || ms < 0) {
             return "-";
         }
@@ -39,10 +36,10 @@ export function formatTimeAmount(options, timeMs) {
         };
         // Temporary support for old format, we can later move the whole thing to the preferences menu,
         // so that there's a dropdown of options that are same as above, but modified for each option.
-        if (options.HOURS.includes(ZERO_PH) || options.MINUTES.includes(ZERO_PH)) {
+        if (timePreferences.HOURS.includes(ZERO_PH) || timePreferences.MINUTES.includes(ZERO_PH)) {
             format.style = 'digital';
         }
-        return new Intl.DurationFormat(localeService.getIntlFriendlyLocale(), format).format({
+        return new Intl.DurationFormat(locale, format).format({
             years: Math.floor(years),
             months: Math.floor(months),
             days: Math.floor(days),
@@ -50,7 +47,9 @@ export function formatTimeAmount(options, timeMs) {
             minutes: Math.floor(minutes),
             seconds: years >= 1 || months > 1 || days > 1 ? undefined : Math.floor(seconds)
         });
-    }
+    }, [locale, timePreferences])
 
-    return apply(timeMs);
+    return useMemo(() => {
+        return {formatTime}
+    }, [formatTime]);
 }

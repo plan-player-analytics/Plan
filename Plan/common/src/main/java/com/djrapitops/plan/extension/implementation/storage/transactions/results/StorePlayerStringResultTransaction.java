@@ -31,8 +31,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.UUID;
 
-import static com.djrapitops.plan.storage.database.sql.building.Sql.AND;
-import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 import static com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPlayerValueTable.*;
 
 /**
@@ -91,7 +90,7 @@ public class StorePlayerStringResultTransaction extends ThrowawayTransaction {
     }
 
     private Executable insertValue() {
-        String sql = "INSERT INTO " + TABLE_NAME + "(" +
+        String sql = INSERT_INTO + TABLE_NAME + "(" +
                 (component ? COMPONENT_VALUE : STRING_VALUE) + "," +
                 USER_UUID + "," +
                 PROVIDER_ID +

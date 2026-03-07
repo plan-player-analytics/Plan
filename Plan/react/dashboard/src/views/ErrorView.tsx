@@ -4,8 +4,22 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faBug} from "@fortawesome/free-solid-svg-icons";
 import LoadIn from "../components/animation/LoadIn";
 import {useTranslation} from "react-i18next";
+import {IconProp} from "@fortawesome/fontawesome-svg-core";
 
-export const ErrorViewText = ({error}) => {
+export type PlanError = {
+    status?: number;
+    title?: string;
+    message: string;
+    url?: string;
+    data?: any
+    icon?: IconProp
+}
+
+type ErrorViewProps = {
+    error: PlanError;
+}
+
+export const ErrorViewText = ({error}: ErrorViewProps) => {
     console.error(error);
     return (
         <>
@@ -17,7 +31,7 @@ export const ErrorViewText = ({error}) => {
     )
 }
 
-export const ErrorViewBody = ({error}) => {
+export const ErrorViewBody = ({error}: ErrorViewProps) => {
     return (
         <Card.Body>
             <ErrorViewText error={error}/>
@@ -25,7 +39,7 @@ export const ErrorViewBody = ({error}) => {
     )
 }
 
-export const ErrorViewCard = ({error}) => {
+export const ErrorViewCard = ({error}: ErrorViewProps) => {
     const {t} = useTranslation();
     return (
         <LoadIn>
@@ -41,7 +55,7 @@ export const ErrorViewCard = ({error}) => {
     )
 }
 
-const ErrorView = ({error}) => {
+const ErrorView = ({error}: ErrorViewProps) => {
     return (
         <LoadIn>
             <section className="error_view">

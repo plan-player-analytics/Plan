@@ -5,7 +5,7 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {InputGroup} from "react-bootstrap";
 import {useLocation, useNavigate} from "react-router";
 import {useMetadata} from "../../hooks/metadataHook";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const PageNavigationItem = ({page}) => {
     const {t} = useTranslation();
@@ -47,6 +47,12 @@ const PageNavigationItem = ({page}) => {
                     displayName: t("html.label.docs"),
                     href: "/docs",
                     permission: 'access.docs'
+                },
+                {
+                    id: 'theme-editor',
+                    displayName: t("html.label.themeEditor.title"),
+                    href: "/theme-editor",
+                    permission: 'access.theme.editor'
                 },
                 ...networkMetadata.servers
                     .filter(server => !server.proxy)

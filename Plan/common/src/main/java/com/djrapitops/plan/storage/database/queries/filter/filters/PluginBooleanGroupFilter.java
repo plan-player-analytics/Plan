@@ -45,7 +45,7 @@ import java.util.*;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 @Singleton
-public class PluginBooleanGroupFilter extends MultiOptionFilter {
+public class PluginBooleanGroupFilter implements MultiOptionFilter {
 
     private final DBSystem dbSystem;
 

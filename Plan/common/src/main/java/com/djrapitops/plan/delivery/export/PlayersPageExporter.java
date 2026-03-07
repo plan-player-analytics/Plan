@@ -27,6 +27,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -43,14 +44,13 @@ import java.util.Optional;
 @Singleton
 public class PlayersPageExporter extends FileExporter {
 
+    private static final String PLAYERS_TABLE = "playersTable";
     private final PlanFiles files;
     private final PlanConfig config;
     private final DBSystem dbSystem;
     private final RootJSONResolver jsonHandler;
     private final ServerInfo serverInfo;
-
     private final ExportPaths exportPaths;
-    private static final String PLAYERS_TABLE = "playersTable";
 
     @Inject
     public PlayersPageExporter(
@@ -91,7 +91,7 @@ public class PlayersPageExporter extends FileExporter {
 
         export(toDirectory.resolve("data").resolve(jsonResourceName),
                 // Replace ../player in urls to fix player page links
-                StringUtils.replace(response.getAsString(), "../player", toRelativePathFromRoot("player"))
+                Strings.CI.replace(response.getAsString(), "../player", toRelativePathFromRoot("player"))
         );
         exportPaths.put("./v1/" + PLAYERS_TABLE, toRelativePathFromRoot("data/" + jsonResourceName));
     }
@@ -115,7 +115,7 @@ public class PlayersPageExporter extends FileExporter {
     }
 
     private String toNonRelativePath(String resourceName) {
-        return StringUtils.remove(resourceName, "../");
+        return Strings.CI.remove(resourceName, "../");
     }
 
 }

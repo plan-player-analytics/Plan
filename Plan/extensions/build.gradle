@@ -33,7 +33,7 @@ dependencies {
     implementation "net.playeranalytics:Extension-MyPet:3.10-R1.2"
     implementation "net.playeranalytics:Extension-Nucleus:3.0.0-R1.0"
     implementation "net.playeranalytics:Extension-nuVotifier:2.3.4-R1.3"
-    implementation "net.playeranalytics:Extension-PlaceholderAPI:2.10.9-R1.6"
+    implementation "net.playeranalytics:Extension-PlaceholderAPI:2.10.9-R2.0"
     implementation "net.playeranalytics:Extension-PlotSquared:6.9.4-R1.3"
     implementation "net.playeranalytics:Extension-ProtectionStones:2.8.2-R1.2"
     implementation "net.playeranalytics:Extension-ProtocolSupport:1.16.4-R1.3"

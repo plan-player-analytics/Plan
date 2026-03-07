@@ -19,6 +19,7 @@ package com.djrapitops.plan.gathering.timed.mspt;
 import com.djrapitops.plan.utilities.java.Reflection;
 
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 /**
  * Accessor for the average MSPT field in MinecraftServer class which is a long[] array with 100 values.
@@ -27,17 +28,39 @@ import java.util.Optional;
  */
 public class SpigotMspt {
 
+    private static final AtomicBoolean PREPARED_SERVER = new AtomicBoolean(false);
+    private static Reflection.FieldAccessor<long[]> msptField;
+    private static Object server;
+
+    private SpigotMspt() {
+        /* Static method class */
+    }
+
     public static Optional<long[]> getMspt() {
         return Optional.ofNullable(getValue());
     }
 
     private static long[] getValue() {
         try {
-            Class<?> minecraftServerClass = Reflection.getMinecraftClass("MinecraftServer");
-            Reflection.FieldAccessor<long[]> field = Reflection.findField(minecraftServerClass, long[].class);
-            return field.get(Reflection.getMinecraftServer().orElse(null));
+            prepField();
+            prepServer();
+            return msptField.get(server);
         } catch (Exception | NoClassDefFoundError | NoSuchFieldError e) {
             return null;
+        }
+    }
+
+    private static void prepServer() {
+        if (!PREPARED_SERVER.get()) {
+            server = Reflection.getMinecraftServer().orElse(null);
+            PREPARED_SERVER.set(true);
+        }
+    }
+
+    private static void prepField() {
+        if (msptField == null) {
+            Class<?> minecraftServerClass = Reflection.getMinecraftClass("MinecraftServer");
+            msptField = Reflection.findField(minecraftServerClass, long[].class);
         }
     }
 

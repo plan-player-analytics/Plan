@@ -1,21 +1,17 @@
 import React, {useEffect} from 'react';
 import {useTranslation} from "react-i18next";
 import {useTheme} from "../../hooks/themeHook";
-import {withReducedSaturation} from "../../util/colors";
 import Highcharts from "highcharts/esm/highcharts";
 import "highcharts/esm/modules/accessibility";
 import "highcharts/esm/modules/no-data-to-display"
 
 const GroupPie = ({id, groups, colors, name}) => {
     const {t} = useTranslation();
-    const {nightModeEnabled, graphTheming} = useTheme();
+    const {graphTheming} = useTheme();
 
     useEffect(() => {
-        const reduceColors = (colorsToReduce) => colorsToReduce.map(color => withReducedSaturation(color));
-
         function getColors() {
-            const actualColors = colors ? colors : groups.map(group => group.color);
-            return nightModeEnabled ? reduceColors(actualColors) : actualColors;
+            return colors ? colors : groups.map(group => group.color);
         }
 
         const series = groups.map(group => {
@@ -55,7 +51,7 @@ const GroupPie = ({id, groups, colors, name}) => {
             },
             series: [pieSeries]
         });
-    }, [id, colors, groups, name, graphTheming, nightModeEnabled, t]);
+    }, [id, colors, groups, name, graphTheming, t]);
 
     return (<div className="chart-area" id={id}/>);
 };

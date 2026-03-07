@@ -17,8 +17,16 @@
 package com.djrapitops.plan.storage.database.sql.tables.webuser;
 
 import com.djrapitops.plan.storage.database.DBType;
+import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.queries.objects.lookup.UserIdentifiable;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
+import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -35,7 +43,7 @@ public class WebUserPreferencesTable {
     public static final String WEB_USER_ID = "web_user_id";
     public static final String PREFERENCES = "preferences";
 
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" + PREFERENCES + ',' + WEB_USER_ID +
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " (" + PREFERENCES + ',' + WEB_USER_ID +
             ") VALUES (?, (" + SecurityTable.SELECT_ID_BY_USERNAME + "))";
     public static final String SELECT_BY_WEB_USERNAME = SELECT + PREFERENCES + FROM + TABLE_NAME +
             WHERE + WEB_USER_ID + "=(" + SecurityTable.SELECT_ID_BY_USERNAME + ")";
@@ -53,6 +61,49 @@ public class WebUserPreferencesTable {
                 .column(WEB_USER_ID, Sql.INT)
                 .foreignKey(WEB_USER_ID, SecurityTable.TABLE_NAME, SecurityTable.ID)
                 .toString();
+    }
+
+    public static Query<List<Row>> fetchRows(int currentId, int rowLimit) {
+        return db -> db.queryList(Select.all(TABLE_NAME)
+                .where(ID + '>' + currentId)
+                .orderBy(ID)
+                .limit(rowLimit)
+                .toString(), Row::extract);
+    }
+
+    public static class Row implements UserIdentifiable {
+        public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " (" + PREFERENCES + ',' + WEB_USER_ID + ") VALUES (?, ?)";
+
+        private int id;
+        private int webUserId;
+        private String preferences;
+
+        public static Row extract(ResultSet set) throws SQLException {
+            Row row = new Row();
+            row.id = set.getInt(ID);
+            row.webUserId = set.getInt(WEB_USER_ID);
+            row.preferences = set.getString(PREFERENCES);
+            return row;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        @Override
+        public int getUserId() {
+            return webUserId;
+        }
+
+        @Override
+        public void setUserId(int webUserId) {
+            this.webUserId = webUserId;
+        }
+
+        public void insert(PreparedStatement statement) throws SQLException {
+            statement.setString(1, preferences);
+            statement.setInt(2, webUserId);
+        }
     }
 
 }

@@ -23,6 +23,7 @@ import utilities.dagger.PlanPluginComponent;
 import utilities.mocks.PluginMockComponent;
 
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -35,7 +36,7 @@ import java.util.Objects;
  */
 public class LocaleResourceUpdateUtility {
 
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) throws IOException {
         PluginMockComponent mockComponent = new PluginMockComponent(Files.createTempDirectory("temp-plan-"));
         PlanPluginComponent component = mockComponent.getComponent();
 

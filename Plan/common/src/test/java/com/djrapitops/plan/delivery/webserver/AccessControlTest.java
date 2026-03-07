@@ -172,7 +172,9 @@ class AccessControlTest {
                 Arguments.of("/theme-editor", WebPermission.ACCESS_THEME_EDITOR, 200, 403),
                 Arguments.of("/theme-editor/new", WebPermission.ACCESS_THEME_EDITOR, 200, 403),
                 Arguments.of("/theme-editor/delete", WebPermission.ACCESS_THEME_EDITOR, 200, 403),
-                Arguments.of("/theme-editor/default", WebPermission.ACCESS_THEME_EDITOR, 200, 403)
+                Arguments.of("/theme-editor/default", WebPermission.ACCESS_THEME_EDITOR, 200, 403),
+                Arguments.of("/v1/playersOnline", WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_ONLINE, 200, 403),
+                Arguments.of("/v1/playersOnline?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_OVERVIEW_PLAYERS_ONLINE_GRAPH, 200, 403)
         );
     }
 

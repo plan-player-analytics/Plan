@@ -76,7 +76,7 @@ public class AfterBadJoinAddressDataCorrectionPatch extends Patch {
                 "u." + UserInfoTable.USER_ID + "=s." + SessionsTable.USER_ID +
                 AND + "u." + UserInfoTable.SERVER_ID + "=s." + SessionsTable.SERVER_ID +
                 LEFT_JOIN + JoinAddressTable.TABLE_NAME + " j on " +
-                "j." + JoinAddressTable.JOIN_ADDRESS + "=u." + UserInfoTable.JOIN_ADDRESS;
+                "j." + JoinAddressTable.JOIN_ADDRESS + "=u." + UserInfoTable.JOIN_ADDRESS + lockForUpdate();
 
         return query(db -> db.queryList(sql, result -> {
             IdRow idRow = new IdRow();
@@ -88,13 +88,6 @@ public class AfterBadJoinAddressDataCorrectionPatch extends Patch {
         }, unknownId));
     }
 
-    private static class IdRow {
-        int userId;
-        int serverId;
-        int oldId;
-        int newId;
-    }
-
     private Integer getIdOfUnknownJoinAddress() {
         return query(JoinAddressQueries.getIdOfJoinAddress(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP))
                 .orElseThrow(() -> new DBOpException("Could not get ID of join address properly"));
@@ -104,9 +97,16 @@ public class AfterBadJoinAddressDataCorrectionPatch extends Patch {
         String sql = SELECT + "COUNT(" + DISTINCT + SessionsTable.JOIN_ADDRESS_ID + ") as c" +
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.JOIN_ADDRESS_ID + " NOT IN (" +
-                SELECT + JoinAddressTable.ID + FROM + JoinAddressTable.TABLE_NAME +
-                ")";
+                SELECT + JoinAddressTable.ID + FROM + JoinAddressTable.TABLE_NAME + lockForUpdate() +
+                ")" + lockForUpdate();
         return query(db -> db.queryOptional(sql, results -> results.getInt("c") > 0))
                 .orElse(false);
+    }
+
+    private static class IdRow {
+        int userId;
+        int serverId;
+        int oldId;
+        int newId;
     }
 }

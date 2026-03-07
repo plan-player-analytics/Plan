@@ -6,8 +6,8 @@ import {faNetworkWired} from "@fortawesome/free-solid-svg-icons";
 import CardHeader from "../CardHeader";
 import {useDataRequest} from "../../../hooks/dataFetchHook";
 import {fetchServerPie} from "../../../service/networkService";
-import {ErrorViewCard} from "../../../views/ErrorView";
-import {useThemeStorage} from "../../../hooks/context/themeContextHook.jsx";
+import {ErrorViewCard} from "../../../views/ErrorView.tsx";
+import {useThemeStorage} from "../../../hooks/context/themeContextHook.tsx";
 import {nameToCssVariable} from "../../../util/colors.js";
 
 const ServerPieCard = () => {

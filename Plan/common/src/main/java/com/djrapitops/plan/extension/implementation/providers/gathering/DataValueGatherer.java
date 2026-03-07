@@ -47,6 +47,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import org.apache.commons.lang3.Strings;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -458,6 +459,9 @@ public class DataValueGatherer {
         String json = componentService.convert(component, ComponentOperation.JSON);
         if (json.length() > ComponentDataValue.MAX_LENGTH) {
             json = "{\"text\":\"<Component too long>\"}";
+        }
+        if (Strings.CI.containsAny(json, "javascript", "clickEvent", "hoverEvent", "open_url", "copy_to_clipboard", "\"action\"", "&#", "\0", "\\")) {
+            json = "{\"text\":\"<Component contained disallowed words or characters>\"}";
         }
         return json;
     }

@@ -59,7 +59,8 @@ public class GeoInfoQueries {
                 GeoInfoTable.LAST_USED + ',' +
                 UsersTable.USER_UUID +
                 FROM + GeoInfoTable.TABLE_NAME + " g" +
-                INNER_JOIN + UsersTable.TABLE_NAME + " u on g.user_id=u.id";
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on g.user_id=u.id" +
+                ORDER_BY + GeoInfoTable.LAST_USED + " DESC," + GeoInfoTable.GEOLOCATION;
 
         return new QueryAllStatement<>(sql, 10000) {
             @Override
@@ -138,7 +139,7 @@ public class GeoInfoQueries {
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on a." + GeoInfoTable.USER_ID + "=u." + UsersTable.ID +
                 WHERE + "b." + GeoInfoTable.LAST_USED + IS_NULL +
                 AND + "u." + UsersTable.ID + " IN (" +
-                new TextStringBuilder().appendWithSeparators(userIds, ",").build() + ")" +
+                new TextStringBuilder().appendWithSeparators(userIds, ",").get() + ")" +
                 GROUP_BY + "a." + GeoInfoTable.GEOLOCATION;
 
         return db -> db.queryMap(sql, GeoInfoQueries::extractGeolocationCounts);

@@ -111,7 +111,7 @@ public class JettyInternalRequest implements InternalRequest {
         @Untrusted List<String> textCookies = getCookieHeaders();
         List<Cookie> cookies = new ArrayList<>();
         if (!textCookies.isEmpty()) {
-            String[] separated = new TextStringBuilder().appendWithSeparators(textCookies, ";").build().split(";");
+            String[] separated = new TextStringBuilder().appendWithSeparators(textCookies, ";").get().split(";");
             for (String textCookie : separated) {
                 cookies.add(new Cookie(textCookie.trim()));
             }
@@ -130,8 +130,8 @@ public class JettyInternalRequest implements InternalRequest {
     }
 
     @Override
-    public String getRequestedPath() {
-        return baseRequest.getHttpURI().getDecodedPath();
+    public String getRequestedPathAndQuery() {
+        return baseRequest.getHttpURI().getDecodedPath() + baseRequest.getHttpURI().getQuery();
     }
 
     @Override

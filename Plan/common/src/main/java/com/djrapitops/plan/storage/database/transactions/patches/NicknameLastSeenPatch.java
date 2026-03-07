@@ -95,7 +95,7 @@ public class NicknameLastSeenPatch extends Patch {
     }
 
     private Map<Integer, Set<Nickname>> getNicknamesByUserID(Map<Integer, ServerUUID> serverUUIDsByID) {
-        String fetchSQL = "SELECT * FROM plan_actions WHERE action_id=3 ORDER BY date DESC";
+        String fetchSQL = "SELECT * FROM plan_actions WHERE action_id=3 ORDER BY date DESC" + lockForUpdate();
         return query(new QueryAllStatement<>(fetchSQL, 10000) {
             @Override
             public Map<Integer, Set<Nickname>> processResults(ResultSet set) throws SQLException {
@@ -131,11 +131,11 @@ public class NicknameLastSeenPatch extends Patch {
                 for (Map.Entry<Integer, Set<Nickname>> entry : nicknames.entrySet()) {
                     Integer userId = entry.getKey();
                     Set<Nickname> nicks = entry.getValue();
+                    statement.setInt(3, userId);
                     for (Nickname nick : nicks) {
                         Integer serverID = serverIDsByUUID.get(nick.getServerUUID());
                         statement.setLong(1, nick.getDate());
                         statement.setString(2, nick.getName());
-                        statement.setInt(3, userId);
                         statement.setInt(4, serverID);
                         statement.addBatch();
                     }

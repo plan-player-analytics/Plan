@@ -167,7 +167,7 @@ public class ShutdownDataPreservation extends TaskSystem.Task {
             );
         } catch (IOException e) {
             logger.warn("Place this to " + storeLocation.toFile().getAbsolutePath() + " if you wish to store missing sessions:");
-            logger.warn(new TextStringBuilder().appendWithSeparators(lines, "\n").build());
+            logger.warn(new TextStringBuilder().appendWithSeparators(lines, "\n").get());
             throw new IllegalStateException("Could not write " + storeLocation.toFile().getAbsolutePath() + ", " + e.getMessage(), e);
         }
     }

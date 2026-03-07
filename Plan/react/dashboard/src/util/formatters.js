@@ -1,17 +1,16 @@
 import {isString} from "highcharts";
+import {useCallback} from "react";
+import {useTranslation} from "react-i18next";
 
-export const formatDecimals = (value, formatPattern) => {
-    if (!formatPattern || isNaN(value)) return value;
-    const split = formatPattern.includes('.') ? formatPattern.split('.') : formatPattern.split(',');
-    if (split.length <= 1) return value.toFixed(0);
-    return value.toFixed(split[1].length);
-}
-
-export const orUnavailable = (value, t) => {
-    if (!t) return value;
-    if (!value) return t('plugin.generic.unavailable');
-    if (isString(value)) {
-        return t(value);
-    }
-    return value;
+export const useOrUnavailable = () => {
+    const {t} = useTranslation();
+    const orUnavailable = useCallback((value) => {
+        if (!t) return value;
+        if (value === undefined || value === null || value === -1) return t('plugin.generic.unavailable');
+        if (isString(value)) {
+            return t(value);
+        }
+        return value;
+    }, [t]);
+    return {orUnavailable};
 }

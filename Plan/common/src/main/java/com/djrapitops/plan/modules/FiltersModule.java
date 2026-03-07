@@ -43,7 +43,7 @@ public interface FiltersModule {
 
     @Binds
     @IntoSet
-    Filter filter5(ActivityIndexFilter filter);
+    Filter filter5(ActivityIndexNowFilter filter);
 
     @Binds
     @IntoSet
@@ -60,5 +60,17 @@ public interface FiltersModule {
     @Binds
     @IntoSet
     Filter filter9(PlayedOnServerFilter filter);
+
+    @Binds
+    @IntoSet
+    Filter filter10(PlayedOnDateFilter filter);
+
+    @Binds
+    @IntoSet
+    Filter filter11(ActivityIndexOnDateFilter filter);
+
+    @Binds
+    @IntoSet
+    Filter filter12(LastSeenBetweenDateRangeFilter filter);
 
 }

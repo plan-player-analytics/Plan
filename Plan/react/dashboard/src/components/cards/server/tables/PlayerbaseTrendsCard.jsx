@@ -9,9 +9,11 @@ import {faClock} from "@fortawesome/free-regular-svg-icons";
 import {TableRow} from "../../../table/TableRow";
 import {CardLoader} from "../../../navigation/Loader";
 import FormattedTime from "../../../text/FormattedTime.jsx";
+import {useTimeAmountFormatter} from "../../../../util/format/useTimeAmountFormatter.js";
 
 const PlayerbaseTrendsCard = ({data}) => {
     const {t} = useTranslation();
+    const {formatTime} = useTimeAmountFormatter();
     if (!data) return <CardLoader/>;
     return (
         <Card id={"playerbase-trends"}>
@@ -33,10 +35,10 @@ const PlayerbaseTrendsCard = ({data}) => {
                 <TableRow icon={faClock} color="playtime"
                           text={t('html.label.averagePlaytime') + ' ' + t('html.label.perPlayer')}
                           values={[
-                              <FormattedTime timeMs={data.playtime_avg_then}/>,
-                              <FormattedTime timeMs={data.playtime_avg_now}/>,
+                              <FormattedTime key={'p-a-t'} timeMs={data.playtime_avg_then}/>,
+                              <FormattedTime key={'p-a-n'} timeMs={data.playtime_avg_now}/>,
                               <BigTrend key={JSON.stringify(data.total_players_trend)}
-                                        trend={<FormattedTime timeMs={data.playtime_avg_trend}/>}/>]}/>
+                                        trend={data.playtime_avg_trend} format={formatTime}/>]}/>
                 <TableRow icon={faClock} color="playtime-afk"
                           text={t('html.label.afk') + ' ' + t('html.label.perPlayer')}
                           values={[data.afk_then, data.afk_now,
@@ -45,17 +47,17 @@ const PlayerbaseTrendsCard = ({data}) => {
                 <TableRow icon={faClock} color="playtime"
                           text={t('html.label.averagePlaytime') + ' ' + t('html.label.perRegularPlayer')}
                           values={[
-                              <FormattedTime timeMs={data.regular_playtime_avg_then}/>,
-                              <FormattedTime timeMs={data.regular_playtime_avg_now}/>,
+                              <FormattedTime key={'rg-pl-avg-th'} timeMs={data.regular_playtime_avg_then}/>,
+                              <FormattedTime key={'rg-pl-av-n'} timeMs={data.regular_playtime_avg_now}/>,
                               <BigTrend key={JSON.stringify(data.regular_playtime_avg_trend)}
-                                        trend={<FormattedTime timeMs={data.regular_playtime_avg_trend}/>}/>]}/>
+                                        trend={data.regular_playtime_avg_trend} format={formatTime}/>]}/>
                 <TableRow icon={faClock} color="sessions"
                           text={t('html.label.averageSessionLength') + ' ' + t('html.label.perRegularPlayer')}
                           values={[
-                              <FormattedTime timeMs={data.regular_session_avg_then}/>,
-                              <FormattedTime timeMs={data.regular_session_avg_now}/>,
+                              <FormattedTime key={'rg-s-a-t'} timeMs={data.regular_session_avg_then}/>,
+                              <FormattedTime key={'rg-s-a-n'} timeMs={data.regular_session_avg_now}/>,
                               <BigTrend key={JSON.stringify(data.regular_session_avg_trend)}
-                                        trend={<FormattedTime timeMs={data.regular_session_avg_trend}/>}/>]}/>
+                                        trend={data.regular_session_avg_trend} format={formatTime}/>]}/>
                 <TableRow icon={faClock} color="playtime-afk"
                           text={t('html.label.afk') + ' ' + t('html.label.perRegularPlayer')}
                           values={[data.regular_afk_avg_then, data.regular_afk_avg_now,

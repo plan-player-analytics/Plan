@@ -1,12 +1,12 @@
 import {useParams} from "react-router";
 import {useDataRequest} from "../../../../hooks/dataFetchHook";
 import {fetchOptimizedPerformance, fetchPingGraph, fetchPluginHistory} from "../../../../service/serverService";
-import {ErrorViewBody} from "../../../../views/ErrorView";
+import {ErrorViewBody} from "../../../../views/ErrorView.tsx";
 import {useTranslation} from "react-i18next";
 import {Card} from "react-bootstrap";
 import CardTabs from "../../../CardTabs";
 import {faGears, faHdd, faMap, faMicrochip, faSignal, faTachometerAlt} from "@fortawesome/free-solid-svg-icons";
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useMemo, useState} from "react";
 import {ChartLoader} from "../../../navigation/Loader";
 import AllPerformanceGraph from "../../../graphs/performance/AllPerformanceGraph";
 import TpsPerformanceGraph from "../../../graphs/performance/TpsPerformanceGraph";
@@ -15,7 +15,7 @@ import WorldPerformanceGraph from "../../../graphs/performance/WorldPerformanceG
 import DiskPerformanceGraph from "../../../graphs/performance/DiskPerformanceGraph";
 import PingGraph from "../../../graphs/performance/PingGraph";
 import {mapPerformanceDataToSeries} from "../../../../util/graphs";
-import {useAuth} from "../../../../hooks/authenticationHook";
+import {useAuth} from "../../../../hooks/authenticationHook.tsx";
 import {GraphExtremesContextProvider} from "../../../../hooks/interaction/graphExtremesContextHook.jsx";
 
 const AllGraphTab = ({data, dataSeries, pluginHistorySeries, loadingError}) => {
@@ -77,14 +77,13 @@ const PerformanceGraphsCard = () => {
         data: pluginHistory,
         loadingError: pluginHistoryLoadingError
     } = useDataRequest(fetchPluginHistory, [identifier], authRequired && hasPermission('page.server.plugin.history'));
-    const [pluginHistorySeries, setPluginHistorySeries] = useState(undefined);
 
     useEffect(() => {
         if (data) {
             mapPerformanceDataToSeries(data.values).then(parsed => setParsedData(parsed))
         }
     }, [data, setParsedData]);
-    useEffect(() => {
+    const pluginHistorySeries = useMemo(() => {
         // https://stackoverflow.com/a/34890276/20825073
         const groupBy = function (xs, key) {
             return xs.reduce(function (rv, x) {
@@ -95,7 +94,7 @@ const PerformanceGraphsCard = () => {
 
         if (pluginHistory) {
             const grouped = groupBy(pluginHistory.history.reverse(), 'modified');
-            setPluginHistorySeries({
+            return {
                 type: 'flags',
                 accessibility: {
                     exposeAsGroupOnly: true,
@@ -113,9 +112,9 @@ const PerformanceGraphsCard = () => {
                             (uninstalledLines.length ? '<br><b>' + t('html.label.uninstalled') + '</b><br>' + uninstalledLines : '')
                     }
                 })
-            })
+            };
         }
-    }, [pluginHistory, setPluginHistorySeries, t]);
+    }, [pluginHistory, t]);
 
     const tabs = [
         {

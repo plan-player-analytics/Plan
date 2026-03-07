@@ -45,7 +45,7 @@ public class RemoveUsernameFromAccessLogPatch extends Patch {
     private Boolean hasUsernames() {
         String sql = SELECT + "COUNT(*) as c" +
                 FROM + AccessLogTable.TABLE_NAME +
-                WHERE + "username" + IS_NOT_NULL;
+                WHERE + "username" + IS_NOT_NULL + lockForUpdate();
         return query(new QueryAllStatement<>(sql) {
             @Override
             public Boolean processResults(ResultSet set) throws SQLException {

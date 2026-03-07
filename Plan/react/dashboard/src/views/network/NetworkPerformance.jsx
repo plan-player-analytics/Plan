@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import LoadIn from "../../components/animation/LoadIn";
+import LoadIn from "../../components/animation/LoadIn.tsx";
 import {Card, Col} from "react-bootstrap";
 import {useMetadata} from "../../hooks/metadataHook";
 import CardHeader from "../../components/cards/CardHeader";
@@ -13,7 +13,7 @@ import {useNavigation} from "../../hooks/navigationHook";
 import {mapPerformanceDataToSeries} from "../../util/graphs";
 import PerformanceGraphsCard from "../../components/cards/network/PerformanceGraphsCard";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 import ActionButton from "../../components/input/button/ActionButton.jsx";
 
 const NetworkPerformance = () => {

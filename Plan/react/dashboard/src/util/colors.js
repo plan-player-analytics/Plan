@@ -143,18 +143,18 @@ const rgbToHex = (component) => {
 export const hexToRgb = (hexString) => {
     const hex = hexString.replace('#', '');
     if (hex.length === 6) {
-        const r = parseInt(hex.substring(0, 2), 16);
-        const g = parseInt(hex.substring(2, 4), 16);
-        const b = parseInt(hex.substring(4, 6), 16);
+        const r = Number.parseInt(hex.substring(0, 2), 16);
+        const g = Number.parseInt(hex.substring(2, 4), 16);
+        const b = Number.parseInt(hex.substring(4, 6), 16);
         return [r, g, b];
     } else {
         // 3 digit hex
         const rLetter = hex.substring(0, 1);
         const gLetter = hex.substring(1, 2);
         const bLetter = hex.substring(2, 3);
-        const r = parseInt(rLetter + rLetter, 16);
-        const g = parseInt(gLetter + gLetter, 16);
-        const b = parseInt(bLetter + bLetter, 16);
+        const r = Number.parseInt(rLetter + rLetter, 16);
+        const g = Number.parseInt(gLetter + gLetter, 16);
+        const b = Number.parseInt(bLetter + bLetter, 16);
         return [r, g, b];
     }
 }
@@ -194,7 +194,8 @@ export const rgbToHsl = ([r, g, b]) => {
 
 // From https://stackoverflow.com/a/3732187
 export const withReducedSaturation = (hex, reduceSaturationPercentage) => {
-    const saturationReduction = reduceSaturationPercentage ? reduceSaturationPercentage : 0.70;
+    if (hex.startsWith('var(')) hex = calculateCssHexColor(hex)
+    const saturationReduction = reduceSaturationPercentage || 0.70;
 
     const rgb = hexToRgb(hex);
     let [h, s, l] = rgbToHsl(rgb);
@@ -231,7 +232,7 @@ export const calculateCssHexColor = (cssColor, inElement) => {
     element.appendChild(colorCalculationElement);
     const rgbString = window.getComputedStyle(colorCalculationElement, null).getPropertyValue("color");
     const hex = rgbToHexString(rgbStringToArray(rgbString));
-    element.removeChild(colorCalculationElement);
+    colorCalculationElement.remove();
     return hex;
 }
 

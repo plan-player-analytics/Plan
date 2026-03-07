@@ -29,7 +29,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Singleton
-public class JoinAddressFilter extends MultiOptionFilter {
+public class JoinAddressFilter implements MultiOptionFilter {
 
     private final DBSystem dbSystem;
 

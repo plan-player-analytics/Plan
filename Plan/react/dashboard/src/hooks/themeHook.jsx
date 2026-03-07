@@ -39,7 +39,7 @@ const removeOldVariables = () => {
 
 const ThemeContext = createContext({});
 
-export const ThemeContextProvider = ({children, themeOverride}) => {
+export const ThemeContextProvider = ({children, themeOverride = undefined}) => {
     const metadata = useMetadata();
 
     const [colorChooserOpen, setColorChooserOpen] = useState(false);

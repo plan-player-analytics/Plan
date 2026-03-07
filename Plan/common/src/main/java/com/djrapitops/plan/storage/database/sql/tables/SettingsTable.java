@@ -20,6 +20,8 @@ import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
+
 /**
  * Table information about 'plan_settings'.
  *
@@ -34,15 +36,15 @@ public class SettingsTable {
     public static final String UPDATED = "updated";
     public static final String CONFIG_CONTENT = "content";
 
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " (" +
             SERVER_UUID + ',' +
             UPDATED + ',' +
             CONFIG_CONTENT + ") VALUES (?,?,?)";
-    public static final String UPDATE_STATEMENT = "UPDATE " + TABLE_NAME + " SET " +
+    public static final String UPDATE_STATEMENT = UPDATE + TABLE_NAME + SET +
             CONFIG_CONTENT + "=?," +
-            UPDATED + "=? WHERE " +
-            SERVER_UUID + "=? AND " +
-            CONFIG_CONTENT + "!=?";
+            UPDATED + "=?" +
+            WHERE + SERVER_UUID + "=?" +
+            AND + CONFIG_CONTENT + "!=?";
 
     private SettingsTable() {
         /* Static information class */

@@ -119,7 +119,8 @@ public class Contributors {
             new Contributor("TWJohnJohn20116", LANG),
             new Contributor("YannicHock", CODE),
             new Contributor("SaolGhra", CODE),
-            new Contributor("Jsinco", CODE)
+            new Contributor("Jsinco", CODE),
+            new Contributor("julianvdhogen", LANG)
     };
 
     private Contributors() {

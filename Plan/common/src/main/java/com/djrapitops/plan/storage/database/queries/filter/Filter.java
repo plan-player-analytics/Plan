@@ -30,6 +30,11 @@ public interface Filter {
 
     String getKind();
 
+    /**
+     * List of expected parameters that is given to frontend, but not necessarily enforced on a per-filter basis.
+     *
+     * @return Names of the parameters inside options.
+     */
     String[] getExpectedParameters();
 
     default Map<String, Object> getOptions() {

@@ -50,7 +50,7 @@ command:
         dbClear: "您即将删除 ${0} 中的所有Plan数据"
         dbMerge: "您即将把 ${0} 中的数据合并到 ${1} 中"
         dbOverwrite: "您即将用 ${1} 中的数据覆盖 ${0} 中的Plan数据"
-        dbRemovePlayer: "您即将从 ${1} 中删除 ${0} 的数据"
+        dbRemovePlayer: "您将从 ${1} 中删除 ${0} 的数据"
         deny: "取消"
         expired: "确认已过期，请重新使用命令"
         unregister: "您即将解除 '${0}' 与 ${1} 的绑定"
@@ -861,7 +861,7 @@ html:
     query:
         filter:
             activity:
-                text: "处于活跃度分组中"
+                text: "处于活跃分组中"
             anyServer: "任意服务器"
             banStatus:
                 name: "封禁状态"
@@ -903,7 +903,7 @@ html:
                 text: "在此期间游玩过"
             pluginGroup:
                 name: "分组："
-                text: "处于 {{plugin}} 插件的 {{group}} 分组中"
+                text: "在 {{plugin}} 插件的 {{group}} 分组中"
             registeredAfter:
                 text: "注册时间晚于"
             registeredBefore:
@@ -912,9 +912,9 @@ html:
                 text: "在此期间注册"
             skipped: "已跳过"
             title:
-                activityGroup: "当前活跃度分组"
+                activityGroup: "活跃度分组"
                 activityGroupOnDate: "指定日期的活跃度分组"
-            view: "查看范围："
+            view: "  日期范围:"
         filters:
             add: "添加过滤器..."
             loading: "加载过滤器中..."

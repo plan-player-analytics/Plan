@@ -17,8 +17,17 @@
 package com.djrapitops.plan.storage.database.sql.tables;
 
 import com.djrapitops.plan.storage.database.DBType;
+import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
+import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+import static com.djrapitops.plan.storage.database.sql.building.Sql.INSERT_INTO;
 
 /**
  * Represents plan_access_log table.
@@ -34,7 +43,7 @@ public class AccessLogTable {
     public static final String REQUEST_METHOD = "request_method";
     public static final String REQUEST_URI = "request_uri";
     public static final String RESPONSE_CODE = "response_code";
-    public static final String INSERT_NO_USER = "INSERT INTO " + TABLE_NAME + " (" +
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " (" +
             TIME + ',' + FROM_IP + ',' + REQUEST_METHOD + ',' + REQUEST_URI + ',' + RESPONSE_CODE +
             ") VALUES (?, ?, ?, ?, ?)";
 
@@ -51,5 +60,46 @@ public class AccessLogTable {
                 .column(REQUEST_URI, Sql.TEXT).notNull()
                 .column(RESPONSE_CODE, Sql.INT)
                 .build();
+    }
+
+    public static Query<List<Row>> fetchRows(int currentId, int rowLimit) {
+        String sql = Select.all(TABLE_NAME)
+                .where(ID + '>' + currentId)
+                .orderBy(ID)
+                .limit(rowLimit)
+                .toString();
+        return db -> db.queryList(sql, Row::extract);
+    }
+
+    public static class Row {
+        private int id;
+        private long time;
+        private String fromIp;
+        private String requestMethod;
+        private String requestUri;
+        private int responseCode;
+
+        public static Row extract(ResultSet set) throws SQLException {
+            Row row = new Row();
+            row.id = set.getInt(ID);
+            row.time = set.getLong(TIME);
+            row.fromIp = set.getString(FROM_IP);
+            row.requestMethod = set.getString(REQUEST_METHOD);
+            row.requestUri = set.getString(REQUEST_URI);
+            row.responseCode = set.getInt(RESPONSE_CODE);
+            return row;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void insert(PreparedStatement statement) throws SQLException {
+            statement.setLong(1, time);
+            statement.setString(2, fromIp);
+            statement.setString(3, requestMethod);
+            statement.setString(4, requestUri);
+            statement.setInt(5, responseCode);
+        }
     }
 }

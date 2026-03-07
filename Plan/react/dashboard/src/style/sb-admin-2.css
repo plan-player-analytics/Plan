@@ -281,6 +281,10 @@ img {
     width: 100%;
 }
 
+.chart-pie.big {
+    height: 27rem;
+}
+
 /*!
  * Start Bootstrap - SB Admin 2 v4.1.3 (https://startbootstrap.com/theme/sb-admin-2)
  * Copyright 2013-2020 Start Bootstrap
@@ -1347,6 +1351,10 @@ select.form-control:focus::-ms-value {
     border-color: color-mix(in hsl, var(--color-info-box-info), var(--color-info-box-info-text) 10%);
 }
 
+.alert-success p {
+    color: var(--color-info-box-info-text);
+}
+
 .alert-success hr {
     border-top-color: color-mix(in hsl, var(--color-info-box-info), var(--color-info-box-info-text) 10%);
 }
@@ -1375,6 +1383,10 @@ select.form-control:focus::-ms-value {
     border-color: color-mix(in hsl, var(--color-info-box-notice), var(--color-info-box-notice-text) 10%);
 }
 
+.alert-warning p {
+    color: var(--color-info-box-notice-text);
+}
+
 .alert-warning hr {
     border-top-color: color-mix(in hsl, var(--color-info-box-notice), var(--color-info-box-notice-text) 10%);
 }
@@ -1387,6 +1399,10 @@ select.form-control:focus::-ms-value {
     color: var(--color-info-box-error-text);
     background-color: var(--color-info-box-error);
     border-color: color-mix(in hsl, var(--color-info-box-error), var(--color-info-box-error-text) 10%);
+}
+
+.alert-danger p {
+    color: var(--color-info-box-error-text);
 }
 
 .alert-danger hr {

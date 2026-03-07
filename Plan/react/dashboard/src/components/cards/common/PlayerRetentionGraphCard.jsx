@@ -7,10 +7,10 @@ import ExtendableCardBody from "../../layout/extension/ExtendableCardBody";
 import {BasicDropdown} from "../../input/BasicDropdown";
 import {useDataRequest} from "../../../hooks/dataFetchHook";
 import {fetchPlayerJoinAddresses, fetchRetentionData} from "../../../service/serverService";
-import {ErrorViewCard} from "../../../views/ErrorView";
+import {ErrorViewCard} from "../../../views/ErrorView.tsx";
 import {CardLoader} from "../../navigation/Loader";
 import {tooltip} from "../../../util/graphs";
-import {hsvToRgb, randomHSVColor, rgbToHexString, withReducedSaturation} from "../../../util/colors";
+import {hsvToRgb, randomHSVColor, rgbToHexString} from "../../../util/colors";
 import LineGraph from "../../graphs/LineGraph";
 import FunctionPlotGraph from "../../graphs/FunctionPlotGraph";
 import {useTheme} from "../../../hooks/themeHook";
@@ -207,10 +207,10 @@ const PlayerRetentionGraphCard = ({identifier, selectedGroupBy, setSelectedGroup
                 type: selectedYAxis === 'count-stacked' ? 'areaspline' : 'spline',
                 tooltip: tooltip.twoDecimals,
                 data: mapped,
-                color: nightModeEnabled ? withReducedSaturation(color) : color
+                color: color
             }];
         }));
-    }, [nightModeEnabled, mapToData, groupOptions, selectedGroup, selectedYAxis, group]);
+    }, [mapToData, groupOptions, selectedGroup, selectedYAxis, group]);
 
     useEffect(() => {
         if (!data || !playerAddresses) return;

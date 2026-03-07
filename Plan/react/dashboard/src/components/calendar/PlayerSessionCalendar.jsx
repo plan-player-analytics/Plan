@@ -1,39 +1,38 @@
-import React from "react";
+import React, {useCallback, useMemo} from "react";
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import {useTranslation} from "react-i18next";
-import {formatTimeAmount} from "../../util/format/TimeAmountFormat.js";
-import {formatDateWithPreferences, useDatePreferences} from "../text/FormattedDate.jsx";
-import {useTimePreferences} from "../text/FormattedTime.jsx";
 import {localeService} from "../../service/localeService.js";
+import {useTimeAmountFormatter} from "../../util/format/useTimeAmountFormatter.js";
+import {useDateFormatter} from "../../util/format/useDateFormatter.js";
 
 const PlayerSessionCalendar = ({series, firstDay}) => {
-    const {t} = useTranslation();
+    const {t, i18n} = useTranslation();
 
-    const timePreferences = useTimePreferences();
-    const datePreferences = useDatePreferences();
+    const {formatTime} = useTimeAmountFormatter();
+    const {formatDate} = useDateFormatter();
 
-    const formatTitle = entry => {
+    const formatTitle = useCallback(entry => {
         switch (entry.title) {
             case 'html.label.session':
-                return formatTimeAmount(timePreferences, entry.value) + ' ' + t(entry.title);
+                return formatTime(entry.value) + ' ' + t(entry.title);
             case 'html.label.playtime':
-                return t(entry.title) + ": " + formatTimeAmount(timePreferences, entry.value)
+                return t(entry.title) + ": " + formatTime(entry.value)
             case 'html.label.registered':
-                return t(entry.title) + ": " + formatDateWithPreferences(datePreferences, entry.value)
+                return t(entry.title) + ": " + formatDate(entry.value)
             default:
                 return t(entry.title) + ": " + entry.value;
         }
-    }
+    }, [formatTime, formatDate])
 
-    const actualSeries = series.map(entry => {
+    const actualSeries = useMemo(() => series.map(entry => {
         return {
             title: formatTitle(entry),
             start: entry.start,
             end: entry.end,
             color: entry.color
         }
-    });
+    }), [formatTitle]);
 
     const buttonText = {
         today: t('plugin.generic.today').toLowerCase().replaceAll("'", ''),

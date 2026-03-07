@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
@@ -92,7 +93,7 @@ public class BundleAddressCorrection {
 
     private String correctAddressInCss(String content, String basePath) {
         String endingSlash = basePath.endsWith("/") ? "" : "/";
-        return StringUtils.replace(content, "/static", basePath + endingSlash + STATIC);
+        return Strings.CS.replace(content, "/static", basePath + endingSlash + STATIC);
     }
 
     private String correctAddressInJavascript(String content, String basePath) {
@@ -134,7 +135,7 @@ public class BundleAddressCorrection {
             // "./Filename-hash.js"       -> "./Filename-hash.js" or "/plan/static/Filename-hash.js"
             // "/static/Filename-hash.js" -> "/static/Filename-hash.js" or "/plan/static/Filename-hash.js"
             // "static/Filename-hash.js"  -> "static/Filename-hash.js" or "plan/static/Filename-hash.js"
-            String replacementAddress = StringUtils.equalsAny(addressStart, "/static", STATIC)
+            String replacementAddress = Strings.CS.equalsAny(addressStart, "/static", STATIC)
                     ? staticReplacement
                     : relativeReplacement;
             String replacement = '"' + replacementAddress + file + '.' + extension + '"';

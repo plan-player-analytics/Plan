@@ -18,7 +18,6 @@ package com.djrapitops.plan.delivery.rendering.json.graphs.calendar;
 
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.settings.locale.lang.HtmlLang;
-import com.djrapitops.plan.settings.theme.ThemeVal;
 
 import java.util.*;
 
@@ -70,7 +69,7 @@ public class ServerCalendar {
             String day = iso8601TZIndependent.apply(key);
 
             entries.add(CalendarEntry.of(HtmlLang.NEW_CALENDAR.getKey(), newPlayers, day)
-                    .withColor(ThemeVal.LIGHT_GREEN.getDefaultValue()));
+                    .withColor("#8BC34A"));
         }
     }
 
@@ -98,7 +97,7 @@ public class ServerCalendar {
             String day = iso8601TZIndependent.apply(key);
 
             entries.add(CalendarEntry.of(HtmlLang.LABEL_PLAYTIME.getKey(), playtime, day)
-                    .withColor(ThemeVal.GREEN.getDefaultValue()));
+                    .withColor("#4CAF50"));
         }
     }
 
@@ -112,7 +111,7 @@ public class ServerCalendar {
             String day = iso8601TZIndependent.apply(key);
 
             entries.add(CalendarEntry.of(HtmlLang.SIDE_SESSIONS.getKey(), sessionCount, day)
-                    .withColor(ThemeVal.TEAL.getDefaultValue()));
+                    .withColor("#009688"));
         }
     }
 }

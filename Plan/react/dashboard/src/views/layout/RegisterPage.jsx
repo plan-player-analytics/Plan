@@ -8,7 +8,7 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faPalette} from "@fortawesome/free-solid-svg-icons";
 import {useTheme} from "../../hooks/themeHook";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 import FinalizeRegistrationModal from "../../components/modal/FinalizeRegistrationModal";
 import {fetchRegisterCheck, postRegister} from "../../service/authenticationService";
 import {useMetadata} from "../../hooks/metadataHook";

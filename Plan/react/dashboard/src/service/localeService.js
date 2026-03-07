@@ -2,10 +2,11 @@ import i18next from "i18next";
 import I18NextChainedBackend from "i18next-chained-backend";
 import I18NextLocalStorageBackend from "i18next-localstorage-backend";
 import I18NextHttpBackend from 'i18next-http-backend';
-import {initReactI18next} from 'react-i18next';
+import {initReactI18next, useTranslation} from 'react-i18next';
 import {fetchAvailableLocales} from "./metadataService";
 import {baseAddress, staticSite} from "./backendConfiguration";
 import {isNumber} from "../util/isNumber.js";
+import {useMemo} from "react";
 
 /**
  * A locale system for localizing the website.
@@ -64,6 +65,7 @@ export const localeService = {
                     lng: this.clientLocale,
                     fallbackLng: false,
                     supportedLngs: Object.keys(this.availableLanguages),
+                    showSupportNotice: false,
                     backend: {
                         backends: [
                             I18NextLocalStorageBackend,
@@ -119,6 +121,7 @@ export const localeService = {
     },
 
     getIntlFriendlyLocale: () => {
+        if (localeService.clientLocale === 'CUSTOM') return 'en';
         return localeService.clientLocale === 'CN' ? 'zh-cn' : localeService.clientLocale.toLocaleLowerCase().replace('_', '-')
     },
 
@@ -145,3 +148,12 @@ const generateGeolocationMap = () => {
     return map;
 }
 export const reverseRegionLookupMap = generateGeolocationMap();
+
+export const useI18nFriendlyLanguage = () => {
+    const {i18n} = useTranslation();
+
+    return useMemo(() => {
+        if (i18n.language === 'CUSTOM') return 'en';
+        return i18n.language === 'CN' ? 'zh-cn' : i18n.language.toLocaleLowerCase().replace('_', '-')
+    });
+}
