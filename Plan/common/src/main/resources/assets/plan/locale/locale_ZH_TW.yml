@@ -339,7 +339,7 @@ html:
         currentlyInstalledPlugins: "目前安裝的插件"
         dayByDay: "按天查看"
         dayOfweek: "星期"
-        deadliestWeapon: "最致命 PVP 武器"
+        deadliestWeapon: "最致命 PvP 武器"
         deaths: "死亡次數"
         disk: "硬碟空間"
         diskSpace: "剩餘硬碟空間"
