@@ -7,10 +7,10 @@
   "mixins": [
     "ClientToServerHandshakePacketMixin",
     "KickCommandMixin",
-    "PlayerManagerMixin",
-    "ServerCommandSourceMixin",
-    "ServerPlayerEntityMixin",
-    "ServerPlayNetworkHandlerMixin",
+    "PlayerListMixin",
+    "CommandSourceStackMixin",
+    "ServerPlayerMixin",
+    "ServerGamePacketListenerImplMixin",
     "TickTimesMixin"
   ],
   "injectors": {

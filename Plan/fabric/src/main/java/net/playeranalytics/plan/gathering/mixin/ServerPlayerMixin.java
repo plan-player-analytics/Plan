@@ -16,23 +16,29 @@
  */
 package net.playeranalytics.plan.gathering.mixin;
 
-import net.minecraft.server.PlayerConfigEntry;
-import net.minecraft.server.PlayerManager;
-import net.minecraft.text.Text;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.GameType;
 import net.playeranalytics.plan.gathering.listeners.events.PlanFabricEvents;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.net.SocketAddress;
+@Mixin(ServerPlayer.class)
+public class ServerPlayerMixin {
 
-@Mixin(PlayerManager.class)
-public class PlayerManagerMixin {
+    @Inject(method = "setGameMode", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;send(Lnet/minecraft/network/protocol/Packet;)V"))
+    public void onGameModeChanged(GameType gameMode, CallbackInfoReturnable<Boolean> cir) {
+        PlanFabricEvents.ON_GAMEMODE_CHANGE.invoker().onGameModeChange((ServerPlayer) (Object) this, gameMode);
+    }
 
-    @Inject(method = "checkCanJoin", at = @At(value = "TAIL"))
-    public void onLogin(SocketAddress address, PlayerConfigEntry profile, CallbackInfoReturnable<Text> cir) {
-        PlanFabricEvents.ON_LOGIN.invoker().onLogin(address, profile, cir.getReturnValue());
+    @Inject(method = "die", at = @At(value = "TAIL"))
+    public void onKillSelf(DamageSource source, CallbackInfo ci) {
+        if (source.getEntity() == null) {
+            PlanFabricEvents.ON_KILLED.invoker().onKilled((ServerPlayer) (Object) this, null);
+        }
     }
 
 }

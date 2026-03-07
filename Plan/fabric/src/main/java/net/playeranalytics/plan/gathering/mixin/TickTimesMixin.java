@@ -26,5 +26,5 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(MinecraftServer.class)
 public interface TickTimesMixin {
     @Accessor
-    long[] getTickTimes();
+    long[] getTickTimesNanos();
 }
