@@ -945,7 +945,7 @@ plugin:
     apiJSAdded: "頁面擴充：${0} 向 ${1} 加入了 JavaScript（${2}）"
     disable:
         database: "正在處理關鍵未完成任務 (${0})"
-        disabled: "玩家分析已停用"
+        disabled: "Plan 插件已停用"
         processingComplete: "處理完成"
         savingSessions: "正在儲存未完成工作階段..."
         savingSessionsTimeout: "逾時（將在下次啟用時儲存未完成工作階段）"
