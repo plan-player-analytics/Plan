@@ -20,7 +20,7 @@ dependencies {
     // https://wiki.fabricmc.net/tutorial:migratemappings
     minecraft "com.mojang:minecraft:1.21.9"
     mappings loom.officialMojangMappings()
-    modImplementation "net.fabricmc:fabric-loader:0.17.2"
+    modImplementation "net.fabricmc:fabric-loader:0.18.4"
     modImplementation("me.lucko:fabric-permissions-api:0.4.1")
 
     // Fabric API
