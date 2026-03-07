@@ -570,7 +570,7 @@ html:
             retainedPlayersPercentage: "留存玩家百分比"
             timeSinceRegistered: "自註冊日期起的時間"
             timeStep: "時間步長"
-        secondDeadliestWeapon: "第二致命 PVP 武器"
+        secondDeadliestWeapon: "第二致命 PvP 武器"
         seenNicknames: "使用過的遊戲名稱"
         select:
             noOptions: "無可用選項"
