@@ -952,7 +952,7 @@ plugin:
         waitingDb: "正在等待查詢完成以避免 SQLite 使 JVM 崩潰..."
         waitingDbComplete: "已關閉 SQLite 連線"
         waitingTransactions: "正在等待未完成的任務以避免資料遺失..."
-        waitingTransactionsComplete: "交易佇列已關閉"
+        waitingTransactionsComplete: "任務佇列已關閉"
         webserver: "網頁伺服器已停用"
     enable:
         database: "${0} - 已連線到資料庫"
