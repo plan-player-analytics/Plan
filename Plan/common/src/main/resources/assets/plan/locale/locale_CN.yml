@@ -9,6 +9,8 @@ command:
             name: "${code}"
         dbBackup:
             description: "要备份的数据库类型。如未指定则使用当前数据库"
+        dbMergeStrategyDelete: "从目标数据库删除冲突服务器"
+        dbMergeStrategySwap: "在目标数据库中为插入的冲突服务器交换UUID"
         dbRestore:
             description: "要恢复的数据库类型。如未指定则使用当前数据库"
         dbTypeHotswap:
@@ -46,12 +48,34 @@ command:
         cancelNoUnregister: "已取消，'${0}' 未被注销"
         confirm: "确认："
         dbClear: "您即将删除 ${0} 中的所有Plan数据"
+        dbMerge: "您即将把 ${0} 中的数据合并到 ${1} 中"
         dbOverwrite: "您即将用 ${1} 中的数据覆盖 ${0} 中的Plan数据"
         dbRemovePlayer: "您即将从 ${1} 中删除 ${0} 的数据"
         deny: "取消"
         expired: "确认已过期，请重新使用命令"
         unregister: "您即将解除 '${0}' 与 ${1} 的绑定"
     database:
+        copy:
+            abort: "操作已中止。"
+            allDataExisted: "  所有数据均已存在。"
+            clearFinish: "已清空目标数据库。"
+            clearStart: "正在清空目标数据库..."
+            conflict:
+                delete: "在插入前从目标数据库删除冲突服务器 ${0}"
+                info1: "UUID 为 ${0} 的服务器已存在，请选择处理策略。"
+                info2: "  --on-conflict-swap - 为待插入服务器交换UUID（适用于多台服务器曾共享UUID）"
+                info3: "  --on-conflict-delete - 从目标数据库删除该服务器（适用于上次合并失败）"
+                swap: "将服务器 UUID ${0} 交换为 ${1}"
+            destinationState: "目标数据库状态为 ${0}，无法开始操作"
+            error: "执行时出现问题，错误已记录到文件：${0}"
+            list:
+                row: "   ${0} - ${1} 行"
+                titleDestination: "现有数据库中的数据："
+                titleSource: "待复制的数据："
+            progress: "  ${0}: 已复制 ${1}/${2} (${3}%)。"
+            sourceState: "源数据库状态为 ${0}，无法开始操作"
+            table: "正在复制 ${0}..."
+            trackPlayerStart: "玩家 ${0} 发起数据库复制 - 进程标识：${1}"
         creatingBackup: "正在创建备份文件 '${0}.db'，内容来自 ${1}"
         failDbNotOpen: "§c数据库状态为 ${0} - 请稍后再试"
         manage:
@@ -65,6 +89,7 @@ command:
             failNoServer: "未找到符合参数的服务器"
             failSameDB: "> §c不能在同一个数据库内操作！"
             failSameServer: "不能将此服务器标记为已卸载（您正在此服务器上）"
+            failTooManyStrategies: "处理合并冲突时只能选择一种策略。"
             hotswap: "§e请切换到新数据库 (/plan db hotswap ${0}) 并重新加载插件"
             importers: "导入器："
             preparing: "准备中..."
@@ -135,6 +160,9 @@ command:
         dbHotswap:
             description: "快速切换数据库"
             inDepth: "用另一个数据库重新加载插件，并自动调整配置以匹配"
+        dbMerge:
+            description: "合并两个数据库的数据"
+            inDepth: "将一个数据库中的内容合并到另一个数据库中，源数据会插入到目标数据库。"
         dbMove:
             description: "在数据库间移动数据"
             inDepth: "用一个数据库的内容覆盖另一个数据库"
@@ -215,7 +243,7 @@ command:
         deaths: "  §2死亡数：§f${0}"
         geolocation: "  §2登录位置：§f${0}"
         lastSeen: "  §2最后在线：§f${0}"
-        longestSession: "  §2最长会话：§f${0}"
+        longestSession: "  §2最长在线：§f${0}"
         mobKills: "  §2生物击杀数：§f${0}"
         playerKills: "  §2玩家击杀数：§f${0}"
         playtime: "  §2游玩时间：§f${0}"
@@ -247,7 +275,7 @@ html:
         nightMode: "夜间模式"
     calendar:
         new: "新增："
-        unique: "独立："
+        unique: "活跃："
     description:
         newPlayerRetention: "此数值根据历史玩家数据预测得出"
         noData24h: "服务器超过24小时未发送数据"
@@ -454,7 +482,7 @@ html:
         loadedEntities: "已加载实体"
         loneJoins: "单独加入"
         loneNewbieJoins: "单独新玩家加入"
-        longestSession: "最长会话时间"
+        longestSession: "最长在线时长"
         lowTpsSpikes: "低TPS时间"
         lowTpsSpikes7days: "低TPS时间（7天）"
         manage: "管理"
@@ -834,6 +862,7 @@ html:
         filter:
             activity:
                 text: "处于活跃度分组中"
+            anyServer: "任意服务器"
             banStatus:
                 name: "封禁状态"
             banned: "已被封禁"
@@ -843,6 +872,8 @@ html:
                 allPlayers: "所有玩家"
                 and: "并且 "
                 start: "查询玩家："
+            hasPlayedOnDate:
+                name: "在指定日期游玩过"
             hasPlayedOnServers:
                 name: "在其中一个服务器上玩过"
                 text: "至少在其中一个服务器上玩过"
@@ -851,21 +882,38 @@ html:
                 text: "拥有插件布尔值"
             joinAddress:
                 text: "使用地址加入"
+            lastSeenAfter:
+                text: "最后在线晚于"
+            lastSeenBefore:
+                text: "最后在线早于"
+            lastSeenBetween:
+                text: "最后在线介于"
             nonOperators: "非管理员"
             notBanned: "未被封禁"
+            onDate: "在"
+            onServer: "在服务器"
             operatorStatus:
                 name: "管理员状态"
             operators: "管理员"
+            playedAfter:
+                text: "游玩时间晚于"
+            playedBefore:
+                text: "游玩时间早于"
             playedBetween:
                 text: "在此期间游玩过"
             pluginGroup:
                 name: "分组："
                 text: "处于 {{plugin}} 插件的 {{group}} 分组中"
+            registeredAfter:
+                text: "注册时间晚于"
+            registeredBefore:
+                text: "注册时间早于"
             registeredBetween:
                 text: "在此期间注册"
             skipped: "已跳过"
             title:
                 activityGroup: "当前活跃度分组"
+                activityGroupOnDate: "指定日期的活跃度分组"
             view: "查看范围："
         filters:
             add: "添加过滤器..."

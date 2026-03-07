@@ -9,6 +9,8 @@ command:
             name: "${code}"
         dbBackup:
             description: "要備份的資料庫類型（若未指定則使用目前資料庫）"
+        dbMergeStrategyDelete: "從目標資料庫刪除衝突伺服器"
+        dbMergeStrategySwap: "在目標資料庫中為插入的衝突伺服器交換 UUID"
         dbRestore:
             description: "要還原的資料庫類型（若未指定則使用目前資料庫）"
         dbTypeHotswap:
@@ -46,12 +48,34 @@ command:
         cancelNoUnregister: "已取消，'${0}' 未被註銷"
         confirm: "確認："
         dbClear: "您即將刪除 ${0} 中的所有 Plan 資料"
+        dbMerge: "您即將把 ${0} 中的資料合併到 ${1} 中"
         dbOverwrite: "您即將用 ${1} 中的資料覆蓋 ${0} 中的 Plan 資料"
         dbRemovePlayer: "您即將從 ${1} 中刪除 ${0} 的資料"
         deny: "取消"
         expired: "確認已過期，請重新使用指令"
         unregister: "您即將解除 '${0}' 與 ${1} 的綁定"
     database:
+        copy:
+            abort: "操作已中止。"
+            allDataExisted: "  所有資料皆已存在。"
+            clearFinish: "已清空目標資料庫。"
+            clearStart: "正在清空目標資料庫..."
+            conflict:
+                delete: "插入前先從目標資料庫刪除衝突伺服器 ${0}"
+                info1: "UUID 為 ${0} 的伺服器已存在，請選擇處理策略。"
+                info2: "  --on-conflict-swap - 為待插入伺服器交換 UUID（適用於多台伺服器曾共用 UUID）"
+                info3: "  --on-conflict-delete - 從目標資料庫刪除該伺服器（適用於上次合併失敗）"
+                swap: "將伺服器 UUID ${0} 交換為 ${1}"
+            destinationState: "目標資料庫狀態為 ${0}，無法開始操作"
+            error: "執行時發生問題，錯誤已記錄到檔案：${0}"
+            list:
+                row: "   ${0} - ${1} 列"
+                titleDestination: "現有資料庫中的資料："
+                titleSource: "待複製的資料："
+            progress: "  ${0}: 已複製 ${1}/${2} (${3}%)。"
+            sourceState: "來源資料庫狀態為 ${0}，無法開始操作"
+            table: "正在複製 ${0}..."
+            trackPlayerStart: "玩家 ${0} 發起資料庫複製 - 程序識別碼：${1}"
         creatingBackup: "正在建立備份檔案 '${0}.db'（內容來自 ${1}）"
         failDbNotOpen: "§c資料庫狀態為 ${0} - 請稍後再試"
         manage:
@@ -65,6 +89,7 @@ command:
             failNoServer: "未找到符合參數的伺服器"
             failSameDB: "> §c不能在同一個資料庫內操作！"
             failSameServer: "不能將此伺服器標記為已解除安裝（您正在此伺服器上）"
+            failTooManyStrategies: "處理合併衝突時只能選擇一種策略。"
             hotswap: "§e請切換到新資料庫 (/plan db hotswap ${0}) 並重新載入插件"
             importers: "匯入器："
             preparing: "準備中..."
@@ -135,6 +160,9 @@ command:
         dbHotswap:
             description: "快速切換資料庫"
             inDepth: "用另一個資料庫重新載入插件，並自動調整設定以匹配"
+        dbMerge:
+            description: "合併兩個資料庫的資料"
+            inDepth: "將一個資料庫中的內容合併到另一個資料庫中，來源資料會插入到目標資料庫。"
         dbMove:
             description: "在資料庫間移動資料"
             inDepth: "用一個資料庫的內容覆蓋另一個資料庫"
@@ -834,6 +862,7 @@ html:
         filter:
             activity:
                 text: "處於活躍度分組中"
+            anyServer: "任意伺服器"
             banStatus:
                 name: "封鎖狀態"
             banned: "已被封鎖"
@@ -843,6 +872,8 @@ html:
                 allPlayers: "所有玩家"
                 and: "並且"
                 start: "查詢玩家："
+            hasPlayedOnDate:
+                name: "在指定日期遊玩過"
             hasPlayedOnServers:
                 name: "在其中一個伺服器上玩過"
                 text: "至少在這些伺服器中的一個上玩過"
@@ -851,21 +882,38 @@ html:
                 text: "擁有插件布林值"
             joinAddress:
                 text: "使用位址加入"
+            lastSeenAfter:
+                text: "最後上線晚於"
+            lastSeenBefore:
+                text: "最後上線早於"
+            lastSeenBetween:
+                text: "最後上線介於"
             nonOperators: "非管理員"
             notBanned: "未被封鎖"
+            onDate: "於"
+            onServer: "在伺服器"
             operatorStatus:
                 name: "管理員狀態"
             operators: "管理員"
+            playedAfter:
+                text: "遊玩時間晚於"
+            playedBefore:
+                text: "遊玩時間早於"
             playedBetween:
                 text: "在此期間遊玩過"
             pluginGroup:
                 name: "分組："
                 text: "處於 {{plugin}} 插件的 {{group}} 分組中"
+            registeredAfter:
+                text: "註冊時間晚於"
+            registeredBefore:
+                text: "註冊時間早於"
             registeredBetween:
                 text: "在此期間註冊"
             skipped: "已跳過"
             title:
                 activityGroup: "目前活躍度分組"
+                activityGroupOnDate: "指定日期的活躍度分組"
             view: "檢視範圍："
         filters:
             add: "新增過濾器..."
