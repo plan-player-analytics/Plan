@@ -956,7 +956,7 @@ plugin:
         webserver: "網頁伺服器已停用"
     enable:
         database: "${0} - 已連線到資料庫"
-        enabled: "玩家分析已啟用"
+        enabled: "Plan 插件已啟用"
         fail:
             database: "${0} - 資料庫連線失敗：${1}"
             databasePatch: "資料庫修補失敗（插件必須停用。請回報此問題）"
