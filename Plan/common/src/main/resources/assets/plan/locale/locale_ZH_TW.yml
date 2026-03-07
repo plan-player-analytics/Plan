@@ -1013,6 +1013,6 @@ plugin:
             certificateNoSuchAlias: "網頁伺服器：在憑證庫檔案 '${1}' 中找不到別名為 '${0}' 的憑證"
             http: "網頁伺服器：無憑證 -> 使用 HTTP 伺服器提供視覺化效果"
             ipWhitelist: "網頁伺服器：IP 允許清單已啟用"
-            ipWhitelistBlock: "網頁伺服器：${0} 被拒絕存取 '${1}'（不在允許清單中）"
+            ipWhitelistBlock: "網頁伺服器：${0} 被拒絕存取 '${1}'（不在白名單中）"
             noCertFile: "網頁伺服器：找不到憑證金鑰庫檔案：${0}"
             reverseProxy: "網頁伺服器：HTTPS 代理模式已開啟（請確保反向代理已設定為 HTTPS 模式且 Plan 的 Alternative_IP.Address 選項指向代理）"
