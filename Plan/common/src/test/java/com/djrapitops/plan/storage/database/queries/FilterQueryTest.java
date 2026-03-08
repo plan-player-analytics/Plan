@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries;
 
-import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
+import com.djrapitops.plan.delivery.domain.datatransfer.query.InputFilterDto;
 import com.djrapitops.plan.settings.locale.lang.FilterLang;
 import com.djrapitops.plan.settings.locale.lang.HtmlLang;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;

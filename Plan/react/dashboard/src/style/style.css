@@ -165,7 +165,7 @@ p.collapsing {
     }
 }
 
-div.scrollbar {
+.scrollbar {
     overflow: hidden;
     overflow-y: auto;
     max-height: 60vh;

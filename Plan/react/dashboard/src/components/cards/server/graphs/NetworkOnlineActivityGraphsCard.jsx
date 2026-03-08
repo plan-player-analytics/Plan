@@ -11,7 +11,7 @@ import {
     fetchPlayersOnlineGraph
 } from "../../../../service/serverService";
 import {ErrorViewBody} from "../../../../views/ErrorView.tsx";
-import {ChartLoader} from "../../../navigation/Loader";
+import {ChartLoader} from "../../../navigation/Loader.tsx";
 import TimeByTimeGraph from "../../../graphs/TimeByTimeGraph";
 import PlayersOnlineGraph from "../../../graphs/PlayersOnlineGraph";
 import {useMetadata} from "../../../../hooks/metadataHook";

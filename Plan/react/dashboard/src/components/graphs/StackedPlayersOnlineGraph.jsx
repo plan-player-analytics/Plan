@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {tooltip, translateLinegraphButtons} from "../../util/graphs";
 import LineGraph from './LineGraph'
-import {ChartLoader} from "../navigation/Loader";
+import {ChartLoader} from "../navigation/Loader.tsx";
 import {useTheme} from "../../hooks/themeHook";
 import {PlayersOnlineTooltip, useTooltipOptions} from "./tooltip/PlayersOnlineTooltip.jsx";
 

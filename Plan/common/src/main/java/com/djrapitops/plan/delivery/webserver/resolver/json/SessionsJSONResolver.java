@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
+import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
@@ -24,11 +25,7 @@ import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
-import com.djrapitops.plan.delivery.webserver.cache.DataID;
-import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.identification.Identifiers;
-import com.djrapitops.plan.identification.ServerUUID;
-import com.djrapitops.plan.utilities.dev.Untrusted;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -41,8 +38,8 @@ import jakarta.ws.rs.Path;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Collections;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Resolves /v1/sessions JSON requests.
@@ -74,6 +71,9 @@ public class SessionsJSONResolver extends JSONResolver {
     @Override
     public boolean canAccess(Request request) {
         WebUser user = request.getUser().orElse(new WebUser(""));
+        if (request.getQuery().get("player").isPresent()) {
+            return user.hasPermission(WebPermission.PAGE_PLAYER_SESSIONS);
+        }
         if (request.getQuery().get("server").isPresent()) {
             return user.hasPermission(WebPermission.PAGE_SERVER_SESSIONS_LIST);
         }
@@ -100,21 +100,25 @@ public class SessionsJSONResolver extends JSONResolver {
     }
 
     private Response getResponse(Request request) {
-        JSONStorage.StoredJSON result = getStoredJSON(request);
-        return getCachedOrNewResponse(request, result);
-    }
-
-    private JSONStorage.StoredJSON getStoredJSON(@Untrusted Request request) {
-        Optional<Long> timestamp = Identifiers.getTimestamp(request);
-        if (request.getQuery().get("server").isPresent()) {
-            ServerUUID serverUUID = identifiers.getServerUUID(request);
-            return jsonResolverService.resolve(timestamp, DataID.SESSIONS, serverUUID,
-                    theUUID -> Collections.singletonMap("sessions", jsonFactory.serverSessionsAsJSONMap(theUUID))
-            );
+        GenericFilter filter = GenericFilter.of(request.getQuery());
+        if (!filter.didAllServerIdentifiersParse()) {
+            filter.setServerUUIDs(identifiers.getServerUUIDs(filter.getServerIdentifiers()));
         }
-        // Assume network
-        return jsonResolverService.resolve(timestamp, DataID.SESSIONS,
-                () -> Collections.singletonMap("sessions", jsonFactory.networkSessionsAsJSONMap())
-        );
+
+        Optional<UUID> playerUUID = filter.getPlayerUUID();
+        if (playerUUID.isPresent()) {
+            return newResponseBuilder()
+                    .setJSONContent(jsonFactory.playerSessions(filter))
+                    .build();
+        }
+        if (!filter.getServerUUIDs().isEmpty()) {
+            return newResponseBuilder()
+                    .setJSONContent(jsonFactory.serverSessions(filter))
+                    .build();
+        } else {
+            return newResponseBuilder()
+                    .setJSONContent(jsonFactory.networkSessions(filter))
+                    .build();
+        }
     }
 }

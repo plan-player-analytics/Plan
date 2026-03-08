@@ -19,7 +19,7 @@ import OnlineActivityCard from "../../components/cards/server/graphs/OnlineActiv
 import ServerAsNumbersCard from "../../components/cards/server/values/ServerAsNumbersCard";
 import ServerWeekComparisonCard from "../../components/cards/server/tables/ServerWeekComparisonCard";
 import LoadIn from "../../components/animation/LoadIn.tsx";
-import {CardLoader} from "../../components/navigation/Loader";
+import {CardLoader} from "../../components/navigation/Loader.tsx";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";

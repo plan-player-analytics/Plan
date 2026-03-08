@@ -5,7 +5,7 @@ import {faBookOpen, faChartLine, faCrosshairs, faSkull, faUser, faUsers} from "@
 import Datapoint from "../../../Datapoint";
 import {faCalendarCheck, faClock} from "@fortawesome/free-regular-svg-icons";
 import React from "react";
-import {CardLoader} from "../../../navigation/Loader";
+import {CardLoader} from "../../../navigation/Loader.tsx";
 import ExtendableCardBody from "../../../layout/extension/ExtendableCardBody";
 import {useMetadata} from "../../../../hooks/metadataHook";
 import CurrentUptime from "../../../datapoint/CurrentUptime";

@@ -51,12 +51,12 @@ public class SessionsMutator {
 
     private final List<FinishedSession> sessions;
 
-    public static SessionsMutator forContainer(DataContainer container) {
-        return new SessionsMutator(container.getValue(CommonKeys.SESSIONS).orElse(new ArrayList<>()));
-    }
-
     public SessionsMutator(List<FinishedSession> sessions) {
         this.sessions = sessions;
+    }
+
+    public static SessionsMutator forContainer(DataContainer container) {
+        return new SessionsMutator(container.getValue(CommonKeys.SESSIONS).orElse(new ArrayList<>()));
     }
 
     public static Map<UUID, List<FinishedSession>> sortByPlayers(List<FinishedSession> sessions) {
@@ -70,11 +70,6 @@ public class SessionsMutator {
         return sorted;
     }
 
-    public SessionsMutator sort(Comparator<DateHolder> sessionComparator) {
-        sessions.sort(sessionComparator);
-        return this;
-    }
-
     public static Map<ServerUUID, List<FinishedSession>> sortByServers(List<FinishedSession> sessions) {
         Map<ServerUUID, List<FinishedSession>> sorted = new HashMap<>();
         for (FinishedSession session : sessions) {
@@ -83,10 +78,6 @@ public class SessionsMutator {
             serverSessions.add(session);
         }
         return sorted;
-    }
-
-    public SessionsMutator filterSessionsBetween(long after, long before) {
-        return filterBy(getBetweenPredicate(after, before));
     }
 
     public static Map<ServerUUID, TreeMap<Long, FinishedSession>> sortByServersToMaps(List<FinishedSession> sessions) {
@@ -98,6 +89,15 @@ public class SessionsMutator {
             sorted.put(serverUUID, serverSessions);
         }
         return sorted;
+    }
+
+    public SessionsMutator sort(Comparator<DateHolder> sessionComparator) {
+        sessions.sort(sessionComparator);
+        return this;
+    }
+
+    public SessionsMutator filterSessionsBetween(long after, long before) {
+        return filterBy(getBetweenPredicate(after, before));
     }
 
     public List<FinishedSession> all() {
@@ -300,7 +300,7 @@ public class SessionsMutator {
                     .map(JoinAddress::getAddress).orElse("-"));
 
             session.getExtraData(AveragePing.class).ifPresent(averagePing ->
-                    sessionMap.put("avg_ping", formatters.decimals().apply(averagePing.getValue()) + " ms")
+                    sessionMap.put("avg_ping", averagePing.getValue())
             );
             return sessionMap;
         });

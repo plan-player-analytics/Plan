@@ -3,7 +3,7 @@ import InsightsFor30DaysCard from "../../common/InsightsFor30DaysCard";
 import {useTranslation} from "react-i18next";
 import Datapoint from "../../../Datapoint";
 import {faDragon, faMap, faStopwatch, faTachometerAlt, faUsers} from "@fortawesome/free-solid-svg-icons";
-import {CardLoader} from "../../../navigation/Loader";
+import {CardLoader} from "../../../navigation/Loader.tsx";
 
 const PerformanceInsightsCard = ({data}) => {
     const {t} = useTranslation();

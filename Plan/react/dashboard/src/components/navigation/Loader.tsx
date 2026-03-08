@@ -1,4 +1,4 @@
-import React from "react";
+import React, {CSSProperties} from "react";
 import {Card} from "react-bootstrap";
 
 export const CardLoader = () => {
@@ -14,7 +14,11 @@ export const CardLoader = () => {
     )
 }
 
-export const ChartLoader = ({style}) => {
+type ChartLoaderProps = {
+    style?: CSSProperties;
+}
+
+export const ChartLoader = ({style}: ChartLoaderProps) => {
     return <div className="chart-area loading" style={style}>
         <Loader/>
     </div>

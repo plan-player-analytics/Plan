@@ -4,7 +4,7 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faClock} from "@fortawesome/free-regular-svg-icons";
 import WorldPie from "../../graphs/WorldPie";
 import React from "react";
-import {CardLoader} from "../../navigation/Loader";
+import {CardLoader} from "../../navigation/Loader.tsx";
 
 const WorldPieCard = ({worldSeries, gmSeries}) => {
     const {t} = useTranslation();

@@ -3,20 +3,12 @@ import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import {useTranslation} from "react-i18next";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faHandPointer} from "@fortawesome/free-regular-svg-icons";
 import {localeService} from "../../service/localeService.js";
 import {useTimeAmountFormatter} from "../../util/format/useTimeAmountFormatter.js";
 
-const ServerCalendar = ({series, firstDay, onSelect}) => {
+const ServerCalendar = ({series, firstDay, onSelect, height}) => {
     const {t} = useTranslation();
     const {formatTime} = useTimeAmountFormatter();
-
-    const explainerStyle = {
-        position: "absolute",
-        top: "0.5rem",
-        right: "1rem"
-    };
 
     const formatTitle = useCallback(entry => {
         switch (entry.title) {
@@ -48,7 +40,6 @@ const ServerCalendar = ({series, firstDay, onSelect}) => {
 
     return (
         <div id={'server-calendar'}>
-            <p style={explainerStyle}><FontAwesomeIcon icon={faHandPointer}/> {t('html.text.clickAndDrag')}</p>
             <FullCalendar
                 locale={localeService.getIntlFriendlyLocale()}
                 plugins={[interactionPlugin, dayGridPlugin]}
@@ -59,8 +50,8 @@ const ServerCalendar = ({series, firstDay, onSelect}) => {
                 firstDay={firstDay}
                 initialView='dayGridMonth'
                 navLinks={true}
-                height={800}
-                contentHeight={800}
+                height={height || 800}
+                contentHeight={height || 800}
                 headerToolbar={{
                     left: 'title',
                     center: '',

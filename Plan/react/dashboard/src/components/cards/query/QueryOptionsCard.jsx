@@ -4,7 +4,7 @@ import {useTranslation} from "react-i18next";
 import {useDataRequest} from "../../../hooks/dataFetchHook";
 import {fetchFilters, postQuery} from "../../../service/queryService";
 import {ErrorViewCard} from "../../../views/ErrorView.tsx";
-import {ChartLoader} from "../../navigation/Loader";
+import {ChartLoader} from "../../navigation/Loader.tsx";
 import DateInputField from "../../input/DateInputField";
 import TimeInputField from "../../input/TimeInputField";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";

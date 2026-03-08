@@ -495,7 +495,7 @@
 .bg-sessions-outline {
     border-color: var(--color-data-play-sessions);
     border-style: solid;
-    border-width: 3px;
+    border-width: 3px !important;
     outline: var(--color-data-play-sessions) solid 1px;
 }
 

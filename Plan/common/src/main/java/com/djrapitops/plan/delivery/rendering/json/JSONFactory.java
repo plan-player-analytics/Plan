@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.delivery.domain.PlayerIdentifier;
 import com.djrapitops.plan.delivery.domain.PlayerName;
 import com.djrapitops.plan.delivery.domain.RetentionData;
+import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.domain.datatransfer.PlayerJoinAddresses;
 import com.djrapitops.plan.delivery.domain.datatransfer.ServerDto;
 import com.djrapitops.plan.delivery.domain.mutators.PlayerKillMutator;
@@ -28,6 +29,7 @@ import com.djrapitops.plan.delivery.domain.mutators.TPSMutator;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
+import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerTableDataQuery;
 import com.djrapitops.plan.gathering.ServerUptimeCalculator;
@@ -112,6 +114,14 @@ public class JSONFactory {
         }
         for (UUID playerUUID : toRemove) {
             addressByPlayerUUID.put(playerUUID, JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
+        }
+    }
+
+    private static void removeLimitOverflow(List<FinishedSession> sessions) {
+        while (true) {
+            int size = sessions.size();
+            if (size <= 10000) break;
+            sessions.remove(size - 1); // Remove last until it fits.
         }
     }
 
@@ -216,50 +226,11 @@ public class JSONFactory {
         }
     }
 
-    public List<Map<String, Object>> serverSessionsAsJSONMap(ServerUUID serverUUID) {
-        Database db = dbSystem.getDatabase();
-
-        Integer perPageLimit = config.get(DisplaySettings.SESSIONS_PER_PAGE);
-        List<FinishedSession> sessions = db.query(SessionQueries.fetchLatestSessionsOfServer(serverUUID, perPageLimit));
-        // Add online sessions
-        if (serverUUID.equals(serverInfo.getServerUUID())) {
-            addActiveSessions(sessions);
-            sessions.sort(new SessionStartComparator());
-            while (true) {
-                int size = sessions.size();
-                if (size <= perPageLimit) break;
-                sessions.remove(size - 1); // Remove last until it fits.
-            }
-        }
-
-        return new SessionsMutator(sessions).toPlayerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters);
-    }
-
-    public List<Map<String, Object>> networkSessionsAsJSONMap() {
-        Database db = dbSystem.getDatabase();
-        Integer perPageLimit = config.get(DisplaySettings.SESSIONS_PER_PAGE);
-
-        List<FinishedSession> sessions = db.query(SessionQueries.fetchLatestSessions(perPageLimit));
-        // Add online sessions
-        if (serverInfo.getServer().isProxy()) {
-            addActiveSessions(sessions);
-            sessions.sort(new SessionStartComparator());
-            while (true) {
-                int size = sessions.size();
-                if (size <= perPageLimit) break;
-                sessions.remove(size - 1); // Remove last until it fits.
-            }
-        }
-
-        List<Map<String, Object>> sessionMaps = new SessionsMutator(sessions).toPlayerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters);
-        // Add network_server property so that sessions have a server page link
-        sessionMaps.forEach(map -> map.put("network_server", map.get("server_name")));
-        return sessionMaps;
-    }
-
-    public void addActiveSessions(List<FinishedSession> sessions) {
+    public void addActiveSessions(List<FinishedSession> sessions, long after, long before) {
         for (ActiveSession activeSession : SessionCache.getActiveSessions()) {
-            sessions.add(activeSession.toFinishedSessionFromStillActive());
+            if (activeSession.isWithin(after, before)) {
+                sessions.add(activeSession.toFinishedSessionFromStillActive());
+            }
         }
     }
 
@@ -401,5 +372,57 @@ public class JSONFactory {
         return online.stream()
                 .sorted()
                 .collect(Collectors.toList());
+    }
+
+    public List<Map<String, Object>> playerSessions(GenericFilter filter) {
+        UUID playerUUID = filter.getPlayerUUID().orElseThrow(() -> new BadRequestException("Player UUID not given"));
+
+        long after = filter.getAfter().orElse(0L);
+        long before = filter.getBefore().orElse(Long.MAX_VALUE);
+        List<ServerUUID> serverUUIDs = filter.getServerUUIDs();
+
+        List<FinishedSession> sessions = dbSystem.getDatabase().query(SessionQueries.sessionsOfPlayer(playerUUID, after, before, serverUUIDs));
+        // Add online sessions
+        if (serverUUIDs.contains(serverInfo.getServerUUID())) {
+            SessionCache.getCachedSession(playerUUID)
+                    .filter(activeSession -> activeSession.isWithin(after, before))
+                    .map(ActiveSession::toFinishedSessionFromStillActive)
+                    .ifPresent(sessions::add);
+            sessions.sort(new SessionStartComparator());
+            removeLimitOverflow(sessions);
+        }
+
+        return new SessionsMutator(sessions).toServerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters);
+    }
+
+    public List<Map<String, Object>> serverSessions(GenericFilter filter) {
+        long after = filter.getAfter().orElse(0L);
+        long before = filter.getBefore().orElse(Long.MAX_VALUE);
+        List<ServerUUID> serverUUIDs = filter.getServerUUIDs();
+
+        List<FinishedSession> sessions = dbSystem.getDatabase().query(SessionQueries.sessionsOfServers(after, before, serverUUIDs));
+        // Add online sessions
+        if (serverUUIDs.contains(serverInfo.getServerUUID())) {
+            addActiveSessions(sessions, after, before);
+            sessions.sort(new SessionStartComparator());
+            removeLimitOverflow(sessions);
+        }
+
+        return new SessionsMutator(sessions).toPlayerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters);
+    }
+
+    public List<Map<String, Object>> networkSessions(GenericFilter filter) {
+        long after = filter.getAfter().orElse(0L);
+        long before = filter.getBefore().orElse(Long.MAX_VALUE);
+
+        List<FinishedSession> sessions = dbSystem.getDatabase().query(SessionQueries.sessionsOfServers(after, before, List.of()));
+        // Add online sessions
+        addActiveSessions(sessions, after, before);
+        sessions.sort(new SessionStartComparator());
+        removeLimitOverflow(sessions);
+
+        List<Map<String, Object>> asMaps = new SessionsMutator(sessions).toPlayerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters);
+        asMaps.forEach(map -> map.put("network_server", map.get("server_name")));
+        return asMaps;
     }
 }

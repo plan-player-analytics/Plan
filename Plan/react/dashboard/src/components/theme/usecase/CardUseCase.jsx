@@ -1,5 +1,5 @@
 import React from 'react';
-import CardHeader from "../../cards/CardHeader.jsx";
+import CardHeader from "../../cards/CardHeader.tsx";
 import {faImage, faUser} from "@fortawesome/free-solid-svg-icons";
 import {Card, Col, Row} from "react-bootstrap";
 import Datapoint from "../../Datapoint.jsx";

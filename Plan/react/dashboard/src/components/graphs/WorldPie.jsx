@@ -8,7 +8,7 @@ import {useTheme} from "../../hooks/themeHook";
 import {nameToCssVariable, withReducedSaturation} from "../../util/colors";
 import {useTranslation} from "react-i18next";
 import {usePreferences} from "../../hooks/preferencesHook.jsx";
-import Loader from "../navigation/Loader.jsx";
+import Loader from "../navigation/Loader.tsx";
 import {useThemeStorage} from "../../hooks/context/themeContextHook.tsx";
 import {classNames} from "../../util/classNames.ts";
 import {useTimeAmountFormatter} from "../../util/format/useTimeAmountFormatter.js";

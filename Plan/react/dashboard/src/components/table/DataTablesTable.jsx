@@ -18,6 +18,7 @@ import CollapseWithButton from "../layout/CollapseWithButton";
 import {faMinusSquare, faPlusSquare} from "@fortawesome/free-regular-svg-icons";
 import {Trans, useTranslation} from "react-i18next";
 import {download, generateCsv, mkConfig} from "export-to-csv";
+import {classNames} from "../../util/classNames.ts";
 
 const PaginationOption = ({onClick, children, selected}) => (
     <li>
@@ -33,9 +34,9 @@ const Pagination = ({page, maxPage, setPage}) => {
 
     const elements = [];
     elements.push(<PaginationOption key={"<<"} onClick={firstPage}><FontAwesomeIcon
-        icon={faAnglesLeft}/></PaginationOption>)
-    elements.push(<PaginationOption key={"<"} onClick={previousPage}><FontAwesomeIcon
-        icon={faAngleLeft}/></PaginationOption>)
+            icon={faAnglesLeft}/></PaginationOption>,
+        <PaginationOption key={"<"} onClick={previousPage}><FontAwesomeIcon
+            icon={faAngleLeft}/></PaginationOption>)
     const pagesStart = Math.max(1, page - 2);
     const pagesEnd = Math.min(maxPage, pagesStart + 7);
     for (let i = pagesStart; i <= pagesEnd; i++) {
@@ -43,9 +44,9 @@ const Pagination = ({page, maxPage, setPage}) => {
                                         onClick={() => setPage(i - 1)}>{i}</PaginationOption>)
     }
     elements.push(<PaginationOption key={">"} onClick={nextPage}><FontAwesomeIcon
-        icon={faAngleRight}/></PaginationOption>)
-    elements.push(<PaginationOption key={">>"} onClick={lastPage}><FontAwesomeIcon
-        icon={faAnglesRight}/></PaginationOption>)
+            icon={faAngleRight}/></PaginationOption>,
+        <PaginationOption key={">>"} onClick={lastPage}><FontAwesomeIcon
+            icon={faAnglesRight}/></PaginationOption>)
 
     return (
         <ul className={"dataTables_paginate input-group pagination"}>
@@ -127,7 +128,7 @@ const ExportMenu = ({matchingData}) => {
     )
 }
 
-const DataTablesTable = ({id, rowKeyFunction, options, colorClass, expandComponent}) => {
+const DataTablesTable = ({id, rowKeyFunction, options, className, colorClass, expandComponent, clickableRows}) => {
     const {t} = useTranslation();
     const {nightModeEnabled} = useTheme();
 
@@ -171,8 +172,8 @@ const DataTablesTable = ({id, rowKeyFunction, options, colorClass, expandCompone
         if (valA === undefined && valB === undefined) return 0;
         if (valA === undefined) return sortReversed ? 1 : -1;
         if (valB === undefined) return sortReversed ? 1 : -1;
-        const isNumberA = typeof valA === 'number' || !isNaN(valA);
-        const isNumberB = typeof valB === 'number' || !isNaN(valB);
+        const isNumberA = typeof valA === 'number' || !Number.isNaN(valA);
+        const isNumberB = typeof valB === 'number' || !Number.isNaN(valB);
         if (isNumberA && isNumberB) {
             return sortReversed ? valA - valB : valB - valA;
         }
@@ -185,7 +186,7 @@ const DataTablesTable = ({id, rowKeyFunction, options, colorClass, expandCompone
 
     const keys = visibleColumns.flatMap(column => [column.data._ || column.data, column.data.display]);
     const [filter, setFilter] = useState('');
-    const filterWords = filter.split(' ').filter(word => word);
+    const filterWords = filter.split(' ').filter(Boolean);
     const matchingData = options.data.filter(row => {
         if (!filter) return true;
 
@@ -257,7 +258,7 @@ const DataTablesTable = ({id, rowKeyFunction, options, colorClass, expandCompone
                 <ExportMenu matchingData={matchingData} columns={columns}/>
             </div>
             <table id={id}
-                   className={"datatable table table-bordered table-striped" + (nightModeEnabled ? " table-dark" : '')}
+                   className={classNames("datatable table table-bordered table-striped", nightModeEnabled && " table-dark", className)}
                    style={{width: "100%"}}>
                 <thead id={id + '-head'} className={colorClass}>
                 <tr>
@@ -278,7 +279,9 @@ const DataTablesTable = ({id, rowKeyFunction, options, colorClass, expandCompone
                     </td>)}
                 </tr>}
                 {rows.map(row => <React.Fragment key={"frag-" + rowKeyFunction(row, null)}>
-                    <tr key={"row-" + rowKeyFunction(row, null)}>
+                    <tr key={"row-" + rowKeyFunction(row, null)} className={row.colorClass}
+                        style={clickableRows ? {cursor: 'pointer'} : undefined}
+                        onClick={clickableRows ? () => toggleRow(rowKeyFunction(row, null)) : undefined}>
                         {visibleColumns.map((column, i) => {
                             if (column.data._ !== undefined) {
                                 return <td key={"col-" + rowKeyFunction(row, column)}>

@@ -7,7 +7,7 @@ import SmallTrend from "../../../trend/SmallTrend";
 import {faCalendar, faCalendarPlus} from "@fortawesome/free-regular-svg-icons";
 import ComparingLabel from "../../../trend/ComparingLabel";
 import End from "../../../layout/End";
-import {CardLoader} from "../../../navigation/Loader";
+import {CardLoader} from "../../../navigation/Loader.tsx";
 import FormattedTime from "../../../text/FormattedTime.jsx";
 import {useTimeAmountFormatter} from "../../../../util/format/useTimeAmountFormatter.js";
 

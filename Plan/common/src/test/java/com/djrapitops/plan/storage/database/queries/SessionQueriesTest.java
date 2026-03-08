@@ -37,15 +37,14 @@ import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythi
 import com.djrapitops.plan.storage.database.transactions.events.*;
 import com.djrapitops.plan.utilities.java.Maps;
 import net.playeranalytics.plugin.scheduling.TimeAmount;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import utilities.RandomData;
 import utilities.TestConstants;
 
 import java.sql.PreparedStatement;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -502,5 +501,35 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         Map<UUID, Long> expected = Map.of(playerUUID, lastSeenP1, player2UUID, lastSeenP2);
         Map<UUID, Long> result = db().query(SessionQueries.lastSeen(serverUUID()));
         assertEquals(expected, result);
+    }
+
+    @TestFactory
+    @DisplayName("Sessions within timeframe are fetched correctly")
+    default Stream<DynamicTest> sessionsWithinTimeframe() {
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[1]));
+        db().executeTransaction(new StoreServerPlayerTransaction(player2UUID, RandomData::randomTime,
+                TestConstants.PLAYER_TWO_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        db().executeTransaction(new StoreSessionTransaction(session)).join();
+
+        List<FinishedSession> expected = List.of(session);
+        List<FinishedSession> none = List.of();
+        long beforeSession = session.getStart() - TimeUnit.MINUTES.toMillis(1);
+        long afterSession = session.getEnd() + TimeUnit.MINUTES.toMillis(1);
+        return Stream.of(
+                DynamicTest.dynamicTest("Player sessions", () -> assertEquals(expected, db().query(SessionQueries.sessionsOfPlayer(playerUUID, beforeSession, afterSession, List.of())))),
+                DynamicTest.dynamicTest("Server sessions", () -> assertEquals(expected, db().query(SessionQueries.sessionsOfServers(beforeSession, afterSession, List.of(serverUUID()))))),
+                DynamicTest.dynamicTest("Network sessions", () -> assertEquals(expected, db().query(SessionQueries.sessionsOfServers(beforeSession, afterSession, List.of())))),
+                DynamicTest.dynamicTest("Player sessions - none (before)", () -> assertEquals(none, db().query(SessionQueries.sessionsOfPlayer(playerUUID, beforeSession - TimeUnit.MINUTES.toMillis(1), beforeSession, List.of())))),
+                DynamicTest.dynamicTest("Player sessions - none (after)", () -> assertEquals(none, db().query(SessionQueries.sessionsOfPlayer(playerUUID, afterSession, afterSession + TimeUnit.MINUTES.toMillis(1), List.of())))),
+                DynamicTest.dynamicTest("Player sessions - none (wrong order)", () -> assertEquals(none, db().query(SessionQueries.sessionsOfPlayer(playerUUID, afterSession, beforeSession, List.of())))),
+                DynamicTest.dynamicTest("Server sessions - none (before)", () -> assertEquals(none, db().query(SessionQueries.sessionsOfServers(beforeSession - TimeUnit.MINUTES.toMillis(1), beforeSession, List.of(serverUUID()))))),
+                DynamicTest.dynamicTest("Server sessions - none (after)", () -> assertEquals(none, db().query(SessionQueries.sessionsOfServers(afterSession, afterSession + TimeUnit.MINUTES.toMillis(1), List.of(serverUUID()))))),
+                DynamicTest.dynamicTest("Server sessions - none (wrong order)", () -> assertEquals(none, db().query(SessionQueries.sessionsOfServers(afterSession, beforeSession, List.of(serverUUID()))))),
+                DynamicTest.dynamicTest("Network sessions - none (before)", () -> assertEquals(none, db().query(SessionQueries.sessionsOfServers(beforeSession - TimeUnit.MINUTES.toMillis(1), beforeSession, List.of())))),
+                DynamicTest.dynamicTest("Network sessions - none (after)", () -> assertEquals(none, db().query(SessionQueries.sessionsOfServers(afterSession, afterSession + TimeUnit.MINUTES.toMillis(1), List.of())))),
+                DynamicTest.dynamicTest("Network sessions - none (wrong order)", () -> assertEquals(none, db().query(SessionQueries.sessionsOfServers(afterSession, beforeSession, List.of()))))
+        );
     }
 }

@@ -7,7 +7,7 @@ import {faLongArrowAltRight, faUser} from "@fortawesome/free-solid-svg-icons";
 import SmallTrend from "../../../trend/SmallTrend";
 import End from "../../../layout/End";
 import ComparingLabel from "../../../trend/ComparingLabel";
-import {CardLoader} from "../../../navigation/Loader";
+import {CardLoader} from "../../../navigation/Loader.tsx";
 
 const TwoPlayerChange = ({colorBefore, labelBefore, colorAfter, labelAfter}) => {
     return (

@@ -5,7 +5,7 @@ import TimeInputField from "../../../input/TimeInputField";
 import {Col, Row} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTrashAlt} from "@fortawesome/free-regular-svg-icons";
-import OutlineButton from "../../../input/button/OutlineButton.jsx";
+import OutlineButton from "../../../input/button/OutlineButton.tsx";
 import Checkbox from "../../../input/Checkbox.jsx";
 import {InlinedRow} from "../../../layout/InlinedRow.jsx";
 

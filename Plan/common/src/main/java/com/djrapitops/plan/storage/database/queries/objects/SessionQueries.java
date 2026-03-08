@@ -30,6 +30,7 @@ import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plan.utilities.java.Maps;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.text.TextStringBuilder;
 import org.jspecify.annotations.NonNull;
 
@@ -300,27 +301,6 @@ public class SessionQueries {
         };
     }
 
-    private static Query<Long> fetchLatestSessionStartLimit(int limit) {
-        String sql = SELECT + SessionsTable.SESSION_START + FROM + SessionsTable.TABLE_NAME +
-                ORDER_BY_SESSION_START_DESC + " LIMIT ?";
-
-        return new QueryStatement<>(sql, limit) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setInt(1, limit);
-            }
-
-            @Override
-            public Long processResults(ResultSet set) throws SQLException {
-                Long last = null;
-                while (set.next()) {
-                    last = set.getLong(SessionsTable.SESSION_START);
-                }
-                return last;
-            }
-        };
-    }
-
     public static Query<List<FinishedSession>> fetchLatestSessionsOfServer(ServerUUID serverUUID, int limit) {
         String sql = SELECT_SESSIONS_STATEMENT +
                 WHERE + "s." + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
@@ -334,29 +314,6 @@ public class SessionQueries {
                 public void prepare(PreparedStatement statement) throws SQLException {
                     statement.setString(1, serverUUID.toString());
                     statement.setLong(2, start != null ? start : 0L);
-                }
-
-                @Override
-                public List<FinishedSession> processResults(ResultSet set) throws SQLException {
-                    return extractDataFromSessionSelectStatement(set);
-                }
-            });
-        };
-    }
-
-    public static Query<List<FinishedSession>> fetchLatestSessions(int limit) {
-        String sql = SELECT_SESSIONS_STATEMENT
-                // Fix for "First Session" icons in the Most recent sessions on network page
-                .replace(LEFT_JOIN + UserInfoTable.TABLE_NAME + " u_info on (u_info." + UserInfoTable.USER_ID + "=s." + SessionsTable.USER_ID + AND + "u_info." + UserInfoTable.SERVER_ID + "=s." + SessionsTable.SERVER_ID + ')', "")
-                .replace("u_info", "u") +
-                WHERE + "s." + SessionsTable.SESSION_START + ">=?" +
-                ORDER_BY_SESSION_START_DESC;
-        return db -> {
-            Long start = db.query(fetchLatestSessionStartLimit(limit));
-            return db.query(new QueryStatement<List<FinishedSession>>(sql) {
-                @Override
-                public void prepare(PreparedStatement statement) throws SQLException {
-                    statement.setLong(1, start != null ? start : 0L);
                 }
 
                 @Override
@@ -1114,6 +1071,61 @@ public class SessionQueries {
                     userIds.add(set.getInt(SessionsTable.USER_ID));
                 }
                 return userIds;
+            }
+        };
+    }
+
+    public static Query<List<FinishedSession>> sessionsOfPlayer(UUID playerUUID, long after, long before, List<ServerUUID> serverUUIDs) {
+        String sql = SELECT_SESSIONS_STATEMENT +
+                WHERE + "s." + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
+                AND + SessionsTable.SESSION_END + ">?" +
+                AND + SessionsTable.SESSION_START + "<?";
+        if (!serverUUIDs.isEmpty()) {
+            sql += AND + "s." + SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs);
+        }
+        sql += ORDER_BY_SESSION_START_DESC;
+        return new QueryStatement<>(sql, 1000) {
+
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+                statement.setLong(2, after);
+                statement.setLong(3, before);
+            }
+
+            @Override
+            public List<FinishedSession> processResults(ResultSet set) throws SQLException {
+                return extractDataFromSessionSelectStatement(set);
+            }
+        };
+    }
+
+    public static Query<List<FinishedSession>> sessionsOfServers(long after, long before, List<ServerUUID> serverUUIDs) {
+        boolean tooBigSelection = after == 0 || before == Long.MAX_VALUE;
+        String sql = SELECT_SESSIONS_STATEMENT +
+                WHERE + SessionsTable.SESSION_END + ">?" +
+                AND + SessionsTable.SESSION_START + "<?";
+        if (!serverUUIDs.isEmpty()) {
+            sql += AND + (tooBigSelection ? "" : "s.") + SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs);
+        }
+        if (tooBigSelection) {
+            sql = Strings.CS.replaceOnce(sql,
+                    WHERE,
+                    INNER_JOIN + "(" + SELECT + SessionsTable.ID + FROM + SessionsTable.TABLE_NAME + WHERE);
+            sql += ORDER_BY_SESSION_START_DESC + LIMIT + 10000 + ") lq ON lq.id=s.id";
+        }
+        sql += ORDER_BY_SESSION_START_DESC;
+        return new QueryStatement<>(sql, 1000) {
+
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, after);
+                statement.setLong(2, before);
+            }
+
+            @Override
+            public List<FinishedSession> processResults(ResultSet set) throws SQLException {
+                return extractDataFromSessionSelectStatement(set);
             }
         };
     }

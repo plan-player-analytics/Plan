@@ -16,7 +16,7 @@ import {faCalendar} from "@fortawesome/free-regular-svg-icons";
 import React, {useCallback, useState} from "react";
 import TimeByTimeGraph from "../../../graphs/TimeByTimeGraph";
 import ServerCalendar from "../../../calendar/ServerCalendar";
-import {ChartLoader} from "../../../navigation/Loader";
+import {ChartLoader} from "../../../navigation/Loader.tsx";
 import {useAuth} from "../../../../hooks/authenticationHook.tsx";
 import Highcharts from "highcharts/highstock";
 import "highcharts/modules/no-data-to-display"

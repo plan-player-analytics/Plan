@@ -3,7 +3,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faArrowRight, faQuestion, faSearch, faTrash} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
 import ActionButton from "../../input/button/ActionButton.jsx";
-import OutlineButton from "../../input/button/OutlineButton.jsx";
+import OutlineButton from "../../input/button/OutlineButton.tsx";
 import {Card, Col, Row} from "react-bootstrap";
 import DateInputField from "../../input/DateInputField.jsx";
 import TimeInputField from "../../input/TimeInputField.jsx";

@@ -7,7 +7,7 @@ import ServerAsNumbersCard from "../../components/cards/server/values/ServerAsNu
 import ServerWeekComparisonCard from "../../components/cards/server/tables/ServerWeekComparisonCard";
 import {fetchNetworkOverview} from "../../service/networkService";
 import {useTranslation} from "react-i18next";
-import {CardLoader} from "../../components/navigation/Loader";
+import {CardLoader} from "../../components/navigation/Loader.tsx";
 import Datapoint from "../../components/Datapoint";
 import {faUsers} from "@fortawesome/free-solid-svg-icons";
 import NetworkOnlineActivityGraphsCard from "../../components/cards/server/graphs/NetworkOnlineActivityGraphsCard";

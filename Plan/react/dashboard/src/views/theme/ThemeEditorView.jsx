@@ -3,7 +3,7 @@ import {useTranslation} from "react-i18next";
 import {useThemeEditContext} from "../../hooks/context/themeEditContextHook.tsx";
 import {Card, Col, Row} from "react-bootstrap";
 import EditorMenuToast from "../../components/theme/EditorMenuToast.jsx";
-import CardHeader from "../../components/cards/CardHeader.jsx";
+import CardHeader from "../../components/cards/CardHeader.tsx";
 import TextInput from "../../components/input/TextInput.jsx";
 import {ColorEditContextProvider} from "../../hooks/context/colorEditContextHook.jsx";
 import ColorSection from "../../components/theme/ColorSection.jsx";

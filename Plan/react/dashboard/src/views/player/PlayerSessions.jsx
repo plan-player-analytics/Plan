@@ -10,6 +10,8 @@ import PlayerRecentSessionsCard from "../../components/cards/player/PlayerRecent
 import LoadIn from "../../components/animation/LoadIn.tsx";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
+import {GenericFilterContextProvider} from "../../dataHooks/genericFilterContextHook.tsx";
+import {DateFilterControls} from "../../components/input/DateFilterControls.tsx";
 
 const SessionCalendarCard = ({player}) => {
     const {t} = useTranslation();
@@ -30,17 +32,21 @@ const PlayerSessions = () => {
     const {player} = usePlayer();
     return (
         <LoadIn>
-            {hasPermission('page.player.sessions') && <section className="player-sessions" id={"player-sessions"}>
-                <ExtendableRow id={'row-player-sessions-0'}>
-                    <Col lg={8}>
-                        <SessionCalendarCard player={player}/>
-                        <PlayerRecentSessionsCard player={player}/>
-                    </Col>
-                    <Col lg={4}>
-                        <PlayerWorldPieCard player={player}/>
-                    </Col>
-                </ExtendableRow>
-            </section>}
+            {hasPermission('page.player.sessions') &&
+                <GenericFilterContextProvider initialValue={{player: player.info.uuid}}>
+                    <section className="player-sessions" id={"player-sessions"}>
+                        <ExtendableRow id={'row-player-sessions-0'}>
+                            <Col lg={6}>
+                                <SessionCalendarCard player={player}/>
+                            </Col>
+                            <Col lg={6}>
+                                <DateFilterControls/>
+                                <PlayerRecentSessionsCard player={player}/>
+                                <PlayerWorldPieCard player={player}/>
+                            </Col>
+                        </ExtendableRow>
+                    </section>
+                </GenericFilterContextProvider>}
         </LoadIn>
     )
 }

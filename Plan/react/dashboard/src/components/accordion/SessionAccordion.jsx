@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useCallback, useMemo} from "react";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCrosshairs, faServer, faSignal, faSkull, faUser, faUserPlus} from "@fortawesome/free-solid-svg-icons";
 import {faClock, faMap} from "@fortawesome/free-regular-svg-icons";
@@ -6,9 +6,7 @@ import Datapoint from "../Datapoint";
 import {Col, Row} from "react-bootstrap";
 import WorldPie from "../graphs/WorldPie";
 import {SimpleKillsTable} from "../table/KillsTable";
-import Accordion from "./Accordion";
 import {useTranslation} from "react-i18next";
-import {ChartLoader} from "../navigation/Loader";
 import {usePreferences} from "../../hooks/preferencesHook.jsx";
 import FormattedDate from "../text/FormattedDate.jsx";
 import FormattedTime from "../text/FormattedTime.jsx";
@@ -16,23 +14,10 @@ import PlayerPageLinkButton from "../input/button/PlayerPageLinkButton.jsx";
 import ServerPageLinkButton from "../input/button/ServerPageLinkButton.jsx";
 import {useDecimalFormatter} from "../../util/format/useDecimalFormatter.js";
 import {usePingFormatter} from "../../util/format/usePingFormatter.js";
+import DataTablesTable from "../table/DataTablesTable.jsx";
+import {ChartLoader} from "../navigation/Loader.tsx";
 
-const SessionHeader = ({session}) => {
-    const {t} = useTranslation();
-    return (
-        <>
-            <td>{session.name} {session.first_session ?
-                <span title={t('html.label.registered') + ' (' + t('html.label.firstSession' + ')')}>
-                    <Fa icon={faUserPlus}/>
-                </span> : ''}</td>
-            <td><FormattedDate date={session.start}/>{session.online ? ` (${t('html.value.online').trim()})` : ''}</td>
-            <td><FormattedTime timeMs={session.length}/></td>
-            <td>{session.network_server ? session.network_server : session.most_used_world}</td>
-        </>
-    )
-}
-
-const SessionBody = ({i, session}) => {
+const SessionBody = ({session}) => {
     const {t} = useTranslation();
     const {formatDecimals} = useDecimalFormatter();
     const {formatPing} = usePingFormatter();
@@ -76,7 +61,7 @@ const SessionBody = ({i, session}) => {
                 <SimpleKillsTable kills={session.player_kills}/>
             </Col>
             <div className="col-xs-12 col-sm-12 col-md-12 col-lg-6">
-                <WorldPie id={"worldpie_" + i}
+                <WorldPie id={"worldpie_" + session.player_uuid + session.start}
                           worldSeries={session.world_series}
                           gmSeries={session.gm_series}/>
                 <PlayerPageLinkButton uuid={session.player_uuid} className={'float-end'}/>
@@ -96,29 +81,69 @@ const SessionAccordion = (
     const {t} = useTranslation();
     const {preferencesLoaded} = usePreferences();
 
-    if (!sessions || !preferencesLoaded) return <ChartLoader/>
-
     const firstColumn = isPlayer ? (<><Fa icon={faUser}/> {t('html.label.player')}</>)
         : (<><Fa icon={faServer}/> {t('html.label.server')}</>)
+    const lastColumn = isNetwork ? {
+        title: <><Fa icon={faServer}/> {t('html.label.server')}</>,
+        data: "server_name"
+    } : {
+        title: <><Fa icon={faMap}/> {t('html.label.mostPlayedWorld')}</>,
+        data: "most_used_world"
+    }
 
-    return (
-        <Accordion headers={[
-            firstColumn,
-            <><Fa icon={faClock}/> {t('html.label.sessionStart')}</>,
-            <><Fa icon={faClock}/> {t('html.label.length')}</>,
-            <>
-                {!isNetwork && <><Fa icon={faMap}/> {t('html.label.mostPlayedWorld')}</>}
-                {isNetwork && <><Fa icon={faServer}/> {t('html.label.server')}</>}
-            </>
-        ]} slices={sessions.map(session => {
-            return {
-                body: <SessionBody session={session}/>,
-                header: <SessionHeader session={session}/>,
-                color: 'sessions',
-                outline: !session.online
-            }
-        })}/>
-    )
+    const columns = [{
+        title: firstColumn,
+        data: {"_": "name", display: "nameFormatted"}
+    }, {
+        title: <><Fa icon={faClock}/> {t('html.label.sessionStart')}</>,
+        data: {_: "start", display: "startFormatted"}
+    }, {
+        title: <><Fa icon={faClock}/> {t('html.label.length')}</>,
+        data: {_: "length", display: "lengthFormatted"}
+    },
+        lastColumn];
+
+    const rows = useMemo(() => sessions?.map(session => {
+        return {
+            ...session,
+            nameFormatted: <>
+                {session.name}
+                {session.first_session &&
+                    <span className={"ms-2"}
+                          title={t('html.label.registered') + ' (' + t('html.label.firstSession') + ')'}>
+                        <Fa icon={faUserPlus}/>
+                    </span>}
+            </>,
+            startFormatted: <>
+                <FormattedDate date={session.start}/>
+                {session.online && ` (${t('html.value.online').trim()})`}
+            </>,
+            lengthFormatted: <FormattedTime timeMs={session.length}/>,
+            colorClass: `bg-sessions${session.online ? '' : '-outline'}`
+        }
+    }) || [], [sessions]);
+
+    const rowKeyFunction = useCallback((session, column) => {
+        return session.player_uuid + session.server_uuid + session.start + JSON.stringify(column?.data);
+    }, [])
+
+    const options = useMemo(() => {
+        return {
+            responsive: true,
+            deferRender: true,
+            columns: columns,
+            data: rows,
+            order: [[1, "desc"]]
+        };
+    }, [columns, rows]);
+
+    if (!sessions || !preferencesLoaded) return <ChartLoader/>
+
+    return <DataTablesTable id={"sessions"} className={"thick-outlines"}
+                            rowKeyFunction={rowKeyFunction}
+                            options={options}
+                            clickableRows
+                            expandComponent={({row}) => <SessionBody session={row}/>}/>
 }
 
 export default SessionAccordion

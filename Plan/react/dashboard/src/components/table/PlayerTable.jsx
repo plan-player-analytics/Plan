@@ -9,7 +9,7 @@ import {faCalendarCheck, faCalendarPlus, faClock} from "@fortawesome/free-regula
 import ExtensionIcon from "../extensions/ExtensionIcon.jsx";
 import {Link} from "react-router";
 import {ExtensionValueTableCell} from "../extensions/ExtensionCard.jsx";
-import {ChartLoader} from "../navigation/Loader.jsx";
+import {ChartLoader} from "../navigation/Loader.tsx";
 import DataTablesTable from "./DataTablesTable.jsx";
 import {localeService, reverseRegionLookupMap} from "../../service/localeService.js";
 import {usePingFormatter} from "../../util/format/usePingFormatter.js";
@@ -17,9 +17,9 @@ import {useDecimalFormatter} from "../../util/format/useDecimalFormatter.js";
 
 const getActivityGroup = value => {
     const VERY_ACTIVE = 3.75;
-    const ACTIVE = 3.0;
-    const REGULAR = 2.0;
-    const IRREGULAR = 1.0;
+    const ACTIVE = 3;
+    const REGULAR = 2;
+    const IRREGULAR = 1;
     if (value >= VERY_ACTIVE) {
         return "html.label.veryActive"
     } else if (value >= ACTIVE) {
@@ -122,7 +122,7 @@ const PlayerTable = ({data, orderBy}) => {
             deferRender: true,
             columns: columns,
             data: rows,
-            order: [[orderBy !== undefined ? orderBy : 5, "desc"]]
+            order: [[orderBy === undefined ? 5 : orderBy, "desc"]]
         });
     }, [data, orderBy, t, formatPing, formatDecimals]);
 

@@ -15,7 +15,7 @@ import {TableRow} from "./TableRow";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faEye, faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 import AsNumbersTable from "./AsNumbersTable";
-import {ChartLoader} from "../navigation/Loader";
+import {ChartLoader} from "../navigation/Loader.tsx";
 import FormattedTime from "../text/FormattedTime.jsx";
 import {useOrUnavailable} from "../../util/formatters.js";
 import {usePingFormatter} from "../../util/format/usePingFormatter.js";
