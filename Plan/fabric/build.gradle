@@ -21,7 +21,7 @@ dependencies {
     minecraft "com.mojang:minecraft:1.21.9"
     mappings "net.fabricmc:yarn:1.21.9+build.1:v2"
     modImplementation "net.fabricmc:fabric-loader:0.17.2"
-    modImplementation("me.lucko:fabric-permissions-api:0.4.1")
+    modImplementation("me.lucko:fabric-permissions-api:0.6.1")
 
     // Fabric API
     Set<String> apiModules = [
