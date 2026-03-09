@@ -63,7 +63,7 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#checkPermission(net.minecraft.server.command.ServerCommandSource,java.lang.String)" tabindex="0">checkPermission(ServerCommandSource, String)</a></li>
+<li><a href="#checkPermission(net.minecraft.commands.CommandSourceStack,java.lang.String)" tabindex="0">checkPermission(CommandSourceStack, String)</a></li>
 <li><a href="#isPermissionsApiAvailable()" tabindex="0">isPermissionsApiAvailable()</a></li>
 <li><a href="#arguments(com.djrapitops.plan.commands.use.Subcommand,com.mojang.brigadier.context.CommandContext,com.mojang.brigadier.suggestion.SuggestionsBuilder)" tabindex="0">arguments(Subcommand, CommandContext, SuggestionsBuilder)</a></li>
 <li><a href="#registerRoot(com.djrapitops.plan.commands.use.Subcommand,net.playeranalytics.plugin.scheduling.RunnableFactory)" tabindex="0">registerRoot(Subcommand, RunnableFactory)</a></li>
@@ -97,7 +97,7 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.mojang.brigadier.CommandDispatcher,net.playeranalytics.plan.PlanFabric,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">FabricCommandManager</a><wbr>(com.mojang.brigadier.CommandDispatcher&lt;net.minecraft.server.command.ServerCommandSource&gt;&nbsp;dispatcher,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.mojang.brigadier.CommandDispatcher,net.playeranalytics.plan.PlanFabric,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">FabricCommandManager</a><wbr>(com.mojang.brigadier.CommandDispatcher&lt;net.minecraft.commands.CommandSourceStack&gt;&nbsp;dispatcher,
  <a href="../PlanFabric.html" title="class in net.playeranalytics.plan">PlanFabric</a>&nbsp;plugin,
  <a href="../../../../com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
@@ -117,11 +117,11 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a><wbr>&lt;com.mojang.brigadier.suggestion.Suggestions&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#arguments(com.djrapitops.plan.commands.use.Subcommand,com.mojang.brigadier.context.CommandContext,com.mojang.brigadier.suggestion.SuggestionsBuilder)" class="member-name-link">arguments</a><wbr>(<a href="../../../../com/djrapitops/plan/commands/use/Subcommand.html" title="class in com.djrapitops.plan.commands.use">Subcommand</a>&nbsp;subcommand,
- com.mojang.brigadier.context.CommandContext&lt;net.minecraft.server.command.ServerCommandSource&gt;&nbsp;ctx,
+ com.mojang.brigadier.context.CommandContext&lt;net.minecraft.commands.CommandSourceStack&gt;&nbsp;ctx,
  com.mojang.brigadier.suggestion.SuggestionsBuilder&nbsp;builder)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#checkPermission(net.minecraft.server.command.ServerCommandSource,java.lang.String)" class="member-name-link">checkPermission</a><wbr>(net.minecraft.server.command.ServerCommandSource&nbsp;src,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#checkPermission(net.minecraft.commands.CommandSourceStack,java.lang.String)" class="member-name-link">checkPermission</a><wbr>(net.minecraft.commands.CommandSourceStack&nbsp;src,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;permission)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static boolean</code></div>
@@ -129,7 +129,7 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#registerChild(com.djrapitops.plan.commands.use.Subcommand,com.mojang.brigadier.builder.ArgumentBuilder)" class="member-name-link">registerChild</a><wbr>(<a href="../../../../com/djrapitops/plan/commands/use/Subcommand.html" title="class in com.djrapitops.plan.commands.use">Subcommand</a>&nbsp;subcommand,
- com.mojang.brigadier.builder.ArgumentBuilder&lt;net.minecraft.server.command.ServerCommandSource, ?&gt;&nbsp;parent)</code></div>
+ com.mojang.brigadier.builder.ArgumentBuilder&lt;net.minecraft.commands.CommandSourceStack, ?&gt;&nbsp;parent)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#registerRoot(com.djrapitops.plan.commands.use.Subcommand,net.playeranalytics.plugin.scheduling.RunnableFactory)" class="member-name-link">registerRoot</a><wbr>(<a href="../../../../com/djrapitops/plan/commands/use/Subcommand.html" title="class in com.djrapitops.plan.commands.use">Subcommand</a>&nbsp;subcommand,
@@ -156,7 +156,7 @@ loadScripts(document, 'script');</script>
 <section class="detail" id="&lt;init&gt;(com.mojang.brigadier.CommandDispatcher,net.playeranalytics.plan.PlanFabric,com.djrapitops.plan.utilities.logging.ErrorLogger)">
 <h3>FabricCommandManager</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">FabricCommandManager</span><wbr><span class="parameters">(com.mojang.brigadier.CommandDispatcher&lt;net.minecraft.server.command.ServerCommandSource&gt;&nbsp;dispatcher,
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">FabricCommandManager</span><wbr><span class="parameters">(com.mojang.brigadier.CommandDispatcher&lt;net.minecraft.commands.CommandSourceStack&gt;&nbsp;dispatcher,
  <a href="../PlanFabric.html" title="class in net.playeranalytics.plan">PlanFabric</a>&nbsp;plugin,
  <a href="../../../../com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</span></div>
 </div>
@@ -171,10 +171,10 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="checkPermission(net.minecraft.server.command.ServerCommandSource,java.lang.String)">
+<section class="detail" id="checkPermission(net.minecraft.commands.CommandSourceStack,java.lang.String)">
 <h3>checkPermission</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">checkPermission</span><wbr><span class="parameters">(net.minecraft.server.command.ServerCommandSource&nbsp;src,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">checkPermission</span><wbr><span class="parameters">(net.minecraft.commands.CommandSourceStack&nbsp;src,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;permission)</span></div>
 </div>
 </section>
@@ -192,7 +192,7 @@ loadScripts(document, 'script');</script>
 <h3>arguments</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a>&lt;com.mojang.brigadier.suggestion.Suggestions&gt;</span>&nbsp;<span class="element-name">arguments</span><wbr><span class="parameters">(<a href="../../../../com/djrapitops/plan/commands/use/Subcommand.html" title="class in com.djrapitops.plan.commands.use">Subcommand</a>&nbsp;subcommand,
- com.mojang.brigadier.context.CommandContext&lt;net.minecraft.server.command.ServerCommandSource&gt;&nbsp;ctx,
+ com.mojang.brigadier.context.CommandContext&lt;net.minecraft.commands.CommandSourceStack&gt;&nbsp;ctx,
  com.mojang.brigadier.suggestion.SuggestionsBuilder&nbsp;builder)</span></div>
 </div>
 </section>
@@ -211,7 +211,7 @@ loadScripts(document, 'script');</script>
 <h3>registerChild</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">registerChild</span><wbr><span class="parameters">(<a href="../../../../com/djrapitops/plan/commands/use/Subcommand.html" title="class in com.djrapitops.plan.commands.use">Subcommand</a>&nbsp;subcommand,
- com.mojang.brigadier.builder.ArgumentBuilder&lt;net.minecraft.server.command.ServerCommandSource, ?&gt;&nbsp;parent)</span></div>
+ com.mojang.brigadier.builder.ArgumentBuilder&lt;net.minecraft.commands.CommandSourceStack, ?&gt;&nbsp;parent)</span></div>
 </div>
 </section>
 </li>

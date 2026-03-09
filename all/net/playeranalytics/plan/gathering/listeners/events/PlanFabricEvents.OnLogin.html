@@ -58,7 +58,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#onLogin(java.net.SocketAddress,net.minecraft.server.PlayerConfigEntry,net.minecraft.text.Text)" tabindex="0">onLogin(SocketAddress, PlayerConfigEntry, Text)</a></li>
+<li><a href="#onLogin(java.net.SocketAddress,net.minecraft.server.players.NameAndId,net.minecraft.network.chat.Component)" tabindex="0">onLogin(SocketAddress, NameAndId, Component)</a></li>
 </ol>
 </li>
 </ol>
@@ -97,9 +97,9 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#onLogin(java.net.SocketAddress,net.minecraft.server.PlayerConfigEntry,net.minecraft.text.Text)" class="member-name-link">onLogin</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/net/SocketAddress.html" title="class or interface in java.net" class="external-link">SocketAddress</a>&nbsp;address,
- net.minecraft.server.PlayerConfigEntry&nbsp;profile,
- net.minecraft.text.Text&nbsp;reason)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#onLogin(java.net.SocketAddress,net.minecraft.server.players.NameAndId,net.minecraft.network.chat.Component)" class="member-name-link">onLogin</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/net/SocketAddress.html" title="class or interface in java.net" class="external-link">SocketAddress</a>&nbsp;address,
+ net.minecraft.server.players.NameAndId&nbsp;profile,
+ net.minecraft.network.chat.Component&nbsp;reason)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Called when a player attempts to login</div>
 </div>
@@ -118,12 +118,12 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="onLogin(java.net.SocketAddress,net.minecraft.server.PlayerConfigEntry,net.minecraft.text.Text)">
+<section class="detail" id="onLogin(java.net.SocketAddress,net.minecraft.server.players.NameAndId,net.minecraft.network.chat.Component)">
 <h3>onLogin</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="return-type">void</span>&nbsp;<span class="element-name">onLogin</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/net/SocketAddress.html" title="class or interface in java.net" class="external-link">SocketAddress</a>&nbsp;address,
- net.minecraft.server.PlayerConfigEntry&nbsp;profile,
- net.minecraft.text.Text&nbsp;reason)</span></div>
+ net.minecraft.server.players.NameAndId&nbsp;profile,
+ net.minecraft.network.chat.Component&nbsp;reason)</span></div>
 <div class="block">Called when a player attempts to login</div>
 <dl class="notes">
 <dt>Parameters:</dt>

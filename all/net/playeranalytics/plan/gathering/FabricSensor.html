@@ -58,15 +58,15 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(net.minecraft.server.dedicated.MinecraftDedicatedServer)" tabindex="0">FabricSensor(MinecraftDedicatedServer)</a></li>
+<li><a href="#%3Cinit%3E(net.minecraft.server.dedicated.DedicatedServer)" tabindex="0">FabricSensor(DedicatedServer)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#getTPS()" tabindex="0">getTPS()</a></li>
 <li><a href="#getWorlds()" tabindex="0">getWorlds()</a></li>
-<li><a href="#getEntityCount(net.minecraft.server.world.ServerWorld)" tabindex="0">getEntityCount(ServerWorld)</a></li>
-<li><a href="#getChunkCount(net.minecraft.server.world.ServerWorld)" tabindex="0">getChunkCount(ServerWorld)</a></li>
+<li><a href="#getEntityCount(net.minecraft.server.level.ServerLevel)" tabindex="0">getEntityCount(ServerLevel)</a></li>
+<li><a href="#getChunkCount(net.minecraft.server.level.ServerLevel)" tabindex="0">getChunkCount(ServerLevel)</a></li>
 <li><a href="#supportsDirectTPS()" tabindex="0">supportsDirectTPS()</a></li>
 <li><a href="#getOnlinePlayerCount()" tabindex="0">getOnlinePlayerCount()</a></li>
 <li><a href="#getOnlinePlayerNames()" tabindex="0">getOnlinePlayerNames()</a></li>
@@ -87,14 +87,14 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html" title="interface in com.djrapitops.plan.gathering">ServerSensor</a>&lt;net.minecraft.server.world.ServerWorld&gt;</code></dd>
+<dd><code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html" title="interface in com.djrapitops.plan.gathering">ServerSensor</a>&lt;net.minecraft.server.level.ServerLevel&gt;</code></dd>
 </dl>
 <hr>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="annotations">@Singleton
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">FabricSensor</span>
 <span class="extends-implements">extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>
-implements <a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html" title="interface in com.djrapitops.plan.gathering">ServerSensor</a>&lt;net.minecraft.server.world.ServerWorld&gt;</span></div>
+implements <a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html" title="interface in com.djrapitops.plan.gathering">ServerSensor</a>&lt;net.minecraft.server.level.ServerLevel&gt;</span></div>
 </div>
 </section>
 <section class="summary">
@@ -107,7 +107,7 @@ implements <a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html"
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(net.minecraft.server.dedicated.MinecraftDedicatedServer)" class="member-name-link">FabricSensor</a><wbr>(net.minecraft.server.dedicated.MinecraftDedicatedServer&nbsp;server)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(net.minecraft.server.dedicated.DedicatedServer)" class="member-name-link">FabricSensor</a><wbr>(net.minecraft.server.dedicated.DedicatedServer&nbsp;server)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -124,10 +124,10 @@ implements <a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html"
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getChunkCount(net.minecraft.server.world.ServerWorld)" class="member-name-link">getChunkCount</a><wbr>(net.minecraft.server.world.ServerWorld&nbsp;world)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getChunkCount(net.minecraft.server.level.ServerLevel)" class="member-name-link">getChunkCount</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;world)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEntityCount(net.minecraft.server.world.ServerWorld)" class="member-name-link">getEntityCount</a><wbr>(net.minecraft.server.world.ServerWorld&nbsp;world)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getEntityCount(net.minecraft.server.level.ServerLevel)" class="member-name-link">getEntityCount</a><wbr>(net.minecraft.server.level.ServerLevel&nbsp;world)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../../../../com/djrapitops/plan/gathering/domain/PluginMetadata.html" title="class in com.djrapitops.plan.gathering.domain">PluginMetadata</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInstalledPlugins()" class="member-name-link">getInstalledPlugins</a>()</code></div>
@@ -146,7 +146,7 @@ implements <a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html"
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>double</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTPS()" class="member-name-link">getTPS</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a><wbr>&lt;net.minecraft.server.world.ServerWorld&gt;</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a><wbr>&lt;net.minecraft.server.level.ServerLevel&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getWorlds()" class="member-name-link">getWorlds</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get the worlds running on the server platform.</div>
@@ -177,11 +177,11 @@ implements <a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html"
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(net.minecraft.server.dedicated.MinecraftDedicatedServer)">
+<section class="detail" id="&lt;init&gt;(net.minecraft.server.dedicated.DedicatedServer)">
 <h3>FabricSensor</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations">@Inject
-</span><span class="modifiers">public</span>&nbsp;<span class="element-name">FabricSensor</span><wbr><span class="parameters">(net.minecraft.server.dedicated.MinecraftDedicatedServer&nbsp;server)</span></div>
+</span><span class="modifiers">public</span>&nbsp;<span class="element-name">FabricSensor</span><wbr><span class="parameters">(net.minecraft.server.dedicated.DedicatedServer&nbsp;server)</span></div>
 </div>
 </section>
 </li>
@@ -200,7 +200,7 @@ implements <a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html"
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">double</span>&nbsp;<span class="element-name">getTPS</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html#getTPS()">getTPS</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html" title="interface in com.djrapitops.plan.gathering">ServerSensor</a>&lt;net.minecraft.server.world.ServerWorld&gt;</code></dd>
+<dd><code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html#getTPS()">getTPS</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html" title="interface in com.djrapitops.plan.gathering">ServerSensor</a>&lt;net.minecraft.server.level.ServerLevel&gt;</code></dd>
 </dl>
 </div>
 </section>
@@ -209,12 +209,12 @@ implements <a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html"
 <section class="detail" id="getWorlds()">
 <h3>getWorlds</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;net.minecraft.server.world.ServerWorld&gt;</span>&nbsp;<span class="element-name">getWorlds</span>()</div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Iterable.html" title="class or interface in java.lang" class="external-link">Iterable</a>&lt;net.minecraft.server.level.ServerLevel&gt;</span>&nbsp;<span class="element-name">getWorlds</span>()</div>
 <div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html#getWorlds()">ServerSensor</a></code></span></div>
 <div class="block">Get the worlds running on the server platform.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html#getWorlds()">getWorlds</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html" title="interface in com.djrapitops.plan.gathering">ServerSensor</a>&lt;net.minecraft.server.world.ServerWorld&gt;</code></dd>
+<dd><code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html#getWorlds()">getWorlds</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html" title="interface in com.djrapitops.plan.gathering">ServerSensor</a>&lt;net.minecraft.server.level.ServerLevel&gt;</code></dd>
 <dt>Returns:</dt>
 <dd>Empty collection if the platform doesn't support worlds.</dd>
 </dl>
@@ -222,25 +222,25 @@ implements <a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html"
 </section>
 </li>
 <li>
-<section class="detail" id="getEntityCount(net.minecraft.server.world.ServerWorld)">
+<section class="detail" id="getEntityCount(net.minecraft.server.level.ServerLevel)">
 <h3>getEntityCount</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getEntityCount</span><wbr><span class="parameters">(net.minecraft.server.world.ServerWorld&nbsp;world)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getEntityCount</span><wbr><span class="parameters">(net.minecraft.server.level.ServerLevel&nbsp;world)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html#getEntityCount(W)">getEntityCount</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html" title="interface in com.djrapitops.plan.gathering">ServerSensor</a>&lt;net.minecraft.server.world.ServerWorld&gt;</code></dd>
+<dd><code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html#getEntityCount(W)">getEntityCount</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html" title="interface in com.djrapitops.plan.gathering">ServerSensor</a>&lt;net.minecraft.server.level.ServerLevel&gt;</code></dd>
 </dl>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="getChunkCount(net.minecraft.server.world.ServerWorld)">
+<section class="detail" id="getChunkCount(net.minecraft.server.level.ServerLevel)">
 <h3>getChunkCount</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getChunkCount</span><wbr><span class="parameters">(net.minecraft.server.world.ServerWorld&nbsp;world)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getChunkCount</span><wbr><span class="parameters">(net.minecraft.server.level.ServerLevel&nbsp;world)</span></div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html#getChunkCount(W)">getChunkCount</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html" title="interface in com.djrapitops.plan.gathering">ServerSensor</a>&lt;net.minecraft.server.world.ServerWorld&gt;</code></dd>
+<dd><code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html#getChunkCount(W)">getChunkCount</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html" title="interface in com.djrapitops.plan.gathering">ServerSensor</a>&lt;net.minecraft.server.level.ServerLevel&gt;</code></dd>
 </dl>
 </div>
 </section>
@@ -254,7 +254,7 @@ implements <a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html"
 <div class="block">Check if server platform provides TPS calculation.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html#supportsDirectTPS()">supportsDirectTPS</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html" title="interface in com.djrapitops.plan.gathering">ServerSensor</a>&lt;net.minecraft.server.world.ServerWorld&gt;</code></dd>
+<dd><code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html#supportsDirectTPS()">supportsDirectTPS</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html" title="interface in com.djrapitops.plan.gathering">ServerSensor</a>&lt;net.minecraft.server.level.ServerLevel&gt;</code></dd>
 <dt>Returns:</dt>
 <dd>false if the server doesn't count TPS.</dd>
 </dl>
@@ -268,7 +268,7 @@ implements <a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html"
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getOnlinePlayerCount</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html#getOnlinePlayerCount()">getOnlinePlayerCount</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html" title="interface in com.djrapitops.plan.gathering">ServerSensor</a>&lt;net.minecraft.server.world.ServerWorld&gt;</code></dd>
+<dd><code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html#getOnlinePlayerCount()">getOnlinePlayerCount</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html" title="interface in com.djrapitops.plan.gathering">ServerSensor</a>&lt;net.minecraft.server.level.ServerLevel&gt;</code></dd>
 </dl>
 </div>
 </section>
@@ -280,7 +280,7 @@ implements <a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html"
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">getOnlinePlayerNames</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html#getOnlinePlayerNames()">getOnlinePlayerNames</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html" title="interface in com.djrapitops.plan.gathering">ServerSensor</a>&lt;net.minecraft.server.world.ServerWorld&gt;</code></dd>
+<dd><code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html#getOnlinePlayerNames()">getOnlinePlayerNames</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html" title="interface in com.djrapitops.plan.gathering">ServerSensor</a>&lt;net.minecraft.server.level.ServerLevel&gt;</code></dd>
 </dl>
 </div>
 </section>
@@ -292,7 +292,7 @@ implements <a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html"
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../com/djrapitops/plan/gathering/domain/PluginMetadata.html" title="class in com.djrapitops.plan.gathering.domain">PluginMetadata</a>&gt;</span>&nbsp;<span class="element-name">getInstalledPlugins</span>()</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html#getInstalledPlugins()">getInstalledPlugins</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html" title="interface in com.djrapitops.plan.gathering">ServerSensor</a>&lt;net.minecraft.server.world.ServerWorld&gt;</code></dd>
+<dd><code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html#getInstalledPlugins()">getInstalledPlugins</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html" title="interface in com.djrapitops.plan.gathering">ServerSensor</a>&lt;net.minecraft.server.level.ServerLevel&gt;</code></dd>
 </dl>
 </div>
 </section>
@@ -308,7 +308,7 @@ implements <a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html"
 Contains 0 values that are initialized on server boot, which should be ignored.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html#getMspt()">getMspt</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html" title="interface in com.djrapitops.plan.gathering">ServerSensor</a>&lt;net.minecraft.server.world.ServerWorld&gt;</code></dd>
+<dd><code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html#getMspt()">getMspt</a></code>&nbsp;in interface&nbsp;<code><a href="../../../../com/djrapitops/plan/gathering/ServerSensor.html" title="interface in com.djrapitops.plan.gathering">ServerSensor</a>&lt;net.minecraft.server.level.ServerLevel&gt;</code></dd>
 <dt>Returns:</dt>
 <dd>Optional empty if not supported on the platform.</dd>
 </dl>

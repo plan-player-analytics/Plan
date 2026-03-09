@@ -58,17 +58,17 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(com.djrapitops.plan.gathering.events.PlayerJoinEventConsumer,com.djrapitops.plan.gathering.events.PlayerLeaveEventConsumer,com.djrapitops.plan.gathering.cache.JoinAddressCache,com.djrapitops.plan.gathering.JoinAddressValidator,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.utilities.logging.ErrorLogger,net.minecraft.server.dedicated.MinecraftDedicatedServer)" tabindex="0">PlayerOnlineListener(PlayerJoinEventConsumer, PlayerLeaveEventConsumer, JoinAddressCache, JoinAddressValidator, ServerInfo, DBSystem, ErrorLogger, MinecraftDedicatedServer)</a></li>
+<li><a href="#%3Cinit%3E(com.djrapitops.plan.gathering.events.PlayerJoinEventConsumer,com.djrapitops.plan.gathering.events.PlayerLeaveEventConsumer,com.djrapitops.plan.gathering.cache.JoinAddressCache,com.djrapitops.plan.gathering.JoinAddressValidator,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.utilities.logging.ErrorLogger,net.minecraft.server.dedicated.DedicatedServer)" tabindex="0">PlayerOnlineListener(PlayerJoinEventConsumer, PlayerLeaveEventConsumer, JoinAddressCache, JoinAddressValidator, ServerInfo, DBSystem, ErrorLogger, DedicatedServer)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#register()" tabindex="0">register()</a></li>
-<li><a href="#onPlayerLogin(java.net.SocketAddress,net.minecraft.server.PlayerConfigEntry,boolean)" tabindex="0">onPlayerLogin(SocketAddress, PlayerConfigEntry, boolean)</a></li>
-<li><a href="#onPlayerKick(net.minecraft.server.network.ServerPlayerEntity)" tabindex="0">onPlayerKick(ServerPlayerEntity)</a></li>
-<li><a href="#onPlayerJoin(net.minecraft.server.network.ServerPlayerEntity)" tabindex="0">onPlayerJoin(ServerPlayerEntity)</a></li>
-<li><a href="#beforePlayerQuit(net.minecraft.server.network.ServerPlayerEntity)" tabindex="0">beforePlayerQuit(ServerPlayerEntity)</a></li>
-<li><a href="#onPlayerQuit(net.minecraft.server.network.ServerPlayerEntity)" tabindex="0">onPlayerQuit(ServerPlayerEntity)</a></li>
+<li><a href="#onPlayerLogin(java.net.SocketAddress,net.minecraft.server.players.NameAndId,boolean)" tabindex="0">onPlayerLogin(SocketAddress, NameAndId, boolean)</a></li>
+<li><a href="#onPlayerKick(net.minecraft.server.level.ServerPlayer)" tabindex="0">onPlayerKick(ServerPlayer)</a></li>
+<li><a href="#onPlayerJoin(net.minecraft.server.level.ServerPlayer)" tabindex="0">onPlayerJoin(ServerPlayer)</a></li>
+<li><a href="#beforePlayerQuit(net.minecraft.server.level.ServerPlayer)" tabindex="0">beforePlayerQuit(ServerPlayer)</a></li>
+<li><a href="#onPlayerQuit(net.minecraft.server.level.ServerPlayer)" tabindex="0">onPlayerQuit(ServerPlayer)</a></li>
 <li><a href="#isEnabled()" tabindex="0">isEnabled()</a></li>
 <li><a href="#enable()" tabindex="0">enable()</a></li>
 <li><a href="#disable()" tabindex="0">disable()</a></li>
@@ -107,14 +107,14 @@ implements <a href="../FabricListener.html" title="interface in net.playeranalyt
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.gathering.events.PlayerJoinEventConsumer,com.djrapitops.plan.gathering.events.PlayerLeaveEventConsumer,com.djrapitops.plan.gathering.cache.JoinAddressCache,com.djrapitops.plan.gathering.JoinAddressValidator,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.utilities.logging.ErrorLogger,net.minecraft.server.dedicated.MinecraftDedicatedServer)" class="member-name-link">PlayerOnlineListener</a><wbr>(<a href="../../../../../../com/djrapitops/plan/gathering/events/PlayerJoinEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerJoinEventConsumer</a>&nbsp;joinEventConsumer,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.gathering.events.PlayerJoinEventConsumer,com.djrapitops.plan.gathering.events.PlayerLeaveEventConsumer,com.djrapitops.plan.gathering.cache.JoinAddressCache,com.djrapitops.plan.gathering.JoinAddressValidator,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.utilities.logging.ErrorLogger,net.minecraft.server.dedicated.DedicatedServer)" class="member-name-link">PlayerOnlineListener</a><wbr>(<a href="../../../../../../com/djrapitops/plan/gathering/events/PlayerJoinEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerJoinEventConsumer</a>&nbsp;joinEventConsumer,
  <a href="../../../../../../com/djrapitops/plan/gathering/events/PlayerLeaveEventConsumer.html" title="class in com.djrapitops.plan.gathering.events">PlayerLeaveEventConsumer</a>&nbsp;leaveEventConsumer,
  <a href="../../../../../../com/djrapitops/plan/gathering/cache/JoinAddressCache.html" title="class in com.djrapitops.plan.gathering.cache">JoinAddressCache</a>&nbsp;joinAddressCache,
  <a href="../../../../../../com/djrapitops/plan/gathering/JoinAddressValidator.html" title="class in com.djrapitops.plan.gathering">JoinAddressValidator</a>&nbsp;joinAddressValidator,
  <a href="../../../../../../com/djrapitops/plan/identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
  <a href="../../../../../../com/djrapitops/plan/storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
  <a href="../../../../../../com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger,
- net.minecraft.server.dedicated.MinecraftDedicatedServer&nbsp;server)</code></div>
+ net.minecraft.server.dedicated.DedicatedServer&nbsp;server)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -131,7 +131,7 @@ implements <a href="../FabricListener.html" title="interface in net.playeranalyt
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#beforePlayerQuit(net.minecraft.server.network.ServerPlayerEntity)" class="member-name-link">beforePlayerQuit</a><wbr>(net.minecraft.server.network.ServerPlayerEntity&nbsp;player)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#beforePlayerQuit(net.minecraft.server.level.ServerPlayer)" class="member-name-link">beforePlayerQuit</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#disable()" class="member-name-link">disable</a>()</code></div>
@@ -143,18 +143,18 @@ implements <a href="../FabricListener.html" title="interface in net.playeranalyt
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEnabled()" class="member-name-link">isEnabled</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onPlayerJoin(net.minecraft.server.network.ServerPlayerEntity)" class="member-name-link">onPlayerJoin</a><wbr>(net.minecraft.server.network.ServerPlayerEntity&nbsp;player)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onPlayerJoin(net.minecraft.server.level.ServerPlayer)" class="member-name-link">onPlayerJoin</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onPlayerKick(net.minecraft.server.network.ServerPlayerEntity)" class="member-name-link">onPlayerKick</a><wbr>(net.minecraft.server.network.ServerPlayerEntity&nbsp;player)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onPlayerKick(net.minecraft.server.level.ServerPlayer)" class="member-name-link">onPlayerKick</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onPlayerLogin(java.net.SocketAddress,net.minecraft.server.PlayerConfigEntry,boolean)" class="member-name-link">onPlayerLogin</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/net/SocketAddress.html" title="class or interface in java.net" class="external-link">SocketAddress</a>&nbsp;address,
- net.minecraft.server.PlayerConfigEntry&nbsp;profile,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onPlayerLogin(java.net.SocketAddress,net.minecraft.server.players.NameAndId,boolean)" class="member-name-link">onPlayerLogin</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/net/SocketAddress.html" title="class or interface in java.net" class="external-link">SocketAddress</a>&nbsp;address,
+ net.minecraft.server.players.NameAndId&nbsp;profile,
  boolean&nbsp;banned)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onPlayerQuit(net.minecraft.server.network.ServerPlayerEntity)" class="member-name-link">onPlayerQuit</a><wbr>(net.minecraft.server.network.ServerPlayerEntity&nbsp;player)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onPlayerQuit(net.minecraft.server.level.ServerPlayer)" class="member-name-link">onPlayerQuit</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#register()" class="member-name-link">register</a>()</code></div>
@@ -177,7 +177,7 @@ implements <a href="../FabricListener.html" title="interface in net.playeranalyt
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.gathering.events.PlayerJoinEventConsumer,com.djrapitops.plan.gathering.events.PlayerLeaveEventConsumer,com.djrapitops.plan.gathering.cache.JoinAddressCache,com.djrapitops.plan.gathering.JoinAddressValidator,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.utilities.logging.ErrorLogger,net.minecraft.server.dedicated.MinecraftDedicatedServer)">
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.gathering.events.PlayerJoinEventConsumer,com.djrapitops.plan.gathering.events.PlayerLeaveEventConsumer,com.djrapitops.plan.gathering.cache.JoinAddressCache,com.djrapitops.plan.gathering.JoinAddressValidator,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.utilities.logging.ErrorLogger,net.minecraft.server.dedicated.DedicatedServer)">
 <h3>PlayerOnlineListener</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations">@Inject
@@ -188,7 +188,7 @@ implements <a href="../FabricListener.html" title="interface in net.playeranalyt
  <a href="../../../../../../com/djrapitops/plan/identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
  <a href="../../../../../../com/djrapitops/plan/storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
  <a href="../../../../../../com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger,
- net.minecraft.server.dedicated.MinecraftDedicatedServer&nbsp;server)</span></div>
+ net.minecraft.server.dedicated.DedicatedServer&nbsp;server)</span></div>
 </div>
 </section>
 </li>
@@ -213,44 +213,44 @@ implements <a href="../FabricListener.html" title="interface in net.playeranalyt
 </section>
 </li>
 <li>
-<section class="detail" id="onPlayerLogin(java.net.SocketAddress,net.minecraft.server.PlayerConfigEntry,boolean)">
+<section class="detail" id="onPlayerLogin(java.net.SocketAddress,net.minecraft.server.players.NameAndId,boolean)">
 <h3>onPlayerLogin</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onPlayerLogin</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/net/SocketAddress.html" title="class or interface in java.net" class="external-link">SocketAddress</a>&nbsp;address,
- net.minecraft.server.PlayerConfigEntry&nbsp;profile,
+ net.minecraft.server.players.NameAndId&nbsp;profile,
  boolean&nbsp;banned)</span></div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="onPlayerKick(net.minecraft.server.network.ServerPlayerEntity)">
+<section class="detail" id="onPlayerKick(net.minecraft.server.level.ServerPlayer)">
 <h3>onPlayerKick</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onPlayerKick</span><wbr><span class="parameters">(net.minecraft.server.network.ServerPlayerEntity&nbsp;player)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onPlayerKick</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="onPlayerJoin(net.minecraft.server.network.ServerPlayerEntity)">
+<section class="detail" id="onPlayerJoin(net.minecraft.server.level.ServerPlayer)">
 <h3>onPlayerJoin</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onPlayerJoin</span><wbr><span class="parameters">(net.minecraft.server.network.ServerPlayerEntity&nbsp;player)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onPlayerJoin</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="beforePlayerQuit(net.minecraft.server.network.ServerPlayerEntity)">
+<section class="detail" id="beforePlayerQuit(net.minecraft.server.level.ServerPlayer)">
 <h3>beforePlayerQuit</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">beforePlayerQuit</span><wbr><span class="parameters">(net.minecraft.server.network.ServerPlayerEntity&nbsp;player)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">beforePlayerQuit</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="onPlayerQuit(net.minecraft.server.network.ServerPlayerEntity)">
+<section class="detail" id="onPlayerQuit(net.minecraft.server.level.ServerPlayer)">
 <h3>onPlayerQuit</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onPlayerQuit</span><wbr><span class="parameters">(net.minecraft.server.network.ServerPlayerEntity&nbsp;player)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onPlayerQuit</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
 </div>
 </section>
 </li>

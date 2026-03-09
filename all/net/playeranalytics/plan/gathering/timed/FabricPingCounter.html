@@ -58,7 +58,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(net.playeranalytics.plugin.server.Listeners,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.identification.ServerInfo,net.minecraft.server.dedicated.MinecraftDedicatedServer)" tabindex="0">FabricPingCounter(Listeners, PlanConfig, DBSystem, ServerInfo, MinecraftDedicatedServer)</a></li>
+<li><a href="#%3Cinit%3E(net.playeranalytics.plugin.server.Listeners,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.identification.ServerInfo,net.minecraft.server.dedicated.DedicatedServer)" tabindex="0">FabricPingCounter(Listeners, PlanConfig, DBSystem, ServerInfo, DedicatedServer)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -66,9 +66,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#run()" tabindex="0">run()</a></li>
 <li><a href="#register(net.playeranalytics.plugin.scheduling.RunnableFactory)" tabindex="0">register(RunnableFactory)</a></li>
 <li><a href="#addPlayer(java.util.UUID)" tabindex="0">addPlayer(UUID)</a></li>
-<li><a href="#removePlayer(net.minecraft.server.network.ServerPlayerEntity)" tabindex="0">removePlayer(ServerPlayerEntity)</a></li>
-<li><a href="#onPlayerJoin(net.minecraft.server.network.ServerPlayerEntity)" tabindex="0">onPlayerJoin(ServerPlayerEntity)</a></li>
-<li><a href="#onPlayerQuit(net.minecraft.server.network.ServerPlayerEntity)" tabindex="0">onPlayerQuit(ServerPlayerEntity)</a></li>
+<li><a href="#removePlayer(net.minecraft.server.level.ServerPlayer)" tabindex="0">removePlayer(ServerPlayer)</a></li>
+<li><a href="#onPlayerJoin(net.minecraft.server.level.ServerPlayer)" tabindex="0">onPlayerJoin(ServerPlayer)</a></li>
+<li><a href="#onPlayerQuit(net.minecraft.server.level.ServerPlayer)" tabindex="0">onPlayerQuit(ServerPlayer)</a></li>
 <li><a href="#clear()" tabindex="0">clear()</a></li>
 <li><a href="#register()" tabindex="0">register()</a></li>
 <li><a href="#isEnabled()" tabindex="0">isEnabled()</a></li>
@@ -113,11 +113,11 @@ implements <a href="../listeners/FabricListener.html" title="interface in net.pl
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(net.playeranalytics.plugin.server.Listeners,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.identification.ServerInfo,net.minecraft.server.dedicated.MinecraftDedicatedServer)" class="member-name-link">FabricPingCounter</a><wbr>(net.playeranalytics.plugin.server.Listeners&nbsp;listeners,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(net.playeranalytics.plugin.server.Listeners,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.identification.ServerInfo,net.minecraft.server.dedicated.DedicatedServer)" class="member-name-link">FabricPingCounter</a><wbr>(net.playeranalytics.plugin.server.Listeners&nbsp;listeners,
  <a href="../../../../../com/djrapitops/plan/settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
  <a href="../../../../../com/djrapitops/plan/storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
  <a href="../../../../../com/djrapitops/plan/identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
- net.minecraft.server.dedicated.MinecraftDedicatedServer&nbsp;server)</code></div>
+ net.minecraft.server.dedicated.DedicatedServer&nbsp;server)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -149,10 +149,10 @@ implements <a href="../listeners/FabricListener.html" title="interface in net.pl
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEnabled()" class="member-name-link">isEnabled</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onPlayerJoin(net.minecraft.server.network.ServerPlayerEntity)" class="member-name-link">onPlayerJoin</a><wbr>(net.minecraft.server.network.ServerPlayerEntity&nbsp;player)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onPlayerJoin(net.minecraft.server.level.ServerPlayer)" class="member-name-link">onPlayerJoin</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onPlayerQuit(net.minecraft.server.network.ServerPlayerEntity)" class="member-name-link">onPlayerQuit</a><wbr>(net.minecraft.server.network.ServerPlayerEntity&nbsp;player)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onPlayerQuit(net.minecraft.server.level.ServerPlayer)" class="member-name-link">onPlayerQuit</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#register()" class="member-name-link">register</a>()</code></div>
@@ -161,7 +161,7 @@ implements <a href="../listeners/FabricListener.html" title="interface in net.pl
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#register(net.playeranalytics.plugin.scheduling.RunnableFactory)" class="member-name-link">register</a><wbr>(net.playeranalytics.plugin.scheduling.RunnableFactory&nbsp;runnableFactory)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removePlayer(net.minecraft.server.network.ServerPlayerEntity)" class="member-name-link">removePlayer</a><wbr>(net.minecraft.server.network.ServerPlayerEntity&nbsp;player)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removePlayer(net.minecraft.server.level.ServerPlayer)" class="member-name-link">removePlayer</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#run()" class="member-name-link">run</a>()</code></div>
@@ -187,7 +187,7 @@ implements <a href="../listeners/FabricListener.html" title="interface in net.pl
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(net.playeranalytics.plugin.server.Listeners,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.identification.ServerInfo,net.minecraft.server.dedicated.MinecraftDedicatedServer)">
+<section class="detail" id="&lt;init&gt;(net.playeranalytics.plugin.server.Listeners,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.identification.ServerInfo,net.minecraft.server.dedicated.DedicatedServer)">
 <h3>FabricPingCounter</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations">@Inject
@@ -195,7 +195,7 @@ implements <a href="../listeners/FabricListener.html" title="interface in net.pl
  <a href="../../../../../com/djrapitops/plan/settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
  <a href="../../../../../com/djrapitops/plan/storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
  <a href="../../../../../com/djrapitops/plan/identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
- net.minecraft.server.dedicated.MinecraftDedicatedServer&nbsp;server)</span></div>
+ net.minecraft.server.dedicated.DedicatedServer&nbsp;server)</span></div>
 </div>
 </section>
 </li>
@@ -240,26 +240,26 @@ implements <a href="../listeners/FabricListener.html" title="interface in net.pl
 </section>
 </li>
 <li>
-<section class="detail" id="removePlayer(net.minecraft.server.network.ServerPlayerEntity)">
+<section class="detail" id="removePlayer(net.minecraft.server.level.ServerPlayer)">
 <h3>removePlayer</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">removePlayer</span><wbr><span class="parameters">(net.minecraft.server.network.ServerPlayerEntity&nbsp;player)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">removePlayer</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="onPlayerJoin(net.minecraft.server.network.ServerPlayerEntity)">
+<section class="detail" id="onPlayerJoin(net.minecraft.server.level.ServerPlayer)">
 <h3>onPlayerJoin</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onPlayerJoin</span><wbr><span class="parameters">(net.minecraft.server.network.ServerPlayerEntity&nbsp;player)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onPlayerJoin</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="onPlayerQuit(net.minecraft.server.network.ServerPlayerEntity)">
+<section class="detail" id="onPlayerQuit(net.minecraft.server.level.ServerPlayer)">
 <h3>onPlayerQuit</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onPlayerQuit</span><wbr><span class="parameters">(net.minecraft.server.network.ServerPlayerEntity&nbsp;player)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onPlayerQuit</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player)</span></div>
 </div>
 </section>
 </li>

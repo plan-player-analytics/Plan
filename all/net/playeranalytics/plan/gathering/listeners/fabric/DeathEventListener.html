@@ -64,8 +64,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#register()" tabindex="0">register()</a></li>
-<li><a href="#getCause(net.minecraft.entity.Entity)" tabindex="0">getCause(Entity)</a></li>
-<li><a href="#findWeapon(net.minecraft.entity.Entity)" tabindex="0">findWeapon(Entity)</a></li>
+<li><a href="#getCause(net.minecraft.world.entity.Entity)" tabindex="0">getCause(Entity)</a></li>
+<li><a href="#findWeapon(net.minecraft.world.entity.Entity)" tabindex="0">findWeapon(Entity)</a></li>
 <li><a href="#isEnabled()" tabindex="0">isEnabled()</a></li>
 <li><a href="#enable()" tabindex="0">enable()</a></li>
 <li><a href="#disable()" tabindex="0">disable()</a></li>
@@ -129,10 +129,10 @@ implements <a href="../FabricListener.html" title="interface in net.playeranalyt
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#enable()" class="member-name-link">enable</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findWeapon(net.minecraft.entity.Entity)" class="member-name-link">findWeapon</a><wbr>(net.minecraft.entity.Entity&nbsp;killer)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findWeapon(net.minecraft.world.entity.Entity)" class="member-name-link">findWeapon</a><wbr>(net.minecraft.world.entity.Entity&nbsp;killer)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;net.minecraft.server.network.ServerPlayerEntity&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCause(net.minecraft.entity.Entity)" class="member-name-link">getCause</a><wbr>(net.minecraft.entity.Entity&nbsp;killer)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;net.minecraft.server.level.ServerPlayer&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCause(net.minecraft.world.entity.Entity)" class="member-name-link">getCause</a><wbr>(net.minecraft.world.entity.Entity&nbsp;killer)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEnabled()" class="member-name-link">isEnabled</a>()</code></div>
@@ -189,18 +189,18 @@ implements <a href="../FabricListener.html" title="interface in net.playeranalyt
 </section>
 </li>
 <li>
-<section class="detail" id="getCause(net.minecraft.entity.Entity)">
+<section class="detail" id="getCause(net.minecraft.world.entity.Entity)">
 <h3>getCause</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;net.minecraft.server.network.ServerPlayerEntity&gt;</span>&nbsp;<span class="element-name">getCause</span><wbr><span class="parameters">(net.minecraft.entity.Entity&nbsp;killer)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;net.minecraft.server.level.ServerPlayer&gt;</span>&nbsp;<span class="element-name">getCause</span><wbr><span class="parameters">(net.minecraft.world.entity.Entity&nbsp;killer)</span></div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="findWeapon(net.minecraft.entity.Entity)">
+<section class="detail" id="findWeapon(net.minecraft.world.entity.Entity)">
 <h3>findWeapon</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">findWeapon</span><wbr><span class="parameters">(net.minecraft.entity.Entity&nbsp;killer)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">findWeapon</span><wbr><span class="parameters">(net.minecraft.world.entity.Entity&nbsp;killer)</span></div>
 </div>
 </section>
 </li>

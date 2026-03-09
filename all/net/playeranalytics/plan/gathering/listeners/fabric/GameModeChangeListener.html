@@ -63,7 +63,7 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#onGameModeChange(net.minecraft.server.network.ServerPlayerEntity,net.minecraft.world.GameMode)" tabindex="0">onGameModeChange(ServerPlayerEntity, GameMode)</a></li>
+<li><a href="#onGameModeChange(net.minecraft.server.level.ServerPlayer,net.minecraft.world.level.GameType)" tabindex="0">onGameModeChange(ServerPlayer, GameType)</a></li>
 <li><a href="#register()" tabindex="0">register()</a></li>
 <li><a href="#isEnabled()" tabindex="0">isEnabled()</a></li>
 <li><a href="#enable()" tabindex="0">enable()</a></li>
@@ -133,8 +133,8 @@ implements <a href="../FabricListener.html" title="interface in net.playeranalyt
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEnabled()" class="member-name-link">isEnabled</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onGameModeChange(net.minecraft.server.network.ServerPlayerEntity,net.minecraft.world.GameMode)" class="member-name-link">onGameModeChange</a><wbr>(net.minecraft.server.network.ServerPlayerEntity&nbsp;player,
- net.minecraft.world.GameMode&nbsp;newGameMode)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onGameModeChange(net.minecraft.server.level.ServerPlayer,net.minecraft.world.level.GameType)" class="member-name-link">onGameModeChange</a><wbr>(net.minecraft.server.level.ServerPlayer&nbsp;player,
+ net.minecraft.world.level.GameType&nbsp;newGameMode)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#register()" class="member-name-link">register</a>()</code></div>
@@ -177,11 +177,11 @@ implements <a href="../FabricListener.html" title="interface in net.playeranalyt
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="onGameModeChange(net.minecraft.server.network.ServerPlayerEntity,net.minecraft.world.GameMode)">
+<section class="detail" id="onGameModeChange(net.minecraft.server.level.ServerPlayer,net.minecraft.world.level.GameType)">
 <h3>onGameModeChange</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onGameModeChange</span><wbr><span class="parameters">(net.minecraft.server.network.ServerPlayerEntity&nbsp;player,
- net.minecraft.world.GameMode&nbsp;newGameMode)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onGameModeChange</span><wbr><span class="parameters">(net.minecraft.server.level.ServerPlayer&nbsp;player,
+ net.minecraft.world.level.GameType&nbsp;newGameMode)</span></div>
 </div>
 </section>
 </li>
