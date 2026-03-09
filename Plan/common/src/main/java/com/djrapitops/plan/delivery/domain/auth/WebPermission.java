@@ -116,6 +116,11 @@ public enum WebPermission implements Supplier<String>, Lang {
     PAGE_PLAYER_SERVERS("See Servers -tab"),
     PAGE_PLAYER_PLUGINS("See Plugins -tabs"),
 
+    DATA("Access all types from /v1/dataPoint"),
+    DATA_PLAYTIME_PLAYER("See Playtime datapoint of players"),
+    DATA_PLAYTIME_SERVER("See Playtime datapoint of servers"),
+    DATA_PLAYTIME_NETWORK("See Playtime datapoint of network"),
+
     ACCESS("Controls access to pages"),
     ACCESS_PLAYER("Allows accessing any /player pages"),
     ACCESS_PLAYER_SELF("Allows accessing own /player page"),
@@ -145,6 +150,25 @@ public enum WebPermission implements Supplier<String>, Lang {
         this.deprecated = deprecated;
     }
 
+    public static WebPermission[] nonDeprecatedValues() {
+        return Arrays.stream(values())
+                .filter(Predicate.not(WebPermission::isDeprecated))
+                .toArray(WebPermission[]::new);
+    }
+
+    public static Optional<WebPermission> findByPermission(String permission) {
+        String name = StringUtils.upperCase(permission).replace('.', '_');
+        try {
+            return Optional.of(valueOf(name));
+        } catch (IllegalArgumentException noSuchEnum) {
+            return Optional.empty();
+        }
+    }
+
+    public static boolean isDeprecated(String permission) {
+        return findByPermission(permission).map(WebPermission::isDeprecated).orElse(false);
+    }
+
     public String getPermission() {
         return StringUtils.lowerCase(name()).replace('_', '.');
     }
@@ -171,24 +195,5 @@ public enum WebPermission implements Supplier<String>, Lang {
     @Override
     public String getDefault() {
         return description;
-    }
-
-    public static WebPermission[] nonDeprecatedValues() {
-        return Arrays.stream(values())
-                .filter(Predicate.not(WebPermission::isDeprecated))
-                .toArray(WebPermission[]::new);
-    }
-
-    public static Optional<WebPermission> findByPermission(String permission) {
-        String name = StringUtils.upperCase(permission).replace('.', '_');
-        try {
-            return Optional.of(valueOf(name));
-        } catch (IllegalArgumentException noSuchEnum) {
-            return Optional.empty();
-        }
-    }
-
-    public static boolean isDeprecated(String permission) {
-        return findByPermission(permission).map(WebPermission::isDeprecated).orElse(false);
     }
 }

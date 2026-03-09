@@ -18,13 +18,12 @@ package com.djrapitops.plan.delivery.webserver.resolver.json;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
-import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
+import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
-import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.identification.Identifiers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -48,25 +47,19 @@ import java.util.UUID;
  */
 @Singleton
 @Path("/v1/sessions")
-public class SessionsJSONResolver extends JSONResolver {
+public class SessionsJSONResolver implements Resolver {
 
     private final Identifiers identifiers;
-    private final AsyncJSONResolverService jsonResolverService;
     private final JSONFactory jsonFactory;
 
     @Inject
     public SessionsJSONResolver(
             Identifiers identifiers,
-            AsyncJSONResolverService jsonResolverService,
             JSONFactory jsonFactory
     ) {
         this.identifiers = identifiers;
-        this.jsonResolverService = jsonResolverService;
         this.jsonFactory = jsonFactory;
     }
-
-    @Override
-    public Formatter<Long> getHttpLastModifiedFormatter() {return jsonResolverService.getHttpLastModifiedFormatter();}
 
     @Override
     public boolean canAccess(Request request) {

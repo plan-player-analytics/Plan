@@ -62,12 +62,12 @@ public class GenericFilter {
         return new GenericFilter(query);
     }
 
-    public Optional<Long> getAfter() {
-        return Optional.ofNullable(after);
+    public Long getAfter() {
+        return after != null ? after : 0L;
     }
 
-    public Optional<Long> getBefore() {
-        return Optional.ofNullable(before);
+    public Long getBefore() {
+        return before != null ? before : Long.MAX_VALUE;
     }
 
     public List<ServerUUID> getServerUUIDs() {
@@ -76,6 +76,10 @@ public class GenericFilter {
 
     public void setServerUUIDs(List<ServerUUID> serverUUIDs) {
         this.serverUUIDs = serverUUIDs;
+    }
+
+    public boolean contains(ServerUUID serverUUID) {
+        return serverUUIDs.isEmpty() || serverUUIDs.contains(serverUUID);
     }
 
     public @Untrusted List<String> getServerIdentifiers() {

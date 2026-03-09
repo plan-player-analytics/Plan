@@ -377,8 +377,8 @@ public class JSONFactory {
     public List<Map<String, Object>> playerSessions(GenericFilter filter) {
         UUID playerUUID = filter.getPlayerUUID().orElseThrow(() -> new BadRequestException("Player UUID not given"));
 
-        long after = filter.getAfter().orElse(0L);
-        long before = filter.getBefore().orElse(Long.MAX_VALUE);
+        long after = filter.getAfter();
+        long before = filter.getBefore();
         List<ServerUUID> serverUUIDs = filter.getServerUUIDs();
 
         List<FinishedSession> sessions = dbSystem.getDatabase().query(SessionQueries.sessionsOfPlayer(playerUUID, after, before, serverUUIDs));
@@ -396,8 +396,8 @@ public class JSONFactory {
     }
 
     public List<Map<String, Object>> serverSessions(GenericFilter filter) {
-        long after = filter.getAfter().orElse(0L);
-        long before = filter.getBefore().orElse(Long.MAX_VALUE);
+        long after = filter.getAfter();
+        long before = filter.getBefore();
         List<ServerUUID> serverUUIDs = filter.getServerUUIDs();
 
         List<FinishedSession> sessions = dbSystem.getDatabase().query(SessionQueries.sessionsOfServers(after, before, serverUUIDs));
@@ -412,8 +412,8 @@ public class JSONFactory {
     }
 
     public List<Map<String, Object>> networkSessions(GenericFilter filter) {
-        long after = filter.getAfter().orElse(0L);
-        long before = filter.getBefore().orElse(Long.MAX_VALUE);
+        long after = filter.getAfter();
+        long before = filter.getBefore();
 
         List<FinishedSession> sessions = dbSystem.getDatabase().query(SessionQueries.sessionsOfServers(after, before, List.of()));
         // Add online sessions

@@ -471,6 +471,30 @@ public class SessionQueries {
         };
     }
 
+
+    public static Query<Long> playtime(long after, long before, List<ServerUUID> serverUUIDs) {
+        return db -> {
+            String sql = SELECT +
+                    playtimeColumn(db.getSql(), after, before) +
+                    FROM + SessionsTable.TABLE_NAME +
+                    WHERE + SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
+                    AND + SessionsTable.SESSION_END + ">=?" +
+                    AND + SessionsTable.SESSION_START + "<=?";
+            return db.query(new QueryStatement<>(sql) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, after);
+                    statement.setLong(2, before);
+                }
+
+                @Override
+                public Long processResults(ResultSet set) throws SQLException {
+                    return set.next() ? set.getLong("playtime") : 0L;
+                }
+            });
+        };
+    }
+
     private static @NonNull String playtimeColumn(Sql sql, long after, long before) {
         return "SUM(" + sql.least(SessionsTable.SESSION_END + "," + before) + "-" + sql.greatest(SessionsTable.SESSION_START + "," + after) + ") as playtime";
     }
