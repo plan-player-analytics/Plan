@@ -16,33 +16,29 @@
  */
 package net.playeranalytics.plan.gathering.mixin;
 
-import net.minecraft.network.packet.c2s.play.CommandExecutionC2SPacket;
-import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.GameType;
 import net.playeranalytics.plan.gathering.listeners.events.PlanFabricEvents;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(ServerPlayNetworkHandler.class)
-public class ServerPlayNetworkHandlerMixin {
+@Mixin(ServerPlayer.class)
+public class ServerPlayerMixin {
 
-    @Inject(method = "onCommandExecution", at = @At("TAIL"))
-    public void onCommand(CommandExecutionC2SPacket packet, CallbackInfo ci) {
-        PlanFabricEvents.ON_COMMAND.invoker().onCommand((ServerPlayNetworkHandler) (Object) this, packet.command());
+    @Inject(method = "setGameMode", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;send(Lnet/minecraft/network/protocol/Packet;)V"))
+    public void onGameModeChanged(GameType gameMode, CallbackInfoReturnable<Boolean> cir) {
+        PlanFabricEvents.ON_GAMEMODE_CHANGE.invoker().onGameModeChange((ServerPlayer) (Object) this, gameMode);
     }
 
-    @Inject(
-        method = "onPlayerMove",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/server/network/ServerPlayerEntity;getEntityWorld()Lnet/minecraft/server/world/ServerWorld;",
-            ordinal = 1
-        )
-    )
-    public void onPlayerMove(PlayerMoveC2SPacket packet, CallbackInfo ci) {
-        PlanFabricEvents.ON_MOVE.invoker().onMove((ServerPlayNetworkHandler) (Object) this, packet);
+    @Inject(method = "die", at = @At(value = "TAIL"))
+    public void onKillSelf(DamageSource source, CallbackInfo ci) {
+        if (source.getEntity() == null) {
+            PlanFabricEvents.ON_KILLED.invoker().onKilled((ServerPlayer) (Object) this, null);
+        }
     }
 
 }

@@ -27,11 +27,11 @@ import com.djrapitops.plan.processing.processors.player.PlayerKillProcessor;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.passive.TameableEntity;
-import net.minecraft.entity.projectile.ProjectileEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.server.level.ServerPlayer;
 import net.playeranalytics.plan.gathering.listeners.FabricListener;
 import net.playeranalytics.plan.gathering.listeners.events.PlanFabricEvents;
 
@@ -80,22 +80,22 @@ public class DeathEventListener implements FabricListener {
                 return;
             }
             long time = System.currentTimeMillis();
-            if (victim instanceof ServerPlayerEntity) {
+            if (victim instanceof ServerPlayer) {
                 // Process Death
-                SessionCache.getCachedSession(victim.getUuid()).ifPresent(ActiveSession::addDeath);
+                SessionCache.getCachedSession(victim.getUUID()).ifPresent(ActiveSession::addDeath);
             }
 
             try {
-                Optional<ServerPlayerEntity> foundKiller = getCause(killer);
+                Optional<ServerPlayer> foundKiller = getCause(killer);
                 if (foundKiller.isEmpty()) {
                     return;
                 }
 
-                ServerPlayerEntity player = foundKiller.get();
+                ServerPlayer player = foundKiller.get();
 
-                Runnable processor = victim instanceof ServerPlayerEntity
-                        ? new PlayerKillProcessor(getKiller(player), getVictim((ServerPlayerEntity) victim), serverInfo.getServerIdentifier(), findWeapon(player), time)
-                        : new MobKillProcessor(player.getUuid());
+                Runnable processor = victim instanceof ServerPlayer
+                        ? new PlayerKillProcessor(getKiller(player), getVictim((ServerPlayer) victim), serverInfo.getServerIdentifier(), findWeapon(player), time)
+                        : new MobKillProcessor(player.getUUID());
                 processing.submitCritical(processor);
             } catch (Exception | NoSuchMethodError e) {
                 errorLogger.error(e, ErrorContext.builder().related(getClass(), victim, killer).build());
@@ -107,49 +107,49 @@ public class DeathEventListener implements FabricListener {
         this.wasRegistered = true;
     }
 
-    private PlayerKill.Killer getKiller(ServerPlayerEntity killer) {
-        return new PlayerKill.Killer(killer.getUuid(), killer.getName().getString());
+    private PlayerKill.Killer getKiller(ServerPlayer killer) {
+        return new PlayerKill.Killer(killer.getUUID(), killer.getName().getString());
     }
 
-    private PlayerKill.Victim getVictim(ServerPlayerEntity victim) {
-        return new PlayerKill.Victim(victim.getUuid(), victim.getName().getString());
+    private PlayerKill.Victim getVictim(ServerPlayer victim) {
+        return new PlayerKill.Victim(victim.getUUID(), victim.getName().getString());
     }
 
-    public Optional<ServerPlayerEntity> getCause(Entity killer) {
-        if (killer instanceof ServerPlayerEntity player) return Optional.of(player);
-        if (killer instanceof TameableEntity tamed) return getOwner(tamed);
-        if (killer instanceof ProjectileEntity projectile) return getShooter(projectile);
+    public Optional<ServerPlayer> getCause(Entity killer) {
+        if (killer instanceof ServerPlayer player) return Optional.of(player);
+        if (killer instanceof TamableAnimal tamed) return getOwner(tamed);
+        if (killer instanceof Projectile projectile) return getShooter(projectile);
         return Optional.empty();
     }
 
     public String findWeapon(Entity killer) {
-        if (killer instanceof ServerPlayerEntity player) return getItemInHand(player);
+        if (killer instanceof ServerPlayer player) return getItemInHand(player);
 
         // Projectile, EnderCrystal and all other causes that are not known yet
-        return new EntityNameFormatter().apply(killer.getType().getName().getString());
+        return new EntityNameFormatter().apply(killer.getType().getDescription().getString());
     }
 
-    private String getItemInHand(ServerPlayerEntity killer) {
-        ItemStack itemInHand = killer.getMainHandStack();
+    private String getItemInHand(ServerPlayer killer) {
+        ItemStack itemInHand = killer.getMainHandItem();
         return itemInHand.getItem().getName().getString();
     }
 
-    private Optional<ServerPlayerEntity> getShooter(ProjectileEntity projectile) {
+    private Optional<ServerPlayer> getShooter(Projectile projectile) {
         Entity source = projectile.getOwner();
-        if (source instanceof ServerPlayerEntity player) {
+        if (source instanceof ServerPlayer player) {
             return Optional.of(player);
         }
 
         return Optional.empty();
     }
 
-    private Optional<ServerPlayerEntity> getOwner(TameableEntity tameable) {
-        if (!tameable.isTamed()) {
+    private Optional<ServerPlayer> getOwner(TamableAnimal tameable) {
+        if (!tameable.isTame()) {
             return Optional.empty();
         }
 
         Entity owner = tameable.getOwner();
-        if (owner instanceof ServerPlayerEntity player) {
+        if (owner instanceof ServerPlayer player) {
             return Optional.of(player);
         }
 

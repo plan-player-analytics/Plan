@@ -27,7 +27,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.version.VersionChecker;
 import dagger.Binds;
 import dagger.Module;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 import net.playeranalytics.plan.FabricServerShutdownSave;
 import net.playeranalytics.plan.gathering.FabricSensor;
 import net.playeranalytics.plan.gathering.listeners.FabricListenerSystem;
@@ -58,10 +58,10 @@ public interface FabricSuperClassBindingModule {
     ServerShutdownSave bindServerShutdownSave(FabricServerShutdownSave shutdownSave);
 
     @Binds
-    ServerSensor<ServerWorld> bindServerSensor(FabricSensor sensor);
+    ServerSensor<ServerLevel> bindServerSensor(FabricSensor sensor);
 
     @Binds
-    ServerSensor<?> bindGenericsServerSensor(ServerSensor<ServerWorld> sensor);
+    ServerSensor<?> bindGenericsServerSensor(ServerSensor<ServerLevel> sensor);
 
     @Binds
     VersionChecker bindVersionChecker(FabricVersionChecker versionChecker);

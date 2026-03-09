@@ -18,10 +18,10 @@ package net.playeranalytics.plan.gathering.mixin;
 
 import com.djrapitops.plan.commands.use.*;
 import com.mojang.authlib.GameProfile;
-import net.minecraft.entity.Entity;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
 import net.playeranalytics.plan.commands.FabricCommandManager;
 import net.playeranalytics.plan.commands.use.FabricMessageBuilder;
 import org.jetbrains.annotations.Nullable;
@@ -32,8 +32,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Supplier;
 
-@Mixin(ServerCommandSource.class)
-public abstract class ServerCommandSourceMixin implements CMDSender {
+@Mixin(CommandSourceStack.class)
+public abstract class CommandSourceStackMixin implements CMDSender {
 
     @Override
     public boolean isPlayer() {
@@ -46,7 +46,7 @@ public abstract class ServerCommandSourceMixin implements CMDSender {
     }
 
     @Shadow
-    public abstract void sendFeedback(Supplier<Text> supplier, boolean broadcastToOps);
+    public abstract void sendSuccess(Supplier<Component> supplier, boolean broadcastToOps);
 
     @Shadow
     @Nullable
@@ -54,27 +54,27 @@ public abstract class ServerCommandSourceMixin implements CMDSender {
 
     @Override
     public MessageBuilder buildMessage() {
-        return new FabricMessageBuilder((ServerCommandSource) (Object) this);
+        return new FabricMessageBuilder((CommandSourceStack) (Object) this);
     }
 
     @Override
     public Optional<String> getPlayerName() {
-        return getPlayer().map(ServerPlayerEntity::getGameProfile).map(GameProfile::name);
+        return getPlayer().map(ServerPlayer::getGameProfile).map(GameProfile::name);
     }
 
     @Override
     public boolean hasPermission(String permission) {
-        return FabricCommandManager.checkPermission((ServerCommandSource) (Object) this, permission);
+        return FabricCommandManager.checkPermission((CommandSourceStack) (Object) this, permission);
     }
 
     @Override
     public Optional<UUID> getUUID() {
-        return getPlayer().map(Entity::getUuid);
+        return getPlayer().map(Entity::getUUID);
     }
 
     @Override
     public void send(String message) {
-        this.sendFeedback(() -> Text.literal(message), false);
+        this.sendSuccess(() -> Component.literal(message), false);
     }
 
     @Override
@@ -86,8 +86,8 @@ public abstract class ServerCommandSourceMixin implements CMDSender {
         return getEntity() == null;
     }
 
-    private Optional<ServerPlayerEntity> getPlayer() {
-        if (getEntity() instanceof ServerPlayerEntity player) {
+    private Optional<ServerPlayer> getPlayer() {
+        if (getEntity() instanceof ServerPlayer player) {
             return Optional.of(player);
         }
         return Optional.empty();
@@ -100,7 +100,7 @@ public abstract class ServerCommandSourceMixin implements CMDSender {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof ServerCommandSourceMixin other)) return false;
+        if (!(obj instanceof CommandSourceStackMixin other)) return false;
 
         return isConsole() == other.isConsole()
                 && getUUID().equals(other.getUUID());
