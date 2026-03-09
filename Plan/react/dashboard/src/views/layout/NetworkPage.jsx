@@ -76,7 +76,7 @@ const NetworkSidebar = () => {
                                 name: server.serverName,
                                 icon: faServer,
                                 href: "/server/" + server.serverUUID,
-                                color: 'light-green',
+                                color: 'servers',
                                 permission: 'access.server.' + server.serverUUID
                             }
                         })

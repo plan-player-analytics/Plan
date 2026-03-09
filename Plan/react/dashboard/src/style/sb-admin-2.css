@@ -1069,6 +1069,14 @@ select.form-control:focus::-ms-value {
     border-radius: 0.35rem;
 }
 
+.form-select option {
+    background: var(--color-forms-input-background);
+}
+
+.form-select option:hover {
+    background: var(--color-forms-dropdown-hover);
+}
+
 .form-select:focus {
     border-color: #bac8f3;
     box-shadow: 0 0 0 0.2rem rgba(78, 115, 223, 0.25);
