@@ -9,10 +9,12 @@ import {faCalendarCheck, faClock, faEye, faQuestionCircle} from "@fortawesome/fr
 import {CardLoader} from "../navigation/Loader";
 import {useNavigation} from "../../hooks/navigationHook";
 import FormattedTime from "../text/FormattedTime.jsx";
+import {useTimeAmountFormatter} from "../../util/format/useTimeAmountFormatter.js";
 
 const OnlineActivityAsNumbersTable = ({data}) => {
     const {t} = useTranslation();
     const {setHelpModalTopic} = useNavigation();
+    const {formatTime} = useTimeAmountFormatter();
     const openHelp = useCallback(() => setHelpModalTopic('new-player-retention'), [setHelpModalTopic]);
     if (!data) return <CardLoader/>;
 
@@ -57,13 +59,13 @@ const OnlineActivityAsNumbersTable = ({data}) => {
                           `(${data.new_players_retention_30d}/${data.new_players_30d}) ${data.new_players_retention_30d_perc}`,
                           `(${data.new_players_retention_7d}/${data.new_players_7d}) ${data.new_players_retention_7d_perc}`,
                           <>{`(${data.new_players_retention_24h}/${data.new_players_24h}) ${data.new_players_retention_24h_perc}`}
-                            {' '}<span title={t('html.description.newPlayerRetention')}><Fa icon={faEye}/></span></>
+                              {' '}<span title={t('html.description.newPlayerRetention')}><Fa icon={faEye}/></span></>
                       ]}/>
             <TableRow icon={faClock} color="playtime"
                       text={t('html.label.playtime')}
                       values={[
                           <>{<FormattedTime timeMs={data.playtime_30d}/>}{' '}<SmallTrend
-                              trend={<FormattedTime timeMs={data.playtime_30d_trend}/>}/></>,
+                              trend={data.playtime_30d_trend} format={formatTime}/></>,
                           <FormattedTime timeMs={data.playtime_7d}/>,
                           <FormattedTime timeMs={data.playtime_24h}/>
                       ]}/>
@@ -71,7 +73,7 @@ const OnlineActivityAsNumbersTable = ({data}) => {
                       text={t('html.label.averagePlaytime') + ' ' + t('html.label.perDay')}
                       values={[
                           <>{<FormattedTime timeMs={data.playtime_30d_avg}/>}{' '}<SmallTrend
-                              trend={<FormattedTime timeMs={data.playtime_30d_avg_trend}/>}/></>,
+                              trend={data.playtime_30d_avg_trend} format={formatTime}/></>,
                           <FormattedTime timeMs={data.playtime_7d_avg}/>,
                           <FormattedTime timeMs={data.playtime_24h_avg}/>
                       ]}/>
@@ -79,7 +81,7 @@ const OnlineActivityAsNumbersTable = ({data}) => {
                       text={t('html.label.averageSessionLength')}
                       values={[
                           <>{<FormattedTime timeMs={data.session_length_30d_avg}/>}{' '}<SmallTrend
-                              trend={<FormattedTime timeMs={data.session_length_30d_avg_trend}/>}/></>,
+                              trend={data.session_length_30d_trend} format={formatTime}/></>,
                           <FormattedTime timeMs={data.session_length_7d_avg}/>,
                           <FormattedTime timeMs={data.session_length_24h_avg}/>
                       ]}/>

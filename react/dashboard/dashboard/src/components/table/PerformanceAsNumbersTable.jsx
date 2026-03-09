@@ -17,11 +17,15 @@ import {faEye, faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 import AsNumbersTable from "./AsNumbersTable";
 import {ChartLoader} from "../navigation/Loader";
 import FormattedTime from "../text/FormattedTime.jsx";
-import {localeService} from "../../service/localeService.js";
-import {orUnavailable} from "../../util/formatters.js";
+import {useOrUnavailable} from "../../util/formatters.js";
+import {usePingFormatter} from "../../util/format/usePingFormatter.js";
+import {useDecimalFormatter} from "../../util/format/useDecimalFormatter.js";
 
 const PerformanceAsNumbersTable = ({data, servers}) => {
     const {t} = useTranslation();
+    const {formatPing} = usePingFormatter();
+    const {formatDecimals} = useDecimalFormatter();
+    const {orUnavailable} = useOrUnavailable();
     if (!data) return <ChartLoader/>;
 
     const dataIncludesGameServers = servers && Boolean(servers.filter(server => !server.proxy).length);
@@ -42,51 +46,51 @@ const PerformanceAsNumbersTable = ({data, servers}) => {
             <TableRow icon={faPowerOff} color="downtime"
                       text={t(data.avg_server_downtime_30d ? 'html.label.serverDowntime' : 'html.label.totalServerDowntime') + ' (' + t('generic.noData') + ')'}
                       values={[
-                          <FormattedTime timeMs={data.server_downtime_30d}/>,
-                          <FormattedTime timeMs={data.server_downtime_7d}/>,
-                          <FormattedTime timeMs={data.server_downtime_24h}/>
+                          <FormattedTime key={'30d'} timeMs={data.server_downtime_30d}/>,
+                          <FormattedTime key={'7d'} timeMs={data.server_downtime_7d}/>,
+                          <FormattedTime key={'1d'} timeMs={data.server_downtime_24h}/>
                       ]}/>
-            {data.avg_server_downtime_30d && (
+            {!!data.avg_server_downtime_30d && (
                 <TableRow icon={faPowerOff} color="downtime"
                           text={t('html.label.averageServerDowntime')}
                           values={[
-                              <FormattedTime timeMs={data.avg_server_downtime_30d}/>,
-                              <FormattedTime timeMs={data.avg_server_downtime_7d}/>,
-                              <FormattedTime timeMs={data.avg_server_downtime_24h}/>
+                              <FormattedTime key={'30d'} timeMs={data.avg_server_downtime_30d}/>,
+                              <FormattedTime key={'7d'} timeMs={data.avg_server_downtime_7d}/>,
+                              <FormattedTime key={'1d'} timeMs={data.avg_server_downtime_24h}/>
                           ]}/>)}
             <TableRow icon={faPowerOff} color="uptime"
                       text={t('html.label.serverUptime')}
                       values={[
-                          <FormattedTime timeMs={data.server_uptime_30d}/>,
-                          <FormattedTime timeMs={data.server_uptime_7d}/>,
-                          <FormattedTime timeMs={data.server_uptime_24h}/>
+                          <FormattedTime key={'30d'} timeMs={data.server_uptime_30d}/>,
+                          <FormattedTime key={'7d'} timeMs={data.server_uptime_7d}/>,
+                          <FormattedTime key={'1d'} timeMs={data.server_uptime_24h}/>
                       ]}/>
             {data.avg_server_uptime_30d && (
                 <TableRow icon={faPowerOff} color="uptime"
                           text={t('html.label.averageServerUptime')}
                           values={[
-                              <FormattedTime timeMs={data.avg_server_uptime_30d}/>,
-                              <FormattedTime timeMs={data.avg_server_uptime_7d}/>,
-                              <FormattedTime timeMs={data.avg_server_uptime_24h}/>
+                              <FormattedTime key={'30d'} timeMs={data.avg_server_uptime_30d}/>,
+                              <FormattedTime key={'7d'} timeMs={data.avg_server_uptime_7d}/>,
+                              <FormattedTime key={'1d'} timeMs={data.avg_server_uptime_24h}/>
                           ]}/>)}
             <TableRow icon={faUser} color="players-online" text={t('html.label.averagePlayers')}
                       values={[
-                          data.players_30d,
-                          data.players_7d,
-                          data.players_24h
+                          orUnavailable(data.players_30d),
+                          orUnavailable(data.players_7d),
+                          orUnavailable(data.players_24h)
                       ]}/>
             <TableRow icon={faTachometerAlt} color="tps-average" text={t('html.label.averageTps')}
                       values={[
-                          <>{t(data.tps_30d)} {noTPSOnProxies}</>,
-                          <>{t(data.tps_7d)} {noTPSOnProxies}</>,
-                          <>{t(data.tps_24h)} {noTPSOnProxies}</>
+                          <>{formatDecimals(orUnavailable(data.tps_30d))} {noTPSOnProxies}</>,
+                          <>{formatDecimals(orUnavailable(data.tps_7d))} {noTPSOnProxies}</>,
+                          <>{formatDecimals(orUnavailable(data.tps_24h))} {noTPSOnProxies}</>
                       ]}/>
             <TableRow icon={faStopwatch} color="mspt-average" text={t('html.label.msptAverage')}
                       title={t('html.label.msptFull')}
                       values={[
-                          <>{localeService.localizePing(orUnavailable(data.mspt_average_30d, t))} {noTPSOnProxies}</>,
-                          <>{localeService.localizePing(orUnavailable(data.mspt_average_7d, t))} {noTPSOnProxies}</>,
-                          <>{localeService.localizePing(orUnavailable(data.mspt_average_24h, t))} {noTPSOnProxies}</>
+                          <>{formatPing(orUnavailable(data.mspt_average_30d))} {noTPSOnProxies}</>,
+                          <>{formatPing(orUnavailable(data.mspt_average_7d))} {noTPSOnProxies}</>,
+                          <>{formatPing(orUnavailable(data.mspt_average_24h))} {noTPSOnProxies}</>
                       ]}/>
             <TableRow icon={faTachometerAlt} color="cpu" text={t('html.label.averageCpuUsage')}
                       values={[
@@ -102,17 +106,17 @@ const PerformanceAsNumbersTable = ({data, servers}) => {
                       ]}/>
             <TableRow icon={faDragon} color="entities" text={t('html.label.averageEntities')}
                       values={[
-                          <>{t(data.entities_30d)} {noTPSOnProxies}</>,
-                          <>{t(data.entities_7d)} {noTPSOnProxies}</>,
-                          <>{t(data.entities_24h)} {noTPSOnProxies}</>
+                          <>{orUnavailable(data.entities_30d)} {noTPSOnProxies}</>,
+                          <>{orUnavailable(data.entities_7d)} {noTPSOnProxies}</>,
+                          <>{orUnavailable(data.entities_24h)} {noTPSOnProxies}</>
                       ]}/>
             <TableRow icon={faMap} color="chunks"
-                      text={<>{t('html.label.averageChunks')}{' '}{data.chunks_30d === 'plugin.generic.unavailable' ?
+                      text={<>{t('html.label.averageChunks')}{' '}{data.chunks_30d === -1 ?
                           <span title={t('html.description.noSpongeChunks')}><Fa icon={faEye}/></span> : ''}</>}
                       values={[
-                          <>{t(data.chunks_30d)} {noTPSOnProxies}</>,
-                          <>{t(data.chunks_7d)} {noTPSOnProxies}</>,
-                          <>{t(data.chunks_24h)} {noTPSOnProxies}</>
+                          <>{orUnavailable(data.chunks_30d)} {noTPSOnProxies}</>,
+                          <>{orUnavailable(data.chunks_7d)} {noTPSOnProxies}</>,
+                          <>{orUnavailable(data.chunks_24h)} {noTPSOnProxies}</>
                       ]}/>
             <TableRow icon={faHdd} color="disk"
                       text={t('html.label.maxFreeDisk')}

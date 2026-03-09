@@ -28,6 +28,8 @@ import {faSuperpowers} from "@fortawesome/free-brands-svg-icons";
 import Datapoint from "../../Datapoint";
 import FormattedTime from "../../text/FormattedTime.jsx";
 import FormattedDate from "../../text/FormattedDate.jsx";
+import {useDecimalFormatter} from "../../../util/format/useDecimalFormatter.js";
+import {usePingFormatter} from "../../../util/format/usePingFormatter.js";
 
 const PlayerHeadSection = ({player}) => {
     const {t} = useTranslation();
@@ -67,6 +69,8 @@ const PlayerOverviewCard = ({player}) => {
     const {t} = useTranslation();
     const {setHelpModalTopic} = useNavigation();
     const openHelp = useCallback(() => setHelpModalTopic('activity-index'), [setHelpModalTopic]);
+    const {formatDecimals} = useDecimalFormatter();
+    const {formatPing} = usePingFormatter();
 
     return (
         <Card>
@@ -124,7 +128,7 @@ const PlayerOverviewCard = ({player}) => {
                                 <button onClick={openHelp}><Fa className={"col-help-icon"}
                                                                icon={faQuestionCircle}/>
                                 </button></span></>}
-                            value={player.info.activity_index} bold
+                            value={formatDecimals(player.info.activity_index)} bold
                             valueLabel={player.info.activity_index_group}
                             title={t('html.label.activityIndex')}
                         />
@@ -139,15 +143,15 @@ const PlayerOverviewCard = ({player}) => {
                         <hr/>
                         <Datapoint
                             icon={faSignal} color="ping"
-                            name={t('html.label.averagePing')} value={player.info.average_ping}
+                            name={t('html.label.averagePing')} value={formatPing(player.info.average_ping)}
                         />
                         <Datapoint
                             icon={faSignal} color="ping"
-                            name={t('html.label.bestPing')} value={player.info.best_ping}
+                            name={t('html.label.bestPing')} value={formatPing(player.info.best_ping)}
                         />
                         <Datapoint
                             icon={faSignal} color="ping"
-                            name={t('html.label.worstPing')} value={player.info.worst_ping}
+                            name={t('html.label.worstPing')} value={formatPing(player.info.worst_ping)}
                         />
                         <hr/>
                         <Datapoint

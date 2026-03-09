@@ -1,4 +1,4 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useMemo, useState} from 'react';
 
 import {hasValuesInSeries, tooltip, translateLinegraphButtons} from "../../../util/graphs";
 import Highcharts from "highcharts/esm/highstock";
@@ -9,7 +9,8 @@ import {useTheme} from "../../../hooks/themeHook";
 import {useMetadata} from "../../../hooks/metadataHook";
 import {useAuth} from "../../../hooks/authenticationHook.tsx";
 import {useGraphExtremesContext} from "../../../hooks/interaction/graphExtremesContextHook.jsx";
-import {localeService} from "../../../service/localeService.js";
+import {useI18nFriendlyLanguage} from "../../../service/localeService.js";
+import {usePingFormatter} from "../../../util/format/usePingFormatter.js";
 
 const AllPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
     const {t} = useTranslation();
@@ -17,9 +18,11 @@ const AllPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
     const {timeZoneOffsetMinutes} = useMetadata();
     const {hasPermission} = useAuth();
     const {extremes, onSetExtremes} = useGraphExtremesContext();
+    const {formatPing} = usePingFormatter();
+
     const [graph, setGraph] = useState(undefined);
 
-    const yAxis = [
+    const yAxis = useMemo(() => [
         {
             labels: {
                 formatter: function () {
@@ -73,13 +76,13 @@ const AllPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
             opposite: true,
             labels: {
                 formatter: function () {
-                    return localeService.localizePing(this.value);
+                    return formatPing(this.value);
                 }
             },
             softMin: 0,
             softMax: 50
         },
-    ]
+    ], [formatPing]);
 
     const onResize = useCallback(() => {
         let chartElement = document.getElementById(id);
@@ -105,7 +108,7 @@ const AllPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
         }
     }, [onResize])
 
-    useEffect(() => {
+    const chart = useMemo(() => {
         const zones = {
             tps: [{
                 value: data.zones.tpsThresholdMed,
@@ -181,14 +184,7 @@ const AllPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
             } : undefined
         };
 
-        Highcharts.setOptions({
-            lang: {
-                locale: localeService.getIntlFriendlyLocale(),
-                noData: t('html.label.noDataToDisplay')
-            }
-        })
-        Highcharts.setOptions(graphTheming);
-        setGraph(Highcharts.stockChart(id, {
+        return {
             chart: {
                 noData: t('html.label.noDataToDisplay')
             },
@@ -217,7 +213,22 @@ const AllPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
                 timezoneOffset: timeZoneOffsetMinutes
             },
             series: [series.playersOnline, series.tps, series.mspt, series.cpu, series.ram, series.entities, series.chunks, pluginHistorySeries].filter(s => s)
-        }));
+        }
+    }, [data, dataSeries, pluginHistorySeries, hasPermission, t, onSetExtremes, timeZoneOffsetMinutes, nightModeEnabled]);
+
+    const locale = useI18nFriendlyLanguage();
+    useEffect(() => {
+        Highcharts.setOptions({
+            lang: {
+                locale: locale,
+                noData: t('html.label.noDataToDisplay')
+            }
+        })
+    }, [locale]);
+
+    useEffect(() => {
+        Highcharts.setOptions(graphTheming);
+        setGraph(Highcharts.stockChart(id, chart));
     }, [data, dataSeries, graphTheming, nightModeEnabled, id, t, timeZoneOffsetMinutes, pluginHistorySeries])
     useEffect(() => {
         if (graph?.xAxis?.length && extremes) {

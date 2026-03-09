@@ -1,24 +1,12 @@
-import React from 'react';
-import {SimpleDateFormat} from "../../util/format/SimpleDateFormat";
-import {useMetadata} from "../../hooks/metadataHook";
 import {isNumber} from "../../util/isNumber.js";
+import {useDateFormatter} from "../../util/format/useDateFormatter.js";
 
 const FormattedDay = ({date}) => {
-    const {timeZoneOffsetHours} = useMetadata();
+    const {formatDate} = useDateFormatter(false, {pattern: "MMMMM d"});
 
-    if (date === undefined || date === null) return <></>;
+    if (date === undefined || date === null) return null;
     if (!isNumber(date)) return date;
-
-    const pattern = "MMMMM d";
-
-    const offset = timeZoneOffsetHours * 60 * 60 * 1000;
-    const timestamp = date - offset;
-
-    const formatted = date !== 0 ? new SimpleDateFormat(pattern).format(timestamp) : '-';
-
-    return (
-        <>{formatted}</>
-    )
+    return date === 0 ? '-' : formatDate(date);
 };
 
 export default FormattedDay

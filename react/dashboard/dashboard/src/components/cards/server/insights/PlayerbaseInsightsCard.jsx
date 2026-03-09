@@ -24,16 +24,16 @@ const PlayerbaseInsightsCard = ({data}) => {
     if (!data) return <CardLoader/>;
     return (
         <InsightsFor30DaysCard id={"playerbase-insights"}>
-            <Datapoint name={<TwoPlayerChange colorBefore={'light-green'}
+            <Datapoint name={<TwoPlayerChange colorBefore={'players-new'}
                                               labelBefore={t('html.label.new')}
-                                              colorAfter={'lime'}
+                                              colorAfter={'players-regular'}
                                               labelAfter={t('html.label.regular')}/>}
                        value={data.new_to_regular}
                        trend={<SmallTrend trend={data.new_to_regular_trend}/>}
             />
-            <Datapoint name={<TwoPlayerChange colorBefore={'lime'}
+            <Datapoint name={<TwoPlayerChange colorBefore={'players-regular'}
                                               labelBefore={t('html.label.regular')}
-                                              colorAfter={'bluegray'}
+                                              colorAfter={'players-inactive'}
                                               labelAfter={t('html.label.inactive')}/>}
                        value={data.regular_to_inactive}
                        trend={<SmallTrend trend={data.regular_to_inactive_trend}/>}

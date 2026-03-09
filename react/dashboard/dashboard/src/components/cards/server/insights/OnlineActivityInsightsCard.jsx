@@ -9,22 +9,24 @@ import ComparingLabel from "../../../trend/ComparingLabel";
 import End from "../../../layout/End";
 import {CardLoader} from "../../../navigation/Loader";
 import FormattedTime from "../../../text/FormattedTime.jsx";
+import {useTimeAmountFormatter} from "../../../../util/format/useTimeAmountFormatter.js";
 
 const OnlineActivityInsightsCard = ({data}) => {
     const {t} = useTranslation();
+    const {formatTime} = useTimeAmountFormatter();
     if (!data) return <CardLoader/>;
 
     return (
         <InsightsFor30DaysCard id={'online-activity-insights'}>
             <Datapoint name={t('html.label.onlineOnFirstJoin')} icon={faUserGroup} color="players-new"
                        value={data.players_first_join_avg}
-                       trend={<SmallTrend trend={data.players_first_join_avg_trend}/>}/>
+                       trend={<SmallTrend trend={data.players_first_join_trend}/>}/>
             <Datapoint name={t('html.label.firstSessionLength.average')} icon={faUserClock} color="players-new"
                        value={<FormattedTime timeMs={data.first_session_length_avg}/>}
-                       trend={<SmallTrend trend={<FormattedTime timeMs={data.first_session_length_avg_trend}/>}/>}/>
+                       trend={<SmallTrend trend={data.first_session_length_trend} format={formatTime}/>}/>
             <Datapoint name={t('html.label.firstSessionLength.median')} icon={faUserClock} color="players-new"
                        value={<FormattedTime timeMs={data.first_session_length_median}/>}
-                       trend={<SmallTrend trend={<FormattedTime timeMs={data.first_session_length_median_trend}/>}/>}/>
+                       trend={<SmallTrend trend={data.first_session_length_median_trend} format={formatTime}/>}/>
             <Datapoint name={t('html.label.loneJoins')} icon={faCalendar} color="sessions"
                        value={data.lone_joins}
                        trend={<SmallTrend trend={data.lone_joins_trend}/>}/>

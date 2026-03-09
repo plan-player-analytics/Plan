@@ -12,9 +12,10 @@ import {ChartLoader} from "../navigation/Loader";
 import {usePreferences} from "../../hooks/preferencesHook.jsx";
 import FormattedDate from "../text/FormattedDate.jsx";
 import FormattedTime from "../text/FormattedTime.jsx";
-import {formatDecimals} from "../../util/formatters.js";
 import PlayerPageLinkButton from "../input/button/PlayerPageLinkButton.jsx";
 import ServerPageLinkButton from "../input/button/ServerPageLinkButton.jsx";
+import {useDecimalFormatter} from "../../util/format/useDecimalFormatter.js";
+import {usePingFormatter} from "../../util/format/usePingFormatter.js";
 
 const SessionHeader = ({session}) => {
     const {t} = useTranslation();
@@ -33,7 +34,8 @@ const SessionHeader = ({session}) => {
 
 const SessionBody = ({i, session}) => {
     const {t} = useTranslation();
-    const {decimalFormat} = usePreferences();
+    const {formatDecimals} = useDecimalFormatter();
+    const {formatPing} = usePingFormatter();
     return (
         <Row>
             <Col lg={6}>
@@ -55,7 +57,7 @@ const SessionBody = ({i, session}) => {
                 />
                 {session.avg_ping ? <Datapoint
                     icon={faSignal} color={"ping"}
-                    name={t('html.label.averagePing')} value={formatDecimals(session.avg_ping, decimalFormat)} bold
+                    name={t('html.label.averagePing')} value={formatPing(formatDecimals(session.avg_ping))} bold
                 /> : ''}
                 <br/>
                 <Datapoint

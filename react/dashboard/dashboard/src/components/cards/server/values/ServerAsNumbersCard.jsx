@@ -29,7 +29,7 @@ const ServerAsNumbersCard = ({data}) => {
                 </h6>
             </Card.Header>
             <ExtendableCardBody
-                id={data.player_kills !== undefined ? 'card-body-server-as-numbers' : 'card-body-network-as-numbers'}>
+                id={data.player_kills === undefined ? 'card-body-network-as-numbers' : 'card-body-server-as-numbers'}>
                 <CurrentUptime uptime={data.current_uptime}/>
                 <hr/>
                 <Datapoint name={t('html.label.totalPlayers')}
@@ -58,7 +58,7 @@ const ServerAsNumbersCard = ({data}) => {
                            color={'playtime'} icon={faClock}
                            value={<FormattedTime timeMs={data.player_playtime}/>}/>
                 {data.session_length_avg && <Datapoint name={t('html.label.averageSessionLength')}
-                           color={'sessions'} icon={faClock}
+                                                       color={'sessions'} icon={faClock}
                                                        value={<FormattedTime timeMs={data.session_length_avg}/>}/>}
                 <Datapoint name={t('html.label.sessions')}
                            color={'sessions'} icon={faCalendarCheck}
