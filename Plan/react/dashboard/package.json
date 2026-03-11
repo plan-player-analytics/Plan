@@ -40,7 +40,7 @@
     "react-select": "^5.10.2",
     "react-transition-group": "^4.4.5",
     "sass": "^1.97.3",
-    "swagger-ui": "^5.32.0"
+    "swagger-ui-dist": "^5.32.0"
   },
   "scripts": {
     "start": "vite",
@@ -71,5 +71,8 @@
     "baseline-browser-mapping": "^2.10.0",
     "typescript": "^5.9.3",
     "vite": "^7.3.1"
+  },
+  "scarfSettings": {
+    "enabled": false
   }
 }
