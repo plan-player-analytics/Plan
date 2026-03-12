@@ -7,6 +7,7 @@ import {
     faPowerOff,
     faTachometerAlt,
     faUser,
+    faUserCircle,
     faUsers
 } from "@fortawesome/free-solid-svg-icons";
 import Datapoint from "../../components/Datapoint";
@@ -52,8 +53,8 @@ const Last7DaysCard = ({data}) => {
                 <Datapoint name={t('html.label.newPlayers')}
                            color={'players-new'} icon={faUsers}
                            value={data.new_players} bold/>
-                <Datapoint name={t('html.label.newPlayers')}
-                           color={'players-new'} icon={faUsers}
+                <Datapoint name={t('html.label.newPlayerRetention')}
+                           color={'players-new'} icon={faUserCircle}
                            value={data.new_players_retention_perc}
                            valueLabel={data.new_players_retention + '/' + data.new_players} bold/>
                 <hr/>
