@@ -101,7 +101,7 @@ public class ConfigWriter {
                 // node is null:       Inconsistent config node state
                 // value is null:      Has no value (empty)
                 // nodeOrder is empty: Has no children
-                if (node == null || (node.value == null && node.nodeOrder.isEmpty())) {
+                if (node == null || node.value == null && node.nodeOrder.isEmpty()) {
                     continue;
                 }
 
