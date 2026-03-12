@@ -604,7 +604,7 @@ html:
         selectSomeAddresses: "주소를 선택하세요."
         server: "서버"
         serverAnalysis: "서버 분석"
-        serverAsNumberse: "숫자로 보는 서버"
+        serverAsNumbers: "숫자로 보는 서버"
         serverCalendar: "서버 캘린더"
         serverDowntime: "서버 다운타임"
         serverOccupied: "서버 점유"

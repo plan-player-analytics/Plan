@@ -604,7 +604,7 @@ html:
         selectSomeAddresses: "Select some addresses"
         server: "サーバー"
         serverAnalysis: "サーバーの分析結果"
-        serverAsNumberse: "サーバーの状況"
+        serverAsNumbers: "サーバーの状況"
         serverCalendar: "サーバーカレンダー"
         serverDowntime: "サーバーダウンタイム"
         serverOccupied: "プレイヤーがログインしている時間"
