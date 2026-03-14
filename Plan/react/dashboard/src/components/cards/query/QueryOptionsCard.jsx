@@ -5,7 +5,7 @@ import {useDataRequest} from "../../../hooks/dataFetchHook";
 import {fetchFilters, postQuery} from "../../../service/queryService";
 import {ErrorViewCard} from "../../../views/ErrorView.tsx";
 import {ChartLoader} from "../../navigation/Loader.tsx";
-import DateInputField from "../../input/DateInputField";
+import DateInputField from "../../input/DateInputField.tsx";
 import TimeInputField from "../../input/TimeInputField";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faGear, faSearch} from "@fortawesome/free-solid-svg-icons";
@@ -196,6 +196,8 @@ const QueryOptionsCard = () => {
                                         setValue={setFromDate}
                                         placeholder={view.afterDate}
                                         setAsInvalid={setAsInvalid} setAsValid={setAsValid}
+                                        rangeEnd={toDate}
+                                        type="string"
                         />
                     </Col>
                     <Col md={2}>
@@ -215,6 +217,8 @@ const QueryOptionsCard = () => {
                                         setValue={setToDate}
                                         placeholder={view.beforeDate}
                                         setAsInvalid={setAsInvalid} setAsValid={setAsValid}
+                                        rangeStart={fromDate}
+                                        type="string"
                         />
                     </Col>
                     <Col md={2}>

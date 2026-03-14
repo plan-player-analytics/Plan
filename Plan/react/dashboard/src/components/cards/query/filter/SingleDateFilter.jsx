@@ -1,7 +1,7 @@
 import {useTranslation} from "react-i18next";
 import React, {useEffect, useState} from "react";
 import {Col, Row} from "react-bootstrap";
-import DateInputField from "../../../input/DateInputField.jsx";
+import DateInputField from "../../../input/DateInputField.tsx";
 import TimeInputField from "../../../input/TimeInputField.jsx";
 import OutlineButton from "../../../input/button/OutlineButton.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";

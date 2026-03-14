@@ -1,13 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from "react-i18next";
-import DateInputField from "../../../input/DateInputField";
+import DateInputField from "../../../input/DateInputField.tsx";
 import TimeInputField from "../../../input/TimeInputField";
 import {Col, Row} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTrashAlt} from "@fortawesome/free-regular-svg-icons";
 import OutlineButton from "../../../input/button/OutlineButton.tsx";
 import Checkbox from "../../../input/Checkbox.jsx";
-import {InlinedRow} from "../../../layout/InlinedRow.jsx";
+import {InlinedRow} from "../../../layout/InlinedRow.tsx";
 
 const BetweenDatesFilter = ({index, label, filter, removeFilter, setFilterOptions, setAsInvalid, setAsValid}) => {
     const {t} = useTranslation();
@@ -67,6 +67,7 @@ const BetweenDatesFilter = ({index, label, filter, removeFilter, setFilterOption
                                         placeholder={options.after[0]}
                                         setAsInvalid={setAsInvalid} setAsValid={setAsValid}
                                         disabled={!fromDateEnabled}
+                                        type="string"
                         />
                     </InlinedRow>
                 </Col>
@@ -91,6 +92,7 @@ const BetweenDatesFilter = ({index, label, filter, removeFilter, setFilterOption
                                         placeholder={options.before[0]}
                                         setAsInvalid={setAsInvalid} setAsValid={setAsValid}
                                         disabled={!toDateEnabled}
+                                        type="string"
                         />
                     </InlinedRow>
                 </Col>

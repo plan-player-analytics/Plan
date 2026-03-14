@@ -5,7 +5,7 @@ import {useTranslation} from "react-i18next";
 import ActionButton from "../../input/button/ActionButton.jsx";
 import OutlineButton from "../../input/button/OutlineButton.tsx";
 import {Card, Col, Row} from "react-bootstrap";
-import DateInputField from "../../input/DateInputField.jsx";
+import DateInputField from "../../input/DateInputField.tsx";
 import TimeInputField from "../../input/TimeInputField.jsx";
 import MultiSelect from "../../input/MultiSelect.jsx";
 import Checkbox from "../../input/Checkbox.jsx";

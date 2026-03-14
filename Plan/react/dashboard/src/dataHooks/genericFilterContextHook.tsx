@@ -3,8 +3,8 @@ import {GenericFilter} from "./model/GenericFilter";
 
 type GenericFilterContextProps = {
     reset: () => void;
-    setAfter: (value: number) => void;
-    setBefore: (value: number) => void;
+    setAfter: (value: number | undefined) => void;
+    setBefore: (value: number | undefined) => void;
 } & GenericFilter;
 
 const GenericFilterContext = createContext<GenericFilterContextProps | undefined>(undefined);
@@ -20,7 +20,21 @@ export const GenericFilterContextProvider = ({initialValue, children}: Props) =>
     const reset = useCallback(() => {
         setAfter(undefined);
         setBefore(undefined);
-    }, [setAfter, setBefore])
+    }, [setAfter, setBefore]);
+
+    const changeBefore = useCallback((value: number | undefined) => {
+        setBefore(value);
+        if (after && value && after > value) {
+            setAfter(value);
+        }
+    }, [setBefore, setAfter, after]);
+
+    const changeAfter = useCallback((value: number | undefined) => {
+        setAfter(value);
+        if (before && value && before < value) {
+            setBefore(value);
+        }
+    }, [setBefore, setAfter, before]);
 
     const context = useMemo(() => {
         return {
@@ -28,10 +42,10 @@ export const GenericFilterContextProvider = ({initialValue, children}: Props) =>
             after,
             before,
             reset,
-            setAfter,
-            setBefore
+            setAfter: changeAfter,
+            setBefore: changeBefore
         }
-    }, [initialValue, after, before, reset, setAfter, setBefore]);
+    }, [initialValue, after, before, reset, changeAfter, changeBefore]);
     return <GenericFilterContext.Provider value={context}>
         {children}
     </GenericFilterContext.Provider>;

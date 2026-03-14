@@ -5,7 +5,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTrashAlt} from "@fortawesome/free-regular-svg-icons";
 import {Col, Row} from "react-bootstrap";
 import OutlineButton from "../../../input/button/OutlineButton.tsx";
-import DateInputField from "../../../input/DateInputField.jsx";
+import DateInputField from "../../../input/DateInputField.tsx";
 import TimeInputField from "../../../input/TimeInputField.jsx";
 
 const MultipleChoiceOnDateFilter = ({
