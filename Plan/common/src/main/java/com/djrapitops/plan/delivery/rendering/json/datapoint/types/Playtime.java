@@ -20,13 +20,14 @@ import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
+import com.djrapitops.plan.gathering.cache.SessionCache;
+import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Map;
 import java.util.Optional;
 
 /**
@@ -36,10 +37,12 @@ import java.util.Optional;
 public class Playtime implements Datapoint<Long> {
 
     private final DBSystem dbSystem;
+    private final ServerInfo serverInfo;
 
     @Inject
-    public Playtime(DBSystem dbSystem) {
+    public Playtime(DBSystem dbSystem, ServerInfo serverInfo) {
         this.dbSystem = dbSystem;
+        this.serverInfo = serverInfo;
     }
 
     @Override
@@ -67,17 +70,23 @@ public class Playtime implements Datapoint<Long> {
     public Optional<Long> getValue(GenericFilter filter) {
         Database db = dbSystem.getDatabase();
         if (filter.getPlayerUUID().isPresent()) {
-            return filter.getPlayerUUID().map(playerUUID -> db.query(
-                            SessionQueries.playtimeOfPlayer(filter.getAfter(), filter.getBefore(), playerUUID)
-                    ).entrySet().stream()
-                    .filter(entry -> filter.contains(entry.getKey()))
-                    .mapToLong(Map.Entry::getValue)
-                    .sum());
+            Long playtime = db.query(SessionQueries.playtime(filter.getAfter(), filter.getBefore(), filter.getPlayerUUID().get(), filter.getServerUUIDs()));
+            if (filter.contains(serverInfo.getServerUUID())) {
+                playtime += SessionCache.getCachedSession(filter.getPlayerUUID().get())
+                        .filter(session -> session.isWithin(filter.getAfter(), filter.getBefore()))
+                        .map(session -> session.toFinishedSession(System.currentTimeMillis()).getLength())
+                        .orElse(0L);
+            }
+            return Optional.of(playtime);
         }
-        if (!filter.getServerUUIDs().isEmpty()) {
-            return Optional.of(db.query(SessionQueries.playtime(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs())));
-        } else {
-            return Optional.of(db.query(SessionQueries.playtime(filter.getAfter(), filter.getBefore())));
+
+        Long playtime = db.query(SessionQueries.playtime(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
+        if (filter.contains(serverInfo.getServerUUID())) {
+            playtime += SessionCache.getActiveSessions().stream()
+                    .filter(session -> session.isWithin(filter.getAfter(), filter.getBefore()))
+                    .mapToLong(session -> session.toFinishedSession(System.currentTimeMillis()).getLength())
+                    .sum();
         }
+        return Optional.of(playtime);
     }
 }

@@ -27,7 +27,9 @@ public enum DatapointType {
     WORLD_PIE(WorldPie.class),
     AFK_TIME(AfkTime.class),
     AFK_TIME_PERCENTAGE(AfkTimePercentage.class),
-    SERVER_OCCUPIED(ServerOccupied.class);
+    SERVER_OCCUPIED(ServerOccupied.class),
+    MOST_ACTIVE_GAME_MODE(MostActiveGameMode.class),
+    MOST_ACTIVE_WORLD(MostActiveWorld.class);
 
     private final Class<? extends Datapoint<?>> datapointClass;
 

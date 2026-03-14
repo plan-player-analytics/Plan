@@ -47,4 +47,13 @@ public interface DatapointModule {
     @Binds
     @IntoSet
     Datapoint<?> bindWorldPie(WorldPie worldPie);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindMostActiveGameMode(MostActiveGameMode mostActiveGameMode);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindMostActiveWorld(MostActiveWorld mostActiveWorld);
+
 }

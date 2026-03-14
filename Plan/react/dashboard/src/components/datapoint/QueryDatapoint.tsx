@@ -5,12 +5,14 @@ import {useQuery} from "@tanstack/react-query";
 import {queryRetry} from "../../dataHooks/queryRetry";
 import {useEffect} from "react";
 import {baseAddress, staticSite} from "../../service/backendConfiguration";
-import {DatapointProps, default as DatapointComponent} from "./Datapoint";
+import {Datapoint as DatapointComponent, DatapointProps} from "./Datapoint";
 import FormattedTime from "../text/FormattedTime";
 import Loader from "../navigation/Loader";
 import {useAuth} from "../../hooks/authenticationHook";
 import {useDecimalFormatter} from "../../util/format/useDecimalFormatter";
 import {isOutOf, OutOf} from "../../dataHooks/model/datapoint/OutOf";
+import {isOutOfCategory, OutOfCategory} from "../../dataHooks/model/datapoint/OutOfCategory";
+import {useTranslation} from "react-i18next";
 
 type Props<K extends DatapointType> = {
     dataType: K;
@@ -25,9 +27,22 @@ type FormatProps<K extends DatapointType> = {
 
 const FormattedOutOf = ({outOf}: { outOf: OutOf }) => {
     const {formatDecimals} = useDecimalFormatter();
+
     return (
         <>
             <Format value={outOf.value} formatType={outOf.formatType}/>
+            {' '}({formatDecimals(outOf.percentage * 100)}%)
+        </>
+    )
+}
+
+const FormattedOutOfCategory = ({outOf}: { outOf: OutOfCategory }) => {
+    const {t} = useTranslation();
+    const {formatDecimals} = useDecimalFormatter();
+    if (!outOf.category || !outOf.percentage) return t('generic.noData');
+    return (
+        <>
+            <b>{outOf.category}</b>
             {' '}({formatDecimals(outOf.percentage * 100)}%)
         </>
     )
@@ -43,7 +58,10 @@ function Format<K extends DatapointType>({value, formatType}: FormatProps<K>) {
             return formatDecimals(value as number * 100) + '%'
         case "SPECIAL":
             if (isOutOf(value)) {
-                return <FormattedOutOf outOf={value as unknown as OutOf}/>
+                return <FormattedOutOf outOf={value as OutOf}/>
+            }
+            if (isOutOfCategory(value)) {
+                return <FormattedOutOfCategory outOf={value as OutOfCategory}/>;
             }
             return String(value);
         case "NONE":

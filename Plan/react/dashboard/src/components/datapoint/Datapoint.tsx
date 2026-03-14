@@ -30,7 +30,18 @@ export type DatapointProps = {
     trend?: Trend;
 }
 
-const Datapoint = ({icon, color, name, value, valueLabel, prefix, bold, boldTitle, title, trend}: DatapointProps) => {
+export const Datapoint = ({
+                              icon,
+                              color,
+                              name,
+                              value,
+                              valueLabel,
+                              prefix,
+                              bold,
+                              boldTitle,
+                              title,
+                              trend
+                          }: DatapointProps) => {
     const {t} = useTranslation();
     if (value === undefined && valueLabel === undefined) return <></>;
 

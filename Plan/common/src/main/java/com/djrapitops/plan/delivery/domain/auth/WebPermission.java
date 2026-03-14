@@ -125,6 +125,12 @@ public enum WebPermission implements Supplier<String>, Lang {
     DATA_AFK_TIME_NETWORK("See AFK datapoint of network"),
     DATA_SERVER_OCCUPIED_SERVER("See Server occupied -datapoint of servers"),
     DATA_SERVER_OCCUPIED_NETWORK("See Server occupied -datapoint of network"),
+    DATA_MOST_ACTIVE_GAME_MODE_PLAYER("See Most Active Gamemode -datapoint of players"),
+    DATA_MOST_ACTIVE_GAME_MODE_SERVER("See Most Active Gamemode -datapoint of servers"),
+    DATA_MOST_ACTIVE_GAME_MODE_NETWORK("See Most Active Gamemode -datapoint of network"),
+    DATA_MOST_ACTIVE_WORLD_PLAYER("See Most Active World -datapoint of players"),
+    DATA_MOST_ACTIVE_WORLD_SERVER("See Most Active World -datapoint of servers"),
+    DATA_MOST_ACTIVE_WORLD_NETWORK("See Most Active World -datapoint of network"),
 
     ACCESS("Controls access to pages"),
     ACCESS_PLAYER("Allows accessing any /player pages"),

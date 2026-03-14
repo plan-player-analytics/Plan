@@ -3,7 +3,6 @@ import InsightsFor30DaysCard from "../../common/InsightsFor30DaysCard";
 import {useDataRequest} from "../../../../hooks/dataFetchHook";
 import {fetchSessionOverview} from "../../../../service/serverService";
 import {ErrorViewCard} from "../../../../views/ErrorView.tsx";
-import Datapoint from "../../../datapoint/Datapoint.tsx";
 import {useTranslation} from "react-i18next";
 import {faGamepad, faUsers} from "@fortawesome/free-solid-svg-icons";
 import {faClock} from "@fortawesome/free-regular-svg-icons";
@@ -38,10 +37,8 @@ const SessionInsightsCard = ({identifier}) => {
 
     return (
         <InsightsFor30DaysCard id={'session-insights'} title={title}>
-            <Datapoint name={t('html.label.mostActiveGamemode')} icon={faGamepad} color="gamemode" bold
-                       value={insights.most_active_gamemode}
-                       valueLabel={insights.most_active_gamemode_perc}
-            />
+            <QueryDatapoint name={t('html.label.mostActiveGamemode')} icon={faGamepad} color="gamemode"
+                            dataType={DatapointType.MOST_ACTIVE_GAME_MODE} filter={filter}/>
             <QueryDatapoint name={t('html.label.serverOccupied')} icon={faUsers} color="sessions" prefix={'~'}
                             dataType={DatapointType.SERVER_OCCUPIED} filter={filter}/>
             <QueryDatapoint name={t('html.label.playtime')} icon={faClock} color="playtime"

@@ -8,5 +8,8 @@ export type OutOf = {
 }
 
 export const isOutOf = (outOf: any) => {
-    return outOf && 'value' in outOf && 'max' in outOf && 'percentage' in outOf && 'formatType' in outOf;
+    return outOf && 'value' in outOf
+        && 'max' in outOf && typeof outOf.max === 'number'
+        && 'percentage' in outOf && typeof outOf.percentage === 'number'
+        && 'formatType' in outOf && typeof outOf.formatType === 'string';
 }

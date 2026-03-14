@@ -23,17 +23,12 @@ import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.PieDrilldown;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.PieGraphFactory;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.PieSlice;
-import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
-import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.Database;
-import com.djrapitops.plan.storage.database.queries.objects.WorldTimesQueries;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
 
 /**
  * Data point implementation for the World Pie Graph.
@@ -43,30 +38,19 @@ import java.util.UUID;
 @Singleton
 public class WorldPie implements Datapoint<WorldPie.Content> {
 
-    private final DBSystem dbSystem;
+    private final WorldTimesForFilter worldTimesForFilter;
     private final PieGraphFactory pieGraphFactory;
 
     @Inject
-    public WorldPie(DBSystem dbSystem, PieGraphFactory pieGraphFactory) {
-        this.dbSystem = dbSystem;
+    public WorldPie(WorldTimesForFilter worldTimesForFilter, PieGraphFactory pieGraphFactory) {
+        this.worldTimesForFilter = worldTimesForFilter;
         this.pieGraphFactory = pieGraphFactory;
     }
 
     @Override
     public Optional<Content> getValue(GenericFilter filter) {
-        Database db = dbSystem.getDatabase();
-        if (filter.getPlayerUUID().isPresent()) {
-            UUID playerUUID = filter.getPlayerUUID().get();
-            WorldTimes worldTimes = db.query(WorldTimesQueries.fetchPlayerTotalWorldTimes(filter.getAfter(), filter.getBefore(), playerUUID, filter.getServerUUIDs()));
-            SessionCache.getCachedSession(playerUUID)
-                    .filter(session -> session.isWithin(filter.getAfter(), filter.getBefore()))
-                    .map(session -> session.getExtraData(WorldTimes.class).orElseGet(WorldTimes::new))
-                    .ifPresent(worldTimes::add);
-            return Optional.of(new Content(pieGraphFactory.worldPie(worldTimes)));
-        } else {
-            WorldTimes worldTimes = db.query(WorldTimesQueries.fetchServerTotalWorldTimes(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
-            return Optional.of(new Content(pieGraphFactory.worldPie(worldTimes)));
-        }
+        WorldTimes worldTimes = worldTimesForFilter.getWorldTimes(filter);
+        return Optional.of(new Content(pieGraphFactory.worldPie(worldTimes)));
     }
 
     @Override
