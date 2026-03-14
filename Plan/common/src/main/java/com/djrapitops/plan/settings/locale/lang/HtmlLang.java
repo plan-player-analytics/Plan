@@ -305,6 +305,11 @@ public enum HtmlLang implements Lang {
     LABEL_BLOCKED("html.label.blocked", "Blocked"),
     LABEL_ALLOWED("html.label.allowed", "Allowed"),
 
+    CATEGORY_SURVIVAL("html.label.SURVIVAL", "Survival"),
+    CATEGORY_CREATIVE("html.label.CREATIVE", "Creative"),
+    CATEGORY_ADVENTURE("html.label.ADVENTURE", "Adventure"),
+    CATEGORY_SPECTATOR("html.label.SPECTATOR", "Spectator"),
+
     LOGIN_LOGIN("html.login.login", "Login"),
     LOGIN_LOGOUT("html.login.logout", "Logout"),
     LOGIN_USERNAME("html.login.username", "Username"),

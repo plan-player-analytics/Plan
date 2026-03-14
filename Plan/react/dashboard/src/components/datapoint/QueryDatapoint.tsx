@@ -13,6 +13,7 @@ import {useDecimalFormatter} from "../../util/format/useDecimalFormatter";
 import {isOutOf, OutOf} from "../../dataHooks/model/datapoint/OutOf";
 import {isOutOfCategory, OutOfCategory} from "../../dataHooks/model/datapoint/OutOfCategory";
 import {useTranslation} from "react-i18next";
+import {useTimeAmountFormatter} from "../../util/format/useTimeAmountFormatter";
 
 type Props<K extends DatapointType> = {
     dataType: K;
@@ -42,7 +43,7 @@ const FormattedOutOfCategory = ({outOf}: { outOf: OutOfCategory }) => {
     if (!outOf.category || !outOf.percentage) return t('generic.noData');
     return (
         <>
-            <b>{outOf.category}</b>
+            <b>{t(`html.label.${outOf.category}`)}</b>
             {' '}({formatDecimals(outOf.percentage * 100)}%)
         </>
     )
@@ -50,6 +51,7 @@ const FormattedOutOfCategory = ({outOf}: { outOf: OutOfCategory }) => {
 
 function Format<K extends DatapointType>({value, formatType}: FormatProps<K>) {
     const {formatDecimals} = useDecimalFormatter();
+    const {formatTime} = useTimeAmountFormatter();
     if (value === undefined) return null;
     switch (formatType) {
         case "TIME_AMOUNT":
@@ -97,6 +99,7 @@ export function QueryDatapoint<K extends DatapointType>({permission, dataType, f
     const cast = data as Datapoint<K>;
     return <DatapointComponent
         {...props}
+        title={props.name}
         value={cast ? <Format value={cast.value} formatType={cast.formatType}/> : <Loader/>}
     />
 }

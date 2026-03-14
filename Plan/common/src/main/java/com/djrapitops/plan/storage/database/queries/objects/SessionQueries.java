@@ -477,8 +477,8 @@ public class SessionQueries {
             String sql = SELECT +
                     playtimeColumn(db.getSql(), after, before) +
                     FROM + SessionsTable.TABLE_NAME +
-                    WHERE + SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
-                    AND + SessionsTable.SESSION_END + ">=?" +
+                    WHERE + (!serverUUIDs.isEmpty() ? SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
+                    AND : "") + SessionsTable.SESSION_END + ">=?" +
                     AND + SessionsTable.SESSION_START + "<=?";
             return db.query(new QueryStatement<>(sql) {
                 @Override

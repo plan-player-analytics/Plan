@@ -51,7 +51,7 @@ export const Datapoint = ({
     const extraLabel = <ExtraLabel valueLabel={valueLabel}/>;
     const colorClass = color?.startsWith("col-") ? color : "col-" + color;
     return (
-        <p className={"col-text datapoint"} title={(title || name) + ": " + translatedValue}>
+        <p className={"col-text datapoint"} title={title || (name + ": " + translatedValue)}>
             {icon && <Fa icon={icon} className={colorClass}/>} {boldTitle ? <b>{name}</b> : name}
             {value !== undefined && <End>{prefix}{displayedValue} {extraLabel}{trend}</End>}
         </p>

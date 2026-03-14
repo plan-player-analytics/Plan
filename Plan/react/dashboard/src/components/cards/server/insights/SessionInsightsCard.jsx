@@ -1,12 +1,8 @@
 import React from "react";
 import InsightsFor30DaysCard from "../../common/InsightsFor30DaysCard";
-import {useDataRequest} from "../../../../hooks/dataFetchHook";
-import {fetchSessionOverview} from "../../../../service/serverService";
-import {ErrorViewCard} from "../../../../views/ErrorView.tsx";
 import {useTranslation} from "react-i18next";
 import {faGamepad, faUsers} from "@fortawesome/free-solid-svg-icons";
 import {faClock} from "@fortawesome/free-regular-svg-icons";
-import {fetchNetworkSessionsOverview} from "../../../../service/networkService";
 import {useGenericFilter} from "../../../../dataHooks/genericFilterContextHook.tsx";
 import {QueryDatapoint, QueryDatapointValue} from "../../../datapoint/QueryDatapoint.tsx";
 import {DatapointType} from "../../../../dataHooks/model/datapoint/Datapoint.ts";
@@ -25,22 +21,13 @@ const SessionInsightsCard = ({identifier}) => {
     const title = <TitleWithDates label={'html.label.insights'} fallback={'html.label.insights30days'} after={after}
                                   before={before}/>;
 
-    const {
-        data,
-        loadingError
-    } = useDataRequest(identifier ? fetchSessionOverview : fetchNetworkSessionsOverview, [identifier]);
-
-    if (loadingError) return <ErrorViewCard error={loadingError}/>
-
-    const insights = data?.insights;
-    if (!insights) return <></>
-
     return (
         <InsightsFor30DaysCard id={'session-insights'} title={title}>
-            <QueryDatapoint name={t('html.label.mostActiveGamemode')} icon={faGamepad} color="gamemode"
-                            dataType={DatapointType.MOST_ACTIVE_GAME_MODE} filter={filter}/>
-            <QueryDatapoint name={t('html.label.serverOccupied')} icon={faUsers} color="sessions" prefix={'~'}
-                            dataType={DatapointType.SERVER_OCCUPIED} filter={filter}/>
+            {identifier && <QueryDatapoint name={t('html.label.mostActiveGamemode')} icon={faGamepad} color="gamemode"
+                                           dataType={DatapointType.MOST_ACTIVE_GAME_MODE} filter={filter}/>}
+            {identifier &&
+                <QueryDatapoint name={t('html.label.serverOccupied')} icon={faUsers} color="sessions" prefix={'~'}
+                                dataType={DatapointType.SERVER_OCCUPIED} filter={filter}/>}
             <QueryDatapoint name={t('html.label.playtime')} icon={faClock} color="playtime"
                             dataType={DatapointType.PLAYTIME} filter={filter}/>
             <QueryDatapoint name={t('html.label.afkTime')} icon={faClock} color="playtime-afk"
