@@ -604,7 +604,7 @@ html:
         selectSomeAddresses: "Zvolte některé adresy"
         server: "Server"
         serverAnalysis: "Analýza serveru"
-        serverAsNumberse: "Statistiky serveru"
+        serverAsNumbers: "Statistiky serveru"
         serverCalendar: "Kalendář serveru"
         serverDowntime: "Server je offline"
         serverOccupied: "Server je plný"

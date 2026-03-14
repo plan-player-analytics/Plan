@@ -19,7 +19,7 @@ package utilities.mocks;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.storage.database.SQLDB;
-import net.minecraft.server.dedicated.MinecraftDedicatedServer;
+import net.minecraft.server.dedicated.DedicatedServer;
 import net.playeranalytics.plan.DaggerPlanFabricComponent;
 import net.playeranalytics.plan.PlanFabricComponent;
 import net.playeranalytics.plan.identification.properties.FabricServerProperties;
@@ -69,11 +69,11 @@ public class FabricMockComponent {
         return component.system();
     }
 
-    private MinecraftDedicatedServer mockServer() {
-        MinecraftDedicatedServer serverMock = Mockito.mock(MinecraftDedicatedServer.class);
+    private DedicatedServer mockServer() {
+        DedicatedServer serverMock = Mockito.mock(DedicatedServer.class);
         doReturn("").when(serverMock).getServerIp();
         doReturn(25565).when(serverMock).getPort();
-        doReturn("1.17.1").when(serverMock).getVersion();
+        doReturn("1.17.1").when(serverMock).getServerVersion();
         return serverMock;
     }
 

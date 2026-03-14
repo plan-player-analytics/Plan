@@ -25,7 +25,7 @@ import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTr
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import net.playeranalytics.plan.gathering.listeners.FabricListener;
 
 import javax.inject.Inject;
@@ -57,7 +57,7 @@ public class WorldChangeListener implements FabricListener {
         this.errorLogger = errorLogger;
     }
 
-    public void onWorldChange(ServerPlayerEntity player) {
+    public void onWorldChange(ServerPlayer player) {
         try {
             actOnEvent(player);
         } catch (Exception e) {
@@ -65,13 +65,13 @@ public class WorldChangeListener implements FabricListener {
         }
     }
 
-    private void actOnEvent(ServerPlayerEntity player) {
+    private void actOnEvent(ServerPlayer player) {
         long time = System.currentTimeMillis();
 
-        UUID uuid = player.getUuid();
+        UUID uuid = player.getUUID();
 
-        String worldName = player.getEntityWorld().getRegistryKey().getValue().toString();
-        String gameMode = player.interactionManager.getGameMode().name();
+        String worldName = player.level().dimension().location().toString();
+        String gameMode = player.gameMode.getGameModeForPlayer().name();
 
         dbSystem.getDatabase().executeTransaction(new StoreWorldNameTransaction(serverInfo.getServerUUID(), worldName));
         worldAliasSettings.addWorld(worldName);

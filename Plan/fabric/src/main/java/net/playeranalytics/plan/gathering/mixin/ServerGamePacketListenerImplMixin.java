@@ -16,29 +16,33 @@
  */
 package net.playeranalytics.plan.gathering.mixin;
 
-import net.minecraft.entity.damage.DamageSource;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.GameMode;
+import net.minecraft.network.protocol.game.ServerboundChatCommandPacket;
+import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.playeranalytics.plan.gathering.listeners.events.PlanFabricEvents;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(ServerPlayerEntity.class)
-public class ServerPlayerEntityMixin {
+@Mixin(ServerGamePacketListenerImpl.class)
+public class ServerGamePacketListenerImplMixin {
 
-    @Inject(method = "changeGameMode", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerPlayNetworkHandler;sendPacket(Lnet/minecraft/network/packet/Packet;)V"))
-    public void onGameModeChanged(GameMode gameMode, CallbackInfoReturnable<Boolean> cir) {
-        PlanFabricEvents.ON_GAMEMODE_CHANGE.invoker().onGameModeChange((ServerPlayerEntity) (Object) this, gameMode);
+    @Inject(method = "handleChatCommand", at = @At("TAIL"))
+    public void onCommand(ServerboundChatCommandPacket packet, CallbackInfo ci) {
+        PlanFabricEvents.ON_COMMAND.invoker().onCommand((ServerGamePacketListenerImpl) (Object) this, packet.command());
     }
 
-    @Inject(method = "onDeath", at = @At(value = "TAIL"))
-    public void onKillSelf(DamageSource source, CallbackInfo ci) {
-        if (source.getAttacker() == null) {
-            PlanFabricEvents.ON_KILLED.invoker().onKilled((ServerPlayerEntity) (Object) this, null);
-        }
+    @Inject(
+        method = "handleMovePlayer",
+        at = @At(
+            value = "INVOKE",
+            target = "Lnet/minecraft/server/level/ServerPlayer;level()Lnet/minecraft/server/level/ServerLevel;",
+            ordinal = 1
+        )
+    )
+    public void onPlayerMove(ServerboundMovePlayerPacket packet, CallbackInfo ci) {
+        PlanFabricEvents.ON_MOVE.invoker().onMove((ServerGamePacketListenerImpl) (Object) this, packet);
     }
 
 }

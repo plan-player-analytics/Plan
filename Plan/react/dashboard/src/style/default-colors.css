@@ -545,7 +545,8 @@
 
 .bg-players-online {
     background-color: var(--color-data-players-online);
-    --bs-btn-hover-bg: var(--color-data-players-online);
+    --bs-btn-hover-bg: color-mix(in srgb, var(--color-data-players-online) 90%, var(--color-text) 10%);
+    --bs-btn-active-bg: color-mix(in srgb, var(--color-data-players-online) 90%, var(--color-text) 20%);
 }
 
 .col-players-unique {

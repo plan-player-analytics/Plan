@@ -20,7 +20,7 @@ const PerformanceInsightsCard = ({data}) => {
             <Datapoint name={t('html.label.averageChunks')} icon={faMap} color="tps-low-spikes"
                        value={data.low_tps_chunks}/>
             <Datapoint name={t('html.label.averageCpuUsage')} icon={faTachometerAlt} color="tps-low-spikes"
-                       value={data.low_tps_entities}/>
+                       value={data.low_tps_cpu}/>
             <Datapoint name={t('html.label.averageTps')} icon={faTachometerAlt} color="tps-low-spikes"
                        value={data.low_tps_tps}/>
             <Datapoint name={t('html.label.msptAverage')} icon={faStopwatch} color="tps-low-spikes"

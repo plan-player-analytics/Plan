@@ -158,7 +158,7 @@ public enum HtmlLang implements Lang {
     LABEL_RETENTION("html.label.newPlayerRetention", "New Player Retention"),
     LABEL_RETENTION_GENERAL("html.label.playerRetention", "Player Retention"),
     DESCRIBE_RETENTION_PREDICTION("html.description.newPlayerRetention", "This value is a prediction based on previous players."),
-    TITLE_SERVER_AS_NUMBERS("html.label.serverAsNumberse", "Server as Numbers"),
+    TITLE_SERVER_AS_NUMBERS("html.label.serverAsNumbers", "Server as Numbers"),
     TITLE_ONLINE_ACTIVITY_AS_NUMBERS("html.label.onlineActivityAsNumbers", "Online Activity as Numbers"),
     COMPARING_15_DAYS("html.text.comparing15days", "Comparing 15 days"),
     TITLE_GRAPH_PUNCHCARD("html.label.punchcard30days", "Punchcard for 30 Days"),

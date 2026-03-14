@@ -22,7 +22,6 @@ import com.djrapitops.plan.settings.config.ConfigNode;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.function.Predicate;
 
 /**
  * Represents a change made to the config structure.
@@ -48,7 +47,9 @@ public interface ConfigChange {
 
         @Override
         public synchronized void apply(Config config) {
-            if (!config.moveChild(oldPath, newPath)) {
+            if (config.getNode(newPath).isPresent()) {
+                super.apply(config);
+            } else if (!config.moveChild(oldPath, newPath)) {
                 throw new IllegalStateException("Failed to move config node from '" + oldPath + "' to '" + newPath + "'");
             }
         }
@@ -102,12 +103,12 @@ public interface ConfigChange {
 
         @Override
         public boolean hasBeenApplied(Config config) {
-            return config.getNode(oldPath)
-                    .map(ConfigNode::getString)
-                    .map(String::trim)
-                    .filter(Predicate.not(String::isEmpty))
-                    .isEmpty()
-                    && config.getNode(newPath).isPresent();
+            Optional<ConfigNode> oldNode = config.getNode(oldPath);
+            Optional<ConfigNode> newNode = config.getNode(newPath);
+            if (oldNode.isPresent()) {
+                return false;
+            }
+            return newNode.isPresent();
         }
 
         @Override

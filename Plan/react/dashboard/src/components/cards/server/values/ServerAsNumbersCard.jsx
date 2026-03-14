@@ -25,7 +25,7 @@ const ServerAsNumbersCard = ({data}) => {
         <Card id={isGameServer ? "server-as-numbers" : "network-as-numbers"}>
             <Card.Header>
                 <h6 className="col-text">
-                    <Fa icon={faBookOpen}/> {isGameServer ? t('html.label.serverAsNumberse') : t('html.label.networkAsNumbers')}
+                    <Fa icon={faBookOpen}/> {isGameServer ? t('html.label.serverAsNumbers') : t('html.label.networkAsNumbers')}
                 </h6>
             </Card.Header>
             <ExtendableCardBody

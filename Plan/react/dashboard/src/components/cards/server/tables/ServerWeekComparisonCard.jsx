@@ -38,7 +38,7 @@ const ServerWeekComparisonCard = ({data}) => {
                           values={[data.new_before, data.new_after,
                               <BigTrend key={JSON.stringify(data.new_trend)}
                                         trend={data.new_trend}/>]}/>
-                <TableRow icon={faUsers} color="lime" text={t('html.label.regularPlayers')}
+                <TableRow icon={faUsers} color="players-regular" text={t('html.label.regularPlayers')}
                           values={[data.regular_before, data.regular_after,
                               <BigTrend key={JSON.stringify(data.regular_trend)}
                                         trend={data.regular_trend}/>]}/>

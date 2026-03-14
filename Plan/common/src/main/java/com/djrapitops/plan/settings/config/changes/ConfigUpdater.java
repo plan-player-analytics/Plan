@@ -165,7 +165,7 @@ public class ConfigUpdater {
                 new ConfigChange.MovedValue("Time.Thresholds.Remove_ping_data_after", "Time.Thresholds.Remove_ping_data_after.Time"),
                 new ConfigChange.MovedValue("Time.Thresholds.AFK_threshold", "Time.Thresholds.AFK_threshold.Time"),
                 new ConfigChange.MovedValue("Time.Thresholds.Remove_inactive_player_data_after", "Time.Thresholds.Remove_inactive_player_data_after.Time"),
-                new ConfigChange.MovedValue("Time.Periodic_tasks.Extension_data_refresh_every", "Time.Periodic_tasks.Extension_data_refresh_every.Time"),
+                new ConfigChange.MovedValue("Time.Periodic_tasks.Extension_data_refresh_every", "Time.Periodic_tasks.Extension_server_data_refresh_every.Time"),
                 new ConfigChange.MovedValue("Time.Periodic_tasks.Check_DB_for_server_config_files_every", "Time.Periodic_tasks.Check_DB_for_server_config_files_every.Time"),
                 new ConfigChange.MovedValue("Time.Periodic_tasks.Clean_Database_every", "Time.Periodic_tasks.Clean_Database_every.Time"),
                 new ConfigChange.MovedValue("Time.Delays.Ping_server_enable_delay", "Time.Delays.Ping_server_enable_delay.Time"),

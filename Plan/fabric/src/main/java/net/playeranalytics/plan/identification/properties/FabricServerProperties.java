@@ -18,7 +18,7 @@ package net.playeranalytics.plan.identification.properties;
 
 import com.djrapitops.plan.identification.properties.ServerProperties;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.server.dedicated.MinecraftDedicatedServer;
+import net.minecraft.server.dedicated.DedicatedServer;
 
 /**
  * server.properties fetcher for Fabric
@@ -27,16 +27,16 @@ import net.minecraft.server.dedicated.MinecraftDedicatedServer;
  */
 public class FabricServerProperties extends ServerProperties {
 
-    public FabricServerProperties(MinecraftDedicatedServer server) {
+    public FabricServerProperties(DedicatedServer server) {
         super(
                 "Fabric",
-                server.getServerPort(),
-                server.getVersion(),
+                server.getPort(),
+                server.getServerVersion(),
                 FabricLoader.getInstance().getModContainer("fabric").map(container -> container.getMetadata().getVersion().getFriendlyString()).orElse("Unknown") +
                         " (API), " +
                         FabricLoader.getInstance().getModContainer("fabricloader").map(modContainer -> modContainer.getMetadata().getVersion().getFriendlyString()).orElse("Unknown") +
                         " (loader)",
-                () -> (server.getServerIp() == null) ? "" : server.getServerIp(),
+                () -> (server.getLocalIp() == null) ? "" : server.getLocalIp(),
                 server.getProperties().maxPlayers.get()
         );
     }

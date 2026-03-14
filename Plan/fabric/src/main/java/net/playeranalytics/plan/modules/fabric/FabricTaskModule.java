@@ -35,7 +35,7 @@ import com.djrapitops.plan.storage.upkeep.OldDependencyCacheDeletionTask;
 import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoSet;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 import net.playeranalytics.plan.gathering.timed.FabricPingCounter;
 
 @Module
@@ -43,7 +43,7 @@ public interface FabricTaskModule {
 
     @Binds
     @IntoSet
-    TaskSystem.Task bindTPSCounter(ServerTPSCounter<ServerWorld> tpsCounter);
+    TaskSystem.Task bindTPSCounter(ServerTPSCounter<ServerLevel> tpsCounter);
 
     @Binds
     @IntoSet
