@@ -16,10 +16,7 @@
  */
 package com.djrapitops.plan.delivery.rendering.json.datapoint;
 
-import com.djrapitops.plan.delivery.rendering.json.datapoint.types.AfkTime;
-import com.djrapitops.plan.delivery.rendering.json.datapoint.types.AfkTimePercentage;
-import com.djrapitops.plan.delivery.rendering.json.datapoint.types.Playtime;
-import com.djrapitops.plan.delivery.rendering.json.datapoint.types.WorldPie;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.types.*;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 
 /**
@@ -29,7 +26,8 @@ public enum DatapointType {
     PLAYTIME(Playtime.class),
     WORLD_PIE(WorldPie.class),
     AFK_TIME(AfkTime.class),
-    AFK_TIME_PERCENTAGE(AfkTimePercentage.class);
+    AFK_TIME_PERCENTAGE(AfkTimePercentage.class),
+    SERVER_OCCUPIED(ServerOccupied.class);
 
     private final Class<? extends Datapoint<?>> datapointClass;
 

@@ -123,6 +123,8 @@ public enum WebPermission implements Supplier<String>, Lang {
     DATA_AFK_TIME_PLAYER("See AFK datapoint of players"),
     DATA_AFK_TIME_SERVER("See AFK datapoint of servers"),
     DATA_AFK_TIME_NETWORK("See AFK datapoint of network"),
+    DATA_SERVER_OCCUPIED_SERVER("See Server occupied -datapoint of servers"),
+    DATA_SERVER_OCCUPIED_NETWORK("See Server occupied -datapoint of network"),
 
     ACCESS("Controls access to pages"),
     ACCESS_PLAYER("Allows accessing any /player pages"),

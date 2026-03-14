@@ -66,6 +66,7 @@ public interface SpongeSuperClassBindingModule {
     ServerSensor<ServerWorld> bindServerSensor(SpongeSensor sensor);
 
     @Binds
+    @SuppressWarnings("java:S1452")
     ServerSensor<?> bindGenericsServerSensor(ServerSensor<ServerWorld> sensor);
 
     @Binds

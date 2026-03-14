@@ -8,7 +8,6 @@ import {useTranslation} from "react-i18next";
 import {faGamepad, faUsers} from "@fortawesome/free-solid-svg-icons";
 import {faClock} from "@fortawesome/free-regular-svg-icons";
 import {fetchNetworkSessionsOverview} from "../../../../service/networkService";
-import FormattedTime from "../../../text/FormattedTime.jsx";
 import {useGenericFilter} from "../../../../dataHooks/genericFilterContextHook.tsx";
 import {QueryDatapoint, QueryDatapointValue} from "../../../datapoint/QueryDatapoint.tsx";
 import {DatapointType} from "../../../../dataHooks/model/datapoint/Datapoint.ts";
@@ -43,11 +42,8 @@ const SessionInsightsCard = ({identifier}) => {
                        value={insights.most_active_gamemode}
                        valueLabel={insights.most_active_gamemode_perc}
             />
-            <Datapoint name={t('html.label.serverOccupied')} icon={faUsers} color="sessions"
-                       value={insights.server_occupied ? <>{'~'}<FormattedTime
-                           timeMs={insights.server_occupied}/></> : undefined}
-                       valueLabel={insights.server_occupied_perc}
-            />
+            <QueryDatapoint name={t('html.label.serverOccupied')} icon={faUsers} color="sessions" prefix={'~'}
+                            dataType={DatapointType.SERVER_OCCUPIED} filter={filter}/>
             <QueryDatapoint name={t('html.label.playtime')} icon={faClock} color="playtime"
                             dataType={DatapointType.PLAYTIME} filter={filter}/>
             <QueryDatapoint name={t('html.label.afkTime')} icon={faClock} color="playtime-afk"

@@ -61,6 +61,7 @@ public interface FabricSuperClassBindingModule {
     ServerSensor<ServerLevel> bindServerSensor(FabricSensor sensor);
 
     @Binds
+    @SuppressWarnings("java:S1452")
     ServerSensor<?> bindGenericsServerSensor(ServerSensor<ServerLevel> sensor);
 
     @Binds

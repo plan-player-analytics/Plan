@@ -59,5 +59,6 @@ public interface BukkitSuperClassBindingModule {
     ServerSensor<World> bindServerSensor(BukkitSensor sensor);
 
     @Binds
+    @SuppressWarnings("java:S1452")
     ServerSensor<?> bindGenericsServerSensor(ServerSensor<World> sensor);
 }

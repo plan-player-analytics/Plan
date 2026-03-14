@@ -84,6 +84,21 @@ public class RandomData {
         return test;
     }
 
+    public static List<TPS> randomDateOrderedTPS() {
+        List<TPS> test = new ArrayList<>();
+        long previousTimestamp = randomLong(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(50), System.currentTimeMillis());
+        int previousPlayers = randomInt(0, 100);
+        for (int i = 0; i < randomInt(50, 100); i++) {
+            int randInt = r.nextInt();
+            long randLong = Math.abs(r.nextLong());
+            test.add(new TPS(previousTimestamp, randLong, randInt, randLong, randLong, randInt, randInt, randLong));
+            boolean reboot = Math.random() < 0.10;
+            previousTimestamp = previousTimestamp + (reboot ? TimeUnit.MINUTES.toMillis(1) : TimeUnit.MINUTES.toMillis(10));
+            previousPlayers = Math.max(previousPlayers + r.nextInt(10) - 10, 0);
+        }
+        return test;
+    }
+
     public static List<FinishedSession> randomSessions() {
         return pickMultiple(randomInt(15, 30),
                 () -> randomSession(

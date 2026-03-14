@@ -23,13 +23,14 @@ export type DatapointProps = {
     name: string;
     value: any;
     valueLabel?: string | ReactNode;
+    prefix?: string;
     bold?: boolean;
     boldTitle?: boolean;
     title?: string;
     trend?: Trend;
 }
 
-const Datapoint = ({icon, color, name, value, valueLabel, bold, boldTitle, title, trend}: DatapointProps) => {
+const Datapoint = ({icon, color, name, value, valueLabel, prefix, bold, boldTitle, title, trend}: DatapointProps) => {
     const {t} = useTranslation();
     if (value === undefined && valueLabel === undefined) return <></>;
 
@@ -41,7 +42,7 @@ const Datapoint = ({icon, color, name, value, valueLabel, bold, boldTitle, title
     return (
         <p className={"col-text datapoint"} title={(title || name) + ": " + translatedValue}>
             {icon && <Fa icon={icon} className={colorClass}/>} {boldTitle ? <b>{name}</b> : name}
-            {value !== undefined ? <End>{displayedValue} {extraLabel}{trend}</End> : ''}
+            {value !== undefined && <End>{prefix}{displayedValue} {extraLabel}{trend}</End>}
         </p>
     );
 }

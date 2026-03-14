@@ -14,37 +14,39 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.rendering.json.datapoint.types;
+package com.djrapitops.plan.delivery.domain;
 
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
-import dagger.Binds;
-import dagger.Module;
-import dagger.multibindings.IntoSet;
 
 /**
  * @author AuroraLS3
  */
-@Module
-@SuppressWarnings("java:S1452")
-public interface DatapointModule {
+public class OutOf {
+    private final long value;
+    private final long max;
+    private final double percentage;
+    private final Datapoint.FormatType formatType;
 
-    @Binds
-    @IntoSet
-    Datapoint<?> bindPlaytime(Playtime playtime);
+    public OutOf(long value, long max, Datapoint.FormatType formatType) {
+        this.value = value;
+        this.max = max;
+        this.formatType = formatType;
+        this.percentage = max != 0L ? value * 1.0 / max : 0.0;
+    }
 
-    @Binds
-    @IntoSet
-    Datapoint<?> bindAfkTime(AfkTime afkTime);
+    public long getValue() {
+        return value;
+    }
 
-    @Binds
-    @IntoSet
-    Datapoint<?> bindAfkTimePercentage(AfkTimePercentage afkTimePercentage);
+    public long getMax() {
+        return max;
+    }
 
-    @Binds
-    @IntoSet
-    Datapoint<?> bindServerOccupied(ServerOccupied serverOccupied);
+    public double getPercentage() {
+        return percentage;
+    }
 
-    @Binds
-    @IntoSet
-    Datapoint<?> bindWorldPie(WorldPie worldPie);
+    public Datapoint.FormatType getFormatType() {
+        return formatType;
+    }
 }

@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
+import com.djrapitops.plan.delivery.domain.mutators.TPSMutator;
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
 import com.djrapitops.plan.identification.ServerUUID;
@@ -27,6 +28,7 @@ import com.djrapitops.plan.storage.database.transactions.events.TPSStoreTransact
 import com.djrapitops.plan.utilities.comparators.TPSComparator;
 import com.djrapitops.plan.utilities.java.Lists;
 import net.playeranalytics.plugin.server.PluginLogger;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import utilities.RandomData;
@@ -56,6 +58,34 @@ public interface TPSQueriesTest extends DatabaseTestPreparer {
 
         expected.sort(new TPSComparator());
         assertEquals(expected, db().query(TPSQueries.fetchTPSDataOfServer(Long.MIN_VALUE, Long.MAX_VALUE, serverUUID())));
+    }
+
+    @RepeatedTest(5)
+    default void occupiedCalculationMatches() {
+        List<TPS> data = RandomData.randomDateOrderedTPS();
+        for (TPS tps : data) {
+            execute(DataStoreQueries.storeTPS(serverUUID(), tps));
+        }
+
+        data.sort(new TPSComparator());
+        List<Long> expected = List.of(new TPSMutator(data).serverOccupiedTime());
+        List<Long> result = db().query(TPSQueries.occupiedTime(Long.MIN_VALUE, Long.MAX_VALUE, List.of(serverUUID())))
+                .values().stream().toList();
+        assertEquals(expected, result, () -> "Mismatch (" + expected + ", " + result + ") with data " + data);
+    }
+
+    @RepeatedTest(5)
+    default void uptimeCalculationMatches() {
+        List<TPS> data = RandomData.randomDateOrderedTPS();
+        for (TPS tps : data) {
+            execute(DataStoreQueries.storeTPS(serverUUID(), tps));
+        }
+
+        data.sort(new TPSComparator());
+        List<Long> expected = List.of(new TPSMutator(data).serverUptime());
+        List<Long> result = db().query(TPSQueries.uptime(Long.MIN_VALUE, Long.MAX_VALUE, List.of(serverUUID())))
+                .values().stream().toList();
+        assertEquals(expected, result, () -> "Mismatch (" + expected + ", " + result + ") with data " + data);
     }
 
     @Test

@@ -5,12 +5,12 @@ import {useQuery} from "@tanstack/react-query";
 import {queryRetry} from "../../dataHooks/queryRetry";
 import {useEffect} from "react";
 import {baseAddress, staticSite} from "../../service/backendConfiguration";
-import {ErrorViewText} from "../../views/ErrorView";
 import {DatapointProps, default as DatapointComponent} from "./Datapoint";
 import FormattedTime from "../text/FormattedTime";
 import Loader from "../navigation/Loader";
 import {useAuth} from "../../hooks/authenticationHook";
 import {useDecimalFormatter} from "../../util/format/useDecimalFormatter";
+import {isOutOf, OutOf} from "../../dataHooks/model/datapoint/OutOf";
 
 type Props<K extends DatapointType> = {
     dataType: K;
@@ -23,6 +23,16 @@ type FormatProps<K extends DatapointType> = {
     formatType?: FormatType
 }
 
+const FormattedOutOf = ({outOf}: { outOf: OutOf }) => {
+    const {formatDecimals} = useDecimalFormatter();
+    return (
+        <>
+            <Format value={outOf.value} formatType={outOf.formatType}/>
+            {' '}({formatDecimals(outOf.percentage * 100)}%)
+        </>
+    )
+}
+
 function Format<K extends DatapointType>({value, formatType}: FormatProps<K>) {
     const {formatDecimals} = useDecimalFormatter();
     if (value === undefined) return null;
@@ -31,6 +41,11 @@ function Format<K extends DatapointType>({value, formatType}: FormatProps<K>) {
             return <FormattedTime timeMs={value}/>
         case "PERCENTAGE":
             return formatDecimals(value as number * 100) + '%'
+        case "SPECIAL":
+            if (isOutOf(value)) {
+                return <FormattedOutOf outOf={value as unknown as OutOf}/>
+            }
+            return String(value);
         case "NONE":
         default:
             return String(value);
@@ -38,6 +53,7 @@ function Format<K extends DatapointType>({value, formatType}: FormatProps<K>) {
 }
 
 function calculatePermission(dataType: DatapointType, filter?: GenericFilter) {
+    if (!dataType) return '';
     const asPermission = dataType.toLowerCase().replaceAll('_', '.');
     if (filter) {
         if (filter.player) return 'data.' + asPermission + '.player';
@@ -52,7 +68,13 @@ export function QueryDatapoint<K extends DatapointType>({permission, dataType, f
     const {data, error} = useDatapointQuery(allowed, dataType, filter);
 
     if (!allowed) return null;
-    if (error) return <ErrorViewText error={error}/>
+    if (error) {
+        console.error(error);
+        return <DatapointComponent
+            {...props}
+            value={error.message}
+        />
+    }
 
     const cast = data as Datapoint<K>;
     return <DatapointComponent
@@ -67,7 +89,10 @@ export function QueryDatapointValue<K extends DatapointType>({permission, dataTy
     const {data, error} = useDatapointQuery(allowed, dataType, filter);
 
     if (!allowed) return null;
-    if (error) return <ErrorViewText error={error}/>
+    if (error) {
+        console.error(error);
+        return error.message;
+    }
 
     const cast = data as Datapoint<K>;
     return cast ? <Format value={cast.value} formatType={cast.formatType}/> : <Loader/>

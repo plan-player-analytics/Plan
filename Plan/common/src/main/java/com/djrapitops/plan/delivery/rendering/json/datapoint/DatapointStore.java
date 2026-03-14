@@ -31,6 +31,7 @@ import java.util.stream.Collectors;
  * @author AuroraLS3
  */
 @Singleton
+@SuppressWarnings("java:S1452")
 public class DatapointStore {
 
     private final Map<DatapointType, Datapoint<?>> dataPointsByType;

@@ -133,6 +133,55 @@ public class TPSQueries {
         };
     }
 
+    public static Query<Map<Integer, Long>> occupiedTime(long after, long before, List<ServerUUID> serverUUIDs) {
+        String sql = SELECT + SERVER_ID + ",SUM(" +
+                "CASE " +
+                "WHEN " + PLAYERS_ONLINE + " > 0 " +
+                "AND (date - prev_date) <= 180000 " +
+                "THEN (date - prev_date) " +
+                "ELSE 0 " +
+                "END" +
+                ") AS active_time" +
+                FROM + "(" +
+                SELECT +
+                SERVER_ID + "," +
+                DATE + "," +
+                PLAYERS_ONLINE + "," +
+                "LAG(" + DATE + ") OVER (PARTITION BY " + SERVER_ID + " ORDER BY " + DATE + ") AS prev_date" +
+                FROM + TABLE_NAME +
+                WHERE + (!serverUUIDs.isEmpty() ? SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
+                AND : "") + DATE + ">=?" +
+                AND + DATE + "<=?" +
+                ") q1" +
+                GROUP_BY + SERVER_ID;
+        return db -> db.queryMap(sql, (row, map) ->
+                        map.put(row.getInt(SERVER_ID), row.getLong("active_time")),
+                after, before);
+    }
+
+    public static Query<Map<Integer, Long>> uptime(long after, long before, List<ServerUUID> serverUUIDs) {
+        String sql = SELECT + SERVER_ID + ",SUM(" +
+                "CASE " +
+                "WHEN diff <= 120000 " +
+                "THEN diff " +
+                "ELSE 0 " +
+                "END" +
+                ") AS uptime" +
+                FROM + "(" +
+                SELECT +
+                SERVER_ID + "," +
+                DATE + "-LAG(" + DATE + ") OVER (PARTITION BY " + SERVER_ID + " ORDER BY " + DATE + ") AS diff" +
+                FROM + TABLE_NAME +
+                WHERE + (!serverUUIDs.isEmpty() ? SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
+                AND : "") + DATE + ">=?" +
+                AND + DATE + "<=?" +
+                ") q1" +
+                GROUP_BY + SERVER_ID;
+        return db -> db.queryMap(sql, (row, map) ->
+                        map.put(row.getInt(SERVER_ID), row.getLong("uptime")),
+                after, before);
+    }
+
     public static Query<List<DateObj<Integer>>> fetchViewPreviewGraphData(ServerUUID serverUUID) {
         String sql = SELECT + min(DATE) + " as " + DATE + ',' +
                 max(PLAYERS_ONLINE) + " as " + PLAYERS_ONLINE +
