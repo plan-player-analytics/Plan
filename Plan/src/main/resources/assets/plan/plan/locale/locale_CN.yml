@@ -604,7 +604,7 @@ html:
         selectSomeAddresses: "Select some addresses"
         server: "服务器"
         serverAnalysis: "服务器分析"
-        serverAsNumberse: "服务器数据"
+        serverAsNumbers: "服务器数据"
         serverCalendar: "服务器日历"
         serverDowntime: "服务器停机时间"
         serverOccupied: "服务器在线时间"
