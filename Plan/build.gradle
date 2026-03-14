@@ -96,7 +96,7 @@ subprojects {
         seleniumVersion = "4.41.0"
         testContainersVersion = "1.21.3"
         awaitilityVersion = "4.3.0"
-        swaggerVersion = "2.2.44"
+        swaggerVersion = "2.2.45"
         guavaVersion = "33.5.0-jre"
     }
 
