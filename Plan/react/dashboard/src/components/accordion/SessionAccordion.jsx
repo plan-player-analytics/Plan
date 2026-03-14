@@ -2,7 +2,7 @@ import React, {useCallback, useMemo} from "react";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCrosshairs, faServer, faSignal, faSkull, faUser, faUserPlus} from "@fortawesome/free-solid-svg-icons";
 import {faClock, faMap} from "@fortawesome/free-regular-svg-icons";
-import Datapoint from "../Datapoint";
+import Datapoint from "../datapoint/Datapoint.tsx";
 import {Col, Row} from "react-bootstrap";
 import WorldPie from "../graphs/WorldPie";
 import {SimpleKillsTable} from "../table/KillsTable";

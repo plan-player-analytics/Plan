@@ -2,7 +2,7 @@ import React from 'react';
 import CardHeader from "../../cards/CardHeader.tsx";
 import {faImage, faUser} from "@fortawesome/free-solid-svg-icons";
 import {Card, Col, Row} from "react-bootstrap";
-import Datapoint from "../../Datapoint.jsx";
+import Datapoint from "../../datapoint/Datapoint.tsx";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 

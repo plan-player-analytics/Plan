@@ -2,7 +2,7 @@ import {useTranslation} from "react-i18next";
 import {Card} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faBookOpen, faChartLine, faCrosshairs, faSkull, faUser, faUsers} from "@fortawesome/free-solid-svg-icons";
-import Datapoint from "../../../Datapoint";
+import Datapoint from "../../../datapoint/Datapoint.tsx";
 import {faCalendarCheck, faClock} from "@fortawesome/free-regular-svg-icons";
 import React from "react";
 import {CardLoader} from "../../../navigation/Loader.tsx";

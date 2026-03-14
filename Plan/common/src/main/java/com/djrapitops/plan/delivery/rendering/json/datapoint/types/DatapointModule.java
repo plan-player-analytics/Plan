@@ -14,8 +14,9 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.rendering.json.datapoint;
+package com.djrapitops.plan.delivery.rendering.json.datapoint.types;
 
+import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoSet;
@@ -29,6 +30,14 @@ public interface DatapointModule {
     @Binds
     @IntoSet
     Datapoint<?> bindPlaytime(Playtime playtime);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindAfkTime(AfkTime afkTime);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindAfkTimePercentage(AfkTimePercentage afkTimePercentage);
 
     @Binds
     @IntoSet

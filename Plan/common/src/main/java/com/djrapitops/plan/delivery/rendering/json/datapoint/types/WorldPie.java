@@ -14,10 +14,12 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.rendering.json.datapoint;
+package com.djrapitops.plan.delivery.rendering.json.datapoint.types;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.PieDrilldown;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.PieGraphFactory;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.PieSlice;
@@ -83,11 +85,26 @@ public class WorldPie implements Datapoint<WorldPie.Content> {
         return DatapointType.WORLD_PIE;
     }
 
-    public record Content(List<PieSlice> slices, List<PieDrilldown> drilldown) {
+    public static class Content {
+        private final List<PieSlice> slices;
+        private final List<PieDrilldown> drilldown;
+
+        public Content(List<PieSlice> slices, List<PieDrilldown> drilldown) {
+            this.slices = slices;
+            this.drilldown = drilldown;
+        }
+
         public Content(com.djrapitops.plan.delivery.rendering.json.graphs.pie.WorldPie worldPie) {
             this(worldPie.getSlices(), worldPie.getDrilldown());
         }
 
+        public List<PieSlice> getSlices() {
+            return slices;
+        }
+
+        public List<PieDrilldown> getDrilldown() {
+            return drilldown;
+        }
     }
 
 }

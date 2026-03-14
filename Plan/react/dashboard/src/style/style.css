@@ -135,6 +135,12 @@ p.collapsing {
     animation: loader 2s infinite ease;
 }
 
+.datapoint span.loader {
+    margin-top: 0 !important;
+    height: 1.5rem;
+    width: 1.5rem;
+}
+
 .card span.loader {
     margin-top: 4rem;
 }

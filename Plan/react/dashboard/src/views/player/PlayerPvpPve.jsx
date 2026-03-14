@@ -3,7 +3,7 @@ import {Card, Col} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faLifeRing} from "@fortawesome/free-regular-svg-icons";
 import {faHandSparkles, faSkull} from "@fortawesome/free-solid-svg-icons";
-import Datapoint from "../../components/Datapoint";
+import Datapoint from "../../components/datapoint/Datapoint.tsx";
 import KillsTable from "../../components/table/KillsTable";
 import {usePlayer} from "../layout/PlayerPage";
 import {useTranslation} from "react-i18next";

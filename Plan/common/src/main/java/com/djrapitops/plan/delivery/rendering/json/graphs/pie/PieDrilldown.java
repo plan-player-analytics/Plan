@@ -22,18 +22,27 @@ import java.util.Objects;
 /**
  * @author AuroraLS3
  */
-public record PieDrilldown(String name, String id, List<List<Object>> data) {
+public final class PieDrilldown {
+    private final String name;
+    private final String id;
+    private final List<List<Object>> data;
+
+    public PieDrilldown(String name, String id, List<List<Object>> data) {
+        this.name = name;
+        this.id = id;
+        this.data = data;
+    }
 
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         PieDrilldown that = (PieDrilldown) o;
-        return Objects.equals(name(), that.name()) && Objects.equals(id(), that.id()) && Objects.equals(data(), that.data());
+        return Objects.equals(getName(), that.getName()) && Objects.equals(getId(), that.getId()) && Objects.equals(getData(), that.getData());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name(), id(), data());
+        return Objects.hash(getName(), getId(), getData());
     }
 
     @Override
@@ -44,4 +53,11 @@ public record PieDrilldown(String name, String id, List<List<Object>> data) {
                 ", data=" + data +
                 '}';
     }
+
+    public String getName() {return name;}
+
+    public String getId() {return id;}
+
+    public List<List<Object>> getData() {return data;}
+
 }

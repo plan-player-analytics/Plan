@@ -1,20 +1,24 @@
 import {WorldPie} from "../graph/WorldPie";
 
-export type FormatType = 'NONE' | 'TIME_AMOUNT' | 'TIME_SINCE' | 'DATE' | 'PERCENTAGE' | 'BYTES';
+export type FormatType = 'NONE' | 'TIME_AMOUNT' | 'TIME_SINCE' | 'DATE' | 'PERCENTAGE' | 'BYTES' | 'SPECIAL';
 
 export enum DatapointType {
     WORLD_PIE = 'WORLD_PIE',
     PLAYTIME = 'PLAYTIME',
+    AFK_TIME = 'AFK_TIME',
+    AFK_TIME_PERCENTAGE = 'AFK_TIME_PERCENTAGE',
 }
 
-type TypeMap = {
+export type DatapointTypeMap = {
     WORLD_PIE: WorldPie;
     PLAYTIME: number;
+    AFK_TIME: number;
+    AFK_TIME_PERCENTAGE: number;
 }
 
-export type Datapoint<K extends keyof TypeMap> = {
+export type Datapoint<K extends keyof DatapointTypeMap> = {
     type: K;
-    format: FormatType;
+    formatType: FormatType;
     timestamp: number;
-    value: TypeMap[K];
+    value: DatapointTypeMap[K];
 };

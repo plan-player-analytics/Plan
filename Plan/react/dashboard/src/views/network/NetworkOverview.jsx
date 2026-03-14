@@ -8,7 +8,7 @@ import ServerWeekComparisonCard from "../../components/cards/server/tables/Serve
 import {fetchNetworkOverview} from "../../service/networkService";
 import {useTranslation} from "react-i18next";
 import {CardLoader} from "../../components/navigation/Loader.tsx";
-import Datapoint from "../../components/Datapoint";
+import Datapoint from "../../components/datapoint/Datapoint.tsx";
 import {faUsers} from "@fortawesome/free-solid-svg-icons";
 import NetworkOnlineActivityGraphsCard from "../../components/cards/server/graphs/NetworkOnlineActivityGraphsCard";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";

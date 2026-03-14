@@ -19,7 +19,7 @@ package utilities.dagger;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.commands.PlanCommand;
-import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointModule;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.types.DatapointModule;
 import com.djrapitops.plan.gathering.events.PlayerJoinEventConsumer;
 import com.djrapitops.plan.gathering.events.PlayerLeaveEventConsumer;
 import com.djrapitops.plan.gathering.events.PlayerSwitchServerEventConsumer;

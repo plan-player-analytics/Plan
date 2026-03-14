@@ -10,7 +10,7 @@ import {
     faUserCircle,
     faUsers
 } from "@fortawesome/free-solid-svg-icons";
-import Datapoint from "../../components/Datapoint";
+import Datapoint from "../../components/datapoint/Datapoint.tsx";
 import {useTranslation} from "react-i18next";
 import {useParams} from "react-router";
 import {fetchServerOverview} from "../../service/serverService";

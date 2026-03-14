@@ -7,7 +7,8 @@ export type GenericFilter = {
     player?: string;
 }
 
-export const filterToQueryString = (filter: GenericFilter) => {
+export const filterToQueryString = (filter?: GenericFilter) => {
+    if (!filter) return "";
     let query = [];
     if (filter.after) query.push("after=" + filter.after);
     if (filter.afterMillisAgo) query.push("afterMillisAgo=" + filter.afterMillisAgo);

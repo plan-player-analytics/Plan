@@ -42,6 +42,7 @@ public interface Datapoint<T> {
         DATE,
         PERCENTAGE,
         BYTES,
+        SPECIAL,
         NONE
     }
 }

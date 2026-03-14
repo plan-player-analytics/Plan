@@ -788,18 +788,20 @@ public class SessionQueries {
         };
     }
 
-    public static Query<Long> afkTime(long after, long before, ServerUUID serverUUID) {
+
+    public static Query<Long> afkTime(long after, long before, UUID playerUUID, List<ServerUUID> serverUUIDs) {
         String sql = SELECT + "SUM(" + SessionsTable.AFK_TIME + ") as afk_time" +
                 FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
-                AND + SessionsTable.SESSION_END + ">=?" +
-                AND + SessionsTable.SESSION_START + "<=?";
+                WHERE + SessionsTable.SESSION_END + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?" +
+                AND + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
+                (!serverUUIDs.isEmpty() ? AND + SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) : "");
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-                statement.setLong(2, after);
-                statement.setLong(3, before);
+                statement.setLong(1, after);
+                statement.setLong(2, before);
+                statement.setString(3, playerUUID.toString());
             }
 
             @Override
@@ -809,11 +811,16 @@ public class SessionQueries {
         };
     }
 
-    public static Query<Long> afkTime(long after, long before) {
+    public static Query<Long> afkTime(long after, long before, ServerUUID serverUUID) {
+        return afkTime(after, before, List.of(serverUUID));
+    }
+
+    public static Query<Long> afkTime(long after, long before, List<ServerUUID> serverUUIDs) {
         String sql = SELECT + "SUM(" + SessionsTable.AFK_TIME + ") as afk_time" +
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SESSION_END + ">=?" +
-                AND + SessionsTable.SESSION_START + "<=?";
+                AND + SessionsTable.SESSION_START + "<=?" +
+                (!serverUUIDs.isEmpty() ? AND + SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) : "");
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -826,6 +833,30 @@ public class SessionQueries {
                 return set.next() ? set.getLong("afk_time") : 0L;
             }
         };
+    }
+
+    public static Query<Double> afkTimePercentage(long after, long before, List<ServerUUID> serverUUIDs) {
+        String sql = SELECT + "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ")/SUM(" + SessionsTable.AFK_TIME + ") as afk_time_perc" +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.SESSION_END + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?" +
+                (!serverUUIDs.isEmpty() ? AND + SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) : "");
+        return new QueryStatement<>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, after);
+                statement.setLong(2, before);
+            }
+
+            @Override
+            public Double processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getDouble("afk_time_perc") : 0.0;
+            }
+        };
+    }
+
+    public static Query<Long> afkTime(long after, long before) {
+        return afkTime(after, before, List.of());
     }
 
     public static Query<Map<String, Long>> playtimePerServer(long after, long before) {
