@@ -18,7 +18,7 @@
     "@fullcalendar/interaction": "^6.1.20",
     "@fullcalendar/react": "^6.1.20",
     "@highcharts/map-collection": "^2.3.2",
-    "@uiw/react-color-chrome": "^2.9.5",
+    "@uiw/react-color-chrome": "^2.9.6",
     "@uiw/react-color-wheel": "^2.9.6",
     "axios": "^1.13.6",
     "bootstrap": "^5.3.8",
