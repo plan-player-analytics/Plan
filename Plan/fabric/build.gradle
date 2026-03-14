@@ -19,8 +19,8 @@ dependencies {
 
     // https://wiki.fabricmc.net/tutorial:migratemappings
     minecraft "com.mojang:minecraft:1.21.9"
-    mappings "net.fabricmc:yarn:1.21.9+build.1:v2"
-    modImplementation "net.fabricmc:fabric-loader:0.17.2"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:0.18.4"
     modImplementation("me.lucko:fabric-permissions-api:0.4.1")
 
     // Fabric API
@@ -39,11 +39,6 @@ dependencies {
 
     testImplementation(testFixtures(project(":common")))
     testImplementation(project(":extensions:adventure"))
-}
-
-loom {
-    // Defining separate refmap file prevents conflicts with plugin mixins
-    mixin.defaultRefmapName.set("plan-fabric-refmap.json")
 }
 
 tasks.withType(JavaCompile).configureEach {

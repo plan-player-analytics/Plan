@@ -20,10 +20,9 @@ import com.djrapitops.plan.gathering.ServerSensor;
 import com.djrapitops.plan.gathering.domain.PluginMetadata;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.impl.FabricLoaderImpl;
-import net.minecraft.entity.Entity;
-import net.minecraft.server.dedicated.MinecraftDedicatedServer;
-import net.minecraft.server.world.ServerWorld;
-import net.playeranalytics.plan.gathering.mixin.TickTimesMixin;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.server.dedicated.DedicatedServer;
+import net.minecraft.server.level.ServerLevel;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -33,13 +32,13 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
 @Singleton
-public class FabricSensor implements ServerSensor<ServerWorld> {
+public class FabricSensor implements ServerSensor<ServerLevel> {
 
-    private final MinecraftDedicatedServer server;
+    private final DedicatedServer server;
 
     @Inject
     public FabricSensor(
-            MinecraftDedicatedServer server
+            DedicatedServer server
     ) {
         this.server = server;
     }
@@ -49,7 +48,7 @@ public class FabricSensor implements ServerSensor<ServerWorld> {
         //Returns the ticks per second of the last 100 ticks
         double totalTickLength = 0;
         int count = 0;
-        for (long tickLength : server.getTickTimes()) {
+        for (long tickLength : server.getTickTimesNanos()) {
             if (tickLength == 0) continue; // Ignore uninitialized values in array
             totalTickLength += Math.max(tickLength, TimeUnit.MILLISECONDS.toNanos(50));
             count++;
@@ -62,22 +61,22 @@ public class FabricSensor implements ServerSensor<ServerWorld> {
     }
 
     @Override
-    public Iterable<ServerWorld> getWorlds() {
-        return server.getWorlds();
+    public Iterable<ServerLevel> getWorlds() {
+        return server.getAllLevels();
     }
 
     @Override
-    public int getEntityCount(ServerWorld world) {
+    public int getEntityCount(ServerLevel world) {
         int entities = 0;
-        for (Entity ignored : world.iterateEntities()) {
+        for (Entity ignored : world.getAllEntities()) {
             entities++;
         }
         return entities;
     }
 
     @Override
-    public int getChunkCount(ServerWorld world) {
-        return world.getChunkManager().getLoadedChunkCount();
+    public int getChunkCount(ServerLevel world) {
+        return world.getChunkSource().getLoadedChunksCount();
     }
 
     @Override
@@ -87,7 +86,7 @@ public class FabricSensor implements ServerSensor<ServerWorld> {
 
     @Override
     public int getOnlinePlayerCount() {
-        return server.getCurrentPlayerCount();
+        return server.getPlayerCount();
     }
 
     @Override
@@ -107,6 +106,6 @@ public class FabricSensor implements ServerSensor<ServerWorld> {
 
     @Override
     public Optional<long[]> getMspt() {
-        return Optional.ofNullable(((TickTimesMixin) server).getTickTimes());
+        return Optional.of(server.getTickTimesNanos());
     }
 }

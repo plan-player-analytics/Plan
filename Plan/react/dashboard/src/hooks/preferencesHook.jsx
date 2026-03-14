@@ -1,6 +1,6 @@
 import {createContext, useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {useAuth} from "./authenticationHook.tsx";
-import {fetchPreferences} from "../service/metadataService";
+import {fetchPreferences, savePreferences} from "../service/metadataService";
 
 const PreferencesContext = createContext({});
 
@@ -29,7 +29,7 @@ export const PreferencesContextProvider = ({children}) => {
         }
 
         if (authRequired && authLoaded && loggedIn) {
-            await storePreferences(withDefaultsRemoved);
+            await savePreferences(withDefaultsRemoved);
         } else {
             localStorage.setItem("preferences", JSON.stringify(withDefaultsRemoved));
         }

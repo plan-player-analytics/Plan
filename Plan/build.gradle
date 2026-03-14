@@ -9,9 +9,9 @@ buildscript {
 
 plugins {
     id("base")
-    id "org.sonarqube" version "7.2.2.6593"
+    id "org.sonarqube" version "7.2.3.7755"
     id "com.gradleup.shadow" version "9.0.0-beta6" apply false
-    id "fabric-loom" version "1.11-SNAPSHOT" apply false
+    id "fabric-loom" version "1.15.4" apply false
 }
 
 apply plugin: "nebula-aggregate-javadocs"
@@ -51,6 +51,7 @@ subprojects {
 
     compileJava {
         options.release = 11
+        sourceCompatibility = "${JavaVersion.VERSION_11}"
     }
 
     ext {
@@ -91,11 +92,11 @@ subprojects {
         nkPlaceholderapiVersion = "1.4-SNAPSHOT"
 
         junitVersion = "6.0.3"
-        mockitoVersion = "5.21.0"
+        mockitoVersion = "5.23.0"
         seleniumVersion = "4.41.0"
         testContainersVersion = "1.21.3"
         awaitilityVersion = "4.3.0"
-        swaggerVersion = "2.2.43"
+        swaggerVersion = "2.2.45"
         guavaVersion = "33.5.0-jre"
     }
 

@@ -24,8 +24,8 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.world.GameMode;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.level.GameType;
 import net.playeranalytics.plan.gathering.listeners.FabricListener;
 import net.playeranalytics.plan.gathering.listeners.events.PlanFabricEvents;
 
@@ -63,7 +63,7 @@ public class GameModeChangeListener implements FabricListener {
         this.errorLogger = errorLogger;
     }
 
-    public void onGameModeChange(ServerPlayerEntity player, GameMode newGameMode) {
+    public void onGameModeChange(ServerPlayer player, GameType newGameMode) {
         try {
             actOnEvent(player, newGameMode);
         } catch (Exception e) {
@@ -71,11 +71,11 @@ public class GameModeChangeListener implements FabricListener {
         }
     }
 
-    private void actOnEvent(ServerPlayerEntity player, GameMode newGameMode) {
-        UUID uuid = player.getUuid();
+    private void actOnEvent(ServerPlayer player, GameType newGameMode) {
+        UUID uuid = player.getUUID();
         long time = System.currentTimeMillis();
         String gameMode = newGameMode.name();
-        String worldName = player.getEntityWorld().getRegistryKey().getValue().toString();
+        String worldName = player.level().dimension().location().toString();
 
         dbSystem.getDatabase().executeTransaction(new StoreWorldNameTransaction(serverInfo.getServerUUID(), worldName));
         worldAliasSettings.addWorld(worldName);

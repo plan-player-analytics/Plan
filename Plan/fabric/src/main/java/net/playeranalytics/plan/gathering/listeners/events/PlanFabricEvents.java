@@ -18,16 +18,16 @@ package net.playeranalytics.plan.gathering.listeners.events;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.network.packet.c2s.handshake.HandshakeC2SPacket;
-import net.minecraft.network.packet.c2s.play.PlayerMoveC2SPacket;
-import net.minecraft.server.PlayerConfigEntry;
-import net.minecraft.server.command.ServerCommandSource;
-import net.minecraft.server.network.ServerPlayNetworkHandler;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
-import net.minecraft.world.GameMode;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.network.protocol.handshake.ClientIntentionPacket;
+import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
+import net.minecraft.server.players.NameAndId;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.server.network.ServerGamePacketListenerImpl;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.level.GameType;
 import net.playeranalytics.plan.PlanFabric;
 import net.playeranalytics.plan.gathering.FabricPlayerPositionTracker;
 
@@ -51,14 +51,14 @@ public class PlanFabricEvents {
 
     public static final Event<OnMove> ON_MOVE = EventFactory.createArrayBacked(OnMove.class, callbacks -> (handler, packet) -> {
         for (OnMove callback : callbacks) {
-            UUID playerUUID = handler.player.getUuid();
+            UUID playerUUID = handler.player.getUUID();
             double[] position = FabricPlayerPositionTracker.getPosition(playerUUID);
             double x = position[0];
             double y = position[1];
             double z = position[2];
             float yaw = (float) position[3];
             float pitch = (float) position[4];
-            if (FabricPlayerPositionTracker.moved(playerUUID, packet.getX(x), packet.getY(y), packet.getZ(z), packet.getYaw(yaw), packet.getPitch(pitch))) {
+            if (FabricPlayerPositionTracker.moved(playerUUID, packet.getX(x), packet.getY(y), packet.getZ(z), packet.getYRot(yaw), packet.getXRot(pitch))) {
                 callback.onMove(handler, packet);
             }
         }
@@ -127,7 +127,7 @@ public class PlanFabricEvents {
          * @param handler the handler of the sending player
          * @param message the message sent (starts with "/" if it is a command)
          */
-        void onCommand(ServerPlayNetworkHandler handler, String message);
+        void onCommand(ServerGamePacketListenerImpl handler, String message);
     }
 
     @FunctionalInterface
@@ -138,7 +138,7 @@ public class PlanFabricEvents {
          * @param handler the handler of the sending player
          * @param packet  the send packet
          */
-        void onMove(ServerPlayNetworkHandler handler, PlayerMoveC2SPacket packet);
+        void onMove(ServerGamePacketListenerImpl handler, ServerboundMovePlayerPacket packet);
     }
 
     @FunctionalInterface
@@ -149,7 +149,7 @@ public class PlanFabricEvents {
          * @param player      the player that changed gamemodes
          * @param newGameMode the new gamemode
          */
-        void onGameModeChange(ServerPlayerEntity player, GameMode newGameMode);
+        void onGameModeChange(ServerPlayer player, GameType newGameMode);
     }
 
     @FunctionalInterface
@@ -161,7 +161,7 @@ public class PlanFabricEvents {
          * @param targets the player(s) that got kicked
          * @param reason  the provided kick reason
          */
-        void onKicked(ServerCommandSource source, Collection<ServerPlayerEntity> targets, Text reason);
+        void onKicked(CommandSourceStack source, Collection<ServerPlayer> targets, Component reason);
     }
 
     @FunctionalInterface
@@ -173,7 +173,7 @@ public class PlanFabricEvents {
          * @param profile the profile of the player
          * @param reason  the provided kick reason (null if player is permitted to join)
          */
-        void onLogin(SocketAddress address, PlayerConfigEntry profile, Text reason);
+        void onLogin(SocketAddress address, NameAndId profile, Component reason);
     }
 
     @FunctionalInterface
@@ -183,7 +183,7 @@ public class PlanFabricEvents {
          *
          * @param packet Handshake packet
          */
-        void onHandshake(HandshakeC2SPacket packet);
+        void onHandshake(ClientIntentionPacket packet);
     }
 
     @FunctionalInterface

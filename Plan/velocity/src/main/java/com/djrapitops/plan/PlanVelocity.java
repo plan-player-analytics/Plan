@@ -34,6 +34,7 @@ import com.velocitypowered.api.plugin.Dependency;
 import com.velocitypowered.api.plugin.Plugin;
 import com.velocitypowered.api.plugin.annotation.DataDirectory;
 import com.velocitypowered.api.proxy.ProxyServer;
+import net.playeranalytics.plan.BuildParameters;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.VelocityPlatformLayer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
@@ -54,7 +55,7 @@ import java.util.logging.Level;
 @Plugin(
         id = "plan",
         name = "Plan",
-        version = "@version@",
+        version = BuildParameters.VERSION,
         description = "Player Analytics Plugin by AuroraLS3",
         dependencies = {
                 @Dependency(id = "viaversion", optional = true),

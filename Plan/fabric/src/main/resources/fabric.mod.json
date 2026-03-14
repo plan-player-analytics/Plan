@@ -13,9 +13,9 @@
     "plan.mixins.json"
   ],
   "depends": {
-    "minecraft": ">=1.21.3",
+    "minecraft": ">=1.21.9",
     "java": ">=21",
-    "fabricloader": ">=0.16.9",
+    "fabricloader": ">=0.18.4",
     "fabric-api-base": "*",
     "fabric-command-api-v2": "*",
     "fabric-entity-events-v1": "*",

@@ -32,8 +32,8 @@ import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.PingStoreTransaction;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.minecraft.server.dedicated.MinecraftDedicatedServer;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.dedicated.DedicatedServer;
+import net.minecraft.server.level.ServerPlayer;
 import net.playeranalytics.plan.gathering.listeners.FabricListener;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.scheduling.TimeAmount;
@@ -59,7 +59,7 @@ public class FabricPingCounter extends TaskSystem.Task implements FabricListener
     private final PlanConfig config;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
-    private final MinecraftDedicatedServer server;
+    private final DedicatedServer server;
 
     private boolean isEnabled = false;
 
@@ -69,7 +69,7 @@ public class FabricPingCounter extends TaskSystem.Task implements FabricListener
             PlanConfig config,
             DBSystem dbSystem,
             ServerInfo serverInfo,
-            MinecraftDedicatedServer server
+            DedicatedServer server
     ) {
         this.listeners = listeners;
         this.config = config;
@@ -104,7 +104,7 @@ public class FabricPingCounter extends TaskSystem.Task implements FabricListener
             Map.Entry<UUID, List<DateObj<Integer>>> entry = iterator.next();
             UUID uuid = entry.getKey();
             List<DateObj<Integer>> history = entry.getValue();
-            ServerPlayerEntity player = server.getPlayerManager().getPlayer(uuid);
+            ServerPlayer player = server.getPlayerList().getPlayer(uuid);
             if (player != null) {
                 int ping = getPing(player);
                 if (ping <= -1 || ping > TimeUnit.SECONDS.toMillis(8L)) {
@@ -140,16 +140,16 @@ public class FabricPingCounter extends TaskSystem.Task implements FabricListener
         playerHistory.put(uuid, new ArrayList<>());
     }
 
-    public void removePlayer(ServerPlayerEntity player) {
-        playerHistory.remove(player.getUuid());
-        startRecording.remove(player.getUuid());
+    public void removePlayer(ServerPlayer player) {
+        playerHistory.remove(player.getUUID());
+        startRecording.remove(player.getUUID());
     }
 
-    private int getPing(ServerPlayerEntity player) {
-        return player.networkHandler.getLatency();
+    private int getPing(ServerPlayer player) {
+        return player.connection.latency();
     }
 
-    public void onPlayerJoin(ServerPlayerEntity player) {
+    public void onPlayerJoin(ServerPlayer player) {
         if (!this.isEnabled) {
             return;
         }
@@ -158,10 +158,10 @@ public class FabricPingCounter extends TaskSystem.Task implements FabricListener
         if (pingDelayMs >= TimeUnit.HOURS.toMillis(2L)) {
             return;
         }
-        startRecording.put(player.getUuid(), System.currentTimeMillis() + pingDelayMs);
+        startRecording.put(player.getUUID(), System.currentTimeMillis() + pingDelayMs);
     }
 
-    public void onPlayerQuit(ServerPlayerEntity player) {
+    public void onPlayerQuit(ServerPlayer player) {
         if (!this.isEnabled) {
             return;
         }

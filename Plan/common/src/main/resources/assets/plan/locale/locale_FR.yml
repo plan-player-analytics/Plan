@@ -604,7 +604,7 @@ html:
         selectSomeAddresses: "Select some addresses"
         server: "Serveur"
         serverAnalysis: "Analyse du Serveur"
-        serverAsNumberse: "Serveur en Chiffres"
+        serverAsNumbers: "Serveur en Chiffres"
         serverCalendar: "Server Calendar"
         serverDowntime: "Temps Hors-Ligne du Serveur"
         serverOccupied: "Serveur Inoccupé"

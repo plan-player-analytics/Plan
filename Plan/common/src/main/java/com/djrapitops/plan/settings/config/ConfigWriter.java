@@ -93,21 +93,26 @@ public class ConfigWriter {
     }
 
     private void dfsTreeTraverseLineResolve(ConfigNode writing, Collection<String> lines) {
-        Map<String, ConfigNode> children = writing.childNodes;
-        for (String key : writing.getNodeOrder()) {
-            ConfigNode node = children.get(key);
-            // node is null:       Inconsistent config node state
-            // value is null:      Has no value (empty)
-            // nodeOrder is empty: Has no children
-            if (node == null || node.value == null && node.nodeOrder.isEmpty()) {
-                continue;
+        writing.nodeModificationLock.lock();
+        try {
+            Map<String, ConfigNode> children = writing.childNodes;
+            for (String key : writing.getNodeOrder()) {
+                ConfigNode node = children.get(key);
+                // node is null:       Inconsistent config node state
+                // value is null:      Has no value (empty)
+                // nodeOrder is empty: Has no children
+                if (node == null || node.value == null && node.nodeOrder.isEmpty()) {
+                    continue;
+                }
+
+                indent = node.getNodeDepth() * 4;
+                addComment(node.comment, lines);
+                addValue(node, lines);
+
+                dfsTreeTraverseLineResolve(node, lines);
             }
-
-            indent = node.getNodeDepth() * 4;
-            addComment(node.comment, lines);
-            addValue(node, lines);
-
-            dfsTreeTraverseLineResolve(node, lines);
+        } finally {
+            writing.nodeModificationLock.unlock();
         }
     }
 
