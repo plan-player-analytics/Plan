@@ -40,7 +40,7 @@ const MultiProxyPlayersOnlineGraph = () => {
     if (loadingError) return <ErrorViewBody error={loadingError}/>
     if (!data) return <ChartLoader/>;
 
-    return <StackedPlayersOnlineGraph data={data}/>
+    return <StackedPlayersOnlineGraph data={data} showPlayersOnline/>
 }
 
 const PlayersOnlineTab = () => {

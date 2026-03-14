@@ -6,7 +6,7 @@ import {ChartLoader} from "../navigation/Loader.tsx";
 import {useTheme} from "../../hooks/themeHook";
 import {PlayersOnlineTooltip, useTooltipOptions} from "./tooltip/PlayersOnlineTooltip.jsx";
 
-const StackedPlayersOnlineGraph = ({data}) => {
+const StackedPlayersOnlineGraph = ({data, showPlayersOnline}) => {
     const {t} = useTranslation();
     const {nightModeEnabled} = useTheme();
     const [graphOptions, setGraphOptions] = useState({title: {text: ''},});
