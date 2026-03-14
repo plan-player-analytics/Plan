@@ -49,4 +49,10 @@ public class DatapointStore {
         return Optional.ofNullable(dataPointsByType.get(datapointType))
                 .map(datapoint -> datapoint.getPermission(filter));
     }
+
+    public Datapoint.FormatType getFormatType(DatapointType datapointType) {
+        return Optional.ofNullable(dataPointsByType.get(datapointType))
+                .map(Datapoint::getFormatType)
+                .orElse(Datapoint.FormatType.NONE);
+    }
 }

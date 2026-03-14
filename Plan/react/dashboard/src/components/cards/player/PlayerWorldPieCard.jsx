@@ -1,18 +1,18 @@
 import React from "react";
 import WorldPieCard from "../common/WorldPieCard";
 import {useGenericFilter} from "../../../dataHooks/genericFilterContextHook.tsx";
-import {useSessions} from "../../../dataHooks/sessionsHooks.ts";
 import {ErrorViewCard} from "../../../views/ErrorView.tsx";
+import {useWorldPie} from "../../../dataHooks/graphHooks.ts";
 
 const PlayerWorldPieCard = ({player}) => {
     const {after, before, player: playerUUID} = useGenericFilter();
-    const {data: sessions, error: loadingError} = useSessions({after, before, player: playerUUID});
+    const {data: worldPie, error: loadingError} = useWorldPie({after, before, player: playerUUID});
 
     if (loadingError) return <ErrorViewCard error={loadingError}/>;
     return (
         <WorldPieCard
-            worldSeries={player.world_pie_series}
-            gmSeries={player.gm_series}
+            worldSeries={worldPie ? worldPie.value.slices : player.world_pie_series}
+            gmSeries={worldPie ? worldPie.value.drilldown : player.gm_series}
         />
     )
 }

@@ -23,11 +23,13 @@ public class DatapointValue {
 
     private final DatapointType type;
     private final Object value;
+    private final Datapoint.FormatType formatType;
     private final long timestamp;
 
-    public DatapointValue(DatapointType type, Object value) {
+    public DatapointValue(DatapointType type, Object value, Datapoint.FormatType formatType) {
         this.type = type;
         this.value = value;
+        this.formatType = formatType;
         this.timestamp = System.currentTimeMillis();
     }
 
@@ -37,5 +39,13 @@ public class DatapointValue {
 
     public Object getValue() {
         return value;
+    }
+
+    public Datapoint.FormatType getFormatType() {
+        return formatType;
+    }
+
+    public long getTimestamp() {
+        return timestamp;
     }
 }

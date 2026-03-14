@@ -18,6 +18,7 @@ package com.djrapitops.plan;
 
 import com.djrapitops.plan.addons.placeholderapi.BukkitPlaceholderRegistrar;
 import com.djrapitops.plan.commands.PlanCommand;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointModule;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.modules.*;
 import com.djrapitops.plan.modules.bukkit.BukkitPlanModule;
@@ -44,6 +45,7 @@ import javax.inject.Singleton;
         PlatformAbstractionLayerModule.class,
         FiltersModule.class,
         PlaceholderModule.class,
+        DatapointModule.class,
 
         ServerCommandModule.class,
         BukkitServerPropertiesModule.class,

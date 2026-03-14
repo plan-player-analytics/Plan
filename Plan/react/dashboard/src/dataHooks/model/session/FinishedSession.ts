@@ -1,6 +1,6 @@
 import {PlayerKill} from "./PlayerKill";
 import {PieSlice} from "../graph/PieSlice";
-import {GameModeDrilldown} from "../graph/GameModeDrilldown";
+import {PieDrilldown} from "../graph/PieDrilldown";
 
 export type FinishedSession = {
     player_name: string;
@@ -22,6 +22,6 @@ export type FinishedSession = {
     join_address: string;
     player_kills: PlayerKill[];
     world_series: PieSlice[];
-    gm_series: GameModeDrilldown[];
+    gm_series: PieDrilldown[];
     avgPing?: number;
 }

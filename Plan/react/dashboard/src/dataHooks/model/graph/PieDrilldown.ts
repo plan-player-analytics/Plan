@@ -1,4 +1,4 @@
-export type GameModeDrilldown = {
+export type PieDrilldown = {
     id: string;
     name: string;
     data: [string, number][];

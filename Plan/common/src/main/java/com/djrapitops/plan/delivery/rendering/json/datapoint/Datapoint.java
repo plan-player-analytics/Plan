@@ -31,4 +31,17 @@ public interface Datapoint<T> {
     WebPermission getPermission(GenericFilter filter);
 
     DatapointType getType();
+
+    default FormatType getFormatType() {
+        return FormatType.NONE;
+    }
+
+    enum FormatType {
+        TIME_AMOUNT,
+        TIME_SINCE,
+        DATE,
+        PERCENTAGE,
+        BYTES,
+        NONE
+    }
 }

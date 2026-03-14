@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from "react";
+import React, {useEffect, useMemo, useRef} from "react";
 import Highcharts from 'highcharts/esm/highcharts';
 import "highcharts/esm/modules/accessibility";
 import 'highcharts/esm/modules/drilldown';
@@ -23,6 +23,7 @@ const WorldPie = ({id, worldSeries, gmSeries}) => {
 
     const gmPieColors = usedUseCases?.graphs?.pie?.drilldown?.map(nameToCssVariable) || [];
 
+    const chartRef = useRef(undefined);
     const chart = useMemo(() => {
         const reduceColors = (series) => {
             return series.map(slice => {
@@ -48,10 +49,10 @@ const WorldPie = ({id, worldSeries, gmSeries}) => {
                 type: 'pie',
                 events: {
                     drilldown: function (e) {
-                        chart.setTitle({text: '' + e.point.name}, {text: ''});
+                        chartRef.current.setTitle({text: '' + e.point.name}, {text: ''});
                     },
                     drillup: function () {
-                        chart.setTitle({text: defaultTitle}, {text: defaultSubtitle});
+                        chartRef.current.setTitle({text: defaultTitle}, {text: defaultSubtitle});
                     }
                 }
             },
@@ -86,7 +87,7 @@ const WorldPie = ({id, worldSeries, gmSeries}) => {
     useEffect(() => {
         Highcharts.setOptions(graphTheming);
         const timeout = setTimeout(() => {
-            Highcharts.chart(id, chart);
+            chartRef.current = Highcharts.chart(id, chart);
         }, 25); // Timeout to allow collapse to open
         return () => {
             clearTimeout(timeout);

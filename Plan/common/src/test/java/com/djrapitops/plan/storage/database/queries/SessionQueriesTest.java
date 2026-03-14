@@ -307,7 +307,9 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         FinishedSession session = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID)).get(serverUUID()).get(0);
         WorldTimes expected = session.getExtraData(WorldTimes.class).orElseThrow(AssertionError::new);
         WorldTimes worldTimesOfUser = db().query(WorldTimesQueries.fetchPlayerTotalWorldTimes(playerUUID));
+        WorldTimes worldTimesOfUserOnServer = db().query(WorldTimesQueries.fetchPlayerTotalWorldTimes(0L, Long.MAX_VALUE, playerUUID, List.of(serverUUID())));
         assertEquals(expected, worldTimesOfUser);
+        assertEquals(expected, worldTimesOfUserOnServer);
     }
 
     @Test
@@ -316,6 +318,15 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         FinishedSession session = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID)).get(serverUUID()).get(0);
         WorldTimes expected = session.getExtraData(WorldTimes.class).orElseThrow(AssertionError::new);
         WorldTimes worldTimesOfServer = db().query(WorldTimesQueries.fetchServerTotalWorldTimes(serverUUID()));
+        assertEquals(expected, worldTimesOfServer);
+    }
+
+    @Test
+    default void networkWorldTimesMatchTotal() {
+        worldTimesAreSavedWithSession();
+        FinishedSession session = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID)).get(serverUUID()).get(0);
+        WorldTimes expected = session.getExtraData(WorldTimes.class).orElseThrow(AssertionError::new);
+        WorldTimes worldTimesOfServer = db().query(WorldTimesQueries.fetchServerTotalWorldTimes(0L, Long.MAX_VALUE, List.of()));
         assertEquals(expected, worldTimesOfServer);
     }
 

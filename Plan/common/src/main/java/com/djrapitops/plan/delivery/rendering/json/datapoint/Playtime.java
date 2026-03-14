@@ -46,6 +46,11 @@ public class Playtime implements Datapoint<Long> {
     }
 
     @Override
+    public FormatType getFormatType() {
+        return FormatType.TIME_AMOUNT;
+    }
+
+    @Override
     public WebPermission getPermission(GenericFilter filter) {
         if (filter.getPlayerUUID().isPresent()) {
             return WebPermission.DATA_PLAYTIME_PLAYER;

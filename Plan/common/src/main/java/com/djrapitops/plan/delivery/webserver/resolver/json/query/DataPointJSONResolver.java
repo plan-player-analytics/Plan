@@ -59,8 +59,8 @@ public class DataPointJSONResolver implements Resolver {
     public boolean canAccess(Request request) {
         Optional<WebUser> user = request.getUser();
         if (user.isEmpty()) return false;
-        DatapointType type = request.getQuery().get("dataType", DatapointType::find)
-                .orElseThrow(() -> new BadRequestException("dataType is required"));
+        DatapointType type = request.getQuery().get("type", DatapointType::find)
+                .orElseThrow(() -> new BadRequestException("type is required"));
         GenericFilter filter = GenericFilter.of(request.getQuery());
         Optional<WebPermission> permission = datapointStore.getPermission(type, filter);
         //noinspection OptionalIsPresent
@@ -86,7 +86,7 @@ public class DataPointJSONResolver implements Resolver {
                 .orElseThrow(() -> new BadRequestException("type is required"));
         GenericFilter filter = GenericFilter.of(request.getQuery());
         return datapointStore.getValue(type, filter)
-                .map(value -> new DatapointValue(type, value))
+                .map(value -> new DatapointValue(type, value, datapointStore.getFormatType(type)))
                 .map(value -> newResponseBuilder()
                         .setJSONContent(value)
                         .build());

@@ -41,9 +41,9 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 public class WorldTimesQueries {
 
     private static final String WORLD_COLUMN = "world";
-    private static final String SELECT_WORLD_TIMES_JOIN_WORLD_NAME = WorldTable.TABLE_NAME + '.' + WorldTable.NAME + " as " + WORLD_COLUMN +
-            FROM + WorldTimesTable.TABLE_NAME +
-            INNER_JOIN + WorldTable.TABLE_NAME + " on " + WorldTable.TABLE_NAME + '.' + WorldTable.ID + "=" + WorldTimesTable.WORLD_ID;
+    private static final String SELECT_WORLD_TIMES_JOIN_WORLD_NAME = "w." + WorldTable.NAME + " as " + WORLD_COLUMN +
+            FROM + WorldTimesTable.TABLE_NAME + " wt" +
+            INNER_JOIN + WorldTable.TABLE_NAME + " w on w." + WorldTable.ID + "=wt." + WorldTimesTable.WORLD_ID;
     private static final String SELECT_WORLD_TIMES_STATEMENT_START = SELECT +
             "SUM(" + WorldTimesTable.SURVIVAL + ") as survival, " +
             "SUM(" + WorldTimesTable.CREATIVE + ") as creative, " +
@@ -61,15 +61,23 @@ public class WorldTimesQueries {
      * @return WorldTimes with world name - playtime ms information.
      */
     public static Query<WorldTimes> fetchServerTotalWorldTimes(ServerUUID serverUUID) {
+        return fetchServerTotalWorldTimes(0L, Long.MAX_VALUE, List.of(serverUUID));
+    }
+
+    public static Query<WorldTimes> fetchServerTotalWorldTimes(Long after, Long before, List<ServerUUID> serverUUIDs) {
         String sql = SELECT_WORLD_TIMES_STATEMENT_START +
                 SELECT_WORLD_TIMES_JOIN_WORLD_NAME +
-                WHERE + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                INNER_JOIN + SessionsTable.TABLE_NAME + " s ON s." + SessionsTable.ID + "=wt." + WorldTimesTable.SESSION_ID +
+                WHERE + SessionsTable.SESSION_END + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?" +
+                (!serverUUIDs.isEmpty() ? AND + "wt." + WorldTimesTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) : "") +
                 GROUP_BY + WORLD_COLUMN;
 
         return new QueryStatement<>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
+                statement.setLong(1, after);
+                statement.setLong(2, before);
             }
 
             @Override
@@ -96,15 +104,25 @@ public class WorldTimesQueries {
      * @return WorldTimes with world name - playtime ms information.
      */
     public static Query<WorldTimes> fetchPlayerTotalWorldTimes(UUID playerUUID) {
+        return fetchPlayerTotalWorldTimes(0L, Long.MAX_VALUE, playerUUID, List.of());
+    }
+
+    public static Query<WorldTimes> fetchPlayerTotalWorldTimes(Long after, Long before, UUID playerUUID, List<ServerUUID> serverUUIDs) {
         String sql = SELECT_WORLD_TIMES_STATEMENT_START +
                 SELECT_WORLD_TIMES_JOIN_WORLD_NAME +
-                WHERE + WorldTimesTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
+                INNER_JOIN + SessionsTable.TABLE_NAME + " s ON s." + SessionsTable.ID + "=wt." + WorldTimesTable.SESSION_ID +
+                WHERE + "wt." + WorldTimesTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
+                AND + SessionsTable.SESSION_END + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?" +
+                (!serverUUIDs.isEmpty() ? AND + "s." + SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) : "") +
                 GROUP_BY + WORLD_COLUMN;
 
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
+                statement.setLong(2, after);
+                statement.setLong(3, before);
             }
 
             @Override
@@ -134,8 +152,8 @@ public class WorldTimesQueries {
         String sql = SELECT_WORLD_TIMES_STATEMENT_START +
                 "s." + ServerTable.SERVER_UUID + ',' +
                 SELECT_WORLD_TIMES_JOIN_WORLD_NAME +
-                INNER_JOIN + ServerTable.TABLE_NAME + " s on " + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.SERVER_ID + "=s." + ServerTable.ID +
-                WHERE + WorldTimesTable.TABLE_NAME + '.' + WorldTimesTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s on wt." + WorldTimesTable.SERVER_ID + "=s." + ServerTable.ID +
+                WHERE + "wt." + WorldTimesTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
                 GROUP_BY + WORLD_COLUMN + ",s." + ServerTable.SERVER_UUID;
 
         return new QueryStatement<>(sql, 1000) {

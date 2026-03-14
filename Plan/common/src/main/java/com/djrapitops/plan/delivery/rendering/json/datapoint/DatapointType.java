@@ -22,7 +22,8 @@ import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
  * @author AuroraLS3
  */
 public enum DatapointType {
-    PLAYTIME(Playtime.class);
+    PLAYTIME(Playtime.class),
+    WORLD_PIE(WorldPie.class);
 
     private final Class<? extends Datapoint<?>> datapointClass;
 

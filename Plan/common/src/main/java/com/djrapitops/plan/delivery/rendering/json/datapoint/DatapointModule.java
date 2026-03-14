@@ -30,4 +30,7 @@ public interface DatapointModule {
     @IntoSet
     Datapoint<?> bindPlaytime(Playtime playtime);
 
+    @Binds
+    @IntoSet
+    Datapoint<?> bindWorldPie(WorldPie worldPie);
 }

@@ -313,12 +313,12 @@ const DataTablesTable = ({id, rowKeyFunction, options, className, colorClass, ex
                             <td colSpan={visibleColumns.length}>
                                 {expandComponent && expandComponent({row})}
                                 {invisibleColumns.map(column => {
-                                    if (column.data._ !== undefined) {
-                                        return <p key={"p-" + rowKeyFunction(row, column)}>
-                                            <b>{column.title}:</b> {row[column.data.display]}</p>
-                                    } else {
+                                    if (column.data._ === undefined) {
                                         return <p key={"p-" + rowKeyFunction(row, column)}>
                                             <b>{column.title}:</b> {row[column.data]}</p>
+                                    } else {
+                                        return <p key={"p-" + rowKeyFunction(row, column)}>
+                                            <b>{column.title}:</b> {row[column.data.display]}</p>
                                     }
                                 })}
                             </td>
