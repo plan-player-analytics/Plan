@@ -197,7 +197,7 @@ const DataTablesTable = ({id, rowKeyFunction, options, className, colorClass, ex
     const [expandedRows, setExpandedRows] = useState([]);
     const toggleRow = useCallback(i => {
         if (expandedRows.includes(i)) {
-            setExpandedRows(expandedRows.filter(item => item !== i));
+            setExpandedRows(expandedRows.filter(index => index !== i));
         } else {
             setExpandedRows([...expandedRows, i]);
         }
@@ -206,7 +206,7 @@ const DataTablesTable = ({id, rowKeyFunction, options, className, colorClass, ex
         if (visibleColumnIndexes.length === columns.length) {
             setExpandedRows([]);
         }
-    }, [visibleColumnIndexes, columns, setExpandedRows])
+    }, [visibleColumnIndexes, columns, setExpandedRows]);
 
     const [page, setPage] = useState(0);
     const maxPage = Math.ceil(matchingData.length / paginationCount);
@@ -285,7 +285,7 @@ const DataTablesTable = ({id, rowKeyFunction, options, className, colorClass, ex
                         {visibleColumns.map((column, i) => {
                             if (column.data._ !== undefined) {
                                 return <td key={"col-" + rowKeyFunction(row, column)}>
-                                    {i === 0 && someColumnsHidden &&
+                                    {rows.length === 1 || i === 0 && someColumnsHidden &&
                                         <button style={{paddingRight: "0.5rem"}}
                                                 onClick={() => toggleRow(rowKeyFunction(row, null))}>
                                             <FontAwesomeIcon
@@ -308,7 +308,7 @@ const DataTablesTable = ({id, rowKeyFunction, options, className, colorClass, ex
                             }
                         })}
                     </tr>
-                    {expandedRows.includes(rowKeyFunction(row, null)) &&
+                    {(rows.length === 1 || expandedRows.includes(rowKeyFunction(row, null))) &&
                         <tr key={"hidden-row" + rowKeyFunction(row, null)}>
                             <td colSpan={visibleColumns.length}>
                                 {expandComponent && expandComponent({row})}

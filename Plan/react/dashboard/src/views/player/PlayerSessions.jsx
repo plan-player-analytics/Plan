@@ -1,7 +1,7 @@
 import React from "react";
 import {Card, Col} from "react-bootstrap";
-import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import {faCalendarAlt} from "@fortawesome/free-regular-svg-icons";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faCalendar, faHandPointer} from "@fortawesome/free-regular-svg-icons";
 import PlayerSessionCalendar from "../../components/calendar/PlayerSessionCalendar";
 import {usePlayer} from "../layout/PlayerPage";
 import {useTranslation} from "react-i18next";
@@ -12,16 +12,18 @@ import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 import {GenericFilterContextProvider} from "../../dataHooks/genericFilterContextHook.tsx";
 import {DateFilterControls} from "../../components/input/DateFilterControls.tsx";
+import {staticSite} from "../../service/backendConfiguration.js";
+import CardHeader from "../../components/cards/CardHeader.tsx";
 
 const SessionCalendarCard = ({player}) => {
     const {t} = useTranslation();
     return (
         <Card>
-            <Card.Header>
-                <h6 className="col-text">
-                    <Fa icon={faCalendarAlt} className="col-sessions"/> {t('html.label.sessionCalendar')}
-                </h6>
-            </Card.Header>
+            <CardHeader icon={faCalendar} color={"sessions"} label={'html.label.sessionCalendar'}>
+                {!staticSite && <span className="float-end">
+                <FontAwesomeIcon icon={faHandPointer}/>{' '}<small>{t('html.text.clickAndDrag')}</small>
+            </span>}
+            </CardHeader>
             <PlayerSessionCalendar series={player.calendar_series} firstDay={player.first_day}/>
         </Card>
     )

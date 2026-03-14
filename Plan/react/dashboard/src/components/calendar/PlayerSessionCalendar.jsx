@@ -1,13 +1,25 @@
 import React, {useCallback, useMemo} from "react";
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
+import interactionPlugin from '@fullcalendar/interaction'
 import {useTranslation} from "react-i18next";
 import {localeService} from "../../service/localeService.js";
 import {useTimeAmountFormatter} from "../../util/format/useTimeAmountFormatter.js";
 import {useDateFormatter} from "../../util/format/useDateFormatter.js";
+import {useMetadata} from "../../hooks/metadataHook.jsx";
+import {useGenericFilter} from "../../dataHooks/genericFilterContextHook.tsx";
+import {staticSite} from "../../service/backendConfiguration.js";
 
 const PlayerSessionCalendar = ({series, firstDay}) => {
-    const {t, i18n} = useTranslation();
+    const {t} = useTranslation();
+
+    const {timeZoneOffsetMinutes} = useMetadata();
+    const {setAfter, setBefore} = useGenericFilter();
+    const onSelect = useCallback(async (selectionInfo) => {
+        if (staticSite) return;
+        setAfter(selectionInfo.start.getTime() - timeZoneOffsetMinutes * 60000);
+        setBefore(selectionInfo.end.getTime() - timeZoneOffsetMinutes * 60000);
+    }, [setAfter, setBefore]);
 
     const {formatTime} = useTimeAmountFormatter();
     const {formatDate} = useDateFormatter();
@@ -44,7 +56,7 @@ const PlayerSessionCalendar = ({series, firstDay}) => {
     return (
         <FullCalendar
             locale={localeService.getIntlFriendlyLocale()}
-            plugins={[dayGridPlugin]}
+            plugins={[interactionPlugin, dayGridPlugin]}
             timeZone="UTC"
             themeSystem='bootstrap'
             eventColor='#009688'
@@ -59,6 +71,10 @@ const PlayerSessionCalendar = ({series, firstDay}) => {
                 center: '',
                 right: 'dayGridMonth dayGridWeek dayGridDay today prev next'
             }}
+            editable={false}
+            selectable={Boolean(onSelect)}
+            select={onSelect}
+            unselectAuto={true}
             buttonText={buttonText}
             events={(_fetchInfo, successCallback) => successCallback(actualSeries)}
         />
