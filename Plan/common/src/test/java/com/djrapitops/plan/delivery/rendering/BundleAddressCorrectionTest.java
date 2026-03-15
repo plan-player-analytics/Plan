@@ -106,4 +106,33 @@ class BundleAddressCorrectionTest {
         assertTrue(result.contains("src=\"/static/index-abc123.js\""),
                 "Should be unchanged when no subpath anywhere, got: " + result);
     }
+
+    @Test
+    @DisplayName("Vite preload base URL is corrected with subpath")
+    void vitePreloadCorrectedWithSubpath() {
+        when(addresses.getExternalAddress()).thenReturn(Optional.of("https://example.com/plan"));
+        when(addresses.getBasePath("https://example.com/plan")).thenReturn("/plan");
+
+        String js = "GN=function(l){return\"/\"+l}";
+
+        String result = bundleAddressCorrection.correctAddressForWebserver(js, "index.js");
+
+        assertTrue(result.contains("return\"/plan/\"+l"),
+                "Vite preload should include base path, got: " + result);
+    }
+
+    @Test
+    @DisplayName("Vite preload base URL unchanged at root")
+    void vitePreloadUnchangedAtRoot() {
+        when(addresses.getExternalAddress()).thenReturn(Optional.empty());
+        when(addresses.getMainAddress()).thenReturn(Optional.of("http://localhost:8804"));
+        when(addresses.getBasePath("http://localhost:8804")).thenReturn("");
+
+        String js = "GN=function(l){return\"/\"+l}";
+
+        String result = bundleAddressCorrection.correctAddressForWebserver(js, "index.js");
+
+        assertTrue(result.contains("return\"/\"+l"),
+                "Vite preload should be unchanged at root, got: " + result);
+    }
 }

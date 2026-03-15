@@ -103,6 +103,13 @@ public class BundleAddressCorrection {
     }
 
     private String correctAddressInJavascript(String content, String basePath) {
+        // Vite's __vitePreload base URL function: return"/"+l
+        // Needs to include the base path so preloaded assets resolve correctly.
+        if (!basePath.isEmpty()) {
+            String endingSlash = basePath.endsWith("/") ? "" : "/";
+            content = Strings.CS.replace(content, "return\"/\"+", "return\"" + basePath + endingSlash + "\"+");
+        }
+
         int lastIndex = 0;
         StringBuilder output = new StringBuilder();
 
