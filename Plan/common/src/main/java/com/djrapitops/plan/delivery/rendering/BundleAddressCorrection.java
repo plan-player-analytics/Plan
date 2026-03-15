@@ -56,9 +56,15 @@ public class BundleAddressCorrection {
     }
 
     private String getWebserverBasePath() {
-        String address = addresses.getMainAddress()
-                .orElseGet(addresses::getFallbackLocalhostAddress);
-        return addresses.getBasePath(address);
+        // Prefer External_Webserver_address base path for reverse proxy subpath support
+        return addresses.getExternalAddress()
+                .map(addresses::getBasePath)
+                .filter(basePath -> !basePath.isEmpty())
+                .orElseGet(() -> {
+                    String address = addresses.getMainAddress()
+                            .orElseGet(addresses::getFallbackLocalhostAddress);
+                    return addresses.getBasePath(address);
+                });
     }
 
     public String correctAddressForWebserver(String content, String fileName) {
