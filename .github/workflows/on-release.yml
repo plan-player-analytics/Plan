@@ -87,7 +87,8 @@ jobs:
           RELEASE_PRERELEASE: ${{ github.event.release.prerelease }}
           RELEASE_JAR_PATH: ${{ env.RELEASE_JAR_PATH }}
         run: |
-          ./Plan/gradlew :plugin:publishToOre
+          cd Plan
+          ./gradlew :plugin:publishToOre
 
   upload_release_curseforge:
     name: CurseForge Upload
@@ -154,12 +155,19 @@ jobs:
           RELEASE_PRERELEASE: ${{ github.event.release.prerelease }}
           RELEASE_DOWNLOAD_URL: ${{ env.RELEASE_DOWNLOAD_URL }}
         run: |
-          ./Plan/gradlew :plugin:publishPluginPublicationToHangar
+          cd Plan
+          ./gradlew :plugin:publishPluginPublicationToHangar
 
   upload_release_modrinth:
     name: Modrinth Upload
     runs-on: ubuntu-latest
     steps:
+      - name: Calculate formatted version
+        run: |
+          TAG_NAME="${{ github.event.release.tag_name }}"
+          # 5.7.xxxx -> 5.7+build.xxxx
+          FORMATTED_VERSION=$(echo "$TAG_NAME" | sed -r 's/([0-9]+\.[0-9]+)\.(.*)/\1+build.\2/')
+          echo "FORMATTED_VERSION=$FORMATTED_VERSION" >> $GITHUB_ENV
       - name: Download release artifacts for upload
         run: |
           # Fetch all assets
@@ -186,7 +194,7 @@ jobs:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           files: ${{ env.REGULAR_JAR }}
           name: ${{ github.event.release.name }}
-          version: ${{ github.event.release.tag_name }}
+          version: ${{ env.FORMATTED_VERSION }}
           changelog: ${{ github.event.release.body }}
           loaders: |
             bukkit
@@ -198,7 +206,8 @@ jobs:
             velocity
             sponge
             nukkit
-          game-versions: <=1.13
+          game-versions: |
+            >=1.13
           version-type: ${{ github.event.release.prerelease && 'beta' || 'release' }}
 
       - name: Modrinth Upload - Fabric 🚀
@@ -208,11 +217,12 @@ jobs:
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
           files: ${{ env.FABRIC_JAR }}
           name: ${{ github.event.release.name }}
-          version: ${{ github.event.release.tag_name }}
+          version: ${{ env.FORMATTED_VERSION }}+fabric
           changelog: ${{ github.event.release.body }}
           loaders: |
             fabric
-          game-versions: <=1.21.9
+          game-versions: |
+            >=1.21.9
           version-type: ${{ github.event.release.prerelease && 'beta' || 'release' }}
           dependencies: |
             P7dR8mSH(required)
