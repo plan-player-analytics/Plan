@@ -1,5 +1,9 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
+plugins {
+    id "io.papermc.hangar-publish-plugin" version "0.1.4"
+}
+
 apply plugin: "com.gradleup.shadow"
 
 logger.lifecycle("Building artifact for version $fullVersion / $fullVersionFilename / $fullVersionSemantic")
@@ -114,6 +118,32 @@ publishing {
             version = "$fullVersion"
 
             artifact shadowJar
+        }
+    }
+}
+
+hangarPublish {
+    publications.register("plugin") {
+        version = project.fullVersionSemantic
+        id = "Plan-Player-Analytics"
+        channel = providers.environmentVariable("RELEASE_PRERELEASE").map { it == "true" ? "Snapshot" : "Release" }.orElse("Release")
+        changelog = providers.environmentVariable("RELEASE_CHANGELOG")
+        apiKey = providers.environmentVariable("HANGAR_API_TOKEN")
+        def downloadUrl = providers.environmentVariable("RELEASE_DOWNLOAD_URL")
+
+        platforms {
+            paper {
+                url = downloadUrl
+                platformVersions = ["1.13-1.21.11"]
+            }
+            waterfall {
+                url = downloadUrl
+                platformVersions = ["1.13-1.21"]
+            }
+            velocity {
+                url = downloadUrl
+                platformVersions = ["3.5"]
+            }
         }
     }
 }

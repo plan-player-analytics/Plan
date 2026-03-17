@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Get Download URL
         run: |
           curl 'https://api.github.com/repos/plan-player-analytics/plan/releases/${{ github.event.release.id }}/assets' | jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric") | not)' > asset.txt
@@ -43,7 +43,7 @@ jobs:
 
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Get git TAG
         id: tagName
         uses: olegtarasov/get-tag@v2.1
@@ -136,3 +136,30 @@ jobs:
           game_versions: "2:Java 21,77784:1.21.9,77784:1.21.10,77784:1.21.11,68441:Fabric"
           release_type: beta
           relations: fabric-api:requiredDependency,luckperms:optionalDependency
+
+  upload_release_hangar:
+    name: Hangar Upload
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout git repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: ⚙ Get Download URL
+        run: |
+          curl 'https://api.github.com/repos/plan-player-analytics/plan/releases/${{ github.event.release.id }}/assets' | jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric") | not)' > asset.txt
+          jq -r '.url' asset.txt > url.txt
+          echo "RELEASE_DOWNLOAD_URL=$(cat url.txt)" >> $GITHUB_ENV
+      - name: ☕ Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+      - name: Publish release to Hangar 🚀
+        env:
+          HANGAR_API_TOKEN: ${{ secrets.HANGAR_API_TOKEN }}
+          RELEASE_CHANGELOG: ${{ github.event.release.body }}
+          RELEASE_PRERELEASE: ${{ github.event.release.prerelease }}
+          RELEASE_DOWNLOAD_URL: ${{ env.RELEASE_DOWNLOAD_URL }}
+        run: |
+          ./gradlew :plugin:publishPluginPublicationToHangar
