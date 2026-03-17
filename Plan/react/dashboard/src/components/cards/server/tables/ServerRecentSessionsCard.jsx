@@ -11,7 +11,7 @@ const ServerRecentSessionsCard = ({identifier}) => {
     if (loadingError) return <ErrorViewCard error={loadingError}/>
 
     return (
-        <RecentSessionsCard sessions={sessions} isPlayer={true} isNetwork={!identifier}/>
+        <RecentSessionsCard sessions={sessions} isNetwork={!identifier}/>
     )
 }
 

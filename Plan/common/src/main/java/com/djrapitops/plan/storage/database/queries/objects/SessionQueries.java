@@ -861,7 +861,7 @@ public class SessionQueries {
     }
 
     public static Query<Double> afkTimePercentage(long after, long before, List<ServerUUID> serverUUIDs) {
-        String sql = SELECT + "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ")/SUM(" + SessionsTable.AFK_TIME + ") as afk_time_perc" +
+        String sql = SELECT + "SUM(" + SessionsTable.AFK_TIME + ")/SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as afk_time_perc" +
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?" +

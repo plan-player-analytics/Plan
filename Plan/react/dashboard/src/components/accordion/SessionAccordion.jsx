@@ -81,8 +81,8 @@ const SessionAccordion = (
     const {t} = useTranslation();
     const {preferencesLoaded} = usePreferences();
 
-    const firstColumn = isPlayer ? (<><Fa icon={faUser}/> {t('html.label.player')}</>)
-        : (<><Fa icon={faServer}/> {t('html.label.server')}</>)
+    const firstColumn = isPlayer ? (<><Fa icon={faServer}/> {t('html.label.server')}</>) : (<><Fa
+        icon={faUser}/> {t('html.label.player')}</>)
     const lastColumn = isNetwork ? {
         title: <><Fa icon={faServer}/> {t('html.label.server')}</>,
         data: "server_name"

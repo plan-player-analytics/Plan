@@ -9,6 +9,7 @@ import {useDateFormatter} from "../../util/format/useDateFormatter";
 import {InlinedRow} from "../layout/InlinedRow";
 import OutlineButton from "./button/OutlineButton";
 import {faChevronDown, faTimes} from "@fortawesome/free-solid-svg-icons";
+import {useMetadata} from "../../hooks/metadataHook";
 
 const isValidDate = (value: string) => {
     if (!value) return true;
@@ -121,6 +122,7 @@ const DateInputField = (
     const [picker, setPicker] = useState<string | undefined>(undefined);
     const {formatDate: formatAsMonth} = useDateFormatter(false, {pattern: "MMMM"});
     const {formatDate: formatAsYear} = useDateFormatter(false, {pattern: "yyyy"});
+    const {timeZoneOffsetMinutes} = useMetadata() as { timeZoneOffsetMinutes: number };
 
     const onChange = (newValue: Date | null) => {
         if (picker) {
@@ -189,7 +191,7 @@ const DateInputField = (
                         disabled={disabled}
                         placeholderText={placeholder || "dd/mm/yyyy"}
                         className={"form-control" + (invalid ? " is-invalid" : '')}
-                        shouldCloseOnSelect={!picker}
+                        shouldCloseOnSelect={false}
                         showMonthYearPicker={picker === 'month'}
                         showYearPicker={picker === 'year'}
                         timeZone='UTC'

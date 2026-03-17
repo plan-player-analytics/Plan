@@ -60,8 +60,8 @@ const SessionCalendarCard = ({data, firstDay}: CalendarResponse) => {
     const {setAfter, setBefore} = useGenericFilter();
     const onSelect = useCallback(async (selectionInfo: SelectionInfo) => {
         if (staticSite) return;
-        setAfter(selectionInfo.start.getTime() - timeZoneOffsetMinutes * 60000);
-        setBefore(selectionInfo.end.getTime() - timeZoneOffsetMinutes * 60000);
+        setAfter(selectionInfo.start.getTime() - selectionInfo.start.getTimezoneOffset() * 60000 + timeZoneOffsetMinutes * 60000);
+        setBefore(selectionInfo.end.getTime() - selectionInfo.end.getTimezoneOffset() * 60000 + timeZoneOffsetMinutes * 60000);
     }, [setAfter, setBefore]);
 
     return <Card>

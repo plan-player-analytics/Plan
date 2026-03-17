@@ -514,6 +514,7 @@ public enum HtmlLang implements Lang {
     THEME_EDITOR_ISSUE_MISSING_NIGHT_MODE_COLOR("html.label.themeEditor.issues.missingNightCase", "Night mode {{name}} is missing color {{colorName}}"),
 
     INFO_NO_UPTIME("html.description.noUptimeCalculation", "Server is offline, or has never restarted with Plan installed."),
+    INFO_MORE_DATA("html.description.moreDataThanFitInResponse", "The filters matched more data than fit in the response."),
     WARNING_NO_GAME_SERVERS("html.description.noGameServers", "Some data requires Plan to be installed on game servers."),
     WARNING_PERFORMANCE_NO_GAME_SERVERS("html.description.performanceNoGameServers", "TPS, Entity or Chunk data is not gathered from proxy servers since they don't have game tick loop."),
     WARNING_NO_GEOLOCATIONS("html.description.noGeolocations", "Geolocation gathering needs to be enabled in the config (Accept GeoLite2 EULA)."),
