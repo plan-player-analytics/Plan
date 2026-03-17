@@ -2,6 +2,7 @@ import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
 plugins {
     id "io.papermc.hangar-publish-plugin" version "0.1.4"
+    id "org.spongepowered.gradle.ore" version "2.3.0"
 }
 
 apply plugin: "com.gradleup.shadow"
@@ -124,26 +125,36 @@ publishing {
 
 hangarPublish {
     publications.register("plugin") {
-        version = project.fullVersionSemantic
-        id = "Plan-Player-Analytics"
-        channel = providers.environmentVariable("RELEASE_PRERELEASE").map { it == "true" ? "Snapshot" : "Release" }.orElse("Release")
-        changelog = providers.environmentVariable("RELEASE_CHANGELOG")
-        apiKey = providers.environmentVariable("HANGAR_API_TOKEN")
+        version.set(project.fullVersionSemantic)
+        id.set("Plan-Player-Analytics")
+        channel.set(providers.environmentVariable("RELEASE_PRERELEASE").map { it == "true" ? "Snapshot" : "Release" }.orElse("Release"))
+        changelog.set(providers.environmentVariable("RELEASE_CHANGELOG"))
+        apiKey.set(providers.environmentVariable("HANGAR_API_TOKEN"))
         def downloadUrl = providers.environmentVariable("RELEASE_DOWNLOAD_URL")
 
         platforms {
             paper {
-                url = downloadUrl
-                platformVersions = ["1.13-1.21.11"]
+                url.set(downloadUrl)
+                platformVersions.set(["1.13-1.21.11"])
             }
             waterfall {
-                url = downloadUrl
-                platformVersions = ["1.13-1.21"]
+                url.set(downloadUrl)
+                platformVersions.set(["1.13-1.21"])
             }
             velocity {
-                url = downloadUrl
-                platformVersions = ["3.5"]
+                url.set(downloadUrl)
+                platformVersions.set(["3.5"])
             }
         }
+    }
+}
+
+oreDeployment {
+    defaultPublication {
+        projectId.set('Plan')
+        channel.set(providers.environmentVariable("RELEASE_PRERELEASE").map { it == "true" ? "DEV" : "Release" }.orElse("Release"))
+        versionBody.set(providers.environmentVariable("RELEASE_CHANGELOG"))
+
+        publishArtifacts.from(file(providers.environmentVariable("RELEASE_JAR_PATH").getOrElse("Plan.jar")))
     }
 }

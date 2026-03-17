@@ -64,38 +64,30 @@ jobs:
     name: Ore Upload
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Download release artifact for upload
         run: |
           curl 'https://api.github.com/repos/plan-player-analytics/plan/releases/${{ github.event.release.id }}/assets' | jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric") | not)' > asset.txt
           jq -r '.url' asset.txt > url.txt
           jq -r '.name' asset.txt > name.txt
           wget -i url.txt
-          echo "JAR_FILENAME=$(cat name.txt)" >> $GITHUB_ENV
-      - name: Upload artifact for ore upload
-        uses: actions/upload-artifact@v3
+          echo "RELEASE_JAR_PATH=$(pwd)/$(cat name.txt)" >> $GITHUB_ENV
+      - name: Setup JDK
+        uses: actions/setup-java@v4
         with:
-          name: ${{ github.event.release.name }}
-          path: ${{ env.JAR_FILENAME }}
-      - name: Upload release to Ore 🚀
-        if: ${{ github.event.release.prerelease == false }}
-        uses: dualspiral/ore-upload-action@v2
-        with:
-          plugin: ${{ github.event.release.name }}
-          description: ${{ github.event.release.body }}
-          apiKey: ${{ secrets.ORE_API_TOKEN }}
-          channel: Release
-          pluginId: plan
-          createForumPost: true
-      - name: Upload DEV release to Ore 🚀
-        if: ${{ github.event.release.prerelease == true }}
-        uses: dualspiral/ore-upload-action@v1
-        with:
-          plugin: ${{ github.event.release.name }}
-          description: ${{ github.event.release.body }}
-          apiKey: ${{ secrets.ORE_API_TOKEN }}
-          channel: DEV
-          pluginId: plan
-          createForumPost: false
+          distribution: 'temurin'
+          java-version: '25'
+      - name: Publish release to Ore 🚀
+        env:
+          ORE_TOKEN: ${{ secrets.ORE_API_TOKEN }}
+          RELEASE_CHANGELOG: ${{ github.event.release.body }}
+          RELEASE_PRERELEASE: ${{ github.event.release.prerelease }}
+          RELEASE_JAR_PATH: ${{ env.RELEASE_JAR_PATH }}
+        run: |
+          ./gradlew :plugin:publishToOre
 
   upload_release_curseforge:
     name: CurseForge Upload
