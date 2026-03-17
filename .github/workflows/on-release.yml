@@ -155,3 +155,55 @@ jobs:
           RELEASE_DOWNLOAD_URL: ${{ env.RELEASE_DOWNLOAD_URL }}
         run: |
           ./gradlew :plugin:publishPluginPublicationToHangar
+
+  upload_release_modrinth:
+    name: Modrinth Upload
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download release artifacts for upload
+        run: |
+          # Fetch all assets
+          curl 'https://api.github.com/repos/plan-player-analytics/plan/releases/${{ github.event.release.id }}/assets' > all_assets.json
+          
+          # Download regular JAR (non-Fabric)
+          jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric") | not)' all_assets.json > asset_regular.txt
+          jq -r '.url' asset_regular.txt > url_regular.txt
+          jq -r '.name' asset_regular.txt > name_regular.txt
+          wget -i url_regular.txt
+          echo "REGULAR_JAR=$(cat name_regular.txt)" >> $GITHUB_ENV
+          
+          # Download Fabric JAR
+          jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric"))' all_assets.json > asset_fabric.txt
+          jq -r '.url' asset_fabric.txt > url_fabric.txt
+          jq -r '.name' asset_fabric.txt > name_fabric.txt
+          wget -i url_fabric.txt
+          echo "FABRIC_JAR=$(cat name_fabric.txt)" >> $GITHUB_ENV
+
+      - name: Modrinth Upload - Plugin 🚀
+        uses: Kira-NT/mc-publish@v3.3
+        with:
+          modrinth-id: wJQfHhxh
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          files: ${{ env.REGULAR_JAR }}
+          name: ${{ github.event.release.name }}
+          version: ${{ github.event.release.tag_name }}
+          changelog: ${{ github.event.release.body }}
+          loaders: bukkit,spigot,paper,folia,bungeecord,waterfall,velocity,sponge,nukkit
+          game-versions: <=1.13
+          version-type: ${{ github.event.release.prerelease && 'beta' || 'release' }}
+
+      - name: Modrinth Upload - Fabric 🚀
+        uses: Kira-NT/mc-publish@v3.3
+        with:
+          modrinth-id: plan
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          files: ${{ env.FABRIC_JAR }}
+          name: ${{ github.event.release.name }}
+          version: ${{ github.event.release.tag_name }}
+          changelog: ${{ github.event.release.body }}
+          loaders: fabric
+          game-versions: <=1.21.9
+          version-type: ${{ github.event.release.prerelease && 'beta' || 'release' }}
+          dependencies: |
+            P7dR8mSH(required)
+            Vebnzrzj(optional)
