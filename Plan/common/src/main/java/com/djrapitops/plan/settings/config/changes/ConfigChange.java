@@ -105,10 +105,7 @@ public interface ConfigChange {
         public boolean hasBeenApplied(Config config) {
             Optional<ConfigNode> oldNode = config.getNode(oldPath);
             Optional<ConfigNode> newNode = config.getNode(newPath);
-            if (oldNode.isPresent()) {
-                return false;
-            }
-            return newNode.isPresent();
+            return oldNode.isEmpty() || newNode.isPresent() && !newNode.get().getString().isEmpty();
         }
 
         @Override

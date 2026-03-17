@@ -23,8 +23,14 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.mockito.junit.jupiter.MockitoExtension;
+import utilities.TestErrorLogger;
+import utilities.TestPluginLogger;
+import utilities.TestResources;
 
+import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -145,4 +151,17 @@ class ConfigChangeTest {
         assertEquals("anotherValue", config.getString("Test.Child"));
     }
 
+    @Test
+    void defaultConfigNeedsNoChanges() throws IOException {
+        config = prepareConfig(new String(TestResources.getJarResourceAsBytes(TestResources.CONFIG_PATH)));
+
+        List<String> originalLines = Files.readAllLines(config.getConfigFilePath());
+        TestPluginLogger logger = new TestPluginLogger();
+        logger.logMessages(true);
+        ConfigUpdater updater = new ConfigUpdater(logger, new TestErrorLogger());
+        updater.applyConfigUpdate(config);
+        List<String> unmodifiedLines = Files.readAllLines(config.getConfigFilePath());
+        assertEquals(List.of(), logger.getLogMessages());
+        assertEquals(originalLines, unmodifiedLines);
+    }
 }
