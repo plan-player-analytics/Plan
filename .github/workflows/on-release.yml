@@ -87,7 +87,7 @@ jobs:
           RELEASE_PRERELEASE: ${{ github.event.release.prerelease }}
           RELEASE_JAR_PATH: ${{ env.RELEASE_JAR_PATH }}
         run: |
-          ./gradlew :plugin:publishToOre
+          ./Plan/gradlew :plugin:publishToOre
 
   upload_release_curseforge:
     name: CurseForge Upload
@@ -154,7 +154,7 @@ jobs:
           RELEASE_PRERELEASE: ${{ github.event.release.prerelease }}
           RELEASE_DOWNLOAD_URL: ${{ env.RELEASE_DOWNLOAD_URL }}
         run: |
-          ./gradlew :plugin:publishPluginPublicationToHangar
+          ./Plan/gradlew :plugin:publishPluginPublicationToHangar
 
   upload_release_modrinth:
     name: Modrinth Upload
@@ -188,7 +188,16 @@ jobs:
           name: ${{ github.event.release.name }}
           version: ${{ github.event.release.tag_name }}
           changelog: ${{ github.event.release.body }}
-          loaders: bukkit,spigot,paper,folia,bungeecord,waterfall,velocity,sponge,nukkit
+          loaders: |
+            bukkit
+            spigot
+            paper
+            folia
+            bungeecord
+            waterfall
+            velocity
+            sponge
+            nukkit
           game-versions: <=1.13
           version-type: ${{ github.event.release.prerelease && 'beta' || 'release' }}
 
@@ -201,7 +210,8 @@ jobs:
           name: ${{ github.event.release.name }}
           version: ${{ github.event.release.tag_name }}
           changelog: ${{ github.event.release.body }}
-          loaders: fabric
+          loaders: |
+            fabric
           game-versions: <=1.21.9
           version-type: ${{ github.event.release.prerelease && 'beta' || 'release' }}
           dependencies: |
