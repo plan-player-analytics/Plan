@@ -151,7 +151,7 @@ hangarPublish {
 
 oreDeployment {
     defaultPublication {
-        projectId.set('Plan')
+        projectId.set('plan')
         channel.set(providers.environmentVariable("RELEASE_PRERELEASE").map { it == "true" ? "DEV" : "Release" }.orElse("Release"))
         versionBody.set(providers.environmentVariable("RELEASE_CHANGELOG"))
 
