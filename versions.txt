@@ -1,3 +1,4 @@
+REL|5.7.3306|https://github.com/plan-player-analytics/Plan/releases/download/5.7.3306/Plan-5.7-build-3306.jar|https://github.com/plan-player-analytics/Plan/releases
 DEV|5.7.3298|https://github.com/plan-player-analytics/Plan/releases/download/5.7.3298/Plan-5.7-dev-build-3298.jar|https://github.com/plan-player-analytics/Plan/releases/tag/5.7.3298
 DEV|5.7.3295|https://github.com/plan-player-analytics/Plan/releases/download/5.7.3295/Plan-5.7-dev-build-3295.jar|https://github.com/plan-player-analytics/Plan/releases/tag/5.7.3295
 DEV|5.7.3294|https://github.com/plan-player-analytics/Plan/releases/download/5.7.3294/Plan-5.7-dev-build-3294.jar|https://github.com/plan-player-analytics/Plan/releases/tag/5.7.3294
