@@ -172,8 +172,8 @@ const DataTablesTable = ({id, rowKeyFunction, options, className, colorClass, ex
         if (valA === undefined && valB === undefined) return 0;
         if (valA === undefined) return sortReversed ? 1 : -1;
         if (valB === undefined) return sortReversed ? 1 : -1;
-        const isNumberA = typeof valA === 'number' || !Number.isNaN(valA);
-        const isNumberB = typeof valB === 'number' || !Number.isNaN(valB);
+        const isNumberA = typeof valA === 'number' || !Number.isNaN(Number(valA));
+        const isNumberB = typeof valB === 'number' || !Number.isNaN(Number(valB));
         if (isNumberA && isNumberB) {
             return sortReversed ? valA - valB : valB - valA;
         }

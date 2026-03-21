@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Get Download URL
         run: |
           curl 'https://api.github.com/repos/plan-player-analytics/plan/releases/${{ github.event.release.id }}/assets' | jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric") | not)' > asset.txt
@@ -43,7 +43,7 @@ jobs:
 
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Get git TAG
         id: tagName
         uses: olegtarasov/get-tag@v2.1
@@ -64,38 +64,31 @@ jobs:
     name: Ore Upload
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout 🛎️
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - name: Download release artifact for upload
         run: |
           curl 'https://api.github.com/repos/plan-player-analytics/plan/releases/${{ github.event.release.id }}/assets' | jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric") | not)' > asset.txt
           jq -r '.url' asset.txt > url.txt
           jq -r '.name' asset.txt > name.txt
           wget -i url.txt
-          echo "JAR_FILENAME=$(cat name.txt)" >> $GITHUB_ENV
-      - name: Upload artifact for ore upload
-        uses: actions/upload-artifact@v3
+          echo "RELEASE_JAR_PATH=$(pwd)/$(cat name.txt)" >> $GITHUB_ENV
+      - name: Setup JDK
+        uses: actions/setup-java@v4
         with:
-          name: ${{ github.event.release.name }}
-          path: ${{ env.JAR_FILENAME }}
-      - name: Upload release to Ore 🚀
-        if: ${{ github.event.release.prerelease == false }}
-        uses: dualspiral/ore-upload-action@v2
-        with:
-          plugin: ${{ github.event.release.name }}
-          description: ${{ github.event.release.body }}
-          apiKey: ${{ secrets.ORE_API_TOKEN }}
-          channel: Release
-          pluginId: plan
-          createForumPost: true
-      - name: Upload DEV release to Ore 🚀
-        if: ${{ github.event.release.prerelease == true }}
-        uses: dualspiral/ore-upload-action@v1
-        with:
-          plugin: ${{ github.event.release.name }}
-          description: ${{ github.event.release.body }}
-          apiKey: ${{ secrets.ORE_API_TOKEN }}
-          channel: DEV
-          pluginId: plan
-          createForumPost: false
+          distribution: 'temurin'
+          java-version: '25'
+      - name: Publish release to Ore 🚀
+        env:
+          ORE_TOKEN: ${{ secrets.ORE_API_TOKEN }}
+          RELEASE_CHANGELOG: ${{ github.event.release.body }}
+          RELEASE_PRERELEASE: ${{ github.event.release.prerelease }}
+          RELEASE_JAR_PATH: ${{ env.RELEASE_JAR_PATH }}
+        run: |
+          cd Plan
+          ./gradlew :plugin:publishToOre
 
   upload_release_curseforge:
     name: CurseForge Upload
@@ -136,3 +129,101 @@ jobs:
           game_versions: "2:Java 21,77784:1.21.9,77784:1.21.10,77784:1.21.11,68441:Fabric"
           release_type: beta
           relations: fabric-api:requiredDependency,luckperms:optionalDependency
+
+  upload_release_hangar:
+    name: Hangar Upload
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Checkout git repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: ⚙ Get Download URL
+        run: |
+          curl 'https://api.github.com/repos/plan-player-analytics/plan/releases/${{ github.event.release.id }}/assets' | jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric") | not)' > asset.txt
+          jq -r '.url' asset.txt > url.txt
+          echo "RELEASE_DOWNLOAD_URL=$(cat url.txt)" >> $GITHUB_ENV
+      - name: ☕ Setup JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '25'
+      - name: Publish release to Hangar 🚀
+        env:
+          HANGAR_API_TOKEN: ${{ secrets.HANGAR_API_TOKEN }}
+          RELEASE_CHANGELOG: ${{ github.event.release.body }}
+          RELEASE_PRERELEASE: ${{ github.event.release.prerelease }}
+          RELEASE_DOWNLOAD_URL: ${{ env.RELEASE_DOWNLOAD_URL }}
+        run: |
+          cd Plan
+          ./gradlew :plugin:publishPluginPublicationToHangar
+
+  upload_release_modrinth:
+    name: Modrinth Upload
+    runs-on: ubuntu-latest
+    steps:
+      - name: Calculate formatted version
+        run: |
+          TAG_NAME="${{ github.event.release.tag_name }}"
+          # 5.7.xxxx -> 5.7+build.xxxx
+          FORMATTED_VERSION=$(echo "$TAG_NAME" | sed -r 's/([0-9]+\.[0-9]+)\.(.*)/\1+build.\2/')
+          echo "FORMATTED_VERSION=$FORMATTED_VERSION" >> $GITHUB_ENV
+      - name: Download release artifacts for upload
+        run: |
+          # Fetch all assets
+          curl 'https://api.github.com/repos/plan-player-analytics/plan/releases/${{ github.event.release.id }}/assets' > all_assets.json
+          
+          # Download regular JAR (non-Fabric)
+          jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric") | not)' all_assets.json > asset_regular.txt
+          jq -r '.url' asset_regular.txt > url_regular.txt
+          jq -r '.name' asset_regular.txt > name_regular.txt
+          wget -i url_regular.txt
+          echo "REGULAR_JAR=$(cat name_regular.txt)" >> $GITHUB_ENV
+          
+          # Download Fabric JAR
+          jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric"))' all_assets.json > asset_fabric.txt
+          jq -r '.url' asset_fabric.txt > url_fabric.txt
+          jq -r '.name' asset_fabric.txt > name_fabric.txt
+          wget -i url_fabric.txt
+          echo "FABRIC_JAR=$(cat name_fabric.txt)" >> $GITHUB_ENV
+
+      - name: Modrinth Upload - Plugin 🚀
+        uses: Kira-NT/mc-publish@v3.3
+        with:
+          modrinth-id: wJQfHhxh
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          files: ${{ env.REGULAR_JAR }}
+          name: ${{ github.event.release.name }}
+          version: ${{ env.FORMATTED_VERSION }}
+          changelog: ${{ github.event.release.body }}
+          loaders: |
+            bukkit
+            spigot
+            paper
+            folia
+            bungeecord
+            waterfall
+            velocity
+            sponge
+            nukkit
+          game-versions: |
+            >=1.13
+          version-type: ${{ github.event.release.prerelease && 'beta' || 'release' }}
+
+      - name: Modrinth Upload - Fabric 🚀
+        uses: Kira-NT/mc-publish@v3.3
+        with:
+          modrinth-id: plan
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          files: ${{ env.FABRIC_JAR }}
+          name: ${{ github.event.release.name }}
+          version: ${{ env.FORMATTED_VERSION }}+fabric
+          changelog: ${{ github.event.release.body }}
+          loaders: |
+            fabric
+          game-versions: |
+            >=1.21.9
+          version-type: ${{ github.event.release.prerelease && 'beta' || 'release' }}
+          dependencies: |
+            P7dR8mSH(required)
+            Vebnzrzj(optional)

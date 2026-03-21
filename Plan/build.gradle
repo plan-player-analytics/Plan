@@ -21,9 +21,6 @@ clean {
 }
 
 allprojects {
-    group = "com.djrapitops"
-    version = "5.7-SNAPSHOT"
-
     ext {
         majorVersion = "5"
         minorVersion = "7"
@@ -38,6 +35,9 @@ allprojects {
         fullVersionFilename = majorVersion + "." + minorVersion + "-build-" + buildVersion
         fullVersionSemantic = majorVersion + "." + minorVersion + "+build." + buildVersion
     }
+
+    group = "com.djrapitops"
+    version = project.hasProperty("isRelease") ? "$fullVersionFilename" : "5.7-SNAPSHOT"
 }
 
 subprojects {
@@ -84,7 +84,7 @@ subprojects {
         geoIpVersion = "4.4.0"
         gsonVersion = "2.13.2"
         dependencyDownloadVersion = "2.0.0"
-        ipAddressMatcherVersion = "5.6.1"
+        ipAddressMatcherVersion = "5.6.2"
         jasyptVersion = "1.9.3"
 
         bstatsVersion = "3.2.1"
