@@ -120,6 +120,19 @@ public class Addresses {
                 .findAny();
     }
 
+    /**
+     * Get the configured External_Webserver_address if it is set to a non-default value.
+     * <p>
+     * This is useful for reverse proxy setups where the external address includes
+     * the correct protocol and subpath that the internal webserver address lacks.
+     *
+     * @return External address if configured, empty otherwise.
+     */
+    public Optional<String> getExternalAddress() {
+        String externalLink = getFallbackExternalAddress();
+        return isValidAddress(externalLink) ? Optional.of(externalLink) : Optional.empty();
+    }
+
     private boolean isValidAddress(String address) {
         return address != null
                 && !address.isEmpty()

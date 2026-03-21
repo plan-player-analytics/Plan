@@ -234,8 +234,12 @@ public class ResponseFactory {
     }
 
     private String replaceMainAddressPlaceholder(String resource) {
-        String address = addresses.get().getAccessAddress()
-                .orElseGet(addresses.get()::getFallbackLocalhostAddress);
+        Addresses addr = addresses.get();
+        // Prefer External_Webserver_address when configured — it includes
+        // the correct protocol and subpath for reverse proxy setups.
+        String address = addr.getExternalAddress()
+                .orElseGet(() -> addr.getAccessAddress()
+                        .orElseGet(addr::getFallbackLocalhostAddress));
         return Strings.CS.replace(resource, "PLAN_BASE_ADDRESS", address);
     }
 

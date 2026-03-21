@@ -56,9 +56,15 @@ public class BundleAddressCorrection {
     }
 
     private String getWebserverBasePath() {
-        String address = addresses.getMainAddress()
-                .orElseGet(addresses::getFallbackLocalhostAddress);
-        return addresses.getBasePath(address);
+        // Prefer External_Webserver_address base path for reverse proxy subpath support
+        return addresses.getExternalAddress()
+                .map(addresses::getBasePath)
+                .filter(basePath -> !basePath.isEmpty())
+                .orElseGet(() -> {
+                    String address = addresses.getMainAddress()
+                            .orElseGet(addresses::getFallbackLocalhostAddress);
+                    return addresses.getBasePath(address);
+                });
     }
 
     public String correctAddressForWebserver(String content, String fileName) {
@@ -97,6 +103,13 @@ public class BundleAddressCorrection {
     }
 
     private String correctAddressInJavascript(String content, String basePath) {
+        // Vite's __vitePreload base URL function: return"/"+l
+        // Needs to include the base path so preloaded assets resolve correctly.
+        if (!basePath.isEmpty()) {
+            String endingSlash = basePath.endsWith("/") ? "" : "/";
+            content = Strings.CS.replace(content, "return\"/\"+", "return\"" + basePath + endingSlash + "\"+");
+        }
+
         int lastIndex = 0;
         StringBuilder output = new StringBuilder();
 
