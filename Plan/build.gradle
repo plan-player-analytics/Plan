@@ -21,9 +21,6 @@ clean {
 }
 
 allprojects {
-    group = "com.djrapitops"
-    version = "5.7-SNAPSHOT"
-
     ext {
         majorVersion = "5"
         minorVersion = "7"
@@ -38,6 +35,9 @@ allprojects {
         fullVersionFilename = majorVersion + "." + minorVersion + "-build-" + buildVersion
         fullVersionSemantic = majorVersion + "." + minorVersion + "+build." + buildVersion
     }
+
+    group = "com.djrapitops"
+    version = project.hasProperty("isRelease") ? "$fullVersionFilename" : "5.7-SNAPSHOT"
 }
 
 subprojects {
