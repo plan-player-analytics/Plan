@@ -104,7 +104,16 @@ public class PlayerPageExporter extends FileExporter {
     }
 
     private void exportJSON(ExportPaths exportPaths, Path toDirectory, UUID playerUUID) throws IOException {
-        exportJSON(exportPaths, toDirectory, "player?player=" + playerUUID);
+        exportJSON(exportPaths, toDirectory,
+                "player?player=" + playerUUID,
+                "sessions?player=" + playerUUID
+        );
+    }
+
+    private void exportJSON(ExportPaths exportPaths, Path toDirectory, String... resources) throws IOException {
+        for (String resource : resources) {
+            exportJSON(exportPaths, toDirectory, resource);
+        }
     }
 
     private void exportJSON(ExportPaths exportPaths, Path toDirectory, String resource) throws IOException {
@@ -114,7 +123,7 @@ public class PlayerPageExporter extends FileExporter {
         String jsonResourceName = toFileName(toJSONResourceName(resource)) + ".json";
 
         export(toDirectory.resolve(jsonResourceName), response.getBytes());
-        exportPaths.put("../v1/player?player=${encodeURIComponent(playerUUID)}", "./" + jsonResourceName);
+        exportPaths.put("../v1/" + resource, "./" + jsonResourceName);
     }
 
     private String toJSONResourceName(String resource) {

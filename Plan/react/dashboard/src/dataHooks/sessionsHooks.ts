@@ -29,7 +29,15 @@ export const useSessions = (filter: GenericFilter) => {
 
 const getSessions = async (filter: GenericFilter) => {
     let url = baseAddress + `/v1/sessions?${filterToQueryString(filter)}`;
-    if (staticSite) url = baseAddress + `/v1/sessions`;
+    if (staticSite) {
+        if (filter.player) {
+            url = baseAddress + `/data/sessions-${filter.player}.json`;
+        } else if (filter.server && filter.server.length > 0) {
+            url = baseAddress + `/data/sessions-${filter.server[0]}.json`;
+        } else {
+            url = baseAddress + `/data/sessions.json`;
+        }
+    }
     const response = await fetch(url);
     if (!response.ok) throw {status: response.status, message: response.statusText, data: response.body};
     return await response.json() as Promise<Session[]>;
