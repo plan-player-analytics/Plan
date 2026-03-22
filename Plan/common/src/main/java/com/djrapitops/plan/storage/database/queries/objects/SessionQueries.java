@@ -30,7 +30,6 @@ import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plan.utilities.java.Maps;
-import org.apache.commons.lang3.Strings;
 import org.apache.commons.text.TextStringBuilder;
 import org.jspecify.annotations.NonNull;
 
@@ -1181,19 +1180,13 @@ public class SessionQueries {
     }
 
     public static Query<List<FinishedSession>> sessionsOfServers(long after, long before, List<ServerUUID> serverUUIDs) {
-        boolean tooBigSelection = after == 0 || before == Long.MAX_VALUE;
         String sql = SELECT_SESSIONS_STATEMENT +
-                WHERE + SessionsTable.SESSION_END + ">?" +
+                INNER_JOIN + "(" + SELECT + SessionsTable.ID + FROM + SessionsTable.TABLE_NAME + WHERE + SessionsTable.SESSION_END + ">?" +
                 AND + SessionsTable.SESSION_START + "<?";
         if (!serverUUIDs.isEmpty()) {
-            sql += AND + (tooBigSelection ? "" : "s.") + SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs);
+            sql += AND + SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs);
         }
-        if (tooBigSelection) {
-            sql = Strings.CS.replaceOnce(sql,
-                    WHERE,
-                    INNER_JOIN + "(" + SELECT + SessionsTable.ID + FROM + SessionsTable.TABLE_NAME + WHERE);
-            sql += ORDER_BY_SESSION_START_DESC + LIMIT + 10000 + ") lq ON lq.id=s.id";
-        }
+        sql += ORDER_BY_SESSION_START_DESC + LIMIT + 10000 + ") lq ON lq.id=s.id";
         sql += ORDER_BY_SESSION_START_DESC;
         return new QueryStatement<>(sql, 1000) {
 
