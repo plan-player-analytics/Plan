@@ -21,7 +21,9 @@ type CalendarResponse = {
 
 type SelectionInfo = {
     start: Date,
-    end: Date
+    startStr: string,
+    end: Date,
+    endStr: string
 }
 
 export const NetworkSessionCalendarCard = () => {
@@ -57,12 +59,11 @@ export const ServerSessionCalendarCard = ({identifier}: Props) => {
 const SessionCalendarCard = ({data, firstDay}: CalendarResponse) => {
     const {t} = useTranslation();
     const {convert} = useDateConverter();
-    const {setAfter, setBefore} = useGenericFilter();
+    const {setTimeframe} = useGenericFilter();
     const onSelect = useCallback(async (selectionInfo: SelectionInfo) => {
         if (staticSite) return;
-        setAfter(convert(selectionInfo.start, 'browser').toUTCEpochMs());
-        setBefore(convert(selectionInfo.end, 'browser').toUTCEpochMs());
-    }, [setAfter, setBefore, convert]);
+        setTimeframe(convert(selectionInfo.startStr).toUTCEpochMs(), convert(selectionInfo.endStr).toUTCEpochMs());
+    }, [setTimeframe, convert]);
 
     return <Card>
         <CardHeader icon={faCalendar} color={"sessions"} label={'html.label.sessionCalendar'}>

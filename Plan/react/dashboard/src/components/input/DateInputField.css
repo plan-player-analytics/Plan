@@ -4,16 +4,13 @@
     width: 1%;
 }
 
-.react-datepicker {
-    min-width: 310px;
-}
-
 .react-datepicker__month-container {
     background-color: var(--color-cards-background);
 }
 
 .react-datepicker__header {
     background-color: var(--color-cards-header-background);
+    min-width: 300px !important;
 }
 
 .react-datepicker__day, .react-datepicker__month-text, .react-datepicker__day-name {

@@ -36,16 +36,20 @@ export const useDateFormatter = (includeSeconds, overrides = {}) => {
         if (date === 0) return '-'
         const dayMs = 24 * 60 * 60 * 1000;
         const timestamp = date - offset;
-        const now = Date.now();
-        const fromStartOfToday = (now - offset) % dayMs;
+        const now = Date.now() - offset;
+        const fromStartOfToday = now % dayMs;
+        const today = now - fromStartOfToday;
+        const yesterday = today - dayMs;
+        const tomorrow = today + dayMs;
+        const fiveDaysAgo = now - dayMs * 5;
 
         let format = pattern;
         if (recentDays) {
-            if (timestamp > now - offset - fromStartOfToday) {
+            if (timestamp >= today && timestamp < tomorrow) {
                 format = format.replace(recentDaysPattern, t('plugin.generic.today'));
-            } else if (timestamp > now - offset - dayMs - fromStartOfToday) {
+            } else if (timestamp >= yesterday && timestamp < today) {
                 format = format.replace(recentDaysPattern, t('plugin.generic.yesterday'));
-            } else if (timestamp > now - offset - dayMs * 5) {
+            } else if (timestamp >= fiveDaysAgo && timestamp < yesterday) {
                 format = format.replace(recentDaysPattern, "EEEE");
             }
         }

@@ -14,7 +14,7 @@ type Props = {
 export const TitleWithDates = ({label, fallback, after, before}: Props) => {
     const {t} = useTranslation();
     const {formatDate} = useDateFormatter(false, {
-        pattern: "MMM dd yyyy - HH:mm:ss",
+        pattern: "MMM dd yyyy HH:mm",
         recentDaysPattern: "MMM dd yyyy",
         noOffset: true
     });
