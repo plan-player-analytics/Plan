@@ -11,7 +11,7 @@ import {faCalendar, faHandPointer} from "@fortawesome/free-regular-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {useTranslation} from "react-i18next";
 import {useGenericFilter} from "../../../../dataHooks/genericFilterContextHook";
-import {useMetadata} from "../../../../hooks/metadataHook";
+import {useDateConverter} from "../../../../util/format/useDateConverter";
 import {staticSite} from "../../../../service/backendConfiguration";
 
 type CalendarResponse = {
@@ -56,13 +56,13 @@ export const ServerSessionCalendarCard = ({identifier}: Props) => {
 
 const SessionCalendarCard = ({data, firstDay}: CalendarResponse) => {
     const {t} = useTranslation();
-    const {timeZoneOffsetMinutes} = useMetadata() as { timeZoneOffsetMinutes: number };
+    const {convert} = useDateConverter();
     const {setAfter, setBefore} = useGenericFilter();
     const onSelect = useCallback(async (selectionInfo: SelectionInfo) => {
         if (staticSite) return;
-        setAfter(selectionInfo.start.getTime() - selectionInfo.start.getTimezoneOffset() * 60000 + timeZoneOffsetMinutes * 60000);
-        setBefore(selectionInfo.end.getTime() - selectionInfo.end.getTimezoneOffset() * 60000 + timeZoneOffsetMinutes * 60000);
-    }, [setAfter, setBefore]);
+        setAfter(convert(selectionInfo.start, 'browser').toUTCEpochMs());
+        setBefore(convert(selectionInfo.end, 'browser').toUTCEpochMs());
+    }, [setAfter, setBefore, convert]);
 
     return <Card>
         <CardHeader icon={faCalendar} color={"sessions"} label={'html.label.sessionCalendar'}>

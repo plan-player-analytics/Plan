@@ -5,13 +5,20 @@ import {Session} from "react-router";
 import {useNavigation} from "../hooks/navigationHook";
 import {useEffect} from "react";
 import {queryRetry} from "./queryRetry";
+import {useDateConverter} from "../util/format/useDateConverter";
 
 
 export const useSessions = (filter: GenericFilter) => {
     const {updateRequested} = useNavigation() as { updateRequested: number };
+    const {convert} = useDateConverter();
+    const serverFilter = {
+        ...filter,
+        after: filter.after ? convert(filter.after).toServerEpochMs() : undefined,
+        before: filter.before ? convert(filter.before).toServerEpochMs() : undefined,
+    };
     const query = useQuery({
-        queryKey: ['sessions', ...Object.values(filter)],
-        queryFn: () => getSessions(filter),
+        queryKey: ['sessions', ...Object.values(serverFilter)],
+        queryFn: () => getSessions(serverFilter),
         retry: queryRetry
     });
     useEffect(() => {

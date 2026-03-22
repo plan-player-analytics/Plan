@@ -27,7 +27,9 @@ export const useDateFormatter = (includeSeconds, overrides = {}) => {
     const locale = useI18nFriendlyLanguage();
     const {t} = useTranslation();
     const preferences = useDatePreferences(includeSeconds);
-    const {pattern, recentDays, recentDaysPattern, offset} = {...preferences, ...overrides};
+    const {pattern, recentDays, recentDaysPattern, offset: configuredOffset} = {...preferences, ...overrides};
+
+    const offset = overrides.noOffset ? 0 : configuredOffset;
 
     const formatDate = useCallback((date) => {
         if (!isNumber(date)) return date;

@@ -53,6 +53,6 @@ export const GenericFilterContextProvider = ({initialValue, children}: Props) =>
 
 export const useGenericFilter = () => {
     const context = useContext(GenericFilterContext);
-    if (!context) throw new Error("useGenericFilter must be used within ThemeStorageContextProvider");
+    if (!context) throw new Error("useGenericFilter must be used within GenericFilterContextProvider");
     return context;
 }

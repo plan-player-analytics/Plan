@@ -1120,3 +1120,9 @@ thead[class^='bg'], thead[class*=' bg'] {
     --bs-modal-color: var(--color-text);
 
 }
+
+.btn-input {
+    background-color: var(--color-forms-input-background);
+    border-color: var(--color-forms-input-border);
+    color: var(--color-forms-input-text);
+}
