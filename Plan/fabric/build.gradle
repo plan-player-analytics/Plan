@@ -1,7 +1,7 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 import net.fabricmc.loom.task.RemapJarTask
 
-apply plugin: "fabric-loom"
+apply plugin: "net.fabricmc.fabric-loom"
 apply plugin: "com.gradleup.shadow"
 
 configurations {

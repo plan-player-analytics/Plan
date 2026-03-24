@@ -11,7 +11,7 @@ plugins {
     id("base")
     id "org.sonarqube" version "7.2.3.7755"
     id "com.gradleup.shadow" version "9.0.0-beta6" apply false
-    id "fabric-loom" version "1.15.4" apply false
+    id "net.fabricmc.fabric-loom" version "1.15.5" apply false
 }
 
 apply plugin: "nebula-aggregate-javadocs"
