@@ -30,8 +30,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public class ServerPlayerMixin {
 
     @Inject(method = "setGameMode", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;send(Lnet/minecraft/network/protocol/Packet;)V"))
-    public void onGameModeChanged(GameType gameMode, CallbackInfoReturnable<Boolean> cir) {
-        PlanFabricEvents.ON_GAMEMODE_CHANGE.invoker().onGameModeChange((ServerPlayer) (Object) this, gameMode);
+    public void onGameModeChanged(GameType mode, CallbackInfoReturnable<Boolean> cir) {
+        PlanFabricEvents.ON_GAMEMODE_CHANGE.invoker().onGameModeChange((ServerPlayer) (Object) this, mode);
     }
 
     @Inject(method = "die", at = @At(value = "TAIL"))
