@@ -47,6 +47,7 @@ import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.java.Maps;
 import com.djrapitops.plan.utilities.java.UnaryChain;
 import dagger.Lazy;
+import org.apache.commons.codec.digest.DigestUtils;
 import org.apache.commons.lang3.Strings;
 import org.apache.commons.text.StringEscapeUtils;
 import org.eclipse.jetty.http.HttpHeader;
@@ -234,7 +235,7 @@ public class ResponseFactory {
                 resource.getLastModified().ifPresent(lastModified -> responseBuilder
                         .setHeader(HttpHeader.CACHE_CONTROL.asString(), alwaysCheckRefetch ? CacheStrategy.CHECK_ETAG : CacheStrategy.CACHE_IN_BROWSER)
                         .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(lastModified))
-                        .setHeader(HttpHeader.ETAG.asString(), lastModified));
+                        .setHeader(HttpHeader.ETAG.asString(), alwaysCheckRefetch ? DigestUtils.sha256Hex(content) : lastModified));
             }
             return responseBuilder.build();
         } catch (UncheckedIOException e) {
