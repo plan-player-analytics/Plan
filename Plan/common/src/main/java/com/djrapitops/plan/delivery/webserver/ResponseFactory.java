@@ -57,6 +57,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 
 /**
@@ -211,8 +212,15 @@ public class ResponseFactory {
     public Response javaScriptResponse(@Untrusted String fileName) {
         try {
             WebResource resource = getPublicOrJarResource(fileName);
+            AtomicBoolean containsPlaceholders = new AtomicBoolean(false);
             String content = UnaryChain.of(resource.asString())
-                    .chain(this::replaceMainAddressPlaceholder)
+                    .chain(contents -> {
+                        String replacement = replaceMainAddressPlaceholder(contents);
+                        containsPlaceholders.set(
+                                replacement.hashCode() != contents.hashCode() || contents.length() != replacement.length()
+                        );
+                        return replacement;
+                    })
                     .chain(contents -> bundleAddressCorrection.get().correctAddressForWebserver(contents, fileName))
                     .apply();
             ResponseBuilder responseBuilder = Response.builder()
@@ -221,9 +229,10 @@ public class ResponseFactory {
                     .setStatus(200);
 
             if (fileName.contains(STATIC_BUNDLE_FOLDER)) {
+                // Can't cache main bundle in browser since base path might change
+                boolean alwaysCheckRefetch = fileName.contains("index") || containsPlaceholders.get();
                 resource.getLastModified().ifPresent(lastModified -> responseBuilder
-                        // Can't cache main bundle in browser since base path might change
-                        .setHeader(HttpHeader.CACHE_CONTROL.asString(), fileName.contains("index") ? CacheStrategy.CHECK_ETAG : CacheStrategy.CACHE_IN_BROWSER)
+                        .setHeader(HttpHeader.CACHE_CONTROL.asString(), alwaysCheckRefetch ? CacheStrategy.CHECK_ETAG : CacheStrategy.CACHE_IN_BROWSER)
                         .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(lastModified))
                         .setHeader(HttpHeader.ETAG.asString(), lastModified));
             }
