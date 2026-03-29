@@ -23,6 +23,7 @@ import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.webserver.CacheStrategy;
 import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
+import com.djrapitops.plan.delivery.webserver.resolver.ETag;
 import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.java.Maps;
@@ -45,8 +46,8 @@ public abstract class JSONResolver implements Resolver {
                     .build();
         }
 
-        Optional<Long> browserCached = Identifiers.getEtag(request);
-        if (browserCached.isPresent() && browserCached.get() == storedJSON.getTimestamp()) {
+        Optional<ETag> browserCached = Identifiers.getEtag(request);
+        if (browserCached.isPresent() && browserCached.get().isOutdated(storedJSON.getTimestamp())) {
             return Response.builder()
                     .setStatus(304)
                     .setContent(new byte[0])

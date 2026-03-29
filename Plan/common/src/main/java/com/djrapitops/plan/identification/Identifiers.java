@@ -18,6 +18,7 @@ package com.djrapitops.plan.identification;
 
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.webserver.resolver.ETag;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
@@ -67,15 +68,9 @@ public class Identifiers {
         }
     }
 
-    public static Optional<Long> getEtag(Request request) {
+    public static Optional<ETag> getEtag(Request request) {
         return request.getHeader(HttpHeader.IF_NONE_MATCH.asString())
-                .map(tag -> {
-                    try {
-                        return Long.parseLong(tag);
-                    } catch (NumberFormatException notANumber) {
-                        throw new BadRequestException("'" + HttpHeader.IF_NONE_MATCH.asString() + "'-header was not a number. Clear browser cache.");
-                    }
-                });
+                .map(ETag::new);
     }
 
     public static Optional<String> getStringEtag(Request request) {

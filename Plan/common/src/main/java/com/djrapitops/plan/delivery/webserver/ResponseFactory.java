@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver;
 
+import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.delivery.formatting.Formatter;
@@ -30,6 +31,7 @@ import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.ResponseBuilder;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resource.WebResource;
+import com.djrapitops.plan.delivery.webserver.resolver.ETag;
 import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -57,6 +59,7 @@ import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.nio.file.Path;
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Function;
 
 /**
@@ -122,9 +125,9 @@ public class ResponseFactory {
 
     private Response forPage(@Untrusted Request request, Page page, int responseCode) {
         long modified = page.lastModified();
-        Optional<Long> etag = Identifiers.getEtag(request);
+        Optional<ETag> etag = Identifiers.getEtag(request);
 
-        if (etag.isPresent() && modified == etag.get()) {
+        if (etag.isPresent() && etag.get().isOutdated(modified)) {
             return browserCachedNotChangedResponse();
         }
 
@@ -169,10 +172,10 @@ public class ResponseFactory {
                 .build();
     }
 
-    private Response getCachedOrNew(long modified, String fileName, Function<String, Response> newResponseFunction) {
+    private Response getCachedOrNew(ETag etag, String fileName, Function<String, Response> newResponseFunction) {
         WebResource resource = getPublicOrJarResource(fileName);
         Optional<Long> lastModified = resource.getLastModified();
-        if (lastModified.isPresent() && modified == lastModified.get()) {
+        if (lastModified.isPresent() && etag.isOutdated(lastModified.get(), () -> "config-" + PlanSystem.LAST_RELOAD.get())) {
             return browserCachedNotChangedResponse();
         } else {
             return newResponseFunction.apply(fileName);
@@ -204,15 +207,22 @@ public class ResponseFactory {
                 .build();
     }
 
-    public Response javaScriptResponse(long modified, @Untrusted String fileName) {
-        return getCachedOrNew(modified, fileName, this::javaScriptResponse);
+    public Response javaScriptResponse(ETag etag, @Untrusted String fileName) {
+        return getCachedOrNew(etag, fileName, this::javaScriptResponse);
     }
 
     public Response javaScriptResponse(@Untrusted String fileName) {
         try {
             WebResource resource = getPublicOrJarResource(fileName);
+            AtomicBoolean containsPlaceholders = new AtomicBoolean(false);
             String content = UnaryChain.of(resource.asString())
-                    .chain(this::replaceMainAddressPlaceholder)
+                    .chain(contents -> {
+                        String replacement = replaceMainAddressPlaceholder(contents);
+                        containsPlaceholders.set(
+                                replacement.hashCode() != contents.hashCode() || contents.length() != replacement.length()
+                        );
+                        return replacement;
+                    })
                     .chain(contents -> bundleAddressCorrection.get().correctAddressForWebserver(contents, fileName))
                     .apply();
             ResponseBuilder responseBuilder = Response.builder()
@@ -221,11 +231,12 @@ public class ResponseFactory {
                     .setStatus(200);
 
             if (fileName.contains(STATIC_BUNDLE_FOLDER)) {
+                // Can't cache main bundle in browser since base path might change
+                boolean alwaysCheckRefetch = fileName.contains("index") || containsPlaceholders.get();
                 resource.getLastModified().ifPresent(lastModified -> responseBuilder
-                        // Can't cache main bundle in browser since base path might change
-                        .setHeader(HttpHeader.CACHE_CONTROL.asString(), fileName.contains("index") ? CacheStrategy.CHECK_ETAG : CacheStrategy.CACHE_IN_BROWSER)
+                        .setHeader(HttpHeader.CACHE_CONTROL.asString(), alwaysCheckRefetch ? CacheStrategy.CHECK_ETAG : CacheStrategy.CACHE_IN_BROWSER)
                         .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(lastModified))
-                        .setHeader(HttpHeader.ETAG.asString(), lastModified));
+                        .setHeader(HttpHeader.ETAG.asString(), alwaysCheckRefetch ? "config-" + PlanSystem.LAST_RELOAD.get() : lastModified));
             }
             return responseBuilder.build();
         } catch (UncheckedIOException e) {
@@ -239,8 +250,8 @@ public class ResponseFactory {
         return Strings.CS.replace(resource, "PLAN_BASE_ADDRESS", address);
     }
 
-    public Response cssResponse(long modified, @Untrusted String fileName) {
-        return getCachedOrNew(modified, fileName, this::cssResponse);
+    public Response cssResponse(ETag etag, @Untrusted String fileName) {
+        return getCachedOrNew(etag, fileName, this::cssResponse);
     }
 
     public Response cssResponse(@Untrusted String fileName) {
@@ -268,8 +279,8 @@ public class ResponseFactory {
         }
     }
 
-    public Response imageResponse(long modified, @Untrusted String fileName) {
-        return getCachedOrNew(modified, fileName, this::imageResponse);
+    public Response imageResponse(ETag eTag, @Untrusted String fileName) {
+        return getCachedOrNew(eTag, fileName, this::imageResponse);
     }
 
     public Response imageResponse(@Untrusted String fileName) {
@@ -292,7 +303,7 @@ public class ResponseFactory {
         }
     }
 
-    public Response fontResponse(long modified, @Untrusted String fileName) {
+    public Response fontResponse(ETag modified, @Untrusted String fileName) {
         return getCachedOrNew(modified, fileName, this::fontResponse);
     }
 
@@ -327,7 +338,7 @@ public class ResponseFactory {
         }
     }
 
-    public Response publicHtmlResourceResponse(long modified, @Untrusted String fileName, String mimeType) {
+    public Response publicHtmlResourceResponse(ETag etag, @Untrusted String fileName, String mimeType) {
         // Slightly different from getCachedOrNew
         WebResource resource = publicHtmlFiles.findPublicHtmlResource(fileName)
                 .map(Resource::asWebResource)
@@ -335,7 +346,7 @@ public class ResponseFactory {
         if (resource == null) return null;
 
         Optional<Long> lastModified = resource.getLastModified();
-        if (lastModified.isPresent() && modified == lastModified.get()) {
+        if (lastModified.isPresent() && etag.isOutdated(lastModified.get())) {
             return browserCachedNotChangedResponse();
         } else {
             return publicHtmlResourceResponse(fileName, mimeType);
@@ -563,8 +574,8 @@ public class ResponseFactory {
                     .asWebResource();
 
             Optional<Long> lastModified = foundTheme.getLastModified();
-            @Untrusted Optional<Long> tag = Identifiers.getEtag(request);
-            if (tag.isPresent() && lastModified.isPresent() && tag.get() >= lastModified.get()) {
+            @Untrusted Optional<ETag> tag = Identifiers.getEtag(request);
+            if (tag.isPresent() && lastModified.isPresent() && tag.get().isOutdated(lastModified.get())) {
                 return browserCachedNotChangedResponse();
             } else {
                 long date = lastModified.orElseGet(System::currentTimeMillis);
