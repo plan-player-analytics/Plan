@@ -9,6 +9,7 @@ import {useAuth} from "../../hooks/authenticationHook.tsx";
 import {ServerSessionCalendarCard} from "../../components/cards/server/graphs/ServerSessionCalendarCard.tsx";
 import {GenericFilterContextProvider} from "../../dataHooks/genericFilterContextHook.tsx";
 import {DateFilterControls} from "../../components/input/DateFilterControls.tsx";
+import ServerWorldPieCard from "../../components/cards/server/graphs/ServerWorldPieCard.tsx";
 
 const ServerSessions = () => {
     const {hasPermission} = useAuth();
@@ -17,6 +18,7 @@ const ServerSessions = () => {
     const seeSessionList = hasPermission('page.server.sessions.list');
     const seeSessionInsights = hasPermission('page.server.sessions.overview');
     const seeWorldPie = hasPermission('page.server.sessions.world.pie');
+    const seeControls = seeSessionList || seeSessionInsights || seeWorldPie;
     return (
         <LoadIn>
             <GenericFilterContextProvider initialValue={{server: identifier}}>
@@ -24,12 +26,13 @@ const ServerSessions = () => {
                     <ExtendableRow id={'row-server-sessions-0'}>
                         {<Col lg={6}>
                             <ServerSessionCalendarCard identifier={identifier}/>
-                            <SessionInsightsCard identifier={identifier}/>
+                            {seeSessionInsights && <SessionInsightsCard identifier={identifier}/>}
                         </Col>}
-                        {seeSessionList && <Col lg={6}>
-                            <DateFilterControls/>
-                            <ServerRecentSessionsCard identifier={identifier}/>
-                        </Col>}
+                        <Col lg={6}>
+                            {seeControls && <DateFilterControls/>}
+                            {seeSessionList && <ServerRecentSessionsCard identifier={identifier}/>}
+                            {seeWorldPie && <ServerWorldPieCard/>}
+                        </Col>
                     </ExtendableRow>
                 </section>
             </GenericFilterContextProvider>

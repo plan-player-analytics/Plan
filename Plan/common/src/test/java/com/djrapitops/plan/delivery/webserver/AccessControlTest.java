@@ -59,7 +59,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -105,6 +104,7 @@ class AccessControlTest {
                 Arguments.of("/v1/kills?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_PLAYER_VERSUS_KILL_LIST, 200, 403),
                 Arguments.of("/v1/pingTable?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_GEOLOCATIONS_PING_PER_COUNTRY, 200, 403),
                 Arguments.of("/v1/sessions?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_SESSIONS_LIST, 200, 403),
+                Arguments.of("/v1/sessions?player=" + TestConstants.PLAYER_ONE_UUID_STRING + "", WebPermission.PAGE_PLAYER_SESSIONS, 200, 403),
                 Arguments.of("/v1/retention?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_RETENTION, 200, 403),
                 Arguments.of("/v1/joinAddresses", WebPermission.PAGE_NETWORK_RETENTION, 200, 403),
                 Arguments.of("/v1/joinAddresses?listOnly=true", WebPermission.PAGE_NETWORK_JOIN_ADDRESSES_GRAPHS_TIME, 200, 403),
@@ -174,7 +174,25 @@ class AccessControlTest {
                 Arguments.of("/theme-editor/delete", WebPermission.ACCESS_THEME_EDITOR, 200, 403),
                 Arguments.of("/theme-editor/default", WebPermission.ACCESS_THEME_EDITOR, 200, 403),
                 Arguments.of("/v1/playersOnline", WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_ONLINE, 200, 403),
-                Arguments.of("/v1/playersOnline?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_OVERVIEW_PLAYERS_ONLINE_GRAPH, 200, 403)
+                Arguments.of("/v1/playersOnline?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_OVERVIEW_PLAYERS_ONLINE_GRAPH, 200, 403),
+                Arguments.of("/v1/datapoint?type=PLAYTIME", WebPermission.DATA_NETWORK_PLAYTIME, 200, 403),
+                Arguments.of("/v1/datapoint?type=PLAYTIME&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_PLAYTIME, 200, 403),
+                Arguments.of("/v1/datapoint?type=PLAYTIME&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_PLAYTIME, 200, 403),
+                Arguments.of("/v1/datapoint?type=AFK_TIME", WebPermission.DATA_NETWORK_AFK_TIME, 200, 403),
+                Arguments.of("/v1/datapoint?type=AFK_TIME&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_AFK_TIME, 200, 403),
+                Arguments.of("/v1/datapoint?type=AFK_TIME&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_AFK_TIME, 200, 403),
+                Arguments.of("/v1/datapoint?type=AFK_TIME_PERCENTAGE", WebPermission.DATA_NETWORK_AFK_TIME, 200, 403),
+                Arguments.of("/v1/datapoint?type=AFK_TIME_PERCENTAGE&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_AFK_TIME, 200, 403),
+                Arguments.of("/v1/datapoint?type=AFK_TIME_PERCENTAGE&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_AFK_TIME, 400, 403),
+                Arguments.of("/v1/datapoint?type=MOST_ACTIVE_GAME_MODE", WebPermission.DATA_NETWORK_MOST_ACTIVE_GAME_MODE, 200, 403),
+                Arguments.of("/v1/datapoint?type=MOST_ACTIVE_GAME_MODE&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_MOST_ACTIVE_GAME_MODE, 200, 403),
+                Arguments.of("/v1/datapoint?type=MOST_ACTIVE_GAME_MODE&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_MOST_ACTIVE_GAME_MODE, 200, 403),
+                Arguments.of("/v1/datapoint?type=MOST_ACTIVE_WORLD", WebPermission.DATA_NETWORK_MOST_ACTIVE_WORLD, 200, 403),
+                Arguments.of("/v1/datapoint?type=MOST_ACTIVE_WORLD&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_MOST_ACTIVE_WORLD, 200, 403),
+                Arguments.of("/v1/datapoint?type=MOST_ACTIVE_WORLD&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_MOST_ACTIVE_WORLD, 200, 403),
+                Arguments.of("/v1/datapoint?type=SERVER_OCCUPIED", WebPermission.DATA_NETWORK_SERVER_OCCUPIED, 200, 403),
+                Arguments.of("/v1/datapoint?type=SERVER_OCCUPIED&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_SERVER_OCCUPIED, 200, 403),
+                Arguments.of("/v1/datapoint?type=SERVER_OCCUPIED&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403)
         );
     }
 
@@ -253,7 +271,7 @@ class AccessControlTest {
     @ParameterizedTest(name = "{0}: Permission {1}, expecting {2} with & {3} without permission")
     @MethodSource("testCases")
     void accessControlTest(String resource, WebPermission permission, int expectedWithPermission, int expectedWithout) throws Exception {
-        String cookie = login(address, createUserWithPermissions(resource, permission).getUsername());
+        String cookie = login(address, createUserWithPermissions(resource, permission, WebPermission.ACCESS_PLAYER_SELF).getUsername());
         int responseCodeWithPermission = access(resource, cookie);
         int responseCodeWithout = access(resource, cookieNoAccess);
 
@@ -292,10 +310,10 @@ class AccessControlTest {
 
         String groupName = StringUtils.truncate(resource, 75);
         db.executeTransaction(
-                new StoreWebGroupTransaction(groupName, Arrays.stream(permissions).map(WebPermission::getPermission).collect(Collectors.toList()))
+                new StoreWebGroupTransaction(groupName, Arrays.stream(permissions).map(WebPermission::getPermission).toList())
         ).get();
 
-        User user = new User(RandomData.randomString(45), "console", null, PassEncryptUtil.createHash("testPass"), groupName, Collections.emptyList());
+        User user = new User(RandomData.randomString(45), "console", TestConstants.PLAYER_ONE_UUID, PassEncryptUtil.createHash("testPass"), groupName, Collections.emptyList());
         db.executeTransaction(new StoreWebUserTransaction(user)).get();
 
         return user;

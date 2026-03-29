@@ -24,17 +24,25 @@ const SessionInsightsCard = ({identifier}) => {
 
     return (
         <InsightsFor30DaysCard id={'session-insights'} title={title}>
-            {identifier && <QueryDatapoint name={t('html.label.mostActiveGamemode')} icon={faGamepad} color="gamemode"
-                                           dataType={DatapointType.MOST_ACTIVE_GAME_MODE} filter={filter}/>}
-            {identifier &&
-                <QueryDatapoint name={t('html.label.serverOccupied')} icon={faUsers} color="sessions" prefix={'~'}
-                                dataType={DatapointType.SERVER_OCCUPIED} filter={filter}/>}
-            <QueryDatapoint name={t('html.label.playtime')} icon={faClock} color="playtime"
-                            dataType={DatapointType.PLAYTIME} filter={filter}/>
-            <QueryDatapoint name={t('html.label.afkTime')} icon={faClock} color="playtime-afk"
-                            dataType={DatapointType.AFK_TIME} filter={filter}
-                            valueLabel={<>(<QueryDatapointValue dataType={DatapointType.AFK_TIME_PERCENTAGE}
-                                                                filter={filter}/>)</>}
+            {identifier && <QueryDatapoint name={t('html.label.mostActiveGamemode')}
+                                           icon={faGamepad} color="gamemode"
+                                           dataType={DatapointType.MOST_ACTIVE_GAME_MODE}
+                                           filter={filter}/>}
+            {identifier && <QueryDatapoint name={t('html.label.serverOccupied')}
+                                           icon={faUsers} color="sessions" prefix={'~'}
+                                           dataType={DatapointType.SERVER_OCCUPIED}
+                                           filter={filter}/>}
+            <QueryDatapoint name={t('html.label.playtime')}
+                            icon={faClock} color="playtime"
+                            dataType={DatapointType.PLAYTIME}
+                            filter={filter}/>
+            <QueryDatapoint name={t('html.label.afkTime')}
+                            icon={faClock} color="playtime-afk"
+                            dataType={DatapointType.AFK_TIME}
+                            filter={filter}
+                            valueLabel={<QueryDatapointValue dataType={DatapointType.AFK_TIME_PERCENTAGE}
+                                                             filter={filter}
+                                                             permission={"afk.time"}/>}
             />
         </InsightsFor30DaysCard>
     )

@@ -55,11 +55,11 @@ public class AfkTimePercentage implements Datapoint<Double> {
     @Override
     public WebPermission getPermission(GenericFilter filter) {
         if (filter.getPlayerUUID().isPresent()) {
-            throw new BadRequestException("AFK_TIME_PERCENTAGE does not support player parameter");
+            return WebPermission.DATA_PLAYER_AFK_TIME;
         } else if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.DATA_AFK_TIME_SERVER;
+            return WebPermission.DATA_SERVER_AFK_TIME;
         } else {
-            return WebPermission.DATA_AFK_TIME_NETWORK;
+            return WebPermission.DATA_NETWORK_AFK_TIME;
         }
     }
 

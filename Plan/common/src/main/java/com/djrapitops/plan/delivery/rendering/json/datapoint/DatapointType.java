@@ -20,6 +20,8 @@ import com.djrapitops.plan.delivery.rendering.json.datapoint.types.*;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 
 /**
+ * Types of {@link Datapoint datapoints}.
+ *
  * @author AuroraLS3
  */
 public enum DatapointType {

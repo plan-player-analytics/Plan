@@ -10,6 +10,7 @@ import {ErrorViewCard} from "../../../views/ErrorView.tsx";
 import {useThemeStorage} from "../../../hooks/context/themeContextHook.tsx";
 import {nameToCssVariable} from "../../../util/colors.js";
 
+// TODO issue-#2742 convert to use Datapoint
 const ServerPieCard = () => {
     const {data, loadingError} = useDataRequest(fetchServerPie, []);
     const {usedUseCases} = useThemeStorage()

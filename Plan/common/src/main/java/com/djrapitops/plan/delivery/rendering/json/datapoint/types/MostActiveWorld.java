@@ -53,12 +53,12 @@ public class MostActiveWorld implements Datapoint<OutOfCategory> {
     @Override
     public WebPermission getPermission(GenericFilter filter) {
         if (filter.getPlayerUUID().isPresent()) {
-            return WebPermission.DATA_MOST_ACTIVE_WORLD_PLAYER;
+            return WebPermission.DATA_PLAYER_MOST_ACTIVE_WORLD;
         }
         if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.DATA_MOST_ACTIVE_WORLD_SERVER;
+            return WebPermission.DATA_SERVER_MOST_ACTIVE_WORLD;
         }
-        return WebPermission.DATA_MOST_ACTIVE_WORLD_NETWORK;
+        return WebPermission.DATA_NETWORK_MOST_ACTIVE_WORLD;
     }
 
     @Override

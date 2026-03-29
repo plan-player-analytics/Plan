@@ -56,12 +56,12 @@ public class WorldPie implements Datapoint<WorldPie.Content> {
     @Override
     public WebPermission getPermission(GenericFilter filter) {
         if (filter.getPlayerUUID().isPresent()) {
-            return WebPermission.PAGE_PLAYER_SESSIONS;
+            return WebPermission.DATA_PLAYER_WORLD_PIE;
         }
         if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.PAGE_SERVER_SESSIONS_WORLD_PIE;
+            return WebPermission.DATA_SERVER_WORLD_PIE;
         }
-        return WebPermission.PAGE_NETWORK_SESSIONS_WORLD_PIE;
+        return WebPermission.DATA_NETWORK_WORLD_PIE;
     }
 
     @Override
@@ -69,6 +69,7 @@ public class WorldPie implements Datapoint<WorldPie.Content> {
         return DatapointType.WORLD_PIE;
     }
 
+    @SuppressWarnings("unused")
     public static class Content {
         private final List<PieSlice> slices;
         private final List<PieDrilldown> drilldown;

@@ -58,11 +58,11 @@ public class ServerOccupied implements Datapoint<OutOf> {
     @Override
     public WebPermission getPermission(GenericFilter filter) {
         if (filter.getPlayerUUID().isPresent()) {
-            throw new BadRequestException("SERVER_OCCUPIED does not support player parameter");
+            return WebPermission.DATA_PLAYER;
         } else if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.DATA_SERVER_OCCUPIED_SERVER;
+            return WebPermission.DATA_SERVER_SERVER_OCCUPIED;
         } else {
-            return WebPermission.DATA_SERVER_OCCUPIED_NETWORK;
+            return WebPermission.DATA_NETWORK_SERVER_OCCUPIED;
         }
     }
 

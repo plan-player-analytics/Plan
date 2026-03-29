@@ -29,6 +29,7 @@ import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * @author AuroraLS3
@@ -58,21 +59,22 @@ public class Playtime implements Datapoint<Long> {
     @Override
     public WebPermission getPermission(GenericFilter filter) {
         if (filter.getPlayerUUID().isPresent()) {
-            return WebPermission.DATA_PLAYTIME_PLAYER;
+            return WebPermission.DATA_PLAYER_PLAYTIME;
         } else if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.DATA_PLAYTIME_SERVER;
+            return WebPermission.DATA_SERVER_PLAYTIME;
         } else {
-            return WebPermission.DATA_PLAYTIME_NETWORK;
+            return WebPermission.DATA_NETWORK_PLAYTIME;
         }
     }
 
     @Override
     public Optional<Long> getValue(GenericFilter filter) {
         Database db = dbSystem.getDatabase();
-        if (filter.getPlayerUUID().isPresent()) {
-            Long playtime = db.query(SessionQueries.playtime(filter.getAfter(), filter.getBefore(), filter.getPlayerUUID().get(), filter.getServerUUIDs()));
+        Optional<UUID> playerUUID = filter.getPlayerUUID();
+        if (playerUUID.isPresent()) {
+            Long playtime = db.query(SessionQueries.playtime(filter.getAfter(), filter.getBefore(), playerUUID.get(), filter.getServerUUIDs()));
             if (filter.contains(serverInfo.getServerUUID())) {
-                playtime += SessionCache.getCachedSession(filter.getPlayerUUID().get())
+                playtime += SessionCache.getCachedSession(playerUUID.get())
                         .filter(session -> session.isWithin(filter.getAfter(), filter.getBefore()))
                         .map(session -> session.toFinishedSession(System.currentTimeMillis()).getLength())
                         .orElse(0L);

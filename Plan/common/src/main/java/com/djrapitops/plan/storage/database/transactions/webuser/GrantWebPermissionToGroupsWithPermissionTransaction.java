@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.transactions.webuser;
 
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.storage.database.sql.tables.webuser.WebGroupToPermissionTable;
@@ -38,6 +39,10 @@ public class GrantWebPermissionToGroupsWithPermissionTransaction extends Transac
 
     private final String permissionToGive;
     private final String whenHasPermission;
+
+    public GrantWebPermissionToGroupsWithPermissionTransaction(WebPermission permissionToGive, WebPermission whenHasPermission) {
+        this(permissionToGive.getPermission(), whenHasPermission.getPermission());
+    }
 
     public GrantWebPermissionToGroupsWithPermissionTransaction(String permissionToGive, String whenHasPermission) {
         this.permissionToGive = permissionToGive;

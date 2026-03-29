@@ -27,6 +27,7 @@ import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * @author AuroraLS3
@@ -54,20 +55,21 @@ public class AfkTime implements Datapoint<Long> {
     @Override
     public WebPermission getPermission(GenericFilter filter) {
         if (filter.getPlayerUUID().isPresent()) {
-            return WebPermission.DATA_AFK_TIME_PLAYER;
+            return WebPermission.DATA_PLAYER_AFK_TIME;
         } else if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.DATA_AFK_TIME_SERVER;
+            return WebPermission.DATA_SERVER_AFK_TIME;
         } else {
-            return WebPermission.DATA_AFK_TIME_NETWORK;
+            return WebPermission.DATA_NETWORK_AFK_TIME;
         }
     }
 
     @Override
     public Optional<Long> getValue(GenericFilter filter) {
         Database db = dbSystem.getDatabase();
-        if (filter.getPlayerUUID().isPresent()) {
+        Optional<UUID> playerUUID = filter.getPlayerUUID();
+        if (playerUUID.isPresent()) {
             return Optional.of(db.query(SessionQueries.afkTime(filter.getAfter(), filter.getBefore(),
-                    filter.getPlayerUUID().get(), filter.getServerUUIDs())));
+                    playerUUID.get(), filter.getServerUUIDs())));
         }
         if (!filter.getServerUUIDs().isEmpty()) {
             return Optional.of(db.query(SessionQueries.afkTime(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs())));

@@ -25,10 +25,10 @@ type Props<K extends DatapointType> = {
     permission?: string;
 } & Omit<DatapointProps, 'value'>;
 
-type FormatProps<K extends DatapointType> = {
+type FormatProps<K extends DatapointType> = Readonly<{
     value?: DatapointTypeMap[K],
     formatType?: FormatType
-}
+}>
 
 const FormattedOutOf = ({outOf}: { outOf: OutOf }) => {
     const {formatDecimals} = useDecimalFormatter();
@@ -75,19 +75,19 @@ function Format<K extends DatapointType>({value, formatType}: FormatProps<K>) {
     }
 }
 
-function calculatePermission(dataType: DatapointType, filter?: GenericFilter) {
+function calculatePermission(dataType: DatapointType, permission?: string, filter?: GenericFilter) {
     if (!dataType) return '';
-    const asPermission = dataType.toLowerCase().replaceAll('_', '.');
+    const asPermission = permission || dataType.toLowerCase().replaceAll('_', '.');
     if (filter) {
-        if (filter.player) return 'data.' + asPermission + '.player';
-        if (filter.server?.length) return 'data.' + asPermission + '.server';
+        if (filter.player) return 'data.player.' + asPermission;
+        if (filter.server?.length) return 'data.server.' + asPermission;
     }
-    return 'data.' + asPermission + '.network';
+    return 'data.network.' + asPermission;
 }
 
 export function QueryDatapoint<K extends DatapointType>({permission, dataType, filter, ...props}: Props<K>) {
     const {hasPermission} = useAuth();
-    const allowed = hasPermission(permission ?? calculatePermission(dataType, filter));
+    const allowed = hasPermission(calculatePermission(dataType, permission, filter));
     const {data, error} = useDatapointQuery(allowed, dataType, filter);
 
     if (!allowed) return null;
@@ -107,9 +107,9 @@ export function QueryDatapoint<K extends DatapointType>({permission, dataType, f
     />
 }
 
-export function QueryDatapointValue<K extends DatapointType>({permission, dataType, filter, ...props}: Props<K>) {
+export function QueryDatapointValue<K extends DatapointType>({permission, dataType, filter}: Props<K>) {
     const {hasPermission} = useAuth();
-    const allowed = hasPermission(permission ?? calculatePermission(dataType, filter));
+    const allowed = hasPermission(calculatePermission(dataType, permission, filter));
     const {data, error} = useDatapointQuery(allowed, dataType, filter);
 
     if (!allowed) return null;
@@ -118,8 +118,7 @@ export function QueryDatapointValue<K extends DatapointType>({permission, dataTy
         return error.message;
     }
 
-    const cast = data as Datapoint<K>;
-    return cast ? <Format value={cast.value} formatType={cast.formatType}/> : <Loader/>
+    return data ? <Format value={data.value} formatType={data.formatType}/> : <Loader/>
 }
 
 

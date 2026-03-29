@@ -40,6 +40,7 @@ import jakarta.ws.rs.Path;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * @author AuroraLS3
@@ -62,10 +63,24 @@ public class DataPointJSONResolver implements Resolver {
         DatapointType type = request.getQuery().get("type", DatapointType::find)
                 .orElseThrow(() -> new BadRequestException("type is required"));
         GenericFilter filter = GenericFilter.of(request.getQuery());
+
         Optional<WebPermission> permission = datapointStore.getPermission(type, filter);
-        //noinspection OptionalIsPresent
         if (permission.isEmpty()) return false;
-        return user.get().hasPermission(permission.get());
+        boolean hasPermission = user.get().hasPermission(permission.get());
+        if (!hasPermission) return false;
+
+        Optional<UUID> playerUUID = filter.getPlayerUUID();
+        boolean isPlayerPermission = playerUUID.isPresent();
+        if (isPlayerPermission) {
+            if (user.get().hasPermission(WebPermission.ACCESS_PLAYER)) return true;
+
+            boolean isSamePlayer = user.get().getUUID()
+                    .filter(userUUID -> playerUUID.get().equals(userUUID))
+                    .isPresent();
+            return user.get().hasPermission(WebPermission.ACCESS_PLAYER_SELF) && isSamePlayer;
+        }
+
+        return true;
     }
 
     @GET

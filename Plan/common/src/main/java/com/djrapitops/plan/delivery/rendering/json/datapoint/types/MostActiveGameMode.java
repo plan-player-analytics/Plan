@@ -53,12 +53,12 @@ public class MostActiveGameMode implements Datapoint<OutOfCategory> {
     @Override
     public WebPermission getPermission(GenericFilter filter) {
         if (filter.getPlayerUUID().isPresent()) {
-            return WebPermission.DATA_MOST_ACTIVE_GAME_MODE_PLAYER;
+            return WebPermission.DATA_PLAYER_MOST_ACTIVE_GAME_MODE;
         }
         if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.DATA_MOST_ACTIVE_GAME_MODE_SERVER;
+            return WebPermission.DATA_SERVER_MOST_ACTIVE_GAME_MODE;
         }
-        return WebPermission.DATA_MOST_ACTIVE_GAME_MODE_NETWORK;
+        return WebPermission.DATA_NETWORK_MOST_ACTIVE_GAME_MODE;
     }
 
     @Override
