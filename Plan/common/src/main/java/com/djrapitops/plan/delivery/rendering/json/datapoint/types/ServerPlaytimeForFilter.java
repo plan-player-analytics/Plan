@@ -1,0 +1,66 @@
+package com.djrapitops.plan.delivery.rendering.json.datapoint.types;
+
+import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
+import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
+import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+
+/**
+ * Utility for getting playtime per server name based on a filter.
+ *
+ * @author AuroraLS3
+ */
+@Singleton
+public class ServerPlaytimeForFilter {
+
+    private final DBSystem dbSystem;
+
+    @Inject
+    public ServerPlaytimeForFilter(DBSystem dbSystem) {
+        this.dbSystem = dbSystem;
+    }
+
+    public Map<String, Long> getPlaytimePerServer(GenericFilter filter) {
+        Database db = dbSystem.getDatabase();
+        long after = filter.getAfter();
+        long before = filter.getBefore();
+        List<ServerUUID> serverUUIDs = filter.getServerUUIDs();
+
+        if (filter.getPlayerUUID().isPresent()) {
+            UUID playerUUID = filter.getPlayerUUID().get();
+            Map<ServerUUID, Long> playtimeByUuid = db.query(SessionQueries.playtimeOfPlayer(after, before, playerUUID));
+            Map<ServerUUID, String> serverNames = db.query(ServerQueries.fetchServerNames());
+            Map<String, Long> playtimes = new HashMap<>();
+            for (Map.Entry<ServerUUID, Long> entry : playtimeByUuid.entrySet()) {
+                ServerUUID uuid = entry.getKey();
+                if (serverUUIDs.isEmpty() || serverUUIDs.contains(uuid)) {
+                    playtimes.put(serverNames.getOrDefault(uuid, uuid.toString()), entry.getValue());
+                }
+            }
+            return playtimes;
+        } else {
+            Map<String, Long> playtimes = db.query(SessionQueries.playtimePerServer(after, before));
+            if (!serverUUIDs.isEmpty()) {
+                Map<ServerUUID, String> serverNames = db.query(ServerQueries.fetchServerNames());
+                Map<String, Long> filtered = new HashMap<>();
+                for (ServerUUID uuid : serverUUIDs) {
+                    String name = serverNames.get(uuid);
+                    if (name != null && playtimes.containsKey(name)) {
+                        filtered.put(name, playtimes.get(name));
+                    }
+                }
+                playtimes = filtered;
+            }
+            return playtimes;
+        }
+    }
+}

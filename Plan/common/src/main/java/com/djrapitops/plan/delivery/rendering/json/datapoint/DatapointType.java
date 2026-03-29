@@ -31,7 +31,8 @@ public enum DatapointType {
     AFK_TIME_PERCENTAGE(AfkTimePercentage.class),
     SERVER_OCCUPIED(ServerOccupied.class),
     MOST_ACTIVE_GAME_MODE(MostActiveGameMode.class),
-    MOST_ACTIVE_WORLD(MostActiveWorld.class);
+    MOST_ACTIVE_WORLD(MostActiveWorld.class),
+    SERVER_PIE(ServerPie.class);
 
     private final Class<? extends Datapoint<?>> datapointClass;
 

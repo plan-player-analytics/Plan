@@ -4,26 +4,28 @@ import {CardLoader} from "../../navigation/Loader.tsx";
 import ServerPie from "../../graphs/ServerPie";
 import {faNetworkWired} from "@fortawesome/free-solid-svg-icons";
 import CardHeader from "../CardHeader.tsx";
-import {useDataRequest} from "../../../hooks/dataFetchHook";
-import {fetchServerPie} from "../../../service/networkService";
 import {ErrorViewCard} from "../../../views/ErrorView.tsx";
 import {useThemeStorage} from "../../../hooks/context/themeContextHook.tsx";
 import {nameToCssVariable} from "../../../util/colors.js";
+import {useServerPie} from "../../../dataHooks/graphHooks.ts";
+import {useGenericFilter} from "../../../dataHooks/genericFilterContextHook.tsx";
 
-// TODO issue-#2742 convert to use Datapoint
 const ServerPieCard = () => {
-    const {data, loadingError} = useDataRequest(fetchServerPie, []);
+    const filter = useGenericFilter();
+    const {data, error} = useServerPie(filter);
     const {usedUseCases} = useThemeStorage()
 
+    if (error) return <ErrorViewCard error={error}/>;
     if (!data) return <CardLoader/>;
-    if (loadingError) return <ErrorViewCard error={loadingError}/>;
 
-    const series = data.server_pie_series_30d;
-    const colors = usedUseCases?.graphs?.pie?.colors?.map(nameToCssVariable) || data.server_pie_colors;
+    const series = data.value.slices;
+    const colors = usedUseCases?.graphs?.pie?.colors?.map(nameToCssVariable);
+    const title = <TitleWithDates label={'html.label.serverPlaytime'} fallback={'html.label.serverPlaytime30days'}
+                                  after={after} before={before}/>;
 
     return (
         <Card>
-            <CardHeader icon={faNetworkWired} color={'sessions'} label={'html.label.serverPlaytime30days'}/>
+            <CardHeader icon={faNetworkWired} color={'sessions'} label={title}/>
             <ServerPie series={series} colors={colors}/>
         </Card>
     )

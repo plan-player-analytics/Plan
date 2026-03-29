@@ -1,4 +1,5 @@
 import {WorldPie} from "../graph/WorldPie";
+import {ServerPie} from "../graph/ServerPie";
 import {OutOf} from "./OutOf";
 import {OutOfCategory} from "./OutOfCategory";
 import {baseAddress, staticSite} from "../../../service/backendConfiguration";
@@ -14,7 +15,8 @@ export enum DatapointType {
     AFK_TIME_PERCENTAGE = 'AFK_TIME_PERCENTAGE',
     SERVER_OCCUPIED = 'SERVER_OCCUPIED',
     MOST_ACTIVE_WORLD = 'MOST_ACTIVE_WORLD',
-    MOST_ACTIVE_GAME_MODE = 'MOST_ACTIVE_GAME_MODE'
+    MOST_ACTIVE_GAME_MODE = 'MOST_ACTIVE_GAME_MODE',
+    SERVER_PIE = 'SERVER_PIE'
 }
 
 export type DatapointTypeMap = {
@@ -25,6 +27,7 @@ export type DatapointTypeMap = {
     SERVER_OCCUPIED: OutOf;
     MOST_ACTIVE_WORLD: OutOfCategory;
     MOST_ACTIVE_GAME_MODE: OutOfCategory;
+    SERVER_PIE: ServerPie;
 }
 
 export type Datapoint<K extends keyof DatapointTypeMap> = {

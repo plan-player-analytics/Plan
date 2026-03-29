@@ -137,6 +137,9 @@ public enum WebPermission implements Supplier<String>, Lang {
     DATA_PLAYER_WORLD_PIE("See World Pie -datapoint of players"),
     DATA_SERVER_WORLD_PIE("See World Pie -datapoint of servers"),
     DATA_NETWORK_WORLD_PIE("See World Pie -datapoint of network"),
+    DATA_PLAYER_SERVER_PIE("See Server Pie -datapoint of players"),
+    DATA_SERVER_SERVER_PIE("See Server Pie -datapoint of servers"),
+    DATA_NETWORK_SERVER_PIE("See Server Pie -datapoint of network"),
 
     ACCESS("Controls access to pages"),
     ACCESS_PLAYER("Allows accessing any /player pages"),

@@ -192,7 +192,13 @@ class AccessControlTest {
                 Arguments.of("/v1/datapoint?type=MOST_ACTIVE_WORLD&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_MOST_ACTIVE_WORLD, 200, 403),
                 Arguments.of("/v1/datapoint?type=SERVER_OCCUPIED", WebPermission.DATA_NETWORK_SERVER_OCCUPIED, 200, 403),
                 Arguments.of("/v1/datapoint?type=SERVER_OCCUPIED&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_SERVER_OCCUPIED, 200, 403),
-                Arguments.of("/v1/datapoint?type=SERVER_OCCUPIED&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403)
+                Arguments.of("/v1/datapoint?type=SERVER_OCCUPIED&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=WORLD_PIE", WebPermission.DATA_NETWORK_WORLD_PIE, 200, 403),
+                Arguments.of("/v1/datapoint?type=WORLD_PIE&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_WORLD_PIE, 200, 403),
+                Arguments.of("/v1/datapoint?type=WORLD_PIE&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_WORLD_PIE, 200, 403),
+                Arguments.of("/v1/datapoint?type=SERVER_PIE", WebPermission.DATA_NETWORK_SERVER_PIE, 200, 403),
+                Arguments.of("/v1/datapoint?type=SERVER_PIE&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_SERVER_PIE, 200, 403),
+                Arguments.of("/v1/datapoint?type=SERVER_PIE&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_SERVER_PIE, 200, 403)
         );
     }
 

@@ -56,4 +56,8 @@ public interface DatapointModule {
     @IntoSet
     Datapoint<?> bindMostActiveWorld(MostActiveWorld mostActiveWorld);
 
+    @Binds
+    @IntoSet
+    Datapoint<?> bindServerPie(ServerPie serverPie);
+
 }
