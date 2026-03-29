@@ -24,6 +24,7 @@ import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.file.Resource;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -36,6 +37,9 @@ import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Code that handles writing the actual files that are exported.
@@ -45,6 +49,10 @@ import java.util.List;
 abstract class FileExporter {
 
     private static final OpenOption[] OPEN_OPTIONS = {StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE};
+    private static final Pattern AFTER_REGEX = Pattern.compile("after=(\\d+)");
+    private static final Pattern BEFORE_REGEX = Pattern.compile("before=(\\d+)");
+    private static final Pattern TIME_REPLACE_REGEX = Pattern.compile("(after|before)=\\d+");
+    private static final Pattern PLAYER_UUID_REGEX = Pattern.compile("&player=[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}");
 
     private static void copy(InputStream in, OutputStream out) throws IOException {
         int read;
@@ -95,7 +103,11 @@ abstract class FileExporter {
         }
     }
 
-    String toFileName(String resourceName) {
+    String toFileName(String resourceName, String fileExtension) {
+        return toDirectoryName(resourceName) + '.' + fileExtension;
+    }
+
+    String toDirectoryName(String resourceName) {
         return StringUtils.replaceEach(
                 Html.encodeToURL(resourceName),
                 new String[]{".", "%2F", "%20"},
@@ -118,4 +130,34 @@ abstract class FileExporter {
         export(toDirectory.resolve(path).resolve("index.html"), redirectHtml);
     }
 
+    protected String toJSONResourceName(String resource) {
+        Matcher afterMatcher = AFTER_REGEX.matcher(resource);
+        Matcher beforeMatcher = BEFORE_REGEX.matcher(resource);
+        String timeReplacement = null;
+        if (afterMatcher.find()) {
+            long after = Long.parseLong(afterMatcher.group(1));
+            long before = beforeMatcher.find() ? Long.parseLong(beforeMatcher.group(1)) : System.currentTimeMillis();
+            long diff = before - after;
+            if (diff < TimeUnit.DAYS.toMillis(2)) {
+                timeReplacement = "1d";
+            } else if (diff < TimeUnit.DAYS.toMillis(14)) {
+                timeReplacement = "7d";
+            } else if (diff < TimeUnit.DAYS.toMillis(60)) {
+                timeReplacement = "30d";
+            }
+        }
+
+        String replaced = PLAYER_UUID_REGEX.matcher(resource).replaceAll("");
+        if (timeReplacement != null) {
+            replaced = TIME_REPLACE_REGEX.matcher(replaced).replaceAll(timeReplacement);
+        }
+
+        return StringUtils.replaceEach(replaced,
+                new String[]{"?", "&", "type=", "server=", "player="},
+                new String[]{"-", "_", "", "", ""});
+    }
+
+    protected String toNonRelativePath(String resourceName) {
+        return Strings.CI.remove(Strings.CI.remove(resourceName, "../"), "./");
+    }
 }

@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.export;
 
+import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
@@ -26,8 +27,6 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.PlayerFetchQueries;
 import com.djrapitops.plan.storage.file.PlanFiles;
-import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Strings;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -89,45 +88,38 @@ public class PlayerPageExporter extends FileExporter {
             return;
         }
 
-        ExportPaths exportPaths = new ExportPaths();
-        exportPaths.put("../network", toRelativePathFromRoot("network"));
-        exportPaths.put("../server/", toRelativePathFromRoot("server"));
-
-        Path playerDirectory = toDirectory.resolve("player/" + toFileName(playerUUID.toString()));
-        exportJSON(exportPaths, playerDirectory, playerUUID);
+        Path playerDirectory = toDirectory.resolve("player/" + toDirectoryName(playerUUID.toString()));
+        exportJSON(playerDirectory, playerUUID);
         exportReactRedirects(toDirectory, playerUUID);
-        exportPaths.clear();
     }
 
     private void exportReactRedirects(Path toDirectory, UUID playerUUID) throws IOException {
         exportReactRedirects(toDirectory, files, config, getRedirections(playerUUID));
     }
 
-    private void exportJSON(ExportPaths exportPaths, Path toDirectory, UUID playerUUID) throws IOException {
-        exportJSON(exportPaths, toDirectory,
+    private void exportJSON(Path toDirectory, UUID playerUUID) throws IOException {
+        String datapointType = "datapoint?type=";
+        String player = "&player=" + playerUUID;
+        exportJSON(toDirectory,
                 "player?player=" + playerUUID,
-                "sessions?player=" + playerUUID
+                "sessions?player=" + playerUUID,
+                datapointType + DatapointType.WORLD_PIE.name() + player
         );
     }
 
-    private void exportJSON(ExportPaths exportPaths, Path toDirectory, String... resources) throws IOException {
+    private void exportJSON(Path toDirectory, String... resources) throws IOException {
         for (String resource : resources) {
-            exportJSON(exportPaths, toDirectory, resource);
+            exportJSON(toDirectory, resource);
         }
     }
 
-    private void exportJSON(ExportPaths exportPaths, Path toDirectory, String resource) throws IOException {
+    private void exportJSON(Path toDirectory, String resource) throws IOException {
         Response response = getJSONResponse(resource)
                 .orElseThrow(() -> new NotFoundException(resource + " was not properly exported: no response"));
 
-        String jsonResourceName = toFileName(toJSONResourceName(resource)) + ".json";
+        String jsonResourceName = toFileName(toJSONResourceName(resource), "json");
 
         export(toDirectory.resolve(jsonResourceName), response.getBytes());
-        exportPaths.put("../v1/" + resource, "./" + jsonResourceName);
-    }
-
-    private String toJSONResourceName(String resource) {
-        return StringUtils.replaceEach(resource, new String[]{"?", "&", "type=", "player="}, new String[]{"-", "_", "", ""});
     }
 
     private Optional<Response> getJSONResponse(String resource) {
@@ -138,14 +130,4 @@ public class PlayerPageExporter extends FileExporter {
             throw new IllegalStateException("Unexpected exception thrown: " + e, e);
         }
     }
-
-    private String toRelativePathFromRoot(String resourceName) {
-        // Player html is exported at /player/<uuid>/index.html
-        return "../../" + toNonRelativePath(resourceName);
-    }
-
-    private String toNonRelativePath(String resourceName) {
-        return Strings.CI.remove(Strings.CI.remove(resourceName, "../"), "./");
-    }
-
 }

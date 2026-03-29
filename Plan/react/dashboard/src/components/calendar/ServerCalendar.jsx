@@ -5,6 +5,7 @@ import interactionPlugin from '@fullcalendar/interaction'
 import {useTranslation} from "react-i18next";
 import {localeService} from "../../service/localeService.js";
 import {useTimeAmountFormatter} from "../../util/format/useTimeAmountFormatter.js";
+import {staticSite} from "../../service/backendConfiguration.js";
 
 const ServerCalendar = ({series, firstDay, onSelect, height}) => {
     const {t} = useTranslation();
@@ -59,7 +60,7 @@ const ServerCalendar = ({series, firstDay, onSelect, height}) => {
                 }}
                 buttonText={buttonText}
                 editable={false}
-                selectable={Boolean(onSelect)}
+                selectable={Boolean(onSelect && !staticSite)}
                 select={onSelect}
                 unselectAuto={true}
                 events={(_fetchInfo, successCallback) => successCallback(actualSeries)}

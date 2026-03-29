@@ -7,13 +7,14 @@ import {useGenericFilter} from "../../../../dataHooks/genericFilterContextHook.t
 import {QueryDatapoint, QueryDatapointValue} from "../../../datapoint/QueryDatapoint.tsx";
 import {DatapointType} from "../../../../dataHooks/model/datapoint/Datapoint.ts";
 import {TitleWithDates} from "../../../text/TitleWithDates.tsx";
+import {MS_MONTH} from "../../../../util/format/useDateFormatter.js";
 
 const SessionInsightsCard = ({identifier}) => {
     const {t} = useTranslation();
     const {after, before, server} = useGenericFilter();
 
     const filter = {
-        after: after || Date.now() - 30 * 24 * 60 * 60 * 1000,
+        after: after || Date.now() - MS_MONTH,
         before,
         server
     };

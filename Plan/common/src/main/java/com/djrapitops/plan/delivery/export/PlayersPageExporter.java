@@ -21,7 +21,6 @@ import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
-import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
@@ -49,33 +48,25 @@ public class PlayersPageExporter extends FileExporter {
     private final PlanConfig config;
     private final DBSystem dbSystem;
     private final RootJSONResolver jsonHandler;
-    private final ServerInfo serverInfo;
-    private final ExportPaths exportPaths;
 
     @Inject
     public PlayersPageExporter(
             PlanFiles files,
             PlanConfig config, DBSystem dbSystem,
-            RootJSONResolver jsonHandler,
-            ServerInfo serverInfo
+            RootJSONResolver jsonHandler
     ) {
         this.files = files;
         this.config = config;
         this.dbSystem = dbSystem;
         this.jsonHandler = jsonHandler;
-        this.serverInfo = serverInfo;
-
-        exportPaths = new ExportPaths();
     }
 
     public void export(Path toDirectory) throws IOException {
         Database.State dbState = dbSystem.getDatabase().getState();
         if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
 
-        exportPaths.put("href=\"/\"", "href=\"" + toRelativePathFromRoot(serverInfo.getServer().isProxy() ? "network" : "server") + '"');
         exportJSON(toDirectory);
         exportReactRedirects(toDirectory);
-        exportPaths.clear();
     }
 
     private void exportReactRedirects(Path toDirectory) throws IOException {
@@ -87,13 +78,12 @@ public class PlayersPageExporter extends FileExporter {
         Response response = getJSONResponse()
                 .orElseThrow(() -> new NotFoundException("players page was not properly exported: not found"));
 
-        String jsonResourceName = toFileName(toJSONResourceName()) + ".json";
+        String jsonResourceName = toFileName(toJSONResourceName(), "json");
 
         export(toDirectory.resolve("data").resolve(jsonResourceName),
                 // Replace ../player in urls to fix player page links
                 Strings.CI.replace(response.getAsString(), "../player", toRelativePathFromRoot("player"))
         );
-        exportPaths.put("./v1/" + PLAYERS_TABLE, toRelativePathFromRoot("data/" + jsonResourceName));
     }
 
     private String toJSONResourceName() {
@@ -113,9 +103,4 @@ public class PlayersPageExporter extends FileExporter {
         // Players html is exported at /players/index.html or /server/index.html
         return "../" + toNonRelativePath(resourceName);
     }
-
-    private String toNonRelativePath(String resourceName) {
-        return Strings.CI.remove(resourceName, "../");
-    }
-
 }

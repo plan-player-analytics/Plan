@@ -3,7 +3,7 @@ export type GenericFilter = {
     afterMillisAgo?: number;
     before?: number;
     beforeMillisAgo?: number;
-    server?: string[];
+    server?: string[] | string;
     player?: string;
 }
 

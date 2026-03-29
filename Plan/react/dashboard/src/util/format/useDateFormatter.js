@@ -6,6 +6,11 @@ import {useI18nFriendlyLanguage} from "../../service/localeService.js";
 import {useMetadata} from "../../hooks/metadataHook.jsx";
 import {usePreferences} from "../../hooks/preferencesHook.jsx";
 
+export const MS_24H = 24 * 60 * 60 * 1000;
+export const MS_WEEK = 7 * MS_24H;
+export const MS_MONTH = 30 * MS_24H;
+export const MS_YEAR = 365 * MS_24H;
+
 const useDatePreferences = (includeSeconds) => {
     const {timeZoneOffsetHours} = useMetadata();
     const {preferencesLoaded, dateFormatFull, dateFormatNoSeconds, recentDaysInDateFormat} = usePreferences();

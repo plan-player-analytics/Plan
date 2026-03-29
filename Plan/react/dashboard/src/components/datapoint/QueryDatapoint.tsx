@@ -1,10 +1,15 @@
-import {Datapoint, DatapointType, DatapointTypeMap, FormatType} from "../../dataHooks/model/datapoint/Datapoint";
-import {filterToQueryString, GenericFilter} from "../../dataHooks/model/GenericFilter";
+import {
+    Datapoint,
+    DatapointType,
+    DatapointTypeMap,
+    FormatType,
+    getDatapointUrl
+} from "../../dataHooks/model/datapoint/Datapoint";
+import {GenericFilter} from "../../dataHooks/model/GenericFilter";
 import {useNavigation} from "../../hooks/navigationHook";
 import {useQuery} from "@tanstack/react-query";
 import {queryRetry} from "../../dataHooks/queryRetry";
 import {useEffect} from "react";
-import {baseAddress, staticSite} from "../../service/backendConfiguration";
 import {Datapoint as DatapointComponent, DatapointProps} from "./Datapoint";
 import FormattedTime from "../text/FormattedTime";
 import Loader from "../navigation/Loader";
@@ -13,7 +18,6 @@ import {useDecimalFormatter} from "../../util/format/useDecimalFormatter";
 import {isOutOf, OutOf} from "../../dataHooks/model/datapoint/OutOf";
 import {isOutOfCategory, OutOfCategory} from "../../dataHooks/model/datapoint/OutOfCategory";
 import {useTranslation} from "react-i18next";
-import {useTimeAmountFormatter} from "../../util/format/useTimeAmountFormatter";
 
 type Props<K extends DatapointType> = {
     dataType: K;
@@ -51,7 +55,6 @@ const FormattedOutOfCategory = ({outOf}: { outOf: OutOfCategory }) => {
 
 function Format<K extends DatapointType>({value, formatType}: FormatProps<K>) {
     const {formatDecimals} = useDecimalFormatter();
-    const {formatTime} = useTimeAmountFormatter();
     if (value === undefined) return null;
     switch (formatType) {
         case "TIME_AMOUNT":
@@ -135,8 +138,7 @@ function useDatapointQuery<K extends DatapointType>(allowed: boolean, dataType: 
 }
 
 async function getDatapoint<K extends DatapointType>(dataType: K, filter?: GenericFilter) {
-    let url = baseAddress + `/v1/datapoint?type=${dataType}&${filterToQueryString(filter)}`;
-    if (staticSite) return baseAddress + `/v1/datapoint?type=${dataType}`;
+    const url = getDatapointUrl(dataType, filter);
     const response = await fetch(url);
     if (!response.ok) throw {status: response.status, message: response.statusText, data: response.body};
     return await response.json() as Promise<Datapoint<K>>;

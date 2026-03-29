@@ -31,9 +31,9 @@ const getSessions = async (filter: GenericFilter) => {
     let url = baseAddress + `/v1/sessions?${filterToQueryString(filter)}`;
     if (staticSite) {
         if (filter.player) {
-            url = baseAddress + `/data/sessions-${filter.player}.json`;
+            url = baseAddress + `/player/${filter.player}/sessions-${filter.player}.json`;
         } else if (filter.server && filter.server.length > 0) {
-            url = baseAddress + `/data/sessions-${filter.server[0]}.json`;
+            url = baseAddress + `/data/sessions-${Array.isArray(filter.server) ? filter.server[0] : filter.server}.json`;
         } else {
             url = baseAddress + `/data/sessions.json`;
         }

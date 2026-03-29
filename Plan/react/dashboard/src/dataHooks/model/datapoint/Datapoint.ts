@@ -1,6 +1,9 @@
 import {WorldPie} from "../graph/WorldPie";
 import {OutOf} from "./OutOf";
 import {OutOfCategory} from "./OutOfCategory";
+import {baseAddress, staticSite} from "../../../service/backendConfiguration";
+import {filterToQueryString, GenericFilter} from "../GenericFilter";
+import {MS_24H, MS_WEEK} from "../../../util/format/useDateFormatter";
 
 export type FormatType = 'NONE' | 'TIME_AMOUNT' | 'TIME_SINCE' | 'DATE' | 'PERCENTAGE' | 'BYTES' | 'SPECIAL';
 
@@ -30,3 +33,24 @@ export type Datapoint<K extends keyof DatapointTypeMap> = {
     timestamp: number;
     value: DatapointTypeMap[K];
 };
+
+export function getDatapointUrl(dataType: DatapointType, filter?: GenericFilter) {
+    let url = baseAddress + `/v1/datapoint?type=${dataType}&${filterToQueryString(filter)}`;
+    if (staticSite) {
+        let timespan = "";
+        if (filter?.after) {
+            const diff = (filter?.before || Date.now()) - filter.after;
+            if (diff < MS_24H * 2) {
+                timespan = "_1d";
+            } else if (diff < MS_WEEK * 2) {
+                timespan = "_7d";
+            } else {
+                timespan = "_30d";
+            }
+        }
+        const folder = filter?.player ? "/player/" + filter?.player : "/data";
+        const server = filter?.server ? "_" + filter?.server : "";
+        url = baseAddress + `${folder}/datapoint-${dataType}${timespan}${server}.json`;
+    }
+    return url;
+}

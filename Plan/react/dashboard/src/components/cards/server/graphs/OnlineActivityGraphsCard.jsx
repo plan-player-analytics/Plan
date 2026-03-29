@@ -24,6 +24,7 @@ import "highcharts/modules/accessibility";
 import {postQuery} from "../../../../service/queryService";
 import QueryPlayerListModal from "../../../modal/QueryPlayerListModal";
 import {useMetadata} from "../../../../hooks/metadataHook";
+import {staticSite} from "../../../../service/backendConfiguration.js";
 
 const DayByDayTab = () => {
     const {identifier} = useParams();
@@ -92,7 +93,7 @@ const ServerCalendarTab = () => {
 
     return <>
         <ServerCalendar series={data.data} firstDay={data.firstDay} onSelect={onSelect}/>
-        <QueryPlayerListModal open={modalOpen} toggle={closeModal} queryData={queryData}/>
+        {!staticSite && <QueryPlayerListModal open={modalOpen} toggle={closeModal} queryData={queryData}/>}
     </>
 }
 

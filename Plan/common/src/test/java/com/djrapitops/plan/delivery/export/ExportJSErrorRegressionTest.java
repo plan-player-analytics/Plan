@@ -60,11 +60,6 @@ import static com.djrapitops.plan.delivery.export.ExportTestUtilities.assertNoLo
 
 /**
  * This test class is for catching any JavaScript errors.
- * <p>
- * Errors may have been caused by:
- * - Missing placeholders {@code ${placeholder}} inside {@code <script>} tags.
- * - Automatic formatting of plugin javascript (See https://github.com/plan-player-analytics/Plan/issues/820)
- * - Missing file definition in Mocker
  */
 @Testcontainers(disabledWithoutDocker = true)
 @ExtendWith(SeleniumExtension.class)
