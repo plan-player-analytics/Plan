@@ -46,7 +46,7 @@ export const useDateFormatter = (includeSeconds, overrides = {}) => {
         const today = now - fromStartOfToday;
         const yesterday = today - dayMs;
         const tomorrow = today + dayMs;
-        const fiveDaysAgo = now - dayMs * 5;
+        const fiveDaysAgo = today - dayMs * 5;
 
         let format = pattern;
         if (recentDays) {
