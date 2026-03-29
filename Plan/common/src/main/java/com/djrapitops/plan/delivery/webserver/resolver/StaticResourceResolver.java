@@ -54,7 +54,7 @@ public class StaticResourceResolver implements NoAuthResolver {
 
     private Response getResponse(Request request) {
         @Untrusted String resource = getPath(request).asString().substring(1);
-        @Untrusted Optional<Long> etag = Identifiers.getEtag(request);
+        @Untrusted Optional<ETag> etag = Identifiers.getEtag(request);
         if (resource.endsWith(".css")) {
             return etag.map(tag -> responseFactory.cssResponse(tag, resource))
                     .orElseGet(() -> responseFactory.cssResponse(resource));

@@ -18,6 +18,7 @@ package com.djrapitops.plan.identification;
 
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.webserver.resolver.ETag;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
@@ -48,23 +49,6 @@ public class Identifiers {
         this.uuidUtility = uuidUtility;
     }
 
-    /**
-     * Obtain UUID of the server.
-     *
-     * @param request for Request, URIQuery needs a 'server' parameter.
-     * @return UUID of the server.
-     * @throws BadRequestException If server parameter is not defined or the server is not in the database.
-     */
-    public ServerUUID getServerUUID(Request request) {
-        String identifier = request.getQuery().get("server")
-                .orElseThrow(() -> new BadRequestException("'server' parameter was not defined."));
-
-        Optional<ServerUUID> parsed = UUIDUtility.parseFromString(identifier).map(ServerUUID::from);
-        return parsed.orElseGet(() -> getServerUUIDFromName(identifier).orElseThrow(
-                () -> new BadRequestException("Given 'server' was not found in the database.")
-        ));
-    }
-
     public static Optional<Long> getTimestamp(@Untrusted Request request) {
         try {
             long currentTime = System.currentTimeMillis();
@@ -82,19 +66,30 @@ public class Identifiers {
         }
     }
 
-    public static Optional<Long> getEtag(Request request) {
+    public static Optional<ETag> getEtag(Request request) {
         return request.getHeader(HttpHeader.IF_NONE_MATCH.asString())
-                .map(tag -> {
-                    try {
-                        return Long.parseLong(tag);
-                    } catch (NumberFormatException notANumber) {
-                        throw new BadRequestException("'" + HttpHeader.IF_NONE_MATCH.asString() + "'-header was not a number. Clear browser cache.");
-                    }
-                });
+                .map(ETag::new);
     }
 
     public static Optional<String> getStringEtag(Request request) {
         return request.getHeader(HttpHeader.IF_NONE_MATCH.asString());
+    }
+
+    /**
+     * Obtain UUID of the server.
+     *
+     * @param request for Request, URIQuery needs a 'server' parameter.
+     * @return UUID of the server.
+     * @throws BadRequestException If server parameter is not defined or the server is not in the database.
+     */
+    public ServerUUID getServerUUID(Request request) {
+        String identifier = request.getQuery().get("server")
+                .orElseThrow(() -> new BadRequestException("'server' parameter was not defined."));
+
+        Optional<ServerUUID> parsed = UUIDUtility.parseFromString(identifier).map(ServerUUID::from);
+        return parsed.orElseGet(() -> getServerUUIDFromName(identifier).orElseThrow(
+                () -> new BadRequestException("Given 'server' was not found in the database.")
+        ));
     }
 
     /**
