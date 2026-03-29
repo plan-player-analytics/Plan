@@ -69,10 +69,10 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#getServerUUID(com.djrapitops.plan.delivery.web.resolver.request.Request)" tabindex="0">getServerUUID(Request)</a></li>
 <li><a href="#getTimestamp(com.djrapitops.plan.delivery.web.resolver.request.Request)" tabindex="0">getTimestamp(Request)</a></li>
 <li><a href="#getEtag(com.djrapitops.plan.delivery.web.resolver.request.Request)" tabindex="0">getEtag(Request)</a></li>
 <li><a href="#getStringEtag(com.djrapitops.plan.delivery.web.resolver.request.Request)" tabindex="0">getStringEtag(Request)</a></li>
+<li><a href="#getServerUUID(com.djrapitops.plan.delivery.web.resolver.request.Request)" tabindex="0">getServerUUID(Request)</a></li>
 <li><a href="#getServerUUID(java.lang.String)" tabindex="0">getServerUUID(String)</a></li>
 <li><a href="#getPlayerUUID(com.djrapitops.plan.delivery.web.resolver.request.Request)" tabindex="0">getPlayerUUID(Request)</a></li>
 <li><a href="#getPlayerUUID(java.lang.String)" tabindex="0">getPlayerUUID(String)</a></li>
@@ -140,7 +140,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="../delivery/webserver/resolver/ETag.html" title="class in com.djrapitops.plan.delivery.webserver.resolver">ETag</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getEtag(com.djrapitops.plan.delivery.web.resolver.request.Request)" class="member-name-link">getEtag</a><wbr>(<a href="../delivery/web/resolver/request/Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">Request</a>&nbsp;request)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</code></div>
@@ -222,6 +222,30 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
+<section class="detail" id="getTimestamp(com.djrapitops.plan.delivery.web.resolver.request.Request)">
+<h3>getTimestamp</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">getTimestamp</span><wbr><span class="parameters">(<a href="../delivery/web/resolver/request/Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">Request</a>&nbsp;request)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getEtag(com.djrapitops.plan.delivery.web.resolver.request.Request)">
+<h3>getEtag</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="../delivery/webserver/resolver/ETag.html" title="class in com.djrapitops.plan.delivery.webserver.resolver">ETag</a>&gt;</span>&nbsp;<span class="element-name">getEtag</span><wbr><span class="parameters">(<a href="../delivery/web/resolver/request/Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">Request</a>&nbsp;request)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getStringEtag(com.djrapitops.plan.delivery.web.resolver.request.Request)">
+<h3>getStringEtag</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">getStringEtag</span><wbr><span class="parameters">(<a href="../delivery/web/resolver/request/Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">Request</a>&nbsp;request)</span></div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="getServerUUID(com.djrapitops.plan.delivery.web.resolver.request.Request)">
 <h3>getServerUUID</h3>
 <div class="horizontal-scroll">
@@ -235,30 +259,6 @@ loadScripts(document, 'script');</script>
 <dt>Throws:</dt>
 <dd><code><a href="../delivery/web/resolver/exception/BadRequestException.html" title="class in com.djrapitops.plan.delivery.web.resolver.exception">BadRequestException</a></code> - If server parameter is not defined or the server is not in the database.</dd>
 </dl>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="getTimestamp(com.djrapitops.plan.delivery.web.resolver.request.Request)">
-<h3>getTimestamp</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">getTimestamp</span><wbr><span class="parameters">(<a href="../delivery/web/resolver/request/Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">Request</a>&nbsp;request)</span></div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="getEtag(com.djrapitops.plan.delivery.web.resolver.request.Request)">
-<h3>getEtag</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">getEtag</span><wbr><span class="parameters">(<a href="../delivery/web/resolver/request/Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">Request</a>&nbsp;request)</span></div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="getStringEtag(com.djrapitops.plan.delivery.web.resolver.request.Request)">
-<h3>getStringEtag</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</span>&nbsp;<span class="element-name">getStringEtag</span><wbr><span class="parameters">(<a href="../delivery/web/resolver/request/Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">Request</a>&nbsp;request)</span></div>
 </div>
 </section>
 </li>

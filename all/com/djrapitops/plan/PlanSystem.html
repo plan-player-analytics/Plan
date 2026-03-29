@@ -54,8 +54,14 @@ loadScripts(document, 'script');</script>
 <div class="toc-header">Contents&nbsp;<input type="text" class="filter-input" disabled placeholder="Filter contents (type .)" aria-label="Filter table of contents" autocomplete="off" spellcheck="false"><input type="reset" class="reset-filter" disabled tabindex="-1" value="Reset"></div>
 <ol class="toc-list" tabindex="-1">
 <li><a href="#" tabindex="0">Description</a></li>
+<li><a href="#field-summary" tabindex="0">Field Summary</a></li>
 <li><a href="#constructor-summary" tabindex="0">Constructor Summary</a></li>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
+<li><a href="#field-detail" tabindex="0">Field Details</a>
+<ol class="toc-list">
+<li><a href="#LAST_RELOAD" tabindex="0">LAST_RELOAD</a></li>
+</ol>
+</li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
 <li><a href="#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.ConfigSystem,com.djrapitops.plan.version.VersionChecker,com.djrapitops.plan.settings.locale.LocaleSystem,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.gathering.cache.CacheSystem,com.djrapitops.plan.gathering.listeners.ListenerSystem,com.djrapitops.plan.TaskSystem,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.delivery.webserver.WebServerSystem,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.gathering.importing.ImportSystem,com.djrapitops.plan.delivery.export.ExportSystem,com.djrapitops.plan.delivery.DeliveryUtilities,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,dev.vankka.dependencydownload.ApplicationDependencyManager,com.djrapitops.plan.ApiServices,com.djrapitops.plan.api.PlanAPI.PlanAPIHolder,com.djrapitops.plan.gathering.GatheringUtilities)" tabindex="0">PlanSystem(PlanFiles, ConfigSystem, VersionChecker, LocaleSystem, DBSystem, CacheSystem, ListenerSystem, TaskSystem, ServerInfo, WebServerSystem, Processing, ImportSystem, ExportSystem, DeliveryUtilities, PluginLogger, ErrorLogger, ApplicationDependencyManager, ApiServices, PlanAPI.PlanAPIHolder, GatheringUtilities)</a></li>
@@ -63,6 +69,7 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
+<li><a href="#getServerEnableTime()" tabindex="0">getServerEnableTime()</a></li>
 <li><a href="#enableForCommands()" tabindex="0">enableForCommands()</a></li>
 <li><a href="#enableOtherThanCommands()" tabindex="0">enableOtherThanCommands()</a></li>
 <li><a href="#enable()" tabindex="0">enable()</a></li>
@@ -84,7 +91,6 @@ loadScripts(document, 'script');</script>
 <li><a href="#getGatheringUtilities()" tabindex="0">getGatheringUtilities()</a></li>
 <li><a href="#isEnabled()" tabindex="0">isEnabled()</a></li>
 <li><a href="#getApiServices()" tabindex="0">getApiServices()</a></li>
-<li><a href="#getServerEnableTime()" tabindex="0">getServerEnableTime()</a></li>
 </ol>
 </li>
 </ol>
@@ -115,6 +121,21 @@ This is an abstraction layer on top of Plugin instances so that tests can be run
 </section>
 <section class="summary">
 <ul class="summary-list">
+<!-- =========== FIELD SUMMARY =========== -->
+<li>
+<section class="field-summary" id="field-summary">
+<h2>Field Summary</h2>
+<div class="caption"><span>Fields</span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Field</div>
+<div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code>static final <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/atomic/AtomicLong.html" title="class or interface in java.util.concurrent.atomic" class="external-link">AtomicLong</a></code></div>
+<div class="col-second even-row-color"><code><a href="#LAST_RELOAD" class="member-name-link">LAST_RELOAD</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+</div>
+</section>
+</li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
 <li>
 <section class="constructor-summary" id="constructor-summary">
@@ -244,6 +265,22 @@ This is an abstraction layer on top of Plugin instances so that tests can be run
 </section>
 <section class="details">
 <ul class="details-list">
+<!-- ============ FIELD DETAIL =========== -->
+<li>
+<section class="field-details" id="field-detail">
+<h2>Field Details</h2>
+<ul class="member-list">
+<li>
+<section class="detail" id="LAST_RELOAD">
+<h3>LAST_RELOAD</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/atomic/AtomicLong.html" title="class or interface in java.util.concurrent.atomic" class="external-link">AtomicLong</a></span>&nbsp;<span class="element-name">LAST_RELOAD</span></div>
+</div>
+</section>
+</li>
+</ul>
+</section>
+</li>
 <!-- ========= CONSTRUCTOR DETAIL ======== -->
 <li>
 <section class="constructor-details" id="constructor-detail">
@@ -285,6 +322,14 @@ This is an abstraction layer on top of Plugin instances so that tests can be run
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="getServerEnableTime()">
+<h3>getServerEnableTime</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">getServerEnableTime</span>()</div>
+</div>
+</section>
+</li>
 <li>
 <section class="detail" id="enableForCommands()">
 <h3>enableForCommands</h3>
@@ -472,14 +517,6 @@ This is an abstraction layer on top of Plugin instances so that tests can be run
 <h3>getApiServices</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ApiServices.html" title="class in com.djrapitops.plan">ApiServices</a></span>&nbsp;<span class="element-name">getApiServices</span>()</div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="getServerEnableTime()">
-<h3>getServerEnableTime</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">getServerEnableTime</span>()</div>
 </div>
 </section>
 </li>
