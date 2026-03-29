@@ -9,6 +9,7 @@ import {useThemeStorage} from "../../../hooks/context/themeContextHook.tsx";
 import {nameToCssVariable} from "../../../util/colors.js";
 import {useServerPie} from "../../../dataHooks/graphHooks.ts";
 import {useGenericFilter} from "../../../dataHooks/genericFilterContextHook.tsx";
+import {TitleWithDates} from "../../text/TitleWithDates.tsx";
 
 const ServerPieCard = () => {
     const filter = useGenericFilter();
@@ -21,7 +22,7 @@ const ServerPieCard = () => {
     const series = data.value.slices;
     const colors = usedUseCases?.graphs?.pie?.colors?.map(nameToCssVariable);
     const title = <TitleWithDates label={'html.label.serverPlaytime'} fallback={'html.label.serverPlaytime30days'}
-                                  after={after} before={before}/>;
+                                  after={filter.after} before={filter.before}/>;
 
     return (
         <Card>

@@ -5,10 +5,8 @@ import React from "react";
 import {CardLoader} from "../../navigation/Loader.tsx";
 import CardHeader from "../CardHeader.tsx";
 
-const WorldPieCard = ({worldSeries, gmSeries}) => {
+const WorldPieCard = ({worldSeries, gmSeries, title}) => {
     if (!worldSeries || !gmSeries) return <CardLoader/>;
-    const title = <TitleWithDates label={'html.label.worldPlaytime'} fallback={'html.label.worldPlaytime'}
-                                  after={after} before={before}/>;
     return (
         <Card>
             <CardHeader icon={faClock} color={"sessions"} label={title}/>

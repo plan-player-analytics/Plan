@@ -7,8 +7,8 @@ import {useTranslation} from "react-i18next";
 type Props = {
     label: string;
     fallback?: string;
-    after: number;
-    before: number;
+    after?: number;
+    before?: number;
 }
 
 export const TitleWithDates = ({label, fallback, after, before}: Props) => {

@@ -18,6 +18,7 @@ const ServerSessions = () => {
     const seeSessionList = hasPermission('page.server.sessions.list');
     const seeSessionInsights = hasPermission('page.server.sessions.overview');
     const seeWorldPie = hasPermission('page.server.sessions.world.pie');
+    const seeCalendar = hasPermission('page.server.sessions.calendar');
     const seeControls = seeSessionList || seeSessionInsights || seeWorldPie;
     return (
         <LoadIn>
@@ -25,7 +26,7 @@ const ServerSessions = () => {
                 <section className="server-sessions">
                     <ExtendableRow id={'row-server-sessions-0'}>
                         {<Col lg={6}>
-                            <ServerSessionCalendarCard identifier={identifier}/>
+                            {seeCalendar && <ServerSessionCalendarCard identifier={identifier}/>}
                             {seeSessionInsights && <SessionInsightsCard identifier={identifier}/>}
                         </Col>}
                         <Col lg={6}>

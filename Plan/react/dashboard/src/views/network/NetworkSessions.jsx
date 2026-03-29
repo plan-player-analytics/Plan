@@ -15,6 +15,7 @@ const NetworkSessions = () => {
     const seeSessionList = hasPermission('page.network.sessions.list');
     const seeServerPie = hasPermission('page.network.sessions.server.pie');
     const seeInsights = hasPermission('page.network.sessions.overview');
+    const seeCalendar = hasPermission('page.network.sessions.calendar');
     const seeControls = seeSessionList || seeInsights || seeServerPie;
 
     return (
@@ -23,7 +24,7 @@ const NetworkSessions = () => {
                 <section className="network-sessions">
                     <ExtendableRow id={'row-network-sessions-0'}>
                         {<Col lg={6}>
-                            <NetworkSessionCalendarCard/>
+                            {seeCalendar && <NetworkSessionCalendarCard/>}
                             {seeInsights && <SessionInsightsCard identifier={undefined}/>}
                         </Col>}
                         <Col lg={6}>

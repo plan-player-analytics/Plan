@@ -3,14 +3,17 @@ import {useNavigation} from "../hooks/navigationHook";
 import {useQuery} from "@tanstack/react-query";
 import {queryRetry} from "./queryRetry";
 import {useEffect} from "react";
-import {Datapoint, DatapointType, getDatapointUrl} from "./model/datapoint/Datapoint";
+import {Datapoint, DatapointType, getDatapointPermission, getDatapointUrl} from "./model/datapoint/Datapoint";
+import {useAuth} from "../hooks/authenticationHook";
 
 export const useWorldPie = (filter: GenericFilter) => {
     const {updateRequested} = useNavigation() as { updateRequested: number };
+    const {hasPermission} = useAuth();
     const query = useQuery({
         queryKey: ['world-pie', ...Object.values(filter)],
         queryFn: () => getWorldPie(filter),
-        retry: queryRetry
+        retry: queryRetry,
+        enabled: hasPermission(getDatapointPermission('world.pie', filter))
     });
     useEffect(() => {
         query.refetch()
@@ -27,10 +30,12 @@ const getWorldPie = async (filter: GenericFilter) => {
 
 export const useServerPie = (filter: GenericFilter) => {
     const {updateRequested} = useNavigation() as { updateRequested: number };
+    const {hasPermission} = useAuth();
     const query = useQuery({
         queryKey: ['server-pie', ...Object.values(filter)],
         queryFn: () => getServerPie(filter),
-        retry: queryRetry
+        retry: queryRetry,
+        enabled: hasPermission(getDatapointPermission('server.pie', filter))
     });
     useEffect(() => {
         query.refetch()

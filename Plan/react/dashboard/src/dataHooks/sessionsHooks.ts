@@ -21,7 +21,6 @@ export const useSessions = (filter: GenericFilter) => {
     const {convert} = useDateConverter();
     const {hasPermission} = useAuth();
 
-    const ownsPermission = hasPermission(getPermission(filter))
     const serverFilter = {
         ...filter,
         after: filter.after ? convert(filter.after).toServerEpochMs() : undefined,
@@ -31,7 +30,7 @@ export const useSessions = (filter: GenericFilter) => {
         queryKey: ['sessions', ...Object.values(serverFilter)],
         queryFn: () => getSessions(serverFilter),
         retry: queryRetry,
-        enabled: ownsPermission
+        enabled: hasPermission(getPermission(filter))
     });
     useEffect(() => {
         query.refetch()

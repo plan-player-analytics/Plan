@@ -37,6 +37,14 @@ export type Datapoint<K extends keyof DatapointTypeMap> = {
     value: DatapointTypeMap[K];
 };
 
+export function getDatapointPermission(suffix: string, filter?: GenericFilter) {
+    if (filter) {
+        if (filter.player) return 'data.player.' + suffix;
+        if (filter.server?.length) return 'data.server.' + suffix;
+    }
+    return 'data.network.' + suffix;
+}
+
 export function getDatapointUrl(dataType: DatapointType, filter?: GenericFilter) {
     let url = baseAddress + `/v1/datapoint?type=${dataType}&${filterToQueryString(filter)}`;
     if (staticSite) {
