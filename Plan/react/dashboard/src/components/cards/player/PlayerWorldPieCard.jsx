@@ -7,7 +7,7 @@ import {TitleWithDates} from "../../text/TitleWithDates.tsx";
 
 const PlayerWorldPieCard = ({player}) => {
     const filter = useGenericFilter();
-    const {data: worldPie, error: loadingError} = useWorldPie(hasPermission(getPermission(filter)), filter);
+    const {data: worldPie, error: loadingError} = useWorldPie(filter);
 
     if (loadingError) return <ErrorViewCard error={loadingError}/>;
 

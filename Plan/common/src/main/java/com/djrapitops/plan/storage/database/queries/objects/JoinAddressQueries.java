@@ -74,7 +74,8 @@ public class JoinAddressQueries {
     public static Query<Map<String, Integer>> latestJoinAddresses(ServerUUID serverUUID) {
         String selectLatestSessionStarts = SELECT + SessionsTable.USER_ID + ",MAX(" + SessionsTable.SESSION_START + ") as max_start" +
                 FROM + SessionsTable.TABLE_NAME + " max_s" +
-                WHERE + "max_s." + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s_max ON s_max." + ServerTable.ID + "=max_s." + SessionsTable.SERVER_ID +
+                WHERE + "s_max." + ServerTable.SERVER_UUID + "=?" +
                 GROUP_BY + SessionsTable.USER_ID;
         String selectLatestJoinAddressIds = SELECT + SessionsTable.JOIN_ADDRESS_ID +
                 FROM + SessionsTable.TABLE_NAME + " s" +
@@ -114,7 +115,8 @@ public class JoinAddressQueries {
     public static Query<Map<UUID, String>> latestJoinAddressesOfPlayers(ServerUUID serverUUID) {
         String selectLatestSessionStarts = SELECT + SessionsTable.USER_ID + ",MAX(" + SessionsTable.SESSION_START + ") as max_start" +
                 FROM + SessionsTable.TABLE_NAME + " max_s" +
-                WHERE + "max_s." + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s_max ON s_max." + ServerTable.ID + "=max_s." + SessionsTable.SERVER_ID +
+                WHERE + "s_max." + ServerTable.SERVER_UUID + "=?" +
                 GROUP_BY + SessionsTable.USER_ID;
         String selectLatestJoinAddressIds = SELECT + SessionsTable.JOIN_ADDRESS_ID + ",s." + SessionsTable.USER_ID +
                 FROM + SessionsTable.TABLE_NAME + " s" +
@@ -150,7 +152,8 @@ public class JoinAddressQueries {
         String sql = SELECT + DISTINCT + JoinAddressTable.JOIN_ADDRESS +
                 FROM + JoinAddressTable.TABLE_NAME + " j" +
                 INNER_JOIN + SessionsTable.TABLE_NAME + " s ON s." + SessionsTable.JOIN_ADDRESS_ID + "=j." + JoinAddressTable.ID +
-                WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                INNER_JOIN + ServerTable.TABLE_NAME + " se ON se." + ServerTable.ID + "=s." + SessionsTable.SERVER_ID +
+                WHERE + "se." + ServerTable.SERVER_UUID + "=?" +
                 ORDER_BY + JoinAddressTable.JOIN_ADDRESS + " ASC";
 
         return new QueryStatement<>(sql, 100) {
@@ -215,7 +218,8 @@ public class JoinAddressQueries {
                     ", COUNT(1) as count" +
                     FROM + SessionsTable.TABLE_NAME + " s" +
                     LEFT_JOIN + JoinAddressTable.TABLE_NAME + " j on s." + SessionsTable.JOIN_ADDRESS_ID + "=j." + JoinAddressTable.ID +
-                    WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                    INNER_JOIN + ServerTable.TABLE_NAME + " se ON se." + ServerTable.ID + "=s." + SessionsTable.SERVER_ID +
+                    WHERE + "se." + ServerTable.SERVER_UUID + "=?" +
                     AND + SessionsTable.SESSION_START + ">?" +
                     AND + SessionsTable.SESSION_START + "<=?" +
                     (ids == null ? "" : AND + "j." + JoinAddressTable.ID +

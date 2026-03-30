@@ -197,8 +197,9 @@ public class WorldTimesQueries {
                 "SUM(" + WorldTimesTable.ADVENTURE + ") as ADVENTURE," +
                 "SUM(" + WorldTimesTable.SPECTATOR + ") as SPECTATOR" +
                 FROM + WorldTimesTable.TABLE_NAME + " w1" +
-                INNER_JOIN + SessionsTable.TABLE_NAME + " s1 on s1." + SessionsTable.ID + '=' + WorldTimesTable.SESSION_ID +
-                WHERE + "w1." + WorldTimesTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                INNER_JOIN + SessionsTable.TABLE_NAME + " s1 on s1." + SessionsTable.ID + "=w1." + WorldTimesTable.SESSION_ID +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=w1." + WorldTimesTable.SERVER_ID +
+                WHERE + "s." + ServerTable.SERVER_UUID + "=?" +
                 AND + SessionsTable.SESSION_START + ">=?" +
                 AND + SessionsTable.SESSION_END + "<=?";
 

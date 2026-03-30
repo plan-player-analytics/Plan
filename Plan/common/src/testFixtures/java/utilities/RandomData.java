@@ -77,9 +77,15 @@ public class RandomData {
     public static List<TPS> randomTPS() {
         List<TPS> test = new ArrayList<>();
         for (int i = 0; i < randomInt(5, 100); i++) {
-            int randInt = r.nextInt();
-            long randLong = Math.abs(r.nextLong());
-            test.add(new TPS(randLong, randLong, randInt, randLong, randLong, randInt, randInt, randLong));
+            long randDate = Math.abs(r.nextLong());
+            int randPlayers = r.nextInt(10000);
+            double randTPS = r.nextDouble() % 20.0;
+            double randCPU = r.nextDouble() % 100.0;
+            long randMemory = r.nextLong() % 100000L;
+            int randEntities = r.nextInt(10000);
+            int randChunks = r.nextInt(10000);
+            long randDisk = r.nextLong() % 100000L;
+            test.add(new TPS(randDate, randTPS, randPlayers, randCPU, randMemory, randEntities, randChunks, randDisk));
         }
         return test;
     }

@@ -232,7 +232,7 @@ public class SessionQueries {
     public static Query<List<FinishedSession>> fetchServerSessionsWithoutKillOrWorldData(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT +
                 SessionsTable.TABLE_NAME + '.' + SessionsTable.ID + ',' +
-                UsersTable.USER_UUID + ',' +
+                "u." + UsersTable.USER_UUID + ',' +
                 SessionsTable.SESSION_START + ',' +
                 SessionsTable.SESSION_END + ',' +
                 SessionsTable.DEATHS + ',' +
@@ -240,7 +240,8 @@ public class SessionQueries {
                 SessionsTable.AFK_TIME +
                 FROM + SessionsTable.TABLE_NAME +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + '=' + SessionsTable.TABLE_NAME + '.' + SessionsTable.USER_ID +
-                WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=" + SessionsTable.TABLE_NAME + "." + SessionsTable.SERVER_ID +
+                WHERE + "s." + ServerTable.SERVER_UUID + "=?" +
                 AND + SessionsTable.SESSION_START + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?";
 
@@ -278,8 +279,9 @@ public class SessionQueries {
     }
 
     private static Query<Long> fetchLatestSessionStartLimitForServer(ServerUUID serverUUID, int limit) {
-        String sql = SELECT + SessionsTable.SESSION_START + FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+        String sql = SELECT + SessionsTable.SESSION_START + FROM + SessionsTable.TABLE_NAME + " t" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SessionsTable.SERVER_ID +
+                WHERE + "s." + ServerTable.SERVER_UUID + "=?" +
                 ORDER_BY_SESSION_START_DESC + " LIMIT ?";
 
         return new QueryStatement<>(sql, limit) {
@@ -302,7 +304,8 @@ public class SessionQueries {
 
     public static Query<List<FinishedSession>> fetchLatestSessionsOfServer(ServerUUID serverUUID, int limit) {
         String sql = SELECT_SESSIONS_STATEMENT +
-                WHERE + "s." + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                INNER_JOIN + ServerTable.TABLE_NAME + " se ON se." + ServerTable.ID + "=s." + SessionsTable.SERVER_ID +
+                WHERE + "se." + ServerTable.SERVER_UUID + "=?" +
                 AND + "s." + SessionsTable.SESSION_START + ">=?" +
                 ORDER_BY_SESSION_START_DESC;
 
@@ -325,8 +328,9 @@ public class SessionQueries {
 
     public static Query<Long> sessionCount(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "COUNT(1) as count" +
-                FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                FROM + SessionsTable.TABLE_NAME + " t" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SessionsTable.SERVER_ID +
+                WHERE + "s." + ServerTable.SERVER_UUID + "=?" +
                 AND + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?";
         return new QueryStatement<>(sql) {
@@ -450,8 +454,9 @@ public class SessionQueries {
         return db -> {
             String sql = SELECT +
                     playtimeColumn(db.getSql(), after, before) +
-                    FROM + SessionsTable.TABLE_NAME +
-                    WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                    FROM + SessionsTable.TABLE_NAME + " t" +
+                    INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SessionsTable.SERVER_ID +
+                    WHERE + "s." + ServerTable.SERVER_UUID + "=?" +
                     AND + SessionsTable.SESSION_END + ">=?" +
                     AND + SessionsTable.SESSION_START + "<=?";
             return db.query(new QueryStatement<>(sql) {
@@ -477,7 +482,7 @@ public class SessionQueries {
                     playtimeColumn(db.getSql(), after, before) +
                     FROM + SessionsTable.TABLE_NAME +
                     WHERE + (!serverUUIDs.isEmpty() ? SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
-                    AND : "") + SessionsTable.SESSION_END + ">=?" +
+                                                      AND : "") + SessionsTable.SESSION_END + ">=?" +
                     AND + SessionsTable.SESSION_START + "<=?";
             return db.query(new QueryStatement<>(sql) {
                 @Override
@@ -500,7 +505,7 @@ public class SessionQueries {
                     playtimeColumn(db.getSql(), after, before) +
                     FROM + SessionsTable.TABLE_NAME +
                     WHERE + (!serverUUIDs.isEmpty() ? SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
-                    AND : "") + SessionsTable.SESSION_END + ">=?" +
+                                                      AND : "") + SessionsTable.SESSION_END + ">=?" +
                     AND + SessionsTable.SESSION_START + "<=?" +
                     AND + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID;
             return db.query(new QueryStatement<>(sql) {
@@ -592,10 +597,11 @@ public class SessionQueries {
                     sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + SessionsTable.SESSION_START + "+?)/1000"))) +
                     "*1000 as date," +
                     "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
-                    FROM + SessionsTable.TABLE_NAME +
+                    FROM + SessionsTable.TABLE_NAME + " t" +
+                    INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SessionsTable.SERVER_ID +
                     WHERE + SessionsTable.SESSION_END + "<=?" +
                     AND + SessionsTable.SESSION_START + ">=?" +
-                    AND + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                    AND + "s." + ServerTable.SERVER_UUID + "=?" +
                     GROUP_BY + "date";
 
             return database.query(new QueryStatement<NavigableMap<Long, Long>>(selectPlaytimePerDay, 100) {
@@ -666,10 +672,11 @@ public class SessionQueries {
                     sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + SessionsTable.SESSION_START + "+?)/1000"))) +
                     "*1000 as date," +
                     "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
-                    FROM + SessionsTable.TABLE_NAME +
+                    FROM + SessionsTable.TABLE_NAME + " t" +
+                    INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SessionsTable.SERVER_ID +
                     WHERE + SessionsTable.SESSION_END + "<=?" +
                     AND + SessionsTable.SESSION_START + ">=?" +
-                    AND + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                    AND + "s." + ServerTable.SERVER_UUID + "=?" +
                     GROUP_BY + "date";
             String selectAverage = SELECT + "AVG(playtime) as average" + FROM + '(' + selectPlaytimePerDay + ") q1";
 
@@ -695,10 +702,11 @@ public class SessionQueries {
             String selectPlaytimePerPlayer = SELECT +
                     SessionsTable.USER_ID + "," +
                     playtimeColumn(db.getSql(), after, before) +
-                    FROM + SessionsTable.TABLE_NAME +
+                    FROM + SessionsTable.TABLE_NAME + " t" +
+                    INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SessionsTable.SERVER_ID +
                     WHERE + SessionsTable.SESSION_START + "<=?" +
                     AND + SessionsTable.SESSION_END + ">=?" +
-                    AND + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                    AND + "s." + ServerTable.SERVER_UUID + "=?" +
                     GROUP_BY + SessionsTable.USER_ID;
             String selectAverage = SELECT + "AVG(playtime) as average" + FROM + '(' + selectPlaytimePerPlayer + ") q1";
 
@@ -756,10 +764,11 @@ public class SessionQueries {
             String selectAfkPerPlayer = SELECT +
                     SessionsTable.USER_ID + "," +
                     "SUM(" + SessionsTable.AFK_TIME + ") as afk" +
-                    FROM + SessionsTable.TABLE_NAME +
+                    FROM + SessionsTable.TABLE_NAME + " t" +
+                    INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SessionsTable.SERVER_ID +
                     WHERE + SessionsTable.SESSION_START + "<=?" +
                     AND + SessionsTable.SESSION_END + ">=?" +
-                    AND + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                    AND + "s." + ServerTable.SERVER_UUID + "=?" +
                     GROUP_BY + SessionsTable.USER_ID;
             String selectAverage = SELECT + "AVG(afk) as average" + FROM + '(' + selectAfkPerPlayer + ") q1";
 
@@ -860,7 +869,7 @@ public class SessionQueries {
     }
 
     public static Query<Double> afkTimePercentage(long after, long before, List<ServerUUID> serverUUIDs) {
-        String sql = SELECT + "SUM(" + SessionsTable.AFK_TIME + ")/SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as afk_time_perc" +
+        String sql = SELECT + "SUM(" + SessionsTable.AFK_TIME + ")*1.0/SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as afk_time_perc" +
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?" +

@@ -340,4 +340,13 @@ public interface JoinAddressQueriesTest extends DatabaseTestPreparer {
         Map<UUID, String> result = db().query(JoinAddressQueries.latestJoinAddressesOfPlayers(TestConstants.SERVER_TWO_UUID));
         assertEquals(expected, result);
     }
+
+    @Test
+    default void serverSpecificJoinAddressCanBeFetched() {
+        joinAddressUpdateIsUniquePerServer();
+
+        var expected = List.of(TestConstants.GET_PLAYER_HOSTNAME.get());
+        var result = db().query(JoinAddressQueries.allJoinAddresses(TestConstants.SERVER_TWO_UUID));
+        assertEquals(expected, result);
+    }
 }

@@ -35,12 +35,12 @@ import utilities.RandomData;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -58,6 +58,72 @@ public interface TPSQueriesTest extends DatabaseTestPreparer {
 
         expected.sort(new TPSComparator());
         assertEquals(expected, db().query(TPSQueries.fetchTPSDataOfServer(Long.MIN_VALUE, Long.MAX_VALUE, serverUUID())));
+    }
+
+
+    @Test
+    default void tpsFetchedInResolution() {
+        execute(LargeStoreQueries.storeAllTPSData(Map.of(serverUUID(), RandomData.randomTPS())));
+
+        assertFalse(db().query(TPSQueries.fetchTPSDataOfServerInResolution(Long.MIN_VALUE, Long.MAX_VALUE, TimeUnit.MINUTES.toMillis(5), serverUUID()))
+                .isEmpty());
+    }
+
+    @Test
+    default void previewGraphData() {
+        List<TPS> tps = RandomData.randomTPS();
+        execute(LargeStoreQueries.storeAllTPSData(Map.of(serverUUID(), tps)));
+
+        tps.sort(new TPSComparator());
+        var expected = tps.stream().map(t -> new DateObj<>(t.getDate(), t.getPlayers())).toList();
+        var result = db().query(TPSQueries.fetchViewPreviewGraphData(serverUUID()));
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void playersOnlineOfServer() {
+        List<TPS> tps = RandomData.randomTPS();
+        execute(LargeStoreQueries.storeAllTPSData(Map.of(serverUUID(), tps)));
+
+        tps.sort(new TPSComparator());
+        var expected = tps.stream().map(t -> new DateObj<>(t.getDate(), t.getPlayers())).toList();
+        var result = db().query(TPSQueries.fetchPlayersOnlineOfServer(Long.MIN_VALUE, Long.MAX_VALUE, serverUUID()));
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void latestTpsOfServer() {
+        List<TPS> tps = RandomData.randomTPS();
+        execute(LargeStoreQueries.storeAllTPSData(Map.of(serverUUID(), tps)));
+
+        tps.sort(new TPSComparator());
+        var expected = tps.getLast();
+        var result = db().query(TPSQueries.fetchLatestTPSEntryForServer(serverUUID()))
+                .orElseThrow();
+        assertEquals(expected, result);
+
+        var expectedDate = expected.getDate();
+        var resultDate = db().query(TPSQueries.fetchLastStoredTpsDate(serverUUID()))
+                .orElseThrow();
+        assertEquals(expectedDate, resultDate);
+    }
+
+    @Test
+    default void tpsAveragesOfServer() {
+        List<TPS> tps = RandomData.randomTPS();
+        execute(LargeStoreQueries.storeAllTPSData(Map.of(serverUUID(), tps)));
+
+        tps.sort(new TPSComparator());
+        TPSMutator mutator = new TPSMutator(tps);
+
+        assertEquals(mutator.averageTPS(), db().query(TPSQueries.averageTPS(Long.MIN_VALUE, Long.MAX_VALUE, serverUUID())), 0.01);
+        assertEquals(mutator.averageCPU(), db().query(TPSQueries.averageCPU(Long.MIN_VALUE, Long.MAX_VALUE, serverUUID())), 0.01);
+        assertEquals((Long) (long) mutator.averageRAM(), db().query(TPSQueries.averageRAM(Long.MIN_VALUE, Long.MAX_VALUE, serverUUID())));
+        assertEquals((Long) (long) mutator.averageChunks(), db().query(TPSQueries.averageChunks(Long.MIN_VALUE, Long.MAX_VALUE, serverUUID())));
+        assertEquals((Long) (long) mutator.averageEntities(), db().query(TPSQueries.averageEntities(Long.MIN_VALUE, Long.MAX_VALUE, serverUUID())));
+        assertEquals(mutator.maxFreeDisk(), db().query(TPSQueries.maxFreeDisk(Long.MIN_VALUE, Long.MAX_VALUE, serverUUID())), 0.01);
+        assertEquals(mutator.minFreeDisk(), db().query(TPSQueries.minFreeDisk(Long.MIN_VALUE, Long.MAX_VALUE, serverUUID())), 0.01);
+        assertEquals((Long) (long) mutator.averageFreeDisk(), db().query(TPSQueries.averageFreeDisk(Long.MIN_VALUE, Long.MAX_VALUE, serverUUID())));
     }
 
     @RepeatedTest(5)

@@ -156,11 +156,12 @@ public class GeoInfoQueries {
                 LEFT_JOIN + GeoInfoTable.TABLE_NAME + " b ON a." + GeoInfoTable.USER_ID + "=b." + GeoInfoTable.USER_ID + AND + "a." + GeoInfoTable.LAST_USED + "<b." + GeoInfoTable.LAST_USED +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + "=a." + GeoInfoTable.USER_ID +
                 INNER_JOIN + UserInfoTable.TABLE_NAME + " ui on ui." + UserInfoTable.USER_ID + "=u." + UsersTable.ID +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=ui." + UserInfoTable.SERVER_ID +
                 WHERE + "b." + GeoInfoTable.LAST_USED + IS_NULL +
-                AND + "ui." + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                AND + "s." + ServerTable.SERVER_UUID + "=?" +
                 GROUP_BY + "a." + GeoInfoTable.GEOLOCATION;
 
-        return db -> db.queryMap(sql, GeoInfoQueries::extractGeolocationCounts, serverUUID);
+        return db -> db.queryMap(sql, GeoInfoQueries::extractGeolocationCounts, serverUUID.toString());
     }
 
     public static Query<List<String>> uniqueGeolocations() {

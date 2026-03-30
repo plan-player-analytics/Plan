@@ -226,4 +226,16 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
     default void noMinimumRegisterDateIsFetchedWithNoData() {
         assertFalse(db().query(BaseUserQueries.minimumRegisterDate()).isPresent());
     }
+
+    @Test
+    default void maxUserIdsIsFetched() {
+        playerIsRegisteredToBothTables();
+        assertNotEquals(0, db().query(UserIdentifierQueries.fetchMaxUserId(serverUUID())));
+    }
+
+    @Test
+    default void userIdsAreFetched() {
+        playerIsRegisteredToBothTables();
+        assertNotEquals(List.of(), db().query(UserIdentifierQueries.fetchUUIDsStartingFromId(0, serverUUID(), 10)));
+    }
 }

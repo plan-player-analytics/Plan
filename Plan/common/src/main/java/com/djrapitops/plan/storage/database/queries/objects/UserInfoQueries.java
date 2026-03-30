@@ -129,11 +129,12 @@ public class UserInfoQueries {
 
     public static Query<Map<UUID, Long>> fetchRegisterDates(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT +
-                UsersTable.USER_UUID + ',' +
+                "u." + UsersTable.USER_UUID + ',' +
                 "ux." + UserInfoTable.REGISTERED +
                 FROM + UserInfoTable.TABLE_NAME + " ux" +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + '=' + "ux." + UserInfoTable.USER_ID +
-                WHERE + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=ux." + UserInfoTable.SERVER_ID +
+                WHERE + "s." + ServerTable.SERVER_UUID + "=?" +
                 AND + "ux." + UserInfoTable.REGISTERED + ">=?" +
                 AND + "ux." + UserInfoTable.REGISTERED + "<=?";
 

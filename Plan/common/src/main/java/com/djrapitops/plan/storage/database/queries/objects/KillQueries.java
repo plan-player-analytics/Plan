@@ -237,23 +237,25 @@ public class KillQueries {
 
     public static Query<Long> mobKillCount(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "SUM(" + SessionsTable.MOB_KILLS + ") as count" +
-                FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                FROM + SessionsTable.TABLE_NAME + " t" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SessionsTable.SERVER_ID +
+                WHERE + "s." + ServerTable.SERVER_UUID + "=?" +
                 AND + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?";
 
 
-        return db -> db.queryOptional(sql, RowExtractors.getLong("count"), serverUUID, after, before)
+        return db -> db.queryOptional(sql, RowExtractors.getLong("count"), serverUUID.toString(), after, before)
                 .orElse(0L);
     }
 
     public static Query<Long> deathCount(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "SUM(" + SessionsTable.DEATHS + ") as count" +
-                FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                FROM + SessionsTable.TABLE_NAME + " t" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SessionsTable.SERVER_ID +
+                WHERE + "s." + ServerTable.SERVER_UUID + "=?" +
                 AND + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?";
-        return db -> db.queryOptional(sql, RowExtractors.getLong("count"), serverUUID, after, before)
+        return db -> db.queryOptional(sql, RowExtractors.getLong("count"), serverUUID.toString(), after, before)
                 .orElse(0L);
     }
 

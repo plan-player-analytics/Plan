@@ -257,6 +257,9 @@ public interface DatabaseTest extends DatabaseTestPreparer {
 
         Map<ServerUUID, Integer> result = db().query(ServerAggregateQueries.serverUserCounts());
         assertEquals(expected, result);
+
+        Integer singleResult = db().query(ServerAggregateQueries.serverUserCount(serverUUID()));
+        assertEquals(expected.get(serverUUID()), singleResult);
     }
 
     @Test
