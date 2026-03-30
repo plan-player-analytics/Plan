@@ -61,7 +61,7 @@ public class GrantWebPermissionToGroupsWithPermissionTransaction extends Transac
                 .orElseThrow(() -> new DBOpException("Permission called '" + permissionToGive + "' not found in database."));
 
         @Language("SQL")
-        String sql = INSERT_INTO + WebGroupToPermissionTable.TABLE_NAME + '(' +
+        String sql = INSERT_INTO + WebGroupToPermissionTable.TABLE_NAME + " (" +
                 WebGroupToPermissionTable.GROUP_ID + ',' + WebGroupToPermissionTable.PERMISSION_ID +
                 ") VALUES (?, ?)";
         execute(new ExecBatchStatement(sql) {

@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.storage.database.transactions.webuser;
 
-import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.storage.database.sql.tables.webuser.WebPermissionTable;
 import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
@@ -60,13 +59,5 @@ public class StoreMissingWebPermissionsTransaction extends Transaction {
                 }
             }
         });
-
-        if (!storedPermissions.contains(WebPermission.DATA_PLAYER.getPermission())) {
-            executeOther(new GrantWebPermissionToGroupsWithPermissionTransaction(WebPermission.DATA_PLAYER, WebPermission.ACCESS_PLAYER_SELF));
-            executeOther(new GrantWebPermissionToGroupsWithPermissionTransaction(WebPermission.DATA_PLAYER, WebPermission.ACCESS_PLAYER));
-            executeOther(new GrantWebPermissionToGroupsWithPermissionTransaction(WebPermission.DATA_SERVER, WebPermission.ACCESS_SERVER));
-            executeOther(new GrantWebPermissionToGroupsWithPermissionTransaction(WebPermission.DATA_NETWORK, WebPermission.ACCESS_NETWORK));
-            executeOther(new GrantWebPermissionToGroupsWithPermissionTransaction(WebPermission.DATA, WebPermission.ACCESS));
-        }
     }
 }
