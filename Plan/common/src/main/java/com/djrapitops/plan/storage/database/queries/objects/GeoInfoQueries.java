@@ -171,6 +171,7 @@ public class GeoInfoQueries {
     }
 
     public static Query<Set<Integer>> userIdsOfPlayersWithGeolocations(@Untrusted List<String> selected) {
+        if (selected.isEmpty()) return db -> Collections.emptySet();
         String sql = SELECT + "u." + UsersTable.ID +
                 FROM + GeoInfoTable.TABLE_NAME + " g" +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on u.id=g." + GeoInfoTable.USER_ID +

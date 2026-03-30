@@ -189,6 +189,7 @@ public class JoinAddressQueries {
     }
 
     public static Query<Set<Integer>> userIdsOfPlayersWithJoinAddresses(@Untrusted List<String> joinAddresses) {
+        if (joinAddresses.isEmpty()) return db -> Collections.emptySet();
         String sql = SELECT + DISTINCT + SessionsTable.USER_ID +
                 FROM + JoinAddressTable.TABLE_NAME + " j" +
                 INNER_JOIN + SessionsTable.TABLE_NAME + " s on s." + SessionsTable.JOIN_ADDRESS_ID + "=j." + JoinAddressTable.ID +
@@ -218,7 +219,7 @@ public class JoinAddressQueries {
                     AND + SessionsTable.SESSION_START + ">?" +
                     AND + SessionsTable.SESSION_START + "<=?" +
                     (ids == null ? "" : AND + "j." + JoinAddressTable.ID +
-                            " IN (" + new TextStringBuilder().appendWithSeparators(ids, ",").get() + ")") +
+                                        " IN (" + new TextStringBuilder().appendWithSeparators(ids, ",").get() + ")") +
                     GROUP_BY + "date,j." + JoinAddressTable.JOIN_ADDRESS + ',' + SessionsTable.USER_ID;
 
             return db.query(new QueryStatement<>(selectAddresses, 1000) {
@@ -250,14 +251,11 @@ public class JoinAddressQueries {
     }
 
     public static Query<List<Integer>> joinAddressIds(@Untrusted List<String> addresses) {
-        return db -> {
-            if (addresses.isEmpty()) return null;
-
-            String selectJoinAddressIds = SELECT + JoinAddressTable.ID +
-                    FROM + JoinAddressTable.TABLE_NAME +
-                    WHERE + JoinAddressTable.JOIN_ADDRESS + " IN (" + Sql.nParameters(addresses.size()) + ")";
-            return db.queryList(selectJoinAddressIds, set -> set.getInt(JoinAddressTable.ID), addresses);
-        };
+        if (addresses.isEmpty()) return db -> null;
+        String selectJoinAddressIds = SELECT + JoinAddressTable.ID +
+                FROM + JoinAddressTable.TABLE_NAME +
+                WHERE + JoinAddressTable.JOIN_ADDRESS + " IN (" + Sql.nParameters(addresses.size()) + ")";
+        return db -> db.queryList(selectJoinAddressIds, set -> set.getInt(JoinAddressTable.ID), addresses);
     }
 
     public static Query<List<DateObj<Map<String, Integer>>>> joinAddressesPerDay(long timezoneOffset, long after, long before, @Untrusted List<String> addressFilter) {
@@ -278,7 +276,7 @@ public class JoinAddressQueries {
                     WHERE + SessionsTable.SESSION_START + ">?" +
                     AND + SessionsTable.SESSION_START + "<=?" +
                     (ids == null ? "" : AND + "j." + JoinAddressTable.ID +
-                            " IN (" + new TextStringBuilder().appendWithSeparators(ids, ",").get() + ")") +
+                                        " IN (" + new TextStringBuilder().appendWithSeparators(ids, ",").get() + ")") +
                     GROUP_BY + "date,j." + JoinAddressTable.JOIN_ADDRESS + ',' + SessionsTable.USER_ID;
 
             return db.query(new QueryStatement<>(selectAddresses, 1000) {

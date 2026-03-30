@@ -198,13 +198,11 @@ public class WebUserQueries {
     }
 
     public static Query<List<Integer>> fetchPermissionIds(@Untrusted Collection<String> permissions) {
+        if (permissions.isEmpty()) return db -> Collections.emptyList();
         String sql = SELECT + WebPermissionTable.ID +
                 FROM + WebPermissionTable.TABLE_NAME +
                 WHERE + WebPermissionTable.PERMISSION + " IN (" + Sql.nParameters(permissions.size()) + ")";
-        return db -> {
-            if (permissions.isEmpty()) return Collections.emptyList();
-            return db.queryList(sql, row -> row.getInt(WebPermissionTable.ID), permissions);
-        };
+        return db -> db.queryList(sql, row -> row.getInt(WebPermissionTable.ID), permissions);
     }
 
     public static Query<List<String>> fetchAllUsernames() {
