@@ -138,7 +138,8 @@ public class NetworkPageExporter extends FileExporter {
                 datapointType + DatapointType.AFK_TIME_PERCENTAGE.name() + after,
                 datapointType + DatapointType.SERVER_OCCUPIED.name() + after,
                 datapointType + DatapointType.MOST_ACTIVE_GAME_MODE.name() + after,
-                datapointType + DatapointType.WORLD_PIE.name() + after
+                datapointType + DatapointType.WORLD_PIE.name() + after,
+                datapointType + DatapointType.SERVER_PIE.name() + after
         );
     }
 

@@ -30,7 +30,7 @@ export const useSessions = (filter: GenericFilter) => {
         queryKey: ['sessions', ...Object.values(serverFilter)],
         queryFn: () => getSessions(serverFilter),
         retry: queryRetry,
-        enabled: hasPermission(getPermission(filter))
+        enabled: hasPermission(getPermission(serverFilter))
     });
     useEffect(() => {
         query.refetch()

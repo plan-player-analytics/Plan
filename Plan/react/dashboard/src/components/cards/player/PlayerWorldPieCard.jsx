@@ -12,7 +12,7 @@ const PlayerWorldPieCard = ({player}) => {
     if (loadingError) return <ErrorViewCard error={loadingError}/>;
 
     const title = <TitleWithDates label={'html.label.worldPlaytime'} fallback={'html.label.worldPlaytime'}
-                                  after={after} before={before}/>;
+                                  after={filter.after} before={filter.before}/>;
     return (
         <WorldPieCard
             worldSeries={worldPie ? worldPie.value.slices : player.world_pie_series}

@@ -5,15 +5,23 @@ import {queryRetry} from "./queryRetry";
 import {useEffect} from "react";
 import {Datapoint, DatapointType, getDatapointPermission, getDatapointUrl} from "./model/datapoint/Datapoint";
 import {useAuth} from "../hooks/authenticationHook";
+import {useDateConverter} from "../util/format/useDateConverter";
 
 export const useWorldPie = (filter: GenericFilter) => {
     const {updateRequested} = useNavigation() as { updateRequested: number };
     const {hasPermission} = useAuth();
+    const {convert} = useDateConverter();
+
+    const serverFilter = {
+        ...filter,
+        after: filter.after ? convert(filter.after).toServerEpochMs() : undefined,
+        before: filter.before ? convert(filter.before).toServerEpochMs() : undefined,
+    };
     const query = useQuery({
-        queryKey: ['world-pie', ...Object.values(filter)],
-        queryFn: () => getWorldPie(filter),
+        queryKey: ['world-pie', ...Object.values(serverFilter)],
+        queryFn: () => getWorldPie(serverFilter),
         retry: queryRetry,
-        enabled: hasPermission(getDatapointPermission('world.pie', filter))
+        enabled: hasPermission(getDatapointPermission('world.pie', serverFilter))
     });
     useEffect(() => {
         query.refetch()
@@ -31,11 +39,18 @@ const getWorldPie = async (filter: GenericFilter) => {
 export const useServerPie = (filter: GenericFilter) => {
     const {updateRequested} = useNavigation() as { updateRequested: number };
     const {hasPermission} = useAuth();
+    const {convert} = useDateConverter();
+
+    const serverFilter = {
+        ...filter,
+        after: filter.after ? convert(filter.after).toServerEpochMs() : undefined,
+        before: filter.before ? convert(filter.before).toServerEpochMs() : undefined,
+    };
     const query = useQuery({
-        queryKey: ['server-pie', ...Object.values(filter)],
-        queryFn: () => getServerPie(filter),
+        queryKey: ['server-pie', ...Object.values(serverFilter)],
+        queryFn: () => getServerPie(serverFilter),
         retry: queryRetry,
-        enabled: hasPermission(getDatapointPermission('server.pie', filter))
+        enabled: hasPermission(getDatapointPermission('server.pie', serverFilter))
     });
     useEffect(() => {
         query.refetch()
