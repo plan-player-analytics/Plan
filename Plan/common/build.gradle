@@ -170,6 +170,7 @@ tasks.withType(YarnInstallTask).configureEach {
     // Skip Yarn build on Jitpack since Jitpack doesn't offer gclib version compatible with Node 20
     // Jitpack build is used mainly for java dependencies.
     onlyIf("not running in Jitpack") { !project.hasProperty("isJitpack") }
+    args = ["--ignore-scripts"]
 }
 
 tasks.register("copyYarnBuildResults") {
