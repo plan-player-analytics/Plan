@@ -151,7 +151,7 @@ public class ServerPageExporter extends FileExporter {
                 datapointType + DatapointType.AFK_TIME_PERCENTAGE.name() + after + server,
                 datapointType + DatapointType.SERVER_OCCUPIED.name() + after + server,
                 datapointType + DatapointType.MOST_ACTIVE_GAME_MODE.name() + after + server,
-                datapointType + DatapointType.WORLD_PIE.name() + after + server
+                datapointType + DatapointType.WORLD_PIE.name() + server
         );
     }
 

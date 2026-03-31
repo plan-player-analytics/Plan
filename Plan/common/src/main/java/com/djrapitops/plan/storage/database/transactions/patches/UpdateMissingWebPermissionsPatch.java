@@ -70,6 +70,8 @@ public class UpdateMissingWebPermissionsPatch extends Patch {
             }
         });
 
+        commitMidTransaction();
+
         if (missingPermissions.contains(WebPermission.DATA_PLAYER.getPermission())) {
             executeOther(new GrantWebPermissionToGroupsWithPermissionTransaction(WebPermission.DATA_PLAYER, WebPermission.ACCESS_PLAYER_SELF));
             executeOther(new GrantWebPermissionToGroupsWithPermissionTransaction(WebPermission.DATA_PLAYER, WebPermission.ACCESS_PLAYER));
