@@ -86,6 +86,8 @@ jobs:
           RELEASE_CHANGELOG: ${{ github.event.release.body }}
           RELEASE_PRERELEASE: ${{ github.event.release.prerelease }}
           RELEASE_JAR_PATH: ${{ env.RELEASE_JAR_PATH }}
+          npm_config_ignore_scripts: true
+          YARN_ENABLE_SCRIPTS: false
         run: |
           cd Plan
           ./gradlew :plugin:publishToOre
@@ -154,6 +156,8 @@ jobs:
           RELEASE_CHANGELOG: ${{ github.event.release.body }}
           RELEASE_PRERELEASE: ${{ github.event.release.prerelease }}
           RELEASE_DOWNLOAD_URL: ${{ env.RELEASE_DOWNLOAD_URL }}
+          npm_config_ignore_scripts: true
+          YARN_ENABLE_SCRIPTS: false
         run: |
           cd Plan
           ./gradlew :plugin:publishPluginPublicationToHangar
