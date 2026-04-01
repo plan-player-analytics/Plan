@@ -18,13 +18,21 @@ package com.djrapitops.plan.delivery.webserver.resolver.json;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
+import com.djrapitops.plan.delivery.formatting.Formatter;
+import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointStore;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
+import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
+import com.djrapitops.plan.delivery.webserver.CacheStrategy;
+import com.djrapitops.plan.delivery.webserver.resolver.ETag;
 import com.djrapitops.plan.identification.Identifiers;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.enums.ParameterIn;
@@ -34,6 +42,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import org.eclipse.jetty.http.HttpHeader;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -51,14 +60,20 @@ public class SessionsJSONResolver implements Resolver {
 
     private final Identifiers identifiers;
     private final JSONFactory jsonFactory;
+    private final DatapointStore datapointStore;
+    private final Formatter<Long> httpLastModifiedFormatter;
 
     @Inject
     public SessionsJSONResolver(
             Identifiers identifiers,
-            JSONFactory jsonFactory
+            JSONFactory jsonFactory,
+            DatapointStore datapointStore,
+            Formatters formatters
     ) {
         this.identifiers = identifiers;
         this.jsonFactory = jsonFactory;
+        this.datapointStore = datapointStore;
+        this.httpLastModifiedFormatter = formatters.httpLastModifiedLong();
     }
 
     @Override
@@ -98,19 +113,40 @@ public class SessionsJSONResolver implements Resolver {
             filter.setServerUUIDs(identifiers.getServerUUIDs(filter.getServerIdentifiers()));
         }
 
+        @Untrusted Optional<ETag> tag = Identifiers.getEtag(request);
+        Long etag = tag.map(eTag -> eTag.parseAsLong()
+                        .orElseThrow(() -> new BadRequestException("If-Modified-Since should be a 64bit number")))
+                .orElse(null);
+        long lastModified = datapointStore.getLastModified(etag, DatapointType.PLAYTIME, filter);
+        if (etag != null && etag == lastModified) {
+            return Response.builder()
+                    .setStatus(304)
+                    .setContent(new byte[0])
+                    .build();
+        }
+
         Optional<UUID> playerUUID = filter.getPlayerUUID();
         if (playerUUID.isPresent()) {
             return newResponseBuilder()
                     .setJSONContent(jsonFactory.playerSessions(filter))
+                    .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CHECK_ETAG)
+                    .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(lastModified))
+                    .setHeader(HttpHeader.ETAG.asString(), lastModified)
                     .build();
         }
         if (!filter.getServerUUIDs().isEmpty()) {
             return newResponseBuilder()
                     .setJSONContent(jsonFactory.serverSessions(filter))
+                    .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CHECK_ETAG)
+                    .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(lastModified))
+                    .setHeader(HttpHeader.ETAG.asString(), lastModified)
                     .build();
         } else {
             return newResponseBuilder()
                     .setJSONContent(jsonFactory.networkSessions(filter))
+                    .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CHECK_ETAG)
+                    .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(lastModified))
+                    .setHeader(HttpHeader.ETAG.asString(), lastModified)
                     .build();
         }
     }

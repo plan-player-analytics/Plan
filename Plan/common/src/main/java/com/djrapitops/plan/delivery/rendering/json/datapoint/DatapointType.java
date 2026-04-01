@@ -19,25 +19,31 @@ package com.djrapitops.plan.delivery.rendering.json.datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.types.*;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
 /**
  * Types of {@link Datapoint datapoints}.
  *
  * @author AuroraLS3
  */
 public enum DatapointType {
-    PLAYTIME(Playtime.class),
-    WORLD_PIE(WorldPie.class),
-    AFK_TIME(AfkTime.class),
-    AFK_TIME_PERCENTAGE(AfkTimePercentage.class),
-    SERVER_OCCUPIED(ServerOccupied.class),
-    MOST_ACTIVE_GAME_MODE(MostActiveGameMode.class),
-    MOST_ACTIVE_WORLD(MostActiveWorld.class),
-    SERVER_PIE(ServerPie.class);
+    PLAYTIME(Playtime.class, DatapointCacheKey.SESSION),
+    WORLD_PIE(WorldPie.class, DatapointCacheKey.SESSION),
+    AFK_TIME(AfkTime.class, DatapointCacheKey.SESSION),
+    AFK_TIME_PERCENTAGE(AfkTimePercentage.class, DatapointCacheKey.SESSION),
+    SERVER_OCCUPIED(ServerOccupied.class, DatapointCacheKey.SESSION, DatapointCacheKey.TPS),
+    MOST_ACTIVE_GAME_MODE(MostActiveGameMode.class, DatapointCacheKey.SESSION),
+    MOST_ACTIVE_WORLD(MostActiveWorld.class, DatapointCacheKey.SESSION),
+    SERVER_PIE(ServerPie.class, DatapointCacheKey.SESSION);
 
     private final Class<? extends Datapoint<?>> datapointClass;
+    private final DatapointCacheKey[] cacheKeys;
 
-    DatapointType(Class<? extends Datapoint<?>> datapointClass) {
+    DatapointType(Class<? extends Datapoint<?>> datapointClass, DatapointCacheKey... cacheKeys) {
         this.datapointClass = datapointClass;
+        this.cacheKeys = cacheKeys;
     }
 
     public static DatapointType find(String name) {
@@ -48,7 +54,12 @@ public enum DatapointType {
         }
     }
 
+    @SuppressWarnings("unused")
     public Class<? extends Datapoint<?>> getDatapointClass() {
         return datapointClass;
+    }
+
+    public Set<DatapointCacheKey> getCacheKeys() {
+        return new HashSet<>(Arrays.asList(cacheKeys));
     }
 }
