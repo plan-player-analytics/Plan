@@ -47,19 +47,18 @@ public abstract class JSONResolver implements Resolver {
         }
 
         Optional<ETag> browserCached = Identifiers.getEtag(request);
-        if (browserCached.isPresent() && browserCached.get().isOutdated(storedJSON.getTimestamp())) {
+        if (browserCached.isEmpty() || browserCached.get().isOutdated(storedJSON.getTimestamp())) {
             return Response.builder()
-                    .setStatus(304)
-                    .setContent(new byte[0])
+                    .setMimeType(MimeType.JSON)
+                    .setJSONContent(storedJSON.getJson())
+                    .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CHECK_ETAG_USER_SPECIFIC)
+                    .setHeader(HttpHeader.LAST_MODIFIED.asString(), getHttpLastModifiedFormatter().apply(storedJSON.getTimestamp()))
+                    .setHeader(HttpHeader.ETAG.asString(), storedJSON.getTimestamp())
                     .build();
         }
-
         return Response.builder()
-                .setMimeType(MimeType.JSON)
-                .setJSONContent(storedJSON.getJson())
-                .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CHECK_ETAG_USER_SPECIFIC)
-                .setHeader(HttpHeader.LAST_MODIFIED.asString(), getHttpLastModifiedFormatter().apply(storedJSON.getTimestamp()))
-                .setHeader(HttpHeader.ETAG.asString(), storedJSON.getTimestamp())
+                .setStatus(304)
+                .setContent(new byte[0])
                 .build();
     }
 
