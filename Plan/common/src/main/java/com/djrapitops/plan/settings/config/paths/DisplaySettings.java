@@ -29,7 +29,6 @@ public class DisplaySettings {
     public static final Setting<String> THEME = new StringSetting("Display_options.Theme");
     public static final Setting<Boolean> NIGHT_MODE = new BooleanSetting("Display_options.Night_mode");
     public static final Setting<String> PLAYER_HEAD_IMG_URL = new StringSetting("Display_options.Player_head_image_url");
-    public static final Setting<Integer> SESSIONS_PER_PAGE = new IntegerSetting("Display_options.Sessions.Show_on_page");
     public static final Setting<Boolean> ORDER_WORLD_PIE_BY_PERCENTAGE = new BooleanSetting("Display_options.Sessions.Order_world_pies_by_percentage");
     public static final Setting<Integer> PLAYERS_PER_SERVER_PAGE = new IntegerSetting("Display_options.Players_table.Show_on_server_page");
     public static final Setting<Integer> PLAYERS_PER_PLAYERS_PAGE = new IntegerSetting("Display_options.Players_table.Show_on_players_page");

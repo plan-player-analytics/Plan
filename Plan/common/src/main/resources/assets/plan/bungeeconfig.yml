@@ -183,7 +183,6 @@ Display_options:
   # Can use ${playerName} or ${playerUUID} or ${playerUUIDNoDash}
   Player_head_image_url: "https://crafthead.net/helm/${playerUUIDNoDash}/120"
   Sessions:
-    Show_on_page: 50
     # By Default World playtime pie is ordered alphabetically.
     # Colors will be determined alphabetically in any case.
     Order_world_pies_by_percentage: false
