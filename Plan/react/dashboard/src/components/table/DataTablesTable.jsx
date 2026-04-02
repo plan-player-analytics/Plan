@@ -92,9 +92,13 @@ const ExportMenu = ({matchingData}) => {
 
         const rows = matchingData.map(row => {
             const mapped = {};
+            console.log(row);
             for (let entry of Object.entries(row)) {
                 if (entry[1] === undefined || entry[1]["$$typeof"] === undefined) {
                     mapped[entry[0]] = entry[1];
+                }
+                if (Array.isArray(entry[1])) {
+                    mapped[entry[0]] = JSON.stringify(entry[1]);
                 }
             }
             return mapped;
