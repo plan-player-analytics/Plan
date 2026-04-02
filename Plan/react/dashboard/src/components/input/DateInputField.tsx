@@ -77,7 +77,7 @@ type Props = {
     disabled?: boolean,
 } & ValueSetFunction
 
-type DatePickerHeaderProps = {
+type DatePickerHeaderOptions = {
     date: Date;
     decreaseMonth: () => void;
     increaseMonth: () => void;
@@ -195,9 +195,9 @@ const DateInputField = (
                                                  increaseMonth,
                                                  prevMonthButtonDisabled,
                                                  nextMonthButtonDisabled
-                                             }: DatePickerHeaderProps) => {
+                                             }: DatePickerHeaderOptions) => {
                             return (
-                                <InlinedRow justifyContent={"space-between"}>
+                                <InlinedRow justifyContent={"space-around"}>
                                     <OutlineButton onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>
                                         <FontAwesomeIcon icon={"chevron-left"}/>
                                     </OutlineButton>

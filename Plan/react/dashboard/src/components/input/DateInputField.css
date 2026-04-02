@@ -10,7 +10,8 @@
 
 .react-datepicker__header {
     background-color: var(--color-cards-header-background);
-    min-width: 300px !important;
+    min-width: 325px !important;
+    padding: 0.5rem;
 }
 
 .react-datepicker__day, .react-datepicker__month-text, .react-datepicker__day-name {
@@ -73,11 +74,6 @@
     font-size: 20px;
     font-weight: bold;
     transition: color 0.1s;
-}
-
-.react-datepicker__header--custom {
-    padding: 0.5rem;
-    min-width: 275px;
 }
 
 .react-datepicker__year, .react-datepicker__year-wrapper {

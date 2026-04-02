@@ -26,7 +26,7 @@ const RecentSessionsCard = ({id, sessions, isPlayer, isNetwork}) => {
                 </h6>
             </Card.Header>
             {(Boolean(after) && Boolean(before)) && sessions?.length === 10000 &&
-                <p className={"alert alert-info mb-0"}>
+                <p className={"alert alert-success mb-0"}>
                     <FontAwesomeIcon icon={faInfoCircle}/> {t('html.description.moreDataThanFitInResponse')}
                 </p>}
             <SessionAccordion sessions={sessions} isPlayer={isPlayer} isNetwork={isNetwork}/>
