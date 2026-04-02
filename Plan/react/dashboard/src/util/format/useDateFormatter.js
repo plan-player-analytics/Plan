@@ -42,7 +42,7 @@ export const useDateFormatter = (includeSeconds, overrides = {}) => {
         const dayMs = 24 * 60 * 60 * 1000;
         const timestamp = date - offset;
         const now = Date.now() - offset;
-        const fromStartOfToday = now % dayMs;
+        const fromStartOfToday = (now - offset) % dayMs;
         const today = now - fromStartOfToday;
         const yesterday = today - dayMs;
         const tomorrow = today + dayMs;
