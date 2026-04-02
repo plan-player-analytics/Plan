@@ -1,13 +1,13 @@
 import React from "react";
 import InsightsFor30DaysCard from "../../common/InsightsFor30DaysCard";
 import {useTranslation} from "react-i18next";
-import Datapoint from "../../../Datapoint";
+import Datapoint from "../../../datapoint/Datapoint.tsx";
 import {faUserClock, faUserGroup} from "@fortawesome/free-solid-svg-icons";
 import SmallTrend from "../../../trend/SmallTrend";
 import {faCalendar, faCalendarPlus} from "@fortawesome/free-regular-svg-icons";
 import ComparingLabel from "../../../trend/ComparingLabel";
 import End from "../../../layout/End";
-import {CardLoader} from "../../../navigation/Loader";
+import {CardLoader} from "../../../navigation/Loader.tsx";
 import FormattedTime from "../../../text/FormattedTime.jsx";
 import {useTimeAmountFormatter} from "../../../../util/format/useTimeAmountFormatter.js";
 

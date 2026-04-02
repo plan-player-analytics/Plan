@@ -50,12 +50,13 @@ public class PlayerCountQueries {
 
     public static Query<Integer> uniquePlayerCount(long after, long before, ServerUUID serverUUID) {
         return database -> database.queryOptional(SELECT + "COUNT(DISTINCT " + SessionsTable.USER_ID + ") as " + PLAYER_COUNT +
-                                FROM + SessionsTable.TABLE_NAME +
+                                FROM + SessionsTable.TABLE_NAME + " t" +
+                                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SessionsTable.SERVER_ID +
                                 WHERE + SessionsTable.SESSION_END + "<=?" +
                                 AND + SessionsTable.SESSION_START + ">=?" +
-                                AND + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID,
+                                AND + "s." + ServerTable.SERVER_UUID + "=?",
                         set -> set.getInt(PLAYER_COUNT),
-                        before, after, serverUUID)
+                        before, after, serverUUID.toString())
                 .orElse(0);
     }
 
@@ -108,16 +109,17 @@ public class PlayerCountQueries {
                     sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + SessionsTable.SESSION_START + "+?)/1000"))) +
                     "*1000 as date," +
                     "COUNT(DISTINCT " + SessionsTable.USER_ID + ") as " + PLAYER_COUNT +
-                    FROM + SessionsTable.TABLE_NAME +
+                    FROM + SessionsTable.TABLE_NAME + " t" +
+                    INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SessionsTable.SERVER_ID +
                     WHERE + SessionsTable.SESSION_END + "<=?" +
                     AND + SessionsTable.SESSION_START + ">=?" +
-                    AND + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                    AND + "s." + ServerTable.SERVER_UUID + "=?" +
                     GROUP_BY + "date";
 
             return database.queryMap(selectUniquePlayersPerDay,
                     (set, perDay) -> perDay.put(set.getLong("date"), set.getInt(PLAYER_COUNT)),
                     TreeMap::new,
-                    timeZoneOffset, before, after, serverUUID);
+                    timeZoneOffset, before, after, serverUUID.toString());
         };
     }
 
@@ -137,16 +139,17 @@ public class PlayerCountQueries {
                     sql.dateToEpochSecond(sql.dateToHourStamp(sql.epochSecondToDate('(' + SessionsTable.SESSION_START + "+?)/1000"))) +
                     "*1000 as date," +
                     "COUNT(DISTINCT " + SessionsTable.USER_ID + ") as " + PLAYER_COUNT +
-                    FROM + SessionsTable.TABLE_NAME +
+                    FROM + SessionsTable.TABLE_NAME + " t" +
+                    INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SessionsTable.SERVER_ID +
                     WHERE + SessionsTable.SESSION_END + "<=?" +
                     AND + SessionsTable.SESSION_START + ">=?" +
-                    AND + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                    AND + "s." + ServerTable.SERVER_UUID + "=?" +
                     GROUP_BY + "date";
 
             return database.queryMap(selectUniquePlayersPerDay,
                     (set, perDay) -> perDay.put(set.getLong("date"), set.getInt(PLAYER_COUNT)),
                     TreeMap::new,
-                    timeZoneOffset, before, after, serverUUID);
+                    timeZoneOffset, before, after, serverUUID.toString());
         };
     }
 
@@ -211,16 +214,17 @@ public class PlayerCountQueries {
                     sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + SessionsTable.SESSION_START + "+?)/1000"))) +
                     "*1000 as date," +
                     "COUNT(DISTINCT " + SessionsTable.USER_ID + ") as " + PLAYER_COUNT +
-                    FROM + SessionsTable.TABLE_NAME +
+                    FROM + SessionsTable.TABLE_NAME + " t" +
+                    INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SessionsTable.SERVER_ID +
                     WHERE + SessionsTable.SESSION_END + "<=?" +
                     AND + SessionsTable.SESSION_START + ">=?" +
-                    AND + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                    AND + "s." + ServerTable.SERVER_UUID + "=?" +
                     GROUP_BY + "date";
             String selectAverage = SELECT + "AVG(" + PLAYER_COUNT + ") as average" + FROM + '(' + selectUniquePlayersPerDay + ") q1";
 
             return database.queryOptional(selectAverage,
                             set -> (int) set.getDouble("average"),
-                            timeZoneOffset, before, after, serverUUID)
+                            timeZoneOffset, before, after, serverUUID.toString())
                     .orElse(0);
         };
     }
@@ -247,14 +251,15 @@ public class PlayerCountQueries {
 
     public static Query<Integer> newPlayerCount(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT + "COUNT(1) as " + PLAYER_COUNT +
-                FROM + UserInfoTable.TABLE_NAME +
+                FROM + UserInfoTable.TABLE_NAME + " t" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + UserInfoTable.SERVER_ID +
                 WHERE + UserInfoTable.REGISTERED + "<=?" +
                 AND + UserInfoTable.REGISTERED + ">=?" +
-                AND + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID;
+                AND + "s." + ServerTable.SERVER_UUID + "=?";
 
         return database -> database.queryOptional(sql,
                         set -> set.getInt(PLAYER_COUNT),
-                        before, after, serverUUID)
+                        before, after, serverUUID.toString())
                 .orElse(0);
     }
 
@@ -302,16 +307,17 @@ public class PlayerCountQueries {
                     sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + UserInfoTable.REGISTERED + "+?)/1000"))) +
                     "*1000 as date," +
                     "COUNT(1) as " + PLAYER_COUNT +
-                    FROM + UserInfoTable.TABLE_NAME +
+                    FROM + UserInfoTable.TABLE_NAME + " t" +
+                    INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + UserInfoTable.SERVER_ID +
                     WHERE + UserInfoTable.REGISTERED + "<=?" +
                     AND + UserInfoTable.REGISTERED + ">=?" +
-                    AND + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                    AND + "s." + ServerTable.SERVER_UUID + "=?" +
                     GROUP_BY + "date";
 
             return database.queryMap(selectNewPlayersQuery,
                     (set, perDay) -> perDay.put(set.getLong("date"), set.getInt(PLAYER_COUNT)),
                     TreeMap::new,
-                    timeZoneOffset, before, after, serverUUID);
+                    timeZoneOffset, before, after, serverUUID.toString());
         };
     }
 
@@ -331,16 +337,17 @@ public class PlayerCountQueries {
                     sql.dateToEpochSecond(sql.dateToHourStamp(sql.epochSecondToDate('(' + UserInfoTable.REGISTERED + "+?)/1000"))) +
                     "*1000 as date," +
                     "COUNT(1) as " + PLAYER_COUNT +
-                    FROM + UserInfoTable.TABLE_NAME +
+                    FROM + UserInfoTable.TABLE_NAME + " t" +
+                    INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + UserInfoTable.SERVER_ID +
                     WHERE + UserInfoTable.REGISTERED + "<=?" +
                     AND + UserInfoTable.REGISTERED + ">=?" +
-                    AND + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                    AND + "s." + ServerTable.SERVER_UUID + "=?" +
                     GROUP_BY + "date";
 
             return database.queryMap(selectNewPlayersQuery,
                     (set, perDay) -> perDay.put(set.getLong("date"), set.getInt(PLAYER_COUNT)),
                     TreeMap::new,
-                    timeZoneOffset, before, after, serverUUID);
+                    timeZoneOffset, before, after, serverUUID.toString());
         };
     }
 
@@ -405,16 +412,17 @@ public class PlayerCountQueries {
                     sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + UserInfoTable.REGISTERED + "+?)/1000"))) +
                     "*1000 as date," +
                     "COUNT(1) as " + PLAYER_COUNT +
-                    FROM + UserInfoTable.TABLE_NAME +
+                    FROM + UserInfoTable.TABLE_NAME + " t" +
+                    INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + UserInfoTable.SERVER_ID +
                     WHERE + UserInfoTable.REGISTERED + "<=?" +
                     AND + UserInfoTable.REGISTERED + ">=?" +
-                    AND + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                    AND + "s." + ServerTable.SERVER_UUID + "=?" +
                     GROUP_BY + "date";
             String selectAverage = SELECT + "AVG(" + PLAYER_COUNT + ") as average" + FROM + '(' + selectNewPlayersQuery + ") q1";
 
             return database.queryOptional(selectAverage,
                             set -> (int) set.getDouble("average"),
-                            timeZoneOffset, before, after, serverUUID)
+                            timeZoneOffset, before, after, serverUUID.toString())
                     .orElse(0);
         };
     }
@@ -425,11 +433,12 @@ public class PlayerCountQueries {
                 INNER_JOIN + UserInfoTable.TABLE_NAME + " ux" +
                 " on ux." + UserInfoTable.USER_ID + "=s." + SessionsTable.USER_ID +
                 AND + "ux." + UserInfoTable.SERVER_ID + "=s." + SessionsTable.SERVER_ID +
+                INNER_JOIN + ServerTable.TABLE_NAME + " se ON se." + ServerTable.ID + "=s." + SessionsTable.SERVER_ID +
                 WHERE + UserInfoTable.REGISTERED + ">=?" +
                 AND + UserInfoTable.REGISTERED + "<=?" +
                 AND + SessionsTable.SESSION_START + ">=?" +
                 AND + SessionsTable.SESSION_END + "<=?" +
-                AND + "s." + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID;
+                AND + "se." + ServerTable.SERVER_UUID + "=?";
 
         return new QueryStatement<>(selectUniqueUUIDs) {
             @Override
@@ -456,10 +465,11 @@ public class PlayerCountQueries {
     }
 
     public static Query<Integer> operators(ServerUUID serverUUID) {
-        String sql = SELECT + "COUNT(1) as " + PLAYER_COUNT + FROM + UserInfoTable.TABLE_NAME +
-                WHERE + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+        String sql = SELECT + "COUNT(1) as " + PLAYER_COUNT + FROM + UserInfoTable.TABLE_NAME + " t" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + UserInfoTable.SERVER_ID +
+                WHERE + "s." + ServerTable.SERVER_UUID + "=?" +
                 AND + UserInfoTable.OP + "=?";
-        return db -> db.queryOptional(sql, set -> set.getInt(PLAYER_COUNT), serverUUID, true)
+        return db -> db.queryOptional(sql, set -> set.getInt(PLAYER_COUNT), serverUUID.toString(), true)
                 .orElse(0);
     }
 }

@@ -47,6 +47,7 @@ public enum WebPermission implements Supplier<String>, Lang {
     PAGE_NETWORK_SESSIONS_OVERVIEW("See Session insights"),
     PAGE_NETWORK_SESSIONS_WORLD_PIE("See World Pie graph"),
     PAGE_NETWORK_SESSIONS_SERVER_PIE("See Server Pie graph"),
+    PAGE_NETWORK_SESSIONS_CALENDAR("See Network calendar"),
     PAGE_NETWORK_SESSIONS_LIST("See list of sessions"),
     PAGE_NETWORK_JOIN_ADDRESSES("See Join Addresses -tab"),
     PAGE_NETWORK_JOIN_ADDRESSES_GRAPHS("See Join Address graphs"),
@@ -83,6 +84,7 @@ public enum WebPermission implements Supplier<String>, Lang {
     PAGE_SERVER_SESSIONS("See Sessions tab"),
     PAGE_SERVER_SESSIONS_OVERVIEW("See Session insights"),
     PAGE_SERVER_SESSIONS_WORLD_PIE("See World Pie graph"),
+    PAGE_SERVER_SESSIONS_CALENDAR("See Server calendar"),
     PAGE_SERVER_SESSIONS_LIST("See list of sessions"),
     PAGE_SERVER_JOIN_ADDRESSES("See Join Addresses -tab"),
     PAGE_SERVER_JOIN_ADDRESSES_GRAPHS("See Join Address graphs"),
@@ -116,6 +118,31 @@ public enum WebPermission implements Supplier<String>, Lang {
     PAGE_PLAYER_SERVERS("See Servers -tab"),
     PAGE_PLAYER_PLUGINS("See Plugins -tabs"),
 
+    DATA("Access all data from /v1/dataPoint"),
+    DATA_PLAYER("Access all /v1/dataPoint endpoint player data. Also needs ACCESS_PLAYER or ACCESS_PLAYER_SELF."),
+    DATA_SERVER("Access all /v1/dataPoint endpoint server data"),
+    DATA_NETWORK("Access all /v1/dataPoint endpoint network data"),
+    DATA_PLAYER_PLAYTIME("See Playtime datapoint of players"),
+    DATA_SERVER_PLAYTIME("See Playtime datapoint of servers"),
+    DATA_NETWORK_PLAYTIME("See Playtime datapoint of network"),
+    DATA_PLAYER_AFK_TIME("See AFK datapoint of players"),
+    DATA_SERVER_AFK_TIME("See AFK datapoint of servers"),
+    DATA_NETWORK_AFK_TIME("See AFK datapoint of network"),
+    DATA_SERVER_SERVER_OCCUPIED("See Server occupied -datapoint of servers"),
+    DATA_NETWORK_SERVER_OCCUPIED("See Server occupied -datapoint of network"),
+    DATA_PLAYER_MOST_ACTIVE_GAME_MODE("See Most Active Gamemode -datapoint of players"),
+    DATA_SERVER_MOST_ACTIVE_GAME_MODE("See Most Active Gamemode -datapoint of servers"),
+    DATA_NETWORK_MOST_ACTIVE_GAME_MODE("See Most Active Gamemode -datapoint of network"),
+    DATA_PLAYER_MOST_ACTIVE_WORLD("See Most Active World -datapoint of players"),
+    DATA_SERVER_MOST_ACTIVE_WORLD("See Most Active World -datapoint of servers"),
+    DATA_NETWORK_MOST_ACTIVE_WORLD("See Most Active World -datapoint of network"),
+    DATA_PLAYER_WORLD_PIE("See World Pie -datapoint of players"),
+    DATA_SERVER_WORLD_PIE("See World Pie -datapoint of servers"),
+    DATA_NETWORK_WORLD_PIE("See World Pie -datapoint of network"),
+    DATA_PLAYER_SERVER_PIE("See Server Pie -datapoint of players"),
+    DATA_SERVER_SERVER_PIE("See Server Pie -datapoint of servers"),
+    DATA_NETWORK_SERVER_PIE("See Server Pie -datapoint of network"),
+
     ACCESS("Controls access to pages"),
     ACCESS_PLAYER("Allows accessing any /player pages"),
     ACCESS_PLAYER_SELF("Allows accessing own /player page"),
@@ -145,6 +172,25 @@ public enum WebPermission implements Supplier<String>, Lang {
         this.deprecated = deprecated;
     }
 
+    public static WebPermission[] nonDeprecatedValues() {
+        return Arrays.stream(values())
+                .filter(Predicate.not(WebPermission::isDeprecated))
+                .toArray(WebPermission[]::new);
+    }
+
+    public static Optional<WebPermission> findByPermission(String permission) {
+        String name = StringUtils.upperCase(permission).replace('.', '_');
+        try {
+            return Optional.of(valueOf(name));
+        } catch (IllegalArgumentException noSuchEnum) {
+            return Optional.empty();
+        }
+    }
+
+    public static boolean isDeprecated(String permission) {
+        return findByPermission(permission).map(WebPermission::isDeprecated).orElse(false);
+    }
+
     public String getPermission() {
         return StringUtils.lowerCase(name()).replace('_', '.');
     }
@@ -171,24 +217,5 @@ public enum WebPermission implements Supplier<String>, Lang {
     @Override
     public String getDefault() {
         return description;
-    }
-
-    public static WebPermission[] nonDeprecatedValues() {
-        return Arrays.stream(values())
-                .filter(Predicate.not(WebPermission::isDeprecated))
-                .toArray(WebPermission[]::new);
-    }
-
-    public static Optional<WebPermission> findByPermission(String permission) {
-        String name = StringUtils.upperCase(permission).replace('.', '_');
-        try {
-            return Optional.of(valueOf(name));
-        } catch (IllegalArgumentException noSuchEnum) {
-            return Optional.empty();
-        }
-    }
-
-    public static boolean isDeprecated(String permission) {
-        return findByPermission(permission).map(WebPermission::isDeprecated).orElse(false);
     }
 }

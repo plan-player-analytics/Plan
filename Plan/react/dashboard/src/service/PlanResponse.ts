@@ -10,3 +10,12 @@ export type PlanResponse<T> =
     data: undefined,
     error: PlanError
 };
+
+export type PlanDataResponse<T> =
+    | {
+    data: T;
+    loadingError: undefined
+} | {
+    data: undefined,
+    loadingError: PlanError
+}

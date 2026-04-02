@@ -1,44 +1,48 @@
 import React from "react";
 import InsightsFor30DaysCard from "../../common/InsightsFor30DaysCard";
-import {useDataRequest} from "../../../../hooks/dataFetchHook";
-import {fetchSessionOverview} from "../../../../service/serverService";
-import {ErrorViewCard} from "../../../../views/ErrorView.tsx";
-import Datapoint from "../../../Datapoint";
 import {useTranslation} from "react-i18next";
 import {faGamepad, faUsers} from "@fortawesome/free-solid-svg-icons";
 import {faClock} from "@fortawesome/free-regular-svg-icons";
-import {fetchNetworkSessionsOverview} from "../../../../service/networkService";
-import FormattedTime from "../../../text/FormattedTime.jsx";
+import {useGenericFilter} from "../../../../dataHooks/genericFilterContextHook.tsx";
+import {QueryDatapoint, QueryDatapointValue} from "../../../datapoint/QueryDatapoint.tsx";
+import {DatapointType} from "../../../../dataHooks/model/datapoint/Datapoint.ts";
+import {TitleWithDates} from "../../../text/TitleWithDates.tsx";
+import {MS_MONTH} from "../../../../util/format/useDateFormatter.js";
 
 const SessionInsightsCard = ({identifier}) => {
     const {t} = useTranslation();
+    const {after, before, server} = useGenericFilter();
 
-    const {
-        data,
-        loadingError
-    } = useDataRequest(identifier ? fetchSessionOverview : fetchNetworkSessionsOverview, [identifier]);
+    const filter = {
+        after: after || Date.now() - MS_MONTH,
+        before,
+        server
+    };
 
-    if (loadingError) return <ErrorViewCard error={loadingError}/>
-
-    const insights = data?.insights;
-    if (!insights) return <></>
+    const title = <TitleWithDates label={'html.label.insights'} fallback={'html.label.insights30days'} after={after}
+                                  before={before}/>;
 
     return (
-        <InsightsFor30DaysCard id={'session-insights'}>
-            <Datapoint name={t('html.label.mostActiveGamemode')} icon={faGamepad} color="gamemode" bold
-                       value={insights.most_active_gamemode}
-                       valueLabel={insights.most_active_gamemode_perc}
-            />
-            <Datapoint name={t('html.label.serverOccupied')} icon={faUsers} color="sessions"
-                       value={insights.server_occupied ? <>{'~'}<FormattedTime
-                           timeMs={insights.server_occupied}/></> : undefined}
-                       valueLabel={insights.server_occupied_perc}
-            />
-            <Datapoint name={t('html.label.playtime')} icon={faClock} color="playtime"
-                       value={<FormattedTime timeMs={insights.total_playtime}/>}
-            />
-            <Datapoint name={t('html.label.afkTime')} icon={faClock} color="playtime-afk"
-                       value={<FormattedTime timeMs={insights.afk_time}/>} valueLabel={insights.afk_time_perc}
+        <InsightsFor30DaysCard id={'session-insights'} title={title}>
+            {identifier && <QueryDatapoint name={t('html.label.mostActiveGamemode')}
+                                           icon={faGamepad} color="gamemode"
+                                           dataType={DatapointType.MOST_ACTIVE_GAME_MODE}
+                                           filter={filter}/>}
+            {identifier && <QueryDatapoint name={t('html.label.serverOccupied')}
+                                           icon={faUsers} color="sessions" prefix={'~'}
+                                           dataType={DatapointType.SERVER_OCCUPIED}
+                                           filter={filter}/>}
+            <QueryDatapoint name={t('html.label.playtime')}
+                            icon={faClock} color="playtime"
+                            dataType={DatapointType.PLAYTIME}
+                            filter={filter}/>
+            <QueryDatapoint name={t('html.label.afkTime')}
+                            icon={faClock} color="playtime-afk"
+                            dataType={DatapointType.AFK_TIME}
+                            filter={filter}
+                            valueLabel={<QueryDatapointValue dataType={DatapointType.AFK_TIME_PERCENTAGE}
+                                                             filter={filter}
+                                                             permission={"afk.time"}/>}
             />
         </InsightsFor30DaysCard>
     )

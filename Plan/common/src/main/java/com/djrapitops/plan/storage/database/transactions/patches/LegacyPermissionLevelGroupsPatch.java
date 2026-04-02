@@ -48,6 +48,7 @@ public class LegacyPermissionLevelGroupsPatch extends Patch {
         executeOther(new StoreWebGroupTransaction("legacy_level_0", Arrays.stream(new WebPermission[]{
                                 WebPermission.PAGE_NETWORK,
                                 WebPermission.PAGE_SERVER,
+                                WebPermission.DATA,
                                 WebPermission.ACCESS_QUERY,
                                 WebPermission.ACCESS_PLAYERS,
                                 WebPermission.PAGE_PLAYER,
@@ -61,6 +62,7 @@ public class LegacyPermissionLevelGroupsPatch extends Patch {
         executeOther(new StoreWebGroupTransaction("legacy_level_1", Arrays.stream(new WebPermission[]{
                                 WebPermission.ACCESS_QUERY,
                                 WebPermission.ACCESS_PLAYERS,
+                                WebPermission.DATA_PLAYER,
                                 WebPermission.PAGE_PLAYER,
                                 WebPermission.ACCESS_PLAYER
                         })
@@ -69,6 +71,7 @@ public class LegacyPermissionLevelGroupsPatch extends Patch {
         );
         executeOther(new StoreWebGroupTransaction("legacy_level_2", Arrays.stream(new WebPermission[]{
                                 WebPermission.PAGE_PLAYER,
+                                WebPermission.DATA_PLAYER,
                                 WebPermission.ACCESS_PLAYER_SELF
                         })
                         .map(WebPermission::getPermission)

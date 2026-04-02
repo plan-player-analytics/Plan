@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.storage.database.sql.tables.webuser.WebPermissionTable;
 import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
+import com.djrapitops.plan.storage.database.transactions.webuser.GrantWebPermissionToGroupsWithPermissionTransaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -33,7 +34,7 @@ import java.util.stream.Collectors;
  *
  * @author AuroraLS3
  */
-public class UpdateWebPermissionsPatch extends Patch {
+public class UpdateMissingWebPermissionsPatch extends Patch {
 
     private List<String> missingPermissions;
 
@@ -68,5 +69,15 @@ public class UpdateWebPermissionsPatch extends Patch {
                 }
             }
         });
+
+        commitMidTransaction();
+
+        if (missingPermissions.contains(WebPermission.DATA_PLAYER.getPermission())) {
+            executeOther(new GrantWebPermissionToGroupsWithPermissionTransaction(WebPermission.DATA_PLAYER, WebPermission.ACCESS_PLAYER_SELF));
+            executeOther(new GrantWebPermissionToGroupsWithPermissionTransaction(WebPermission.DATA_PLAYER, WebPermission.ACCESS_PLAYER));
+            executeOther(new GrantWebPermissionToGroupsWithPermissionTransaction(WebPermission.DATA_SERVER, WebPermission.ACCESS_SERVER));
+            executeOther(new GrantWebPermissionToGroupsWithPermissionTransaction(WebPermission.DATA_NETWORK, WebPermission.ACCESS_NETWORK));
+            executeOther(new GrantWebPermissionToGroupsWithPermissionTransaction(WebPermission.DATA, WebPermission.ACCESS));
+        }
     }
 }

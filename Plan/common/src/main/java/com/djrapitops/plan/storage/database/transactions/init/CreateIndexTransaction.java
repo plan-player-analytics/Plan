@@ -33,18 +33,15 @@ public class CreateIndexTransaction extends Transaction {
 
     @Override
     protected void performOperations() {
-        createIndex(UsersTable.TABLE_NAME, "plan_users_uuid_index",
-                UsersTable.USER_UUID
-        );
+        createIndex(UsersTable.TABLE_NAME, "plan_users_uuid_index", UsersTable.USER_UUID);
+        createIndex(ServerTable.TABLE_NAME, "plan_servers_uuid_index", ServerTable.SERVER_UUID);
 
         // replaced by foreign keys
         dropIndex(UserInfoTable.TABLE_NAME, "plan_user_info_uuid_index");
         // replaced by foreign keys
         dropIndex(SessionsTable.TABLE_NAME, "plan_sessions_uuid_index");
 
-        createIndex(SessionsTable.TABLE_NAME, "plan_sessions_date_index",
-                SessionsTable.SESSION_START
-        );
+        createIndex(SessionsTable.TABLE_NAME, "plan_sessions_date_index", SessionsTable.SESSION_START);
         // Replaced by foreign keys
         dropIndex(WorldTimesTable.TABLE_NAME, "plan_world_times_uuid_index");
 
@@ -53,21 +50,14 @@ public class CreateIndexTransaction extends Transaction {
                 KillsTable.VICTIM_UUID,
                 KillsTable.SERVER_UUID
         );
-        createIndex(KillsTable.TABLE_NAME, "plan_kills_date_index",
-                KillsTable.DATE
-        );
+        createIndex(KillsTable.TABLE_NAME, "plan_kills_date_index", KillsTable.DATE);
         // Replaced with foreign keys.
         dropIndex(PingTable.TABLE_NAME, "plan_ping_uuid_index");
 
-        createIndex(PingTable.TABLE_NAME, "plan_ping_date_index",
-                PingTable.DATE
-        );
-        createIndex(TPSTable.TABLE_NAME, "plan_tps_date_index",
-                TPSTable.DATE
-        );
+        createIndex(PingTable.TABLE_NAME, "plan_ping_date_index", PingTable.DATE);
+        createIndex(TPSTable.TABLE_NAME, "plan_tps_date_index", TPSTable.DATE);
 
-        createIndex(SessionsTable.TABLE_NAME, "plan_session_join_address_index",
-                SessionsTable.JOIN_ADDRESS_ID);
+        createIndex(SessionsTable.TABLE_NAME, "plan_session_join_address_index", SessionsTable.JOIN_ADDRESS_ID);
 
         createIndex(ExtensionPlayerTableValueTable.TABLE_NAME, "plan_extension_player_table_value_player_index",
                 ExtensionPlayerTableValueTable.TABLE_ID,

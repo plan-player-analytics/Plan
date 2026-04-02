@@ -77,9 +77,30 @@ public class RandomData {
     public static List<TPS> randomTPS() {
         List<TPS> test = new ArrayList<>();
         for (int i = 0; i < randomInt(5, 100); i++) {
+            long randDate = Math.abs(r.nextLong());
+            int randPlayers = r.nextInt(10000);
+            double randTPS = r.nextDouble() % 20.0;
+            double randCPU = r.nextDouble() % 100.0;
+            long randMemory = r.nextLong() % 100000L;
+            int randEntities = r.nextInt(10000);
+            int randChunks = r.nextInt(10000);
+            long randDisk = r.nextLong() % 100000L;
+            test.add(new TPS(randDate, randTPS, randPlayers, randCPU, randMemory, randEntities, randChunks, randDisk));
+        }
+        return test;
+    }
+
+    public static List<TPS> randomDateOrderedTPS() {
+        List<TPS> test = new ArrayList<>();
+        long previousTimestamp = randomLong(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(50), System.currentTimeMillis());
+        int previousPlayers = randomInt(0, 100);
+        for (int i = 0; i < randomInt(50, 100); i++) {
             int randInt = r.nextInt();
             long randLong = Math.abs(r.nextLong());
-            test.add(new TPS(randLong, randLong, randInt, randLong, randLong, randInt, randInt, randLong));
+            test.add(new TPS(previousTimestamp, randLong, randInt, randLong, randLong, randInt, randInt, randLong));
+            boolean reboot = Math.random() < 0.10;
+            previousTimestamp = previousTimestamp + (reboot ? TimeUnit.MINUTES.toMillis(1) : TimeUnit.MINUTES.toMillis(10));
+            previousPlayers = Math.max(previousPlayers + r.nextInt(10) - 10, 0);
         }
         return test;
     }

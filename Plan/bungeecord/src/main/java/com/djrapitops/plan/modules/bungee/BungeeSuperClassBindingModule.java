@@ -40,5 +40,6 @@ public interface BungeeSuperClassBindingModule {
     ListenerSystem bindListenerSystem(BungeeListenerSystem listenerSystem);
 
     @Binds
+    @SuppressWarnings("java:S1452")
     ServerSensor<?> bindServerSensor(BungeeSensor sensor);
 }

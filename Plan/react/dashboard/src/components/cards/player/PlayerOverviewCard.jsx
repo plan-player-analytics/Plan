@@ -25,7 +25,7 @@ import {
     faUserPlus
 } from "@fortawesome/free-solid-svg-icons";
 import {faSuperpowers} from "@fortawesome/free-brands-svg-icons";
-import Datapoint from "../../Datapoint";
+import Datapoint from "../../datapoint/Datapoint.tsx";
 import FormattedTime from "../../text/FormattedTime.jsx";
 import FormattedDate from "../../text/FormattedDate.jsx";
 import {useDecimalFormatter} from "../../../util/format/useDecimalFormatter.js";

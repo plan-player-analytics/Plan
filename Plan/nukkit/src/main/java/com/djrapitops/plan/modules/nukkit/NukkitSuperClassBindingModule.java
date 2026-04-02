@@ -59,5 +59,6 @@ public interface NukkitSuperClassBindingModule {
     ServerSensor<Level> bindServerSensor(NukkitSensor sensor);
 
     @Binds
+    @SuppressWarnings("java:S1452")
     ServerSensor<?> bindGenericsServerSensor(ServerSensor<Level> sensor);
 }

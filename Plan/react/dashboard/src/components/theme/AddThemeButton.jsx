@@ -1,5 +1,5 @@
 import React from 'react';
-import OutlineButton from "../input/button/OutlineButton.jsx";
+import OutlineButton from "../input/button/OutlineButton.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import {useNavigate} from "react-router";

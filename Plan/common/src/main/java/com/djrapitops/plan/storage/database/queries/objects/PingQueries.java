@@ -134,10 +134,12 @@ public class PingQueries {
                 PingTable.MAX_PING + ", " +
                 PingTable.MIN_PING + ", " +
                 PingTable.AVG_PING +
-                FROM + PingTable.TABLE_NAME +
-                WHERE + PingTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                FROM + PingTable.TABLE_NAME + " t" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + PingTable.SERVER_ID +
+                WHERE + "s." + ServerTable.SERVER_UUID + "=?" +
                 AND + PingTable.DATE + ">=?" +
-                AND + PingTable.DATE + "<=?";
+                AND + PingTable.DATE + "<=?" +
+                ORDER_BY + PingTable.DATE + " ASC";
         return new QueryStatement<>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -178,8 +180,9 @@ public class PingQueries {
                 // That way the biggest a.last_used value will have NULL on the b.last_used column and MAX doesn't need to be used.
                 LEFT_JOIN + GeoInfoTable.TABLE_NAME + " b ON a." + GeoInfoTable.USER_ID + "=b." + GeoInfoTable.USER_ID + AND + "a." + GeoInfoTable.LAST_USED + "<b." + GeoInfoTable.LAST_USED +
                 INNER_JOIN + PingTable.TABLE_NAME + " sp on sp." + PingTable.USER_ID + "=a." + GeoInfoTable.USER_ID +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=sp." + PingTable.SERVER_ID +
                 WHERE + "b." + GeoInfoTable.LAST_USED + IS_NULL +
-                AND + "sp." + PingTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                AND + "s." + ServerTable.SERVER_UUID + "=?" +
                 GROUP_BY + "a." + GeoInfoTable.GEOLOCATION;
 
         return new QueryStatement<>(selectPingByGeolocation) {
@@ -242,8 +245,9 @@ public class PingQueries {
     }
 
     public static Query<Double> averagePing(long after, long before, ServerUUID serverUUID) {
-        String sql = SELECT + "AVG(" + PingTable.AVG_PING + ") as average" + FROM + PingTable.TABLE_NAME +
-                WHERE + PingTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+        String sql = SELECT + "AVG(" + PingTable.AVG_PING + ") as average" + FROM + PingTable.TABLE_NAME + " t" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + PingTable.SERVER_ID +
+                WHERE + "s." + ServerTable.SERVER_UUID + "=?" +
                 AND + PingTable.DATE + ">=?" +
                 AND + PingTable.DATE + "<=?";
 
@@ -264,8 +268,7 @@ public class PingQueries {
 
     public static Query<Double> averagePing(long after, long before) {
         String sql = SELECT + "AVG(" + PingTable.AVG_PING + ") as average" + FROM + PingTable.TABLE_NAME +
-                WHERE + PingTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
-                AND + PingTable.DATE + ">=?" +
+                WHERE + PingTable.DATE + ">=?" +
                 AND + PingTable.DATE + "<=?";
         return db -> db.queryOptional(sql, set -> set.getDouble("average"), after, before).orElse(-1.0);
     }

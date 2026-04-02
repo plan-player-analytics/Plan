@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries.filter;
 
-import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
+import com.djrapitops.plan.delivery.domain.datatransfer.query.InputFilterDto;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.filter.filters.AllPlayersFilter;

@@ -10,7 +10,7 @@ import {
     faUserCircle,
     faUsers
 } from "@fortawesome/free-solid-svg-icons";
-import Datapoint from "../../components/Datapoint";
+import Datapoint from "../../components/datapoint/Datapoint.tsx";
 import {useTranslation} from "react-i18next";
 import {useParams} from "react-router";
 import {fetchServerOverview} from "../../service/serverService";
@@ -20,7 +20,7 @@ import OnlineActivityCard from "../../components/cards/server/graphs/OnlineActiv
 import ServerAsNumbersCard from "../../components/cards/server/values/ServerAsNumbersCard";
 import ServerWeekComparisonCard from "../../components/cards/server/tables/ServerWeekComparisonCard";
 import LoadIn from "../../components/animation/LoadIn.tsx";
-import {CardLoader} from "../../components/navigation/Loader";
+import {CardLoader} from "../../components/navigation/Loader.tsx";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";

@@ -17,17 +17,21 @@
 package com.djrapitops.plan.delivery.webserver.resolver.json;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
+import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.formatting.Formatter;
+import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointStore;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
+import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
+import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
-import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
-import com.djrapitops.plan.delivery.webserver.cache.DataID;
-import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
+import com.djrapitops.plan.delivery.webserver.CacheStrategy;
+import com.djrapitops.plan.delivery.webserver.resolver.ETag;
 import com.djrapitops.plan.identification.Identifiers;
-import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -38,11 +42,12 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import org.eclipse.jetty.http.HttpHeader;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Collections;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Resolves /v1/sessions JSON requests.
@@ -51,29 +56,32 @@ import java.util.Optional;
  */
 @Singleton
 @Path("/v1/sessions")
-public class SessionsJSONResolver extends JSONResolver {
+public class SessionsJSONResolver implements Resolver {
 
     private final Identifiers identifiers;
-    private final AsyncJSONResolverService jsonResolverService;
     private final JSONFactory jsonFactory;
+    private final DatapointStore datapointStore;
+    private final Formatter<Long> httpLastModifiedFormatter;
 
     @Inject
     public SessionsJSONResolver(
             Identifiers identifiers,
-            AsyncJSONResolverService jsonResolverService,
-            JSONFactory jsonFactory
+            JSONFactory jsonFactory,
+            DatapointStore datapointStore,
+            Formatters formatters
     ) {
         this.identifiers = identifiers;
-        this.jsonResolverService = jsonResolverService;
         this.jsonFactory = jsonFactory;
+        this.datapointStore = datapointStore;
+        this.httpLastModifiedFormatter = formatters.httpLastModifiedLong();
     }
-
-    @Override
-    public Formatter<Long> getHttpLastModifiedFormatter() {return jsonResolverService.getHttpLastModifiedFormatter();}
 
     @Override
     public boolean canAccess(Request request) {
         WebUser user = request.getUser().orElse(new WebUser(""));
+        if (request.getQuery().get("player").isPresent()) {
+            return user.hasPermission(WebPermission.PAGE_PLAYER_SESSIONS);
+        }
         if (request.getQuery().get("server").isPresent()) {
             return user.hasPermission(WebPermission.PAGE_SERVER_SESSIONS_LIST);
         }
@@ -100,21 +108,46 @@ public class SessionsJSONResolver extends JSONResolver {
     }
 
     private Response getResponse(Request request) {
-        JSONStorage.StoredJSON result = getStoredJSON(request);
-        return getCachedOrNewResponse(request, result);
-    }
-
-    private JSONStorage.StoredJSON getStoredJSON(@Untrusted Request request) {
-        Optional<Long> timestamp = Identifiers.getTimestamp(request);
-        if (request.getQuery().get("server").isPresent()) {
-            ServerUUID serverUUID = identifiers.getServerUUID(request);
-            return jsonResolverService.resolve(timestamp, DataID.SESSIONS, serverUUID,
-                    theUUID -> Collections.singletonMap("sessions", jsonFactory.serverSessionsAsJSONMap(theUUID))
-            );
+        GenericFilter filter = GenericFilter.of(request.getQuery());
+        if (!filter.didAllServerIdentifiersParse()) {
+            filter.setServerUUIDs(identifiers.getServerUUIDs(filter.getServerIdentifiers()));
         }
-        // Assume network
-        return jsonResolverService.resolve(timestamp, DataID.SESSIONS,
-                () -> Collections.singletonMap("sessions", jsonFactory.networkSessionsAsJSONMap())
-        );
+
+        @Untrusted Optional<ETag> tag = Identifiers.getEtag(request);
+        Long etag = tag.map(eTag -> eTag.parseAsLong()
+                        .orElseThrow(() -> new BadRequestException("If-Modified-Since should be a 64bit number")))
+                .orElse(null);
+        long lastModified = datapointStore.getLastModified(etag, DatapointType.PLAYTIME, filter);
+        if (etag != null && etag == lastModified) {
+            return Response.builder()
+                    .setStatus(304)
+                    .setContent(new byte[0])
+                    .build();
+        }
+
+        Optional<UUID> playerUUID = filter.getPlayerUUID();
+        if (playerUUID.isPresent()) {
+            return newResponseBuilder()
+                    .setJSONContent(jsonFactory.playerSessions(filter))
+                    .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CHECK_ETAG)
+                    .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(lastModified))
+                    .setHeader(HttpHeader.ETAG.asString(), lastModified)
+                    .build();
+        }
+        if (!filter.getServerUUIDs().isEmpty()) {
+            return newResponseBuilder()
+                    .setJSONContent(jsonFactory.serverSessions(filter))
+                    .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CHECK_ETAG)
+                    .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(lastModified))
+                    .setHeader(HttpHeader.ETAG.asString(), lastModified)
+                    .build();
+        } else {
+            return newResponseBuilder()
+                    .setJSONContent(jsonFactory.networkSessions(filter))
+                    .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CHECK_ETAG)
+                    .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(lastModified))
+                    .setHeader(HttpHeader.ETAG.asString(), lastModified)
+                    .build();
+        }
     }
 }

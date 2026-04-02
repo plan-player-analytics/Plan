@@ -7,7 +7,7 @@ import ActionButton from "../input/button/ActionButton.jsx";
 import {useTranslation} from "react-i18next";
 import {unstable_usePrompt} from "react-router";
 import ThemeEditHistory from "./ThemeEditHistory.jsx";
-import OutlineButton from "../input/button/OutlineButton.jsx";
+import OutlineButton from "../input/button/OutlineButton.tsx";
 import ThemeEditIssues from "./ThemeEditIssues.jsx";
 
 const EditorMenuToast = () => {

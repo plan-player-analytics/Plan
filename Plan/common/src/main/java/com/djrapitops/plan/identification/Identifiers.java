@@ -28,6 +28,8 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -86,6 +88,10 @@ public class Identifiers {
         String identifier = request.getQuery().get("server")
                 .orElseThrow(() -> new BadRequestException("'server' parameter was not defined."));
 
+        return getServerUUIDForRequest(identifier);
+    }
+
+    private ServerUUID getServerUUIDForRequest(String identifier) {
         Optional<ServerUUID> parsed = UUIDUtility.parseFromString(identifier).map(ServerUUID::from);
         return parsed.orElseGet(() -> getServerUUIDFromName(identifier).orElseThrow(
                 () -> new BadRequestException("Given 'server' was not found in the database.")
@@ -138,5 +144,13 @@ public class Identifiers {
         return dbSystem.getDatabase()
                 .query(UserIdentifierQueries.fetchPlayerUUIDOf(playerName))
                 .orElseThrow(() -> new BadRequestException("Given 'player' was not found in the database."));
+    }
+
+    public List<ServerUUID> getServerUUIDs(@Untrusted List<String> serverIdentifiers) {
+        List<ServerUUID> serverUUIDs = new ArrayList<>();
+        for (@Untrusted String serverIdentifier : serverIdentifiers) {
+            serverUUIDs.add(getServerUUIDForRequest(serverIdentifier));
+        }
+        return serverUUIDs;
     }
 }

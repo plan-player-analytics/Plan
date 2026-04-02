@@ -1,10 +1,10 @@
 import React, {useState} from 'react';
 import {useMetadata} from "../../hooks/metadataHook.jsx";
 import {faExclamationTriangle, faInfoCircle, faTrash} from "@fortawesome/free-solid-svg-icons";
-import CardHeader from "../../components/cards/CardHeader.jsx";
+import CardHeader from "../../components/cards/CardHeader.tsx";
 import {Card, Col, Row} from "react-bootstrap";
 import ThemeOption from "../../components/theme/ThemeOption.jsx";
-import {ChartLoader} from "../../components/navigation/Loader.jsx";
+import {ChartLoader} from "../../components/navigation/Loader.tsx";
 import {getLocallyStoredThemes, ThemeContextProvider, useTheme} from "../../hooks/themeHook.jsx";
 import {useTranslation} from "react-i18next";
 import {ThemeStorageContextProvider, useThemeStorage} from "../../hooks/context/themeContextHook.tsx";
@@ -35,7 +35,7 @@ const DeleteThemesView = () => {
 
     const onDelete = async () => {
         if (onlyLocal) {
-            await themeStorage.deleteThemeLocally(themeToDelete);
+            themeStorage.deleteThemeLocally(themeToDelete);
         } else if (canDelete) {
             await deleteTheme(themeToDelete);
         }

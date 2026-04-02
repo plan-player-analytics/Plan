@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Card, Col} from "react-bootstrap";
 import ExtensionIcon from "./ExtensionIcon";
-import Datapoint from "../Datapoint";
+import Datapoint from "../datapoint/Datapoint.tsx";
 import Masonry from 'masonry-layout'
 import ExtensionTable from "./ExtensionTable";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";

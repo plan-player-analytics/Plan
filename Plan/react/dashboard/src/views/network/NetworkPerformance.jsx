@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import LoadIn from "../../components/animation/LoadIn.tsx";
 import {Card, Col} from "react-bootstrap";
 import {useMetadata} from "../../hooks/metadataHook";
-import CardHeader from "../../components/cards/CardHeader";
+import CardHeader from "../../components/cards/CardHeader.tsx";
 import {faServer} from "@fortawesome/free-solid-svg-icons";
 import MultiSelect from "../../components/input/MultiSelect";
 import {useTranslation} from "react-i18next";
@@ -57,7 +57,7 @@ const NetworkPerformance = () => {
             colors: {},
             timestamp_f: ''
         }
-        const time = new Date().getTime();
+        const time = Date.now();
 
         for (const index of visualizedServers) {
             const server = serverOptions[index];

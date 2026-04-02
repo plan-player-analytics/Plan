@@ -20,6 +20,8 @@ import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.delivery.domain.PlayerName;
 import com.djrapitops.plan.delivery.domain.ServerName;
 import com.djrapitops.plan.delivery.export.Exporter;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointCacheKey;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointStore;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.extension.implementation.providers.Parameters;
@@ -58,6 +60,7 @@ public class PlayerJoinEventConsumer {
     private final GeolocationCache geolocationCache;
     private final SessionCache sessionCache;
     private final NicknameCache nicknameCache;
+    private final DatapointStore datapointStore;
 
     private final ExtensionSvc extensionService;
     private final Exporter exporter;
@@ -67,10 +70,12 @@ public class PlayerJoinEventConsumer {
     public PlayerJoinEventConsumer(
             Processing processing,
             PlanConfig config,
-            DBSystem dbSystem, JoinAddressValidator joinAddressValidator,
+            DBSystem dbSystem,
+            JoinAddressValidator joinAddressValidator,
             GeolocationCache geolocationCache,
             SessionCache sessionCache,
             NicknameCache nicknameCache,
+            DatapointStore datapointStore,
             ExtensionSvc extensionService,
             Exporter exporter,
             PlayerExtensionDataUpdateTask.Factory playerExtensionUpdateTaskFactory
@@ -82,6 +87,7 @@ public class PlayerJoinEventConsumer {
         this.geolocationCache = geolocationCache;
         this.sessionCache = sessionCache;
         this.nicknameCache = nicknameCache;
+        this.datapointStore = datapointStore;
         this.extensionService = extensionService;
         this.exporter = exporter;
         this.playerExtensionUpdateTaskFactory = playerExtensionUpdateTaskFactory;
@@ -110,6 +116,7 @@ public class PlayerJoinEventConsumer {
                         updatePlayerDataExtensionValues(join);
                         updateExport(join);
                         registerExtensionUpdateTask(join);
+                        datapointStore.clearLastModified(DatapointCacheKey.SESSION);
                     }, processing.getCriticalExecutor());
         });
     }
@@ -125,6 +132,7 @@ public class PlayerJoinEventConsumer {
                     storeGeolocation(join);
                     updatePlayerDataExtensionValues(join);
                     updateExport(join);
+                    datapointStore.clearLastModified(DatapointCacheKey.SESSION);
                 }, processing.getCriticalExecutor())
         );
     }

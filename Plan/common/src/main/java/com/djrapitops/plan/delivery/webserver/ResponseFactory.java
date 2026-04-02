@@ -127,18 +127,17 @@ public class ResponseFactory {
         long modified = page.lastModified();
         Optional<ETag> etag = Identifiers.getEtag(request);
 
-        if (etag.isPresent() && etag.get().isOutdated(modified)) {
-            return browserCachedNotChangedResponse();
+        if (etag.isEmpty() || etag.get().isOutdated(modified)) {
+            return Response.builder()
+                    .setStatus(responseCode)
+                    .setMimeType(MimeType.HTML)
+                    .setContent(page.toHtml())
+                    .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CHECK_ETAG)
+                    .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(modified))
+                    .setHeader(HttpHeader.ETAG.asString(), modified)
+                    .build();
         }
-
-        return Response.builder()
-                .setStatus(responseCode)
-                .setMimeType(MimeType.HTML)
-                .setContent(page.toHtml())
-                .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CHECK_ETAG)
-                .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(modified))
-                .setHeader(HttpHeader.ETAG.asString(), modified)
-                .build();
+        return browserCachedNotChangedResponse();
     }
 
     private Response forInternalError(@Untrusted Throwable error, String cause) {
@@ -175,10 +174,10 @@ public class ResponseFactory {
     private Response getCachedOrNew(ETag etag, String fileName, Function<String, Response> newResponseFunction) {
         WebResource resource = getPublicOrJarResource(fileName);
         Optional<Long> lastModified = resource.getLastModified();
-        if (lastModified.isPresent() && etag.isOutdated(lastModified.get(), () -> "config-" + PlanSystem.LAST_RELOAD.get())) {
-            return browserCachedNotChangedResponse();
-        } else {
+        if (lastModified.isEmpty() || etag.isOutdated(lastModified.get(), () -> "config-" + PlanSystem.LAST_RELOAD.get())) {
             return newResponseFunction.apply(fileName);
+        } else {
+            return browserCachedNotChangedResponse();
         }
     }
 
@@ -346,10 +345,10 @@ public class ResponseFactory {
         if (resource == null) return null;
 
         Optional<Long> lastModified = resource.getLastModified();
-        if (lastModified.isPresent() && etag.isOutdated(lastModified.get())) {
-            return browserCachedNotChangedResponse();
-        } else {
+        if (lastModified.isEmpty() || etag.isOutdated(lastModified.get())) {
             return publicHtmlResourceResponse(fileName, mimeType);
+        } else {
+            return browserCachedNotChangedResponse();
         }
     }
 
@@ -575,9 +574,7 @@ public class ResponseFactory {
 
             Optional<Long> lastModified = foundTheme.getLastModified();
             @Untrusted Optional<ETag> tag = Identifiers.getEtag(request);
-            if (tag.isPresent() && lastModified.isPresent() && tag.get().isOutdated(lastModified.get())) {
-                return browserCachedNotChangedResponse();
-            } else {
+            if (tag.isEmpty() || lastModified.isEmpty() || tag.get().isOutdated(lastModified.get())) {
                 long date = lastModified.orElseGet(System::currentTimeMillis);
                 return Response.builder()
                         .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CHECK_ETAG)
@@ -585,6 +582,8 @@ public class ResponseFactory {
                         .setHeader(HttpHeader.ETAG.asString(), date)
                         .setJSONContent(foundTheme.asString())
                         .build();
+            } else {
+                return browserCachedNotChangedResponse();
             }
         } catch (UncheckedIOException e) {
             return notFound404Json("Theme file by that name doesn't exist");

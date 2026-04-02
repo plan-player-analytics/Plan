@@ -26,6 +26,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 public enum DataID {
     PLAYERS,
     PLAYERS_V2,
+    @Deprecated
     SESSIONS,
     SERVERS,
     KILLS,

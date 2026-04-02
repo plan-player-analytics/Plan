@@ -4,7 +4,7 @@ import {Modal} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faArrowRight, faSearch} from "@fortawesome/free-solid-svg-icons";
 import {getViewTitle} from "../../views/query/QueryResultView";
-import {ChartLoader} from "../navigation/Loader";
+import {ChartLoader} from "../navigation/Loader.tsx";
 import {useNavigate} from "react-router";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 import PlayerTable from "../table/PlayerTable.jsx";

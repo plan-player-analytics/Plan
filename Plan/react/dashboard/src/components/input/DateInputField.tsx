@@ -1,0 +1,275 @@
+import React, {useMemo, useRef, useState} from 'react';
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faCalendar} from "@fortawesome/free-regular-svg-icons";
+import "react-datepicker/dist/react-datepicker.css";
+import "./DateInputField.css";
+import DatePicker, {registerLocale} from "react-datepicker";
+import {InputGroup} from "react-bootstrap";
+import {useDateFormatter} from "../../util/format/useDateFormatter";
+import {InlinedRow} from "../layout/InlinedRow";
+import OutlineButton from "./button/OutlineButton";
+import {faChevronDown, faTimes} from "@fortawesome/free-solid-svg-icons";
+import {useDateConverter} from "../../util/format/useDateConverter";
+import {useI18nFriendlyLanguage} from "../../service/localeService";
+import {zhCN} from "date-fns/locale/zh-CN";
+import {cs} from "date-fns/locale/cs";
+import {es} from "date-fns/locale/es";
+import {fi} from "date-fns/locale/fi";
+import {fr} from "date-fns/locale/fr";
+import {it} from "date-fns/locale/it";
+import {ja} from "date-fns/locale/ja";
+import {ko} from "date-fns/locale/ko";
+import {nl} from "date-fns/locale/nl";
+import {ptBR} from "date-fns/locale/pt-BR";
+import {ru} from "date-fns/locale/ru";
+import {tr} from "date-fns/locale/tr";
+import {uk} from "date-fns/locale/uk";
+import {zhTW} from "date-fns/locale/zh-TW";
+
+let loadedLocale = false;
+if (!loadedLocale) {
+    registerLocale("zh-cn", zhCN);
+    registerLocale("cs", cs);
+    registerLocale("es", es);
+    registerLocale("fi", fi);
+    registerLocale("fr", fr);
+    registerLocale("it", it);
+    registerLocale("ja", ja);
+    registerLocale("ko", ko);
+    registerLocale("nl", nl);
+    registerLocale("pt-br", ptBR);
+    registerLocale("ru", ru);
+    registerLocale("tr", tr);
+    registerLocale("uk", uk);
+    registerLocale("zh-tw", zhTW);
+    loadedLocale = true;
+}
+
+const isValidDate = (value: string) => {
+    if (!value) return true;
+    const d = new RegExp(/^(0\d|\d{2})[/|-]?(0\d|\d{2})[/|-]?(\d{4,5})$/).exec(value);
+    if (!d) return false;
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
+    const parsedDay = Number(d[1]);
+    const parsedMonth = Number(d[2]) - 1; // 0=January, 11=December
+    const parsedYear = Number(d[3]);
+    return new Date(parsedYear, parsedMonth, parsedDay);
+};
+
+const correctDate = (value: string) => {
+    const ddmmyyyy = new RegExp(/^(0\d|\d{2})[/|-]?(0\d|\d{2})[/|-]?(\d{4,5})$/).exec(value);
+    const yyyymmdd = new RegExp(/^(\d{4,5})[/|-](0\d|\d{2})[/|-]?(0\d|\d{2})$/).exec(value);
+    if (!ddmmyyyy && !yyyymmdd) return value;
+
+    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
+    let date = null;
+    if (ddmmyyyy) {
+        const day = Number(ddmmyyyy[1]);
+        const month = Number(ddmmyyyy[2]) - 1; // 0=January, 11=December
+        const year = Number(ddmmyyyy[3]);
+        date = new Date(year, month, day);
+    }
+    if (yyyymmdd) {
+        const year = Number(yyyymmdd[1]);
+        const month = Number(yyyymmdd[2]) - 1; // 0=January, 11=December
+        const day = Number(yyyymmdd[3]);
+        date = new Date(year, month, day);
+    }
+    if (!date) return value;
+
+    const day = `${date.getDate()}`;
+    const month = `${date.getMonth() + 1}`;
+    const year = `${date.getFullYear()}`;
+    return (
+        (day.length === 1 ? `0${day}` : day) +
+        "/" +
+        (month.length === 1 ? `0${month}` : month) +
+        "/" +
+        year
+    );
+};
+
+type ValueSetFunction = | {
+    value?: number;
+    setValue: (value: number | undefined) => void;
+    type: 'number';
+    rangeEnd?: number;
+    rangeStart?: number;
+} | {
+    value?: string;
+    setValue: (value: string | undefined) => void;
+    type: 'string';
+    rangeEnd?: string;
+    rangeStart?: string;
+}
+
+type Props = {
+    id: string,
+    placeholder?: string,
+    setAsInvalid: (id: string) => void,
+    setAsValid: (id: string) => void,
+    disabled?: boolean,
+} & ValueSetFunction
+
+type DatePickerHeaderOptions = {
+    date: Date;
+    decreaseMonth: () => void;
+    increaseMonth: () => void;
+    prevMonthButtonDisabled: boolean;
+    nextMonthButtonDisabled: boolean;
+}
+
+const DateInputField = (
+    {
+        id,
+        setValue,
+        value,
+        placeholder,
+        setAsInvalid,
+        setAsValid,
+        disabled,
+        rangeStart,
+        rangeEnd,
+        type
+    }: Props
+) => {
+    const {convert} = useDateConverter();
+    const [invalid, setInvalid] = useState(false);
+    const [picker, setPicker] = useState<'month' | 'year' | undefined>(undefined);
+    const {formatDate: formatAsMonth} = useDateFormatter(false, {pattern: "MMMM"});
+    const {formatDate: formatAsYear} = useDateFormatter(false, {pattern: "yyyy"});
+    const locale = useI18nFriendlyLanguage();
+    const currentDebounce = useRef<number | undefined>(undefined);
+
+    const onChange = (newValue: Date | null) => {
+        if (picker) {
+            setPicker(undefined);
+            return;
+        }
+        if (newValue) {
+            const dateConverter = convert(newValue);
+            if (type === 'string') {
+                setValue(dateConverter.toDDMMYYYY());
+            } else {
+                setValue(dateConverter.toUTCEpochMs());
+            }
+            setAsValid(id);
+            setInvalid(false);
+        } else {
+            setValue(undefined);
+            setAsValid(id);
+            setInvalid(false);
+        }
+    }
+
+    const onRawChange = (event: any) => {
+        const rawValue = event.target.value;
+        if (!rawValue) return;
+
+        if (currentDebounce.current) clearTimeout(currentDebounce.current);
+        currentDebounce.current = setTimeout(() => {
+            const dateConverter = convert(correctDate(rawValue));
+
+            if (isValidDate(rawValue)) {
+                if (type === 'string') {
+                    setValue(dateConverter.toDDMMYYYY());
+                } else {
+                    setValue(dateConverter.toUTCEpochMs());
+                }
+                setAsValid(id);
+                setInvalid(false);
+            } else {
+                setAsInvalid(id);
+                setInvalid(true);
+            }
+        }, 1000);
+    }
+
+    const asDate = useMemo(() => {
+        if (!value) return undefined;
+        const dateConverter = convert(value);
+        return dateConverter.isValid() ? dateConverter.toDate() : undefined;
+    }, [value, convert])
+
+    const getDayClassName = (date: Date): string => {
+        if ((!rangeEnd && !rangeStart) || (rangeStart && rangeEnd) || !asDate) return ''
+        const rangeEndWallClock = convert(rangeEnd).toWallClockEpochMs();
+        const asDateWallClock = convert(asDate).toWallClockEpochMs();
+        const dateWallClock = convert(date).toWallClockEpochMs();
+
+        if (rangeEnd) {
+            return dateWallClock > asDateWallClock && dateWallClock < rangeEndWallClock ? "in-range" : "";
+        }
+        const rangeStartWallClock = convert(rangeStart).toWallClockEpochMs();
+        if (rangeStart) {
+            return dateWallClock < asDateWallClock && dateWallClock > rangeStartWallClock ? "in-range" : "";
+        }
+        return value && dateWallClock > asDateWallClock ? "in-range" : "";
+    };
+    return (
+        <InputGroup>
+            <div className={"input-group-text"}>
+                <FontAwesomeIcon icon={faCalendar}/>
+            </div>
+            <DatePicker dateFormat="dd/MM/yyyy"
+                // timeZone="UTC"
+                        selected={asDate}
+                        onChange={onChange}
+                        onChangeRaw={onRawChange}
+                        disabled={disabled}
+                        placeholderText={placeholder || "dd/mm/yyyy"}
+                        className={"form-control" + (invalid ? " is-invalid" : '')}
+                        shouldCloseOnSelect={false}
+                        showMonthYearPicker={picker === 'month'}
+                        showYearPicker={picker === 'year'}
+                        allowSameDay
+                        dayClassName={getDayClassName}
+                        locale={locale === 'en' ? undefined : locale}
+                        renderCustomHeader={({
+                                                 date,
+                                                 decreaseMonth,
+                                                 increaseMonth,
+                                                 prevMonthButtonDisabled,
+                                                 nextMonthButtonDisabled
+                                             }: DatePickerHeaderOptions) => {
+                            return (
+                                <InlinedRow justifyContent={"space-around"}>
+                                    <OutlineButton onClick={decreaseMonth} disabled={prevMonthButtonDisabled}>
+                                        <FontAwesomeIcon icon={"chevron-left"}/>
+                                    </OutlineButton>
+                                    <OutlineButton
+                                        onClick={() => {
+                                            setPicker(picker === 'month' ? undefined : 'month');
+                                        }}>
+                                        {formatAsMonth(date.getTime())}
+                                        <FontAwesomeIcon icon={picker === 'month' ? faTimes : faChevronDown}
+                                                         className={"ms-1"}/>
+                                    </OutlineButton>
+                                    <OutlineButton onClick={increaseMonth} disabled={nextMonthButtonDisabled}>
+                                        <FontAwesomeIcon icon={"chevron-right"}/>
+                                    </OutlineButton>
+                                    <OutlineButton
+                                        onClick={() => {
+                                            setPicker(picker === 'year' ? undefined : 'year');
+                                        }}>
+                                        {formatAsYear(date.getTime())}
+                                        <FontAwesomeIcon icon={picker === 'year' ? faTimes : faChevronDown}
+                                                         className={"ms-1"}/>
+                                    </OutlineButton>
+                                </InlinedRow>
+                            )
+                        }}
+                        isClearable
+            />
+            {/*<input type="text" className={"form-control" + (invalid ? " is-invalid" : '')}*/}
+            {/*       id={id}*/}
+            {/*       placeholder={placeholder}*/}
+            {/*       value={value}*/}
+            {/*       onChange={onChange}*/}
+            {/*       disabled={disabled}*/}
+            {/*/>*/}
+        </InputGroup>
+    )
+};
+
+export default DateInputField

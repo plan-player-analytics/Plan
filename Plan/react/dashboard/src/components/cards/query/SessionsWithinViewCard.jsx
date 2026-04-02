@@ -1,8 +1,8 @@
 import React from 'react';
 import {Card} from "react-bootstrap";
-import CardHeader from "../CardHeader";
+import CardHeader from "../CardHeader.tsx";
 import {faCalendar, faCalendarCheck, faClock} from "@fortawesome/free-regular-svg-icons";
-import Datapoint from "../../Datapoint";
+import Datapoint from "../../datapoint/Datapoint.tsx";
 import {useTranslation} from "react-i18next";
 
 const SessionsWithinViewCard = ({data}) => {

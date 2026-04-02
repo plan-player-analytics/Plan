@@ -15,7 +15,7 @@ import {useDataRequest} from "../../../hooks/dataFetchHook";
 import {fetchPingGraph} from "../../../service/serverService";
 import {tooltip, yAxisConfigurations} from "../../../util/graphs";
 import {useTranslation} from "react-i18next";
-import {CardLoader, ChartLoader} from "../../navigation/Loader";
+import {CardLoader, ChartLoader} from "../../navigation/Loader.tsx";
 import LineGraph from "../../graphs/LineGraph";
 import {ErrorViewBody, ErrorViewCard} from "../../../views/ErrorView.tsx";
 import PingGraph from "../../graphs/performance/PingGraph";

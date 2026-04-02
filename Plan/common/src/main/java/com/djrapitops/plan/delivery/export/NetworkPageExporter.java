@@ -16,18 +16,19 @@
  */
 package com.djrapitops.plan.delivery.export;
 
+import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.identification.Server;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Strings;
 import org.apache.commons.text.StringEscapeUtils;
 
 import javax.inject.Inject;
@@ -36,6 +37,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Handles exporting of /network page html, data and resources.
@@ -90,9 +92,7 @@ public class NetworkPageExporter extends FileExporter {
         Database.State dbState = dbSystem.getDatabase().getState();
         if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
 
-        ExportPaths exportPaths = new ExportPaths();
-        exportPaths.put("./players", toRelativePathFromRoot("players"));
-        exportJSON(exportPaths, toDirectory, server);
+        exportJSON(toDirectory, server.getUuid());
         exportReactRedirects(toDirectory);
     }
 
@@ -103,16 +103,16 @@ public class NetworkPageExporter extends FileExporter {
     /**
      * Perform export for a network page json payload.
      *
-     * @param exportPaths Replacement store for player file paths.
      * @param toDirectory Path to Export directory
-     * @param server      Server to export as Network page, {@link Server#isProxy()} assumed true.
+     * @param serverUUID  Server to export as Network page, {@link Server#isProxy()} assumed true.
      * @throws IOException       If a template can not be read from jar/disk or the result written
      * @throws NotFoundException If a file or resource that is being exported can not be found
      */
-    public void exportJSON(ExportPaths exportPaths, Path toDirectory, Server server) throws IOException {
-        String serverUUID = server.getUuid().toString();
-
-        exportJSON(exportPaths, toDirectory,
+    public void exportJSON(Path toDirectory, ServerUUID serverUUID) throws IOException {
+        long monthAgo = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(30);
+        String datapointType = "datapoint?type=";
+        String after = "&after=" + monthAgo;
+        exportJSON(toDirectory,
                 "network/overview",
                 "network/servers",
                 "network/sessionsOverview",
@@ -132,21 +132,28 @@ public class NetworkPageExporter extends FileExporter {
                 "extensionData?server=" + serverUUID,
                 "retention",
                 "joinAddresses",
-                "playersTable"
+                "playersTable",
+                datapointType + DatapointType.PLAYTIME.name() + after,
+                datapointType + DatapointType.AFK_TIME.name() + after,
+                datapointType + DatapointType.AFK_TIME_PERCENTAGE.name() + after,
+                datapointType + DatapointType.SERVER_OCCUPIED.name() + after,
+                datapointType + DatapointType.MOST_ACTIVE_GAME_MODE.name() + after,
+                datapointType + DatapointType.WORLD_PIE.name() + after,
+                datapointType + DatapointType.SERVER_PIE.name()
         );
     }
 
-    private void exportJSON(ExportPaths exportPaths, Path toDirectory, String... resources) throws IOException {
+    private void exportJSON(Path toDirectory, String... resources) throws IOException {
         for (String resource : resources) {
-            exportJSON(exportPaths, toDirectory, resource);
+            exportJSON(toDirectory, resource);
         }
     }
 
-    private void exportJSON(ExportPaths exportPaths, Path toDirectory, String resource) throws IOException {
+    private void exportJSON(Path toDirectory, String resource) throws IOException {
         Response response = getJSONResponse(resource)
                 .orElseThrow(() -> new NotFoundException(resource + " was not properly exported: not found"));
 
-        String jsonResourceName = toFileName(toJSONResourceName(resource)) + ".json";
+        String jsonResourceName = toFileName(toJSONResourceName(resource), "json");
 
         String relativePlayerLink = toRelativePathFromRoot("player");
         export(toDirectory.resolve("data").resolve(jsonResourceName),
@@ -156,11 +163,6 @@ public class NetworkPageExporter extends FileExporter {
                         new String[]{StringEscapeUtils.escapeJson(relativePlayerLink), StringEscapeUtils.escapeJson(relativePlayerLink)}
                 )
         );
-        exportPaths.put("./v1/" + resource, toRelativePathFromRoot("data/" + jsonResourceName));
-    }
-
-    private String toJSONResourceName(String resource) {
-        return StringUtils.replaceEach(resource, new String[]{"?", "&", "type=", "server="}, new String[]{"-", "_", "", ""});
     }
 
     private Optional<Response> getJSONResponse(String resource) {
@@ -176,9 +178,4 @@ public class NetworkPageExporter extends FileExporter {
         // Network html is exported at /network//index.html or /server/index.html
         return "../" + toNonRelativePath(resourceName);
     }
-
-    private String toNonRelativePath(String resourceName) {
-        return Strings.CI.remove(Strings.CI.remove(resourceName, "../"), "./");
-    }
-
 }

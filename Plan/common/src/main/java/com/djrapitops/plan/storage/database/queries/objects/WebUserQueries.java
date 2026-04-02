@@ -169,8 +169,8 @@ public class WebUserQueries {
         String permissionGroup = set.getString(WebGroupTable.NAME);
         String userPermissions = set.getString("user_permissions");
         List<String> permissions = userPermissions != null ? Arrays.stream(userPermissions.split(","))
-                .filter(permission -> !permission.isEmpty())
-                .collect(Collectors.toList()) : List.of();
+                                                             .filter(permission -> !permission.isEmpty())
+                                                             .collect(Collectors.toList()) : List.of();
         return new User(username, linkedTo != null ? linkedTo : "console", linkedToUUID, passwordHash, permissionGroup, new HashSet<>(permissions));
     }
 
@@ -198,13 +198,11 @@ public class WebUserQueries {
     }
 
     public static Query<List<Integer>> fetchPermissionIds(@Untrusted Collection<String> permissions) {
+        if (permissions.isEmpty()) return db -> Collections.emptyList();
         String sql = SELECT + WebPermissionTable.ID +
                 FROM + WebPermissionTable.TABLE_NAME +
                 WHERE + WebPermissionTable.PERMISSION + " IN (" + Sql.nParameters(permissions.size()) + ")";
-        return db -> {
-            if (permissions.isEmpty()) return Collections.emptyList();
-            return db.queryList(sql, row -> row.getInt(WebPermissionTable.ID), permissions);
-        };
+        return db -> db.queryList(sql, row -> row.getInt(WebPermissionTable.ID), permissions);
     }
 
     public static Query<List<String>> fetchAllUsernames() {
@@ -227,6 +225,7 @@ public class WebUserQueries {
     }
 
     public static Query<List<Integer>> fetchGroupIds(List<String> groups) {
+        if (groups.isEmpty()) return db -> List.of();
         String sql = SELECT + WebGroupTable.ID +
                 FROM + WebGroupTable.TABLE_NAME +
                 WHERE + WebGroupTable.NAME + " IN (" + Sql.nParameters(groups.size()) + ')';

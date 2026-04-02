@@ -12,12 +12,6 @@ export const fetchServersOverview = async (updateRequested) => {
     return doGetRequest(url, updateRequested);
 }
 
-export const fetchServerPie = async (timestamp) => {
-    let url = `/v1/graph?type=serverPie`;
-    if (staticSite) url = `/data/graph-serverPie.json`;
-    return doGetRequest(url, timestamp);
-}
-
 export const fetchNetworkSessionsOverview = async (timestamp) => {
     let url = `/v1/network/sessionsOverview`;
     if (staticSite) url = `/data/network-sessionsOverview.json`;

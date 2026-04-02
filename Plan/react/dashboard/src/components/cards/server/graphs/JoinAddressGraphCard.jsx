@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {useTranslation} from "react-i18next";
 import {fetchJoinAddressByDay} from "../../../../service/serverService";
 import {ErrorViewCard} from "../../../../views/ErrorView.tsx";
-import {ChartLoader} from "../../../navigation/Loader";
+import {ChartLoader} from "../../../navigation/Loader.tsx";
 import {Card} from "react-bootstrap";
 import {FontAwesomeIcon, FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faChartColumn} from "@fortawesome/free-solid-svg-icons";
@@ -39,7 +39,10 @@ const JoinAddressGraphCard = ({identifier}) => {
             dataByGroup.push({...group, data: data?.join_addresses_by_date || []});
         }
 
-        if (!staticSite) {
+        if (staticSite) {
+            // On exported site we get all addresses individually
+            setData({join_addresses_by_date: dataByGroup[0].data, colors})
+        } else {
             // First group points from endpoint into frontend based groups
             const points = {};
             for (const group of dataByGroup) {
@@ -57,7 +60,7 @@ const JoinAddressGraphCard = ({identifier}) => {
                 .sort((a, b) => Number(b.date) - Number(a.date))
                 .map(([date, pointList]) => {
                     return {
-                        date: Number(date), joinAddresses: pointList.map(point => point.joinAddresses).flat()
+                        date: Number(date), joinAddresses: pointList.flatMap(point => point.joinAddresses)
                     }
                 });
 
@@ -65,9 +68,6 @@ const JoinAddressGraphCard = ({identifier}) => {
                 join_addresses_by_date: flattened,
                 colors
             });
-        } else {
-            // On exported site we get all addresses individually
-            setData({join_addresses_by_date: dataByGroup[0].data, colors})
         }
     }, [setData, setLoadingError, identifier, updateRequested, list]);
 

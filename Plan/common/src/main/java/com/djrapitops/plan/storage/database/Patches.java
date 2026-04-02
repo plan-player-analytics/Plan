@@ -80,7 +80,7 @@ public class Patches {
                 new BadJoinAddressDataCorrectionPatch(),
                 new AfterBadJoinAddressDataCorrectionPatch(),
                 new CorrectWrongCharacterEncodingPatch(logger, config),
-                new UpdateWebPermissionsPatch(),
+                new UpdateMissingWebPermissionsPatch(),
                 new WebGroupDefaultGroupsPatch(),
                 new WebGroupAddMissingAdminGroupPatch(),
                 new LegacyPermissionLevelGroupsPatch(),

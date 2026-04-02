@@ -40,9 +40,8 @@ import org.testcontainers.utility.DockerImageName;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.djrapitops.plan.delivery.export.ExportTestUtilities.*;
 
@@ -97,7 +96,7 @@ class ExportRegressionTest {
     }
 
     @TestFactory
-    Collection<DynamicTest> exportedWebpageDoesNotHaveErrors(ChromeDriver driver) {
+    Stream<DynamicTest> exportedWebpageDoesNotHaveErrors(ChromeDriver driver) {
         List<String> endpointsToTest = getEndpointsToTest(serverUUID);
 
         return endpointsToTest.stream().map(
@@ -107,6 +106,6 @@ class ExportRegressionTest {
                     List<LogEntry> logs = getLogsAfterRequestToAddress(driver, address);
                     assertNoLogs(logs, endpoint);
                 })
-        ).collect(Collectors.toList());
+        );
     }
 }

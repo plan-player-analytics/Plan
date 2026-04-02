@@ -26,6 +26,7 @@ import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythi
 import com.djrapitops.plan.storage.database.transactions.events.PingStoreTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreServerPlayerTransaction;
+import com.djrapitops.plan.utilities.comparators.DateHolderOldestComparator;
 import org.junit.jupiter.api.Test;
 import utilities.RandomData;
 import utilities.TestConstants;
@@ -95,6 +96,41 @@ public interface PingQueriesTest extends DatabaseTestPreparer {
         execute(LargeStoreQueries.storeAllPingData(expected));
         Map<UUID, List<Ping>> fetched = db().query(PingQueries.fetchAllPingData());
         assertEquals(expected, fetched);
+    }
+
+    @Test
+    default void userPings() {
+        prepareForPingStorage();
+
+        var expected = Collections.singletonMap(playerUUID, RandomData.randomPings(serverUUID()));
+        execute(LargeStoreQueries.storeAllPingData(expected));
+        var fetched = db().query(PingQueries.fetchPingDataOfPlayer(playerUUID));
+        assertEquals(expected.get(playerUUID), fetched);
+    }
+
+    @Test
+    default void serverPings() {
+        prepareForPingStorage();
+
+        var expected = Collections.singletonMap(playerUUID, RandomData.randomPings(serverUUID()));
+        execute(LargeStoreQueries.storeAllPingData(expected));
+        expected.get(playerUUID).sort(new DateHolderOldestComparator());
+        var fetched = db().query(PingQueries.fetchPingDataOfServer(0L, Long.MAX_VALUE, serverUUID()));
+        assertEquals(expected.get(playerUUID), fetched);
+    }
+
+    @Test
+    default void averageServerPing() {
+        prepareForPingStorage();
+
+        var expected = Collections.singletonMap(playerUUID, RandomData.randomPings(serverUUID()));
+        execute(LargeStoreQueries.storeAllPingData(expected));
+        double expectedAverage = expected.get(playerUUID)
+                .stream().mapToDouble(Ping::getAverage)
+                .average()
+                .orElseThrow();
+        assertEquals(expectedAverage, db().query(PingQueries.averagePing(0L, Long.MAX_VALUE, serverUUID())));
+        assertEquals(expectedAverage, db().query(PingQueries.averagePing(0L, Long.MAX_VALUE)));
     }
 
     @Test

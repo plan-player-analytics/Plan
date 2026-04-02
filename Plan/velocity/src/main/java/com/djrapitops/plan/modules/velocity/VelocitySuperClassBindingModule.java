@@ -40,5 +40,6 @@ public interface VelocitySuperClassBindingModule {
     ListenerSystem bindListenerSystem(VelocityListenerSystem listenerSystem);
 
     @Binds
+    @SuppressWarnings("java:S1452")
     ServerSensor<?> bindServerSensor(VelocitySensor sensor);
 }

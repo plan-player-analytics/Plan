@@ -11,7 +11,7 @@ import {
     fetchPlayersOnlineGraph
 } from "../../../../service/serverService";
 import {ErrorViewBody} from "../../../../views/ErrorView.tsx";
-import {ChartLoader} from "../../../navigation/Loader";
+import {ChartLoader} from "../../../navigation/Loader.tsx";
 import TimeByTimeGraph from "../../../graphs/TimeByTimeGraph";
 import PlayersOnlineGraph from "../../../graphs/PlayersOnlineGraph";
 import {useMetadata} from "../../../../hooks/metadataHook";
@@ -24,6 +24,7 @@ import Highcharts from "highcharts/highstock";
 import "highcharts/modules/no-data-to-display"
 import "highcharts/modules/accessibility";
 import QueryPlayerListModal from "../../../modal/QueryPlayerListModal";
+import {staticSite} from "../../../../service/backendConfiguration.js";
 
 const SingleProxyPlayersOnlineGraph = ({serverUUID}) => {
     const {data, loadingError} = useDataRequest(fetchPlayersOnlineGraph, [serverUUID]);
@@ -113,7 +114,7 @@ const NetworkCalendarTab = () => {
 
     return <>
         <ServerCalendar series={data.data} firstDay={data.firstDay} onSelect={onSelect}/>
-        <QueryPlayerListModal open={modalOpen} toggle={closeModal} queryData={queryData}/>
+        {!staticSite && <QueryPlayerListModal open={modalOpen} toggle={closeModal} queryData={queryData}/>}
     </>
 }
 

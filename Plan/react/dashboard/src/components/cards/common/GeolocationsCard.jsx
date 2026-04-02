@@ -5,7 +5,7 @@ import React, {useCallback, useState} from "react";
 import {faExclamationTriangle, faGlobe, faLayerGroup} from "@fortawesome/free-solid-svg-icons";
 import GeolocationBarGraph from "../../graphs/GeolocationBarGraph";
 import GeolocationWorldMap, {ProjectionOptions} from "../../graphs/GeolocationWorldMap";
-import {CardLoader} from "../../navigation/Loader";
+import {CardLoader} from "../../navigation/Loader.tsx";
 import ExtendableRow from "../../layout/extension/ExtendableRow";
 import Highcharts from "highcharts/highstock";
 import "highcharts/modules/accessibility";
@@ -14,7 +14,7 @@ import {postQuery} from "../../../service/queryService";
 import {useMetadata} from "../../../hooks/metadataHook";
 import QueryPlayerListModal from "../../modal/QueryPlayerListModal";
 import {faHandPointer} from "@fortawesome/free-regular-svg-icons";
-import CardHeader from "../CardHeader";
+import CardHeader from "../CardHeader.tsx";
 
 const ProjectionDropDown = ({projection, setProjection}) => {
     const {t} = useTranslation();

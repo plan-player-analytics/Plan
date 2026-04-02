@@ -248,7 +248,7 @@ public class GraphsJSONResolver extends JSONResolver {
             case GRAPH_HOURLY_UNIQUE_NEW:
                 return List.of(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_HOUR_BY_HOUR);
             case GRAPH_CALENDAR:
-                return List.of(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_CALENDAR);
+                return List.of(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_CALENDAR, WebPermission.PAGE_SERVER_SESSIONS_CALENDAR);
             case GRAPH_PUNCHCARD:
                 return List.of(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_PUNCHCARD);
             case GRAPH_WORLD_PIE:
@@ -277,7 +277,7 @@ public class GraphsJSONResolver extends JSONResolver {
             case GRAPH_HOURLY_UNIQUE_NEW:
                 return List.of(WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_HOUR_BY_HOUR);
             case GRAPH_CALENDAR:
-                return List.of(WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_CALENDAR);
+                return List.of(WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_CALENDAR, WebPermission.PAGE_NETWORK_SESSIONS_CALENDAR);
             case GRAPH_SERVER_PIE:
                 return List.of(WebPermission.PAGE_NETWORK_SESSIONS_SERVER_PIE);
             case GRAPH_WORLD_MAP:

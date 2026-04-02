@@ -79,4 +79,19 @@ public class WorldPie extends PieWithDrilldown {
         }
         return data;
     }
+
+    public List<PieDrilldown> getDrilldown() {
+        List<PieDrilldown> drilldowns = new ArrayList<>();
+        for (Map.Entry<String, GMTimes> worldAlias : gmTimesAliasMap.entrySet()) {
+            Map<String, Object> drilldown = new HashMap<>();
+            drilldown.put("name", worldAlias.getKey());
+            drilldown.put("id", worldAlias.getKey());
+            drilldown.put("data", createGMTimesForWorld(worldAlias.getValue()));
+            drilldowns.add(new PieDrilldown(
+                    worldAlias.getKey(),
+                    worldAlias.getKey(),
+                    createGMTimesForWorld(worldAlias.getValue())));
+        }
+        return drilldowns;
+    }
 }

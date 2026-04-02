@@ -25,6 +25,7 @@ import com.djrapitops.plan.delivery.webserver.http.WebServer;
 import com.djrapitops.plan.delivery.webserver.resolver.json.metadata.*;
 import com.djrapitops.plan.delivery.webserver.resolver.json.plugins.ExtensionJSONResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.json.plugins.PluginHistoryJSONResolver;
+import com.djrapitops.plan.delivery.webserver.resolver.json.query.DataPointJSONResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.json.query.FiltersJSONResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.json.query.QueryJSONResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.json.theme.DeleteThemeJSONResolver;
@@ -97,6 +98,7 @@ public class RootJSONResolver {
             PluginHistoryJSONResolver pluginHistoryJSONResolver,
             AllowlistJSONResolver allowlistJSONResolver,
             PlayersOnlineJSONResolver playersOnlineJSONResolver,
+            DataPointJSONResolver dataPointJSONResolver,
 
             ThemeJSONResolver themeJSONResolver,
             SaveThemeJSONResolver saveThemeJSONResolver,
@@ -144,7 +146,8 @@ public class RootJSONResolver {
                 .add("preferences", preferencesJSONResolver)
                 .add("gameAllowlistBounces", allowlistJSONResolver)
                 .add("theme", themeJSONResolver)
-                .add("playersOnline", playersOnlineJSONResolver);
+                .add("playersOnline", playersOnlineJSONResolver)
+                .add("datapoint", dataPointJSONResolver);
 
         this.webServer = webServer;
         // These endpoints require authentication to be enabled.

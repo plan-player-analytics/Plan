@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.export;
 
+import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
@@ -28,7 +29,6 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.file.PlanFiles;
-import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.Strings;
 import org.apache.commons.text.StringEscapeUtils;
 
@@ -38,6 +38,7 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Handles exporting of /server page html, data and resources.
@@ -53,8 +54,6 @@ public class ServerPageExporter extends FileExporter {
     private final RootJSONResolver jsonHandler;
     private final ServerInfo serverInfo;
 
-    private final ExportPaths exportPaths;
-
     @Inject
     public ServerPageExporter(
             PlanFiles files,
@@ -68,8 +67,6 @@ public class ServerPageExporter extends FileExporter {
         this.dbSystem = dbSystem;
         this.jsonHandler = jsonHandler;
         this.serverInfo = serverInfo;
-
-        exportPaths = new ExportPaths();
     }
 
     public static String[] getRedirections(ServerUUID serverUUID) {
@@ -103,10 +100,8 @@ public class ServerPageExporter extends FileExporter {
         Database.State dbState = dbSystem.getDatabase().getState();
         if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
 
-        exportPaths.put("../network", toRelativePathFromRoot("network"));
-        exportJSON(toDirectory, server);
+        exportJSON(toDirectory, server.getUuid());
         exportReactRedirects(toDirectory, server.getUuid());
-        exportPaths.clear();
     }
 
     private void exportReactRedirects(Path toDirectory, ServerUUID serverUUID) throws IOException {
@@ -117,24 +112,24 @@ public class ServerPageExporter extends FileExporter {
      * Perform export for a server page json payload.
      *
      * @param toDirectory Path to Export directory
-     * @param server      Server to export
+     * @param serverUUID  Server to export
      * @throws IOException       If a template can not be read from jar/disk or the result written
      * @throws NotFoundException If a file or resource that is being exported can not be found
      */
-    public void exportJSON(Path toDirectory, Server server) throws IOException {
-        String serverUUID = server.getUuid().toString();
-
+    public void exportJSON(Path toDirectory, ServerUUID serverUUID) throws IOException {
+        long monthAgo = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(30);
+        String datapointType = "datapoint?type=";
+        String after = "&after=" + monthAgo;
+        String server = "&server=" + serverUUID;
         exportJSON(toDirectory,
                 "serverOverview?server=" + serverUUID,
                 "onlineOverview?server=" + serverUUID,
-                "sessionsOverview?server=" + serverUUID,
                 "playerVersus?server=" + serverUUID,
                 "playerbaseOverview?server=" + serverUUID,
                 "performanceOverview?server=" + serverUUID,
                 "graph?type=playersOnline&server=" + serverUUID,
                 "graph?type=optimizedPerformance&server=" + serverUUID,
                 "graph?type=aggregatedPing&server=" + serverUUID,
-                "graph?type=worldPie&server=" + serverUUID,
                 "graph?type=activity&server=" + serverUUID,
                 "graph?type=geolocation&server=" + serverUUID,
                 "graph?type=uniqueAndNew&server=" + serverUUID,
@@ -150,7 +145,13 @@ public class ServerPageExporter extends FileExporter {
                 "serverIdentity?server=" + serverUUID,
                 "retention?server=" + serverUUID,
                 "joinAddresses?server=" + serverUUID,
-                "gameAllowlistBounces?server=" + serverUUID
+                "gameAllowlistBounces?server=" + serverUUID,
+                datapointType + DatapointType.PLAYTIME.name() + after + server,
+                datapointType + DatapointType.AFK_TIME.name() + after + server,
+                datapointType + DatapointType.AFK_TIME_PERCENTAGE.name() + after + server,
+                datapointType + DatapointType.SERVER_OCCUPIED.name() + after + server,
+                datapointType + DatapointType.MOST_ACTIVE_GAME_MODE.name() + after + server,
+                datapointType + DatapointType.WORLD_PIE.name() + server
         );
     }
 
@@ -164,7 +165,7 @@ public class ServerPageExporter extends FileExporter {
         Response response = getJSONResponse(resource)
                 .orElseThrow(() -> new NotFoundException(resource + " was not properly exported: not found"));
 
-        String jsonResourceName = toFileName(toJSONResourceName(resource)) + ".json";
+        String jsonResourceName = toFileName(toJSONResourceName(resource), "json");
 
         export(toDirectory.resolve("data").resolve(jsonResourceName),
                 // Replace ../player in urls to fix player page links
@@ -174,11 +175,6 @@ public class ServerPageExporter extends FileExporter {
                         StringEscapeUtils.escapeJson(toRelativePathFromRoot("player"))
                 )
         );
-        exportPaths.put("../v1/" + resource, toRelativePathFromRoot("data/" + jsonResourceName));
-    }
-
-    private String toJSONResourceName(String resource) {
-        return StringUtils.replaceEach(resource, new String[]{"?", "&", "type=", "server="}, new String[]{"-", "_", "", ""});
     }
 
     private Optional<Response> getJSONResponse(String resource) {
@@ -194,9 +190,4 @@ public class ServerPageExporter extends FileExporter {
         // Server html is exported at /server/<name>/index.html or /server/index.html
         return (serverInfo.getServer().isProxy() ? "../../" : "../") + toNonRelativePath(resourceName);
     }
-
-    private String toNonRelativePath(String resourceName) {
-        return Strings.CI.remove(Strings.CI.remove(resourceName, "../"), "./");
-    }
-
 }

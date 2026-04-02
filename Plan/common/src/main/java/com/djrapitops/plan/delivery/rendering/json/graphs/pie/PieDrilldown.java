@@ -14,51 +14,50 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.domain.datatransfer;
-
-import com.djrapitops.plan.utilities.dev.Untrusted;
+package com.djrapitops.plan.delivery.rendering.json.graphs.pie;
 
 import java.util.List;
 import java.util.Objects;
 
-public class InputQueryDto {
+/**
+ * @author AuroraLS3
+ */
+public final class PieDrilldown {
+    private final String name;
+    private final String id;
+    private final List<List<Object>> data;
 
-    @Untrusted
-    public final List<InputFilterDto> filters;
-    private final ViewDto view;
-
-    public InputQueryDto(ViewDto view, List<InputFilterDto> filters) {
-        this.view = view;
-        this.filters = filters;
-    }
-
-    public ViewDto getView() {
-        return view;
-    }
-
-    @Untrusted
-    public List<InputFilterDto> getFilters() {
-        return filters;
+    public PieDrilldown(String name, String id, List<List<Object>> data) {
+        this.name = name;
+        this.id = id;
+        this.data = data;
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        InputQueryDto that = (InputQueryDto) o;
-        return Objects.equals(getView(), that.getView()) && Objects.equals(getFilters(), that.getFilters());
+        PieDrilldown that = (PieDrilldown) o;
+        return Objects.equals(getName(), that.getName()) && Objects.equals(getId(), that.getId()) && Objects.equals(getData(), that.getData());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getView(), getFilters());
+        return Objects.hash(getName(), getId(), getData());
     }
 
     @Override
     public String toString() {
-        return "InputQueryDto{" +
-                "view=" + view +
-                ", filters=" + filters +
+        return "PieDrilldown{" +
+                "name='" + name + '\'' +
+                ", id='" + id + '\'' +
+                ", data=" + data +
                 '}';
     }
+
+    public String getName() {return name;}
+
+    public String getId() {return id;}
+
+    public List<List<Object>> getData() {return data;}
+
 }

@@ -4,7 +4,7 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faBookOpen} from "@fortawesome/free-solid-svg-icons";
 import React from "react";
 import OnlineActivityAsNumbersTable from "../../../table/OnlineActivityAsNumbersTable";
-import {CardLoader} from "../../../navigation/Loader";
+import {CardLoader} from "../../../navigation/Loader.tsx";
 
 const OnlineActivityAsNumbersCard = ({data}) => {
     const {t} = useTranslation();

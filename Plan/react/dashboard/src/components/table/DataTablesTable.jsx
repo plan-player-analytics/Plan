@@ -18,6 +18,7 @@ import CollapseWithButton from "../layout/CollapseWithButton";
 import {faMinusSquare, faPlusSquare} from "@fortawesome/free-regular-svg-icons";
 import {Trans, useTranslation} from "react-i18next";
 import {download, generateCsv, mkConfig} from "export-to-csv";
+import {classNames} from "../../util/classNames.ts";
 
 const PaginationOption = ({onClick, children, selected}) => (
     <li>
@@ -33,9 +34,9 @@ const Pagination = ({page, maxPage, setPage}) => {
 
     const elements = [];
     elements.push(<PaginationOption key={"<<"} onClick={firstPage}><FontAwesomeIcon
-        icon={faAnglesLeft}/></PaginationOption>)
-    elements.push(<PaginationOption key={"<"} onClick={previousPage}><FontAwesomeIcon
-        icon={faAngleLeft}/></PaginationOption>)
+            icon={faAnglesLeft}/></PaginationOption>,
+        <PaginationOption key={"<"} onClick={previousPage}><FontAwesomeIcon
+            icon={faAngleLeft}/></PaginationOption>)
     const pagesStart = Math.max(1, page - 2);
     const pagesEnd = Math.min(maxPage, pagesStart + 7);
     for (let i = pagesStart; i <= pagesEnd; i++) {
@@ -43,9 +44,9 @@ const Pagination = ({page, maxPage, setPage}) => {
                                         onClick={() => setPage(i - 1)}>{i}</PaginationOption>)
     }
     elements.push(<PaginationOption key={">"} onClick={nextPage}><FontAwesomeIcon
-        icon={faAngleRight}/></PaginationOption>)
-    elements.push(<PaginationOption key={">>"} onClick={lastPage}><FontAwesomeIcon
-        icon={faAnglesRight}/></PaginationOption>)
+            icon={faAngleRight}/></PaginationOption>,
+        <PaginationOption key={">>"} onClick={lastPage}><FontAwesomeIcon
+            icon={faAnglesRight}/></PaginationOption>)
 
     return (
         <ul className={"dataTables_paginate input-group pagination"}>
@@ -91,9 +92,13 @@ const ExportMenu = ({matchingData}) => {
 
         const rows = matchingData.map(row => {
             const mapped = {};
+            console.log(row);
             for (let entry of Object.entries(row)) {
                 if (entry[1] === undefined || entry[1]["$$typeof"] === undefined) {
                     mapped[entry[0]] = entry[1];
+                }
+                if (Array.isArray(entry[1])) {
+                    mapped[entry[0]] = JSON.stringify(entry[1]);
                 }
             }
             return mapped;
@@ -127,7 +132,7 @@ const ExportMenu = ({matchingData}) => {
     )
 }
 
-const DataTablesTable = ({id, rowKeyFunction, options, colorClass, expandComponent}) => {
+const DataTablesTable = ({id, rowKeyFunction, options, className, colorClass, expandComponent, clickableRows}) => {
     const {t} = useTranslation();
     const {nightModeEnabled} = useTheme();
 
@@ -171,8 +176,8 @@ const DataTablesTable = ({id, rowKeyFunction, options, colorClass, expandCompone
         if (valA === undefined && valB === undefined) return 0;
         if (valA === undefined) return sortReversed ? 1 : -1;
         if (valB === undefined) return sortReversed ? 1 : -1;
-        const isNumberA = typeof valA === 'number' || !isNaN(Number(valA));
-        const isNumberB = typeof valB === 'number' || !isNaN(Number(valB));
+        const isNumberA = typeof valA === 'number' || !Number.isNaN(Number(valA));
+        const isNumberB = typeof valB === 'number' || !Number.isNaN(Number(valB));
         if (isNumberA && isNumberB) {
             return sortReversed ? valA - valB : valB - valA;
         }
@@ -185,7 +190,7 @@ const DataTablesTable = ({id, rowKeyFunction, options, colorClass, expandCompone
 
     const keys = visibleColumns.flatMap(column => [column.data._ || column.data, column.data.display]);
     const [filter, setFilter] = useState('');
-    const filterWords = filter.split(' ').filter(word => word);
+    const filterWords = filter.split(' ').filter(Boolean);
     const matchingData = options.data.filter(row => {
         if (!filter) return true;
 
@@ -196,7 +201,7 @@ const DataTablesTable = ({id, rowKeyFunction, options, colorClass, expandCompone
     const [expandedRows, setExpandedRows] = useState([]);
     const toggleRow = useCallback(i => {
         if (expandedRows.includes(i)) {
-            setExpandedRows(expandedRows.filter(item => item !== i));
+            setExpandedRows(expandedRows.filter(index => index !== i));
         } else {
             setExpandedRows([...expandedRows, i]);
         }
@@ -205,7 +210,7 @@ const DataTablesTable = ({id, rowKeyFunction, options, colorClass, expandCompone
         if (visibleColumnIndexes.length === columns.length) {
             setExpandedRows([]);
         }
-    }, [visibleColumnIndexes, columns, setExpandedRows])
+    }, [visibleColumnIndexes, columns, setExpandedRows]);
 
     const [page, setPage] = useState(0);
     const maxPage = Math.ceil(matchingData.length / paginationCount);
@@ -257,7 +262,7 @@ const DataTablesTable = ({id, rowKeyFunction, options, colorClass, expandCompone
                 <ExportMenu matchingData={matchingData} columns={columns}/>
             </div>
             <table id={id}
-                   className={"datatable table table-bordered table-striped" + (nightModeEnabled ? " table-dark" : '')}
+                   className={classNames("datatable table table-bordered table-striped", nightModeEnabled && " table-dark", className)}
                    style={{width: "100%"}}>
                 <thead id={id + '-head'} className={colorClass}>
                 <tr>
@@ -278,11 +283,13 @@ const DataTablesTable = ({id, rowKeyFunction, options, colorClass, expandCompone
                     </td>)}
                 </tr>}
                 {rows.map(row => <React.Fragment key={"frag-" + rowKeyFunction(row, null)}>
-                    <tr key={"row-" + rowKeyFunction(row, null)}>
+                    <tr key={"row-" + rowKeyFunction(row, null)} className={row.colorClass}
+                        style={clickableRows ? {cursor: 'pointer'} : undefined}
+                        onClick={clickableRows ? () => toggleRow(rowKeyFunction(row, null)) : undefined}>
                         {visibleColumns.map((column, i) => {
                             if (column.data._ !== undefined) {
                                 return <td key={"col-" + rowKeyFunction(row, column)}>
-                                    {i === 0 && someColumnsHidden &&
+                                    {rows.length === 1 || i === 0 && someColumnsHidden &&
                                         <button style={{paddingRight: "0.5rem"}}
                                                 onClick={() => toggleRow(rowKeyFunction(row, null))}>
                                             <FontAwesomeIcon
@@ -305,17 +312,17 @@ const DataTablesTable = ({id, rowKeyFunction, options, colorClass, expandCompone
                             }
                         })}
                     </tr>
-                    {expandedRows.includes(rowKeyFunction(row, null)) &&
+                    {(rows.length === 1 || expandedRows.includes(rowKeyFunction(row, null))) &&
                         <tr key={"hidden-row" + rowKeyFunction(row, null)}>
                             <td colSpan={visibleColumns.length}>
                                 {expandComponent && expandComponent({row})}
                                 {invisibleColumns.map(column => {
-                                    if (column.data._ !== undefined) {
-                                        return <p key={"p-" + rowKeyFunction(row, column)}>
-                                            <b>{column.title}:</b> {row[column.data.display]}</p>
-                                    } else {
+                                    if (column.data._ === undefined) {
                                         return <p key={"p-" + rowKeyFunction(row, column)}>
                                             <b>{column.title}:</b> {row[column.data]}</p>
+                                    } else {
+                                        return <p key={"p-" + rowKeyFunction(row, column)}>
+                                            <b>{column.title}:</b> {row[column.data.display]}</p>
                                     }
                                 })}
                             </td>
