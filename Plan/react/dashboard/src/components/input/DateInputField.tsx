@@ -3,13 +3,47 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCalendar} from "@fortawesome/free-regular-svg-icons";
 import "react-datepicker/dist/react-datepicker.css";
 import "./DateInputField.css";
-import DatePicker from "react-datepicker";
+import DatePicker, {registerLocale} from "react-datepicker";
 import {InputGroup} from "react-bootstrap";
 import {useDateFormatter} from "../../util/format/useDateFormatter";
 import {InlinedRow} from "../layout/InlinedRow";
 import OutlineButton from "./button/OutlineButton";
 import {faChevronDown, faTimes} from "@fortawesome/free-solid-svg-icons";
 import {useDateConverter} from "../../util/format/useDateConverter";
+import {useI18nFriendlyLanguage} from "../../service/localeService";
+import {zhCN} from "date-fns/locale/zh-CN";
+import {cs} from "date-fns/locale/cs";
+import {es} from "date-fns/locale/es";
+import {fi} from "date-fns/locale/fi";
+import {fr} from "date-fns/locale/fr";
+import {it} from "date-fns/locale/it";
+import {ja} from "date-fns/locale/ja";
+import {ko} from "date-fns/locale/ko";
+import {nl} from "date-fns/locale/nl";
+import {ptBR} from "date-fns/locale/pt-BR";
+import {ru} from "date-fns/locale/ru";
+import {tr} from "date-fns/locale/tr";
+import {uk} from "date-fns/locale/uk";
+import {zhTW} from "date-fns/locale/zh-TW";
+
+let loadedLocale = false;
+if (!loadedLocale) {
+    registerLocale("zh-cn", zhCN);
+    registerLocale("cs", cs);
+    registerLocale("es", es);
+    registerLocale("fi", fi);
+    registerLocale("fr", fr);
+    registerLocale("it", it);
+    registerLocale("ja", ja);
+    registerLocale("ko", ko);
+    registerLocale("nl", nl);
+    registerLocale("pt-br", ptBR);
+    registerLocale("ru", ru);
+    registerLocale("tr", tr);
+    registerLocale("uk", uk);
+    registerLocale("zh-tw", zhTW);
+    loadedLocale = true;
+}
 
 const isValidDate = (value: string) => {
     if (!value) return true;
@@ -104,6 +138,7 @@ const DateInputField = (
     const [picker, setPicker] = useState<'month' | 'year' | undefined>(undefined);
     const {formatDate: formatAsMonth} = useDateFormatter(false, {pattern: "MMMM"});
     const {formatDate: formatAsYear} = useDateFormatter(false, {pattern: "yyyy"});
+    const locale = useI18nFriendlyLanguage();
     const currentDebounce = useRef<number | undefined>(undefined);
 
     const onChange = (newValue: Date | null) => {
@@ -177,7 +212,7 @@ const DateInputField = (
                 <FontAwesomeIcon icon={faCalendar}/>
             </div>
             <DatePicker dateFormat="dd/MM/yyyy"
-                        timeZone="UTC"
+                // timeZone="UTC"
                         selected={asDate}
                         onChange={onChange}
                         onChangeRaw={onRawChange}
@@ -189,6 +224,7 @@ const DateInputField = (
                         showYearPicker={picker === 'year'}
                         allowSameDay
                         dayClassName={getDayClassName}
+                        locale={locale === 'en' ? undefined : locale}
                         renderCustomHeader={({
                                                  date,
                                                  decreaseMonth,
