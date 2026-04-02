@@ -58,12 +58,14 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver,com.djrapitops.plan.identification.ServerInfo)" tabindex="0">PlayersPageExporter(PlanFiles, PlanConfig, DBSystem, RootJSONResolver, ServerInfo)</a></li>
+<li><a href="#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver)" tabindex="0">PlayersPageExporter(PlanFiles, PlanConfig, DBSystem, RootJSONResolver)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#export(java.nio.file.Path)" tabindex="0">export(Path)</a></li>
+<li><a href="#toJSONResourceName(java.lang.String)" tabindex="0">toJSONResourceName(String)</a></li>
+<li><a href="#toNonRelativePath(java.lang.String)" tabindex="0">toNonRelativePath(String)</a></li>
 </ol>
 </li>
 </ol>
@@ -95,11 +97,10 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver,com.djrapitops.plan.identification.ServerInfo)" class="member-name-link">PlayersPageExporter</a><wbr>(<a href="../../storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver)" class="member-name-link">PlayersPageExporter</a><wbr>(<a href="../../storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
  <a href="../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
  <a href="../../storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
- <a href="../webserver/resolver/json/RootJSONResolver.html" title="class in com.djrapitops.plan.delivery.webserver.resolver.json">RootJSONResolver</a>&nbsp;jsonHandler,
- <a href="../../identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo)</code></div>
+ <a href="../webserver/resolver/json/RootJSONResolver.html" title="class in com.djrapitops.plan.delivery.webserver.resolver.json">RootJSONResolver</a>&nbsp;jsonHandler)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -117,6 +118,12 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#export(java.nio.file.Path)" class="member-name-link">export</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a>&nbsp;toDirectory)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toJSONResourceName(java.lang.String)" class="member-name-link">toJSONResourceName</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;resource)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toNonRelativePath(java.lang.String)" class="member-name-link">toNonRelativePath</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;resourceName)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -136,15 +143,14 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver,com.djrapitops.plan.identification.ServerInfo)">
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver)">
 <h3>PlayersPageExporter</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations">@Inject
 </span><span class="modifiers">public</span>&nbsp;<span class="element-name">PlayersPageExporter</span><wbr><span class="parameters">(<a href="../../storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
  <a href="../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
  <a href="../../storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
- <a href="../webserver/resolver/json/RootJSONResolver.html" title="class in com.djrapitops.plan.delivery.webserver.resolver.json">RootJSONResolver</a>&nbsp;jsonHandler,
- <a href="../../identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo)</span></div>
+ <a href="../webserver/resolver/json/RootJSONResolver.html" title="class in com.djrapitops.plan.delivery.webserver.resolver.json">RootJSONResolver</a>&nbsp;jsonHandler)</span></div>
 </div>
 </section>
 </li>
@@ -166,6 +172,22 @@ loadScripts(document, 'script');</script>
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
 </dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="toJSONResourceName(java.lang.String)">
+<h3>toJSONResourceName</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">toJSONResourceName</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;resource)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="toNonRelativePath(java.lang.String)">
+<h3>toNonRelativePath</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">toNonRelativePath</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;resourceName)</span></div>
 </div>
 </section>
 </li>

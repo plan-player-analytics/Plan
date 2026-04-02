@@ -66,7 +66,7 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#getKind()" tabindex="0">getKind()</a></li>
 <li><a href="#getExpectedParameters()" tabindex="0">getExpectedParameters()</a></li>
-<li><a href="#getMatchingUserIds(com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto)" tabindex="0">getMatchingUserIds(InputFilterDto)</a></li>
+<li><a href="#getMatchingUserIds(com.djrapitops.plan.delivery.domain.datatransfer.query.InputFilterDto)" tabindex="0">getMatchingUserIds(InputFilterDto)</a></li>
 </ol>
 </li>
 </ol>
@@ -137,7 +137,7 @@ implements <a href="../Filter.html" title="interface in com.djrapitops.plan.stor
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getKind()" class="member-name-link">getKind</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMatchingUserIds(com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto)" class="member-name-link">getMatchingUserIds</a><wbr>(<a href="../../../../../delivery/domain/datatransfer/InputFilterDto.html" title="class in com.djrapitops.plan.delivery.domain.datatransfer">InputFilterDto</a>&nbsp;query)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMatchingUserIds(com.djrapitops.plan.delivery.domain.datatransfer.query.InputFilterDto)" class="member-name-link">getMatchingUserIds</a><wbr>(<a href="../../../../../delivery/domain/datatransfer/query/InputFilterDto.html" title="class in com.djrapitops.plan.delivery.domain.datatransfer.query">InputFilterDto</a>&nbsp;query)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Match some UUIDs to the filter.</div>
 </div>
@@ -149,7 +149,7 @@ implements <a href="../Filter.html" title="interface in com.djrapitops.plan.stor
 <code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.djrapitops.plan.storage.database.queries.filter.Filter">Methods inherited from interface&nbsp;<a href="../Filter.html#method-summary" title="interface in com.djrapitops.plan.storage.database.queries.filter">Filter</a></h3>
-<code><a href="../Filter.html#apply(com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto)" title="apply(InputFilterDto)">apply</a>, <a href="../Filter.html#getOptions()" title="getOptions()">getOptions</a></code></div>
+<code><a href="../Filter.html#apply(com.djrapitops.plan.delivery.domain.datatransfer.query.InputFilterDto)" title="apply(InputFilterDto)">apply</a>, <a href="../Filter.html#getOptions()" title="getOptions()">getOptions</a></code></div>
 </section>
 </li>
 </ul>
@@ -207,15 +207,15 @@ implements <a href="../Filter.html" title="interface in com.djrapitops.plan.stor
 </section>
 </li>
 <li>
-<section class="detail" id="getMatchingUserIds(com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto)">
+<section class="detail" id="getMatchingUserIds(com.djrapitops.plan.delivery.domain.datatransfer.query.InputFilterDto)">
 <h3>getMatchingUserIds</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</span>&nbsp;<span class="element-name">getMatchingUserIds</span><wbr><span class="parameters">(<a href="../../../../../delivery/domain/datatransfer/InputFilterDto.html" title="class in com.djrapitops.plan.delivery.domain.datatransfer">InputFilterDto</a>&nbsp;query)</span></div>
-<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../Filter.html#getMatchingUserIds(com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto)">Filter</a></code></span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</span>&nbsp;<span class="element-name">getMatchingUserIds</span><wbr><span class="parameters">(<a href="../../../../../delivery/domain/datatransfer/query/InputFilterDto.html" title="class in com.djrapitops.plan.delivery.domain.datatransfer.query">InputFilterDto</a>&nbsp;query)</span></div>
+<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../Filter.html#getMatchingUserIds(com.djrapitops.plan.delivery.domain.datatransfer.query.InputFilterDto)">Filter</a></code></span></div>
 <div class="block">Match some UUIDs to the filter.</div>
 <dl class="notes">
 <dt>Specified by:</dt>
-<dd><code><a href="../Filter.html#getMatchingUserIds(com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto)">getMatchingUserIds</a></code>&nbsp;in interface&nbsp;<code><a href="../Filter.html" title="interface in com.djrapitops.plan.storage.database.queries.filter">Filter</a></code></dd>
+<dd><code><a href="../Filter.html#getMatchingUserIds(com.djrapitops.plan.delivery.domain.datatransfer.query.InputFilterDto)">getMatchingUserIds</a></code>&nbsp;in interface&nbsp;<code><a href="../Filter.html" title="interface in com.djrapitops.plan.storage.database.queries.filter">Filter</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>query</code> - Query for the filter</dd>
 <dt>Returns:</dt>

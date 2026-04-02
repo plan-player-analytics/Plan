@@ -76,6 +76,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#PAGE_NETWORK_SESSIONS_OVERVIEW" tabindex="0">PAGE_NETWORK_SESSIONS_OVERVIEW</a></li>
 <li><a href="#PAGE_NETWORK_SESSIONS_WORLD_PIE" tabindex="0">PAGE_NETWORK_SESSIONS_WORLD_PIE</a></li>
 <li><a href="#PAGE_NETWORK_SESSIONS_SERVER_PIE" tabindex="0">PAGE_NETWORK_SESSIONS_SERVER_PIE</a></li>
+<li><a href="#PAGE_NETWORK_SESSIONS_CALENDAR" tabindex="0">PAGE_NETWORK_SESSIONS_CALENDAR</a></li>
 <li><a href="#PAGE_NETWORK_SESSIONS_LIST" tabindex="0">PAGE_NETWORK_SESSIONS_LIST</a></li>
 <li><a href="#PAGE_NETWORK_JOIN_ADDRESSES" tabindex="0">PAGE_NETWORK_JOIN_ADDRESSES</a></li>
 <li><a href="#PAGE_NETWORK_JOIN_ADDRESSES_GRAPHS" tabindex="0">PAGE_NETWORK_JOIN_ADDRESSES_GRAPHS</a></li>
@@ -110,6 +111,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#PAGE_SERVER_SESSIONS" tabindex="0">PAGE_SERVER_SESSIONS</a></li>
 <li><a href="#PAGE_SERVER_SESSIONS_OVERVIEW" tabindex="0">PAGE_SERVER_SESSIONS_OVERVIEW</a></li>
 <li><a href="#PAGE_SERVER_SESSIONS_WORLD_PIE" tabindex="0">PAGE_SERVER_SESSIONS_WORLD_PIE</a></li>
+<li><a href="#PAGE_SERVER_SESSIONS_CALENDAR" tabindex="0">PAGE_SERVER_SESSIONS_CALENDAR</a></li>
 <li><a href="#PAGE_SERVER_SESSIONS_LIST" tabindex="0">PAGE_SERVER_SESSIONS_LIST</a></li>
 <li><a href="#PAGE_SERVER_JOIN_ADDRESSES" tabindex="0">PAGE_SERVER_JOIN_ADDRESSES</a></li>
 <li><a href="#PAGE_SERVER_JOIN_ADDRESSES_GRAPHS" tabindex="0">PAGE_SERVER_JOIN_ADDRESSES_GRAPHS</a></li>
@@ -140,6 +142,30 @@ loadScripts(document, 'script');</script>
 <li><a href="#PAGE_PLAYER_VERSUS" tabindex="0">PAGE_PLAYER_VERSUS</a></li>
 <li><a href="#PAGE_PLAYER_SERVERS" tabindex="0">PAGE_PLAYER_SERVERS</a></li>
 <li><a href="#PAGE_PLAYER_PLUGINS" tabindex="0">PAGE_PLAYER_PLUGINS</a></li>
+<li><a href="#DATA" tabindex="0">DATA</a></li>
+<li><a href="#DATA_PLAYER" tabindex="0">DATA_PLAYER</a></li>
+<li><a href="#DATA_SERVER" tabindex="0">DATA_SERVER</a></li>
+<li><a href="#DATA_NETWORK" tabindex="0">DATA_NETWORK</a></li>
+<li><a href="#DATA_PLAYER_PLAYTIME" tabindex="0">DATA_PLAYER_PLAYTIME</a></li>
+<li><a href="#DATA_SERVER_PLAYTIME" tabindex="0">DATA_SERVER_PLAYTIME</a></li>
+<li><a href="#DATA_NETWORK_PLAYTIME" tabindex="0">DATA_NETWORK_PLAYTIME</a></li>
+<li><a href="#DATA_PLAYER_AFK_TIME" tabindex="0">DATA_PLAYER_AFK_TIME</a></li>
+<li><a href="#DATA_SERVER_AFK_TIME" tabindex="0">DATA_SERVER_AFK_TIME</a></li>
+<li><a href="#DATA_NETWORK_AFK_TIME" tabindex="0">DATA_NETWORK_AFK_TIME</a></li>
+<li><a href="#DATA_SERVER_SERVER_OCCUPIED" tabindex="0">DATA_SERVER_SERVER_OCCUPIED</a></li>
+<li><a href="#DATA_NETWORK_SERVER_OCCUPIED" tabindex="0">DATA_NETWORK_SERVER_OCCUPIED</a></li>
+<li><a href="#DATA_PLAYER_MOST_ACTIVE_GAME_MODE" tabindex="0">DATA_PLAYER_MOST_ACTIVE_GAME_MODE</a></li>
+<li><a href="#DATA_SERVER_MOST_ACTIVE_GAME_MODE" tabindex="0">DATA_SERVER_MOST_ACTIVE_GAME_MODE</a></li>
+<li><a href="#DATA_NETWORK_MOST_ACTIVE_GAME_MODE" tabindex="0">DATA_NETWORK_MOST_ACTIVE_GAME_MODE</a></li>
+<li><a href="#DATA_PLAYER_MOST_ACTIVE_WORLD" tabindex="0">DATA_PLAYER_MOST_ACTIVE_WORLD</a></li>
+<li><a href="#DATA_SERVER_MOST_ACTIVE_WORLD" tabindex="0">DATA_SERVER_MOST_ACTIVE_WORLD</a></li>
+<li><a href="#DATA_NETWORK_MOST_ACTIVE_WORLD" tabindex="0">DATA_NETWORK_MOST_ACTIVE_WORLD</a></li>
+<li><a href="#DATA_PLAYER_WORLD_PIE" tabindex="0">DATA_PLAYER_WORLD_PIE</a></li>
+<li><a href="#DATA_SERVER_WORLD_PIE" tabindex="0">DATA_SERVER_WORLD_PIE</a></li>
+<li><a href="#DATA_NETWORK_WORLD_PIE" tabindex="0">DATA_NETWORK_WORLD_PIE</a></li>
+<li><a href="#DATA_PLAYER_SERVER_PIE" tabindex="0">DATA_PLAYER_SERVER_PIE</a></li>
+<li><a href="#DATA_SERVER_SERVER_PIE" tabindex="0">DATA_SERVER_SERVER_PIE</a></li>
+<li><a href="#DATA_NETWORK_SERVER_PIE" tabindex="0">DATA_NETWORK_SERVER_PIE</a></li>
 <li><a href="#ACCESS" tabindex="0">ACCESS</a></li>
 <li><a href="#ACCESS_PLAYER" tabindex="0">ACCESS_PLAYER</a></li>
 <li><a href="#ACCESS_PLAYER_SELF" tabindex="0">ACCESS_PLAYER_SELF</a></li>
@@ -160,15 +186,15 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#values()" tabindex="0">values()</a></li>
 <li><a href="#valueOf(java.lang.String)" tabindex="0">valueOf(String)</a></li>
+<li><a href="#nonDeprecatedValues()" tabindex="0">nonDeprecatedValues()</a></li>
+<li><a href="#findByPermission(java.lang.String)" tabindex="0">findByPermission(String)</a></li>
+<li><a href="#isDeprecated(java.lang.String)" tabindex="0">isDeprecated(String)</a></li>
 <li><a href="#getPermission()" tabindex="0">getPermission()</a></li>
 <li><a href="#isDeprecated()" tabindex="0">isDeprecated()</a></li>
 <li><a href="#get()" tabindex="0">get()</a></li>
 <li><a href="#getIdentifier()" tabindex="0">getIdentifier()</a></li>
 <li><a href="#getKey()" tabindex="0">getKey()</a></li>
 <li><a href="#getDefault()" tabindex="0">getDefault()</a></li>
-<li><a href="#nonDeprecatedValues()" tabindex="0">nonDeprecatedValues()</a></li>
-<li><a href="#findByPermission(java.lang.String)" tabindex="0">findByPermission(String)</a></li>
-<li><a href="#isDeprecated(java.lang.String)" tabindex="0">isDeprecated(String)</a></li>
 </ol>
 </li>
 </ol>
@@ -237,6 +263,54 @@ implements <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code><a href="#ACCESS_THEME_EDITOR" class="member-name-link">ACCESS_THEME_EDITOR</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#DATA" class="member-name-link">DATA</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#DATA_NETWORK" class="member-name-link">DATA_NETWORK</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_AFK_TIME" class="member-name-link">DATA_NETWORK_AFK_TIME</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_MOST_ACTIVE_GAME_MODE" class="member-name-link">DATA_NETWORK_MOST_ACTIVE_GAME_MODE</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_MOST_ACTIVE_WORLD" class="member-name-link">DATA_NETWORK_MOST_ACTIVE_WORLD</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_PLAYTIME" class="member-name-link">DATA_NETWORK_PLAYTIME</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_SERVER_OCCUPIED" class="member-name-link">DATA_NETWORK_SERVER_OCCUPIED</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_SERVER_PIE" class="member-name-link">DATA_NETWORK_SERVER_PIE</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_WORLD_PIE" class="member-name-link">DATA_NETWORK_WORLD_PIE</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#DATA_PLAYER" class="member-name-link">DATA_PLAYER</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#DATA_PLAYER_AFK_TIME" class="member-name-link">DATA_PLAYER_AFK_TIME</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#DATA_PLAYER_MOST_ACTIVE_GAME_MODE" class="member-name-link">DATA_PLAYER_MOST_ACTIVE_GAME_MODE</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#DATA_PLAYER_MOST_ACTIVE_WORLD" class="member-name-link">DATA_PLAYER_MOST_ACTIVE_WORLD</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#DATA_PLAYER_PLAYTIME" class="member-name-link">DATA_PLAYER_PLAYTIME</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#DATA_PLAYER_SERVER_PIE" class="member-name-link">DATA_PLAYER_SERVER_PIE</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#DATA_PLAYER_WORLD_PIE" class="member-name-link">DATA_PLAYER_WORLD_PIE</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#DATA_SERVER" class="member-name-link">DATA_SERVER</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#DATA_SERVER_AFK_TIME" class="member-name-link">DATA_SERVER_AFK_TIME</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_MOST_ACTIVE_GAME_MODE" class="member-name-link">DATA_SERVER_MOST_ACTIVE_GAME_MODE</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#DATA_SERVER_MOST_ACTIVE_WORLD" class="member-name-link">DATA_SERVER_MOST_ACTIVE_WORLD</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_PLAYTIME" class="member-name-link">DATA_SERVER_PLAYTIME</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#DATA_SERVER_SERVER_OCCUPIED" class="member-name-link">DATA_SERVER_SERVER_OCCUPIED</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_SERVER_PIE" class="member-name-link">DATA_SERVER_SERVER_PIE</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#DATA_SERVER_WORLD_PIE" class="member-name-link">DATA_SERVER_WORLD_PIE</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code><a href="#MANAGE_GROUPS" class="member-name-link">MANAGE_GROUPS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code><a href="#MANAGE_THEMES" class="member-name-link">MANAGE_THEMES</a></code></div>
@@ -297,111 +371,115 @@ implements <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code><a href="#PAGE_NETWORK_SESSIONS" class="member-name-link">PAGE_NETWORK_SESSIONS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PAGE_NETWORK_SESSIONS_LIST" class="member-name-link">PAGE_NETWORK_SESSIONS_LIST</a></code></div>
+<div class="col-first even-row-color"><code><a href="#PAGE_NETWORK_SESSIONS_CALENDAR" class="member-name-link">PAGE_NETWORK_SESSIONS_CALENDAR</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_NETWORK_SESSIONS_OVERVIEW" class="member-name-link">PAGE_NETWORK_SESSIONS_OVERVIEW</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_NETWORK_SESSIONS_LIST" class="member-name-link">PAGE_NETWORK_SESSIONS_LIST</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PAGE_NETWORK_SESSIONS_SERVER_PIE" class="member-name-link">PAGE_NETWORK_SESSIONS_SERVER_PIE</a></code></div>
+<div class="col-first even-row-color"><code><a href="#PAGE_NETWORK_SESSIONS_OVERVIEW" class="member-name-link">PAGE_NETWORK_SESSIONS_OVERVIEW</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_NETWORK_SESSIONS_WORLD_PIE" class="member-name-link">PAGE_NETWORK_SESSIONS_WORLD_PIE</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_NETWORK_SESSIONS_SERVER_PIE" class="member-name-link">PAGE_NETWORK_SESSIONS_SERVER_PIE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PAGE_PLAYER" class="member-name-link">PAGE_PLAYER</a></code></div>
+<div class="col-first even-row-color"><code><a href="#PAGE_NETWORK_SESSIONS_WORLD_PIE" class="member-name-link">PAGE_NETWORK_SESSIONS_WORLD_PIE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_PLAYER_OVERVIEW" class="member-name-link">PAGE_PLAYER_OVERVIEW</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_PLAYER" class="member-name-link">PAGE_PLAYER</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PAGE_PLAYER_PLUGINS" class="member-name-link">PAGE_PLAYER_PLUGINS</a></code></div>
+<div class="col-first even-row-color"><code><a href="#PAGE_PLAYER_OVERVIEW" class="member-name-link">PAGE_PLAYER_OVERVIEW</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_PLAYER_SERVERS" class="member-name-link">PAGE_PLAYER_SERVERS</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_PLAYER_PLUGINS" class="member-name-link">PAGE_PLAYER_PLUGINS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PAGE_PLAYER_SESSIONS" class="member-name-link">PAGE_PLAYER_SESSIONS</a></code></div>
+<div class="col-first even-row-color"><code><a href="#PAGE_PLAYER_SERVERS" class="member-name-link">PAGE_PLAYER_SERVERS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_PLAYER_VERSUS" class="member-name-link">PAGE_PLAYER_VERSUS</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_PLAYER_SESSIONS" class="member-name-link">PAGE_PLAYER_SESSIONS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PAGE_SERVER" class="member-name-link">PAGE_SERVER</a></code></div>
+<div class="col-first even-row-color"><code><a href="#PAGE_PLAYER_VERSUS" class="member-name-link">PAGE_PLAYER_VERSUS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_ALLOWLIST_BOUNCE" class="member-name-link">PAGE_SERVER_ALLOWLIST_BOUNCE</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER" class="member-name-link">PAGE_SERVER</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_GEOLOCATIONS" class="member-name-link">PAGE_SERVER_GEOLOCATIONS</a></code></div>
+<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_ALLOWLIST_BOUNCE" class="member-name-link">PAGE_SERVER_ALLOWLIST_BOUNCE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_GEOLOCATIONS_MAP" class="member-name-link">PAGE_SERVER_GEOLOCATIONS_MAP</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_GEOLOCATIONS" class="member-name-link">PAGE_SERVER_GEOLOCATIONS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_GEOLOCATIONS_PING_PER_COUNTRY" class="member-name-link">PAGE_SERVER_GEOLOCATIONS_PING_PER_COUNTRY</a></code></div>
+<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_GEOLOCATIONS_MAP" class="member-name-link">PAGE_SERVER_GEOLOCATIONS_MAP</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_JOIN_ADDRESSES" class="member-name-link">PAGE_SERVER_JOIN_ADDRESSES</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_GEOLOCATIONS_PING_PER_COUNTRY" class="member-name-link">PAGE_SERVER_GEOLOCATIONS_PING_PER_COUNTRY</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_JOIN_ADDRESSES_GRAPHS" class="member-name-link">PAGE_SERVER_JOIN_ADDRESSES_GRAPHS</a></code></div>
+<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_JOIN_ADDRESSES" class="member-name-link">PAGE_SERVER_JOIN_ADDRESSES</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_JOIN_ADDRESSES_GRAPHS_PIE" class="member-name-link">PAGE_SERVER_JOIN_ADDRESSES_GRAPHS_PIE</a></code></div>
-<div class="col-last odd-row-color">
+<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_JOIN_ADDRESSES_GRAPHS" class="member-name-link">PAGE_SERVER_JOIN_ADDRESSES_GRAPHS</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_JOIN_ADDRESSES_GRAPHS_PIE" class="member-name-link">PAGE_SERVER_JOIN_ADDRESSES_GRAPHS_PIE</a></code></div>
+<div class="col-last even-row-color">
 <div class="block"><span class="deprecated-label">Deprecated.</span></div>
 </div>
-<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_JOIN_ADDRESSES_GRAPHS_TIME" class="member-name-link">PAGE_SERVER_JOIN_ADDRESSES_GRAPHS_TIME</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_ONLINE_ACTIVITY" class="member-name-link">PAGE_SERVER_ONLINE_ACTIVITY</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_JOIN_ADDRESSES_GRAPHS_TIME" class="member-name-link">PAGE_SERVER_JOIN_ADDRESSES_GRAPHS_TIME</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS" class="member-name-link">PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS</a></code></div>
+<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_ONLINE_ACTIVITY" class="member-name-link">PAGE_SERVER_ONLINE_ACTIVITY</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_CALENDAR" class="member-name-link">PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_CALENDAR</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS" class="member-name-link">PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_DAY_BY_DAY" class="member-name-link">PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_DAY_BY_DAY</a></code></div>
+<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_CALENDAR" class="member-name-link">PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_CALENDAR</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_HOUR_BY_HOUR" class="member-name-link">PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_HOUR_BY_HOUR</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_DAY_BY_DAY" class="member-name-link">PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_DAY_BY_DAY</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_PUNCHCARD" class="member-name-link">PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_PUNCHCARD</a></code></div>
+<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_HOUR_BY_HOUR" class="member-name-link">PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_HOUR_BY_HOUR</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_ONLINE_ACTIVITY_OVERVIEW" class="member-name-link">PAGE_SERVER_ONLINE_ACTIVITY_OVERVIEW</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_PUNCHCARD" class="member-name-link">PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_PUNCHCARD</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_OVERVIEW" class="member-name-link">PAGE_SERVER_OVERVIEW</a></code></div>
+<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_ONLINE_ACTIVITY_OVERVIEW" class="member-name-link">PAGE_SERVER_ONLINE_ACTIVITY_OVERVIEW</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_OVERVIEW_NUMBERS" class="member-name-link">PAGE_SERVER_OVERVIEW_NUMBERS</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_OVERVIEW" class="member-name-link">PAGE_SERVER_OVERVIEW</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_OVERVIEW_PLAYERS_ONLINE_GRAPH" class="member-name-link">PAGE_SERVER_OVERVIEW_PLAYERS_ONLINE_GRAPH</a></code></div>
+<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_OVERVIEW_NUMBERS" class="member-name-link">PAGE_SERVER_OVERVIEW_NUMBERS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_PERFORMANCE" class="member-name-link">PAGE_SERVER_PERFORMANCE</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_OVERVIEW_PLAYERS_ONLINE_GRAPH" class="member-name-link">PAGE_SERVER_OVERVIEW_PLAYERS_ONLINE_GRAPH</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_PERFORMANCE_GRAPHS" class="member-name-link">PAGE_SERVER_PERFORMANCE_GRAPHS</a></code></div>
+<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_PERFORMANCE" class="member-name-link">PAGE_SERVER_PERFORMANCE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_PERFORMANCE_GRAPHS_CHUNKS" class="member-name-link">PAGE_SERVER_PERFORMANCE_GRAPHS_CHUNKS</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_PERFORMANCE_GRAPHS" class="member-name-link">PAGE_SERVER_PERFORMANCE_GRAPHS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_PERFORMANCE_GRAPHS_CPU" class="member-name-link">PAGE_SERVER_PERFORMANCE_GRAPHS_CPU</a></code></div>
+<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_PERFORMANCE_GRAPHS_CHUNKS" class="member-name-link">PAGE_SERVER_PERFORMANCE_GRAPHS_CHUNKS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_PERFORMANCE_GRAPHS_DISK" class="member-name-link">PAGE_SERVER_PERFORMANCE_GRAPHS_DISK</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_PERFORMANCE_GRAPHS_CPU" class="member-name-link">PAGE_SERVER_PERFORMANCE_GRAPHS_CPU</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_PERFORMANCE_GRAPHS_ENTITIES" class="member-name-link">PAGE_SERVER_PERFORMANCE_GRAPHS_ENTITIES</a></code></div>
+<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_PERFORMANCE_GRAPHS_DISK" class="member-name-link">PAGE_SERVER_PERFORMANCE_GRAPHS_DISK</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_PERFORMANCE_GRAPHS_MSPT" class="member-name-link">PAGE_SERVER_PERFORMANCE_GRAPHS_MSPT</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_PERFORMANCE_GRAPHS_ENTITIES" class="member-name-link">PAGE_SERVER_PERFORMANCE_GRAPHS_ENTITIES</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_PERFORMANCE_GRAPHS_PING" class="member-name-link">PAGE_SERVER_PERFORMANCE_GRAPHS_PING</a></code></div>
+<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_PERFORMANCE_GRAPHS_MSPT" class="member-name-link">PAGE_SERVER_PERFORMANCE_GRAPHS_MSPT</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_PERFORMANCE_GRAPHS_PLAYERS_ONLINE" class="member-name-link">PAGE_SERVER_PERFORMANCE_GRAPHS_PLAYERS_ONLINE</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_PERFORMANCE_GRAPHS_PING" class="member-name-link">PAGE_SERVER_PERFORMANCE_GRAPHS_PING</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_PERFORMANCE_GRAPHS_RAM" class="member-name-link">PAGE_SERVER_PERFORMANCE_GRAPHS_RAM</a></code></div>
+<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_PERFORMANCE_GRAPHS_PLAYERS_ONLINE" class="member-name-link">PAGE_SERVER_PERFORMANCE_GRAPHS_PLAYERS_ONLINE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_PERFORMANCE_GRAPHS_TPS" class="member-name-link">PAGE_SERVER_PERFORMANCE_GRAPHS_TPS</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_PERFORMANCE_GRAPHS_RAM" class="member-name-link">PAGE_SERVER_PERFORMANCE_GRAPHS_RAM</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_PERFORMANCE_OVERVIEW" class="member-name-link">PAGE_SERVER_PERFORMANCE_OVERVIEW</a></code></div>
+<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_PERFORMANCE_GRAPHS_TPS" class="member-name-link">PAGE_SERVER_PERFORMANCE_GRAPHS_TPS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_PLAYER_VERSUS" class="member-name-link">PAGE_SERVER_PLAYER_VERSUS</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_PERFORMANCE_OVERVIEW" class="member-name-link">PAGE_SERVER_PERFORMANCE_OVERVIEW</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_PLAYER_VERSUS_KILL_LIST" class="member-name-link">PAGE_SERVER_PLAYER_VERSUS_KILL_LIST</a></code></div>
+<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_PLAYER_VERSUS" class="member-name-link">PAGE_SERVER_PLAYER_VERSUS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_PLAYER_VERSUS_OVERVIEW" class="member-name-link">PAGE_SERVER_PLAYER_VERSUS_OVERVIEW</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_PLAYER_VERSUS_KILL_LIST" class="member-name-link">PAGE_SERVER_PLAYER_VERSUS_KILL_LIST</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_PLAYERBASE" class="member-name-link">PAGE_SERVER_PLAYERBASE</a></code></div>
+<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_PLAYER_VERSUS_OVERVIEW" class="member-name-link">PAGE_SERVER_PLAYER_VERSUS_OVERVIEW</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_PLAYERBASE_GRAPHS" class="member-name-link">PAGE_SERVER_PLAYERBASE_GRAPHS</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_PLAYERBASE" class="member-name-link">PAGE_SERVER_PLAYERBASE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_PLAYERBASE_OVERVIEW" class="member-name-link">PAGE_SERVER_PLAYERBASE_OVERVIEW</a></code></div>
+<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_PLAYERBASE_GRAPHS" class="member-name-link">PAGE_SERVER_PLAYERBASE_GRAPHS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_PLAYERS" class="member-name-link">PAGE_SERVER_PLAYERS</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_PLAYERBASE_OVERVIEW" class="member-name-link">PAGE_SERVER_PLAYERBASE_OVERVIEW</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_PLUGIN_HISTORY" class="member-name-link">PAGE_SERVER_PLUGIN_HISTORY</a></code></div>
+<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_PLAYERS" class="member-name-link">PAGE_SERVER_PLAYERS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_PLUGINS" class="member-name-link">PAGE_SERVER_PLUGINS</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_PLUGIN_HISTORY" class="member-name-link">PAGE_SERVER_PLUGIN_HISTORY</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_RETENTION" class="member-name-link">PAGE_SERVER_RETENTION</a></code></div>
+<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_PLUGINS" class="member-name-link">PAGE_SERVER_PLUGINS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_SESSIONS" class="member-name-link">PAGE_SERVER_SESSIONS</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_RETENTION" class="member-name-link">PAGE_SERVER_RETENTION</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#PAGE_SERVER_SESSIONS" class="member-name-link">PAGE_SERVER_SESSIONS</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_SESSIONS_CALENDAR" class="member-name-link">PAGE_SERVER_SESSIONS_CALENDAR</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code><a href="#PAGE_SERVER_SESSIONS_LIST" class="member-name-link">PAGE_SERVER_SESSIONS_LIST</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
@@ -614,6 +692,14 @@ the order they are declared.</div>
 <h3>PAGE_NETWORK_SESSIONS_SERVER_PIE</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">PAGE_NETWORK_SESSIONS_SERVER_PIE</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="PAGE_NETWORK_SESSIONS_CALENDAR">
+<h3>PAGE_NETWORK_SESSIONS_CALENDAR</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">PAGE_NETWORK_SESSIONS_CALENDAR</span></div>
 </div>
 </section>
 </li>
@@ -892,6 +978,14 @@ the order they are declared.</div>
 </section>
 </li>
 <li>
+<section class="detail" id="PAGE_SERVER_SESSIONS_CALENDAR">
+<h3>PAGE_SERVER_SESSIONS_CALENDAR</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">PAGE_SERVER_SESSIONS_CALENDAR</span></div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="PAGE_SERVER_SESSIONS_LIST">
 <h3>PAGE_SERVER_SESSIONS_LIST</h3>
 <div class="horizontal-scroll">
@@ -1134,6 +1228,198 @@ the order they are declared.</div>
 </section>
 </li>
 <li>
+<section class="detail" id="DATA">
+<h3>DATA</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_PLAYER">
+<h3>DATA_PLAYER</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_PLAYER</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_SERVER">
+<h3>DATA_SERVER</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_SERVER</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_NETWORK">
+<h3>DATA_NETWORK</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_NETWORK</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_PLAYER_PLAYTIME">
+<h3>DATA_PLAYER_PLAYTIME</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_PLAYER_PLAYTIME</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_SERVER_PLAYTIME">
+<h3>DATA_SERVER_PLAYTIME</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_SERVER_PLAYTIME</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_NETWORK_PLAYTIME">
+<h3>DATA_NETWORK_PLAYTIME</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_NETWORK_PLAYTIME</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_PLAYER_AFK_TIME">
+<h3>DATA_PLAYER_AFK_TIME</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_PLAYER_AFK_TIME</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_SERVER_AFK_TIME">
+<h3>DATA_SERVER_AFK_TIME</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_SERVER_AFK_TIME</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_NETWORK_AFK_TIME">
+<h3>DATA_NETWORK_AFK_TIME</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_NETWORK_AFK_TIME</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_SERVER_SERVER_OCCUPIED">
+<h3>DATA_SERVER_SERVER_OCCUPIED</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_SERVER_SERVER_OCCUPIED</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_NETWORK_SERVER_OCCUPIED">
+<h3>DATA_NETWORK_SERVER_OCCUPIED</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_NETWORK_SERVER_OCCUPIED</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_PLAYER_MOST_ACTIVE_GAME_MODE">
+<h3>DATA_PLAYER_MOST_ACTIVE_GAME_MODE</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_PLAYER_MOST_ACTIVE_GAME_MODE</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_SERVER_MOST_ACTIVE_GAME_MODE">
+<h3>DATA_SERVER_MOST_ACTIVE_GAME_MODE</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_SERVER_MOST_ACTIVE_GAME_MODE</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_NETWORK_MOST_ACTIVE_GAME_MODE">
+<h3>DATA_NETWORK_MOST_ACTIVE_GAME_MODE</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_NETWORK_MOST_ACTIVE_GAME_MODE</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_PLAYER_MOST_ACTIVE_WORLD">
+<h3>DATA_PLAYER_MOST_ACTIVE_WORLD</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_PLAYER_MOST_ACTIVE_WORLD</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_SERVER_MOST_ACTIVE_WORLD">
+<h3>DATA_SERVER_MOST_ACTIVE_WORLD</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_SERVER_MOST_ACTIVE_WORLD</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_NETWORK_MOST_ACTIVE_WORLD">
+<h3>DATA_NETWORK_MOST_ACTIVE_WORLD</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_NETWORK_MOST_ACTIVE_WORLD</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_PLAYER_WORLD_PIE">
+<h3>DATA_PLAYER_WORLD_PIE</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_PLAYER_WORLD_PIE</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_SERVER_WORLD_PIE">
+<h3>DATA_SERVER_WORLD_PIE</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_SERVER_WORLD_PIE</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_NETWORK_WORLD_PIE">
+<h3>DATA_NETWORK_WORLD_PIE</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_NETWORK_WORLD_PIE</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_PLAYER_SERVER_PIE">
+<h3>DATA_PLAYER_SERVER_PIE</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_PLAYER_SERVER_PIE</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_SERVER_SERVER_PIE">
+<h3>DATA_SERVER_SERVER_PIE</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_SERVER_SERVER_PIE</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_NETWORK_SERVER_PIE">
+<h3>DATA_NETWORK_SERVER_PIE</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_NETWORK_SERVER_PIE</span></div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="ACCESS">
 <h3>ACCESS</h3>
 <div class="horizontal-scroll">
@@ -1289,6 +1575,30 @@ not permitted.)</div>
 </section>
 </li>
 <li>
+<section class="detail" id="nonDeprecatedValues()">
+<h3>nonDeprecatedValues</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a>[]</span>&nbsp;<span class="element-name">nonDeprecatedValues</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="findByPermission(java.lang.String)">
+<h3>findByPermission</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a>&gt;</span>&nbsp;<span class="element-name">findByPermission</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;permission)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="isDeprecated(java.lang.String)">
+<h3>isDeprecated</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isDeprecated</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;permission)</span></div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="getPermission()">
 <h3>getPermission</h3>
 <div class="horizontal-scroll">
@@ -1349,30 +1659,6 @@ not permitted.)</div>
 <dt>Specified by:</dt>
 <dd><code><a href="../../../settings/locale/lang/Lang.html#getDefault()">getDefault</a></code>&nbsp;in interface&nbsp;<code><a href="../../../settings/locale/lang/Lang.html" title="interface in com.djrapitops.plan.settings.locale.lang">Lang</a></code></dd>
 </dl>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="nonDeprecatedValues()">
-<h3>nonDeprecatedValues</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a>[]</span>&nbsp;<span class="element-name">nonDeprecatedValues</span>()</div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="findByPermission(java.lang.String)">
-<h3>findByPermission</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a>&gt;</span>&nbsp;<span class="element-name">findByPermission</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;permission)</span></div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="isDeprecated(java.lang.String)">
-<h3>isDeprecated</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">isDeprecated</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;permission)</span></div>
 </div>
 </section>
 </li>

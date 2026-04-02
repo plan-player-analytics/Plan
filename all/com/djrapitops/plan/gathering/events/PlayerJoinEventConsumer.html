@@ -58,7 +58,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(com.djrapitops.plan.processing.Processing,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.gathering.JoinAddressValidator,com.djrapitops.plan.gathering.geolocation.GeolocationCache,com.djrapitops.plan.gathering.cache.SessionCache,com.djrapitops.plan.gathering.cache.NicknameCache,com.djrapitops.plan.extension.ExtensionSvc,com.djrapitops.plan.delivery.export.Exporter,com.djrapitops.plan.gathering.timed.PlayerExtensionDataUpdateTask.Factory)" tabindex="0">PlayerJoinEventConsumer(Processing, PlanConfig, DBSystem, JoinAddressValidator, GeolocationCache, SessionCache, NicknameCache, ExtensionSvc, Exporter, PlayerExtensionDataUpdateTask.Factory)</a></li>
+<li><a href="#%3Cinit%3E(com.djrapitops.plan.processing.Processing,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.gathering.JoinAddressValidator,com.djrapitops.plan.gathering.geolocation.GeolocationCache,com.djrapitops.plan.gathering.cache.SessionCache,com.djrapitops.plan.gathering.cache.NicknameCache,com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointStore,com.djrapitops.plan.extension.ExtensionSvc,com.djrapitops.plan.delivery.export.Exporter,com.djrapitops.plan.gathering.timed.PlayerExtensionDataUpdateTask.Factory)" tabindex="0">PlayerJoinEventConsumer(Processing, PlanConfig, DBSystem, JoinAddressValidator, GeolocationCache, SessionCache, NicknameCache, DatapointStore, ExtensionSvc, Exporter, PlayerExtensionDataUpdateTask.Factory)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -95,13 +95,14 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.processing.Processing,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.gathering.JoinAddressValidator,com.djrapitops.plan.gathering.geolocation.GeolocationCache,com.djrapitops.plan.gathering.cache.SessionCache,com.djrapitops.plan.gathering.cache.NicknameCache,com.djrapitops.plan.extension.ExtensionSvc,com.djrapitops.plan.delivery.export.Exporter,com.djrapitops.plan.gathering.timed.PlayerExtensionDataUpdateTask.Factory)" class="member-name-link">PlayerJoinEventConsumer</a><wbr>(<a href="../../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.processing.Processing,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.gathering.JoinAddressValidator,com.djrapitops.plan.gathering.geolocation.GeolocationCache,com.djrapitops.plan.gathering.cache.SessionCache,com.djrapitops.plan.gathering.cache.NicknameCache,com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointStore,com.djrapitops.plan.extension.ExtensionSvc,com.djrapitops.plan.delivery.export.Exporter,com.djrapitops.plan.gathering.timed.PlayerExtensionDataUpdateTask.Factory)" class="member-name-link">PlayerJoinEventConsumer</a><wbr>(<a href="../../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing,
  <a href="../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
  <a href="../../storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
  <a href="../JoinAddressValidator.html" title="class in com.djrapitops.plan.gathering">JoinAddressValidator</a>&nbsp;joinAddressValidator,
  <a href="../geolocation/GeolocationCache.html" title="class in com.djrapitops.plan.gathering.geolocation">GeolocationCache</a>&nbsp;geolocationCache,
  <a href="../cache/SessionCache.html" title="class in com.djrapitops.plan.gathering.cache">SessionCache</a>&nbsp;sessionCache,
  <a href="../cache/NicknameCache.html" title="class in com.djrapitops.plan.gathering.cache">NicknameCache</a>&nbsp;nicknameCache,
+ <a href="../../delivery/rendering/json/datapoint/DatapointStore.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint">DatapointStore</a>&nbsp;datapointStore,
  <a href="../../extension/ExtensionSvc.html" title="class in com.djrapitops.plan.extension">ExtensionSvc</a>&nbsp;extensionService,
  <a href="../../delivery/export/Exporter.html" title="class in com.djrapitops.plan.delivery.export">Exporter</a>&nbsp;exporter,
  <a href="../timed/PlayerExtensionDataUpdateTask.Factory.html" title="class in com.djrapitops.plan.gathering.timed">PlayerExtensionDataUpdateTask.Factory</a>&nbsp;playerExtensionUpdateTaskFactory)</code></div>
@@ -144,7 +145,7 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.processing.Processing,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.gathering.JoinAddressValidator,com.djrapitops.plan.gathering.geolocation.GeolocationCache,com.djrapitops.plan.gathering.cache.SessionCache,com.djrapitops.plan.gathering.cache.NicknameCache,com.djrapitops.plan.extension.ExtensionSvc,com.djrapitops.plan.delivery.export.Exporter,com.djrapitops.plan.gathering.timed.PlayerExtensionDataUpdateTask.Factory)">
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.processing.Processing,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.gathering.JoinAddressValidator,com.djrapitops.plan.gathering.geolocation.GeolocationCache,com.djrapitops.plan.gathering.cache.SessionCache,com.djrapitops.plan.gathering.cache.NicknameCache,com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointStore,com.djrapitops.plan.extension.ExtensionSvc,com.djrapitops.plan.delivery.export.Exporter,com.djrapitops.plan.gathering.timed.PlayerExtensionDataUpdateTask.Factory)">
 <h3>PlayerJoinEventConsumer</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations">@Inject
@@ -155,6 +156,7 @@ loadScripts(document, 'script');</script>
  <a href="../geolocation/GeolocationCache.html" title="class in com.djrapitops.plan.gathering.geolocation">GeolocationCache</a>&nbsp;geolocationCache,
  <a href="../cache/SessionCache.html" title="class in com.djrapitops.plan.gathering.cache">SessionCache</a>&nbsp;sessionCache,
  <a href="../cache/NicknameCache.html" title="class in com.djrapitops.plan.gathering.cache">NicknameCache</a>&nbsp;nicknameCache,
+ <a href="../../delivery/rendering/json/datapoint/DatapointStore.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint">DatapointStore</a>&nbsp;datapointStore,
  <a href="../../extension/ExtensionSvc.html" title="class in com.djrapitops.plan.extension">ExtensionSvc</a>&nbsp;extensionService,
  <a href="../../delivery/export/Exporter.html" title="class in com.djrapitops.plan.delivery.export">Exporter</a>&nbsp;exporter,
  <a href="../timed/PlayerExtensionDataUpdateTask.Factory.html" title="class in com.djrapitops.plan.gathering.timed">PlayerExtensionDataUpdateTask.Factory</a>&nbsp;playerExtensionUpdateTaskFactory)</span></div>

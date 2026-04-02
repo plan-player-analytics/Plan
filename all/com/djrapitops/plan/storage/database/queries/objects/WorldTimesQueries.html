@@ -58,7 +58,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#fetchServerTotalWorldTimes(com.djrapitops.plan.identification.ServerUUID)" tabindex="0">fetchServerTotalWorldTimes(ServerUUID)</a></li>
+<li><a href="#fetchServerTotalWorldTimes(java.lang.Long,java.lang.Long,java.util.List)" tabindex="0">fetchServerTotalWorldTimes(Long, Long, List)</a></li>
 <li><a href="#fetchPlayerTotalWorldTimes(java.util.UUID)" tabindex="0">fetchPlayerTotalWorldTimes(UUID)</a></li>
+<li><a href="#fetchPlayerTotalWorldTimes(java.lang.Long,java.lang.Long,java.util.UUID,java.util.List)" tabindex="0">fetchPlayerTotalWorldTimes(Long, Long, UUID, List)</a></li>
 <li><a href="#fetchPlayerWorldTimesOnServers(java.util.UUID)" tabindex="0">fetchPlayerWorldTimesOnServers(UUID)</a></li>
 <li><a href="#fetchGMTimes(long,long,com.djrapitops.plan.identification.ServerUUID)" tabindex="0">fetchGMTimes(long, long, ServerUUID)</a></li>
 <li><a href="#fetchWorlds()" tabindex="0">fetchWorlds()</a></li>
@@ -103,24 +105,35 @@ loadScripts(document, 'script');</script>
  <a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="../../../../gathering/domain/WorldTimes.html" title="class in com.djrapitops.plan.gathering.domain">WorldTimes</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fetchPlayerTotalWorldTimes(java.util.UUID)" class="member-name-link">fetchPlayerTotalWorldTimes</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Sum total playtime per world on all servers.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>, <a href="../../../../gathering/domain/WorldTimes.html" title="class in com.djrapitops.plan.gathering.domain">WorldTimes</a>&gt;&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fetchPlayerWorldTimesOnServers(java.util.UUID)" class="member-name-link">fetchPlayerWorldTimesOnServers</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
-<div class="block">Find total world times of the player on servers.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../sql/tables/WorldTimesTable.Row.html" title="class in com.djrapitops.plan.storage.database.sql.tables">WorldTimesTable.Row</a>&gt;&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fetchRows(int,int)" class="member-name-link">fetchRows</a><wbr>(int&nbsp;currentId,
- int&nbsp;rowLimit)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fetchPlayerTotalWorldTimes(java.lang.Long,java.lang.Long,java.util.UUID,java.util.List)" class="member-name-link">fetchPlayerTotalWorldTimes</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;after,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="../../../../gathering/domain/WorldTimes.html" title="class in com.djrapitops.plan.gathering.domain">WorldTimes</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fetchServerTotalWorldTimes(com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">fetchServerTotalWorldTimes</a><wbr>(<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fetchPlayerTotalWorldTimes(java.util.UUID)" class="member-name-link">fetchPlayerTotalWorldTimes</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Sum total playtime per world on all servers.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>, <a href="../../../../gathering/domain/WorldTimes.html" title="class in com.djrapitops.plan.gathering.domain">WorldTimes</a>&gt;&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fetchPlayerWorldTimesOnServers(java.util.UUID)" class="member-name-link">fetchPlayerWorldTimesOnServers</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Find total world times of the player on servers.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../sql/tables/WorldTimesTable.Row.html" title="class in com.djrapitops.plan.storage.database.sql.tables">WorldTimesTable.Row</a>&gt;&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fetchRows(int,int)" class="member-name-link">fetchRows</a><wbr>(int&nbsp;currentId,
+ int&nbsp;rowLimit)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="../../../../gathering/domain/WorldTimes.html" title="class in com.djrapitops.plan.gathering.domain">WorldTimes</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fetchServerTotalWorldTimes(com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">fetchServerTotalWorldTimes</a><wbr>(<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Sum total playtime per world on a server.</div>
 </div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="../../../../gathering/domain/WorldTimes.html" title="class in com.djrapitops.plan.gathering.domain">WorldTimes</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fetchServerTotalWorldTimes(java.lang.Long,java.lang.Long,java.util.List)" class="member-name-link">fetchServerTotalWorldTimes</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;after,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../sql/tables/WorldTable.Row.html" title="class in com.djrapitops.plan.storage.database.sql.tables">WorldTable.Row</a>&gt;&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fetchWorldRows(int,int)" class="member-name-link">fetchWorldRows</a><wbr>(int&nbsp;currentId,
  int&nbsp;rowLimit)</code></div>
@@ -161,6 +174,16 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="fetchServerTotalWorldTimes(java.lang.Long,java.lang.Long,java.util.List)">
+<h3>fetchServerTotalWorldTimes</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="../../../../gathering/domain/WorldTimes.html" title="class in com.djrapitops.plan.gathering.domain">WorldTimes</a>&gt;</span>&nbsp;<span class="element-name">fetchServerTotalWorldTimes</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;after,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</span></div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="fetchPlayerTotalWorldTimes(java.util.UUID)">
 <h3>fetchPlayerTotalWorldTimes</h3>
 <div class="horizontal-scroll">
@@ -172,6 +195,17 @@ loadScripts(document, 'script');</script>
 <dt>Returns:</dt>
 <dd>WorldTimes with world name - playtime ms information.</dd>
 </dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="fetchPlayerTotalWorldTimes(java.lang.Long,java.lang.Long,java.util.UUID,java.util.List)">
+<h3>fetchPlayerTotalWorldTimes</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="../../../../gathering/domain/WorldTimes.html" title="class in com.djrapitops.plan.gathering.domain">WorldTimes</a>&gt;</span>&nbsp;<span class="element-name">fetchPlayerTotalWorldTimes</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;after,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</span></div>
 </div>
 </section>
 </li>

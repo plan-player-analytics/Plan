@@ -60,6 +60,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#fetchTPSDataOfServerInResolution(long,long,long,com.djrapitops.plan.identification.ServerUUID)" tabindex="0">fetchTPSDataOfServerInResolution(long, long, long, ServerUUID)</a></li>
 <li><a href="#extractTPS(java.sql.ResultSet)" tabindex="0">extractTPS(ResultSet)</a></li>
 <li><a href="#fetchTPSDataOfServer(long,long,com.djrapitops.plan.identification.ServerUUID)" tabindex="0">fetchTPSDataOfServer(long, long, ServerUUID)</a></li>
+<li><a href="#occupiedTime(long,long,java.util.List)" tabindex="0">occupiedTime(long, long, List)</a></li>
+<li><a href="#uptime(long,long,java.util.List)" tabindex="0">uptime(long, long, List)</a></li>
 <li><a href="#fetchViewPreviewGraphData(com.djrapitops.plan.identification.ServerUUID)" tabindex="0">fetchViewPreviewGraphData(ServerUUID)</a></li>
 <li><a href="#fetchPlayersOnlineOfServer(long,long,com.djrapitops.plan.identification.ServerUUID)" tabindex="0">fetchPlayersOnlineOfServer(long, long, ServerUUID)</a></li>
 <li><a href="#fetchTPSDataOfAllServersBut(long,long,com.djrapitops.plan.identification.ServerUUID)" tabindex="0">fetchTPSDataOfAllServersBut(long, long, ServerUUID)</a></li>
@@ -204,6 +206,16 @@ loadScripts(document, 'script');</script>
  long&nbsp;before,
  <a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#occupiedTime(long,long,java.util.List)" class="member-name-link">occupiedTime</a><wbr>(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#uptime(long,long,java.util.List)" class="member-name-link">uptime</a><wbr>(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -252,6 +264,26 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../gathering/domain/TPS.html" title="class in com.djrapitops.plan.gathering.domain">TPS</a>&gt;&gt;</span>&nbsp;<span class="element-name">fetchTPSDataOfServer</span><wbr><span class="parameters">(long&nbsp;after,
  long&nbsp;before,
  <a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="occupiedTime(long,long,java.util.List)">
+<h3>occupiedTime</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;&gt;</span>&nbsp;<span class="element-name">occupiedTime</span><wbr><span class="parameters">(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="uptime(long,long,java.util.List)">
+<h3>uptime</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;&gt;</span>&nbsp;<span class="element-name">uptime</span><wbr><span class="parameters">(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</span></div>
 </div>
 </section>
 </li>

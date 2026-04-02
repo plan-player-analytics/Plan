@@ -65,7 +65,9 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#getRedirections()" tabindex="0">getRedirections()</a></li>
 <li><a href="#export(java.nio.file.Path,com.djrapitops.plan.identification.Server)" tabindex="0">export(Path, Server)</a></li>
-<li><a href="#exportJSON(com.djrapitops.plan.delivery.export.ExportPaths,java.nio.file.Path,com.djrapitops.plan.identification.Server)" tabindex="0">exportJSON(ExportPaths, Path, Server)</a></li>
+<li><a href="#exportJSON(java.nio.file.Path,com.djrapitops.plan.identification.ServerUUID)" tabindex="0">exportJSON(Path, ServerUUID)</a></li>
+<li><a href="#toJSONResourceName(java.lang.String)" tabindex="0">toJSONResourceName(String)</a></li>
+<li><a href="#toNonRelativePath(java.lang.String)" tabindex="0">toNonRelativePath(String)</a></li>
 </ol>
 </li>
 </ol>
@@ -123,15 +125,20 @@ loadScripts(document, 'script');</script>
 <div class="block">Perform export for a network page.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#exportJSON(com.djrapitops.plan.delivery.export.ExportPaths,java.nio.file.Path,com.djrapitops.plan.identification.Server)" class="member-name-link">exportJSON</a><wbr>(<a href="ExportPaths.html" title="class in com.djrapitops.plan.delivery.export">ExportPaths</a>&nbsp;exportPaths,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a>&nbsp;toDirectory,
- <a href="../../identification/Server.html" title="class in com.djrapitops.plan.identification">Server</a>&nbsp;server)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#exportJSON(java.nio.file.Path,com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">exportJSON</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a>&nbsp;toDirectory,
+ <a href="../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Perform export for a network page json payload.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getRedirections()" class="member-name-link">getRedirections</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toJSONResourceName(java.lang.String)" class="member-name-link">toJSONResourceName</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;resource)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toNonRelativePath(java.lang.String)" class="member-name-link">toNonRelativePath</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;resourceName)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -197,23 +204,37 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="exportJSON(com.djrapitops.plan.delivery.export.ExportPaths,java.nio.file.Path,com.djrapitops.plan.identification.Server)">
+<section class="detail" id="exportJSON(java.nio.file.Path,com.djrapitops.plan.identification.ServerUUID)">
 <h3>exportJSON</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">exportJSON</span><wbr><span class="parameters">(<a href="ExportPaths.html" title="class in com.djrapitops.plan.delivery.export">ExportPaths</a>&nbsp;exportPaths,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a>&nbsp;toDirectory,
- <a href="../../identification/Server.html" title="class in com.djrapitops.plan.identification">Server</a>&nbsp;server)</span>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">exportJSON</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/nio/file/Path.html" title="class or interface in java.nio.file" class="external-link">Path</a>&nbsp;toDirectory,
+ <a href="../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</span>
                 throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></span></div>
 <div class="block">Perform export for a network page json payload.</div>
 <dl class="notes">
 <dt>Parameters:</dt>
-<dd><code>exportPaths</code> - Replacement store for player file paths.</dd>
 <dd><code>toDirectory</code> - Path to Export directory</dd>
-<dd><code>server</code> - Server to export as Network page, <a href="../../identification/Server.html#isProxy()"><code>Server.isProxy()</code></a> assumed true.</dd>
+<dd><code>serverUUID</code> - Server to export as Network page, <a href="../../identification/Server.html#isProxy()"><code>Server.isProxy()</code></a> assumed true.</dd>
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code> - If a template can not be read from jar/disk or the result written</dd>
 <dd><code><a href="../web/resolver/exception/NotFoundException.html" title="class in com.djrapitops.plan.delivery.web.resolver.exception">NotFoundException</a></code> - If a file or resource that is being exported can not be found</dd>
 </dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="toJSONResourceName(java.lang.String)">
+<h3>toJSONResourceName</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">toJSONResourceName</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;resource)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="toNonRelativePath(java.lang.String)">
+<h3>toNonRelativePath</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">toNonRelativePath</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;resourceName)</span></div>
 </div>
 </section>
 </li>
