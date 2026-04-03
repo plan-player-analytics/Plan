@@ -71,7 +71,7 @@
     "@types/react": "19.2.14",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "5.2.0",
-    "baseline-browser-mapping": "2.10.9",
+    "baseline-browser-mapping": "2.10.13",
     "typescript": "5.9.3",
     "vite": "7.3.1"
   },
