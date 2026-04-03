@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {Card, Col, Row} from "react-bootstrap";
-import CardHeader from "../CardHeader";
+import CardHeader from "../CardHeader.tsx";
 import {faUsersViewfinder} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
 import ExtendableCardBody from "../../layout/extension/ExtendableCardBody";
@@ -8,7 +8,7 @@ import {BasicDropdown} from "../../input/BasicDropdown";
 import {useDataRequest} from "../../../hooks/dataFetchHook";
 import {fetchPlayerJoinAddresses, fetchRetentionData} from "../../../service/serverService";
 import {ErrorViewCard} from "../../../views/ErrorView.tsx";
-import {CardLoader} from "../../navigation/Loader";
+import {CardLoader} from "../../navigation/Loader.tsx";
 import {tooltip} from "../../../util/graphs";
 import {hsvToRgb, randomHSVColor, rgbToHexString} from "../../../util/colors";
 import LineGraph from "../../graphs/LineGraph";
@@ -33,7 +33,7 @@ const PlayerRetentionGraphCard = ({identifier, selectedGroupBy, setSelectedGroup
     const {setHelpModalTopic} = useNavigation();
     const openHelp = useCallback(() => setHelpModalTopic('player-retention-graph'), [setHelpModalTopic]);
 
-    const time = useMemo(() => new Date().getTime(), []);
+    const time = useMemo(() => Date.now(), []);
 
     const {data, loadingError} = useDataRequest(fetchRetentionData, [identifier]);
     const {
@@ -92,31 +92,33 @@ const PlayerRetentionGraphCard = ({identifier, selectedGroupBy, setSelectedGroup
         const increment = windowOptions.find(option => option.name === selectedWindow).increment;
         const xAxis = axisOptions.find(option => option.name === selectedAxis).name;
         switch (xAxis) {
-            case 'deltas':
+            case 'deltas': {
                 const retainedBasedOnDeltas = [];
                 const firstRegisterDeltasStart = dataToMap[0].registerDate - dataToMap[0].registerDate % increment;
                 let previousRetained = -1;
                 for (let date = firstRegisterDeltasStart; date < time; date += increment) {
                     const filter = player => player.registerDate <= date && player.lastSeenDate >= date;
                     const retainedSince = dataToMap.filter(filter).length;
-                    retainedBasedOnDeltas.push([date, selectedYAxis === 'percentage' ? retainedSince * 100.0 / total : retainedSince]);
+                    retainedBasedOnDeltas.push([date, selectedYAxis === 'percentage' ? retainedSince * 100 / total : retainedSince]);
                     if (previousRetained === retainedSince && retainedSince <= 0.5) break;
                     if (previousRetained !== -1 || retainedSince > 0) previousRetained = retainedSince;
                 }
                 seriesData = retainedBasedOnDeltas;
                 break;
-            case 'date':
+            }
+            case 'date': {
                 const retainedBasedOnDate = [];
                 const firstRegisterDateStart = dataToMap[0].registerDate - dataToMap[0].registerDate % increment;
                 for (let date = firstRegisterDateStart; date < time; date += increment) {
                     const filter = player => player.lastSeenDate >= date;
                     const retainedSince = dataToMap.filter(filter).length;
-                    retainedBasedOnDate.push([date, selectedYAxis === 'percentage' ? retainedSince * 100.0 / total : retainedSince]);
+                    retainedBasedOnDate.push([date, selectedYAxis === 'percentage' ? retainedSince * 100 / total : retainedSince]);
                     if (retainedSince < 0.5) break;
                 }
                 seriesData = retainedBasedOnDate;
                 break;
-            case 'time':
+            }
+            case 'time': {
                 const retainedBasedOnTime = [];
                 for (let i = 0; i < time; i += increment) {
                     const retainedSince = dataToMap.filter(point => point.timeDifference > i).length;
@@ -125,16 +127,18 @@ const PlayerRetentionGraphCard = ({identifier, selectedGroupBy, setSelectedGroup
                 }
                 seriesData = retainedBasedOnTime;
                 break;
+            }
             case 'playtime':
-            default:
+            default: {
                 const retainedBasedOnPlaytime = [];
                 for (let i = start; i < time; i += increment) {
                     const retainedSince = dataToMap.filter(point => point.playtime > i - start).length;
-                    retainedBasedOnPlaytime.push([(i - start) / increment, selectedYAxis === 'percentage' ? retainedSince * 100.0 / total : retainedSince]);
+                    retainedBasedOnPlaytime.push([(i - start) / increment, selectedYAxis === 'percentage' ? retainedSince * 100 / total : retainedSince]);
                     if (retainedSince < 0.5) break;
                 }
                 seriesData = retainedBasedOnPlaytime;
                 break;
+            }
         }
         return seriesData;
     }, [selectedWindow, windowOptions, selectedAxis, axisOptions, selectedYAxis, time])
@@ -146,27 +150,31 @@ const PlayerRetentionGraphCard = ({identifier, selectedGroupBy, setSelectedGroup
             const date = new Date();
             date.setTime(point.registerDate);
             switch (groupBy) {
-                case 'days':
+                case 'days': {
                     const day = date.toISOString().substring(0, 10);
                     if (!grouped[day]) grouped[day] = [];
                     grouped[day].push(point);
                     break;
-                case 'weeks':
+                }
+                case 'weeks': {
                     const week = date.getUTCFullYear() + '-week-' + getWeek(date);
                     if (!grouped[week]) grouped[week] = [];
                     grouped[week].push(point);
                     break;
-                case 'months':
+                }
+                case 'months': {
                     const month = date.toISOString().substring(0, 7);
                     if (!grouped[month]) grouped[month] = [];
                     grouped[month].push(point);
                     break;
-                case 'years':
+                }
+                case 'years': {
                     const year = date.getUTCFullYear();
                     if (!grouped[year]) grouped[year] = [];
                     grouped[year].push(point);
                     break;
-                case 'joinAddress':
+                }
+                case 'joinAddress': {
                     const joinAddress = joinAddressData[point.playerUUID];
                     const joinAddressGroups = list.filter(g => g.addresses.includes(joinAddress)).map(g => g.name);
                     for (const joinAddressGroup of joinAddressGroups) {
@@ -174,6 +182,7 @@ const PlayerRetentionGraphCard = ({identifier, selectedGroupBy, setSelectedGroup
                         grouped[joinAddressGroup].push(point);
                     }
                     break;
+                }
                 case 'none':
                 default:
                     grouped['all'] = filtered;
@@ -269,13 +278,13 @@ const PlayerRetentionGraphCard = ({identifier, selectedGroupBy, setSelectedGroup
                 enabled: true,
                 shared: series.length <= 10,
                 valueDecimals: 2,
-                pointFormat: (selectedGroupBy !== 'none' ? '{series.name} - ' : '') + '<b>{point.y} ' + (selectedYAxis === 'percentage' ? '%' : t('html.label.players')) + '</b><br>'
+                pointFormat: (selectedGroupBy === 'none' ? '' : '{series.name} - ') + '<b>{point.y} ' + (selectedYAxis === 'percentage' ? '%' : t('html.label.players')) + '</b><br>'
             } : {
                 enabled: true,
                 shared: series.length <= 10,
                 valueDecimals: 2,
                 headerFormat: '{point.x} ' + windowName + '<br>',
-                pointFormat: (selectedGroupBy !== 'none' ? '{series.name} - ' : '') + '<b>{point.y} ' + (selectedYAxis === 'percentage' ? '%' : t('html.label.players')) + '</b><br>'
+                pointFormat: (selectedGroupBy === 'none' ? '' : '{series.name} - ') + '<b>{point.y} ' + (selectedYAxis === 'percentage' ? '%' : t('html.label.players')) + '</b><br>'
             },
             series: series
         })

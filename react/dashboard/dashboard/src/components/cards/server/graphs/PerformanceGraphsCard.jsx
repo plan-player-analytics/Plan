@@ -7,7 +7,7 @@ import {Card} from "react-bootstrap";
 import CardTabs from "../../../CardTabs";
 import {faGears, faHdd, faMap, faMicrochip, faSignal, faTachometerAlt} from "@fortawesome/free-solid-svg-icons";
 import React, {useEffect, useMemo, useState} from "react";
-import {ChartLoader} from "../../../navigation/Loader";
+import {ChartLoader} from "../../../navigation/Loader.tsx";
 import AllPerformanceGraph from "../../../graphs/performance/AllPerformanceGraph";
 import TpsPerformanceGraph from "../../../graphs/performance/TpsPerformanceGraph";
 import CpuRamPerformanceGraph from "../../../graphs/performance/CpuRamPerformanceGraph";

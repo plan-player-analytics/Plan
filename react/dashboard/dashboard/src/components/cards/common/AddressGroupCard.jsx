@@ -1,13 +1,13 @@
 import {useTranslation} from "react-i18next";
 import React, {useCallback, useEffect, useState} from "react";
 import {Card, Form} from "react-bootstrap";
-import CardHeader from "../CardHeader.jsx";
+import CardHeader from "../CardHeader.tsx";
 import {faCheck, faList, faPencil} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import MultiSelect from "../../input/MultiSelect.jsx";
 import {faTrashAlt} from "@fortawesome/free-regular-svg-icons";
 import ActionButton from "../../input/button/ActionButton.jsx";
-import OutlineButton from "../../input/button/OutlineButton.jsx";
+import OutlineButton from "../../input/button/OutlineButton.tsx";
 
 const AddressGroupCard = ({n, group, editGroup, allAddresses, remove}) => {
     const {t} = useTranslation();

@@ -11,7 +11,7 @@ export default defineConfig({
     build: {
         outDir: 'build',
         assetsDir: 'static',
-        rollupOptions: {
+        rolldownOptions: {
             treeshake: {
                 // Fixes an issue where backendConfiguration.staticSite if-blocks would get removed
                 correctVarValueBeforeDeclaration: true

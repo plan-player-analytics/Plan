@@ -4,7 +4,7 @@ import ServersTable, {ServerSortOption} from "../../table/ServersTable";
 import {faNetworkWired} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import {CardLoader} from "../../navigation/Loader";
+import {CardLoader} from "../../navigation/Loader.tsx";
 
 const SortDropDown = ({sortBy, sortReversed, setSortBy}) => {
     const {t} = useTranslation();

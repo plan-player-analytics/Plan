@@ -1,6 +1,6 @@
 import React from 'react';
 import {Card} from "react-bootstrap";
-import CardHeader from "../CardHeader";
+import CardHeader from "../CardHeader.tsx";
 import {
     faBookOpen,
     faChartLine,
@@ -10,7 +10,7 @@ import {
     faUsers
 } from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
-import Datapoint from "../../Datapoint";
+import Datapoint from "../../datapoint/Datapoint.tsx";
 import CurrentUptime from "../../datapoint/CurrentUptime";
 import FormattedDate from "../../text/FormattedDate.jsx";
 import FormattedTime from "../../text/FormattedTime.jsx";

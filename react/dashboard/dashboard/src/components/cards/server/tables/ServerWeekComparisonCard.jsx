@@ -7,7 +7,7 @@ import BigTrend from "../../../trend/BigTrend";
 import {faCalendarCheck, faClock} from "@fortawesome/free-regular-svg-icons";
 import React from "react";
 import {TableRow} from "../../../table/TableRow";
-import {CardLoader} from "../../../navigation/Loader";
+import {CardLoader} from "../../../navigation/Loader.tsx";
 import FormattedDay from "../../../text/FormattedDay.jsx";
 import FormattedTime, {formatTimeFunction} from "../../../text/FormattedTime.jsx";
 

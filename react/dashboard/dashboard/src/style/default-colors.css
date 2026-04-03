@@ -489,13 +489,13 @@
 
 .bg-sessions {
     background-color: var(--color-data-play-sessions) !important;
-    color: var(--contrast-color-data-play-sessions);
+    color: var(--contrast-color-data-play-sessions) !important;
 }
 
 .bg-sessions-outline {
     border-color: var(--color-data-play-sessions);
     border-style: solid;
-    border-width: 3px;
+    border-width: 3px !important;
     outline: var(--color-data-play-sessions) solid 1px;
 }
 
@@ -1119,4 +1119,10 @@ thead[class^='bg'], thead[class*=' bg'] {
     --bs-modal-header-border-color: var(--color-cards-border);
     --bs-modal-color: var(--color-text);
 
+}
+
+.btn-input {
+    background-color: var(--color-forms-input-background);
+    border-color: var(--color-forms-input-border);
+    color: var(--color-forms-input-text);
 }

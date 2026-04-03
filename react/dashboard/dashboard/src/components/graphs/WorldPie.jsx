@@ -1,4 +1,4 @@
-import React, {useEffect, useMemo} from "react";
+import React, {useEffect, useMemo, useRef} from "react";
 import Highcharts from 'highcharts/esm/highcharts';
 import "highcharts/esm/modules/accessibility";
 import 'highcharts/esm/modules/drilldown';
@@ -8,7 +8,7 @@ import {useTheme} from "../../hooks/themeHook";
 import {nameToCssVariable, withReducedSaturation} from "../../util/colors";
 import {useTranslation} from "react-i18next";
 import {usePreferences} from "../../hooks/preferencesHook.jsx";
-import Loader from "../navigation/Loader.jsx";
+import Loader from "../navigation/Loader.tsx";
 import {useThemeStorage} from "../../hooks/context/themeContextHook.tsx";
 import {classNames} from "../../util/classNames.ts";
 import {useTimeAmountFormatter} from "../../util/format/useTimeAmountFormatter.js";
@@ -23,6 +23,7 @@ const WorldPie = ({id, worldSeries, gmSeries}) => {
 
     const gmPieColors = usedUseCases?.graphs?.pie?.drilldown?.map(nameToCssVariable) || [];
 
+    const chartRef = useRef(undefined);
     const chart = useMemo(() => {
         const reduceColors = (series) => {
             return series.map(slice => {
@@ -48,10 +49,10 @@ const WorldPie = ({id, worldSeries, gmSeries}) => {
                 type: 'pie',
                 events: {
                     drilldown: function (e) {
-                        chart.setTitle({text: '' + e.point.name}, {text: ''});
+                        chartRef.current.setTitle({text: '' + e.point.name}, {text: ''});
                     },
                     drillup: function () {
-                        chart.setTitle({text: defaultTitle}, {text: defaultSubtitle});
+                        chartRef.current.setTitle({text: defaultTitle}, {text: defaultSubtitle});
                     }
                 }
             },
@@ -86,7 +87,7 @@ const WorldPie = ({id, worldSeries, gmSeries}) => {
     useEffect(() => {
         Highcharts.setOptions(graphTheming);
         const timeout = setTimeout(() => {
-            Highcharts.chart(id, chart);
+            chartRef.current = Highcharts.chart(id, chart);
         }, 25); // Timeout to allow collapse to open
         return () => {
             clearTimeout(timeout);

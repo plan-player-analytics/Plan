@@ -153,7 +153,7 @@ Time:
       Unit: DAYS
     # Includes players online, tps and performance time series
     Remove_time_series_data_after:
-      Time: 90
+      Time: 3650
       Unit: DAYS
     Remove_ping_data_after:
       Time: 14
@@ -183,7 +183,6 @@ Display_options:
   # Can use ${playerName} or ${playerUUID} or ${playerUUIDNoDash}
   Player_head_image_url: "https://crafthead.net/helm/${playerUUIDNoDash}/120"
   Sessions:
-    Show_on_page: 50
     # By Default World playtime pie is ordered alphabetically.
     # Colors will be determined alphabetically in any case.
     Order_world_pies_by_percentage: false

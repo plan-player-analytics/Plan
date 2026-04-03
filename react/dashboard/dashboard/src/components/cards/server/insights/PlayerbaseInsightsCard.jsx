@@ -2,12 +2,12 @@ import React from "react";
 import InsightsFor30DaysCard from "../../common/InsightsFor30DaysCard";
 import {useTranslation} from "react-i18next";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import Datapoint from "../../../Datapoint";
+import Datapoint from "../../../datapoint/Datapoint.tsx";
 import {faLongArrowAltRight, faUser} from "@fortawesome/free-solid-svg-icons";
 import SmallTrend from "../../../trend/SmallTrend";
 import End from "../../../layout/End";
 import ComparingLabel from "../../../trend/ComparingLabel";
-import {CardLoader} from "../../../navigation/Loader";
+import {CardLoader} from "../../../navigation/Loader.tsx";
 
 const TwoPlayerChange = ({colorBefore, labelBefore, colorAfter, labelAfter}) => {
     return (

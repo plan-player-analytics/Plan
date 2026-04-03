@@ -2,7 +2,7 @@ import React, {useMemo, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {tooltip} from "../../util/graphs";
 import LineGraph from "./LineGraph";
-import {ChartLoader} from "../navigation/Loader";
+import {ChartLoader} from "../navigation/Loader.tsx";
 import {PlayersOnlineTooltip, useTooltipOptions} from "./tooltip/PlayersOnlineTooltip.jsx";
 
 

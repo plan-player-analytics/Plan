@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Card, Col} from "react-bootstrap";
 import ExtensionIcon from "./ExtensionIcon";
-import Datapoint from "../Datapoint";
+import Datapoint from "../datapoint/Datapoint.tsx";
 import Masonry from 'masonry-layout'
 import ExtensionTable from "./ExtensionTable";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
@@ -11,6 +11,7 @@ import ColoredText from "../text/ColoredText";
 import {Link} from "react-router";
 import FormattedTime from "../text/FormattedTime.jsx";
 import FormattedDate from "../text/FormattedDate.jsx";
+import {useTranslation} from "react-i18next";
 
 export const ExtensionCardWrapper = ({extension, children}) => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -88,6 +89,7 @@ export const ExtensionValueTableCell = ({data}) => {
 }
 
 const ExtensionValue = ({data}) => {
+    const {t} = useTranslation();
     const color = data.description.icon.colorClass;
     const colorClass = color?.startsWith("col-") ? color : "col-" + color;
     const icon = [data.description.icon.familyClass, data.description.icon.iconName];

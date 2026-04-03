@@ -28,7 +28,7 @@ type AuthenticationContextValues = {
     loggedIn: boolean;
     user?: User;
     loginError?: PlanError;
-    hasPermission: (permission: Permission) => boolean;
+    hasPermission: (permission?: Permission) => boolean;
     hasChildPermission: (permission: Permission) => boolean;
     hasPermissionOtherThan: (permission: Permission) => boolean;
     updateLoginDetails: () => Promise<void>
@@ -56,7 +56,8 @@ export const AuthenticationContextProvider = ({children}: PropsWithChildren) => 
         }
     }, [])
 
-    const hasPermission = useCallback((permission: Permission) => {
+    const hasPermission = useCallback((permission?: Permission) => {
+        if (!permission) return true;
         if (Array.isArray(permission)) {
             for (const permissionOption of permission) {
                 if (hasPermission(permissionOption)) {

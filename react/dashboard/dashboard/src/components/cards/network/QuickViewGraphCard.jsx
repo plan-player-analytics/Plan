@@ -1,5 +1,5 @@
 import React from 'react';
-import CardHeader from "../CardHeader";
+import CardHeader from "../CardHeader.tsx";
 import {Card} from "react-bootstrap";
 import PlayersOnlineGraph from "../../graphs/PlayersOnlineGraph";
 import {faChartArea} from "@fortawesome/free-solid-svg-icons";

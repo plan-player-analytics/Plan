@@ -4,7 +4,7 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCrosshairs} from "@fortawesome/free-solid-svg-icons";
 import KillsTable from "../../table/KillsTable";
 import React from "react";
-import {CardLoader} from "../../navigation/Loader";
+import {CardLoader} from "../../navigation/Loader.tsx";
 
 const PvpKillsTableCard = ({player_kills}) => {
     const {t} = useTranslation();

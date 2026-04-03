@@ -9,7 +9,7 @@ import {SwitchTransition} from "react-transition-group";
 import {Outlet, useParams} from "react-router";
 import {ThemeContextProvider, useTheme} from "../../hooks/themeHook.jsx";
 import {ThemeStorageContextProvider, useThemeStorage} from "../../hooks/context/themeContextHook.tsx";
-import {ChartLoader} from "../../components/navigation/Loader.jsx";
+import {ChartLoader} from "../../components/navigation/Loader.tsx";
 import {useMetadata} from "../../hooks/metadataHook.jsx";
 import {faInfoCircle, faPlus, faSwatchbook, faTrash} from "@fortawesome/free-solid-svg-icons";
 import ErrorView from "../ErrorView.tsx";
@@ -35,8 +35,8 @@ const ThemeEditorPage = () => {
     const items = metadata.loaded ? metadata.getAvailableThemes().map(theme => {
         return {name: theme, icon: faSwatchbook, href: theme}
     }) : [];
-    items.push({name: t('html.label.themeEditor.addTheme'), icon: faPlus, href: 'new'});
-    items.push({name: t('html.label.themeEditor.deleteThemes'), icon: faTrash, href: 'delete'});
+    items.push({name: t('html.label.themeEditor.addTheme'), icon: faPlus, href: 'new'},
+        {name: t('html.label.themeEditor.deleteThemes'), icon: faTrash, href: 'delete'});
     return (
         <>
             <Sidebar page={title} items={items}/>

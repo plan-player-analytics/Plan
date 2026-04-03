@@ -2,7 +2,7 @@ import React from 'react';
 import {useTranslation} from "react-i18next";
 import {faPowerOff} from "@fortawesome/free-solid-svg-icons";
 import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
-import Datapoint from "../Datapoint";
+import Datapoint from "./Datapoint.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import FormattedTime from "../text/FormattedTime.jsx";
 import {isNumber} from "../../util/isNumber.js";
