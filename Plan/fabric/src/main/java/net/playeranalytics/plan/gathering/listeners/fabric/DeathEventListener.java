@@ -131,7 +131,7 @@ public class DeathEventListener implements FabricListener {
 
     private String getItemInHand(ServerPlayer killer) {
         ItemStack itemInHand = killer.getMainHandItem();
-        return itemInHand.getItem().getName().getString();
+        return itemInHand.getItemName().getString();
     }
 
     private Optional<ServerPlayer> getShooter(Projectile projectile) {

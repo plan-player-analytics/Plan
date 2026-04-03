@@ -1,7 +1,6 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
-import net.fabricmc.loom.task.RemapJarTask
 
-apply plugin: "fabric-loom"
+apply plugin: "net.fabricmc.fabric-loom"
 apply plugin: "com.gradleup.shadow"
 
 configurations {
@@ -17,11 +16,9 @@ dependencies {
 
     implementation "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
 
-    // https://wiki.fabricmc.net/tutorial:migratemappings
-    minecraft "com.mojang:minecraft:1.21.9"
-    mappings loom.officialMojangMappings()
-    modImplementation "net.fabricmc:fabric-loader:0.18.4"
-    modImplementation("me.lucko:fabric-permissions-api:0.4.1")
+    minecraft "com.mojang:minecraft:26.1"
+    implementation "net.fabricmc:fabric-loader:0.18.6"
+    implementation("me.lucko:fabric-permissions-api:0.7.0")
 
     // Fabric API
     Set<String> apiModules = [
@@ -34,7 +31,7 @@ dependencies {
     ]
 
     apiModules.forEach {
-        modImplementation(fabricApi.module(it, "0.134.0+1.21.9"))
+        implementation(fabricApi.module(it, "0.145.1+26.1"))
     }
 
     testImplementation(testFixtures(project(":common")))
@@ -42,7 +39,8 @@ dependencies {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    options.release.set(21)
+    options.release.set(25)
+    sourceCompatibility = "${JavaVersion.VERSION_25}"
 }
 
 processResources {
@@ -118,14 +116,9 @@ tasks.named("shadowJar", ShadowJar) {
     relocate "javax.servlet", "plan.javax.servlet"
 
     mergeServiceFiles()
-}
 
-tasks.register("remapShadowJar", RemapJarTask) {
-    dependsOn tasks.shadowJar
-    input = tasks.shadowJar.archiveFile
-    addNestedDependencies = true
     destinationDirectory.set(file("$rootDir/builds/"))
     archiveBaseName.set("PlanFabric")
 }
 
-tasks.assemble.dependsOn tasks.remapShadowJar
+tasks.assemble.dependsOn tasks.shadowJar
