@@ -128,7 +128,7 @@ jobs:
           changelog: ${{ github.event.release.body }}
           changelog_type: markdown
           display_name: ${{ github.event.release.name }}
-          game_versions: "2:Java 21,77784:1.21.9,77784:1.21.10,77784:1.21.11,68441:Fabric"
+          game_versions: "2:Java 25,83806:26.1,68441:Fabric"
           release_type: beta
           relations: fabric-api:requiredDependency,luckperms:optionalDependency
 
@@ -226,7 +226,7 @@ jobs:
           loaders: |
             fabric
           game-versions: |
-            >=1.21.9
+            >=26.1
           version-type: ${{ github.event.release.prerelease && 'beta' || 'release' }}
           dependencies: |
             P7dR8mSH(required)
