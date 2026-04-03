@@ -42,7 +42,7 @@
     "react-router": "7.13.1",
     "react-select": "5.10.2",
     "react-transition-group": "4.4.5",
-    "sass": "1.98.0",
+    "sass": "1.99.0",
     "swagger-ui-dist": "5.32.1"
   },
   "scripts": {
