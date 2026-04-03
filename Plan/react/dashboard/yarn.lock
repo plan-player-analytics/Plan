@@ -1491,10 +1491,10 @@ html-parse-stringify@^3.0.1:
   dependencies:
     void-elements "3.1.0"
 
-i18next-chained-backend@5.0.2:
-  version "5.0.2"
-  resolved "https://registry.yarnpkg.com/i18next-chained-backend/-/i18next-chained-backend-5.0.2.tgz#75628886de83984458eae7d2c2cb102ab3339171"
-  integrity sha512-PiTQAfAfXldDXRl2m+mHXxbqV94rloxX0Sb++da/EmJdHoiNEwlT4BtFoUhjsm7lrJ62mtgbwglENrFH2lUNow==
+i18next-chained-backend@5.0.3:
+  version "5.0.3"
+  resolved "https://registry.yarnpkg.com/i18next-chained-backend/-/i18next-chained-backend-5.0.3.tgz#723bd7d8d7fafe016270f1349cfd98f5dd52dc50"
+  integrity sha512-VUwc+yFpZzmIvtPfSdTv1+CjgZGZwGug6qHyIuSES/n7RDhVARFxthjML0anUMJVjlvLfRW/x6+U4UrxXBflmw==
   dependencies:
     "@babel/runtime" "^7.28.4"
 
