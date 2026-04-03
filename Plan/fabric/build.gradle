@@ -118,7 +118,7 @@ tasks.named("shadowJar", ShadowJar) {
     mergeServiceFiles()
 
     destinationDirectory.set(file("$rootDir/builds/"))
-    archiveBaseName.set("PlanFabric")
+    archiveFileName.set("PlanFabric-${project.version}.jar")
 }
 
 tasks.assemble.dependsOn tasks.shadowJar
