@@ -489,7 +489,7 @@
 
 .bg-sessions {
     background-color: var(--color-data-play-sessions) !important;
-    color: var(--contrast-color-data-play-sessions);
+    color: var(--contrast-color-data-play-sessions) !important;
 }
 
 .bg-sessions-outline {
