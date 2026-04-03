@@ -44,20 +44,22 @@ const PlayerPage = () => {
             {name: 'html.label.servers', icon: faNetworkWired, href: "servers", permission: 'page.player.servers'}
         ]
 
-        items.push({
-            name: 'html.label.plugins',
-            permission: 'page.player.plugins',
-            icon: faCubes,
-            contents: player?.extensions?.filter(extension => extension?.extensionData?.length)
-                .map(extension => {
-                    return {
-                        name: `${t('html.label.plugins')} (${extension.serverName})`,
-                        icon: faCubes,
-                        href: `plugins/${encodeURIComponent(extension.serverName)}`,
-                        permission: 'page.player.plugins'
-                    }
-                })
-        });
+        if (player?.extensions?.filter(extension => extension?.extensionData?.length).length) {
+            items.push({
+                name: 'html.label.plugins',
+                permission: 'page.player.plugins',
+                icon: faCubes,
+                contents: player?.extensions?.filter(extension => extension?.extensionData?.length)
+                    .map(extension => {
+                        return {
+                            name: `${t('html.label.plugins')} (${extension.serverName})`,
+                            icon: faCubes,
+                            href: `plugins/${encodeURIComponent(extension.serverName)}`,
+                            permission: 'page.player.plugins'
+                        }
+                    })
+            });
+        }
 
         setSidebarItems(items);
         window.document.title = `Plan | ${player?.info?.name}`;
