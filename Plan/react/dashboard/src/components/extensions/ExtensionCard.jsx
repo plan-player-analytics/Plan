@@ -54,7 +54,7 @@ const valueOrUndefined = (value) => {
     return typeof value === "undefined" ? undefined : value;
 }
 const sanitizeComponent = (component) => {
-    if (!component) return undefined;
+    if (!component) return [];
     return {
         extra: sanitizeComponent(component.extra),
         color: valueOrUndefined(component.color),
