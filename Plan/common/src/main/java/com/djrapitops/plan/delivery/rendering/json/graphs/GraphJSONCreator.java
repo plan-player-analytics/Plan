@@ -254,7 +254,7 @@ public class GraphJSONCreator {
                 PlayerCountQueries.hourlyUniquePlayerCounts(weekAgo, now, timeZoneOffset, serverUUID)
         );
         NavigableMap<Long, Integer> newPerDay = db.query(
-                PlayerCountQueries.newPlayerCounts(weekAgo, now, timeZoneOffset, serverUUID)
+                PlayerCountQueries.hourlyNewPlayerCounts(weekAgo, now, timeZoneOffset, serverUUID)
         );
 
         return createUniqueAndNewJSON(lineGraphs, uniquePerDay, newPerDay, TimeUnit.HOURS.toMillis(1L));
