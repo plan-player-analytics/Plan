@@ -28,10 +28,10 @@ import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.TreeMap;
-import java.util.UUID;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -49,14 +49,20 @@ public class PlayerCountQueries {
     }
 
     public static Query<Integer> uniquePlayerCount(long after, long before, ServerUUID serverUUID) {
-        return database -> database.queryOptional(SELECT + "COUNT(DISTINCT " + SessionsTable.USER_ID + ") as " + PLAYER_COUNT +
-                                FROM + SessionsTable.TABLE_NAME + " t" +
-                                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SessionsTable.SERVER_ID +
-                                WHERE + SessionsTable.SESSION_END + "<=?" +
-                                AND + SessionsTable.SESSION_START + ">=?" +
-                                AND + "s." + ServerTable.SERVER_UUID + "=?",
-                        set -> set.getInt(PLAYER_COUNT),
-                        before, after, serverUUID.toString())
+        return uniquePlayerCount(after, before, List.of(serverUUID));
+    }
+
+    public static Query<Integer> uniquePlayerCount(long after, long before, List<ServerUUID> serverUUIDs) {
+        if (serverUUIDs.isEmpty()) {
+            return uniquePlayerCount(after, before);
+        }
+        String sql = SELECT + "COUNT(DISTINCT " + SessionsTable.USER_ID + ") as " + PLAYER_COUNT +
+                FROM + SessionsTable.TABLE_NAME + " t" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SessionsTable.SERVER_ID +
+                WHERE + SessionsTable.SESSION_END + "<=?" +
+                AND + SessionsTable.SESSION_START + ">=?" +
+                AND + "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ')';
+        return database -> database.queryOptional(sql, set -> set.getInt(PLAYER_COUNT), before, after)
                 .orElse(0);
     }
 
@@ -250,16 +256,21 @@ public class PlayerCountQueries {
     }
 
     public static Query<Integer> newPlayerCount(long after, long before, ServerUUID serverUUID) {
+        return newPlayerCount(after, before, List.of(serverUUID));
+    }
+
+    public static Query<Integer> newPlayerCount(long after, long before, List<ServerUUID> serverUUIDs) {
+        if (serverUUIDs.isEmpty()) {
+            return newPlayerCount(after, before);
+        }
         String sql = SELECT + "COUNT(1) as " + PLAYER_COUNT +
                 FROM + UserInfoTable.TABLE_NAME + " t" +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + UserInfoTable.SERVER_ID +
                 WHERE + UserInfoTable.REGISTERED + "<=?" +
                 AND + UserInfoTable.REGISTERED + ">=?" +
-                AND + "s." + ServerTable.SERVER_UUID + "=?";
+                AND + "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ')';
 
-        return database -> database.queryOptional(sql,
-                        set -> set.getInt(PLAYER_COUNT),
-                        before, after, serverUUID.toString())
+        return database -> database.queryOptional(sql, set -> set.getInt(PLAYER_COUNT), before, after)
                 .orElse(0);
     }
 
@@ -330,7 +341,7 @@ public class PlayerCountQueries {
      * @param serverUUID     UUID of the Plan server
      * @return Map: Epoch ms (Start of day at 0 AM, no offset) - How many new players joined that day
      */
-    public static Query<NavigableMap<Long, Integer>> hourlyNewPlayerCounts(long after, long before, long timeZoneOffset, UUID serverUUID) {
+    public static Query<NavigableMap<Long, Integer>> hourlyNewPlayerCounts(long after, long before, long timeZoneOffset, ServerUUID serverUUID) {
         return database -> {
             Sql sql = database.getSql();
             String selectNewPlayersQuery = SELECT +

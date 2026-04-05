@@ -1,7 +1,7 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import LoadIn from "../../components/animation/LoadIn.tsx";
 import {Card, Col} from "react-bootstrap";
-import {useMetadata} from "../../hooks/metadataHook";
+import {useMetadata} from "../../hooks/metadataHook.tsx";
 import CardHeader from "../../components/cards/CardHeader.tsx";
 import {faServer} from "@fortawesome/free-solid-svg-icons";
 import MultiSelect from "../../components/input/MultiSelect";
@@ -9,7 +9,7 @@ import {useTranslation} from "react-i18next";
 import {fetchOptimizedPerformance} from "../../service/serverService";
 import {fetchNetworkPerformanceOverview} from "../../service/networkService";
 import PerformanceAsNumbersCard from "../../components/cards/server/tables/PerformanceAsNumbersCard";
-import {useNavigation} from "../../hooks/navigationHook";
+import {useNavigation} from "../../hooks/navigationHook.tsx";
 import {mapPerformanceDataToSeries} from "../../util/graphs";
 import PerformanceGraphsCard from "../../components/cards/network/PerformanceGraphsCard";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";

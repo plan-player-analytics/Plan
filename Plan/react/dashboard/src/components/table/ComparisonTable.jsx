@@ -1,5 +1,5 @@
 import React from "react";
-import {useTheme} from "../../hooks/themeHook";
+import {useTheme} from "../../hooks/themeHook.tsx";
 import ComparingLabel from "../trend/ComparingLabel";
 
 const ComparisonTable = ({headers, children, comparisonHeader}) => {

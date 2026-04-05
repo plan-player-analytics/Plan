@@ -1,5 +1,5 @@
 import React from "react";
-import {useTheme} from "../../hooks/themeHook";
+import {useTheme} from "../../hooks/themeHook.tsx";
 
 const AsNumbersTable = ({headers, children}) => {
     const {nightModeEnabled} = useTheme();

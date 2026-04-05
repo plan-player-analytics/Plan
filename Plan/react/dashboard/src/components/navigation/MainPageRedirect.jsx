@@ -1,5 +1,5 @@
 import {useAuth} from "../../hooks/authenticationHook.tsx";
-import {useMetadata} from "../../hooks/metadataHook";
+import {useMetadata} from "../../hooks/metadataHook.tsx";
 import {Navigate} from "react-router";
 import React, {useEffect, useState} from "react";
 import {staticSite} from "../../service/backendConfiguration";

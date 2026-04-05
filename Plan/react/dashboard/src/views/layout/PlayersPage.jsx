@@ -1,12 +1,12 @@
 import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {Outlet} from "react-router";
-import {useNavigation} from "../../hooks/navigationHook";
+import {useNavigation} from "../../hooks/navigationHook.tsx";
 import {faSearch} from "@fortawesome/free-solid-svg-icons";
 import Sidebar from "../../components/navigation/Sidebar";
 import Header from "../../components/navigation/Header";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
-import {useMetadata} from "../../hooks/metadataHook";
+import {useMetadata} from "../../hooks/metadataHook.tsx";
 import ErrorPage from "./ErrorPage";
 import {staticSite} from "../../service/backendConfiguration";
 import {useAuth} from "../../hooks/authenticationHook.tsx";

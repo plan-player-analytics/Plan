@@ -1,12 +1,12 @@
 import React, {useState} from 'react';
-import {useMetadata} from "../../hooks/metadataHook.jsx";
+import {useMetadata} from "../../hooks/metadataHook.tsx";
 import {faFileSignature, faInfoCircle, faPlusCircle} from "@fortawesome/free-solid-svg-icons";
 import CardHeader from "../../components/cards/CardHeader.tsx";
 import {Card, Col, Row} from "react-bootstrap";
 import TextInput from "../../components/input/TextInput.jsx";
 import ThemeOption from "../../components/theme/ThemeOption.jsx";
 import {ChartLoader} from "../../components/navigation/Loader.tsx";
-import {useTheme} from "../../hooks/themeHook.jsx";
+import {useTheme} from "../../hooks/themeHook.tsx";
 import ActionButton from "../../components/input/button/ActionButton.jsx";
 import {useTranslation} from "react-i18next";
 import {useThemeStorage} from "../../hooks/context/themeContextHook.tsx";

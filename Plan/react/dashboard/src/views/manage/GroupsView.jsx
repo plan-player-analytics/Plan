@@ -28,7 +28,7 @@ import Scrollable from "../../components/Scrollable";
 import OpaqueText from "../../components/layout/OpaqueText";
 import {useAlertPopupContext} from "../../hooks/context/alertPopupContext.tsx";
 import {DropdownStatusContextProvider, useDropdownStatusContext} from "../../hooks/context/dropdownStatusContextHook";
-import {useNavigation} from "../../hooks/navigationHook";
+import {useNavigation} from "../../hooks/navigationHook.tsx";
 import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 import Checkbox from "../../components/input/Checkbox.jsx";

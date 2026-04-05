@@ -19,9 +19,9 @@ import FilterDropdown from "./FilterDropdown";
 import FilterList from "./FilterList";
 import {useQueryResultContext} from "../../../hooks/queryResultContext";
 import {useNavigate} from "react-router";
-import {useNavigation} from "../../../hooks/navigationHook.jsx";
+import {useNavigation} from "../../../hooks/navigationHook.tsx";
 import ActionButton from "../../input/button/ActionButton.jsx";
-import {useMetadata} from "../../../hooks/metadataHook.jsx";
+import {useMetadata} from "../../../hooks/metadataHook.tsx";
 
 const parseTimeAsUTC = (dateString, timeString) => {
     const d = dateString.match(

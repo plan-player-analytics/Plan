@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {useTranslation} from "react-i18next";
-import {useTheme} from "../../hooks/themeHook";
+import {useTheme} from "../../hooks/themeHook.tsx";
 import {withReducedSaturation} from "../../util/colors";
 import Highcharts from "highcharts/esm/highstock";
 import "highcharts/esm/modules/no-data-to-display";

@@ -135,7 +135,7 @@ public class Contributors {
         CODE, LANG
     }
 
-    private static class Contributor implements Comparable<Contributor> {
+    public static class Contributor implements Comparable<Contributor> {
         final String name;
         final For[] contributed;
 

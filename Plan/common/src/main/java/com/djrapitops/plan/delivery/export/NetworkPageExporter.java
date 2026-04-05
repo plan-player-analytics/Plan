@@ -112,6 +112,7 @@ public class NetworkPageExporter extends FileExporter {
         long monthAgo = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(30);
         String datapointType = "datapoint?type=";
         String after = "&after=" + monthAgo;
+        String afterMillis = "&afterMillisAgo=";
         exportJSON(toDirectory,
                 "network/overview",
                 "network/servers",
@@ -139,7 +140,13 @@ public class NetworkPageExporter extends FileExporter {
                 datapointType + DatapointType.SERVER_OCCUPIED.name() + after,
                 datapointType + DatapointType.MOST_ACTIVE_GAME_MODE.name() + after,
                 datapointType + DatapointType.WORLD_PIE.name() + after,
-                datapointType + DatapointType.SERVER_PIE.name()
+                datapointType + DatapointType.SERVER_PIE.name(),
+                datapointType + DatapointType.UNIQUE_PLAYERS.name() + afterMillis + TimeUnit.DAYS.toMillis(30),
+                datapointType + DatapointType.UNIQUE_PLAYERS.name() + afterMillis + TimeUnit.DAYS.toMillis(7),
+                datapointType + DatapointType.UNIQUE_PLAYERS.name() + afterMillis + TimeUnit.DAYS.toMillis(1),
+                datapointType + DatapointType.NEW_PLAYERS.name() + afterMillis + TimeUnit.DAYS.toMillis(30),
+                datapointType + DatapointType.NEW_PLAYERS.name() + afterMillis + TimeUnit.DAYS.toMillis(7),
+                datapointType + DatapointType.NEW_PLAYERS.name() + afterMillis + TimeUnit.DAYS.toMillis(1)
         );
     }
 

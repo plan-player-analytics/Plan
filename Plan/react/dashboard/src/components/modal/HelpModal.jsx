@@ -1,7 +1,7 @@
 import {Modal} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import React, {useCallback} from "react";
-import {useNavigation} from "../../hooks/navigationHook";
+import {useNavigation} from "../../hooks/navigationHook.tsx";
 import {useTranslation} from "react-i18next";
 import ActivityIndexHelp from "./help/ActivityIndexHelp";
 import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";

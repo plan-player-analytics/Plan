@@ -40,7 +40,8 @@ import java.util.regex.Pattern;
 public class BundleAddressCorrection {
 
     private static final String STATIC = "static";
-    private static final Pattern JAVASCRIPT_ADDRESS_PATTERN = Pattern.compile("([\"`])(\\./|/?static)(.+?)\\.(json|js|css|png)\\1");
+    // (?:(?!\1).)+? matches any character except the beginning character
+    private static final Pattern JAVASCRIPT_ADDRESS_PATTERN = Pattern.compile("([\"`])(\\./|/?static)((?:(?!\\1).)+?)\\.(json|js|css|png)\\1");
 
     private final PlanConfig config;
     private final Addresses addresses;

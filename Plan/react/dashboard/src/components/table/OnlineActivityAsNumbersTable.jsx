@@ -7,7 +7,7 @@ import SmallTrend from "../trend/SmallTrend";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCalendarCheck, faClock, faEye, faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 import {CardLoader} from "../navigation/Loader.tsx";
-import {useNavigation} from "../../hooks/navigationHook";
+import {useNavigation} from "../../hooks/navigationHook.tsx";
 import FormattedTime from "../text/FormattedTime.jsx";
 import {useTimeAmountFormatter} from "../../util/format/useTimeAmountFormatter.js";
 

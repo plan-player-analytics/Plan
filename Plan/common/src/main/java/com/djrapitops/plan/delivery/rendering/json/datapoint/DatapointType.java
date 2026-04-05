@@ -36,7 +36,9 @@ public enum DatapointType {
     SERVER_OCCUPIED(ServerOccupied.class, DatapointCacheKey.SESSION, DatapointCacheKey.TPS),
     MOST_ACTIVE_GAME_MODE(MostActiveGameMode.class, DatapointCacheKey.SESSION),
     MOST_ACTIVE_WORLD(MostActiveWorld.class, DatapointCacheKey.SESSION),
-    SERVER_PIE(ServerPie.class, DatapointCacheKey.SESSION);
+    SERVER_PIE(ServerPie.class, DatapointCacheKey.SESSION),
+    UNIQUE_PLAYERS(UniquePlayers.class, DatapointCacheKey.SESSION),
+    NEW_PLAYERS(NewPlayers.class, DatapointCacheKey.SESSION);
 
     private final Class<? extends Datapoint<?>> datapointClass;
     private final DatapointCacheKey[] cacheKeys;

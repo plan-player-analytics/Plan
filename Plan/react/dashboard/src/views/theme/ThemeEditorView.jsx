@@ -15,7 +15,7 @@ import ActionButton from "../../components/input/button/ActionButton.jsx";
 import UnsavedChangesText from "../../components/text/UnsavedChangesText.jsx";
 import SecondaryActionButton from "../../components/input/button/SecondaryActionButton.jsx";
 import {MinHeightProvider} from "../../hooks/context/minHeightContextHook.jsx";
-import {useMetadata} from "../../hooks/metadataHook.jsx";
+import {useMetadata} from "../../hooks/metadataHook.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import DownloadButton from "../../components/theme/DownloadButton.jsx";
 import {useAuth} from "../../hooks/authenticationHook.tsx";

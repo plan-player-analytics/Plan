@@ -19,7 +19,7 @@ import {CardLoader, ChartLoader} from "../../navigation/Loader.tsx";
 import LineGraph from "../../graphs/LineGraph";
 import {ErrorViewBody, ErrorViewCard} from "../../../views/ErrorView.tsx";
 import PingGraph from "../../graphs/performance/PingGraph";
-import {useMetadata} from "../../../hooks/metadataHook";
+import {useMetadata} from "../../../hooks/metadataHook.tsx";
 import {getColorConverter} from "../../../util/Color.js";
 import {
     GraphExtremesContextProvider,

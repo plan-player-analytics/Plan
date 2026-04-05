@@ -14,7 +14,7 @@ import {
     faUser,
     faUsers
 } from "@fortawesome/free-solid-svg-icons";
-import {useTheme} from "../../hooks/themeHook";
+import {useTheme} from "../../hooks/themeHook.tsx";
 import {useTranslation} from "react-i18next";
 import Scrollable from "../Scrollable";
 import {NavLink} from "react-router";

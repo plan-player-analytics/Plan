@@ -1,6 +1,6 @@
 import React from 'react';
 import {useTranslation} from "react-i18next";
-import {useTheme} from "../../../hooks/themeHook";
+import {useTheme} from "../../../hooks/themeHook.tsx";
 import {Card} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faGlobe, faWifi} from "@fortawesome/free-solid-svg-icons";

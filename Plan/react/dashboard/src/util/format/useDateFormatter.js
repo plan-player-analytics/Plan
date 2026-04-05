@@ -3,7 +3,7 @@ import {useCallback, useMemo} from "react";
 import {isNumber} from "../isNumber.js";
 import {SimpleDateFormat} from "./SimpleDateFormat.js";
 import {useI18nFriendlyLanguage} from "../../service/localeService.js";
-import {useMetadata} from "../../hooks/metadataHook.jsx";
+import {useMetadata} from "../../hooks/metadataHook.tsx";
 import {usePreferences} from "../../hooks/preferencesHook.jsx";
 
 export const MS_24H = 24 * 60 * 60 * 1000;

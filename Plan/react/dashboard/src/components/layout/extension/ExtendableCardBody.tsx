@@ -2,9 +2,15 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {Card} from "react-bootstrap";
 import {usePageExtension} from "../../../hooks/pageExtensionHook";
 
-const ExtendableCardBody = ({id, className, children}) => {
-    const [elementsBefore, setElementsBefore] = useState([]);
-    const [elementsAfter, setElementsAfter] = useState([]);
+type Props = {
+    id: string,
+    className?: string,
+    children?: React.ReactNode,
+}
+
+const ExtendableCardBody = ({id, className, children}: Props) => {
+    const [elementsBefore, setElementsBefore] = useState<HTMLElement[]>([]);
+    const [elementsAfter, setElementsAfter] = useState<HTMLElement[]>([]);
     const {onRender, onUnmount, context} = usePageExtension();
 
     const render = useCallback(async () => {

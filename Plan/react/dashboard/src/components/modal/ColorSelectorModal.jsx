@@ -1,11 +1,11 @@
 import React from "react";
-import {useTheme} from "../../hooks/themeHook";
+import {useTheme} from "../../hooks/themeHook.tsx";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCloudMoon, faPalette} from "@fortawesome/free-solid-svg-icons";
 import {Col, Modal, Row} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
 import {useThemeStorage} from "../../hooks/context/themeContextHook.tsx";
-import {useMetadata} from "../../hooks/metadataHook.jsx";
+import {useMetadata} from "../../hooks/metadataHook.tsx";
 import ThemeOption from "../theme/ThemeOption.jsx";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 import AddThemeButton from "../theme/AddThemeButton.jsx";

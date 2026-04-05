@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {tooltip} from "../../../util/graphs";
-import {useTheme} from "../../../hooks/themeHook";
+import {useTheme} from "../../../hooks/themeHook.tsx";
 import FunctionPlotGraph from "../../graphs/FunctionPlotGraph";
 import {useTranslation} from "react-i18next";
 import {Form, InputGroup} from "react-bootstrap";

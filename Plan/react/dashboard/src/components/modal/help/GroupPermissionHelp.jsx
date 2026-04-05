@@ -1,7 +1,7 @@
 import React from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons";
-import {useMetadata} from "../../../hooks/metadataHook";
+import {useMetadata} from "../../../hooks/metadataHook.tsx";
 import {Trans} from "react-i18next";
 
 /* eslint-disable jsx-a11y/anchor-has-content */

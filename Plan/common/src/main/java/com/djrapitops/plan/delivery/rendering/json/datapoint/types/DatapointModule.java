@@ -60,4 +60,12 @@ public interface DatapointModule {
     @IntoSet
     Datapoint<?> bindServerPie(ServerPie serverPie);
 
+    @Binds
+    @IntoSet
+    Datapoint<?> bindUniquePlayers(UniquePlayers uniquePlayers);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindNewPlayers(NewPlayers newPlayers);
+
 }

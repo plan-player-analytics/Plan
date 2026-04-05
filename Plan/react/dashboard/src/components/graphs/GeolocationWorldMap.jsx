@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {useTranslation} from "react-i18next";
-import {useTheme} from "../../hooks/themeHook";
+import {useTheme} from "../../hooks/themeHook.tsx";
 import Highcharts from 'highcharts/esm/highmaps';
 import topology from '@highcharts/map-collection/custom/world.topo.json';
 import "highcharts/esm/modules/accessibility";

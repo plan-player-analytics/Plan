@@ -1,11 +1,11 @@
 import React, {useState} from 'react';
-import {useMetadata} from "../../hooks/metadataHook.jsx";
+import {useMetadata} from "../../hooks/metadataHook.tsx";
 import {faExclamationTriangle, faInfoCircle, faTrash} from "@fortawesome/free-solid-svg-icons";
 import CardHeader from "../../components/cards/CardHeader.tsx";
 import {Card, Col, Row} from "react-bootstrap";
 import ThemeOption from "../../components/theme/ThemeOption.jsx";
 import {ChartLoader} from "../../components/navigation/Loader.tsx";
-import {getLocallyStoredThemes, ThemeContextProvider, useTheme} from "../../hooks/themeHook.jsx";
+import {getLocallyStoredThemes, ThemeContextProvider, useTheme} from "../../hooks/themeHook.tsx";
 import {useTranslation} from "react-i18next";
 import {ThemeStorageContextProvider, useThemeStorage} from "../../hooks/context/themeContextHook.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";

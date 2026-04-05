@@ -16,7 +16,9 @@ export enum DatapointType {
     SERVER_OCCUPIED = 'SERVER_OCCUPIED',
     MOST_ACTIVE_WORLD = 'MOST_ACTIVE_WORLD',
     MOST_ACTIVE_GAME_MODE = 'MOST_ACTIVE_GAME_MODE',
-    SERVER_PIE = 'SERVER_PIE'
+    SERVER_PIE = 'SERVER_PIE',
+    UNIQUE_PLAYERS = "UNIQUE_PLAYERS",
+    NEW_PLAYERS = "NEW_PLAYERS",
 }
 
 export type DatapointTypeMap = {
@@ -24,6 +26,8 @@ export type DatapointTypeMap = {
     PLAYTIME: number;
     AFK_TIME: number;
     AFK_TIME_PERCENTAGE: number;
+    UNIQUE_PLAYERS: number;
+    NEW_PLAYERS: number;
     SERVER_OCCUPIED: OutOf;
     MOST_ACTIVE_WORLD: OutOfCategory;
     MOST_ACTIVE_GAME_MODE: OutOfCategory;
@@ -58,6 +62,9 @@ export function getDatapointUrl(dataType: DatapointType, filter?: GenericFilter)
             } else {
                 timespan = "_30d";
             }
+        }
+        if (filter?.afterMillisAgo) {
+            timespan = "_" + filter.afterMillisAgo;
         }
         const folder = filter?.player ? "/player/" + filter?.player : "/data";
         const server = filter?.server ? "_" + filter?.server : "";

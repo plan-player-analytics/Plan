@@ -9,7 +9,7 @@ import {faChartColumn} from "@fortawesome/free-solid-svg-icons";
 import JoinAddressGraph from "../../../graphs/JoinAddressGraph";
 import Toggle from "../../../input/Toggle";
 import {useJoinAddressListContext} from "../../../../hooks/context/joinAddressListContextHook.jsx";
-import {useNavigation} from "../../../../hooks/navigationHook.jsx";
+import {useNavigation} from "../../../../hooks/navigationHook.tsx";
 import {staticSite} from "../../../../service/backendConfiguration.js";
 import {faHandPointDown} from "@fortawesome/free-regular-svg-icons";
 

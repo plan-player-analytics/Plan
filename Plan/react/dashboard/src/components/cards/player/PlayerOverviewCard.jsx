@@ -1,7 +1,7 @@
 import React, {useCallback} from 'react';
 import {useTranslation} from "react-i18next";
-import {useMetadata} from "../../../hooks/metadataHook";
-import {useNavigation} from "../../../hooks/navigationHook";
+import {useMetadata} from "../../../hooks/metadataHook.tsx";
+import {useNavigation} from "../../../hooks/navigationHook.tsx";
 import {Card, Col} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {
@@ -11,7 +11,7 @@ import {
     faClock,
     faQuestionCircle
 } from "@fortawesome/free-regular-svg-icons";
-import ExtendableCardBody from "../../layout/extension/ExtendableCardBody";
+import ExtendableCardBody from "../../layout/extension/ExtendableCardBody.tsx";
 import ExtendableRow from "../../layout/extension/ExtendableRow";
 import {
     faCircle,

@@ -9,7 +9,7 @@ import React, {useCallback} from "react";
 import PlayerbaseGraph from "../../../graphs/PlayerbaseGraph";
 import {CardLoader} from "../../../navigation/Loader.tsx";
 import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
-import {useNavigation} from "../../../../hooks/navigationHook";
+import {useNavigation} from "../../../../hooks/navigationHook.tsx";
 
 export const PlayerbaseDevelopmentCardWithData = ({data, title}) => {
     const {t} = useTranslation();

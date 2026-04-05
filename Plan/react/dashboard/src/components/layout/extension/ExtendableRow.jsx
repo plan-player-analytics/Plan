@@ -1,6 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import {Row} from "react-bootstrap";
-import {usePageExtension} from "../../../hooks/pageExtensionHook";
+import {usePageExtension} from "../../../hooks/pageExtensionHook.tsx";
 
 const ExtendableRow = ({id, className, children}) => {
     const [elementsBefore, setElementsBefore] = useState([]);

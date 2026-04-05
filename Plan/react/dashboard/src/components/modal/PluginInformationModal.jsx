@@ -11,7 +11,7 @@ import {
     faStar
 } from "@fortawesome/free-solid-svg-icons";
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
-import {useMetadata} from "../../hooks/metadataHook";
+import {useMetadata} from "../../hooks/metadataHook.tsx";
 import {Trans, useTranslation} from "react-i18next";
 import ActionButton from "../input/button/ActionButton.jsx";
 import ExternalLink from "../input/button/ExternalLink.jsx";

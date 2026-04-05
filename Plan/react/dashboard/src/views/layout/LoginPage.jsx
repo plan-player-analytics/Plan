@@ -6,7 +6,7 @@ import {Link, useNavigate} from "react-router";
 import {useTranslation} from "react-i18next";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faPalette} from "@fortawesome/free-solid-svg-icons";
-import {useTheme} from "../../hooks/themeHook";
+import {useTheme} from "../../hooks/themeHook.tsx";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
 import drawSine from "../../util/loginSineRenderer";
 import {fetchLogin} from "../../service/authenticationService";

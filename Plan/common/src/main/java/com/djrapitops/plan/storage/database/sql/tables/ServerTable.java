@@ -84,11 +84,15 @@ public class ServerTable {
                 .toString();
     }
 
+    public static String uuids(Collection<ServerUUID> serverUUIDs) {
+        return "'" + new TextStringBuilder().appendWithSeparators(serverUUIDs, "','").get() + "'";
+    }
+
     public static String selectServerIds(Collection<ServerUUID> serverUUIDs) {
         return '(' + SELECT + TABLE_NAME + '.' + ID +
                 FROM + TABLE_NAME +
-                WHERE + TABLE_NAME + '.' + SERVER_UUID + " IN ('" +
-                new TextStringBuilder().appendWithSeparators(serverUUIDs, "','").get() +
-                "'))";
+                WHERE + TABLE_NAME + '.' + SERVER_UUID + " IN (" +
+                uuids(serverUUIDs) +
+                "))";
     }
 }

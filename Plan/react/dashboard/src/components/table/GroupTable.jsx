@@ -1,6 +1,6 @@
 import React from 'react';
 import {useTranslation} from "react-i18next";
-import {useTheme} from "../../hooks/themeHook";
+import {useTheme} from "../../hooks/themeHook.tsx";
 import {withReducedSaturation} from "../../util/colors";
 import Scrollable from "../Scrollable";
 

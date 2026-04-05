@@ -4,7 +4,7 @@ import {faCogs, faInfoCircle, faNetworkWired, faServer} from "@fortawesome/free-
 import {faCalendarCheck} from "@fortawesome/free-regular-svg-icons";
 import AlertPopupArea from "../../alert/AlertPopupArea.jsx";
 import Header from "../../navigation/Header.jsx";
-import {useMetadata} from "../../../hooks/metadataHook.jsx";
+import {useMetadata} from "../../../hooks/metadataHook.tsx";
 import {useTranslation} from "react-i18next";
 
 export const SidebarUseCase = () => {

@@ -5,8 +5,8 @@ import Highcharts from "highcharts/esm/highstock";
 import "highcharts/esm/modules/no-data-to-display"
 import "highcharts/esm/modules/accessibility";
 import {useTranslation} from "react-i18next";
-import {useTheme} from "../../../hooks/themeHook";
-import {useMetadata} from "../../../hooks/metadataHook";
+import {useTheme} from "../../../hooks/themeHook.tsx";
+import {useMetadata} from "../../../hooks/metadataHook.tsx";
 import {useAuth} from "../../../hooks/authenticationHook.tsx";
 import {useGraphExtremesContext} from "../../../hooks/interaction/graphExtremesContextHook.jsx";
 import {localeService} from "../../../service/localeService.js";

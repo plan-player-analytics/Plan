@@ -8,7 +8,7 @@ import {useAuth} from "../authenticationHook.js";
 import {useAlertPopupContext} from "./alertPopupContext";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCheck, faExclamationTriangle} from "@fortawesome/free-solid-svg-icons";
-import {getLocallyStoredThemes} from "../themeHook.jsx";
+import {getLocallyStoredThemes} from "../themeHook.js";
 import {ColorPropertyMap, ThemeConfig, UseCaseMap} from "../../components/theme/model/ThemeConfig";
 import {PlanResponse} from "../../service/PlanResponse";
 import {ThemeContextValue} from "../../components/theme/model/ThemeContextValue";
