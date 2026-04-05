@@ -166,6 +166,10 @@ loadScripts(document, 'script');</script>
 <li><a href="#DATA_PLAYER_SERVER_PIE" tabindex="0">DATA_PLAYER_SERVER_PIE</a></li>
 <li><a href="#DATA_SERVER_SERVER_PIE" tabindex="0">DATA_SERVER_SERVER_PIE</a></li>
 <li><a href="#DATA_NETWORK_SERVER_PIE" tabindex="0">DATA_NETWORK_SERVER_PIE</a></li>
+<li><a href="#DATA_SERVER_UNIQUE_PLAYERS" tabindex="0">DATA_SERVER_UNIQUE_PLAYERS</a></li>
+<li><a href="#DATA_NETWORK_UNIQUE_PLAYERS" tabindex="0">DATA_NETWORK_UNIQUE_PLAYERS</a></li>
+<li><a href="#DATA_SERVER_NEW_PLAYERS" tabindex="0">DATA_SERVER_NEW_PLAYERS</a></li>
+<li><a href="#DATA_NETWORK_NEW_PLAYERS" tabindex="0">DATA_NETWORK_NEW_PLAYERS</a></li>
 <li><a href="#ACCESS" tabindex="0">ACCESS</a></li>
 <li><a href="#ACCESS_PLAYER" tabindex="0">ACCESS_PLAYER</a></li>
 <li><a href="#ACCESS_PLAYER_SELF" tabindex="0">ACCESS_PLAYER_SELF</a></li>
@@ -273,11 +277,15 @@ implements <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_MOST_ACTIVE_WORLD" class="member-name-link">DATA_NETWORK_MOST_ACTIVE_WORLD</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_PLAYTIME" class="member-name-link">DATA_NETWORK_PLAYTIME</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_NEW_PLAYERS" class="member-name-link">DATA_NETWORK_NEW_PLAYERS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_SERVER_OCCUPIED" class="member-name-link">DATA_NETWORK_SERVER_OCCUPIED</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_PLAYTIME" class="member-name-link">DATA_NETWORK_PLAYTIME</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_SERVER_PIE" class="member-name-link">DATA_NETWORK_SERVER_PIE</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_SERVER_OCCUPIED" class="member-name-link">DATA_NETWORK_SERVER_OCCUPIED</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_SERVER_PIE" class="member-name-link">DATA_NETWORK_SERVER_PIE</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_UNIQUE_PLAYERS" class="member-name-link">DATA_NETWORK_UNIQUE_PLAYERS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_WORLD_PIE" class="member-name-link">DATA_NETWORK_WORLD_PIE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
@@ -303,11 +311,15 @@ implements <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code><a href="#DATA_SERVER_MOST_ACTIVE_WORLD" class="member-name-link">DATA_SERVER_MOST_ACTIVE_WORLD</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_PLAYTIME" class="member-name-link">DATA_SERVER_PLAYTIME</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_NEW_PLAYERS" class="member-name-link">DATA_SERVER_NEW_PLAYERS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DATA_SERVER_SERVER_OCCUPIED" class="member-name-link">DATA_SERVER_SERVER_OCCUPIED</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DATA_SERVER_PLAYTIME" class="member-name-link">DATA_SERVER_PLAYTIME</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_SERVER_PIE" class="member-name-link">DATA_SERVER_SERVER_PIE</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_SERVER_OCCUPIED" class="member-name-link">DATA_SERVER_SERVER_OCCUPIED</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#DATA_SERVER_SERVER_PIE" class="member-name-link">DATA_SERVER_SERVER_PIE</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_UNIQUE_PLAYERS" class="member-name-link">DATA_SERVER_UNIQUE_PLAYERS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code><a href="#DATA_SERVER_WORLD_PIE" class="member-name-link">DATA_SERVER_WORLD_PIE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
@@ -1416,6 +1428,38 @@ the order they are declared.</div>
 <h3>DATA_NETWORK_SERVER_PIE</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_NETWORK_SERVER_PIE</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_SERVER_UNIQUE_PLAYERS">
+<h3>DATA_SERVER_UNIQUE_PLAYERS</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_SERVER_UNIQUE_PLAYERS</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_NETWORK_UNIQUE_PLAYERS">
+<h3>DATA_NETWORK_UNIQUE_PLAYERS</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_NETWORK_UNIQUE_PLAYERS</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_SERVER_NEW_PLAYERS">
+<h3>DATA_SERVER_NEW_PLAYERS</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_SERVER_NEW_PLAYERS</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_NETWORK_NEW_PLAYERS">
+<h3>DATA_NETWORK_NEW_PLAYERS</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_NETWORK_NEW_PLAYERS</span></div>
 </div>
 </section>
 </li>
