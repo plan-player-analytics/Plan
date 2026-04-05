@@ -24,13 +24,13 @@ import com.djrapitops.plan.identification.ServerUUID;
  * @author AuroraLS3
  */
 public enum DataID {
+    @Deprecated
     PLAYERS,
     PLAYERS_V2,
-    @Deprecated
-    SESSIONS,
     SERVERS,
     KILLS,
     PING_TABLE,
+    @Deprecated
     GRAPH_PERFORMANCE,
     GRAPH_OPTIMIZED_PERFORMANCE,
     GRAPH_ONLINE,

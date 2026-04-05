@@ -116,7 +116,6 @@ public class NetworkPageExporter extends FileExporter {
         exportJSON(toDirectory,
                 "network/overview",
                 "network/servers",
-                "network/sessionsOverview",
                 "network/playerbaseOverview",
                 "graph?type=playersOnline&server=" + serverUUID,
                 "graph?type=playersOnlineProxies",

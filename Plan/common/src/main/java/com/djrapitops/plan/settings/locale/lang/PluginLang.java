@@ -29,6 +29,8 @@ public enum PluginLang implements Lang {
     API_ADD_RESOURCE_CSS("plugin.apiCSSAdded", "API - css+", "PageExtension: ${0} added stylesheet(s) to ${1}, ${2}"),
     RELOAD_LOCALE("plugin.localeReloaded", "API - locale reload", "Custom locale.yml was modified so it was reloaded and is now in use."),
 
+    DEPRECATED_ENDPOINT_CALL("plugin.deprecated.endpoint", null, "Webserver: Deprecated endpoint ${0} was called. Endpoint ${1} should be used instead."),
+
     ENABLE_NOTIFY_PROXY_ADDRESS("plugin.enable.notify.proxyAddress", "Enable - Notify proxy address", "Proxy server detected in the database - Proxy Webserver address is '${0}'."),
     ENABLE_NOTIFY_PROXY_DISABLED_WEBSERVER("plugin.enable.notify.proxyDisabledWebserver", "Enable - Notify proxy disabled webserver", "Disabling Webserver on this server - You can override this behavior by setting '${0}' to false."),
     ENABLE_NOTIFY_SETTING_CHANGE("plugin.enable.notify.settingChange", "Enable - Notify settingChange", "Note: Set '${0}' to ${1}"),
