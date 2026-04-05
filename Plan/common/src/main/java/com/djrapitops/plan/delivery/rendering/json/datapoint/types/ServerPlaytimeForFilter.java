@@ -25,10 +25,7 @@ import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * Utility for getting playtime per server name based on a filter.
@@ -51,9 +48,9 @@ public class ServerPlaytimeForFilter {
         long before = filter.getBefore();
         List<ServerUUID> serverUUIDs = filter.getServerUUIDs();
 
-        if (filter.getPlayerUUID().isPresent()) {
-            UUID playerUUID = filter.getPlayerUUID().get();
-            Map<ServerUUID, Long> playtimeByUuid = db.query(SessionQueries.playtimeOfPlayer(after, before, playerUUID));
+        Optional<UUID> playerUUID = filter.getPlayerUUID();
+        if (playerUUID.isPresent()) {
+            Map<ServerUUID, Long> playtimeByUuid = db.query(SessionQueries.playtimeOfPlayer(after, before, playerUUID.get()));
             Map<ServerUUID, String> serverNames = db.query(ServerQueries.fetchServerNames());
             Map<String, Long> playtimes = new HashMap<>();
             for (Map.Entry<ServerUUID, Long> entry : playtimeByUuid.entrySet()) {

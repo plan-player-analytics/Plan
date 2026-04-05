@@ -16,8 +16,8 @@
  */
 package net.playeranalytics.plan.gathering.mixin;
 
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.level.GameType;
 import net.playeranalytics.plan.gathering.listeners.events.PlanFabricEvents;
 import org.spongepowered.asm.mixin.Mixin;
@@ -26,11 +26,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+@SuppressWarnings({"javabugs:S6320", "DataFlowIssue"}) // Illegal cast is required here.
 @Mixin(ServerPlayer.class)
 public class ServerPlayerMixin {
 
     @Inject(method = "setGameMode", at = @At(value = "INVOKE", target = "Lnet/minecraft/server/network/ServerGamePacketListenerImpl;send(Lnet/minecraft/network/protocol/Packet;)V"))
     public void onGameModeChanged(GameType mode, CallbackInfoReturnable<Boolean> cir) {
+
         PlanFabricEvents.ON_GAMEMODE_CHANGE.invoker().onGameModeChange((ServerPlayer) (Object) this, mode);
     }
 
