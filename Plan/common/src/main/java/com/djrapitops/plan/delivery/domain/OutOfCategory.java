@@ -40,7 +40,7 @@ public class OutOfCategory {
             if (entry.getValue() > biggest) {
                 category = entry.getKey();
                 biggest = entry.getValue();
-                percentage = max != 0L ? biggest / max : 0.0;
+                percentage = max != 0L ? biggest * 1.0 / max : 0.0;
             }
         }
     }
@@ -53,11 +53,11 @@ public class OutOfCategory {
         return max;
     }
 
-    public String getCategory() {
+    public @Nullable String getCategory() {
         return category;
     }
 
-    public Double getPercentage() {
+    public @Nullable Double getPercentage() {
         return percentage;
     }
 }
