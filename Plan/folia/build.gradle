@@ -1,5 +1,3 @@
-apply plugin: "com.gradleup.shadow"
-
 dependencies {
     runtimeOnly "net.playeranalytics:platform-abstraction-layer-folia:$palVersion"
 }

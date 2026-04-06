@@ -2,8 +2,6 @@ plugins {
     id "net.kyori.blossom" version "2.2.0"
 }
 
-apply plugin: "com.gradleup.shadow"
-
 compileJava {
     dependsOn generateTemplates
 }

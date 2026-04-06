@@ -6,10 +6,6 @@ plugins {
     id "org.spongepowered.gradle.vanilla" version "0.2.2"
 }
 
-// Shadow plugin applied even though shadow is not used in the module,
-// so that VanillaGradle doesn't include Minecraft in runtimeClassPath
-apply plugin: "com.gradleup.shadow"
-
 dependencies {
     implementation project(":common")
 
