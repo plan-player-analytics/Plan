@@ -63,6 +63,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#fetchLatestSessionsOfServer(com.djrapitops.plan.identification.ServerUUID,int)" tabindex="0">fetchLatestSessionsOfServer(ServerUUID, int)</a></li>
 <li><a href="#sessionCount(long,long,com.djrapitops.plan.identification.ServerUUID)" tabindex="0">sessionCount(long, long, ServerUUID)</a></li>
 <li><a href="#sessionCount(long,long)" tabindex="0">sessionCount(long, long)</a></li>
+<li><a href="#sessionCount(long,long,java.util.List)" tabindex="0">sessionCount(long, long, List)</a></li>
+<li><a href="#sessionCount(long,long,java.util.UUID,java.util.List)" tabindex="0">sessionCount(long, long, UUID, List)</a></li>
 <li><a href="#sessionCountPerDay(long,long,long,com.djrapitops.plan.identification.ServerUUID)" tabindex="0">sessionCountPerDay(long, long, long, ServerUUID)</a></li>
 <li><a href="#sessionCountPerDay(long,long,long)" tabindex="0">sessionCountPerDay(long, long, long)</a></li>
 <li><a href="#playtime(long,long,com.djrapitops.plan.identification.ServerUUID)" tabindex="0">playtime(long, long, ServerUUID)</a></li>
@@ -288,6 +290,17 @@ loadScripts(document, 'script');</script>
  long&nbsp;before,
  <a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sessionCount(long,long,java.util.List)" class="member-name-link">sessionCount</a><wbr>(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sessionCount(long,long,java.util.UUID,java.util.List)" class="member-name-link">sessionCount</a><wbr>(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/NavigableMap.html" title="class or interface in java.util" class="external-link">NavigableMap</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#sessionCountPerDay(long,long,long)" class="member-name-link">sessionCountPerDay</a><wbr>(long&nbsp;after,
  long&nbsp;before,
@@ -410,6 +423,27 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">sessionCount</span><wbr><span class="parameters">(long&nbsp;after,
  long&nbsp;before)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="sessionCount(long,long,java.util.List)">
+<h3>sessionCount</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">sessionCount</span><wbr><span class="parameters">(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="sessionCount(long,long,java.util.UUID,java.util.List)">
+<h3>sessionCount</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">sessionCount</span><wbr><span class="parameters">(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</span></div>
 </div>
 </section>
 </li>
