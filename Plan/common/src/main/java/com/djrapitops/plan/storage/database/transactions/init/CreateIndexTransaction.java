@@ -65,6 +65,14 @@ public class CreateIndexTransaction extends Transaction {
         createIndex(ExtensionServerTableValueTable.TABLE_NAME, "plan_extension_server_table_value_server_index",
                 ExtensionServerTableValueTable.TABLE_ID,
                 ExtensionServerTableValueTable.SERVER_UUID);
+
+        createIndex(UserInfoTable.TABLE_NAME, "plan_user_info_server_user",
+                UserInfoTable.SERVER_ID,
+                UserInfoTable.USER_ID);
+        createIndex(SessionsTable.TABLE_NAME, "plan_sessions_server_time_user",
+                SessionsTable.SERVER_ID,
+                SessionsTable.SESSION_START,
+                SessionsTable.SERVER_ID);
     }
 
     private void createIndex(String tableName, String indexName, String... indexedColumns) {

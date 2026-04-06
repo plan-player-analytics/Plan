@@ -144,6 +144,8 @@ public enum WebPermission implements Supplier<String>, Lang {
     DATA_NETWORK_SERVER_PIE("See Server Pie -datapoint of network"),
     DATA_SERVER_UNIQUE_PLAYERS("See Unique players -datapoint of servers"),
     DATA_NETWORK_UNIQUE_PLAYERS("See Unique players -datapoint of network"),
+    DATA_SERVER_REGULAR_PLAYERS("See Regular players -datapoint of servers"),
+    DATA_NETWORK_REGULAR_PLAYERS("See Regular players -datapoint of network"),
     DATA_SERVER_NEW_PLAYERS("See New players -datapoint of servers"),
     DATA_NETWORK_NEW_PLAYERS("See New players -datapoint of network"),
     DATA_PLAYER_SESSION_COUNT("See Session count datapoint of players"),

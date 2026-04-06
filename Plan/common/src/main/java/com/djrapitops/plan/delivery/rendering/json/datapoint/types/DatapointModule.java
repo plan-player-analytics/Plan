@@ -70,6 +70,10 @@ public interface DatapointModule {
 
     @Binds
     @IntoSet
+    Datapoint<?> bindRegularPlayers(RegularPlayers regularPlayers);
+
+    @Binds
+    @IntoSet
     Datapoint<?> bindSessionCount(SessionCount sessionCount);
 
     @Binds

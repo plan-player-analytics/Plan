@@ -39,6 +39,7 @@ public enum DatapointType {
     SERVER_PIE(ServerPie.class, DatapointCacheKey.SESSION),
     UNIQUE_PLAYERS(UniquePlayers.class, DatapointCacheKey.SESSION),
     NEW_PLAYERS(NewPlayers.class, DatapointCacheKey.SESSION),
+    REGULAR_PLAYERS(RegularPlayers.class, DatapointCacheKey.SESSION),
     SESSION_COUNT(SessionCount.class, DatapointCacheKey.SESSION),
     PLAYERS_ONLINE_PEAK(PlayersOnlinePeak.class, DatapointCacheKey.TPS);
 

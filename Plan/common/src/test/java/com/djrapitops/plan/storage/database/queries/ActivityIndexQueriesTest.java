@@ -22,6 +22,7 @@ import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.queries.analysis.ActivityIndexQueries;
+import com.djrapitops.plan.storage.database.queries.analysis.MultiServerActivityIndexQueries;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.NetworkTablePlayersQuery;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.ServerTablePlayersQuery;
@@ -118,6 +119,23 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
                     .append(dbW3).append("ms");
             return errorMsg.toString();
         });
+    }
+
+    @RepeatedTest(value = 20, name = "Multi-server Activity Index calculations match {currentRepetition}/{totalRepetitions}")
+    default void multiServerActivityIndexCalculationsMatch() {
+        storeSessions(session -> true);
+
+        long date = System.currentTimeMillis();
+        long playtimeThreshold = TimeUnit.HOURS.toMillis(5L);
+
+        Integer expected = db().query(ActivityIndexQueries.fetchActivityGroupCount(date, serverUUID(), playtimeThreshold, 1.0, 5.1));
+        Integer result = db().query(MultiServerActivityIndexQueries.fetchActivityGroupCount(date, List.of(serverUUID()), playtimeThreshold, 1.0, 5.1));
+        assertEquals(expected, result);
+
+        double expectedIndex = new ActivityIndex(db().query(SessionQueries.sessionsOfPlayer(playerUUID, 0, Long.MAX_VALUE, List.of(serverUUID()))), date, playtimeThreshold)
+                .getValue();
+        Double resultIndex = db().query(MultiServerActivityIndexQueries.getActivityIndex(date, playtimeThreshold, playerUUID, List.of(serverUUID())));
+        assertEquals(expectedIndex, resultIndex, 0.01);
     }
 
     @RepeatedTest(value = 3, name = "Activity Index calculations match with missing data {currentRepetition}/{totalRepetitions}")
