@@ -204,7 +204,10 @@ class AccessControlTest {
                 Arguments.of("/v1/datapoint?type=UNIQUE_PLAYERS&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
                 Arguments.of("/v1/datapoint?type=NEW_PLAYERS", WebPermission.DATA_NETWORK_NEW_PLAYERS, 200, 403),
                 Arguments.of("/v1/datapoint?type=NEW_PLAYERS&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_NEW_PLAYERS, 200, 403),
-                Arguments.of("/v1/datapoint?type=NEW_PLAYERS&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403)
+                Arguments.of("/v1/datapoint?type=NEW_PLAYERS&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=SESSION_COUNT", WebPermission.DATA_NETWORK_SESSION_COUNT, 200, 403),
+                Arguments.of("/v1/datapoint?type=SESSION_COUNT&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_SESSION_COUNT, 200, 403),
+                Arguments.of("/v1/datapoint?type=SESSION_COUNT&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_SESSION_COUNT, 200, 403)
         );
     }
 

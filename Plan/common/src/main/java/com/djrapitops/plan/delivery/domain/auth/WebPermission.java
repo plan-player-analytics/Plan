@@ -146,6 +146,9 @@ public enum WebPermission implements Supplier<String>, Lang {
     DATA_NETWORK_UNIQUE_PLAYERS("See Unique players -datapoint of network"),
     DATA_SERVER_NEW_PLAYERS("See New players -datapoint of servers"),
     DATA_NETWORK_NEW_PLAYERS("See New players -datapoint of network"),
+    DATA_PLAYER_SESSION_COUNT("See Session count datapoint of players"),
+    DATA_SERVER_SESSION_COUNT("See Session count datapoint of servers"),
+    DATA_NETWORK_SESSION_COUNT("See Session count datapoint of network"),
 
     ACCESS("Controls access to pages"),
     ACCESS_PLAYER("Allows accessing any /player pages"),

@@ -68,4 +68,8 @@ public interface DatapointModule {
     @IntoSet
     Datapoint<?> bindNewPlayers(NewPlayers newPlayers);
 
+    @Binds
+    @IntoSet
+    Datapoint<?> bindSessionCount(SessionCount sessionCount);
+
 }

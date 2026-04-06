@@ -327,43 +327,56 @@ public class SessionQueries {
     }
 
     public static Query<Long> sessionCount(long after, long before, ServerUUID serverUUID) {
-        String sql = SELECT + "COUNT(1) as count" +
-                FROM + SessionsTable.TABLE_NAME + " t" +
-                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SessionsTable.SERVER_ID +
-                WHERE + "s." + ServerTable.SERVER_UUID + "=?" +
-                AND + SessionsTable.SESSION_END + ">=?" +
-                AND + SessionsTable.SESSION_START + "<=?";
-        return new QueryStatement<>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-                statement.setLong(2, after);
-                statement.setLong(3, before);
-            }
-
-            @Override
-            public Long processResults(ResultSet set) throws SQLException {
-                return set.next() ? set.getLong("count") : 0L;
-            }
-        };
+        return sessionCount(after, before, List.of(serverUUID));
     }
 
     public static Query<Long> sessionCount(long after, long before) {
-        String sql = SELECT + "COUNT(1) as count" +
-                FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.SESSION_END + ">=?" +
-                AND + SessionsTable.SESSION_START + "<=?";
-        return new QueryStatement<>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, after);
-                statement.setLong(2, before);
-            }
+        return sessionCount(after, before, List.of());
+    }
 
-            @Override
-            public Long processResults(ResultSet set) throws SQLException {
-                return set.next() ? set.getLong("count") : 0L;
-            }
+    public static Query<Long> sessionCount(long after, long before, List<ServerUUID> serverUUIDs) {
+        return db -> {
+            String sql = SELECT + "COUNT(1) as count" +
+                    FROM + SessionsTable.TABLE_NAME +
+                    WHERE + (!serverUUIDs.isEmpty() ? SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
+                                                      AND : "") + SessionsTable.SESSION_END + ">=?" +
+                    AND + SessionsTable.SESSION_START + "<=?";
+            return db.query(new QueryStatement<>(sql) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, after);
+                    statement.setLong(2, before);
+                }
+
+                @Override
+                public Long processResults(ResultSet set) throws SQLException {
+                    return set.next() ? set.getLong("count") : 0L;
+                }
+            });
+        };
+    }
+
+    public static Query<Long> sessionCount(long after, long before, UUID playerUUID, List<ServerUUID> serverUUIDs) {
+        return db -> {
+            String sql = SELECT + "COUNT(1) as count" +
+                    FROM + SessionsTable.TABLE_NAME +
+                    WHERE + (!serverUUIDs.isEmpty() ? SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
+                                                      AND : "") + SessionsTable.SESSION_END + ">=?" +
+                    AND + SessionsTable.SESSION_START + "<=?" +
+                    AND + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID;
+            return db.query(new QueryStatement<>(sql) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, after);
+                    statement.setLong(2, before);
+                    statement.setString(3, playerUUID.toString());
+                }
+
+                @Override
+                public Long processResults(ResultSet set) throws SQLException {
+                    return set.next() ? set.getLong("count") : 0L;
+                }
+            });
         };
     }
 
