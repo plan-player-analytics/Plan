@@ -118,9 +118,9 @@ public class SessionPlaceHolders implements Placeholders {
         placeholders.registerStatic("sessions_peak_date",
                 parameters -> database.query(TPSQueries.fetchAllTimePeakPlayerCount(getServerUUID(parameters))).map(year).orElse("-"));
         placeholders.registerStatic("sessions_recent_peak_count",
-                parameters -> database.query(TPSQueries.fetchPeakPlayerCount(getServerUUID(parameters), now() - TimeUnit.DAYS.toMillis(2L))).map(DateObj::getValue).orElse(0));
+                parameters -> database.query(TPSQueries.fetchPeakPlayerCount(getServerUUID(parameters), now() - TimeUnit.DAYS.toMillis(2L), Long.MAX_VALUE)).map(DateObj::getValue).orElse(0));
         placeholders.registerStatic("sessions_recent_peak_date",
-                parameters -> database.query(TPSQueries.fetchPeakPlayerCount(getServerUUID(parameters), now() - TimeUnit.DAYS.toMillis(2L))).map(year).orElse("-"));
+                parameters -> database.query(TPSQueries.fetchPeakPlayerCount(getServerUUID(parameters), now() - TimeUnit.DAYS.toMillis(2L), Long.MAX_VALUE)).map(year).orElse("-"));
     }
 
     private void registerPing(PlanPlaceholders placeholders) {

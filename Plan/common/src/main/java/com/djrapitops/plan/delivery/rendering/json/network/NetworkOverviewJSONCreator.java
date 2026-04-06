@@ -111,7 +111,7 @@ public class NetworkOverviewJSONCreator implements NetworkTabJSONCreator<Map<Str
         numbers.put("regular_players", db.query(NetworkActivityIndexQueries.fetchRegularPlayerCount(now, playtimeThreshold)));
         numbers.put("online_players", serverSensor.getOnlinePlayerCount());
         ServerUUID serverUUID = serverInfo.getServerUUID();
-        Optional<DateObj<Integer>> lastPeak = db.query(TPSQueries.fetchPeakPlayerCount(serverUUID, twoDaysAgo));
+        Optional<DateObj<Integer>> lastPeak = db.query(TPSQueries.fetchPeakPlayerCount(serverUUID, twoDaysAgo, Long.MAX_VALUE));
         Optional<DateObj<Integer>> allTimePeak = db.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID));
         numbers.put("last_peak_date", lastPeak.map(DateObj::getDate).map(Object.class::cast).orElse("-"));
         numbers.put("last_peak_players", lastPeak.map(dateObj -> dateObj.getValue().toString()).orElse("-"));

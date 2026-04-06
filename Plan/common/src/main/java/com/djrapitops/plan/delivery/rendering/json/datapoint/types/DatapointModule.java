@@ -72,4 +72,8 @@ public interface DatapointModule {
     @IntoSet
     Datapoint<?> bindSessionCount(SessionCount sessionCount);
 
+    @Binds
+    @IntoSet
+    Datapoint<?> bindPlayerOnlinePeak(PlayersOnlinePeak playersOnlinePeak);
+
 }

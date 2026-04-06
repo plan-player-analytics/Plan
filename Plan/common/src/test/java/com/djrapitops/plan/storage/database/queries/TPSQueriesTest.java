@@ -171,7 +171,7 @@ public interface TPSQueriesTest extends DatabaseTestPreparer {
 
         tpsData.sort(Comparator.comparingInt(TPS::getPlayers));
         int expected = tpsData.get(tpsData.size() - 1).getPlayers();
-        int actual = db().query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID())).map(DateObj::getValue).orElse(-1);
+        int actual = db().query(TPSQueries.fetchPeakPlayerCount(serverUUID(), 0, Long.MAX_VALUE)).map(DateObj::getValue).orElse(-1);
         assertEquals(expected, actual, () -> "Wrong return value. " + Lists.map(tpsData, TPS::getPlayers).toString());
     }
 

@@ -20,11 +20,13 @@ import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.extension.Caller;
+import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.changes.ConfigUpdater;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.storage.database.queries.ExtensionsDatabaseTest;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
@@ -207,7 +209,10 @@ class AccessControlTest {
                 Arguments.of("/v1/datapoint?type=NEW_PLAYERS&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
                 Arguments.of("/v1/datapoint?type=SESSION_COUNT", WebPermission.DATA_NETWORK_SESSION_COUNT, 200, 403),
                 Arguments.of("/v1/datapoint?type=SESSION_COUNT&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_SESSION_COUNT, 200, 403),
-                Arguments.of("/v1/datapoint?type=SESSION_COUNT&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_SESSION_COUNT, 200, 403)
+                Arguments.of("/v1/datapoint?type=SESSION_COUNT&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_SESSION_COUNT, 200, 403),
+                Arguments.of("/v1/datapoint?type=PLAYERS_ONLINE_PEAK", WebPermission.DATA_NETWORK_PLAYERS_ONLINE_PEAK, 200, 403),
+                Arguments.of("/v1/datapoint?type=PLAYERS_ONLINE_PEAK&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_PLAYERS_ONLINE_PEAK, 200, 403),
+                Arguments.of("/v1/datapoint?type=PLAYERS_ONLINE_PEAK&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403)
         );
     }
 
@@ -244,6 +249,9 @@ class AccessControlTest {
                 TestConstants.SERVER_NAME,
                 address,
                 TestConstants.VERSION)));
+        for (TPS tps : RandomData.randomTPS()) {
+            database.executeInTransaction(DataStoreQueries.storeTPS(TestConstants.SERVER_UUID, tps));
+        }
 
         Caller caller = system.getApiServices().getExtensionService().register(new ExtensionsDatabaseTest.PlayerExtension())
                 .orElseThrow(AssertionError::new);

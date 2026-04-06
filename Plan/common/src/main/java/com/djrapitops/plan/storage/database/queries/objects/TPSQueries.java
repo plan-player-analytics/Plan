@@ -275,28 +275,104 @@ public class TPSQueries {
         };
     }
 
-    public static Query<Optional<DateObj<Integer>>> fetchPeakPlayerCount(ServerUUID serverUUID, long afterDate) {
+    public static Query<Optional<DateObj<Integer>>> fetchPeakPlayerCount(ServerUUID serverUUID, long afterDate, long beforeDate) {
+        return fetchPeakPlayerCount(Collections.singletonList(serverUUID), afterDate, beforeDate);
+    }
+
+    public static Query<Optional<DateObj<Integer>>> fetchPeakPlayerCount(List<ServerUUID> serverUUIDs, long afterDate, long beforeDate) {
+        if (serverUUIDs.isEmpty()) {
+            return db -> Optional.empty();
+        }
+
         String subQuery = '(' + SELECT + "MAX(" + PLAYERS_ONLINE + ") as " + PLAYERS_ONLINE + FROM + TABLE_NAME + " t2" +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s2 ON s2." + ServerTable.ID + "=t2." + SERVER_ID +
-                WHERE + "s2." + ServerTable.SERVER_UUID + "=?" +
+                WHERE + "s2." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
                 AND + DATE + ">= ?" +
+                AND + DATE + "<= ?" +
                 GROUP_BY + "t2." + SERVER_ID + ")";
         String sql = SELECT +
                 "t." + DATE + ',' + "t." + PLAYERS_ONLINE +
                 FROM + TABLE_NAME + " t" +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
                 INNER_JOIN + subQuery + " max on t." + PLAYERS_ONLINE + "=max." + PLAYERS_ONLINE +
-                WHERE + "s." + ServerTable.SERVER_UUID + "=?" +
+                WHERE + "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
                 AND + "t." + DATE + ">= ?" +
+                AND + "t." + DATE + "<= ?" +
                 ORDER_BY + "t." + DATE + " DESC LIMIT 1";
 
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
+                statement.setLong(1, afterDate);
+                statement.setLong(2, beforeDate);
+                statement.setLong(3, afterDate);
+                statement.setLong(4, beforeDate);
+            }
+
+            @Override
+            public Optional<DateObj<Integer>> processResults(ResultSet set) throws SQLException {
+                if (set.next()) {
+                    return Optional.of(new DateObj<>(
+                            set.getLong(DATE),
+                            set.getInt(PLAYERS_ONLINE)
+                    ));
+                }
+                return Optional.empty();
+            }
+        };
+    }
+
+    public static Query<Optional<DateObj<Integer>>> fetchNetworkPeakPlayerCount(long afterDate, long beforeDate, boolean onlyOneProxy) {
+        String subQuery;
+        if (onlyOneProxy) {
+            subQuery = '(' + SELECT + "MAX(" + PLAYERS_ONLINE + ") as " + PLAYERS_ONLINE + FROM + TABLE_NAME + " t2" +
+                    INNER_JOIN + ServerTable.TABLE_NAME + " s2 ON s2." + ServerTable.ID + "=t2." + SERVER_ID +
+                    WHERE + "s2." + ServerTable.PROXY + "=?" +
+                    AND + DATE + ">= ?" +
+                    AND + DATE + "<= ?" +
+                    GROUP_BY + "t2." + SERVER_ID + ")";
+        } else {
+            subQuery = '(' + SELECT + "MAX(network_players) as " + PLAYERS_ONLINE + FROM +
+                    '(' + SELECT + "SUM(" + PLAYERS_ONLINE + ") as network_players" + FROM + TABLE_NAME + " t3" +
+                    INNER_JOIN + ServerTable.TABLE_NAME + " s3 ON s3." + ServerTable.ID + "=t3." + SERVER_ID +
+                    WHERE + "s3." + ServerTable.PROXY + "=?" +
+                    AND + DATE + ">= ?" +
+                    AND + DATE + "<= ?" +
+                    GROUP_BY + DATE + ") as network_counts" + ')';
+        }
+
+        String sql;
+        if (onlyOneProxy) {
+            sql = SELECT +
+                    "t." + DATE + ',' + "t." + PLAYERS_ONLINE +
+                    FROM + TABLE_NAME + " t" +
+                    INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
+                    INNER_JOIN + subQuery + " max on t." + PLAYERS_ONLINE + "=max." + PLAYERS_ONLINE +
+                    WHERE + "s." + ServerTable.PROXY + "=?" +
+                    AND + "t." + DATE + ">= ?" +
+                    AND + "t." + DATE + "<= ?" +
+                    ORDER_BY + "t." + DATE + " DESC LIMIT 1";
+        } else {
+            sql = SELECT + DATE + ", network_players as " + PLAYERS_ONLINE + FROM +
+                    '(' + SELECT + DATE + ", SUM(" + PLAYERS_ONLINE + ") as network_players" + FROM + TABLE_NAME + " t" +
+                    INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
+                    WHERE + "s." + ServerTable.PROXY + "=?" +
+                    AND + "t." + DATE + ">= ?" +
+                    AND + "t." + DATE + "<= ?" +
+                    GROUP_BY + DATE + ") as network_counts" +
+                    INNER_JOIN + subQuery + " max on network_players=max." + PLAYERS_ONLINE +
+                    ORDER_BY + DATE + " DESC LIMIT 1";
+        }
+
+        return new QueryStatement<>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setBoolean(1, true);
                 statement.setLong(2, afterDate);
-                statement.setString(3, serverUUID.toString());
-                statement.setLong(4, afterDate);
+                statement.setLong(3, beforeDate);
+                statement.setBoolean(4, true);
+                statement.setLong(5, afterDate);
+                statement.setLong(6, beforeDate);
             }
 
             @Override
@@ -313,7 +389,7 @@ public class TPSQueries {
     }
 
     public static Query<Optional<DateObj<Integer>>> fetchAllTimePeakPlayerCount(ServerUUID serverUUID) {
-        return fetchPeakPlayerCount(serverUUID, 0);
+        return fetchPeakPlayerCount(serverUUID, 0, Long.MAX_VALUE);
     }
 
     public static Query<Optional<TPS>> fetchLatestTPSEntryForServer(ServerUUID serverUUID) {

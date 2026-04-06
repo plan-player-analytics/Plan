@@ -283,7 +283,7 @@ public class JSONFactory {
                     server.put("serverUUID", entry.getValue().getUuid().toString());
                     server.put("playersOnlineColor", "#1E90FF");
 
-                    Optional<DateObj<Integer>> recentPeak = db.query(TPSQueries.fetchPeakPlayerCount(serverUUID, now - TimeUnit.DAYS.toMillis(2L)));
+                    Optional<DateObj<Integer>> recentPeak = db.query(TPSQueries.fetchPeakPlayerCount(serverUUID, now - TimeUnit.DAYS.toMillis(2L), Long.MAX_VALUE));
                     Optional<DateObj<Integer>> allTimePeak = db.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID));
                     server.put("last_peak_date", recentPeak.map(DateObj::getDate).map(Object.class::cast).orElse("-"));
                     server.put("best_peak_date", allTimePeak.map(DateObj::getDate).map(Object.class::cast).orElse("-"));
