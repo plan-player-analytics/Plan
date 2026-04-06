@@ -49,11 +49,6 @@ subprojects {
     apply plugin: "checkstyle"
     apply plugin: "jacoco"
 
-    compileJava {
-        options.release = 11
-        sourceCompatibility = "${JavaVersion.VERSION_11}"
-    }
-
     ext {
         daggerVersion = "2.59.2"
 
@@ -146,8 +141,14 @@ subprojects {
         }
     }
 
-    // Fix for UTF-8 files showing with wrong encoding when compiled on Windows machines.
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(25)
+        }
+    }
+
     tasks.withType(JavaCompile).configureEach {
+        options.release = 25
         options.encoding = "UTF-8"
         options.fork = true
     }
