@@ -72,7 +72,7 @@ public class CreateIndexTransaction extends Transaction {
         createIndex(SessionsTable.TABLE_NAME, "plan_sessions_server_time_user",
                 SessionsTable.SERVER_ID,
                 SessionsTable.SESSION_START,
-                SessionsTable.SERVER_ID);
+                SessionsTable.USER_ID);
     }
 
     private void createIndex(String tableName, String indexName, String... indexedColumns) {
