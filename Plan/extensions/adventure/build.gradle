@@ -12,6 +12,10 @@ dependencies {
     api "net.kyori:adventure-text-minimessage:$adventureVersion"
 }
 
+compileJava {
+    options.release = 11
+}
+
 tasks.named("shadowJar", ShadowJar) {
     relocate "net.kyori", "plan.net.kyori"
 }

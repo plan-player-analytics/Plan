@@ -76,6 +76,6 @@ minecraft {
     platform(MinecraftPlatform.SERVER)
 }
 
-tasks.withType(JavaCompile).configureEach {
-    options.release.set(21)
+compileJava {
+    options.release = 21
 }

@@ -43,6 +43,6 @@ dependencies {
     testImplementation(project(":extensions:adventure"))
 }
 
-tasks.withType(JavaCompile).configureEach {
-    options.release.set(21)
+compileJava {
+    options.release = 21
 }

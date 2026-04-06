@@ -9,10 +9,6 @@ plugins {
     id "io.swagger.core.v3.swagger-gradle-plugin" version "2.2.46"
 }
 
-compileTestFixturesJava {
-    sourceCompatibility = "${JavaVersion.VERSION_17}"
-}
-
 configurations {
     // Runtime downloading scopes
     mysqlDriver
@@ -120,6 +116,10 @@ dependencies {
 
     testImplementation "com.google.dagger:dagger:$daggerVersion"
     testAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
+}
+
+compileJava {
+    options.release = 11
 }
 
 test {
