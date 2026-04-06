@@ -20,7 +20,7 @@ const ExtraLabel = ({valueLabel}: { valueLabel: string | ReactNode }) => {
 export type DatapointProps = {
     icon: IconProp;
     color: string;
-    name: string;
+    name: string | ReactNode;
     value: any;
     valueLabel?: string | ReactNode;
     prefix?: string;

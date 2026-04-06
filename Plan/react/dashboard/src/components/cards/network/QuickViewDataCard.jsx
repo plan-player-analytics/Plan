@@ -12,7 +12,7 @@ import {
 import {useTranslation} from "react-i18next";
 import Datapoint from "../../datapoint/Datapoint.tsx";
 import CurrentUptime from "../../datapoint/CurrentUptime";
-import FormattedDate from "../../text/FormattedDate.jsx";
+import FormattedDate from "../../text/FormattedDate.tsx";
 import FormattedTime from "../../text/FormattedTime.jsx";
 
 const QuickViewDataCard = ({server}) => {

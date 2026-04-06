@@ -10,7 +10,7 @@ import {MinecraftChat} from "react-mcjsonchat";
 import ColoredText from "../text/ColoredText";
 import {Link} from "react-router";
 import FormattedTime from "../text/FormattedTime.jsx";
-import FormattedDate from "../text/FormattedDate.jsx";
+import FormattedDate from "../text/FormattedDate.tsx";
 import {useTranslation} from "react-i18next";
 
 export const ExtensionCardWrapper = ({extension, children}) => {

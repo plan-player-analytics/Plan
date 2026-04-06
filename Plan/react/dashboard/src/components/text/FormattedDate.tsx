@@ -1,7 +1,13 @@
 import React from 'react';
 import {useDateFormatter} from "../../util/format/useDateFormatter.js";
 
-const FormattedDate = ({date, react, includeSeconds}) => {
+type Props = {
+    date: number;
+    react?: boolean;
+    includeSeconds?: boolean;
+}
+
+const FormattedDate = ({date, react, includeSeconds}: Props) => {
     const {formatDate} = useDateFormatter(includeSeconds);
 
     if (react) {

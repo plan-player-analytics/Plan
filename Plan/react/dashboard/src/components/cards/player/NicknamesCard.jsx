@@ -7,7 +7,7 @@ import Scrollable from "../../Scrollable";
 import {faClock} from "@fortawesome/free-regular-svg-icons";
 import React from "react";
 import ColoredText from "../../text/ColoredText";
-import FormattedDate from "../../text/FormattedDate.jsx";
+import FormattedDate from "../../text/FormattedDate.tsx";
 
 const NicknamesCard = ({nicknames}) => {
     const {t} = useTranslation();

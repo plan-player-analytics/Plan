@@ -18,6 +18,8 @@ import {useDecimalFormatter} from "../../util/format/useDecimalFormatter";
 import {isOutOf, OutOf} from "../../dataHooks/model/datapoint/OutOf";
 import {isOutOfCategory, OutOfCategory} from "../../dataHooks/model/datapoint/OutOfCategory";
 import {useTranslation} from "react-i18next";
+import {DateObj, isDateObj} from "../../dataHooks/model/datapoint/DateObj";
+import FormattedDate from "../text/FormattedDate";
 
 type Props<K extends DatapointType> = {
     dataType: K;
@@ -68,6 +70,9 @@ function Format<K extends DatapointType>({value, formatType}: FormatProps<K>) {
             if (isOutOfCategory(value)) {
                 return <FormattedOutOfCategory outOf={value as OutOfCategory}/>;
             }
+            if (isDateObj(value)) {
+                return (value as DateObj).value;
+            }
             return String(value);
         case "NONE":
         default:
@@ -100,9 +105,13 @@ export function QueryDatapoint<K extends DatapointType>({permission, dataType, f
     }
 
     const cast = data as Datapoint<K>;
+
+    const name = cast && isDateObj(cast.value) ? <>{props.name} (<FormattedDate
+        date={(cast.value as DateObj).date}/>)</> : props.name
+
     return <DatapointComponent
         {...props}
-        title={props.name}
+        name={name}
         value={cast ? <Format value={cast.value} formatType={cast.formatType}/> : <Loader/>}
     />
 }

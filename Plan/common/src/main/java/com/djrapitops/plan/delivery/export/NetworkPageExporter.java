@@ -133,6 +133,7 @@ public class NetworkPageExporter extends FileExporter {
                 "retention",
                 "joinAddresses",
                 "playersTable",
+                datapointType + DatapointType.PLAYTIME.name(),
                 datapointType + DatapointType.PLAYTIME.name() + after,
                 datapointType + DatapointType.AFK_TIME.name() + after,
                 datapointType + DatapointType.AFK_TIME_PERCENTAGE.name() + after,
@@ -143,9 +144,15 @@ public class NetworkPageExporter extends FileExporter {
                 datapointType + DatapointType.UNIQUE_PLAYERS.name() + afterMillis + TimeUnit.DAYS.toMillis(30),
                 datapointType + DatapointType.UNIQUE_PLAYERS.name() + afterMillis + TimeUnit.DAYS.toMillis(7),
                 datapointType + DatapointType.UNIQUE_PLAYERS.name() + afterMillis + TimeUnit.DAYS.toMillis(1),
+                datapointType + DatapointType.NEW_PLAYERS.name(),
                 datapointType + DatapointType.NEW_PLAYERS.name() + afterMillis + TimeUnit.DAYS.toMillis(30),
                 datapointType + DatapointType.NEW_PLAYERS.name() + afterMillis + TimeUnit.DAYS.toMillis(7),
-                datapointType + DatapointType.NEW_PLAYERS.name() + afterMillis + TimeUnit.DAYS.toMillis(1)
+                datapointType + DatapointType.NEW_PLAYERS.name() + afterMillis + TimeUnit.DAYS.toMillis(1),
+                datapointType + DatapointType.REGULAR_PLAYERS.name(),
+                datapointType + DatapointType.PLAYERS_ONLINE_PEAK + afterMillis + TimeUnit.DAYS.toMillis(2),
+                datapointType + DatapointType.PLAYERS_ONLINE_PEAK,
+                datapointType + DatapointType.SESSION_COUNT,
+                datapointType + DatapointType.SESSION_COUNT + after
         );
     }
 

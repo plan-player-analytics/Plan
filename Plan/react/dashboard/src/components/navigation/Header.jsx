@@ -8,7 +8,7 @@ import {localeService} from "../../service/localeService";
 import {useTranslation} from "react-i18next";
 import {useNavigation} from "../../hooks/navigationHook.tsx";
 import {baseAddress, staticSite} from "../../service/backendConfiguration";
-import FormattedDate from "../text/FormattedDate";
+import FormattedDate from "../text/FormattedDate.tsx";
 
 const LanguageSelector = () => {
     const languages = localeService.getLanguages();
@@ -72,9 +72,7 @@ const Header = ({page, tab, hideUpdater}) => {
                     {authRequired && user ? <>
                         <span className="me-1 login-username">{user.username} </span>
                         <img alt="user img" className="rounded-circle" src={headImageUrl} style={{height: "2rem"}}/>
-                    </> : <>
-                        <Fa icon={faCog} className="me-2"/>
-                    </>}
+                    </> : <Fa icon={faCog} className="me-2"/>}
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>

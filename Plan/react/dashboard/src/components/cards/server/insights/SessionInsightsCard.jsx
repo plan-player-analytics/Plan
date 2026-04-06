@@ -2,7 +2,7 @@ import React from "react";
 import InsightsFor30DaysCard from "../../common/InsightsFor30DaysCard";
 import {useTranslation} from "react-i18next";
 import {faGamepad, faUsers} from "@fortawesome/free-solid-svg-icons";
-import {faClock} from "@fortawesome/free-regular-svg-icons";
+import {faCalendarCheck, faClock} from "@fortawesome/free-regular-svg-icons";
 import {useGenericFilter} from "../../../../dataHooks/genericFilterContextHook.tsx";
 import {QueryDatapoint, QueryDatapointValue} from "../../../datapoint/QueryDatapoint.tsx";
 import {DatapointType} from "../../../../dataHooks/model/datapoint/Datapoint.ts";
@@ -32,6 +32,10 @@ const SessionInsightsCard = ({identifier}) => {
                                            icon={faUsers} color="sessions" prefix={'~'}
                                            dataType={DatapointType.SERVER_OCCUPIED}
                                            filter={filter}/>}
+            <QueryDatapoint name={t('html.label.sessions')}
+                            icon={faCalendarCheck} color="sessions"
+                            dataType={DatapointType.SESSION_COUNT}
+                            filter={filter}/>
             <QueryDatapoint name={t('html.label.playtime')}
                             icon={faClock} color="playtime"
                             dataType={DatapointType.PLAYTIME}

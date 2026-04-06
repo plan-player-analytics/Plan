@@ -19,6 +19,9 @@ export enum DatapointType {
     SERVER_PIE = 'SERVER_PIE',
     UNIQUE_PLAYERS = "UNIQUE_PLAYERS",
     NEW_PLAYERS = "NEW_PLAYERS",
+    REGULAR_PLAYERS = "REGULAR_PLAYERS",
+    PLAYERS_ONLINE_PEAK = "PLAYERS_ONLINE_PEAK",
+    SESSION_COUNT = "SESSION_COUNT",
 }
 
 export type DatapointTypeMap = {
@@ -28,10 +31,13 @@ export type DatapointTypeMap = {
     AFK_TIME_PERCENTAGE: number;
     UNIQUE_PLAYERS: number;
     NEW_PLAYERS: number;
+    REGULAR_PLAYERS: number;
+    SESSION_COUNT: number;
     SERVER_OCCUPIED: OutOf;
     MOST_ACTIVE_WORLD: OutOfCategory;
     MOST_ACTIVE_GAME_MODE: OutOfCategory;
     SERVER_PIE: ServerPie;
+    PLAYERS_ONLINE_PEAK: { date: number, value: number };
 }
 
 export type Datapoint<K extends keyof DatapointTypeMap> = {

@@ -56,7 +56,7 @@ public class PlayersOnlinePeak implements Datapoint<DateObj<Long>> {
             throw new BadRequestException("PLAYERS_ONLINE_PEAK does not support player parameter");
         }
 
-        return Optional.of(getPeak(filter).orElse(new DateObj<>(0L, -1L)));
+        return Optional.of(getPeak(filter).orElse(new DateObj<>(0L, 0L)));
     }
 
     private @NonNull Optional<DateObj<Long>> getPeak(GenericFilter filter) {

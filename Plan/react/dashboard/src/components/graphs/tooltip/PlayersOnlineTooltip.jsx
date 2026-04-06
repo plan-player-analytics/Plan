@@ -2,7 +2,7 @@ import {useTranslation} from "react-i18next";
 import React, {useCallback, useEffect, useMemo, useState} from "react";
 import {fetchPlayersOnline} from "../../../service/serverService.js";
 import {Card, CardBody} from "react-bootstrap";
-import FormattedDate from "../../text/FormattedDate.jsx";
+import FormattedDate from "../../text/FormattedDate.tsx";
 
 export const useTooltipOptions = (showPlayersOnline, setHoveredDate) => {
     return useMemo(() => {

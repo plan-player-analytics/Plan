@@ -121,6 +121,7 @@ public class ServerPageExporter extends FileExporter {
         String datapointType = "datapoint?type=";
         String after = "&after=" + monthAgo;
         String server = "&server=" + serverUUID;
+        String afterMillis = "&afterMillisAgo=";
         exportJSON(toDirectory,
                 "serverOverview?server=" + serverUUID,
                 "onlineOverview?server=" + serverUUID,
@@ -146,12 +147,19 @@ public class ServerPageExporter extends FileExporter {
                 "retention?server=" + serverUUID,
                 "joinAddresses?server=" + serverUUID,
                 "gameAllowlistBounces?server=" + serverUUID,
+                datapointType + DatapointType.PLAYTIME.name() + server,
                 datapointType + DatapointType.PLAYTIME.name() + after + server,
                 datapointType + DatapointType.AFK_TIME.name() + after + server,
                 datapointType + DatapointType.AFK_TIME_PERCENTAGE.name() + after + server,
                 datapointType + DatapointType.SERVER_OCCUPIED.name() + after + server,
                 datapointType + DatapointType.MOST_ACTIVE_GAME_MODE.name() + after + server,
-                datapointType + DatapointType.WORLD_PIE.name() + server
+                datapointType + DatapointType.WORLD_PIE.name() + server,
+                datapointType + DatapointType.NEW_PLAYERS.name() + server,
+                datapointType + DatapointType.REGULAR_PLAYERS.name() + server,
+                datapointType + DatapointType.PLAYERS_ONLINE_PEAK + afterMillis + TimeUnit.DAYS.toMillis(2) + server,
+                datapointType + DatapointType.PLAYERS_ONLINE_PEAK + server,
+                datapointType + DatapointType.SESSION_COUNT + server,
+                datapointType + DatapointType.SESSION_COUNT + after + server
         );
     }
 
