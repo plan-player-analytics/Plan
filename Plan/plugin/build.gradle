@@ -13,13 +13,10 @@ dependencies {
     implementation project(":common")
     implementation project(":bukkit")
     implementation project(":nukkit")
-    implementation project(path: ":sponge", configuration: "shadow")
+    implementation project(":sponge")
     implementation project(":bungeecord")
-    // Shadow configuration required to depend on Velocity due to newer Java version
-    implementation project(path: ":velocity", configuration: "shadow")
-
-    // Shadow configuration required to depend on Folia due to newer Java version
-    implementation project(path: ":folia", configuration: "shadow")
+    implementation project(":velocity")
+    implementation project(":folia")
 
     // Shadow configuration required to only relocate adventure calls in ComponentConverter, not whole plugin
     implementation project(path: ":extensions:adventure", configuration: "shadow")

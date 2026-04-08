@@ -7,9 +7,17 @@ apply plugin: "com.gradleup.shadow"
 
 dependencies {
     compileOnly project(":common")
-    api "net.kyori:adventure-text-serializer-gson:$adventureVersion"
+    api("net.kyori:adventure-text-serializer-gson:$adventureVersion") {
+        // Exclude Gson to use our version and not double-shade
+        // a potentially older version when building :plugin module
+        exclude(group: "com.google.code.gson", module: "gson")
+    }
     api "net.kyori:adventure-text-serializer-legacy:$adventureVersion"
     api "net.kyori:adventure-text-minimessage:$adventureVersion"
+}
+
+compileJava {
+    options.release = 11
 }
 
 tasks.named("shadowJar", ShadowJar) {

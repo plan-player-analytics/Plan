@@ -38,9 +38,8 @@ dependencies {
     testImplementation(project(":extensions:adventure"))
 }
 
-tasks.withType(JavaCompile).configureEach {
-    options.release.set(25)
-    sourceCompatibility = "${JavaVersion.VERSION_25}"
+compileJava {
+    options.release = 25
 }
 
 processResources {

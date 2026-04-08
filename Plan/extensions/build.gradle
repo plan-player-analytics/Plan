@@ -47,3 +47,7 @@ dependencies {
     implementation "net.playeranalytics:Extension-Vault:1.7-R1.3"
     implementation "net.playeranalytics:Extension-ViaVersion:4.0.1-R1.5"
 }
+
+compileJava {
+    options.release = 11
+}
