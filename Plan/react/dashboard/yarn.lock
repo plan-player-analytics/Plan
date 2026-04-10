@@ -655,6 +655,11 @@
   resolved "https://registry.yarnpkg.com/@types/warning/-/warning-3.0.3.tgz#d1884c8cc4a426d1ac117ca2611bf333834c6798"
   integrity sha512-D1XC7WK8K+zZEveUPY+cf4+kgauk8N4eHr/XIHXGlGYkHLud6hK9lYfZk1ry1TNh798cZUCgb6MqGEG8DkJt6Q==
 
+"@uiw/color-convert@2.10.1":
+  version "2.10.1"
+  resolved "https://registry.yarnpkg.com/@uiw/color-convert/-/color-convert-2.10.1.tgz#9b7cf1a97bd051c1c926fad2123b8c554721ab1b"
+  integrity sha512-/Z3YfBiX+SErRM59yQH88Id+Xy/k10nnkfTuqhX6RB2yYUcG57DoFqb6FudhiQ5fwzKvKf1k4xq9lfT1UTFUKQ==
+
 "@uiw/color-convert@2.9.6":
   version "2.9.6"
   resolved "https://registry.yarnpkg.com/@uiw/color-convert/-/color-convert-2.9.6.tgz#d0ac52b061e28a1e090f200092b91b80d24558a9"
@@ -734,13 +739,18 @@
   dependencies:
     "@uiw/color-convert" "2.9.6"
 
-"@uiw/react-color-wheel@2.9.6":
-  version "2.9.6"
-  resolved "https://registry.yarnpkg.com/@uiw/react-color-wheel/-/react-color-wheel-2.9.6.tgz#dd103c7f8345a5c66324db4831c0fc24a5c479d9"
-  integrity sha512-a2qw544xrdVBfl2TY1VlmhLM4PMAN/pl1FLdAlSSy8u1xl1f851n9C3lze/9myQwnPO500NfQ8gcXq40nPEqPw==
+"@uiw/react-color-wheel@2.10.1":
+  version "2.10.1"
+  resolved "https://registry.yarnpkg.com/@uiw/react-color-wheel/-/react-color-wheel-2.10.1.tgz#8c34df71a3337538c1915548b1800403f949390f"
+  integrity sha512-LnO7CAsfSDfOSUFUeedNycVtx+ODpkGgcgxAT4QindU2BplTcl3mxQJxC1SIszq9zFdGK+1nXhG8N8ZmgvmVYw==
   dependencies:
-    "@uiw/color-convert" "2.9.6"
-    "@uiw/react-drag-event-interactive" "2.9.6"
+    "@uiw/color-convert" "2.10.1"
+    "@uiw/react-drag-event-interactive" "2.10.1"
+
+"@uiw/react-drag-event-interactive@2.10.1":
+  version "2.10.1"
+  resolved "https://registry.yarnpkg.com/@uiw/react-drag-event-interactive/-/react-drag-event-interactive-2.10.1.tgz#d8d0e49c83ddc7a2553f34934d2034f255170a3c"
+  integrity sha512-eArtX/XdSrg5aQs8CV0vne9vChybw2GkNZCP9H68zjBBzucuYgjURqKBJ/+3jid06YpRZ5zz/YTnAlySqOt0Ag==
 
 "@uiw/react-drag-event-interactive@2.9.6":
   version "2.9.6"
