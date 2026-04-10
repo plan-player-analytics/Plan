@@ -184,6 +184,7 @@ tasks.register("copyYarnBuildResults") {
     dependsOn bundle
     doLast {
         mkdir "$rootDir/common/build/resources/main/assets/plan/web"
+        delete "$rootDir/common/build/resources/main/assets/plan/web/static"
         copy {
             from "$rootDir/react/dashboard/build"
             into "$rootDir/common/build/resources/main/assets/plan/web"
