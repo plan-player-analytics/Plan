@@ -6,7 +6,15 @@ import {baseAddress, staticSite} from "../../../service/backendConfiguration";
 import {filterToQueryString, GenericFilter} from "../GenericFilter";
 import {MS_24H, MS_WEEK} from "../../../util/format/useDateFormatter";
 
-export type FormatType = 'NONE' | 'TIME_AMOUNT' | 'TIME_SINCE' | 'DATE' | 'PERCENTAGE' | 'BYTES' | 'SPECIAL';
+export type FormatType =
+    'NONE'
+    | 'TIME_AMOUNT'
+    | 'TIME_SINCE'
+    | 'DATE'
+    | 'DECIMAL'
+    | 'PERCENTAGE'
+    | 'BYTES'
+    | 'SPECIAL';
 
 export enum DatapointType {
     WORLD_PIE = 'WORLD_PIE',
@@ -29,6 +37,7 @@ export enum DatapointType {
     DEATHS = "DEATHS",
     PLAYER_KILLS = "PLAYER_KILLS",
     MOB_KILLS = "MOB_KILLS",
+    AVERAGE_TPS = "AVERAGE_TPS",
 }
 
 export type DatapointTypeMap = {
@@ -47,6 +56,7 @@ export type DatapointTypeMap = {
     DEATHS: number;
     PLAYER_KILLS: number;
     MOB_KILLS: number;
+    AVERAGE_TPS: number;
     SERVER_OCCUPIED: OutOf;
     MOST_ACTIVE_WORLD: OutOfCategory;
     MOST_ACTIVE_GAME_MODE: OutOfCategory;

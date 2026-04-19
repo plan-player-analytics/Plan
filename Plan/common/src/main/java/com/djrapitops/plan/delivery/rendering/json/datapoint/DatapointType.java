@@ -48,7 +48,8 @@ public enum DatapointType {
     CURRENT_UPTIME(CurrentUptime.class),
     MOB_KILLS(MobKills.class, DatapointCacheKey.SESSION),
     PLAYER_KILLS(PlayerKills.class, DatapointCacheKey.SESSION),
-    DEATHS(Deaths.class, DatapointCacheKey.SESSION);
+    DEATHS(Deaths.class, DatapointCacheKey.SESSION),
+    AVERAGE_TPS(AverageTPS.class, DatapointCacheKey.TPS);
 
     private final Class<? extends Datapoint<?>> datapointClass;
     private final DatapointCacheKey[] cacheKeys;

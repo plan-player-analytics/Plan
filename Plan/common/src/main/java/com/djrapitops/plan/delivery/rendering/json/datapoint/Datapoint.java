@@ -43,6 +43,6 @@ public interface Datapoint<T> {
         PERCENTAGE,
         BYTES,
         SPECIAL,
-        NONE
+        DECIMAL, NONE
     }
 }

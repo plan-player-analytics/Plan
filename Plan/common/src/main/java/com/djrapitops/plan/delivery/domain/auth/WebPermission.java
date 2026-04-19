@@ -171,6 +171,7 @@ public enum WebPermission implements Supplier<String>, Lang {
     DATA_PLAYER_DEATHS("See Deaths datapoint of players"),
     DATA_SERVER_DEATHS("See Deaths datapoint of servers"),
     DATA_NETWORK_DEATHS("See Deaths datapoint of network"),
+    DATA_SERVER_AVERAGE_TPS("See Average TPS datapoint of servers"),
 
     ACCESS("Controls access to pages"),
     ACCESS_PLAYER("Allows accessing any /player pages"),

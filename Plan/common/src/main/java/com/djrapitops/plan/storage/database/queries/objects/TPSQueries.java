@@ -425,18 +425,25 @@ public class TPSQueries {
     }
 
     public static Query<Double> averageTPS(long after, long before, ServerUUID serverUUID) {
+        return averageTPS(after, before, Collections.singletonList(serverUUID));
+    }
+
+    public static Query<Double> averageTPS(long after, long before, List<ServerUUID> serverUUIDs) {
+        if (serverUUIDs.isEmpty()) {
+            return db -> -1.0;
+        }
+
         String sql = SELECT + "AVG(" + TPS + ") as average" + FROM + TABLE_NAME + " t" +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
-                WHERE + "s." + ServerTable.SERVER_UUID + "=?" +
+                WHERE + "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
                 AND + TPS + ">=0" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-                statement.setLong(2, before);
-                statement.setLong(3, after);
+                statement.setLong(1, before);
+                statement.setLong(2, after);
             }
 
             @Override

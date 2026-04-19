@@ -107,4 +107,8 @@ public interface DatapointModule {
     @Binds
     @IntoSet
     Datapoint<?> bindPlayerKills(PlayerKills playerKills);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindAverageTPS(AverageTPS averageTPS);
 }

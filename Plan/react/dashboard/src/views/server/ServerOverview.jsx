@@ -25,14 +25,20 @@ import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import FormattedTime from "../../components/text/FormattedTime.jsx";
+import {QueryDatapoint, useDatapointQuery} from "../../components/datapoint/QueryDatapoint.tsx";
+import {DatapointType} from "../../dataHooks/model/datapoint/Datapoint.ts";
+import {MS_WEEK} from "../../util/format/useDateFormatter.js";
+import {GenericFilterContextProvider} from "../../dataHooks/genericFilterContextHook.tsx";
 
 const Last7DaysCard = ({data}) => {
     const {t} = useTranslation();
+    const {identifier} = useParams();
+
+
+    const {error} = useDatapointQuery(true, DatapointType.AVERAGE_TPS, {server: identifier, afterMillisAgo: MS_WEEK})
+    const noData = error?.status === 404
 
     if (!data) return <CardLoader/>;
-
-    const noData = data.average_tps === 'plugin.generic.unavailable'
-
     return (
         <Card id={"last-7-days"}>
             <Card.Header>
@@ -43,31 +49,38 @@ const Last7DaysCard = ({data}) => {
             {noData && <Alert className='alert-warning mb-0'>
                 <FontAwesomeIcon icon={faInfoCircle}/> {t('html.description.noData7d')}
             </Alert>}
-            <Card.Body>
-                <Datapoint name={t('html.label.uniquePlayers')}
-                           color={'players-unique'} icon={faUsers}
-                           value={data.unique_players} bold/>
-                <Datapoint name={t('html.label.uniquePlayers') + ' ' + t('html.label.perDay')}
-                           color={'players-unique'} icon={faUser}
-                           value={data.unique_players_day} bold/>
-                <Datapoint name={t('html.label.newPlayers')}
-                           color={'players-new'} icon={faUsers}
-                           value={data.new_players} bold/>
-                <Datapoint name={t('html.label.newPlayerRetention')}
-                           color={'players-new'} icon={faUserCircle}
-                           value={data.new_players_retention_perc}
-                           valueLabel={data.new_players_retention + '/' + data.new_players} bold/>
-                <hr/>
-                <Datapoint name={t('html.label.averageTps')}
-                           color={'tps-average'} icon={faTachometerAlt}
-                           value={data.average_tps} bold/>
-                <Datapoint name={t('html.label.lowTpsSpikes')}
-                           color={'tps-low-spikes'} icon={faExclamationCircle}
-                           value={data.low_tps_spikes} bold/>
-                <Datapoint name={t('html.label.downtime')}
-                           color={'downtime'} icon={faPowerOff}
-                           value={<FormattedTime timeMs={data.downtime}/>}/>
-            </Card.Body>
+            <GenericFilterContextProvider initialValue={{server: identifier, afterMillisAgo: MS_WEEK}}>
+                {filter => (
+                    <Card.Body>
+                        <QueryDatapoint name={t('html.label.uniquePlayers')}
+                                        color={'players-unique'} icon={faUsers}
+                                        dataType={DatapointType.UNIQUE_PLAYERS}
+                                        filter={filter} bold/>
+                        <Datapoint name={t('html.label.uniquePlayers') + ' ' + t('html.label.perDay')}
+                                   color={'players-unique'} icon={faUser}
+                                   value={data.unique_players_day} bold/>
+                        <QueryDatapoint name={t('html.label.newPlayers')}
+                                        color={'players-new'} icon={faUsers}
+                                        dataType={DatapointType.NEW_PLAYERS}
+                                        filter={filter} bold/>
+                        <Datapoint name={t('html.label.newPlayerRetention')}
+                                   color={'players-new'} icon={faUserCircle}
+                                   value={data.new_players_retention_perc}
+                                   valueLabel={data.new_players_retention + '/' + data.new_players} bold/>
+                        <hr/>
+                        <QueryDatapoint name={t('html.label.averageTps')}
+                                        color={'tps-average'} icon={faTachometerAlt}
+                                        dataType={DatapointType.AVERAGE_TPS}
+                                        filter={filter} bold/>
+                        <Datapoint name={t('html.label.lowTpsSpikes')}
+                                   color={'tps-low-spikes'} icon={faExclamationCircle}
+                                   value={data.low_tps_spikes} bold/>
+                        <Datapoint name={t('html.label.downtime')}
+                                   color={'downtime'} icon={faPowerOff}
+                                   value={<FormattedTime timeMs={data.downtime}/>}/>
+                    </Card.Body>
+                )}
+            </GenericFilterContextProvider>
         </Card>
     )
 }
