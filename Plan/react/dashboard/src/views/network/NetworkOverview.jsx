@@ -4,7 +4,7 @@ import ErrorView from "../ErrorView.tsx";
 import LoadIn from "../../components/animation/LoadIn.tsx";
 import {Col} from "react-bootstrap";
 import ServerAsNumbersCard from "../../components/cards/server/values/ServerAsNumbersCard";
-import ServerWeekComparisonCard from "../../components/cards/server/tables/ServerWeekComparisonCard";
+import ServerWeekComparisonCard from "../../components/cards/server/tables/ServerWeekComparisonCard.tsx";
 import {fetchNetworkOverview} from "../../service/networkService";
 import NetworkOnlineActivityGraphsCard from "../../components/cards/server/graphs/NetworkOnlineActivityGraphsCard";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
@@ -37,7 +37,7 @@ const NetworkOverview = () => {
                         <ServerAsNumbersCard data={data?.numbers}/>
                     </Col>
                     <Col lg={8}>
-                        <ServerWeekComparisonCard data={data?.weeks}/>
+                        <ServerWeekComparisonCard/>
                     </Col>
                 </ExtendableRow>}
             </section>

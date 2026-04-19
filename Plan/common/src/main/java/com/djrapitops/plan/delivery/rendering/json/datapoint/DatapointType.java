@@ -72,4 +72,9 @@ public enum DatapointType {
     public Set<DatapointCacheKey> getCacheKeys() {
         return new HashSet<>(Arrays.asList(cacheKeys));
     }
+
+    @Override
+    public String toString() {
+        return name();
+    }
 }

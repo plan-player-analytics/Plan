@@ -9,7 +9,6 @@ import {CardLoader} from "../../../navigation/Loader.tsx";
 import ExtendableCardBody from "../../../layout/extension/ExtendableCardBody.tsx";
 import {useMetadata} from "../../../../hooks/metadataHook.tsx";
 import CurrentUptime from "../../../datapoint/CurrentUptime";
-import FormattedTime from "../../../text/FormattedTime.jsx";
 import {GenericFilterContextProvider} from "../../../../dataHooks/genericFilterContextHook.tsx";
 import {useParams} from "react-router";
 import {QueryDatapoint} from "../../../datapoint/QueryDatapoint.tsx";
@@ -23,7 +22,7 @@ const ServerAsNumbersCard = ({data}) => {
 
     if (!data || !networkMetadata) return <CardLoader/>;
 
-    const isGameServer = data.player_kills !== undefined;
+    const isGameServer = !!identifier;
 
     return (
         <GenericFilterContextProvider initialValue={{server: identifier}}>
@@ -67,27 +66,34 @@ const ServerAsNumbersCard = ({data}) => {
                                         color={'playtime'} icon={faClock}
                                         dataType={DatapointType.PLAYTIME}
                                         filter={filter}/>
-                        <Datapoint name={t('html.label.averagePlaytime') + ' ' + t('html.label.perPlayer')}
-                                   color={'playtime'} icon={faClock}
-                                   value={<FormattedTime timeMs={data.player_playtime}/>}/>
-                        {data.session_length_avg && <Datapoint name={t('html.label.averageSessionLength')}
-                                                               color={'sessions'} icon={faClock}
-                                                               value={<FormattedTime
-                                                                   timeMs={data.session_length_avg}/>}/>}
+                        <QueryDatapoint name={t('html.label.averagePlaytime') + ' ' + t('html.label.perPlayer')}
+                                        color={'playtime'} icon={faClock}
+                                        dataType={DatapointType.PLAYTIME_PER_PLAYER_AVERAGE}
+                                        filter={filter}/>
+                        <QueryDatapoint name={t('html.label.averageSessionLength')}
+                                        color={'sessions'} icon={faClock}
+                                        dataType={DatapointType.SESSION_LENGTH_AVERAGE}
+                                        filter={filter}/>
                         <QueryDatapoint name={t('html.label.sessions')}
                                         color={'sessions'} icon={faCalendarCheck} bold
                                         dataType={DatapointType.SESSION_COUNT}
                                         filter={filter}/>
-                        {data.player_kills !== undefined && <hr/>}
-                        <Datapoint name={t('html.label.playerKills')}
-                                   color={'player-kills'} icon={faCrosshairs}
-                                   value={data.player_kills} bold/>
-                        <Datapoint name={t('html.label.mobKills')}
-                                   color={'mob-kills'} icon={faCrosshairs}
-                                   value={data.mob_kills} bold/>
-                        <Datapoint name={t('html.label.deaths')}
-                                   color={'deaths'} icon={faSkull}
-                                   value={data.deaths} bold/>
+                        <hr/>
+                        <QueryDatapoint name={t('html.label.playerKills')}
+                                        color={'player-kills'} icon={faCrosshairs}
+                                        value={data.player_kills}
+                                        dataType={DatapointType.PLAYER_KILLS}
+                                        filter={filter}/>
+                        <QueryDatapoint name={t('html.label.mobKills')}
+                                        color={'mob-kills'} icon={faCrosshairs}
+                                        value={data.mob_kills}
+                                        dataType={DatapointType.MOB_KILLS}
+                                        filter={filter}/>
+                        <QueryDatapoint name={t('html.label.deaths')}
+                                        color={'deaths'} icon={faSkull}
+                                        value={data.deaths}
+                                        dataType={DatapointType.DEATHS}
+                                        filter={filter}/>
                     </ExtendableCardBody>
                 </Card>
             )}

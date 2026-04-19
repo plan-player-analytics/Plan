@@ -3,7 +3,8 @@ import {
     DatapointType,
     DatapointTypeMap,
     FormatType,
-    getDatapointUrl
+    getDatapointUrl,
+    NumericDatapointType
 } from "../../dataHooks/model/datapoint/Datapoint";
 import {GenericFilter} from "../../dataHooks/model/GenericFilter";
 import {useNavigation} from "../../hooks/navigationHook";
@@ -20,6 +21,7 @@ import {isOutOfCategory, OutOfCategory} from "../../dataHooks/model/datapoint/Ou
 import {useTranslation} from "react-i18next";
 import {DateObj, isDateObj} from "../../dataHooks/model/datapoint/DateObj";
 import FormattedDate from "../text/FormattedDate";
+import BigTrend from "../trend/BigTrend";
 
 type Props<K extends DatapointType> = {
     dataType: K;
@@ -82,7 +84,7 @@ function Format<K extends DatapointType>({value, formatType}: FormatProps<K>) {
     }
 }
 
-function calculatePermission(dataType: DatapointType, permission?: string, filter?: GenericFilter) {
+export function calculatePermission(dataType: DatapointType, permission?: string, filter?: GenericFilter) {
     if (!dataType) return '';
     const asPermission = permission || dataType.toLowerCase().replaceAll('_', '.');
     if (filter) {
@@ -130,6 +132,39 @@ export function QueryDatapointValue<K extends DatapointType>({permission, dataTy
     }
 
     return data ? <Format value={data.value} formatType={data.formatType}/> : <Loader/>
+}
+
+type TrendProps<K extends NumericDatapointType> = { downGood?: boolean, filter2: GenericFilter } & ValueProps<K>
+
+export function QueryDatapointTrend<K extends NumericDatapointType>({
+                                                                        permission,
+                                                                        dataType,
+                                                                        downGood,
+                                                                        filter,
+                                                                        filter2
+                                                                    }: TrendProps<K>) {
+    const {hasPermission} = useAuth();
+    const allowed = hasPermission(calculatePermission(dataType, permission, filter));
+    const {data: before, error: error1} = useDatapointQuery(allowed, dataType, filter);
+    const {data: after, error: error2} = useDatapointQuery(allowed, dataType, filter2);
+
+    if (!allowed) return null;
+    if (error1) {
+        console.error(error1);
+        return error1.message;
+    }
+    if (error2) {
+        console.error(error2);
+        return error2.message;
+    }
+
+    return before && after ?
+        <BigTrend trend={{
+            text: before.value - after.value,
+            reversed: downGood,
+            direction: before.value - after.value === 0 ? undefined : (before.value - after.value > 0 ? '+' : '-')
+        }} format={(value: number) => <Format value={value}/>}/>
+        : <Loader/>
 }
 
 

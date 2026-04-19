@@ -145,6 +145,10 @@ p.collapsing {
     margin-top: 4rem;
 }
 
+.table span.loader {
+    margin-top: 0;
+}
+
 .loader-text {
     margin-top: 0.5rem;
 }

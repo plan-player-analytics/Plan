@@ -50,6 +50,11 @@ export type DatapointTypeMap = {
     PLAYERS_ONLINE_PEAK: { date: number, value: number };
 }
 
+export type NumericDatapointType = {
+    [K in DatapointType]:
+    DatapointTypeMap[K] extends number ? K : never
+}[DatapointType];
+
 export type Datapoint<K extends keyof DatapointTypeMap> = {
     type: K;
     formatType: FormatType;
@@ -80,7 +85,7 @@ export function getDatapointUrl(dataType: DatapointType, filter?: GenericFilter)
             }
         }
         if (filter?.afterMillisAgo) {
-            timespan = "_" + filter.afterMillisAgo;
+            timespan = "_" + filter.afterMillisAgo + (filter?.beforeMillisAgo ? "_" + filter.beforeMillisAgo : '');
         }
         const folder = filter?.player ? "/player/" + filter?.player : "/data";
         const server = filter?.server ? "_" + filter?.server : "";

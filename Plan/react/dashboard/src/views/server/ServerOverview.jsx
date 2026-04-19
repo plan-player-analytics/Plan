@@ -18,7 +18,7 @@ import ErrorView from "../ErrorView.tsx";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import OnlineActivityCard from "../../components/cards/server/graphs/OnlineActivityCard";
 import ServerAsNumbersCard from "../../components/cards/server/values/ServerAsNumbersCard";
-import ServerWeekComparisonCard from "../../components/cards/server/tables/ServerWeekComparisonCard";
+import ServerWeekComparisonCard from "../../components/cards/server/tables/ServerWeekComparisonCard.tsx";
 import LoadIn from "../../components/animation/LoadIn.tsx";
 import {CardLoader} from "../../components/navigation/Loader.tsx";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
@@ -103,7 +103,7 @@ const ServerOverview = () => {
                         <ServerAsNumbersCard data={data?.numbers}/>
                     </Col>
                     <Col lg={8}>
-                        <ServerWeekComparisonCard data={data?.weeks}/>
+                        <ServerWeekComparisonCard/>
                     </Col>
                 </ExtendableRow>}
             </section>

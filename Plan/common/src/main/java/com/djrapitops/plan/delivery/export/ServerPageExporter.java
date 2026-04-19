@@ -122,6 +122,7 @@ public class ServerPageExporter extends FileExporter {
         String after = "&after=" + monthAgo;
         String server = "&server=" + serverUUID;
         String afterMillis = "&afterMillisAgo=";
+        String beforeMillis = "&beforeMillisAgo=";
         exportJSON(toDirectory,
                 "serverOverview?server=" + serverUUID,
                 "onlineOverview?server=" + serverUUID,
@@ -147,19 +148,43 @@ public class ServerPageExporter extends FileExporter {
                 "retention?server=" + serverUUID,
                 "joinAddresses?server=" + serverUUID,
                 "gameAllowlistBounces?server=" + serverUUID,
-                datapointType + DatapointType.PLAYTIME.name() + server,
-                datapointType + DatapointType.PLAYTIME.name() + after + server,
-                datapointType + DatapointType.AFK_TIME.name() + after + server,
-                datapointType + DatapointType.AFK_TIME_PERCENTAGE.name() + after + server,
-                datapointType + DatapointType.SERVER_OCCUPIED.name() + after + server,
-                datapointType + DatapointType.MOST_ACTIVE_GAME_MODE.name() + after + server,
-                datapointType + DatapointType.WORLD_PIE.name() + server,
-                datapointType + DatapointType.NEW_PLAYERS.name() + server,
-                datapointType + DatapointType.REGULAR_PLAYERS.name() + server,
+                datapointType + DatapointType.PLAYTIME + server,
+                datapointType + DatapointType.PLAYTIME + after + server,
+                datapointType + DatapointType.AFK_TIME + after + server,
+                datapointType + DatapointType.AFK_TIME_PERCENTAGE + after + server,
+                datapointType + DatapointType.SERVER_OCCUPIED + after + server,
+                datapointType + DatapointType.MOST_ACTIVE_GAME_MODE + after + server,
+                datapointType + DatapointType.WORLD_PIE + server,
+                datapointType + DatapointType.NEW_PLAYERS + server,
+                datapointType + DatapointType.REGULAR_PLAYERS + server,
                 datapointType + DatapointType.PLAYERS_ONLINE_PEAK + afterMillis + TimeUnit.DAYS.toMillis(2) + server,
                 datapointType + DatapointType.PLAYERS_ONLINE_PEAK + server,
                 datapointType + DatapointType.SESSION_COUNT + server,
-                datapointType + DatapointType.SESSION_COUNT + after + server
+                datapointType + DatapointType.SESSION_COUNT + after + server,
+                datapointType + DatapointType.PLAYTIME_PER_PLAYER_AVERAGE + server,
+                datapointType + DatapointType.SESSION_LENGTH_AVERAGE + server,
+                datapointType + DatapointType.PLAYER_KILLS + server,
+                datapointType + DatapointType.MOB_KILLS + server,
+                datapointType + DatapointType.DEATHS + server,
+                // Week comparison
+                datapointType + DatapointType.UNIQUE_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L) + server,
+                datapointType + DatapointType.NEW_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L) + server,
+                datapointType + DatapointType.REGULAR_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L) + server,
+                datapointType + DatapointType.PLAYTIME_PER_PLAYER_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L) + server,
+                datapointType + DatapointType.SESSION_LENGTH_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L) + server,
+                datapointType + DatapointType.SESSION_COUNT + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L) + server,
+                datapointType + DatapointType.PLAYER_KILLS + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L) + server,
+                datapointType + DatapointType.MOB_KILLS + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L) + server,
+                datapointType + DatapointType.DEATHS + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L) + server,
+                datapointType + DatapointType.UNIQUE_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(7) + server,
+                datapointType + DatapointType.NEW_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(7) + server,
+                datapointType + DatapointType.REGULAR_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(7) + server,
+                datapointType + DatapointType.PLAYTIME_PER_PLAYER_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(7) + server,
+                datapointType + DatapointType.SESSION_LENGTH_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(7) + server,
+                datapointType + DatapointType.SESSION_COUNT + afterMillis + TimeUnit.DAYS.toMillis(7) + server,
+                datapointType + DatapointType.PLAYER_KILLS + afterMillis + TimeUnit.DAYS.toMillis(7) + server,
+                datapointType + DatapointType.MOB_KILLS + afterMillis + TimeUnit.DAYS.toMillis(7) + server,
+                datapointType + DatapointType.DEATHS + afterMillis + TimeUnit.DAYS.toMillis(7) + server
         );
     }
 
