@@ -151,6 +151,9 @@ public enum WebPermission implements Supplier<String>, Lang {
     DATA_PLAYER_SESSION_COUNT("See Session count datapoint of players"),
     DATA_SERVER_SESSION_COUNT("See Session count datapoint of servers"),
     DATA_NETWORK_SESSION_COUNT("See Session count datapoint of network"),
+    DATA_PLAYER_SESSION_LENGTH_AVERAGE("See Average session length datapoint of players"),
+    DATA_SERVER_SESSION_LENGTH_AVERAGE("See Average session length datapoint of servers"),
+    DATA_NETWORK_SESSION_LENGTH_AVERAGE("See Average session length datapoint of network"),
     DATA_SERVER_PLAYERS_ONLINE_PEAK("See Player online peak -datapoint of servers"),
     DATA_NETWORK_PLAYERS_ONLINE_PEAK("See Player online peak -datapoint of network"),
 

@@ -78,6 +78,9 @@ public interface DatapointModule {
 
     @Binds
     @IntoSet
-    Datapoint<?> bindPlayerOnlinePeak(PlayersOnlinePeak playersOnlinePeak);
+    Datapoint<?> bindSessionLengthAverage(SessionLengthAverage sessionLengthAverage);
 
+    @Binds
+    @IntoSet
+    Datapoint<?> bindPlayerOnlinePeak(PlayersOnlinePeak playersOnlinePeak);
 }

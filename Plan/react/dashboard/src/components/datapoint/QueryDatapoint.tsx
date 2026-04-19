@@ -27,6 +27,8 @@ type Props<K extends DatapointType> = {
     permission?: string;
 } & Omit<DatapointProps, 'value'>;
 
+type ValueProps<K extends DatapointType> = Omit<Props<K>, 'color' | 'name' | 'icon'>;
+
 type FormatProps<K extends DatapointType> = Readonly<{
     value?: DatapointTypeMap[K],
     formatType?: FormatType
@@ -116,7 +118,7 @@ export function QueryDatapoint<K extends DatapointType>({permission, dataType, f
     />
 }
 
-export function QueryDatapointValue<K extends DatapointType>({permission, dataType, filter}: Props<K>) {
+export function QueryDatapointValue<K extends DatapointType>({permission, dataType, filter}: ValueProps<K>) {
     const {hasPermission} = useAuth();
     const allowed = hasPermission(calculatePermission(dataType, permission, filter));
     const {data, error} = useDatapointQuery(allowed, dataType, filter);

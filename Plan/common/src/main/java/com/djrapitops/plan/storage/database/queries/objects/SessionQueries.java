@@ -537,6 +537,56 @@ public class SessionQueries {
         };
     }
 
+    public static Query<PlaytimeAndCount> playtimeAndCount(long after, long before, List<ServerUUID> serverUUIDs) {
+        return db -> {
+            String sql = SELECT +
+                    playtimeColumn(db.getSql(), after, before) + "," +
+                    "COUNT(1) as count" +
+                    FROM + SessionsTable.TABLE_NAME +
+                    WHERE + (!serverUUIDs.isEmpty() ? SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
+                                                      AND : "") + SessionsTable.SESSION_END + ">=?" +
+                    AND + SessionsTable.SESSION_START + "<=?";
+            return db.query(new QueryStatement<>(sql) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, after);
+                    statement.setLong(2, before);
+                }
+
+                @Override
+                public PlaytimeAndCount processResults(ResultSet set) throws SQLException {
+                    return set.next() ? new PlaytimeAndCount(set.getLong("playtime"), set.getLong("count")) : new PlaytimeAndCount(0L, 0L);
+                }
+            });
+        };
+    }
+
+    public static Query<PlaytimeAndCount> playtimeAndCount(long after, long before, UUID playerUUID, List<ServerUUID> serverUUIDs) {
+        return db -> {
+            String sql = SELECT +
+                    playtimeColumn(db.getSql(), after, before) + "," +
+                    "COUNT(1) as count" +
+                    FROM + SessionsTable.TABLE_NAME +
+                    WHERE + (!serverUUIDs.isEmpty() ? SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
+                                                      AND : "") + SessionsTable.SESSION_END + ">=?" +
+                    AND + SessionsTable.SESSION_START + "<=?" +
+                    AND + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID;
+            return db.query(new QueryStatement<>(sql) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, after);
+                    statement.setLong(2, before);
+                    statement.setString(3, playerUUID.toString());
+                }
+
+                @Override
+                public PlaytimeAndCount processResults(ResultSet set) throws SQLException {
+                    return set.next() ? new PlaytimeAndCount(set.getLong("playtime"), set.getLong("count")) : new PlaytimeAndCount(0L, 0L);
+                }
+            });
+        };
+    }
+
     private static @NonNull String playtimeColumn(Sql sql, long after, long before) {
         return "SUM(" + sql.least(SessionsTable.SESSION_END + "," + before) + "-" + sql.greatest(SessionsTable.SESSION_START + "," + after) + ") as playtime";
     }
