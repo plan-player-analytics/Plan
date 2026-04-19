@@ -82,5 +82,9 @@ public interface DatapointModule {
 
     @Binds
     @IntoSet
+    Datapoint<?> bindPlaytimePerPlayerAverage(PlaytimePerPlayerAverage playtimePerPlayerAverage);
+
+    @Binds
+    @IntoSet
     Datapoint<?> bindPlayerOnlinePeak(PlayersOnlinePeak playersOnlinePeak);
 }

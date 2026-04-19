@@ -42,6 +42,7 @@ public enum DatapointType {
     REGULAR_PLAYERS(RegularPlayers.class, DatapointCacheKey.SESSION),
     SESSION_COUNT(SessionCount.class, DatapointCacheKey.SESSION),
     SESSION_LENGTH_AVERAGE(SessionLengthAverage.class, DatapointCacheKey.SESSION),
+    PLAYTIME_PER_PLAYER_AVERAGE(PlaytimePerPlayerAverage.class, DatapointCacheKey.SESSION),
     PLAYERS_ONLINE_PEAK(PlayersOnlinePeak.class, DatapointCacheKey.TPS);
 
     private final Class<? extends Datapoint<?>> datapointClass;

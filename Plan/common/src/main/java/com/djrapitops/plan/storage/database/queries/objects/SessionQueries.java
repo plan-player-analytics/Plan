@@ -760,16 +760,18 @@ public class SessionQueries {
         };
     }
 
-    public static Query<Long> averagePlaytimePerPlayer(long after, long before, ServerUUID serverUUID) {
+    public static Query<Long> averagePlaytimePerPlayer(long after, long before, List<ServerUUID> serverUUIDs) {
+        if (serverUUIDs.isEmpty()) {
+            return averagePlaytimePerPlayer(after, before);
+        }
         return db -> {
             String selectPlaytimePerPlayer = SELECT +
                     SessionsTable.USER_ID + "," +
                     playtimeColumn(db.getSql(), after, before) +
                     FROM + SessionsTable.TABLE_NAME + " t" +
-                    INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SessionsTable.SERVER_ID +
                     WHERE + SessionsTable.SESSION_START + "<=?" +
                     AND + SessionsTable.SESSION_END + ">=?" +
-                    AND + "s." + ServerTable.SERVER_UUID + "=?" +
+                    AND + SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
                     GROUP_BY + SessionsTable.USER_ID;
             String selectAverage = SELECT + "AVG(playtime) as average" + FROM + '(' + selectPlaytimePerPlayer + ") q1";
 
@@ -778,7 +780,6 @@ public class SessionQueries {
                 public void prepare(PreparedStatement statement) throws SQLException {
                     statement.setLong(1, before);
                     statement.setLong(2, after);
-                    statement.setString(3, serverUUID.toString());
                 }
 
                 @Override
@@ -787,6 +788,10 @@ public class SessionQueries {
                 }
             });
         };
+    }
+
+    public static Query<Long> averagePlaytimePerPlayer(long after, long before, ServerUUID serverUUID) {
+        return averagePlaytimePerPlayer(after, before, Collections.singletonList(serverUUID));
     }
 
     /**
