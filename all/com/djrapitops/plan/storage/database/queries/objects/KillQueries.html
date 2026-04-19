@@ -61,9 +61,18 @@ loadScripts(document, 'script');</script>
 <li><a href="#fetchPlayerKillsOfPlayer(java.util.UUID)" tabindex="0">fetchPlayerKillsOfPlayer(UUID)</a></li>
 <li><a href="#fetchPlayerDeathsOfPlayer(java.util.UUID)" tabindex="0">fetchPlayerDeathsOfPlayer(UUID)</a></li>
 <li><a href="#playerKillCount(long,long,com.djrapitops.plan.identification.ServerUUID)" tabindex="0">playerKillCount(long, long, ServerUUID)</a></li>
+<li><a href="#playerKillCount(long,long)" tabindex="0">playerKillCount(long, long)</a></li>
+<li><a href="#playerKillCount(long,long,java.util.List)" tabindex="0">playerKillCount(long, long, List)</a></li>
+<li><a href="#playerKillCount(long,long,java.util.UUID,java.util.List)" tabindex="0">playerKillCount(long, long, UUID, List)</a></li>
 <li><a href="#averageKDR(long,long,com.djrapitops.plan.identification.ServerUUID)" tabindex="0">averageKDR(long, long, ServerUUID)</a></li>
 <li><a href="#mobKillCount(long,long,com.djrapitops.plan.identification.ServerUUID)" tabindex="0">mobKillCount(long, long, ServerUUID)</a></li>
+<li><a href="#mobKillCount(long,long)" tabindex="0">mobKillCount(long, long)</a></li>
+<li><a href="#mobKillCount(long,long,java.util.List)" tabindex="0">mobKillCount(long, long, List)</a></li>
+<li><a href="#mobKillCount(long,long,java.util.UUID,java.util.List)" tabindex="0">mobKillCount(long, long, UUID, List)</a></li>
 <li><a href="#deathCount(long,long,com.djrapitops.plan.identification.ServerUUID)" tabindex="0">deathCount(long, long, ServerUUID)</a></li>
+<li><a href="#deathCount(long,long)" tabindex="0">deathCount(long, long)</a></li>
+<li><a href="#deathCount(long,long,java.util.List)" tabindex="0">deathCount(long, long, List)</a></li>
+<li><a href="#deathCount(long,long,java.util.UUID,java.util.List)" tabindex="0">deathCount(long, long, UUID, List)</a></li>
 <li><a href="#topWeaponsOfServer(long,long,com.djrapitops.plan.identification.ServerUUID,int)" tabindex="0">topWeaponsOfServer(long, long, ServerUUID, int)</a></li>
 <li><a href="#topWeaponsOfPlayer(long,long,java.util.UUID,int)" tabindex="0">topWeaponsOfPlayer(long, long, UUID, int)</a></li>
 <li><a href="#fetchRows(int,int)" tabindex="0">fetchRows(int, int)</a></li>
@@ -106,23 +115,42 @@ loadScripts(document, 'script');</script>
  <a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#deathCount(long,long,com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">deathCount</a><wbr>(long&nbsp;after,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#deathCount(long,long)" class="member-name-link">deathCount</a><wbr>(long&nbsp;after,
+ long&nbsp;before)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#deathCount(long,long,com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">deathCount</a><wbr>(long&nbsp;after,
  long&nbsp;before,
  <a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#deathCount(long,long,java.util.List)" class="member-name-link">deathCount</a><wbr>(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../gathering/domain/PlayerKill.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill</a>&gt;&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fetchPlayerDeathsOfPlayer(java.util.UUID)" class="member-name-link">fetchPlayerDeathsOfPlayer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#deathCount(long,long,java.util.UUID,java.util.List)" class="member-name-link">deathCount</a><wbr>(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../gathering/domain/PlayerKill.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill</a>&gt;&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fetchPlayerKillsOfPlayer(java.util.UUID)" class="member-name-link">fetchPlayerKillsOfPlayer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fetchPlayerDeathsOfPlayer(java.util.UUID)" class="member-name-link">fetchPlayerDeathsOfPlayer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../gathering/domain/PlayerKill.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill</a>&gt;&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fetchPlayerKillsOnServer(com.djrapitops.plan.identification.ServerUUID,int)" class="member-name-link">fetchPlayerKillsOnServer</a><wbr>(<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID,
- int&nbsp;limit)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fetchPlayerKillsOfPlayer(java.util.UUID)" class="member-name-link">fetchPlayerKillsOfPlayer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../sql/tables/KillsTable.Row.html" title="class in com.djrapitops.plan.storage.database.sql.tables">KillsTable.Row</a>&gt;&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fetchRows(int,int)" class="member-name-link">fetchRows</a><wbr>(int&nbsp;currentId,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../gathering/domain/PlayerKill.html" title="class in com.djrapitops.plan.gathering.domain">PlayerKill</a>&gt;&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fetchPlayerKillsOnServer(com.djrapitops.plan.identification.ServerUUID,int)" class="member-name-link">fetchPlayerKillsOnServer</a><wbr>(<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID,
+ int&nbsp;limit)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../sql/tables/KillsTable.Row.html" title="class in com.djrapitops.plan.storage.database.sql.tables">KillsTable.Row</a>&gt;&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#fetchRows(int,int)" class="member-name-link">fetchRows</a><wbr>(int&nbsp;currentId,
  int&nbsp;rowLimit)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mobKillCount(long,long)" class="member-name-link">mobKillCount</a><wbr>(long&nbsp;after,
+ long&nbsp;before)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mobKillCount(long,long,com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">mobKillCount</a><wbr>(long&nbsp;after,
@@ -130,22 +158,48 @@ loadScripts(document, 'script');</script>
  <a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerKillCount(long,long,com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">playerKillCount</a><wbr>(long&nbsp;after,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mobKillCount(long,long,java.util.List)" class="member-name-link">mobKillCount</a><wbr>(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#mobKillCount(long,long,java.util.UUID,java.util.List)" class="member-name-link">mobKillCount</a><wbr>(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerKillCount(long,long)" class="member-name-link">playerKillCount</a><wbr>(long&nbsp;after,
+ long&nbsp;before)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerKillCount(long,long,com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">playerKillCount</a><wbr>(long&nbsp;after,
  long&nbsp;before,
  <a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerKillCount(long,long,java.util.List)" class="member-name-link">playerKillCount</a><wbr>(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#topWeaponsOfPlayer(long,long,java.util.UUID,int)" class="member-name-link">topWeaponsOfPlayer</a><wbr>(long&nbsp;after,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#playerKillCount(long,long,java.util.UUID,java.util.List)" class="member-name-link">playerKillCount</a><wbr>(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#topWeaponsOfPlayer(long,long,java.util.UUID,int)" class="member-name-link">topWeaponsOfPlayer</a><wbr>(long&nbsp;after,
  long&nbsp;before,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID,
  int&nbsp;limit)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#topWeaponsOfServer(long,long,com.djrapitops.plan.identification.ServerUUID,int)" class="member-name-link">topWeaponsOfServer</a><wbr>(long&nbsp;after,
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#topWeaponsOfServer(long,long,com.djrapitops.plan.identification.ServerUUID,int)" class="member-name-link">topWeaponsOfServer</a><wbr>(long&nbsp;after,
  long&nbsp;before,
  <a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID,
  int&nbsp;limit)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -199,6 +253,36 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="playerKillCount(long,long)">
+<h3>playerKillCount</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">playerKillCount</span><wbr><span class="parameters">(long&nbsp;after,
+ long&nbsp;before)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="playerKillCount(long,long,java.util.List)">
+<h3>playerKillCount</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">playerKillCount</span><wbr><span class="parameters">(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="playerKillCount(long,long,java.util.UUID,java.util.List)">
+<h3>playerKillCount</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">playerKillCount</span><wbr><span class="parameters">(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</span></div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="averageKDR(long,long,com.djrapitops.plan.identification.ServerUUID)">
 <h3>averageKDR</h3>
 <div class="horizontal-scroll">
@@ -219,12 +303,72 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="mobKillCount(long,long)">
+<h3>mobKillCount</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">mobKillCount</span><wbr><span class="parameters">(long&nbsp;after,
+ long&nbsp;before)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="mobKillCount(long,long,java.util.List)">
+<h3>mobKillCount</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">mobKillCount</span><wbr><span class="parameters">(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="mobKillCount(long,long,java.util.UUID,java.util.List)">
+<h3>mobKillCount</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">mobKillCount</span><wbr><span class="parameters">(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</span></div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="deathCount(long,long,com.djrapitops.plan.identification.ServerUUID)">
 <h3>deathCount</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">deathCount</span><wbr><span class="parameters">(long&nbsp;after,
  long&nbsp;before,
  <a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="deathCount(long,long)">
+<h3>deathCount</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">deathCount</span><wbr><span class="parameters">(long&nbsp;after,
+ long&nbsp;before)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="deathCount(long,long,java.util.List)">
+<h3>deathCount</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">deathCount</span><wbr><span class="parameters">(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="deathCount(long,long,java.util.UUID,java.util.List)">
+<h3>deathCount</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">deathCount</span><wbr><span class="parameters">(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</span></div>
 </div>
 </section>
 </li>
