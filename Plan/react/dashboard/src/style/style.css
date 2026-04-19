@@ -135,6 +135,25 @@ p.collapsing {
     animation: loader 2s infinite ease;
 }
 
+.datapoint-loader {
+    width: 40px;
+    height: 14px;
+    background: linear-gradient(-65deg,
+    color-mix(in srgb, var(--color-text) 10%, transparent) 33%,
+    color-mix(in srgb, var(--color-text) 20%, transparent) 50%,
+    color-mix(in srgb, var(--color-text) 10%, transparent) 66%) color-mix(in srgb, var(--color-text) 5%, transparent);
+    background-size: 300% 100%;
+    animation: l1 1.5s infinite linear;
+    border-radius: 5px;
+    display: inline-block;
+}
+
+@keyframes l1 {
+    0% {
+        background-position: right
+    }
+}
+
 .datapoint span.loader {
     margin-top: 0 !important;
     height: 1.5rem;

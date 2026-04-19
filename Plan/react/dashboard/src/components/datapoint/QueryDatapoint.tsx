@@ -13,7 +13,7 @@ import {queryRetry} from "../../dataHooks/queryRetry";
 import {useEffect} from "react";
 import {Datapoint as DatapointComponent, DatapointProps} from "./Datapoint";
 import FormattedTime from "../text/FormattedTime";
-import Loader from "../navigation/Loader";
+import {DatapointLoader} from "../navigation/Loader";
 import {useAuth} from "../../hooks/authenticationHook";
 import {useDecimalFormatter} from "../../util/format/useDecimalFormatter";
 import {isOutOf, OutOf} from "../../dataHooks/model/datapoint/OutOf";
@@ -97,7 +97,7 @@ export function calculatePermission(dataType: DatapointType, permission?: string
 export function QueryDatapoint<K extends DatapointType>({permission, dataType, filter, ...props}: Props<K>) {
     const {hasPermission} = useAuth();
     const allowed = hasPermission(calculatePermission(dataType, permission, filter));
-    const {data, error} = useDatapointQuery(allowed, dataType, filter);
+    const {data, isFetching, error} = useDatapointQuery(allowed, dataType, filter);
 
     if (!allowed) return null;
     if (error) {
@@ -108,22 +108,20 @@ export function QueryDatapoint<K extends DatapointType>({permission, dataType, f
         />
     }
 
-    const cast = data as Datapoint<K>;
-
-    const name = cast && isDateObj(cast.value) ? <>{props.name} (<FormattedDate
-        date={(cast.value as DateObj).date}/>)</> : props.name
+    const name = data && isDateObj(data.value) ? <>{props.name} (<FormattedDate
+        date={(data.value as DateObj).date}/>)</> : props.name
 
     return <DatapointComponent
         {...props}
         name={name}
-        value={cast ? <Format value={cast.value} formatType={cast.formatType}/> : <Loader/>}
+        value={data && !isFetching ? <Format value={data.value} formatType={data.formatType}/> : <DatapointLoader/>}
     />
 }
 
 export function QueryDatapointValue<K extends DatapointType>({permission, dataType, filter}: ValueProps<K>) {
     const {hasPermission} = useAuth();
     const allowed = hasPermission(calculatePermission(dataType, permission, filter));
-    const {data, error} = useDatapointQuery(allowed, dataType, filter);
+    const {data, isFetching, error} = useDatapointQuery(allowed, dataType, filter);
 
     if (!allowed) return null;
     if (error) {
@@ -131,7 +129,7 @@ export function QueryDatapointValue<K extends DatapointType>({permission, dataTy
         return error.message;
     }
 
-    return data ? <Format value={data.value} formatType={data.formatType}/> : <Loader/>
+    return data && !isFetching ? <Format value={data.value} formatType={data.formatType}/> : <DatapointLoader/>
 }
 
 type TrendProps<K extends NumericDatapointType> = { downGood?: boolean, filter2: GenericFilter } & ValueProps<K>
@@ -163,12 +161,12 @@ export function QueryDatapointTrend<K extends NumericDatapointType>({
             text: before.value - after.value,
             reversed: downGood,
             direction: before.value - after.value === 0 ? undefined : (before.value - after.value > 0 ? '+' : '-')
-        }} format={(value: number) => <Format value={value}/>}/>
-        : <Loader/>
+        }} format={(value: number) => <Format value={value} formatType={before.formatType}/>}/>
+        : <DatapointLoader/>
 }
 
 
-function useDatapointQuery<K extends DatapointType>(allowed: boolean, dataType: K, filter?: GenericFilter) {
+export function useDatapointQuery<K extends DatapointType>(allowed: boolean, dataType: K, filter?: GenericFilter) {
     const {updateRequested} = useNavigation() as { updateRequested: number };
     const query = useQuery({
         queryKey: filter ? ['datapoint', dataType, ...Object.values(filter)] : ['datapoint', dataType],

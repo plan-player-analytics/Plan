@@ -100,7 +100,7 @@ const ServerOverview = () => {
                 </ExtendableRow>
                 {seeOverview && <ExtendableRow id={'row-server-overview-1'}>
                     <Col lg={4}>
-                        <ServerAsNumbersCard data={data?.numbers}/>
+                        <ServerAsNumbersCard/>
                     </Col>
                     <Col lg={8}>
                         <ServerWeekComparisonCard/>

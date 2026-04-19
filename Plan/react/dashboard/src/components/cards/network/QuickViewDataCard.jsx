@@ -11,7 +11,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
 import Datapoint from "../../datapoint/Datapoint.tsx";
-import CurrentUptime from "../../datapoint/CurrentUptime";
+import CurrentUptime from "../../datapoint/CurrentUptime.tsx";
 import FormattedDate from "../../text/FormattedDate.tsx";
 import FormattedTime from "../../text/FormattedTime.jsx";
 

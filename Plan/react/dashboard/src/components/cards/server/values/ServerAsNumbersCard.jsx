@@ -7,19 +7,19 @@ import React from "react";
 import {CardLoader} from "../../../navigation/Loader.tsx";
 import ExtendableCardBody from "../../../layout/extension/ExtendableCardBody.tsx";
 import {useMetadata} from "../../../../hooks/metadataHook.tsx";
-import CurrentUptime from "../../../datapoint/CurrentUptime";
+import CurrentUptime from "../../../datapoint/CurrentUptime.tsx";
 import {GenericFilterContextProvider} from "../../../../dataHooks/genericFilterContextHook.tsx";
 import {useParams} from "react-router";
 import {QueryDatapoint} from "../../../datapoint/QueryDatapoint.tsx";
 import {DatapointType} from "../../../../dataHooks/model/datapoint/Datapoint.ts";
 import {MS_24H} from "../../../../util/format/useDateFormatter.js";
 
-const ServerAsNumbersCard = ({data}) => {
+const ServerAsNumbersCard = () => {
     const {t} = useTranslation();
     const {networkMetadata} = useMetadata();
     const {identifier} = useParams();
 
-    if (!data || !networkMetadata) return <CardLoader/>;
+    if (!networkMetadata) return <CardLoader/>;
 
     const isGameServer = !!identifier;
 
@@ -33,8 +33,8 @@ const ServerAsNumbersCard = ({data}) => {
                         </h6>
                     </Card.Header>
                     <ExtendableCardBody
-                        id={data.player_kills === undefined ? 'card-body-network-as-numbers' : 'card-body-server-as-numbers'}>
-                        <CurrentUptime uptime={data.current_uptime}/>
+                        id={isGameServer ? 'card-body-server-as-numbers' : 'card-body-network-as-numbers'}>
+                        <CurrentUptime filter={filter}/>
                         <hr/>
                         <QueryDatapoint name={t('html.label.totalPlayers')}
                                         color={'players-count'} icon={faUsers}
@@ -81,17 +81,14 @@ const ServerAsNumbersCard = ({data}) => {
                         <hr/>
                         <QueryDatapoint name={t('html.label.playerKills')}
                                         color={'player-kills'} icon={faCrosshairs}
-                                        value={data.player_kills}
                                         dataType={DatapointType.PLAYER_KILLS}
                                         filter={filter}/>
                         <QueryDatapoint name={t('html.label.mobKills')}
                                         color={'mob-kills'} icon={faCrosshairs}
-                                        value={data.mob_kills}
                                         dataType={DatapointType.MOB_KILLS}
                                         filter={filter}/>
                         <QueryDatapoint name={t('html.label.deaths')}
                                         color={'deaths'} icon={faSkull}
-                                        value={data.deaths}
                                         dataType={DatapointType.DEATHS}
                                         filter={filter}/>
                     </ExtendableCardBody>

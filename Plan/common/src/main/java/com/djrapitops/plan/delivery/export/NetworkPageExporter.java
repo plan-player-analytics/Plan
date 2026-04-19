@@ -160,6 +160,7 @@ public class NetworkPageExporter extends FileExporter {
                 datapointType + DatapointType.PLAYER_KILLS,
                 datapointType + DatapointType.MOB_KILLS,
                 datapointType + DatapointType.DEATHS,
+                datapointType + DatapointType.CURRENT_UPTIME,
                 // Week comparison
                 datapointType + DatapointType.UNIQUE_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L),
                 datapointType + DatapointType.NEW_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L),

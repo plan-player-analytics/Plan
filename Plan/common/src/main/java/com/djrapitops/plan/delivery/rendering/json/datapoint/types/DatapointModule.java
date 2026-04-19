@@ -98,6 +98,10 @@ public interface DatapointModule {
 
     @Binds
     @IntoSet
+    Datapoint<?> bindCurrentUptime(CurrentUptime currentUptime);
+
+    @Binds
+    @IntoSet
     Datapoint<?> bindMobKills(MobKills mobKills);
 
     @Binds

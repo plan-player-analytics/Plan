@@ -44,9 +44,9 @@ const SessionInsightsCard = ({identifier}) => {
                             icon={faClock} color="playtime-afk"
                             dataType={DatapointType.AFK_TIME}
                             filter={filter}
-                            valueLabel={<QueryDatapointValue dataType={DatapointType.AFK_TIME_PERCENTAGE}
-                                                             filter={filter}
-                                                             permission={"afk.time"}/>}
+                            valueLabel={<>(<QueryDatapointValue dataType={DatapointType.AFK_TIME_PERCENTAGE}
+                                                                filter={filter}
+                                                                permission={"afk.time"}/>)</>}
             />
         </InsightsFor30DaysCard>
     )
