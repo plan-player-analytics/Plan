@@ -29,6 +29,7 @@ import com.djrapitops.plan.gathering.ServerSensor;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.ConfigSystem;
 import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.locale.LocaleSystem;
 import com.djrapitops.plan.settings.theme.Theme;
@@ -95,7 +96,8 @@ public class FullSystemExtension implements ParameterResolver, BeforeAllCallback
         component = new PluginMockComponent(tempDir);
         planSystem = component.getPlanSystem();
         planSystem.getConfigSystem().getConfig()
-                .set(WebserverSettings.PORT, TEST_PORT_NUMBER);
+                .set(WebserverSettings.PORT, TEST_PORT_NUMBER)
+                .set(DisplaySettings.PLAYER_HEAD_IMG_URL, "data:image/png;base64,AA==");
     }
 
     @Override

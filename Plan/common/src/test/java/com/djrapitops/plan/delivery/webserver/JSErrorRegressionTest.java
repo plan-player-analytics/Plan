@@ -17,24 +17,26 @@
 package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.PlanSystem;
+import com.djrapitops.plan.component.Component;
+import com.djrapitops.plan.component.ComponentService;
+import com.djrapitops.plan.extension.DataExtension;
+import com.djrapitops.plan.extension.annotation.ComponentProvider;
+import com.djrapitops.plan.extension.annotation.PluginInfo;
 import com.djrapitops.plan.gathering.domain.DataMap;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.identification.ServerUUID;
-import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.DisplaySettings;
-import com.djrapitops.plan.settings.config.paths.ProxySettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
-import com.djrapitops.plan.settings.locale.LangCode;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
+import extension.FullSystemExtension;
 import extension.SeleniumExtension;
+import org.intellij.lang.annotations.Language;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import org.openqa.selenium.By;
@@ -44,11 +46,9 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.logging.LogType;
 import utilities.RandomData;
 import utilities.TestConstants;
-import utilities.mocks.PluginMockComponent;
 
-import java.nio.file.Path;
 import java.util.*;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.djrapitops.plan.delivery.export.ExportTestUtilities.assertNoLogs;
 
@@ -58,38 +58,24 @@ import static com.djrapitops.plan.delivery.export.ExportTestUtilities.assertNoLo
  * Errors may have been caused by:
  * - Javascript mistakes / build issues
  * - Missed console.log statements
- * - Automatic formatting of plugin javascript (See https://github.com/plan-player-analytics/Plan/issues/820)
  * - Missing file definition in Mocker
  */
-@ExtendWith(SeleniumExtension.class)
+@ExtendWith({FullSystemExtension.class, SeleniumExtension.class})
 class JSErrorRegressionTest {
 
     private static final int TEST_PORT_NUMBER = 9091;
 
-    public static PluginMockComponent component;
-
-    private static PlanSystem planSystem;
-    private static ServerUUID serverUUID;
-
     @BeforeAll
-    static void setUpClass(@TempDir Path tempDir) throws Exception {
-        component = new PluginMockComponent(tempDir);
-        planSystem = component.getPlanSystem();
-
-        PlanConfig config = planSystem.getConfigSystem().getConfig();
-        config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
-        config.set(ProxySettings.IP, "localhost:" + TEST_PORT_NUMBER);
-
-        // Avoid accidentally DDoS:ing head image service during tests.
-        config.set(DisplaySettings.PLAYER_HEAD_IMG_URL, "data:image/png;base64,AA==");
-
-        planSystem.enable();
-        serverUUID = planSystem.getServerInfo().getServerUUID();
-        savePlayerData();
+    static void setUpClass(PlanSystem system) {
+        system.getConfigSystem().getConfig()
+                .set(WebserverSettings.PORT, TEST_PORT_NUMBER);
+        system.enable();
+        savePlayerData(system);
     }
 
-    private static void savePlayerData() {
-        DBSystem dbSystem = planSystem.getDatabaseSystem();
+    private static void savePlayerData(PlanSystem system) {
+        ServerUUID serverUUID = system.getServerInfo().getServerUUID();
+        DBSystem dbSystem = system.getDatabaseSystem();
         Database database = dbSystem.getDatabase();
         UUID uuid = TestConstants.PLAYER_ONE_UUID;
         database.executeTransaction(new PlayerRegisterTransaction(uuid, RandomData::randomTime, TestConstants.PLAYER_ONE_NAME));
@@ -99,9 +85,9 @@ class JSErrorRegressionTest {
     }
 
     @AfterAll
-    static void tearDownClass() {
-        if (planSystem != null) {
-            planSystem.disable();
+    static void tearDownClass(PlanSystem system) {
+        if (system != null) {
+            system.disable();
         }
     }
 
@@ -111,7 +97,7 @@ class JSErrorRegressionTest {
     }
 
     @TestFactory
-    Collection<DynamicTest> javascriptRegressionTest(ChromeDriver driver) {
+    Collection<DynamicTest> javascriptRegressionTest(ChromeDriver driver, PlanSystem system) {
         String[] addresses = new String[]{
                 "http://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_NAME,
                 "http://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_UUID_STRING,
@@ -121,19 +107,29 @@ class JSErrorRegressionTest {
                 "http://localhost:" + TEST_PORT_NUMBER + "/query"
         };
 
-        LangCode[] languages = LangCode.values();
-        return
-                Arrays.stream(addresses)
-                        .map(link -> testAddress(link, driver))
-                        .collect(Collectors.toList());
+        return Arrays.stream(addresses)
+                .map(link -> testAddress(link, driver, system))
+                .toList();
     }
 
-    private DynamicTest testAddress(String address, ChromeDriver driver) {
+    @TestFactory
+    Stream<DynamicTest> componentJsRegressionTest(ChromeDriver driver, PlanSystem system) {
+        system.getApiServices().getExtensionService()
+                .register(new ComponentExtension())
+                .orElseThrow(AssertionError::new)
+                .updatePlayerData(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME);
+
+        String address = "http://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_UUID_STRING + "/plugins/" + system.getServerInfo().getServerIdentifier().getName().replaceAll(" ", "%20");
+        return Stream.of(testAddress(address, driver, system));
+    }
+
+    private DynamicTest testAddress(String address, ChromeDriver driver, PlanSystem system) {
         return DynamicTest.dynamicTest("Page should not log anything on js console: " + address, () -> {
-            Locale locale = planSystem.getLocaleSystem().getLocale();
+            Locale locale = system.getLocaleSystem().getLocale();
             try {
                 driver.get(address);
-                Thread.sleep(250);
+                SeleniumExtension.waitForPageLoadForSeconds(5, driver);
+                SeleniumExtension.waitForElementToBeVisible(By.className("load-in"), driver);
                 assertNoLogs(driver.manage().logs().get(LogType.BROWSER).getAll(), address);
             } finally {
                 locale.clear(); // Reset locale after test
@@ -175,9 +171,78 @@ class JSErrorRegressionTest {
                     .filter(href -> href.contains("localhost") && !href.contains("logout"))
                     .map(href -> href.split("#")[0])
                     .distinct()
-                    .collect(Collectors.toList());
-        } catch (StaleElementReferenceException e) {
+                    .toList();
+        } catch (StaleElementReferenceException _) {
             return getLinks(driver, attempt + 1);
+        }
+    }
+
+    @PluginInfo(name = "Component-regression")
+    static class ComponentExtension implements DataExtension {
+        @ComponentProvider(text = "regression")
+        public Component component(UUID playerUUID) {
+            @Language("JSON")
+            String json = """
+                    {
+                      "extra": [
+                        {
+                          "color": "gray",
+                          "extra": [
+                            {
+                              "color": "#9D50BB",
+                              "extra": [
+                                {
+                                  "color": "#914EB7",
+                                  "extra": [
+                                    {
+                                      "color": "#864CB3",
+                                      "extra": [
+                                        {
+                                          "color": "#7A4AAE",
+                                          "extra": [
+                                            {
+                                              "color": "#6E48AA",
+                                              "extra": [
+                                                {
+                                                  "color": "gray",
+                                                  "extra": [
+                                                    {
+                                                      "color": "dark_aqua",
+                                                      "text": "Executive Advisor"
+                                                    }
+                                                  ],
+                                                  "text": "] "
+                                                }
+                                              ],
+                                              "text": "f"
+                                            }
+                                          ],
+                                          "text": "f"
+                                        }
+                                      ],
+                                      "text": "a"
+                                    }
+                                  ],
+                                  "text": "t"
+                                }
+                              ],
+                              "text": "S"
+                            }
+                          ],
+                          "text": "["
+                        }
+                      ],
+                      "text": " "
+                    }""";
+            return ComponentService.getInstance().fromJson(json);
+        }
+
+        @ComponentProvider(text = "regression2")
+        public Component component2(UUID playerUUID) {
+            @Language("JSON")
+            String json2 = """
+                    {"color":"dark_aqua","text":"EA"}""";
+            return ComponentService.getInstance().fromJson(json2);
         }
     }
 }

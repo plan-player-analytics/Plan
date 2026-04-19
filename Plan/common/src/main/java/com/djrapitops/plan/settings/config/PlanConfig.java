@@ -109,8 +109,9 @@ public class PlanConfig extends Config {
         return !isTrue(setting);
     }
 
-    public <T> void set(Setting<T> setting, T value) {
+    public <T> PlanConfig set(Setting<T> setting, T value) {
         set(setting.getPath(), value);
+        return this;
     }
 
     public TimeZone getTimeZone() {

@@ -56,7 +56,7 @@ const valueOrUndefined = (value) => {
 const sanitizeComponent = (component) => {
     if (!component) return [];
     return {
-        extra: sanitizeComponent(component.extra),
+        extra: component.extra ? component.extra.filter(Boolean).map(sanitizeComponent) : [],
         color: valueOrUndefined(component.color),
         bold: valueOrUndefined(component.bold),
         italic: valueOrUndefined(component.italic),
