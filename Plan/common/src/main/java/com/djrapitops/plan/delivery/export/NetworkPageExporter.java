@@ -115,7 +115,6 @@ public class NetworkPageExporter extends FileExporter {
         String afterMillis = "&afterMillisAgo=";
         String beforeMillis = "&beforeMillisAgo=";
         exportJSON(toDirectory,
-                "network/overview",
                 "network/servers",
                 "network/playerbaseOverview",
                 "graph?type=playersOnline&server=" + serverUUID,
@@ -160,7 +159,7 @@ public class NetworkPageExporter extends FileExporter {
                 datapointType + DatapointType.PLAYER_KILLS,
                 datapointType + DatapointType.MOB_KILLS,
                 datapointType + DatapointType.DEATHS,
-                datapointType + DatapointType.CURRENT_UPTIME,
+                datapointType + DatapointType.UPTIME_CURRENT,
                 // Week comparison
                 datapointType + DatapointType.UNIQUE_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L),
                 datapointType + DatapointType.NEW_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L),

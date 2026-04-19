@@ -13,7 +13,7 @@ const CurrentUptime = ({filter}: Props) => {
     const {t} = useTranslation();
 
     return (
-        <QueryDatapoint dataType={DatapointType.CURRENT_UPTIME} icon={faPowerOff} color={'uptime'}
+        <QueryDatapoint dataType={DatapointType.UPTIME_CURRENT} icon={faPowerOff} color={'uptime'}
                         name={t('html.label.currentUptime')} filter={filter}
                         fallbackUnavailableExplanation={t('html.description.noUptimeCalculation')}/>
     )

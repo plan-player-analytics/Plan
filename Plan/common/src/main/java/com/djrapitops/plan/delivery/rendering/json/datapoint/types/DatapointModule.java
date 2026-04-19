@@ -98,7 +98,7 @@ public interface DatapointModule {
 
     @Binds
     @IntoSet
-    Datapoint<?> bindCurrentUptime(CurrentUptime currentUptime);
+    Datapoint<?> bindUptimeCurrent(UptimeCurrent uptimeCurrent);
 
     @Binds
     @IntoSet
@@ -110,5 +110,29 @@ public interface DatapointModule {
 
     @Binds
     @IntoSet
-    Datapoint<?> bindAverageTPS(AverageTPS averageTPS);
+    Datapoint<?> bindTPSAverage(TPSAverage tpsAverage);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindCPUAverage(CPUAverage cpuAverage);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindMSPTAverage(MSPTAverage msptaverage);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindPlayersOnlineAverage(PlayersOnlineAverage playersOnlineAverage);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindRAMAverage(RAMAverage ramAverage);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindEntitiesAverage(EntitiesAverage entitiesAverage);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindChunksAverage(ChunksAverage chunksAverage);
 }

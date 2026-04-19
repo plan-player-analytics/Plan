@@ -21,42 +21,40 @@ import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
-import com.djrapitops.plan.gathering.ServerUptimeCalculator;
-import com.djrapitops.plan.identification.ServerInfo;
-import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
 import java.util.Optional;
 
 /**
- * Datapoint for looking up current uptime of the servers.
+ * Datapoint for looking up Average CPU usage within the timeframe.
  *
  * @author AuroraLS3
  */
 @Singleton
-public class CurrentUptime implements Datapoint<Long> {
+public class CPUAverage implements Datapoint<Double> {
 
-    private final ServerInfo serverInfo;
-    private final ServerUptimeCalculator serverUptimeCalculator;
+    private final DBSystem dbSystem;
 
     @Inject
-    public CurrentUptime(ServerInfo serverInfo, ServerUptimeCalculator serverUptimeCalculator) {
-        this.serverInfo = serverInfo;
-        this.serverUptimeCalculator = serverUptimeCalculator;
+    public CPUAverage(DBSystem dbSystem) {
+        this.dbSystem = dbSystem;
     }
 
     @Override
-    public Optional<Long> getValue(GenericFilter filter) {
+    public Optional<Double> getValue(GenericFilter filter) {
         if (filter.getPlayerUUID().isPresent()) {
-            throw new BadRequestException("CURRENT_UPTIME does not support player parameter");
+            throw new BadRequestException("CPU_AVERAGE does not support player parameter");
         }
 
-        List<ServerUUID> serverUUIDs = filter.getServerUUIDs();
-        ServerUUID serverUUID = serverUUIDs.size() == 1 ? serverUUIDs.get(0) : serverInfo.getServerUUID();
+        if (filter.getServerUUIDs().isEmpty()) {
+            throw new BadRequestException("CPU_AVERAGE is only available for servers");
+        }
 
-        return serverUptimeCalculator.getServerUptimeMillis(serverUUID);
+        double average = dbSystem.getDatabase().query(TPSQueries.averageCPU(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
+        return average != -1.0 ? Optional.of(average) : Optional.empty();
     }
 
     @Override
@@ -64,19 +62,19 @@ public class CurrentUptime implements Datapoint<Long> {
         if (filter.getPlayerUUID().isPresent()) {
             return WebPermission.DATA_PLAYER;
         } else if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.DATA_SERVER_CURRENT_UPTIME;
+            return WebPermission.DATA_SERVER_CPU_AVERAGE;
         } else {
-            return WebPermission.DATA_NETWORK_CURRENT_UPTIME;
+            return WebPermission.DATA_NETWORK;
         }
     }
 
     @Override
     public DatapointType getType() {
-        return DatapointType.CURRENT_UPTIME;
+        return DatapointType.CPU_AVERAGE;
     }
 
     @Override
     public FormatType getFormatType() {
-        return FormatType.TIME_AMOUNT;
+        return FormatType.PERCENTAGE;
     }
 }

@@ -29,32 +29,32 @@ import javax.inject.Singleton;
 import java.util.Optional;
 
 /**
- * Datapoint for looking up Average TPS within the timeframe.
+ * Datapoint for looking up Average CHUNKS usage within the timeframe.
  *
  * @author AuroraLS3
  */
 @Singleton
-public class AverageTPS implements Datapoint<Double> {
+public class ChunksAverage implements Datapoint<Long> {
 
     private final DBSystem dbSystem;
 
     @Inject
-    public AverageTPS(DBSystem dbSystem) {
+    public ChunksAverage(DBSystem dbSystem) {
         this.dbSystem = dbSystem;
     }
 
     @Override
-    public Optional<Double> getValue(GenericFilter filter) {
+    public Optional<Long> getValue(GenericFilter filter) {
         if (filter.getPlayerUUID().isPresent()) {
-            throw new BadRequestException("AVERAGE_TPS does not support player parameter");
+            throw new BadRequestException("CHUNKS_AVERAGE does not support player parameter");
         }
 
         if (filter.getServerUUIDs().isEmpty()) {
-            throw new BadRequestException("AVERAGE_TPS is only available for servers");
+            throw new BadRequestException("CHUNKS_AVERAGE is only available for servers");
         }
 
-        double average = dbSystem.getDatabase().query(TPSQueries.averageTPS(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
-        return average != -1.0 ? Optional.of(average) : Optional.empty();
+        long average = dbSystem.getDatabase().query(TPSQueries.averageChunks(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
+        return average != -1L ? Optional.of(average) : Optional.empty();
     }
 
     @Override
@@ -62,7 +62,7 @@ public class AverageTPS implements Datapoint<Double> {
         if (filter.getPlayerUUID().isPresent()) {
             return WebPermission.DATA_PLAYER;
         } else if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.DATA_SERVER_AVERAGE_TPS;
+            return WebPermission.DATA_SERVER_CHUNKS_AVERAGE;
         } else {
             return WebPermission.DATA_NETWORK;
         }
@@ -70,11 +70,11 @@ public class AverageTPS implements Datapoint<Double> {
 
     @Override
     public DatapointType getType() {
-        return DatapointType.AVERAGE_TPS;
+        return DatapointType.CHUNKS_AVERAGE;
     }
 
     @Override
     public FormatType getFormatType() {
-        return FormatType.DECIMAL;
+        return FormatType.NONE;
     }
 }

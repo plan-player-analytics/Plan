@@ -35,7 +35,7 @@ const Last7DaysCard = ({data}) => {
     const {identifier} = useParams();
 
 
-    const {error} = useDatapointQuery(true, DatapointType.AVERAGE_TPS, {server: identifier, afterMillisAgo: MS_WEEK})
+    const {error} = useDatapointQuery(true, DatapointType.TPS_AVERAGE, {server: identifier, afterMillisAgo: MS_WEEK})
     const noData = error?.status === 404
 
     if (!data) return <CardLoader/>;
@@ -70,7 +70,7 @@ const Last7DaysCard = ({data}) => {
                         <hr/>
                         <QueryDatapoint name={t('html.label.averageTps')}
                                         color={'tps-average'} icon={faTachometerAlt}
-                                        dataType={DatapointType.AVERAGE_TPS}
+                                        dataType={DatapointType.TPS_AVERAGE}
                                         filter={filter} bold/>
                         <Datapoint name={t('html.label.lowTpsSpikes')}
                                    color={'tps-low-spikes'} icon={faExclamationCircle}

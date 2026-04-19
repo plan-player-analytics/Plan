@@ -47,7 +47,7 @@ import java.util.concurrent.TimeUnit;
  * Creates JSON payload for /network-page Network Overview tab.
  *
  * @author AuroraLS3
- * @deprecated Use /v1/datapoint instead (types UNIQUE_PLAYERS, NEW_PLAYERS, REGULAR_PLAYERS, CURRENT_UPTIME, PLAYERS_ONLINE, PLAYTIME, PLAYTIME_PER_PLAYER_AVERAGE, SESSION_LENGTH_AVERAGE, PLAYER_KILLS, MOB_KILLS, DEATHS).
+ * @deprecated Use /v1/datapoint instead (types UNIQUE_PLAYERS, NEW_PLAYERS, REGULAR_PLAYERS, UPTIME_CURRENT, PLAYERS_ONLINE, PLAYTIME, PLAYTIME_PER_PLAYER_AVERAGE, SESSION_LENGTH_AVERAGE, PLAYER_KILLS, MOB_KILLS, DEATHS).
  */
 @Singleton
 @Deprecated(since = "2026-04-19 / 5.7 build 3392")

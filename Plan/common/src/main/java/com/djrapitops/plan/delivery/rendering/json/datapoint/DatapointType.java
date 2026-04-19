@@ -45,11 +45,17 @@ public enum DatapointType {
     PLAYTIME_PER_PLAYER_AVERAGE(PlaytimePerPlayerAverage.class, DatapointCacheKey.SESSION),
     PLAYERS_ONLINE_PEAK(PlayersOnlinePeak.class, DatapointCacheKey.TPS),
     PLAYERS_ONLINE(PlayersOnline.class, DatapointCacheKey.TPS),
-    CURRENT_UPTIME(CurrentUptime.class),
+    UPTIME_CURRENT(UptimeCurrent.class),
     MOB_KILLS(MobKills.class, DatapointCacheKey.SESSION),
     PLAYER_KILLS(PlayerKills.class, DatapointCacheKey.SESSION),
     DEATHS(Deaths.class, DatapointCacheKey.SESSION),
-    AVERAGE_TPS(AverageTPS.class, DatapointCacheKey.TPS);
+    PLAYERS_ONLINE_AVERAGE(PlayersOnlineAverage.class, DatapointCacheKey.TPS),
+    TPS_AVERAGE(TPSAverage.class, DatapointCacheKey.TPS),
+    MSPT_AVERAGE(MSPTAverage.class, DatapointCacheKey.TPS),
+    CPU_AVERAGE(CPUAverage.class, DatapointCacheKey.TPS),
+    RAM_AVERAGE(RAMAverage.class, DatapointCacheKey.TPS),
+    ENTITIES_AVERAGE(EntitiesAverage.class, DatapointCacheKey.TPS),
+    CHUNKS_AVERAGE(ChunksAverage.class, DatapointCacheKey.TPS);
 
     private final Class<? extends Datapoint<?>> datapointClass;
     private final DatapointCacheKey[] cacheKeys;

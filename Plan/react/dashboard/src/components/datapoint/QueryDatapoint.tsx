@@ -141,9 +141,13 @@ export function QueryDatapointValue<K extends DatapointType>({permission, dataTy
     const {hasPermission} = useAuth();
     const allowed = hasPermission(calculatePermission(dataType, permission, filter));
     const {data, isFetching, error} = useDatapointQuery(allowed, dataType, filter);
+    const {t} = useTranslation();
 
     if (!allowed) return null;
     if (error) {
+        if (error.status === 404) {
+            return t('plugin.generic.unavailable');
+        }
         console.error(error);
         return error.message;
     }

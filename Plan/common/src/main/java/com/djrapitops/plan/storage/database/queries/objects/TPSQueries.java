@@ -453,19 +453,55 @@ public class TPSQueries {
         };
     }
 
+    public static Query<Double> averagePlayersOnline(long after, long before, ServerUUID serverUUID) {
+        return averagePlayersOnline(after, before, Collections.singletonList(serverUUID));
+    }
+
+    public static Query<Double> averagePlayersOnline(long after, long before, List<ServerUUID> serverUUIDs) {
+        if (serverUUIDs.isEmpty()) {
+            return db -> -1.0;
+        }
+
+        String sql = SELECT + "AVG(" + PLAYERS_ONLINE + ") as average" + FROM + TABLE_NAME + " t" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
+                WHERE + "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
+                AND + PLAYERS_ONLINE + ">=0" +
+                AND + DATE + "<?" +
+                AND + DATE + ">?";
+        return new QueryStatement<>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, before);
+                statement.setLong(2, after);
+            }
+
+            @Override
+            public Double processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getDouble("average") : -1.0;
+            }
+        };
+    }
+
     public static Query<Double> averageCPU(long after, long before, ServerUUID serverUUID) {
+        return averageCPU(after, before, Collections.singletonList(serverUUID));
+    }
+
+    public static Query<Double> averageCPU(long after, long before, List<ServerUUID> serverUUIDs) {
+        if (serverUUIDs.isEmpty()) {
+            return db -> -1.0;
+        }
+
         String sql = SELECT + "AVG(" + CPU_USAGE + ") as average" + FROM + TABLE_NAME + " t" +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
-                WHERE + "s." + ServerTable.SERVER_UUID + "=?" +
+                WHERE + "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
                 AND + CPU_USAGE + ">=0" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-                statement.setLong(2, before);
-                statement.setLong(3, after);
+                statement.setLong(1, before);
+                statement.setLong(2, after);
             }
 
             @Override
@@ -476,18 +512,25 @@ public class TPSQueries {
     }
 
     public static Query<Long> averageRAM(long after, long before, ServerUUID serverUUID) {
+        return averageRAM(after, before, Collections.singletonList(serverUUID));
+    }
+
+    public static Query<Long> averageRAM(long after, long before, List<ServerUUID> serverUUIDs) {
+        if (serverUUIDs.isEmpty()) {
+            return db -> -1L;
+        }
+
         String sql = SELECT + "AVG(" + RAM_USAGE + ") as average" + FROM + TABLE_NAME + " t" +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
-                WHERE + "s." + ServerTable.SERVER_UUID + "=?" +
+                WHERE + "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
                 AND + RAM_USAGE + ">=0" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-                statement.setLong(2, before);
-                statement.setLong(3, after);
+                statement.setLong(1, before);
+                statement.setLong(2, after);
             }
 
             @Override
@@ -498,18 +541,25 @@ public class TPSQueries {
     }
 
     public static Query<Long> averageChunks(long after, long before, ServerUUID serverUUID) {
+        return averageChunks(after, before, Collections.singletonList(serverUUID));
+    }
+
+    public static Query<Long> averageChunks(long after, long before, List<ServerUUID> serverUUIDs) {
+        if (serverUUIDs.isEmpty()) {
+            return db -> -1L;
+        }
+
         String sql = SELECT + "AVG(" + CHUNKS + ") as average" + FROM + TABLE_NAME + " t" +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
-                WHERE + "s." + ServerTable.SERVER_UUID + "=?" +
+                WHERE + "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
                 AND + CHUNKS + ">=0" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-                statement.setLong(2, before);
-                statement.setLong(3, after);
+                statement.setLong(1, before);
+                statement.setLong(2, after);
             }
 
             @Override
@@ -520,23 +570,59 @@ public class TPSQueries {
     }
 
     public static Query<Long> averageEntities(long after, long before, ServerUUID serverUUID) {
+        return averageEntities(after, before, Collections.singletonList(serverUUID));
+    }
+
+    public static Query<Long> averageEntities(long after, long before, List<ServerUUID> serverUUIDs) {
+        if (serverUUIDs.isEmpty()) {
+            return db -> -1L;
+        }
+
         String sql = SELECT + "AVG(" + ENTITIES + ") as average" + FROM + TABLE_NAME + " t" +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
-                WHERE + "s." + ServerTable.SERVER_UUID + "=?" +
+                WHERE + "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
                 AND + ENTITIES + ">=0" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-                statement.setLong(2, before);
-                statement.setLong(3, after);
+                statement.setLong(1, before);
+                statement.setLong(2, after);
             }
 
             @Override
             public Long processResults(ResultSet set) throws SQLException {
                 return set.next() ? (long) set.getDouble("average") : -1L;
+            }
+        };
+    }
+
+    public static Query<Double> averageMSPT(long after, long before, ServerUUID serverUUID) {
+        return averageMSPT(after, before, Collections.singletonList(serverUUID));
+    }
+
+    public static Query<Double> averageMSPT(long after, long before, List<ServerUUID> serverUUIDs) {
+        if (serverUUIDs.isEmpty()) {
+            return db -> -1.0;
+        }
+
+        String sql = SELECT + "AVG(" + MSPT_AVERAGE + ") as average" + FROM + TABLE_NAME + " t" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
+                WHERE + "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
+                AND + MSPT_AVERAGE + ">=0" +
+                AND + DATE + "<?" +
+                AND + DATE + ">?";
+        return new QueryStatement<>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, before);
+                statement.setLong(2, after);
+            }
+
+            @Override
+            public Double processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getDouble("average") : -1.0;
             }
         };
     }
