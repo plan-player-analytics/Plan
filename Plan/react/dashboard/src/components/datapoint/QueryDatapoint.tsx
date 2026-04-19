@@ -10,7 +10,7 @@ import {GenericFilter} from "../../dataHooks/model/GenericFilter";
 import {useNavigation} from "../../hooks/navigationHook";
 import {useQuery} from "@tanstack/react-query";
 import {queryRetry} from "../../dataHooks/queryRetry";
-import {useEffect} from "react";
+import React, {useEffect} from "react";
 import {Datapoint as DatapointComponent, DatapointProps} from "./Datapoint";
 import FormattedTime from "../text/FormattedTime";
 import {DatapointLoader} from "../navigation/Loader";
@@ -22,11 +22,14 @@ import {useTranslation} from "react-i18next";
 import {DateObj, isDateObj} from "../../dataHooks/model/datapoint/DateObj";
 import FormattedDate from "../text/FormattedDate";
 import BigTrend from "../trend/BigTrend";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 
 type Props<K extends DatapointType> = {
     dataType: K;
     filter?: GenericFilter;
     permission?: string;
+    fallbackUnavailableExplanation?: string
 } & Omit<DatapointProps, 'value'>;
 
 type ValueProps<K extends DatapointType> = Omit<Props<K>, 'color' | 'name' | 'icon'>;
@@ -67,6 +70,8 @@ function Format<K extends DatapointType>({value, formatType}: FormatProps<K>) {
             return <FormattedTime timeMs={value}/>
         case "PERCENTAGE":
             return formatDecimals(value as number * 100) + '%'
+        case "DECIMAL":
+            return formatDecimals(value as number)
         case "SPECIAL":
             if (isOutOf(value)) {
                 return <FormattedOutOf outOf={value as OutOf}/>
@@ -94,13 +99,27 @@ export function calculatePermission(dataType: DatapointType, permission?: string
     return 'data.network.' + asPermission;
 }
 
-export function QueryDatapoint<K extends DatapointType>({permission, dataType, filter, ...props}: Props<K>) {
+export function QueryDatapoint<K extends DatapointType>({
+                                                            permission,
+                                                            dataType,
+                                                            filter,
+                                                            fallbackUnavailableExplanation,
+                                                            ...props
+                                                        }: Props<K>) {
     const {hasPermission} = useAuth();
     const allowed = hasPermission(calculatePermission(dataType, permission, filter));
     const {data, isFetching, error} = useDatapointQuery(allowed, dataType, filter);
 
     if (!allowed) return null;
     if (error) {
+        if (error.status === 404) {
+            return <DatapointComponent
+                {...props}
+                value={'plugin.generic.unavailable'}
+                valueLabel={<span
+                    title={fallbackUnavailableExplanation}><FontAwesomeIcon icon={faQuestionCircle}/></span>}
+            />
+        }
         console.error(error);
         return <DatapointComponent
             {...props}
