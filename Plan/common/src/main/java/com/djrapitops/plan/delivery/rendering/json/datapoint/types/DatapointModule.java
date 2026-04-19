@@ -82,9 +82,21 @@ public interface DatapointModule {
 
     @Binds
     @IntoSet
+    Datapoint<?> bindDeaths(Deaths deaths);
+
+    @Binds
+    @IntoSet
     Datapoint<?> bindPlaytimePerPlayerAverage(PlaytimePerPlayerAverage playtimePerPlayerAverage);
 
     @Binds
     @IntoSet
     Datapoint<?> bindPlayerOnlinePeak(PlayersOnlinePeak playersOnlinePeak);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindMobKills(MobKills mobKills);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindPlayerKills(PlayerKills playerKills);
 }

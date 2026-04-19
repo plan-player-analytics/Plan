@@ -221,7 +221,16 @@ class AccessControlTest {
                 Arguments.of("/v1/datapoint?type=PLAYERS_ONLINE_PEAK&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
                 Arguments.of("/v1/datapoint?type=REGULAR_PLAYERS", WebPermission.DATA_NETWORK_REGULAR_PLAYERS, 200, 403),
                 Arguments.of("/v1/datapoint?type=REGULAR_PLAYERS&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_REGULAR_PLAYERS, 200, 403),
-                Arguments.of("/v1/datapoint?type=REGULAR_PLAYERS&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403)
+                Arguments.of("/v1/datapoint?type=REGULAR_PLAYERS&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=DEATHS", WebPermission.DATA_NETWORK_DEATHS, 200, 403),
+                Arguments.of("/v1/datapoint?type=DEATHS&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_DEATHS, 200, 403),
+                Arguments.of("/v1/datapoint?type=DEATHS&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_DEATHS, 200, 403),
+                Arguments.of("/v1/datapoint?type=PLAYER_KILLS", WebPermission.DATA_NETWORK_PLAYER_KILLS, 200, 403),
+                Arguments.of("/v1/datapoint?type=PLAYER_KILLS&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_PLAYER_KILLS, 200, 403),
+                Arguments.of("/v1/datapoint?type=PLAYER_KILLS&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_PLAYER_KILLS, 200, 403),
+                Arguments.of("/v1/datapoint?type=MOB_KILLS", WebPermission.DATA_NETWORK_MOB_KILLS, 200, 403),
+                Arguments.of("/v1/datapoint?type=MOB_KILLS&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_MOB_KILLS, 200, 403),
+                Arguments.of("/v1/datapoint?type=MOB_KILLS&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_MOB_KILLS, 200, 403)
         );
     }
 

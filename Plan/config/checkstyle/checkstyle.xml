@@ -24,6 +24,10 @@
         <!-- This value is alright. Notable: SessionQueries 1007 -->
         <property name="max" value="1250"/>
         <property name="fileExtensions" value=".java"/>
+        <!-- These files are ignored. -->
+        <property name="files"
+                  value="SessionQueries.java|.*Test.java"/>
+
     </module>
     <module name="LineLength">
         <!-- This value is very high. Notable: ExtensionExtractor: 254, DeepHelpLang 345, WorldMap 2964 -->

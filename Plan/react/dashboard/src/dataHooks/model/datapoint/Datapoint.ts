@@ -24,6 +24,9 @@ export enum DatapointType {
     SESSION_COUNT = "SESSION_COUNT",
     SESSION_LENGTH_AVERAGE = "SESSION_LENGTH_AVERAGE",
     PLAYTIME_PER_PLAYER_AVERAGE = "PLAYTIME_PER_PLAYER_AVERAGE",
+    DEATHS = "DEATHS",
+    PLAYER_KILLS = "PLAYER_KILLS",
+    MOB_KILLS = "MOB_KILLS",
 }
 
 export type DatapointTypeMap = {
@@ -37,6 +40,9 @@ export type DatapointTypeMap = {
     SESSION_COUNT: number;
     SESSION_LENGTH_AVERAGE: number;
     PLAYTIME_PER_PLAYER_AVERAGE: number;
+    DEATHS: number;
+    PLAYER_KILLS: number;
+    MOB_KILLS: number;
     SERVER_OCCUPIED: OutOf;
     MOST_ACTIVE_WORLD: OutOfCategory;
     MOST_ACTIVE_GAME_MODE: OutOfCategory;

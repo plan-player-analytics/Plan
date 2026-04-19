@@ -179,14 +179,43 @@ public class KillQueries {
     }
 
     public static Query<Long> playerKillCount(long after, long before, ServerUUID serverUUID) {
+        return playerKillCount(after, before, List.of(serverUUID));
+    }
+
+    public static Query<Long> playerKillCount(long after, long before) {
+        return playerKillCount(after, before, List.of());
+    }
+
+    public static Query<Long> playerKillCount(long after, long before, List<ServerUUID> serverUUIDs) {
         String sql = SELECT + "COUNT(1) as count" +
                 FROM + KillsTable.TABLE_NAME +
-                WHERE + KillsTable.SERVER_UUID + "=?" +
-                AND + KillsTable.DATE + ">=?" +
+                WHERE + (serverUUIDs.isEmpty() ? "" : KillsTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" + AND)
+                + KillsTable.DATE + ">=?" +
                 AND + KillsTable.DATE + "<=?";
-
-        return db -> db.queryOptional(sql, RowExtractors.getLong("count"), serverUUID, after, before)
+        return db -> db.queryOptional(sql, RowExtractors.getLong("count"), after, before)
                 .orElse(0L);
+    }
+
+    public static Query<Long> playerKillCount(long after, long before, UUID playerUUID, List<ServerUUID> serverUUIDs) {
+        String sql = SELECT + "COUNT(1) as count" +
+                FROM + KillsTable.TABLE_NAME +
+                WHERE + (serverUUIDs.isEmpty() ? "" : KillsTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" + AND)
+                + KillsTable.DATE + ">=?" +
+                AND + KillsTable.DATE + "<=?" +
+                AND + KillsTable.KILLER_UUID + "=?";
+        return new QueryStatement<>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, after);
+                statement.setLong(2, before);
+                statement.setString(3, playerUUID.toString());
+            }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getLong("count") : 0L;
+            }
+        };
     }
 
     public static Query<Double> averageKDR(long after, long before, ServerUUID serverUUID) {
@@ -236,27 +265,99 @@ public class KillQueries {
     }
 
     public static Query<Long> mobKillCount(long after, long before, ServerUUID serverUUID) {
-        String sql = SELECT + "SUM(" + SessionsTable.MOB_KILLS + ") as count" +
-                FROM + SessionsTable.TABLE_NAME + " t" +
-                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SessionsTable.SERVER_ID +
-                WHERE + "s." + ServerTable.SERVER_UUID + "=?" +
-                AND + SessionsTable.SESSION_END + ">=?" +
-                AND + SessionsTable.SESSION_START + "<=?";
+        return mobKillCount(after, before, List.of(serverUUID));
+    }
 
+    public static Query<Long> mobKillCount(long after, long before) {
+        return mobKillCount(after, before, List.of());
+    }
 
-        return db -> db.queryOptional(sql, RowExtractors.getLong("count"), serverUUID.toString(), after, before)
-                .orElse(0L);
+    public static Query<Long> mobKillCount(long after, long before, List<ServerUUID> serverUUIDs) {
+        // Mob kill count filtered by optional set of servers
+        return db -> {
+            String sql = SELECT + "COALESCE(SUM(" + SessionsTable.MOB_KILLS + "),0) as count" +
+                    FROM + SessionsTable.TABLE_NAME +
+                    WHERE + (!serverUUIDs.isEmpty() ? SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) + AND : "") +
+                    SessionsTable.SESSION_END + ">=?" +
+                    AND + SessionsTable.SESSION_START + "<=?";
+            return db.query(new QueryStatement<Long>(sql) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, after);
+                    statement.setLong(2, before);
+                }
+
+                @Override
+                public Long processResults(ResultSet set) throws SQLException {
+                    return set.next() ? set.getLong("count") : 0L;
+                }
+            });
+        };
+    }
+
+    public static Query<Long> mobKillCount(long after, long before, UUID playerUUID, List<ServerUUID> serverUUIDs) {
+        // Player-specific mob kill count filtered by optional set of servers
+        return db -> {
+            String sql = SELECT + "COALESCE(SUM(" + SessionsTable.MOB_KILLS + "),0) as count" +
+                    FROM + SessionsTable.TABLE_NAME +
+                    WHERE + (!serverUUIDs.isEmpty() ? SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) + AND : "") +
+                    SessionsTable.SESSION_END + ">=?" +
+                    AND + SessionsTable.SESSION_START + "<=?" +
+                    AND + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID;
+            return db.query(new QueryStatement<Long>(sql) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, after);
+                    statement.setLong(2, before);
+                    statement.setString(3, playerUUID.toString());
+                }
+
+                @Override
+                public Long processResults(ResultSet set) throws SQLException {
+                    return set.next() ? set.getLong("count") : 0L;
+                }
+            });
+        };
     }
 
     public static Query<Long> deathCount(long after, long before, ServerUUID serverUUID) {
+        return deathCount(after, before, List.of(serverUUID));
+    }
+
+    public static Query<Long> deathCount(long after, long before) {
+        return deathCount(after, before, List.of());
+    }
+
+    public static Query<Long> deathCount(long after, long before, List<ServerUUID> serverUUIDs) {
         String sql = SELECT + "SUM(" + SessionsTable.DEATHS + ") as count" +
-                FROM + SessionsTable.TABLE_NAME + " t" +
-                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SessionsTable.SERVER_ID +
-                WHERE + "s." + ServerTable.SERVER_UUID + "=?" +
-                AND + SessionsTable.SESSION_END + ">=?" +
-                AND + SessionsTable.SESSION_START + "<=?";
-        return db -> db.queryOptional(sql, RowExtractors.getLong("count"), serverUUID.toString(), after, before)
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.SESSION_END + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?" +
+                (!serverUUIDs.isEmpty() ? AND + SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) : "");
+        return db -> db.queryOptional(sql, RowExtractors.getLong("count"), after, before)
                 .orElse(0L);
+    }
+
+    public static Query<Long> deathCount(long after, long before, UUID playerUUID, List<ServerUUID> serverUUIDs) {
+        String sql = SELECT + "SUM(" + SessionsTable.DEATHS + ") as count" +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + SessionsTable.SESSION_END + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?" +
+                AND + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
+                (!serverUUIDs.isEmpty() ? AND + SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) : "");
+        return new QueryStatement<>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, after);
+                statement.setLong(2, before);
+                statement.setString(3, playerUUID.toString());
+            }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getLong("count") : 0L;
+            }
+        };
     }
 
     public static Query<List<String>> topWeaponsOfServer(long after, long before, ServerUUID serverUUID, int limit) {
