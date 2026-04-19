@@ -94,6 +94,10 @@ public interface DatapointModule {
 
     @Binds
     @IntoSet
+    Datapoint<?> bindPlayersOnline(PlayersOnline playersOnline);
+
+    @Binds
+    @IntoSet
     Datapoint<?> bindMobKills(MobKills mobKills);
 
     @Binds

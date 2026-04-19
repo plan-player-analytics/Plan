@@ -2,7 +2,6 @@ import {useTranslation} from "react-i18next";
 import {Card} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faBookOpen, faChartLine, faCrosshairs, faSkull, faUser, faUsers} from "@fortawesome/free-solid-svg-icons";
-import Datapoint from "../../../datapoint/Datapoint.tsx";
 import {faCalendarCheck, faClock} from "@fortawesome/free-regular-svg-icons";
 import React from "react";
 import {CardLoader} from "../../../navigation/Loader.tsx";
@@ -45,9 +44,10 @@ const ServerAsNumbersCard = ({data}) => {
                                         color={'players-regular'} icon={faUsers}
                                         dataType={DatapointType.REGULAR_PLAYERS}
                                         filter={filter} bold/>
-                        <Datapoint name={t('html.label.playersOnline')}
-                                   color={'players-online'} icon={faUser}
-                                   value={data.online_players} bold/>
+                        <QueryDatapoint name={t('html.label.playersOnline')}
+                                        color={'players-online'} icon={faUser}
+                                        dataType={DatapointType.PLAYERS_ONLINE}
+                                        filter={filter} bold/>
                         <hr/>
                         <QueryDatapoint
                             name={t('html.label.lastPeak')}

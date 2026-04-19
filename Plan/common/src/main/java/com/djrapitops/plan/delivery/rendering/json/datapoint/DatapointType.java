@@ -44,6 +44,7 @@ public enum DatapointType {
     SESSION_LENGTH_AVERAGE(SessionLengthAverage.class, DatapointCacheKey.SESSION),
     PLAYTIME_PER_PLAYER_AVERAGE(PlaytimePerPlayerAverage.class, DatapointCacheKey.SESSION),
     PLAYERS_ONLINE_PEAK(PlayersOnlinePeak.class, DatapointCacheKey.TPS),
+    PLAYERS_ONLINE(PlayersOnline.class, DatapointCacheKey.TPS),
     MOB_KILLS(MobKills.class, DatapointCacheKey.SESSION),
     PLAYER_KILLS(PlayerKills.class, DatapointCacheKey.SESSION),
     DEATHS(Deaths.class, DatapointCacheKey.SESSION);

@@ -159,6 +159,7 @@ public class ServerPageExporter extends FileExporter {
                 datapointType + DatapointType.REGULAR_PLAYERS + server,
                 datapointType + DatapointType.PLAYERS_ONLINE_PEAK + afterMillis + TimeUnit.DAYS.toMillis(2) + server,
                 datapointType + DatapointType.PLAYERS_ONLINE_PEAK + server,
+                datapointType + DatapointType.PLAYERS_ONLINE + server,
                 datapointType + DatapointType.SESSION_COUNT + server,
                 datapointType + DatapointType.SESSION_COUNT + after + server,
                 datapointType + DatapointType.PLAYTIME_PER_PLAYER_AVERAGE + server,

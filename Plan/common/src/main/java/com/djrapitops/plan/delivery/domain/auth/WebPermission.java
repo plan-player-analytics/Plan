@@ -158,6 +158,8 @@ public enum WebPermission implements Supplier<String>, Lang {
     DATA_NETWORK_PLAYTIME_PER_PLAYER_AVERAGE("See Average playtime per player datapoint of network"),
     DATA_SERVER_PLAYERS_ONLINE_PEAK("See Player online peak -datapoint of servers"),
     DATA_NETWORK_PLAYERS_ONLINE_PEAK("See Player online peak -datapoint of network"),
+    DATA_SERVER_PLAYERS_ONLINE("See Players online -datapoint of servers"),
+    DATA_NETWORK_PLAYERS_ONLINE("See Players online -datapoint of network"),
     DATA_PLAYER_MOB_KILLS("See Mob kills datapoint of players"),
     DATA_SERVER_MOB_KILLS("See Mob kills datapoint of servers"),
     DATA_NETWORK_MOB_KILLS("See Mob kills datapoint of network"),

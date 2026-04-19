@@ -150,6 +150,7 @@ public class NetworkPageExporter extends FileExporter {
                 datapointType + DatapointType.NEW_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(7),
                 datapointType + DatapointType.NEW_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(1),
                 datapointType + DatapointType.REGULAR_PLAYERS,
+                datapointType + DatapointType.PLAYERS_ONLINE,
                 datapointType + DatapointType.PLAYERS_ONLINE_PEAK + afterMillis + TimeUnit.DAYS.toMillis(2),
                 datapointType + DatapointType.PLAYERS_ONLINE_PEAK,
                 datapointType + DatapointType.SESSION_COUNT,
