@@ -25,13 +25,16 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
+import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.analysis.NetworkActivityIndexQueries;
 import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -44,8 +47,10 @@ import java.util.concurrent.TimeUnit;
  * Creates JSON payload for /network-page Network Overview tab.
  *
  * @author AuroraLS3
+ * @deprecated Use /v1/datapoint instead (types UNIQUE_PLAYERS, NEW_PLAYERS, REGULAR_PLAYERS, CURRENT_UPTIME, PLAYERS_ONLINE, PLAYTIME, PLAYTIME_PER_PLAYER_AVERAGE, SESSION_LENGTH_AVERAGE, PLAYER_KILLS, MOB_KILLS, DEATHS).
  */
 @Singleton
+@Deprecated(since = "2026-04-19 / 5.7 build 3392")
 public class NetworkOverviewJSONCreator implements NetworkTabJSONCreator<Map<String, Object>> {
 
     private final PlanConfig config;
@@ -53,6 +58,8 @@ public class NetworkOverviewJSONCreator implements NetworkTabJSONCreator<Map<Str
     private final ServerInfo serverInfo;
     private final ServerSensor<?> serverSensor;
     private final ServerUptimeCalculator serverUptimeCalculator;
+    private final PluginLogger logger;
+    private final Locale locale;
 
     @Inject
     public NetworkOverviewJSONCreator(
@@ -61,16 +68,21 @@ public class NetworkOverviewJSONCreator implements NetworkTabJSONCreator<Map<Str
             ServerInfo serverInfo,
             ServerSensor<?> serverSensor,
             ServerUptimeCalculator serverUptimeCalculator,
-            Formatters formatters
+            Formatters formatters,
+            PluginLogger logger, Locale locale
     ) {
         this.config = config;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.serverSensor = serverSensor;
         this.serverUptimeCalculator = serverUptimeCalculator;
+        this.logger = logger;
+        this.locale = locale;
     }
 
     public Map<String, Object> createJSONAsMap() {
+        logger.warn(locale.getString(PluginLang.DEPRECATED_ENDPOINT_CALL, "/v1/network/overview", "/v1/datapoint"));
+
         Map<String, Object> serverOverview = new HashMap<>();
         serverOverview.put("players", createPlayersMap());
         serverOverview.put("numbers", createNumbersMap());
