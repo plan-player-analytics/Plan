@@ -21,6 +21,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.java.CatchingParsers;
 import org.apache.commons.lang3.StringUtils;
+import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
 import java.util.*;
@@ -58,10 +59,6 @@ public class GenericFilter {
         playerUUID = query.get("player", CatchingParsers::parsePlayerUUID).orElse(null);
     }
 
-    public static GenericFilter of(@Untrusted URIQuery query) {
-        return new GenericFilter(query);
-    }
-
     public Long getAfter() {
         return after != null ? after : 0L;
     }
@@ -82,7 +79,7 @@ public class GenericFilter {
         return serverUUIDs.isEmpty() || serverUUIDs.contains(serverUUID);
     }
 
-    public @Untrusted List<String> getServerIdentifiers() {
+    public @NonNull @Untrusted List<String> getServerIdentifiers() {
         return serverIdentifiers;
     }
 

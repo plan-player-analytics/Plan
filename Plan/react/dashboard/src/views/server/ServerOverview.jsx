@@ -34,7 +34,6 @@ const Last7DaysCard = ({data}) => {
     const {t} = useTranslation();
     const {identifier} = useParams();
 
-
     const {error} = useDatapointQuery(true, DatapointType.TPS_AVERAGE, {server: identifier, afterMillisAgo: MS_WEEK})
     const noData = error?.status === 404
 

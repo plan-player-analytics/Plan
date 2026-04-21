@@ -108,10 +108,7 @@ public class SessionsJSONResolver implements Resolver {
     }
 
     private Response getResponse(Request request) {
-        GenericFilter filter = GenericFilter.of(request.getQuery());
-        if (!filter.didAllServerIdentifiersParse()) {
-            filter.setServerUUIDs(identifiers.getServerUUIDs(filter.getServerIdentifiers()));
-        }
+        GenericFilter filter = identifiers.genericFilter(request.getQuery());
 
         @Untrusted Optional<ETag> tag = Identifiers.getEtag(request);
         Long etag = tag.map(eTag -> eTag.parseAsLong()

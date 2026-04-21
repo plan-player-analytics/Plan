@@ -55,12 +55,13 @@ import java.util.UUID;
 @Path("/v1/datapoint")
 public class DataPointJSONResolver implements Resolver {
 
+    private final Identifiers identifiers;
     private final DatapointStore datapointStore;
     private final Formatter<Long> httpLastModifiedFormatter;
 
-
     @Inject
-    public DataPointJSONResolver(DatapointStore datapointStore, Formatters formatters) {
+    public DataPointJSONResolver(Identifiers identifiers, DatapointStore datapointStore, Formatters formatters) {
+        this.identifiers = identifiers;
         this.datapointStore = datapointStore;
         this.httpLastModifiedFormatter = formatters.httpLastModifiedLong();
     }
@@ -71,7 +72,7 @@ public class DataPointJSONResolver implements Resolver {
         if (user.isEmpty()) return false;
         DatapointType type = request.getQuery().get("type", DatapointType::find)
                 .orElseThrow(() -> new BadRequestException("type is required"));
-        GenericFilter filter = GenericFilter.of(request.getQuery());
+        GenericFilter filter = identifiers.genericFilter(request.getQuery());
 
         Optional<WebPermission> permission = datapointStore.getPermission(type, filter);
         if (permission.isEmpty()) return false;
@@ -108,7 +109,7 @@ public class DataPointJSONResolver implements Resolver {
     public Optional<Response> resolve(Request request) {
         DatapointType type = request.getQuery().get("type", DatapointType::find)
                 .orElseThrow(() -> new BadRequestException("type is required"));
-        GenericFilter filter = GenericFilter.of(request.getQuery());
+        GenericFilter filter = identifiers.genericFilter(request.getQuery());
         @Untrusted Optional<ETag> tag = Identifiers.getEtag(request);
         Long etag = tag.map(eTag -> eTag.parseAsLong()
                         .orElseThrow(() -> new BadRequestException("If-Modified-Since should be a 64bit number")))

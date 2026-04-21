@@ -16,8 +16,10 @@
  */
 package com.djrapitops.plan.identification;
 
+import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.web.resolver.request.URIQuery;
 import com.djrapitops.plan.delivery.webserver.resolver.ETag;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
@@ -152,5 +154,13 @@ public class Identifiers {
             serverUUIDs.add(getServerUUIDForRequest(serverIdentifier));
         }
         return serverUUIDs;
+    }
+
+    public GenericFilter genericFilter(@Untrusted URIQuery query) {
+        GenericFilter filter = new GenericFilter(query);
+        if (!filter.didAllServerIdentifiersParse()) {
+            filter.setServerUUIDs(getServerUUIDs(filter.getServerIdentifiers()));
+        }
+        return filter;
     }
 }
