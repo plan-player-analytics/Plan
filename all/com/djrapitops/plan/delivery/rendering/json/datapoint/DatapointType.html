@@ -75,10 +75,17 @@ loadScripts(document, 'script');</script>
 <li><a href="#PLAYTIME_PER_PLAYER_AVERAGE" tabindex="0">PLAYTIME_PER_PLAYER_AVERAGE</a></li>
 <li><a href="#PLAYERS_ONLINE_PEAK" tabindex="0">PLAYERS_ONLINE_PEAK</a></li>
 <li><a href="#PLAYERS_ONLINE" tabindex="0">PLAYERS_ONLINE</a></li>
-<li><a href="#CURRENT_UPTIME" tabindex="0">CURRENT_UPTIME</a></li>
+<li><a href="#UPTIME_CURRENT" tabindex="0">UPTIME_CURRENT</a></li>
 <li><a href="#MOB_KILLS" tabindex="0">MOB_KILLS</a></li>
 <li><a href="#PLAYER_KILLS" tabindex="0">PLAYER_KILLS</a></li>
 <li><a href="#DEATHS" tabindex="0">DEATHS</a></li>
+<li><a href="#PLAYERS_ONLINE_AVERAGE" tabindex="0">PLAYERS_ONLINE_AVERAGE</a></li>
+<li><a href="#TPS_AVERAGE" tabindex="0">TPS_AVERAGE</a></li>
+<li><a href="#MSPT_AVERAGE" tabindex="0">MSPT_AVERAGE</a></li>
+<li><a href="#CPU_AVERAGE" tabindex="0">CPU_AVERAGE</a></li>
+<li><a href="#RAM_AVERAGE" tabindex="0">RAM_AVERAGE</a></li>
+<li><a href="#ENTITIES_AVERAGE" tabindex="0">ENTITIES_AVERAGE</a></li>
+<li><a href="#CHUNKS_AVERAGE" tabindex="0">CHUNKS_AVERAGE</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -138,9 +145,13 @@ loadScripts(document, 'script');</script>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code><a href="#AFK_TIME_PERCENTAGE" class="member-name-link">AFK_TIME_PERCENTAGE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#CURRENT_UPTIME" class="member-name-link">CURRENT_UPTIME</a></code></div>
+<div class="col-first even-row-color"><code><a href="#CHUNKS_AVERAGE" class="member-name-link">CHUNKS_AVERAGE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DEATHS" class="member-name-link">DEATHS</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#CPU_AVERAGE" class="member-name-link">CPU_AVERAGE</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#DEATHS" class="member-name-link">DEATHS</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#ENTITIES_AVERAGE" class="member-name-link">ENTITIES_AVERAGE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code><a href="#MOB_KILLS" class="member-name-link">MOB_KILLS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
@@ -148,11 +159,15 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code><a href="#MOST_ACTIVE_WORLD" class="member-name-link">MOST_ACTIVE_WORLD</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#NEW_PLAYERS" class="member-name-link">NEW_PLAYERS</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#MSPT_AVERAGE" class="member-name-link">MSPT_AVERAGE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PLAYER_KILLS" class="member-name-link">PLAYER_KILLS</a></code></div>
+<div class="col-first even-row-color"><code><a href="#NEW_PLAYERS" class="member-name-link">NEW_PLAYERS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PLAYERS_ONLINE" class="member-name-link">PLAYERS_ONLINE</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PLAYER_KILLS" class="member-name-link">PLAYER_KILLS</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#PLAYERS_ONLINE" class="member-name-link">PLAYERS_ONLINE</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#PLAYERS_ONLINE_AVERAGE" class="member-name-link">PLAYERS_ONLINE_AVERAGE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code><a href="#PLAYERS_ONLINE_PEAK" class="member-name-link">PLAYERS_ONLINE_PEAK</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
@@ -160,20 +175,26 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code><a href="#PLAYTIME_PER_PLAYER_AVERAGE" class="member-name-link">PLAYTIME_PER_PLAYER_AVERAGE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#REGULAR_PLAYERS" class="member-name-link">REGULAR_PLAYERS</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#RAM_AVERAGE" class="member-name-link">RAM_AVERAGE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#SERVER_OCCUPIED" class="member-name-link">SERVER_OCCUPIED</a></code></div>
+<div class="col-first even-row-color"><code><a href="#REGULAR_PLAYERS" class="member-name-link">REGULAR_PLAYERS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#SERVER_PIE" class="member-name-link">SERVER_PIE</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#SERVER_OCCUPIED" class="member-name-link">SERVER_OCCUPIED</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#SESSION_COUNT" class="member-name-link">SESSION_COUNT</a></code></div>
+<div class="col-first even-row-color"><code><a href="#SERVER_PIE" class="member-name-link">SERVER_PIE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#SESSION_LENGTH_AVERAGE" class="member-name-link">SESSION_LENGTH_AVERAGE</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#SESSION_COUNT" class="member-name-link">SESSION_COUNT</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#SESSION_LENGTH_AVERAGE" class="member-name-link">SESSION_LENGTH_AVERAGE</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#TPS_AVERAGE" class="member-name-link">TPS_AVERAGE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code><a href="#UNIQUE_PLAYERS" class="member-name-link">UNIQUE_PLAYERS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#WORLD_PIE" class="member-name-link">WORLD_PIE</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#UPTIME_CURRENT" class="member-name-link">UPTIME_CURRENT</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#WORLD_PIE" class="member-name-link">WORLD_PIE</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -360,10 +381,10 @@ the order they are declared.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="CURRENT_UPTIME">
-<h3>CURRENT_UPTIME</h3>
+<section class="detail" id="UPTIME_CURRENT">
+<h3>UPTIME_CURRENT</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="DatapointType.html" title="enum class in com.djrapitops.plan.delivery.rendering.json.datapoint">DatapointType</a></span>&nbsp;<span class="element-name">CURRENT_UPTIME</span></div>
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="DatapointType.html" title="enum class in com.djrapitops.plan.delivery.rendering.json.datapoint">DatapointType</a></span>&nbsp;<span class="element-name">UPTIME_CURRENT</span></div>
 </div>
 </section>
 </li>
@@ -388,6 +409,62 @@ the order they are declared.</div>
 <h3>DEATHS</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="DatapointType.html" title="enum class in com.djrapitops.plan.delivery.rendering.json.datapoint">DatapointType</a></span>&nbsp;<span class="element-name">DEATHS</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="PLAYERS_ONLINE_AVERAGE">
+<h3>PLAYERS_ONLINE_AVERAGE</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="DatapointType.html" title="enum class in com.djrapitops.plan.delivery.rendering.json.datapoint">DatapointType</a></span>&nbsp;<span class="element-name">PLAYERS_ONLINE_AVERAGE</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="TPS_AVERAGE">
+<h3>TPS_AVERAGE</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="DatapointType.html" title="enum class in com.djrapitops.plan.delivery.rendering.json.datapoint">DatapointType</a></span>&nbsp;<span class="element-name">TPS_AVERAGE</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="MSPT_AVERAGE">
+<h3>MSPT_AVERAGE</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="DatapointType.html" title="enum class in com.djrapitops.plan.delivery.rendering.json.datapoint">DatapointType</a></span>&nbsp;<span class="element-name">MSPT_AVERAGE</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="CPU_AVERAGE">
+<h3>CPU_AVERAGE</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="DatapointType.html" title="enum class in com.djrapitops.plan.delivery.rendering.json.datapoint">DatapointType</a></span>&nbsp;<span class="element-name">CPU_AVERAGE</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="RAM_AVERAGE">
+<h3>RAM_AVERAGE</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="DatapointType.html" title="enum class in com.djrapitops.plan.delivery.rendering.json.datapoint">DatapointType</a></span>&nbsp;<span class="element-name">RAM_AVERAGE</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="ENTITIES_AVERAGE">
+<h3>ENTITIES_AVERAGE</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="DatapointType.html" title="enum class in com.djrapitops.plan.delivery.rendering.json.datapoint">DatapointType</a></span>&nbsp;<span class="element-name">ENTITIES_AVERAGE</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="CHUNKS_AVERAGE">
+<h3>CHUNKS_AVERAGE</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="DatapointType.html" title="enum class in com.djrapitops.plan.delivery.rendering.json.datapoint">DatapointType</a></span>&nbsp;<span class="element-name">CHUNKS_AVERAGE</span></div>
 </div>
 </section>
 </li>
