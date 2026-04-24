@@ -53,11 +53,12 @@ const Last7DaysCard = ({data}) => {
                     <Card.Body>
                         <QueryDatapoint name={t('html.label.uniquePlayers')}
                                         color={'players-unique'} icon={faUsers}
-                                        dataType={DatapointType.UNIQUE_PLAYERS}
+                                        dataType={DatapointType.UNIQUE_PLAYERS_COUNT}
                                         filter={filter} bold/>
-                        <Datapoint name={t('html.label.uniquePlayers') + ' ' + t('html.label.perDay')}
-                                   color={'players-unique'} icon={faUser}
-                                   value={data.unique_players_day} bold/>
+                        <QueryDatapoint name={t('html.label.uniquePlayers') + ' ' + t('html.label.perDay')}
+                                        color={'players-unique'} icon={faUser}
+                                        dataType={DatapointType.UNIQUE_PLAYERS_AVERAGE}
+                                        filter={filter} bold/>
                         <QueryDatapoint name={t('html.label.newPlayers')}
                                         color={'players-new'} icon={faUsers}
                                         dataType={DatapointType.NEW_PLAYERS}

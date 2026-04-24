@@ -26,7 +26,7 @@ export const RecentPlayersCard = () => {
                             <p>{t('html.label.last24hours')}</p>
                             <QueryDatapoint icon={faUsers} color="players-unique"
                                             name={t('html.label.uniquePlayers')}
-                                            dataType={DatapointType.UNIQUE_PLAYERS}
+                                            dataType={DatapointType.UNIQUE_PLAYERS_COUNT}
                                             filter={filter}/>
                             <QueryDatapoint icon={faUsers} color="players-new"
                                             name={t('html.label.newPlayers')}
@@ -41,7 +41,7 @@ export const RecentPlayersCard = () => {
                             <p>{t('html.label.last7days')}</p>
                             <QueryDatapoint icon={faUsers} color="players-unique"
                                             name={t('html.label.uniquePlayers')}
-                                            dataType={DatapointType.UNIQUE_PLAYERS}
+                                            dataType={DatapointType.UNIQUE_PLAYERS_COUNT}
                                             filter={filter}/>
                             <QueryDatapoint icon={faUsers} color="players-new"
                                             name={t('html.label.newPlayers')}
@@ -56,7 +56,7 @@ export const RecentPlayersCard = () => {
                             <p>{t('html.label.last30days')}</p>
                             <QueryDatapoint icon={faUsers} color="players-unique"
                                             name={t('html.label.uniquePlayers')}
-                                            dataType={DatapointType.UNIQUE_PLAYERS}
+                                            dataType={DatapointType.UNIQUE_PLAYERS_COUNT}
                                             filter={filter}/>
                             <QueryDatapoint icon={faUsers} color="players-new"
                                             name={t('html.label.newPlayers')}

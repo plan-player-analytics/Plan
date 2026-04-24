@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
+import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
 
@@ -29,23 +30,41 @@ import javax.inject.Singleton;
 import java.util.Optional;
 
 /**
- * Datapoint for unique player count.
+ * Datapoint for Unique players average per day.
+ * <p>
+ * Average is computed using the timezone configured in the config,
+ * splitting day at midnight and counting unique players each day,
+ * and then averaging the number.
  *
  * @author AuroraLS3
  */
 @Singleton
-public class UniquePlayers implements Datapoint<Integer> {
+public class UniquePlayersPerDayAverage implements Datapoint<Integer> {
 
+    private final PlanConfig config;
     private final DBSystem dbSystem;
 
     @Inject
-    public UniquePlayers(DBSystem dbSystem) {
+    public UniquePlayersPerDayAverage(PlanConfig config, DBSystem dbSystem) {
+        this.config = config;
         this.dbSystem = dbSystem;
     }
 
     @Override
-    public DatapointType getType() {
-        return DatapointType.UNIQUE_PLAYERS;
+    public Optional<Integer> getValue(GenericFilter filter) {
+        if (filter.getPlayerUUID().isPresent()) {
+            throw new BadRequestException("UNIQUE_PLAYERS_AVERAGE does not support player parameter");
+        }
+
+        if (!filter.getServerUUIDs().isEmpty()) {
+            return Optional.of(dbSystem.getDatabase().query(PlayerCountQueries.averageUniquePlayerCount(
+                    filter.getAfter(), filter.getBefore(), config.getTimeZone().getOffset(filter.getBefore()), filter.getServerUUIDs())
+            ));
+        }
+
+        return Optional.of(dbSystem.getDatabase().query(PlayerCountQueries.averageUniquePlayerCount(
+                filter.getAfter(), filter.getBefore(), config.getTimeZone().getOffset(filter.getBefore()))
+        ));
     }
 
     @Override
@@ -53,26 +72,14 @@ public class UniquePlayers implements Datapoint<Integer> {
         if (filter.getPlayerUUID().isPresent()) {
             return WebPermission.DATA_PLAYER;
         } else if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.DATA_SERVER_UNIQUE_PLAYERS;
+            return WebPermission.DATA_SERVER_UNIQUE_PLAYERS_AVERAGE;
         } else {
-            return WebPermission.DATA_NETWORK_UNIQUE_PLAYERS;
+            return WebPermission.DATA_NETWORK_UNIQUE_PLAYERS_AVERAGE;
         }
     }
 
     @Override
-    public Optional<Integer> getValue(GenericFilter filter) {
-        if (filter.getPlayerUUID().isPresent()) {
-            throw new BadRequestException("UNIQUE_PLAYERS does not support player parameter");
-        }
-
-        if (!filter.getServerUUIDs().isEmpty()) {
-            return Optional.of(dbSystem.getDatabase().query(PlayerCountQueries.uniquePlayerCount(
-                    filter.getAfter(), filter.getBefore(), filter.getServerUUIDs())
-            ));
-        }
-
-        return Optional.of(dbSystem.getDatabase().query(PlayerCountQueries.uniquePlayerCount(
-                filter.getAfter(), filter.getBefore())
-        ));
+    public DatapointType getType() {
+        return DatapointType.UNIQUE_PLAYERS_AVERAGE;
     }
 }

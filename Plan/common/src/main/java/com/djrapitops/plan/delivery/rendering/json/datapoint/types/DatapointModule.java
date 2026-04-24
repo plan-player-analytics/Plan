@@ -22,6 +22,8 @@ import dagger.Module;
 import dagger.multibindings.IntoSet;
 
 /**
+ * Dagger module for registering {@code Set<Datapoint<?>> for use in constructors so that individual ones don't need to be injected.}
+ *
  * @author AuroraLS3
  */
 @Module
@@ -62,7 +64,7 @@ public interface DatapointModule {
 
     @Binds
     @IntoSet
-    Datapoint<?> bindUniquePlayers(UniquePlayers uniquePlayers);
+    Datapoint<?> bindUniquePlayers(UniquePlayersCount uniquePlayersCount);
 
     @Binds
     @IntoSet
@@ -135,4 +137,8 @@ public interface DatapointModule {
     @Binds
     @IntoSet
     Datapoint<?> bindChunksAverage(ChunksAverage chunksAverage);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindUniquePlayersAveragePerDay(UniquePlayersPerDayAverage uniquePlayersPerDayAverage);
 }

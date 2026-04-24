@@ -29,7 +29,7 @@ const ServerWeekComparisonCard = () => {
                                      filter: {afterMillisAgo: MS_WEEK}
                                  }]}
                                  rows={[{
-                                     dataType: DatapointType.UNIQUE_PLAYERS,
+                                     dataType: DatapointType.UNIQUE_PLAYERS_COUNT,
                                      color: "players-unique",
                                      icon: faUsers,
                                      text: t('html.label.uniquePlayers')

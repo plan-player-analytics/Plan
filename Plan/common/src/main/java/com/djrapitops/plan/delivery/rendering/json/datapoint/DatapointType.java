@@ -37,7 +37,7 @@ public enum DatapointType {
     MOST_ACTIVE_GAME_MODE(MostActiveGameMode.class, DatapointCacheKey.SESSION),
     MOST_ACTIVE_WORLD(MostActiveWorld.class, DatapointCacheKey.SESSION),
     SERVER_PIE(ServerPie.class, DatapointCacheKey.SESSION),
-    UNIQUE_PLAYERS(UniquePlayers.class, DatapointCacheKey.SESSION),
+    UNIQUE_PLAYERS_COUNT(UniquePlayersCount.class, DatapointCacheKey.SESSION),
     NEW_PLAYERS(NewPlayers.class, DatapointCacheKey.SESSION),
     REGULAR_PLAYERS(RegularPlayers.class, DatapointCacheKey.SESSION),
     SESSION_COUNT(SessionCount.class, DatapointCacheKey.SESSION),
@@ -55,7 +55,8 @@ public enum DatapointType {
     CPU_AVERAGE(CPUAverage.class, DatapointCacheKey.TPS),
     RAM_AVERAGE(RAMAverage.class, DatapointCacheKey.TPS),
     ENTITIES_AVERAGE(EntitiesAverage.class, DatapointCacheKey.TPS),
-    CHUNKS_AVERAGE(ChunksAverage.class, DatapointCacheKey.TPS);
+    CHUNKS_AVERAGE(ChunksAverage.class, DatapointCacheKey.TPS),
+    UNIQUE_PLAYERS_AVERAGE(UniquePlayersPerDayAverage.class, DatapointCacheKey.SESSION);
 
     private final Class<? extends Datapoint<?>> datapointClass;
     private final DatapointCacheKey[] cacheKeys;
