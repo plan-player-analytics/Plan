@@ -176,6 +176,8 @@ public enum WebPermission implements Supplier<String>, Lang {
     DATA_SERVER_DEATHS("See Deaths datapoint of servers"),
     DATA_NETWORK_DEATHS("See Deaths datapoint of network"),
     DATA_SERVER_TPS_AVERAGE("See Average TPS -datapoint of servers"),
+    DATA_SERVER_TPS_LOW_SPIKES("See Low TPS spikes -datapoint of servers"),
+    DATA_NETWORK_TPS_LOW_SPIKES("See Low TPS spikes -datapoint of network"),
     DATA_SERVER_RAM_AVERAGE("See Average RAM -datapoint of servers"),
     DATA_SERVER_MSPT_AVERAGE("See Average MSPT -datapoint of servers"),
     DATA_SERVER_CPU_AVERAGE("See Average CPU -datapoint of servers"),

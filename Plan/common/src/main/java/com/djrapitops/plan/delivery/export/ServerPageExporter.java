@@ -169,6 +169,7 @@ public class ServerPageExporter extends FileExporter {
                 datapointType + DatapointType.DEATHS + server,
                 datapointType + DatapointType.UPTIME_CURRENT + server,
                 datapointType + DatapointType.TPS_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(7) + server,
+                datapointType + DatapointType.TPS_LOW_SPIKES + afterMillis + TimeUnit.DAYS.toMillis(7) + server,
                 datapointType + DatapointType.UNIQUE_PLAYERS_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(7) + server,
                 datapointType + DatapointType.NEW_PLAYER_RETENTION + afterMillis + TimeUnit.DAYS.toMillis(7) + server,
                 // Week comparison

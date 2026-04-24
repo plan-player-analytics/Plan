@@ -57,7 +57,8 @@ public enum DatapointType {
     ENTITIES_AVERAGE(EntitiesAverage.class, DatapointCacheKey.TPS),
     CHUNKS_AVERAGE(ChunksAverage.class, DatapointCacheKey.TPS),
     UNIQUE_PLAYERS_AVERAGE(UniquePlayersPerDayAverage.class, DatapointCacheKey.SESSION),
-    NEW_PLAYER_RETENTION(NewPlayerRetention.class, DatapointCacheKey.SESSION);
+    NEW_PLAYER_RETENTION(NewPlayerRetention.class, DatapointCacheKey.SESSION),
+    TPS_LOW_SPIKES(TPSLowSpikes.class, DatapointCacheKey.TPS);
 
     private final Class<? extends Datapoint<?>> datapointClass;
     private final DatapointCacheKey[] cacheKeys;

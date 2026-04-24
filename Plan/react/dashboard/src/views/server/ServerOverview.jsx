@@ -72,9 +72,10 @@ const Last7DaysCard = ({data}) => {
                                         color={'tps-average'} icon={faTachometerAlt}
                                         dataType={DatapointType.TPS_AVERAGE}
                                         filter={filter} bold/>
-                        <Datapoint name={t('html.label.lowTpsSpikes')}
-                                   color={'tps-low-spikes'} icon={faExclamationCircle}
-                                   value={data.low_tps_spikes} bold/>
+                        <QueryDatapoint name={t('html.label.lowTpsSpikes')}
+                                        color={'tps-low-spikes'} icon={faExclamationCircle}
+                                        dataType={DatapointType.TPS_LOW_SPIKES}
+                                        filter={filter} bold/>
                         <Datapoint name={t('html.label.downtime')}
                                    color={'downtime'} icon={faPowerOff}
                                    value={<FormattedTime timeMs={data.downtime}/>}/>

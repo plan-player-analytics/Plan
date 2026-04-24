@@ -40,6 +40,7 @@ export enum DatapointType {
     PLAYER_KILLS = "PLAYER_KILLS",
     MOB_KILLS = "MOB_KILLS",
     TPS_AVERAGE = "TPS_AVERAGE",
+    TPS_LOW_SPIKES = "TPS_LOW_SPIKES",
 }
 
 export type DatapointTypeMap = {
@@ -61,6 +62,7 @@ export type DatapointTypeMap = {
     PLAYER_KILLS: number;
     MOB_KILLS: number;
     TPS_AVERAGE: number;
+    TPS_LOW_SPIKES: number;
     SERVER_OCCUPIED: OutOf;
     MOST_ACTIVE_WORLD: OutOfCategory;
     MOST_ACTIVE_GAME_MODE: OutOfCategory;

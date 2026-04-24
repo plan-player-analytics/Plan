@@ -145,4 +145,8 @@ public interface DatapointModule {
     @Binds
     @IntoSet
     Datapoint<?> bindNewPlayerRetention(NewPlayerRetention newPlayerRetention);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindTPSLowSpikes(TPSLowSpikes tpsLowSpikes);
 }

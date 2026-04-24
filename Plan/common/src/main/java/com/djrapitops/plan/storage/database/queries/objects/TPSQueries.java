@@ -184,6 +184,25 @@ public class TPSQueries {
                 after, before);
     }
 
+    public static Query<Integer> lowTpsSpikes(double threshold, long after, long before, List<ServerUUID> serverUUIDs) {
+        String sql = SELECT + "COUNT(*) as count" + FROM + '(' +
+                SELECT + SERVER_ID + ',' +
+                TPS + ',' +
+                "LAG(" + TPS + ") OVER (PARTITION BY " + SERVER_ID + ORDER_BY + DATE + ") as prev_tps" +
+                FROM + TABLE_NAME +
+                WHERE + DATE + ">=?" +
+                AND + DATE + "<=?" +
+                (serverUUIDs.isEmpty()
+                        ? AND + SERVER_ID + " IN " + ServerTable.selectGameServerIds()
+                        : AND + SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs)) +
+                ") s1" +
+                WHERE + TPS + ">0" +
+                AND + TPS + "<?" +
+                AND + "(prev_tps " + IS_NULL + OR + "prev_tps>=?)";
+        return db -> db.queryOptional(sql, row -> row.getInt("count"), after, before, threshold, threshold)
+                .orElse(0);
+    }
+
     public static Query<List<DateObj<Integer>>> fetchViewPreviewGraphData(ServerUUID serverUUID) {
         String sql = SELECT + min(DATE) + " as " + DATE + ',' +
                 max(PLAYERS_ONLINE) + " as " + PLAYERS_ONLINE +

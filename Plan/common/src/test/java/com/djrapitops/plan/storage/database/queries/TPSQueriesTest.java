@@ -154,6 +154,20 @@ public interface TPSQueriesTest extends DatabaseTestPreparer {
         assertEquals(expected, result, () -> "Mismatch (" + expected + ", " + result + ") with data " + data);
     }
 
+    @RepeatedTest(5)
+    default void lowTpsSpikeCalculationMatches() {
+        List<TPS> data = RandomData.randomDateOrderedTPS();
+        for (TPS tps : data) {
+            execute(DataStoreQueries.storeTPS(serverUUID(), tps));
+        }
+
+        data.sort(new TPSComparator());
+        double threshold = RandomData.randomInt(3, 18);
+        Integer expected = new TPSMutator(data).lowTpsSpikeCount(threshold);
+        Integer result = db().query(TPSQueries.lowTpsSpikes(threshold, Long.MIN_VALUE, Long.MAX_VALUE, List.of(serverUUID())));
+        assertEquals(expected, result, () -> "Mismatch (" + expected + ", " + result + ") with data " + data);
+    }
+
     @Test
     default void removeEverythingRemovesTPS() {
         tpsIsStored();
