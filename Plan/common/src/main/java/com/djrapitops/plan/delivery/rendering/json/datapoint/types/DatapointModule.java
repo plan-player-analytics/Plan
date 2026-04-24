@@ -96,7 +96,7 @@ public interface DatapointModule {
 
     @Binds
     @IntoSet
-    Datapoint<?> bindPlayersOnline(PlayersOnline playersOnline);
+    Datapoint<?> bindPlayersOnline(PlayersOnlineCurrent playersOnlineCurrent);
 
     @Binds
     @IntoSet
@@ -140,5 +140,9 @@ public interface DatapointModule {
 
     @Binds
     @IntoSet
-    Datapoint<?> bindUniquePlayersAveragePerDay(UniquePlayersPerDayAverage uniquePlayersPerDayAverage);
+    Datapoint<?> bindUniquePlayersPerDayAverage(UniquePlayersPerDayAverage uniquePlayersPerDayAverage);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindNewPlayerRetention(NewPlayerRetention newPlayerRetention);
 }

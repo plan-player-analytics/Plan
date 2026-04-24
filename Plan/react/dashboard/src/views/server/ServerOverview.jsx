@@ -63,10 +63,10 @@ const Last7DaysCard = ({data}) => {
                                         color={'players-new'} icon={faUsers}
                                         dataType={DatapointType.NEW_PLAYERS}
                                         filter={filter} bold/>
-                        <Datapoint name={t('html.label.newPlayerRetention')}
-                                   color={'players-new'} icon={faUserCircle}
-                                   value={data.new_players_retention_perc}
-                                   valueLabel={data.new_players_retention + '/' + data.new_players} bold/>
+                        <QueryDatapoint name={t('html.label.newPlayerRetention')}
+                                        color={'players-new'} icon={faUserCircle}
+                                        dataType={DatapointType.NEW_PLAYER_RETENTION}
+                                        filter={filter} bold/>
                         <hr/>
                         <QueryDatapoint name={t('html.label.averageTps')}
                                         color={'tps-average'} icon={faTachometerAlt}

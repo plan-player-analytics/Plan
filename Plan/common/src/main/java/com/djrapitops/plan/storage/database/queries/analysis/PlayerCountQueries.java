@@ -446,6 +446,10 @@ public class PlayerCountQueries {
     }
 
     public static Query<Integer> retainedPlayerCount(long after, long before, ServerUUID serverUUID) {
+        return retainedPlayerCount(after, before, List.of(serverUUID));
+    }
+
+    public static Query<Integer> retainedPlayerCount(long after, long before, List<ServerUUID> serverUUIDs) {
         String selectUniqueUUIDs = SELECT + DISTINCT + "s." + SessionsTable.USER_ID +
                 FROM + SessionsTable.TABLE_NAME + " s" +
                 INNER_JOIN + UserInfoTable.TABLE_NAME + " ux" +
@@ -456,7 +460,7 @@ public class PlayerCountQueries {
                 AND + UserInfoTable.REGISTERED + "<=?" +
                 AND + SessionsTable.SESSION_START + ">=?" +
                 AND + SessionsTable.SESSION_END + "<=?" +
-                AND + "se." + ServerTable.SERVER_UUID + "=?";
+                (serverUUIDs.isEmpty() ? "" : AND + "se." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ')');
 
         return new QueryStatement<>(selectUniqueUUIDs) {
             @Override
@@ -468,7 +472,6 @@ public class PlayerCountQueries {
                 long half = before - (before - after) / 2;
                 statement.setLong(3, half);
                 statement.setLong(4, before);
-                statement.setString(5, serverUUID.toString());
             }
 
             @Override

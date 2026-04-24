@@ -40,14 +40,14 @@ import java.util.concurrent.TimeUnit;
  * @author AuroraLS3
  */
 @Singleton
-public class PlayersOnline implements Datapoint<Integer> {
+public class PlayersOnlineCurrent implements Datapoint<Integer> {
 
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final ServerSensor<?> serverSensor;
 
     @Inject
-    public PlayersOnline(DBSystem dbSystem, ServerInfo serverInfo, ServerSensor<?> serverSensor) {
+    public PlayersOnlineCurrent(DBSystem dbSystem, ServerInfo serverInfo, ServerSensor<?> serverSensor) {
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.serverSensor = serverSensor;
@@ -95,9 +95,9 @@ public class PlayersOnline implements Datapoint<Integer> {
         if (filter.getPlayerUUID().isPresent()) {
             return WebPermission.DATA_PLAYER;
         } else if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.DATA_SERVER_PLAYERS_ONLINE;
+            return WebPermission.DATA_SERVER_PLAYERS_ONLINE_CURRENT;
         } else {
-            return WebPermission.DATA_NETWORK_PLAYERS_ONLINE;
+            return WebPermission.DATA_NETWORK_PLAYERS_ONLINE_CURRENT;
         }
     }
 

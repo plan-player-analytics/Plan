@@ -53,7 +53,7 @@ public enum ThemeVal {
     WHITE("Colors.Extra.White", "#fff"),
 
     GRAPH_PUNCHCARD("GraphColors.PunchCard", "#222"),
-    GRAPH_PLAYERS_ONLINE("GraphColors.PlayersOnline", "#1E90FF"),
+    GRAPH_PLAYERS_ONLINE("GraphColors.PlayersOnlineCurrent", "#1E90FF"),
     GRAPH_TPS_HIGH("GraphColors.TPS.High", "#267F00"),
     GRAPH_TPS_MED("GraphColors.TPS.Medium", "#e5cc12"),
     GRAPH_TPS_LOW("GraphColors.TPS.Low", "#b74343"),

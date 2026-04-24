@@ -170,6 +170,7 @@ public class ServerPageExporter extends FileExporter {
                 datapointType + DatapointType.UPTIME_CURRENT + server,
                 datapointType + DatapointType.TPS_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(7) + server,
                 datapointType + DatapointType.UNIQUE_PLAYERS_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(7) + server,
+                datapointType + DatapointType.NEW_PLAYER_RETENTION + afterMillis + TimeUnit.DAYS.toMillis(7) + server,
                 // Week comparison
                 datapointType + DatapointType.UNIQUE_PLAYERS_COUNT + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L) + server,
                 datapointType + DatapointType.NEW_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L) + server,

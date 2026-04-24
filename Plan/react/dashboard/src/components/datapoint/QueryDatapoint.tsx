@@ -45,6 +45,8 @@ const FormattedOutOf = ({outOf}: { outOf: OutOf }) => {
     return (
         <>
             <Format value={outOf.value} formatType={outOf.formatType}/>
+            {' / '}
+            <Format value={outOf.max} formatType={outOf.formatType}/>
             {' '}({formatDecimals(outOf.percentage * 100)}%)
         </>
     )
