@@ -65,7 +65,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#bindMostActiveGameMode(com.djrapitops.plan.delivery.rendering.json.datapoint.types.MostActiveGameMode)" tabindex="0">bindMostActiveGameMode(MostActiveGameMode)</a></li>
 <li><a href="#bindMostActiveWorld(com.djrapitops.plan.delivery.rendering.json.datapoint.types.MostActiveWorld)" tabindex="0">bindMostActiveWorld(MostActiveWorld)</a></li>
 <li><a href="#bindServerPie(com.djrapitops.plan.delivery.rendering.json.datapoint.types.ServerPie)" tabindex="0">bindServerPie(ServerPie)</a></li>
-<li><a href="#bindUniquePlayers(com.djrapitops.plan.delivery.rendering.json.datapoint.types.UniquePlayers)" tabindex="0">bindUniquePlayers(UniquePlayers)</a></li>
+<li><a href="#bindUniquePlayers(com.djrapitops.plan.delivery.rendering.json.datapoint.types.UniquePlayersCount)" tabindex="0">bindUniquePlayers(UniquePlayersCount)</a></li>
 <li><a href="#bindNewPlayers(com.djrapitops.plan.delivery.rendering.json.datapoint.types.NewPlayers)" tabindex="0">bindNewPlayers(NewPlayers)</a></li>
 <li><a href="#bindRegularPlayers(com.djrapitops.plan.delivery.rendering.json.datapoint.types.RegularPlayers)" tabindex="0">bindRegularPlayers(RegularPlayers)</a></li>
 <li><a href="#bindSessionCount(com.djrapitops.plan.delivery.rendering.json.datapoint.types.SessionCount)" tabindex="0">bindSessionCount(SessionCount)</a></li>
@@ -73,7 +73,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#bindDeaths(com.djrapitops.plan.delivery.rendering.json.datapoint.types.Deaths)" tabindex="0">bindDeaths(Deaths)</a></li>
 <li><a href="#bindPlaytimePerPlayerAverage(com.djrapitops.plan.delivery.rendering.json.datapoint.types.PlaytimePerPlayerAverage)" tabindex="0">bindPlaytimePerPlayerAverage(PlaytimePerPlayerAverage)</a></li>
 <li><a href="#bindPlayerOnlinePeak(com.djrapitops.plan.delivery.rendering.json.datapoint.types.PlayersOnlinePeak)" tabindex="0">bindPlayerOnlinePeak(PlayersOnlinePeak)</a></li>
-<li><a href="#bindPlayersOnline(com.djrapitops.plan.delivery.rendering.json.datapoint.types.PlayersOnline)" tabindex="0">bindPlayersOnline(PlayersOnline)</a></li>
+<li><a href="#bindPlayersOnline(com.djrapitops.plan.delivery.rendering.json.datapoint.types.PlayersOnlineCurrent)" tabindex="0">bindPlayersOnline(PlayersOnlineCurrent)</a></li>
 <li><a href="#bindUptimeCurrent(com.djrapitops.plan.delivery.rendering.json.datapoint.types.UptimeCurrent)" tabindex="0">bindUptimeCurrent(UptimeCurrent)</a></li>
 <li><a href="#bindMobKills(com.djrapitops.plan.delivery.rendering.json.datapoint.types.MobKills)" tabindex="0">bindMobKills(MobKills)</a></li>
 <li><a href="#bindPlayerKills(com.djrapitops.plan.delivery.rendering.json.datapoint.types.PlayerKills)" tabindex="0">bindPlayerKills(PlayerKills)</a></li>
@@ -84,6 +84,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#bindRAMAverage(com.djrapitops.plan.delivery.rendering.json.datapoint.types.RAMAverage)" tabindex="0">bindRAMAverage(RAMAverage)</a></li>
 <li><a href="#bindEntitiesAverage(com.djrapitops.plan.delivery.rendering.json.datapoint.types.EntitiesAverage)" tabindex="0">bindEntitiesAverage(EntitiesAverage)</a></li>
 <li><a href="#bindChunksAverage(com.djrapitops.plan.delivery.rendering.json.datapoint.types.ChunksAverage)" tabindex="0">bindChunksAverage(ChunksAverage)</a></li>
+<li><a href="#bindUniquePlayersPerDayAverage(com.djrapitops.plan.delivery.rendering.json.datapoint.types.UniquePlayersPerDayAverage)" tabindex="0">bindUniquePlayersPerDayAverage(UniquePlayersPerDayAverage)</a></li>
+<li><a href="#bindNewPlayerRetention(com.djrapitops.plan.delivery.rendering.json.datapoint.types.NewPlayerRetention)" tabindex="0">bindNewPlayerRetention(NewPlayerRetention)</a></li>
+<li><a href="#bindTPSLowSpikes(com.djrapitops.plan.delivery.rendering.json.datapoint.types.TPSLowSpikes)" tabindex="0">bindTPSLowSpikes(TPSLowSpikes)</a></li>
 </ol>
 </li>
 </ol>
@@ -98,6 +101,7 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="annotations">@Module
 </span><span class="modifiers">public interface </span><span class="element-name type-name-label">DatapointModule</span></div>
+<div class="block">Dagger module for registering <code>Set&lt;Datapoint&lt;?&gt;&gt; for use in constructors so that individual ones don't need to be injected.</code></div>
 </div>
 </section>
 <section class="summary">
@@ -144,56 +148,65 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindMSPTAverage(com.djrapitops.plan.delivery.rendering.json.datapoint.types.MSPTAverage)" class="member-name-link">bindMSPTAverage</a><wbr>(<a href="MSPTAverage.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">MSPTAverage</a>&nbsp;msptaverage)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a><wbr>&lt;?&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindNewPlayers(com.djrapitops.plan.delivery.rendering.json.datapoint.types.NewPlayers)" class="member-name-link">bindNewPlayers</a><wbr>(<a href="NewPlayers.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">NewPlayers</a>&nbsp;newPlayers)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindNewPlayerRetention(com.djrapitops.plan.delivery.rendering.json.datapoint.types.NewPlayerRetention)" class="member-name-link">bindNewPlayerRetention</a><wbr>(<a href="NewPlayerRetention.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">NewPlayerRetention</a>&nbsp;newPlayerRetention)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a><wbr>&lt;?&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindPlayerKills(com.djrapitops.plan.delivery.rendering.json.datapoint.types.PlayerKills)" class="member-name-link">bindPlayerKills</a><wbr>(<a href="PlayerKills.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">PlayerKills</a>&nbsp;playerKills)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindNewPlayers(com.djrapitops.plan.delivery.rendering.json.datapoint.types.NewPlayers)" class="member-name-link">bindNewPlayers</a><wbr>(<a href="NewPlayers.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">NewPlayers</a>&nbsp;newPlayers)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a><wbr>&lt;?&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindPlayerOnlinePeak(com.djrapitops.plan.delivery.rendering.json.datapoint.types.PlayersOnlinePeak)" class="member-name-link">bindPlayerOnlinePeak</a><wbr>(<a href="PlayersOnlinePeak.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">PlayersOnlinePeak</a>&nbsp;playersOnlinePeak)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindPlayerKills(com.djrapitops.plan.delivery.rendering.json.datapoint.types.PlayerKills)" class="member-name-link">bindPlayerKills</a><wbr>(<a href="PlayerKills.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">PlayerKills</a>&nbsp;playerKills)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a><wbr>&lt;?&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindPlayersOnline(com.djrapitops.plan.delivery.rendering.json.datapoint.types.PlayersOnline)" class="member-name-link">bindPlayersOnline</a><wbr>(<a href="PlayersOnline.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">PlayersOnline</a>&nbsp;playersOnline)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindPlayerOnlinePeak(com.djrapitops.plan.delivery.rendering.json.datapoint.types.PlayersOnlinePeak)" class="member-name-link">bindPlayerOnlinePeak</a><wbr>(<a href="PlayersOnlinePeak.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">PlayersOnlinePeak</a>&nbsp;playersOnlinePeak)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a><wbr>&lt;?&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindPlayersOnlineAverage(com.djrapitops.plan.delivery.rendering.json.datapoint.types.PlayersOnlineAverage)" class="member-name-link">bindPlayersOnlineAverage</a><wbr>(<a href="PlayersOnlineAverage.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">PlayersOnlineAverage</a>&nbsp;playersOnlineAverage)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindPlayersOnline(com.djrapitops.plan.delivery.rendering.json.datapoint.types.PlayersOnlineCurrent)" class="member-name-link">bindPlayersOnline</a><wbr>(<a href="PlayersOnlineCurrent.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">PlayersOnlineCurrent</a>&nbsp;playersOnlineCurrent)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a><wbr>&lt;?&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindPlaytime(com.djrapitops.plan.delivery.rendering.json.datapoint.types.Playtime)" class="member-name-link">bindPlaytime</a><wbr>(<a href="Playtime.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">Playtime</a>&nbsp;playtime)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindPlayersOnlineAverage(com.djrapitops.plan.delivery.rendering.json.datapoint.types.PlayersOnlineAverage)" class="member-name-link">bindPlayersOnlineAverage</a><wbr>(<a href="PlayersOnlineAverage.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">PlayersOnlineAverage</a>&nbsp;playersOnlineAverage)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a><wbr>&lt;?&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindPlaytimePerPlayerAverage(com.djrapitops.plan.delivery.rendering.json.datapoint.types.PlaytimePerPlayerAverage)" class="member-name-link">bindPlaytimePerPlayerAverage</a><wbr>(<a href="PlaytimePerPlayerAverage.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">PlaytimePerPlayerAverage</a>&nbsp;playtimePerPlayerAverage)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindPlaytime(com.djrapitops.plan.delivery.rendering.json.datapoint.types.Playtime)" class="member-name-link">bindPlaytime</a><wbr>(<a href="Playtime.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">Playtime</a>&nbsp;playtime)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a><wbr>&lt;?&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindRAMAverage(com.djrapitops.plan.delivery.rendering.json.datapoint.types.RAMAverage)" class="member-name-link">bindRAMAverage</a><wbr>(<a href="RAMAverage.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">RAMAverage</a>&nbsp;ramAverage)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindPlaytimePerPlayerAverage(com.djrapitops.plan.delivery.rendering.json.datapoint.types.PlaytimePerPlayerAverage)" class="member-name-link">bindPlaytimePerPlayerAverage</a><wbr>(<a href="PlaytimePerPlayerAverage.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">PlaytimePerPlayerAverage</a>&nbsp;playtimePerPlayerAverage)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a><wbr>&lt;?&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindRegularPlayers(com.djrapitops.plan.delivery.rendering.json.datapoint.types.RegularPlayers)" class="member-name-link">bindRegularPlayers</a><wbr>(<a href="RegularPlayers.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">RegularPlayers</a>&nbsp;regularPlayers)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindRAMAverage(com.djrapitops.plan.delivery.rendering.json.datapoint.types.RAMAverage)" class="member-name-link">bindRAMAverage</a><wbr>(<a href="RAMAverage.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">RAMAverage</a>&nbsp;ramAverage)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a><wbr>&lt;?&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindServerOccupied(com.djrapitops.plan.delivery.rendering.json.datapoint.types.ServerOccupied)" class="member-name-link">bindServerOccupied</a><wbr>(<a href="ServerOccupied.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">ServerOccupied</a>&nbsp;serverOccupied)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindRegularPlayers(com.djrapitops.plan.delivery.rendering.json.datapoint.types.RegularPlayers)" class="member-name-link">bindRegularPlayers</a><wbr>(<a href="RegularPlayers.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">RegularPlayers</a>&nbsp;regularPlayers)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a><wbr>&lt;?&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindServerPie(com.djrapitops.plan.delivery.rendering.json.datapoint.types.ServerPie)" class="member-name-link">bindServerPie</a><wbr>(<a href="ServerPie.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">ServerPie</a>&nbsp;serverPie)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindServerOccupied(com.djrapitops.plan.delivery.rendering.json.datapoint.types.ServerOccupied)" class="member-name-link">bindServerOccupied</a><wbr>(<a href="ServerOccupied.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">ServerOccupied</a>&nbsp;serverOccupied)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a><wbr>&lt;?&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindSessionCount(com.djrapitops.plan.delivery.rendering.json.datapoint.types.SessionCount)" class="member-name-link">bindSessionCount</a><wbr>(<a href="SessionCount.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">SessionCount</a>&nbsp;sessionCount)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindServerPie(com.djrapitops.plan.delivery.rendering.json.datapoint.types.ServerPie)" class="member-name-link">bindServerPie</a><wbr>(<a href="ServerPie.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">ServerPie</a>&nbsp;serverPie)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a><wbr>&lt;?&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindSessionLengthAverage(com.djrapitops.plan.delivery.rendering.json.datapoint.types.SessionLengthAverage)" class="member-name-link">bindSessionLengthAverage</a><wbr>(<a href="SessionLengthAverage.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">SessionLengthAverage</a>&nbsp;sessionLengthAverage)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindSessionCount(com.djrapitops.plan.delivery.rendering.json.datapoint.types.SessionCount)" class="member-name-link">bindSessionCount</a><wbr>(<a href="SessionCount.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">SessionCount</a>&nbsp;sessionCount)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a><wbr>&lt;?&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindTPSAverage(com.djrapitops.plan.delivery.rendering.json.datapoint.types.TPSAverage)" class="member-name-link">bindTPSAverage</a><wbr>(<a href="TPSAverage.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">TPSAverage</a>&nbsp;tpsAverage)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindSessionLengthAverage(com.djrapitops.plan.delivery.rendering.json.datapoint.types.SessionLengthAverage)" class="member-name-link">bindSessionLengthAverage</a><wbr>(<a href="SessionLengthAverage.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">SessionLengthAverage</a>&nbsp;sessionLengthAverage)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a><wbr>&lt;?&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindUniquePlayers(com.djrapitops.plan.delivery.rendering.json.datapoint.types.UniquePlayers)" class="member-name-link">bindUniquePlayers</a><wbr>(<a href="UniquePlayers.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">UniquePlayers</a>&nbsp;uniquePlayers)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindTPSAverage(com.djrapitops.plan.delivery.rendering.json.datapoint.types.TPSAverage)" class="member-name-link">bindTPSAverage</a><wbr>(<a href="TPSAverage.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">TPSAverage</a>&nbsp;tpsAverage)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a><wbr>&lt;?&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindUptimeCurrent(com.djrapitops.plan.delivery.rendering.json.datapoint.types.UptimeCurrent)" class="member-name-link">bindUptimeCurrent</a><wbr>(<a href="UptimeCurrent.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">UptimeCurrent</a>&nbsp;uptimeCurrent)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindTPSLowSpikes(com.djrapitops.plan.delivery.rendering.json.datapoint.types.TPSLowSpikes)" class="member-name-link">bindTPSLowSpikes</a><wbr>(<a href="TPSLowSpikes.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">TPSLowSpikes</a>&nbsp;tpsLowSpikes)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a><wbr>&lt;?&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindWorldPie(com.djrapitops.plan.delivery.rendering.json.datapoint.types.WorldPie)" class="member-name-link">bindWorldPie</a><wbr>(<a href="WorldPie.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">WorldPie</a>&nbsp;worldPie)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindUniquePlayers(com.djrapitops.plan.delivery.rendering.json.datapoint.types.UniquePlayersCount)" class="member-name-link">bindUniquePlayers</a><wbr>(<a href="UniquePlayersCount.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">UniquePlayersCount</a>&nbsp;uniquePlayersCount)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a><wbr>&lt;?&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindUniquePlayersPerDayAverage(com.djrapitops.plan.delivery.rendering.json.datapoint.types.UniquePlayersPerDayAverage)" class="member-name-link">bindUniquePlayersPerDayAverage</a><wbr>(<a href="UniquePlayersPerDayAverage.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">UniquePlayersPerDayAverage</a>&nbsp;uniquePlayersPerDayAverage)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a><wbr>&lt;?&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindUptimeCurrent(com.djrapitops.plan.delivery.rendering.json.datapoint.types.UptimeCurrent)" class="member-name-link">bindUptimeCurrent</a><wbr>(<a href="UptimeCurrent.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">UptimeCurrent</a>&nbsp;uptimeCurrent)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a><wbr>&lt;?&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindWorldPie(com.djrapitops.plan.delivery.rendering.json.datapoint.types.WorldPie)" class="member-name-link">bindWorldPie</a><wbr>(<a href="WorldPie.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">WorldPie</a>&nbsp;worldPie)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -289,12 +302,12 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="bindUniquePlayers(com.djrapitops.plan.delivery.rendering.json.datapoint.types.UniquePlayers)">
+<section class="detail" id="bindUniquePlayers(com.djrapitops.plan.delivery.rendering.json.datapoint.types.UniquePlayersCount)">
 <h3>bindUniquePlayers</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations">@Binds
 @IntoSet
-</span><span class="return-type"><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a>&lt;?&gt;</span>&nbsp;<span class="element-name">bindUniquePlayers</span><wbr><span class="parameters">(<a href="UniquePlayers.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">UniquePlayers</a>&nbsp;uniquePlayers)</span></div>
+</span><span class="return-type"><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a>&lt;?&gt;</span>&nbsp;<span class="element-name">bindUniquePlayers</span><wbr><span class="parameters">(<a href="UniquePlayersCount.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">UniquePlayersCount</a>&nbsp;uniquePlayersCount)</span></div>
 </div>
 </section>
 </li>
@@ -369,12 +382,12 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="bindPlayersOnline(com.djrapitops.plan.delivery.rendering.json.datapoint.types.PlayersOnline)">
+<section class="detail" id="bindPlayersOnline(com.djrapitops.plan.delivery.rendering.json.datapoint.types.PlayersOnlineCurrent)">
 <h3>bindPlayersOnline</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations">@Binds
 @IntoSet
-</span><span class="return-type"><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a>&lt;?&gt;</span>&nbsp;<span class="element-name">bindPlayersOnline</span><wbr><span class="parameters">(<a href="PlayersOnline.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">PlayersOnline</a>&nbsp;playersOnline)</span></div>
+</span><span class="return-type"><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a>&lt;?&gt;</span>&nbsp;<span class="element-name">bindPlayersOnline</span><wbr><span class="parameters">(<a href="PlayersOnlineCurrent.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">PlayersOnlineCurrent</a>&nbsp;playersOnlineCurrent)</span></div>
 </div>
 </section>
 </li>
@@ -475,6 +488,36 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="annotations">@Binds
 @IntoSet
 </span><span class="return-type"><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a>&lt;?&gt;</span>&nbsp;<span class="element-name">bindChunksAverage</span><wbr><span class="parameters">(<a href="ChunksAverage.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">ChunksAverage</a>&nbsp;chunksAverage)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="bindUniquePlayersPerDayAverage(com.djrapitops.plan.delivery.rendering.json.datapoint.types.UniquePlayersPerDayAverage)">
+<h3>bindUniquePlayersPerDayAverage</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations">@Binds
+@IntoSet
+</span><span class="return-type"><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a>&lt;?&gt;</span>&nbsp;<span class="element-name">bindUniquePlayersPerDayAverage</span><wbr><span class="parameters">(<a href="UniquePlayersPerDayAverage.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">UniquePlayersPerDayAverage</a>&nbsp;uniquePlayersPerDayAverage)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="bindNewPlayerRetention(com.djrapitops.plan.delivery.rendering.json.datapoint.types.NewPlayerRetention)">
+<h3>bindNewPlayerRetention</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations">@Binds
+@IntoSet
+</span><span class="return-type"><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a>&lt;?&gt;</span>&nbsp;<span class="element-name">bindNewPlayerRetention</span><wbr><span class="parameters">(<a href="NewPlayerRetention.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">NewPlayerRetention</a>&nbsp;newPlayerRetention)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="bindTPSLowSpikes(com.djrapitops.plan.delivery.rendering.json.datapoint.types.TPSLowSpikes)">
+<h3>bindTPSLowSpikes</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations">@Binds
+@IntoSet
+</span><span class="return-type"><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a>&lt;?&gt;</span>&nbsp;<span class="element-name">bindTPSLowSpikes</span><wbr><span class="parameters">(<a href="TPSLowSpikes.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types">TPSLowSpikes</a>&nbsp;tpsLowSpikes)</span></div>
 </div>
 </section>
 </li>
