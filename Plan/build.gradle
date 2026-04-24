@@ -77,7 +77,7 @@ subprojects {
         hikariVersion = "7.0.2"
         slf4jVersion = "2.0.17"
         geoIpVersion = "4.4.0"
-        gsonVersion = "2.13.2"
+        gsonVersion = "2.14.0"
         dependencyDownloadVersion = "2.0.0"
         ipAddressMatcherVersion = "5.6.2"
         jasyptVersion = "1.9.3"
