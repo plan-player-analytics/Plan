@@ -124,7 +124,6 @@ public class ServerPageExporter extends FileExporter {
         String afterMillis = "&afterMillisAgo=";
         String beforeMillis = "&beforeMillisAgo=";
         exportJSON(toDirectory,
-                "serverOverview?server=" + serverUUID,
                 "onlineOverview?server=" + serverUUID,
                 "playerVersus?server=" + serverUUID,
                 "playerbaseOverview?server=" + serverUUID,
@@ -172,6 +171,7 @@ public class ServerPageExporter extends FileExporter {
                 datapointType + DatapointType.TPS_LOW_SPIKES + afterMillis + TimeUnit.DAYS.toMillis(7) + server,
                 datapointType + DatapointType.UNIQUE_PLAYERS_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(7) + server,
                 datapointType + DatapointType.NEW_PLAYER_RETENTION + afterMillis + TimeUnit.DAYS.toMillis(7) + server,
+                datapointType + DatapointType.DOWNTIME + afterMillis + TimeUnit.DAYS.toMillis(7) + server,
                 // Week comparison
                 datapointType + DatapointType.UNIQUE_PLAYERS_COUNT + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L) + server,
                 datapointType + DatapointType.NEW_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L) + server,

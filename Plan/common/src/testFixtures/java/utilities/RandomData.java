@@ -98,7 +98,7 @@ public class RandomData {
             int randInt = r.nextInt();
             double randTps = r.nextDouble() * 20;
             long randLong = Math.abs(r.nextLong());
-            test.add(new TPS(previousTimestamp, randTps, randInt, randLong, randLong, randInt, randInt, randLong));
+            test.add(new TPS(previousTimestamp, randTps, previousPlayers, randLong, randLong, randInt, randInt, randLong));
             boolean reboot = Math.random() < 0.10;
             previousTimestamp = previousTimestamp + (reboot ? TimeUnit.MINUTES.toMillis(1) : TimeUnit.MINUTES.toMillis(10));
             previousPlayers = Math.max(previousPlayers + r.nextInt(10) - 10, 0);

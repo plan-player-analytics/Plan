@@ -56,6 +56,7 @@ public class CreateIndexTransaction extends Transaction {
 
         createIndex(PingTable.TABLE_NAME, "plan_ping_date_index", PingTable.DATE);
         createIndex(TPSTable.TABLE_NAME, "plan_tps_date_index", TPSTable.DATE);
+        createIndex(TPSTable.TABLE_NAME, "plan_tps_server_date_index", TPSTable.SERVER_ID, TPSTable.DATE);
 
         createIndex(SessionsTable.TABLE_NAME, "plan_session_join_address_index", SessionsTable.JOIN_ADDRESS_ID);
 

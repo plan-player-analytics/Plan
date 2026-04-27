@@ -28,7 +28,9 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
+import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.ServerAggregateQueries;
@@ -38,6 +40,7 @@ import com.djrapitops.plan.storage.database.queries.objects.KillQueries;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 import com.djrapitops.plan.utilities.analysis.Percentage;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -50,14 +53,18 @@ import java.util.concurrent.TimeUnit;
  * Creates JSON payload for /server-page Server Overview tab.
  *
  * @author AuroraLS3
+ * @deprecated Use /v1/datapoint instead (types UNIQUE_PLAYERS, NEW_PLAYERS, REGULAR_PLAYERS, UPTIME_CURRENT, PLAYERS_ONLINE, PLAYTIME, PLAYTIME_PER_PLAYER_AVERAGE, SESSION_LENGTH_AVERAGE, PLAYER_KILLS, MOB_KILLS, DEATHS, DOWNTIME, TPS_AVERAGE, NEW_PLAYER_RETENTION, UNIQUE_PLAYERS_AVERAGE, TPS_LOW_SPIKES).
  */
 @Singleton
+@Deprecated(since = "2026-04-27 / 5.7 build 3400")
 public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<String, Object>> {
 
     private final PlanConfig config;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
     private final ServerSensor<?> serverSensor;
+    private final PluginLogger logger;
+    private final Locale locale;
 
     private final Formatter<Double> decimals;
     private final Formatter<Double> percentage;
@@ -68,7 +75,7 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
             PlanConfig config,
             DBSystem dbSystem,
             ServerInfo serverInfo,
-            ServerSensor<?> serverSensor,
+            ServerSensor<?> serverSensor, PluginLogger logger, Locale locale,
             ServerUptimeCalculator serverUptimeCalculator,
             Formatters formatters
     ) {
@@ -76,6 +83,8 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
         this.serverSensor = serverSensor;
+        this.logger = logger;
+        this.locale = locale;
         this.serverUptimeCalculator = serverUptimeCalculator;
 
         decimals = formatters.decimals();
@@ -83,6 +92,8 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
     }
 
     public Map<String, Object> createJSONAsMap(ServerUUID serverUUID) {
+        logger.warn(locale.getString(PluginLang.DEPRECATED_ENDPOINT_CALL, "/v1/serverOverview", "/v1/datapoint"));
+
         Map<String, Object> serverOverview = new HashMap<>();
         serverOverview.put("last_7_days", createLast7DaysMap(serverUUID));
         serverOverview.put("numbers", createNumbersMap(serverUUID));
@@ -91,6 +102,7 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
     }
 
     private Map<String, Object> createLast7DaysMap(ServerUUID serverUUID) {
+
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();
         long weekAgo = now - TimeUnit.DAYS.toMillis(7L);

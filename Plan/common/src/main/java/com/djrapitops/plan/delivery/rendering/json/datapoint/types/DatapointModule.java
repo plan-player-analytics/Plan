@@ -149,4 +149,8 @@ public interface DatapointModule {
     @Binds
     @IntoSet
     Datapoint<?> bindTPSLowSpikes(TPSLowSpikes tpsLowSpikes);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindDowntime(Downtime downtime);
 }

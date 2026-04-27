@@ -17,9 +17,11 @@
 package com.djrapitops.plan.storage.database.queries.objects;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
+import com.djrapitops.plan.delivery.domain.Segment;
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.building.Select;
@@ -135,34 +137,67 @@ public class TPSQueries {
         };
     }
 
-    public static Query<Map<Integer, Long>> occupiedTime(long after, long before, List<ServerUUID> serverUUIDs) {
-        String sql = SELECT + SERVER_ID + ",SUM(" +
-                "CASE " +
-                "WHEN " + PLAYERS_ONLINE + " > 0 " +
-                "AND (date - prev_date) <= 180000 " +
-                "THEN (date - prev_date) " +
-                "ELSE 0 " +
-                "END" +
-                ") AS active_time" +
-                FROM + "(" +
-                SELECT +
-                SERVER_ID + "," +
-                DATE + "," +
-                PLAYERS_ONLINE + "," +
-                "LAG(" + DATE + ") OVER (PARTITION BY " + SERVER_ID + " ORDER BY " + DATE + ") AS prev_date" +
-                FROM + TABLE_NAME +
-                WHERE + (!serverUUIDs.isEmpty() ? SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
-                                                  AND : "") + DATE + ">=?" +
-                AND + DATE + "<=?" +
-                ") q1" +
-                GROUP_BY + SERVER_ID;
-        return db -> db.queryMap(sql, (row, map) ->
-                        map.put(row.getInt(SERVER_ID), row.getLong("active_time")),
-                after, before);
+    public static Query<Long> occupiedTime(long after, long before, List<ServerUUID> serverUUIDs) {
+        return db -> {
+            @Language("SQL")
+            String sql = "WITH ordered AS (" +
+                    "SELECT\n" +
+                    "    date,\n" +
+                    "    LAG(date) OVER (ORDER BY date) AS prev_date\n" +
+                    "FROM plan_tps\n" +
+                    "WHERE players_online>0\n" +
+                    "  AND date >=?\n" +
+                    "  AND date <=?\n" +
+                    "  AND server_id IN " + ServerTable.selectServerIds(serverUUIDs) +
+                    "),\n" +
+                    "    marked AS (\n" +
+                    "SELECT\n" +
+                    "    date," +
+                    " CASE\n" +
+                    "    WHEN prev_date IS NULL\n" +
+                    "    OR date - prev_date >= 180000\n" +
+                    "    THEN 1\n" +
+                    "    ELSE 0\n" +
+                    "    END AS new_segment\n" +
+                    "FROM ordered\n" +
+                    "    ),\n" +
+                    "    segmented AS (\n" +
+                    "SELECT\n" +
+                    "    date," +
+                    " SUM (new_segment) OVER (\n" +
+                    "    ORDER BY date\n" +
+                    (db.getType() == DBType.SQLITE ? "    ROWS UNBOUNDED PRECEDING" : "") +
+                    ") AS segment_id\n" +
+                    "FROM marked" +
+                    ")\n" +
+                    "SELECT MIN(date) AS segment_start,\n" +
+                    "       MAX(date) AS segment_end" +
+                    " FROM segmented\n" +
+                    "GROUP BY segment_id\n" +
+                    "ORDER BY segment_start";
+
+            return db.query(new QueryStatement<>(sql, 50000) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, after);
+                    statement.setLong(2, before);
+                }
+
+                @Override
+                public Long processResults(ResultSet set) throws SQLException {
+                    long sum = 0L;
+                    while (set.next()) {
+                        Segment segment = new Segment(set.getLong("segment_start"), set.getLong("segment_end"));
+                        sum += segment.getLength();
+                    }
+                    return sum;
+                }
+            });
+        };
     }
 
-    public static Query<Map<Integer, Long>> uptime(long after, long before, List<ServerUUID> serverUUIDs) {
-        String sql = SELECT + SERVER_ID + ",SUM(" +
+    public static Query<Long> uptime(long after, long before, List<ServerUUID> serverUUIDs) {
+        String sql = SELECT + "SUM(" +
                 "CASE " +
                 "WHEN diff <= 120000 " +
                 "THEN diff " +
@@ -172,16 +207,35 @@ public class TPSQueries {
                 FROM + "(" +
                 SELECT +
                 SERVER_ID + "," +
-                DATE + "-LAG(" + DATE + ") OVER (PARTITION BY " + SERVER_ID + " ORDER BY " + DATE + ") AS diff" +
+                DATE + "-LAG(" + DATE + ") OVER (ORDER BY " + DATE + ") AS diff" +
                 FROM + TABLE_NAME +
                 WHERE + (!serverUUIDs.isEmpty() ? SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
                                                   AND : "") + DATE + ">=?" +
                 AND + DATE + "<=?" +
-                ") q1" +
-                GROUP_BY + SERVER_ID;
-        return db -> db.queryMap(sql, (row, map) ->
-                        map.put(row.getInt(SERVER_ID), row.getLong("uptime")),
-                after, before);
+                ") q1";
+        return db -> db.queryOptional(sql, row -> row.getLong("uptime"), after, before)
+                .orElse(0L);
+    }
+
+    public static Query<Long> downtime(long after, long before, List<ServerUUID> serverUUIDs) {
+        String sql = SELECT + "SUM(" +
+                "CASE " +
+                "WHEN diff >= 180000 " +
+                "THEN diff " +
+                "ELSE 0 " +
+                "END" +
+                ") AS downtime" +
+                FROM + "(" +
+                SELECT +
+                SERVER_ID + "," +
+                DATE + "-LAG(" + DATE + ") OVER (ORDER BY " + DATE + ") AS diff" +
+                FROM + TABLE_NAME +
+                WHERE + (!serverUUIDs.isEmpty() ? SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
+                                                  AND : "") + DATE + ">=?" +
+                AND + DATE + "<=?" +
+                ") q1";
+        return db -> db.queryOptional(sql, row -> row.getLong("downtime"), after, before)
+                .orElse(0L);
     }
 
     public static Query<Integer> lowTpsSpikes(double threshold, long after, long before, List<ServerUUID> serverUUIDs) {

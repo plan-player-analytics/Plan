@@ -10,34 +10,27 @@ import {
     faUserCircle,
     faUsers
 } from "@fortawesome/free-solid-svg-icons";
-import Datapoint from "../../components/datapoint/Datapoint.tsx";
 import {useTranslation} from "react-i18next";
 import {useParams} from "react-router";
-import {fetchServerOverview} from "../../service/serverService";
-import ErrorView from "../ErrorView.tsx";
-import {useDataRequest} from "../../hooks/dataFetchHook";
 import OnlineActivityCard from "../../components/cards/server/graphs/OnlineActivityCard";
 import ServerAsNumbersCard from "../../components/cards/server/values/ServerAsNumbersCard";
 import ServerWeekComparisonCard from "../../components/cards/server/tables/ServerWeekComparisonCard.tsx";
 import LoadIn from "../../components/animation/LoadIn.tsx";
-import {CardLoader} from "../../components/navigation/Loader.tsx";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import FormattedTime from "../../components/text/FormattedTime.jsx";
 import {QueryDatapoint, useDatapointQuery} from "../../components/datapoint/QueryDatapoint.tsx";
 import {DatapointType} from "../../dataHooks/model/datapoint/Datapoint.ts";
 import {MS_WEEK} from "../../util/format/useDateFormatter.js";
 import {GenericFilterContextProvider} from "../../dataHooks/genericFilterContextHook.tsx";
 
-const Last7DaysCard = ({data}) => {
+const Last7DaysCard = () => {
     const {t} = useTranslation();
     const {identifier} = useParams();
 
     const {error} = useDatapointQuery(true, DatapointType.TPS_AVERAGE, {server: identifier, afterMillisAgo: MS_WEEK})
     const noData = error?.status === 404
 
-    if (!data) return <CardLoader/>;
     return (
         <Card id={"last-7-days"}>
             <Card.Header>
@@ -76,9 +69,10 @@ const Last7DaysCard = ({data}) => {
                                         color={'tps-low-spikes'} icon={faExclamationCircle}
                                         dataType={DatapointType.TPS_LOW_SPIKES}
                                         filter={filter} bold/>
-                        <Datapoint name={t('html.label.downtime')}
-                                   color={'downtime'} icon={faPowerOff}
-                                   value={<FormattedTime timeMs={data.downtime}/>}/>
+                        <QueryDatapoint name={t('html.label.downtime')}
+                                        color={'downtime'} icon={faPowerOff}
+                                        dataType={DatapointType.DOWNTIME}
+                                        filter={filter}/>
                     </Card.Body>
                 )}
             </GenericFilterContextProvider>
@@ -88,18 +82,9 @@ const Last7DaysCard = ({data}) => {
 
 const ServerOverview = () => {
     const {hasPermission} = useAuth();
-    const {identifier} = useParams();
 
     const seeOverview = hasPermission('page.server.overview.numbers');
     const seeOnlineGraph = hasPermission('page.server.overview.players.online.graph')
-    const {data, loadingError} = useDataRequest(
-        fetchServerOverview,
-        [identifier],
-        seeOverview)
-
-    if (loadingError) {
-        return <ErrorView error={loadingError}/>
-    }
 
     return (
         <LoadIn>
@@ -109,7 +94,7 @@ const ServerOverview = () => {
                         <OnlineActivityCard/>
                     </Col>}
                     {seeOverview && <Col lg={3}>
-                        <Last7DaysCard data={data?.last_7_days}/>
+                        <Last7DaysCard/>
                     </Col>}
                 </ExtendableRow>
                 {seeOverview && <ExtendableRow id={'row-server-overview-1'}>

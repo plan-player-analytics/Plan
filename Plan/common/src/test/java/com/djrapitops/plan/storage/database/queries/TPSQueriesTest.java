@@ -134,9 +134,8 @@ public interface TPSQueriesTest extends DatabaseTestPreparer {
         }
 
         data.sort(new TPSComparator());
-        List<Long> expected = List.of(new TPSMutator(data).serverOccupiedTime());
-        List<Long> result = db().query(TPSQueries.occupiedTime(Long.MIN_VALUE, Long.MAX_VALUE, List.of(serverUUID())))
-                .values().stream().toList();
+        Long expected = new TPSMutator(data).serverOccupiedTime();
+        Long result = db().query(TPSQueries.occupiedTime(Long.MIN_VALUE, Long.MAX_VALUE, List.of(serverUUID())));
         assertEquals(expected, result, () -> "Mismatch (" + expected + ", " + result + ") with data " + data);
     }
 
@@ -148,9 +147,21 @@ public interface TPSQueriesTest extends DatabaseTestPreparer {
         }
 
         data.sort(new TPSComparator());
-        List<Long> expected = List.of(new TPSMutator(data).serverUptime());
-        List<Long> result = db().query(TPSQueries.uptime(Long.MIN_VALUE, Long.MAX_VALUE, List.of(serverUUID())))
-                .values().stream().toList();
+        Long expected = new TPSMutator(data).serverUptime();
+        Long result = db().query(TPSQueries.uptime(Long.MIN_VALUE, Long.MAX_VALUE, List.of(serverUUID())));
+        assertEquals(expected, result, () -> "Mismatch (" + expected + ", " + result + ") with data " + data);
+    }
+
+    @RepeatedTest(5)
+    default void downtimeCalculationMatches() {
+        List<TPS> data = RandomData.randomDateOrderedTPS();
+        for (TPS tps : data) {
+            execute(DataStoreQueries.storeTPS(serverUUID(), tps));
+        }
+
+        data.sort(new TPSComparator());
+        Long expected = new TPSMutator(data).serverDownTime();
+        Long result = db().query(TPSQueries.downtime(Long.MIN_VALUE, Long.MAX_VALUE, List.of(serverUUID())));
         assertEquals(expected, result, () -> "Mismatch (" + expected + ", " + result + ") with data " + data);
     }
 
