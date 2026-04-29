@@ -26,6 +26,7 @@ import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 
 import javax.inject.Inject;
@@ -61,7 +62,11 @@ public class PlayersOnlineCurrent implements Datapoint<Integer> {
 
         List<ServerUUID> serverUUIDs = filter.getServerUUIDs();
         if (serverUUIDs.isEmpty()) {
-            return Optional.of(serverSensor.getOnlinePlayerCount());
+            if (serverSensor.usingRedisBungee()) {
+                return Optional.of(serverSensor.getOnlinePlayerCount());
+            } else {
+                serverUUIDs = dbSystem.getDatabase().query(ServerQueries.fetchProxyServerUUIDs());
+            }
         }
 
         if (serverUUIDs.size() == 1) {
@@ -69,25 +74,27 @@ public class PlayersOnlineCurrent implements Datapoint<Integer> {
             if (serverUUID.equals(serverInfo.getServerUUID())) {
                 return Optional.of(serverSensor.getOnlinePlayerCount());
             }
-            return Optional.of(dbSystem.getDatabase().query(TPSQueries.fetchLatestTPSEntryForServer(serverUUID))
+            return dbSystem.getDatabase().query(TPSQueries.fetchLatestTPSEntryForServer(serverUUID))
                     .filter(tps -> tps.getDate() > System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(2))
-                    .map(TPS::getPlayers)
-                    .orElse(0)
-            );
+                    .map(TPS::getPlayers);
         }
 
         // Multiple servers: sum of latest online counts
         int total = 0;
+        boolean addedValues = false;
         for (ServerUUID serverUUID : serverUUIDs) {
             if (serverUUID.equals(serverInfo.getServerUUID())) {
                 total += serverSensor.getOnlinePlayerCount();
+                addedValues = true;
             } else {
-                total += dbSystem.getDatabase().query(TPSQueries.fetchLatestTPSEntryForServer(serverUUID))
+                Optional<Integer> found = dbSystem.getDatabase().query(TPSQueries.fetchLatestTPSEntryForServer(serverUUID))
                         .filter(tps -> tps.getDate() > System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(2))
-                        .map(TPS::getPlayers).orElse(0);
+                        .map(TPS::getPlayers);
+                total += found.orElse(0);
+                if (!addedValues) addedValues = found.isPresent();
             }
         }
-        return Optional.of(total);
+        return addedValues ? Optional.of(total) : Optional.empty();
     }
 
     @Override

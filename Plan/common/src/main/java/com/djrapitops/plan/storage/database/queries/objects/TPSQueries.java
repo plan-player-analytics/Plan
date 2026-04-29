@@ -164,9 +164,8 @@ public class TPSQueries {
                     "    segmented AS (\n" +
                     "SELECT\n" +
                     "    date," +
-                    " SUM (new_segment) OVER (\n" +
-                    "    ORDER BY date\n" +
-                    (db.getType() == DBType.SQLITE ? "    ROWS UNBOUNDED PRECEDING" : "") +
+                    " SUM(new_segment) OVER (ORDER BY date" +
+                    (db.getType() == DBType.SQLITE ? " ROWS UNBOUNDED PRECEDING" : "") +
                     ") AS segment_id\n" +
                     "FROM marked" +
                     ")\n" +
@@ -521,7 +520,8 @@ public class TPSQueries {
 
             @Override
             public Double processResults(ResultSet set) throws SQLException {
-                return set.next() ? set.getDouble("average") : -1.0;
+                double value = set.next() ? set.getDouble("average") : -1.0;
+                return set.wasNull() ? -1.0 : value;
             }
         };
     }
@@ -550,7 +550,8 @@ public class TPSQueries {
 
             @Override
             public Double processResults(ResultSet set) throws SQLException {
-                return set.next() ? set.getDouble("average") : -1.0;
+                double value = set.next() ? set.getDouble("average") : -1.0;
+                return set.wasNull() ? -1.0 : value;
             }
         };
     }
@@ -579,7 +580,8 @@ public class TPSQueries {
 
             @Override
             public Double processResults(ResultSet set) throws SQLException {
-                return set.next() ? set.getDouble("average") : -1.0;
+                double value = set.next() ? set.getDouble("average") : -1.0;
+                return set.wasNull() ? -1.0 : value;
             }
         };
     }
@@ -608,7 +610,8 @@ public class TPSQueries {
 
             @Override
             public Long processResults(ResultSet set) throws SQLException {
-                return set.next() ? (long) set.getDouble("average") : -1L;
+                double value = set.next() ? set.getDouble("average") : -1.0;
+                return set.wasNull() ? -1L : (long) value;
             }
         };
     }
@@ -637,7 +640,8 @@ public class TPSQueries {
 
             @Override
             public Long processResults(ResultSet set) throws SQLException {
-                return set.next() ? (long) set.getDouble("average") : -1L;
+                double value = set.next() ? set.getDouble("average") : -1.0;
+                return set.wasNull() ? -1L : (long) value;
             }
         };
     }
@@ -666,7 +670,8 @@ public class TPSQueries {
 
             @Override
             public Long processResults(ResultSet set) throws SQLException {
-                return set.next() ? (long) set.getDouble("average") : -1L;
+                double value = set.next() ? set.getDouble("average") : -1.0;
+                return set.wasNull() ? -1L : (long) value;
             }
         };
     }
@@ -695,7 +700,8 @@ public class TPSQueries {
 
             @Override
             public Double processResults(ResultSet set) throws SQLException {
-                return set.next() ? set.getDouble("average") : -1.0;
+                double value = set.next() ? set.getDouble("average") : -1.0;
+                return set.wasNull() ? -1.0 : value;
             }
         };
     }
@@ -717,7 +723,8 @@ public class TPSQueries {
 
             @Override
             public Long processResults(ResultSet set) throws SQLException {
-                return set.next() ? set.getLong("free") : -1L;
+                long value = set.next() ? set.getLong("free") : -1L;
+                return set.wasNull() ? -1L : value;
             }
         };
     }
@@ -739,7 +746,8 @@ public class TPSQueries {
 
             @Override
             public Long processResults(ResultSet set) throws SQLException {
-                return set.next() ? set.getLong("free") : -1L;
+                long value = set.next() ? set.getLong("free") : -1L;
+                return set.wasNull() ? -1L : value;
             }
         };
     }
@@ -761,7 +769,8 @@ public class TPSQueries {
 
             @Override
             public Long processResults(ResultSet set) throws SQLException {
-                return set.next() ? (long) set.getDouble("average") : -1L;
+                double value = set.next() ? set.getDouble("average") : -1.0;
+                return set.wasNull() ? -1L : (long) value;
             }
         };
     }

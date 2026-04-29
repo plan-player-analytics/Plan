@@ -1,11 +1,5 @@
 import {doGetRequest, staticSite} from "./backendConfiguration";
 
-export const fetchServersOverview = async (updateRequested) => {
-    let url = `/v1/network/servers`;
-    if (staticSite) url = `/data/network-servers.json`;
-    return doGetRequest(url, updateRequested);
-}
-
 export const fetchNetworkPlayerbaseOverview = async (timestamp) => {
     let url = `/v1/network/playerbaseOverview`;
     if (staticSite) url = `/data/network-playerbaseOverview.json`;

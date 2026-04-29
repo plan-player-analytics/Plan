@@ -34,6 +34,7 @@ import org.apache.commons.text.StringEscapeUtils;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Optional;
@@ -115,7 +116,6 @@ public class NetworkPageExporter extends FileExporter {
         String afterMillis = "&afterMillisAgo=";
         String beforeMillis = "&beforeMillisAgo=";
         exportJSON(toDirectory,
-                "network/servers",
                 "network/playerbaseOverview",
                 "graph?type=playersOnline&server=" + serverUUID,
                 "graph?type=playersOnlineProxies",
@@ -187,19 +187,22 @@ public class NetworkPageExporter extends FileExporter {
     }
 
     private void exportJSON(Path toDirectory, String resource) throws IOException {
-        Response response = getJSONResponse(resource)
-                .orElseThrow(() -> new NotFoundException(resource + " was not properly exported: not found"));
+        Optional<Response> response = getJSONResponse(resource);
 
         String jsonResourceName = toFileName(toJSONResourceName(resource), "json");
 
         String relativePlayerLink = toRelativePathFromRoot("player");
-        export(toDirectory.resolve("data").resolve(jsonResourceName),
-                // Replace ../player in urls to fix player page links
-                StringUtils.replaceEach(response.getAsString(),
-                        new String[]{StringEscapeUtils.escapeJson("../player"), StringEscapeUtils.escapeJson("./player")},
-                        new String[]{StringEscapeUtils.escapeJson(relativePlayerLink), StringEscapeUtils.escapeJson(relativePlayerLink)}
-                )
-        );
+        if (response.isPresent()) {
+            export(toDirectory.resolve("data").resolve(jsonResourceName),
+                    // Replace ../player in urls to fix player page links
+                    StringUtils.replaceEach(response.get().getAsString(),
+                            new String[]{StringEscapeUtils.escapeJson("../player"), StringEscapeUtils.escapeJson("./player")},
+                            new String[]{StringEscapeUtils.escapeJson(relativePlayerLink), StringEscapeUtils.escapeJson(relativePlayerLink)}
+                    )
+            );
+        } else {
+            Files.deleteIfExists(toDirectory.resolve("data").resolve(jsonResourceName));
+        }
     }
 
     private Optional<Response> getJSONResponse(String resource) {

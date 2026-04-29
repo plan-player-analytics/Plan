@@ -19,26 +19,44 @@ import {useTranslation} from "react-i18next";
 import Scrollable from "../Scrollable";
 import {NavLink} from "react-router";
 import ActionButton from "../input/button/ActionButton.jsx";
+import {DatapointType} from "../../dataHooks/model/datapoint/Datapoint.ts";
+import {
+    calculatePermission,
+    QueryDatapointValue,
+    useDatapointQueries,
+    useDatapointQuery
+} from "../datapoint/QueryDatapoint.tsx";
+import {MS_24H, MS_MONTH, MS_WEEK} from "../../util/format/useDateFormatter.js";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 
-const ServerRow = ({server, onQuickView}) => {
+const ServerRow = ({server, sortedBy, onQuickView}) => {
     const {t} = useTranslation();
 
-    const timeUtc = Date.now();
-    const dayMs = 86400000
+    const {error: error30d} = useDatapointQuery(true, DatapointType.TPS_AVERAGE, {
+        server: server.serverUUID,
+        afterMillisAgo: MS_MONTH
+    })
+    const {error: error7d} = useDatapointQuery(true, DatapointType.TPS_AVERAGE, {
+        server: server.serverUUID,
+        afterMillisAgo: MS_WEEK
+    })
+    const {error: error24h} = useDatapointQuery(true, DatapointType.TPS_AVERAGE, {
+        server: server.serverUUID,
+        afterMillisAgo: MS_24H
+    })
 
     let noDataWarning = '';
-    if (!server.playersOnline.length) {
+    if (error30d?.status === 404) {
         noDataWarning = <>&nbsp;<span title={t('html.description.noData30d')}><Fa icon={faBoxArchive}/></span></>
-    } else if (timeUtc - server.playersOnline[server.playersOnline.length - 1][0] > dayMs) {
+    } else if (error24h?.status === 404) {
         noDataWarning = <>&nbsp;<span title={t('html.description.noData24h')}>
-            <Fa icon={faExclamationTriangle}
-                className={timeUtc - server.playersOnline[server.playersOnline.length - 1][0] > dayMs * 7 ? '' : "col-deep-orange"}/>
+            <Fa icon={faExclamationTriangle} className={error7d?.status === 404 ? '' : "col-deep-orange"}/>
         </span></>
     }
 
     return (
         <tr>
-            <td>{server.name}{noDataWarning}</td>
+            <td>{server.serverName}{noDataWarning}</td>
             <td className="p-1">
                 <NavLink to={"/server/" + encodeURIComponent(server.serverUUID)}
                          title={t('html.label.serverAnalysis') + ': ' + server.name}
@@ -46,8 +64,17 @@ const ServerRow = ({server, onQuickView}) => {
                     icon={faLink}/> {t('html.label.serverAnalysis')}
                 </NavLink>
             </td>
-            <td>{server.players}</td>
-            <td>{t(server.online)}</td>
+            <td>
+                <QueryDatapointValue dataType={sortedBy.data || ServerSortOption.REGISTERED_PLAYERS.data}
+                                     filter={{
+                                         server: server.serverUUID,
+                                         afterMillisAgo: sortedBy.noFilterDates ? undefined : MS_WEEK
+                                     }}/>
+            </td>
+            <td>
+                <QueryDatapointValue dataType={DatapointType.PLAYERS_ONLINE}
+                                     filter={{server: server.serverUUID}}/>
+            </td>
             <td className="p-1">
                 <ActionButton className={'btn bg-players-online float-right'}
                               title={t('html.label.quickView') + ': ' + server.name}
@@ -97,39 +124,56 @@ const SortOptionIcon = {
 
 export const ServerSortOption = {
     ALPHABETICAL: {
+        key: "ALPHABETICAL",
         label: 'html.label.alphabetical',
+        data: undefined,
+        noFilterDates: true,
         sortFunction: sortKeepOrder,
         ...SortOptionIcon.LETTERS
     },
     AVERAGE_TPS: {
+        key: "AVERAGE_TPS",
         label: 'html.label.averageTps7days',
-        sortFunction: sortBySometimesNumericProperty('avg_tps'),
+        data: DatapointType.TPS_AVERAGE,
+        sortFunction: sortBySometimesNumericProperty('value'),
         ...SortOptionIcon.NUMBERS
     },
     // DOWNTIME: 'html.label.downtime',
     LOW_TPS_SPIKES: {
+        key: "LOW_TPS_SPIKES",
         label: 'html.label.lowTpsSpikes7days',
-        sortFunction: sortByNumericProperty('low_tps_spikes'),
+        data: DatapointType.TPS_LOW_SPIKES,
+        sortFunction: sortByNumericProperty('value'),
         ...SortOptionIcon.NUMBERS
     },
     NEW_PLAYERS: {
+        key: "NEW_PLAYERS",
         label: 'html.label.newPlayers7days',
-        sortFunction: sortByNumericProperty('new_players'),
+        data: DatapointType.NEW_PLAYERS,
+        sortFunction: sortByNumericProperty('value'),
         ...SortOptionIcon.NUMBERS
     },
     PLAYERS_ONLINE: {
+        key: "PLAYERS_ONLINE",
         label: 'html.label.playersOnlineNow',
-        sortFunction: sortBySometimesNumericProperty('online'),
+        data: DatapointType.PLAYERS_ONLINE,
+        noFilterDates: true,
+        sortFunction: sortBySometimesNumericProperty('value'),
         ...SortOptionIcon.NUMBERS
     },
     REGISTERED_PLAYERS: {
+        key: "REGISTERED_PLAYERS",
         label: 'html.label.registeredPlayers',
-        sortFunction: sortByNumericProperty('players'),
+        data: DatapointType.NEW_PLAYERS,
+        noFilterDates: true,
+        sortFunction: sortByNumericProperty('value'),
         ...SortOptionIcon.NUMBERS
     },
     UNIQUE_PLAYERS: {
+        key: "UNIQUE_PLAYERS",
         label: 'html.label.uniquePlayers7days',
-        sortFunction: sortByNumericProperty('unique_players'),
+        data: DatapointType.UNIQUE_PLAYERS_COUNT,
+        sortFunction: sortByNumericProperty('value'),
         ...SortOptionIcon.NUMBERS
     },
 }
@@ -137,8 +181,16 @@ export const ServerSortOption = {
 const ServersTable = ({servers, onSelect, sortBy, sortReversed}) => {
     const {t} = useTranslation();
     const {nightModeEnabled} = useTheme();
+    const {hasPermission} = useAuth();
 
-    const sortedServers = sort(servers, sortBy, sortReversed);
+    const sortedBy = ServerSortOption[sortBy.key];
+    const permission = calculatePermission(sortedBy.data);
+    const queries = useDatapointQueries(hasPermission(permission), sortedBy.data || ServerSortOption.REGISTERED_PLAYERS.data,
+        servers.map(server => ({
+            server: server.serverUUID,
+            afterMillisAgo: sortedBy.noFilterDates ? undefined : MS_WEEK
+        })))
+    const sortedServers = sort(servers.map((s, i) => ({...s, value: queries[i].data?.value})), sortBy, sortReversed);
 
     return (
         <Scrollable>
@@ -147,14 +199,17 @@ const ServersTable = ({servers, onSelect, sortBy, sortReversed}) => {
                 <tr>
                     <th><Fa icon={faServer}/> {t('html.label.server')}</th>
                     <th><Fa icon={faLineChart}/> {t('html.label.serverAnalysis')}</th>
-                    <th><Fa icon={faUsers}/> {t('html.label.registeredPlayers')}</th>
+                    <th><Fa
+                        icon={faUsers}/> {t(sortedBy.data ? sortedBy.label : ServerSortOption.REGISTERED_PLAYERS.label)}
+                    </th>
                     <th><Fa icon={faUser}/> {t('html.label.playersOnline')}</th>
                     <th></th>
                 </tr>
                 </thead>
                 <tbody>
-                {sortedServers.length ? sortedServers.map(server => <ServerRow key={server.serverUUID}
+                {sortedServers.length ? sortedServers.map(server => <ServerRow key={server.serverUUID + sortedBy.key}
                                                                                server={server}
+                                                                               sortedBy={sortedBy}
                                                                                onQuickView={() => onSelect(servers.indexOf(server))}/>) :
                     <tr>
                         <td>{t('html.generic.none')}</td>

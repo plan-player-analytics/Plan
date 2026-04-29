@@ -4,12 +4,15 @@ import ServersTable, {ServerSortOption} from "../../table/ServersTable";
 import {faNetworkWired} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import {CardLoader} from "../../navigation/Loader.tsx";
+import {useAuth} from "../../../hooks/authenticationHook.tsx";
+import {calculatePermission} from "../../datapoint/QueryDatapoint.tsx";
 
 const SortDropDown = ({sortBy, sortReversed, setSortBy}) => {
     const {t} = useTranslation();
+    const {hasPermission} = useAuth();
 
-    const sortOptions = Object.values(ServerSortOption);
+    const sortOptions = Object.values(ServerSortOption)
+        .filter(sortBy => hasPermission(calculatePermission(sortBy.data)));
 
     const getSortIcon = useCallback(() => {
         return sortReversed ? sortBy.iconDesc : sortBy.iconAsc;
@@ -33,14 +36,10 @@ const SortDropDown = ({sortBy, sortReversed, setSortBy}) => {
     )
 }
 
-const ServersTableCard = ({loaded, servers, onSelect}) => {
+const ServersTableCard = ({servers, onSelect}) => {
     const {t} = useTranslation();
     const [sortBy, setSortBy] = useState(ServerSortOption.ALPHABETICAL);
     const [sortReversed, setSortReversed] = useState(false);
-
-    if (!loaded) {
-        return <CardLoader/>
-    }
 
     const setSort = option => {
         if (sortBy === option) {

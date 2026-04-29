@@ -24,6 +24,7 @@ import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.TPSStoreTransaction;
 import com.djrapitops.plan.utilities.java.Lists;
 import org.apache.commons.lang3.Strings;
 import org.awaitility.Awaitility;
@@ -86,7 +87,7 @@ public class ExportTestUtilities {
     public static Optional<WebElement> getMainPageElement(ChromeDriver driver) {
         try {
             return Optional.of(driver.findElement(By.className("load-in")));
-        } catch (NoSuchElementException e) {
+        } catch (NoSuchElementException _) {
             return Optional.empty();
         }
     }
@@ -94,7 +95,7 @@ public class ExportTestUtilities {
     public static Optional<WebElement> getElementById(ChromeDriver driver, String id) {
         try {
             return Optional.of(driver.findElement(By.id(id)));
-        } catch (NoSuchElementException e) {
+        } catch (NoSuchElementException _) {
             return Optional.empty();
         }
     }
@@ -129,6 +130,10 @@ public class ExportTestUtilities {
         FinishedSession session = new FinishedSession(uuid, serverUUID, 1000L, 11000L, 500L, new DataMap());
         database.executeTransaction(new StoreWorldNameTransaction(serverUUID, "world"));
         database.executeTransaction(new StoreSessionTransaction(session));
+    }
+
+    static void saveServerData(Database database, ServerUUID serverUUID) {
+        RandomData.randomDateOrderedTPS(5).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
     }
 
     public static List<String> getEndpointsToTest(ServerUUID serverUUID) {

@@ -8,7 +8,7 @@ import {
 } from "../../dataHooks/model/datapoint/Datapoint";
 import {GenericFilter} from "../../dataHooks/model/GenericFilter";
 import {useNavigation} from "../../hooks/navigationHook";
-import {useQuery} from "@tanstack/react-query";
+import {useQueries, useQuery} from "@tanstack/react-query";
 import {queryRetry} from "../../dataHooks/queryRetry";
 import React, {useEffect} from "react";
 import {Datapoint as DatapointComponent, DatapointProps} from "./Datapoint";
@@ -117,9 +117,10 @@ export function QueryDatapoint<K extends DatapointType>({
         if (error.status === 404) {
             return <DatapointComponent
                 {...props}
-                value={'plugin.generic.unavailable'}
-                valueLabel={<span
-                    title={fallbackUnavailableExplanation}><FontAwesomeIcon icon={faQuestionCircle}/></span>}
+                value={'generic.noData'}
+                valueLabel={fallbackUnavailableExplanation
+                    ? <span title={fallbackUnavailableExplanation}><FontAwesomeIcon icon={faQuestionCircle}/></span>
+                    : undefined}
             />
         }
         console.error(error);
@@ -148,7 +149,7 @@ export function QueryDatapointValue<K extends DatapointType>({permission, dataTy
     if (!allowed) return null;
     if (error) {
         if (error.status === 404) {
-            return t('plugin.generic.unavailable');
+            return t('generic.noData');
         }
         console.error(error);
         return error.message;
@@ -204,6 +205,23 @@ export function useDatapointQuery<K extends DatapointType>(allowed: boolean, dat
     }, [updateRequested]);
     return query;
 }
+
+export function useDatapointQueries<K extends DatapointType>(allowed: boolean, dataType: K, filters: GenericFilter[]) {
+    const {updateRequested} = useNavigation() as { updateRequested: number };
+    const query = useQueries({
+        queries: filters.map(filter => ({
+            queryKey: filter ? ['datapoint', dataType, ...Object.values(filter)] : ['datapoint', dataType],
+            queryFn: () => getDatapoint(dataType, filter),
+            retry: queryRetry,
+            enabled: Boolean(allowed)
+        }))
+    });
+    useEffect(() => {
+        query.forEach(q => q.refetch())
+    }, [updateRequested]);
+    return query;
+}
+
 
 async function getDatapoint<K extends DatapointType>(dataType: K, filter?: GenericFilter) {
     const url = getDatapointUrl(dataType, filter);

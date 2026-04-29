@@ -64,7 +64,8 @@ public class LargeFetchQueries {
                 TPSTable.FREE_DISK + ',' +
                 serverUUIDColumn +
                 FROM + TPSTable.TABLE_NAME +
-                INNER_JOIN + ServerTable.TABLE_NAME + " on " + serverIDColumn + "=" + TPSTable.SERVER_ID;
+                INNER_JOIN + ServerTable.TABLE_NAME + " on " + serverIDColumn + "=" + TPSTable.SERVER_ID +
+                ORDER_BY + serverIDColumn + ',' + TPSTable.DATE + " ASC";
 
         return new QueryAllStatement<>(sql, 50000) {
             @Override

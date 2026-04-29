@@ -4,14 +4,25 @@ import {Card} from "react-bootstrap";
 import PlayersOnlineGraph from "../../graphs/PlayersOnlineGraph";
 import {faChartArea} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
+import {useDataRequest} from "../../../hooks/dataFetchHook.js";
+import {fetchPlayersOnlineGraph} from "../../../service/serverService.js";
+import {ErrorViewCard} from "../../../views/ErrorView.tsx";
+import {CardLoader} from "../../navigation/Loader.tsx";
 
 const QuickViewGraphCard = ({server}) => {
     const {t} = useTranslation();
+    const {data, loadingError} = useDataRequest(
+        fetchPlayersOnlineGraph,
+        [server.serverUUID])
+
+    if (loadingError) return <ErrorViewCard error={loadingError}/>
+    if (!data) return <CardLoader/>;
+
     return (
         <Card>
             <CardHeader icon={faChartArea} color={'players-online'}
-                        label={server.name + ' ' + t('html.label.onlineActivity') + ' (' + t('html.label.thirtyDays') + ')'}/>
-            <PlayersOnlineGraph data={{playersOnline: server.playersOnline, color: server.playersOnlineColor}}/>
+                        label={server.serverName + ' ' + t('html.label.onlineActivity')}/>
+            <PlayersOnlineGraph data={data} identifier={server.serverUUID} showPlayersOnline/>
         </Card>
     )
 };

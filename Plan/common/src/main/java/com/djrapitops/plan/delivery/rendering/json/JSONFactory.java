@@ -45,6 +45,7 @@ import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.settings.locale.lang.HtmlLang;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
@@ -57,6 +58,7 @@ import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.java.Lists;
 import com.djrapitops.plan.utilities.java.Maps;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -74,6 +76,7 @@ import java.util.stream.Collectors;
 public class JSONFactory {
 
     private final PlanConfig config;
+    private final PluginLogger logger;
     private final Locale locale;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
@@ -83,7 +86,7 @@ public class JSONFactory {
 
     @Inject
     public JSONFactory(
-            PlanConfig config,
+            PlanConfig config, PluginLogger logger,
             Locale locale,
             DBSystem dbSystem,
             ServerInfo serverInfo,
@@ -92,6 +95,7 @@ public class JSONFactory {
             Formatters formatters
     ) {
         this.config = config;
+        this.logger = logger;
         this.locale = locale;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
@@ -246,7 +250,10 @@ public class JSONFactory {
                 .map(ServerDto::fromServer);
     }
 
+    @Deprecated(since = "2026-04-29 / 5.7 build 3401")
     public Map<String, Object> serversAsJSONMaps() {
+        logger.warn(locale.getString(PluginLang.DEPRECATED_ENDPOINT_CALL, "/v1/network/servers", "/v1/datapoint"));
+
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();
         long weekAgo = now - TimeUnit.DAYS.toMillis(7L);
