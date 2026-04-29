@@ -210,7 +210,7 @@ const ServersTable = ({servers, onSelect, sortBy, sortReversed}) => {
                 {sortedServers.length ? sortedServers.map(server => <ServerRow key={server.serverUUID + sortedBy.key}
                                                                                server={server}
                                                                                sortedBy={sortedBy}
-                                                                               onQuickView={() => onSelect(servers.indexOf(server))}/>) :
+                                                                               onQuickView={() => onSelect(servers.findIndex(s => s.serverUUID === server.serverUUID))}/>) :
                     <tr>
                         <td>{t('html.generic.none')}</td>
                         <td>-</td>
