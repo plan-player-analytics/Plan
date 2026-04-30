@@ -489,6 +489,8 @@ public class TPSQueries {
                             .entities(set.getInt(ENTITIES))
                             .chunksLoaded(set.getInt(CHUNKS))
                             .freeDiskSpace(set.getLong(FREE_DISK))
+                            .mspt95thPercentile(set.getDouble(MSPT_95TH_PERCENTILE))
+                            .msptAverage(set.getDouble(MSPT_AVERAGE))
                             .toTPS());
                 }
                 return Optional.empty();

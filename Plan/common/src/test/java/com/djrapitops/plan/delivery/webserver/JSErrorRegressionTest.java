@@ -29,6 +29,7 @@ import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
@@ -48,6 +49,7 @@ import utilities.RandomData;
 import utilities.TestConstants;
 
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import static com.djrapitops.plan.delivery.export.ExportTestUtilities.assertNoLogs;
@@ -71,6 +73,7 @@ class JSErrorRegressionTest {
                 .set(WebserverSettings.PORT, TEST_PORT_NUMBER);
         system.enable();
         savePlayerData(system);
+        saveServerData(system);
     }
 
     private static void savePlayerData(PlanSystem system) {
@@ -82,6 +85,14 @@ class JSErrorRegressionTest {
         FinishedSession session = new FinishedSession(uuid, serverUUID, 1000L, 11000L, 500L, new DataMap());
         database.executeTransaction(new StoreWorldNameTransaction(serverUUID, "world"));
         database.executeTransaction(new StoreSessionTransaction(session));
+    }
+
+    private static void saveServerData(PlanSystem system) {
+        Database database = system.getDatabaseSystem().getDatabase();
+        ServerUUID serverUUID = system.getServerInfo().getServerUUID();
+        database.executeInTransaction(
+                DataStoreQueries.storeTPS(serverUUID,
+                        RandomData.randomTPSAtDate(System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(5)))).join();
     }
 
     @AfterAll
