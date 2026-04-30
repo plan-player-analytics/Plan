@@ -45,8 +45,7 @@ const SessionInsightsCard = ({identifier}) => {
                             dataType={DatapointType.AFK_TIME}
                             filter={filter}
                             valueLabel={<>(<QueryDatapointValue dataType={DatapointType.AFK_TIME_PERCENTAGE}
-                                                                filter={filter}
-                                                                permission={"afk.time"}/>)</>}
+                                                                filter={filter}/>)</>}
             />
         </InsightsFor30DaysCard>
     )

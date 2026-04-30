@@ -62,12 +62,11 @@ export const QueryDatapointTable = ({comparisonHeader, filter, columns, rows, sh
         </tr>
         </thead>
         <tbody>
-        {rows.filter(row => hasPermission(calculatePermission(row.dataType, row.permission, filter)))
+        {rows.filter(row => hasPermission(calculatePermission(row.dataType, filter)))
             .map(row => <tr key={row.text} title={row.title}>
                 <td><Fa icon={row.icon} className={'col-' + row.color}/> {row.text}</td>
                 {columns.map(column => <td key={column.key + row.text}>
                     <QueryDatapointValue dataType={row.dataType}
-                                         permission={row.permission}
                                          filter={{...filter, ...column.filter}}/>
                 </td>)}
                 {showTrend && <td>

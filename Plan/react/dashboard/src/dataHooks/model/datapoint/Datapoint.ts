@@ -44,6 +44,11 @@ export enum DatapointType {
     TPS_LOW_SPIKES = "TPS_LOW_SPIKES",
 }
 
+export const differingPermissions: Partial<Record<DatapointType, string>> = {
+    PLAYERS_ONLINE: "players.online.current",
+    AFK_TIME_PERCENTAGE: "afk.time"
+}
+
 export type DatapointTypeMap = {
     WORLD_PIE: WorldPie;
     PLAYTIME: number;

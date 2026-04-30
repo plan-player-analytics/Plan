@@ -27,6 +27,7 @@ import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveWebGroupsTransaction;
@@ -198,6 +199,13 @@ class AccessControlVisibilityTest {
                 .get();
     }
 
+    @BeforeEach
+    void setUp(Database database, ServerUUID serverUUID) {
+        database.executeInTransaction(
+                DataStoreQueries.storeTPS(serverUUID,
+                        RandomData.randomTPSAtDate(System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(5)))).join();
+    }
+
     @AfterEach
     void tearDownTest(WebDriver driver) {
         String address = "https://localhost:" + TEST_PORT_NUMBER + "/auth/logout";
@@ -295,10 +303,11 @@ class AccessControlVisibilityTest {
         assertNoLogs(driver, address);
     }
 
-    private void registerProxy(Database database) throws ExecutionException, InterruptedException {
+    private void registerProxy(Database database) {
         database.executeTransaction(new StoreServerInformationTransaction(
                 new Server(null, TestConstants.SERVER_TWO_UUID, "Proxy", "https://localhost", true, TestConstants.VERSION)
-        )).get();
+        )).join();
+        database.executeInTransaction(DataStoreQueries.storeTPS(TestConstants.SERVER_TWO_UUID, RandomData.randomTPSAtDate(System.currentTimeMillis() - 1)));
         Awaitility.await("Proxy was not registered")
                 .atMost(5, TimeUnit.SECONDS)
                 .until(() -> !database.query(ServerQueries.fetchProxyServers()).isEmpty());

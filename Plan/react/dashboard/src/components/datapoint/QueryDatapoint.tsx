@@ -2,6 +2,7 @@ import {
     Datapoint,
     DatapointType,
     DatapointTypeMap,
+    differingPermissions,
     FormatType,
     getDatapointUrl,
     NumericDatapointType
@@ -10,7 +11,7 @@ import {GenericFilter} from "../../dataHooks/model/GenericFilter";
 import {useNavigation} from "../../hooks/navigationHook";
 import {useQueries, useQuery} from "@tanstack/react-query";
 import {queryRetry} from "../../dataHooks/queryRetry";
-import React, {useEffect} from "react";
+import React, {useEffect, useRef} from "react";
 import {Datapoint as DatapointComponent, DatapointProps} from "./Datapoint";
 import FormattedTime from "../text/FormattedTime";
 import {DatapointLoader} from "../navigation/Loader";
@@ -28,7 +29,6 @@ import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 type Props<K extends DatapointType> = {
     dataType: K;
     filter?: GenericFilter;
-    permission?: string;
     fallbackUnavailableExplanation?: string
 } & Omit<DatapointProps, 'value'>;
 
@@ -91,9 +91,9 @@ function Format<K extends DatapointType>({value, formatType}: FormatProps<K>) {
     }
 }
 
-export function calculatePermission(dataType: DatapointType, permission?: string, filter?: GenericFilter) {
+export function calculatePermission(dataType: DatapointType, filter?: GenericFilter) {
     if (!dataType) return '';
-    const asPermission = permission || dataType.toLowerCase().replaceAll('_', '.');
+    const asPermission = differingPermissions[dataType] || dataType.toLowerCase().replaceAll('_', '.');
     if (filter) {
         if (filter.player) return 'data.player.' + asPermission;
         if (filter.server?.length) return 'data.server.' + asPermission;
@@ -102,14 +102,13 @@ export function calculatePermission(dataType: DatapointType, permission?: string
 }
 
 export function QueryDatapoint<K extends DatapointType>({
-                                                            permission,
                                                             dataType,
                                                             filter,
                                                             fallbackUnavailableExplanation,
                                                             ...props
                                                         }: Props<K>) {
     const {hasPermission} = useAuth();
-    const allowed = hasPermission(calculatePermission(dataType, permission, filter));
+    const allowed = hasPermission(calculatePermission(dataType, filter));
     const {data, isFetching, error} = useDatapointQuery(allowed, dataType, filter);
 
     if (!allowed) return null;
@@ -140,9 +139,9 @@ export function QueryDatapoint<K extends DatapointType>({
     />
 }
 
-export function QueryDatapointValue<K extends DatapointType>({permission, dataType, filter}: ValueProps<K>) {
+export function QueryDatapointValue<K extends DatapointType>({dataType, filter}: ValueProps<K>) {
     const {hasPermission} = useAuth();
-    const allowed = hasPermission(calculatePermission(dataType, permission, filter));
+    const allowed = hasPermission(calculatePermission(dataType, filter));
     const {data, isFetching, error} = useDatapointQuery(allowed, dataType, filter);
     const {t} = useTranslation();
 
@@ -161,14 +160,13 @@ export function QueryDatapointValue<K extends DatapointType>({permission, dataTy
 type TrendProps<K extends NumericDatapointType> = { downGood?: boolean, filter2: GenericFilter } & ValueProps<K>
 
 export function QueryDatapointTrend<K extends NumericDatapointType>({
-                                                                        permission,
                                                                         dataType,
                                                                         downGood,
                                                                         filter,
                                                                         filter2
                                                                     }: TrendProps<K>) {
     const {hasPermission} = useAuth();
-    const allowed = hasPermission(calculatePermission(dataType, permission, filter));
+    const allowed = hasPermission(calculatePermission(dataType, filter));
     const {data: before, error: error1} = useDatapointQuery(allowed, dataType, filter);
     const {data: after, error: error2} = useDatapointQuery(allowed, dataType, filter2);
 
@@ -194,6 +192,7 @@ export function QueryDatapointTrend<K extends NumericDatapointType>({
 
 export function useDatapointQuery<K extends DatapointType>(allowed: boolean, dataType: K, filter?: GenericFilter) {
     const {updateRequested} = useNavigation() as { updateRequested: number };
+    const prevUpdateRef = useRef<number | undefined>(undefined);
     const query = useQuery({
         queryKey: filter ? ['datapoint', dataType, ...Object.values(filter)] : ['datapoint', dataType],
         queryFn: () => getDatapoint(dataType, filter),
@@ -201,13 +200,17 @@ export function useDatapointQuery<K extends DatapointType>(allowed: boolean, dat
         enabled: Boolean(allowed)
     });
     useEffect(() => {
-        query.refetch()
-    }, [updateRequested]);
+        if (allowed && prevUpdateRef.current && prevUpdateRef.current <= updateRequested) {
+            query.refetch()
+        }
+        prevUpdateRef.current = updateRequested;
+    }, [updateRequested, allowed]);
     return query;
 }
 
 export function useDatapointQueries<K extends DatapointType>(allowed: boolean, dataType: K, filters: GenericFilter[]) {
     const {updateRequested} = useNavigation() as { updateRequested: number };
+    const prevUpdateRef = useRef<number | undefined>(undefined);
     const query = useQueries({
         queries: filters.map(filter => ({
             queryKey: filter ? ['datapoint', dataType, ...Object.values(filter)] : ['datapoint', dataType],
@@ -217,8 +220,11 @@ export function useDatapointQueries<K extends DatapointType>(allowed: boolean, d
         }))
     });
     useEffect(() => {
-        query.forEach(q => q.refetch())
-    }, [updateRequested]);
+        if (allowed && prevUpdateRef.current && prevUpdateRef.current <= updateRequested) {
+            query.forEach(q => q.refetch())
+        }
+        prevUpdateRef.current = updateRequested;
+    }, [updateRequested, allowed]);
     return query;
 }
 

@@ -61,6 +61,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -306,9 +307,10 @@ class AccessControlTest {
                 TestConstants.SERVER_NAME,
                 address,
                 TestConstants.VERSION)));
-        for (TPS tps : RandomData.randomTPS()) {
-            database.executeInTransaction(DataStoreQueries.storeTPS(TestConstants.SERVER_UUID, tps));
+        for (TPS tps : RandomData.randomDateOrderedTPS(1)) {
+            database.executeInTransaction(DataStoreQueries.storeTPS(TestConstants.SERVER_UUID, tps)).join();
         }
+        database.executeInTransaction(DataStoreQueries.storeTPS(TestConstants.SERVER_UUID, RandomData.randomTPSAtDate(System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(5))));
 
         Caller caller = system.getApiServices().getExtensionService().register(new ExtensionsDatabaseTest.PlayerExtension())
                 .orElseThrow(AssertionError::new);

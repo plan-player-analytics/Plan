@@ -46,7 +46,7 @@ const ServerAsNumbersCard = () => {
                                         filter={filter} bold/>
                         <QueryDatapoint name={t('html.label.playersOnline')}
                                         color={'players-online'} icon={faUser}
-                                        dataType={DatapointType.PLAYERS_ONLINE}
+                                        dataType={DatapointType.PLAYERS_ONLINE} permission="players.online.current"
                                         filter={filter} bold/>
                         <hr/>
                         <QueryDatapoint

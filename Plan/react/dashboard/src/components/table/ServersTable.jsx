@@ -31,16 +31,18 @@ import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const ServerRow = ({server, sortedBy, onQuickView}) => {
     const {t} = useTranslation();
+    const {hasPermission} = useAuth();
 
-    const {error: error30d} = useDatapointQuery(true, DatapointType.TPS_AVERAGE, {
+    const permission = hasPermission(calculatePermission(DatapointType.TPS_AVERAGE, {server: server.serverUUID}))
+    const {error: error30d} = useDatapointQuery(permission, DatapointType.TPS_AVERAGE, {
         server: server.serverUUID,
         afterMillisAgo: MS_MONTH
     })
-    const {error: error7d} = useDatapointQuery(true, DatapointType.TPS_AVERAGE, {
+    const {error: error7d} = useDatapointQuery(permission, DatapointType.TPS_AVERAGE, {
         server: server.serverUUID,
         afterMillisAgo: MS_WEEK
     })
-    const {error: error24h} = useDatapointQuery(true, DatapointType.TPS_AVERAGE, {
+    const {error: error24h} = useDatapointQuery(permission, DatapointType.TPS_AVERAGE, {
         server: server.serverUUID,
         afterMillisAgo: MS_24H
     })
@@ -72,7 +74,7 @@ const ServerRow = ({server, sortedBy, onQuickView}) => {
                                      }}/>
             </td>
             <td>
-                <QueryDatapointValue dataType={DatapointType.PLAYERS_ONLINE}
+                <QueryDatapointValue dataType={DatapointType.PLAYERS_ONLINE} permission="players.online.current"
                                      filter={{server: server.serverUUID}}/>
             </td>
             <td className="p-1">
@@ -184,8 +186,8 @@ const ServersTable = ({servers, onSelect, sortBy, sortReversed}) => {
     const {hasPermission} = useAuth();
 
     const sortedBy = ServerSortOption[sortBy.key];
-    const permission = calculatePermission(sortedBy.data);
-    const queries = useDatapointQueries(hasPermission(permission), sortedBy.data || ServerSortOption.REGISTERED_PLAYERS.data,
+    const allowed = Boolean(servers.length) && hasPermission(calculatePermission(sortedBy.data || ServerSortOption.REGISTERED_PLAYERS.data, {server: servers[0].serverUUID}));
+    const queries = useDatapointQueries(allowed, sortedBy.data || ServerSortOption.REGISTERED_PLAYERS.data,
         servers.map(server => ({
             server: server.serverUUID,
             afterMillisAgo: sortedBy.noFilterDates ? undefined : MS_WEEK

@@ -85,7 +85,10 @@ public class RandomData {
             int randEntities = r.nextInt(10000);
             int randChunks = r.nextInt(10000);
             long randDisk = r.nextLong() % 100000L;
-            test.add(new TPS(randDate, randTPS, randPlayers, randCPU, randMemory, randEntities, randChunks, randDisk));
+            TPS tps = new TPS(randDate, randTPS, randPlayers, randCPU, randMemory, randEntities, randChunks, randDisk);
+            tps.setMsptAverage(randTPS / 20.0);
+            tps.setMspt95thPercentile(randTPS / 20.0);
+            test.add(tps);
         }
         return test;
     }
@@ -100,14 +103,28 @@ public class RandomData {
         int previousPlayers = randomInt(0, 100);
         for (int i = 0; i < randomInt(50, 100); i++) {
             int randInt = r.nextInt();
-            double randTps = r.nextDouble() * 20;
+            double randTps = Math.abs(r.nextDouble() * 20);
             long randLong = Math.abs(r.nextLong());
-            test.add(new TPS(previousTimestamp, randTps, previousPlayers, randLong, randLong, randInt, randInt, randLong));
+            TPS tps = new TPS(previousTimestamp, randTps, previousPlayers, randLong, randLong, randInt, randInt, randLong);
+            tps.setMsptAverage(randTps / 20.0);
+            tps.setMspt95thPercentile(randTps / 20.0);
+            test.add(tps);
             boolean reboot = Math.random() < 0.10;
             previousTimestamp = previousTimestamp + (reboot ? TimeUnit.MINUTES.toMillis(1) : TimeUnit.MINUTES.toMillis(10));
             previousPlayers = Math.max(previousPlayers + r.nextInt(10) - 10, 0);
         }
         return test;
+    }
+
+    public static TPS randomTPSAtDate(long epoch) {
+        int randInt = r.nextInt();
+        double randTps = Math.abs(r.nextDouble() * 20);
+        long randLong = Math.abs(r.nextLong());
+        int previousPlayers = randomInt(0, 100);
+        TPS tps = new TPS(epoch, randTps, previousPlayers, randLong, randLong, randInt, randInt, randLong);
+        tps.setMsptAverage(randTps / 20.0);
+        tps.setMspt95thPercentile(randTps / 20.0);
+        return tps;
     }
 
     public static List<FinishedSession> randomSessions() {
@@ -251,6 +268,6 @@ public class RandomData {
     }
 
     public static List<UUID> randomUUIDs(int n) {
-        return IntStream.range(0, n).mapToObj(i -> UUID.randomUUID()).toList();
+        return IntStream.range(0, n).mapToObj(_ -> UUID.randomUUID()).toList();
     }
 }

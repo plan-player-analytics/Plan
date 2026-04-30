@@ -12,7 +12,7 @@ const SortDropDown = ({sortBy, sortReversed, setSortBy}) => {
     const {hasPermission} = useAuth();
 
     const sortOptions = Object.values(ServerSortOption)
-        .filter(sortBy => hasPermission(calculatePermission(sortBy.data)));
+        .filter(sortBy => hasPermission(calculatePermission(sortBy.data, {server: "true"})));
 
     const getSortIcon = useCallback(() => {
         return sortReversed ? sortBy.iconDesc : sortBy.iconAsc;

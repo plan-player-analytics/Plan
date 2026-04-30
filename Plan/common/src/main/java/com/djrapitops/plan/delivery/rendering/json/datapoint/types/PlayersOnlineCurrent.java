@@ -68,6 +68,9 @@ public class PlayersOnlineCurrent implements Datapoint<Integer> {
                 serverUUIDs = dbSystem.getDatabase().query(ServerQueries.fetchProxyServerUUIDs());
             }
         }
+        if (serverUUIDs.isEmpty()) {
+            return Optional.of(serverSensor.getOnlinePlayerCount());
+        }
 
         if (serverUUIDs.size() == 1) {
             ServerUUID serverUUID = serverUUIDs.get(0);
