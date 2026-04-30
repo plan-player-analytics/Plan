@@ -85,6 +85,7 @@ class ExportSubdirRegressionTest {
         system.enable();
         serverUUID = system.getServerInfo().getServerUUID();
         savePlayerData(system.getDatabaseSystem().getDatabase(), serverUUID);
+        saveServerData(system.getDatabaseSystem().getDatabase(), serverUUID);
         export(system.getExportSystem().getExporter(), system.getDatabaseSystem().getDatabase(), serverUUID);
     }
 
