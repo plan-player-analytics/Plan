@@ -424,23 +424,54 @@ public class PlayerCountQueries {
     }
 
     public static Query<Integer> averageNewPlayerCount(long after, long before, long timeZoneOffset, ServerUUID serverUUID) {
+        return averageUniquePlayerCount(after, before, timeZoneOffset, List.of(serverUUID));
+    }
+
+    public static Query<Integer> averageNewPlayerCount(long after, long before, long timeZoneOffset) {
         return database -> {
             Sql sql = database.getSql();
             String selectNewPlayersQuery = SELECT +
-                    sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + UserInfoTable.REGISTERED + "+?)/1000"))) +
-                    "*1000 as date," +
+                    "date," +
                     "COUNT(1) as " + PLAYER_COUNT +
-                    FROM + UserInfoTable.TABLE_NAME + " t" +
-                    INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + UserInfoTable.SERVER_ID +
-                    WHERE + UserInfoTable.REGISTERED + "<=?" +
-                    AND + UserInfoTable.REGISTERED + ">=?" +
-                    AND + "s." + ServerTable.SERVER_UUID + "=?" +
+                    FROM + "(" + SELECT +
+                    sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + UserInfoTable.REGISTERED + "+?)/1000"))) +
+                    "*1000 as date" +
+                    FROM + UsersTable.TABLE_NAME + " t" +
+                    WHERE + UsersTable.REGISTERED + "<=?" +
+                    AND + UsersTable.REGISTERED + ">=?" +
+                    ") q1" +
                     GROUP_BY + "date";
             String selectAverage = SELECT + "AVG(" + PLAYER_COUNT + ") as average" + FROM + '(' + selectNewPlayersQuery + ") q1";
 
             return database.queryOptional(selectAverage,
                             set -> (int) set.getDouble("average"),
-                            timeZoneOffset, before, after, serverUUID.toString())
+                            timeZoneOffset, before, after)
+                    .orElse(0);
+        };
+    }
+
+    public static Query<Integer> averageNewPlayerCount(long after, long before, long timeZoneOffset, List<ServerUUID> serverUUIDs) {
+        return database -> {
+            Sql sql = database.getSql();
+            String selectNewPlayersQuery = SELECT +
+                    "date," +
+                    "COUNT(DISTINCT(" + UserInfoTable.USER_ID + ")) as " + PLAYER_COUNT +
+                    FROM + "(" + SELECT +
+                    sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + UserInfoTable.REGISTERED + "+?)/1000"))) +
+                    "*1000 as date," +
+                    UserInfoTable.USER_ID +
+                    FROM + UserInfoTable.TABLE_NAME + " t" +
+                    INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + UserInfoTable.SERVER_ID +
+                    WHERE + UserInfoTable.REGISTERED + "<=?" +
+                    AND + UserInfoTable.REGISTERED + ">=?" +
+                    AND + "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
+                    ") q1" +
+                    GROUP_BY + "date";
+            String selectAverage = SELECT + "AVG(" + PLAYER_COUNT + ") as average" + FROM + '(' + selectNewPlayersQuery + ") q1";
+
+            return database.queryOptional(selectAverage,
+                            set -> (int) set.getDouble("average"),
+                            timeZoneOffset, before, after)
                     .orElse(0);
         };
     }

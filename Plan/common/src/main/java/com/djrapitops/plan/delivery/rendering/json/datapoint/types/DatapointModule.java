@@ -153,4 +153,8 @@ public interface DatapointModule {
     @Binds
     @IntoSet
     Datapoint<?> bindDowntime(Downtime downtime);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindNewPlayersPerDayAverage(NewPlayersPerDayAverage newPlayersPerDayAverage);
 }

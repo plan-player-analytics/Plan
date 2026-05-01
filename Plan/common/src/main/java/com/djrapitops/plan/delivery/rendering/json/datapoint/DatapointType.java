@@ -59,7 +59,8 @@ public enum DatapointType {
     UNIQUE_PLAYERS_AVERAGE(UniquePlayersPerDayAverage.class, DatapointCacheKey.SESSION),
     NEW_PLAYER_RETENTION(NewPlayerRetention.class, DatapointCacheKey.SESSION),
     TPS_LOW_SPIKES(TPSLowSpikes.class, DatapointCacheKey.TPS),
-    DOWNTIME(Downtime.class, DatapointCacheKey.TPS);
+    DOWNTIME(Downtime.class, DatapointCacheKey.TPS),
+    NEW_PLAYERS_AVERAGE(NewPlayersPerDayAverage.class, DatapointCacheKey.SESSION);
 
     private final Class<? extends Datapoint<?>> datapointClass;
     private final DatapointCacheKey[] cacheKeys;
