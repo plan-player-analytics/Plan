@@ -64,6 +64,7 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
+<li><a href="#getSupportedFilters()" tabindex="0">getSupportedFilters()</a></li>
 <li><a href="#getType()" tabindex="0">getType()</a></li>
 <li><a href="#getFormatType()" tabindex="0">getFormatType()</a></li>
 <li><a href="#getPermission(com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter)" tabindex="0">getPermission(GenericFilter)</a></li>
@@ -136,12 +137,15 @@ implements <a href="../Datapoint.html" title="interface in com.djrapitops.plan.d
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../../../domain/auth/WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getPermission(com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter)" class="member-name-link">getPermission</a><wbr>(<a href="../../../../domain/datatransfer/GenericFilter.html" title="class in com.djrapitops.plan.delivery.domain.datatransfer">GenericFilter</a>&nbsp;filter)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../DatapointType.html" title="enum class in com.djrapitops.plan.delivery.rendering.json.datapoint">DatapointType</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getType()" class="member-name-link">getType</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../SupportedFilters.html" title="enum class in com.djrapitops.plan.delivery.rendering.json.datapoint">SupportedFilters</a>[]</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getSupportedFilters()" class="member-name-link">getSupportedFilters</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getValue(com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter)" class="member-name-link">getValue</a><wbr>(<a href="../../../../domain/datatransfer/GenericFilter.html" title="class in com.djrapitops.plan.delivery.domain.datatransfer">GenericFilter</a>&nbsp;filter)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../DatapointType.html" title="enum class in com.djrapitops.plan.delivery.rendering.json.datapoint">DatapointType</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getType()" class="member-name-link">getType</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getValue(com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter)" class="member-name-link">getValue</a><wbr>(<a href="../../../../domain/datatransfer/GenericFilter.html" title="class in com.djrapitops.plan.delivery.domain.datatransfer">GenericFilter</a>&nbsp;filter)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -177,6 +181,18 @@ implements <a href="../Datapoint.html" title="interface in com.djrapitops.plan.d
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="getSupportedFilters()">
+<h3>getSupportedFilters</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../SupportedFilters.html" title="enum class in com.djrapitops.plan.delivery.rendering.json.datapoint">SupportedFilters</a>[]</span>&nbsp;<span class="element-name">getSupportedFilters</span>()</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../Datapoint.html#getSupportedFilters()">getSupportedFilters</a></code>&nbsp;in interface&nbsp;<code><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></dd>
+</dl>
+</div>
+</section>
+</li>
 <li>
 <section class="detail" id="getType()">
 <h3>getType</h3>
