@@ -728,18 +728,29 @@ public class SessionQueries {
         };
     }
 
+    public static Query<Long> averagePlaytimePerDay(long after, long before, long timeZoneOffset) {
+        return averagePlaytimePerDay(after, before, timeZoneOffset, List.of());
+    }
+
     public static Query<Long> averagePlaytimePerDay(long after, long before, long timeZoneOffset, ServerUUID serverUUID) {
+        return averagePlaytimePerDay(after, before, timeZoneOffset, List.of(serverUUID));
+    }
+
+    public static Query<Long> averagePlaytimePerDay(long after, long before, long timeZoneOffset, List<ServerUUID> serverUUIDs) {
         return database -> {
             Sql sql = database.getSql();
             String selectPlaytimePerDay = SELECT +
+                    "date,SUM(playtime) as playtime" +
+                    FROM + "(" + SELECT +
                     sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + SessionsTable.SESSION_START + "+?)/1000"))) +
                     "*1000 as date," +
-                    "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
+                    SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + " as playtime" +
                     FROM + SessionsTable.TABLE_NAME + " t" +
                     INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SessionsTable.SERVER_ID +
                     WHERE + SessionsTable.SESSION_END + "<=?" +
                     AND + SessionsTable.SESSION_START + ">=?" +
-                    AND + "s." + ServerTable.SERVER_UUID + "=?" +
+                    (serverUUIDs.isEmpty() ? "" : AND + "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")") +
+                    ") q1" +
                     GROUP_BY + "date";
             String selectAverage = SELECT + "AVG(playtime) as average" + FROM + '(' + selectPlaytimePerDay + ") q1";
 
@@ -749,7 +760,42 @@ public class SessionQueries {
                     statement.setLong(1, timeZoneOffset);
                     statement.setLong(2, before);
                     statement.setLong(3, after);
-                    statement.setString(4, serverUUID.toString());
+                }
+
+                @Override
+                public Long processResults(ResultSet set) throws SQLException {
+                    return set.next() ? (long) set.getDouble("average") : 0;
+                }
+            });
+        };
+    }
+
+    public static Query<Long> averagePlaytimePerDay(long after, long before, long timeZoneOffset, UUID playerUUID, List<ServerUUID> serverUUIDs) {
+        return database -> {
+            Sql sql = database.getSql();
+            String selectPlaytimePerDay = SELECT +
+                    "date,SUM(playtime) as playtime" +
+                    FROM + "(" + SELECT +
+                    sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + SessionsTable.SESSION_START + "+?)/1000"))) +
+                    "*1000 as date," +
+                    SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + " as playtime" +
+                    FROM + SessionsTable.TABLE_NAME + " t" +
+                    INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SessionsTable.SERVER_ID +
+                    WHERE + SessionsTable.SESSION_END + "<=?" +
+                    AND + SessionsTable.SESSION_START + ">=?" +
+                    AND + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
+                    (serverUUIDs.isEmpty() ? "" : AND + "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")") +
+                    ") q1" +
+                    GROUP_BY + "date";
+            String selectAverage = SELECT + "AVG(playtime) as average" + FROM + '(' + selectPlaytimePerDay + ") q1";
+
+            return database.query(new QueryStatement<Long>(selectAverage, 100) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, timeZoneOffset);
+                    statement.setLong(2, before);
+                    statement.setLong(3, after);
+                    statement.setString(4, playerUUID.toString());
                 }
 
                 @Override

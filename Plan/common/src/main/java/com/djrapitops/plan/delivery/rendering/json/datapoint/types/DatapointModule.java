@@ -157,4 +157,8 @@ public interface DatapointModule {
     @Binds
     @IntoSet
     Datapoint<?> bindNewPlayersPerDayAverage(NewPlayersPerDayAverage newPlayersPerDayAverage);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindPlaytimePerDayAverage(PlaytimePerDayAverage playtimePerDayAverage);
 }
