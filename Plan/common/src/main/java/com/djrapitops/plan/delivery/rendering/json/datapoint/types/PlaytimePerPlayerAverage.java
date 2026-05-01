@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
@@ -44,6 +45,11 @@ public class PlaytimePerPlayerAverage implements Datapoint<Long> {
     @Inject
     public PlaytimePerPlayerAverage(DBSystem dbSystem) {
         this.dbSystem = dbSystem;
+    }
+
+    @Override
+    public SupportedFilters[] getSupportedFilters() {
+        return SupportedFilters.noPlayer();
     }
 
     @Override

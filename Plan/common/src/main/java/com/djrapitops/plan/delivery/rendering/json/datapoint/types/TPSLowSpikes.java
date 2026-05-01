@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
@@ -48,6 +49,11 @@ public class TPSLowSpikes implements Datapoint<Integer> {
     public TPSLowSpikes(PlanConfig config, DBSystem dbSystem) {
         this.config = config;
         this.dbSystem = dbSystem;
+    }
+
+    @Override
+    public SupportedFilters[] getSupportedFilters() {
+        return SupportedFilters.noPlayer();
     }
 
     @Override

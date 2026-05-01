@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.gathering.ServerUptimeCalculator;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -45,6 +46,11 @@ public class UptimeCurrent implements Datapoint<Long> {
     public UptimeCurrent(ServerInfo serverInfo, ServerUptimeCalculator serverUptimeCalculator) {
         this.serverInfo = serverInfo;
         this.serverUptimeCalculator = serverUptimeCalculator;
+    }
+
+    @Override
+    public SupportedFilters[] getSupportedFilters() {
+        return SupportedFilters.noPlayer();
     }
 
     @Override

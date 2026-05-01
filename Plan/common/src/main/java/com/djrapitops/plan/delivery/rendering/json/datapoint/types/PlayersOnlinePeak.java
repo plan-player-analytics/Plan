@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.gathering.ServerSensor;
 import com.djrapitops.plan.identification.ServerUUID;
@@ -48,6 +49,11 @@ public class PlayersOnlinePeak implements Datapoint<DateObj<Long>> {
     public PlayersOnlinePeak(DBSystem dbSystem, ServerSensor<?> serverSensor) {
         this.dbSystem = dbSystem;
         this.serverSensor = serverSensor;
+    }
+
+    @Override
+    public SupportedFilters[] getSupportedFilters() {
+        return SupportedFilters.noPlayer();
     }
 
     @Override

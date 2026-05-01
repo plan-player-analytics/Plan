@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
@@ -61,6 +62,11 @@ public class AfkTime implements Datapoint<Long> {
         } else {
             return WebPermission.DATA_NETWORK_AFK_TIME;
         }
+    }
+
+    @Override
+    public SupportedFilters[] getSupportedFilters() {
+        return SupportedFilters.all();
     }
 
     @Override

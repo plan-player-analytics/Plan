@@ -16,35 +16,30 @@
  */
 package com.djrapitops.plan.delivery.rendering.json.datapoint;
 
-import com.djrapitops.plan.delivery.domain.auth.WebPermission;
-import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
-
-import java.util.Optional;
-
 /**
  * @author AuroraLS3
  */
-public interface Datapoint<T> {
+public enum SupportedFilters {
 
-    Optional<T> getValue(GenericFilter filter);
+    PLAYER,
+    SERVER,
+    NETWORK;
 
-    WebPermission getPermission(GenericFilter filter);
-
-    DatapointType getType();
-
-    default FormatType getFormatType() {
-        return FormatType.NONE;
+    public static SupportedFilters[] all() {
+        return values();
     }
 
-    SupportedFilters[] getSupportedFilters();
-
-    enum FormatType {
-        TIME_AMOUNT,
-        TIME_SINCE,
-        DATE,
-        PERCENTAGE,
-        BYTES,
-        SPECIAL,
-        DECIMAL, NONE
+    public static SupportedFilters[] noPlayer() {
+        return new SupportedFilters[]{
+                SupportedFilters.SERVER,
+                SupportedFilters.NETWORK
+        };
     }
+
+    public static SupportedFilters[] onlyServer() {
+        return new SupportedFilters[]{
+                SupportedFilters.SERVER
+        };
+    }
+
 }

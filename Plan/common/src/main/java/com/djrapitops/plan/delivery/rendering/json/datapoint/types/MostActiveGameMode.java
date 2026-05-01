@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
 
 import javax.inject.Inject;
@@ -38,6 +39,11 @@ public class MostActiveGameMode implements Datapoint<OutOfCategory> {
     @Inject
     public MostActiveGameMode(WorldTimesForFilter worldTimesForFilter) {
         this.worldTimesForFilter = worldTimesForFilter;
+    }
+
+    @Override
+    public SupportedFilters[] getSupportedFilters() {
+        return SupportedFilters.all();
     }
 
     @Override

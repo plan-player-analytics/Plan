@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.PieDrilldown;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.PieGraphFactory;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.PieSlice;
@@ -45,6 +46,11 @@ public class WorldPie implements Datapoint<WorldPie.Content> {
     public WorldPie(WorldTimesForFilter worldTimesForFilter, PieGraphFactory pieGraphFactory) {
         this.worldTimesForFilter = worldTimesForFilter;
         this.pieGraphFactory = pieGraphFactory;
+    }
+
+    @Override
+    public SupportedFilters[] getSupportedFilters() {
+        return SupportedFilters.all();
     }
 
     @Override

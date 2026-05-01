@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.DeathCounter;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -45,6 +46,11 @@ public class Deaths implements Datapoint<Long> {
     public Deaths(DBSystem dbSystem, ServerInfo serverInfo) {
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
+    }
+
+    @Override
+    public SupportedFilters[] getSupportedFilters() {
+        return SupportedFilters.all();
     }
 
     @Override

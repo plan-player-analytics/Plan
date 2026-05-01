@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.PieGraphFactory;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.PieSlice;
 
@@ -45,6 +46,12 @@ public class ServerPie implements Datapoint<ServerPie.Content> {
         this.serverPlaytimeForFilter = serverPlaytimeForFilter;
         this.pieGraphFactory = pieGraphFactory;
     }
+
+    @Override
+    public SupportedFilters[] getSupportedFilters() {
+        return SupportedFilters.all();
+    }
+
 
     @Override
     public Optional<Content> getValue(GenericFilter filter) {
