@@ -193,7 +193,29 @@ public class ServerPageExporter extends FileExporter {
                 datapointType + DatapointType.SESSION_COUNT + afterMillis + TimeUnit.DAYS.toMillis(7) + server,
                 datapointType + DatapointType.PLAYER_KILLS + afterMillis + TimeUnit.DAYS.toMillis(7) + server,
                 datapointType + DatapointType.MOB_KILLS + afterMillis + TimeUnit.DAYS.toMillis(7) + server,
-                datapointType + DatapointType.DEATHS + afterMillis + TimeUnit.DAYS.toMillis(7) + server
+                datapointType + DatapointType.DEATHS + afterMillis + TimeUnit.DAYS.toMillis(7) + server,
+                // Online Activity overview
+                datapointType + DatapointType.UNIQUE_PLAYERS_COUNT + afterMillis + TimeUnit.DAYS.toMillis(1) + server,
+                datapointType + DatapointType.UNIQUE_PLAYERS_COUNT + afterMillis + TimeUnit.DAYS.toMillis(30) + server,
+                datapointType + DatapointType.UNIQUE_PLAYERS_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(1) + server,
+                datapointType + DatapointType.UNIQUE_PLAYERS_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(30) + server,
+                datapointType + DatapointType.NEW_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(1) + server,
+                datapointType + DatapointType.NEW_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(30) + server,
+                datapointType + DatapointType.NEW_PLAYERS_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(1) + server,
+                datapointType + DatapointType.NEW_PLAYERS_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(7) + server,
+                datapointType + DatapointType.NEW_PLAYERS_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(30) + server,
+                datapointType + DatapointType.NEW_PLAYER_RETENTION + afterMillis + TimeUnit.DAYS.toMillis(1) + server,
+                datapointType + DatapointType.NEW_PLAYER_RETENTION + afterMillis + TimeUnit.DAYS.toMillis(30) + server,
+                datapointType + DatapointType.PLAYTIME + afterMillis + TimeUnit.DAYS.toMillis(1) + server,
+                datapointType + DatapointType.PLAYTIME + afterMillis + TimeUnit.DAYS.toMillis(7) + server,
+                datapointType + DatapointType.PLAYTIME + afterMillis + TimeUnit.DAYS.toMillis(30) + server,
+                datapointType + DatapointType.PLAYTIME_PER_DAY_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(1) + server,
+                datapointType + DatapointType.PLAYTIME_PER_DAY_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(7) + server,
+                datapointType + DatapointType.PLAYTIME_PER_DAY_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(30) + server,
+                datapointType + DatapointType.SESSION_LENGTH_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(1) + server,
+                datapointType + DatapointType.SESSION_LENGTH_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(30) + server,
+                datapointType + DatapointType.SESSION_COUNT + afterMillis + TimeUnit.DAYS.toMillis(1) + server,
+                datapointType + DatapointType.SESSION_COUNT + afterMillis + TimeUnit.DAYS.toMillis(30) + server
         );
     }
 

@@ -9,6 +9,7 @@ import {calculatePermission, QueryDatapointTrend, QueryDatapointValue} from "../
 import FormattedDay from "../text/FormattedDay";
 import {useAuth} from "../../hooks/authenticationHook";
 import {useTranslation} from "react-i18next";
+import {MS_24H, MS_MONTH, MS_WEEK} from "../../util/format/useDateFormatter";
 
 type Column = {
     filter: GenericFilter;
@@ -34,7 +35,14 @@ type Props = {
 }
 
 const FilterHeader = ({filter}: Column) => {
+    const {t} = useTranslation();
     if (filter.afterMillisAgo) {
+        if (filter.beforeMillisAgo === undefined) {
+            if (filter.afterMillisAgo === MS_MONTH) return <th>{t('html.label.last30days')}</th>;
+            if (filter.afterMillisAgo === MS_WEEK) return <th>{t('html.label.last7days')}</th>;
+            if (filter.afterMillisAgo === MS_24H) return <th>{t('html.label.last24hours')}</th>;
+        }
+
         return <th>
             <FormattedDay date={Date.now() - filter.afterMillisAgo}/> - <FormattedDay
             date={Date.now() - (filter.beforeMillisAgo || 0)}/>

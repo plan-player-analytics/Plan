@@ -31,7 +31,7 @@ const OnlineActivity = () => {
                 </ExtendableRow>}
                 {seeOverview && <ExtendableRow id={'row-server-online-activity-overview-1'}>
                     <Col lg={8}>
-                        <OnlineActivityAsNumbersCard data={data?.numbers}/>
+                        <OnlineActivityAsNumbersCard/>
                     </Col>
                     <Col lg={4}>
                         <OnlineActivityInsightsCard data={data?.insights}/>

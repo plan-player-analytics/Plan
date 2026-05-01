@@ -19,6 +19,7 @@ export type FormatType =
 export enum DatapointType {
     WORLD_PIE = 'WORLD_PIE',
     PLAYTIME = 'PLAYTIME',
+    PLAYTIME_PER_DAY_AVERAGE = 'PLAYTIME_PER_DAY_AVERAGE',
     AFK_TIME = 'AFK_TIME',
     AFK_TIME_PERCENTAGE = 'AFK_TIME_PERCENTAGE',
     SERVER_OCCUPIED = 'SERVER_OCCUPIED',
@@ -28,6 +29,7 @@ export enum DatapointType {
     UNIQUE_PLAYERS_COUNT = "UNIQUE_PLAYERS_COUNT",
     UNIQUE_PLAYERS_AVERAGE = "UNIQUE_PLAYERS_AVERAGE",
     NEW_PLAYERS = "NEW_PLAYERS",
+    NEW_PLAYERS_AVERAGE = "NEW_PLAYERS_AVERAGE",
     NEW_PLAYER_RETENTION = "NEW_PLAYER_RETENTION",
     REGULAR_PLAYERS = "REGULAR_PLAYERS",
     PLAYERS_ONLINE = "PLAYERS_ONLINE",
@@ -52,11 +54,13 @@ export const differingPermissions: Partial<Record<DatapointType, string>> = {
 export type DatapointTypeMap = {
     WORLD_PIE: WorldPie;
     PLAYTIME: number;
+    PLAYTIME_PER_DAY_AVERAGE: number;
     AFK_TIME: number;
     AFK_TIME_PERCENTAGE: number;
     UNIQUE_PLAYERS_COUNT: number;
     UNIQUE_PLAYERS_AVERAGE: number;
     NEW_PLAYERS: number;
+    NEW_PLAYERS_AVERAGE: number;
     NEW_PLAYER_RETENTION: number;
     REGULAR_PLAYERS: number;
     PLAYERS_ONLINE: number;

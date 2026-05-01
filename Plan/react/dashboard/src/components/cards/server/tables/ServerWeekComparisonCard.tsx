@@ -26,7 +26,7 @@ const ServerWeekComparisonCard = () => {
                                      filter: {afterMillisAgo: MS_WEEK * 2, beforeMillisAgo: MS_WEEK}
                                  }, {
                                      key: 'next',
-                                     filter: {afterMillisAgo: MS_WEEK}
+                                     filter: {afterMillisAgo: MS_WEEK, beforeMillisAgo: 0}
                                  }]}
                                  rows={[{
                                      dataType: DatapointType.UNIQUE_PLAYERS_COUNT,
