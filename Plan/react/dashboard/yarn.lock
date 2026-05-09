@@ -1111,10 +1111,10 @@ i18next-localstorage-backend@4.3.1:
   dependencies:
     "@babel/runtime" "^7.28.4"
 
-i18next@26.0.8:
-  version "26.0.8"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-26.0.8.tgz#be27c02733962574cb47156d190ac8d0ff5365c4"
-  integrity sha512-BRzLom0mhDhV9v0QhgUUHWQJuwFmnr1194xEcNLYD6ym8y8s542n4jXUvRLnhNTbh9PmpU6kGZamyuGHQMsGjw==
+i18next@26.0.10:
+  version "26.0.10"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-26.0.10.tgz#7cf2f5548bc49f587d651b500f75e6185537caba"
+  integrity sha512-k3yGPAlWR2RdMYoVXJoDZDT87qeHIWKH7gVksdZMpRty7QX/D9QZeYGvN08KGbKHke9wn01eYT+EEsrqX/YTlw==
 
 immutable@^5.1.5:
   version "5.1.5"
