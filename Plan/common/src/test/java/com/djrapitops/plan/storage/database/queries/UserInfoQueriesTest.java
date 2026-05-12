@@ -49,13 +49,25 @@ public interface UserInfoQueriesTest extends DatabaseTestPreparer {
         assertEquals(expected, userInfo);
     }
 
-
     @Test
     default void userInfoTableUpdatesBanStatus() {
         db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, () -> TestConstants.REGISTER_TIME,
                 TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
 
         db().executeTransaction(new BanStatusTransaction(playerUUID, serverUUID(), () -> true));
+
+        Set<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
+        Set<UserInfo> expected = Collections.singleton(new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, false, TestConstants.GET_PLAYER_HOSTNAME.get(), true));
+
+        assertEquals(expected, userInfo);
+    }
+
+    @Test
+    default void userInfoTableUpdatesBanStatusBatch() {
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, () -> TestConstants.REGISTER_TIME,
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
+
+        db().executeTransaction(new BatchBanStatusTransaction(List.of(playerUUID), List.of(), serverUUID()));
 
         Set<UserInfo> userInfo = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
         Set<UserInfo> expected = Collections.singleton(new UserInfo(playerUUID, serverUUID(), TestConstants.REGISTER_TIME, false, TestConstants.GET_PLAYER_HOSTNAME.get(), true));
