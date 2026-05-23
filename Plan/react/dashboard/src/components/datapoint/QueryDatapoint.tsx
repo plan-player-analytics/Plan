@@ -26,6 +26,7 @@ import BigTrend from "../trend/BigTrend";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 import {useByteSizeFormatter} from "../../util/format/useByteSizeFormatter";
+import {usePingFormatter} from "../../util/format/usePingFormatter";
 
 type Props<K extends DatapointType> = {
     dataType: K;
@@ -69,10 +70,13 @@ const FormattedOutOfCategory = ({outOf}: { outOf: OutOfCategory }) => {
 function Format<K extends DatapointType>({value, formatType}: FormatProps<K>) {
     const {formatDecimals} = useDecimalFormatter();
     const {formatByteSize} = useByteSizeFormatter();
+    const {formatPing} = usePingFormatter();
     if (value === undefined) return null;
     switch (formatType) {
         case "TIME_AMOUNT":
             return <FormattedTime timeMs={value}/>;
+        case "MILLIS":
+            return formatPing(value as number);
         case "PERCENTAGE":
             return formatDecimals(value as number * 100) + '%';
         case "DECIMAL":

@@ -40,6 +40,7 @@ public interface Datapoint<T> {
 
     enum FormatType {
         TIME_AMOUNT,
+        MILLIS,
         TIME_SINCE,
         DATE,
         PERCENTAGE,

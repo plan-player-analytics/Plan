@@ -783,6 +783,58 @@ public class TPSQueries {
         };
     }
 
+    public static Query<Double> averageMSPTWhenLowTps(long after, long before, List<ServerUUID> serverUUIDs, double lowTpsThreshold) {
+        String sql = SELECT + "AVG(" + MSPT_AVERAGE + ") as average" + FROM + TABLE_NAME + " t" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
+                WHERE + (serverUUIDs.isEmpty()
+                ? ""
+                : "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
+                  AND) + MSPT_AVERAGE + ">=0" +
+                AND + DATE + "<?" +
+                AND + DATE + ">?" +
+                AND + TPS + "<?";
+        return new QueryStatement<>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, before);
+                statement.setLong(2, after);
+                statement.setDouble(3, lowTpsThreshold);
+            }
+
+            @Override
+            public Double processResults(ResultSet set) throws SQLException {
+                double value = set.next() ? set.getDouble("average") : -1.0;
+                return set.wasNull() ? -1.0 : value;
+            }
+        };
+    }
+
+    public static Query<Double> max95thMSPTWhenLowTps(long after, long before, List<ServerUUID> serverUUIDs, double lowTpsThreshold) {
+        String sql = SELECT + "MAX(" + MSPT_95TH_PERCENTILE + ") as max" + FROM + TABLE_NAME + " t" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
+                WHERE + (serverUUIDs.isEmpty()
+                ? ""
+                : "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
+                  AND) + MSPT_95TH_PERCENTILE + ">=0" +
+                AND + DATE + "<?" +
+                AND + DATE + ">?" +
+                AND + TPS + "<?";
+        return new QueryStatement<>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, before);
+                statement.setLong(2, after);
+                statement.setDouble(3, lowTpsThreshold);
+            }
+
+            @Override
+            public Double processResults(ResultSet set) throws SQLException {
+                double value = set.next() ? set.getDouble("max") : -1.0;
+                return set.wasNull() ? -1.0 : value;
+            }
+        };
+    }
+
     public static Query<Double> averageMsptImpactPerPlayer(long after, long before, List<ServerUUID> serverUUIDs) {
         String sql = SELECT + "AVG(" + MSPT_AVERAGE + "/" + PLAYERS_ONLINE + ") as average" + FROM + TABLE_NAME + " t" +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +

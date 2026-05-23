@@ -45,6 +45,8 @@ public enum DatapointType {
     MOST_ACTIVE_GAME_MODE(MostActiveGameMode.class, DatapointCacheKey.SESSION),
     MOST_ACTIVE_WORLD(MostActiveWorld.class, DatapointCacheKey.SESSION),
     MSPT_AVERAGE(MSPTAverage.class, DatapointCacheKey.TPS),
+    MSPT_AVERAGE_LOW_TPS(MSPTAverageWithLowTPS.class, DatapointCacheKey.TPS),
+    MSPT_MAX_95TH_LOW_TPS(MSPTMax95thWithLowTPS.class, DatapointCacheKey.TPS),
     MSPT_IMPACT_PER_CHUNK(MSPTImpactPerChunk.class, DatapointCacheKey.TPS),
     MSPT_IMPACT_PER_PLAYER(MSPTImpactPerPlayer.class, DatapointCacheKey.TPS),
     NEW_PLAYERS(NewPlayers.class, DatapointCacheKey.SESSION),

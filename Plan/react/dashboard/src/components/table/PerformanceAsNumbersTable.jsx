@@ -68,6 +68,18 @@ const PerformanceAsNumbersTable = ({servers}) => {
                                  icon: faExclamationCircle,
                                  text: t('html.label.lowTpsSpikes')
                              }, {
+                                 dataType: DatapointType.MSPT_AVERAGE_LOW_TPS,
+                                 color: "tps-low-spikes",
+                                 icon: faStopwatch,
+                                 text: t('html.label.averageMsptLowTPS'),
+                                 indent: true
+                             }, {
+                                 dataType: DatapointType.MSPT_MAX_95TH_LOW_TPS,
+                                 color: "tps-low-spikes",
+                                 icon: faStopwatch,
+                                 text: t('html.label.maxMsptLowTPS'),
+                                 indent: true
+                             }, {
                                  dataType: DatapointType.PLAYERS_ONLINE_AVERAGE,
                                  color: "players-online",
                                  icon: faUser,
@@ -88,13 +100,13 @@ const PerformanceAsNumbersTable = ({servers}) => {
                                  dataType: DatapointType.MSPT_IMPACT_PER_PLAYER,
                                  color: "mspt-average",
                                  icon: faUsers,
-                                 text: "MSPT impact per Player",
+                                 text: t('html.label.msptImpactPlayer'),
                                  indent: true
                              }, {
                                  dataType: DatapointType.MSPT_IMPACT_PER_CHUNK,
                                  color: "mspt-average",
                                  icon: faMap,
-                                 text: "MSPT impact per Chunk",
+                                 text: t('html.label.msptImpactChunk'),
                                  indent: true
                              }, {
                                  dataType: DatapointType.ENTITIES_AVERAGE,
@@ -106,7 +118,7 @@ const PerformanceAsNumbersTable = ({servers}) => {
                                  dataType: DatapointType.ENTITIES_PER_CHUNK,
                                  color: "entities",
                                  icon: faMap,
-                                 text: "Average Entities per Chunk",
+                                 text: t('html.label.averageEntitiesPerChunk'),
                                  indent: true
                              }, {
                                  dataType: DatapointType.CHUNKS_AVERAGE,
@@ -118,7 +130,7 @@ const PerformanceAsNumbersTable = ({servers}) => {
                                  dataType: DatapointType.CHUNKS_PER_PLAYER,
                                  color: "chunks",
                                  icon: faUsers,
-                                 text: "Average Chunks per Player",
+                                 text: t('html.label.averageChunksPerPlayer'),
                                  indent: true,
                                  boldBottom: true
                              }, {
@@ -130,7 +142,7 @@ const PerformanceAsNumbersTable = ({servers}) => {
                                  dataType: DatapointType.CPU_IMPACT_PER_PLAYER,
                                  color: "cpu",
                                  icon: faUsers,
-                                 text: "CPU impact per Player",
+                                 text: t('html.label.cpuImpactPerPlayer'),
                                  indent: true
                              }, {
                                  dataType: DatapointType.RAM_AVERAGE,

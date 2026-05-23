@@ -193,4 +193,12 @@ public interface DatapointModule {
     @Binds
     @IntoSet
     Datapoint<?> bindPlaytimePerDayAverage(PlaytimePerDayAverage playtimePerDayAverage);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindMSPTAverageWithLowTPS(MSPTAverageWithLowTPS msptaverageWithLowTPS);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindMSPTMax95thWithLowTPS(MSPTMax95thWithLowTPS msptMax95thWithLowTPS);
 }

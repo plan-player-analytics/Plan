@@ -77,6 +77,6 @@ public class MSPTImpactPerPlayer implements Datapoint<Double> {
 
     @Override
     public FormatType getFormatType() {
-        return FormatType.DECIMAL;
+        return FormatType.MILLIS;
     }
 }

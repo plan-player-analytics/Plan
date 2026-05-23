@@ -22,6 +22,8 @@ import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 
@@ -30,32 +32,36 @@ import javax.inject.Singleton;
 import java.util.Optional;
 
 /**
- * Datapoint for looking up Average MSPT impact per Chunk within the timeframe.
+ * Datapoint for looking up Average MSPT within the timeframe when TPS is low.
  *
  * @author AuroraLS3
  */
 @Singleton
-public class MSPTImpactPerChunk implements Datapoint<Double> {
+public class MSPTMax95thWithLowTPS implements Datapoint<Double> {
 
+    private final PlanConfig config;
     private final DBSystem dbSystem;
 
     @Inject
-    public MSPTImpactPerChunk(DBSystem dbSystem) {
+    public MSPTMax95thWithLowTPS(PlanConfig config, DBSystem dbSystem) {
+        this.config = config;
         this.dbSystem = dbSystem;
     }
 
     @Override
     public SupportedFilters[] getSupportedFilters() {
-        return SupportedFilters.onlyServer();
+        return SupportedFilters.noPlayer();
     }
 
     @Override
     public Optional<Double> getValue(GenericFilter filter) {
         if (filter.getPlayerUUID().isPresent()) {
-            throw new BadRequestException("MSPT_IMPACT_PER_CHUNK does not support player parameter");
+            throw new BadRequestException("MSPT_AVERAGE_LOW_TPS does not support player parameter");
         }
 
-        double average = dbSystem.getDatabase().query(TPSQueries.averageMsptImpactPerChunk(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
+        double average = dbSystem.getDatabase().query(TPSQueries.averageMSPTWhenLowTps(
+                filter.getAfter(), filter.getBefore(), filter.getServerUUIDs(),
+                config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED)));
         return average != -1.0 ? Optional.of(average) : Optional.empty();
     }
 
@@ -64,15 +70,15 @@ public class MSPTImpactPerChunk implements Datapoint<Double> {
         if (filter.getPlayerUUID().isPresent()) {
             return WebPermission.DATA_PLAYER;
         } else if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.DATA_SERVER_MSPT_IMPACT_PER_CHUNK;
+            return WebPermission.DATA_SERVER_MSPT_MAX_95TH_LOW_TPS;
         } else {
-            return WebPermission.DATA_NETWORK_MSPT_IMPACT_PER_CHUNK;
+            return WebPermission.DATA_NETWORK_MSPT_MAX_95TH_LOW_TPS;
         }
     }
 
     @Override
     public DatapointType getType() {
-        return DatapointType.MSPT_IMPACT_PER_CHUNK;
+        return DatapointType.MSPT_MAX_95TH_LOW_TPS;
     }
 
     @Override

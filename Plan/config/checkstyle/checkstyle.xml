@@ -70,10 +70,6 @@
         <module name="LambdaParameterName"/>
 
         <!-- Metrics -->
-        <module name="ClassFanOutComplexity">
-            <!-- This value is a bit high. QueryJSONResolver: 42 -->
-            <property name="max" value="45"/>
-        </module>
         <module name="CyclomaticComplexity">
             <!-- This value is high. Notable: ThemeConfig: 16 -->
             <property name="max" value="17"/>

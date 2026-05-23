@@ -81,6 +81,6 @@ public class MSPTAverage implements Datapoint<Double> {
 
     @Override
     public FormatType getFormatType() {
-        return FormatType.DECIMAL;
+        return FormatType.MILLIS;
     }
 }

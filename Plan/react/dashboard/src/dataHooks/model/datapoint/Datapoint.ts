@@ -9,6 +9,7 @@ import {MS_24H, MS_WEEK} from "../../../util/format/useDateFormatter";
 export type FormatType =
     'NONE'
     | 'TIME_AMOUNT'
+    | 'MILLIS'
     | 'TIME_SINCE'
     | 'DATE'
     | 'DECIMAL'
@@ -47,6 +48,8 @@ export enum DatapointType {
     TPS_AVERAGE = "TPS_AVERAGE",
     TPS_LOW_SPIKES = "TPS_LOW_SPIKES",
     MSPT_AVERAGE = "MSPT_AVERAGE",
+    MSPT_AVERAGE_LOW_TPS = "MSPT_AVERAGE_LOW_TPS",
+    MSPT_MAX_95TH_LOW_TPS = "MSPT_MAX_95TH_LOW_TPS",
     MSPT_IMPACT_PER_PLAYER = "MSPT_IMPACT_PER_PLAYER",
     MSPT_IMPACT_PER_CHUNK = "MSPT_IMPACT_PER_CHUNK",
     CPU_AVERAGE = "CPU_AVERAGE",
@@ -91,6 +94,8 @@ export type DatapointTypeMap = {
     TPS_AVERAGE: number;
     TPS_LOW_SPIKES: number;
     MSPT_AVERAGE: number;
+    MSPT_AVERAGE_LOW_TPS: number;
+    MSPT_MAX_95TH_LOW_TPS: number;
     MSPT_IMPACT_PER_PLAYER: number;
     MSPT_IMPACT_PER_CHUNK: number;
     CPU_AVERAGE: number;
