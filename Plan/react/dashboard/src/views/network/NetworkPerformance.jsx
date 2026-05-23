@@ -96,10 +96,10 @@ const NetworkPerformance = () => {
                     </Col>
                 </ExtendableRow>
                 <ExtendableRow id={'row-network-performance-1'}>
-                    <Col md={8}>
+                    <Col md={10}>
                         <PerformanceAsNumbersCard servers={performanceData.servers || []}/>
                     </Col>
-                    <Col md={4}>
+                    <Col md={2}>
                         <Card>
                             <CardHeader icon={faServer} color={'servers'} label={t('html.label.serverSelector')}/>
                             <MultiSelect options={serverOptions.map(server => server.serverName)}

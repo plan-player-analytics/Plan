@@ -30,7 +30,8 @@ import {useByteSizeFormatter} from "../../util/format/useByteSizeFormatter";
 type Props<K extends DatapointType> = {
     dataType: K;
     filter?: GenericFilter;
-    fallbackUnavailableExplanation?: string
+    fallbackUnavailableExplanation?: string,
+    noDataFallback?: string,
 } & Omit<DatapointProps, 'value'>;
 
 type ValueProps<K extends DatapointType> = Omit<Props<K>, 'color' | 'name' | 'icon'>;
@@ -109,6 +110,7 @@ export function QueryDatapoint<K extends DatapointType>({
                                                             dataType,
                                                             filter,
                                                             fallbackUnavailableExplanation,
+                                                            noDataFallback,
                                                             ...props
                                                         }: Props<K>) {
     const {hasPermission} = useAuth();
@@ -120,7 +122,7 @@ export function QueryDatapoint<K extends DatapointType>({
         if (error.status === 404) {
             return <DatapointComponent
                 {...props}
-                value={'generic.noData'}
+                value={noDataFallback || 'generic.noData'}
                 valueLabel={fallbackUnavailableExplanation
                     ? <span title={fallbackUnavailableExplanation}><FontAwesomeIcon icon={faQuestionCircle}/></span>
                     : undefined}
@@ -143,7 +145,7 @@ export function QueryDatapoint<K extends DatapointType>({
     />
 }
 
-export function QueryDatapointValue<K extends DatapointType>({dataType, filter}: ValueProps<K>) {
+export function QueryDatapointValue<K extends DatapointType>({dataType, noDataFallback, filter}: ValueProps<K>) {
     const {hasPermission} = useAuth();
     const allowed = hasPermission(calculatePermission(dataType, filter));
     const {data, isFetching, error} = useDatapointQuery(allowed, dataType, filter);
@@ -152,7 +154,7 @@ export function QueryDatapointValue<K extends DatapointType>({dataType, filter}:
     if (!allowed) return null;
     if (error) {
         if (error.status === 404) {
-            return t('generic.noData');
+            return t(noDataFallback || 'generic.noData');
         }
         console.error(error);
         return error.message;

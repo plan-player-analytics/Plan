@@ -6,7 +6,6 @@ import PerformanceGraphsCard from "../../components/cards/server/graphs/Performa
 import PerformanceAsNumbersCard from "../../components/cards/server/tables/PerformanceAsNumbersCard";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
-import PerformanceInsightsCard from "../../components/cards/server/insights/PerformanceInsightsCard.jsx";
 
 const ServerPerformance = () => {
     const {hasPermission, hasChildPermission} = useAuth();
@@ -24,11 +23,8 @@ const ServerPerformance = () => {
                     </Col>
                 </ExtendableRow>}
                 {seeOverview && <ExtendableRow id={'row-server-performance-1'}>
-                    <Col lg={8}>
+                    <Col lg={12}>
                         <PerformanceAsNumbersCard servers={[{serverUUID: identifier}]}/>
-                    </Col>
-                    <Col lg={4}>
-                        <PerformanceInsightsCard servers={[{serverUUID: identifier}]}/>
                     </Col>
                 </ExtendableRow>}
             </section>

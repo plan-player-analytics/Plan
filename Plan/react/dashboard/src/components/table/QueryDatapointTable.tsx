@@ -13,6 +13,7 @@ import {MS_24H, MS_MONTH, MS_WEEK} from "../../util/format/useDateFormatter";
 
 type Column = {
     filter: GenericFilter;
+    label?: string;
     key: string;
 }
 
@@ -26,6 +27,8 @@ type Row = {
     bold?: boolean;
     title?: string;
     hidden?: boolean;
+    indent?: boolean;
+    boldBottom?: boolean;
 }
 
 type Props = {
@@ -36,8 +39,11 @@ type Props = {
     showTrend?: boolean;
 }
 
-const FilterHeader = ({filter}: Column) => {
+const FilterHeader = ({filter, label}: Column) => {
     const {t} = useTranslation();
+    if (label) {
+        return <th>{label}</th>;
+    }
     if (filter.afterMillisAgo) {
         if (filter.beforeMillisAgo === undefined) {
             if (filter.afterMillisAgo === MS_MONTH) return <th>{t('html.label.last30days')}</th>;
@@ -67,18 +73,21 @@ export const QueryDatapointTable = ({comparisonHeader, filter, columns, rows, sh
             <th>
                 {comparisonHeader && <ComparingLabel>{comparisonHeader}</ComparingLabel>}
             </th>
-            {columns.map(column => <FilterHeader key={column.key} filter={column.filter}/>)}
+            {columns.map(column => <FilterHeader key={column.key} filter={column.filter} label={column.label}/>)}
             {showTrend && <th>{t('html.label.trend')}</th>}
         </tr>
         </thead>
         <tbody>
         {rows.filter(row => !row.hidden)
             .filter(row => hasPermission(calculatePermission(row.dataType, filter)))
-            .map(row => <tr key={row.key || String(row.text)} title={row.title}>
-                <td><Fa icon={row.icon} className={'col-' + row.color}/> {row.text}</td>
+            .map(row => <tr key={row.key || String(row.text)} title={row.title}
+                            style={row.boldBottom ? {borderBottomWidth: "3px"} : undefined}>
+                <td><Fa icon={row.icon} className={'col-' + row.color}
+                        style={row.indent ? {marginLeft: "1rem"} : undefined}/> {row.text}</td>
                 {columns.map(column => <td key={column.key + row.text}>
                     <QueryDatapointValue dataType={row.dataType}
-                                         filter={{...filter, ...column.filter}}/>
+                                         filter={{...filter, ...column.filter}}
+                                         noDataFallback={"-"}/>
                 </td>)}
                 {showTrend && <td>
                     <QueryDatapointTrend filter={{...filter, ...columns[0].filter}}

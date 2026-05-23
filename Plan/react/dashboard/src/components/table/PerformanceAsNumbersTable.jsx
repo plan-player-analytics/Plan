@@ -8,7 +8,8 @@ import {
     faPowerOff,
     faStopwatch,
     faTachometerAlt,
-    faUser
+    faUser,
+    faUsers
 } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
@@ -29,20 +30,28 @@ const PerformanceAsNumbersTable = ({servers}) => {
         <QueryDatapointTable filter={{server: servers.map(s => s.serverUUID)}}
                              columns={[{
                                  key: '30d',
-                                 filter: {afterMillisAgo: MS_MONTH}
+                                 filter: {afterMillisAgo: MS_MONTH},
                              }, {
-                                 key: '7d',
-                                 filter: {afterMillisAgo: MS_WEEK}
+                                 key: '7d-1',
+                                 filter: {afterMillisAgo: MS_WEEK * 4, beforeMillisAgo: MS_WEEK * 3},
+                                 label: t('html.label.time.week') + " 1"
+                             }, {
+                                 key: '7d-2',
+                                 filter: {afterMillisAgo: MS_WEEK * 3, beforeMillisAgo: MS_WEEK * 2},
+                                 label: t('html.label.time.week') + " 2"
+                             }, {
+                                 key: '7d-3',
+                                 filter: {afterMillisAgo: MS_WEEK * 2, beforeMillisAgo: MS_WEEK},
+                                 label: t('html.label.time.week') + " 3"
+                             }, {
+                                 key: '7d-4',
+                                 filter: {afterMillisAgo: MS_WEEK},
+                                 label: t('html.label.time.week') + " 4 (" + t('html.label.last7days') + ")"
                              }, {
                                  key: '1d',
                                  filter: {afterMillisAgo: MS_24H}
                              }]}
-                             rows={[{
-                                 dataType: DatapointType.TPS_LOW_SPIKES,
-                                 color: "tps-low-spikes",
-                                 icon: faExclamationCircle,
-                                 text: t('html.label.lowTpsSpikes')
-                             }, { // TODO Total and average/server downtime and uptime
+                             rows={[{ // TODO Total and average/server downtime and uptime
                                  dataType: DatapointType.DOWNTIME,
                                  color: "downtime",
                                  icon: faPowerOff,
@@ -51,7 +60,13 @@ const PerformanceAsNumbersTable = ({servers}) => {
                                  dataType: DatapointType.UPTIME,
                                  color: "uptime",
                                  icon: faPowerOff,
-                                 text: t('html.label.serverUptime')
+                                 text: t('html.label.serverUptime'),
+                                 boldBottom: true
+                             }, {
+                                 dataType: DatapointType.TPS_LOW_SPIKES,
+                                 color: "tps-low-spikes",
+                                 icon: faExclamationCircle,
+                                 text: t('html.label.lowTpsSpikes')
                              }, {
                                  dataType: DatapointType.PLAYERS_ONLINE_AVERAGE,
                                  color: "players-online",
@@ -70,15 +85,17 @@ const PerformanceAsNumbersTable = ({servers}) => {
                                  text: <>{t('html.label.msptAverage')} {noTPSOnProxies}</>,
                                  key: "average-mspt"
                              }, {
-                                 dataType: DatapointType.CPU_AVERAGE,
-                                 color: "cpu",
-                                 icon: faTachometerAlt,
-                                 text: t('html.label.averageCpuUsage')
+                                 dataType: DatapointType.MSPT_IMPACT_PER_PLAYER,
+                                 color: "mspt-average",
+                                 icon: faUsers,
+                                 text: "MSPT impact per Player",
+                                 indent: true
                              }, {
-                                 dataType: DatapointType.RAM_AVERAGE,
-                                 color: "ram",
-                                 icon: faMicrochip,
-                                 text: t('html.label.averageRamUsage')
+                                 dataType: DatapointType.MSPT_IMPACT_PER_CHUNK,
+                                 color: "mspt-average",
+                                 icon: faMap,
+                                 text: "MSPT impact per Chunk",
+                                 indent: true
                              }, {
                                  dataType: DatapointType.ENTITIES_AVERAGE,
                                  color: "entities",
@@ -86,11 +103,40 @@ const PerformanceAsNumbersTable = ({servers}) => {
                                  text: <>{t('html.label.averageEntities')} {noTPSOnProxies}</>,
                                  key: "average-entities"
                              }, {
+                                 dataType: DatapointType.ENTITIES_PER_CHUNK,
+                                 color: "entities",
+                                 icon: faMap,
+                                 text: "Average Entities per Chunk",
+                                 indent: true
+                             }, {
                                  dataType: DatapointType.CHUNKS_AVERAGE,
                                  color: "chunks",
                                  icon: faMap,
                                  text: <>{t('html.label.averageChunks')} {noTPSOnProxies}</>,
                                  key: "average-chunks"
+                             }, {
+                                 dataType: DatapointType.CHUNKS_PER_PLAYER,
+                                 color: "chunks",
+                                 icon: faUsers,
+                                 text: "Average Chunks per Player",
+                                 indent: true,
+                                 boldBottom: true
+                             }, {
+                                 dataType: DatapointType.CPU_AVERAGE,
+                                 color: "cpu",
+                                 icon: faTachometerAlt,
+                                 text: t('html.label.averageCpuUsage')
+                             }, {
+                                 dataType: DatapointType.CPU_IMPACT_PER_PLAYER,
+                                 color: "cpu",
+                                 icon: faUsers,
+                                 text: "CPU impact per Player",
+                                 indent: true
+                             }, {
+                                 dataType: DatapointType.RAM_AVERAGE,
+                                 color: "ram",
+                                 icon: faMicrochip,
+                                 text: t('html.label.averageRamUsage')
                              }, {
                                  dataType: DatapointType.DISK_MAX,
                                  color: "disk",
