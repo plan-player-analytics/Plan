@@ -44,6 +44,8 @@ export enum DatapointType {
     MOB_KILLS = "MOB_KILLS",
     TPS_AVERAGE = "TPS_AVERAGE",
     TPS_LOW_SPIKES = "TPS_LOW_SPIKES",
+    DISK_MAX = "DISK_MAX",
+    DISK_MIN = "DISK_MIN",
 }
 
 export const differingPermissions: Partial<Record<DatapointType, string>> = {
@@ -74,6 +76,8 @@ export type DatapointTypeMap = {
     MOB_KILLS: number;
     TPS_AVERAGE: number;
     TPS_LOW_SPIKES: number;
+    DISK_MAX: number;
+    DISK_MIN: number;
     SERVER_OCCUPIED: OutOf;
     MOST_ACTIVE_WORLD: OutOfCategory;
     MOST_ACTIVE_GAME_MODE: OutOfCategory;

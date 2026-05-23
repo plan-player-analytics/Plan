@@ -34,6 +34,8 @@ public enum DatapointType {
     CHUNKS_AVERAGE(ChunksAverage.class, DatapointCacheKey.TPS),
     CPU_AVERAGE(CPUAverage.class, DatapointCacheKey.TPS),
     DEATHS(Deaths.class, DatapointCacheKey.SESSION),
+    DISK_MAX(DiskMax.class, DatapointCacheKey.TPS),
+    DISK_MIN(DiskMin.class, DatapointCacheKey.TPS),
     DOWNTIME(Downtime.class, DatapointCacheKey.TPS),
     ENTITIES_AVERAGE(EntitiesAverage.class, DatapointCacheKey.TPS),
     MOB_KILLS(MobKills.class, DatapointCacheKey.SESSION),

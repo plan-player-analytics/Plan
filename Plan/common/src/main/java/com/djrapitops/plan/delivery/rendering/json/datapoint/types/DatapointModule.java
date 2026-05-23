@@ -116,6 +116,14 @@ public interface DatapointModule {
 
     @Binds
     @IntoSet
+    Datapoint<?> bindDiskMax(DiskMax diskMax);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindDiskMin(DiskMin diskMin);
+
+    @Binds
+    @IntoSet
     Datapoint<?> bindCPUAverage(CPUAverage cpuAverage);
 
     @Binds

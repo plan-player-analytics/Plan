@@ -276,7 +276,13 @@ class AccessControlTest {
                 Arguments.of("/v1/datapoint?type=ENTITIES_AVERAGE&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
                 Arguments.of("/v1/datapoint?type=CHUNKS_AVERAGE", WebPermission.DATA_NETWORK, 400, 403),
                 Arguments.of("/v1/datapoint?type=CHUNKS_AVERAGE&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_CHUNKS_AVERAGE, 200, 403),
-                Arguments.of("/v1/datapoint?type=CHUNKS_AVERAGE&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403)
+                Arguments.of("/v1/datapoint?type=CHUNKS_AVERAGE&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=DISK_MAX", WebPermission.DATA_NETWORK, 400, 403),
+                Arguments.of("/v1/datapoint?type=DISK_MAX&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_DISK_MAX, 200, 403),
+                Arguments.of("/v1/datapoint?type=DISK_MAX&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=DISK_MIN", WebPermission.DATA_NETWORK, 400, 403),
+                Arguments.of("/v1/datapoint?type=DISK_MIN&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_DISK_MIN, 200, 403),
+                Arguments.of("/v1/datapoint?type=DISK_MIN&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403)
         );
     }
 
