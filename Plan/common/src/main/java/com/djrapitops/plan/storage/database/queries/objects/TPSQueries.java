@@ -588,6 +588,31 @@ public class TPSQueries {
         };
     }
 
+    public static Query<Double> averageCpuPerPlayer(long after, long before, List<ServerUUID> serverUUIDs) {
+        String sql = SELECT + "AVG(" + CPU_USAGE + "/" + PLAYERS_ONLINE + ") as average" + FROM + TABLE_NAME + " t" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
+                WHERE + (serverUUIDs.isEmpty()
+                ? ""
+                : "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
+                  AND) + CPU_USAGE + ">=0" +
+                AND + DATE + "<?" +
+                AND + DATE + ">?" +
+                AND + PLAYERS_ONLINE + ">0";
+        return new QueryStatement<>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, before);
+                statement.setLong(2, after);
+            }
+
+            @Override
+            public Double processResults(ResultSet set) throws SQLException {
+                double value = set.next() ? set.getDouble("average") : -1.0;
+                return set.wasNull() ? -1.0 : value;
+            }
+        };
+    }
+
     public static Query<Long> averageRAM(long after, long before, ServerUUID serverUUID) {
         return averageRAM(after, before, Collections.singletonList(serverUUID));
     }
@@ -648,6 +673,31 @@ public class TPSQueries {
         };
     }
 
+    public static Query<Long> averageChunksPerPlayer(long after, long before, List<ServerUUID> serverUUIDs) {
+        String sql = SELECT + "AVG(" + CHUNKS + "/" + PLAYERS_ONLINE + ") as average" + FROM + TABLE_NAME + " t" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
+                WHERE + (serverUUIDs.isEmpty()
+                ? ""
+                : "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
+                  AND) + CHUNKS + ">=0" +
+                AND + DATE + "<?" +
+                AND + DATE + ">?" +
+                AND + PLAYERS_ONLINE + ">0";
+        return new QueryStatement<>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, before);
+                statement.setLong(2, after);
+            }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                double value = set.next() ? set.getDouble("average") : -1.0;
+                return set.wasNull() ? -1L : (long) value;
+            }
+        };
+    }
+
     public static Query<Long> averageEntities(long after, long before, ServerUUID serverUUID) {
         return averageEntities(after, before, Collections.singletonList(serverUUID));
     }
@@ -678,6 +728,31 @@ public class TPSQueries {
         };
     }
 
+    public static Query<Long> averageEntitiesPerChunk(long after, long before, List<ServerUUID> serverUUIDs) {
+        String sql = SELECT + "AVG(" + ENTITIES + "/" + CHUNKS + ") as average" + FROM + TABLE_NAME + " t" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
+                WHERE + (serverUUIDs.isEmpty()
+                ? ""
+                : "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
+                  AND) + ENTITIES + ">=0" +
+                AND + DATE + "<?" +
+                AND + DATE + ">?" +
+                AND + CHUNKS + ">0";
+        return new QueryStatement<>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, before);
+                statement.setLong(2, after);
+            }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                double value = set.next() ? set.getDouble("average") : -1.0;
+                return set.wasNull() ? -1L : (long) value;
+            }
+        };
+    }
+
     public static Query<Double> averageMSPT(long after, long before, ServerUUID serverUUID) {
         return averageMSPT(after, before, Collections.singletonList(serverUUID));
     }
@@ -693,6 +768,56 @@ public class TPSQueries {
                 AND + MSPT_AVERAGE + ">=0" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
+        return new QueryStatement<>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, before);
+                statement.setLong(2, after);
+            }
+
+            @Override
+            public Double processResults(ResultSet set) throws SQLException {
+                double value = set.next() ? set.getDouble("average") : -1.0;
+                return set.wasNull() ? -1.0 : value;
+            }
+        };
+    }
+
+    public static Query<Double> averageMsptImpactPerPlayer(long after, long before, List<ServerUUID> serverUUIDs) {
+        String sql = SELECT + "AVG(" + MSPT_AVERAGE + "/" + PLAYERS_ONLINE + ") as average" + FROM + TABLE_NAME + " t" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
+                WHERE + (serverUUIDs.isEmpty()
+                ? ""
+                : "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
+                  AND) + MSPT_AVERAGE + ">=0" +
+                AND + DATE + "<?" +
+                AND + DATE + ">?" +
+                AND + PLAYERS_ONLINE + ">0";
+        return new QueryStatement<>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, before);
+                statement.setLong(2, after);
+            }
+
+            @Override
+            public Double processResults(ResultSet set) throws SQLException {
+                double value = set.next() ? set.getDouble("average") : -1.0;
+                return set.wasNull() ? -1.0 : value;
+            }
+        };
+    }
+
+    public static Query<Double> averageMsptImpactPerChunk(long after, long before, List<ServerUUID> serverUUIDs) {
+        String sql = SELECT + "AVG(" + MSPT_AVERAGE + "/" + CHUNKS + ") as average" + FROM + TABLE_NAME + " t" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
+                WHERE + (serverUUIDs.isEmpty()
+                ? ""
+                : "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
+                  AND) + MSPT_AVERAGE + ">=0" +
+                AND + DATE + "<?" +
+                AND + DATE + ">?" +
+                AND + CHUNKS + ">0";
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

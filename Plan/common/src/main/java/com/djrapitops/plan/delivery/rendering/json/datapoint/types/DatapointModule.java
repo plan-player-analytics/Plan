@@ -132,7 +132,19 @@ public interface DatapointModule {
 
     @Binds
     @IntoSet
+    Datapoint<?> bindCPUImpactPerPlayer(CPUImpactPerPlayer cpuImpactPerPlayer);
+
+    @Binds
+    @IntoSet
     Datapoint<?> bindMSPTAverage(MSPTAverage msptaverage);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindMSPTImpactPerPlayer(MSPTImpactPerPlayer msptImpactPerPlayer);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindMSPTImpactPerChunk(MSPTImpactPerChunk msptImpactPerChunk);
 
     @Binds
     @IntoSet
@@ -148,7 +160,15 @@ public interface DatapointModule {
 
     @Binds
     @IntoSet
+    Datapoint<?> bindEntitiesPerChunk(EntitiesPerChunk entitiesPerChunk);
+
+    @Binds
+    @IntoSet
     Datapoint<?> bindChunksAverage(ChunksAverage chunksAverage);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindChunksPerPlayer(ChunksPerPlayer chunksPerPlayer);
 
     @Binds
     @IntoSet
