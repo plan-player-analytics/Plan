@@ -62,6 +62,7 @@ public enum DatapointType {
     TPS_LOW_SPIKES(TPSLowSpikes.class, DatapointCacheKey.TPS),
     UNIQUE_PLAYERS_AVERAGE(UniquePlayersPerDayAverage.class, DatapointCacheKey.SESSION),
     UNIQUE_PLAYERS_COUNT(UniquePlayersCount.class, DatapointCacheKey.SESSION),
+    UPTIME(Uptime.class, DatapointCacheKey.TPS),
     UPTIME_CURRENT(UptimeCurrent.class),
     WORLD_PIE(WorldPie.class, DatapointCacheKey.SESSION),
     ;

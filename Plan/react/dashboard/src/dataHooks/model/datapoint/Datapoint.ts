@@ -34,6 +34,7 @@ export enum DatapointType {
     REGULAR_PLAYERS = "REGULAR_PLAYERS",
     PLAYERS_ONLINE = "PLAYERS_ONLINE",
     PLAYERS_ONLINE_PEAK = "PLAYERS_ONLINE_PEAK",
+    UPTIME = "UPTIME",
     UPTIME_CURRENT = "UPTIME_CURRENT",
     DOWNTIME = "DOWNTIME",
     SESSION_COUNT = "SESSION_COUNT",
@@ -66,6 +67,7 @@ export type DatapointTypeMap = {
     NEW_PLAYER_RETENTION: number;
     REGULAR_PLAYERS: number;
     PLAYERS_ONLINE: number;
+    UPTIME: number;
     UPTIME_CURRENT: number;
     DOWNTIME: number;
     SESSION_COUNT: number;
