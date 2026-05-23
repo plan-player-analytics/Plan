@@ -32,7 +32,7 @@ const Loader = () => {
 
 export const DatapointLoader = () => {
     return (
-        <div className="datapoint-loader"/>
+        <span className="datapoint-loader"/>
     )
 }
 

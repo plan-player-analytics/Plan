@@ -60,7 +60,7 @@ public class CPUAverage implements Datapoint<Double> {
         }
 
         double average = dbSystem.getDatabase().query(TPSQueries.averageCPU(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
-        return average != -1.0 ? Optional.of(average) : Optional.empty();
+        return average != -1.0 ? Optional.of(average / 100.0) : Optional.empty();
     }
 
     @Override

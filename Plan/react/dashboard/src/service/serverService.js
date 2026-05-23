@@ -6,15 +6,9 @@ export const fetchServerIdentity = async (timestamp, identifier) => {
     return doGetRequest(url, timestamp);
 }
 
-export const fetchServerOverview = async (timestamp, identifier) => {
-    let url = `/v1/serverOverview?server=${identifier}`;
-    if (staticSite) url = `/data/serverOverview-${identifier}.json`;
-    return doGetRequest(url, timestamp);
-}
-
 export const fetchOnlineActivityOverview = async (timestamp, identifier) => {
-    let url = `/v1/onlineOverview?server=${identifier}`;
-    if (staticSite) url = `/data/onlineOverview-${identifier}.json`;
+    let url = `/v1/onlineInsights?server=${identifier}&justInsights=true`;
+    if (staticSite) url = `/data/onlineInsights-${identifier}.json`;
     return doGetRequest(url, timestamp);
 }
 
@@ -24,21 +18,9 @@ export const fetchPlayerbaseOverview = async (timestamp, identifier) => {
     return doGetRequest(url, timestamp);
 }
 
-export const fetchSessionOverview = async (timestamp, identifier) => {
-    let url = `/v1/sessionsOverview?server=${identifier}`;
-    if (staticSite) url = `/data/sessionsOverview-${identifier}.json`;
-    return doGetRequest(url, timestamp);
-}
-
 export const fetchPvpPve = async (timestamp, identifier) => {
     let url = `/v1/playerVersus?server=${identifier}`;
     if (staticSite) url = `/data/playerVersus-${identifier}.json`;
-    return doGetRequest(url, timestamp);
-}
-
-export const fetchPerformanceOverview = async (timestamp, identifier) => {
-    let url = `/v1/performanceOverview?server=${identifier}`;
-    if (staticSite) url = `/data/performanceOverview-${identifier}.json`;
     return doGetRequest(url, timestamp);
 }
 

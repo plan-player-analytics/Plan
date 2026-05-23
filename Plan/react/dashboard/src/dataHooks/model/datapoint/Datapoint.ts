@@ -33,6 +33,7 @@ export enum DatapointType {
     NEW_PLAYER_RETENTION = "NEW_PLAYER_RETENTION",
     REGULAR_PLAYERS = "REGULAR_PLAYERS",
     PLAYERS_ONLINE = "PLAYERS_ONLINE",
+    PLAYERS_ONLINE_AVERAGE = "PLAYERS_ONLINE_AVERAGE",
     PLAYERS_ONLINE_PEAK = "PLAYERS_ONLINE_PEAK",
     UPTIME = "UPTIME",
     UPTIME_CURRENT = "UPTIME_CURRENT",
@@ -45,6 +46,11 @@ export enum DatapointType {
     MOB_KILLS = "MOB_KILLS",
     TPS_AVERAGE = "TPS_AVERAGE",
     TPS_LOW_SPIKES = "TPS_LOW_SPIKES",
+    MSPT_AVERAGE = "MSPT_AVERAGE",
+    CPU_AVERAGE = "CPU_AVERAGE",
+    RAM_AVERAGE = "RAM_AVERAGE",
+    ENTITIES_AVERAGE = "ENTITIES_AVERAGE",
+    CHUNKS_AVERAGE = "CHUNKS_AVERAGE",
     DISK_MAX = "DISK_MAX",
     DISK_MIN = "DISK_MIN",
 }
@@ -67,6 +73,7 @@ export type DatapointTypeMap = {
     NEW_PLAYER_RETENTION: number;
     REGULAR_PLAYERS: number;
     PLAYERS_ONLINE: number;
+    PLAYERS_ONLINE_AVERAGE: number;
     UPTIME: number;
     UPTIME_CURRENT: number;
     DOWNTIME: number;
@@ -78,6 +85,11 @@ export type DatapointTypeMap = {
     MOB_KILLS: number;
     TPS_AVERAGE: number;
     TPS_LOW_SPIKES: number;
+    MSPT_AVERAGE: number;
+    CPU_AVERAGE: number;
+    RAM_AVERAGE: number;
+    ENTITIES_AVERAGE: number;
+    CHUNKS_AVERAGE: number;
     DISK_MAX: number;
     DISK_MIN: number;
     SERVER_OCCUPIED: OutOf;

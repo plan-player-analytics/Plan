@@ -20,10 +20,12 @@ type Row = {
     dataType: DatapointType;
     permission?: string;
     icon: IconProp;
-    text: string;
+    key?: string;
+    text: string | React.ReactNode;
     color: string;
     bold?: boolean;
     title?: string;
+    hidden?: boolean;
 }
 
 type Props = {
@@ -70,8 +72,9 @@ export const QueryDatapointTable = ({comparisonHeader, filter, columns, rows, sh
         </tr>
         </thead>
         <tbody>
-        {rows.filter(row => hasPermission(calculatePermission(row.dataType, filter)))
-            .map(row => <tr key={row.text} title={row.title}>
+        {rows.filter(row => !row.hidden)
+            .filter(row => hasPermission(calculatePermission(row.dataType, filter)))
+            .map(row => <tr key={row.key || String(row.text)} title={row.title}>
                 <td><Fa icon={row.icon} className={'col-' + row.color}/> {row.text}</td>
                 {columns.map(column => <td key={column.key + row.text}>
                     <QueryDatapointValue dataType={row.dataType}

@@ -70,6 +70,12 @@ public class OnlineActivityOverviewJSONCreator implements ServerTabJSONCreator<M
         percentageFormatter = formatters.percentage();
     }
 
+    public Map<String, Object> createJustInsightsJSONAsMap(ServerUUID serverUUID) {
+        Map<String, Object> serverOverview = new HashMap<>();
+        serverOverview.put("insights", createInsightsMap(serverUUID));
+        return serverOverview;
+    }
+
     public Map<String, Object> createJSONAsMap(ServerUUID serverUUID) {
         Map<String, Object> serverOverview = new HashMap<>();
         serverOverview.put("numbers", createNumbersMap(serverUUID));

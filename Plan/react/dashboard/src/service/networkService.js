@@ -11,8 +11,3 @@ export const fetchNetworkPingTable = async (timestamp) => {
     if (staticSite) url = `/data/network-pingTable.json`;
     return doGetRequest(url, timestamp);
 }
-
-export const fetchNetworkPerformanceOverview = async (timestamp, serverUUIDs) => {
-    let url = `/v1/network/performanceOverview?servers=${encodeURIComponent(JSON.stringify(serverUUIDs))}`;
-    return doGetRequest(url, timestamp);
-}
