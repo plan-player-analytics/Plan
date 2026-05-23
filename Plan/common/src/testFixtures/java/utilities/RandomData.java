@@ -102,7 +102,7 @@ public class RandomData {
         long previousTimestamp = randomLong(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(minimumDay), System.currentTimeMillis());
         int previousPlayers = randomInt(0, 100);
         for (int i = 0; i < randomInt(50, 100); i++) {
-            int randInt = r.nextInt();
+            int randInt = Math.abs(r.nextInt());
             double randTps = Math.abs(r.nextDouble() * 20);
             long randLong = Math.abs(r.nextLong());
             TPS tps = new TPS(previousTimestamp, randTps, previousPlayers, randLong, randLong, randInt, randInt, randLong);
