@@ -134,6 +134,10 @@ public class ExportTestUtilities {
 
     static void saveServerData(Database database, ServerUUID serverUUID) {
         RandomData.randomDateOrderedTPS(1).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
+        RandomData.randomDateOrderedTPS(8).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
+        RandomData.randomDateOrderedTPS(15).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
+        RandomData.randomDateOrderedTPS(22).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
+        RandomData.randomDateOrderedTPS(29).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
     }
 
     public static List<String> getEndpointsToTest(ServerUUID serverUUID) {
