@@ -195,6 +195,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#DATA_NETWORK_PLAYERS_ONLINE_CURRENT" tabindex="0">DATA_NETWORK_PLAYERS_ONLINE_CURRENT</a></li>
 <li><a href="#DATA_SERVER_UPTIME_CURRENT" tabindex="0">DATA_SERVER_UPTIME_CURRENT</a></li>
 <li><a href="#DATA_NETWORK_UPTIME_CURRENT" tabindex="0">DATA_NETWORK_UPTIME_CURRENT</a></li>
+<li><a href="#DATA_SERVER_UPTIME" tabindex="0">DATA_SERVER_UPTIME</a></li>
+<li><a href="#DATA_NETWORK_UPTIME" tabindex="0">DATA_NETWORK_UPTIME</a></li>
 <li><a href="#DATA_SERVER_DOWNTIME" tabindex="0">DATA_SERVER_DOWNTIME</a></li>
 <li><a href="#DATA_NETWORK_DOWNTIME" tabindex="0">DATA_NETWORK_DOWNTIME</a></li>
 <li><a href="#DATA_PLAYER_MOB_KILLS" tabindex="0">DATA_PLAYER_MOB_KILLS</a></li>
@@ -207,14 +209,30 @@ loadScripts(document, 'script');</script>
 <li><a href="#DATA_SERVER_DEATHS" tabindex="0">DATA_SERVER_DEATHS</a></li>
 <li><a href="#DATA_NETWORK_DEATHS" tabindex="0">DATA_NETWORK_DEATHS</a></li>
 <li><a href="#DATA_SERVER_TPS_AVERAGE" tabindex="0">DATA_SERVER_TPS_AVERAGE</a></li>
+<li><a href="#DATA_SERVER_DISK_MAX" tabindex="0">DATA_SERVER_DISK_MAX</a></li>
+<li><a href="#DATA_SERVER_DISK_MIN" tabindex="0">DATA_SERVER_DISK_MIN</a></li>
 <li><a href="#DATA_SERVER_TPS_LOW_SPIKES" tabindex="0">DATA_SERVER_TPS_LOW_SPIKES</a></li>
 <li><a href="#DATA_NETWORK_TPS_LOW_SPIKES" tabindex="0">DATA_NETWORK_TPS_LOW_SPIKES</a></li>
 <li><a href="#DATA_SERVER_RAM_AVERAGE" tabindex="0">DATA_SERVER_RAM_AVERAGE</a></li>
 <li><a href="#DATA_SERVER_MSPT_AVERAGE" tabindex="0">DATA_SERVER_MSPT_AVERAGE</a></li>
+<li><a href="#DATA_SERVER_MSPT_AVERAGE_LOW_TPS" tabindex="0">DATA_SERVER_MSPT_AVERAGE_LOW_TPS</a></li>
+<li><a href="#DATA_NETWORK_MSPT_AVERAGE_LOW_TPS" tabindex="0">DATA_NETWORK_MSPT_AVERAGE_LOW_TPS</a></li>
+<li><a href="#DATA_SERVER_MSPT_MAX_95TH_LOW_TPS" tabindex="0">DATA_SERVER_MSPT_MAX_95TH_LOW_TPS</a></li>
+<li><a href="#DATA_NETWORK_MSPT_MAX_95TH_LOW_TPS" tabindex="0">DATA_NETWORK_MSPT_MAX_95TH_LOW_TPS</a></li>
 <li><a href="#DATA_SERVER_CPU_AVERAGE" tabindex="0">DATA_SERVER_CPU_AVERAGE</a></li>
 <li><a href="#DATA_SERVER_PLAYERS_ONLINE_AVERAGE" tabindex="0">DATA_SERVER_PLAYERS_ONLINE_AVERAGE</a></li>
 <li><a href="#DATA_SERVER_ENTITIES_AVERAGE" tabindex="0">DATA_SERVER_ENTITIES_AVERAGE</a></li>
 <li><a href="#DATA_SERVER_CHUNKS_AVERAGE" tabindex="0">DATA_SERVER_CHUNKS_AVERAGE</a></li>
+<li><a href="#DATA_SERVER_MSPT_IMPACT_PER_PLAYER" tabindex="0">DATA_SERVER_MSPT_IMPACT_PER_PLAYER</a></li>
+<li><a href="#DATA_NETWORK_MSPT_IMPACT_PER_PLAYER" tabindex="0">DATA_NETWORK_MSPT_IMPACT_PER_PLAYER</a></li>
+<li><a href="#DATA_SERVER_CPU_IMPACT_PER_PLAYER" tabindex="0">DATA_SERVER_CPU_IMPACT_PER_PLAYER</a></li>
+<li><a href="#DATA_NETWORK_CPU_IMPACT_PER_PLAYER" tabindex="0">DATA_NETWORK_CPU_IMPACT_PER_PLAYER</a></li>
+<li><a href="#DATA_SERVER_CHUNKS_PER_PLAYER" tabindex="0">DATA_SERVER_CHUNKS_PER_PLAYER</a></li>
+<li><a href="#DATA_NETWORK_CHUNKS_PER_PLAYER" tabindex="0">DATA_NETWORK_CHUNKS_PER_PLAYER</a></li>
+<li><a href="#DATA_SERVER_ENTITIES_PER_CHUNK" tabindex="0">DATA_SERVER_ENTITIES_PER_CHUNK</a></li>
+<li><a href="#DATA_NETWORK_ENTITIES_PER_CHUNK" tabindex="0">DATA_NETWORK_ENTITIES_PER_CHUNK</a></li>
+<li><a href="#DATA_SERVER_MSPT_IMPACT_PER_CHUNK" tabindex="0">DATA_SERVER_MSPT_IMPACT_PER_CHUNK</a></li>
+<li><a href="#DATA_NETWORK_MSPT_IMPACT_PER_CHUNK" tabindex="0">DATA_NETWORK_MSPT_IMPACT_PER_CHUNK</a></li>
 <li><a href="#ACCESS" tabindex="0">ACCESS</a></li>
 <li><a href="#ACCESS_PLAYER" tabindex="0">ACCESS_PLAYER</a></li>
 <li><a href="#ACCESS_PLAYER_SELF" tabindex="0">ACCESS_PLAYER_SELF</a></li>
@@ -318,49 +336,65 @@ implements <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_AFK_TIME" class="member-name-link">DATA_NETWORK_AFK_TIME</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_CHUNKS_PER_PLAYER" class="member-name-link">DATA_NETWORK_CHUNKS_PER_PLAYER</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_CPU_IMPACT_PER_PLAYER" class="member-name-link">DATA_NETWORK_CPU_IMPACT_PER_PLAYER</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code><a href="#DATA_NETWORK_DEATHS" class="member-name-link">DATA_NETWORK_DEATHS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_DOWNTIME" class="member-name-link">DATA_NETWORK_DOWNTIME</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_MOB_KILLS" class="member-name-link">DATA_NETWORK_MOB_KILLS</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_ENTITIES_PER_CHUNK" class="member-name-link">DATA_NETWORK_ENTITIES_PER_CHUNK</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_MOST_ACTIVE_GAME_MODE" class="member-name-link">DATA_NETWORK_MOST_ACTIVE_GAME_MODE</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_MOB_KILLS" class="member-name-link">DATA_NETWORK_MOB_KILLS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_MOST_ACTIVE_WORLD" class="member-name-link">DATA_NETWORK_MOST_ACTIVE_WORLD</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_MOST_ACTIVE_GAME_MODE" class="member-name-link">DATA_NETWORK_MOST_ACTIVE_GAME_MODE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_NEW_PLAYER_RETENTION" class="member-name-link">DATA_NETWORK_NEW_PLAYER_RETENTION</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_MOST_ACTIVE_WORLD" class="member-name-link">DATA_NETWORK_MOST_ACTIVE_WORLD</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_NEW_PLAYERS" class="member-name-link">DATA_NETWORK_NEW_PLAYERS</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_MSPT_AVERAGE_LOW_TPS" class="member-name-link">DATA_NETWORK_MSPT_AVERAGE_LOW_TPS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_NEW_PLAYERS_AVERAGE" class="member-name-link">DATA_NETWORK_NEW_PLAYERS_AVERAGE</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_MSPT_IMPACT_PER_CHUNK" class="member-name-link">DATA_NETWORK_MSPT_IMPACT_PER_CHUNK</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_PLAYER_KILLS" class="member-name-link">DATA_NETWORK_PLAYER_KILLS</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_MSPT_IMPACT_PER_PLAYER" class="member-name-link">DATA_NETWORK_MSPT_IMPACT_PER_PLAYER</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_PLAYERS_ONLINE_CURRENT" class="member-name-link">DATA_NETWORK_PLAYERS_ONLINE_CURRENT</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_MSPT_MAX_95TH_LOW_TPS" class="member-name-link">DATA_NETWORK_MSPT_MAX_95TH_LOW_TPS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_PLAYERS_ONLINE_PEAK" class="member-name-link">DATA_NETWORK_PLAYERS_ONLINE_PEAK</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_NEW_PLAYER_RETENTION" class="member-name-link">DATA_NETWORK_NEW_PLAYER_RETENTION</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_PLAYTIME" class="member-name-link">DATA_NETWORK_PLAYTIME</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_NEW_PLAYERS" class="member-name-link">DATA_NETWORK_NEW_PLAYERS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_PLAYTIME_PER_DAY_AVERAGE" class="member-name-link">DATA_NETWORK_PLAYTIME_PER_DAY_AVERAGE</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_NEW_PLAYERS_AVERAGE" class="member-name-link">DATA_NETWORK_NEW_PLAYERS_AVERAGE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_PLAYTIME_PER_PLAYER_AVERAGE" class="member-name-link">DATA_NETWORK_PLAYTIME_PER_PLAYER_AVERAGE</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_PLAYER_KILLS" class="member-name-link">DATA_NETWORK_PLAYER_KILLS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_REGULAR_PLAYERS" class="member-name-link">DATA_NETWORK_REGULAR_PLAYERS</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_PLAYERS_ONLINE_CURRENT" class="member-name-link">DATA_NETWORK_PLAYERS_ONLINE_CURRENT</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_SERVER_OCCUPIED" class="member-name-link">DATA_NETWORK_SERVER_OCCUPIED</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_PLAYERS_ONLINE_PEAK" class="member-name-link">DATA_NETWORK_PLAYERS_ONLINE_PEAK</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_SERVER_PIE" class="member-name-link">DATA_NETWORK_SERVER_PIE</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_PLAYTIME" class="member-name-link">DATA_NETWORK_PLAYTIME</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_SESSION_COUNT" class="member-name-link">DATA_NETWORK_SESSION_COUNT</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_PLAYTIME_PER_DAY_AVERAGE" class="member-name-link">DATA_NETWORK_PLAYTIME_PER_DAY_AVERAGE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_SESSION_LENGTH_AVERAGE" class="member-name-link">DATA_NETWORK_SESSION_LENGTH_AVERAGE</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_PLAYTIME_PER_PLAYER_AVERAGE" class="member-name-link">DATA_NETWORK_PLAYTIME_PER_PLAYER_AVERAGE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_TPS_LOW_SPIKES" class="member-name-link">DATA_NETWORK_TPS_LOW_SPIKES</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_REGULAR_PLAYERS" class="member-name-link">DATA_NETWORK_REGULAR_PLAYERS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_UNIQUE_PLAYERS_AVERAGE" class="member-name-link">DATA_NETWORK_UNIQUE_PLAYERS_AVERAGE</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_SERVER_OCCUPIED" class="member-name-link">DATA_NETWORK_SERVER_OCCUPIED</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_UNIQUE_PLAYERS_COUNT" class="member-name-link">DATA_NETWORK_UNIQUE_PLAYERS_COUNT</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_SERVER_PIE" class="member-name-link">DATA_NETWORK_SERVER_PIE</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_SESSION_COUNT" class="member-name-link">DATA_NETWORK_SESSION_COUNT</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_SESSION_LENGTH_AVERAGE" class="member-name-link">DATA_NETWORK_SESSION_LENGTH_AVERAGE</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_TPS_LOW_SPIKES" class="member-name-link">DATA_NETWORK_TPS_LOW_SPIKES</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_UNIQUE_PLAYERS_AVERAGE" class="member-name-link">DATA_NETWORK_UNIQUE_PLAYERS_AVERAGE</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#DATA_NETWORK_UNIQUE_PLAYERS_COUNT" class="member-name-link">DATA_NETWORK_UNIQUE_PLAYERS_COUNT</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#DATA_NETWORK_UPTIME" class="member-name-link">DATA_NETWORK_UPTIME</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code><a href="#DATA_NETWORK_UPTIME_CURRENT" class="member-name-link">DATA_NETWORK_UPTIME_CURRENT</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
@@ -398,61 +432,81 @@ implements <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code><a href="#DATA_SERVER_CHUNKS_AVERAGE" class="member-name-link">DATA_SERVER_CHUNKS_AVERAGE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DATA_SERVER_CPU_AVERAGE" class="member-name-link">DATA_SERVER_CPU_AVERAGE</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DATA_SERVER_CHUNKS_PER_PLAYER" class="member-name-link">DATA_SERVER_CHUNKS_PER_PLAYER</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_CPU_AVERAGE" class="member-name-link">DATA_SERVER_CPU_AVERAGE</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#DATA_SERVER_CPU_IMPACT_PER_PLAYER" class="member-name-link">DATA_SERVER_CPU_IMPACT_PER_PLAYER</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code><a href="#DATA_SERVER_DEATHS" class="member-name-link">DATA_SERVER_DEATHS</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#DATA_SERVER_DISK_MAX" class="member-name-link">DATA_SERVER_DISK_MAX</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_DISK_MIN" class="member-name-link">DATA_SERVER_DISK_MIN</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code><a href="#DATA_SERVER_DOWNTIME" class="member-name-link">DATA_SERVER_DOWNTIME</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code><a href="#DATA_SERVER_ENTITIES_AVERAGE" class="member-name-link">DATA_SERVER_ENTITIES_AVERAGE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DATA_SERVER_MOB_KILLS" class="member-name-link">DATA_SERVER_MOB_KILLS</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DATA_SERVER_ENTITIES_PER_CHUNK" class="member-name-link">DATA_SERVER_ENTITIES_PER_CHUNK</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_MOST_ACTIVE_GAME_MODE" class="member-name-link">DATA_SERVER_MOST_ACTIVE_GAME_MODE</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_MOB_KILLS" class="member-name-link">DATA_SERVER_MOB_KILLS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DATA_SERVER_MOST_ACTIVE_WORLD" class="member-name-link">DATA_SERVER_MOST_ACTIVE_WORLD</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DATA_SERVER_MOST_ACTIVE_GAME_MODE" class="member-name-link">DATA_SERVER_MOST_ACTIVE_GAME_MODE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_MSPT_AVERAGE" class="member-name-link">DATA_SERVER_MSPT_AVERAGE</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_MOST_ACTIVE_WORLD" class="member-name-link">DATA_SERVER_MOST_ACTIVE_WORLD</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DATA_SERVER_NEW_PLAYER_RETENTION" class="member-name-link">DATA_SERVER_NEW_PLAYER_RETENTION</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DATA_SERVER_MSPT_AVERAGE" class="member-name-link">DATA_SERVER_MSPT_AVERAGE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_NEW_PLAYERS" class="member-name-link">DATA_SERVER_NEW_PLAYERS</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_MSPT_AVERAGE_LOW_TPS" class="member-name-link">DATA_SERVER_MSPT_AVERAGE_LOW_TPS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DATA_SERVER_NEW_PLAYERS_AVERAGE" class="member-name-link">DATA_SERVER_NEW_PLAYERS_AVERAGE</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DATA_SERVER_MSPT_IMPACT_PER_CHUNK" class="member-name-link">DATA_SERVER_MSPT_IMPACT_PER_CHUNK</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_PLAYER_KILLS" class="member-name-link">DATA_SERVER_PLAYER_KILLS</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_MSPT_IMPACT_PER_PLAYER" class="member-name-link">DATA_SERVER_MSPT_IMPACT_PER_PLAYER</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DATA_SERVER_PLAYERS_ONLINE_AVERAGE" class="member-name-link">DATA_SERVER_PLAYERS_ONLINE_AVERAGE</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DATA_SERVER_MSPT_MAX_95TH_LOW_TPS" class="member-name-link">DATA_SERVER_MSPT_MAX_95TH_LOW_TPS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_PLAYERS_ONLINE_CURRENT" class="member-name-link">DATA_SERVER_PLAYERS_ONLINE_CURRENT</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_NEW_PLAYER_RETENTION" class="member-name-link">DATA_SERVER_NEW_PLAYER_RETENTION</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DATA_SERVER_PLAYERS_ONLINE_PEAK" class="member-name-link">DATA_SERVER_PLAYERS_ONLINE_PEAK</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DATA_SERVER_NEW_PLAYERS" class="member-name-link">DATA_SERVER_NEW_PLAYERS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_PLAYTIME" class="member-name-link">DATA_SERVER_PLAYTIME</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_NEW_PLAYERS_AVERAGE" class="member-name-link">DATA_SERVER_NEW_PLAYERS_AVERAGE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DATA_SERVER_PLAYTIME_PER_DAY_AVERAGE" class="member-name-link">DATA_SERVER_PLAYTIME_PER_DAY_AVERAGE</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DATA_SERVER_PLAYER_KILLS" class="member-name-link">DATA_SERVER_PLAYER_KILLS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_PLAYTIME_PER_PLAYER_AVERAGE" class="member-name-link">DATA_SERVER_PLAYTIME_PER_PLAYER_AVERAGE</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_PLAYERS_ONLINE_AVERAGE" class="member-name-link">DATA_SERVER_PLAYERS_ONLINE_AVERAGE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DATA_SERVER_RAM_AVERAGE" class="member-name-link">DATA_SERVER_RAM_AVERAGE</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DATA_SERVER_PLAYERS_ONLINE_CURRENT" class="member-name-link">DATA_SERVER_PLAYERS_ONLINE_CURRENT</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_REGULAR_PLAYERS" class="member-name-link">DATA_SERVER_REGULAR_PLAYERS</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_PLAYERS_ONLINE_PEAK" class="member-name-link">DATA_SERVER_PLAYERS_ONLINE_PEAK</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DATA_SERVER_SERVER_OCCUPIED" class="member-name-link">DATA_SERVER_SERVER_OCCUPIED</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DATA_SERVER_PLAYTIME" class="member-name-link">DATA_SERVER_PLAYTIME</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_SERVER_PIE" class="member-name-link">DATA_SERVER_SERVER_PIE</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_PLAYTIME_PER_DAY_AVERAGE" class="member-name-link">DATA_SERVER_PLAYTIME_PER_DAY_AVERAGE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DATA_SERVER_SESSION_COUNT" class="member-name-link">DATA_SERVER_SESSION_COUNT</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DATA_SERVER_PLAYTIME_PER_PLAYER_AVERAGE" class="member-name-link">DATA_SERVER_PLAYTIME_PER_PLAYER_AVERAGE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_SESSION_LENGTH_AVERAGE" class="member-name-link">DATA_SERVER_SESSION_LENGTH_AVERAGE</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_RAM_AVERAGE" class="member-name-link">DATA_SERVER_RAM_AVERAGE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DATA_SERVER_TPS_AVERAGE" class="member-name-link">DATA_SERVER_TPS_AVERAGE</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DATA_SERVER_REGULAR_PLAYERS" class="member-name-link">DATA_SERVER_REGULAR_PLAYERS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_TPS_LOW_SPIKES" class="member-name-link">DATA_SERVER_TPS_LOW_SPIKES</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_SERVER_OCCUPIED" class="member-name-link">DATA_SERVER_SERVER_OCCUPIED</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DATA_SERVER_UNIQUE_PLAYERS_AVERAGE" class="member-name-link">DATA_SERVER_UNIQUE_PLAYERS_AVERAGE</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DATA_SERVER_SERVER_PIE" class="member-name-link">DATA_SERVER_SERVER_PIE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_UNIQUE_PLAYERS_COUNT" class="member-name-link">DATA_SERVER_UNIQUE_PLAYERS_COUNT</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_SESSION_COUNT" class="member-name-link">DATA_SERVER_SESSION_COUNT</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#DATA_SERVER_SESSION_LENGTH_AVERAGE" class="member-name-link">DATA_SERVER_SESSION_LENGTH_AVERAGE</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_TPS_AVERAGE" class="member-name-link">DATA_SERVER_TPS_AVERAGE</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#DATA_SERVER_TPS_LOW_SPIKES" class="member-name-link">DATA_SERVER_TPS_LOW_SPIKES</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_UNIQUE_PLAYERS_AVERAGE" class="member-name-link">DATA_SERVER_UNIQUE_PLAYERS_AVERAGE</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#DATA_SERVER_UNIQUE_PLAYERS_COUNT" class="member-name-link">DATA_SERVER_UNIQUE_PLAYERS_COUNT</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#DATA_SERVER_UPTIME" class="member-name-link">DATA_SERVER_UPTIME</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code><a href="#DATA_SERVER_UPTIME_CURRENT" class="member-name-link">DATA_SERVER_UPTIME_CURRENT</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
@@ -1799,6 +1853,22 @@ the order they are declared.</div>
 </section>
 </li>
 <li>
+<section class="detail" id="DATA_SERVER_UPTIME">
+<h3>DATA_SERVER_UPTIME</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_SERVER_UPTIME</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_NETWORK_UPTIME">
+<h3>DATA_NETWORK_UPTIME</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_NETWORK_UPTIME</span></div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="DATA_SERVER_DOWNTIME">
 <h3>DATA_SERVER_DOWNTIME</h3>
 <div class="horizontal-scroll">
@@ -1895,6 +1965,22 @@ the order they are declared.</div>
 </section>
 </li>
 <li>
+<section class="detail" id="DATA_SERVER_DISK_MAX">
+<h3>DATA_SERVER_DISK_MAX</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_SERVER_DISK_MAX</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_SERVER_DISK_MIN">
+<h3>DATA_SERVER_DISK_MIN</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_SERVER_DISK_MIN</span></div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="DATA_SERVER_TPS_LOW_SPIKES">
 <h3>DATA_SERVER_TPS_LOW_SPIKES</h3>
 <div class="horizontal-scroll">
@@ -1927,6 +2013,38 @@ the order they are declared.</div>
 </section>
 </li>
 <li>
+<section class="detail" id="DATA_SERVER_MSPT_AVERAGE_LOW_TPS">
+<h3>DATA_SERVER_MSPT_AVERAGE_LOW_TPS</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_SERVER_MSPT_AVERAGE_LOW_TPS</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_NETWORK_MSPT_AVERAGE_LOW_TPS">
+<h3>DATA_NETWORK_MSPT_AVERAGE_LOW_TPS</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_NETWORK_MSPT_AVERAGE_LOW_TPS</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_SERVER_MSPT_MAX_95TH_LOW_TPS">
+<h3>DATA_SERVER_MSPT_MAX_95TH_LOW_TPS</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_SERVER_MSPT_MAX_95TH_LOW_TPS</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_NETWORK_MSPT_MAX_95TH_LOW_TPS">
+<h3>DATA_NETWORK_MSPT_MAX_95TH_LOW_TPS</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_NETWORK_MSPT_MAX_95TH_LOW_TPS</span></div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="DATA_SERVER_CPU_AVERAGE">
 <h3>DATA_SERVER_CPU_AVERAGE</h3>
 <div class="horizontal-scroll">
@@ -1955,6 +2073,86 @@ the order they are declared.</div>
 <h3>DATA_SERVER_CHUNKS_AVERAGE</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_SERVER_CHUNKS_AVERAGE</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_SERVER_MSPT_IMPACT_PER_PLAYER">
+<h3>DATA_SERVER_MSPT_IMPACT_PER_PLAYER</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_SERVER_MSPT_IMPACT_PER_PLAYER</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_NETWORK_MSPT_IMPACT_PER_PLAYER">
+<h3>DATA_NETWORK_MSPT_IMPACT_PER_PLAYER</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_NETWORK_MSPT_IMPACT_PER_PLAYER</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_SERVER_CPU_IMPACT_PER_PLAYER">
+<h3>DATA_SERVER_CPU_IMPACT_PER_PLAYER</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_SERVER_CPU_IMPACT_PER_PLAYER</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_NETWORK_CPU_IMPACT_PER_PLAYER">
+<h3>DATA_NETWORK_CPU_IMPACT_PER_PLAYER</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_NETWORK_CPU_IMPACT_PER_PLAYER</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_SERVER_CHUNKS_PER_PLAYER">
+<h3>DATA_SERVER_CHUNKS_PER_PLAYER</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_SERVER_CHUNKS_PER_PLAYER</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_NETWORK_CHUNKS_PER_PLAYER">
+<h3>DATA_NETWORK_CHUNKS_PER_PLAYER</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_NETWORK_CHUNKS_PER_PLAYER</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_SERVER_ENTITIES_PER_CHUNK">
+<h3>DATA_SERVER_ENTITIES_PER_CHUNK</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_SERVER_ENTITIES_PER_CHUNK</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_NETWORK_ENTITIES_PER_CHUNK">
+<h3>DATA_NETWORK_ENTITIES_PER_CHUNK</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_NETWORK_ENTITIES_PER_CHUNK</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_SERVER_MSPT_IMPACT_PER_CHUNK">
+<h3>DATA_SERVER_MSPT_IMPACT_PER_CHUNK</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_SERVER_MSPT_IMPACT_PER_CHUNK</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="DATA_NETWORK_MSPT_IMPACT_PER_CHUNK">
+<h3>DATA_NETWORK_MSPT_IMPACT_PER_CHUNK</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">DATA_NETWORK_MSPT_IMPACT_PER_CHUNK</span></div>
 </div>
 </section>
 </li>
