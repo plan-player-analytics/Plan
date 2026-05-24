@@ -11,8 +11,7 @@ import {
     faSortAlphaUp,
     faSortNumericDown,
     faSortNumericUp,
-    faUser,
-    faUsers
+    faUser
 } from "@fortawesome/free-solid-svg-icons";
 import {useTheme} from "../../hooks/themeHook.tsx";
 import {useTranslation} from "react-i18next";
@@ -201,8 +200,7 @@ const ServersTable = ({servers, onSelect, sortBy, sortReversed}) => {
                 <tr>
                     <th><Fa icon={faServer}/> {t('html.label.server')}</th>
                     <th><Fa icon={faLineChart}/> {t('html.label.serverAnalysis')}</th>
-                    <th><Fa
-                        icon={faUsers}/> {t(sortedBy.data ? sortedBy.label : ServerSortOption.REGISTERED_PLAYERS.label)}
+                    <th>{t(sortedBy.data ? sortedBy.label : ServerSortOption.REGISTERED_PLAYERS.label)}
                     </th>
                     <th><Fa icon={faUser}/> {t('html.label.playersOnline')}</th>
                     <th></th>
