@@ -89,6 +89,7 @@ class AccessControlTest {
                 Arguments.of("/server/" + TestConstants.SERVER_UUID_STRING + "", WebPermission.ACCESS_SERVER, 200, 403),
                 Arguments.of("/v1/serverOverview?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_OVERVIEW_NUMBERS, 200, 403),
                 Arguments.of("/v1/onlineOverview?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_OVERVIEW, 200, 403),
+                Arguments.of("/v1/onlineInsights?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_OVERVIEW, 200, 403),
                 Arguments.of("/v1/sessionsOverview?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_SESSIONS, 200, 403),
                 Arguments.of("/v1/playerVersus?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_PLAYER_VERSUS, 200, 403),
                 Arguments.of("/v1/playerbaseOverview?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_PLAYERBASE_OVERVIEW, 200, 403),
