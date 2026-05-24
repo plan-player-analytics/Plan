@@ -98,8 +98,12 @@ public class RandomData {
     }
 
     public static List<TPS> randomDateOrderedTPS(long minimumDay) {
+        return dateOrderedTPS(randomLong(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(minimumDay), System.currentTimeMillis()));
+    }
+
+    public static List<TPS> dateOrderedTPS(long from) {
         List<TPS> test = new ArrayList<>();
-        long previousTimestamp = randomLong(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(minimumDay), System.currentTimeMillis());
+        long previousTimestamp = from;
         int previousPlayers = randomInt(0, 100);
         for (int i = 0; i < randomInt(50, 100); i++) {
             int randInt = Math.abs(r.nextInt());

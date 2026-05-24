@@ -44,6 +44,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -133,11 +134,11 @@ public class ExportTestUtilities {
     }
 
     static void saveServerData(Database database, ServerUUID serverUUID) {
-        RandomData.randomDateOrderedTPS(1).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
-        RandomData.randomDateOrderedTPS(8).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
-        RandomData.randomDateOrderedTPS(15).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
-        RandomData.randomDateOrderedTPS(22).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
-        RandomData.randomDateOrderedTPS(29).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
+        RandomData.dateOrderedTPS(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(1)).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
+        RandomData.dateOrderedTPS(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(8)).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
+        RandomData.dateOrderedTPS(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(15)).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
+        RandomData.dateOrderedTPS(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(22)).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
+        RandomData.dateOrderedTPS(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(29)).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
     }
 
     public static List<String> getEndpointsToTest(ServerUUID serverUUID) {
