@@ -404,12 +404,10 @@ public class DatabaseCommands {
 
             queryService.playerRemoved(playerToRemove);
             database.executeTransaction(new RemovePlayerTransaction(playerToRemove))
-                    .get(); // Wait for completion
+                    .join();
 
             sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS));
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        } catch (DBOpException | ExecutionException e) {
+        } catch (DBOpException e) {
             sender.send(locale.getString(CommandLang.PROGRESS_FAIL, e.getMessage()));
             errorLogger.error(e, ErrorContext.builder().related(sender, database.getType().getName(), playerToRemove).build());
         }
@@ -433,9 +431,19 @@ public class DatabaseCommands {
             throw new IllegalArgumentException(locale.getString(CommandLang.UNINSTALLING_SAME_SERVER));
         }
 
-        dbSystem.getDatabase().executeTransaction(new SetServerAsUninstalledTransaction(server.getUuid()));
-        sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS));
-        sender.send(locale.getString(CommandLang.DB_UNINSTALLED));
+        processing.submitNonCritical(() -> {
+            try {
+                sender.send(locale.getString(CommandLang.PROGRESS_START));
+                dbSystem.getDatabase().executeTransaction(new SetServerAsUninstalledTransaction(server.getUuid()))
+                        .join();
+                sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS));
+                sender.send(locale.getString(CommandLang.DB_UNINSTALLED));
+            } catch (DBOpException e) {
+                sender.send(locale.getString(CommandLang.PROGRESS_FAIL, e.getMessage()));
+                errorLogger.error(e, ErrorContext.builder()
+                        .related(sender, dbSystem.getDatabase().getType().getName()).build());
+            }
+        });
     }
 
     public void onHotswap(CMDSender sender, @Untrusted Arguments arguments) {
