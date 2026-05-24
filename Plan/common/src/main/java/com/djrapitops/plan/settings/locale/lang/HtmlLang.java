@@ -142,6 +142,7 @@ public enum HtmlLang implements Lang {
     TITLE_JOIN_ADDRESSES("html.label.joinAddresses", "Join Addresses"),
     TITLE_LATEST_JOIN_ADDRESSES("html.label.latestJoinAddresses", "Latest Join Addresses"),
     LABEL_SELECT_SOME_ADDRESSES("html.label.selectSomeAddresses", "Select some addresses"),
+    LABEL_SELECT_SOME_SERVER("html.label.selectSomeServer", "Select some server(s)"),
     COMPARING_60_DAYS("html.text.comparing30daysAgo", "Comparing 30d ago to Now"),
     TITLE_30_DAYS_AGO("html.label.thirtyDaysAgo", "30 days ago"),
     TITLE_NOW("html.label.now", "Now"),

@@ -36,8 +36,10 @@ const NetworkPerformance = () => {
             const indexOfProxy = options
                 .findIndex(option => option.serverName === networkMetadata.currentServer.serverName);
 
-            setSelectedOptions([indexOfProxy]);
-            setVisualizedServers([indexOfProxy]);
+            if (indexOfProxy >= 0) {
+                setSelectedOptions([indexOfProxy]);
+                setVisualizedServers([indexOfProxy]);
+            }
         }
     }, [networkMetadata, setVisualizedServers]);
 
@@ -92,12 +94,23 @@ const NetworkPerformance = () => {
             {seePerformance && <section className={"network-performance"}>
                 <ExtendableRow id={'row-network-performance-0'}>
                     <Col>
-                        <PerformanceGraphsCard data={performanceData}/>
+                        {!!performanceData.servers?.length && <PerformanceGraphsCard data={performanceData}/>}
+                        {!performanceData.servers?.length && <Card>
+                            <Card.Body>
+                                <p>{t('html.label.selectSomeServer')}</p>
+                            </Card.Body>
+                        </Card>}
                     </Col>
                 </ExtendableRow>
                 <ExtendableRow id={'row-network-performance-1'}>
                     <Col md={10}>
-                        <PerformanceAsNumbersCard servers={performanceData.servers || []}/>
+                        {!!performanceData.servers?.length &&
+                            <PerformanceAsNumbersCard servers={performanceData.servers || []}/>}
+                        {!performanceData.servers?.length && <Card>
+                            <Card.Body>
+                                <p>{t('html.label.selectSomeServer')}</p>
+                            </Card.Body>
+                        </Card>}
                     </Col>
                     <Col md={2}>
                         <Card>

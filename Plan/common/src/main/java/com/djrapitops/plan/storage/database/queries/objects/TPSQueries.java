@@ -563,14 +563,12 @@ public class TPSQueries {
     }
 
     public static Query<Double> averageCPU(long after, long before, List<ServerUUID> serverUUIDs) {
-        if (serverUUIDs.isEmpty()) {
-            return db -> -1.0;
-        }
-
         String sql = SELECT + "AVG(" + CPU_USAGE + ") as average" + FROM + TABLE_NAME + " t" +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
-                WHERE + "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
-                AND + CPU_USAGE + ">=0" +
+                WHERE + (serverUUIDs.isEmpty()
+                ? ""
+                : "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
+                  AND) + CPU_USAGE + ">=0" +
                 AND + DATE + "<?" +
                 AND + DATE + ">?";
         return new QueryStatement<>(sql) {

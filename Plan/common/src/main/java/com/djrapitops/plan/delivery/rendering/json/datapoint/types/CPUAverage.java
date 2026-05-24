@@ -46,17 +46,13 @@ public class CPUAverage implements Datapoint<Double> {
 
     @Override
     public SupportedFilters[] getSupportedFilters() {
-        return SupportedFilters.onlyServer();
+        return SupportedFilters.noPlayer();
     }
 
     @Override
     public Optional<Double> getValue(GenericFilter filter) {
         if (filter.getPlayerUUID().isPresent()) {
             throw new BadRequestException("CPU_AVERAGE does not support player parameter");
-        }
-
-        if (filter.getServerUUIDs().isEmpty()) {
-            throw new BadRequestException("CPU_AVERAGE is only available for servers");
         }
 
         double average = dbSystem.getDatabase().query(TPSQueries.averageCPU(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
