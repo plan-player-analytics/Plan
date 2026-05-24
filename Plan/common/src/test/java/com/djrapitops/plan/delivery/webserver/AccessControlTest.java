@@ -263,7 +263,7 @@ class AccessControlTest {
                 Arguments.of("/v1/datapoint?type=TPS_LOW_SPIKES", WebPermission.DATA_NETWORK_TPS_LOW_SPIKES, 200, 403),
                 Arguments.of("/v1/datapoint?type=TPS_LOW_SPIKES&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_TPS_LOW_SPIKES, 200, 403),
                 Arguments.of("/v1/datapoint?type=TPS_LOW_SPIKES&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
-                Arguments.of("/v1/datapoint?type=CPU_AVERAGE", WebPermission.DATA_NETWORK, 400, 403),
+                Arguments.of("/v1/datapoint?type=CPU_AVERAGE", WebPermission.DATA_NETWORK, 200, 403),
                 Arguments.of("/v1/datapoint?type=CPU_AVERAGE&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_CPU_AVERAGE, 200, 403),
                 Arguments.of("/v1/datapoint?type=CPU_IMPACT_PER_PLAYER", WebPermission.DATA_NETWORK_CPU_IMPACT_PER_PLAYER, 200, 403),
                 Arguments.of("/v1/datapoint?type=CPU_IMPACT_PER_PLAYER&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_CPU_IMPACT_PER_PLAYER, 200, 403),
