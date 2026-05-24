@@ -379,7 +379,23 @@ public class ResponseFactory {
     }
 
     public Response redirectResponse(String location) {
-        return Response.builder().redirectTo(location).build();
+        String redirectTo = addresses.get().getMainAddress().map(address -> {
+                    if (location.startsWith("/")) {
+                        if (address.endsWith("/")) {
+                            return address + location.substring(1);
+                        } else {
+                            return address + location;
+                        }
+                    } else {
+                        if (address.endsWith("/")) {
+                            return address + location;
+                        } else {
+                            return address + "/" + location;
+                        }
+                    }
+                })
+                .orElse(location);
+        return Response.builder().redirectTo(redirectTo).build();
     }
 
     public Response faviconResponse() {
