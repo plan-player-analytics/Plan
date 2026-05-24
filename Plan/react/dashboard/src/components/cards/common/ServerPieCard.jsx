@@ -1,5 +1,5 @@
 import {Card} from "react-bootstrap";
-import React from "react";
+import React, {useMemo} from "react";
 import {CardLoader} from "../../navigation/Loader.tsx";
 import ServerPie from "../../graphs/ServerPie";
 import {faNetworkWired} from "@fortawesome/free-solid-svg-icons";
@@ -10,9 +10,17 @@ import {nameToCssVariable} from "../../../util/colors.js";
 import {useServerPie} from "../../../dataHooks/graphHooks.ts";
 import {useGenericFilter} from "../../../dataHooks/genericFilterContextHook.tsx";
 import {TitleWithDates} from "../../text/TitleWithDates.tsx";
+import {MS_MONTH} from "../../../util/format/useDateFormatter.js";
 
 const ServerPieCard = () => {
-    const filter = useGenericFilter();
+    const {after, before, server} = useGenericFilter();
+    const filter = useMemo(() => ({
+        after,
+        afterMillisAgo: after ? undefined : MS_MONTH,
+        before,
+        server
+    }), [after, before, server]);
+
     const {data, error} = useServerPie(filter);
     const {usedUseCases} = useThemeStorage()
 

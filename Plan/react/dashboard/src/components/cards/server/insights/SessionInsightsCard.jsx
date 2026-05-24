@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useMemo} from "react";
 import InsightsFor30DaysCard from "../../common/InsightsFor30DaysCard";
 import {useTranslation} from "react-i18next";
 import {faGamepad, faUsers} from "@fortawesome/free-solid-svg-icons";
@@ -13,11 +13,12 @@ const SessionInsightsCard = ({identifier}) => {
     const {t} = useTranslation();
     const {after, before, server} = useGenericFilter();
 
-    const filter = {
-        after: after || Date.now() - MS_MONTH,
+    const filter = useMemo(() => ({
+        after,
+        afterMillisAgo: after ? undefined : MS_MONTH,
         before,
         server
-    };
+    }), [after, before, server]);
 
     const title = <TitleWithDates label={'html.label.insights'} fallback={'html.label.insights30days'} after={after}
                                   before={before}/>;

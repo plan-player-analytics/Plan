@@ -110,7 +110,8 @@ public class NetworkPageExporter extends FileExporter {
      * @throws NotFoundException If a file or resource that is being exported can not be found
      */
     public void exportJSON(Path toDirectory, ServerUUID serverUUID) throws IOException {
-        long monthAgo = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(30);
+        long month = TimeUnit.DAYS.toMillis(30);
+        long monthAgo = System.currentTimeMillis() - month;
         String datapointType = "datapoint?type=";
         String after = "&after=" + monthAgo;
         String afterMillis = "&afterMillisAgo=";
@@ -135,17 +136,20 @@ public class NetworkPageExporter extends FileExporter {
                 "playersTable",
                 datapointType + DatapointType.PLAYTIME,
                 datapointType + DatapointType.PLAYTIME + after,
+                datapointType + DatapointType.PLAYTIME + afterMillis + month,
                 datapointType + DatapointType.AFK_TIME + after,
+                datapointType + DatapointType.AFK_TIME + afterMillis + month,
                 datapointType + DatapointType.AFK_TIME_PERCENTAGE + after,
-                datapointType + DatapointType.SERVER_OCCUPIED + after,
-                datapointType + DatapointType.MOST_ACTIVE_GAME_MODE + after,
+                datapointType + DatapointType.AFK_TIME_PERCENTAGE + afterMillis + month,
+                datapointType + DatapointType.SERVER_OCCUPIED + afterMillis + month,
+                datapointType + DatapointType.MOST_ACTIVE_GAME_MODE + afterMillis + month,
                 datapointType + DatapointType.WORLD_PIE + after,
-                datapointType + DatapointType.SERVER_PIE,
-                datapointType + DatapointType.UNIQUE_PLAYERS_COUNT + afterMillis + TimeUnit.DAYS.toMillis(30),
+                datapointType + DatapointType.SERVER_PIE + afterMillis + month,
+                datapointType + DatapointType.UNIQUE_PLAYERS_COUNT + afterMillis + month,
                 datapointType + DatapointType.UNIQUE_PLAYERS_COUNT + afterMillis + TimeUnit.DAYS.toMillis(7),
                 datapointType + DatapointType.UNIQUE_PLAYERS_COUNT + afterMillis + TimeUnit.DAYS.toMillis(1),
                 datapointType + DatapointType.NEW_PLAYERS,
-                datapointType + DatapointType.NEW_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(30),
+                datapointType + DatapointType.NEW_PLAYERS + afterMillis + month,
                 datapointType + DatapointType.NEW_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(7),
                 datapointType + DatapointType.NEW_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(1),
                 datapointType + DatapointType.REGULAR_PLAYERS,
