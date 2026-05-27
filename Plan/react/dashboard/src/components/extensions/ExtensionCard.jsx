@@ -78,11 +78,11 @@ export const ExtensionValueTableCell = ({data}) => {
     } else if (data.type === 'COMPONENT') {
         return (<MinecraftChat component={sanitizeComponent(JSON.parse(data.value))}/>)
     } else if (data.type === 'TIME_MILLISECONDS') {
-        return <FormattedTime timeMs={value}/>;
+        return <FormattedTime timeMs={data.value}/>;
     } else if (data.type === 'DATE_YEAR') {
-        return <FormattedDate date={value}/>;
+        return <FormattedDate date={data.value}/>;
     } else if (data.type === 'DATE_SECOND') {
-        return <FormattedDate date={value} includeSeconds/>;
+        return <FormattedDate date={data.value} includeSeconds/>;
     } else {
         return (<span title={title}>{data.value}</span>);
     }
