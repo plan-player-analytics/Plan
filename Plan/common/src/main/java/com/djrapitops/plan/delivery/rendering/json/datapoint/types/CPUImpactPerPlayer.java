@@ -77,6 +77,6 @@ public class CPUImpactPerPlayer implements Datapoint<Double> {
 
     @Override
     public FormatType getFormatType() {
-        return FormatType.DECIMAL;
+        return FormatType.PERCENTAGE;
     }
 }

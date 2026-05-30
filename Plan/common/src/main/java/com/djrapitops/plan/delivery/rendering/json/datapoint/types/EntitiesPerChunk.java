@@ -35,7 +35,7 @@ import java.util.Optional;
  * @author AuroraLS3
  */
 @Singleton
-public class EntitiesPerChunk implements Datapoint<Long> {
+public class EntitiesPerChunk implements Datapoint<Double> {
 
     private final DBSystem dbSystem;
 
@@ -50,13 +50,13 @@ public class EntitiesPerChunk implements Datapoint<Long> {
     }
 
     @Override
-    public Optional<Long> getValue(GenericFilter filter) {
+    public Optional<Double> getValue(GenericFilter filter) {
         if (filter.getPlayerUUID().isPresent()) {
             throw new BadRequestException("ENTITIES_PER_CHUNK does not support player parameter");
         }
 
-        long average = dbSystem.getDatabase().query(TPSQueries.averageEntitiesPerChunk(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
-        return average != -1L ? Optional.of(average) : Optional.empty();
+        double average = dbSystem.getDatabase().query(TPSQueries.averageEntitiesPerChunk(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
+        return average != -1.0 ? Optional.of(average) : Optional.empty();
     }
 
     @Override
@@ -77,6 +77,6 @@ public class EntitiesPerChunk implements Datapoint<Long> {
 
     @Override
     public FormatType getFormatType() {
-        return FormatType.NONE;
+        return FormatType.DECIMAL;
     }
 }

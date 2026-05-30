@@ -726,8 +726,8 @@ public class TPSQueries {
         };
     }
 
-    public static Query<Long> averageEntitiesPerChunk(long after, long before, List<ServerUUID> serverUUIDs) {
-        String sql = SELECT + "AVG(" + ENTITIES + "/" + CHUNKS + ") as average" + FROM + TABLE_NAME + " t" +
+    public static Query<Double> averageEntitiesPerChunk(long after, long before, List<ServerUUID> serverUUIDs) {
+        String sql = SELECT + "AVG(" + ENTITIES + "*1.0/" + CHUNKS + ") as average" + FROM + TABLE_NAME + " t" +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
                 WHERE + (serverUUIDs.isEmpty()
                 ? ""
@@ -744,9 +744,9 @@ public class TPSQueries {
             }
 
             @Override
-            public Long processResults(ResultSet set) throws SQLException {
+            public Double processResults(ResultSet set) throws SQLException {
                 double value = set.next() ? set.getDouble("average") : -1.0;
-                return set.wasNull() ? -1L : (long) value;
+                return set.wasNull() ? -1L : value;
             }
         };
     }
