@@ -8,15 +8,17 @@ import {QueryDatapoint, QueryDatapointValue} from "../../../datapoint/QueryDatap
 import {DatapointType} from "../../../../dataHooks/model/datapoint/Datapoint.ts";
 import {TitleWithDates} from "../../../text/TitleWithDates.tsx";
 import {MS_MONTH} from "../../../../util/format/useDateFormatter.js";
+import {useDateConverter} from "../../../../util/format/useDateConverter.ts";
 
 const SessionInsightsCard = ({identifier}) => {
     const {t} = useTranslation();
     const {after, before, server} = useGenericFilter();
+    const {convert} = useDateConverter();
 
     const filter = useMemo(() => ({
-        after,
+        after: after ? convert(after).toServerEpochMs() : undefined,
+        before: before ? convert(before).toServerEpochMs() : undefined,
         afterMillisAgo: after ? undefined : MS_MONTH,
-        before,
         server
     }), [after, before, server]);
 

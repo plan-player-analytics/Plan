@@ -339,8 +339,8 @@ public class SessionQueries {
             String sql = SELECT + "COUNT(1) as count" +
                     FROM + SessionsTable.TABLE_NAME +
                     WHERE + (!serverUUIDs.isEmpty() ? SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
-                                                      AND : "") + SessionsTable.SESSION_END + ">=?" +
-                    AND + SessionsTable.SESSION_START + "<=?";
+                                                      AND : "") + SessionsTable.SESSION_START + ">=?" +
+                    AND + SessionsTable.SESSION_START + "<?";
             return db.query(new QueryStatement<>(sql) {
                 @Override
                 public void prepare(PreparedStatement statement) throws SQLException {
@@ -361,8 +361,8 @@ public class SessionQueries {
             String sql = SELECT + "COUNT(1) as count" +
                     FROM + SessionsTable.TABLE_NAME +
                     WHERE + (!serverUUIDs.isEmpty() ? SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
-                                                      AND : "") + SessionsTable.SESSION_END + ">=?" +
-                    AND + SessionsTable.SESSION_START + "<=?" +
+                                                      AND : "") + SessionsTable.SESSION_START + ">=?" +
+                    AND + SessionsTable.SESSION_START + "<?" +
                     AND + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID;
             return db.query(new QueryStatement<>(sql) {
                 @Override
@@ -397,7 +397,7 @@ public class SessionQueries {
                     "*1000 as date," +
                     "COUNT(1) as session_count" +
                     FROM + SessionsTable.TABLE_NAME +
-                    WHERE + SessionsTable.SESSION_END + "<=?" +
+                    WHERE + SessionsTable.SESSION_START + "<?" +
                     AND + SessionsTable.SESSION_START + ">=?" +
                     AND + SessionsTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
                     GROUP_BY + "date";
@@ -439,7 +439,7 @@ public class SessionQueries {
                     "*1000 as date," +
                     "COUNT(1) as session_count" +
                     FROM + SessionsTable.TABLE_NAME +
-                    WHERE + SessionsTable.SESSION_END + "<=?" +
+                    WHERE + SessionsTable.SESSION_START + "<?" +
                     AND + SessionsTable.SESSION_START + ">=?" +
                     GROUP_BY + "date";
 
@@ -1148,7 +1148,7 @@ public class SessionQueries {
                     activePlaytimeColumn(db.getSql(), after, before) + ',' +
                     "COUNT(1) as session_count" +
                     FROM + SessionsTable.TABLE_NAME +
-                    WHERE + SessionsTable.SESSION_END + ">?" +
+                    WHERE + SessionsTable.SESSION_START + ">=?" +
                     AND + SessionsTable.SESSION_START + "<?" +
                     AND + SessionsTable.USER_ID + uuidsInSet +
                     (serverUUIDs.isEmpty() ? "" : AND + SessionsTable.SERVER_ID + " IN (" + selectServerIds + ")");
@@ -1280,8 +1280,8 @@ public class SessionQueries {
     public static Query<List<FinishedSession>> sessionsOfPlayer(UUID playerUUID, long after, long before, List<ServerUUID> serverUUIDs) {
         String sql = SELECT_SESSIONS_STATEMENT +
                 WHERE + "s." + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
-                AND + SessionsTable.SESSION_END + ">?" +
-                AND + SessionsTable.SESSION_START + "<?";
+                AND + SessionsTable.SESSION_START + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?";
         if (!serverUUIDs.isEmpty()) {
             sql += AND + "s." + SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs);
         }
@@ -1304,8 +1304,8 @@ public class SessionQueries {
 
     public static Query<List<FinishedSession>> sessionsOfServers(long after, long before, List<ServerUUID> serverUUIDs) {
         String sql = SELECT_SESSIONS_STATEMENT +
-                INNER_JOIN + "(" + SELECT + SessionsTable.ID + FROM + SessionsTable.TABLE_NAME + WHERE + SessionsTable.SESSION_END + ">?" +
-                AND + SessionsTable.SESSION_START + "<?";
+                INNER_JOIN + "(" + SELECT + SessionsTable.ID + FROM + SessionsTable.TABLE_NAME + WHERE + SessionsTable.SESSION_START + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?";
         if (!serverUUIDs.isEmpty()) {
             sql += AND + SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs);
         }
