@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.rendering.json.datapoint.types;
 
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance.*;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.types.playtime.*;
 import dagger.Binds;
 import dagger.Module;
 import dagger.multibindings.IntoSet;

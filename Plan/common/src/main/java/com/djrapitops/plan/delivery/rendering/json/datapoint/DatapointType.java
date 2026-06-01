@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.rendering.json.datapoint;
 
 import com.djrapitops.plan.delivery.rendering.json.datapoint.types.*;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance.*;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.types.playtime.*;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 
 import java.util.Arrays;

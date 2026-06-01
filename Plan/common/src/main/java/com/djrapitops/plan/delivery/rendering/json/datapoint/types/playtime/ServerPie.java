@@ -14,31 +14,37 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.rendering.json.datapoint.types;
+package com.djrapitops.plan.delivery.rendering.json.datapoint.types.playtime;
 
-import com.djrapitops.plan.delivery.domain.OutOfCategory;
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
-import com.djrapitops.plan.gathering.domain.WorldTimes;
+import com.djrapitops.plan.delivery.rendering.json.graphs.pie.PieGraphFactory;
+import com.djrapitops.plan.delivery.rendering.json.graphs.pie.PieSlice;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /**
+ * Data point implementation for the Server Pie Graph.
+ *
  * @author AuroraLS3
  */
 @Singleton
-public class MostActiveWorld implements Datapoint<OutOfCategory> {
+public class ServerPie implements Datapoint<ServerPie.Content> {
 
-    private final WorldTimesForFilter worldTimesForFilter;
+    private final ServerPlaytimeForFilter serverPlaytimeForFilter;
+    private final PieGraphFactory pieGraphFactory;
 
     @Inject
-    public MostActiveWorld(WorldTimesForFilter worldTimesForFilter) {
-        this.worldTimesForFilter = worldTimesForFilter;
+    public ServerPie(ServerPlaytimeForFilter serverPlaytimeForFilter, PieGraphFactory pieGraphFactory) {
+        this.serverPlaytimeForFilter = serverPlaytimeForFilter;
+        this.pieGraphFactory = pieGraphFactory;
     }
 
     @Override
@@ -46,30 +52,40 @@ public class MostActiveWorld implements Datapoint<OutOfCategory> {
         return SupportedFilters.all();
     }
 
-    @Override
-    public FormatType getFormatType() {
-        return FormatType.SPECIAL;
-    }
 
     @Override
-    public DatapointType getType() {
-        return DatapointType.MOST_ACTIVE_WORLD;
+    public Optional<Content> getValue(GenericFilter filter) {
+        Map<String, Long> playtimeByServerName = serverPlaytimeForFilter.getPlaytimePerServer(filter);
+        return Optional.of(new Content(pieGraphFactory.serverPreferencePie(playtimeByServerName).getSlices()));
     }
 
     @Override
     public WebPermission getPermission(GenericFilter filter) {
         if (filter.getPlayerUUID().isPresent()) {
-            return WebPermission.DATA_PLAYER_MOST_ACTIVE_WORLD;
+            return WebPermission.DATA_PLAYER_SERVER_PIE;
         }
         if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.DATA_SERVER_MOST_ACTIVE_WORLD;
+            return WebPermission.DATA_SERVER_SERVER_PIE;
         }
-        return WebPermission.DATA_NETWORK_MOST_ACTIVE_WORLD;
+        return WebPermission.DATA_NETWORK_SERVER_PIE;
     }
 
     @Override
-    public Optional<OutOfCategory> getValue(GenericFilter filter) {
-        WorldTimes worldTimes = worldTimesForFilter.getWorldTimes(filter);
-        return Optional.of(new OutOfCategory(worldTimes.computeWorldTimes(), worldTimes.getTotal()));
+    public DatapointType getType() {
+        return DatapointType.SERVER_PIE;
     }
+
+    @SuppressWarnings("unused")
+    public static class Content {
+        private final List<PieSlice> slices;
+
+        public Content(List<PieSlice> slices) {
+            this.slices = slices;
+        }
+
+        public List<PieSlice> getSlices() {
+            return slices;
+        }
+    }
+
 }
