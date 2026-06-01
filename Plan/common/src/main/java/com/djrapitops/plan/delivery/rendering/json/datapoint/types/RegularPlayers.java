@@ -22,7 +22,6 @@ import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
-import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
@@ -73,10 +72,6 @@ public class RegularPlayers implements Datapoint<Integer> {
 
     @Override
     public Optional<Integer> getValue(GenericFilter filter) {
-        if (filter.getPlayerUUID().isPresent()) {
-            throw new BadRequestException("REGULAR_PLAYERS does not support player parameter");
-        }
-
         long before = filter.getBefore();
         long now = System.currentTimeMillis();
         long calculationDate = Math.min(before, now);

@@ -21,7 +21,6 @@ import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
-import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.storage.database.DBSystem;
@@ -58,9 +57,6 @@ public class TPSLowSpikes implements Datapoint<Integer> {
 
     @Override
     public Optional<Integer> getValue(GenericFilter filter) {
-        if (filter.getPlayerUUID().isPresent()) {
-            throw new BadRequestException("TPS_LOW_SPIKES does not support player parameter");
-        }
         return Optional.of(dbSystem.getDatabase().query(TPSQueries.lowTpsSpikes(
                 config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED),
                 filter.getAfter(),

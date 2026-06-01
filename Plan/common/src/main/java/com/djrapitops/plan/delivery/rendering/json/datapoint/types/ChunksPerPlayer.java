@@ -21,7 +21,6 @@ import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
-import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 
@@ -46,15 +45,11 @@ public class ChunksPerPlayer implements Datapoint<Long> {
 
     @Override
     public SupportedFilters[] getSupportedFilters() {
-        return SupportedFilters.onlyServer();
+        return SupportedFilters.noPlayer();
     }
 
     @Override
     public Optional<Long> getValue(GenericFilter filter) {
-        if (filter.getPlayerUUID().isPresent()) {
-            throw new BadRequestException("CHUNKS_PER_PLAYER does not support player parameter");
-        }
-
         long average = dbSystem.getDatabase().query(TPSQueries.averageChunksPerPlayer(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
         return average != -1L ? Optional.of(average) : Optional.empty();
     }

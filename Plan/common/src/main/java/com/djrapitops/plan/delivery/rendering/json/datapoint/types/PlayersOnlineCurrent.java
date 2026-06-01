@@ -21,7 +21,6 @@ import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
-import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.gathering.ServerSensor;
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -62,10 +61,6 @@ public class PlayersOnlineCurrent implements Datapoint<Integer> {
 
     @Override
     public Optional<Integer> getValue(GenericFilter filter) {
-        if (filter.getPlayerUUID().isPresent()) {
-            throw new BadRequestException("PLAYERS_ONLINE does not support player parameter");
-        }
-
         List<ServerUUID> serverUUIDs = filter.getServerUUIDs();
         if (serverUUIDs.isEmpty()) {
             if (serverSensor.usingRedisBungee()) {

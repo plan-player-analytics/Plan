@@ -21,7 +21,6 @@ import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
-import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 
@@ -46,15 +45,11 @@ public class EntitiesPerChunk implements Datapoint<Double> {
 
     @Override
     public SupportedFilters[] getSupportedFilters() {
-        return SupportedFilters.onlyServer();
+        return SupportedFilters.noPlayer();
     }
 
     @Override
     public Optional<Double> getValue(GenericFilter filter) {
-        if (filter.getPlayerUUID().isPresent()) {
-            throw new BadRequestException("ENTITIES_PER_CHUNK does not support player parameter");
-        }
-
         double average = dbSystem.getDatabase().query(TPSQueries.averageEntitiesPerChunk(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
         return average != -1.0 ? Optional.of(average) : Optional.empty();
     }

@@ -21,7 +21,6 @@ import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
-import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
@@ -72,9 +71,6 @@ public class AfkTimePercentage implements Datapoint<Double> {
     @Override
     public Optional<Double> getValue(GenericFilter filter) {
         Database db = dbSystem.getDatabase();
-        if (filter.getPlayerUUID().isPresent()) {
-            throw new BadRequestException("AFK_TIME_PERCENTAGE does not support player parameter");
-        }
         return Optional.of(db.query(SessionQueries.afkTimePercentage(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs())));
     }
 }

@@ -18,13 +18,12 @@ package com.djrapitops.plan.delivery.rendering.json.datapoint;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
+import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import org.jspecify.annotations.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
@@ -48,6 +47,19 @@ public class DatapointStore {
 
     public Optional<DatapointValue> getValue(DatapointType datapointType, GenericFilter filter) {
         return Optional.ofNullable(dataPointsByType.get(datapointType))
+                .map(datapoint -> {
+                    List<SupportedFilters> supportedFilters = Arrays.asList(datapoint.getSupportedFilters());
+                    if (filter.getPlayerUUID().isPresent() && !supportedFilters.contains(SupportedFilters.PLAYER)) {
+                        throw new BadRequestException(datapoint.getType().name() + " does not support player parameter");
+                    } else {
+                        if (!filter.getServerUUIDs().isEmpty() && !supportedFilters.contains(SupportedFilters.SERVER)) {
+                            throw new BadRequestException(datapoint.getType().name() + " does not support server parameter");
+                        } else if (filter.getServerUUIDs().isEmpty() && !supportedFilters.contains(SupportedFilters.NETWORK)) {
+                            throw new BadRequestException(datapoint.getType().name() + " requires server parameter");
+                        }
+                    }
+                    return datapoint;
+                })
                 .flatMap(datapoint ->
                         datapoint.getValue(filter)
                                 .map(value -> new DatapointValue(

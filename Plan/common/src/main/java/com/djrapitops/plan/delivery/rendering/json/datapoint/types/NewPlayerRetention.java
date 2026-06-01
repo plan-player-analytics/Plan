@@ -22,7 +22,6 @@ import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
-import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
@@ -54,10 +53,6 @@ public class NewPlayerRetention implements Datapoint<OutOf> {
 
     @Override
     public Optional<OutOf> getValue(GenericFilter filter) {
-        if (filter.getPlayerUUID().isPresent()) {
-            throw new BadRequestException("NEW_PLAYER_RETENTION does not support player parameter");
-        }
-
         Database db = dbSystem.getDatabase();
         int new7d = db.query(PlayerCountQueries.newPlayerCount(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
         int retained7d = db.query(PlayerCountQueries.retainedPlayerCount(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));

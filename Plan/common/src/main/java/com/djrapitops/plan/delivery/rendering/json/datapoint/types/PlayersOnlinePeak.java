@@ -22,7 +22,6 @@ import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
-import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.gathering.ServerSensor;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
@@ -58,10 +57,6 @@ public class PlayersOnlinePeak implements Datapoint<DateObj<Long>> {
 
     @Override
     public Optional<DateObj<Long>> getValue(GenericFilter filter) {
-        if (filter.getPlayerUUID().isPresent()) {
-            throw new BadRequestException("PLAYERS_ONLINE_PEAK does not support player parameter");
-        }
-
         return Optional.of(getPeak(filter).orElse(new DateObj<>(0L, 0L)));
     }
 
