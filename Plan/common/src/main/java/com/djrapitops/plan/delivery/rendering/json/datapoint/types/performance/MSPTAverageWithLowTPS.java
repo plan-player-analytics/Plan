@@ -14,41 +14,36 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.rendering.json.datapoint.types;
+package com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
-import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.settings.config.PlanConfig;
+import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.Database;
-import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
 import java.util.Optional;
 
 /**
- * Downtime datapoint.
- * <p>
- * Downtime is calculated by checking gaps between TPS data points,
- * if multiple servers are given it is assumed they act as fallback for each other, reducing downtime if one of them is up.
- * <p>
- * Giving no server parameter gives downtime for network, where same fallback rule applies for multi-proxy setups.
+ * Datapoint for looking up Average MSPT within the timeframe when TPS is low.
  *
  * @author AuroraLS3
  */
 @Singleton
-public class Downtime implements Datapoint<Long> {
+public class MSPTAverageWithLowTPS implements Datapoint<Double> {
 
+    private final PlanConfig config;
     private final DBSystem dbSystem;
 
     @Inject
-    public Downtime(DBSystem dbSystem) {
+    public MSPTAverageWithLowTPS(PlanConfig config, DBSystem dbSystem) {
+        this.config = config;
         this.dbSystem = dbSystem;
     }
 
@@ -58,14 +53,11 @@ public class Downtime implements Datapoint<Long> {
     }
 
     @Override
-    public Optional<Long> getValue(GenericFilter filter) {
-        Database db = dbSystem.getDatabase();
-        List<ServerUUID> serverUUIDs = filter.getServerUUIDs();
-        if (filter.getServerUUIDs().isEmpty()) {
-            serverUUIDs = db.query(ServerQueries.fetchProxyServerUUIDs());
-        }
-
-        return Optional.of(db.query(TPSQueries.downtime(filter.getAfter(), filter.getBefore(), serverUUIDs)));
+    public Optional<Double> getValue(GenericFilter filter) {
+        double average = dbSystem.getDatabase().query(TPSQueries.averageMSPTWhenLowTps(
+                filter.getAfter(), filter.getBefore(), filter.getServerUUIDs(),
+                config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED)));
+        return average != -1.0 ? Optional.of(average) : Optional.empty();
     }
 
     @Override
@@ -73,19 +65,19 @@ public class Downtime implements Datapoint<Long> {
         if (filter.getPlayerUUID().isPresent()) {
             return WebPermission.DATA_PLAYER;
         } else if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.DATA_SERVER_DOWNTIME;
+            return WebPermission.DATA_SERVER_MSPT_AVERAGE_LOW_TPS;
         } else {
-            return WebPermission.DATA_NETWORK_DOWNTIME;
+            return WebPermission.DATA_NETWORK_MSPT_AVERAGE_LOW_TPS;
         }
     }
 
     @Override
     public DatapointType getType() {
-        return DatapointType.DOWNTIME;
+        return DatapointType.MSPT_AVERAGE_LOW_TPS;
     }
 
     @Override
     public FormatType getFormatType() {
-        return FormatType.TIME_AMOUNT;
+        return FormatType.MILLIS;
     }
 }

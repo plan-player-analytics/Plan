@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.rendering.json.datapoint.types;
+package com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
@@ -29,29 +29,29 @@ import javax.inject.Singleton;
 import java.util.Optional;
 
 /**
- * Datapoint for looking up Maximum Free Disk within the timeframe.
+ * Datapoint for looking up Average CPU impact per player within the timeframe.
  *
  * @author AuroraLS3
  */
 @Singleton
-public class DiskMax implements Datapoint<Long> {
+public class CPUImpactPerPlayer implements Datapoint<Double> {
 
     private final DBSystem dbSystem;
 
     @Inject
-    public DiskMax(DBSystem dbSystem) {
+    public CPUImpactPerPlayer(DBSystem dbSystem) {
         this.dbSystem = dbSystem;
     }
 
     @Override
     public SupportedFilters[] getSupportedFilters() {
-        return SupportedFilters.onlyServer();
+        return SupportedFilters.noPlayer();
     }
 
     @Override
-    public Optional<Long> getValue(GenericFilter filter) {
-        long max = dbSystem.getDatabase().query(TPSQueries.maxFreeDisk(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
-        return max != -1L ? Optional.of(max) : Optional.empty();
+    public Optional<Double> getValue(GenericFilter filter) {
+        double average = dbSystem.getDatabase().query(TPSQueries.averageCpuPerPlayer(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
+        return average != -1.0 ? Optional.of(average) : Optional.empty();
     }
 
     @Override
@@ -59,19 +59,19 @@ public class DiskMax implements Datapoint<Long> {
         if (filter.getPlayerUUID().isPresent()) {
             return WebPermission.DATA_PLAYER;
         } else if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.DATA_SERVER_DISK_MAX;
+            return WebPermission.DATA_SERVER_CPU_IMPACT_PER_PLAYER;
         } else {
-            return WebPermission.DATA_NETWORK;
+            return WebPermission.DATA_NETWORK_CPU_IMPACT_PER_PLAYER;
         }
     }
 
     @Override
     public DatapointType getType() {
-        return DatapointType.DISK_MAX;
+        return DatapointType.CPU_IMPACT_PER_PLAYER;
     }
 
     @Override
     public FormatType getFormatType() {
-        return FormatType.BYTES;
+        return FormatType.PERCENTAGE;
     }
 }

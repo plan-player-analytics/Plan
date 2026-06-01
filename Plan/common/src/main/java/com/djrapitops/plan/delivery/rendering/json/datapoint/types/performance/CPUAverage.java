@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.rendering.json.datapoint.types;
+package com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
@@ -29,29 +29,29 @@ import javax.inject.Singleton;
 import java.util.Optional;
 
 /**
- * Datapoint for looking up Minimum Free Disk within the timeframe.
+ * Datapoint for looking up Average CPU usage within the timeframe.
  *
  * @author AuroraLS3
  */
 @Singleton
-public class DiskMin implements Datapoint<Long> {
+public class CPUAverage implements Datapoint<Double> {
 
     private final DBSystem dbSystem;
 
     @Inject
-    public DiskMin(DBSystem dbSystem) {
+    public CPUAverage(DBSystem dbSystem) {
         this.dbSystem = dbSystem;
     }
 
     @Override
     public SupportedFilters[] getSupportedFilters() {
-        return SupportedFilters.onlyServer();
+        return SupportedFilters.noPlayer();
     }
 
     @Override
-    public Optional<Long> getValue(GenericFilter filter) {
-        long min = dbSystem.getDatabase().query(TPSQueries.minFreeDisk(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
-        return min != -1L ? Optional.of(min) : Optional.empty();
+    public Optional<Double> getValue(GenericFilter filter) {
+        double average = dbSystem.getDatabase().query(TPSQueries.averageCPU(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
+        return average != -1.0 ? Optional.of(average / 100.0) : Optional.empty();
     }
 
     @Override
@@ -59,7 +59,7 @@ public class DiskMin implements Datapoint<Long> {
         if (filter.getPlayerUUID().isPresent()) {
             return WebPermission.DATA_PLAYER;
         } else if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.DATA_SERVER_DISK_MIN;
+            return WebPermission.DATA_SERVER_CPU_AVERAGE;
         } else {
             return WebPermission.DATA_NETWORK;
         }
@@ -67,11 +67,11 @@ public class DiskMin implements Datapoint<Long> {
 
     @Override
     public DatapointType getType() {
-        return DatapointType.DISK_MIN;
+        return DatapointType.CPU_AVERAGE;
     }
 
     @Override
     public FormatType getFormatType() {
-        return FormatType.BYTES;
+        return FormatType.PERCENTAGE;
     }
 }

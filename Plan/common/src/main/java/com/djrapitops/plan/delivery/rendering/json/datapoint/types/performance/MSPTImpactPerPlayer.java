@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.rendering.json.datapoint.types;
+package com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
@@ -29,17 +29,17 @@ import javax.inject.Singleton;
 import java.util.Optional;
 
 /**
- * Datapoint for looking up Average Chunks per player within the timeframe.
+ * Datapoint for looking up Average MSPT impact per player within the timeframe.
  *
  * @author AuroraLS3
  */
 @Singleton
-public class ChunksPerPlayer implements Datapoint<Long> {
+public class MSPTImpactPerPlayer implements Datapoint<Double> {
 
     private final DBSystem dbSystem;
 
     @Inject
-    public ChunksPerPlayer(DBSystem dbSystem) {
+    public MSPTImpactPerPlayer(DBSystem dbSystem) {
         this.dbSystem = dbSystem;
     }
 
@@ -49,9 +49,9 @@ public class ChunksPerPlayer implements Datapoint<Long> {
     }
 
     @Override
-    public Optional<Long> getValue(GenericFilter filter) {
-        long average = dbSystem.getDatabase().query(TPSQueries.averageChunksPerPlayer(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
-        return average != -1L ? Optional.of(average) : Optional.empty();
+    public Optional<Double> getValue(GenericFilter filter) {
+        double average = dbSystem.getDatabase().query(TPSQueries.averageMsptImpactPerPlayer(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
+        return average != -1.0 ? Optional.of(average) : Optional.empty();
     }
 
     @Override
@@ -59,19 +59,19 @@ public class ChunksPerPlayer implements Datapoint<Long> {
         if (filter.getPlayerUUID().isPresent()) {
             return WebPermission.DATA_PLAYER;
         } else if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.DATA_SERVER_CHUNKS_PER_PLAYER;
+            return WebPermission.DATA_SERVER_MSPT_IMPACT_PER_PLAYER;
         } else {
-            return WebPermission.DATA_NETWORK_CHUNKS_PER_PLAYER;
+            return WebPermission.DATA_NETWORK_MSPT_IMPACT_PER_PLAYER;
         }
     }
 
     @Override
     public DatapointType getType() {
-        return DatapointType.CHUNKS_PER_PLAYER;
+        return DatapointType.MSPT_IMPACT_PER_PLAYER;
     }
 
     @Override
     public FormatType getFormatType() {
-        return FormatType.NONE;
+        return FormatType.MILLIS;
     }
 }

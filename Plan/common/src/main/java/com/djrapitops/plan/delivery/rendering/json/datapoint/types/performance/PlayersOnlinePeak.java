@@ -14,31 +14,41 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.rendering.json.datapoint.types;
+package com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance;
 
-import com.djrapitops.plan.delivery.domain.OutOf;
+import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
+import com.djrapitops.plan.gathering.ServerSensor;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
+import org.jspecify.annotations.NonNull;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
 import java.util.Optional;
 
 /**
+ * Datapoint for looking up maximum Player online count within the timeframe.
+ *
  * @author AuroraLS3
  */
 @Singleton
-public class ServerOccupied implements Datapoint<OutOf> {
+public class PlayersOnlinePeak implements Datapoint<DateObj<Long>> {
 
     private final DBSystem dbSystem;
+    private final ServerSensor<?> serverSensor;
 
     @Inject
-    public ServerOccupied(DBSystem dbSystem) {this.dbSystem = dbSystem;}
+    public PlayersOnlinePeak(DBSystem dbSystem, ServerSensor<?> serverSensor) {
+        this.dbSystem = dbSystem;
+        this.serverSensor = serverSensor;
+    }
 
     @Override
     public SupportedFilters[] getSupportedFilters() {
@@ -46,11 +56,19 @@ public class ServerOccupied implements Datapoint<OutOf> {
     }
 
     @Override
-    public Optional<OutOf> getValue(GenericFilter filter) {
-        Long occupied = dbSystem.getDatabase().query(TPSQueries.occupiedTime(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
-        Long uptime = dbSystem.getDatabase().query(TPSQueries.uptime(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
+    public Optional<DateObj<Long>> getValue(GenericFilter filter) {
+        return Optional.of(getPeak(filter).orElse(new DateObj<>(0L, 0L)));
+    }
 
-        return Optional.of(new OutOf(occupied, uptime, FormatType.TIME_AMOUNT));
+    private @NonNull Optional<DateObj<Long>> getPeak(GenericFilter filter) {
+        List<ServerUUID> serverUUIDs = filter.getServerUUIDs();
+        if (serverUUIDs.isEmpty()) {
+            return dbSystem.getDatabase().query(TPSQueries.fetchNetworkPeakPlayerCount(filter.getAfter(), filter.getBefore(), serverSensor.usingRedisBungee()))
+                    .map(peak -> new DateObj<>(peak.getDate(), peak.getValue().longValue()));
+        }
+
+        return dbSystem.getDatabase().query(TPSQueries.fetchPeakPlayerCount(serverUUIDs, filter.getAfter(), filter.getBefore()))
+                .map(peak -> new DateObj<>(peak.getDate(), peak.getValue().longValue()));
     }
 
     @Override
@@ -58,15 +76,15 @@ public class ServerOccupied implements Datapoint<OutOf> {
         if (filter.getPlayerUUID().isPresent()) {
             return WebPermission.DATA_PLAYER;
         } else if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.DATA_SERVER_SERVER_OCCUPIED;
+            return WebPermission.DATA_SERVER_PLAYERS_ONLINE_PEAK;
         } else {
-            return WebPermission.DATA_NETWORK_SERVER_OCCUPIED;
+            return WebPermission.DATA_NETWORK_PLAYERS_ONLINE_PEAK;
         }
     }
 
     @Override
     public DatapointType getType() {
-        return DatapointType.SERVER_OCCUPIED;
+        return DatapointType.PLAYERS_ONLINE_PEAK;
     }
 
     @Override

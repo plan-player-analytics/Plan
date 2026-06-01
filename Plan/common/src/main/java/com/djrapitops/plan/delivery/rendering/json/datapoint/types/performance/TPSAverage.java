@@ -14,58 +14,44 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.rendering.json.datapoint.types;
+package com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
-import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
-import com.djrapitops.plan.storage.database.Database;
-import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
 import java.util.Optional;
 
 /**
- * Uptime datapoint.
- * <p>
- * Uptime is calculated by checking gaps between TPS data points,
- * if multiple servers are given it is assumed they act as fallback for each other.
- * <p>
- * Giving no server parameter gives uptime for network, where same fallback rule applies for multi-proxy setups.
+ * Datapoint for looking up Average TPS within the timeframe.
  *
  * @author AuroraLS3
  */
 @Singleton
-public class Uptime implements Datapoint<Long> {
+public class TPSAverage implements Datapoint<Double> {
 
     private final DBSystem dbSystem;
 
     @Inject
-    public Uptime(DBSystem dbSystem) {
+    public TPSAverage(DBSystem dbSystem) {
         this.dbSystem = dbSystem;
     }
 
     @Override
     public SupportedFilters[] getSupportedFilters() {
-        return SupportedFilters.noPlayer();
+        return SupportedFilters.onlyServer();
     }
 
     @Override
-    public Optional<Long> getValue(GenericFilter filter) {
-        Database db = dbSystem.getDatabase();
-        List<ServerUUID> serverUUIDs = filter.getServerUUIDs();
-        if (filter.getServerUUIDs().isEmpty()) {
-            serverUUIDs = db.query(ServerQueries.fetchProxyServerUUIDs());
-        }
-
-        return Optional.of(db.query(TPSQueries.uptime(filter.getAfter(), filter.getBefore(), serverUUIDs)));
+    public Optional<Double> getValue(GenericFilter filter) {
+        double average = dbSystem.getDatabase().query(TPSQueries.averageTPS(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
+        return average != -1.0 ? Optional.of(average) : Optional.empty();
     }
 
     @Override
@@ -73,19 +59,19 @@ public class Uptime implements Datapoint<Long> {
         if (filter.getPlayerUUID().isPresent()) {
             return WebPermission.DATA_PLAYER;
         } else if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.DATA_SERVER_UPTIME;
+            return WebPermission.DATA_SERVER_TPS_AVERAGE;
         } else {
-            return WebPermission.DATA_NETWORK_UPTIME;
+            return WebPermission.DATA_NETWORK;
         }
     }
 
     @Override
     public DatapointType getType() {
-        return DatapointType.UPTIME;
+        return DatapointType.TPS_AVERAGE;
     }
 
     @Override
     public FormatType getFormatType() {
-        return FormatType.TIME_AMOUNT;
+        return FormatType.DECIMAL;
     }
 }

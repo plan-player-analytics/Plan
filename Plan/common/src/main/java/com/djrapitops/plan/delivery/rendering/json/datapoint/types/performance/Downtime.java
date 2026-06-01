@@ -14,32 +14,41 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.rendering.json.datapoint.types;
+package com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
 import java.util.Optional;
 
 /**
- * Datapoint for looking up Average CPU impact per player within the timeframe.
+ * Downtime datapoint.
+ * <p>
+ * Downtime is calculated by checking gaps between TPS data points,
+ * if multiple servers are given it is assumed they act as fallback for each other, reducing downtime if one of them is up.
+ * <p>
+ * Giving no server parameter gives downtime for network, where same fallback rule applies for multi-proxy setups.
  *
  * @author AuroraLS3
  */
 @Singleton
-public class CPUImpactPerPlayer implements Datapoint<Double> {
+public class Downtime implements Datapoint<Long> {
 
     private final DBSystem dbSystem;
 
     @Inject
-    public CPUImpactPerPlayer(DBSystem dbSystem) {
+    public Downtime(DBSystem dbSystem) {
         this.dbSystem = dbSystem;
     }
 
@@ -49,9 +58,14 @@ public class CPUImpactPerPlayer implements Datapoint<Double> {
     }
 
     @Override
-    public Optional<Double> getValue(GenericFilter filter) {
-        double average = dbSystem.getDatabase().query(TPSQueries.averageCpuPerPlayer(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
-        return average != -1.0 ? Optional.of(average) : Optional.empty();
+    public Optional<Long> getValue(GenericFilter filter) {
+        Database db = dbSystem.getDatabase();
+        List<ServerUUID> serverUUIDs = filter.getServerUUIDs();
+        if (filter.getServerUUIDs().isEmpty()) {
+            serverUUIDs = db.query(ServerQueries.fetchProxyServerUUIDs());
+        }
+
+        return Optional.of(db.query(TPSQueries.downtime(filter.getAfter(), filter.getBefore(), serverUUIDs)));
     }
 
     @Override
@@ -59,19 +73,19 @@ public class CPUImpactPerPlayer implements Datapoint<Double> {
         if (filter.getPlayerUUID().isPresent()) {
             return WebPermission.DATA_PLAYER;
         } else if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.DATA_SERVER_CPU_IMPACT_PER_PLAYER;
+            return WebPermission.DATA_SERVER_DOWNTIME;
         } else {
-            return WebPermission.DATA_NETWORK_CPU_IMPACT_PER_PLAYER;
+            return WebPermission.DATA_NETWORK_DOWNTIME;
         }
     }
 
     @Override
     public DatapointType getType() {
-        return DatapointType.CPU_IMPACT_PER_PLAYER;
+        return DatapointType.DOWNTIME;
     }
 
     @Override
     public FormatType getFormatType() {
-        return FormatType.PERCENTAGE;
+        return FormatType.TIME_AMOUNT;
     }
 }

@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.rendering.json.datapoint.types;
+package com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
@@ -29,17 +29,17 @@ import javax.inject.Singleton;
 import java.util.Optional;
 
 /**
- * Datapoint for looking up Average CHUNKS usage within the timeframe.
+ * Datapoint for looking up Average RAM usage within the timeframe.
  *
  * @author AuroraLS3
  */
 @Singleton
-public class ChunksAverage implements Datapoint<Long> {
+public class RAMAverage implements Datapoint<Long> {
 
     private final DBSystem dbSystem;
 
     @Inject
-    public ChunksAverage(DBSystem dbSystem) {
+    public RAMAverage(DBSystem dbSystem) {
         this.dbSystem = dbSystem;
     }
 
@@ -50,7 +50,7 @@ public class ChunksAverage implements Datapoint<Long> {
 
     @Override
     public Optional<Long> getValue(GenericFilter filter) {
-        long average = dbSystem.getDatabase().query(TPSQueries.averageChunks(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
+        long average = dbSystem.getDatabase().query(TPSQueries.averageRAM(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
         return average != -1L ? Optional.of(average) : Optional.empty();
     }
 
@@ -59,7 +59,7 @@ public class ChunksAverage implements Datapoint<Long> {
         if (filter.getPlayerUUID().isPresent()) {
             return WebPermission.DATA_PLAYER;
         } else if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.DATA_SERVER_CHUNKS_AVERAGE;
+            return WebPermission.DATA_SERVER_RAM_AVERAGE;
         } else {
             return WebPermission.DATA_NETWORK;
         }
@@ -67,11 +67,11 @@ public class ChunksAverage implements Datapoint<Long> {
 
     @Override
     public DatapointType getType() {
-        return DatapointType.CHUNKS_AVERAGE;
+        return DatapointType.RAM_AVERAGE;
     }
 
     @Override
     public FormatType getFormatType() {
-        return FormatType.NONE;
+        return FormatType.BYTES;
     }
 }

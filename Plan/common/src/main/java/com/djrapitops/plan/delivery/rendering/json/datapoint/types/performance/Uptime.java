@@ -14,36 +14,41 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.rendering.json.datapoint.types;
+package com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
-import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.DisplaySettings;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.List;
 import java.util.Optional;
 
 /**
- * Datapoint for looking up Average MSPT within the timeframe when TPS is low.
+ * Uptime datapoint.
+ * <p>
+ * Uptime is calculated by checking gaps between TPS data points,
+ * if multiple servers are given it is assumed they act as fallback for each other.
+ * <p>
+ * Giving no server parameter gives uptime for network, where same fallback rule applies for multi-proxy setups.
  *
  * @author AuroraLS3
  */
 @Singleton
-public class MSPTMax95thWithLowTPS implements Datapoint<Double> {
+public class Uptime implements Datapoint<Long> {
 
-    private final PlanConfig config;
     private final DBSystem dbSystem;
 
     @Inject
-    public MSPTMax95thWithLowTPS(PlanConfig config, DBSystem dbSystem) {
-        this.config = config;
+    public Uptime(DBSystem dbSystem) {
         this.dbSystem = dbSystem;
     }
 
@@ -53,11 +58,14 @@ public class MSPTMax95thWithLowTPS implements Datapoint<Double> {
     }
 
     @Override
-    public Optional<Double> getValue(GenericFilter filter) {
-        double average = dbSystem.getDatabase().query(TPSQueries.max95thMSPTWhenLowTps(
-                filter.getAfter(), filter.getBefore(), filter.getServerUUIDs(),
-                config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED)));
-        return average != -1.0 ? Optional.of(average) : Optional.empty();
+    public Optional<Long> getValue(GenericFilter filter) {
+        Database db = dbSystem.getDatabase();
+        List<ServerUUID> serverUUIDs = filter.getServerUUIDs();
+        if (filter.getServerUUIDs().isEmpty()) {
+            serverUUIDs = db.query(ServerQueries.fetchProxyServerUUIDs());
+        }
+
+        return Optional.of(db.query(TPSQueries.uptime(filter.getAfter(), filter.getBefore(), serverUUIDs)));
     }
 
     @Override
@@ -65,19 +73,19 @@ public class MSPTMax95thWithLowTPS implements Datapoint<Double> {
         if (filter.getPlayerUUID().isPresent()) {
             return WebPermission.DATA_PLAYER;
         } else if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.DATA_SERVER_MSPT_MAX_95TH_LOW_TPS;
+            return WebPermission.DATA_SERVER_UPTIME;
         } else {
-            return WebPermission.DATA_NETWORK_MSPT_MAX_95TH_LOW_TPS;
+            return WebPermission.DATA_NETWORK_UPTIME;
         }
     }
 
     @Override
     public DatapointType getType() {
-        return DatapointType.MSPT_MAX_95TH_LOW_TPS;
+        return DatapointType.UPTIME;
     }
 
     @Override
     public FormatType getFormatType() {
-        return FormatType.MILLIS;
+        return FormatType.TIME_AMOUNT;
     }
 }

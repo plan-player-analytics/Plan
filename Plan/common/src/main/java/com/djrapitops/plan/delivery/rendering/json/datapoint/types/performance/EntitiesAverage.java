@@ -14,61 +14,44 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.rendering.json.datapoint.types;
+package com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance;
 
-import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
-import com.djrapitops.plan.gathering.ServerSensor;
-import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
-import org.jspecify.annotations.NonNull;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
 import java.util.Optional;
 
 /**
- * Datapoint for looking up maximum Player online count within the timeframe.
+ * Datapoint for looking up Average ENTITIES usage within the timeframe.
  *
  * @author AuroraLS3
  */
 @Singleton
-public class PlayersOnlinePeak implements Datapoint<DateObj<Long>> {
+public class EntitiesAverage implements Datapoint<Long> {
 
     private final DBSystem dbSystem;
-    private final ServerSensor<?> serverSensor;
 
     @Inject
-    public PlayersOnlinePeak(DBSystem dbSystem, ServerSensor<?> serverSensor) {
+    public EntitiesAverage(DBSystem dbSystem) {
         this.dbSystem = dbSystem;
-        this.serverSensor = serverSensor;
     }
 
     @Override
     public SupportedFilters[] getSupportedFilters() {
-        return SupportedFilters.noPlayer();
+        return SupportedFilters.onlyServer();
     }
 
     @Override
-    public Optional<DateObj<Long>> getValue(GenericFilter filter) {
-        return Optional.of(getPeak(filter).orElse(new DateObj<>(0L, 0L)));
-    }
-
-    private @NonNull Optional<DateObj<Long>> getPeak(GenericFilter filter) {
-        List<ServerUUID> serverUUIDs = filter.getServerUUIDs();
-        if (serverUUIDs.isEmpty()) {
-            return dbSystem.getDatabase().query(TPSQueries.fetchNetworkPeakPlayerCount(filter.getAfter(), filter.getBefore(), serverSensor.usingRedisBungee()))
-                    .map(peak -> new DateObj<>(peak.getDate(), peak.getValue().longValue()));
-        }
-
-        return dbSystem.getDatabase().query(TPSQueries.fetchPeakPlayerCount(serverUUIDs, filter.getAfter(), filter.getBefore()))
-                .map(peak -> new DateObj<>(peak.getDate(), peak.getValue().longValue()));
+    public Optional<Long> getValue(GenericFilter filter) {
+        long average = dbSystem.getDatabase().query(TPSQueries.averageEntities(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
+        return average != -1L ? Optional.of(average) : Optional.empty();
     }
 
     @Override
@@ -76,19 +59,19 @@ public class PlayersOnlinePeak implements Datapoint<DateObj<Long>> {
         if (filter.getPlayerUUID().isPresent()) {
             return WebPermission.DATA_PLAYER;
         } else if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.DATA_SERVER_PLAYERS_ONLINE_PEAK;
+            return WebPermission.DATA_SERVER_ENTITIES_AVERAGE;
         } else {
-            return WebPermission.DATA_NETWORK_PLAYERS_ONLINE_PEAK;
+            return WebPermission.DATA_NETWORK;
         }
     }
 
     @Override
     public DatapointType getType() {
-        return DatapointType.PLAYERS_ONLINE_PEAK;
+        return DatapointType.ENTITIES_AVERAGE;
     }
 
     @Override
     public FormatType getFormatType() {
-        return FormatType.SPECIAL;
+        return FormatType.NONE;
     }
 }

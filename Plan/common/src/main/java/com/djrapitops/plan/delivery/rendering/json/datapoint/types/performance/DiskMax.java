@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.rendering.json.datapoint.types;
+package com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
@@ -29,17 +29,17 @@ import javax.inject.Singleton;
 import java.util.Optional;
 
 /**
- * Datapoint for looking up Average TPS within the timeframe.
+ * Datapoint for looking up Maximum Free Disk within the timeframe.
  *
  * @author AuroraLS3
  */
 @Singleton
-public class TPSAverage implements Datapoint<Double> {
+public class DiskMax implements Datapoint<Long> {
 
     private final DBSystem dbSystem;
 
     @Inject
-    public TPSAverage(DBSystem dbSystem) {
+    public DiskMax(DBSystem dbSystem) {
         this.dbSystem = dbSystem;
     }
 
@@ -49,9 +49,9 @@ public class TPSAverage implements Datapoint<Double> {
     }
 
     @Override
-    public Optional<Double> getValue(GenericFilter filter) {
-        double average = dbSystem.getDatabase().query(TPSQueries.averageTPS(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
-        return average != -1.0 ? Optional.of(average) : Optional.empty();
+    public Optional<Long> getValue(GenericFilter filter) {
+        long max = dbSystem.getDatabase().query(TPSQueries.maxFreeDisk(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
+        return max != -1L ? Optional.of(max) : Optional.empty();
     }
 
     @Override
@@ -59,7 +59,7 @@ public class TPSAverage implements Datapoint<Double> {
         if (filter.getPlayerUUID().isPresent()) {
             return WebPermission.DATA_PLAYER;
         } else if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.DATA_SERVER_TPS_AVERAGE;
+            return WebPermission.DATA_SERVER_DISK_MAX;
         } else {
             return WebPermission.DATA_NETWORK;
         }
@@ -67,11 +67,11 @@ public class TPSAverage implements Datapoint<Double> {
 
     @Override
     public DatapointType getType() {
-        return DatapointType.TPS_AVERAGE;
+        return DatapointType.DISK_MAX;
     }
 
     @Override
     public FormatType getFormatType() {
-        return FormatType.DECIMAL;
+        return FormatType.BYTES;
     }
 }

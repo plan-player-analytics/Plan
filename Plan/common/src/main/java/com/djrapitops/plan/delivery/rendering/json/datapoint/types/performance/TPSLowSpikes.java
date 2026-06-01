@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.rendering.json.datapoint.types;
+package com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
@@ -31,18 +31,21 @@ import javax.inject.Singleton;
 import java.util.Optional;
 
 /**
- * Datapoint for looking up Average MSPT within the timeframe when TPS is low.
+ * Datapoint for Low TPS spikes.
+ * <p>
+ * Low tps spikes are computed by checking TPS values against a threshold,
+ * only counting each spike as individual spike once previous spike has recovered.
  *
  * @author AuroraLS3
  */
 @Singleton
-public class MSPTAverageWithLowTPS implements Datapoint<Double> {
+public class TPSLowSpikes implements Datapoint<Integer> {
 
     private final PlanConfig config;
     private final DBSystem dbSystem;
 
     @Inject
-    public MSPTAverageWithLowTPS(PlanConfig config, DBSystem dbSystem) {
+    public TPSLowSpikes(PlanConfig config, DBSystem dbSystem) {
         this.config = config;
         this.dbSystem = dbSystem;
     }
@@ -53,11 +56,13 @@ public class MSPTAverageWithLowTPS implements Datapoint<Double> {
     }
 
     @Override
-    public Optional<Double> getValue(GenericFilter filter) {
-        double average = dbSystem.getDatabase().query(TPSQueries.averageMSPTWhenLowTps(
-                filter.getAfter(), filter.getBefore(), filter.getServerUUIDs(),
-                config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED)));
-        return average != -1.0 ? Optional.of(average) : Optional.empty();
+    public Optional<Integer> getValue(GenericFilter filter) {
+        return Optional.of(dbSystem.getDatabase().query(TPSQueries.lowTpsSpikes(
+                config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED),
+                filter.getAfter(),
+                filter.getBefore(),
+                filter.getServerUUIDs()))
+        );
     }
 
     @Override
@@ -65,19 +70,14 @@ public class MSPTAverageWithLowTPS implements Datapoint<Double> {
         if (filter.getPlayerUUID().isPresent()) {
             return WebPermission.DATA_PLAYER;
         } else if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.DATA_SERVER_MSPT_AVERAGE_LOW_TPS;
+            return WebPermission.DATA_SERVER_TPS_LOW_SPIKES;
         } else {
-            return WebPermission.DATA_NETWORK_MSPT_AVERAGE_LOW_TPS;
+            return WebPermission.DATA_NETWORK_TPS_LOW_SPIKES;
         }
     }
 
     @Override
     public DatapointType getType() {
-        return DatapointType.MSPT_AVERAGE_LOW_TPS;
-    }
-
-    @Override
-    public FormatType getFormatType() {
-        return FormatType.MILLIS;
+        return DatapointType.TPS_LOW_SPIKES;
     }
 }

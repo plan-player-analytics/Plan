@@ -14,37 +14,33 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.rendering.json.datapoint.types;
+package com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
-import com.djrapitops.plan.gathering.ServerUptimeCalculator;
-import com.djrapitops.plan.identification.ServerInfo;
-import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
 import java.util.Optional;
 
 /**
- * Datapoint for looking up current uptime of the servers.
+ * Datapoint for looking up Average MSPT impact per Chunk within the timeframe.
  *
  * @author AuroraLS3
  */
 @Singleton
-public class UptimeCurrent implements Datapoint<Long> {
+public class MSPTImpactPerChunk implements Datapoint<Double> {
 
-    private final ServerInfo serverInfo;
-    private final ServerUptimeCalculator serverUptimeCalculator;
+    private final DBSystem dbSystem;
 
     @Inject
-    public UptimeCurrent(ServerInfo serverInfo, ServerUptimeCalculator serverUptimeCalculator) {
-        this.serverInfo = serverInfo;
-        this.serverUptimeCalculator = serverUptimeCalculator;
+    public MSPTImpactPerChunk(DBSystem dbSystem) {
+        this.dbSystem = dbSystem;
     }
 
     @Override
@@ -53,11 +49,9 @@ public class UptimeCurrent implements Datapoint<Long> {
     }
 
     @Override
-    public Optional<Long> getValue(GenericFilter filter) {
-        List<ServerUUID> serverUUIDs = filter.getServerUUIDs();
-        ServerUUID serverUUID = serverUUIDs.size() == 1 ? serverUUIDs.get(0) : serverInfo.getServerUUID();
-
-        return serverUptimeCalculator.getServerUptimeMillis(serverUUID);
+    public Optional<Double> getValue(GenericFilter filter) {
+        double average = dbSystem.getDatabase().query(TPSQueries.averageMsptImpactPerChunk(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
+        return average != -1.0 ? Optional.of(average) : Optional.empty();
     }
 
     @Override
@@ -65,19 +59,19 @@ public class UptimeCurrent implements Datapoint<Long> {
         if (filter.getPlayerUUID().isPresent()) {
             return WebPermission.DATA_PLAYER;
         } else if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.DATA_SERVER_UPTIME_CURRENT;
+            return WebPermission.DATA_SERVER_MSPT_IMPACT_PER_CHUNK;
         } else {
-            return WebPermission.DATA_NETWORK_UPTIME_CURRENT;
+            return WebPermission.DATA_NETWORK_MSPT_IMPACT_PER_CHUNK;
         }
     }
 
     @Override
     public DatapointType getType() {
-        return DatapointType.UPTIME_CURRENT;
+        return DatapointType.MSPT_IMPACT_PER_CHUNK;
     }
 
     @Override
     public FormatType getFormatType() {
-        return FormatType.TIME_AMOUNT;
+        return FormatType.MILLIS;
     }
 }

@@ -14,8 +14,9 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.rendering.json.datapoint.types;
+package com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance;
 
+import com.djrapitops.plan.delivery.domain.OutOf;
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
@@ -29,19 +30,15 @@ import javax.inject.Singleton;
 import java.util.Optional;
 
 /**
- * Datapoint for looking up Average CPU usage within the timeframe.
- *
  * @author AuroraLS3
  */
 @Singleton
-public class CPUAverage implements Datapoint<Double> {
+public class ServerOccupied implements Datapoint<OutOf> {
 
     private final DBSystem dbSystem;
 
     @Inject
-    public CPUAverage(DBSystem dbSystem) {
-        this.dbSystem = dbSystem;
-    }
+    public ServerOccupied(DBSystem dbSystem) {this.dbSystem = dbSystem;}
 
     @Override
     public SupportedFilters[] getSupportedFilters() {
@@ -49,9 +46,11 @@ public class CPUAverage implements Datapoint<Double> {
     }
 
     @Override
-    public Optional<Double> getValue(GenericFilter filter) {
-        double average = dbSystem.getDatabase().query(TPSQueries.averageCPU(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
-        return average != -1.0 ? Optional.of(average / 100.0) : Optional.empty();
+    public Optional<OutOf> getValue(GenericFilter filter) {
+        Long occupied = dbSystem.getDatabase().query(TPSQueries.occupiedTime(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
+        Long uptime = dbSystem.getDatabase().query(TPSQueries.uptime(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
+
+        return Optional.of(new OutOf(occupied, uptime, FormatType.TIME_AMOUNT));
     }
 
     @Override
@@ -59,19 +58,19 @@ public class CPUAverage implements Datapoint<Double> {
         if (filter.getPlayerUUID().isPresent()) {
             return WebPermission.DATA_PLAYER;
         } else if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.DATA_SERVER_CPU_AVERAGE;
+            return WebPermission.DATA_SERVER_SERVER_OCCUPIED;
         } else {
-            return WebPermission.DATA_NETWORK;
+            return WebPermission.DATA_NETWORK_SERVER_OCCUPIED;
         }
     }
 
     @Override
     public DatapointType getType() {
-        return DatapointType.CPU_AVERAGE;
+        return DatapointType.SERVER_OCCUPIED;
     }
 
     @Override
     public FormatType getFormatType() {
-        return FormatType.PERCENTAGE;
+        return FormatType.SPECIAL;
     }
 }

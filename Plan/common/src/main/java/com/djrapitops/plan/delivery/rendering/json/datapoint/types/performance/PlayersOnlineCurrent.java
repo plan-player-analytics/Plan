@@ -14,7 +14,7 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.rendering.json.datapoint.types;
+package com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
@@ -28,6 +28,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
+import org.jspecify.annotations.NonNull;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -83,6 +84,10 @@ public class PlayersOnlineCurrent implements Datapoint<Integer> {
                     .map(TPS::getPlayers);
         }
 
+        return getTotal(serverUUIDs);
+    }
+
+    private @NonNull Optional<Integer> getTotal(List<ServerUUID> serverUUIDs) {
         // Multiple servers: sum of latest online counts
         int total = 0;
         boolean addedValues = false;

@@ -14,15 +14,13 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.rendering.json.datapoint.types;
+package com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
-import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 
@@ -31,38 +29,29 @@ import javax.inject.Singleton;
 import java.util.Optional;
 
 /**
- * Datapoint for Low TPS spikes.
- * <p>
- * Low tps spikes are computed by checking TPS values against a threshold,
- * only counting each spike as individual spike once previous spike has recovered.
+ * Datapoint for looking up Average MSPT within the timeframe.
  *
  * @author AuroraLS3
  */
 @Singleton
-public class TPSLowSpikes implements Datapoint<Integer> {
+public class MSPTAverage implements Datapoint<Double> {
 
-    private final PlanConfig config;
     private final DBSystem dbSystem;
 
     @Inject
-    public TPSLowSpikes(PlanConfig config, DBSystem dbSystem) {
-        this.config = config;
+    public MSPTAverage(DBSystem dbSystem) {
         this.dbSystem = dbSystem;
     }
 
     @Override
     public SupportedFilters[] getSupportedFilters() {
-        return SupportedFilters.noPlayer();
+        return SupportedFilters.onlyServer();
     }
 
     @Override
-    public Optional<Integer> getValue(GenericFilter filter) {
-        return Optional.of(dbSystem.getDatabase().query(TPSQueries.lowTpsSpikes(
-                config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED),
-                filter.getAfter(),
-                filter.getBefore(),
-                filter.getServerUUIDs()))
-        );
+    public Optional<Double> getValue(GenericFilter filter) {
+        double average = dbSystem.getDatabase().query(TPSQueries.averageMSPT(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
+        return average != -1.0 ? Optional.of(average) : Optional.empty();
     }
 
     @Override
@@ -70,14 +59,19 @@ public class TPSLowSpikes implements Datapoint<Integer> {
         if (filter.getPlayerUUID().isPresent()) {
             return WebPermission.DATA_PLAYER;
         } else if (!filter.getServerUUIDs().isEmpty()) {
-            return WebPermission.DATA_SERVER_TPS_LOW_SPIKES;
+            return WebPermission.DATA_SERVER_MSPT_AVERAGE;
         } else {
-            return WebPermission.DATA_NETWORK_TPS_LOW_SPIKES;
+            return WebPermission.DATA_NETWORK;
         }
     }
 
     @Override
     public DatapointType getType() {
-        return DatapointType.TPS_LOW_SPIKES;
+        return DatapointType.MSPT_AVERAGE;
+    }
+
+    @Override
+    public FormatType getFormatType() {
+        return FormatType.MILLIS;
     }
 }
