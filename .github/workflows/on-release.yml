@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Get Download URL
         run: |
           curl 'https://api.github.com/repos/plan-player-analytics/plan/releases/${{ github.event.release.id }}/assets' | jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric") | not)' > asset.txt
@@ -43,7 +43,7 @@ jobs:
 
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Get git TAG
         id: tagName
         uses: olegtarasov/get-tag@v2.1
@@ -65,7 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: Download release artifact for upload
@@ -137,7 +137,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 📥 Checkout git repository
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
       - name: ⚙ Get Download URL
