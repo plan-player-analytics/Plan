@@ -20,7 +20,7 @@
     "@highcharts/map-collection": "2.3.2",
     "@tanstack/react-query": "5.100.14",
     "@uiw/react-color-chrome": "2.10.1",
-    "@uiw/react-color-wheel": "2.10.1",
+    "@uiw/react-color-wheel": "2.10.3",
     "axios": "1.16.1",
     "bootstrap": "5.3.8",
     "date-fns-tz": "3.2.0",
