@@ -19,7 +19,7 @@ jobs:
     if: github.event_name == 'issues' && github.event.action == 'opened'
     steps:
       - name: Add issue to ${{ env.inbox }}
-        uses: leonsteinhaeuser/project-beta-automations@v1.2.1
+        uses: leonsteinhaeuser/project-beta-automations@v2
         with:
           gh_token: ${{ secrets.GITHUB_TOKEN }}
           organization: plan-player-analytics

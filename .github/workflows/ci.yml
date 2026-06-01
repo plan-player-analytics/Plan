@@ -23,7 +23,7 @@ jobs:
 
     services:
       mariadb:
-        image: mariadb:11.1-rc
+        image: mariadb:lts
         ports:
           - 3306
         env:
@@ -36,19 +36,19 @@ jobs:
     steps:
       - if: ${{ github.event_name == 'push' }}
         name: 📥 Checkout git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
 
       - if: ${{ github.event_name == 'pull_request' }}
         name: 📥 Checkout git repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           fetch-depth: 0
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: ☕ Setup JDK
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: 'temurin'
           java-version: '25'
@@ -71,15 +71,17 @@ jobs:
           echo "versionString=$(cat build/versions/jar.txt)" >> $GITHUB_ENV
           echo "artifactPath=$(pwd)/builds" >> $GITHUB_ENV
       - name: 📤 Upload Plan.jar 
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: Plan-${{ env.versionString }}-${{ env.git_hash }}.jar
           path: ${{ env.artifactPath }}/Plan-${{ env.snapshotVersion }}.jar
+          archive: false
       - name: 📤 Upload PlanFabric.jar 
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: PlanFabric-${{ env.versionString }}-${{ env.git_hash }}.jar
           path: ${{ env.artifactPath }}/PlanFabric-${{ env.snapshotVersion }}.jar
+          archive: false
       - name: 🚦 Setup Selenium Webdriver
         uses: nanasess/setup-chromedriver@v2
       - name: 🚦 Setup Selenium Webdriver settings
