@@ -56,10 +56,10 @@ public class MSPTMax95thWithLowTPS implements Datapoint<Double> {
     @Override
     public Optional<Double> getValue(GenericFilter filter) {
         if (filter.getPlayerUUID().isPresent()) {
-            throw new BadRequestException("MSPT_AVERAGE_LOW_TPS does not support player parameter");
+            throw new BadRequestException("MSPT_MAX_95TH_LOW_TPS does not support player parameter");
         }
 
-        double average = dbSystem.getDatabase().query(TPSQueries.averageMSPTWhenLowTps(
+        double average = dbSystem.getDatabase().query(TPSQueries.max95thMSPTWhenLowTps(
                 filter.getAfter(), filter.getBefore(), filter.getServerUUIDs(),
                 config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED)));
         return average != -1.0 ? Optional.of(average) : Optional.empty();
