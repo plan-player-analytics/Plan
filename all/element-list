@@ -33,6 +33,7 @@ com.djrapitops.plan.delivery.rendering.json
 com.djrapitops.plan.delivery.rendering.json.datapoint
 com.djrapitops.plan.delivery.rendering.json.datapoint.types
 com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance
+com.djrapitops.plan.delivery.rendering.json.datapoint.types.playtime
 com.djrapitops.plan.delivery.rendering.json.graphs
 com.djrapitops.plan.delivery.rendering.json.graphs.bar
 com.djrapitops.plan.delivery.rendering.json.graphs.calendar
