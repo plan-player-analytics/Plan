@@ -23,7 +23,7 @@ jobs:
 
     services:
       mariadb:
-        image: mariadb:lts
+        image: mariadb:11
         ports:
           - 3306
         env:
