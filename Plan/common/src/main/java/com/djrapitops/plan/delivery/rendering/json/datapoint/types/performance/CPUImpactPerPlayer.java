@@ -51,7 +51,7 @@ public class CPUImpactPerPlayer implements Datapoint<Double> {
     @Override
     public Optional<Double> getValue(GenericFilter filter) {
         double average = dbSystem.getDatabase().query(TPSQueries.averageCpuPerPlayer(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
-        return average != -1.0 ? Optional.of(average) : Optional.empty();
+        return average != -1.0 ? Optional.of(average / 100.0) : Optional.empty();
     }
 
     @Override
