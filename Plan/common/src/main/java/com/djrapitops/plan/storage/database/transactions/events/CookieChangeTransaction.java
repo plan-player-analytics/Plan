@@ -26,6 +26,8 @@ import org.jspecify.annotations.Nullable;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import static com.djrapitops.plan.storage.database.sql.tables.CookieTable.MAX_IP_ADDRESS_LENGTH;
+
 public class CookieChangeTransaction extends Transaction {
 
     private final String username;
@@ -102,7 +104,7 @@ public class CookieChangeTransaction extends Transaction {
                     statement.setString(1, username);
                     statement.setString(2, cookie);
                     statement.setLong(3, expires);
-                    statement.setString(4, ipAddress);
+                    statement.setString(4, StringUtils.truncate(ipAddress, MAX_IP_ADDRESS_LENGTH));
                 }
             });
         }

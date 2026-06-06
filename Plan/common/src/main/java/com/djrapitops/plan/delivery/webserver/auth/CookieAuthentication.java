@@ -18,8 +18,11 @@ package com.djrapitops.plan.delivery.webserver.auth;
 
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.utilities.dev.Untrusted;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
+
+import static com.djrapitops.plan.storage.database.sql.tables.CookieTable.MAX_IP_ADDRESS_LENGTH;
 
 public class CookieAuthentication implements Authentication {
 
@@ -32,7 +35,7 @@ public class CookieAuthentication implements Authentication {
     public CookieAuthentication(ActiveCookieStore activeCookieStore, @Untrusted String cookie, @Untrusted String accessAddress) {
         this.activeCookieStore = activeCookieStore;
         this.cookie = cookie;
-        this.accessAddress = accessAddress;
+        this.accessAddress = StringUtils.truncate(accessAddress, MAX_IP_ADDRESS_LENGTH);
     }
 
     @Override

@@ -90,7 +90,8 @@ public class Patches {
                 new TPSTableMSPTPatch(),
                 new AllowlistIncorrectUniqueConstraintPatch(),
                 new TPSTableIdPatch(),
-                new DeleteUrlOpenEventsFromExtensionComponentsPatch()
+                new DeleteUrlOpenEventsFromExtensionComponentsPatch(),
+                new CookieTableIPLengthPatch()
         };
     }
 }
