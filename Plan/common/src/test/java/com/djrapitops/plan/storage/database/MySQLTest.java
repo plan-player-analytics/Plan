@@ -29,6 +29,7 @@ import com.djrapitops.plan.storage.database.queries.filter.QueryFilters;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
+import com.djrapitops.plan.storage.database.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransaction;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assumptions;
@@ -80,6 +81,7 @@ class MySQLTest implements DatabaseTest, DatabaseTestAggregate {
         Assumptions.assumeTrue(mysql.isPresent());
         database = mysql.get();
         database.executeTransaction(new CreateTablesTransaction()).join();
+        database.executeTransaction(new CreateIndexTransaction()).join();
         // Enables more strict query mode to prevent errors from it going unnoticed.
         database.executeTransaction(new Transaction() {
             @Override
