@@ -50,7 +50,8 @@ const ServerRow = ({server, sortedBy, onQuickView}) => {
     if (error30d?.status === 404) {
         noDataWarning = <>&nbsp;<span title={t('html.description.noData30d')}><Fa icon={faBoxArchive}/></span></>
     } else if (error24h?.status === 404) {
-        noDataWarning = <>&nbsp;<span title={t('html.description.noData24h')}>
+        noDataWarning = <>&nbsp;<span
+            title={t(error7d?.status === 404 ? 'html.description.noData7d' : 'html.description.noData24h')}>
             <Fa icon={faExclamationTriangle} className={error7d?.status === 404 ? '' : "col-deep-orange"}/>
         </span></>
     }
