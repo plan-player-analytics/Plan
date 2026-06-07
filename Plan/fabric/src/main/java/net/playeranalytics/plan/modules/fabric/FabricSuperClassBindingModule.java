@@ -22,7 +22,7 @@ import com.djrapitops.plan.gathering.listeners.ListenerSystem;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerServerInfo;
 import com.djrapitops.plan.settings.ConfigSystem;
-import com.djrapitops.plan.settings.FabricConfigSystem;
+import com.djrapitops.plan.settings.GameServerConfigSystem;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.version.VersionChecker;
 import dagger.Binds;
@@ -49,7 +49,7 @@ public interface FabricSuperClassBindingModule {
     DBSystem bindDBSystem(FabricDBSystem dbSystem);
 
     @Binds
-    ConfigSystem bindConfigSystem(FabricConfigSystem configSystem);
+    ConfigSystem bindConfigSystem(GameServerConfigSystem configSystem);
 
     @Binds
     ListenerSystem bindListenerSystem(FabricListenerSystem listenerSystem);

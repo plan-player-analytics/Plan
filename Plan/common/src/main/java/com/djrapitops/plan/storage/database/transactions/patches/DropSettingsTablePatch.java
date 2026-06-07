@@ -14,19 +14,22 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package utilities.dagger;
+package com.djrapitops.plan.storage.database.transactions.patches;
 
-import com.djrapitops.plan.identification.ServerInfo;
-import com.djrapitops.plan.settings.ConfigSystem;
-import com.djrapitops.plan.settings.GameServerConfigSystem;
-import dagger.Binds;
-import dagger.Module;
+/**
+ * Removes plan_settings table.
+ *
+ * @author AuroraLS3
+ */
+public class DropSettingsTablePatch extends Patch {
 
-@Module
-public interface PlanProxyPluginModule {
-    @Binds
-    ConfigSystem bindGameServerConfigSystem(GameServerConfigSystem gameServerConfigSystem);
+    @Override
+    public boolean hasBeenApplied() {
+        return !hasTable("plan_settings");
+    }
 
-    @Binds
-    ServerInfo bindServerInfo(ProxyServerInfo proxyServerInfo);
+    @Override
+    protected void applyPatch() {
+        dropTable("plan_settings");
+    }
 }

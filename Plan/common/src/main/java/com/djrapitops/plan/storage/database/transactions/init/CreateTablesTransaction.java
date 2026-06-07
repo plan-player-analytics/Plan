@@ -73,7 +73,6 @@ public class CreateTablesTransaction extends OperationCriticalTransaction {
         execute(TPSTable.createTableSQL(dbType));
         execute(WorldTable.createTableSQL(dbType));
         execute(WorldTimesTable.createTableSQL(dbType));
-        execute(SettingsTable.createTableSQL(dbType));
         execute(CookieTable.createTableSQL(dbType));
         execute(AccessLogTable.createTableSql(dbType));
         execute(WebGroupTable.createTableSQL(dbType));

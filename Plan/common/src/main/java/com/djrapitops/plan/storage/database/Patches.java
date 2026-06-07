@@ -91,7 +91,8 @@ public class Patches {
                 new AllowlistIncorrectUniqueConstraintPatch(),
                 new TPSTableIdPatch(),
                 new DeleteUrlOpenEventsFromExtensionComponentsPatch(),
-                new CookieTableIPLengthPatch()
+                new CookieTableIPLengthPatch(),
+                new DropSettingsTablePatch()
         };
     }
 }
