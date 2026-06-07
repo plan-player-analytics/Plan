@@ -22,6 +22,7 @@ import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
@@ -113,20 +114,25 @@ public class SessionQueries {
      * @return Map: Server UUID - List of sessions on the server.
      */
     public static Query<Map<ServerUUID, List<FinishedSession>>> fetchSessionsOfPlayer(UUID playerUUID) {
-        String sql = SELECT_SESSIONS_STATEMENT +
-                WHERE + "s." + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
-                ORDER_BY_SESSION_START_DESC;
-        return new QueryStatement<>(sql, 1000) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, playerUUID.toString());
+        return db -> {
+            String sql = SELECT_SESSIONS_STATEMENT +
+                    WHERE + "s." + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
+                    ORDER_BY_SESSION_START_DESC;
+            if (db.getType() == DBType.MYSQL) {
+                sql = sql.replace(SessionsTable.TABLE_NAME + " s", SessionsTable.TABLE_NAME + " s FORCE INDEX(plan_session_user_start)");
             }
+            return db.query(new QueryStatement<>(sql, 1000) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setString(1, playerUUID.toString());
+                }
 
-            @Override
-            public Map<ServerUUID, List<FinishedSession>> processResults(ResultSet set) throws SQLException {
-                List<FinishedSession> sessions = extractDataFromSessionSelectStatement(set);
-                return SessionsMutator.sortByServers(sessions);
-            }
+                @Override
+                public Map<ServerUUID, List<FinishedSession>> processResults(ResultSet set) throws SQLException {
+                    List<FinishedSession> sessions = extractDataFromSessionSelectStatement(set);
+                    return SessionsMutator.sortByServers(sessions);
+                }
+            });
         };
     }
 

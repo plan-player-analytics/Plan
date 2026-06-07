@@ -242,7 +242,7 @@ public abstract class SQLDB extends AbstractDatabase {
                         errorLogger.warn(e);
                     }
                 }
-            }).runTaskLaterAsynchronously(TimeAmount.toTicks(1, TimeUnit.MINUTES));
+            }).runTaskLaterAsynchronously(TimeAmount.toTicks(0, TimeUnit.MINUTES));
         } catch (Exception ignore) {
             // Task failed to register because plugin is being disabled
         }
