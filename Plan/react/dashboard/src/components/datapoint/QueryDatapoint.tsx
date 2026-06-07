@@ -192,9 +192,9 @@ export function QueryDatapointTrend<K extends NumericDatapointType>({
 
     return before && after ?
         <BigTrend trend={{
-            text: before.value - after.value,
+            text: Math.abs(after.value - before.value),
             reversed: downGood,
-            direction: before.value - after.value === 0 ? undefined : (before.value - after.value > 0 ? '+' : '-')
+            direction: after.value - before.value === 0 ? undefined : (after.value - before.value > 0 ? '+' : '-')
         }} format={(value: number) => <Format value={value} formatType={before.formatType}/>}/>
         : <DatapointLoader/>
 }
