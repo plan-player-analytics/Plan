@@ -356,29 +356,25 @@ public class TPSQueries {
             return db -> Optional.empty();
         }
 
-        String subQuery = '(' + SELECT + "MAX(" + PLAYERS_ONLINE + ") as " + PLAYERS_ONLINE + FROM + TABLE_NAME + " t2" +
-                INNER_JOIN + ServerTable.TABLE_NAME + " s2 ON s2." + ServerTable.ID + "=t2." + SERVER_ID +
-                WHERE + "s2." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
-                AND + DATE + ">= ?" +
-                AND + DATE + "<= ?" +
-                GROUP_BY + "t2." + SERVER_ID + ")";
-        String sql = SELECT +
-                "t." + DATE + ',' + "t." + PLAYERS_ONLINE +
+        String sql = SELECT + DATE + ',' + PLAYERS_ONLINE +
+                FROM + '(' +
+                SELECT + DATE + ',' + PLAYERS_ONLINE + ',' +
+                "ROW_NUMBER() OVER (" +
+                ORDER_BY + PLAYERS_ONLINE + " DESC," + DATE + " DESC" +
+                ") as rn" +
                 FROM + TABLE_NAME + " t" +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
-                INNER_JOIN + subQuery + " max on t." + PLAYERS_ONLINE + "=max." + PLAYERS_ONLINE +
                 WHERE + "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
-                AND + "t." + DATE + ">= ?" +
-                AND + "t." + DATE + "<= ?" +
-                ORDER_BY + "t." + DATE + " DESC LIMIT 1";
+                AND + DATE + ">= ?" +
+                AND + DATE + "<= ?" +
+                ") ranked" +
+                WHERE + " rn = 1";
 
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, afterDate);
                 statement.setLong(2, beforeDate);
-                statement.setLong(3, afterDate);
-                statement.setLong(4, beforeDate);
             }
 
             @Override
