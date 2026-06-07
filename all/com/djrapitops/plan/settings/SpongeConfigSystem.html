@@ -59,7 +59,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.settings.config.changes.ConfigUpdater,com.djrapitops.plan.settings.network.ServerSettingsManager,com.djrapitops.plan.settings.theme.Theme,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" tabindex="0">SpongeConfigSystem(PlanFiles, PlanConfig, ConfigUpdater, ServerSettingsManager, Theme, PluginLogger, ErrorLogger)</a></li>
+<li><a href="#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.settings.config.changes.ConfigUpdater,com.djrapitops.plan.settings.theme.Theme,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" tabindex="0">SpongeConfigSystem(PlanFiles, PlanConfig, ConfigUpdater, Theme, PluginLogger, ErrorLogger)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -77,7 +77,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance"><a href="ConfigSystem.html" title="class in com.djrapitops.plan.settings">com.djrapitops.plan.settings.ConfigSystem</a>
-<div class="inheritance"><a href="BukkitConfigSystem.html" title="class in com.djrapitops.plan.settings">com.djrapitops.plan.settings.BukkitConfigSystem</a>
+<div class="inheritance"><a href="GameServerConfigSystem.html" title="class in com.djrapitops.plan.settings">com.djrapitops.plan.settings.GameServerConfigSystem</a>
 <div class="inheritance">com.djrapitops.plan.settings.SpongeConfigSystem</div>
 </div>
 </div>
@@ -91,7 +91,7 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="annotations">@Singleton
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">SpongeConfigSystem</span>
-<span class="extends-implements">extends <a href="BukkitConfigSystem.html" title="class in com.djrapitops.plan.settings">BukkitConfigSystem</a></span></div>
+<span class="extends-implements">extends <a href="GameServerConfigSystem.html" title="class in com.djrapitops.plan.settings">GameServerConfigSystem</a></span></div>
 <div class="block">Sponge ConfigSystem that disables Geolocations on first enable.</div>
 </div>
 </section>
@@ -114,10 +114,9 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.settings.config.changes.ConfigUpdater,com.djrapitops.plan.settings.network.ServerSettingsManager,com.djrapitops.plan.settings.theme.Theme,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">SpongeConfigSystem</a><wbr>(<a href="../storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.settings.config.changes.ConfigUpdater,com.djrapitops.plan.settings.theme.Theme,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">SpongeConfigSystem</a><wbr>(<a href="../storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
  <a href="config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
  <a href="config/changes/ConfigUpdater.html" title="class in com.djrapitops.plan.settings.config.changes">ConfigUpdater</a>&nbsp;configUpdater,
- <a href="network/ServerSettingsManager.html" title="class in com.djrapitops.plan.settings.network">ServerSettingsManager</a>&nbsp;serverSettingsManager,
  <a href="theme/Theme.html" title="class in com.djrapitops.plan.settings.theme">Theme</a>&nbsp;theme,
  net.playeranalytics.plugin.server.PluginLogger&nbsp;logger,
  <a href="../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</code></div>
@@ -150,11 +149,8 @@ loadScripts(document, 'script');</script>
 </div>
 </div>
 <div class="inherited-list">
-<h3 id="methods-inherited-from-class-com.djrapitops.plan.settings.BukkitConfigSystem">Methods inherited from class&nbsp;<a href="BukkitConfigSystem.html#method-summary" title="class in com.djrapitops.plan.settings">BukkitConfigSystem</a></h3>
-<code><a href="BukkitConfigSystem.html#disable()" title="disable()">disable</a></code></div>
-<div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.djrapitops.plan.settings.ConfigSystem">Methods inherited from class&nbsp;<a href="ConfigSystem.html#method-summary" title="class in com.djrapitops.plan.settings">ConfigSystem</a></h3>
-<code><a href="ConfigSystem.html#checkWrongTimeZone()" title="checkWrongTimeZone()">checkWrongTimeZone</a>, <a href="ConfigSystem.html#getConfig()" title="getConfig()">getConfig</a>, <a href="ConfigSystem.html#getTheme()" title="getTheme()">getTheme</a>, <a href="ConfigSystem.html#reload()" title="reload()">reload</a></code></div>
+<code><a href="ConfigSystem.html#checkWrongTimeZone()" title="checkWrongTimeZone()">checkWrongTimeZone</a>, <a href="ConfigSystem.html#disable()" title="disable()">disable</a>, <a href="ConfigSystem.html#getConfig()" title="getConfig()">getConfig</a>, <a href="ConfigSystem.html#getTheme()" title="getTheme()">getTheme</a>, <a href="ConfigSystem.html#reload()" title="reload()">reload</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#method-summary" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -170,14 +166,13 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.settings.config.changes.ConfigUpdater,com.djrapitops.plan.settings.network.ServerSettingsManager,com.djrapitops.plan.settings.theme.Theme,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)">
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.settings.config.changes.ConfigUpdater,com.djrapitops.plan.settings.theme.Theme,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)">
 <h3>SpongeConfigSystem</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations">@Inject
 </span><span class="modifiers">public</span>&nbsp;<span class="element-name">SpongeConfigSystem</span><wbr><span class="parameters">(<a href="../storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
  <a href="config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
  <a href="config/changes/ConfigUpdater.html" title="class in com.djrapitops.plan.settings.config.changes">ConfigUpdater</a>&nbsp;configUpdater,
- <a href="network/ServerSettingsManager.html" title="class in com.djrapitops.plan.settings.network">ServerSettingsManager</a>&nbsp;serverSettingsManager,
  <a href="theme/Theme.html" title="class in com.djrapitops.plan.settings.theme">Theme</a>&nbsp;theme,
  net.playeranalytics.plugin.server.PluginLogger&nbsp;logger,
  <a href="../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</span></div>
@@ -203,7 +198,7 @@ loadScripts(document, 'script');</script>
 <dt>Specified by:</dt>
 <dd><code><a href="../SubSystem.html#enable()">enable</a></code>&nbsp;in interface&nbsp;<code><a href="../SubSystem.html" title="interface in com.djrapitops.plan">SubSystem</a></code></dd>
 <dt>Overrides:</dt>
-<dd><code><a href="BukkitConfigSystem.html#enable()">enable</a></code>&nbsp;in class&nbsp;<code><a href="BukkitConfigSystem.html" title="class in com.djrapitops.plan.settings">BukkitConfigSystem</a></code></dd>
+<dd><code><a href="ConfigSystem.html#enable()">enable</a></code>&nbsp;in class&nbsp;<code><a href="ConfigSystem.html" title="class in com.djrapitops.plan.settings">ConfigSystem</a></code></dd>
 </dl>
 </div>
 </section>
@@ -218,7 +213,7 @@ loadScripts(document, 'script');</script>
 <div class="block">Copies default values from file in jar to Config.</div>
 <dl class="notes">
 <dt>Overrides:</dt>
-<dd><code><a href="BukkitConfigSystem.html#copyDefaults()">copyDefaults</a></code>&nbsp;in class&nbsp;<code><a href="BukkitConfigSystem.html" title="class in com.djrapitops.plan.settings">BukkitConfigSystem</a></code></dd>
+<dd><code><a href="GameServerConfigSystem.html#copyDefaults()">copyDefaults</a></code>&nbsp;in class&nbsp;<code><a href="GameServerConfigSystem.html" title="class in com.djrapitops.plan.settings">GameServerConfigSystem</a></code></dd>
 <dt>Throws:</dt>
 <dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code> - If file can't be read or written.</dd>
 </dl>

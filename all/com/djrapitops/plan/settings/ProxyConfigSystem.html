@@ -59,13 +59,11 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.settings.config.changes.ConfigUpdater,com.djrapitops.plan.settings.network.NetworkSettingManager,com.djrapitops.plan.settings.theme.Theme,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" tabindex="0">ProxyConfigSystem(PlanFiles, PlanConfig, ConfigUpdater, NetworkSettingManager, Theme, PluginLogger, ErrorLogger)</a></li>
+<li><a href="#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.settings.config.changes.ConfigUpdater,com.djrapitops.plan.settings.theme.Theme,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" tabindex="0">ProxyConfigSystem(PlanFiles, PlanConfig, ConfigUpdater, Theme, PluginLogger, ErrorLogger)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#enable()" tabindex="0">enable()</a></li>
-<li><a href="#disable()" tabindex="0">disable()</a></li>
 <li><a href="#copyDefaults()" tabindex="0">copyDefaults()</a></li>
 </ol>
 </li>
@@ -115,10 +113,9 @@ Bukkit and Bungee have different default config file inside the jar.</div>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.settings.config.changes.ConfigUpdater,com.djrapitops.plan.settings.network.NetworkSettingManager,com.djrapitops.plan.settings.theme.Theme,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">ProxyConfigSystem</a><wbr>(<a href="../storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.settings.config.changes.ConfigUpdater,com.djrapitops.plan.settings.theme.Theme,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">ProxyConfigSystem</a><wbr>(<a href="../storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
  <a href="config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
  <a href="config/changes/ConfigUpdater.html" title="class in com.djrapitops.plan.settings.config.changes">ConfigUpdater</a>&nbsp;configUpdater,
- <a href="network/NetworkSettingManager.html" title="class in com.djrapitops.plan.settings.network">NetworkSettingManager</a>&nbsp;networkSettingManager,
  <a href="theme/Theme.html" title="class in com.djrapitops.plan.settings.theme">Theme</a>&nbsp;theme,
  net.playeranalytics.plugin.server.PluginLogger&nbsp;logger,
  <a href="../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</code></div>
@@ -142,22 +139,12 @@ Bukkit and Bungee have different default config file inside the jar.</div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Copies default values from file in jar to Config.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#disable()" class="member-name-link">disable</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Performs disable actions for the subsystem</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#enable()" class="member-name-link">enable</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
-<div class="block">Performs enable actions for the subsystem.</div>
-</div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.djrapitops.plan.settings.ConfigSystem">Methods inherited from class&nbsp;<a href="ConfigSystem.html#method-summary" title="class in com.djrapitops.plan.settings">ConfigSystem</a></h3>
-<code><a href="ConfigSystem.html#checkWrongTimeZone()" title="checkWrongTimeZone()">checkWrongTimeZone</a>, <a href="ConfigSystem.html#getConfig()" title="getConfig()">getConfig</a>, <a href="ConfigSystem.html#getTheme()" title="getTheme()">getTheme</a>, <a href="ConfigSystem.html#reload()" title="reload()">reload</a></code></div>
+<code><a href="ConfigSystem.html#checkWrongTimeZone()" title="checkWrongTimeZone()">checkWrongTimeZone</a>, <a href="ConfigSystem.html#disable()" title="disable()">disable</a>, <a href="ConfigSystem.html#enable()" title="enable()">enable</a>, <a href="ConfigSystem.html#getConfig()" title="getConfig()">getConfig</a>, <a href="ConfigSystem.html#getTheme()" title="getTheme()">getTheme</a>, <a href="ConfigSystem.html#reload()" title="reload()">reload</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-java.lang.Object">Methods inherited from class&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#method-summary" title="class or interface in java.lang" class="external-link">Object</a></h3>
 <code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#clone()" title="class or interface in java.lang" class="external-link">clone</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#equals(java.lang.Object)" title="class or interface in java.lang" class="external-link">equals</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#finalize()" title="class or interface in java.lang" class="external-link">finalize</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#getClass()" title="class or interface in java.lang" class="external-link">getClass</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#hashCode()" title="class or interface in java.lang" class="external-link">hashCode</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#notify()" title="class or interface in java.lang" class="external-link">notify</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#notifyAll()" title="class or interface in java.lang" class="external-link">notifyAll</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#toString()" title="class or interface in java.lang" class="external-link">toString</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait()" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait(long)" title="class or interface in java.lang" class="external-link">wait</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html#wait(long,int)" title="class or interface in java.lang" class="external-link">wait</a></code></div>
@@ -173,14 +160,13 @@ Bukkit and Bungee have different default config file inside the jar.</div>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.settings.config.changes.ConfigUpdater,com.djrapitops.plan.settings.network.NetworkSettingManager,com.djrapitops.plan.settings.theme.Theme,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)">
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.settings.config.changes.ConfigUpdater,com.djrapitops.plan.settings.theme.Theme,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)">
 <h3>ProxyConfigSystem</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations">@Inject
 </span><span class="modifiers">public</span>&nbsp;<span class="element-name">ProxyConfigSystem</span><wbr><span class="parameters">(<a href="../storage/file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
  <a href="config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
  <a href="config/changes/ConfigUpdater.html" title="class in com.djrapitops.plan.settings.config.changes">ConfigUpdater</a>&nbsp;configUpdater,
- <a href="network/NetworkSettingManager.html" title="class in com.djrapitops.plan.settings.network">NetworkSettingManager</a>&nbsp;networkSettingManager,
  <a href="theme/Theme.html" title="class in com.djrapitops.plan.settings.theme">Theme</a>&nbsp;theme,
  net.playeranalytics.plugin.server.PluginLogger&nbsp;logger,
  <a href="../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</span></div>
@@ -195,38 +181,6 @@ Bukkit and Bungee have different default config file inside the jar.</div>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
-<li>
-<section class="detail" id="enable()">
-<h3>enable</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">enable</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../SubSystem.html#enable()">SubSystem</a></code></span></div>
-<div class="block">Performs enable actions for the subsystem.</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="../SubSystem.html#enable()">enable</a></code>&nbsp;in interface&nbsp;<code><a href="../SubSystem.html" title="interface in com.djrapitops.plan">SubSystem</a></code></dd>
-<dt>Overrides:</dt>
-<dd><code><a href="ConfigSystem.html#enable()">enable</a></code>&nbsp;in class&nbsp;<code><a href="ConfigSystem.html" title="class in com.djrapitops.plan.settings">ConfigSystem</a></code></dd>
-</dl>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="disable()">
-<h3>disable</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">disable</span>()</div>
-<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../SubSystem.html#disable()">SubSystem</a></code></span></div>
-<div class="block">Performs disable actions for the subsystem</div>
-<dl class="notes">
-<dt>Specified by:</dt>
-<dd><code><a href="../SubSystem.html#disable()">disable</a></code>&nbsp;in interface&nbsp;<code><a href="../SubSystem.html" title="interface in com.djrapitops.plan">SubSystem</a></code></dd>
-<dt>Overrides:</dt>
-<dd><code><a href="ConfigSystem.html#disable()">disable</a></code>&nbsp;in class&nbsp;<code><a href="ConfigSystem.html" title="class in com.djrapitops.plan.settings">ConfigSystem</a></code></dd>
-</dl>
-</div>
-</section>
-</li>
 <li>
 <section class="detail" id="copyDefaults()">
 <h3>copyDefaults</h3>

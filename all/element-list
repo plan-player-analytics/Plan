@@ -120,7 +120,6 @@ com.djrapitops.plan.settings.config.paths
 com.djrapitops.plan.settings.config.paths.key
 com.djrapitops.plan.settings.locale
 com.djrapitops.plan.settings.locale.lang
-com.djrapitops.plan.settings.network
 com.djrapitops.plan.settings.theme
 com.djrapitops.plan.settings.upkeep
 com.djrapitops.plan.storage.database
