@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database.queries.analysis;
 
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
@@ -28,9 +29,7 @@ import org.jspecify.annotations.NonNull;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
@@ -47,10 +46,6 @@ public class MultiServerActivityIndexQueries {
     }
 
     public static Query<Integer> fetchActivityGroupCount(long date, Collection<ServerUUID> serverUUIDs, long playtimeThreshold, double above, double below) {
-        if (serverUUIDs.isEmpty()) {
-            return NetworkActivityIndexQueries.fetchActivityGroupCount(date, playtimeThreshold, above, below);
-        }
-
         String selectActivityIndex = selectActivityIndexOfPlayersOnServer(date, playtimeThreshold, serverUUIDs);
 
         String selectCount = SELECT + "COUNT(1) as count" +
@@ -72,13 +67,39 @@ public class MultiServerActivityIndexQueries {
         };
     }
 
+    public static Query<Map<String, Integer>> fetchActivityGroupCounts(long date, Collection<ServerUUID> serverUUIDs, long playtimeThreshold) {
+        String selectCounts = "WITH activity_indexes AS (" +
+                selectActivityIndexOfPlayersOnServer(date, playtimeThreshold, serverUUIDs) +
+                ")," +
+                "classified AS (" +
+                SELECT + " CASE WHEN activity_index < 1.0 THEN 'Inactive'\n" +
+                " WHEN activity_index < 2.0 THEN 'Irregular'" +
+                " WHEN activity_index < 3.0 THEN 'Regular'" +
+                " WHEN activity_index < 3.75 THEN 'Active'" +
+                " ELSE 'Very Active'" +
+                " END AS activity_group" +
+                FROM + "activity_indexes" +
+                ")" +
+                SELECT + "activity_group,COUNT(*) as count" + FROM + "classified" + GROUP_BY + "activity_group";
+
+        return new QueryAllStatement<>(selectCounts) {
+            @Override
+            public Map<String, Integer> processResults(ResultSet set) throws SQLException {
+                Map<String, Integer> groups = new HashMap<>();
+                while (set.next()) {
+                    String group = set.getString("activity_group");
+                    int count = set.getInt("count");
+                    groups.put(group, count);
+                }
+                return groups;
+            }
+        };
+    }
+
     private static String selectActivityIndexOfPlayersOnServer(long date, long playtimeThreshold, Collection<ServerUUID> serverUUIDs) {
         long weekAgo = date - TimeUnit.DAYS.toMillis(7L);
         long twoWeeksAgo = date - TimeUnit.DAYS.toMillis(14L);
         long threeWeeksAgo = date - TimeUnit.DAYS.toMillis(21L);
-        String selectUserIds = SELECT + DISTINCT + UserInfoTable.USER_ID +
-                FROM + UserInfoTable.TABLE_NAME +
-                WHERE + UserInfoTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs);
 
         String selectWeeks = SELECT +
                 "ps.user_id, " +
@@ -86,22 +107,39 @@ public class MultiServerActivityIndexQueries {
                 week(twoWeeksAgo, weekAgo, "w2") + ',' +
                 week(threeWeeksAgo, twoWeeksAgo, "w3") +
                 FROM + SessionsTable.TABLE_NAME + " ps " +
-                WHERE + "ps." + SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
-                AND + "ps." + SessionsTable.SESSION_END + ">=" + threeWeeksAgo + " " +
+                WHERE + (serverUUIDs.isEmpty()
+                ? ""
+                : "ps." + SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
+                  AND) + "ps." + SessionsTable.SESSION_END + ">=" + threeWeeksAgo + " " +
                 AND + "ps." + SessionsTable.SESSION_START + "<" + date + " " +
                 GROUP_BY + "ps." + SessionsTable.USER_ID;
 
-        return SELECT +
-                "u." + UserInfoTable.USER_ID + ", " +
-                "5.0 - 5.0 * ( " +
+        String activityIndex = "5.0 - 5.0 * ( " +
                 "( " +
                 "1 / (PI()/2 * (COALESCE(s.w1,0) / " + playtimeThreshold + ") + 1) + " +
                 "1 / (PI()/2 * (COALESCE(s.w2,0) / " + playtimeThreshold + ") + 1) + " +
                 "1 / (PI()/2 * (COALESCE(s.w3,0) / " + playtimeThreshold + ") + 1) " +
                 ") / 3 " +
-                ") AS activity_index " +
-                FROM + "(" + selectUserIds + ") u " +
-                LEFT_JOIN + "( " + selectWeeks + ") s ON s." + SessionsTable.USER_ID + "=u." + UserInfoTable.USER_ID;
+                ") AS activity_index ";
+
+        if (serverUUIDs.isEmpty()) {
+            return SELECT + "u." + UsersTable.ID + " as user_id, " +
+                    activityIndex +
+                    FROM + UsersTable.TABLE_NAME + " u " +
+                    LEFT_JOIN + "( " + selectWeeks + ") s ON s." + SessionsTable.USER_ID + "=u." + UsersTable.ID +
+                    WHERE + UsersTable.REGISTERED + "<=" + date;
+        } else {
+            String selectUserIds = SELECT + UserInfoTable.USER_ID + ',' + "MIN(" + UserInfoTable.REGISTERED + ") as registered" +
+                    FROM + UserInfoTable.TABLE_NAME +
+                    WHERE + UserInfoTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
+                    GROUP_BY + UserInfoTable.USER_ID;
+            return SELECT +
+                    "u." + UserInfoTable.USER_ID + ", " +
+                    activityIndex +
+                    FROM + "(" + selectUserIds + ") u " +
+                    LEFT_JOIN + "( " + selectWeeks + ") s ON s." + SessionsTable.USER_ID + "=u." + UserInfoTable.USER_ID +
+                    WHERE + UserInfoTable.REGISTERED + "<=" + date;
+        }
     }
 
     private static String selectActivityIndexOfPlayerOnServers(long date, long playtimeThreshold, Collection<ServerUUID> serverUUIDs) {
