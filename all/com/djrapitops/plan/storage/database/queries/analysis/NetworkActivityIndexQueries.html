@@ -69,8 +69,6 @@ loadScripts(document, 'script');</script>
 <li><a href="#averagePlaytimePerRegularPlayer(long,long,java.lang.Long)" tabindex="0">averagePlaytimePerRegularPlayer(long, long, Long)</a></li>
 <li><a href="#averageSessionLengthPerRegularPlayer(long,long,java.lang.Long)" tabindex="0">averageSessionLengthPerRegularPlayer(long, long, Long)</a></li>
 <li><a href="#averageAFKPerRegularPlayer(long,long,java.lang.Long)" tabindex="0">averageAFKPerRegularPlayer(long, long, Long)</a></li>
-<li><a href="#activityIndexForNewPlayers(long,long,java.lang.Long)" tabindex="0">activityIndexForNewPlayers(long, long, Long)</a></li>
-<li><a href="#averageActivityIndexForRetainedPlayers(long,long,java.lang.Long)" tabindex="0">averageActivityIndexForRetainedPlayers(long, long, Long)</a></li>
 <li><a href="#activityIndexForAllPlayers(long,long)" tabindex="0">activityIndexForAllPlayers(long, long)</a></li>
 </ol>
 </li>
@@ -136,16 +134,6 @@ New Limits for A would thus be
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>, <a href="../../../../delivery/domain/mutators/ActivityIndex.html" title="class in com.djrapitops.plan.delivery.domain.mutators">ActivityIndex</a>&gt;&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#activityIndexForAllPlayers(long,long)" class="member-name-link">activityIndexForAllPlayers</a><wbr>(long&nbsp;date,
  long&nbsp;playtimeThreshold)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../../../delivery/domain/mutators/ActivityIndex.html" title="class in com.djrapitops.plan.delivery.domain.mutators">ActivityIndex</a>&gt;&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#activityIndexForNewPlayers(long,long,java.lang.Long)" class="member-name-link">activityIndexForNewPlayers</a><wbr>(long&nbsp;after,
- long&nbsp;before,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;threshold)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="../../../../delivery/domain/mutators/ActivityIndex.html" title="class in com.djrapitops.plan.delivery.domain.mutators">ActivityIndex</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#averageActivityIndexForRetainedPlayers(long,long,java.lang.Long)" class="member-name-link">averageActivityIndexForRetainedPlayers</a><wbr>(long&nbsp;after,
- long&nbsp;before,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;threshold)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#averageAFKPerRegularPlayer(long,long,java.lang.Long)" class="member-name-link">averageAFKPerRegularPlayer</a><wbr>(long&nbsp;after,
@@ -346,26 +334,6 @@ New Limits for A would thus be
 <h3>averageAFKPerRegularPlayer</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">averageAFKPerRegularPlayer</span><wbr><span class="parameters">(long&nbsp;after,
- long&nbsp;before,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;threshold)</span></div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="activityIndexForNewPlayers(long,long,java.lang.Long)">
-<h3>activityIndexForNewPlayers</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../../../delivery/domain/mutators/ActivityIndex.html" title="class in com.djrapitops.plan.delivery.domain.mutators">ActivityIndex</a>&gt;&gt;</span>&nbsp;<span class="element-name">activityIndexForNewPlayers</span><wbr><span class="parameters">(long&nbsp;after,
- long&nbsp;before,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;threshold)</span></div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="averageActivityIndexForRetainedPlayers(long,long,java.lang.Long)">
-<h3>averageActivityIndexForRetainedPlayers</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="../../../../delivery/domain/mutators/ActivityIndex.html" title="class in com.djrapitops.plan.delivery.domain.mutators">ActivityIndex</a>&gt;</span>&nbsp;<span class="element-name">averageActivityIndexForRetainedPlayers</span><wbr><span class="parameters">(long&nbsp;after,
  long&nbsp;before,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;threshold)</span></div>
 </div>
