@@ -126,15 +126,15 @@ const PerformanceAsNumbersTable = ({servers}) => {
                                  color: "mspt-average",
                                  icon: faMap,
                                  text: t('html.label.msptImpactChunk'),
-                                 indent: true,
-                                 boldBottom: true
+                                 indent: true
                              }, {
                                  dataType: DatapointType.MSPT_MAX_95TH,
                                  color: "mspt-percentile",
                                  icon: faStopwatch,
                                  text: t('html.label.msptPercentileMax', {percentile: 95}),
                                  key: 'max-95h-mspt',
-                                 indent: true
+                                 indent: true,
+                                 boldBottom: true
                              }, {
                                  dataType: DatapointType.ENTITIES_AVERAGE,
                                  color: "entities",
