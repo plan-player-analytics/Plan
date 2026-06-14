@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.web.resolver.request.URIQuery;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.java.CatchingParsers;
+import com.djrapitops.plan.utilities.java.ThrowingFunction;
 import org.apache.commons.lang3.StringUtils;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -34,6 +35,8 @@ import java.util.stream.Collectors;
  */
 public class GenericFilter {
 
+    private final @Untrusted URIQuery query;
+
     private final @Nullable Long after;
     private final @Nullable Long before;
     private final @Untrusted List<String> serverIdentifiers;
@@ -41,7 +44,8 @@ public class GenericFilter {
     private List<ServerUUID> serverUUIDs;
 
     public GenericFilter(@Untrusted URIQuery query) {
-        after = query.get("after", CatchingParsers::parseLong)
+        this.query = query;
+        after = this.query.get("after", CatchingParsers::parseLong)
                 .orElseGet(() -> query.get("afterMillisAgo", CatchingParsers::parseLong)
                         .map(value -> System.currentTimeMillis() - value)
                         .orElse(null));
@@ -89,5 +93,13 @@ public class GenericFilter {
 
     public Optional<UUID> getPlayerUUID() {
         return Optional.ofNullable(playerUUID);
+    }
+
+    public <T, E extends RuntimeException> Optional<T> getAdditionalParameter(String key, ThrowingFunction<String, T, E> mapper) {
+        try {
+            return query.get(key).map(mapper::apply);
+        } catch (RuntimeException e) {
+            return Optional.empty();
+        }
     }
 }

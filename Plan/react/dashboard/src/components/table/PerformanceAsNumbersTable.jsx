@@ -17,6 +17,7 @@ import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 import {QueryDatapointTable} from "./QueryDatapointTable.tsx";
 import {MS_24H, MS_MONTH, MS_WEEK} from "../../util/format/useDateFormatter.js";
 import {DatapointType} from "../../dataHooks/model/datapoint/Datapoint.ts";
+import {OnlineActivityType} from "../../dataHooks/model/GenericFilter.ts";
 
 const PerformanceAsNumbersTable = ({servers}) => {
     const {t} = useTranslation();
@@ -85,17 +86,35 @@ const PerformanceAsNumbersTable = ({servers}) => {
                                  icon: faUser,
                                  text: t('html.label.averagePlayers')
                              }, {
+                                 dataType: DatapointType.PLAYERS_ONLINE_AVERAGE,
+                                 color: "players-online",
+                                 icon: faUser,
+                                 filter: {extra: {activityType: OnlineActivityType.ACTIVE}},
+                                 text: t('html.label.whileActive'),
+                                 key: 'players-online-active',
+                                 indent: true
+                             }, {
                                  dataType: DatapointType.TPS_AVERAGE,
                                  color: "tps-average",
                                  icon: faTachometerAlt,
                                  text: <>{t('html.label.averageTps')} {noTPSOnProxies}</>,
-                                 key: "average-tps"
+                                 key: "average-tps",
+                                 boldBottom: true
                              }, {
                                  dataType: DatapointType.MSPT_AVERAGE,
                                  color: "mspt-average",
                                  icon: faStopwatch,
-                                 text: <>{t('html.label.msptAverage')} {noTPSOnProxies}</>,
+                                 filter: {extra: {activityType: OnlineActivityType.ACTIVE}},
+                                 text: <>{t('html.label.msptAverage')} {t('html.label.whileActive')} {noTPSOnProxies}</>,
                                  key: "average-mspt"
+                             }, {
+                                 dataType: DatapointType.MSPT_AVERAGE,
+                                 color: "mspt-average",
+                                 icon: faStopwatch,
+                                 filter: {extra: {activityType: OnlineActivityType.IDLE}},
+                                 text: t('html.label.whileIdle'),
+                                 key: 'average-mspt-idle',
+                                 indent: true
                              }, {
                                  dataType: DatapointType.MSPT_IMPACT_PER_PLAYER,
                                  color: "mspt-average",
@@ -107,12 +126,21 @@ const PerformanceAsNumbersTable = ({servers}) => {
                                  color: "mspt-average",
                                  icon: faMap,
                                  text: t('html.label.msptImpactChunk'),
+                                 indent: true,
+                                 boldBottom: true
+                             }, {
+                                 dataType: DatapointType.MSPT_MAX_95TH,
+                                 color: "mspt-percentile",
+                                 icon: faStopwatch,
+                                 text: t('html.label.msptPercentileMax', {percentile: 95}),
+                                 key: 'max-95h-mspt',
                                  indent: true
                              }, {
                                  dataType: DatapointType.ENTITIES_AVERAGE,
                                  color: "entities",
                                  icon: faDragon,
-                                 text: <>{t('html.label.averageEntities')} {noTPSOnProxies}</>,
+                                 filter: {extra: {activityType: OnlineActivityType.ACTIVE}},
+                                 text: <>{t('html.label.averageEntities')} {t('html.label.whileActive')} {noTPSOnProxies}</>,
                                  key: "average-entities"
                              }, {
                                  dataType: DatapointType.ENTITIES_PER_CHUNK,
@@ -124,7 +152,8 @@ const PerformanceAsNumbersTable = ({servers}) => {
                                  dataType: DatapointType.CHUNKS_AVERAGE,
                                  color: "chunks",
                                  icon: faMap,
-                                 text: <>{t('html.label.averageChunks')} {noTPSOnProxies}</>,
+                                 filter: {extra: {activityType: OnlineActivityType.ACTIVE}},
+                                 text: <>{t('html.label.averageChunks')} {t('html.label.whileActive')} {noTPSOnProxies}</>,
                                  key: "average-chunks"
                              }, {
                                  dataType: DatapointType.CHUNKS_PER_PLAYER,
@@ -138,6 +167,22 @@ const PerformanceAsNumbersTable = ({servers}) => {
                                  color: "cpu",
                                  icon: faTachometerAlt,
                                  text: t('html.label.averageCpuUsage')
+                             }, {
+                                 dataType: DatapointType.CPU_AVERAGE,
+                                 color: "cpu",
+                                 icon: faTachometerAlt,
+                                 filter: {extra: {activityType: OnlineActivityType.ACTIVE}},
+                                 text: t('html.label.whileActive'),
+                                 key: 'average-mspt-active',
+                                 indent: true
+                             }, {
+                                 dataType: DatapointType.CPU_AVERAGE,
+                                 color: "cpu",
+                                 icon: faTachometerAlt,
+                                 filter: {extra: {activityType: OnlineActivityType.IDLE}},
+                                 text: t('html.label.whileIdle'),
+                                 key: 'average-mspt-idle',
+                                 indent: true
                              }, {
                                  dataType: DatapointType.CPU_IMPACT_PER_PLAYER,
                                  color: "cpu",

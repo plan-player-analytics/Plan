@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
+import com.djrapitops.plan.delivery.domain.datatransfer.OnlineActivityType;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
@@ -45,12 +46,17 @@ public class ChunksAverage implements Datapoint<Long> {
 
     @Override
     public SupportedFilters[] getSupportedFilters() {
-        return SupportedFilters.onlyServer();
+        return SupportedFilters.noPlayer();
     }
 
     @Override
     public Optional<Long> getValue(GenericFilter filter) {
-        long average = dbSystem.getDatabase().query(TPSQueries.averageChunks(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
+        long average = dbSystem.getDatabase().query(TPSQueries.averageChunks(
+                filter.getAfter(),
+                filter.getBefore(),
+                filter.getServerUUIDs(),
+                filter.getAdditionalParameter("activityType", OnlineActivityType::valueOf)
+                        .orElse(null)));
         return average != -1L ? Optional.of(average) : Optional.empty();
     }
 
@@ -61,7 +67,7 @@ public class ChunksAverage implements Datapoint<Long> {
         } else if (!filter.getServerUUIDs().isEmpty()) {
             return WebPermission.DATA_SERVER_CHUNKS_AVERAGE;
         } else {
-            return WebPermission.DATA_NETWORK;
+            return WebPermission.DATA_NETWORK_CHUNKS_AVERAGE;
         }
     }
 

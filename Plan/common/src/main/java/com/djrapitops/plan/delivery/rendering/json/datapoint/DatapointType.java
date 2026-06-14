@@ -74,7 +74,7 @@ public enum DatapointType {
     UPTIME(Uptime.class, DatapointCacheKey.TPS),
     UPTIME_CURRENT(UptimeCurrent.class),
     WORLD_PIE(WorldPie.class, DatapointCacheKey.SESSION),
-    ;
+    MSPT_MAX_95TH(MSPTMax95th.class, DatapointCacheKey.TPS);
 
     private final Class<? extends Datapoint<?>> datapointClass;
     private final DatapointCacheKey[] cacheKeys;

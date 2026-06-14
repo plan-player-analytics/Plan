@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database.queries.objects;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.delivery.domain.Segment;
+import com.djrapitops.plan.delivery.domain.datatransfer.OnlineActivityType;
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
 import com.djrapitops.plan.identification.ServerUUID;
@@ -30,6 +31,7 @@ import com.djrapitops.plan.storage.database.sql.tables.TPSTable;
 import com.djrapitops.plan.utilities.dev.Benchmark;
 import com.djrapitops.plan.utilities.java.Lists;
 import org.intellij.lang.annotations.Language;
+import org.jspecify.annotations.Nullable;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -525,10 +527,10 @@ public class TPSQueries {
     }
 
     public static Query<Double> averagePlayersOnline(long after, long before, ServerUUID serverUUID) {
-        return averagePlayersOnline(after, before, Collections.singletonList(serverUUID));
+        return averagePlayersOnline(after, before, Collections.singletonList(serverUUID), null);
     }
 
-    public static Query<Double> averagePlayersOnline(long after, long before, List<ServerUUID> serverUUIDs) {
+    public static Query<Double> averagePlayersOnline(long after, long before, List<ServerUUID> serverUUIDs, OnlineActivityType onlineActivityType) {
         if (serverUUIDs.isEmpty()) {
             return db -> -1.0;
         }
@@ -536,9 +538,9 @@ public class TPSQueries {
         String sql = SELECT + "AVG(" + PLAYERS_ONLINE + ") as average" + FROM + TABLE_NAME + " t" +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
                 WHERE + "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
-                AND + PLAYERS_ONLINE + ">=0" +
                 AND + DATE + "<?" +
-                AND + DATE + ">?";
+                AND + DATE + ">?" +
+                (onlineActivityType != null ? onlineActivityType.getSql() : AND + PLAYERS_ONLINE + ">=0");
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -555,10 +557,10 @@ public class TPSQueries {
     }
 
     public static Query<Double> averageCPU(long after, long before, ServerUUID serverUUID) {
-        return averageCPU(after, before, Collections.singletonList(serverUUID));
+        return averageCPU(after, before, Collections.singletonList(serverUUID), null);
     }
 
-    public static Query<Double> averageCPU(long after, long before, List<ServerUUID> serverUUIDs) {
+    public static Query<Double> averageCPU(long after, long before, List<ServerUUID> serverUUIDs, OnlineActivityType onlineActivityType) {
         String sql = SELECT + "AVG(" + CPU_USAGE + ") as average" + FROM + TABLE_NAME + " t" +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
                 WHERE + (serverUUIDs.isEmpty()
@@ -566,7 +568,8 @@ public class TPSQueries {
                 : "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
                   AND) + CPU_USAGE + ">=0" +
                 AND + DATE + "<?" +
-                AND + DATE + ">?";
+                AND + DATE + ">?" +
+                (onlineActivityType != null ? onlineActivityType.getSql() : "");
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -582,8 +585,8 @@ public class TPSQueries {
         };
     }
 
-    public static Query<Double> averageCpuPerPlayer(long after, long before, List<ServerUUID> serverUUIDs) {
-        String sql = SELECT + "AVG(" + CPU_USAGE + "/" + PLAYERS_ONLINE + ") as average" + FROM + TABLE_NAME + " t" +
+    public static Query<Double> averageCpuPerPlayer(long after, long before, List<ServerUUID> serverUUIDs, double averageWhenIdle) {
+        String sql = SELECT + "AVG((" + CPU_USAGE + "-?)" + "/" + PLAYERS_ONLINE + ") as average" + FROM + TABLE_NAME + " t" +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
                 WHERE + (serverUUIDs.isEmpty()
                 ? ""
@@ -595,8 +598,9 @@ public class TPSQueries {
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, before);
-                statement.setLong(2, after);
+                statement.setDouble(1, averageWhenIdle);
+                statement.setLong(2, before);
+                statement.setLong(3, after);
             }
 
             @Override
@@ -638,20 +642,19 @@ public class TPSQueries {
     }
 
     public static Query<Long> averageChunks(long after, long before, ServerUUID serverUUID) {
-        return averageChunks(after, before, Collections.singletonList(serverUUID));
+        return averageChunks(after, before, Collections.singletonList(serverUUID), null);
     }
 
-    public static Query<Long> averageChunks(long after, long before, List<ServerUUID> serverUUIDs) {
-        if (serverUUIDs.isEmpty()) {
-            return db -> -1L;
-        }
-
+    public static Query<Long> averageChunks(long after, long before, List<ServerUUID> serverUUIDs, @Nullable OnlineActivityType onlineActivityType) {
         String sql = SELECT + "AVG(" + CHUNKS + ") as average" + FROM + TABLE_NAME + " t" +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
-                WHERE + "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
-                AND + CHUNKS + ">=0" +
+                WHERE + (serverUUIDs.isEmpty()
+                ? ""
+                : "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
+                  AND) + CHUNKS + ">=0" +
                 AND + DATE + "<?" +
-                AND + DATE + ">?";
+                AND + DATE + ">?" +
+                (onlineActivityType != null ? onlineActivityType.getSql() : "");
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -693,20 +696,19 @@ public class TPSQueries {
     }
 
     public static Query<Long> averageEntities(long after, long before, ServerUUID serverUUID) {
-        return averageEntities(after, before, Collections.singletonList(serverUUID));
+        return averageEntities(after, before, Collections.singletonList(serverUUID), null);
     }
 
-    public static Query<Long> averageEntities(long after, long before, List<ServerUUID> serverUUIDs) {
-        if (serverUUIDs.isEmpty()) {
-            return db -> -1L;
-        }
-
+    public static Query<Long> averageEntities(long after, long before, List<ServerUUID> serverUUIDs, OnlineActivityType onlineActivityType) {
         String sql = SELECT + "AVG(" + ENTITIES + ") as average" + FROM + TABLE_NAME + " t" +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
-                WHERE + "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
-                AND + ENTITIES + ">=0" +
+                WHERE + (serverUUIDs.isEmpty()
+                ? ""
+                : "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
+                  AND) + ENTITIES + ">=0" +
                 AND + DATE + "<?" +
-                AND + DATE + ">?";
+                AND + DATE + ">?" +
+                (onlineActivityType != null ? onlineActivityType.getSql() : "");
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -748,20 +750,19 @@ public class TPSQueries {
     }
 
     public static Query<Double> averageMSPT(long after, long before, ServerUUID serverUUID) {
-        return averageMSPT(after, before, Collections.singletonList(serverUUID));
+        return averageMSPT(after, before, Collections.singletonList(serverUUID), null);
     }
 
-    public static Query<Double> averageMSPT(long after, long before, List<ServerUUID> serverUUIDs) {
-        if (serverUUIDs.isEmpty()) {
-            return db -> -1.0;
-        }
-
+    public static Query<Double> averageMSPT(long after, long before, List<ServerUUID> serverUUIDs, OnlineActivityType onlineActivityType) {
         String sql = SELECT + "AVG(" + MSPT_AVERAGE + ") as average" + FROM + TABLE_NAME + " t" +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
-                WHERE + "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
-                AND + MSPT_AVERAGE + ">=0" +
+                WHERE + (serverUUIDs.isEmpty()
+                ? ""
+                : "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
+                  AND) + MSPT_AVERAGE + ">=0" +
                 AND + DATE + "<?" +
-                AND + DATE + ">?";
+                AND + DATE + ">?" +
+                (onlineActivityType != null ? onlineActivityType.getSql() : "");
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -819,6 +820,30 @@ public class TPSQueries {
                 statement.setLong(1, before);
                 statement.setLong(2, after);
                 statement.setDouble(3, lowTpsThreshold);
+            }
+
+            @Override
+            public Double processResults(ResultSet set) throws SQLException {
+                double value = set.next() ? set.getDouble("max") : -1.0;
+                return set.wasNull() ? -1.0 : value;
+            }
+        };
+    }
+
+    public static Query<Double> max95thMSPT(long after, long before, List<ServerUUID> serverUUIDs) {
+        String sql = SELECT + "MAX(" + MSPT_95TH_PERCENTILE + ") as max" + FROM + TABLE_NAME + " t" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
+                WHERE + (serverUUIDs.isEmpty()
+                ? ""
+                : "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
+                  AND) + MSPT_95TH_PERCENTILE + ">=0" +
+                AND + DATE + "<?" +
+                AND + DATE + ">?";
+        return new QueryStatement<>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, before);
+                statement.setLong(2, after);
             }
 
             @Override

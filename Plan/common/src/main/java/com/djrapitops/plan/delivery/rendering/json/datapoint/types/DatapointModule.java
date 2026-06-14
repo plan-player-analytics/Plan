@@ -203,4 +203,8 @@ public interface DatapointModule {
     @Binds
     @IntoSet
     Datapoint<?> bindMSPTMax95thWithLowTPS(MSPTMax95thWithLowTPS msptMax95thWithLowTPS);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindMSPTMax95th(MSPTMax95th msptMax95th);
 }

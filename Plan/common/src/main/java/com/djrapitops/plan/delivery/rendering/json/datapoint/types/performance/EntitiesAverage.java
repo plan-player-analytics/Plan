@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
+import com.djrapitops.plan.delivery.domain.datatransfer.OnlineActivityType;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
@@ -45,12 +46,18 @@ public class EntitiesAverage implements Datapoint<Long> {
 
     @Override
     public SupportedFilters[] getSupportedFilters() {
-        return SupportedFilters.onlyServer();
+        return SupportedFilters.noPlayer();
     }
 
     @Override
     public Optional<Long> getValue(GenericFilter filter) {
-        long average = dbSystem.getDatabase().query(TPSQueries.averageEntities(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
+        long average = dbSystem.getDatabase().query(TPSQueries.averageEntities(
+                filter.getAfter(),
+                filter.getBefore(),
+                filter.getServerUUIDs(),
+                filter.getAdditionalParameter("activityType", OnlineActivityType::valueOf)
+                        .orElse(null)
+        ));
         return average != -1L ? Optional.of(average) : Optional.empty();
     }
 
@@ -61,7 +68,7 @@ public class EntitiesAverage implements Datapoint<Long> {
         } else if (!filter.getServerUUIDs().isEmpty()) {
             return WebPermission.DATA_SERVER_ENTITIES_AVERAGE;
         } else {
-            return WebPermission.DATA_NETWORK;
+            return WebPermission.DATA_NETWORK_ENTITIES_AVERAGE;
         }
     }
 

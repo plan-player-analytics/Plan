@@ -208,6 +208,7 @@ public enum HtmlLang implements Lang {
     LABEL_AVERAGE_MSPT("html.label.msptAverage", "MSPT Average"),
     LABEL_MSPT_FULL("html.label.msptFull", "Milliseconds Per Tick"),
     LABEL_MSPT_PERCENTILE("html.label.msptPercentile", "MSPT {{percentile}}th Percentile"),
+    LABEL_MAX_MSPT_PERCENTILE("html.label.msptPercentileMax", "Max MSPT {{percentile}}th Percentile"),
     // Player Page
     TITLE_SEEN_NICKNAMES("html.label.seenNicknames", "Seen Nicknames"),
     LABEL_LAST_SEEN("html.label.lastSeen", "Last Seen"),
@@ -240,6 +241,8 @@ public enum HtmlLang implements Lang {
     LABEL_LABEL_SESSION_MEDIAN("html.label.medianSessionLength", "Median Session Length"),
     LABEL_LABEL_KDR("html.label.kdr", "KDR"),
     LABEL_TITLE_INSIGHTS("html.label.insights", "Insights"),
+    LABEL_WHILE_ACTIVE("html.label.whileActive", "While Active (≥1 players)"),
+    LABEL_WHILE_IDLE("html.label.whileIdle", "While Idle (0 players)"),
     // ----------------------------------
     // OLD
     // ----------------------------------

@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
+import com.djrapitops.plan.delivery.domain.datatransfer.OnlineActivityType;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.Datapoint;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.rendering.json.datapoint.SupportedFilters;
@@ -50,7 +51,13 @@ public class CPUAverage implements Datapoint<Double> {
 
     @Override
     public Optional<Double> getValue(GenericFilter filter) {
-        double average = dbSystem.getDatabase().query(TPSQueries.averageCPU(filter.getAfter(), filter.getBefore(), filter.getServerUUIDs()));
+        double average = dbSystem.getDatabase().query(TPSQueries.averageCPU(
+                filter.getAfter(),
+                filter.getBefore(),
+                filter.getServerUUIDs(),
+                filter.getAdditionalParameter("activityType", OnlineActivityType::valueOf)
+                        .orElse(null)
+        ));
         return average != -1.0 ? Optional.of(average / 100.0) : Optional.empty();
     }
 

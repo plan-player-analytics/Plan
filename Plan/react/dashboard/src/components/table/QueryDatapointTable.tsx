@@ -24,6 +24,7 @@ type Row = {
     key?: string;
     text: string | React.ReactNode;
     color: string;
+    filter?: GenericFilter;
     bold?: boolean;
     title?: string;
     hidden?: boolean;
@@ -68,7 +69,7 @@ export const QueryDatapointTable = ({comparisonHeader, filter, columns, rows, sh
     const {hasPermission} = useAuth();
 
     return <table className={"table table-striped" + (nightModeEnabled ? " table-dark" : '')}>
-        <thead>
+        <thead className={"sticky-top"}>
         <tr>
             <th>
                 {comparisonHeader && <ComparingLabel>{comparisonHeader}</ComparingLabel>}
@@ -86,7 +87,7 @@ export const QueryDatapointTable = ({comparisonHeader, filter, columns, rows, sh
                         style={row.indent ? {marginLeft: "1rem"} : undefined}/> {row.text}</td>
                 {columns.map(column => <td key={column.key + row.text}>
                     <QueryDatapointValue dataType={row.dataType}
-                                         filter={{...filter, ...column.filter}}
+                                         filter={{...filter, ...column.filter, ...row.filter}}
                                          noDataFallback={"-"}/>
                 </td>)}
                 {showTrend && <td>
