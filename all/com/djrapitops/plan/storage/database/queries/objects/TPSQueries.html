@@ -75,22 +75,23 @@ loadScripts(document, 'script');</script>
 <li><a href="#averageTPS(long,long,com.djrapitops.plan.identification.ServerUUID)" tabindex="0">averageTPS(long, long, ServerUUID)</a></li>
 <li><a href="#averageTPS(long,long,java.util.List)" tabindex="0">averageTPS(long, long, List)</a></li>
 <li><a href="#averagePlayersOnline(long,long,com.djrapitops.plan.identification.ServerUUID)" tabindex="0">averagePlayersOnline(long, long, ServerUUID)</a></li>
-<li><a href="#averagePlayersOnline(long,long,java.util.List)" tabindex="0">averagePlayersOnline(long, long, List)</a></li>
+<li><a href="#averagePlayersOnline(long,long,java.util.List,com.djrapitops.plan.delivery.domain.datatransfer.OnlineActivityType)" tabindex="0">averagePlayersOnline(long, long, List, OnlineActivityType)</a></li>
 <li><a href="#averageCPU(long,long,com.djrapitops.plan.identification.ServerUUID)" tabindex="0">averageCPU(long, long, ServerUUID)</a></li>
-<li><a href="#averageCPU(long,long,java.util.List)" tabindex="0">averageCPU(long, long, List)</a></li>
-<li><a href="#averageCpuPerPlayer(long,long,java.util.List)" tabindex="0">averageCpuPerPlayer(long, long, List)</a></li>
+<li><a href="#averageCPU(long,long,java.util.List,com.djrapitops.plan.delivery.domain.datatransfer.OnlineActivityType)" tabindex="0">averageCPU(long, long, List, OnlineActivityType)</a></li>
+<li><a href="#averageCpuPerPlayer(long,long,java.util.List,double)" tabindex="0">averageCpuPerPlayer(long, long, List, double)</a></li>
 <li><a href="#averageRAM(long,long,com.djrapitops.plan.identification.ServerUUID)" tabindex="0">averageRAM(long, long, ServerUUID)</a></li>
 <li><a href="#averageRAM(long,long,java.util.List)" tabindex="0">averageRAM(long, long, List)</a></li>
 <li><a href="#averageChunks(long,long,com.djrapitops.plan.identification.ServerUUID)" tabindex="0">averageChunks(long, long, ServerUUID)</a></li>
-<li><a href="#averageChunks(long,long,java.util.List)" tabindex="0">averageChunks(long, long, List)</a></li>
+<li><a href="#averageChunks(long,long,java.util.List,com.djrapitops.plan.delivery.domain.datatransfer.OnlineActivityType)" tabindex="0">averageChunks(long, long, List, OnlineActivityType)</a></li>
 <li><a href="#averageChunksPerPlayer(long,long,java.util.List)" tabindex="0">averageChunksPerPlayer(long, long, List)</a></li>
 <li><a href="#averageEntities(long,long,com.djrapitops.plan.identification.ServerUUID)" tabindex="0">averageEntities(long, long, ServerUUID)</a></li>
-<li><a href="#averageEntities(long,long,java.util.List)" tabindex="0">averageEntities(long, long, List)</a></li>
+<li><a href="#averageEntities(long,long,java.util.List,com.djrapitops.plan.delivery.domain.datatransfer.OnlineActivityType)" tabindex="0">averageEntities(long, long, List, OnlineActivityType)</a></li>
 <li><a href="#averageEntitiesPerChunk(long,long,java.util.List)" tabindex="0">averageEntitiesPerChunk(long, long, List)</a></li>
 <li><a href="#averageMSPT(long,long,com.djrapitops.plan.identification.ServerUUID)" tabindex="0">averageMSPT(long, long, ServerUUID)</a></li>
-<li><a href="#averageMSPT(long,long,java.util.List)" tabindex="0">averageMSPT(long, long, List)</a></li>
+<li><a href="#averageMSPT(long,long,java.util.List,com.djrapitops.plan.delivery.domain.datatransfer.OnlineActivityType)" tabindex="0">averageMSPT(long, long, List, OnlineActivityType)</a></li>
 <li><a href="#averageMSPTWhenLowTps(long,long,java.util.List,double)" tabindex="0">averageMSPTWhenLowTps(long, long, List, double)</a></li>
 <li><a href="#max95thMSPTWhenLowTps(long,long,java.util.List,double)" tabindex="0">max95thMSPTWhenLowTps(long, long, List, double)</a></li>
+<li><a href="#max95thMSPT(long,long,java.util.List)" tabindex="0">max95thMSPT(long, long, List)</a></li>
 <li><a href="#averageMsptImpactPerPlayer(long,long,java.util.List)" tabindex="0">averageMsptImpactPerPlayer(long, long, List)</a></li>
 <li><a href="#averageMsptImpactPerChunk(long,long,java.util.List)" tabindex="0">averageMsptImpactPerChunk(long, long, List)</a></li>
 <li><a href="#maxFreeDisk(long,long,com.djrapitops.plan.identification.ServerUUID)" tabindex="0">maxFreeDisk(long, long, ServerUUID)</a></li>
@@ -141,9 +142,10 @@ loadScripts(document, 'script');</script>
  <a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#averageChunks(long,long,java.util.List)" class="member-name-link">averageChunks</a><wbr>(long&nbsp;after,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#averageChunks(long,long,java.util.List,com.djrapitops.plan.delivery.domain.datatransfer.OnlineActivityType)" class="member-name-link">averageChunks</a><wbr>(long&nbsp;after,
  long&nbsp;before,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs,
+ @Nullable <a href="../../../../delivery/domain/datatransfer/OnlineActivityType.html" title="enum class in com.djrapitops.plan.delivery.domain.datatransfer">OnlineActivityType</a>&nbsp;onlineActivityType)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#averageChunksPerPlayer(long,long,java.util.List)" class="member-name-link">averageChunksPerPlayer</a><wbr>(long&nbsp;after,
@@ -156,14 +158,16 @@ loadScripts(document, 'script');</script>
  <a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#averageCPU(long,long,java.util.List)" class="member-name-link">averageCPU</a><wbr>(long&nbsp;after,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#averageCPU(long,long,java.util.List,com.djrapitops.plan.delivery.domain.datatransfer.OnlineActivityType)" class="member-name-link">averageCPU</a><wbr>(long&nbsp;after,
  long&nbsp;before,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs,
+ <a href="../../../../delivery/domain/datatransfer/OnlineActivityType.html" title="enum class in com.djrapitops.plan.delivery.domain.datatransfer">OnlineActivityType</a>&nbsp;onlineActivityType)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#averageCpuPerPlayer(long,long,java.util.List)" class="member-name-link">averageCpuPerPlayer</a><wbr>(long&nbsp;after,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#averageCpuPerPlayer(long,long,java.util.List,double)" class="member-name-link">averageCpuPerPlayer</a><wbr>(long&nbsp;after,
  long&nbsp;before,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs,
+ double&nbsp;averageWhenIdle)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#averageEntities(long,long,com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">averageEntities</a><wbr>(long&nbsp;after,
@@ -171,9 +175,10 @@ loadScripts(document, 'script');</script>
  <a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#averageEntities(long,long,java.util.List)" class="member-name-link">averageEntities</a><wbr>(long&nbsp;after,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#averageEntities(long,long,java.util.List,com.djrapitops.plan.delivery.domain.datatransfer.OnlineActivityType)" class="member-name-link">averageEntities</a><wbr>(long&nbsp;after,
  long&nbsp;before,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs,
+ <a href="../../../../delivery/domain/datatransfer/OnlineActivityType.html" title="enum class in com.djrapitops.plan.delivery.domain.datatransfer">OnlineActivityType</a>&nbsp;onlineActivityType)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#averageEntitiesPerChunk(long,long,java.util.List)" class="member-name-link">averageEntitiesPerChunk</a><wbr>(long&nbsp;after,
@@ -191,9 +196,10 @@ loadScripts(document, 'script');</script>
  <a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#averageMSPT(long,long,java.util.List)" class="member-name-link">averageMSPT</a><wbr>(long&nbsp;after,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#averageMSPT(long,long,java.util.List,com.djrapitops.plan.delivery.domain.datatransfer.OnlineActivityType)" class="member-name-link">averageMSPT</a><wbr>(long&nbsp;after,
  long&nbsp;before,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs,
+ <a href="../../../../delivery/domain/datatransfer/OnlineActivityType.html" title="enum class in com.djrapitops.plan.delivery.domain.datatransfer">OnlineActivityType</a>&nbsp;onlineActivityType)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#averageMsptImpactPerChunk(long,long,java.util.List)" class="member-name-link">averageMsptImpactPerChunk</a><wbr>(long&nbsp;after,
@@ -217,9 +223,10 @@ loadScripts(document, 'script');</script>
  <a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#averagePlayersOnline(long,long,java.util.List)" class="member-name-link">averagePlayersOnline</a><wbr>(long&nbsp;after,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#averagePlayersOnline(long,long,java.util.List,com.djrapitops.plan.delivery.domain.datatransfer.OnlineActivityType)" class="member-name-link">averagePlayersOnline</a><wbr>(long&nbsp;after,
  long&nbsp;before,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</code></div>
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs,
+ <a href="../../../../delivery/domain/datatransfer/OnlineActivityType.html" title="enum class in com.djrapitops.plan.delivery.domain.datatransfer">OnlineActivityType</a>&nbsp;onlineActivityType)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#averageRAM(long,long,com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">averageRAM</a><wbr>(long&nbsp;after,
@@ -317,41 +324,46 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#max95thMSPTWhenLowTps(long,long,java.util.List,double)" class="member-name-link">max95thMSPTWhenLowTps</a><wbr>(long&nbsp;after,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#max95thMSPT(long,long,java.util.List)" class="member-name-link">max95thMSPT</a><wbr>(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#max95thMSPTWhenLowTps(long,long,java.util.List,double)" class="member-name-link">max95thMSPTWhenLowTps</a><wbr>(long&nbsp;after,
  long&nbsp;before,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs,
  double&nbsp;lowTpsThreshold)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#maxFreeDisk(long,long,com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">maxFreeDisk</a><wbr>(long&nbsp;after,
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#maxFreeDisk(long,long,com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">maxFreeDisk</a><wbr>(long&nbsp;after,
  long&nbsp;before,
  <a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#maxFreeDisk(long,long,java.util.List)" class="member-name-link">maxFreeDisk</a><wbr>(long&nbsp;after,
- long&nbsp;before,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#minFreeDisk(long,long,com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">minFreeDisk</a><wbr>(long&nbsp;after,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#maxFreeDisk(long,long,java.util.List)" class="member-name-link">maxFreeDisk</a><wbr>(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#minFreeDisk(long,long,com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">minFreeDisk</a><wbr>(long&nbsp;after,
  long&nbsp;before,
  <a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#minFreeDisk(long,long,java.util.List)" class="member-name-link">minFreeDisk</a><wbr>(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#minFreeDisk(long,long,java.util.List)" class="member-name-link">minFreeDisk</a><wbr>(long&nbsp;after,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#occupiedTime(long,long,java.util.List)" class="member-name-link">occupiedTime</a><wbr>(long&nbsp;after,
  long&nbsp;before,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#occupiedTime(long,long,java.util.List)" class="member-name-link">occupiedTime</a><wbr>(long&nbsp;after,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#uptime(long,long,java.util.List)" class="member-name-link">uptime</a><wbr>(long&nbsp;after,
  long&nbsp;before,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#uptime(long,long,java.util.List)" class="member-name-link">uptime</a><wbr>(long&nbsp;after,
- long&nbsp;before,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -549,12 +561,13 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="averagePlayersOnline(long,long,java.util.List)">
+<section class="detail" id="averagePlayersOnline(long,long,java.util.List,com.djrapitops.plan.delivery.domain.datatransfer.OnlineActivityType)">
 <h3>averagePlayersOnline</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</span>&nbsp;<span class="element-name">averagePlayersOnline</span><wbr><span class="parameters">(long&nbsp;after,
  long&nbsp;before,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs,
+ <a href="../../../../delivery/domain/datatransfer/OnlineActivityType.html" title="enum class in com.djrapitops.plan.delivery.domain.datatransfer">OnlineActivityType</a>&nbsp;onlineActivityType)</span></div>
 </div>
 </section>
 </li>
@@ -569,22 +582,24 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="averageCPU(long,long,java.util.List)">
+<section class="detail" id="averageCPU(long,long,java.util.List,com.djrapitops.plan.delivery.domain.datatransfer.OnlineActivityType)">
 <h3>averageCPU</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</span>&nbsp;<span class="element-name">averageCPU</span><wbr><span class="parameters">(long&nbsp;after,
  long&nbsp;before,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs,
+ <a href="../../../../delivery/domain/datatransfer/OnlineActivityType.html" title="enum class in com.djrapitops.plan.delivery.domain.datatransfer">OnlineActivityType</a>&nbsp;onlineActivityType)</span></div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="averageCpuPerPlayer(long,long,java.util.List)">
+<section class="detail" id="averageCpuPerPlayer(long,long,java.util.List,double)">
 <h3>averageCpuPerPlayer</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</span>&nbsp;<span class="element-name">averageCpuPerPlayer</span><wbr><span class="parameters">(long&nbsp;after,
  long&nbsp;before,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs,
+ double&nbsp;averageWhenIdle)</span></div>
 </div>
 </section>
 </li>
@@ -619,12 +634,13 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="averageChunks(long,long,java.util.List)">
+<section class="detail" id="averageChunks(long,long,java.util.List,com.djrapitops.plan.delivery.domain.datatransfer.OnlineActivityType)">
 <h3>averageChunks</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">averageChunks</span><wbr><span class="parameters">(long&nbsp;after,
  long&nbsp;before,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs,
+ @Nullable <a href="../../../../delivery/domain/datatransfer/OnlineActivityType.html" title="enum class in com.djrapitops.plan.delivery.domain.datatransfer">OnlineActivityType</a>&nbsp;onlineActivityType)</span></div>
 </div>
 </section>
 </li>
@@ -649,12 +665,13 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="averageEntities(long,long,java.util.List)">
+<section class="detail" id="averageEntities(long,long,java.util.List,com.djrapitops.plan.delivery.domain.datatransfer.OnlineActivityType)">
 <h3>averageEntities</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">averageEntities</span><wbr><span class="parameters">(long&nbsp;after,
  long&nbsp;before,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs,
+ <a href="../../../../delivery/domain/datatransfer/OnlineActivityType.html" title="enum class in com.djrapitops.plan.delivery.domain.datatransfer">OnlineActivityType</a>&nbsp;onlineActivityType)</span></div>
 </div>
 </section>
 </li>
@@ -679,12 +696,13 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="averageMSPT(long,long,java.util.List)">
+<section class="detail" id="averageMSPT(long,long,java.util.List,com.djrapitops.plan.delivery.domain.datatransfer.OnlineActivityType)">
 <h3>averageMSPT</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</span>&nbsp;<span class="element-name">averageMSPT</span><wbr><span class="parameters">(long&nbsp;after,
  long&nbsp;before,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</span></div>
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs,
+ <a href="../../../../delivery/domain/datatransfer/OnlineActivityType.html" title="enum class in com.djrapitops.plan.delivery.domain.datatransfer">OnlineActivityType</a>&nbsp;onlineActivityType)</span></div>
 </div>
 </section>
 </li>
@@ -707,6 +725,16 @@ loadScripts(document, 'script');</script>
  long&nbsp;before,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs,
  double&nbsp;lowTpsThreshold)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="max95thMSPT(long,long,java.util.List)">
+<h3>max95thMSPT</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</span>&nbsp;<span class="element-name">max95thMSPT</span><wbr><span class="parameters">(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs)</span></div>
 </div>
 </section>
 </li>
