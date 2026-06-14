@@ -155,7 +155,13 @@ export function getDatapointUrl(dataType: DatapointType, filter?: GenericFilter)
         }
         const folder = filter?.player ? "/player/" + filter?.player : "/data";
         const server = filter?.server ? "_" + filter?.server : "";
-        url = baseAddress + `${folder}/datapoint-${dataType}${timespan}${server}.json`;
+        let extra = ""
+        if (filter?.extra) {
+            Object.entries(filter.extra).forEach(([key, value]) => {
+                extra += "_" + key + "-" + value;
+            })
+        }
+        url = baseAddress + `${folder}/datapoint-${dataType}${timespan}${server}${extra}.json`;
     }
     return url;
 }
