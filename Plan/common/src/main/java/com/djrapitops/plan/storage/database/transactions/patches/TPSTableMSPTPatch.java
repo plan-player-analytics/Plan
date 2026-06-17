@@ -37,7 +37,7 @@ public class TPSTableMSPTPatch extends Patch {
         hasPercentile = hasColumn(TPSTable.TABLE_NAME, TPSTable.MSPT_95TH_PERCENTILE);
         hasJitterAverage = hasColumn(TPSTable.TABLE_NAME, TPSTable.MSPT_JITTER_AVERAGE);
         hasJitterMax = hasColumn(TPSTable.TABLE_NAME, TPSTable.MSPT_JITTER_MAX);
-        return hasAverage && hasPercentile;
+        return hasAverage && hasPercentile && hasJitterAverage && hasJitterMax;
     }
 
     @Override
