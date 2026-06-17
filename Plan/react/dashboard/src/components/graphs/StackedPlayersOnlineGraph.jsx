@@ -13,20 +13,18 @@ const StackedPlayersOnlineGraph = ({data, showPlayersOnline}) => {
 
     useEffect(() => {
         if (!data) return;
-        const playersOnlineSeries = data.graphs.map(graph => {
-            return {
-                name: t('html.label.playersOnline') + ' (' + graph.server.serverName + ')',
-                type: 'areaspline',
-                tooltip: tooltip.zeroDecimals,
-                data: graph.points.map(point => {
-                    // Ensure that the points can be stacked by moving data to minute level
-                    point[0] -= (point[0] % 60000);
-                    return point;
-                }),
-                color: data.color,
-                yAxis: 0
-            }
-        });
+        const playersOnlineSeries = data.graphs.map(graph => ({
+            name: t('html.label.playersOnline') + ' (' + graph.server.serverName + ')',
+            type: 'areaspline',
+            tooltip: tooltip.zeroDecimals,
+            data: graph.points.map(point => {
+                // Ensure that the points can be stacked by moving data to minute level
+                point[0] -= (point[0] % 60000);
+                return point;
+            }),
+            color: "var(--color-graphs-players-online)",
+            yAxis: 0
+        }));
         setGraphOptions({
             title: {text: ''},
             rangeSelector: {

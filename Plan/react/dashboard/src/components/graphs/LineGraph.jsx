@@ -7,6 +7,7 @@ import "highcharts/esm/modules/accessibility"
 import {useTranslation} from "react-i18next";
 import {useMetadata} from "../../hooks/metadataHook.tsx";
 import {localeService} from "../../service/localeService.js";
+import {mergeUseCases} from "../../util/mutator.js";
 
 const LineGraph = ({
                        id,
@@ -68,7 +69,7 @@ const LineGraph = ({
             },
             series: series
         };
-        if (extraOptions) actualOptions = {...actualOptions, ...extraOptions};
+        if (extraOptions) actualOptions = mergeUseCases(actualOptions, extraOptions);
         setGraph(Highcharts.stockChart(id, actualOptions));
     }, [options, extraOptions, series, id, t,
         graphTheming, nightModeEnabled, alreadyOffsetTimezone, timeZoneOffsetMinutes,
