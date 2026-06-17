@@ -68,6 +68,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#freeDiskSpace" tabindex="0">freeDiskSpace</a></li>
 <li><a href="#msptAverage" tabindex="0">msptAverage</a></li>
 <li><a href="#mspt95thPercentile" tabindex="0">mspt95thPercentile</a></li>
+<li><a href="#msptJitterAverage" tabindex="0">msptJitterAverage</a></li>
+<li><a href="#msptJitterMax" tabindex="0">msptJitterMax</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -86,6 +88,10 @@ loadScripts(document, 'script');</script>
 <li><a href="#msptAverage(double,boolean)" tabindex="0">msptAverage(double, boolean)</a></li>
 <li><a href="#mspt95thPercentile(java.lang.Double)" tabindex="0">mspt95thPercentile(Double)</a></li>
 <li><a href="#mspt95thPercentile(double,boolean)" tabindex="0">mspt95thPercentile(double, boolean)</a></li>
+<li><a href="#msptJitterAverage(java.lang.Double)" tabindex="0">msptJitterAverage(Double)</a></li>
+<li><a href="#msptJitterAverage(java.lang.Double,boolean)" tabindex="0">msptJitterAverage(Double, boolean)</a></li>
+<li><a href="#msptJitterMax(java.lang.Double)" tabindex="0">msptJitterMax(Double)</a></li>
+<li><a href="#msptJitterMax(java.lang.Double,boolean)" tabindex="0">msptJitterMax(Double, boolean)</a></li>
 </ol>
 </li>
 </ol>
@@ -138,6 +144,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a></code></div>
 <div class="col-second even-row-color"><code><a href="#msptAverage" class="member-name-link">msptAverage</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#msptJitterAverage" class="member-name-link">msptJitterAverage</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a></code></div>
+<div class="col-second even-row-color"><code><a href="#msptJitterMax" class="member-name-link">msptJitterMax</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code>protected int</code></div>
 <div class="col-second odd-row-color"><code><a href="#players" class="member-name-link">players</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
@@ -189,6 +201,20 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="TPSBuilder.html" title="class in com.djrapitops.plan.gathering.domain.builders">TPSBuilder</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#msptAverage(java.lang.Double)" class="member-name-link">msptAverage</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&nbsp;msptAverage)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="TPSBuilder.html" title="class in com.djrapitops.plan.gathering.domain.builders">TPSBuilder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#msptJitterAverage(java.lang.Double)" class="member-name-link">msptJitterAverage</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&nbsp;msptJitterAverage)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="TPSBuilder.html" title="class in com.djrapitops.plan.gathering.domain.builders">TPSBuilder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#msptJitterAverage(java.lang.Double,boolean)" class="member-name-link">msptJitterAverage</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&nbsp;msptJitterAverage,
+ boolean&nbsp;wasNull)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="TPSBuilder.html" title="class in com.djrapitops.plan.gathering.domain.builders">TPSBuilder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#msptJitterMax(java.lang.Double)" class="member-name-link">msptJitterMax</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&nbsp;msptJitterMax)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="TPSBuilder.html" title="class in com.djrapitops.plan.gathering.domain.builders">TPSBuilder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#msptJitterMax(java.lang.Double,boolean)" class="member-name-link">msptJitterMax</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&nbsp;msptJitterMax,
+ boolean&nbsp;wasNull)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="TPSBuilder.html" title="class in com.djrapitops.plan.gathering.domain.builders">TPSBuilder</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#playersOnline(int)" class="member-name-link">playersOnline</a><wbr>(int&nbsp;online)</code></div>
@@ -299,6 +325,22 @@ loadScripts(document, 'script');</script>
 <h3>mspt95thPercentile</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a></span>&nbsp;<span class="element-name">mspt95thPercentile</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="msptJitterAverage">
+<h3>msptJitterAverage</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a></span>&nbsp;<span class="element-name">msptJitterAverage</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="msptJitterMax">
+<h3>msptJitterMax</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a></span>&nbsp;<span class="element-name">msptJitterMax</span></div>
 </div>
 </section>
 </li>
@@ -420,6 +462,40 @@ loadScripts(document, 'script');</script>
 <h3>mspt95thPercentile</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="TPSBuilder.html" title="class in com.djrapitops.plan.gathering.domain.builders">TPSBuilder</a></span>&nbsp;<span class="element-name">mspt95thPercentile</span><wbr><span class="parameters">(double&nbsp;mspt95thPercentile,
+ boolean&nbsp;wasNull)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="msptJitterAverage(java.lang.Double)">
+<h3>msptJitterAverage</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="TPSBuilder.html" title="class in com.djrapitops.plan.gathering.domain.builders">TPSBuilder</a></span>&nbsp;<span class="element-name">msptJitterAverage</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&nbsp;msptJitterAverage)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="msptJitterAverage(java.lang.Double,boolean)">
+<h3>msptJitterAverage</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="TPSBuilder.html" title="class in com.djrapitops.plan.gathering.domain.builders">TPSBuilder</a></span>&nbsp;<span class="element-name">msptJitterAverage</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&nbsp;msptJitterAverage,
+ boolean&nbsp;wasNull)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="msptJitterMax(java.lang.Double)">
+<h3>msptJitterMax</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="TPSBuilder.html" title="class in com.djrapitops.plan.gathering.domain.builders">TPSBuilder</a></span>&nbsp;<span class="element-name">msptJitterMax</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&nbsp;msptJitterMax)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="msptJitterMax(java.lang.Double,boolean)">
+<h3>msptJitterMax</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="TPSBuilder.html" title="class in com.djrapitops.plan.gathering.domain.builders">TPSBuilder</a></span>&nbsp;<span class="element-name">msptJitterMax</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&nbsp;msptJitterMax,
  boolean&nbsp;wasNull)</span></div>
 </div>
 </section>
