@@ -123,8 +123,6 @@ public class ServerPageExporter extends FileExporter {
         long monthAgo = System.currentTimeMillis() - month;
         long week = TimeUnit.DAYS.toMillis(7L);
         long twoWeeks = week * 2;
-        long threeWeeks = week * 3;
-        long fourWeeks = week * 4;
         long day = TimeUnit.DAYS.toMillis(1);
 
         String datapointType = "datapoint?type=";
@@ -132,8 +130,6 @@ public class ServerPageExporter extends FileExporter {
         String server = "&server=" + serverUUID;
         String afterMillis = "&afterMillisAgo=";
         String beforeMillis = "&beforeMillisAgo=";
-        String active = "&activityType=" + OnlineActivityType.ACTIVE.name();
-        String idle = "&activityType=" + OnlineActivityType.IDLE.name();
         exportJSON(toDirectory,
                 "onlineInsights?server=" + serverUUID,
                 "playerVersus?server=" + serverUUID,
@@ -223,154 +219,80 @@ public class ServerPageExporter extends FileExporter {
                 datapointType + DatapointType.SESSION_LENGTH_AVERAGE + afterMillis + day + server,
                 datapointType + DatapointType.SESSION_LENGTH_AVERAGE + afterMillis + month + server,
                 datapointType + DatapointType.SESSION_COUNT + afterMillis + day + server,
-                datapointType + DatapointType.SESSION_COUNT + afterMillis + month + server,
-                // Performance overview
-                datapointType + DatapointType.TPS_LOW_SPIKES + afterMillis + day + server,
-                datapointType + DatapointType.TPS_LOW_SPIKES + afterMillis + week + server,
-                datapointType + DatapointType.TPS_LOW_SPIKES + afterMillis + twoWeeks + beforeMillis + week + server,
-                datapointType + DatapointType.TPS_LOW_SPIKES + afterMillis + threeWeeks + beforeMillis + twoWeeks + server,
-                datapointType + DatapointType.TPS_LOW_SPIKES + afterMillis + fourWeeks + beforeMillis + threeWeeks + server,
-                datapointType + DatapointType.TPS_LOW_SPIKES + afterMillis + month + server,
-                datapointType + DatapointType.MSPT_AVERAGE_LOW_TPS + afterMillis + day + server,
-                datapointType + DatapointType.MSPT_AVERAGE_LOW_TPS + afterMillis + week + server,
-                datapointType + DatapointType.MSPT_AVERAGE_LOW_TPS + afterMillis + twoWeeks + beforeMillis + week + server,
-                datapointType + DatapointType.MSPT_AVERAGE_LOW_TPS + afterMillis + threeWeeks + beforeMillis + twoWeeks + server,
-                datapointType + DatapointType.MSPT_AVERAGE_LOW_TPS + afterMillis + fourWeeks + beforeMillis + threeWeeks + server,
-                datapointType + DatapointType.MSPT_AVERAGE_LOW_TPS + afterMillis + month + server,
-                datapointType + DatapointType.MSPT_MAX_95TH_LOW_TPS + afterMillis + day + server,
-                datapointType + DatapointType.MSPT_MAX_95TH_LOW_TPS + afterMillis + week + server,
-                datapointType + DatapointType.MSPT_MAX_95TH_LOW_TPS + afterMillis + twoWeeks + beforeMillis + week + server,
-                datapointType + DatapointType.MSPT_MAX_95TH_LOW_TPS + afterMillis + threeWeeks + beforeMillis + twoWeeks + server,
-                datapointType + DatapointType.MSPT_MAX_95TH_LOW_TPS + afterMillis + fourWeeks + beforeMillis + threeWeeks + server,
-                datapointType + DatapointType.MSPT_MAX_95TH_LOW_TPS + afterMillis + month + server,
-                datapointType + DatapointType.DOWNTIME + afterMillis + day + server,
-                datapointType + DatapointType.DOWNTIME + afterMillis + week + server,
-                datapointType + DatapointType.DOWNTIME + afterMillis + twoWeeks + beforeMillis + week + server,
-                datapointType + DatapointType.DOWNTIME + afterMillis + threeWeeks + beforeMillis + twoWeeks + server,
-                datapointType + DatapointType.DOWNTIME + afterMillis + fourWeeks + beforeMillis + threeWeeks + server,
-                datapointType + DatapointType.DOWNTIME + afterMillis + month + server,
-                datapointType + DatapointType.UPTIME + afterMillis + day + server,
-                datapointType + DatapointType.UPTIME + afterMillis + week + server,
-                datapointType + DatapointType.UPTIME + afterMillis + twoWeeks + beforeMillis + week + server,
-                datapointType + DatapointType.UPTIME + afterMillis + threeWeeks + beforeMillis + twoWeeks + server,
-                datapointType + DatapointType.UPTIME + afterMillis + fourWeeks + beforeMillis + threeWeeks + server,
-                datapointType + DatapointType.UPTIME + afterMillis + month + server,
-                datapointType + DatapointType.PLAYERS_ONLINE_AVERAGE + afterMillis + day + server,
-                datapointType + DatapointType.PLAYERS_ONLINE_AVERAGE + afterMillis + week + server,
-                datapointType + DatapointType.PLAYERS_ONLINE_AVERAGE + afterMillis + twoWeeks + beforeMillis + week + server,
-                datapointType + DatapointType.PLAYERS_ONLINE_AVERAGE + afterMillis + threeWeeks + beforeMillis + twoWeeks + server,
-                datapointType + DatapointType.PLAYERS_ONLINE_AVERAGE + afterMillis + fourWeeks + beforeMillis + threeWeeks + server,
-                datapointType + DatapointType.PLAYERS_ONLINE_AVERAGE + afterMillis + month + server,
-                datapointType + DatapointType.PLAYERS_ONLINE_AVERAGE + afterMillis + day + server + active,
-                datapointType + DatapointType.PLAYERS_ONLINE_AVERAGE + afterMillis + week + server + active,
-                datapointType + DatapointType.PLAYERS_ONLINE_AVERAGE + afterMillis + twoWeeks + beforeMillis + week + server + active,
-                datapointType + DatapointType.PLAYERS_ONLINE_AVERAGE + afterMillis + threeWeeks + beforeMillis + twoWeeks + server + active,
-                datapointType + DatapointType.PLAYERS_ONLINE_AVERAGE + afterMillis + fourWeeks + beforeMillis + threeWeeks + server + active,
-                datapointType + DatapointType.PLAYERS_ONLINE_AVERAGE + afterMillis + month + server + active,
-                datapointType + DatapointType.MSPT_AVERAGE + afterMillis + day + server + active,
-                datapointType + DatapointType.MSPT_AVERAGE + afterMillis + week + server + active,
-                datapointType + DatapointType.MSPT_AVERAGE + afterMillis + twoWeeks + beforeMillis + week + server + active,
-                datapointType + DatapointType.MSPT_AVERAGE + afterMillis + threeWeeks + beforeMillis + twoWeeks + server + active,
-                datapointType + DatapointType.MSPT_AVERAGE + afterMillis + fourWeeks + beforeMillis + threeWeeks + server + active,
-                datapointType + DatapointType.MSPT_AVERAGE + afterMillis + month + server + active,
-                datapointType + DatapointType.MSPT_AVERAGE + afterMillis + day + server + idle,
-                datapointType + DatapointType.MSPT_AVERAGE + afterMillis + week + server + idle,
-                datapointType + DatapointType.MSPT_AVERAGE + afterMillis + twoWeeks + beforeMillis + week + server + idle,
-                datapointType + DatapointType.MSPT_AVERAGE + afterMillis + threeWeeks + beforeMillis + twoWeeks + server + idle,
-                datapointType + DatapointType.MSPT_AVERAGE + afterMillis + fourWeeks + beforeMillis + threeWeeks + server + idle,
-                datapointType + DatapointType.MSPT_AVERAGE + afterMillis + month + server + idle,
-                datapointType + DatapointType.MSPT_IMPACT_PER_PLAYER + afterMillis + day + server,
-                datapointType + DatapointType.MSPT_IMPACT_PER_PLAYER + afterMillis + week + server,
-                datapointType + DatapointType.MSPT_IMPACT_PER_PLAYER + afterMillis + twoWeeks + beforeMillis + week + server,
-                datapointType + DatapointType.MSPT_IMPACT_PER_PLAYER + afterMillis + threeWeeks + beforeMillis + twoWeeks + server,
-                datapointType + DatapointType.MSPT_IMPACT_PER_PLAYER + afterMillis + fourWeeks + beforeMillis + threeWeeks + server,
-                datapointType + DatapointType.MSPT_IMPACT_PER_PLAYER + afterMillis + month + server,
-                datapointType + DatapointType.MSPT_IMPACT_PER_CHUNK + afterMillis + day + server,
-                datapointType + DatapointType.MSPT_IMPACT_PER_CHUNK + afterMillis + week + server,
-                datapointType + DatapointType.MSPT_IMPACT_PER_CHUNK + afterMillis + twoWeeks + beforeMillis + week + server,
-                datapointType + DatapointType.MSPT_IMPACT_PER_CHUNK + afterMillis + threeWeeks + beforeMillis + twoWeeks + server,
-                datapointType + DatapointType.MSPT_IMPACT_PER_CHUNK + afterMillis + fourWeeks + beforeMillis + threeWeeks + server,
-                datapointType + DatapointType.MSPT_IMPACT_PER_CHUNK + afterMillis + month + server,
-                datapointType + DatapointType.MSPT_MAX_95TH + afterMillis + day + server,
-                datapointType + DatapointType.MSPT_MAX_95TH + afterMillis + week + server,
-                datapointType + DatapointType.MSPT_MAX_95TH + afterMillis + twoWeeks + beforeMillis + week + server,
-                datapointType + DatapointType.MSPT_MAX_95TH + afterMillis + threeWeeks + beforeMillis + twoWeeks + server,
-                datapointType + DatapointType.MSPT_MAX_95TH + afterMillis + fourWeeks + beforeMillis + threeWeeks + server,
-                datapointType + DatapointType.MSPT_MAX_95TH + afterMillis + month + server,
-                datapointType + DatapointType.CPU_AVERAGE + afterMillis + day + server,
-                datapointType + DatapointType.CPU_AVERAGE + afterMillis + week + server,
-                datapointType + DatapointType.CPU_AVERAGE + afterMillis + twoWeeks + beforeMillis + week + server,
-                datapointType + DatapointType.CPU_AVERAGE + afterMillis + threeWeeks + beforeMillis + twoWeeks + server,
-                datapointType + DatapointType.CPU_AVERAGE + afterMillis + fourWeeks + beforeMillis + threeWeeks + server,
-                datapointType + DatapointType.CPU_AVERAGE + afterMillis + month + server,
-                datapointType + DatapointType.CPU_AVERAGE + afterMillis + day + server + idle,
-                datapointType + DatapointType.CPU_AVERAGE + afterMillis + week + server + idle,
-                datapointType + DatapointType.CPU_AVERAGE + afterMillis + twoWeeks + beforeMillis + week + server + idle,
-                datapointType + DatapointType.CPU_AVERAGE + afterMillis + threeWeeks + beforeMillis + twoWeeks + server + idle,
-                datapointType + DatapointType.CPU_AVERAGE + afterMillis + fourWeeks + beforeMillis + threeWeeks + server + idle,
-                datapointType + DatapointType.CPU_AVERAGE + afterMillis + month + server + idle,
-                datapointType + DatapointType.CPU_AVERAGE + afterMillis + day + server + active,
-                datapointType + DatapointType.CPU_AVERAGE + afterMillis + week + server + active,
-                datapointType + DatapointType.CPU_AVERAGE + afterMillis + twoWeeks + beforeMillis + week + server + active,
-                datapointType + DatapointType.CPU_AVERAGE + afterMillis + threeWeeks + beforeMillis + twoWeeks + server + active,
-                datapointType + DatapointType.CPU_AVERAGE + afterMillis + fourWeeks + beforeMillis + threeWeeks + server + active,
-                datapointType + DatapointType.CPU_AVERAGE + afterMillis + month + server + active,
-                datapointType + DatapointType.CPU_IMPACT_PER_PLAYER + afterMillis + day + server,
-                datapointType + DatapointType.CPU_IMPACT_PER_PLAYER + afterMillis + week + server,
-                datapointType + DatapointType.CPU_IMPACT_PER_PLAYER + afterMillis + twoWeeks + beforeMillis + week + server,
-                datapointType + DatapointType.CPU_IMPACT_PER_PLAYER + afterMillis + threeWeeks + beforeMillis + twoWeeks + server,
-                datapointType + DatapointType.CPU_IMPACT_PER_PLAYER + afterMillis + fourWeeks + beforeMillis + threeWeeks + server,
-                datapointType + DatapointType.CPU_IMPACT_PER_PLAYER + afterMillis + month + server,
-                datapointType + DatapointType.RAM_AVERAGE + afterMillis + day + server,
-                datapointType + DatapointType.RAM_AVERAGE + afterMillis + week + server,
-                datapointType + DatapointType.RAM_AVERAGE + afterMillis + twoWeeks + beforeMillis + week + server,
-                datapointType + DatapointType.RAM_AVERAGE + afterMillis + threeWeeks + beforeMillis + twoWeeks + server,
-                datapointType + DatapointType.RAM_AVERAGE + afterMillis + fourWeeks + beforeMillis + threeWeeks + server,
-                datapointType + DatapointType.RAM_AVERAGE + afterMillis + month + server,
-                datapointType + DatapointType.ENTITIES_AVERAGE + afterMillis + day + server + active,
-                datapointType + DatapointType.ENTITIES_AVERAGE + afterMillis + week + server + active,
-                datapointType + DatapointType.ENTITIES_AVERAGE + afterMillis + twoWeeks + beforeMillis + week + server + active,
-                datapointType + DatapointType.ENTITIES_AVERAGE + afterMillis + threeWeeks + beforeMillis + twoWeeks + server + active,
-                datapointType + DatapointType.ENTITIES_AVERAGE + afterMillis + fourWeeks + beforeMillis + threeWeeks + server + active,
-                datapointType + DatapointType.ENTITIES_AVERAGE + afterMillis + month + server + active,
-                datapointType + DatapointType.ENTITIES_PER_CHUNK + afterMillis + day + server,
-                datapointType + DatapointType.ENTITIES_PER_CHUNK + afterMillis + week + server,
-                datapointType + DatapointType.ENTITIES_PER_CHUNK + afterMillis + twoWeeks + beforeMillis + week + server,
-                datapointType + DatapointType.ENTITIES_PER_CHUNK + afterMillis + threeWeeks + beforeMillis + twoWeeks + server,
-                datapointType + DatapointType.ENTITIES_PER_CHUNK + afterMillis + fourWeeks + beforeMillis + threeWeeks + server,
-                datapointType + DatapointType.ENTITIES_PER_CHUNK + afterMillis + month + server,
-                datapointType + DatapointType.CHUNKS_AVERAGE + afterMillis + day + server + active,
-                datapointType + DatapointType.CHUNKS_AVERAGE + afterMillis + week + server + active,
-                datapointType + DatapointType.CHUNKS_AVERAGE + afterMillis + twoWeeks + beforeMillis + week + server + active,
-                datapointType + DatapointType.CHUNKS_AVERAGE + afterMillis + threeWeeks + beforeMillis + twoWeeks + server + active,
-                datapointType + DatapointType.CHUNKS_AVERAGE + afterMillis + fourWeeks + beforeMillis + threeWeeks + server + active,
-                datapointType + DatapointType.CHUNKS_AVERAGE + afterMillis + month + server + active,
-                datapointType + DatapointType.CHUNKS_PER_PLAYER + afterMillis + day + server,
-                datapointType + DatapointType.CHUNKS_PER_PLAYER + afterMillis + week + server,
-                datapointType + DatapointType.CHUNKS_PER_PLAYER + afterMillis + twoWeeks + beforeMillis + week + server,
-                datapointType + DatapointType.CHUNKS_PER_PLAYER + afterMillis + threeWeeks + beforeMillis + twoWeeks + server,
-                datapointType + DatapointType.CHUNKS_PER_PLAYER + afterMillis + fourWeeks + beforeMillis + threeWeeks + server,
-                datapointType + DatapointType.CHUNKS_PER_PLAYER + afterMillis + month + server,
-                datapointType + DatapointType.DISK_MAX + afterMillis + day + server,
-                datapointType + DatapointType.DISK_MAX + afterMillis + week + server,
-                datapointType + DatapointType.DISK_MAX + afterMillis + twoWeeks + beforeMillis + week + server,
-                datapointType + DatapointType.DISK_MAX + afterMillis + threeWeeks + beforeMillis + twoWeeks + server,
-                datapointType + DatapointType.DISK_MAX + afterMillis + fourWeeks + beforeMillis + threeWeeks + server,
-                datapointType + DatapointType.DISK_MAX + afterMillis + month + server,
-                datapointType + DatapointType.DISK_MIN + afterMillis + day + server,
-                datapointType + DatapointType.DISK_MIN + afterMillis + week + server,
-                datapointType + DatapointType.DISK_MIN + afterMillis + twoWeeks + beforeMillis + week + server,
-                datapointType + DatapointType.DISK_MIN + afterMillis + threeWeeks + beforeMillis + twoWeeks + server,
-                datapointType + DatapointType.DISK_MIN + afterMillis + fourWeeks + beforeMillis + threeWeeks + server,
-                datapointType + DatapointType.DISK_MIN + afterMillis + month + server,
-                datapointType + DatapointType.TPS_AVERAGE + afterMillis + day + server,
-                datapointType + DatapointType.TPS_AVERAGE + afterMillis + week + server,
-                datapointType + DatapointType.TPS_AVERAGE + afterMillis + twoWeeks + beforeMillis + week + server,
-                datapointType + DatapointType.TPS_AVERAGE + afterMillis + threeWeeks + beforeMillis + twoWeeks + server,
-                datapointType + DatapointType.TPS_AVERAGE + afterMillis + fourWeeks + beforeMillis + threeWeeks + server,
-                datapointType + DatapointType.TPS_AVERAGE + afterMillis + month + server
+                datapointType + DatapointType.SESSION_COUNT + afterMillis + month + server
+        );
+        // Performance overview
+        exportDatapointJSON(toDirectory, DatapointType.TPS_LOW_SPIKES, serverUUID);
+        exportDatapointJSON(toDirectory, DatapointType.MSPT_AVERAGE_LOW_TPS, serverUUID);
+        exportDatapointJSON(toDirectory, DatapointType.MSPT_MAX_95TH_LOW_TPS, serverUUID);
+        exportDatapointJSON(toDirectory, DatapointType.DOWNTIME, serverUUID);
+        exportDatapointJSON(toDirectory, DatapointType.UPTIME, serverUUID);
+        exportDatapointJSON(toDirectory, DatapointType.PLAYERS_ONLINE_AVERAGE, serverUUID);
+        exportDatapointJSON(toDirectory, DatapointType.PLAYERS_ONLINE_AVERAGE, serverUUID, OnlineActivityType.ACTIVE);
+        exportDatapointJSON(toDirectory, DatapointType.MSPT_AVERAGE, serverUUID, OnlineActivityType.ACTIVE);
+        exportDatapointJSON(toDirectory, DatapointType.MSPT_AVERAGE, serverUUID, OnlineActivityType.IDLE);
+        exportDatapointJSON(toDirectory, DatapointType.MSPT_IMPACT_PER_PLAYER, serverUUID);
+        exportDatapointJSON(toDirectory, DatapointType.MSPT_IMPACT_PER_CHUNK, serverUUID);
+        exportDatapointJSON(toDirectory, DatapointType.MSPT_MAX_95TH, serverUUID);
+        exportDatapointJSON(toDirectory, DatapointType.CPU_AVERAGE, serverUUID);
+        exportDatapointJSON(toDirectory, DatapointType.CPU_AVERAGE, serverUUID, OnlineActivityType.ACTIVE);
+        exportDatapointJSON(toDirectory, DatapointType.CPU_AVERAGE, serverUUID, OnlineActivityType.IDLE);
+        exportDatapointJSON(toDirectory, DatapointType.CPU_IMPACT_PER_PLAYER, serverUUID);
+        exportDatapointJSON(toDirectory, DatapointType.RAM_AVERAGE, serverUUID);
+        exportDatapointJSON(toDirectory, DatapointType.ENTITIES_AVERAGE, serverUUID, OnlineActivityType.ACTIVE);
+        exportDatapointJSON(toDirectory, DatapointType.ENTITIES_PER_CHUNK, serverUUID);
+        exportDatapointJSON(toDirectory, DatapointType.CHUNKS_AVERAGE, serverUUID, OnlineActivityType.ACTIVE);
+        exportDatapointJSON(toDirectory, DatapointType.CHUNKS_PER_PLAYER, serverUUID);
+        exportDatapointJSON(toDirectory, DatapointType.DISK_MAX, serverUUID);
+        exportDatapointJSON(toDirectory, DatapointType.DISK_MIN, serverUUID);
+        exportDatapointJSON(toDirectory, DatapointType.TPS_AVERAGE, serverUUID);
+    }
+
+    private void exportDatapointJSON(Path toDirectory, DatapointType type, ServerUUID serverUUID) throws IOException {
+        long month = TimeUnit.DAYS.toMillis(30L);
+        long week = TimeUnit.DAYS.toMillis(7L);
+        long twoWeeks = week * 2;
+        long threeWeeks = week * 3;
+        long fourWeeks = week * 4;
+        long day = TimeUnit.DAYS.toMillis(1);
+
+        String datapointType = "datapoint?type=";
+        String server = "&server=" + serverUUID;
+        String afterMillis = "&afterMillisAgo=";
+        String beforeMillis = "&beforeMillisAgo=";
+        exportJSON(toDirectory,
+                datapointType + type + afterMillis + day + server,
+                datapointType + type + afterMillis + week + server,
+                datapointType + type + afterMillis + twoWeeks + beforeMillis + week + server,
+                datapointType + type + afterMillis + threeWeeks + beforeMillis + twoWeeks + server,
+                datapointType + type + afterMillis + fourWeeks + beforeMillis + threeWeeks + server,
+                datapointType + type + afterMillis + month + server
         );
     }
+
+    private void exportDatapointJSON(Path toDirectory, DatapointType type, ServerUUID serverUUID, OnlineActivityType activityType) throws IOException {
+        long month = TimeUnit.DAYS.toMillis(30L);
+        long week = TimeUnit.DAYS.toMillis(7L);
+        long twoWeeks = week * 2;
+        long threeWeeks = week * 3;
+        long fourWeeks = week * 4;
+        long day = TimeUnit.DAYS.toMillis(1);
+
+        String datapointType = "datapoint?type=";
+        String server = "&server=" + serverUUID;
+        String afterMillis = "&afterMillisAgo=";
+        String beforeMillis = "&beforeMillisAgo=";
+        String active = "&activityType=" + activityType.name();
+        exportJSON(toDirectory,
+                datapointType + type + afterMillis + day + server + active,
+                datapointType + type + afterMillis + week + server + active,
+                datapointType + type + afterMillis + twoWeeks + beforeMillis + week + server + active,
+                datapointType + type + afterMillis + threeWeeks + beforeMillis + twoWeeks + server + active,
+                datapointType + type + afterMillis + fourWeeks + beforeMillis + threeWeeks + server + active,
+                datapointType + type + afterMillis + month + server + active
+        );
+    }
+
 
     private void exportJSON(Path toDirectory, String... resources) throws IOException {
         for (String resource : resources) {
