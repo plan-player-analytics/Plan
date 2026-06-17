@@ -170,10 +170,10 @@ public class PingQueries {
     }
 
     public static Query<Map<String, Ping>> fetchPingDataOfServerByGeolocation(ServerUUID serverUUID) {
-        String selectPingByGeolocation = SELECT + "a." + GeoInfoTable.GEOLOCATION +
-                ", MIN(" + PingTable.MIN_PING + ") as minPing" +
-                ", MAX(" + PingTable.MAX_PING + ") as maxPing" +
-                ", AVG(" + PingTable.AVG_PING + ") as avgPing" +
+        String selectPingByGeolocation = SELECT + "a." + GeoInfoTable.GEOLOCATION + ',' +
+                min(PingTable.MIN_PING) + " as minPing," +
+                max(PingTable.MAX_PING) + " as maxPing," +
+                avg(PingTable.AVG_PING) + " as avgPing" +
                 FROM + GeoInfoTable.TABLE_NAME + " a" +
                 // Super smart optimization https://stackoverflow.com/a/28090544
                 // Join the last_used column, but only if there's a bigger one.

@@ -62,8 +62,10 @@ public abstract class Sql {
     public static final String TEXT = "TEXT";
 
     private static final String FLOOR = "FLOOR(";
+    private static final String AVG = "AVG(";
     private static final String MIN = "MIN(";
     private static final String MAX = "MAX(";
+    private static final String SUM = "SUM(";
     private static final String VARCHAR = "varchar(";
 
     public static String nParameters(int n) {
@@ -78,9 +80,13 @@ public abstract class Sql {
 
     public static String floor(String expression) {return FLOOR + expression + ')';}
 
+    public static String sum(String expression) {return SUM + expression + ')';}
+
     public static String min(String expression) {return MIN + expression + ')';}
 
     public static String max(String expression) {return MAX + expression + ')';}
+
+    public static String avg(String expression) {return AVG + expression + ')';}
 
     /**
      * Turn day of week to epoch ms.

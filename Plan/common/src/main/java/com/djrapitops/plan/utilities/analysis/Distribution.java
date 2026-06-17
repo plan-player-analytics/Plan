@@ -54,6 +54,19 @@ public class Distribution {
         return Optional.of(values.get(lastInPercentile));
     }
 
+    public List<Double> getJitter() {
+        List<Double> jitter = new ArrayList<>();
+        Double lastValue = null;
+        for (Double value : values) {
+            if (lastValue == null) {
+                lastValue = value;
+                continue;
+            }
+            jitter.add(lastValue);
+        }
+        return jitter;
+    }
+
     public void reset() {
         values.clear();
     }

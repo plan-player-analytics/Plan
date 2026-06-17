@@ -88,6 +88,8 @@ public class RandomData {
             TPS tps = new TPS(randDate, randTPS, randPlayers, randCPU, randMemory, randEntities, randChunks, randDisk);
             tps.setMsptAverage(randTPS / 20.0);
             tps.setMspt95thPercentile(randTPS / 20.0);
+            tps.setMsptJitterAverage(randTPS / 20.0);
+            tps.setMsptJitterMax(randTPS / 20.0);
             test.add(tps);
         }
         return test;
@@ -112,6 +114,8 @@ public class RandomData {
             TPS tps = new TPS(previousTimestamp, randTps, previousPlayers, randLong, randLong, randInt, randInt, randLong);
             tps.setMsptAverage(randTps / 20.0);
             tps.setMspt95thPercentile(randTps / 20.0);
+            tps.setMsptJitterAverage(randTps / 20.0);
+            tps.setMsptJitterMax(randTps / 20.0);
             test.add(tps);
             boolean reboot = Math.random() < 0.10;
             previousTimestamp = previousTimestamp + (reboot ? TimeUnit.MINUTES.toMillis(1) : TimeUnit.MINUTES.toMillis(10));
@@ -128,6 +132,8 @@ public class RandomData {
         TPS tps = new TPS(epoch, randTps, previousPlayers, randLong, randLong, randInt, randInt, randLong);
         tps.setMsptAverage(randTps / 20.0);
         tps.setMspt95thPercentile(randTps / 20.0);
+        tps.setMsptJitterAverage(randTps / 20.0);
+        tps.setMsptJitterMax(randTps / 20.0);
         return tps;
     }
 

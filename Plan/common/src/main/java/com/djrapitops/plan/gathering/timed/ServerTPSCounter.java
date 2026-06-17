@@ -30,6 +30,7 @@ import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.DoubleSummaryStatistics;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 
@@ -46,14 +47,13 @@ public class ServerTPSCounter<W> extends TPSCounter {
     private final SystemUsageBuffer systemUsage;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
-    private TPSCalculator indirectTPS;
-    private TimerAverage directTPS;
     private final Maximum.ForInteger playersOnline;
     private final Average cpu;
     private final Average ram;
     private final Average mspt;
     private final Distribution msptDistribution;
-
+    private TPSCalculator indirectTPS;
+    private TimerAverage directTPS;
     private int pulseCounter = 0;
 
     @Inject
@@ -123,6 +123,11 @@ public class ServerTPSCounter<W> extends TPSCounter {
         if (msptAverage <= 0) msptAverage = null;
         Double mspt95thPercentile = msptDistribution.getNthPercentile(0.95)
                 .orElse(null);
+        DoubleSummaryStatistics summary = msptDistribution.getJitter()
+                .stream().mapToDouble(v -> v)
+                .summaryStatistics();
+        Double msptJitterAverage = summary.getCount() == 0L ? null : summary.getAverage();
+        Double msptJitterMax = summary.getCount() == 0L ? null : summary.getMax();
         msptDistribution.reset();
 
         dbSystem.getDatabase().executeTransaction(new TPSStoreTransaction(
@@ -139,6 +144,8 @@ public class ServerTPSCounter<W> extends TPSCounter {
                         .freeDiskSpace(freeDiskSpace)
                         .msptAverage(msptAverage)
                         .mspt95thPercentile(mspt95thPercentile)
+                        .msptJitterAverage(msptJitterAverage)
+                        .msptJitterMax(msptJitterMax)
                         .toTPS()
         ));
     }

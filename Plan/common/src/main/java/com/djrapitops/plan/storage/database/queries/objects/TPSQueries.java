@@ -66,7 +66,9 @@ public class TPSQueries {
                     max("t." + CHUNKS) + " as " + CHUNKS + ',' +
                     max("t." + FREE_DISK) + " as " + FREE_DISK + ',' +
                     min("t." + MSPT_AVERAGE) + " as " + MSPT_AVERAGE + ',' +
-                    max("t." + MSPT_95TH_PERCENTILE) + " as " + MSPT_95TH_PERCENTILE +
+                    max("t." + MSPT_95TH_PERCENTILE) + " as " + MSPT_95TH_PERCENTILE + ',' +
+                    avg("t." + MSPT_JITTER_AVERAGE) + " as " + MSPT_JITTER_AVERAGE + ',' +
+                    max("t." + MSPT_JITTER_MAX) + " as " + MSPT_JITTER_MAX +
                     FROM + TABLE_NAME + " t" +
                     INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
                     WHERE + "s." + ServerTable.SERVER_UUID + "=?" +
@@ -106,8 +108,10 @@ public class TPSQueries {
                 .entities(set.getInt(ENTITIES))
                 .chunksLoaded(set.getInt(CHUNKS))
                 .freeDiskSpace(set.getLong(FREE_DISK))
-                .msptAverage(set.getDouble(MSPT_AVERAGE), set.wasNull())
                 .mspt95thPercentile(set.getDouble(MSPT_95TH_PERCENTILE), set.wasNull())
+                .msptAverage(set.getDouble(MSPT_AVERAGE), set.wasNull())
+                .msptJitterAverage(set.getDouble(MSPT_JITTER_AVERAGE), set.wasNull())
+                .msptJitterMax(set.getDouble(MSPT_JITTER_MAX), set.wasNull())
                 .toTPS();
     }
 
@@ -487,8 +491,10 @@ public class TPSQueries {
                             .entities(set.getInt(ENTITIES))
                             .chunksLoaded(set.getInt(CHUNKS))
                             .freeDiskSpace(set.getLong(FREE_DISK))
-                            .mspt95thPercentile(set.getDouble(MSPT_95TH_PERCENTILE))
-                            .msptAverage(set.getDouble(MSPT_AVERAGE))
+                            .mspt95thPercentile(set.getDouble(MSPT_95TH_PERCENTILE), set.wasNull())
+                            .msptAverage(set.getDouble(MSPT_AVERAGE), set.wasNull())
+                            .msptJitterAverage(set.getDouble(MSPT_JITTER_AVERAGE), set.wasNull())
+                            .msptJitterMax(set.getDouble(MSPT_JITTER_MAX), set.wasNull())
                             .toTPS());
                 }
                 return Optional.empty();

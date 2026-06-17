@@ -35,6 +35,8 @@ public class TPSBuilder {
     protected long freeDiskSpace = -1;
     protected Double msptAverage = null;
     protected Double mspt95thPercentile = null;
+    protected Double msptJitterAverage = null;
+    protected Double msptJitterMax = null;
 
     /**
      * Hides constructor.
@@ -50,6 +52,8 @@ public class TPSBuilder {
         TPS tps = new TPS(date, ticksPerSecond, players, cpuUsage, usedMemory, entityCount, chunksLoaded, freeDiskSpace);
         tps.setMsptAverage(msptAverage);
         tps.setMspt95thPercentile(mspt95thPercentile);
+        tps.setMsptJitterAverage(msptJitterAverage);
+        tps.setMsptJitterMax(msptJitterMax);
         return tps;
     }
 
@@ -113,6 +117,30 @@ public class TPSBuilder {
     public TPSBuilder mspt95thPercentile(double mspt95thPercentile, boolean wasNull) {
         if (!wasNull) {
             this.mspt95thPercentile = mspt95thPercentile;
+        }
+        return this;
+    }
+
+    public TPSBuilder msptJitterAverage(Double msptJitterAverage) {
+        this.msptJitterAverage = msptJitterAverage;
+        return this;
+    }
+
+    public TPSBuilder msptJitterAverage(Double msptJitterAverage, boolean wasNull) {
+        if (!wasNull) {
+            this.msptJitterAverage = msptJitterAverage;
+        }
+        return this;
+    }
+
+    public TPSBuilder msptJitterMax(Double msptJitterMax) {
+        this.msptJitterMax = msptJitterMax;
+        return this;
+    }
+
+    public TPSBuilder msptJitterMax(Double msptJitterMax, boolean wasNull) {
+        if (!wasNull) {
+            this.msptJitterMax = msptJitterMax;
         }
         return this;
     }

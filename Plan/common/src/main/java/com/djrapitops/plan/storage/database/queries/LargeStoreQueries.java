@@ -204,6 +204,8 @@ public class LargeStoreQueries {
                         statement.setLong(9, tps.getFreeDiskSpace());
                         Sql.setDoubleOrNull(statement, 10, tps.getMsptAverage());
                         Sql.setDoubleOrNull(statement, 11, tps.getMspt95thPercentile());
+                        Sql.setDoubleOrNull(statement, 12, tps.getMsptJitterAverage());
+                        Sql.setDoubleOrNull(statement, 13, tps.getMsptJitterMax());
                         statement.addBatch();
                     }
                 }
