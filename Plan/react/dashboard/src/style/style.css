@@ -1441,3 +1441,7 @@ ul.filters {
     justify-content: space-between;
     align-items: center;
 }
+
+.sticky-top {
+    z-index: unset;
+}
