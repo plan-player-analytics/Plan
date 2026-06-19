@@ -301,10 +301,10 @@
   resolved "https://registry.yarnpkg.com/@fullcalendar/bootstrap/-/bootstrap-6.1.20.tgz#6b7281fa96674ffea2602172f75a1c724b9b40bd"
   integrity sha512-WLMt4SQTrVnE19aQi54csIDIplVDew/eQ9f0iMRJqSGZqEYbH2Ea11LGjortB8+8bi7fAHhy4An47gaG6FOOpw==
 
-"@fullcalendar/core@6.1.20":
-  version "6.1.20"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/core/-/core-6.1.20.tgz#e4cfa767a9b8b7dad015b33fcb8acb0fac986a85"
-  integrity sha512-1cukXLlePFiJ8YKXn/4tMKsy0etxYLCkXk8nUCFi11nRONF2Ba2CD5b21/ovtOO2tL6afTJfwmc1ed3HG7eB1g==
+"@fullcalendar/core@6.1.21":
+  version "6.1.21"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/core/-/core-6.1.21.tgz#e8b0ed592a60aba44499802fefdbb1fcc91b0a07"
+  integrity sha512-t3u/+sqh3Iq7TWtUnVLcGDUE6OWZh0UD3c04bI/l7lSLAgAKr3kngBmhHiQD1QXpwC8ZN5iNqG7a7gOVixhSKQ==
   dependencies:
     preact "~10.12.1"
 
