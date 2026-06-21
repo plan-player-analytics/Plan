@@ -84,6 +84,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#bindCPUAverage(com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance.CPUAverage)" tabindex="0">bindCPUAverage(CPUAverage)</a></li>
 <li><a href="#bindCPUImpactPerPlayer(com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance.CPUImpactPerPlayer)" tabindex="0">bindCPUImpactPerPlayer(CPUImpactPerPlayer)</a></li>
 <li><a href="#bindMSPTAverage(com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance.MSPTAverage)" tabindex="0">bindMSPTAverage(MSPTAverage)</a></li>
+<li><a href="#bindMSPTJitterAverage(com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance.MSPTJitterAverage)" tabindex="0">bindMSPTJitterAverage(MSPTJitterAverage)</a></li>
+<li><a href="#bindMSPTJitterMax(com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance.MSPTJitterMax)" tabindex="0">bindMSPTJitterMax(MSPTJitterMax)</a></li>
 <li><a href="#bindMSPTImpactPerPlayer(com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance.MSPTImpactPerPlayer)" tabindex="0">bindMSPTImpactPerPlayer(MSPTImpactPerPlayer)</a></li>
 <li><a href="#bindMSPTImpactPerChunk(com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance.MSPTImpactPerChunk)" tabindex="0">bindMSPTImpactPerChunk(MSPTImpactPerChunk)</a></li>
 <li><a href="#bindPlayersOnlineAverage(com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance.PlayersOnlineAverage)" tabindex="0">bindPlayersOnlineAverage(PlayersOnlineAverage)</a></li>
@@ -187,6 +189,12 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a><wbr>&lt;?&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindMSPTImpactPerPlayer(com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance.MSPTImpactPerPlayer)" class="member-name-link">bindMSPTImpactPerPlayer</a><wbr>(<a href="performance/MSPTImpactPerPlayer.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance">MSPTImpactPerPlayer</a>&nbsp;msptImpactPerPlayer)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a><wbr>&lt;?&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindMSPTJitterAverage(com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance.MSPTJitterAverage)" class="member-name-link">bindMSPTJitterAverage</a><wbr>(<a href="performance/MSPTJitterAverage.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance">MSPTJitterAverage</a>&nbsp;msptJitterAverage)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a><wbr>&lt;?&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindMSPTJitterMax(com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance.MSPTJitterMax)" class="member-name-link">bindMSPTJitterMax</a><wbr>(<a href="performance/MSPTJitterMax.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance">MSPTJitterMax</a>&nbsp;msptJitterMax)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a><wbr>&lt;?&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#bindMSPTMax95th(com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance.MSPTMax95th)" class="member-name-link">bindMSPTMax95th</a><wbr>(<a href="performance/MSPTMax95th.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance">MSPTMax95th</a>&nbsp;msptMax95th)</code></div>
@@ -544,6 +552,26 @@ loadScripts(document, 'script');</script>
 <div class="member-signature"><span class="annotations">@Binds
 @IntoSet
 </span><span class="return-type"><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a>&lt;?&gt;</span>&nbsp;<span class="element-name">bindMSPTAverage</span><wbr><span class="parameters">(<a href="performance/MSPTAverage.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance">MSPTAverage</a>&nbsp;msptaverage)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="bindMSPTJitterAverage(com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance.MSPTJitterAverage)">
+<h3>bindMSPTJitterAverage</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations">@Binds
+@IntoSet
+</span><span class="return-type"><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a>&lt;?&gt;</span>&nbsp;<span class="element-name">bindMSPTJitterAverage</span><wbr><span class="parameters">(<a href="performance/MSPTJitterAverage.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance">MSPTJitterAverage</a>&nbsp;msptJitterAverage)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="bindMSPTJitterMax(com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance.MSPTJitterMax)">
+<h3>bindMSPTJitterMax</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="annotations">@Binds
+@IntoSet
+</span><span class="return-type"><a href="../Datapoint.html" title="interface in com.djrapitops.plan.delivery.rendering.json.datapoint">Datapoint</a>&lt;?&gt;</span>&nbsp;<span class="element-name">bindMSPTJitterMax</span><wbr><span class="parameters">(<a href="performance/MSPTJitterMax.html" title="class in com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance">MSPTJitterMax</a>&nbsp;msptJitterMax)</span></div>
 </div>
 </section>
 </li>
