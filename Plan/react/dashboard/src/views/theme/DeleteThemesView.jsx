@@ -10,7 +10,7 @@ import {useTranslation} from "react-i18next";
 import {ThemeStorageContextProvider, useThemeStorage} from "../../hooks/context/themeContextHook.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import LoadIn from "../../components/animation/LoadIn.tsx";
-import Checkbox from "../../components/input/Checkbox.jsx";
+import Checkbox from "../../components/input/Checkbox.tsx";
 import DangerButton from "../../components/input/button/DangerButton.jsx";
 import {ThemeEditContextProvider} from "../../hooks/context/themeEditContextHook.tsx";
 import DownloadButton from "../../components/theme/DownloadButton.jsx";

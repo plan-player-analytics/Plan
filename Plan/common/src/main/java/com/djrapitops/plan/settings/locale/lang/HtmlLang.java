@@ -209,6 +209,8 @@ public enum HtmlLang implements Lang {
     LABEL_MSPT_FULL("html.label.msptFull", "Milliseconds Per Tick"),
     LABEL_MSPT_PERCENTILE("html.label.msptPercentile", "MSPT {{percentile}}th Percentile"),
     LABEL_MAX_MSPT_PERCENTILE("html.label.msptPercentileMax", "Max MSPT {{percentile}}th Percentile"),
+    LABEL_MSPT_JITTER_AVERAGE("html.label.msptJitterAverage", "MSPT Jitter Average"),
+    LABEL_MSPT_JITTER_MAX("html.label.msptJitterMax", "Max MSPT Jitter"),
     // Player Page
     TITLE_SEEN_NICKNAMES("html.label.seenNicknames", "Seen Nicknames"),
     LABEL_LAST_SEEN("html.label.lastSeen", "Last Seen"),

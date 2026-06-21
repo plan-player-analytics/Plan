@@ -8,7 +8,7 @@ import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 import NewPlayerRetentionHelp from "./help/NewPlayerRetentionHelp";
 import PlayerRetentionGraphHelp from "./help/PlayerRetentionGraphHelp";
 import GroupPermissionHelp from "./help/GroupPermissionHelp";
-import ActionButton from "../input/button/ActionButton.jsx";
+import ActionButton from "../input/button/ActionButton.tsx";
 import ModalCloseButton from "../input/button/ModalCloseButton.jsx";
 
 const HelpModal = () => {

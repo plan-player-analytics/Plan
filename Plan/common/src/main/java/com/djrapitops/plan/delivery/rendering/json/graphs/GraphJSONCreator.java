@@ -192,7 +192,7 @@ public class GraphJSONCreator {
         )));
 
         return Maps.builder(String.class, Object.class)
-                .put("keys", new String[]{"date", "playersOnline", "tps", "cpu", "ram", "entities", "chunks", "disk", "msptAverage", "mspt95thPercentile"})
+                .put("keys", new String[]{"date", "playersOnline", "tps", "cpu", "ram", "entities", "chunks", "disk", "msptAverage", "mspt95thPercentile", "msptJitterAverage", "msptJitterMax"})
                 .put("values", values)
                 .put("colors", Maps.builder(String.class, Object.class)
                         .put("playersOnline", "#1E90FF")

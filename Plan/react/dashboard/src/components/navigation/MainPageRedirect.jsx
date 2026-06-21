@@ -3,6 +3,7 @@ import {useMetadata} from "../../hooks/metadataHook.tsx";
 import {Navigate} from "react-router";
 import React, {useEffect, useState} from "react";
 import {staticSite} from "../../service/backendConfiguration";
+import ActionButton from "../input/button/ActionButton.tsx";
 
 const RedirectPlaceholder = () => {
     const [redirectStart] = useState(Date.now())
@@ -36,9 +37,9 @@ const RedirectPlaceholder = () => {
                     change package.json "proxy" to address of your Plan webserver.
                 </p>
                 <p className="m-4">
-                    <button className="btn bg-plan" onClick={() => window.location.reload()}>Click to Refresh the
+                    <ActionButton onClick={() => window.location.reload()}>Click to Refresh the
                         page & try again.
-                    </button>
+                    </ActionButton>
                 </p>
             </div>
         </>
@@ -80,12 +81,12 @@ const MainPageRedirect = () => {
     };
 
     if (authRequired && !loggedIn) {
-        if (!window.location.pathname.startsWith("/login")) {
+        if (window.location.pathname.startsWith("/login")) {
+            return (<Navigate to="/login" replace={true}/>)
+        } else {
             return (<Navigate
                 to={"/login?from=" + encodeURIComponent(window.location.pathname + window.location.search + window.location.hash)}
                 replace={true}/>)
-        } else {
-            return (<Navigate to="/login" replace={true}/>)
         }
     } else if (authRequired && loggedIn) {
         return redirectBasedOnPermissions();

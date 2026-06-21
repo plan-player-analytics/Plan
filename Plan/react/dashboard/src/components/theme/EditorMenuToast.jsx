@@ -3,7 +3,7 @@ import {Toast} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faHistory, faRedoAlt, faUndoAlt} from "@fortawesome/free-solid-svg-icons";
 import {useThemeEditContext} from "../../hooks/context/themeEditContextHook.tsx";
-import ActionButton from "../input/button/ActionButton.jsx";
+import ActionButton from "../input/button/ActionButton.tsx";
 import {useTranslation} from "react-i18next";
 import {unstable_usePrompt} from "react-router";
 import ThemeEditHistory from "./ThemeEditHistory.jsx";

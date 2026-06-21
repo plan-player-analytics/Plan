@@ -6,7 +6,7 @@ import {faCheck, faList, faPencil} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import MultiSelect from "../../input/MultiSelect.jsx";
 import {faTrashAlt} from "@fortawesome/free-regular-svg-icons";
-import ActionButton from "../../input/button/ActionButton.jsx";
+import ActionButton from "../../input/button/ActionButton.tsx";
 import OutlineButton from "../../input/button/OutlineButton.tsx";
 
 const AddressGroupCard = ({n, group, editGroup, allAddresses, remove}) => {

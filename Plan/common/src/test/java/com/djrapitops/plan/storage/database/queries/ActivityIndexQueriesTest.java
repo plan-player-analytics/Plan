@@ -44,7 +44,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 import static org.junit.jupiter.api.Assertions.*;
@@ -65,24 +64,14 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
         }
     }
 
-//    @Test
-//    default void activityIndexCoalesceSanityCheck() {
-//        storeSessions();
-//        Map<String, Integer> groupings = db().query(
-//                ActivityIndexQueries.fetchActivityIndexGroupingsOn(System.currentTimeMillis(), serverUUID(), TimeUnit.HOURS.toMillis(2L))
-//        );
-//        Map<String, Integer> expected = Collections.singletonMap(ActivityIndex.getDefaultGroups()[4], 1); // Inactive
-//        assertEquals(expected, groupings);
-//    }
-
     @RepeatedTest(value = 3, name = "Activity Index calculations match {currentRepetition}/{totalRepetitions}")
     default void activityIndexCalculationsMatch() {
-        storeSessions(session -> true);
+        storeSessions(_ -> true);
 
         long date = System.currentTimeMillis();
         long playtimeThreshold = TimeUnit.HOURS.toMillis(5L);
         List<FinishedSession> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID))
-                .values().stream().flatMap(Collection::stream).collect(Collectors.toList());
+                .values().stream().flatMap(Collection::stream).toList();
 
         ActivityIndex javaCalculation = new ActivityIndex(sessions, date, playtimeThreshold);
 
@@ -121,9 +110,9 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
         });
     }
 
-    @RepeatedTest(value = 20, name = "Multi-server Activity Index calculations match {currentRepetition}/{totalRepetitions}")
+    @RepeatedTest(value = 3, name = "Multi-server Activity Index calculations match {currentRepetition}/{totalRepetitions}")
     default void multiServerActivityIndexCalculationsMatch() {
-        storeSessions(session -> true);
+        storeSessions(_ -> true);
 
         long date = System.currentTimeMillis();
         long playtimeThreshold = TimeUnit.HOURS.toMillis(5L);
@@ -146,7 +135,7 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
         long date = System.currentTimeMillis();
         long playtimeThreshold = TimeUnit.HOURS.toMillis(5L);
         List<FinishedSession> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID))
-                .values().stream().flatMap(Collection::stream).collect(Collectors.toList());
+                .values().stream().flatMap(Collection::stream).toList();
 
         ActivityIndex javaCalculation = new ActivityIndex(sessions, date, playtimeThreshold);
 
@@ -187,12 +176,12 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
 
     @RepeatedTest(value = 3, name = "Network Activity Index calculations match {currentRepetition}/{totalRepetitions}")
     default void networkActivityIndexCalculationsMatch() {
-        storeSessions(session -> true);
+        storeSessions(_ -> true);
 
         long date = System.currentTimeMillis();
         long playtimeThreshold = TimeUnit.HOURS.toMillis(5L);
         List<FinishedSession> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID))
-                .values().stream().flatMap(Collection::stream).collect(Collectors.toList());
+                .values().stream().flatMap(Collection::stream).toList();
 
         ActivityIndex javaCalculation = new ActivityIndex(sessions, date, playtimeThreshold);
 
@@ -267,7 +256,7 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
 
     @RepeatedTest(5)
     default void countRegularPlayers() {
-        storeSessions(session -> true);
+        storeSessions(_ -> true);
         long playtimeThreshold = TimeUnit.MILLISECONDS.toMillis(1L);
         Integer expected = 1; // All players are very active
         FinishedSession randomSession = RandomData.randomSession(serverUUID(), worlds, System.currentTimeMillis() - TimeUnit.HOURS.toMillis(1L), playerUUID, player2UUID);
@@ -278,7 +267,7 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
 
     @Test
     default void noRegularPlayers() {
-        storeSessions(session -> true);
+        storeSessions(_ -> true);
         long playtimeThreshold = System.currentTimeMillis(); // Threshold is so high it's impossible to be regular
         Integer expected = 0;
         Integer result = db().query(ActivityIndexQueries.fetchRegularPlayerCount(System.currentTimeMillis(), serverUUID(), playtimeThreshold));

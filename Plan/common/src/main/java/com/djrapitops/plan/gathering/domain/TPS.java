@@ -217,7 +217,9 @@ public class TPS implements DateHolder {
                 chunks >= 0 ? chunks : null,
                 disk >= 0 ? disk : null,
                 msptAverage,
-                mspt95thPercentile
+                mspt95thPercentile,
+                msptJitterAverage,
+                msptJitterMax
         };
     }
 }

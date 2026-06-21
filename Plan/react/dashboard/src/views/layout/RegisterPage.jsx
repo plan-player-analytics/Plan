@@ -12,7 +12,7 @@ import {useAuth} from "../../hooks/authenticationHook.tsx";
 import FinalizeRegistrationModal from "../../components/modal/FinalizeRegistrationModal";
 import {fetchRegisterCheck, postRegister} from "../../service/authenticationService";
 import {useMetadata} from "../../hooks/metadataHook.tsx";
-import ActionButton from "../../components/input/button/ActionButton.jsx";
+import ActionButton from "../../components/input/button/ActionButton.tsx";
 
 const Logo = () => {
     return (

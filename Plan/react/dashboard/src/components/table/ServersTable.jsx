@@ -17,7 +17,7 @@ import {useTheme} from "../../hooks/themeHook.tsx";
 import {useTranslation} from "react-i18next";
 import Scrollable from "../Scrollable";
 import {NavLink} from "react-router";
-import ActionButton from "../input/button/ActionButton.jsx";
+import ActionButton from "../input/button/ActionButton.tsx";
 import {DatapointType} from "../../dataHooks/model/datapoint/Datapoint.ts";
 import {
     calculatePermission,

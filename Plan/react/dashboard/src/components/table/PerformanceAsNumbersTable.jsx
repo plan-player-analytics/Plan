@@ -173,7 +173,7 @@ const PerformanceAsNumbersTable = ({servers}) => {
                                  icon: faTachometerAlt,
                                  filter: {extra: {activityType: OnlineActivityType.ACTIVE}},
                                  text: t('html.label.whileActive'),
-                                 key: 'average-mspt-active',
+                                 key: 'average-cpu-active',
                                  indent: true
                              }, {
                                  dataType: DatapointType.CPU_AVERAGE,
@@ -181,7 +181,7 @@ const PerformanceAsNumbersTable = ({servers}) => {
                                  icon: faTachometerAlt,
                                  filter: {extra: {activityType: OnlineActivityType.IDLE}},
                                  text: t('html.label.whileIdle'),
-                                 key: 'average-mspt-idle',
+                                 key: 'average-cpu-idle',
                                  indent: true
                              }, {
                                  dataType: DatapointType.CPU_IMPACT_PER_PLAYER,

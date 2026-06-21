@@ -13,7 +13,7 @@ import {
 import {faDiscord} from "@fortawesome/free-brands-svg-icons";
 import {useMetadata} from "../../hooks/metadataHook.tsx";
 import {Trans, useTranslation} from "react-i18next";
-import ActionButton from "../input/button/ActionButton.jsx";
+import ActionButton from "../input/button/ActionButton.tsx";
 import ExternalLink from "../input/button/ExternalLink.jsx";
 import ModalCloseButton from "../input/button/ModalCloseButton.jsx";
 

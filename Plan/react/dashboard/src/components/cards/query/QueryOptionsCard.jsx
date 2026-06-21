@@ -20,7 +20,7 @@ import FilterList from "./FilterList";
 import {useQueryResultContext} from "../../../hooks/queryResultContext";
 import {useNavigate} from "react-router";
 import {useNavigation} from "../../../hooks/navigationHook.tsx";
-import ActionButton from "../../input/button/ActionButton.jsx";
+import ActionButton from "../../input/button/ActionButton.tsx";
 import {useMetadata} from "../../../hooks/metadataHook.tsx";
 
 const parseTimeAsUTC = (dateString, timeString) => {

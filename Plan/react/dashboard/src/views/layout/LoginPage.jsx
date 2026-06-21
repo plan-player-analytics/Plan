@@ -12,7 +12,7 @@ import drawSine from "../../util/loginSineRenderer";
 import {fetchLogin} from "../../service/authenticationService";
 import ForgotPasswordModal from "../../components/modal/ForgotPasswordModal";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
-import ActionButton from "../../components/input/button/ActionButton.jsx";
+import ActionButton from "../../components/input/button/ActionButton.tsx";
 
 const Logo = () => {
     return (
