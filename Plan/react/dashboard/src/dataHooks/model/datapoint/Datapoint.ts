@@ -48,6 +48,8 @@ export enum DatapointType {
     TPS_AVERAGE = "TPS_AVERAGE",
     TPS_LOW_SPIKES = "TPS_LOW_SPIKES",
     MSPT_AVERAGE = "MSPT_AVERAGE",
+    MSPT_JITTER_AVERAGE = "MSPT_JITTER_AVERAGE",
+    MSPT_JITTER_MAX = "MSPT_JITTER_MAX",
     MSPT_AVERAGE_LOW_TPS = "MSPT_AVERAGE_LOW_TPS",
     MSPT_MAX_95TH = "MSPT_MAX_95TH",
     MSPT_MAX_95TH_LOW_TPS = "MSPT_MAX_95TH_LOW_TPS",
@@ -95,6 +97,8 @@ export type DatapointTypeMap = {
     TPS_AVERAGE: number;
     TPS_LOW_SPIKES: number;
     MSPT_AVERAGE: number;
+    MSPT_JITTER_AVERAGE: number;
+    MSPT_JITTER_MAX: number;
     MSPT_AVERAGE_LOW_TPS: number;
     MSPT_MAX_95TH: number;
     MSPT_MAX_95TH_LOW_TPS: number;

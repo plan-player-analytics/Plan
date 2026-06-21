@@ -9,7 +9,8 @@ import {
     faStopwatch,
     faTachometerAlt,
     faUser,
-    faUsers
+    faUsers,
+    faWaveSquare
 } from "@fortawesome/free-solid-svg-icons";
 import React from "react";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
@@ -26,6 +27,7 @@ const PerformanceAsNumbersTable = ({servers}) => {
     const noTPSOnProxies = !servers || dataIncludesGameServers
         ? ''
         : <span title={t('html.description.performanceNoGameServers')}><Fa icon={faQuestionCircle}/></span>;
+    const jitterInfo = <span title={t('html.description.jitter')}><Fa icon={faQuestionCircle}/></span>;
 
     return (
         <QueryDatapointTable filter={{server: servers.map(s => s.serverUUID)}}
@@ -132,8 +134,21 @@ const PerformanceAsNumbersTable = ({servers}) => {
                                  color: "mspt-percentile",
                                  icon: faStopwatch,
                                  text: t('html.label.msptPercentileMax', {percentile: 95}),
-                                 key: 'max-95h-mspt',
-                                 indent: true,
+                                 key: 'max-95h-mspt'
+                             }, {
+                                 dataType: DatapointType.MSPT_JITTER_AVERAGE,
+                                 color: "mspt-average",
+                                 icon: faWaveSquare,
+                                 text: <>{t('html.label.msptJitterAverage')} {t('html.label.whileActive')} {jitterInfo}</>,
+                                 filter: {extra: {activityType: OnlineActivityType.ACTIVE}},
+                                 key: 'mspt-jitter-average'
+                             }, {
+                                 dataType: DatapointType.MSPT_JITTER_MAX,
+                                 color: "mspt-percentile",
+                                 icon: faWaveSquare,
+                                 text: t('html.label.msptJitterMax') + ' ' + t('html.label.whileActive'),
+                                 filter: {extra: {activityType: OnlineActivityType.ACTIVE}},
+                                 key: 'mspt-jitter-max',
                                  boldBottom: true
                              }, {
                                  dataType: DatapointType.ENTITIES_AVERAGE,

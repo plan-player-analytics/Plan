@@ -234,6 +234,8 @@ public class ServerPageExporter extends FileExporter {
         exportDatapointJSON(toDirectory, DatapointType.MSPT_IMPACT_PER_PLAYER, serverUUID);
         exportDatapointJSON(toDirectory, DatapointType.MSPT_IMPACT_PER_CHUNK, serverUUID);
         exportDatapointJSON(toDirectory, DatapointType.MSPT_MAX_95TH, serverUUID);
+        exportDatapointJSON(toDirectory, DatapointType.MSPT_JITTER_AVERAGE, serverUUID, OnlineActivityType.ACTIVE);
+        exportDatapointJSON(toDirectory, DatapointType.MSPT_JITTER_MAX, serverUUID, OnlineActivityType.ACTIVE);
         exportDatapointJSON(toDirectory, DatapointType.CPU_AVERAGE, serverUUID);
         exportDatapointJSON(toDirectory, DatapointType.CPU_AVERAGE, serverUUID, OnlineActivityType.ACTIVE);
         exportDatapointJSON(toDirectory, DatapointType.CPU_AVERAGE, serverUUID, OnlineActivityType.IDLE);

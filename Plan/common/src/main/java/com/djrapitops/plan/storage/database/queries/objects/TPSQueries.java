@@ -591,6 +591,64 @@ public class TPSQueries {
         };
     }
 
+    public static Query<Double> averageMsptJitter(long after, long before, ServerUUID serverUUID) {
+        return averageMsptJitter(after, before, Collections.singletonList(serverUUID), null);
+    }
+
+    public static Query<Double> averageMsptJitter(long after, long before, List<ServerUUID> serverUUIDs, OnlineActivityType onlineActivityType) {
+        String sql = SELECT + "AVG(" + MSPT_JITTER_AVERAGE + ") as average" + FROM + TABLE_NAME + " t" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
+                WHERE + (serverUUIDs.isEmpty()
+                ? ""
+                : "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
+                  AND) + MSPT_JITTER_AVERAGE + IS_NOT_NULL +
+                AND + DATE + "<?" +
+                AND + DATE + ">?" +
+                (onlineActivityType != null ? onlineActivityType.getSql() : "");
+        return new QueryStatement<>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, before);
+                statement.setLong(2, after);
+            }
+
+            @Override
+            public Double processResults(ResultSet set) throws SQLException {
+                double value = set.next() ? set.getDouble("average") : -1.0;
+                return set.wasNull() ? -1.0 : value;
+            }
+        };
+    }
+
+    public static Query<Double> maxMsptJitter(long after, long before, ServerUUID serverUUID) {
+        return maxMsptJitter(after, before, Collections.singletonList(serverUUID), null);
+    }
+
+    public static Query<Double> maxMsptJitter(long after, long before, List<ServerUUID> serverUUIDs, OnlineActivityType onlineActivityType) {
+        String sql = SELECT + "MAX(" + MSPT_JITTER_MAX + ") as max" + FROM + TABLE_NAME + " t" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +
+                WHERE + (serverUUIDs.isEmpty()
+                ? ""
+                : "s." + ServerTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" +
+                  AND) + MSPT_JITTER_MAX + IS_NOT_NULL +
+                AND + DATE + "<?" +
+                AND + DATE + ">?" +
+                (onlineActivityType != null ? onlineActivityType.getSql() : "");
+        return new QueryStatement<>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, before);
+                statement.setLong(2, after);
+            }
+
+            @Override
+            public Double processResults(ResultSet set) throws SQLException {
+                double value = set.next() ? set.getDouble("max") : -1.0;
+                return set.wasNull() ? -1.0 : value;
+            }
+        };
+    }
+
     public static Query<Double> averageCpuPerPlayer(long after, long before, List<ServerUUID> serverUUIDs, double averageWhenIdle) {
         String sql = SELECT + "AVG((" + CPU_USAGE + "-?)" + "/" + PLAYERS_ONLINE + ") as average" + FROM + TABLE_NAME + " t" +
                 INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + SERVER_ID +

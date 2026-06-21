@@ -142,6 +142,14 @@ public interface DatapointModule {
 
     @Binds
     @IntoSet
+    Datapoint<?> bindMSPTJitterAverage(MSPTJitterAverage msptJitterAverage);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindMSPTJitterMax(MSPTJitterMax msptJitterMax);
+
+    @Binds
+    @IntoSet
     Datapoint<?> bindMSPTImpactPerPlayer(MSPTImpactPerPlayer msptImpactPerPlayer);
 
     @Binds
