@@ -1103,10 +1103,10 @@ https-proxy-agent@^5.0.1:
     agent-base "6"
     debug "4"
 
-i18next-chained-backend@5.0.4:
-  version "5.0.4"
-  resolved "https://registry.yarnpkg.com/i18next-chained-backend/-/i18next-chained-backend-5.0.4.tgz#20e63b74986e0c9ed220a847f8393f570f1d3695"
-  integrity sha512-xM7kSODBvvtAwPoIoI9WX7LMMdrT5RCvqriUk7juHg5dUgRTTfMoOm8PcZeqxKy9Fn1t4psZwgmeB5Ck43cvrg==
+i18next-chained-backend@5.0.5:
+  version "5.0.5"
+  resolved "https://registry.yarnpkg.com/i18next-chained-backend/-/i18next-chained-backend-5.0.5.tgz#40f011ee7593c6839b100da0718aaaaff3928a13"
+  integrity sha512-ThdtKUcNdk/zrSuzQyz2t4uH1McomKXP/t7GOf9Cm1oabDlJ6ZbQQJkLB9VlUErL9+45baFHv/ipzgi9MOotUg==
   dependencies:
     "@babel/runtime" "^7.28.4"
 
