@@ -118,6 +118,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#VERSION_CHANGE_LOG" tabindex="0">VERSION_CHANGE_LOG</a></li>
 <li><a href="#VERSION_DOWNLOAD" tabindex="0">VERSION_DOWNLOAD</a></li>
 <li><a href="#VERSION_CURRENT" tabindex="0">VERSION_CURRENT</a></li>
+<li><a href="#DB_DOWNLOAD_DRIVER" tabindex="0">DB_DOWNLOAD_DRIVER</a></li>
 <li><a href="#DB_APPLY_PATCH" tabindex="0">DB_APPLY_PATCH</a></li>
 <li><a href="#DB_APPLIED_PATCHES" tabindex="0">DB_APPLIED_PATCHES</a></li>
 <li><a href="#DB_APPLIED_PATCHES_ALREADY" tabindex="0">DB_APPLIED_PATCHES_ALREADY</a></li>
@@ -127,6 +128,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#LOADING_SERVER_INFO" tabindex="0">LOADING_SERVER_INFO</a></li>
 <li><a href="#LOADED_SERVER_INFO" tabindex="0">LOADED_SERVER_INFO</a></li>
 <li><a href="#DB_SCHEMA_PATCH" tabindex="0">DB_SCHEMA_PATCH</a></li>
+<li><a href="#EXTENSION_REGISTERED" tabindex="0">EXTENSION_REGISTERED</a></li>
+<li><a href="#EXTENSION_FAILED" tabindex="0">EXTENSION_FAILED</a></li>
+<li><a href="#EXTENSION_ERROR" tabindex="0">EXTENSION_ERROR</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -192,69 +196,77 @@ implements <a href="Lang.html" title="interface in com.djrapitops.plan.settings.
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code><a href="#DB_APPLY_PATCH" class="member-name-link">DB_APPLY_PATCH</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DB_MYSQL_LAUNCH_OPTIONS_FAIL" class="member-name-link">DB_MYSQL_LAUNCH_OPTIONS_FAIL</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DB_DOWNLOAD_DRIVER" class="member-name-link">DB_DOWNLOAD_DRIVER</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DB_NOTIFY_CLEAN" class="member-name-link">DB_NOTIFY_CLEAN</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DB_MYSQL_LAUNCH_OPTIONS_FAIL" class="member-name-link">DB_MYSQL_LAUNCH_OPTIONS_FAIL</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DB_NOTIFY_SQLITE_WAL" class="member-name-link">DB_NOTIFY_SQLITE_WAL</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DB_NOTIFY_CLEAN" class="member-name-link">DB_NOTIFY_CLEAN</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DB_SCHEMA_PATCH" class="member-name-link">DB_SCHEMA_PATCH</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DB_NOTIFY_SQLITE_WAL" class="member-name-link">DB_NOTIFY_SQLITE_WAL</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DEPRECATED_ENDPOINT_CALL" class="member-name-link">DEPRECATED_ENDPOINT_CALL</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DB_SCHEMA_PATCH" class="member-name-link">DB_SCHEMA_PATCH</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DISABLED" class="member-name-link">DISABLED</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DEPRECATED_ENDPOINT_CALL" class="member-name-link">DEPRECATED_ENDPOINT_CALL</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DISABLED_PROCESSING" class="member-name-link">DISABLED_PROCESSING</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DISABLED" class="member-name-link">DISABLED</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DISABLED_PROCESSING_COMPLETE" class="member-name-link">DISABLED_PROCESSING_COMPLETE</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DISABLED_PROCESSING" class="member-name-link">DISABLED_PROCESSING</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DISABLED_UNSAVED_SESSIONS" class="member-name-link">DISABLED_UNSAVED_SESSIONS</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DISABLED_PROCESSING_COMPLETE" class="member-name-link">DISABLED_PROCESSING_COMPLETE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DISABLED_UNSAVED_SESSIONS_TIMEOUT" class="member-name-link">DISABLED_UNSAVED_SESSIONS_TIMEOUT</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DISABLED_UNSAVED_SESSIONS" class="member-name-link">DISABLED_UNSAVED_SESSIONS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DISABLED_WAITING_SQLITE" class="member-name-link">DISABLED_WAITING_SQLITE</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DISABLED_UNSAVED_SESSIONS_TIMEOUT" class="member-name-link">DISABLED_UNSAVED_SESSIONS_TIMEOUT</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DISABLED_WAITING_SQLITE_COMPLETE" class="member-name-link">DISABLED_WAITING_SQLITE_COMPLETE</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DISABLED_WAITING_SQLITE" class="member-name-link">DISABLED_WAITING_SQLITE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DISABLED_WAITING_TRANSACTIONS" class="member-name-link">DISABLED_WAITING_TRANSACTIONS</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DISABLED_WAITING_SQLITE_COMPLETE" class="member-name-link">DISABLED_WAITING_SQLITE_COMPLETE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#DISABLED_WAITING_TRANSACTIONS_COMPLETE" class="member-name-link">DISABLED_WAITING_TRANSACTIONS_COMPLETE</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DISABLED_WAITING_TRANSACTIONS" class="member-name-link">DISABLED_WAITING_TRANSACTIONS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#DISABLED_WEB_SERVER" class="member-name-link">DISABLED_WEB_SERVER</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#DISABLED_WAITING_TRANSACTIONS_COMPLETE" class="member-name-link">DISABLED_WAITING_TRANSACTIONS_COMPLETE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#ENABLE_FAIL_DB" class="member-name-link">ENABLE_FAIL_DB</a></code></div>
+<div class="col-first even-row-color"><code><a href="#DISABLED_WEB_SERVER" class="member-name-link">DISABLED_WEB_SERVER</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#ENABLE_FAIL_DB_PATCH" class="member-name-link">ENABLE_FAIL_DB_PATCH</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#ENABLE_FAIL_DB" class="member-name-link">ENABLE_FAIL_DB</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#ENABLE_FAIL_GEODB_WRITE" class="member-name-link">ENABLE_FAIL_GEODB_WRITE</a></code></div>
+<div class="col-first even-row-color"><code><a href="#ENABLE_FAIL_DB_PATCH" class="member-name-link">ENABLE_FAIL_DB_PATCH</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#ENABLE_FAIL_NO_WEB_SERVER_PROXY" class="member-name-link">ENABLE_FAIL_NO_WEB_SERVER_PROXY</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#ENABLE_FAIL_GEODB_WRITE" class="member-name-link">ENABLE_FAIL_GEODB_WRITE</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#ENABLE_FAIL_WRONG_DB" class="member-name-link">ENABLE_FAIL_WRONG_DB</a></code></div>
+<div class="col-first even-row-color"><code><a href="#ENABLE_FAIL_NO_WEB_SERVER_PROXY" class="member-name-link">ENABLE_FAIL_NO_WEB_SERVER_PROXY</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#ENABLE_NOTIFY_BAD_IP" class="member-name-link">ENABLE_NOTIFY_BAD_IP</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#ENABLE_FAIL_WRONG_DB" class="member-name-link">ENABLE_FAIL_WRONG_DB</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#ENABLE_NOTIFY_EMPTY_IP" class="member-name-link">ENABLE_NOTIFY_EMPTY_IP</a></code></div>
+<div class="col-first even-row-color"><code><a href="#ENABLE_NOTIFY_BAD_IP" class="member-name-link">ENABLE_NOTIFY_BAD_IP</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#ENABLE_NOTIFY_GEOLOCATIONS_DISABLED" class="member-name-link">ENABLE_NOTIFY_GEOLOCATIONS_DISABLED</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#ENABLE_NOTIFY_EMPTY_IP" class="member-name-link">ENABLE_NOTIFY_EMPTY_IP</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#ENABLE_NOTIFY_GEOLOCATIONS_INTERNET_REQUIRED" class="member-name-link">ENABLE_NOTIFY_GEOLOCATIONS_INTERNET_REQUIRED</a></code></div>
+<div class="col-first even-row-color"><code><a href="#ENABLE_NOTIFY_GEOLOCATIONS_DISABLED" class="member-name-link">ENABLE_NOTIFY_GEOLOCATIONS_DISABLED</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#ENABLE_NOTIFY_PROXY_ADDRESS" class="member-name-link">ENABLE_NOTIFY_PROXY_ADDRESS</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#ENABLE_NOTIFY_GEOLOCATIONS_INTERNET_REQUIRED" class="member-name-link">ENABLE_NOTIFY_GEOLOCATIONS_INTERNET_REQUIRED</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#ENABLE_NOTIFY_PROXY_DISABLED_WEBSERVER" class="member-name-link">ENABLE_NOTIFY_PROXY_DISABLED_WEBSERVER</a></code></div>
+<div class="col-first even-row-color"><code><a href="#ENABLE_NOTIFY_PROXY_ADDRESS" class="member-name-link">ENABLE_NOTIFY_PROXY_ADDRESS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#ENABLE_NOTIFY_SETTING_CHANGE" class="member-name-link">ENABLE_NOTIFY_SETTING_CHANGE</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#ENABLE_NOTIFY_PROXY_DISABLED_WEBSERVER" class="member-name-link">ENABLE_NOTIFY_PROXY_DISABLED_WEBSERVER</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#ENABLE_NOTIFY_STORING_PRESERVED_SESSIONS" class="member-name-link">ENABLE_NOTIFY_STORING_PRESERVED_SESSIONS</a></code></div>
+<div class="col-first even-row-color"><code><a href="#ENABLE_NOTIFY_SETTING_CHANGE" class="member-name-link">ENABLE_NOTIFY_SETTING_CHANGE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#ENABLE_NOTIFY_WEB_SERVER_DISABLED" class="member-name-link">ENABLE_NOTIFY_WEB_SERVER_DISABLED</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#ENABLE_NOTIFY_STORING_PRESERVED_SESSIONS" class="member-name-link">ENABLE_NOTIFY_STORING_PRESERVED_SESSIONS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#ENABLED" class="member-name-link">ENABLED</a></code></div>
+<div class="col-first even-row-color"><code><a href="#ENABLE_NOTIFY_WEB_SERVER_DISABLED" class="member-name-link">ENABLE_NOTIFY_WEB_SERVER_DISABLED</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#ENABLED_DATABASE" class="member-name-link">ENABLED_DATABASE</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#ENABLED" class="member-name-link">ENABLED</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#ENABLED_WEB_SERVER" class="member-name-link">ENABLED_WEB_SERVER</a></code></div>
+<div class="col-first even-row-color"><code><a href="#ENABLED_DATABASE" class="member-name-link">ENABLED_DATABASE</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#ENABLED_WEB_SERVER" class="member-name-link">ENABLED_WEB_SERVER</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#EXTENSION_ERROR" class="member-name-link">EXTENSION_ERROR</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#EXTENSION_FAILED" class="member-name-link">EXTENSION_FAILED</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#EXTENSION_REGISTERED" class="member-name-link">EXTENSION_REGISTERED</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 <div class="col-first odd-row-color"><code><a href="#LOADED_SERVER_INFO" class="member-name-link">LOADED_SERVER_INFO</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
@@ -845,6 +857,14 @@ the order they are declared.</div>
 </section>
 </li>
 <li>
+<section class="detail" id="DB_DOWNLOAD_DRIVER">
+<h3>DB_DOWNLOAD_DRIVER</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="PluginLang.html" title="enum class in com.djrapitops.plan.settings.locale.lang">PluginLang</a></span>&nbsp;<span class="element-name">DB_DOWNLOAD_DRIVER</span></div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="DB_APPLY_PATCH">
 <h3>DB_APPLY_PATCH</h3>
 <div class="horizontal-scroll">
@@ -913,6 +933,30 @@ the order they are declared.</div>
 <h3>DB_SCHEMA_PATCH</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="PluginLang.html" title="enum class in com.djrapitops.plan.settings.locale.lang">PluginLang</a></span>&nbsp;<span class="element-name">DB_SCHEMA_PATCH</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="EXTENSION_REGISTERED">
+<h3>EXTENSION_REGISTERED</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="PluginLang.html" title="enum class in com.djrapitops.plan.settings.locale.lang">PluginLang</a></span>&nbsp;<span class="element-name">EXTENSION_REGISTERED</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="EXTENSION_FAILED">
+<h3>EXTENSION_FAILED</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="PluginLang.html" title="enum class in com.djrapitops.plan.settings.locale.lang">PluginLang</a></span>&nbsp;<span class="element-name">EXTENSION_FAILED</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="EXTENSION_ERROR">
+<h3>EXTENSION_ERROR</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="PluginLang.html" title="enum class in com.djrapitops.plan.settings.locale.lang">PluginLang</a></span>&nbsp;<span class="element-name">EXTENSION_ERROR</span></div>
 </div>
 </section>
 </li>
