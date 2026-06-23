@@ -10,6 +10,7 @@ import PlayerRetentionGraphHelp from "./help/PlayerRetentionGraphHelp";
 import GroupPermissionHelp from "./help/GroupPermissionHelp";
 import ActionButton from "../input/button/ActionButton.tsx";
 import ModalCloseButton from "../input/button/ModalCloseButton.jsx";
+import {PerformanceHelp} from "./help/PerformanceHelp.tsx";
 
 const HelpModal = () => {
     const {t} = useTranslation();
@@ -32,6 +33,10 @@ const HelpModal = () => {
         "group-permissions": {
             title: t('html.label.managePage.groupHeader'),
             body: <GroupPermissionHelp/>
+        },
+        "performance": {
+            title: t('html.label.performance'),
+            body: <PerformanceHelp/>
         }
     }
 

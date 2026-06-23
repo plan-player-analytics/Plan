@@ -228,16 +228,6 @@ export const GraphSeriesCard = ({id, identifier}: Props) => {
                 yAxis: 'milliseconds'
             }
         }, {
-            id: PerformanceGraphId.CHUNKS,
-            name: t('html.label.loadedChunks'), icon: faMap, color: 'chunks',
-            permission: 'page.server.performance.graphs.chunks',
-            data: performanceSeries?.chunks,
-            options: {
-                type: 'spline',
-                tooltip: tooltip.zeroDecimals,
-                yAxis: 'chunks'
-            }
-        }, {
             id: PerformanceGraphId.ENTITIES,
             name: t('html.label.entities'), icon: faDragon, color: 'entities',
             permission: 'page.server.performance.graphs.entities',
@@ -246,6 +236,16 @@ export const GraphSeriesCard = ({id, identifier}: Props) => {
                 type: 'spline',
                 tooltip: tooltip.zeroDecimals,
                 yAxis: 'entities'
+            }
+        }, {
+            id: PerformanceGraphId.CHUNKS,
+            name: t('html.label.loadedChunks'), icon: faMap, color: 'chunks',
+            permission: 'page.server.performance.graphs.chunks',
+            data: performanceSeries?.chunks,
+            options: {
+                type: 'spline',
+                tooltip: tooltip.zeroDecimals,
+                yAxis: 'chunks'
             }
         }, {
             id: PerformanceGraphId.CPU,

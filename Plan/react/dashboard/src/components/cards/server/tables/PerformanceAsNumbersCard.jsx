@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import PerformanceAsNumbersTable from "../../../table/PerformanceAsNumbersTable";
 import CardHeader from "../../CardHeader.tsx";
 import {faBookOpen} from "@fortawesome/free-solid-svg-icons";
@@ -7,6 +7,9 @@ import {useTranslation} from "react-i18next";
 import {useDatapointQuery} from "../../../datapoint/QueryDatapoint.tsx";
 import {DatapointType} from "../../../../dataHooks/model/datapoint/Datapoint.ts";
 import {MS_24H, MS_MONTH, MS_WEEK} from "../../../../util/format/useDateFormatter.js";
+import {useNavigation} from "../../../../hooks/navigationHook.tsx";
+import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
+import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 
 const NoDataAlert = ({servers}) => {
     const {t} = useTranslation();
@@ -33,9 +36,17 @@ const NoDataAlert = ({servers}) => {
 }
 
 const PerformanceAsNumbersCard = ({servers}) => {
+    const {setHelpModalTopic} = useNavigation();
+    const openHelp = useCallback(() => setHelpModalTopic('performance'), [setHelpModalTopic]);
+
     return (
         <Card id={"performance-as-numbers"}>
-            <CardHeader icon={faBookOpen} color="chunks" label={"html.label.performanceAsNumbers"}/>
+            <CardHeader icon={faBookOpen} color="chunks" label={"html.label.performanceAsNumbers"}>
+                <button className={"float-end"} onClick={openHelp}>
+                    <Fa className={"col-help-icon"}
+                        icon={faQuestionCircle}/>
+                </button>
+            </CardHeader>
             <NoDataAlert servers={servers.map(s => s.serverUUID)}/>
             <PerformanceAsNumbersTable servers={servers}/>
         </Card>
