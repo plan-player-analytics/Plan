@@ -1169,7 +1169,13 @@ plugin:
             storeSessions: "正在保存上次关机前未完成的会话。"
             webserverDisabled: "网页服务器未初始化。(WebServer.DisableWebServer: true)"
         webserver: "网页服务器已在 ${0} (${1}) 端口运行"
+    extensions:
+        errorOnRegister: "Could not register DataExtension for ${0} due to ${1}"
+        failedToRegister: "One or more extensions failed to register (They can be disabled in Plan config)."
+        registered: "Registered extension: ${0}"
     generic:
+        database:
+            downloadDriver: "Downloading ${0} Driver, this may take a while..."
         dbApplyingPatch: "正在应用补丁：${0}……"
         dbFaultyLaunchOptions: "启动参数错误，正在使用默认参数（${0}）"
         dbNotifyClean: "已移除 ${0} 位用户的数据。"

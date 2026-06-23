@@ -1169,7 +1169,13 @@ plugin:
             storeSessions: "Зберігання сеансів, які були збережені до попереднього вимкнення."
             webserverDisabled: "Веб-сервер не було ініціалізовано. (WebServer.DisableWebServer: true)"
         webserver: "Веб-сервер працює на порті ${0} ( ${1} )"
+    extensions:
+        errorOnRegister: "Could not register DataExtension for ${0} due to ${1}"
+        failedToRegister: "One or more extensions failed to register (They can be disabled in Plan config)."
+        registered: "Registered extension: ${0}"
     generic:
+        database:
+            downloadDriver: "Downloading ${0} Driver, this may take a while..."
         dbApplyingPatch: "Застосування виправлень: ${0}.."
         dbFaultyLaunchOptions: "Параметри запуску були помилковими, використовуються стандартні (${0})"
         dbNotifyClean: "Видалено дані ${0} гравців."

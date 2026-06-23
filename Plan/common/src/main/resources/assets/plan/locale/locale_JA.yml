@@ -1169,7 +1169,13 @@ plugin:
             storeSessions: "前回のシャットダウン時に、保存されていたセッションを保存します"
             webserverDisabled: "Webサーバーの初期化に失敗しました (WebServer.DisableWebServer: true)"
         webserver: "Webサーバーは次のポートで実行されています: ${0} ( ${1} )"
+    extensions:
+        errorOnRegister: "Could not register DataExtension for ${0} due to ${1}"
+        failedToRegister: "One or more extensions failed to register (They can be disabled in Plan config)."
+        registered: "Registered extension: ${0}"
     generic:
+        database:
+            downloadDriver: "Downloading ${0} Driver, this may take a while..."
         dbApplyingPatch: "次のパッチを適用しています: ${0}.."
         dbFaultyLaunchOptions: "起動オプションに問題があります,デフォルトのオプションを使用して下さい (${0})"
         dbNotifyClean: "${0} のプレイヤーデータを削除しています"

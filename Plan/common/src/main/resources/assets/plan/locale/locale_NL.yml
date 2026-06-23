@@ -1169,7 +1169,13 @@ plugin:
             storeSessions: "Sessies opslaan die zijn bewaard vóór de vorige afsluiting."
             webserverDisabled: "Webserver is niet geïnitialiseerd. (WebServer.DisableWebServer: true)"
         webserver: "Webserver draait op POORT ${0} ( ${1} )"
+    extensions:
+        errorOnRegister: "Could not register DataExtension for ${0} due to ${1}"
+        failedToRegister: "One or more extensions failed to register (They can be disabled in Plan config)."
+        registered: "Registered extension: ${0}"
     generic:
+        database:
+            downloadDriver: "Downloading ${0} Driver, this may take a while..."
         dbApplyingPatch: "Patch Toepassen: ${0}.."
         dbFaultyLaunchOptions: "Startopties waren defect, gebruik maken van standaardopties (${0})"
         dbNotifyClean: "Gegevens van ${0} spelers zijn verwijderd."

@@ -1169,7 +1169,13 @@ plugin:
             storeSessions: "正在儲存之前關機前留下的會話。"
             webserverDisabled: "網頁伺服器未初始化。(WebServer.DisableWebServer: true)"
         webserver: "網頁伺服器已在 ${0} ( ${1} ) 端口上執行"
+    extensions:
+        errorOnRegister: "Could not register DataExtension for ${0} due to ${1}"
+        failedToRegister: "One or more extensions failed to register (They can be disabled in Plan config)."
+        registered: "Registered extension: ${0}"
     generic:
+        database:
+            downloadDriver: "Downloading ${0} Driver, this may take a while..."
         dbApplyingPatch: "正在應用補丁：${0}..."
         dbFaultyLaunchOptions: "啟動參數出錯，正使用預設參數（${0}）"
         dbNotifyClean: "移除了 ${0} 位使用者的資料。"

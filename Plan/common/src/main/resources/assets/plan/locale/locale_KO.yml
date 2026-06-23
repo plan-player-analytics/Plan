@@ -1169,7 +1169,13 @@ plugin:
             storeSessions: "이전 종료 전에 보존된 세션을 저장하는 중입니다."
             webserverDisabled: "웹서버가 초기화되지 않았습니다. (WebServer.DisableWebServer: true)"
         webserver: "웹서버가 포트 ${0}에서 실행 중입니다 ( ${1} )"
+    extensions:
+        errorOnRegister: "Could not register DataExtension for ${0} due to ${1}"
+        failedToRegister: "One or more extensions failed to register (They can be disabled in Plan config)."
+        registered: "Registered extension: ${0}"
     generic:
+        database:
+            downloadDriver: "Downloading ${0} Driver, this may take a while..."
         dbApplyingPatch: "패치 적용 중: ${0}.."
         dbFaultyLaunchOptions: "실행 옵션에 오류가 있어 기본값을 사용합니다. (${0})"
         dbNotifyClean: "${0}명의 플레이어 데이터가 제거되었습니다."

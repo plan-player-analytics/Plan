@@ -1169,7 +1169,13 @@ plugin:
             storeSessions: "Almacenando sesiones que fueron preservadas antes de los apagados recientes."
             webserverDisabled: "El servidor web no se ha iniciado. (WebServer.DisableWebServer: true)"
         webserver: "El servidor web esta funcionando en el puerto ${0} ( ${1} )"
+    extensions:
+        errorOnRegister: "Could not register DataExtension for ${0} due to ${1}"
+        failedToRegister: "One or more extensions failed to register (They can be disabled in Plan config)."
+        registered: "Registered extension: ${0}"
     generic:
+        database:
+            downloadDriver: "Downloading ${0} Driver, this may take a while..."
         dbApplyingPatch: "Aplicar parche: ${0}.."
         dbFaultyLaunchOptions: "Opciones de Lanzamiento fallidos. Usando los predeterminados (${0})"
         dbNotifyClean: "Eliminados los datos de ${0} jugadores."

@@ -1169,7 +1169,13 @@ plugin:
             storeSessions: "Önceki kapatmadan önce korunan oturumları saklama."
             webserverDisabled: "WebServer başlatılmadı. (WebServer.DisableWebServer: true)"
         webserver: "Webserver Bu port üzerinden çalışıyor ${0} ( ${1} )"
+    extensions:
+        errorOnRegister: "Could not register DataExtension for ${0} due to ${1}"
+        failedToRegister: "One or more extensions failed to register (They can be disabled in Plan config)."
+        registered: "Registered extension: ${0}"
     generic:
+        database:
+            downloadDriver: "Downloading ${0} Driver, this may take a while..."
         dbApplyingPatch: "Yama uygulanıyor: ${0}.."
         dbFaultyLaunchOptions: "Başlatma seçenekleri hatalı, varsayılan olarak kullanın (${0})"
         dbNotifyClean: "${0} oyuncunun verileri kaldırıldı."

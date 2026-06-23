@@ -106,7 +106,7 @@ public class MySQLDB extends SQLDB {
     @Override
     public void setupDataSource() {
         if (driverClassLoader == null) {
-            logger.info("Downloading " + (useMariaDbDriver ? "MariaDB" : "MySQL") + " Driver, this may take a while...");
+            logger.info(locale.getString(PluginLang.DB_DOWNLOAD_DRIVER, useMariaDbDriver ? "MariaDB" : "MySQL"));
             downloadDriver();
         }
 

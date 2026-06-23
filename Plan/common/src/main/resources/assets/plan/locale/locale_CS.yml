@@ -1169,7 +1169,13 @@ plugin:
             storeSessions: "Uložení relace, které byly zachovalé před předchozím spojením."
             webserverDisabled: "WebServer nebyl inicializován. (WebServer.DisableWebServer: true)"
         webserver: "Webserver běží na PORTU ${0} ( ${1} )"
+    extensions:
+        errorOnRegister: "Could not register DataExtension for ${0} due to ${1}"
+        failedToRegister: "One or more extensions failed to register (They can be disabled in Plan config)."
+        registered: "Registered extension: ${0}"
     generic:
+        database:
+            downloadDriver: "Downloading ${0} Driver, this may take a while..."
         dbApplyingPatch: "Aplikuji patch: ${0}.."
         dbFaultyLaunchOptions: "Možnosti spuštění byly chybné, používám defaultní (${0})"
         dbNotifyClean: "Smazány data ${0} hráčů."
