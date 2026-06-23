@@ -74,6 +74,10 @@ public class CreateIndexTransaction extends Transaction {
                 SessionsTable.SERVER_ID,
                 SessionsTable.SESSION_START,
                 SessionsTable.USER_ID);
+        createIndex(SessionsTable.TABLE_NAME, "plan_sessions_server_end_user",
+                SessionsTable.SERVER_ID,
+                SessionsTable.SESSION_END,
+                SessionsTable.USER_ID);
         createIndex(SessionsTable.TABLE_NAME, "plan_sessions_user_end",
                 SessionsTable.USER_ID, SessionsTable.SESSION_END);
         createIndex(SessionsTable.TABLE_NAME, "plan_session_user_start",
