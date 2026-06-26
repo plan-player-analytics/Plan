@@ -296,10 +296,10 @@
   resolved "https://registry.yarnpkg.com/@fortawesome/react-fontawesome/-/react-fontawesome-3.3.1.tgz#7fb1d1f4b48a15b9c6c4d88d579dacc478ebf3ef"
   integrity sha512-wGnAPhfzivDwBWYmEG8MSrEXPruoiMMo48NnsRkj1NZkoaawgOijPNAiSHKMYEoCsqTBSgLTzL6EqTTWGaUR4w==
 
-"@fullcalendar/bootstrap@6.1.20":
-  version "6.1.20"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/bootstrap/-/bootstrap-6.1.20.tgz#6b7281fa96674ffea2602172f75a1c724b9b40bd"
-  integrity sha512-WLMt4SQTrVnE19aQi54csIDIplVDew/eQ9f0iMRJqSGZqEYbH2Ea11LGjortB8+8bi7fAHhy4An47gaG6FOOpw==
+"@fullcalendar/bootstrap@6.1.21":
+  version "6.1.21"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/bootstrap/-/bootstrap-6.1.21.tgz#da3be75df4db3ede6bd4bb11dd11c9d583a42d69"
+  integrity sha512-bg7F4U0kpQiHZyDM4BQKev7n94TekFgR4ZWkFY+HSaPfIYXuW5zkAs4f10WMu0xyp9pcR2v930gYtPw9bnRj+A==
 
 "@fullcalendar/core@6.1.21":
   version "6.1.21"
