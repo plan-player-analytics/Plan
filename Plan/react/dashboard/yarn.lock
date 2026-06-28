@@ -296,10 +296,10 @@
   resolved "https://registry.yarnpkg.com/@fortawesome/react-fontawesome/-/react-fontawesome-3.3.1.tgz#7fb1d1f4b48a15b9c6c4d88d579dacc478ebf3ef"
   integrity sha512-wGnAPhfzivDwBWYmEG8MSrEXPruoiMMo48NnsRkj1NZkoaawgOijPNAiSHKMYEoCsqTBSgLTzL6EqTTWGaUR4w==
 
-"@fullcalendar/bootstrap@6.1.20":
-  version "6.1.20"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/bootstrap/-/bootstrap-6.1.20.tgz#6b7281fa96674ffea2602172f75a1c724b9b40bd"
-  integrity sha512-WLMt4SQTrVnE19aQi54csIDIplVDew/eQ9f0iMRJqSGZqEYbH2Ea11LGjortB8+8bi7fAHhy4An47gaG6FOOpw==
+"@fullcalendar/bootstrap@6.1.21":
+  version "6.1.21"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/bootstrap/-/bootstrap-6.1.21.tgz#da3be75df4db3ede6bd4bb11dd11c9d583a42d69"
+  integrity sha512-bg7F4U0kpQiHZyDM4BQKev7n94TekFgR4ZWkFY+HSaPfIYXuW5zkAs4f10WMu0xyp9pcR2v930gYtPw9bnRj+A==
 
 "@fullcalendar/core@6.1.21":
   version "6.1.21"
@@ -308,20 +308,20 @@
   dependencies:
     preact "~10.12.1"
 
-"@fullcalendar/daygrid@6.1.20":
-  version "6.1.20"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/daygrid/-/daygrid-6.1.20.tgz#fcf33af4ea908b46fd755414278341811e01bdf8"
-  integrity sha512-AO9vqhkLP77EesmJzuU+IGXgxNulsA8mgQHynclJ8U70vSwAVnbcLG9qftiTAFSlZjiY/NvhE7sflve6cJelyQ==
+"@fullcalendar/daygrid@6.1.21":
+  version "6.1.21"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/daygrid/-/daygrid-6.1.21.tgz#70eef7af5951b35a5f0380b15e32e5389ae029bc"
+  integrity sha512-QYb1y40RGYLlOxKpYWg8O+7njEnKnFG8Tt7qjnubJGR35s1phQg67E+81y2TyAbbm59p2JFOCXGDk9t6KDujIA==
 
-"@fullcalendar/interaction@6.1.20":
-  version "6.1.20"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/interaction/-/interaction-6.1.20.tgz#a73a53af5f93ac261f864b025ae80201609f1cd7"
-  integrity sha512-p6txmc5txL0bMiPaJxe2ip6o0T384TyoD2KGdsU6UjZ5yoBlaY+dg7kxfnYKpYMzEJLG58n+URrHr2PgNL2fyA==
+"@fullcalendar/interaction@6.1.21":
+  version "6.1.21"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/interaction/-/interaction-6.1.21.tgz#e7fd36d7d328a02e1d7a1dcc174db7650a6edf31"
+  integrity sha512-WPYpqtljDWmU0Xm2cOtFrLlocgxv7cgkOppj34Q6OUUat8a6Cnd6kYo2JR+irP223PE5lBYHFNp1qh7SIpJc0w==
 
-"@fullcalendar/react@6.1.20":
-  version "6.1.20"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/react/-/react-6.1.20.tgz#7f2a8ede416364ab3b426c8e7c6739ec0ec476d0"
-  integrity sha512-1w0pZtceaUdfAnxMSCGHCQalhi+mR1jOe76sXzyAXpcPz/Lf0zHSdcGK/U2XpZlnQgQtBZW+d+QBnnzVQKCxAA==
+"@fullcalendar/react@6.1.21":
+  version "6.1.21"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/react/-/react-6.1.21.tgz#6f396ab7460d3ad9d07f4c32b1ac483b9b21120f"
+  integrity sha512-TLpmGUd5k/PMdCh8XbeFC9PW9wuGvMms1oCxWgXyjK3EFPXAAd0PLfcvwKdyxoAS5eK1E4RJFkjMHvsYHpimcg==
 
 "@highcharts/map-collection@2.3.3":
   version "2.3.3"
