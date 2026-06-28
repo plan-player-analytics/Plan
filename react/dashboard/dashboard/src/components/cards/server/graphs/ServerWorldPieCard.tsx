@@ -8,6 +8,7 @@ import {TitleWithDates} from "../../../text/TitleWithDates";
 
 const ServerWorldPieCard = () => {
     const filter = useGenericFilter();
+
     const {data: worldPie, error: loadingError} = useWorldPie(filter);
     if (loadingError) return <ErrorViewCard error={loadingError}/>
     if (!worldPie) return <CardLoader/>;

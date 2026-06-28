@@ -2,7 +2,7 @@ import {useTranslation} from "react-i18next";
 import {usePreferences} from "../../hooks/preferencesHook.jsx";
 import React, {useCallback, useEffect, useState} from "react";
 import FormattedTime from "../text/FormattedTime.jsx";
-import FormattedDate from "../text/FormattedDate.jsx";
+import FormattedDate from "../text/FormattedDate.tsx";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCheck, faGlobe, faSignal, faUser, faUserPlus} from "@fortawesome/free-solid-svg-icons";
 import {faCalendarCheck, faCalendarPlus, faClock} from "@fortawesome/free-regular-svg-icons";

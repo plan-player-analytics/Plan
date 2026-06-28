@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {useTheme} from "../../hooks/themeHook";
+import {useTheme} from "../../hooks/themeHook.tsx";
 import {Card, Dropdown, InputGroup} from "react-bootstrap";
 import Select from "../input/Select";
 import SearchField from "../input/SearchField";

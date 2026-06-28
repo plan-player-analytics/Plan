@@ -4,7 +4,7 @@ import "highcharts/esm/modules/accessibility";
 import 'highcharts/esm/modules/drilldown';
 import "highcharts/esm/modules/no-data-to-display"
 
-import {useTheme} from "../../hooks/themeHook";
+import {useTheme} from "../../hooks/themeHook.tsx";
 import {nameToCssVariable, withReducedSaturation} from "../../util/colors";
 import {useTranslation} from "react-i18next";
 import {usePreferences} from "../../hooks/preferencesHook.jsx";

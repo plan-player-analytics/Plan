@@ -23,7 +23,7 @@ import "highcharts/modules/no-data-to-display"
 import "highcharts/modules/accessibility";
 import {postQuery} from "../../../../service/queryService";
 import QueryPlayerListModal from "../../../modal/QueryPlayerListModal";
-import {useMetadata} from "../../../../hooks/metadataHook";
+import {useMetadata} from "../../../../hooks/metadataHook.tsx";
 import {staticSite} from "../../../../service/backendConfiguration.js";
 
 const DayByDayTab = () => {

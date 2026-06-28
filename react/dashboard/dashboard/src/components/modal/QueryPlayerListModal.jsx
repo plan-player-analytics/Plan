@@ -8,7 +8,7 @@ import {ChartLoader} from "../navigation/Loader.tsx";
 import {useNavigate} from "react-router";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 import PlayerTable from "../table/PlayerTable.jsx";
-import ActionButton from "../input/button/ActionButton.jsx";
+import ActionButton from "../input/button/ActionButton.tsx";
 import ModalCloseButton from "../input/button/ModalCloseButton.jsx";
 
 const QueryPlayerListModal = ({open, toggle, queryData, title}) => {

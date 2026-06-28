@@ -1,16 +1,33 @@
-import React from 'react';
+import React, {useCallback} from 'react';
 import PerformanceAsNumbersTable from "../../../table/PerformanceAsNumbersTable";
 import CardHeader from "../../CardHeader.tsx";
-import {faBookOpen, faInfoCircle} from "@fortawesome/free-solid-svg-icons";
-import {Alert, Card} from "react-bootstrap";
+import {faBookOpen} from "@fortawesome/free-solid-svg-icons";
+import {Card} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {useDatapointQuery} from "../../../datapoint/QueryDatapoint.tsx";
+import {DatapointType} from "../../../../dataHooks/model/datapoint/Datapoint.ts";
+import {MS_24H, MS_MONTH, MS_WEEK} from "../../../../util/format/useDateFormatter.js";
+import {useNavigation} from "../../../../hooks/navigationHook.tsx";
+import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
+import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 
-const NoDataAlert = ({data}) => {
+const NoDataAlert = ({servers}) => {
     const {t} = useTranslation();
-    const noData24h = data?.cpu_24h === "plugin.generic.unavailable";
-    const noData7d = data?.cpu_7d === "plugin.generic.unavailable";
-    const noData30d = data?.cpu_30d === "plugin.generic.unavailable";
+    const {error: error24h} = useDatapointQuery(true, DatapointType.CPU_AVERAGE, {
+        server: servers,
+        afterMillisAgo: MS_24H
+    })
+    const noData24h = error24h?.status === 404
+    const {error: error7d} = useDatapointQuery(true, DatapointType.CPU_AVERAGE, {
+        server: servers,
+        afterMillisAgo: MS_WEEK
+    })
+    const noData7d = error7d?.status === 404
+    const {error: error30d} = useDatapointQuery(true, DatapointType.CPU_AVERAGE, {
+        server: servers,
+        afterMillisAgo: MS_MONTH
+    })
+    const noData30d = error30d?.status === 404;
 
     if (noData30d) return <p className={"alert alert-warning mb-0"}>{t('html.description.noData30d')}</p>;
     if (noData7d) return <p className={"alert alert-warning mb-0"}>{t('html.description.noData7d')}</p>;
@@ -18,18 +35,20 @@ const NoDataAlert = ({data}) => {
     return null;
 }
 
-const PerformanceAsNumbersCard = ({data, servers}) => {
-    const {t} = useTranslation();
-    const dataIncludesGameServers = !servers || Boolean(servers.filter(server => !server.proxy).length);
+const PerformanceAsNumbersCard = ({servers}) => {
+    const {setHelpModalTopic} = useNavigation();
+    const openHelp = useCallback(() => setHelpModalTopic('performance'), [setHelpModalTopic]);
 
     return (
         <Card id={"performance-as-numbers"}>
-            <CardHeader icon={faBookOpen} color="chunks" label={"html.label.performanceAsNumbers"}/>
-            <NoDataAlert data={data}/>
-            {!dataIncludesGameServers && <Alert className='alert-warning mb-0'>
-                <FontAwesomeIcon icon={faInfoCircle}/> {t('html.description.performanceNoGameServers')}
-            </Alert>}
-            <PerformanceAsNumbersTable data={data} servers={servers}/>
+            <CardHeader icon={faBookOpen} color="chunks" label={"html.label.performanceAsNumbers"}>
+                <button className={"float-end"} onClick={openHelp}>
+                    <Fa className={"col-help-icon"}
+                        icon={faQuestionCircle}/>
+                </button>
+            </CardHeader>
+            <NoDataAlert servers={servers.map(s => s.serverUUID)}/>
+            <PerformanceAsNumbersTable servers={servers}/>
         </Card>
     )
 };

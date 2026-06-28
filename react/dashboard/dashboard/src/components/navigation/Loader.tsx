@@ -30,4 +30,10 @@ const Loader = () => {
     )
 }
 
+export const DatapointLoader = () => {
+    return (
+        <span className="datapoint-loader"/>
+    )
+}
+
 export default Loader;

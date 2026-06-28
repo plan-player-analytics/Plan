@@ -4,11 +4,9 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faBookOpen} from "@fortawesome/free-solid-svg-icons";
 import React from "react";
 import OnlineActivityAsNumbersTable from "../../../table/OnlineActivityAsNumbersTable";
-import {CardLoader} from "../../../navigation/Loader.tsx";
 
-const OnlineActivityAsNumbersCard = ({data}) => {
+const OnlineActivityAsNumbersCard = () => {
     const {t} = useTranslation();
-    if (!data) return <CardLoader/>;
 
     return (
         <Card id={'online-activity-numbers'}>
@@ -17,7 +15,7 @@ const OnlineActivityAsNumbersCard = ({data}) => {
                     <Fa icon={faBookOpen} className="col-players-unique"/> {t('html.label.onlineActivityAsNumbers')}
                 </h6>
             </Card.Header>
-            <OnlineActivityAsNumbersTable data={data}/>
+            <OnlineActivityAsNumbersTable/>
         </Card>
     )
 }

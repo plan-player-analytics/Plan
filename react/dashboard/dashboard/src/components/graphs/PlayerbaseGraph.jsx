@@ -1,6 +1,6 @@
 import {useTranslation} from "react-i18next";
 import React, {useEffect, useMemo} from "react";
-import {useTheme} from "../../hooks/themeHook";
+import {useTheme} from "../../hooks/themeHook.tsx";
 import Highcharts from "highcharts/esm/highstock";
 import "highcharts/esm/modules/no-data-to-display";
 import "highcharts/esm/modules/accessibility";

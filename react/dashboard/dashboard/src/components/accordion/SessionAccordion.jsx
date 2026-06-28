@@ -8,7 +8,7 @@ import WorldPie from "../graphs/WorldPie";
 import {SimpleKillsTable} from "../table/KillsTable";
 import {useTranslation} from "react-i18next";
 import {usePreferences} from "../../hooks/preferencesHook.jsx";
-import FormattedDate from "../text/FormattedDate.jsx";
+import FormattedDate from "../text/FormattedDate.tsx";
 import FormattedTime from "../text/FormattedTime.jsx";
 import PlayerPageLinkButton from "../input/button/PlayerPageLinkButton.jsx";
 import ServerPageLinkButton from "../input/button/ServerPageLinkButton.jsx";

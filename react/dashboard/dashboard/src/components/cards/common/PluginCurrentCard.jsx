@@ -3,7 +3,7 @@ import CardHeader from "../CardHeader.tsx";
 import {faCube, faCubes, faSignal} from "@fortawesome/free-solid-svg-icons";
 import {Card} from "react-bootstrap";
 import {ErrorViewCard} from "../../../views/ErrorView.tsx";
-import FormattedDate from "../../text/FormattedDate";
+import FormattedDate from "../../text/FormattedDate.tsx";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCalendar} from "@fortawesome/free-regular-svg-icons";
 import {useTranslation} from "react-i18next";

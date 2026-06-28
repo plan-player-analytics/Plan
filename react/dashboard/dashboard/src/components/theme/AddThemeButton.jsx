@@ -3,7 +3,7 @@ import OutlineButton from "../input/button/OutlineButton.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import {useNavigate} from "react-router";
-import {useTheme} from "../../hooks/themeHook.jsx";
+import {useTheme} from "../../hooks/themeHook.tsx";
 import {useTranslation} from "react-i18next";
 
 const AddThemeButton = () => {

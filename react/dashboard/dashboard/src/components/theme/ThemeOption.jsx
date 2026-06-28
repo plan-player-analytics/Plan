@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from 'react';
-import {getLocallyStoredThemes, ThemeContextProvider, useTheme} from "../../hooks/themeHook.jsx";
+import {getLocallyStoredThemes, ThemeContextProvider, useTheme} from "../../hooks/themeHook.tsx";
 import {ThemeStorageContextProvider} from "../../hooks/context/themeContextHook.tsx";
 import {ThemeStyleCss} from "./ThemeStyleCss.tsx";
 import {Card, Col} from "react-bootstrap";

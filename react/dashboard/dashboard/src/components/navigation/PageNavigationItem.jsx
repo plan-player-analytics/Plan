@@ -4,7 +4,7 @@ import {useTranslation} from "react-i18next";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {InputGroup} from "react-bootstrap";
 import {useLocation, useNavigate} from "react-router";
-import {useMetadata} from "../../hooks/metadataHook";
+import {useMetadata} from "../../hooks/metadataHook.tsx";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const PageNavigationItem = ({page}) => {

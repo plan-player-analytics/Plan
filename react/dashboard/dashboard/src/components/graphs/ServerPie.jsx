@@ -3,11 +3,10 @@ import Highcharts from 'highcharts/esm/highcharts';
 import "highcharts/esm/modules/no-data-to-display";
 import "highcharts/esm/modules/accessibility";
 
-import {useTheme} from "../../hooks/themeHook";
+import {useTheme} from "../../hooks/themeHook.tsx";
 import {withReducedSaturation} from "../../util/colors";
 import {useTranslation} from "react-i18next";
 import {usePreferences} from "../../hooks/preferencesHook.jsx";
-import {useTimePreferences} from "../text/FormattedTime.jsx";
 import {classNames} from "../../util/classNames.ts";
 import {useTimeAmountFormatter} from "../../util/format/useTimeAmountFormatter.js";
 import {useI18nFriendlyLanguage} from "../../service/localeService.js";
@@ -17,7 +16,6 @@ const ServerPie = ({colors, series}) => {
     const {nightModeEnabled, graphTheming} = useTheme();
     const {preferencesLoaded} = usePreferences();
     const {formatTime} = useTimeAmountFormatter();
-    const timePreferences = useTimePreferences();
 
     const chart = useMemo(() => {
         const reduceColors = (colorsToReduce) => colorsToReduce.map(color => withReducedSaturation(color));

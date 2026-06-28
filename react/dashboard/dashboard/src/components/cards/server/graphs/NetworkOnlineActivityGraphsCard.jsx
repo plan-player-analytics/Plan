@@ -14,7 +14,7 @@ import {ErrorViewBody} from "../../../../views/ErrorView.tsx";
 import {ChartLoader} from "../../../navigation/Loader.tsx";
 import TimeByTimeGraph from "../../../graphs/TimeByTimeGraph";
 import PlayersOnlineGraph from "../../../graphs/PlayersOnlineGraph";
-import {useMetadata} from "../../../../hooks/metadataHook";
+import {useMetadata} from "../../../../hooks/metadataHook.tsx";
 import StackedPlayersOnlineGraph from "../../../graphs/StackedPlayersOnlineGraph";
 import {useAuth} from "../../../../hooks/authenticationHook.tsx";
 import {faCalendar} from "@fortawesome/free-regular-svg-icons";

@@ -1,4 +1,4 @@
-import {createContext, PropsWithChildren, useCallback, useContext, useMemo, useState} from "react";
+import {createContext, useCallback, useContext, useMemo, useState} from "react";
 import {GenericFilter} from "./model/GenericFilter";
 
 type GenericFilterContextProps = {
@@ -12,7 +12,8 @@ const GenericFilterContext = createContext<GenericFilterContextProps | undefined
 
 type Props = {
     initialValue?: GenericFilter;
-} & PropsWithChildren
+    children?: ((filter: GenericFilter) => React.ReactNode) | React.ReactNode;
+}
 
 export const GenericFilterContextProvider = ({initialValue, children}: Props) => {
     const [after, setAfter] = useState<number | undefined>(initialValue?.after);
@@ -54,7 +55,7 @@ export const GenericFilterContextProvider = ({initialValue, children}: Props) =>
         }
     }, [initialValue, after, before, reset, changeAfter, changeBefore, changeTimeframe]);
     return <GenericFilterContext.Provider value={context}>
-        {children}
+        {typeof children === 'function' ? children(context) : children}
     </GenericFilterContext.Provider>;
 }
 

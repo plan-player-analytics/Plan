@@ -5,7 +5,7 @@ import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
 import {fetchPlayer} from "../../service/playerService";
 import {faCampground, faCubes, faInfoCircle, faNetworkWired} from "@fortawesome/free-solid-svg-icons";
 import Header from "../../components/navigation/Header";
-import {useNavigation} from "../../hooks/navigationHook";
+import {useNavigation} from "../../hooks/navigationHook.tsx";
 import {useTranslation} from "react-i18next";
 import {faCalendarCheck} from "@fortawesome/free-regular-svg-icons";
 import {useDataRequest} from "../../hooks/dataFetchHook";

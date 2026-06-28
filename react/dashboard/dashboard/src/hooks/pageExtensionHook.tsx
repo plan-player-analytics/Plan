@@ -1,5 +1,5 @@
-import {createContext, useCallback, useContext, useMemo} from "react";
-import {useAuth} from "./authenticationHook.tsx";
+import {createContext, PropsWithChildren, useCallback, useContext, useMemo} from "react";
+import {useAuth} from "./authenticationHook";
 import {useNavigation} from "./navigationHook";
 import {useTheme} from "./themeHook";
 import {useMetadata} from "./metadataHook";
@@ -7,15 +7,31 @@ import {withReducedSaturation} from "../util/colors";
 import axios from "axios";
 import {useTranslation} from "react-i18next";
 
-const PageExtensionContext = createContext({});
+type PageExtensionContextValue = {
+    onRender: (className: string, position: string, context: any) => Promise<HTMLElement[]>;
+    onUnmount: (className: string, position: string) => void;
+    context: any;
+}
 
-export const PageExtensionContextProvider = ({children}) => {
-    const onRender = useCallback(async (className, position) => {
-        return await global.pageExtensionApi.onRender(className, position);
+const PageExtensionContext = createContext<PageExtensionContextValue | undefined>(undefined);
+
+type PageExtensionApi = {
+    onRender: (className: string, position: string, context: any) => Promise<HTMLElement[]>;
+    onUnmount: (className: string, position: string) => void;
+}
+
+export const PageExtensionContextProvider = ({children}: PropsWithChildren) => {
+    const onRender = useCallback(async (className: string, position: string, context: any) => {
+        if ('pageExtensionApi' in globalThis) {
+            return await ((globalThis as any).pageExtensionApi as PageExtensionApi).onRender(className, position, context);
+        }
+        return [];
     }, []);
 
-    const onUnmount = useCallback((className, position) => {
-        global.pageExtensionApi.onUnmount(className, position);
+    const onUnmount = useCallback((className: string, position: string) => {
+        if ('pageExtensionApi' in globalThis) {
+            ((globalThis as any).pageExtensionApi as PageExtensionApi).onUnmount(className, position);
+        }
     }, []);
 
     const {t} = useTranslation();
@@ -34,7 +50,7 @@ export const PageExtensionContextProvider = ({children}) => {
                 currentTab: navigationContext.currentTab
             },
             theme: {
-                currentThemeColor: themeContext.selectedColor,
+                currentThemeColor: themeContext.color,
                 colorMap: {}, // deprecated, use var(--color-plugins-red) etc. in css instead.
                 withReducedSaturation
             },
@@ -60,5 +76,7 @@ export const PageExtensionContextProvider = ({children}) => {
 }
 
 export const usePageExtension = () => {
-    return useContext(PageExtensionContext);
+    const context = useContext(PageExtensionContext);
+    if (!context) throw new Error("usePageExtension must be used within PageExtensionContextProvider");
+    return context;
 }
