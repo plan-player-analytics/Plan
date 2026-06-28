@@ -1451,6 +1451,41 @@ loadScripts(document, 'script');</script>
 </ul>
 <ul class="block-list">
 <li>
+<div class="caption"><span>com.djrapitops.plan.storage.database.sql.tables.webuser.<a href="com/djrapitops/plan/storage/database/sql/tables/webuser/RegistrationTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables.webuser">RegistrationTable</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Constant Field</div>
+<div class="table-header col-last">Value</div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.webuser.RegistrationTable.CODE">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/webuser/RegistrationTable.html#CODE">CODE</a></code></div>
+<div class="col-last even-row-color"><code>"code"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.webuser.RegistrationTable.DELETE_BY_CODE">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/webuser/RegistrationTable.html#DELETE_BY_CODE">DELETE_BY_CODE</a></code></div>
+<div class="col-last odd-row-color"><code>"DELETE FROM plan_incomplete_registration WHERE code=?"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.webuser.RegistrationTable.DELETE_EXPIRED">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/webuser/RegistrationTable.html#DELETE_EXPIRED">DELETE_EXPIRED</a></code></div>
+<div class="col-last even-row-color"><code>"DELETE FROM plan_incomplete_registration WHERE expiry_time&lt;=?"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.webuser.RegistrationTable.EXPIRY_TIME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/webuser/RegistrationTable.html#EXPIRY_TIME">EXPIRY_TIME</a></code></div>
+<div class="col-last odd-row-color"><code>"expiry_time"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.webuser.RegistrationTable.ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/webuser/RegistrationTable.html#ID">ID</a></code></div>
+<div class="col-last even-row-color"><code>"id"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.webuser.RegistrationTable.SALT_PASSWORD_HASH">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/webuser/RegistrationTable.html#SALT_PASSWORD_HASH">SALT_PASSWORD_HASH</a></code></div>
+<div class="col-last odd-row-color"><code>"salted_password_hash"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.webuser.RegistrationTable.SELECT_BY_CODE">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/webuser/RegistrationTable.html#SELECT_BY_CODE">SELECT_BY_CODE</a></code></div>
+<div class="col-last even-row-color"><code>"SELECT * FROM plan_incomplete_registration WHERE code=? AND expiry_time&gt;?"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.webuser.RegistrationTable.TABLE_NAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/webuser/RegistrationTable.html#TABLE_NAME">TABLE_NAME</a></code></div>
+<div class="col-last odd-row-color"><code>"plan_incomplete_registration"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.webuser.RegistrationTable.USERNAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/webuser/RegistrationTable.html#USERNAME">USERNAME</a></code></div>
+<div class="col-last even-row-color"><code>"username"</code></div>
+</div>
+</li>
+<li>
 <div class="caption"><span>com.djrapitops.plan.storage.database.sql.tables.webuser.<a href="com/djrapitops/plan/storage/database/sql/tables/webuser/SecurityTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables.webuser">SecurityTable</a></span></div>
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
@@ -1618,7 +1653,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Value</div>
 <div class="col-first even-row-color"><code id="net.playeranalytics.plan.BuildParameters.VERSION">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="net/playeranalytics/plan/BuildParameters.html#VERSION">VERSION</a></code></div>
-<div class="col-last even-row-color"><code>"5.7 build 3558"</code></div>
+<div class="col-last even-row-color"><code>"5.7 build 3561"</code></div>
 </div>
 </li>
 </ul>

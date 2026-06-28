@@ -69,7 +69,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#queryMap(java.lang.String,com.djrapitops.plan.storage.database.queries.MapRowExtractor,java.util.function.Supplier,java.lang.Object...)" tabindex="0">queryMap(String, MapRowExtractor, Supplier, Object...)</a></li>
 <li><a href="#executeTransaction(com.djrapitops.plan.storage.database.transactions.Transaction)" tabindex="0">executeTransaction(Transaction)</a></li>
 <li><a href="#executeInTransaction(com.djrapitops.plan.storage.database.transactions.Executable)" tabindex="0">executeInTransaction(Executable)</a></li>
-<li><a href="#executeInTransaction(java.lang.String)" tabindex="0">executeInTransaction(String)</a></li>
+<li><a href="#executeInTransaction(java.lang.String,java.lang.Object...)" tabindex="0">executeInTransaction(String, Object...)</a></li>
 <li><a href="#getType()" tabindex="0">getType()</a></li>
 <li><a href="#getSql()" tabindex="0">getSql()</a></li>
 <li><a href="#getState()" tabindex="0">getState()</a></li>
@@ -136,7 +136,8 @@ PATCHING to CLOSED (Database closed prematurely)</div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#executeInTransaction(com.djrapitops.plan.storage.database.transactions.Executable)" class="member-name-link">executeInTransaction</a><wbr>(<a href="transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a>&nbsp;executable)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a><wbr>&lt;?&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#executeInTransaction(java.lang.String)" class="member-name-link">executeInTransaction</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#executeInTransaction(java.lang.String,java.lang.Object...)" class="member-name-link">executeInTransaction</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;parameters)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a><wbr>&lt;?&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#executeTransaction(com.djrapitops.plan.storage.database.transactions.Transaction)" class="member-name-link">executeTransaction</a><wbr>(<a href="transactions/Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a>&nbsp;transaction)</code></div>
@@ -341,10 +342,11 @@ This method should only be called from an asynchronous thread.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="executeInTransaction(java.lang.String)">
+<section class="detail" id="executeInTransaction(java.lang.String,java.lang.Object...)">
 <h3>executeInTransaction</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a>&lt;?&gt;</span>&nbsp;<span class="element-name">executeInTransaction</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql)</span></div>
+<div class="member-signature"><span class="modifiers">default</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a>&lt;?&gt;</span>&nbsp;<span class="element-name">executeInTransaction</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;parameters)</span></div>
 </div>
 </section>
 </li>
