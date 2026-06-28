@@ -273,7 +273,8 @@ export const GraphSeriesCard = ({id, identifier}: Props) => {
             }
         }, {
             id: PerformanceGraphId.DISK,
-            name: t('html.label.diskSpace'), icon: faHdd, color: 'disk',
+            name: t('html.label.diskSpace'), icon: faHdd,
+            color: 'var(--color-data-performance-disk)',
             permission: 'page.server.performance.graphs.disk',
             data: performanceSeries?.disk,
             options: {
@@ -284,7 +285,8 @@ export const GraphSeriesCard = ({id, identifier}: Props) => {
         }, {
             id: PerformanceGraphId.PING,
             series: [PerformanceGraphId.PING_MIN, PerformanceGraphId.PING_AVG, PerformanceGraphId.PING_MAX],
-            name: t('html.label.ping'), icon: faSignal, color: 'ping',
+            name: t('html.label.ping'), icon: faSignal,
+            color: 'var(--color-data-performance-ping)',
             permission: 'page.server.performance.graphs.ping',
             data: pingSeries ? [] : undefined
         }, {
