@@ -32,6 +32,7 @@ import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
+import com.djrapitops.plan.storage.database.sql.tables.webuser.RegistrationTable;
 import com.djrapitops.plan.storage.database.transactions.commands.RemovePlayerTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.RemoveDuplicateUserInfoTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.RemoveOldAccessLogTransaction;
@@ -102,7 +103,7 @@ public class DBCleanTask extends TaskSystem.Task {
         Database database = dbSystem.getDatabase();
         try {
             if (database.getState() != Database.State.CLOSED) {
-
+                database.executeInTransaction(RegistrationTable.DELETE_EXPIRED, System.currentTimeMillis());
                 database.executeTransaction(new RemoveOldAccessLogTransaction(TimeUnit.DAYS.toMillis(config.get(WebserverSettings.REMOVE_ACCESS_LOG_AFTER_DAYS))));
                 database.executeTransaction(new RemoveOldSampledDataTransaction(
                         serverInfo.getServerUUID(),

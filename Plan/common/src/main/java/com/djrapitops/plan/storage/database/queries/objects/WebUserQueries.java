@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.delivery.domain.datatransfer.preferences.Preferences;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.auth.CookieMetadata;
+import com.djrapitops.plan.delivery.webserver.auth.IncompleteRegistration;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.sql.building.Select;
@@ -169,8 +170,8 @@ public class WebUserQueries {
         String permissionGroup = set.getString(WebGroupTable.NAME);
         String userPermissions = set.getString("user_permissions");
         List<String> permissions = userPermissions != null ? Arrays.stream(userPermissions.split(","))
-                                                             .filter(permission -> !permission.isEmpty())
-                                                             .collect(Collectors.toList()) : List.of();
+                .filter(permission -> !permission.isEmpty())
+                .collect(Collectors.toList()) : List.of();
         return new User(username, linkedTo != null ? linkedTo : "console", linkedToUUID, passwordHash, permissionGroup, new HashSet<>(permissions));
     }
 
@@ -287,5 +288,18 @@ public class WebUserQueries {
     public static Query<Set<Integer>> fetchPreferencesUserIds() {
         String sql = SELECT + WebUserPreferencesTable.WEB_USER_ID + FROM + WebUserPreferencesTable.TABLE_NAME;
         return db -> db.querySet(sql, row -> row.getInt(WebUserPreferencesTable.WEB_USER_ID));
+    }
+
+    public static Query<Optional<IncompleteRegistration>> fetchIncompleteRegistration(@Untrusted String code) {
+        return db -> db.queryOptional(RegistrationTable.SELECT_BY_CODE, WebUserQueries::extractIncompleteRegistration, code, System.currentTimeMillis());
+    }
+
+    private static IncompleteRegistration extractIncompleteRegistration(ResultSet set) throws SQLException {
+        return new IncompleteRegistration(
+                set.getString(RegistrationTable.USERNAME),
+                set.getString(RegistrationTable.SALT_PASSWORD_HASH),
+                set.getString(RegistrationTable.CODE),
+                set.getLong(RegistrationTable.EXPIRY_TIME)
+        );
     }
 }

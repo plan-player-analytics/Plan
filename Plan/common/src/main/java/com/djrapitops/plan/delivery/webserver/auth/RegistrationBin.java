@@ -17,13 +17,16 @@
 package com.djrapitops.plan.delivery.webserver.auth;
 
 import com.djrapitops.plan.delivery.domain.auth.User;
+import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
+import com.djrapitops.plan.storage.database.sql.tables.webuser.RegistrationTable;
+import com.djrapitops.plan.storage.database.transactions.webuser.StoreIncompleteRegistrationTransaction;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import com.djrapitops.plan.utilities.dev.Untrusted;
-import com.github.benmanes.caffeine.cache.Cache;
-import com.github.benmanes.caffeine.cache.Caffeine;
 import org.apache.commons.codec.digest.DigestUtils;
 
-import java.util.Collections;
+import javax.inject.Inject;
+import javax.inject.Singleton;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -33,46 +36,41 @@ import java.util.concurrent.TimeUnit;
  *
  * @author AuroraLS3
  */
+@Singleton
 public class RegistrationBin {
 
-    private static final Cache<String, AwaitingForRegistration> REGISTRATION_BIN = Caffeine.newBuilder()
-            .expireAfterAccess(15, TimeUnit.MINUTES)
-            .build();
+    private final DBSystem dbSystem;
 
-    private RegistrationBin() {
-        // Hide static cache constructor
+    @Inject
+    public RegistrationBin(DBSystem dbSystem) {
+        this.dbSystem = dbSystem;
     }
 
-    public static String addInfoForRegistration(@Untrusted String username, @Untrusted String password) {
+    public String addInfoForRegistration(@Untrusted String username, @Untrusted String password) {
         String hash = PassEncryptUtil.createHash(password);
-        String code = DigestUtils.sha256Hex(username + password + System.currentTimeMillis()).substring(0, 12);
-        REGISTRATION_BIN.put(code, new AwaitingForRegistration(username, hash));
+        String code = DigestUtils.sha256Hex(username + hash + System.currentTimeMillis()).substring(0, 12);
+        long expiresAfter = System.currentTimeMillis() + TimeUnit.MINUTES.toMillis(15L);
+
+        dbSystem.getDatabase().executeTransaction(new StoreIncompleteRegistrationTransaction(
+                new IncompleteRegistration(username, hash, code, expiresAfter)
+        ));
         return code;
     }
 
-    public static Optional<User> register(@Untrusted String code, UUID linkedToUUID) {
-        AwaitingForRegistration found = REGISTRATION_BIN.getIfPresent(code);
-        if (found == null) return Optional.empty();
-        REGISTRATION_BIN.invalidate(code);
-        return Optional.of(found.toUser(linkedToUUID));
+    public Optional<User> register(@Untrusted String code, UUID linkedToUUID) {
+        return dbSystem.getDatabase().query(WebUserQueries.fetchIncompleteRegistration(code))
+                .map(registration -> {
+                    dbSystem.getDatabase().executeInTransaction(RegistrationTable.DELETE_BY_CODE, registration.getCode());
+                    return registration.toUser(linkedToUUID);
+                });
     }
 
-    public static boolean contains(@Untrusted String code) {
-        return REGISTRATION_BIN.getIfPresent(code) != null;
-    }
-
-    private static class AwaitingForRegistration {
-        @Untrusted
-        private final String username;
-        private final String passwordHash;
-
-        public AwaitingForRegistration(@Untrusted String username, String passwordHash) {
-            this.username = username;
-            this.passwordHash = passwordHash;
-        }
-
-        public User toUser(UUID linkedToUUID) {
-            return new User(username, null, linkedToUUID, passwordHash, null, Collections.emptyList());
-        }
+    public boolean contains(@Untrusted String code) {
+        // This method is used to check if registration was completed by the user.
+        // There's a bug here where incomplete registration can be cleaned up before registration completes while register window is open
+        // Which can lead to a confusing situation where user gets "Registration succeeded, you can now log in"-message
+        // Even though the user was not actually registered.
+        Optional<IncompleteRegistration> incompleteRegistration = dbSystem.getDatabase().query(WebUserQueries.fetchIncompleteRegistration(code));
+        return incompleteRegistration.isPresent();
     }
 }
