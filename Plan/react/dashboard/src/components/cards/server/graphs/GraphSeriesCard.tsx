@@ -177,7 +177,8 @@ export const GraphSeriesCard = ({id, identifier}: Props) => {
             }
         }, {
             id: PerformanceGraphId.TPS,
-            name: t('html.label.tps'), icon: faTachometerAlt, color: 'tps',
+            name: t('html.label.tps'), icon: faTachometerAlt,
+            color: 'var(--color-data-performance-tps)',
             permission: 'page.server.performance.graphs.tps',
             data: performanceSeries?.tps,
             options: {
@@ -187,7 +188,7 @@ export const GraphSeriesCard = ({id, identifier}: Props) => {
             }
         }, {
             id: PerformanceGraphId.MSPT_AVG,
-            name: t('html.label.msptAverage'), icon: faStopwatch, color: 'mspt-average',
+            name: t('html.label.msptAverage'), icon: faStopwatch, color: 'var(--color-data-performance-mspt-average)',
             permission: 'page.server.performance.graphs.mspt',
             data: performanceSeries?.msptAverage,
             options: {
@@ -197,7 +198,9 @@ export const GraphSeriesCard = ({id, identifier}: Props) => {
             }
         }, {
             id: PerformanceGraphId.MSPT_95TH,
-            name: t('html.label.msptPercentile', {percentile: 95}), icon: faStopwatch, color: 'mspt-percentile',
+            name: t('html.label.msptPercentile', {percentile: 95}),
+            icon: faStopwatch,
+            color: 'var(--color-data-performance-mspt-percentile)',
             permission: 'page.server.performance.graphs.mspt',
             data: performanceSeries?.mspt95thPercentile,
             options: {
@@ -208,7 +211,7 @@ export const GraphSeriesCard = ({id, identifier}: Props) => {
         }, {
             id: PerformanceGraphId.MSPT_JITTER_AVG,
             name: t('html.label.msptJitterAverage'),
-            icon: faWaveSquare, color: 'mspt-average',
+            icon: faWaveSquare, color: 'var(--color-data-performance-mspt-average)',
             permission: 'page.server.performance.graphs.mspt',
             data: performanceSeries?.msptJitterAverage,
             options: {
@@ -219,7 +222,8 @@ export const GraphSeriesCard = ({id, identifier}: Props) => {
         }, {
             id: PerformanceGraphId.MSPT_JITTER_MAX,
             name: t('html.label.msptJitterMax'),
-            icon: faWaveSquare, color: 'mspt-percentile',
+            icon: faWaveSquare,
+            color: 'var(--color-data-performance-mspt-percentile)',
             permission: 'page.server.performance.graphs.mspt',
             data: performanceSeries?.msptJitterMax,
             options: {
@@ -344,7 +348,7 @@ export const GraphSeriesCard = ({id, identifier}: Props) => {
                 name: series.name,
                 type: series.options.type,
                 tooltip: series.options.tooltip,
-                color: `var(--color-graphs-${series.color})`,
+                color: series.color.includes("var(") ? series.color : `var(--color-graphs-${series.color})`,
                 zones: zones[series.id] || undefined,
                 yAxis: Object.entries(yAxis).findIndex(([id]) => id === series.options.yAxis)
             }));
@@ -438,7 +442,8 @@ export const GraphSeriesCard = ({id, identifier}: Props) => {
                                         }}
                                         onClick={() => toggleSeries(series.id)}>
                                     <FontAwesomeIcon icon={'data' in series && series.data ? series.icon : faGear}
-                                                     className={"col-" + series.color + ('data' in series && series.data ? '' : ' fa-spin')}/>
+                                                     style={{color: series.color.includes("var(") ? series.color : `var(--color-graphs-${series.color})`}}
+                                                     className={'data' in series && series.data ? '' : ' fa-spin'}/>
                                     {' '}
                                     <small>{series.name}</small>
                                 </button>
