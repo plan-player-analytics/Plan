@@ -46,7 +46,7 @@ public class PlayerTableRowPatch extends Patch {
                 USER_UUID + ',' + TABLE_ID + ",COUNT(1) as c" +
                 FROM + TABLE_NAME +
                 WHERE + TABLE_ROW + "=?" +
-                GROUP_BY + TABLE_ID + ',' + USER_UUID;
+                GROUP_BY + TABLE_ID + ',' + USER_UUID + lockForUpdate();
         return query(new QueryStatement<>(columnCountPerTableSql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -91,7 +91,7 @@ public class PlayerTableRowPatch extends Patch {
     }
 
     public Map<Integer, List<Integer>> fetchTableRowIds() {
-        String columnCountPerTableSql = SELECT + TABLE_ID + ',' + ID + FROM + TABLE_NAME;
+        String columnCountPerTableSql = SELECT + TABLE_ID + ',' + ID + FROM + TABLE_NAME + lockForUpdate();
         return query(new QueryAllStatement<>(columnCountPerTableSql) {
             @Override
             public Map<Integer, List<Integer>> processResults(ResultSet set) throws SQLException {

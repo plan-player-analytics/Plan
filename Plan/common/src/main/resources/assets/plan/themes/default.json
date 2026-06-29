@@ -308,6 +308,8 @@
         "uptime": "var(--color-light-green)",
         "downtime": "var(--color-red)",
         "tps": "var(--color-red)",
+        "msptAverage": "var(--color-orange)",
+        "msptPercentile": "var(--color-deep-orange)",
         "tpsLowSpikes": "var(--color-red)",
         "tpsAverage": "var(--color-orange)",
         "cpu": "var(--color-amber)",

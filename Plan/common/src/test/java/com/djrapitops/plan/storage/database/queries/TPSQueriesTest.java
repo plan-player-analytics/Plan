@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
+import com.djrapitops.plan.delivery.domain.mutators.TPSMutator;
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
 import com.djrapitops.plan.identification.ServerUUID;
@@ -27,18 +28,19 @@ import com.djrapitops.plan.storage.database.transactions.events.TPSStoreTransact
 import com.djrapitops.plan.utilities.comparators.TPSComparator;
 import com.djrapitops.plan.utilities.java.Lists;
 import net.playeranalytics.plugin.server.PluginLogger;
+import org.junit.jupiter.api.RepeatedTest;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import utilities.RandomData;
 
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
@@ -58,6 +60,125 @@ public interface TPSQueriesTest extends DatabaseTestPreparer {
         assertEquals(expected, db().query(TPSQueries.fetchTPSDataOfServer(Long.MIN_VALUE, Long.MAX_VALUE, serverUUID())));
     }
 
+
+    @Test
+    default void tpsFetchedInResolution() {
+        execute(LargeStoreQueries.storeAllTPSData(Map.of(serverUUID(), RandomData.randomTPS())));
+
+        assertFalse(db().query(TPSQueries.fetchTPSDataOfServerInResolution(Long.MIN_VALUE, Long.MAX_VALUE, TimeUnit.MINUTES.toMillis(5), serverUUID()))
+                .isEmpty());
+    }
+
+    @Test
+    default void previewGraphData() {
+        List<TPS> tps = RandomData.randomTPS();
+        execute(LargeStoreQueries.storeAllTPSData(Map.of(serverUUID(), tps)));
+
+        tps.sort(new TPSComparator());
+        var expected = tps.stream().map(t -> new DateObj<>(t.getDate(), t.getPlayers())).toList();
+        var result = db().query(TPSQueries.fetchViewPreviewGraphData(serverUUID()));
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void playersOnlineOfServer() {
+        List<TPS> tps = RandomData.randomTPS();
+        execute(LargeStoreQueries.storeAllTPSData(Map.of(serverUUID(), tps)));
+
+        tps.sort(new TPSComparator());
+        var expected = tps.stream().map(t -> new DateObj<>(t.getDate(), t.getPlayers())).toList();
+        var result = db().query(TPSQueries.fetchPlayersOnlineOfServer(Long.MIN_VALUE, Long.MAX_VALUE, serverUUID()));
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void latestTpsOfServer() {
+        List<TPS> tps = RandomData.randomTPS();
+        execute(LargeStoreQueries.storeAllTPSData(Map.of(serverUUID(), tps)));
+
+        tps.sort(new TPSComparator());
+        var expected = tps.getLast();
+        var result = db().query(TPSQueries.fetchLatestTPSEntryForServer(serverUUID()))
+                .orElseThrow();
+        assertEquals(expected, result);
+
+        var expectedDate = expected.getDate();
+        var resultDate = db().query(TPSQueries.fetchLastStoredTpsDate(serverUUID()))
+                .orElseThrow();
+        assertEquals(expectedDate, resultDate);
+    }
+
+    @Test
+    default void tpsAveragesOfServer() {
+        List<TPS> tps = RandomData.randomTPS();
+        execute(LargeStoreQueries.storeAllTPSData(Map.of(serverUUID(), tps)));
+
+        tps.sort(new TPSComparator());
+        TPSMutator mutator = new TPSMutator(tps);
+
+        assertEquals(mutator.averageTPS(), db().query(TPSQueries.averageTPS(Long.MIN_VALUE, Long.MAX_VALUE, serverUUID())), 0.01);
+        assertEquals(mutator.averageCPU(), db().query(TPSQueries.averageCPU(Long.MIN_VALUE, Long.MAX_VALUE, serverUUID())), 0.01);
+        assertEquals((Long) (long) mutator.averageRAM(), db().query(TPSQueries.averageRAM(Long.MIN_VALUE, Long.MAX_VALUE, serverUUID())));
+        assertEquals((Long) (long) mutator.averageChunks(), db().query(TPSQueries.averageChunks(Long.MIN_VALUE, Long.MAX_VALUE, serverUUID())));
+        assertEquals((Long) (long) mutator.averageEntities(), db().query(TPSQueries.averageEntities(Long.MIN_VALUE, Long.MAX_VALUE, serverUUID())));
+        assertEquals(mutator.maxFreeDisk(), db().query(TPSQueries.maxFreeDisk(Long.MIN_VALUE, Long.MAX_VALUE, serverUUID())), 0.01);
+        assertEquals(mutator.minFreeDisk(), db().query(TPSQueries.minFreeDisk(Long.MIN_VALUE, Long.MAX_VALUE, serverUUID())), 0.01);
+        assertEquals((Long) (long) mutator.averageFreeDisk(), db().query(TPSQueries.averageFreeDisk(Long.MIN_VALUE, Long.MAX_VALUE, serverUUID())));
+    }
+
+    @RepeatedTest(5)
+    default void occupiedCalculationMatches() {
+        List<TPS> data = RandomData.randomDateOrderedTPS();
+        for (TPS tps : data) {
+            execute(DataStoreQueries.storeTPS(serverUUID(), tps));
+        }
+
+        data.sort(new TPSComparator());
+        Long expected = new TPSMutator(data).serverOccupiedTime();
+        Long result = db().query(TPSQueries.occupiedTime(Long.MIN_VALUE, Long.MAX_VALUE, List.of(serverUUID())));
+        assertEquals(expected, result, () -> "Mismatch (" + expected + ", " + result + ") with data " + data);
+    }
+
+    @RepeatedTest(5)
+    default void uptimeCalculationMatches() {
+        List<TPS> data = RandomData.randomDateOrderedTPS();
+        for (TPS tps : data) {
+            execute(DataStoreQueries.storeTPS(serverUUID(), tps));
+        }
+
+        data.sort(new TPSComparator());
+        Long expected = new TPSMutator(data).serverUptime();
+        Long result = db().query(TPSQueries.uptime(Long.MIN_VALUE, Long.MAX_VALUE, List.of(serverUUID())));
+        assertEquals(expected, result, () -> "Mismatch (" + expected + ", " + result + ") with data " + data);
+    }
+
+    @RepeatedTest(5)
+    default void downtimeCalculationMatches() {
+        List<TPS> data = RandomData.randomDateOrderedTPS();
+        for (TPS tps : data) {
+            execute(DataStoreQueries.storeTPS(serverUUID(), tps));
+        }
+
+        data.sort(new TPSComparator());
+        Long expected = new TPSMutator(data).serverDownTime();
+        Long result = db().query(TPSQueries.downtime(Long.MIN_VALUE, Long.MAX_VALUE, List.of(serverUUID())));
+        assertEquals(expected, result, () -> "Mismatch (" + expected + ", " + result + ") with data " + data);
+    }
+
+    @RepeatedTest(5)
+    default void lowTpsSpikeCalculationMatches() {
+        List<TPS> data = RandomData.randomDateOrderedTPS();
+        for (TPS tps : data) {
+            execute(DataStoreQueries.storeTPS(serverUUID(), tps));
+        }
+
+        data.sort(new TPSComparator());
+        double threshold = RandomData.randomInt(3, 18);
+        Integer expected = new TPSMutator(data).lowTpsSpikeCount(threshold);
+        Integer result = db().query(TPSQueries.lowTpsSpikes(threshold, Long.MIN_VALUE, Long.MAX_VALUE, List.of(serverUUID())));
+        assertEquals(expected, result, () -> "Mismatch (" + expected + ", " + result + ") with data " + data);
+    }
+
     @Test
     default void removeEverythingRemovesTPS() {
         tpsIsStored();
@@ -74,8 +195,8 @@ public interface TPSQueriesTest extends DatabaseTestPreparer {
         }
 
         tpsData.sort(Comparator.comparingInt(TPS::getPlayers));
-        int expected = tpsData.get(tpsData.size() - 1).getPlayers();
-        int actual = db().query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID())).map(DateObj::getValue).orElse(-1);
+        int expected = tpsData.getLast().getPlayers();
+        int actual = db().query(TPSQueries.fetchPeakPlayerCount(serverUUID(), 0, Long.MAX_VALUE)).map(DateObj::getValue).orElse(-1);
         assertEquals(expected, actual, () -> "Wrong return value. " + Lists.map(tpsData, TPS::getPlayers).toString());
     }
 

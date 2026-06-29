@@ -40,6 +40,7 @@ public class TablePlayerDto {
     private Double pingAverage;
     private Integer pingMax;
     private Integer pingMin;
+    private String nicknames;
 
     private Map<String, ExtensionValueDataDto> extensionValues;
 
@@ -147,6 +148,14 @@ public class TablePlayerDto {
         this.pingMin = pingMin;
     }
 
+    public String getNicknames() {
+        return nicknames;
+    }
+
+    public void setNicknames(String nicknames) {
+        this.nicknames = nicknames;
+    }
+
     public static final class TablePlayerDtoBuilder {
         private final TablePlayerDto tablePlayerDto;
 
@@ -203,6 +212,11 @@ public class TablePlayerDto {
                 tablePlayerDto.setPingMax(ping.getMax());
                 tablePlayerDto.setPingMin(ping.getMin());
             }
+            return this;
+        }
+
+        public TablePlayerDtoBuilder withNicknames(String nicknames) {
+            tablePlayerDto.setNicknames(nicknames);
             return this;
         }
 

@@ -20,6 +20,10 @@ import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 public class JoinAddressTable {
@@ -30,7 +34,7 @@ public class JoinAddressTable {
     public static final int JOIN_ADDRESS_MAX_LENGTH = 191;
 
     public static final String SELECT_ID = '(' + SELECT + ID + FROM + TABLE_NAME + WHERE + JOIN_ADDRESS + "=?)";
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME +
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME +
             " (" + JOIN_ADDRESS + ") VALUES (?)";
     public static final String DEFAULT_VALUE_FOR_LOOKUP = "unknown";
 
@@ -43,4 +47,27 @@ public class JoinAddressTable {
                 .toString();
     }
 
+    public static class Row {
+        private int id;
+        private String joinAddress;
+
+        public static Row extract(ResultSet set) throws SQLException {
+            Row row = new Row();
+            row.id = set.getInt(ID);
+            row.joinAddress = set.getString(JOIN_ADDRESS);
+            return row;
+        }
+
+        public String getJoinAddress() {
+            return joinAddress;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void insert(PreparedStatement statement) throws SQLException {
+            statement.setString(1, joinAddress);
+        }
+    }
 }

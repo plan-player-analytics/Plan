@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.storage.database;
 
-import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.component.ComponentSvc;
 import com.djrapitops.plan.delivery.DeliveryUtilities;
 import com.djrapitops.plan.extension.ExtensionSvc;
@@ -30,6 +29,7 @@ import com.djrapitops.plan.storage.database.queries.filter.QueryFilters;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
+import com.djrapitops.plan.storage.database.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransaction;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Assumptions;
@@ -37,20 +37,19 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import utilities.DBPreparer;
 import utilities.RandomData;
 import utilities.TestConstants;
 import utilities.TestErrorLogger;
 
+import java.io.File;
 import java.nio.file.Path;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.Mockito.when;
 
 /**
  * Tests for MySQL database.
@@ -81,7 +80,8 @@ class MySQLTest implements DatabaseTest, DatabaseTestAggregate {
         Optional<Database> mysql = preparer.prepareMySQL();
         Assumptions.assumeTrue(mysql.isPresent());
         database = mysql.get();
-        database.executeTransaction(new CreateTablesTransaction());
+        database.executeTransaction(new CreateTablesTransaction()).join();
+        database.executeTransaction(new CreateIndexTransaction()).join();
         // Enables more strict query mode to prevent errors from it going unnoticed.
         database.executeTransaction(new Transaction() {
             @Override
@@ -96,7 +96,7 @@ class MySQLTest implements DatabaseTest, DatabaseTestAggregate {
                     execute("SET GLOBAL sql_mode=(SELECT CONCAT(@@GLOBAL.sql_mode, ',ONLY_FULL_GROUP_BY'))");
                 }
             }
-        });
+        }).join();
     }
 
     @AfterAll
@@ -161,9 +161,8 @@ class MySQLTest implements DatabaseTest, DatabaseTestAggregate {
     }
 
     @Override
-    public PlanSystem system() {
-        PlanSystem mockSystem = Mockito.mock(PlanSystem.class);
-        when(mockSystem.getPlanFiles()).thenReturn(component.files());
-        return mockSystem;
+    public File dataFolder() {
+        return component.files().getDataFolder();
     }
+
 }

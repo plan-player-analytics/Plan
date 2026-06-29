@@ -17,15 +17,15 @@
 package utilities.dagger;
 
 import com.djrapitops.plan.identification.ServerInfo;
-import com.djrapitops.plan.settings.BukkitConfigSystem;
 import com.djrapitops.plan.settings.ConfigSystem;
+import com.djrapitops.plan.settings.GameServerConfigSystem;
 import dagger.Binds;
 import dagger.Module;
 
 @Module
 public interface PlanProxyPluginModule {
     @Binds
-    ConfigSystem bindBukkitConfigSystem(BukkitConfigSystem bukkitConfigSystem);
+    ConfigSystem bindGameServerConfigSystem(GameServerConfigSystem gameServerConfigSystem);
 
     @Binds
     ServerInfo bindServerInfo(ProxyServerInfo proxyServerInfo);

@@ -52,7 +52,6 @@ abstract class DBPatchRegressionTest {
                 execute("DROP TABLE " + SecurityTable.TABLE_NAME);
                 execute("DROP TABLE " + ServerTable.TABLE_NAME);
                 execute("DROP TABLE " + SessionsTable.TABLE_NAME);
-                execute("DROP TABLE " + SettingsTable.TABLE_NAME);
                 execute("DROP TABLE " + TPSTable.TABLE_NAME);
                 execute("DROP TABLE " + UserInfoTable.TABLE_NAME);
                 execute("DROP TABLE " + UsersTable.TABLE_NAME);
@@ -96,5 +95,19 @@ abstract class DBPatchRegressionTest {
             }
         }
         assertTrue(failed.isEmpty(), "Patches " + failed + " were not applied properly.");
+    }
+
+
+    void assertPatchesWereNotApplied(Patch[] patches) {
+        List<String> failed = new ArrayList<>();
+        for (Patch patch : patches) {
+            if (patch.wasApplied()) {
+                System.out.println("! WAS APPLIED: " + patch.getClass().getSimpleName());
+                failed.add(patch.getClass().getSimpleName());
+            } else {
+                System.out.println(" NOT APPLIED: " + patch.getClass().getSimpleName());
+            }
+        }
+        assertTrue(failed.isEmpty(), "Patches " + failed + " were applied twice.");
     }
 }

@@ -19,6 +19,7 @@ package utilities;
 import javax.net.ssl.*;
 import java.io.IOException;
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.net.URL;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
@@ -51,7 +52,7 @@ public class HTTPConnector {
     }
 
     public HttpURLConnection getConnection(String method, String address) throws IOException, KeyManagementException, NoSuchAlgorithmException {
-        URL url = new URL(address);
+        URL url = URI.create(address).toURL();
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
         if (address.startsWith("https")) {
             HttpsURLConnection httpsConn = (HttpsURLConnection) connection;

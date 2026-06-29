@@ -29,6 +29,32 @@ import com.djrapitops.plan.storage.database.transactions.patches.SecurityTableId
  */
 public class CreateTablesTransaction extends OperationCriticalTransaction {
 
+    public static String[] tableNames() {
+        return new String[]{
+                ServerTable.TABLE_NAME,
+                UsersTable.TABLE_NAME,
+                UserInfoTable.TABLE_NAME,
+                GeoInfoTable.TABLE_NAME,
+                NicknamesTable.TABLE_NAME,
+                SessionsTable.TABLE_NAME,
+                KillsTable.TABLE_NAME,
+                PingTable.TABLE_NAME,
+                TPSTable.TABLE_NAME,
+                JoinAddressTable.TABLE_NAME,
+                WorldTable.TABLE_NAME,
+                WorldTimesTable.TABLE_NAME,
+                AccessLogTable.TABLE_NAME,
+                WebGroupTable.TABLE_NAME,
+                WebPermissionTable.TABLE_NAME,
+                WebGroupToPermissionTable.TABLE_NAME,
+                SecurityTable.TABLE_NAME,
+                WebUserPreferencesTable.TABLE_NAME,
+                PluginVersionTable.TABLE_NAME,
+                AllowlistBounceTable.TABLE_NAME,
+                RegistrationTable.TABLE_NAME
+        };
+    }
+
     @Override
     protected void performOperations() {
         // DBType is required for SQL creation, as MySQL and SQLite primary key format differs.
@@ -48,7 +74,6 @@ public class CreateTablesTransaction extends OperationCriticalTransaction {
         execute(TPSTable.createTableSQL(dbType));
         execute(WorldTable.createTableSQL(dbType));
         execute(WorldTimesTable.createTableSQL(dbType));
-        execute(SettingsTable.createTableSQL(dbType));
         execute(CookieTable.createTableSQL(dbType));
         execute(AccessLogTable.createTableSql(dbType));
         execute(WebGroupTable.createTableSQL(dbType));
@@ -60,6 +85,7 @@ public class CreateTablesTransaction extends OperationCriticalTransaction {
         execute(WebUserPreferencesTable.createTableSQL(dbType));
         execute(PluginVersionTable.createTableSQL(dbType));
         execute(AllowlistBounceTable.createTableSQL(dbType));
+        execute(RegistrationTable.createTableSql(dbType));
 
         // DataExtension tables
         execute(ExtensionIconTable.createTableSQL(dbType));

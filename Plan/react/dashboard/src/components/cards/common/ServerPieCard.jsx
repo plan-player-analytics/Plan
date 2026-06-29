@@ -1,28 +1,40 @@
 import {Card} from "react-bootstrap";
-import React from "react";
-import {CardLoader} from "../../navigation/Loader";
+import React, {useMemo} from "react";
+import {CardLoader} from "../../navigation/Loader.tsx";
 import ServerPie from "../../graphs/ServerPie";
 import {faNetworkWired} from "@fortawesome/free-solid-svg-icons";
-import CardHeader from "../CardHeader";
-import {useDataRequest} from "../../../hooks/dataFetchHook";
-import {fetchServerPie} from "../../../service/networkService";
-import {ErrorViewCard} from "../../../views/ErrorView";
-import {useThemeStorage} from "../../../hooks/context/themeContextHook.jsx";
+import CardHeader from "../CardHeader.tsx";
+import {ErrorViewCard} from "../../../views/ErrorView.tsx";
+import {useThemeStorage} from "../../../hooks/context/themeContextHook.tsx";
 import {nameToCssVariable} from "../../../util/colors.js";
+import {useServerPie} from "../../../dataHooks/graphHooks.ts";
+import {useGenericFilter} from "../../../dataHooks/genericFilterContextHook.tsx";
+import {TitleWithDates} from "../../text/TitleWithDates.tsx";
+import {MS_MONTH} from "../../../util/format/useDateFormatter.js";
 
 const ServerPieCard = () => {
-    const {data, loadingError} = useDataRequest(fetchServerPie, []);
+    const {after, before, server} = useGenericFilter();
+    const filter = useMemo(() => ({
+        after,
+        afterMillisAgo: after ? undefined : MS_MONTH,
+        before,
+        server
+    }), [after, before, server]);
+
+    const {data, error} = useServerPie(filter);
     const {usedUseCases} = useThemeStorage()
 
+    if (error) return <ErrorViewCard error={error}/>;
     if (!data) return <CardLoader/>;
-    if (loadingError) return <ErrorViewCard error={loadingError}/>;
 
-    const series = data.server_pie_series_30d;
-    const colors = usedUseCases?.graphs?.pie?.colors?.map(nameToCssVariable) || data.server_pie_colors;
+    const series = data.value.slices;
+    const colors = usedUseCases?.graphs?.pie?.colors?.map(nameToCssVariable);
+    const title = <TitleWithDates label={'html.label.serverPlaytime'} fallback={'html.label.serverPlaytime30days'}
+                                  after={filter.after} before={filter.before}/>;
 
     return (
         <Card>
-            <CardHeader icon={faNetworkWired} color={'sessions'} label={'html.label.serverPlaytime30days'}/>
+            <CardHeader icon={faNetworkWired} color={'sessions'} label={title}/>
             <ServerPie series={series} colors={colors}/>
         </Card>
     )

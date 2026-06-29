@@ -53,7 +53,7 @@ class PlanPlaceholdersTest {
     private static UUID playerUUID;
 
     @BeforeAll
-    static void prepareSystem(@TempDir Path tempDir) throws Exception {
+    static void prepareSystem(@TempDir Path tempDir) {
         PluginMockComponent mockComponent = new PluginMockComponent(tempDir);
         component = mockComponent.getComponent();
         mockComponent.getPlanSystem().enable();

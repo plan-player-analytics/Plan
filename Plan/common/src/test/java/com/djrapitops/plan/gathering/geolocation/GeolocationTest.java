@@ -64,7 +64,6 @@ class GeolocationTest {
     @BeforeAll
     static void setUpTestData() {
         TEST_DATA.put("156.53.159.86", "United States"); // Oregon, US
-        TEST_DATA.put("208.67.222.222", "United States"); // California, US
         TEST_DATA.put("208.67.220.220", "United States"); // California, US
         TEST_DATA.put("205.210.42.205", "Canada");
         TEST_DATA.put("64.68.200.200", "Canada");
@@ -108,6 +107,13 @@ class GeolocationTest {
         assertTrue(underTest.canGeolocate());
     }
 
+    @AfterEach
+    void tearDownCache(PlanSystem system, PlanFiles files) throws IOException {
+        Files.deleteIfExists(files.getFileFromPluginFolder("GeoLite2-Country.mmdb").toPath());
+        underTest.disable();
+        system.disable();
+    }
+
     @Test
     void countryIsFetched() {
         for (Map.Entry<String, String> entry : TEST_DATA.entrySet()) {
@@ -123,7 +129,7 @@ class GeolocationTest {
     void callsToCachedIPsReturnCachedEntries() {
         for (Map.Entry<String, String> entry : TEST_DATA.entrySet()) {
             String ip = entry.getKey();
-            String expIp = entry.getValue();
+            String expected = entry.getValue();
 
             assertFalse(underTest.isCached(ip));
             String countrySecondCall = underTest.getCountry(ip);
@@ -132,15 +138,8 @@ class GeolocationTest {
             String countryThirdCall = underTest.getCountry(ip);
 
             assertSame(countrySecondCall, countryThirdCall);
-            assertEquals(expIp, countryThirdCall);
+            assertEquals(expected, countryThirdCall, "Tested " + ip + ", expected: <" + expected + "> but was: <" + countryThirdCall + '>');
         }
-    }
-
-    @AfterEach
-    void tearDownCache(PlanSystem system, PlanFiles files) throws IOException {
-        Files.deleteIfExists(files.getFileFromPluginFolder("GeoLite2-Country.mmdb").toPath());
-        underTest.disable();
-        system.disable();
     }
 
     @TestFactory

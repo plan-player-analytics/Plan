@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries.filter;
 
-import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
+import com.djrapitops.plan.delivery.domain.datatransfer.query.InputFilterDto;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import java.util.*;
@@ -30,6 +30,11 @@ public interface Filter {
 
     String getKind();
 
+    /**
+     * List of expected parameters that is given to frontend, but not necessarily enforced on a per-filter basis.
+     *
+     * @return Names of the parameters inside options.
+     */
     String[] getExpectedParameters();
 
     default Map<String, Object> getOptions() {

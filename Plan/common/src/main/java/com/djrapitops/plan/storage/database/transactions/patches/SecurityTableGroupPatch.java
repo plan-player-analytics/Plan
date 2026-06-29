@@ -60,7 +60,7 @@ public class SecurityTableGroupPatch extends Patch {
             dropTable(tableName);
             execute(SecurityTable.createTableSQL(dbType));
 
-            execute("INSERT INTO " + tableName + " (" +
+            execute(INSERT_INTO + tableName + " (" +
                     (hasIdColumn ? SecurityTable.ID + ',' : "") +
                     SecurityTable.USERNAME + ',' +
                     SecurityTable.LINKED_TO + ',' +

@@ -86,8 +86,8 @@ public class StoreWebGroupTransaction extends Transaction {
         execute(new ExecBatchStatement(WebGroupToPermissionTable.INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setInt(1, id);
                 for (Integer permissionId : permissionIds) {
-                    statement.setInt(1, id);
                     statement.setInt(2, permissionId);
                     statement.addBatch();
                 }

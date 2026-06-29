@@ -49,7 +49,7 @@ public class LitebansTableHeaderPatch extends Patch {
                 AND + "(pr." + ExtensionTableProviderTable.PROVIDER_NAME + "=?" +
                 OR + "pr." + ExtensionTableProviderTable.PROVIDER_NAME + "=?" +
                 OR + "pr." + ExtensionTableProviderTable.PROVIDER_NAME + "=?" +
-                OR + "pr." + ExtensionTableProviderTable.PROVIDER_NAME + "=?)";
+                OR + "pr." + ExtensionTableProviderTable.PROVIDER_NAME + "=?)" + lockForUpdate();
         found = query(new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

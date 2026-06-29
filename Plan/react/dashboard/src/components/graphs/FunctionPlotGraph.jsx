@@ -1,5 +1,5 @@
 import {useTranslation} from "react-i18next";
-import {useTheme} from "../../hooks/themeHook";
+import {useTheme} from "../../hooks/themeHook.tsx";
 import React, {useEffect} from "react";
 import Highcharts from "highcharts/esm/highcharts";
 import "highcharts/esm/modules/no-data-to-display";

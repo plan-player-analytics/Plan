@@ -5,15 +5,15 @@ import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
 import {fetchPlayer} from "../../service/playerService";
 import {faCampground, faCubes, faInfoCircle, faNetworkWired} from "@fortawesome/free-solid-svg-icons";
 import Header from "../../components/navigation/Header";
-import {useNavigation} from "../../hooks/navigationHook";
+import {useNavigation} from "../../hooks/navigationHook.tsx";
 import {useTranslation} from "react-i18next";
 import {faCalendarCheck} from "@fortawesome/free-regular-svg-icons";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import ErrorPage from "./ErrorPage";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 import MainPageRedirect from "../../components/navigation/MainPageRedirect";
 import {SwitchTransition} from "react-transition-group";
-import {ChartLoader} from "../../components/navigation/Loader.jsx";
+import {ChartLoader} from "../../components/navigation/Loader.tsx";
 
 const HelpModal = React.lazy(() => import("../../components/modal/HelpModal"));
 
@@ -44,20 +44,22 @@ const PlayerPage = () => {
             {name: 'html.label.servers', icon: faNetworkWired, href: "servers", permission: 'page.player.servers'}
         ]
 
-        items.push({
-            name: 'html.label.plugins',
-            permission: 'page.player.plugins',
-            icon: faCubes,
-            contents: player?.extensions?.filter(extension => extension?.extensionData?.length)
-                .map(extension => {
-                    return {
-                        name: `${t('html.label.plugins')} (${extension.serverName})`,
-                        icon: faCubes,
-                        href: `plugins/${encodeURIComponent(extension.serverName)}`,
-                        permission: 'page.player.plugins'
-                    }
-                })
-        });
+        if (player?.extensions?.filter(extension => extension?.extensionData?.length).length) {
+            items.push({
+                name: 'html.label.plugins',
+                permission: 'page.player.plugins',
+                icon: faCubes,
+                contents: player?.extensions?.filter(extension => extension?.extensionData?.length)
+                    .map(extension => {
+                        return {
+                            name: `${t('html.label.plugins')} (${extension.serverName})`,
+                            icon: faCubes,
+                            href: `plugins/${encodeURIComponent(extension.serverName)}`,
+                            permission: 'page.player.plugins'
+                        }
+                    })
+            });
+        }
 
         setSidebarItems(items);
         window.document.title = `Plan | ${player?.info?.name}`;

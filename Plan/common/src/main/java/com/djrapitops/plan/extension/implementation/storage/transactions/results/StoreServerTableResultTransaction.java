@@ -69,6 +69,11 @@ public class StoreServerTableResultTransaction extends ThrowawayTransaction {
         execute(storeValue());
     }
 
+    @Override
+    protected IsolationLevel getDesiredIsolationLevel() {
+        return IsolationLevel.READ_COMMITTED;
+    }
+
     private Executable storeValue() {
         return connection -> {
             int maxColumnSize = table.getMaxColumnSize();
@@ -83,15 +88,15 @@ public class StoreServerTableResultTransaction extends ThrowawayTransaction {
             int newRowCount = rows.size();
 
             if (oldRowCount < newRowCount) {
-                updateRows(tableID, oldRowCount, rows);
                 insertNewRows(tableID, oldRowCount, rows);
+                updateRows(tableID, oldRowCount, rows);
             } else if (oldRowCount == newRowCount) {
                 // No need to delete or insert rows
                 updateRows(tableID, oldRowCount, rows);
             } else {
                 // oldRowCount > newRowCount
-                updateRows(tableID, newRowCount, rows);
                 deleteOldRows(tableID, newRowCount);
+                updateRows(tableID, newRowCount, rows);
             }
             return false;
         };
@@ -114,7 +119,7 @@ public class StoreServerTableResultTransaction extends ThrowawayTransaction {
     }
 
     private void insertNewRows(Integer tableID, Integer afterRow, List<Object[]> rows) {
-        String sql = "INSERT INTO " + TABLE_NAME + '(' +
+        String sql = INSERT_INTO + TABLE_NAME + '(' +
                 TABLE_ID + ',' +
                 SERVER_UUID + ',' +
                 VALUE_1 + ',' +
@@ -130,9 +135,9 @@ public class StoreServerTableResultTransaction extends ThrowawayTransaction {
             public void prepare(PreparedStatement statement) throws SQLException {
                 int maxColumnSize = Math.min(table.getMaxColumnSize(), 5); // Limit to maximum 5 columns, or how many column names there are.
 
+                statement.setInt(1, tableID);
                 for (int rowNumber = afterRow; rowNumber < rows.size(); rowNumber++) {
                     Object[] row = rows.get(rowNumber);
-                    statement.setInt(1, tableID);
                     statement.setString(2, serverUUID.toString());
                     for (int i = 0; i < maxColumnSize; i++) {
                         Object value = row[i];
@@ -166,6 +171,7 @@ public class StoreServerTableResultTransaction extends ThrowawayTransaction {
             public void prepare(PreparedStatement statement) throws SQLException {
                 int maxColumnSize = Math.min(table.getMaxColumnSize(), 5); // Limit to maximum 5 columns, or how many column names there are.
 
+                statement.setInt(6, tableID);
                 for (int rowNumber = 0; rowNumber < untilRow; rowNumber++) {
                     Object[] row = rows.get(rowNumber);
 
@@ -178,7 +184,6 @@ public class StoreServerTableResultTransaction extends ThrowawayTransaction {
                         statement.setNull(1 + valueIndex, Types.VARCHAR);
                     }
 
-                    statement.setInt(6, tableID);
                     statement.setString(7, serverUUID.toString());
                     statement.setInt(8, rowNumber);
 
@@ -192,7 +197,7 @@ public class StoreServerTableResultTransaction extends ThrowawayTransaction {
         String sql = SELECT + "COALESCE(MAX(" + TABLE_ROW + "), -1) as m" +
                 FROM + TABLE_NAME +
                 WHERE + TABLE_ID + "=?" +
-                AND + SERVER_UUID + "=?";
+                AND + SERVER_UUID + "=?" + lockForUpdate();
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -221,7 +226,7 @@ public class StoreServerTableResultTransaction extends ThrowawayTransaction {
                 FROM + ExtensionTableProviderTable.TABLE_NAME +
                 WHERE + ExtensionTableProviderTable.PROVIDER_NAME + "=?" +
                 AND + ExtensionTableProviderTable.PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID +
-                " LIMIT 1";
+                LIMIT_1 + lockForUpdate();
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

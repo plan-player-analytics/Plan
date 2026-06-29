@@ -32,6 +32,7 @@ public class BaseUser {
     private final String name;
     private final long registered;
     private final int timesKicked;
+    private Integer id;
 
     public BaseUser(UUID uuid, String name, long registered, int timesKicked) {
         if (uuid == null) throw new IllegalArgumentException("'uuid' can not be null");
@@ -57,6 +58,14 @@ public class BaseUser {
 
     public int getTimesKicked() {
         return timesKicked;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     @Override

@@ -21,7 +21,7 @@ import com.djrapitops.plan.delivery.web.AssetVersions;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import dagger.Lazy;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
@@ -34,7 +34,9 @@ import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.Comparator;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Abstracts File methods of Plugin classes so that they can be tested without Mocks.
@@ -61,6 +63,12 @@ public class PlanFiles implements SubSystem {
         this.getResourceStream = getResourceStream;
         this.assetVersions = assetVersions;
         this.configFile = getFileFromPluginFolder("config.yml");
+    }
+
+    public static OpenOption[] replaceIfExists() {
+        return new OpenOption[]{
+                StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE
+        };
     }
 
     public File getDataFolder() {
@@ -94,10 +102,8 @@ public class PlanFiles implements SubSystem {
         return getFileFromPluginFolder("locale.yml");
     }
 
-    public static OpenOption[] replaceIfExists() {
-        return new OpenOption[]{
-                StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.WRITE
-        };
+    public File getFileFromPluginFolder(@Untrusted String name) {
+        return new File(dataFolder, name.replace("/", File.separator));
     }
 
     @Override
@@ -108,18 +114,32 @@ public class PlanFiles implements SubSystem {
             Path dir = getDataDirectory();
             if (!Files.isSymbolicLink(dir)) Files.createDirectories(dir);
             if (!configFile.exists()) Files.createFile(configFile.toPath());
+            cleanOldUnusedFolders();
         } catch (IOException e) {
             throw new EnableException("Failed to create config.yml, " + e.getMessage(), e);
+        }
+    }
+
+    private void cleanOldUnusedFolders() {
+        Path serverConfiguration = getDataDirectory().resolve("serverConfiguration");
+        if (Files.exists(serverConfiguration)) {
+            try (Stream<Path> files = Files.walk(serverConfiguration).sorted(Comparator.reverseOrder())) {
+                files.forEach(path -> {
+                    try {
+                        Files.deleteIfExists(path);
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                });
+            } catch (IOException | UncheckedIOException e) {
+                throw new EnableException("Failed to delete Plan serverConfiguration folder - please delete it manually, " + e.getMessage(), e);
+            }
         }
     }
 
     @Override
     public void disable() {
         // No disable actions necessary.
-    }
-
-    public File getFileFromPluginFolder(@Untrusted String name) {
-        return new File(dataFolder, name.replace("/", File.separator));
     }
 
     /**
@@ -136,6 +156,13 @@ public class PlanFiles implements SubSystem {
         );
     }
 
+    @NotNull
+    protected Long getLastModifiedForJarResource(@Untrusted String resourceName) {
+        String webResourceName = Strings.CS.remove(resourceName, "web/");
+        return assetVersions.get().getAssetVersion(webResourceName)
+                .orElseGet(System::currentTimeMillis);
+    }
+
     /**
      * Get a file from plugin folder as a {@link Resource}.
      *
@@ -144,17 +171,6 @@ public class PlanFiles implements SubSystem {
      */
     public Resource getResourceFromPluginFolder(String resourceName) {
         return new FileResource(resourceName, getFileFromPluginFolder(resourceName));
-    }
-
-    @NotNull
-    protected Long getLastModifiedForJarResource(@Untrusted String resourceName) {
-        String webResourceName = StringUtils.remove(resourceName, "web/");
-        return assetVersions.get().getAssetVersion(webResourceName)
-                .orElseGet(System::currentTimeMillis);
-    }
-
-    public Path getJSONStorageDirectory() {
-        return getDataDirectory().resolve("cached_json");
     }
 
     public Optional<File> attemptToFind(Path dir, @Untrusted String resourceName) {
@@ -171,6 +187,10 @@ public class PlanFiles implements SubSystem {
             }
         }
         return Optional.empty();
+    }
+
+    public Path getJSONStorageDirectory() {
+        return getDataDirectory().resolve("cached_json");
     }
 
     public Path getThemeDirectory() {

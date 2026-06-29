@@ -10,7 +10,7 @@ const isCurrentAddress = (address) => {
     let is = window.location.href.startsWith(address);
     const usingProxyHttps = window.location.href.startsWith("https") && !address.startsWith("https");
     if (usingProxyHttps) {
-        is = window.location.href.replace('https', '').startsWith(address.replace('http'));
+        is = window.location.href.replace('https', '').startsWith(address.replace('http', ''));
     }
     if (!is) {
         console.warn(`Configured address ${address} did not match start of ${window.location.href}, falling back to relative address. Configure 'Webserver.Alternative_IP' settings to point to your address.`)
@@ -36,7 +36,7 @@ export const doSomeDeleteRequest = async (url, statusOptions, body) => {
 }
 
 export const doSomeRequest = async (url, statusOptions, axiosFunction) => {
-    let response = undefined;
+    let response;
     try {
         response = await axiosFunction.call();
 
@@ -49,6 +49,16 @@ export const doSomeRequest = async (url, statusOptions, axiosFunction) => {
                 };
             }
         }
+
+        return {
+            status: response.status,
+            data: undefined,
+            error: {
+                status: response.status,
+                message: 'Server returned unexpected status code',
+                url
+            }
+        };
     } catch (e) {
         console.error(e);
         if (e.response !== undefined) {

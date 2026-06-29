@@ -31,7 +31,7 @@ import net.fabricmc.api.DedicatedServerModInitializer;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.server.dedicated.MinecraftDedicatedServer;
+import net.minecraft.server.dedicated.DedicatedServer;
 import net.playeranalytics.plan.commands.FabricCommandManager;
 import net.playeranalytics.plan.identification.properties.FabricServerProperties;
 import net.playeranalytics.plugin.FabricPlatformLayer;
@@ -54,7 +54,7 @@ import java.util.concurrent.TimeoutException;
  */
 public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
 
-    private MinecraftDedicatedServer server;
+    private DedicatedServer server;
     private FabricCommandManager fabricCommandManager;
 
     private PlanSystem system;
@@ -163,7 +163,7 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
         runnableFactory = abstractionLayer.getRunnableFactory();
 
         ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-            this.server = (MinecraftDedicatedServer) server;
+            this.server = (DedicatedServer) server;
             onEnable();
         });
 
@@ -172,7 +172,7 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> onDisable());
     }
 
-    public MinecraftDedicatedServer getServer() {
+    public DedicatedServer getServer() {
         return server;
     }
 }

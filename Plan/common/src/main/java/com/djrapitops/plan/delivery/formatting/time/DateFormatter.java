@@ -71,13 +71,18 @@ public abstract class DateFormatter implements Formatter<Long> {
         TimeZone timeZone = config.getTimeZone();
         int offset = timeZone.getOffset(epochMs);
 
-        // Time since Start of day: UTC + Timezone % 24 hours
-        long fromStartOfDay = (now + offset) % TimeUnit.DAYS.toMillis(1L);
-        if (epochMs > now - fromStartOfDay) {
+        long dayMs = TimeUnit.DAYS.toMillis(1L);
+        long fromStartOfDay = (now + offset) % dayMs;
+        long today = now - fromStartOfDay;
+        long yesterday = today - dayMs;
+        long tomorrow = today + dayMs;
+        long fiveDaysAgo = today - dayMs * 5;
+
+        if (epochMs >= today && epochMs < tomorrow) {
             format = format.replace(pattern, locale.getString(GenericLang.TODAY));
-        } else if (epochMs > now - TimeUnit.DAYS.toMillis(1L) - fromStartOfDay) {
+        } else if (epochMs >= yesterday && epochMs < today) {
             format = format.replace(pattern, locale.getString(GenericLang.YESTERDAY));
-        } else if (epochMs > now - TimeUnit.DAYS.toMillis(5L)) {
+        } else if (epochMs >= fiveDaysAgo && epochMs < yesterday) {
             format = format.replace(pattern, "EEEE");
         }
         return format;

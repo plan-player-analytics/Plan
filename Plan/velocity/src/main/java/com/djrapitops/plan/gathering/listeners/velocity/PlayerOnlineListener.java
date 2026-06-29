@@ -25,7 +25,6 @@ import com.djrapitops.plan.gathering.events.PlayerSwitchServerEventConsumer;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.velocitypowered.api.event.PostOrder;
 import com.velocitypowered.api.event.Subscribe;
 import com.velocitypowered.api.event.connection.DisconnectEvent;
 import com.velocitypowered.api.event.connection.PostLoginEvent;
@@ -67,7 +66,7 @@ public class PlayerOnlineListener {
         this.errorLogger = errorLogger;
     }
 
-    @Subscribe(order = PostOrder.LAST)
+    @Subscribe
     public void onPostLogin(PostLoginEvent event) {
         try {
             actOnLogin(event);
@@ -87,7 +86,7 @@ public class PlayerOnlineListener {
                 .build());
     }
 
-    @Subscribe(order = PostOrder.NORMAL)
+    @Subscribe(priority = Short.MAX_VALUE)
     public void beforeLogout(DisconnectEvent event) {
         leaveEventConsumer.beforeLeave(PlayerLeave.builder()
                 .server(serverInfo.getServer())
@@ -96,7 +95,7 @@ public class PlayerOnlineListener {
                 .build());
     }
 
-    @Subscribe(order = PostOrder.LAST)
+    @Subscribe
     public void onLogout(DisconnectEvent event) {
         try {
             leaveEventConsumer.onLeaveProxyServer(PlayerLeave.builder()
@@ -109,7 +108,7 @@ public class PlayerOnlineListener {
         }
     }
 
-    @Subscribe(order = PostOrder.LAST)
+    @Subscribe
     public void onServerSwitch(ServerConnectedEvent event) {
         try {
             actOnServerSwitch(event);

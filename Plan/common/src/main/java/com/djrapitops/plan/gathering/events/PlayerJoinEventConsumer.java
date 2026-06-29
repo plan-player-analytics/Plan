@@ -20,8 +20,11 @@ import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.delivery.domain.PlayerName;
 import com.djrapitops.plan.delivery.domain.ServerName;
 import com.djrapitops.plan.delivery.export.Exporter;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointCacheKey;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointStore;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.ExtensionSvc;
+import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.gathering.JoinAddressValidator;
 import com.djrapitops.plan.gathering.cache.NicknameCache;
 import com.djrapitops.plan.gathering.cache.SessionCache;
@@ -30,6 +33,7 @@ import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.gathering.domain.event.PlayerJoin;
 import com.djrapitops.plan.gathering.geolocation.GeolocationCache;
+import com.djrapitops.plan.gathering.timed.PlayerExtensionDataUpdateTask;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -56,20 +60,25 @@ public class PlayerJoinEventConsumer {
     private final GeolocationCache geolocationCache;
     private final SessionCache sessionCache;
     private final NicknameCache nicknameCache;
+    private final DatapointStore datapointStore;
 
     private final ExtensionSvc extensionService;
     private final Exporter exporter;
+    private final PlayerExtensionDataUpdateTask.Factory playerExtensionUpdateTaskFactory;
 
     @Inject
     public PlayerJoinEventConsumer(
             Processing processing,
             PlanConfig config,
-            DBSystem dbSystem, JoinAddressValidator joinAddressValidator,
+            DBSystem dbSystem,
+            JoinAddressValidator joinAddressValidator,
             GeolocationCache geolocationCache,
             SessionCache sessionCache,
             NicknameCache nicknameCache,
+            DatapointStore datapointStore,
             ExtensionSvc extensionService,
-            Exporter exporter
+            Exporter exporter,
+            PlayerExtensionDataUpdateTask.Factory playerExtensionUpdateTaskFactory
     ) {
         this.processing = processing;
         this.config = config;
@@ -78,8 +87,19 @@ public class PlayerJoinEventConsumer {
         this.geolocationCache = geolocationCache;
         this.sessionCache = sessionCache;
         this.nicknameCache = nicknameCache;
+        this.datapointStore = datapointStore;
         this.extensionService = extensionService;
         this.exporter = exporter;
+        this.playerExtensionUpdateTaskFactory = playerExtensionUpdateTaskFactory;
+    }
+
+    private static long getRegisterDate(PlayerJoin join) {
+        long registerDate = join.getPlayer().getRegisterDate().orElseGet(join::getTime);
+        // Correct incorrect register dates https://github.com/plan-player-analytics/Plan/issues/2934
+        if (registerDate < System.currentTimeMillis() / 1000) {
+            registerDate = registerDate * 1000;
+        }
+        return registerDate;
     }
 
     public void onJoinGameServer(PlayerJoin join) {
@@ -95,8 +115,14 @@ public class PlayerJoinEventConsumer {
                         storeNickname(join);
                         updatePlayerDataExtensionValues(join);
                         updateExport(join);
+                        registerExtensionUpdateTask(join);
+                        datapointStore.clearLastModified(DatapointCacheKey.SESSION);
                     }, processing.getCriticalExecutor());
         });
+    }
+
+    private void registerExtensionUpdateTask(PlayerJoin join) {
+        playerExtensionUpdateTaskFactory.register(Parameters.player(join.getServer().getUuid(), join.getPlayerUUID(), join.getPlayer().getName()));
     }
 
     public void onJoinProxyServer(PlayerJoin join) {
@@ -106,17 +132,17 @@ public class PlayerJoinEventConsumer {
                     storeGeolocation(join);
                     updatePlayerDataExtensionValues(join);
                     updateExport(join);
+                    datapointStore.clearLastModified(DatapointCacheKey.SESSION);
                 }, processing.getCriticalExecutor())
         );
     }
 
-    private static long getRegisterDate(PlayerJoin join) {
-        long registerDate = join.getPlayer().getRegisterDate().orElseGet(join::getTime);
-        // Correct incorrect register dates https://github.com/plan-player-analytics/Plan/issues/2934
-        if (registerDate < System.currentTimeMillis() / 1000) {
-            registerDate = registerDate * 1000;
-        }
-        return registerDate;
+    private void storeJoinAddress(PlayerJoin join) {
+        join.getPlayer().getJoinAddress()
+                .map(joinAddressValidator::sanitize)
+                .filter(joinAddressValidator::isValid)
+                .map(StoreJoinAddressTransaction::new)
+                .ifPresent(dbSystem.getDatabase()::executeTransaction);
     }
 
     private void storeGeolocation(PlayerJoin join) {
@@ -131,14 +157,6 @@ public class PlayerJoinEventConsumer {
         ServerUUID serverUUID = join.getServerUUID();
         join.getPlayer().getCurrentWorld()
                 .map(world -> new StoreWorldNameTransaction(serverUUID, world))
-                .ifPresent(dbSystem.getDatabase()::executeTransaction);
-    }
-
-    private void storeJoinAddress(PlayerJoin join) {
-        join.getPlayer().getJoinAddress()
-                .map(joinAddressValidator::sanitize)
-                .filter(joinAddressValidator::isValid)
-                .map(StoreJoinAddressTransaction::new)
                 .ifPresent(dbSystem.getDatabase()::executeTransaction);
     }
 

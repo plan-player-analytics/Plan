@@ -1,9 +1,9 @@
 import React from 'react';
 import {Col} from "react-bootstrap";
-import {ErrorViewCard} from "../ErrorView";
+import {ErrorViewCard} from "../ErrorView.tsx";
 import GeolocationsCard from "../../components/cards/common/GeolocationsCard";
 import PingTableCard from "../../components/cards/common/PingTableCard";
-import LoadIn from "../../components/animation/LoadIn";
+import LoadIn from "../../components/animation/LoadIn.tsx";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 
 const Geolocations = (

@@ -28,6 +28,8 @@ import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -38,6 +40,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -49,24 +52,32 @@ import java.util.Optional;
  * Deprecated.
  *
  * @author AuroraLS3
+ * @deprecated Use /v1/playersTable instead, it is more efficient.
  */
 @Singleton
 @Path("/v1/players")
+@Deprecated(since = "5.6")
 public class PlayersJSONResolver extends JSONResolver {
 
     private final Identifiers identifiers;
     private final AsyncJSONResolverService jsonResolverService;
     private final JSONFactory jsonFactory;
+    private final PluginLogger logger;
+    private final Locale locale;
 
     @Inject
     public PlayersJSONResolver(
             Identifiers identifiers,
             AsyncJSONResolverService jsonResolverService,
-            JSONFactory jsonFactory
+            JSONFactory jsonFactory,
+            PluginLogger logger,
+            Locale locale
     ) {
         this.identifiers = identifiers;
         this.jsonResolverService = jsonResolverService;
         this.jsonFactory = jsonFactory;
+        this.logger = logger;
+        this.locale = locale;
     }
 
     @Override
@@ -107,8 +118,8 @@ public class PlayersJSONResolver extends JSONResolver {
         return getCachedOrNewResponse(request, storedJSON);
     }
 
-    @SuppressWarnings("deprecation") // /v1/players is deprecated but kept for backwards compatibility.
     private JSONStorage.StoredJSON getStoredJSON(@Untrusted Request request) {
+        logger.warn(locale.getString(PluginLang.DEPRECATED_ENDPOINT_CALL, "/v1/players", "/v1/playersTable"));
         Optional<Long> timestamp = Identifiers.getTimestamp(request);
         JSONStorage.StoredJSON storedJSON;
         if (request.getQuery().get("server").isPresent()) {

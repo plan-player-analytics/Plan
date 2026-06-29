@@ -16,8 +16,11 @@
  */
 package com.djrapitops.plan.identification;
 
+import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
+import com.djrapitops.plan.delivery.web.resolver.request.URIQuery;
+import com.djrapitops.plan.delivery.webserver.resolver.ETag;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
@@ -27,6 +30,8 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -48,23 +53,6 @@ public class Identifiers {
         this.uuidUtility = uuidUtility;
     }
 
-    /**
-     * Obtain UUID of the server.
-     *
-     * @param request for Request, URIQuery needs a 'server' parameter.
-     * @return UUID of the server.
-     * @throws BadRequestException If server parameter is not defined or the server is not in the database.
-     */
-    public ServerUUID getServerUUID(Request request) {
-        String identifier = request.getQuery().get("server")
-                .orElseThrow(() -> new BadRequestException("'server' parameter was not defined."));
-
-        Optional<ServerUUID> parsed = UUIDUtility.parseFromString(identifier).map(ServerUUID::from);
-        return parsed.orElseGet(() -> getServerUUIDFromName(identifier).orElseThrow(
-                () -> new BadRequestException("Given 'server' was not found in the database.")
-        ));
-    }
-
     public static Optional<Long> getTimestamp(@Untrusted Request request) {
         try {
             long currentTime = System.currentTimeMillis();
@@ -82,19 +70,34 @@ public class Identifiers {
         }
     }
 
-    public static Optional<Long> getEtag(Request request) {
+    public static Optional<ETag> getEtag(Request request) {
         return request.getHeader(HttpHeader.IF_NONE_MATCH.asString())
-                .map(tag -> {
-                    try {
-                        return Long.parseLong(tag);
-                    } catch (NumberFormatException notANumber) {
-                        throw new BadRequestException("'" + HttpHeader.IF_NONE_MATCH.asString() + "'-header was not a number. Clear browser cache.");
-                    }
-                });
+                .map(ETag::new);
     }
 
     public static Optional<String> getStringEtag(Request request) {
         return request.getHeader(HttpHeader.IF_NONE_MATCH.asString());
+    }
+
+    /**
+     * Obtain UUID of the server.
+     *
+     * @param request for Request, URIQuery needs a 'server' parameter.
+     * @return UUID of the server.
+     * @throws BadRequestException If server parameter is not defined or the server is not in the database.
+     */
+    public ServerUUID getServerUUID(Request request) {
+        String identifier = request.getQuery().get("server")
+                .orElseThrow(() -> new BadRequestException("'server' parameter was not defined."));
+
+        return getServerUUIDForRequest(identifier);
+    }
+
+    private ServerUUID getServerUUIDForRequest(String identifier) {
+        Optional<ServerUUID> parsed = UUIDUtility.parseFromString(identifier).map(ServerUUID::from);
+        return parsed.orElseGet(() -> getServerUUIDFromName(identifier).orElseThrow(
+                () -> new BadRequestException("Given 'server' was not found in the database.")
+        ));
     }
 
     /**
@@ -143,5 +146,21 @@ public class Identifiers {
         return dbSystem.getDatabase()
                 .query(UserIdentifierQueries.fetchPlayerUUIDOf(playerName))
                 .orElseThrow(() -> new BadRequestException("Given 'player' was not found in the database."));
+    }
+
+    public List<ServerUUID> getServerUUIDs(@Untrusted List<String> serverIdentifiers) {
+        List<ServerUUID> serverUUIDs = new ArrayList<>();
+        for (@Untrusted String serverIdentifier : serverIdentifiers) {
+            serverUUIDs.add(getServerUUIDForRequest(serverIdentifier));
+        }
+        return serverUUIDs;
+    }
+
+    public GenericFilter genericFilter(@Untrusted URIQuery query) {
+        GenericFilter filter = new GenericFilter(query);
+        if (!filter.didAllServerIdentifiersParse()) {
+            filter.setServerUUIDs(getServerUUIDs(filter.getServerIdentifiers()));
+        }
+        return filter;
     }
 }

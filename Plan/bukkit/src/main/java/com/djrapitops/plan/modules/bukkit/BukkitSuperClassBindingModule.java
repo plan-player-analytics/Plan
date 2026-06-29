@@ -24,8 +24,8 @@ import com.djrapitops.plan.gathering.listeners.BukkitListenerSystem;
 import com.djrapitops.plan.gathering.listeners.ListenerSystem;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerServerInfo;
-import com.djrapitops.plan.settings.BukkitConfigSystem;
 import com.djrapitops.plan.settings.ConfigSystem;
+import com.djrapitops.plan.settings.GameServerConfigSystem;
 import com.djrapitops.plan.storage.database.BukkitDBSystem;
 import com.djrapitops.plan.storage.database.DBSystem;
 import dagger.Binds;
@@ -47,7 +47,7 @@ public interface BukkitSuperClassBindingModule {
     DBSystem bindDBSystem(BukkitDBSystem dbSystem);
 
     @Binds
-    ConfigSystem bindConfigSystem(BukkitConfigSystem configSystem);
+    ConfigSystem bindConfigSystem(GameServerConfigSystem configSystem);
 
     @Binds
     ListenerSystem bindListenerSystem(BukkitListenerSystem listenerSystem);
@@ -59,5 +59,6 @@ public interface BukkitSuperClassBindingModule {
     ServerSensor<World> bindServerSensor(BukkitSensor sensor);
 
     @Binds
+    @SuppressWarnings("java:S1452")
     ServerSensor<?> bindGenericsServerSensor(ServerSensor<World> sensor);
 }

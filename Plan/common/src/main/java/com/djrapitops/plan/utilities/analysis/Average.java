@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.utilities.analysis;
 
+import java.util.function.UnaryOperator;
+
 /**
  * Utility for averaging data.
  *
@@ -42,9 +44,22 @@ public class Average {
     }
 
     public double getAverageAndReset() {
+        if (count == 0) return -1;
         double average = total / count;
         total = 0.0;
         count = 0;
         return average;
+    }
+
+    public void addNonNull(Double value) {
+        if (value != null && !value.isNaN()) {
+            add(value);
+        }
+    }
+
+    public void addPositive(long[] values, UnaryOperator<Long> mappingFunction) {
+        for (long value : values) {
+            if (value > 0) add(mappingFunction.apply(value));
+        }
     }
 }

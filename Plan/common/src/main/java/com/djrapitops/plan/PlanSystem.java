@@ -41,6 +41,7 @@ import net.playeranalytics.plugin.server.PluginLogger;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * PlanSystem contains everything Plan needs to run.
@@ -52,10 +53,8 @@ import java.io.IOException;
 @Singleton
 public class PlanSystem implements SubSystem {
 
+    public static final AtomicLong LAST_RELOAD = new AtomicLong(0L);
     private static final long SERVER_ENABLE_TIME = System.currentTimeMillis();
-
-    private boolean enabled = false;
-
     private final PlanFiles files;
     private final ConfigSystem configSystem;
     private final VersionChecker versionChecker;
@@ -66,9 +65,7 @@ public class PlanSystem implements SubSystem {
     private final TaskSystem taskSystem;
     private final ServerInfo serverInfo;
     private final WebServerSystem webServerSystem;
-
     private final Processing processing;
-
     private final ImportSystem importSystem;
     private final ExportSystem exportSystem;
     private final DeliveryUtilities deliveryUtilities;
@@ -77,6 +74,7 @@ public class PlanSystem implements SubSystem {
     private final PluginLogger logger;
     private final ErrorLogger errorLogger;
     private final ApplicationDependencyManager applicationDependencyManager;
+    private boolean enabled = false;
 
     @Inject
     public PlanSystem(
@@ -128,17 +126,18 @@ public class PlanSystem implements SubSystem {
         logger.info("§2");
     }
 
+    public static long getServerEnableTime() {
+        return SERVER_ENABLE_TIME;
+    }
+
     /**
      * Enables only the systems that are required for {@link com.djrapitops.plan.commands.PlanCommand}.
      *
      * @see #enableOtherThanCommands()
      */
     public void enableForCommands() {
+        LAST_RELOAD.set(System.currentTimeMillis());
         enableSystems(configSystem);
-    }
-
-    public static long getServerEnableTime() {
-        return SERVER_ENABLE_TIME;
     }
 
     /**
@@ -194,6 +193,8 @@ public class PlanSystem implements SubSystem {
         enableOtherThanCommands();
     }
 
+    // Accessor methods.
+
     private void disableSystems(SubSystem... systems) {
         for (SubSystem system : systems) {
             try {
@@ -205,8 +206,6 @@ public class PlanSystem implements SubSystem {
             }
         }
     }
-
-    // Accessor methods.
 
     public VersionChecker getVersionChecker() {
         return versionChecker;

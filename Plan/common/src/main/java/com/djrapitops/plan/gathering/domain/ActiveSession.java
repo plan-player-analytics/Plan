@@ -152,5 +152,13 @@ public class ActiveSession {
         this.lastMovementForAfkCalculation = lastMovementForAfkCalculation;
     }
 
-    public static class FirstSession {}
+    public boolean isWithin(long after, long before) {
+        return start < before && after < System.currentTimeMillis();
+    }
+
+    public static class FirstSession {
+        public FirstSession() {
+            /* Class based boolean marker */
+        }
+    }
 }

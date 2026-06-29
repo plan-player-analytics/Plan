@@ -17,6 +17,7 @@
 package com.djrapitops.plan.gathering;
 
 import com.djrapitops.plan.gathering.domain.PluginMetadata;
+import com.djrapitops.plan.gathering.mixin.TickTimesMixin;
 import org.spongepowered.api.Game;
 import org.spongepowered.api.entity.living.player.server.ServerPlayer;
 import org.spongepowered.api.service.ban.BanService;
@@ -28,6 +29,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
@@ -110,5 +112,10 @@ public class SpongeSensor implements ServerSensor<ServerWorld> {
                 .map(banService::find)
                 .flatMap(CompletableFuture::join)
                 .isPresent();
+    }
+
+    @Override
+    public Optional<long[]> getMspt() {
+        return Optional.ofNullable(((TickTimesMixin) game.server()).getTickTimesNanos());
     }
 }

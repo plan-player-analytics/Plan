@@ -90,6 +90,10 @@ public interface Parameters {
             return playerUUID;
         }
 
+        public String getPlayerName() {
+            return playerName;
+        }
+
         @Override
         public Object usingOn(DataExtension extension, Method method) throws InvocationTargetException, IllegalAccessException {
             Class<?> parameterType = method.getParameterTypes()[0];

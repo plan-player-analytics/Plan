@@ -41,7 +41,7 @@ public class NukkitMockComponent {
         SQLDB.setDownloadDriver(false);
     }
 
-    public PlanNukkit getPlanMock() throws Exception {
+    public PlanNukkit getPlanMock() {
         if (planMock == null) {
             planMock = PlanNukkitMocker.setUp()
                     .withDataFolder(tempDir.toFile())
@@ -52,7 +52,7 @@ public class NukkitMockComponent {
         return planMock;
     }
 
-    public PlanSystem getPlanSystem() throws Exception {
+    public PlanSystem getPlanSystem() {
         if (component == null) {
             PlanNukkit planMock = getPlanMock();
             component = DaggerPlanNukkitComponent.builder()

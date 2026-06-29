@@ -40,6 +40,7 @@ public class WebGroupDefaultGroupsPatch extends Patch {
     protected void applyPatch() {
         executeOther(new StoreWebGroupTransaction("admin", Arrays.stream(new WebPermission[]{
                                 WebPermission.PAGE,
+                                WebPermission.DATA,
                                 WebPermission.ACCESS,
                                 WebPermission.MANAGE_GROUPS,
                                 WebPermission.MANAGE_USERS,
@@ -49,6 +50,7 @@ public class WebGroupDefaultGroupsPatch extends Patch {
                         .collect(Collectors.toList()))
         );
         executeOther(new StoreWebGroupTransaction("read_all", Arrays.stream(new WebPermission[]{
+                                WebPermission.DATA,
                                 WebPermission.PAGE_NETWORK,
                                 WebPermission.PAGE_SERVER,
                                 WebPermission.ACCESS_QUERY,
@@ -73,6 +75,7 @@ public class WebGroupDefaultGroupsPatch extends Patch {
                         .collect(Collectors.toList()))
         );
         executeOther(new StoreWebGroupTransaction("player", Arrays.stream(new WebPermission[]{
+                                WebPermission.DATA_PLAYER,
                                 WebPermission.PAGE_PLAYER,
                                 WebPermission.ACCESS_PLAYER_SELF,
                                 WebPermission.ACCESS_RAW_PLAYER_DATA

@@ -51,16 +51,14 @@ public class SQLiteDB extends SQLDB {
 
     private final File databaseFile;
     private final String dbName;
-    private Connection connection;
-    private Task connectionPingTask;
-
     /*
      * In charge of keeping a single thread in control of the connection to avoid
      * one thread closing the connection while another is executing a statement as
      * that might lead to a SIGSEGV signal JVM crash.
      */
     private final SemaphoreAccessCounter connectionLock;
-
+    private Connection connection;
+    private Task connectionPingTask;
     private Constructor<?> connectionConstructor;
 
     private SQLiteDB(
@@ -112,7 +110,7 @@ public class SQLiteDB extends SQLDB {
 
     public Connection getNewConnection(File dbFile) throws SQLException {
         if (driverClassLoader == null) {
-            logger.info("Downloading SQLite Driver, this may take a while...");
+            logger.info(locale.getString(PluginLang.DB_DOWNLOAD_DRIVER, "SQLite"));
             downloadDriver();
         }
         String dbFilePath = dbFile.getAbsolutePath();

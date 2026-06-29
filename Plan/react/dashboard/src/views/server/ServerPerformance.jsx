@@ -1,15 +1,11 @@
 import React from 'react';
-import LoadIn from "../../components/animation/LoadIn";
+import LoadIn from "../../components/animation/LoadIn.tsx";
 import {Col} from "react-bootstrap";
 import {useParams} from "react-router";
-import {useDataRequest} from "../../hooks/dataFetchHook";
-import {fetchPerformanceOverview} from "../../service/serverService";
-import PerformanceGraphsCard from "../../components/cards/server/graphs/PerformanceGraphsCard";
-import PerformanceInsightsCard from "../../components/cards/server/insights/PerformanceInsightsCard";
-import {ErrorViewCard} from "../ErrorView";
 import PerformanceAsNumbersCard from "../../components/cards/server/tables/PerformanceAsNumbersCard";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
+import {GraphSeriesCard} from "../../components/cards/server/graphs/GraphSeriesCard.tsx";
 
 const ServerPerformance = () => {
     const {hasPermission, hasChildPermission} = useAuth();
@@ -17,24 +13,18 @@ const ServerPerformance = () => {
 
     const seeGraphs = hasChildPermission('page.server.performance.graphs');
     const seeOverview = hasPermission('page.server.performance.overview');
-    const {data, loadingError} = useDataRequest(fetchPerformanceOverview, [identifier], seeOverview);
 
     return (
         <LoadIn>
             <section className="server-performance">
                 {seeGraphs && <ExtendableRow id={'row-server-performance-0'}>
                     <Col lg={12}>
-                        <PerformanceGraphsCard/>
+                        <GraphSeriesCard id="performance-graphs" identifier={identifier}/>
                     </Col>
                 </ExtendableRow>}
                 {seeOverview && <ExtendableRow id={'row-server-performance-1'}>
-                    <Col lg={8}>
-                        {loadingError ? <ErrorViewCard error={loadingError}/> :
-                            <PerformanceAsNumbersCard data={data?.numbers}/>}
-                    </Col>
-                    <Col lg={4}>
-                        {loadingError ? <ErrorViewCard error={loadingError}/> :
-                            <PerformanceInsightsCard data={data?.insights}/>}
+                    <Col lg={12}>
+                        <PerformanceAsNumbersCard servers={[{serverUUID: identifier}]}/>
                     </Col>
                 </ExtendableRow>}
             </section>

@@ -84,7 +84,7 @@ public class PlayerKills {
         return "{" +
                 "  \"kills\": [" +
                 new TextStringBuilder().appendWithSeparators(kills
-                        .stream().map(PlayerKill::toJson).iterator(), ",").build() +
+                        .stream().map(PlayerKill::toJson).iterator(), ",").get() +
                 "  ]" +
                 "}";
     }

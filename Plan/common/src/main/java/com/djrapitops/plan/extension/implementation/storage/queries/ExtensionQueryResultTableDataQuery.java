@@ -60,6 +60,7 @@ public class ExtensionQueryResultTableDataQuery implements Query<Map<UUID, Exten
 
     @Override
     public Map<UUID, ExtensionTabData> executeQuery(SQLDB db) {
+        if (userIds.isEmpty()) return new HashMap<>();
         return combine(db.query(fetchPlayerData()), db.query(fetchPlayerGroups()));
     }
 

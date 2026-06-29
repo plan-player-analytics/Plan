@@ -39,6 +39,7 @@ public class WebGroupAddMissingAdminGroupPatch extends Patch {
     protected void applyPatch() {
         executeOther(new StoreWebGroupTransaction("admin", Arrays.stream(new WebPermission[]{
                                 WebPermission.PAGE,
+                                WebPermission.DATA,
                                 WebPermission.ACCESS,
                                 WebPermission.MANAGE_GROUPS,
                                 WebPermission.MANAGE_USERS,

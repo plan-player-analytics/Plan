@@ -17,8 +17,16 @@
 package com.djrapitops.plan.storage.database.sql.tables;
 
 import com.djrapitops.plan.storage.database.DBType;
+import com.djrapitops.plan.storage.database.queries.objects.lookup.ServerIdentifiable;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
+import com.djrapitops.plan.storage.database.sql.building.Insert;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import static com.djrapitops.plan.storage.database.sql.building.Sql.INSERT_INTO;
 
 /**
  * Table information about 'plan_tps'.
@@ -39,8 +47,12 @@ public class TPSTable {
     public static final String ENTITIES = "entities";
     public static final String CHUNKS = "chunks_loaded";
     public static final String FREE_DISK = "free_disk_space";
+    public static final String MSPT_AVERAGE = "mspt_average";
+    public static final String MSPT_95TH_PERCENTILE = "mspt_95th_percentile";
+    public static final String MSPT_JITTER_AVERAGE = "mspt_jitter_average";
+    public static final String MSPT_JITTER_MAX = "mspt_jitter_max";
 
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " ("
             + SERVER_ID + ','
             + DATE + ','
             + TPS + ','
@@ -49,10 +61,14 @@ public class TPSTable {
             + RAM_USAGE + ','
             + ENTITIES + ','
             + CHUNKS + ','
-            + FREE_DISK
+            + FREE_DISK + ','
+            + MSPT_AVERAGE + ','
+            + MSPT_95TH_PERCENTILE + ','
+            + MSPT_JITTER_AVERAGE + ','
+            + MSPT_JITTER_MAX
             + ") VALUES ("
             + ServerTable.SELECT_SERVER_ID + ','
-            + "?, ?, ?, ?, ?, ?, ?, ?)";
+            + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private TPSTable() {
         /* Static information class */
@@ -70,7 +86,81 @@ public class TPSTable {
                 .column(ENTITIES, Sql.INT).notNull()
                 .column(CHUNKS, Sql.INT).notNull()
                 .column(FREE_DISK, Sql.LONG).notNull()
+                .column(MSPT_AVERAGE, Sql.DOUBLE) // Nullable
+                .column(MSPT_95TH_PERCENTILE, Sql.DOUBLE) // Nullable
+                .column(MSPT_JITTER_AVERAGE, Sql.DOUBLE) // Nullable
+                .column(MSPT_JITTER_MAX, Sql.DOUBLE) // Nullable
                 .foreignKey(SERVER_ID, ServerTable.TABLE_NAME, ServerTable.ID)
                 .toString();
+    }
+
+    public static class Row implements ServerIdentifiable {
+        public static final String INSERT_STATEMENT = Insert.values(TABLE_NAME, SERVER_ID, DATE, TPS, PLAYERS_ONLINE,
+                CPU_USAGE, RAM_USAGE, ENTITIES, CHUNKS, FREE_DISK, MSPT_AVERAGE, MSPT_95TH_PERCENTILE,
+                MSPT_JITTER_AVERAGE, MSPT_JITTER_MAX);
+
+        private int id;
+        private int serverId;
+        private long date;
+        private double tps;
+        private int playersOnline;
+        private double cpuUsage;
+        private long ramUsage;
+        private int entities;
+        private int chunksLoaded;
+        private long freeDiskSpace;
+        private Double msptAverage;
+        private Double mspt95thPercentile;
+        private Double msptJitterAverage;
+        private Double msptJitterMax;
+
+        public static Row extract(ResultSet set) throws SQLException {
+            Row row = new Row();
+            row.id = set.getInt(ID);
+            row.serverId = set.getInt(SERVER_ID);
+            row.date = set.getLong(DATE);
+            row.tps = set.getDouble(TPS);
+            row.playersOnline = set.getInt(PLAYERS_ONLINE);
+            row.cpuUsage = set.getDouble(CPU_USAGE);
+            row.ramUsage = set.getLong(RAM_USAGE);
+            row.entities = set.getInt(ENTITIES);
+            row.chunksLoaded = set.getInt(CHUNKS);
+            row.freeDiskSpace = set.getLong(FREE_DISK);
+            row.msptAverage = Sql.getDoubleOrNull(set, MSPT_AVERAGE);
+            row.mspt95thPercentile = Sql.getDoubleOrNull(set, MSPT_95TH_PERCENTILE);
+            row.msptJitterAverage = Sql.getDoubleOrNull(set, MSPT_JITTER_AVERAGE);
+            row.msptJitterMax = Sql.getDoubleOrNull(set, MSPT_JITTER_MAX);
+            return row;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void insert(PreparedStatement statement) throws SQLException {
+            statement.setInt(1, serverId);
+            statement.setLong(2, date);
+            statement.setDouble(3, tps);
+            statement.setInt(4, playersOnline);
+            statement.setDouble(5, cpuUsage);
+            statement.setLong(6, ramUsage);
+            statement.setInt(7, entities);
+            statement.setInt(8, chunksLoaded);
+            statement.setLong(9, freeDiskSpace);
+            Sql.setDoubleOrNull(statement, 10, msptAverage);
+            Sql.setDoubleOrNull(statement, 11, mspt95thPercentile);
+            Sql.setDoubleOrNull(statement, 12, msptJitterAverage);
+            Sql.setDoubleOrNull(statement, 13, msptJitterMax);
+        }
+
+        @Override
+        public int getServerId() {
+            return serverId;
+        }
+
+        @Override
+        public void setServerId(int serverId) {
+            this.serverId = serverId;
+        }
     }
 }

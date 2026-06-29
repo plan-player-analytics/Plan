@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {Outlet, useParams} from "react-router";
-import {useNavigation} from "../../hooks/navigationHook";
+import {useNavigation} from "../../hooks/navigationHook.tsx";
 import {
     faCampground,
     faChartArea,
@@ -14,15 +14,16 @@ import {
     faInfoCircle,
     faLocationArrow,
     faSearch,
+    faSignsPost,
     faUserGroup,
     faUsers,
     faUsersViewfinder
 } from "@fortawesome/free-solid-svg-icons";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 import Sidebar from "../../components/navigation/Sidebar";
 import Header from "../../components/navigation/Header";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
-import {useMetadata} from "../../hooks/metadataHook";
+import {useMetadata} from "../../hooks/metadataHook.tsx";
 import {faCalendarCheck} from "@fortawesome/free-regular-svg-icons";
 import ErrorPage from "./ErrorPage";
 import {SwitchTransition} from "react-transition-group";
@@ -30,7 +31,7 @@ import MainPageRedirect from "../../components/navigation/MainPageRedirect";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import {fetchServerIdentity} from "../../service/serverService";
 import {ServerExtensionContextProvider, useServerExtensionContext} from "../../hooks/serverExtensionDataContext";
-import {iconTypeToFontAwesomeClass} from "../../util/icons";
+import {iconTypeToFontAwesomeClass} from "../../util/icons.ts";
 import {staticSite} from "../../service/backendConfiguration";
 
 const HelpModal = React.lazy(() => import("../../components/modal/HelpModal"));
@@ -205,7 +206,8 @@ const ServerPage = () => {
         if (identityLoadingError.status === 404) return <ErrorPage
             error={{
                 title: t('html.error.404NotFound'),
-                message: t(staticSite ? 'html.error.serverNotExported' : 'html.error.serverNotSeen')
+                message: t(staticSite ? 'html.error.serverNotExported' : 'html.error.serverNotSeen'),
+                icon: faSignsPost
             }}/>
         return <ErrorPage error={identityLoadingError}/>
     }

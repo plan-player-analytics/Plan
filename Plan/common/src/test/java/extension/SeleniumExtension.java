@@ -103,9 +103,7 @@ public class SeleniumExtension implements ParameterResolver, BeforeAllCallback, 
     private LoggingPreferences getLoggingPreferences() {
         LoggingPreferences logPrefs = new LoggingPreferences();
         logPrefs.enable(LogType.PERFORMANCE, Level.INFO);
-        logPrefs.enable(LogType.PROFILER, Level.INFO);
         logPrefs.enable(LogType.BROWSER, Level.INFO);
-        logPrefs.enable(LogType.CLIENT, Level.INFO);
         logPrefs.enable(LogType.DRIVER, Level.INFO);
         return logPrefs;
     }

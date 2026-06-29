@@ -1,12 +1,13 @@
-import {useTheme} from "../../hooks/themeHook";
+import {useTheme} from "../../hooks/themeHook.tsx";
 import React, {useEffect, useState} from "react";
 import {translateLinegraphButtons} from "../../util/graphs";
 import Highcharts from "highcharts/esm/highstock";
 import "highcharts/esm/modules/no-data-to-display";
 import "highcharts/esm/modules/accessibility"
 import {useTranslation} from "react-i18next";
-import {useMetadata} from "../../hooks/metadataHook";
+import {useMetadata} from "../../hooks/metadataHook.tsx";
 import {localeService} from "../../service/localeService.js";
+import {mergeUseCases} from "../../util/mutator.js";
 
 const LineGraph = ({
                        id,
@@ -18,7 +19,9 @@ const LineGraph = ({
                        extremes,
                        onSetExtremes,
                        alreadyOffsetTimezone,
-                       options
+                       options,
+                       extraOptions,
+                       onMouseLeave
                    }) => {
     const {t} = useTranslation()
     const {graphTheming, nightModeEnabled} = useTheme();
@@ -33,7 +36,7 @@ const LineGraph = ({
             }
         })
         Highcharts.setOptions(graphTheming);
-        setGraph(Highcharts.stockChart(id, options || {
+        let actualOptions = options || {
             chart: {
                 noData: t('html.label.noDataToDisplay')
             },
@@ -65,8 +68,10 @@ const LineGraph = ({
                 timezoneOffset: alreadyOffsetTimezone ? 0 : timeZoneOffsetMinutes
             },
             series: series
-        }));
-    }, [options, series, id, t,
+        };
+        if (extraOptions) actualOptions = mergeUseCases(actualOptions, extraOptions);
+        setGraph(Highcharts.stockChart(id, actualOptions));
+    }, [options, extraOptions, series, id, t,
         graphTheming, nightModeEnabled, alreadyOffsetTimezone, timeZoneOffsetMinutes,
         legendEnabled, yAxis,
         onSetExtremes, setGraph, selectedRange]);
@@ -80,7 +85,7 @@ const LineGraph = ({
     const style = tall ? {height: "450px"} : undefined;
 
     return (
-        <div className="chart-area" style={style} id={id}>
+        <div className="chart-area" style={style} id={id} onMouseLeave={onMouseLeave}>
             <span className="loader"/>
         </div>
     )

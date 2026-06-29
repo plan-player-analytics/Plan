@@ -165,7 +165,7 @@ public class ConfigUpdater {
                 new ConfigChange.MovedValue("Time.Thresholds.Remove_ping_data_after", "Time.Thresholds.Remove_ping_data_after.Time"),
                 new ConfigChange.MovedValue("Time.Thresholds.AFK_threshold", "Time.Thresholds.AFK_threshold.Time"),
                 new ConfigChange.MovedValue("Time.Thresholds.Remove_inactive_player_data_after", "Time.Thresholds.Remove_inactive_player_data_after.Time"),
-                new ConfigChange.MovedValue("Time.Periodic_tasks.Extension_data_refresh_every", "Time.Periodic_tasks.Extension_data_refresh_every.Time"),
+                new ConfigChange.MovedValue("Time.Periodic_tasks.Extension_data_refresh_every", "Time.Periodic_tasks.Extension_server_data_refresh_every.Time"),
                 new ConfigChange.MovedValue("Time.Periodic_tasks.Check_DB_for_server_config_files_every", "Time.Periodic_tasks.Check_DB_for_server_config_files_every.Time"),
                 new ConfigChange.MovedValue("Time.Periodic_tasks.Clean_Database_every", "Time.Periodic_tasks.Clean_Database_every.Time"),
                 new ConfigChange.MovedValue("Time.Delays.Ping_server_enable_delay", "Time.Delays.Ping_server_enable_delay.Time"),
@@ -180,6 +180,10 @@ public class ConfigUpdater {
 
                 new ConfigChange.Moved("Data_gathering.Preserve_join_address_case", "Data_gathering.Join_addresses.Preserve_case"),
                 new ConfigChange.Moved("Data_gathering.Preserve_invalid_join_addresses", "Data_gathering.Join_addresses.Preserve_invalid"),
+
+                new ConfigChange.Moved("Time.Periodic_tasks.Extension_data_refresh_every", "Time.Periodic_tasks.Extension_server_data_refresh_every"),
+
+                new ConfigChange.Removed("Display_options.Sessions.Show_on_page")
         };
     }
 

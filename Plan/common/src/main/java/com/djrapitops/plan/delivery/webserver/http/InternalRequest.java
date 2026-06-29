@@ -82,5 +82,5 @@ public interface InternalRequest {
         return authenticationExtractor.extractAuthentication(this);
     }
 
-    String getRequestedPath();
+    String getRequestedPathAndQuery();
 }

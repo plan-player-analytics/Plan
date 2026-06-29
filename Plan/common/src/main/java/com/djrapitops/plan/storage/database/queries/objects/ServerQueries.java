@@ -145,7 +145,7 @@ public class ServerQueries {
     public static Query<List<Server>> fetchAllServers() {
         String sql = SELECT + '*' + FROM + ServerTable.TABLE_NAME +
                 WHERE + ServerTable.INSTALLED + "=?";
-        return db -> db.queryList(sql, ServerQueries::extractServer, true, true);
+        return db -> db.queryList(sql, ServerQueries::extractServer, true);
     }
 
     private static @NotNull Server extractServer(ResultSet set) throws SQLException {

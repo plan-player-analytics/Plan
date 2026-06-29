@@ -20,11 +20,13 @@ import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.extension.Caller;
+import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.changes.ConfigUpdater;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.storage.database.queries.ExtensionsDatabaseTest;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
@@ -59,7 +61,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -87,6 +89,7 @@ class AccessControlTest {
                 Arguments.of("/server/" + TestConstants.SERVER_UUID_STRING + "", WebPermission.ACCESS_SERVER, 200, 403),
                 Arguments.of("/v1/serverOverview?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_OVERVIEW_NUMBERS, 200, 403),
                 Arguments.of("/v1/onlineOverview?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_OVERVIEW, 200, 403),
+                Arguments.of("/v1/onlineInsights?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_OVERVIEW, 200, 403),
                 Arguments.of("/v1/sessionsOverview?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_SESSIONS, 200, 403),
                 Arguments.of("/v1/playerVersus?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_PLAYER_VERSUS, 200, 403),
                 Arguments.of("/v1/playerbaseOverview?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_PLAYERBASE_OVERVIEW, 200, 403),
@@ -105,6 +108,7 @@ class AccessControlTest {
                 Arguments.of("/v1/kills?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_PLAYER_VERSUS_KILL_LIST, 200, 403),
                 Arguments.of("/v1/pingTable?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_GEOLOCATIONS_PING_PER_COUNTRY, 200, 403),
                 Arguments.of("/v1/sessions?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_SESSIONS_LIST, 200, 403),
+                Arguments.of("/v1/sessions?player=" + TestConstants.PLAYER_ONE_UUID_STRING + "", WebPermission.PAGE_PLAYER_SESSIONS, 200, 403),
                 Arguments.of("/v1/retention?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_RETENTION, 200, 403),
                 Arguments.of("/v1/joinAddresses", WebPermission.PAGE_NETWORK_RETENTION, 200, 403),
                 Arguments.of("/v1/joinAddresses?listOnly=true", WebPermission.PAGE_NETWORK_JOIN_ADDRESSES_GRAPHS_TIME, 200, 403),
@@ -172,7 +176,147 @@ class AccessControlTest {
                 Arguments.of("/theme-editor", WebPermission.ACCESS_THEME_EDITOR, 200, 403),
                 Arguments.of("/theme-editor/new", WebPermission.ACCESS_THEME_EDITOR, 200, 403),
                 Arguments.of("/theme-editor/delete", WebPermission.ACCESS_THEME_EDITOR, 200, 403),
-                Arguments.of("/theme-editor/default", WebPermission.ACCESS_THEME_EDITOR, 200, 403)
+                Arguments.of("/theme-editor/default", WebPermission.ACCESS_THEME_EDITOR, 200, 403),
+                Arguments.of("/v1/playersOnline", WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_ONLINE, 200, 403),
+                Arguments.of("/v1/playersOnline?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_OVERVIEW_PLAYERS_ONLINE_GRAPH, 200, 403),
+                Arguments.of("/v1/datapoint?type=PLAYTIME", WebPermission.DATA_NETWORK_PLAYTIME, 200, 403),
+                Arguments.of("/v1/datapoint?type=PLAYTIME&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_PLAYTIME, 200, 403),
+                Arguments.of("/v1/datapoint?type=PLAYTIME&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_PLAYTIME, 200, 403),
+                Arguments.of("/v1/datapoint?type=PLAYTIME_PER_DAY_AVERAGE", WebPermission.DATA_NETWORK_PLAYTIME_PER_DAY_AVERAGE, 200, 403),
+                Arguments.of("/v1/datapoint?type=PLAYTIME_PER_DAY_AVERAGE&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_PLAYTIME_PER_DAY_AVERAGE, 200, 403),
+                Arguments.of("/v1/datapoint?type=PLAYTIME_PER_DAY_AVERAGE&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_PLAYTIME_PER_DAY_AVERAGE, 200, 403),
+                Arguments.of("/v1/datapoint?type=AFK_TIME", WebPermission.DATA_NETWORK_AFK_TIME, 200, 403),
+                Arguments.of("/v1/datapoint?type=AFK_TIME&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_AFK_TIME, 200, 403),
+                Arguments.of("/v1/datapoint?type=AFK_TIME&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_AFK_TIME, 200, 403),
+                Arguments.of("/v1/datapoint?type=AFK_TIME_PERCENTAGE", WebPermission.DATA_NETWORK_AFK_TIME, 200, 403),
+                Arguments.of("/v1/datapoint?type=AFK_TIME_PERCENTAGE&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_AFK_TIME, 200, 403),
+                Arguments.of("/v1/datapoint?type=AFK_TIME_PERCENTAGE&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_AFK_TIME, 400, 403),
+                Arguments.of("/v1/datapoint?type=MOST_ACTIVE_GAME_MODE", WebPermission.DATA_NETWORK_MOST_ACTIVE_GAME_MODE, 200, 403),
+                Arguments.of("/v1/datapoint?type=MOST_ACTIVE_GAME_MODE&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_MOST_ACTIVE_GAME_MODE, 200, 403),
+                Arguments.of("/v1/datapoint?type=MOST_ACTIVE_GAME_MODE&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_MOST_ACTIVE_GAME_MODE, 200, 403),
+                Arguments.of("/v1/datapoint?type=MOST_ACTIVE_WORLD", WebPermission.DATA_NETWORK_MOST_ACTIVE_WORLD, 200, 403),
+                Arguments.of("/v1/datapoint?type=MOST_ACTIVE_WORLD&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_MOST_ACTIVE_WORLD, 200, 403),
+                Arguments.of("/v1/datapoint?type=MOST_ACTIVE_WORLD&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_MOST_ACTIVE_WORLD, 200, 403),
+                Arguments.of("/v1/datapoint?type=SERVER_OCCUPIED", WebPermission.DATA_NETWORK_SERVER_OCCUPIED, 200, 403),
+                Arguments.of("/v1/datapoint?type=SERVER_OCCUPIED&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_SERVER_OCCUPIED, 200, 403),
+                Arguments.of("/v1/datapoint?type=SERVER_OCCUPIED&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=WORLD_PIE", WebPermission.DATA_NETWORK_WORLD_PIE, 200, 403),
+                Arguments.of("/v1/datapoint?type=WORLD_PIE&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_WORLD_PIE, 200, 403),
+                Arguments.of("/v1/datapoint?type=WORLD_PIE&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_WORLD_PIE, 200, 403),
+                Arguments.of("/v1/datapoint?type=SERVER_PIE", WebPermission.DATA_NETWORK_SERVER_PIE, 200, 403),
+                Arguments.of("/v1/datapoint?type=SERVER_PIE&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_SERVER_PIE, 200, 403),
+                Arguments.of("/v1/datapoint?type=SERVER_PIE&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_SERVER_PIE, 200, 403),
+                Arguments.of("/v1/datapoint?type=UNIQUE_PLAYERS_COUNT", WebPermission.DATA_NETWORK_UNIQUE_PLAYERS_COUNT, 200, 403),
+                Arguments.of("/v1/datapoint?type=UNIQUE_PLAYERS_COUNT&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_UNIQUE_PLAYERS_COUNT, 200, 403),
+                Arguments.of("/v1/datapoint?type=UNIQUE_PLAYERS_COUNT&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=UNIQUE_PLAYERS_AVERAGE", WebPermission.DATA_NETWORK_UNIQUE_PLAYERS_AVERAGE, 200, 403),
+                Arguments.of("/v1/datapoint?type=UNIQUE_PLAYERS_AVERAGE&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_UNIQUE_PLAYERS_AVERAGE, 200, 403),
+                Arguments.of("/v1/datapoint?type=UNIQUE_PLAYERS_AVERAGE&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=NEW_PLAYERS", WebPermission.DATA_NETWORK_NEW_PLAYERS, 200, 403),
+                Arguments.of("/v1/datapoint?type=NEW_PLAYERS&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_NEW_PLAYERS, 200, 403),
+                Arguments.of("/v1/datapoint?type=NEW_PLAYERS&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=NEW_PLAYERS_AVERAGE", WebPermission.DATA_NETWORK_NEW_PLAYERS_AVERAGE, 200, 403),
+                Arguments.of("/v1/datapoint?type=NEW_PLAYERS_AVERAGE&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_NEW_PLAYERS_AVERAGE, 200, 403),
+                Arguments.of("/v1/datapoint?type=NEW_PLAYERS_AVERAGE&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=NEW_PLAYER_RETENTION", WebPermission.DATA_NETWORK_NEW_PLAYER_RETENTION, 200, 403),
+                Arguments.of("/v1/datapoint?type=NEW_PLAYER_RETENTION&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_NEW_PLAYER_RETENTION, 200, 403),
+                Arguments.of("/v1/datapoint?type=NEW_PLAYER_RETENTION&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=SESSION_COUNT", WebPermission.DATA_NETWORK_SESSION_COUNT, 200, 403),
+                Arguments.of("/v1/datapoint?type=SESSION_COUNT&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_SESSION_COUNT, 200, 403),
+                Arguments.of("/v1/datapoint?type=SESSION_COUNT&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_SESSION_COUNT, 200, 403),
+                Arguments.of("/v1/datapoint?type=SESSION_LENGTH_AVERAGE", WebPermission.DATA_NETWORK_SESSION_LENGTH_AVERAGE, 200, 403),
+                Arguments.of("/v1/datapoint?type=SESSION_LENGTH_AVERAGE&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_SESSION_LENGTH_AVERAGE, 200, 403),
+                Arguments.of("/v1/datapoint?type=SESSION_LENGTH_AVERAGE&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_SESSION_LENGTH_AVERAGE, 200, 403),
+                Arguments.of("/v1/datapoint?type=PLAYTIME_PER_PLAYER_AVERAGE", WebPermission.DATA_NETWORK_PLAYTIME_PER_PLAYER_AVERAGE, 200, 403),
+                Arguments.of("/v1/datapoint?type=PLAYTIME_PER_PLAYER_AVERAGE&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_PLAYTIME_PER_PLAYER_AVERAGE, 200, 403),
+                Arguments.of("/v1/datapoint?type=PLAYTIME_PER_PLAYER_AVERAGE&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=PLAYERS_ONLINE_PEAK", WebPermission.DATA_NETWORK_PLAYERS_ONLINE_PEAK, 200, 403),
+                Arguments.of("/v1/datapoint?type=PLAYERS_ONLINE_PEAK&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_PLAYERS_ONLINE_PEAK, 200, 403),
+                Arguments.of("/v1/datapoint?type=PLAYERS_ONLINE_PEAK&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=PLAYERS_ONLINE", WebPermission.DATA_NETWORK_PLAYERS_ONLINE_CURRENT, 200, 403),
+                Arguments.of("/v1/datapoint?type=PLAYERS_ONLINE&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_PLAYERS_ONLINE_CURRENT, 200, 403),
+                Arguments.of("/v1/datapoint?type=PLAYERS_ONLINE&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=UPTIME_CURRENT", WebPermission.DATA_NETWORK_UPTIME_CURRENT, 200, 403),
+                Arguments.of("/v1/datapoint?type=UPTIME_CURRENT&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_UPTIME_CURRENT, 200, 403),
+                Arguments.of("/v1/datapoint?type=UPTIME_CURRENT&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=UPTIME", WebPermission.DATA_NETWORK_UPTIME, 200, 403),
+                Arguments.of("/v1/datapoint?type=UPTIME&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_UPTIME, 200, 403),
+                Arguments.of("/v1/datapoint?type=UPTIME&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=DOWNTIME", WebPermission.DATA_NETWORK_DOWNTIME, 200, 403),
+                Arguments.of("/v1/datapoint?type=DOWNTIME&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_DOWNTIME, 200, 403),
+                Arguments.of("/v1/datapoint?type=DOWNTIME&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=REGULAR_PLAYERS", WebPermission.DATA_NETWORK_REGULAR_PLAYERS, 200, 403),
+                Arguments.of("/v1/datapoint?type=REGULAR_PLAYERS&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_REGULAR_PLAYERS, 200, 403),
+                Arguments.of("/v1/datapoint?type=REGULAR_PLAYERS&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=DEATHS", WebPermission.DATA_NETWORK_DEATHS, 200, 403),
+                Arguments.of("/v1/datapoint?type=DEATHS&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_DEATHS, 200, 403),
+                Arguments.of("/v1/datapoint?type=DEATHS&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_DEATHS, 200, 403),
+                Arguments.of("/v1/datapoint?type=PLAYER_KILLS", WebPermission.DATA_NETWORK_PLAYER_KILLS, 200, 403),
+                Arguments.of("/v1/datapoint?type=PLAYER_KILLS&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_PLAYER_KILLS, 200, 403),
+                Arguments.of("/v1/datapoint?type=PLAYER_KILLS&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_PLAYER_KILLS, 200, 403),
+                Arguments.of("/v1/datapoint?type=MOB_KILLS", WebPermission.DATA_NETWORK_MOB_KILLS, 200, 403),
+                Arguments.of("/v1/datapoint?type=MOB_KILLS&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_MOB_KILLS, 200, 403),
+                Arguments.of("/v1/datapoint?type=MOB_KILLS&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_MOB_KILLS, 200, 403),
+                Arguments.of("/v1/datapoint?type=TPS_AVERAGE", WebPermission.DATA_NETWORK, 400, 403),
+                Arguments.of("/v1/datapoint?type=TPS_AVERAGE&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_TPS_AVERAGE, 200, 403),
+                Arguments.of("/v1/datapoint?type=TPS_AVERAGE&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=TPS_LOW_SPIKES", WebPermission.DATA_NETWORK_TPS_LOW_SPIKES, 200, 403),
+                Arguments.of("/v1/datapoint?type=TPS_LOW_SPIKES&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_TPS_LOW_SPIKES, 200, 403),
+                Arguments.of("/v1/datapoint?type=TPS_LOW_SPIKES&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=CPU_AVERAGE", WebPermission.DATA_NETWORK, 200, 403),
+                Arguments.of("/v1/datapoint?type=CPU_AVERAGE&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_CPU_AVERAGE, 200, 403),
+                Arguments.of("/v1/datapoint?type=CPU_IMPACT_PER_PLAYER", WebPermission.DATA_NETWORK_CPU_IMPACT_PER_PLAYER, 200, 403),
+                Arguments.of("/v1/datapoint?type=CPU_IMPACT_PER_PLAYER&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_CPU_IMPACT_PER_PLAYER, 200, 403),
+                Arguments.of("/v1/datapoint?type=CPU_IMPACT_PER_PLAYER&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=CPU_AVERAGE&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=RAM_AVERAGE", WebPermission.DATA_NETWORK, 400, 403),
+                Arguments.of("/v1/datapoint?type=RAM_AVERAGE&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_RAM_AVERAGE, 200, 403),
+                Arguments.of("/v1/datapoint?type=RAM_AVERAGE&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=MSPT_AVERAGE", WebPermission.DATA_NETWORK_MSPT_AVERAGE, 200, 403),
+                Arguments.of("/v1/datapoint?type=MSPT_AVERAGE&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_MSPT_AVERAGE, 200, 403),
+                Arguments.of("/v1/datapoint?type=MSPT_AVERAGE&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=MSPT_JITTER_AVERAGE", WebPermission.DATA_NETWORK_MSPT_JITTER_AVERAGE, 200, 403),
+                Arguments.of("/v1/datapoint?type=MSPT_JITTER_AVERAGE&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_MSPT_JITTER_AVERAGE, 200, 403),
+                Arguments.of("/v1/datapoint?type=MSPT_JITTER_AVERAGE&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=MSPT_JITTER_MAX", WebPermission.DATA_NETWORK_MSPT_JITTER_MAX, 200, 403),
+                Arguments.of("/v1/datapoint?type=MSPT_JITTER_MAX&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_MSPT_JITTER_MAX, 200, 403),
+                Arguments.of("/v1/datapoint?type=MSPT_JITTER_MAX&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=MSPT_AVERAGE_LOW_TPS", WebPermission.DATA_NETWORK_MSPT_AVERAGE_LOW_TPS, 200, 403),
+                Arguments.of("/v1/datapoint?type=MSPT_AVERAGE_LOW_TPS&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_MSPT_AVERAGE_LOW_TPS, 200, 403),
+                Arguments.of("/v1/datapoint?type=MSPT_AVERAGE_LOW_TPS&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=MSPT_MAX_95TH_LOW_TPS", WebPermission.DATA_NETWORK_MSPT_MAX_95TH_LOW_TPS, 200, 403),
+                Arguments.of("/v1/datapoint?type=MSPT_MAX_95TH_LOW_TPS&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_MSPT_MAX_95TH_LOW_TPS, 200, 403),
+                Arguments.of("/v1/datapoint?type=MSPT_MAX_95TH_LOW_TPS&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=MSPT_MAX_95TH", WebPermission.DATA_NETWORK_MSPT_MAX_95TH, 200, 403),
+                Arguments.of("/v1/datapoint?type=MSPT_MAX_95TH&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_MSPT_MAX_95TH, 200, 403),
+                Arguments.of("/v1/datapoint?type=MSPT_MAX_95TH&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=MSPT_IMPACT_PER_PLAYER", WebPermission.DATA_NETWORK_MSPT_IMPACT_PER_PLAYER, 200, 403),
+                Arguments.of("/v1/datapoint?type=MSPT_IMPACT_PER_PLAYER&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_MSPT_IMPACT_PER_PLAYER, 200, 403),
+                Arguments.of("/v1/datapoint?type=MSPT_IMPACT_PER_PLAYER&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=MSPT_IMPACT_PER_CHUNK", WebPermission.DATA_NETWORK_MSPT_IMPACT_PER_CHUNK, 200, 403),
+                Arguments.of("/v1/datapoint?type=MSPT_IMPACT_PER_CHUNK&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_MSPT_IMPACT_PER_CHUNK, 200, 403),
+                Arguments.of("/v1/datapoint?type=MSPT_IMPACT_PER_CHUNK&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=PLAYERS_ONLINE_AVERAGE", WebPermission.DATA_NETWORK, 400, 403),
+                Arguments.of("/v1/datapoint?type=PLAYERS_ONLINE_AVERAGE&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_PLAYERS_ONLINE_AVERAGE, 200, 403),
+                Arguments.of("/v1/datapoint?type=PLAYERS_ONLINE_AVERAGE&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=ENTITIES_AVERAGE", WebPermission.DATA_NETWORK_ENTITIES_AVERAGE, 200, 403),
+                Arguments.of("/v1/datapoint?type=ENTITIES_AVERAGE&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_ENTITIES_AVERAGE, 200, 403),
+                Arguments.of("/v1/datapoint?type=ENTITIES_AVERAGE&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=ENTITIES_PER_CHUNK", WebPermission.DATA_NETWORK_ENTITIES_PER_CHUNK, 200, 403),
+                Arguments.of("/v1/datapoint?type=ENTITIES_PER_CHUNK&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_ENTITIES_PER_CHUNK, 200, 403),
+                Arguments.of("/v1/datapoint?type=ENTITIES_PER_CHUNK&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=CHUNKS_AVERAGE", WebPermission.DATA_NETWORK_CHUNKS_AVERAGE, 200, 403),
+                Arguments.of("/v1/datapoint?type=CHUNKS_AVERAGE&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_CHUNKS_AVERAGE, 200, 403),
+                Arguments.of("/v1/datapoint?type=CHUNKS_AVERAGE&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=CHUNKS_PER_PLAYER", WebPermission.DATA_NETWORK_CHUNKS_PER_PLAYER, 200, 403),
+                Arguments.of("/v1/datapoint?type=CHUNKS_PER_PLAYER&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_CHUNKS_PER_PLAYER, 200, 403),
+                Arguments.of("/v1/datapoint?type=CHUNKS_PER_PLAYER&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=DISK_MAX", WebPermission.DATA_NETWORK, 400, 403),
+                Arguments.of("/v1/datapoint?type=DISK_MAX&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_DISK_MAX, 200, 403),
+                Arguments.of("/v1/datapoint?type=DISK_MAX&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403),
+                Arguments.of("/v1/datapoint?type=DISK_MIN", WebPermission.DATA_NETWORK, 400, 403),
+                Arguments.of("/v1/datapoint?type=DISK_MIN&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_DISK_MIN, 200, 403),
+                Arguments.of("/v1/datapoint?type=DISK_MIN&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER, 400, 403)
         );
     }
 
@@ -209,6 +353,10 @@ class AccessControlTest {
                 TestConstants.SERVER_NAME,
                 address,
                 TestConstants.VERSION)));
+        for (TPS tps : RandomData.randomDateOrderedTPS(1)) {
+            database.executeInTransaction(DataStoreQueries.storeTPS(TestConstants.SERVER_UUID, tps)).join();
+        }
+        database.executeInTransaction(DataStoreQueries.storeTPS(TestConstants.SERVER_UUID, RandomData.randomTPSAtDate(System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(5))));
 
         Caller caller = system.getApiServices().getExtensionService().register(new ExtensionsDatabaseTest.PlayerExtension())
                 .orElseThrow(AssertionError::new);
@@ -251,7 +399,7 @@ class AccessControlTest {
     @ParameterizedTest(name = "{0}: Permission {1}, expecting {2} with & {3} without permission")
     @MethodSource("testCases")
     void accessControlTest(String resource, WebPermission permission, int expectedWithPermission, int expectedWithout) throws Exception {
-        String cookie = login(address, createUserWithPermissions(resource, permission).getUsername());
+        String cookie = login(address, createUserWithPermissions(resource, permission, WebPermission.ACCESS_PLAYER_SELF).getUsername());
         int responseCodeWithPermission = access(resource, cookie);
         int responseCodeWithout = access(resource, cookieNoAccess);
 
@@ -290,10 +438,10 @@ class AccessControlTest {
 
         String groupName = StringUtils.truncate(resource, 75);
         db.executeTransaction(
-                new StoreWebGroupTransaction(groupName, Arrays.stream(permissions).map(WebPermission::getPermission).collect(Collectors.toList()))
+                new StoreWebGroupTransaction(groupName, Arrays.stream(permissions).map(WebPermission::getPermission).toList())
         ).get();
 
-        User user = new User(RandomData.randomString(45), "console", null, PassEncryptUtil.createHash("testPass"), groupName, Collections.emptyList());
+        User user = new User(RandomData.randomString(45), "console", TestConstants.PLAYER_ONE_UUID, PassEncryptUtil.createHash("testPass"), groupName, Collections.emptyList());
         db.executeTransaction(new StoreWebUserTransaction(user)).get();
 
         return user;

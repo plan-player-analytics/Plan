@@ -20,8 +20,7 @@ import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 
-import static com.djrapitops.plan.storage.database.sql.building.Sql.DELETE_FROM;
-import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Table information about 'plan_cookies'
@@ -29,6 +28,8 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
  * @author AuroraLS3
  */
 public class CookieTable {
+
+    public static final int MAX_IP_ADDRESS_LENGTH = 1000;
 
     public static final String TABLE_NAME = "plan_cookies";
 
@@ -38,7 +39,7 @@ public class CookieTable {
     public static final String IP_ADDRESS = "ip_address";
     public static final String EXPIRES = "expires";
 
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " (" +
             WEB_USERNAME + ',' +
             COOKIE + ',' +
             EXPIRES + ',' +
@@ -65,7 +66,7 @@ public class CookieTable {
                 .column(WEB_USERNAME, Sql.varchar(100)).notNull()
                 .column(EXPIRES, Sql.LONG).notNull()
                 .column(COOKIE, Sql.varchar(64)).notNull()
-                .column(IP_ADDRESS, Sql.varchar(45)) // Max IPv6 text length 45 chars
+                .column(IP_ADDRESS, Sql.varchar(MAX_IP_ADDRESS_LENGTH)) // Max IPv6 text length 45 chars
                 .toString();
     }
 }

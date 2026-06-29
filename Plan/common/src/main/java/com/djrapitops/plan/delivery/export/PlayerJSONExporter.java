@@ -54,7 +54,7 @@ public class PlayerJSONExporter extends FileExporter {
             return;
         }
 
-        Path to = toDirectory.resolve("player/" + toFileName(playerName) + ".json");
+        Path to = toDirectory.resolve("player/" + toFileName(playerName, "json"));
         exportJSON(to, playerUUID);
     }
 

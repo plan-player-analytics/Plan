@@ -19,7 +19,6 @@ package com.djrapitops.plan.settings;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.changes.ConfigUpdater;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
-import com.djrapitops.plan.settings.network.ServerSettingsManager;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
@@ -35,7 +34,7 @@ import java.io.IOException;
  * @author AuroraLS3
  */
 @Singleton
-public class SpongeConfigSystem extends BukkitConfigSystem {
+public class SpongeConfigSystem extends GameServerConfigSystem {
 
     private boolean firstInstall;
 
@@ -44,12 +43,11 @@ public class SpongeConfigSystem extends BukkitConfigSystem {
             PlanFiles files,
             PlanConfig config,
             ConfigUpdater configUpdater,
-            ServerSettingsManager serverSettingsManager,
             Theme theme,
             PluginLogger logger,
             ErrorLogger errorLogger
     ) {
-        super(files, config, configUpdater, serverSettingsManager, theme, logger, errorLogger);
+        super(files, config, configUpdater, theme, logger, errorLogger);
     }
 
     @Override

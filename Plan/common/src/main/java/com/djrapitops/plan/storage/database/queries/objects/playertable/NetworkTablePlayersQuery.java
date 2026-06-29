@@ -72,15 +72,22 @@ public class NetworkTablePlayersQuery implements Query<List<TablePlayer>> {
 
         String selectPingData = SELECT +
                 "p." + PingTable.USER_ID + ',' +
-                "AVG(p." + PingTable.AVG_PING + ") as " + PingTable.AVG_PING + "," +
-                "MAX(p." + PingTable.MAX_PING + ") as " + PingTable.MAX_PING + "," +
-                "MIN(p." + PingTable.MIN_PING + ") as " + PingTable.MIN_PING +
+                avg("p." + PingTable.AVG_PING) + " as " + PingTable.AVG_PING + "," +
+                max("p." + PingTable.MAX_PING) + " as " + PingTable.MAX_PING + "," +
+                min("p." + PingTable.MIN_PING) + " as " + PingTable.MIN_PING +
                 FROM + PingTable.TABLE_NAME + " p" +
                 GROUP_BY + "p." + PingTable.USER_ID;
 
         String selectBanned = SELECT + DISTINCT + "ub." + UserInfoTable.USER_ID +
                 FROM + UserInfoTable.TABLE_NAME + " ub" +
                 WHERE + UserInfoTable.BANNED + "=?";
+
+        String selectNicknames = SELECT +
+                "un." + UsersTable.ID + ',' +
+                "GROUP_CONCAT(DISTINCT " + "n." + NicknamesTable.NICKNAME + ") as nicknames" +
+                FROM + NicknamesTable.TABLE_NAME + " n" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " un ON n." + NicknamesTable.USER_UUID + "=un." + UsersTable.USER_UUID +
+                GROUP_BY + "un." + UsersTable.ID;
 
         String selectBaseUsers = SELECT +
                 "u." + UsersTable.USER_UUID + ',' +
@@ -94,13 +101,15 @@ public class NetworkTablePlayersQuery implements Query<List<TablePlayer>> {
                 "act.activity_index," +
                 "pi.min_ping," +
                 "pi.max_ping," +
-                "pi.avg_ping" +
+                "pi.avg_ping," +
+                "ni.nicknames" +
                 FROM + UsersTable.TABLE_NAME + " u" +
                 LEFT_JOIN + '(' + selectBanned + ") ban on ban." + UserInfoTable.USER_ID + "=u." + UsersTable.ID +
                 LEFT_JOIN + '(' + selectLatestGeolocations + ") geo on geo." + GeoInfoTable.USER_ID + "=u." + UsersTable.ID +
                 LEFT_JOIN + '(' + selectSessionData + ") ses on ses." + SessionsTable.USER_ID + "=u." + UsersTable.ID +
                 LEFT_JOIN + '(' + NetworkActivityIndexQueries.selectActivityIndexSQL() + ") act on u." + UsersTable.ID + "=act." + UserInfoTable.USER_ID +
                 LEFT_JOIN + '(' + selectPingData + ") pi on pi." + PingTable.USER_ID + "=u." + UsersTable.ID +
+                LEFT_JOIN + '(' + selectNicknames + ") ni on ni." + UsersTable.ID + "=u." + UsersTable.ID +
                 ORDER_BY + "ses.last_seen DESC LIMIT ?";
 
         return db.query(new QueryStatement<>(selectBaseUsers, 1000) {
@@ -127,7 +136,8 @@ public class NetworkTablePlayersQuery implements Query<List<TablePlayer>> {
                             .ping(new Ping(0L, null,
                                     set.getInt(PingTable.MIN_PING),
                                     set.getInt(PingTable.MAX_PING),
-                                    set.getDouble(PingTable.AVG_PING)));
+                                    set.getDouble(PingTable.AVG_PING)))
+                            .nicknames(set.getString("nicknames"));
                     if (set.getString("banned") != null) {
                         player.banned();
                     }

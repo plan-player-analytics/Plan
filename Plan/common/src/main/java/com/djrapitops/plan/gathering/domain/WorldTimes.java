@@ -18,10 +18,8 @@ package com.djrapitops.plan.gathering.domain;
 
 import org.apache.commons.text.TextStringBuilder;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Class that tracks the time spent in each World based on GMTimes.
@@ -140,6 +138,19 @@ public class WorldTimes {
         return times;
     }
 
+    public Map<String, Long> computeWorldTimes() {
+        return times.entrySet().stream()
+                .collect(Collectors.toMap(Map.Entry::getKey, entry -> entry.getValue().getTotal()));
+    }
+
+    public Map<String, Long> computeGMTimes() {
+        return times.values().stream()
+                .map(TimeKeeper::getTimes)
+                .map(Map::entrySet)
+                .flatMap(Set::stream)
+                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, Long::sum));
+    }
+
     public void setGMTimesForWorld(String world, GMTimes gmTimes) {
         times.put(world, gmTimes);
     }
@@ -204,7 +215,7 @@ public class WorldTimes {
         return "{\"times\": {" +
                 new TextStringBuilder().appendWithSeparators(times.entrySet().stream()
                         .map(entry -> "\"" + entry.getKey() + "\": " + entry.getValue().toJson())
-                        .iterator(), ",").build() +
+                        .iterator(), ",").get() +
                 "  }," +
                 (currentWorld != null ? "\"currentWorld\": \"" + currentWorld + "\"," : "\"currentWorld\": null,") +
                 (currentGamemode != null ? "\"currentGamemode\": \"" + currentGamemode + "\"" : "\"currentGamemode\": null") +

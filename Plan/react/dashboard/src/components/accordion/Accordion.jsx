@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {useTheme} from "../../hooks/themeHook";
+import {useTheme} from "../../hooks/themeHook.tsx";
 
 const SliceHeader = ({i, open, onClick, slice}) => {
     let style = 'bg-' + slice.color + (slice.outline ? '-outline' : '');

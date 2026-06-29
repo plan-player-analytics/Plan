@@ -41,6 +41,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -84,6 +85,26 @@ public class SaveThemeJSONResolver implements Resolver {
                 || result.getNightColors() == null || result.getNightColors().isEmpty()
                 || result.getUseCases() == null || result.getUseCases().isEmpty()
                 || result.getNightModeUseCases() == null || result.getNightModeUseCases().isEmpty();
+    }
+
+    private static void validateVariable(List<String> issues, String value, String prefixedKey) {
+        if (!Strings.CS.startsWith(value, "var(--color-")) {
+            issues.add(prefixedKey + " is not a color variable");
+        }
+        if (!Strings.CS.endsWith(value, ")")) {
+            issues.add(prefixedKey + " is not a color variable");
+        }
+        if (!colorPattern.matcher(value).matches()) {
+            issues.add(prefixedKey + " has invalid character");
+        }
+    }
+
+    private static void validateListVariables(List<String> issues, List<String> value, String prefixedKey) {
+        for (String color : value) {
+            if (!themeFilePattern.matcher(color).matches()) {
+                issues.add(prefixedKey + " has invalid character");
+            }
+        }
     }
 
     @Override
@@ -199,21 +220,9 @@ public class SaveThemeJSONResolver implements Resolver {
             Object value = entry.getValue();
             try {
                 if (value instanceof String) {
-                    if (!StringUtils.startsWith((String) value, "var(--color-")) {
-                        issues.add(prefixedKey + " is not a color variable");
-                    }
-                    if (!StringUtils.endsWith((String) value, ")")) {
-                        issues.add(prefixedKey + " is not a color variable");
-                    }
-                    if (!colorPattern.matcher((String) value).matches()) {
-                        issues.add(prefixedKey + " has invalid character");
-                    }
+                    validateVariable(issues, (String) value, prefixedKey);
                 } else if (value instanceof List) {
-                    for (String color : (List<String>) value) {
-                        if (!themeFilePattern.matcher(color).matches()) {
-                            issues.add(prefixedKey + " has invalid character");
-                        }
-                    }
+                    validateListVariables(issues, (List<String>) value, prefixedKey);
                 } else if (value instanceof Map) {
                     validateUseCases(prefixedKey + '.', (Map<String, Object>) value, issues);
                 } else {

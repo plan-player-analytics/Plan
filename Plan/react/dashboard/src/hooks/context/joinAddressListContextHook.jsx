@@ -1,7 +1,7 @@
 import {createContext, useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {randomUuid} from "../../util/uuid.js";
 import {fetchPlayerJoinAddresses} from "../../service/serverService.js";
-import {useNavigation} from "../navigationHook.jsx";
+import {useNavigation} from "../navigationHook.tsx";
 import {usePreferences} from "../preferencesHook.jsx";
 import {useTranslation} from "react-i18next";
 

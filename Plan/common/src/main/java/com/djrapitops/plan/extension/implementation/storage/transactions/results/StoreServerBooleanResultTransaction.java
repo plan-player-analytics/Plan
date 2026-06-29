@@ -33,6 +33,7 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.djrapitops.plan.storage.database.sql.building.Sql.INSERT_INTO;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 import static com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionServerValueTable.*;
 
@@ -97,7 +98,7 @@ public class StoreServerBooleanResultTransaction extends ThrowawayTransaction {
     }
 
     private Executable insertValue() {
-        String sql = "INSERT INTO " + TABLE_NAME + "(" +
+        String sql = INSERT_INTO + TABLE_NAME + "(" +
                 BOOLEAN_VALUE + "," +
                 PROVIDER_ID +
                 ") VALUES (?," + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID + ")";
@@ -137,7 +138,7 @@ public class StoreServerBooleanResultTransaction extends ThrowawayTransaction {
                 (value ? Sql.concat(dbType, "'not_'", "indb.provided_condition") : "indb.provided_condition") +
                 " AND indb.plugin_id=unfulfilled.plugin_id" +
                 " WHERE indb.id=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID +
-                " AND indb.provided_condition IS NOT NULL";
+                " AND indb.provided_condition IS NOT NULL" + lockForUpdate();
 
         return extractIds(selectUnsatisfiedProviderIds);
     }
@@ -169,7 +170,7 @@ public class StoreServerBooleanResultTransaction extends ThrowawayTransaction {
                 (value ? Sql.concat(dbType, "'not_'", "indb.provided_condition") : "indb.provided_condition") +
                 " AND indb.plugin_id=unfulfilled.plugin_id" +
                 " WHERE indb.id=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID +
-                " AND indb.provided_condition IS NOT NULL";
+                " AND indb.provided_condition IS NOT NULL" + lockForUpdate();
 
         return extractIds(selectUnsatisfiedProviderIds);
     }

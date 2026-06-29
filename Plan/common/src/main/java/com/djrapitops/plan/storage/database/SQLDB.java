@@ -32,8 +32,7 @@ import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.OperationCriticalTransaction;
-import com.djrapitops.plan.storage.database.transactions.init.RemoveIncorrectTebexPackageDataPatch;
-import com.djrapitops.plan.storage.database.transactions.patches.*;
+import com.djrapitops.plan.storage.database.transactions.patches.Patch;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.java.ThrowableUtils;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
@@ -66,30 +65,26 @@ import java.util.function.Supplier;
  */
 public abstract class SQLDB extends AbstractDatabase {
 
-    private static boolean downloadDriver = true;
-
     private static final List<Repository> DRIVER_REPOSITORIES = Arrays.asList(
             new MavenRepository("https://repo.papermc.io/repository/maven-public"),
             new MavenRepository("https://repo1.maven.org/maven2")
     );
-
-    private final Supplier<ServerUUID> serverUUIDSupplier;
-
+    private static final ThreadLocal<StackTraceElement[]> TRANSACTION_ORIGIN = new ThreadLocal<>();
+    private static boolean downloadDriver = true;
     protected final Locale locale;
     protected final PlanConfig config;
     protected final PlanFiles files;
     protected final RunnableFactory runnableFactory;
     protected final PluginLogger logger;
     protected final ErrorLogger errorLogger;
-    private static final ThreadLocal<StackTraceElement[]> TRANSACTION_ORIGIN = new ThreadLocal<>();
     protected final ApplicationDependencyManager applicationDependencyManager;
-
-    private Supplier<ExecutorService> transactionExecutorServiceProvider;
-    private ExecutorService transactionExecutor;
+    private final Supplier<ServerUUID> serverUUIDSupplier;
     private final AtomicInteger transactionQueueSize = new AtomicInteger(0);
-    protected ClassLoader driverClassLoader;
     private final AtomicBoolean dropUnimportantTransactions = new AtomicBoolean(false);
     private final AtomicBoolean ranIntoFatalError = new AtomicBoolean(false);
+    protected ClassLoader driverClassLoader;
+    private Supplier<ExecutorService> transactionExecutorServiceProvider;
+    private ExecutorService transactionExecutor;
 
     protected SQLDB(
             Supplier<ServerUUID> serverUUIDSupplier,
@@ -112,7 +107,7 @@ public abstract class SQLDB extends AbstractDatabase {
 
         this.transactionExecutorServiceProvider = () -> {
             String nameFormat = "Plan " + getClass().getSimpleName() + "-transaction-thread-%d";
-            return Executors.newSingleThreadExecutor(new BasicThreadFactory.Builder()
+            return Executors.newSingleThreadExecutor(BasicThreadFactory.builder()
                     .namingPattern(nameFormat)
                     .uncaughtExceptionHandler((thread, throwable) -> {
                         if (config.isTrue(PluginSettings.DEV_MODE)) {
@@ -128,11 +123,11 @@ public abstract class SQLDB extends AbstractDatabase {
         SQLDB.downloadDriver = downloadDriver;
     }
 
-    protected abstract List<String> getDependencyResource();
-
     public static ThreadLocal<StackTraceElement[]> getTransactionOrigin() {
         return TRANSACTION_ORIGIN;
     }
+
+    protected abstract List<String> getDependencyResource();
 
     public void downloadDriver() {
         if (downloadDriver) {
@@ -203,61 +198,7 @@ public abstract class SQLDB extends AbstractDatabase {
     }
 
     Patch[] patches() {
-        return new Patch[]{
-                new Version10Patch(),
-                new GeoInfoLastUsedPatch(),
-                new SessionAFKTimePatch(),
-                new KillsServerIDPatch(),
-                new WorldTimesSeverIDPatch(),
-                new WorldsServerIDPatch(),
-                new NicknameLastSeenPatch(),
-                new VersionTableRemovalPatch(),
-                new DiskUsagePatch(),
-                new WorldsOptimizationPatch(),
-                new KillsOptimizationPatch(),
-                new NicknamesOptimizationPatch(),
-                new TransferTableRemovalPatch(),
-                // new BadAFKThresholdValuePatch(),
-                new DeleteIPsPatch(),
-                new ExtensionShowInPlayersTablePatch(),
-                new ExtensionTableRowValueLengthPatch(),
-                new CommandUsageTableRemovalPatch(),
-                new BadNukkitRegisterValuePatch(),
-                new LinkedToSecurityTablePatch(),
-                new LinkUsersToPlayersSecurityTablePatch(),
-                new LitebansTableHeaderPatch(),
-                new UserInfoHostnamePatch(),
-                new ServerIsProxyPatch(),
-                new ServerTableRowPatch(),
-                new PlayerTableRowPatch(),
-                new ExtensionTableProviderValuesForPatch(),
-                new RemoveIncorrectTebexPackageDataPatch(),
-                new ExtensionTableProviderFormattersPatch(),
-                new ServerPlanVersionPatch(),
-                new RemoveDanglingUserDataPatch(),
-                new RemoveDanglingServerDataPatch(),
-                new GeoInfoOptimizationPatch(),
-                new PingOptimizationPatch(),
-                new UserInfoOptimizationPatch(),
-                new WorldTimesOptimizationPatch(),
-                new SessionsOptimizationPatch(),
-                new UserInfoHostnameAllowNullPatch(),
-                new RegisterDateMinimizationPatch(),
-                new UsersTableNameLengthPatch(),
-                new SessionJoinAddressPatch(),
-                new RemoveUsernameFromAccessLogPatch(),
-                new ComponentColumnToExtensionDataPatch(),
-                new BadJoinAddressDataCorrectionPatch(),
-                new AfterBadJoinAddressDataCorrectionPatch(),
-                new CorrectWrongCharacterEncodingPatch(logger, config),
-                new UpdateWebPermissionsPatch(),
-                new WebGroupDefaultGroupsPatch(),
-                new WebGroupAddMissingAdminGroupPatch(),
-                new LegacyPermissionLevelGroupsPatch(),
-                new SecurityTableGroupPatch(),
-                new ExtensionStringValueLengthPatch(),
-                new CookieTableIpAddressPatch()
-        };
+        return Patches.getAll(logger, config);
     }
 
     /**
@@ -301,7 +242,7 @@ public abstract class SQLDB extends AbstractDatabase {
                         errorLogger.warn(e);
                     }
                 }
-            }).runTaskLaterAsynchronously(TimeAmount.toTicks(1, TimeUnit.MINUTES));
+            }).runTaskLaterAsynchronously(TimeAmount.toTicks(0, TimeUnit.MINUTES));
         } catch (Exception ignore) {
             // Task failed to register because plugin is being disabled
         }

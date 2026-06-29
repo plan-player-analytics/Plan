@@ -20,6 +20,7 @@ import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.FROM;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.INSERT_INTO;
 
 /**
  * Replaces user_id and server_id foreign keys with respective uuid fields in user info table.
@@ -51,7 +52,7 @@ public class UserInfoOptimizationPatch extends Patch {
             tempOldTable();
             execute(UserInfoTable.createTableSQL(dbType));
 
-            execute("INSERT INTO " + tableName + " (" +
+            execute(INSERT_INTO + tableName + " (" +
                     UserInfoTable.USER_ID + ',' +
                     UserInfoTable.SERVER_ID + ',' +
                     UserInfoTable.REGISTERED + ',' +

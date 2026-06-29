@@ -18,8 +18,8 @@ package com.djrapitops.plan.delivery.webserver.resolver.json.query;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
-import com.djrapitops.plan.delivery.domain.datatransfer.FilterDto;
-import com.djrapitops.plan.delivery.domain.datatransfer.ViewDto;
+import com.djrapitops.plan.delivery.domain.datatransfer.query.FilterDto;
+import com.djrapitops.plan.delivery.domain.datatransfer.query.ViewDto;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.JSONFactory;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;

@@ -109,7 +109,7 @@ public class RemoveDanglingUserDataPatch extends Patch {
     }
 
     private Query<Set<String>> getUuids(String tableName) {
-        String sql = "SELECT DISTINCT uuid FROM " + tableName;
+        String sql = "SELECT DISTINCT uuid FROM " + tableName + lockForUpdate();
 
         return new QueryAllStatement<>(sql) {
             @Override

@@ -25,6 +25,7 @@ import com.djrapitops.plan.delivery.webserver.http.WebServer;
 import com.djrapitops.plan.delivery.webserver.resolver.json.metadata.*;
 import com.djrapitops.plan.delivery.webserver.resolver.json.plugins.ExtensionJSONResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.json.plugins.PluginHistoryJSONResolver;
+import com.djrapitops.plan.delivery.webserver.resolver.json.query.DataPointJSONResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.json.query.FiltersJSONResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.json.query.QueryJSONResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.json.theme.DeleteThemeJSONResolver;
@@ -96,6 +97,8 @@ public class RootJSONResolver {
             PlayerJoinAddressJSONResolver playerJoinAddressJSONResolver,
             PluginHistoryJSONResolver pluginHistoryJSONResolver,
             AllowlistJSONResolver allowlistJSONResolver,
+            PlayersOnlineJSONResolver playersOnlineJSONResolver,
+            DataPointJSONResolver dataPointJSONResolver,
 
             ThemeJSONResolver themeJSONResolver,
             SaveThemeJSONResolver saveThemeJSONResolver,
@@ -122,6 +125,7 @@ public class RootJSONResolver {
                 .add("pingTable", forJSON(DataID.PING_TABLE, jsonFactory::pingPerGeolocation, WebPermission.PAGE_SERVER_GEOLOCATIONS_PING_PER_COUNTRY))
                 .add("serverOverview", forJSON(DataID.SERVER_OVERVIEW, serverOverviewJSONCreator, WebPermission.PAGE_SERVER_OVERVIEW_NUMBERS))
                 .add("onlineOverview", forJSON(DataID.ONLINE_OVERVIEW, onlineActivityOverviewJSONCreator, WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_OVERVIEW))
+                .add("onlineInsights", forJSON(DataID.ONLINE_OVERVIEW, onlineActivityOverviewJSONCreator::createJustInsightsJSONAsMap, WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_OVERVIEW))
                 .add("sessionsOverview", forJSON(DataID.SESSIONS_OVERVIEW, sessionsOverviewJSONCreator, WebPermission.PAGE_SERVER_SESSIONS_OVERVIEW))
                 .add("playerVersus", forJSON(DataID.PVP_PVE, pvPPvEJSONCreator, WebPermission.PAGE_SERVER_PLAYER_VERSUS_OVERVIEW))
                 .add("playerbaseOverview", forJSON(DataID.PLAYERBASE_OVERVIEW, playerBaseOverviewJSONCreator, WebPermission.PAGE_SERVER_PLAYERBASE_OVERVIEW))
@@ -142,7 +146,9 @@ public class RootJSONResolver {
                 .add("joinAddresses", playerJoinAddressJSONResolver)
                 .add("preferences", preferencesJSONResolver)
                 .add("gameAllowlistBounces", allowlistJSONResolver)
-                .add("theme", themeJSONResolver);
+                .add("theme", themeJSONResolver)
+                .add("playersOnline", playersOnlineJSONResolver)
+                .add("datapoint", dataPointJSONResolver);
 
         this.webServer = webServer;
         // These endpoints require authentication to be enabled.

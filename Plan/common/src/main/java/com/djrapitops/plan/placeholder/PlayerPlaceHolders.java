@@ -145,10 +145,25 @@ public class PlayerPlaceHolders implements Placeholders {
                 player -> year.apply(player.getValue(PlayerKeys.LAST_SEEN)
                         .orElse((long) 0))
         );
+        placeholders.register("player_lastseen_server",
+                player -> SessionsMutator.forContainer(player).latestSession()
+                        .map(FinishedSession::getServerUUID)
+                        .flatMap(serverUUID -> dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverUUID)))
+                        .map(Server::getIdentifiableName)
+                        .orElse("-")
+        );
+        placeholders.register("player_lastseen_raw",
+                player -> player.getValue(PlayerKeys.LAST_SEEN)
+                        .orElse((long) 0)
+        );
 
         placeholders.register("player_registered",
                 player -> year.apply(player.getValue(PlayerKeys.REGISTERED)
                         .orElse((long) 0))
+        );
+        placeholders.register("player_registered_raw",
+                player -> player.getValue(PlayerKeys.REGISTERED)
+                        .orElse((long) 0)
         );
 
         placeholders.register("player_geolocation",
@@ -167,7 +182,7 @@ public class PlayerPlaceHolders implements Placeholders {
         );
 
         registerPlaytimePlaceholders(placeholders, time);
-        registerSessionLengethPlaceholders(placeholders, time);
+        registerSessionLengthPlaceholders(placeholders, time);
 
         placeholders.register("player_favorite_server",
                 player -> PerServerMutator.forContainer(player).favoriteServer()
@@ -192,7 +207,7 @@ public class PlayerPlaceHolders implements Placeholders {
         registerKillPlaceholders(placeholders);
     }
 
-    private void registerSessionLengethPlaceholders(PlanPlaceholders placeholders, Formatter<Long> time) {
+    private void registerSessionLengthPlaceholders(PlanPlaceholders placeholders, Formatter<Long> time) {
         placeholders.register("player_current_session_length",
                 player -> time.apply(getActiveSessionLength(player).orElse(-1L)));
         placeholders.register("player_current_session_length_raw",

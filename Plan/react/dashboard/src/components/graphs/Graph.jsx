@@ -1,4 +1,4 @@
-import {useTheme} from "../../hooks/themeHook";
+import {useTheme} from "../../hooks/themeHook.tsx";
 import React, {useEffect} from "react";
 import Highcharts from "highcharts/esm/highstock";
 import "highcharts/esm/modules/accessibility";

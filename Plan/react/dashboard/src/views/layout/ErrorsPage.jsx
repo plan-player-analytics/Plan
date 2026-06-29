@@ -9,7 +9,7 @@ import {fetchErrorLogs} from "../../service/metadataService";
 import ErrorPage from "./ErrorPage";
 import ErrorsAccordion from "../../components/accordion/ErrorsAccordion";
 import {Card} from "react-bootstrap";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const ErrorsPage = () => {
     const {hasPermission} = useAuth();

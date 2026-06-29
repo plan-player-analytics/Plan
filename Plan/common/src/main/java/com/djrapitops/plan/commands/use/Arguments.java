@@ -80,7 +80,7 @@ public class Arguments {
     }
 
     public String concatenate(String separator) {
-        return new TextStringBuilder().appendWithSeparators(args, separator).build();
+        return new TextStringBuilder().appendWithSeparators(args, separator).get();
     }
 
     public boolean isEmpty() {

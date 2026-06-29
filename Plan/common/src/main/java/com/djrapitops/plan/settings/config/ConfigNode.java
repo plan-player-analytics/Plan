@@ -23,12 +23,12 @@
  */
 package com.djrapitops.plan.settings.config;
 
-import com.djrapitops.plan.utilities.UnitSemaphoreAccessLock;
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.function.BiConsumer;
 import java.util.stream.Collectors;
 
@@ -39,13 +39,12 @@ import java.util.stream.Collectors;
  */
 public class ConfigNode {
 
-    protected final UnitSemaphoreAccessLock nodeModificationLock = new UnitSemaphoreAccessLock();
+    protected final ReentrantLock nodeModificationLock = new ReentrantLock();
 
     protected final String key;
-    protected ConfigNode parent;
-
-    protected List<String> nodeOrder;
     protected final Map<String, ConfigNode> childNodes;
+    protected ConfigNode parent;
+    protected List<String> nodeOrder;
     protected List<String> comment;
 
     protected String value;
@@ -129,10 +128,10 @@ public class ConfigNode {
         if (parent == null) {
             throw new IllegalStateException("Can not remove root node from a tree.");
         }
-        nodeModificationLock.enter();
+        nodeModificationLock.lock();
         parent.nodeOrder.remove(key);
         parent.childNodes.remove(key);
-        nodeModificationLock.exit();
+        nodeModificationLock.unlock();
 
         updateParent(null);
 
@@ -154,10 +153,10 @@ public class ConfigNode {
     protected ConfigNode addChild(ConfigNode child) {
         getNode(child.key).ifPresent(ConfigNode::remove);
 
-        nodeModificationLock.enter();
+        nodeModificationLock.lock();
         childNodes.put(child.key, child);
         nodeOrder.add(child.key);
-        nodeModificationLock.exit();
+        nodeModificationLock.unlock();
 
         child.updateParent(this);
         return child;
@@ -213,7 +212,7 @@ public class ConfigNode {
     }
 
     public void reorder(List<String> newOrder) {
-        nodeModificationLock.enter();
+        nodeModificationLock.lock();
         List<String> oldOrder = nodeOrder;
         nodeOrder = new ArrayList<>();
         for (String childKey : newOrder) {
@@ -224,7 +223,7 @@ public class ConfigNode {
         // Add those that were not in the new order, but are in the old order.
         oldOrder.removeAll(nodeOrder);
         nodeOrder.addAll(oldOrder);
-        nodeModificationLock.exit();
+        nodeModificationLock.unlock();
     }
 
     /**
@@ -264,10 +263,7 @@ public class ConfigNode {
     }
 
     private String getEnvironmentVariable() {
-        String key = getEnvironmentVariableKey();
-        String variable = System.getenv(key);
-        Map<String, String> env = System.getenv();
-        return variable;
+        return System.getenv(getEnvironmentVariableKey());
     }
 
     public List<String> getStringList() {
@@ -379,40 +375,50 @@ public class ConfigNode {
     }
 
     public void copyMissing(ConfigNode from) {
-        // Override comment conditionally
-        if (comment.size() < from.comment.size()) {
-            comment = from.comment;
-        }
+        nodeModificationLock.lock();
+        try {
+            // Override comment conditionally
+            if (comment.size() < from.comment.size()) {
+                comment = from.comment;
+            }
 
-        // Override value conditionally
-        boolean currentValueIsMissing = value == null || value.isEmpty();
-        boolean otherNodeHasValue = from.value != null && !from.value.isEmpty();
-        if (currentValueIsMissing && otherNodeHasValue) {
-            value = from.value;
-        }
+            // Override value conditionally
+            boolean currentValueIsMissing = value == null || value.isEmpty();
+            boolean otherNodeHasValue = from.value != null && !from.value.isEmpty();
+            if (currentValueIsMissing && otherNodeHasValue) {
+                value = from.value;
+            }
 
-        // Copy all nodes from 'from'
-        for (String childKey : from.nodeOrder) {
-            ConfigNode newChild = from.childNodes.get(childKey);
+            // Copy all nodes from 'from'
+            for (String childKey : from.nodeOrder) {
+                ConfigNode newChild = from.childNodes.get(childKey);
 
-            // Copy values recursively to children
-            ConfigNode created = addNode(childKey);
-            created.copyMissing(newChild);
+                // Copy values recursively to children
+                ConfigNode created = addNode(childKey);
+                created.copyMissing(newChild);
+            }
+        } finally {
+            nodeModificationLock.unlock();
         }
     }
 
     public void copyAll(ConfigNode from) {
-        // Override comment and value unconditionally.
-        comment = from.comment;
-        value = from.value;
+        nodeModificationLock.lock();
+        try {
+            // Override comment and value unconditionally.
+            comment = from.comment;
+            value = from.value;
 
-        // Copy all nodes from 'from'
-        for (String childKey : from.nodeOrder) {
-            ConfigNode newChild = from.childNodes.get(childKey);
+            // Copy all nodes from 'from'
+            for (String childKey : from.nodeOrder) {
+                ConfigNode newChild = from.childNodes.get(childKey);
 
-            // Copy values recursively to children
-            ConfigNode created = addNode(childKey);
-            created.copyAll(newChild);
+                // Copy values recursively to children
+                ConfigNode created = addNode(childKey);
+                created.copyAll(newChild);
+            }
+        } finally {
+            nodeModificationLock.unlock();
         }
     }
 

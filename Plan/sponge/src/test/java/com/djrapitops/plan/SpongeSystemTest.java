@@ -40,19 +40,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class SpongeSystemTest {
 
-    private final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
+    private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 
     private PlanSystem system;
 
     @BeforeEach
-    void prepareSpongeSystem(@TempDir Path temp) throws Exception {
+    void prepareSpongeSystem(@TempDir Path temp) {
         system = new SpongeMockComponent(temp).getPlanSystem();
         system.getConfigSystem().getConfig()
                 .set(WebserverSettings.PORT, TEST_PORT_NUMBER);
     }
 
     @Test
-    void spongeSystemEnables() throws EnableException {
+    void spongeSystemEnables() {
         try {
             system.enable();
             assertTrue(system.isEnabled());

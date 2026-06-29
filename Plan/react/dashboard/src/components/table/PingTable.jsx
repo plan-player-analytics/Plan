@@ -2,14 +2,17 @@ import React from "react";
 import {useTranslation} from "react-i18next";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faGlobe, faSignal} from "@fortawesome/free-solid-svg-icons";
-import {formatDecimals} from "../../util/formatters.js";
 import {usePreferences} from "../../hooks/preferencesHook.jsx";
 import DataTablesTable from "./DataTablesTable.jsx";
 import {localeService, reverseRegionLookupMap} from "../../service/localeService.js";
+import {usePingFormatter} from "../../util/format/usePingFormatter.js";
+import {useDecimalFormatter} from "../../util/format/useDecimalFormatter.js";
 
 const PingTable = ({countries}) => {
     const {t} = useTranslation();
-    const {preferencesLoaded, decimalFormat} = usePreferences();
+    const {preferencesLoaded} = usePreferences();
+    const {formatPing} = usePingFormatter();
+    const {formatDecimals} = useDecimalFormatter();
 
     const columns = [{
         title: <><Fa icon={faGlobe}/> {t('html.label.country')}</>,
@@ -33,11 +36,11 @@ const PingTable = ({countries}) => {
         return {
             country: location,
             pingAverage: country.avg_ping,
-            pingAverageFormatted: localeService.localizePing(formatDecimals(country.avg_ping, decimalFormat)),
+            pingAverageFormatted: formatPing(formatDecimals(country.avg_ping)),
             pingMax: country.max_ping,
-            pingMaxFormatted: localeService.localizePing(country.max_ping),
+            pingMaxFormatted: formatPing(country.max_ping),
             pingMin: country.min_ping,
-            pingMinFormatted: localeService.localizePing(country.min_ping)
+            pingMinFormatted: formatPing(country.min_ping)
         };
     });
     const options = {

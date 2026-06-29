@@ -1,7 +1,7 @@
 import {useEffect, useMemo, useState} from "react";
-import {useNavigation} from "./navigationHook";
+import {useNavigation} from "./navigationHook.tsx";
 import {useDataStore} from "./datastoreHook";
-import {useMetadata} from "./metadataHook";
+import {useMetadata} from "./metadataHook.tsx";
 import {staticSite} from "../service/backendConfiguration";
 
 export const useDataRequest = (fetchMethod, parameters, shouldRequest) => {

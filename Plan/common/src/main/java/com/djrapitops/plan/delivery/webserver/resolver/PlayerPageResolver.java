@@ -26,7 +26,7 @@ import com.djrapitops.plan.delivery.webserver.ResponseFactory;
 import com.djrapitops.plan.identification.UUIDUtility;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.utilities.dev.Untrusted;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
@@ -78,7 +78,7 @@ public class PlayerPageResolver implements Resolver {
     @Override
     public Optional<Response> resolve(Request request) {
         @Untrusted URIPath path = request.getPath();
-        if (StringUtils.containsAny(path.asString(), "/vendor/", "/js/", "/css/", "/img/", "/static/")) {
+        if (Strings.CS.containsAny(path.asString(), "/vendor/", "/js/", "/css/", "/img/", "/static/")) {
             return Optional.empty();
         }
         return path.getPart(1)

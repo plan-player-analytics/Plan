@@ -41,6 +41,8 @@ public class ResourceSettings {
     }
 
     public boolean shouldBeCustomized(String plugin, @Untrusted String fileName) {
+        if ("Plan".equals(plugin)) return false;
+
         ConfigNode fileCustomization = getCustomizationConfigNode();
         fileCustomization.setComment(Collections.singletonList("The files are placed in /Plan/web/ if the setting is 'true' when accessed."));
 

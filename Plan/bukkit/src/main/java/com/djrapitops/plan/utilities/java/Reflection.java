@@ -27,6 +27,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Server;
 
 import java.lang.reflect.Field;
+import java.util.Optional;
 
 /**
  * An utility class that simplifies reflection in Bukkit plugins.
@@ -44,6 +45,35 @@ public final class Reflection {
 
     private Reflection() {
         // Seal class
+    }
+
+    public static Optional<Object> getMinecraftServer() {
+        Optional<Object> minecraftServerBeforeV1p17 = getMinecraftServerBeforeV1p17();
+        if (minecraftServerBeforeV1p17.isPresent()) {return minecraftServerBeforeV1p17;}
+        return getMinecraftServerAfterV1p17();
+    }
+
+    private static Optional<Object> getMinecraftServerBeforeV1p17() {
+        try {
+            Class<?> minecraftServerClass = Reflection.getMinecraftClass("MinecraftServer");
+            Object minecraftServer = Reflection.getField(minecraftServerClass, "SERVER", minecraftServerClass).get(null);
+
+            return Optional.ofNullable(minecraftServer);
+        } catch (Exception | NoClassDefFoundError | NoSuchFieldError e) {
+            return Optional.empty();
+        }
+    }
+
+    private static Optional<Object> getMinecraftServerAfterV1p17() {
+        try {
+            Class<?> minecraftServerClass = Reflection.getMinecraftClass("MinecraftServer");
+            Class<?> craftServerClass = Reflection.getCraftBukkitClass("CraftServer");
+            Object minecraftServer = Reflection.getField(craftServerClass, "console", minecraftServerClass).get(Bukkit.getServer());
+
+            return Optional.ofNullable(minecraftServer);
+        } catch (Exception | NoClassDefFoundError | NoSuchFieldError e) {
+            return Optional.empty();
+        }
     }
 
     private static String getOBCPrefix() {
@@ -109,6 +139,46 @@ public final class Reflection {
         throw new IllegalArgumentException("Cannot find field with type " + fieldType);
     }
 
+    public static <T> FieldAccessor<T> findField(Class<?> target, Class<T> fieldType) {
+        for (final Field field : target.getDeclaredFields()) {
+            if (fieldType.isAssignableFrom(field.getType())) {
+
+                return new FieldAccessor<>() {
+
+                    @Override
+                    @SuppressWarnings("unchecked")
+                    public T get(Object target) {
+                        try {
+                            if (!field.canAccess(target)) {
+                                field.setAccessible(true);
+                            }
+                            return (T) field.get(target);
+                        } catch (IllegalAccessException e) {
+                            throw new IllegalStateException("Cannot access reflection.", e);
+                        }
+                    }
+
+                    @Override
+                    public void set(Object target, Object value) {
+                        try {
+                            field.set(target, value);
+                        } catch (IllegalAccessException e) {
+                            throw new IllegalStateException("Cannot access reflection.", e);
+                        }
+                    }
+
+                    @Override
+                    public boolean hasField(Object target) {
+                        // target instanceof DeclaringClass
+                        return field.getDeclaringClass().isAssignableFrom(target.getClass());
+                    }
+                };
+            }
+        }
+
+        throw new IllegalArgumentException("Cannot find field with type " + fieldType);
+    }
+
     /**
      * Retrieve a class in the net.minecraft.server.VERSION.* package.
      *
@@ -117,7 +187,16 @@ public final class Reflection {
      * @throws IllegalArgumentException If the class doesn't exist.
      */
     public static Class<?> getMinecraftClass(String name) {
-        return getCanonicalClass(NMS_PREFIX + '.' + name);
+        try {
+            return getCanonicalClass(NMS_PREFIX + '.' + name);
+        } catch (IllegalArgumentException suppressed) {
+            try {
+                return getCanonicalClass("net.minecraft.server." + name);
+            } catch (IllegalArgumentException e) {
+                e.addSuppressed(suppressed);
+                throw e;
+            }
+        }
     }
 
     /**

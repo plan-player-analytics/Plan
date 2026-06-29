@@ -19,9 +19,9 @@ package net.playeranalytics.plan.gathering.domain;
 import com.djrapitops.plan.gathering.domain.PlatformPlayerData;
 import io.netty.channel.local.LocalAddress;
 import io.netty.channel.unix.DomainSocketAddress;
-import net.minecraft.server.dedicated.MinecraftDedicatedServer;
-import net.minecraft.server.network.ServerPlayerEntity;
-import net.minecraft.text.Text;
+import net.minecraft.network.chat.Component;
+import net.minecraft.server.dedicated.DedicatedServer;
+import net.minecraft.server.level.ServerPlayer;
 
 import java.net.*;
 import java.util.Optional;
@@ -29,11 +29,11 @@ import java.util.UUID;
 
 public class FabricPlayerData implements PlatformPlayerData {
 
-    private final ServerPlayerEntity player;
-    private final MinecraftDedicatedServer server;
+    private final ServerPlayer player;
+    private final DedicatedServer server;
     private final String joinAddress;
 
-    public FabricPlayerData(ServerPlayerEntity player, MinecraftDedicatedServer server, String joinAddress) {
+    public FabricPlayerData(ServerPlayer player, DedicatedServer server, String joinAddress) {
         this.player = player;
         this.server = server;
         this.joinAddress = joinAddress;
@@ -41,32 +41,32 @@ public class FabricPlayerData implements PlatformPlayerData {
 
     @Override
     public UUID getUUID() {
-        return player.getUuid();
+        return player.getUUID();
     }
 
     @Override
     public String getName() {
-        return player.getGameProfile().getName();
+        return player.getGameProfile().name();
     }
 
     @Override
     public Optional<String> getDisplayName() {
-        return Optional.ofNullable(player.getDisplayName()).map(Text::getString);
+        return Optional.of(player.getDisplayName()).map(Component::getString);
     }
 
     @Override
     public Optional<Boolean> isOperator() {
-        return Optional.of(server.getPlayerManager().getOpList().get(player.getGameProfile()) != null);
+        return Optional.of(server.getPlayerList().getOps().get(player.nameAndId()) != null);
     }
 
     @Override
     public Optional<String> getCurrentWorld() {
-        return Optional.of(player.getWorld().getRegistryKey().getValue().toString());
+        return Optional.of(player.level().dimension().identifier().toString());
     }
 
     @Override
     public Optional<String> getCurrentGameMode() {
-        return Optional.of(player.interactionManager.getGameMode().name());
+        return Optional.of(player.gameMode.getGameModeForPlayer().name());
     }
 
     @Override
@@ -76,7 +76,7 @@ public class FabricPlayerData implements PlatformPlayerData {
 
     private Optional<InetAddress> getIPFromSocketAddress() {
         try {
-            SocketAddress socketAddress = player.networkHandler.getConnectionAddress();
+            SocketAddress socketAddress = player.connection.getRemoteAddress();
             if (socketAddress instanceof InetSocketAddress inetSocketAddress) {
                 return Optional.of(inetSocketAddress.getAddress());
             } else if (socketAddress instanceof UnixDomainSocketAddress || socketAddress instanceof LocalAddress) {

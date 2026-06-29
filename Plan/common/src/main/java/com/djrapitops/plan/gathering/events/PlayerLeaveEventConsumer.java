@@ -17,8 +17,11 @@
 package com.djrapitops.plan.gathering.events;
 
 import com.djrapitops.plan.delivery.export.Exporter;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointCacheKey;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointStore;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.ExtensionSvc;
+import com.djrapitops.plan.gathering.PlayerGatheringTasks;
 import com.djrapitops.plan.gathering.cache.JoinAddressCache;
 import com.djrapitops.plan.gathering.cache.NicknameCache;
 import com.djrapitops.plan.gathering.cache.SessionCache;
@@ -47,20 +50,24 @@ public class PlayerLeaveEventConsumer {
     private final JoinAddressCache joinAddressCache;
     private final NicknameCache nicknameCache;
     private final SessionCache sessionCache;
+    private final DatapointStore datapointStore;
 
     private final ExtensionSvc extensionService;
     private final Exporter exporter;
+    private final PlayerGatheringTasks playerGatheringTasks;
 
     @Inject
-    public PlayerLeaveEventConsumer(Processing processing, PlanConfig config, DBSystem dbSystem, JoinAddressCache joinAddressCache, NicknameCache nicknameCache, SessionCache sessionCache, ExtensionSvc extensionService, Exporter exporter) {
+    public PlayerLeaveEventConsumer(Processing processing, PlanConfig config, DBSystem dbSystem, JoinAddressCache joinAddressCache, NicknameCache nicknameCache, SessionCache sessionCache, DatapointStore datapointStore, ExtensionSvc extensionService, Exporter exporter, PlayerGatheringTasks playerGatheringTasks) {
         this.processing = processing;
         this.config = config;
         this.dbSystem = dbSystem;
         this.joinAddressCache = joinAddressCache;
         this.nicknameCache = nicknameCache;
         this.sessionCache = sessionCache;
+        this.datapointStore = datapointStore;
         this.extensionService = extensionService;
         this.exporter = exporter;
+        this.playerGatheringTasks = playerGatheringTasks;
     }
 
     public void beforeLeave(PlayerLeave leave) {
@@ -121,5 +128,7 @@ public class PlayerLeaveEventConsumer {
         UUID playerUUID = leave.getPlayerUUID();
         nicknameCache.removeDisplayName(playerUUID);
         joinAddressCache.remove(playerUUID);
+        playerGatheringTasks.unregister(playerUUID);
+        datapointStore.clearLastModified(DatapointCacheKey.SESSION);
     }
 }

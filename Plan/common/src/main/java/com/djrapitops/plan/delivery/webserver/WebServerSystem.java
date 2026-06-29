@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieStore;
+import com.djrapitops.plan.delivery.webserver.auth.RegistrationBin;
 import com.djrapitops.plan.delivery.webserver.http.WebServer;
 import com.djrapitops.plan.storage.file.PublicHtmlFiles;
 import net.playeranalytics.plugin.server.PluginLogger;
@@ -35,6 +36,7 @@ public class WebServerSystem implements SubSystem {
 
     private final Addresses addresses;
     private final ActiveCookieStore activeCookieStore;
+    private final RegistrationBin registrationBin;
     private final PublicHtmlFiles publicHtmlFiles;
     private final WebServer webServer;
     private final PluginLogger logger;
@@ -42,12 +44,13 @@ public class WebServerSystem implements SubSystem {
     @Inject
     public WebServerSystem(
             Addresses addresses,
-            ActiveCookieStore activeCookieStore,
+            ActiveCookieStore activeCookieStore, RegistrationBin registrationBin,
             PublicHtmlFiles publicHtmlFiles,
             WebServer webServer,
             PluginLogger logger) {
         this.addresses = addresses;
         this.activeCookieStore = activeCookieStore;
+        this.registrationBin = registrationBin;
         this.publicHtmlFiles = publicHtmlFiles;
         this.webServer = webServer;
         this.logger = logger;
@@ -75,5 +78,17 @@ public class WebServerSystem implements SubSystem {
 
     public Addresses getAddresses() {
         return addresses;
+    }
+
+    public ActiveCookieStore getActiveCookieStore() {
+        return activeCookieStore;
+    }
+
+    public RegistrationBin getRegistrationBin() {
+        return registrationBin;
+    }
+
+    public PublicHtmlFiles getPublicHtmlFiles() {
+        return publicHtmlFiles;
     }
 }

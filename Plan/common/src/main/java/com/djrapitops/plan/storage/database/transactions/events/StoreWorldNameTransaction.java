@@ -52,7 +52,7 @@ public class StoreWorldNameTransaction extends Transaction {
         String sql = SELECT + "COUNT(1) as c" +
                 FROM + WorldTable.TABLE_NAME +
                 WHERE + WorldTable.NAME + "=?" +
-                AND + WorldTable.SERVER_UUID + "=?";
+                AND + WorldTable.SERVER_UUID + "=?" + lockForUpdate();
         return !query(new HasMoreThanZeroQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

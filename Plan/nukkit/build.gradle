@@ -16,6 +16,10 @@ dependencies {
     testImplementation(project(":extensions:adventure"))
 }
 
+compileJava {
+    options.release = 11
+}
+
 processResources {
     inputs.property("version", fullVersion)
 

@@ -18,6 +18,7 @@ package net.playeranalytics.plan;
 
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.commands.PlanCommand;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.types.DatapointModule;
 import com.djrapitops.plan.modules.FiltersModule;
 import com.djrapitops.plan.modules.PlatformAbstractionLayerModule;
 import dagger.BindsInstance;
@@ -33,6 +34,7 @@ import javax.inject.Singleton;
 @Component(modules = {
         PlatformAbstractionLayerModule.class,
         FiltersModule.class,
+        DatapointModule.class,
 
         StandaloneBindingModule.class,
         StandaloneProvidingModule.class,

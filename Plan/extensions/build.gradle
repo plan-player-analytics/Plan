@@ -11,7 +11,7 @@ dependencies {
     implementation "net.playeranalytics:Extension-DKBans:2.1.2-R1.3"
     implementation "net.playeranalytics:Extension-DKCoins:3.0.5-R1.1"
     implementation "net.playeranalytics:Extension-EssentialsX:2.15.0-R2.0"
-    implementation "net.playeranalytics:Extension-CMI:9.7.4.1-R0.1"
+    implementation "net.playeranalytics:Extension-CMI:9.7.4.1-R0.2"
     implementation "net.playeranalytics:Extension-Factions:2.14.0-R1.1"
     implementation "net.playeranalytics:Extension-FactionsUUID:1.6.9.5-U0.5.25-R1.1"
     implementation "net.playeranalytics:Extension-FastLogin:R1.3"
@@ -24,7 +24,7 @@ dependencies {
     implementation "net.playeranalytics:Extension-KingdomsX:1.12.6.3.1-R1.4"
     implementation "net.playeranalytics:Extension-Lands:6.35.0-R1.2"
     implementation "net.playeranalytics:Extension-LibertyBans:1.1.0-R1.6"
-    implementation "net.playeranalytics:Extension-Litebans:0.4.1-R1.5"
+    implementation "net.playeranalytics:Extension-Litebans:0.4.1-R2.0"
     implementation "net.playeranalytics:Extension-LogBlock:1.16.1.2-R1.9"
     implementation "net.playeranalytics:Extension-LuckPerms:5.0-R1.6"
     implementation "net.playeranalytics:Extension-MarriageMaster:2.3-R1.3"
@@ -33,7 +33,7 @@ dependencies {
     implementation "net.playeranalytics:Extension-MyPet:3.10-R1.2"
     implementation "net.playeranalytics:Extension-Nucleus:3.0.0-R1.0"
     implementation "net.playeranalytics:Extension-nuVotifier:2.3.4-R1.3"
-    implementation "net.playeranalytics:Extension-PlaceholderAPI:2.10.9-R1.6"
+    implementation "net.playeranalytics:Extension-PlaceholderAPI:2.10.9-R2.0"
     implementation "net.playeranalytics:Extension-PlotSquared:6.9.4-R1.3"
     implementation "net.playeranalytics:Extension-ProtectionStones:2.8.2-R1.2"
     implementation "net.playeranalytics:Extension-ProtocolSupport:1.16.4-R1.3"
@@ -46,4 +46,8 @@ dependencies {
     implementation "net.playeranalytics:Extension-Towny:0.99-R1.3"
     implementation "net.playeranalytics:Extension-Vault:1.7-R1.3"
     implementation "net.playeranalytics:Extension-ViaVersion:4.0.1-R1.5"
+}
+
+compileJava {
+    options.release = 11
 }

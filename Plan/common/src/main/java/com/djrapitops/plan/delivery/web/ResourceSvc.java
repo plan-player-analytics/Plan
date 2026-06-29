@@ -30,6 +30,7 @@ import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import dagger.Lazy;
 import net.playeranalytics.plugin.server.PluginLogger;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.text.TextStringBuilder;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,7 +53,7 @@ import java.util.function.Supplier;
 @Singleton
 public class ResourceSvc implements ResourceService {
 
-    public final Set<Snippet> snippets;
+    private final Set<Snippet> snippets;
     private final PublicHtmlFiles publicHtmlFiles;
     private final ResourceSettings resourceSettings;
     private final Locale locale;
@@ -78,10 +79,6 @@ public class ResourceSvc implements ResourceService {
         this.snippets = new HashSet<>();
     }
 
-    public void register() {
-        Holder.set(this);
-    }
-
     @Nullable
     @SuppressWarnings("deprecation") // Legacy method, backwards compatibility
     private static String applyLegacy(Map<Position, StringBuilder> byPosition, String html) {
@@ -105,6 +102,10 @@ public class ResourceSvc implements ResourceService {
         }
 
         return html;
+    }
+
+    public void register() {
+        Holder.set(this);
     }
 
     @Override
@@ -142,11 +143,11 @@ public class ResourceSvc implements ResourceService {
         if ("index.html".equals(fileName)) {
             StringBuilder toHead = byPosition.get(Position.PRE_CONTENT);
             if (toHead != null) {
-                html = StringUtils.replaceOnce(html, "</head>", toHead.append("</head>").toString());
+                html = Strings.CS.replaceOnce(html, "</head>", toHead.append("</head>").toString());
             }
             StringBuilder toBody = byPosition.get(Position.PRE_MAIN_SCRIPT);
             if (toBody != null) {
-                html = StringUtils.replaceOnce(html, "<script></script>", toBody.toString());
+                html = Strings.CS.replaceOnce(html, "<script></script>", toBody.toString());
             }
             return html;
         } else {
@@ -217,7 +218,7 @@ public class ResourceSvc implements ResourceService {
 
         String snippet = new TextStringBuilder("<script src=\"").append(getBasePath())
                 .appendWithSeparators(jsSources, "\"></script><script src=\"" + getBasePath())
-                .append("\"></script>").build();
+                .append("\"></script>").get();
         snippets.add(new Snippet(pluginName, fileName, position, snippet));
         if (!"Plan".equals(pluginName)) {
             logger.info(locale.getString(PluginLang.API_ADD_RESOURCE_JS, pluginName, fileName, position.cleanName()));
@@ -248,7 +249,7 @@ public class ResourceSvc implements ResourceService {
 
         String snippet = new TextStringBuilder("<link href=\"").append(getBasePath())
                 .appendWithSeparators(cssSources, "\" rel=\"stylesheet\"></link><link href=\"" + getBasePath())
-                .append("\" rel=\"stylesheet\">").build();
+                .append("\" rel=\"stylesheet\">").get();
         snippets.add(new Snippet(pluginName, fileName, position, snippet));
         if (!"Plan".equals(pluginName)) {
             logger.info(locale.getString(PluginLang.API_ADD_RESOURCE_CSS, pluginName, fileName, position.cleanName()));

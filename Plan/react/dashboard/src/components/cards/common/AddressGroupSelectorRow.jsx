@@ -5,7 +5,7 @@ import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import React from "react";
 import {useTranslation} from "react-i18next";
 import {useJoinAddressListContext} from "../../../hooks/context/joinAddressListContextHook.jsx";
-import ActionButton from "../../input/button/ActionButton.jsx";
+import ActionButton from "../../input/button/ActionButton.tsx";
 
 const AddressGroupSelectorRow = () => {
     const {t} = useTranslation();

@@ -18,10 +18,10 @@ package com.djrapitops.plan.delivery.webserver.resolver.json.query;
 
 import com.djrapitops.plan.delivery.domain.DateMap;
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
-import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
-import com.djrapitops.plan.delivery.domain.datatransfer.InputQueryDto;
 import com.djrapitops.plan.delivery.domain.datatransfer.PlayerListDto;
-import com.djrapitops.plan.delivery.domain.datatransfer.ViewDto;
+import com.djrapitops.plan.delivery.domain.datatransfer.query.InputFilterDto;
+import com.djrapitops.plan.delivery.domain.datatransfer.query.InputQueryDto;
+import com.djrapitops.plan.delivery.domain.datatransfer.query.ViewDto;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.PlayersTableJSONCreator;

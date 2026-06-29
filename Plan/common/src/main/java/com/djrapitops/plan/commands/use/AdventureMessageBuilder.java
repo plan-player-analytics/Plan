@@ -92,7 +92,7 @@ public class AdventureMessageBuilder implements MessageBuilder {
     @Override
     public MessageBuilder hover(Collection<String> lines) {
         TextComponent.Builder hoverText = Component.text();
-        hoverText.append(Component.text(new TextStringBuilder().appendWithSeparators(lines, "\n").build()));
+        hoverText.append(Component.text(new TextStringBuilder().appendWithSeparators(lines, "\n").get()));
         previousComponent = previousComponent.hoverEvent(HoverEvent.showText(hoverText.build()));
         return this;
     }

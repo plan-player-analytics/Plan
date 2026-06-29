@@ -16,10 +16,12 @@
  */
 package com.djrapitops.plan.storage.database.sql.building;
 
+import static com.djrapitops.plan.storage.database.sql.building.Sql.INSERT_INTO;
+
 public class Insert extends SqlBuilder {
 
     public Insert(String table) {
-        super("INSERT INTO " + table + ' ');
+        super(INSERT_INTO + table + ' ');
     }
 
     public static String values(String table, String... columns) {
@@ -41,5 +43,9 @@ public class Insert extends SqlBuilder {
         }
         builder.append(')');
         return builder.toString();
+    }
+
+    public String build() {
+        return toString();
     }
 }

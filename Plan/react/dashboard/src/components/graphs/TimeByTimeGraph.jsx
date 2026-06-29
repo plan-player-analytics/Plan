@@ -2,13 +2,10 @@ import {useTranslation} from "react-i18next";
 import React, {useEffect, useState} from "react";
 import {tooltip} from "../../util/graphs";
 import LineGraph from "./LineGraph";
-import {useTheme} from "../../hooks/themeHook";
-import {withReducedSaturation} from "../../util/colors";
 
 const TimeByTimeGraph = ({id, data}) => {
     const {t} = useTranslation();
     const [series, setSeries] = useState([]);
-    const {nightModeEnabled} = useTheme();
 
     useEffect(() => {
         const uniquePlayers = {
@@ -16,17 +13,17 @@ const TimeByTimeGraph = ({id, data}) => {
             type: 'spline',
             tooltip: tooltip.zeroDecimals,
             data: data.uniquePlayers,
-            color: nightModeEnabled ? withReducedSaturation(data.colors.playersOnline) : data.colors.playersOnline
+            color: "var(--color-data-players-unique)"
         };
         const newPlayers = {
             name: t('html.label.newPlayers'),
             type: 'spline',
             tooltip: tooltip.zeroDecimals,
             data: data.newPlayers,
-            color: nightModeEnabled ? withReducedSaturation(data.colors.newPlayers) : data.colors.newPlayers
+            color: "var(--color-data-players-new)"
         };
         setSeries([uniquePlayers, newPlayers]);
-    }, [data, t, nightModeEnabled])
+    }, [data, t])
 
     return (
         <LineGraph id={id} series={series} alreadyOffsetTimezone/>

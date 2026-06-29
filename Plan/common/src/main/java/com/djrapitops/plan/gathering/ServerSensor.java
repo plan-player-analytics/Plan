@@ -20,6 +20,7 @@ import com.djrapitops.plan.gathering.domain.PluginMetadata;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 /**
@@ -75,4 +76,15 @@ public interface ServerSensor<W> {
     default boolean supportsBans() {return false;}
 
     default boolean isBanned(UUID playerUUID) {return false;}
+
+    /**
+     * Milliseconds per tick stored in the MinecraftServer class.
+     * <p>
+     * Contains 0 values that are initialized on server boot, which should be ignored.
+     *
+     * @return Optional empty if not supported on the platform.
+     */
+    default Optional<long[]> getMspt() {
+        return Optional.empty();
+    }
 }

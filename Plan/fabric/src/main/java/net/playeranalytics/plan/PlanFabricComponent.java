@@ -19,6 +19,7 @@ package net.playeranalytics.plan;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.commands.PlanCommand;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.types.DatapointModule;
 import com.djrapitops.plan.gathering.ServerShutdownSave;
 import com.djrapitops.plan.modules.FiltersModule;
 import com.djrapitops.plan.modules.PlatformAbstractionLayerModule;
@@ -27,7 +28,7 @@ import com.djrapitops.plan.modules.SystemObjectProvidingModule;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import dagger.BindsInstance;
 import dagger.Component;
-import net.minecraft.server.dedicated.MinecraftDedicatedServer;
+import net.minecraft.server.dedicated.DedicatedServer;
 import net.playeranalytics.plan.identification.properties.FabricServerProperties;
 import net.playeranalytics.plan.modules.fabric.FabricServerPropertiesModule;
 import net.playeranalytics.plan.modules.fabric.FabricSuperClassBindingModule;
@@ -46,6 +47,7 @@ import javax.inject.Singleton;
         SystemObjectProvidingModule.class,
         PlatformAbstractionLayerModule.class,
         FiltersModule.class,
+        DatapointModule.class,
 
         ServerCommandModule.class,
         FabricServerPropertiesModule.class,
@@ -72,7 +74,7 @@ public interface PlanFabricComponent {
         Builder abstractionLayer(PlatformAbstractionLayer abstractionLayer);
 
         @BindsInstance
-        Builder server(MinecraftDedicatedServer server);
+        Builder server(DedicatedServer server);
 
         @BindsInstance
         Builder serverProperties(FabricServerProperties serverProperties);

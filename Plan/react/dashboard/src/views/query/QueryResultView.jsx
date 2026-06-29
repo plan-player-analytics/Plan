@@ -1,5 +1,5 @@
 import React, {useCallback, useEffect} from 'react';
-import LoadIn from "../../components/animation/LoadIn";
+import LoadIn from "../../components/animation/LoadIn.tsx";
 import {Col, Row} from "react-bootstrap";
 import QueryPath from "../../components/alert/QueryPath";
 import {useQueryResultContext} from "../../hooks/queryResultContext";
@@ -11,7 +11,7 @@ import {CurrentPlayerbaseCardWithData} from "../../components/cards/server/graph
 import {useTranslation} from "react-i18next";
 import GeolocationsCard from "../../components/cards/common/GeolocationsCard";
 import SessionsWithinViewCard from "../../components/cards/query/SessionsWithinViewCard";
-import {useNavigation} from "../../hooks/navigationHook";
+import {useNavigation} from "../../hooks/navigationHook.tsx";
 
 const serverCount = (count, t) => {
     if (count === 0) {

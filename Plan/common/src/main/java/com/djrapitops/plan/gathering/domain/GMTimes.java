@@ -135,7 +135,7 @@ public class GMTimes extends TimeKeeper {
         return "{\"times\": {" +
                 new TextStringBuilder().appendWithSeparators(times.entrySet().stream()
                         .map(entry -> "\"" + entry.getKey() + "\": " + entry.getValue())
-                        .iterator(), ",").build() +
+                        .iterator(), ",").get() +
                 "  }," +
                 (state != null ? "\"state\": \"" + state + "\"," : "\"state\": null,") +
                 "\"lastStateChange\": " + lastStateChange +

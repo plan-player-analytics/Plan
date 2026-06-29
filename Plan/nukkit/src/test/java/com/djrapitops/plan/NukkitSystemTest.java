@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan;
 
-import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.config.paths.key.Setting;
@@ -39,18 +38,18 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class NukkitSystemTest {
 
-    private final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
+    private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
     private PlanSystem system;
 
     @BeforeEach
-    void prepareSystem(@TempDir Path temp) throws Exception {
+    void prepareSystem(@TempDir Path temp) {
         system = new NukkitMockComponent(temp).getPlanSystem();
         system.getConfigSystem().getConfig()
                 .set(WebserverSettings.PORT, TEST_PORT_NUMBER);
     }
 
     @Test
-    void nukkitSystemEnables() throws EnableException {
+    void nukkitSystemEnables() {
         try {
             system.enable();
             assertTrue(system.isEnabled());
@@ -60,7 +59,7 @@ class NukkitSystemTest {
     }
 
     @Test
-    void nukkitSystemHasDefaultConfigValuesAfterEnable() throws EnableException, IllegalAccessException {
+    void nukkitSystemHasDefaultConfigValuesAfterEnable() throws IllegalAccessException {
         try {
             system.enable();
             PlanConfig config = system.getConfigSystem().getConfig();

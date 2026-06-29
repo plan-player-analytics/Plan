@@ -31,7 +31,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
@@ -152,33 +152,7 @@ public class ActivityIndexQueries {
     }
 
     public static Query<Map<String, Integer>> fetchActivityIndexGroupingsOn(long date, ServerUUID serverUUID, long threshold) {
-        String selectActivityIndex = selectActivityIndexSQL();
-
-        String selectIndexes = SELECT + "activity_index" +
-                FROM + UserInfoTable.TABLE_NAME + " u" +
-                LEFT_JOIN + '(' + selectActivityIndex + ") s on s." + SessionsTable.USER_ID + "=u." + UserInfoTable.USER_ID +
-                WHERE + "u." + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
-                AND + "u." + UserInfoTable.REGISTERED + "<=?";
-
-        return new QueryStatement<>(selectIndexes) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                setSelectActivityIndexSQLParameters(statement, 1, threshold, serverUUID, date);
-                statement.setString(12, serverUUID.toString());
-                statement.setLong(13, date);
-            }
-
-            @Override
-            public Map<String, Integer> processResults(ResultSet set) throws SQLException {
-                Map<String, Integer> groups = new HashMap<>();
-                while (set.next()) {
-                    double activityIndex = set.getDouble("activity_index");
-                    String group = ActivityIndex.getGroup(activityIndex);
-                    groups.put(group, groups.getOrDefault(group, 0) + 1);
-                }
-                return groups;
-            }
-        };
+        return MultiServerActivityIndexQueries.fetchActivityGroupCounts(date, List.of(serverUUID), threshold);
     }
 
     public static Query<Integer> countNewPlayersTurnedRegular(long after, long before, ServerUUID serverUUID, Long threshold) {

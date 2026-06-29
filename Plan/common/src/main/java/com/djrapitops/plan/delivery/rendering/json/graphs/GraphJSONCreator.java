@@ -46,7 +46,6 @@ import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.settings.theme.Theme;
-import com.djrapitops.plan.settings.theme.ThemeVal;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.analysis.ActivityIndexQueries;
@@ -64,6 +63,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -92,11 +92,15 @@ public class GraphJSONCreator {
         this.graphs = graphs;
     }
 
-    private static void removeFilteredAddresses(List<JoinAddressCount> addresses, List<String> filteredJoinAddresses) {
-        if (filteredJoinAddresses.isEmpty() || filteredJoinAddresses.equals(List.of("play.example.com"))) return;
+    private static void removeFilteredAddresses(List<JoinAddressCount> addresses, List<Pattern> filteredJoinAddresses) {
+        if (filteredJoinAddresses.isEmpty() || filteredJoinAddresses.equals(List.of(Pattern.compile("play\\.example\\.com")))) {
+            return;
+        }
 
         List<JoinAddressCount> addressesToRemove = addresses.stream()
-                .filter(address -> filteredJoinAddresses.contains(address.getJoinAddress()))
+                .filter(address ->
+                        filteredJoinAddresses.stream().anyMatch(p -> p.matcher(address.getJoinAddress()).matches())
+                )
                 .collect(Collectors.toList());
 
         if (!addressesToRemove.isEmpty()) {
@@ -133,14 +137,14 @@ public class GraphJSONCreator {
                 ",\"chunks\":" + lineGraphs.chunkGraph(tpsMutator).toHighChartsSeries() +
                 ",\"disk\":" + lineGraphs.diskGraph(tpsMutator).toHighChartsSeries() +
                 ",\"colors\":{" +
-                "\"playersOnline\":\"" + ThemeVal.GRAPH_PLAYERS_ONLINE.getDefaultValue() + "\"," +
-                "\"cpu\":\"" + ThemeVal.GRAPH_CPU.getDefaultValue() + "\"," +
-                "\"ram\":\"" + ThemeVal.GRAPH_RAM.getDefaultValue() + "\"," +
-                "\"entities\":\"" + ThemeVal.GRAPH_ENTITIES.getDefaultValue() + "\"," +
-                "\"chunks\":\"" + ThemeVal.GRAPH_CHUNKS.getDefaultValue() + "\"," +
-                "\"low\":\"" + ThemeVal.GRAPH_TPS_LOW.getDefaultValue() + "\"," +
-                "\"med\":\"" + ThemeVal.GRAPH_TPS_MED.getDefaultValue() + "\"," +
-                "\"high\":\"" + ThemeVal.GRAPH_TPS_HIGH.getDefaultValue() + "\"}" +
+                "\"playersOnline\":\"#1E90FF\"," +
+                "\"cpu\":\"#e0d264\"," +
+                "\"ram\":\"#7dcc24\"," +
+                "\"entities\":\"#ac69ef\"," +
+                "\"chunks\":\"#b58310\"," +
+                "\"low\":\"#b74343\"," +
+                "\"med\":\"#e5cc12\"," +
+                "\"high\":\"#267F00\"}" +
                 ",\"zones\":{" +
                 "\"tpsThresholdMed\":" + config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED) + ',' +
                 "\"tpsThresholdHigh\":" + config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_HIGH) + ',' +
@@ -188,17 +192,17 @@ public class GraphJSONCreator {
         )));
 
         return Maps.builder(String.class, Object.class)
-                .put("keys", new String[]{"date", "playersOnline", "tps", "cpu", "ram", "entities", "chunks", "disk"})
+                .put("keys", new String[]{"date", "playersOnline", "tps", "cpu", "ram", "entities", "chunks", "disk", "msptAverage", "mspt95thPercentile", "msptJitterAverage", "msptJitterMax"})
                 .put("values", values)
                 .put("colors", Maps.builder(String.class, Object.class)
-                        .put("playersOnline", ThemeVal.GRAPH_PLAYERS_ONLINE.getDefaultValue())
-                        .put("cpu", ThemeVal.GRAPH_CPU.getDefaultValue())
-                        .put("ram", ThemeVal.GRAPH_RAM.getDefaultValue())
-                        .put("entities", ThemeVal.GRAPH_ENTITIES.getDefaultValue())
-                        .put("chunks", ThemeVal.GRAPH_CHUNKS.getDefaultValue())
-                        .put("low", ThemeVal.GRAPH_TPS_LOW.getDefaultValue())
-                        .put("med", ThemeVal.GRAPH_TPS_MED.getDefaultValue())
-                        .put("high", ThemeVal.GRAPH_TPS_HIGH.getDefaultValue())
+                        .put("playersOnline", "#1E90FF")
+                        .put("cpu", "#e0d264")
+                        .put("ram", "#7dcc24")
+                        .put("entities", "#ac69ef")
+                        .put("chunks", "#b58310")
+                        .put("low", "#b74343")
+                        .put("med", "#e5cc12")
+                        .put("high", "#267F00")
                         .build())
                 .put("zones", Maps.builder(String.class, Object.class)
                         .put("tpsThresholdMed", config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED))
@@ -209,6 +213,19 @@ public class GraphJSONCreator {
                 .put("serverName", serverName)
                 .put("serverUUID", serverUUID)
                 .build();
+    }
+
+    public String playersOnlineGraph(ServerUUID serverUUID) {
+        Database db = dbSystem.getDatabase();
+        long now = System.currentTimeMillis();
+        long halfYearAgo = now - TimeUnit.DAYS.toMillis(180L);
+
+        List<Point> points = Lists.map(
+                db.query(TPSQueries.fetchPlayersOnlineOfServer(halfYearAgo, now, serverUUID)),
+                Point::fromDateObj
+        );
+        return "{\"playersOnline\":" + graphs.line().lineGraph(points).toHighChartsSeries() +
+                ",\"color\":\"#1E90FF\"}";
     }
 
     public String uniqueAndNewGraphJSON(ServerUUID serverUUID) {
@@ -237,23 +254,26 @@ public class GraphJSONCreator {
                 PlayerCountQueries.hourlyUniquePlayerCounts(weekAgo, now, timeZoneOffset, serverUUID)
         );
         NavigableMap<Long, Integer> newPerDay = db.query(
-                PlayerCountQueries.newPlayerCounts(weekAgo, now, timeZoneOffset, serverUUID)
+                PlayerCountQueries.hourlyNewPlayerCounts(weekAgo, now, timeZoneOffset, serverUUID)
         );
 
         return createUniqueAndNewJSON(lineGraphs, uniquePerDay, newPerDay, TimeUnit.HOURS.toMillis(1L));
     }
 
-    public String playersOnlineGraph(ServerUUID serverUUID) {
-        Database db = dbSystem.getDatabase();
-        long now = System.currentTimeMillis();
-        long halfYearAgo = now - TimeUnit.DAYS.toMillis(180L);
-
-        List<Point> points = Lists.map(
-                db.query(TPSQueries.fetchPlayersOnlineOfServer(halfYearAgo, now, serverUUID)),
-                Point::fromDateObj
-        );
-        return "{\"playersOnline\":" + graphs.line().lineGraph(points).toHighChartsSeries() +
-                ",\"color\":\"" + ThemeVal.GRAPH_PLAYERS_ONLINE.getDefaultValue() + "\"}";
+    public String createUniqueAndNewJSON(LineGraphFactory lineGraphs, NavigableMap<Long, Integer> uniquePerDay, NavigableMap<Long, Integer> newPerDay, long gapFillPeriod) {
+        LineGraph.GapStrategy gapStrategy = new LineGraph.GapStrategy(true, gapFillPeriod, 0, gapFillPeriod, 0.0);
+        return "{\"uniquePlayers\":" +
+                lineGraphs.lineGraph(MutatorFunctions.toPoints(
+                        MutatorFunctions.addMissing(uniquePerDay, gapFillPeriod, 0)
+                ), gapStrategy).toHighChartsSeries() +
+                ",\"newPlayers\":" +
+                lineGraphs.lineGraph(MutatorFunctions.toPoints(
+                        MutatorFunctions.addMissing(newPerDay, gapFillPeriod, 0)
+                ), gapStrategy).toHighChartsSeries() +
+                ",\"colors\":{" +
+                "\"playersOnline\":\"#1E90FF\"," +
+                "\"newPlayers\":\"#8BC34A\"" +
+                "}}";
     }
 
     public String uniqueAndNewGraphJSON() {
@@ -288,22 +308,6 @@ public class GraphJSONCreator {
         return createUniqueAndNewJSON(lineGraphs, uniquePerDay, newPerDay, TimeUnit.HOURS.toMillis(1L));
     }
 
-    public String createUniqueAndNewJSON(LineGraphFactory lineGraphs, NavigableMap<Long, Integer> uniquePerDay, NavigableMap<Long, Integer> newPerDay, long gapFillPeriod) {
-        LineGraph.GapStrategy gapStrategy = new LineGraph.GapStrategy(true, gapFillPeriod, 0, gapFillPeriod, 0.0);
-        return "{\"uniquePlayers\":" +
-                lineGraphs.lineGraph(MutatorFunctions.toPoints(
-                        MutatorFunctions.addMissing(uniquePerDay, gapFillPeriod, 0)
-                ), gapStrategy).toHighChartsSeries() +
-                ",\"newPlayers\":" +
-                lineGraphs.lineGraph(MutatorFunctions.toPoints(
-                        MutatorFunctions.addMissing(newPerDay, gapFillPeriod, 0)
-                ), gapStrategy).toHighChartsSeries() +
-                ",\"colors\":{" +
-                "\"playersOnline\":\"" + ThemeVal.GRAPH_PLAYERS_ONLINE.getDefaultValue() + "\"," +
-                "\"newPlayers\":\"" + ThemeVal.LIGHT_GREEN.getDefaultValue() + "\"" +
-                "}}";
-    }
-
     public Map<String, Object> serverCalendarJSON(ServerUUID serverUUID) {
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();
@@ -320,6 +324,33 @@ public class GraphJSONCreator {
         );
         NavigableMap<Long, Integer> sessionsPerDay = db.query(
                 SessionQueries.sessionCountPerDay(twoYearsAgo, now, timeZoneOffset, serverUUID)
+        );
+        return Map.of("data",
+                graphs.calendar().serverCalendar(
+                        uniquePerDay,
+                        newPerDay,
+                        playtimePerDay,
+                        sessionsPerDay
+                ).getEntries(),
+                "firstDay", 1);
+    }
+
+    public Map<String, Object> networkCalendarJSON() {
+        Database db = dbSystem.getDatabase();
+        long now = System.currentTimeMillis();
+        long twoYearsAgo = now - TimeUnit.DAYS.toMillis(730L);
+        int timeZoneOffset = config.getTimeZone().getOffset(now);
+        NavigableMap<Long, Integer> uniquePerDay = db.query(
+                PlayerCountQueries.uniquePlayerCounts(twoYearsAgo, now, timeZoneOffset)
+        );
+        NavigableMap<Long, Integer> newPerDay = db.query(
+                PlayerCountQueries.newPlayerCounts(twoYearsAgo, now, timeZoneOffset)
+        );
+        NavigableMap<Long, Long> playtimePerDay = db.query(
+                SessionQueries.playtimePerDay(twoYearsAgo, now, timeZoneOffset)
+        );
+        NavigableMap<Long, Integer> sessionsPerDay = db.query(
+                SessionQueries.sessionCountPerDay(twoYearsAgo, now, timeZoneOffset)
         );
         return Map.of("data",
                 graphs.calendar().serverCalendar(
@@ -387,40 +418,6 @@ public class GraphJSONCreator {
         return createGeolocationJSON(geolocationCounts);
     }
 
-    public Map<String, Object> networkCalendarJSON() {
-        Database db = dbSystem.getDatabase();
-        long now = System.currentTimeMillis();
-        long twoYearsAgo = now - TimeUnit.DAYS.toMillis(730L);
-        int timeZoneOffset = config.getTimeZone().getOffset(now);
-        NavigableMap<Long, Integer> uniquePerDay = db.query(
-                PlayerCountQueries.uniquePlayerCounts(twoYearsAgo, now, timeZoneOffset)
-        );
-        NavigableMap<Long, Integer> newPerDay = db.query(
-                PlayerCountQueries.newPlayerCounts(twoYearsAgo, now, timeZoneOffset)
-        );
-        NavigableMap<Long, Long> playtimePerDay = db.query(
-                SessionQueries.playtimePerDay(twoYearsAgo, now, timeZoneOffset)
-        );
-        NavigableMap<Long, Integer> sessionsPerDay = db.query(
-                SessionQueries.sessionCountPerDay(twoYearsAgo, now, timeZoneOffset)
-        );
-        return Map.of("data",
-                graphs.calendar().serverCalendar(
-                        uniquePerDay,
-                        newPerDay,
-                        playtimePerDay,
-                        sessionsPerDay
-                ).getEntries(),
-                "firstDay", 1);
-    }
-
-    public Map<String, Object> geolocationGraphsJSONAsMap() {
-        Database db = dbSystem.getDatabase();
-        Map<String, Integer> geolocationCounts = db.query(GeoInfoQueries.networkGeolocationCounts());
-
-        return createGeolocationJSON(geolocationCounts);
-    }
-
     public Map<String, Object> createGeolocationJSON(Map<String, Integer> geolocationCounts) {
         BarGraph geolocationBarGraph = graphs.bar().geolocationBarGraph(geolocationCounts);
         WorldMap worldMap = graphs.special().worldMap(geolocationCounts);
@@ -430,11 +427,18 @@ public class GraphJSONCreator {
                 .put("geolocation_series", worldMap.getEntries())
                 .put("geolocation_bar_series", geolocationBarGraph.getBars())
                 .put("colors", Maps.builder(String.class, String.class)
-                        .put("low", ThemeVal.WORLD_MAP_LOW.getDefaultValue())
-                        .put("high", ThemeVal.WORLD_MAP_HIGH.getDefaultValue())
-                        .put("bars", ThemeVal.GREEN.getDefaultValue())
+                        .put("low", "#EEFFEE")
+                        .put("high", "#267f00")
+                        .put("bars", "#4CAF50")
                         .build())
                 .build();
+    }
+
+    public Map<String, Object> geolocationGraphsJSONAsMap() {
+        Database db = dbSystem.getDatabase();
+        Map<String, Integer> geolocationCounts = db.query(GeoInfoQueries.networkGeolocationCounts());
+
+        return createGeolocationJSON(geolocationCounts);
     }
 
     public String pingGraphsJSON(ServerUUID serverUUID) {
@@ -448,9 +452,9 @@ public class GraphJSONCreator {
                 ",\"avg_ping_series\":" + pingGraph.getAvgGraph().toHighChartsSeries() +
                 ",\"max_ping_series\":" + pingGraph.getMaxGraph().toHighChartsSeries() +
                 ",\"colors\":{" +
-                "\"min\":\"" + ThemeVal.GRAPH_MIN_PING.getDefaultValue() + "\"," +
-                "\"avg\":\"" + ThemeVal.GRAPH_AVG_PING.getDefaultValue() + "\"," +
-                "\"max\":\"" + ThemeVal.GRAPH_MAX_PING.getDefaultValue() + "\"" +
+                "\"min\":\"#ffd54f\"," +
+                "\"avg\":\"#ffc107\"," +
+                "\"max\":\"#ffa000\"" +
                 "}}";
     }
 
@@ -462,7 +466,7 @@ public class GraphJSONCreator {
         );
         return Maps.builder(String.class, Object.class)
                 .put("punchCard", graphs.special().punchCard(sessions).getDots())
-                .put("color", ThemeVal.GRAPH_PUNCHCARD.getDefaultValue())
+                .put("color", "#222")
                 .build();
     }
 
@@ -505,7 +509,7 @@ public class GraphJSONCreator {
             translateUnknown(addressesByDate.getValue());
         }
 
-        List<String> filteredJoinAddresses = config.get(DataGatheringSettings.FILTER_JOIN_ADDRESSES);
+        List<Pattern> filteredJoinAddresses = Lists.map(config.get(DataGatheringSettings.FILTER_JOIN_ADDRESSES), Pattern::compile);
 
         List<JoinAddressCounts> joinAddressCounts = joinAddresses.stream()
                 .map(addressesOnDay -> {
@@ -543,6 +547,6 @@ public class GraphJSONCreator {
             proxyGraphs.add(new ServerSpecificLineGraph(points, ServerDto.fromServer(proxy)));
         }
 
-        return new GraphCollection<>(proxyGraphs, ThemeVal.GRAPH_PLAYERS_ONLINE.getDefaultValue());
+        return new GraphCollection<>(proxyGraphs, "#1E90FF");
     }
 }

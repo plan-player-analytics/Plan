@@ -39,10 +39,10 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class VelocitySystemTest {
 
-    private final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
+    private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
 
     @Test
-    void velocityEnables(@TempDir Path temp) throws Exception {
+    void velocityEnables(@TempDir Path temp) {
         PlanSystem velocitySystem = new VelocityMockComponent(temp).getPlanSystem();
         try {
             PlanConfig config = velocitySystem.getConfigSystem().getConfig();

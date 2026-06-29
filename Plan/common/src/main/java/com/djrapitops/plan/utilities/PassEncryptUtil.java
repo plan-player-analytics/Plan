@@ -36,6 +36,8 @@ import java.util.Base64;
  */
 public class PassEncryptUtil {
 
+    private static final SecureRandom RANDOM = new SecureRandom();
+
     private static final String PBKDF2_ALGORITHM = "PBKDF2WithHmacSHA1";
     // These constants may be changed without breaking existing hashes.
     private static final int SALT_BYTE_SIZE = 24;
@@ -69,9 +71,8 @@ public class PassEncryptUtil {
 
     private static String createHash(char[] password) {
         // Generate a random salt
-        SecureRandom random = new SecureRandom();
         byte[] salt = new byte[SALT_BYTE_SIZE];
-        random.nextBytes(salt);
+        RANDOM.nextBytes(salt);
 
         // Hash the password
         byte[] hash = pbkdf2(password, salt, PBKDF2_ITERATIONS, HASH_BYTE_SIZE);

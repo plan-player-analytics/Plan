@@ -2,6 +2,7 @@ import React from 'react';
 import PlayerSessionCalendar from "../../calendar/PlayerSessionCalendar.jsx";
 import {calculateCssHexColor} from "../../../util/colors.js";
 import Background from "./Background.jsx";
+import {GenericFilterContextProvider} from "../../../dataHooks/genericFilterContextHook.tsx";
 
 const CalendarUseCase = () => {
 
@@ -27,7 +28,9 @@ const CalendarUseCase = () => {
     }
     return (
         <Background>
-            <PlayerSessionCalendar series={series} firstDay={1}/>
+            <GenericFilterContextProvider initialValue={{}}>
+                <PlayerSessionCalendar series={series} firstDay={1}/>
+            </GenericFilterContextProvider>
         </Background>
     )
 };

@@ -17,14 +17,21 @@
 package com.djrapitops.plan.storage.database.sql.tables;
 
 import com.djrapitops.plan.storage.database.DBType;
+import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.queries.objects.lookup.UserIdentifiable;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
+import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.transactions.patches.GeoInfoLastUsedPatch;
 import com.djrapitops.plan.storage.database.transactions.patches.GeoInfoOptimizationPatch;
 import com.djrapitops.plan.storage.database.transactions.patches.Version10Patch;
 
-import static com.djrapitops.plan.storage.database.sql.building.Sql.AND;
-import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.List;
+
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Table information about 'plan_ips'.
@@ -45,16 +52,25 @@ public class GeoInfoTable {
     public static final String GEOLOCATION = "geolocation";
     public static final String LAST_USED = "last_used";
 
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " ("
             + USER_ID + ','
             + GEOLOCATION + ','
             + LAST_USED
             + ") VALUES (" + UsersTable.SELECT_USER_ID + ", ?, ?)";
 
-    public static final String UPDATE_STATEMENT = "UPDATE " + TABLE_NAME + " SET " +
+    public static final String UPDATE_STATEMENT = UPDATE + TABLE_NAME + SET +
             LAST_USED + "=?" +
             WHERE + USER_ID + "=" + UsersTable.SELECT_USER_ID +
             AND + GEOLOCATION + "=?";
+
+    public static final String UPSERT_STATEMENT_MYSQL = INSERT_INTO + TABLE_NAME + " (" + USER_ID + ", " + GEOLOCATION + ", " + LAST_USED + ") " +
+            "VALUES (?, ?, ?) " +
+            "ON DUPLICATE KEY UPDATE " +
+            LAST_USED + " = GREATEST(VALUES(" + LAST_USED + "), " + LAST_USED + ");";
+    public static final String UPSERT_STATEMENT_SQLITE = INSERT_INTO + TABLE_NAME + " (" + USER_ID + ", " + GEOLOCATION + ", " + LAST_USED + ") " +
+            "VALUES (?, ?, ?) " +
+            "ON CONFLICT(" + USER_ID + ',' + GEOLOCATION + ") DO UPDATE SET " +
+            LAST_USED + " = MAX(excluded." + LAST_USED + ", " + TABLE_NAME + "." + LAST_USED + ");";
 
     private GeoInfoTable() {
         /* Static information class */
@@ -70,4 +86,48 @@ public class GeoInfoTable {
                 .toString();
     }
 
+    public static Query<List<Row>> fetchRows(int currentId, int rowLimit) {
+        String sql = Select.all(TABLE_NAME)
+                .where(ID + '>' + currentId)
+                .orderBy(ID)
+                .limit(rowLimit)
+                .toString();
+        return db -> db.queryList(sql, Row::extract);
+    }
+
+    public static class Row implements UserIdentifiable {
+        private int id;
+        private int userId;
+        private String geolocation;
+        private long lastUsed;
+
+        public static Row extract(ResultSet set) throws SQLException {
+            Row row = new Row();
+            row.id = set.getInt(ID);
+            row.userId = set.getInt(USER_ID);
+            row.geolocation = set.getString(GEOLOCATION);
+            row.lastUsed = set.getLong(LAST_USED);
+            return row;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void upsert(PreparedStatement statement) throws SQLException {
+            statement.setInt(1, userId);
+            statement.setString(2, geolocation);
+            statement.setLong(3, lastUsed);
+        }
+
+        @Override
+        public int getUserId() {
+            return userId;
+        }
+
+        @Override
+        public void setUserId(int userId) {
+            this.userId = userId;
+        }
+    }
 }

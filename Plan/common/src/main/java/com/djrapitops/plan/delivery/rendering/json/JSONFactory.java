@@ -17,7 +17,10 @@
 package com.djrapitops.plan.delivery.rendering.json;
 
 import com.djrapitops.plan.delivery.domain.DateObj;
+import com.djrapitops.plan.delivery.domain.PlayerIdentifier;
+import com.djrapitops.plan.delivery.domain.PlayerName;
 import com.djrapitops.plan.delivery.domain.RetentionData;
+import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.domain.datatransfer.PlayerJoinAddresses;
 import com.djrapitops.plan.delivery.domain.datatransfer.ServerDto;
 import com.djrapitops.plan.delivery.domain.mutators.PlayerKillMutator;
@@ -26,6 +29,7 @@ import com.djrapitops.plan.delivery.domain.mutators.TPSMutator;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
+import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerTableDataQuery;
 import com.djrapitops.plan.gathering.ServerUptimeCalculator;
@@ -41,7 +45,7 @@ import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.settings.locale.lang.HtmlLang;
-import com.djrapitops.plan.settings.theme.ThemeVal;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
@@ -52,12 +56,15 @@ import com.djrapitops.plan.storage.database.queries.objects.playertable.ServerTa
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.utilities.comparators.SessionStartComparator;
 import com.djrapitops.plan.utilities.dev.Untrusted;
+import com.djrapitops.plan.utilities.java.Lists;
 import com.djrapitops.plan.utilities.java.Maps;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -69,6 +76,7 @@ import java.util.stream.Collectors;
 public class JSONFactory {
 
     private final PlanConfig config;
+    private final PluginLogger logger;
     private final Locale locale;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
@@ -78,7 +86,7 @@ public class JSONFactory {
 
     @Inject
     public JSONFactory(
-            PlanConfig config,
+            PlanConfig config, PluginLogger logger,
             Locale locale,
             DBSystem dbSystem,
             ServerInfo serverInfo,
@@ -87,6 +95,7 @@ public class JSONFactory {
             Formatters formatters
     ) {
         this.config = config;
+        this.logger = logger;
         this.locale = locale;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
@@ -95,18 +104,28 @@ public class JSONFactory {
         this.formatters = formatters;
     }
 
-    private static void removeFiltered(Map<UUID, String> addressByPlayerUUID, List<String> filteredJoinAddresses) {
-        if (filteredJoinAddresses.isEmpty() || filteredJoinAddresses.equals(List.of("play.example.com"))) return;
+    private static void removeFiltered(Map<UUID, String> addressByPlayerUUID, List<Pattern> filteredJoinAddresses) {
+        if (filteredJoinAddresses.isEmpty() || filteredJoinAddresses.equals(List.of(Pattern.compile("play\\.example\\.com")))) {
+            return;
+        }
 
         Set<UUID> toRemove = new HashSet<>();
         // Remove filtered addresses from the data
         for (Map.Entry<UUID, String> entry : addressByPlayerUUID.entrySet()) {
-            if (filteredJoinAddresses.contains(entry.getValue())) {
+            if (filteredJoinAddresses.stream().anyMatch(pattern -> pattern.matcher(entry.getValue()).matches())) {
                 toRemove.add(entry.getKey());
             }
         }
         for (UUID playerUUID : toRemove) {
             addressByPlayerUUID.put(playerUUID, JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP);
+        }
+    }
+
+    private static void removeLimitOverflow(List<FinishedSession> sessions) {
+        while (true) {
+            int size = sessions.size();
+            if (size <= 10000) break;
+            sessions.remove(size - 1); // Remove last until it fits.
         }
     }
 
@@ -176,7 +195,7 @@ public class JSONFactory {
 
     public PlayerJoinAddresses playerJoinAddresses(ServerUUID serverUUID, boolean includeByPlayerMap) {
         Database db = dbSystem.getDatabase();
-        List<String> filteredJoinAddresses = config.get(DataGatheringSettings.FILTER_JOIN_ADDRESSES);
+        List<Pattern> filteredJoinAddresses = Lists.map(config.get(DataGatheringSettings.FILTER_JOIN_ADDRESSES), Pattern::compile);
         if (includeByPlayerMap) {
             Map<UUID, String> addresses = db.query(JoinAddressQueries.latestJoinAddressesOfPlayers(serverUUID));
 
@@ -188,16 +207,20 @@ public class JSONFactory {
             );
         } else {
             List<String> addresses = db.query(JoinAddressQueries.uniqueJoinAddresses(serverUUID));
-            addresses.removeAll(filteredJoinAddresses);
+            addresses.removeIf(address ->
+                    filteredJoinAddresses.stream().anyMatch(pattern -> pattern.matcher(address).matches())
+            );
             return new PlayerJoinAddresses(addresses, null);
         }
     }
 
     public PlayerJoinAddresses playerJoinAddresses(boolean includeByPlayerMap) {
         Database db = dbSystem.getDatabase();
-        List<String> filteredJoinAddresses = config.get(DataGatheringSettings.FILTER_JOIN_ADDRESSES);
+        List<Pattern> filteredJoinAddresses = Lists.map(config.get(DataGatheringSettings.FILTER_JOIN_ADDRESSES), Pattern::compile);
         List<String> unique = db.query(JoinAddressQueries.uniqueJoinAddresses());
-        unique.removeAll(filteredJoinAddresses);
+        unique.removeIf(address ->
+                filteredJoinAddresses.stream().anyMatch(pattern -> pattern.matcher(address).matches())
+        );
         if (includeByPlayerMap) {
             Map<UUID, String> latest = db.query(JoinAddressQueries.latestJoinAddressesOfPlayers());
             removeFiltered(latest, filteredJoinAddresses);
@@ -207,50 +230,11 @@ public class JSONFactory {
         }
     }
 
-    public List<Map<String, Object>> serverSessionsAsJSONMap(ServerUUID serverUUID) {
-        Database db = dbSystem.getDatabase();
-
-        Integer perPageLimit = config.get(DisplaySettings.SESSIONS_PER_PAGE);
-        List<FinishedSession> sessions = db.query(SessionQueries.fetchLatestSessionsOfServer(serverUUID, perPageLimit));
-        // Add online sessions
-        if (serverUUID.equals(serverInfo.getServerUUID())) {
-            addActiveSessions(sessions);
-            sessions.sort(new SessionStartComparator());
-            while (true) {
-                int size = sessions.size();
-                if (size <= perPageLimit) break;
-                sessions.remove(size - 1); // Remove last until it fits.
-            }
-        }
-
-        return new SessionsMutator(sessions).toPlayerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters);
-    }
-
-    public List<Map<String, Object>> networkSessionsAsJSONMap() {
-        Database db = dbSystem.getDatabase();
-        Integer perPageLimit = config.get(DisplaySettings.SESSIONS_PER_PAGE);
-
-        List<FinishedSession> sessions = db.query(SessionQueries.fetchLatestSessions(perPageLimit));
-        // Add online sessions
-        if (serverInfo.getServer().isProxy()) {
-            addActiveSessions(sessions);
-            sessions.sort(new SessionStartComparator());
-            while (true) {
-                int size = sessions.size();
-                if (size <= perPageLimit) break;
-                sessions.remove(size - 1); // Remove last until it fits.
-            }
-        }
-
-        List<Map<String, Object>> sessionMaps = new SessionsMutator(sessions).toPlayerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters);
-        // Add network_server property so that sessions have a server page link
-        sessionMaps.forEach(map -> map.put("network_server", map.get("server_name")));
-        return sessionMaps;
-    }
-
-    public void addActiveSessions(List<FinishedSession> sessions) {
+    public void addActiveSessions(List<FinishedSession> sessions, long after, long before) {
         for (ActiveSession activeSession : SessionCache.getActiveSessions()) {
-            sessions.add(activeSession.toFinishedSessionFromStillActive());
+            if (activeSession.isWithin(after, before)) {
+                sessions.add(activeSession.toFinishedSessionFromStillActive());
+            }
         }
     }
 
@@ -266,7 +250,10 @@ public class JSONFactory {
                 .map(ServerDto::fromServer);
     }
 
+    @Deprecated(since = "2026-04-29 / 5.7 build 3401")
     public Map<String, Object> serversAsJSONMaps() {
+        logger.warn(locale.getString(PluginLang.DEPRECATED_ENDPOINT_CALL, "/v1/network/servers", "/v1/datapoint"));
+
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();
         long weekAgo = now - TimeUnit.DAYS.toMillis(7L);
@@ -301,9 +288,9 @@ public class JSONFactory {
                     Map<String, Object> server = new HashMap<>();
                     server.put("name", entry.getValue().getIdentifiableName());
                     server.put("serverUUID", entry.getValue().getUuid().toString());
-                    server.put("playersOnlineColor", ThemeVal.GRAPH_PLAYERS_ONLINE.getDefaultValue());
+                    server.put("playersOnlineColor", "#1E90FF");
 
-                    Optional<DateObj<Integer>> recentPeak = db.query(TPSQueries.fetchPeakPlayerCount(serverUUID, now - TimeUnit.DAYS.toMillis(2L)));
+                    Optional<DateObj<Integer>> recentPeak = db.query(TPSQueries.fetchPeakPlayerCount(serverUUID, now - TimeUnit.DAYS.toMillis(2L), Long.MAX_VALUE));
                     Optional<DateObj<Integer>> allTimePeak = db.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID));
                     server.put("last_peak_date", recentPeak.map(DateObj::getDate).map(Object.class::cast).orElse("-"));
                     server.put("best_peak_date", allTimePeak.map(DateObj::getDate).map(Object.class::cast).orElse("-"));
@@ -368,5 +355,81 @@ public class JSONFactory {
         return Collections.singletonMap("servers", servers.stream()
                 .map(ServerDto::fromServer)
                 .collect(Collectors.toList()));
+    }
+
+    public List<PlayerIdentifier> playersOnlineOn(long date) {
+        Set<PlayerIdentifier> online = new HashSet<>(dbSystem.getDatabase().query(SessionQueries.playersOnlineOn(date)));
+        SessionCache.getActiveSessions().stream()
+                .filter(session -> session.getStart() <= date)
+                .map(session -> new PlayerIdentifier(session.getPlayerUUID(), session.getExtraData(PlayerName.class).map(PlayerName::get).orElse(session.getPlayerUUID().toString())))
+                .forEach(online::add);
+        return online.stream()
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    public List<PlayerIdentifier> playersOnlineOn(long date, ServerUUID serverUUID) {
+        Set<PlayerIdentifier> online = new HashSet<>(dbSystem.getDatabase().query(SessionQueries.playersOnlineOn(date, serverUUID)));
+        if (serverUUID.equals(serverInfo.getServerUUID())) {
+            SessionCache.getActiveSessions().stream()
+                    .filter(session -> session.getStart() <= date)
+                    .map(session -> new PlayerIdentifier(session.getPlayerUUID(), session.getExtraData(PlayerName.class).map(PlayerName::get).orElse(session.getPlayerUUID().toString())))
+                    .forEach(online::add);
+        }
+        return online.stream()
+                .sorted()
+                .collect(Collectors.toList());
+    }
+
+    public List<Map<String, Object>> playerSessions(GenericFilter filter) {
+        UUID playerUUID = filter.getPlayerUUID().orElseThrow(() -> new BadRequestException("Player UUID not given"));
+
+        long after = filter.getAfter();
+        long before = filter.getBefore();
+        List<ServerUUID> serverUUIDs = filter.getServerUUIDs();
+
+        List<FinishedSession> sessions = dbSystem.getDatabase().query(SessionQueries.sessionsOfPlayer(playerUUID, after, before, serverUUIDs));
+        // Add online sessions
+        if (serverUUIDs.contains(serverInfo.getServerUUID())) {
+            SessionCache.getCachedSession(playerUUID)
+                    .filter(activeSession -> activeSession.isWithin(after, before))
+                    .map(ActiveSession::toFinishedSessionFromStillActive)
+                    .ifPresent(sessions::add);
+            sessions.sort(new SessionStartComparator());
+            removeLimitOverflow(sessions);
+        }
+
+        return new SessionsMutator(sessions).toServerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters);
+    }
+
+    public List<Map<String, Object>> serverSessions(GenericFilter filter) {
+        long after = filter.getAfter();
+        long before = filter.getBefore();
+        List<ServerUUID> serverUUIDs = filter.getServerUUIDs();
+
+        List<FinishedSession> sessions = dbSystem.getDatabase().query(SessionQueries.sessionsOfServers(after, before, serverUUIDs));
+        // Add online sessions
+        if (serverUUIDs.contains(serverInfo.getServerUUID())) {
+            addActiveSessions(sessions, after, before);
+            sessions.sort(new SessionStartComparator());
+            removeLimitOverflow(sessions);
+        }
+
+        return new SessionsMutator(sessions).toPlayerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters);
+    }
+
+    public List<Map<String, Object>> networkSessions(GenericFilter filter) {
+        long after = filter.getAfter();
+        long before = filter.getBefore();
+
+        List<FinishedSession> sessions = dbSystem.getDatabase().query(SessionQueries.sessionsOfServers(after, before, List.of()));
+        // Add online sessions
+        addActiveSessions(sessions, after, before);
+        sessions.sort(new SessionStartComparator());
+        removeLimitOverflow(sessions);
+
+        List<Map<String, Object>> asMaps = new SessionsMutator(sessions).toPlayerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters);
+        asMaps.forEach(map -> map.put("network_server", map.get("server_name")));
+        return asMaps;
     }
 }

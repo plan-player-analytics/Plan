@@ -20,6 +20,7 @@ import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.storage.database.sql.tables.PingTable;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.FROM;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.INSERT_INTO;
 
 /**
  * Replaces uuid and server_uuid with foreign keys in ping table.
@@ -51,7 +52,7 @@ public class PingOptimizationPatch extends Patch {
             tempOldTable();
             execute(PingTable.createTableSQL(dbType));
 
-            execute("INSERT INTO " + tableName + " (" +
+            execute(INSERT_INTO + tableName + " (" +
                     PingTable.USER_ID + ',' +
                     PingTable.SERVER_ID + ',' +
                     PingTable.ID + ',' +

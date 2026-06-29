@@ -1,8 +1,8 @@
-import ErrorView from "../ErrorView";
-import LoadIn from "../../components/animation/LoadIn";
+import ErrorView from "../ErrorView.tsx";
+import LoadIn from "../../components/animation/LoadIn.tsx";
 import {Card, Col, InputGroup, Row} from "react-bootstrap";
 import React, {useCallback, useEffect, useState} from "react";
-import CardHeader from "../../components/cards/CardHeader";
+import CardHeader from "../../components/cards/CardHeader.tsx";
 import {
     faCheck,
     faExclamationTriangle,
@@ -16,7 +16,7 @@ import {
 import {FontAwesomeIcon as Fa, FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {GroupEditContextProvider, useGroupEditContext} from "../../hooks/context/groupEditContextHook";
 import {addGroup, deleteGroup, fetchGroups} from "../../service/manageService";
-import {CardLoader, ChartLoader} from "../../components/navigation/Loader";
+import {CardLoader, ChartLoader} from "../../components/navigation/Loader.tsx";
 import {Trans, useTranslation} from "react-i18next";
 import {
     ConfigurationStorageContextProvider,
@@ -26,17 +26,17 @@ import SideNavTabs from "../../components/layout/SideNavTabs";
 import Select from "../../components/input/Select";
 import Scrollable from "../../components/Scrollable";
 import OpaqueText from "../../components/layout/OpaqueText";
-import {useAlertPopupContext} from "../../hooks/context/alertPopupContext";
+import {useAlertPopupContext} from "../../hooks/context/alertPopupContext.tsx";
 import {DropdownStatusContextProvider, useDropdownStatusContext} from "../../hooks/context/dropdownStatusContextHook";
-import {useNavigation} from "../../hooks/navigationHook";
+import {useNavigation} from "../../hooks/navigationHook.tsx";
 import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
-import {useAuth} from "../../hooks/authenticationHook";
-import Checkbox from "../../components/input/Checkbox.jsx";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
+import Checkbox from "../../components/input/Checkbox.tsx";
 import TextInput from "../../components/input/TextInput.jsx";
 import UnsavedChangesText from "../../components/text/UnsavedChangesText.jsx";
-import ActionButton from "../../components/input/button/ActionButton.jsx";
+import ActionButton from "../../components/input/button/ActionButton.tsx";
 import DangerButton from "../../components/input/button/DangerButton.jsx";
-import OutlineButton from "../../components/input/button/OutlineButton.jsx";
+import OutlineButton from "../../components/input/button/OutlineButton.tsx";
 import SecondaryActionButton from "../../components/input/button/SecondaryActionButton.jsx";
 
 const GroupsHeader = ({groupName, icon}) => {

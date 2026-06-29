@@ -39,11 +39,11 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 class FabricSystemTest {
 
-    private final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
+    private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
     private PlanSystem system;
 
     @BeforeEach
-    void prepareSystem(@TempDir Path temp) throws Exception {
+    void prepareSystem(@TempDir Path temp) {
         system = new FabricMockComponent(temp).getPlanSystem();
         system.getConfigSystem().getConfig()
                 .set(WebserverSettings.PORT, TEST_PORT_NUMBER);

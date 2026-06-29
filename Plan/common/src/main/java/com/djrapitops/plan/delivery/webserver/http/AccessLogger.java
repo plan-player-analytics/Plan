@@ -16,16 +16,17 @@
  */
 package com.djrapitops.plan.delivery.webserver.http;
 
+import com.djrapitops.plan.delivery.AccessLogBatchTask;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration;
 import com.djrapitops.plan.exceptions.database.DBOpException;
-import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.StoreRequestTransaction;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.server.PluginLogger;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -34,15 +35,15 @@ import java.util.concurrent.CompletionException;
 @Singleton
 public class AccessLogger {
 
+    private final AccessLogBatchTask accessLogBatchTask;
     private final WebserverConfiguration webserverConfiguration;
-    private final DBSystem dbSystem;
     private final PluginLogger logger;
     private final ErrorLogger errorLogger;
 
     @Inject
-    public AccessLogger(WebserverConfiguration webserverConfiguration, DBSystem dbSystem, PluginLogger logger, ErrorLogger errorLogger) {
+    public AccessLogger(AccessLogBatchTask accessLogBatchTask, WebserverConfiguration webserverConfiguration, PluginLogger logger, ErrorLogger errorLogger) {
+        this.accessLogBatchTask = accessLogBatchTask;
         this.webserverConfiguration = webserverConfiguration;
-        this.dbSystem = dbSystem;
         this.logger = logger;
         this.errorLogger = errorLogger;
     }
@@ -81,9 +82,7 @@ public class AccessLogger {
             method = method != null ? method : "?";
             String url = StoreRequestTransaction.getTruncatedURI(request, internalRequest);
             int responseCode = response.getCode();
-            dbSystem.getDatabase().executeTransaction(
-                    new StoreRequestTransaction(timestamp, accessAddress, method, url, responseCode)
-            );
+            accessLogBatchTask.addLoggedRequest(new LoggedRequest(timestamp, accessAddress, method, url, responseCode));
         } catch (CompletionException | DBOpException e) {
             errorLogger.warn(e, ErrorContext.builder()
                     .related("Logging request failed")
@@ -96,5 +95,41 @@ public class AccessLogger {
     private String getRequestURI(InternalRequest internalRequest, Request request) {
         return request != null ? request.getPath().asString() + request.getQuery().asString()
                 : internalRequest.getRequestedURIString();
+    }
+
+    public static class LoggedRequest {
+        private final long timestamp;
+        private final String accessAddress;
+        private final String method;
+        private final String url;
+        private final int responseCode;
+
+        public LoggedRequest(long timestamp, String accessAddress, String method, String url, int responseCode) {
+            this.timestamp = timestamp;
+            this.accessAddress = StringUtils.truncate(accessAddress, 45);
+            this.method = method;
+            this.url = url;
+            this.responseCode = responseCode;
+        }
+
+        public long getTimestamp() {
+            return timestamp;
+        }
+
+        public String getAccessAddress() {
+            return accessAddress;
+        }
+
+        public String getMethod() {
+            return method;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public int getResponseCode() {
+            return responseCode;
+        }
     }
 }

@@ -54,7 +54,7 @@ public class SpongeMockComponent {
         SQLDB.setDownloadDriver(false);
     }
 
-    public PlanPlugin getPlanMock() throws Exception {
+    public PlanPlugin getPlanMock() {
         if (planMock == null) {
             planMock = PlanPluginMocker.setUp()
                     .withLogging()
@@ -64,7 +64,7 @@ public class SpongeMockComponent {
         return planMock;
     }
 
-    public PlanSystem getPlanSystem() throws Exception {
+    public PlanSystem getPlanSystem() {
         if (component == null) {
             PlanPlugin planMock = getPlanMock();
             component = DaggerPlanSpongeComponent.builder()

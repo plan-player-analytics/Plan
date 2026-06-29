@@ -1,0 +1,424 @@
+{
+  "name": "solarized",
+  "colors": {
+    "base03": "#002b36",
+    "base02": "#073642",
+    "base01": "#586e75",
+    "base00": "#657b83",
+    "base0": "#839496",
+    "base1": "#93a1a1",
+    "base2": "#eee8d5",
+    "base3": "#fdf6e3",
+    "text-dark": "#fdf6e3",
+    "text-light": "#002b36",
+    "base3-15-percent": "rgba(253, 246, 227, 0.15)",
+    "base03-10-percent": "rgba(0, 43, 54, 0.1)",
+    "red": "#dc322f",
+    "magenta": "#d33682",
+    "violet": "#6c71c4",
+    "blue": "#268bd2",
+    "cyan": "#2aa198",
+    "green": "#859900",
+    "yellow": "#b58900",
+    "orange": "#cb4b16"
+  },
+  "nightColors": {
+    "red": "#dc322f",
+    "magenta": "#d33682",
+    "violet": "#6c71c4",
+    "blue": "#268bd2",
+    "cyan": "#2aa198",
+    "green": "#859900",
+    "yellow": "#b58900",
+    "orange": "#cb4b16"
+  },
+  "useCases": {
+    "themeColorOptions": [
+      "theme",
+      "red",
+      "magenta",
+      "violet",
+      "blue",
+      "cyan",
+      "green",
+      "yellow",
+      "orange",
+      "base01"
+    ],
+    "referenceColors": {
+      "theme": "var(--color-base02)",
+      "themeText": "var(--color-theme)",
+      "text": "var(--color-base03)"
+    },
+    "layout": {
+      "background": "var(--color-base2)",
+      "title": "var(--color-base02)",
+      "divider": "var(--color-base1)",
+      "helpIcon": "var(--color-blue)",
+      "loader": {
+        "border": "var(--color-theme)",
+        "background": "var(--color-theme)"
+      }
+    },
+    "sidebar": {
+      "background": "var(--color-theme)",
+      "text": "var(--color-text-dark)",
+      "divider": "var(--color-base3-15-percent)",
+      "collapsibleSection": {
+        "background": "var(--color-base3)",
+        "text": "var(--color-text)",
+        "hover": "var(--color-base2)",
+        "border": "var(--color-base2)"
+      },
+      "navigationItem": {
+        "background": "var(--color-theme)",
+        "icon": "var(--color-text-dark)"
+      }
+    },
+    "cards": {
+      "background": "var(--color-base3)",
+      "border": "var(--color-base1)",
+      "header": {
+        "background": "var(--color-base3)",
+        "border": "var(--color-base1)"
+      }
+    },
+    "tabs": {
+      "background": "var(--color-base3)",
+      "selected": "var(--color-base3)",
+      "border": "var(--color-base1)"
+    },
+    "infoBox": {
+      "info": "var(--color-green)",
+      "infoText": "var(--color-text-dark)",
+      "notice": "var(--color-yellow)",
+      "noticeText": "var(--color-text-dark)",
+      "error": "var(--color-red)",
+      "errorText": "var(--color-text-dark)"
+    },
+    "calendar": {
+      "today": "var(--color-base2)",
+      "border": "var(--color-base1)",
+      "popover": {
+        "body": "var(--color-base3)"
+      }
+    },
+    "tables": {
+      "text": "var(--color-text)",
+      "coloredHeaderText": "var(--color-text-dark)",
+      "oddRow": "var(--color-base2)",
+      "evenRow": "var(--color-base3)",
+      "border": "var(--color-base1)"
+    },
+    "forms": {
+      "buttons": {
+        "actionButton": "var(--color-green)",
+        "dangerousButton": "var(--color-red)",
+        "secondaryActionButton": "var(--color-base0)",
+        "outlineButtonBorder": "var(--color-base01)"
+      },
+      "input": {
+        "background": "var(--color-base3)",
+        "border": "var(--color-base1)",
+        "text": "var(--color-base01)"
+      },
+      "dropdown": {
+        "hover": "var(--color-base2)"
+      },
+      "multiSelect": {
+        "itemBackground": "var(--color-base2)"
+      },
+      "checkbox": {
+        "checked": "var(--color-theme)"
+      }
+    },
+    "graphs": {
+      "style": {
+        "gridLine": "var(--color-base1)",
+        "minorGridLine": "var(--color-base03)",
+        "border": "var(--color-base1)",
+        "tooltipBackground": "var(--color-base3)",
+        "selectorButton": {
+          "background": "var(--color-base2)",
+          "hover": "var(--color-base1)",
+          "selected": "var(--color-base01)"
+        },
+        "selectorTextInput": {
+          "background": "var(--color-base2)",
+          "border": "var(--color-base1)"
+        },
+        "selectorRange": {
+          "handle": {
+            "background": "var(--color-base2)",
+            "border": "var(--color-base1)"
+          },
+          "outline": "var(--color-base1)",
+          "selectedArea": "var(--color-blue)",
+          "seriesLine": "var(--color-blue)"
+        },
+        "scrollbar": {
+          "decoration": "var(--color-base3)",
+          "barBackground": "var(--color-base1)",
+          "buttonBackground": "var(--color-base1)",
+          "trackBackground": "var(--color-base2)"
+        }
+      },
+      "punchCard": "var(--color-base03)",
+      "playersOnline": "var(--color-blue)",
+      "tps": {
+        "high": "var(--color-green)",
+        "medium": "var(--color-yellow)",
+        "low": "var(--color-red)"
+      },
+      "cpu": "var(--color-cyan)",
+      "ram": "var(--color-green)",
+      "chunks": "var(--color-yellow)",
+      "entities": "var(--color-violet)",
+      "disk": {
+        "high": "var(--color-green)",
+        "medium": "var(--color-yellow)",
+        "low": "var(--color-red)"
+      },
+      "ping": {
+        "max": "var(--color-orange)",
+        "avg": "var(--color-yellow)",
+        "min": "var(--color-green)"
+      },
+      "worldMap": {
+        "high": "var(--color-green)",
+        "low": "var(--color-base2)",
+        "bars": "var(--color-green)"
+      },
+      "pie": {
+        "colors": [
+          "red",
+          "magenta",
+          "violet",
+          "blue",
+          "cyan",
+          "green",
+          "yellow",
+          "orange"
+        ],
+        "drilldown": [
+          "blue",
+          "yellow",
+          "orange",
+          "magenta"
+        ]
+      }
+    },
+    "data": {
+      "servers": "var(--color-green)",
+      "trend": {
+        "better": "var(--color-green)",
+        "same": "var(--color-yellow)",
+        "worse": "var(--color-orange)"
+      },
+      "play": {
+        "playtime": "var(--color-green)",
+        "playtimeActive": "var(--color-green)",
+        "playtimeAfk": "var(--color-base1)",
+        "sessions": "var(--color-cyan)",
+        "sessionLength": "var(--color-cyan)",
+        "gamemode": "var(--color-cyan)",
+        "firstSeen": "var(--color-green)",
+        "lastSeen": "var(--color-cyan)"
+      },
+      "players": {
+        "count": "var(--color-base03)",
+        "online": "var(--color-blue)",
+        "unique": "var(--color-blue)",
+        "new": "var(--color-green)",
+        "activityIndex": "var(--color-violet)",
+        "veryActive": "var(--color-violet)",
+        "active": "var(--color-green)",
+        "regular": "var(--color-yellow)",
+        "irregular": "var(--color-orange)",
+        "inactive": "var(--color-base0)"
+      },
+      "playerPeakLast": "var(--color-blue)",
+      "playerPeakAllTime": "var(--color-green)",
+      "performance": {
+        "uptime": "var(--color-green)",
+        "downtime": "var(--color-red)",
+        "tps": "var(--color-red)",
+        "msptAverage": "var(--color-orange)",
+        "msptPercentile": "var(--color-yellow)",
+        "tpsLowSpikes": "var(--color-red)",
+        "tpsAverage": "var(--color-orange)",
+        "cpu": "var(--color-yellow)",
+        "ram": "var(--color-green)",
+        "entities": "var(--color-magenta)",
+        "chunks": "var(--color-base00)",
+        "disk": "var(--color-green)",
+        "ping": "var(--color-yellow)"
+      },
+      "calculated": {
+        "insights": "var(--color-red)",
+        "joinAddresses": "var(--color-yellow)",
+        "retention": "var(--color-violet)",
+        "retentionNewPlayers": "var(--color-green)",
+        "geolocation": "var(--color-green)",
+        "allowList": "var(--color-orange)",
+        "pluginVersions": "var(--color-blue)"
+      },
+      "playerVersus": {
+        "playerKills": "var(--color-red)",
+        "mobKills": "var(--color-green)",
+        "deaths": "var(--color-base03)",
+        "top-3": {
+          "first": "var(--color-yellow)",
+          "second": "var(--color-base0)",
+          "third": "var(--color-orange)"
+        }
+      },
+      "playerStatus": {
+        "online": "var(--color-green)",
+        "offline": "var(--color-red)",
+        "banned": "var(--color-red)",
+        "operator": "var(--color-blue)",
+        "kicks": "var(--color-yellow)",
+        "nicknames": "var(--color-magenta)"
+      }
+    },
+    "plugin": {
+      "red": "var(--color-red)",
+      "pink": "var(--color-magenta)",
+      "purple": "var(--color-violet)",
+      "deepPurple": "var(--color-violet)",
+      "indigo": "var(--color-blue)",
+      "blue": "var(--color-blue)",
+      "lightBlue": "var(--color-blue)",
+      "cyan": "var(--color-cyan)",
+      "teal": "var(--color-cyan)",
+      "green": "var(--color-green)",
+      "lightGreen": "var(--color-green)",
+      "lime": "var(--color-green)",
+      "yellow": "var(--color-yellow)",
+      "amber": "var(--color-yellow)",
+      "orange": "var(--color-orange)",
+      "deepOrange": "var(--color-orange)",
+      "brown": "var(--color-yellow)",
+      "grey": "var(--color-base1)",
+      "blueGrey": "var(--color-base00)",
+      "black": "var(--color-base03)"
+    }
+  },
+  "nightModeUseCases": {
+    "themeColorOptions": [
+      "theme"
+    ],
+    "referenceColors": {
+      "theme": "var(--color-base02)",
+      "themeText": "var(--color-green)",
+      "text": "var(--color-base3)"
+    },
+    "layout": {
+      "background": "var(--color-base03)",
+      "title": "var(--color-text)",
+      "loader": {
+        "border": "var(--color-green)",
+        "background": "var(--color-green)"
+      },
+      "divider": "var(--color-base01)"
+    },
+    "sidebar": {
+      "text": "var(--color-text)",
+      "divider": "var(--color-base1)",
+      "navigationItem": {
+        "icon": "var(--color-text)",
+        "background": "var(--color-base02)"
+      },
+      "collapsibleSection": {
+        "background": "var(--color-base03)",
+        "hover": "var(--color-base00)",
+        "border": "var(--color-base00)"
+      },
+      "background": "var(--color-base02)"
+    },
+    "cards": {
+      "background": "var(--color-base02)",
+      "header": {
+        "background": "var(--color-base02)",
+        "border": "var(--color-base00)"
+      },
+      "border": "var(--color-base00)"
+    },
+    "tabs": {
+      "background": "var(--color-base02)",
+      "selected": "var(--color-base02)",
+      "border": "var(--color-base01)"
+    },
+    "tables": {
+      "coloredHeaderText": "var(--color-text)",
+      "oddRow": "var(--color-base03)",
+      "evenRow": "var(--color-base02)",
+      "border": "var(--color-base01)"
+    },
+    "forms": {
+      "input": {
+        "background": "var(--color-base02)",
+        "border": "var(--color-base01)",
+        "text": "var(--color-text)"
+      },
+      "multiSelect": {
+        "itemBackground": "var(--color-base01)"
+      },
+      "checkbox": {
+        "checked": "var(--color-green)"
+      },
+      "dropdown": {
+        "hover": "var(--color-base0)"
+      },
+      "buttons": {
+        "outlineButtonBorder": "var(--color-base2)"
+      }
+    },
+    "calendar": {
+      "today": "var(--color-base0)",
+      "border": "var(--color-base01)",
+      "popover": {
+        "body": "var(--color-base01)"
+      }
+    },
+    "graphs": {
+      "style": {
+        "gridLine": "var(--color-base01)",
+        "minorGridLine": "var(--color-base03)",
+        "border": "var(--color-base01)",
+        "tooltipBackground": "var(--color-base02)",
+        "selectorButton": {
+          "background": "var(--color-base01)",
+          "hover": "var(--color-base1)",
+          "selected": "var(--color-base1)"
+        },
+        "selectorTextInput": {
+          "background": "var(--color-theme)",
+          "border": "var(--color-base01)"
+        },
+        "selectorRange": {
+          "selectedArea": "var(--color-base3)",
+          "handle": {
+            "background": "var(--color-base01)"
+          }
+        },
+        "scrollbar": {
+          "decoration": "var(--color-text)",
+          "barBackground": "var(--color-base01)",
+          "buttonBackground": "var(--color-base1)",
+          "trackBackground": "var(--color-base02)"
+        }
+      },
+      "punchCard": "var(--color-text)"
+    },
+    "data": {
+      "players": {
+        "count": "var(--color-text)"
+      },
+      "playerVersus": {
+        "deaths": "var(--color-text)"
+      }
+    }
+  }
+}

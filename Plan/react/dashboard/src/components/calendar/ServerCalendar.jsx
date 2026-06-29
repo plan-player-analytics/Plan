@@ -1,44 +1,36 @@
-import React from "react";
+import React, {useCallback, useMemo} from "react";
 import FullCalendar from '@fullcalendar/react'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import {useTranslation} from "react-i18next";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faHandPointer} from "@fortawesome/free-regular-svg-icons";
-import {useTimePreferences} from "../text/FormattedTime.jsx";
-import {formatTimeAmount} from "../../util/format/TimeAmountFormat.js";
 import {localeService} from "../../service/localeService.js";
+import {useTimeAmountFormatter} from "../../util/format/useTimeAmountFormatter.js";
+import {staticSite} from "../../service/backendConfiguration.js";
 
-const ServerCalendar = ({series, firstDay, onSelect}) => {
+const ServerCalendar = ({series, firstDay, onSelect, height}) => {
     const {t} = useTranslation();
+    const {formatTime} = useTimeAmountFormatter();
 
-    const explainerStyle = {
-        position: "absolute",
-        top: "0.5rem",
-        right: "1rem"
-    };
-    const timePreferences = useTimePreferences();
-
-    const formatTitle = entry => {
+    const formatTitle = useCallback(entry => {
         switch (entry.title) {
             case 'html.label.playtime':
-                return t(entry.title) + ": " + formatTimeAmount(timePreferences, entry.value)
+                return t(entry.title) + ": " + formatTime(entry.value)
             case 'html.calendar.unique':
             case 'html.calendar.new':
                 return t(entry.title) + " " + entry.value
             default:
                 return t(entry.title) + ": " + entry.value;
         }
-    }
+    }, [formatTime, t]);
 
-    const actualSeries = series.map(entry => {
+    const actualSeries = useMemo(() => series.map(entry => {
         return {
             title: formatTitle(entry),
             start: entry.start,
             end: entry.end,
             color: entry.color
         }
-    });
+    }), [series, formatTitle]);
 
     const buttonText = {
         today: t('plugin.generic.today').toLowerCase().replaceAll("'", ''),
@@ -49,7 +41,6 @@ const ServerCalendar = ({series, firstDay, onSelect}) => {
 
     return (
         <div id={'server-calendar'}>
-            <p style={explainerStyle}><FontAwesomeIcon icon={faHandPointer}/> {t('html.text.clickAndDrag')}</p>
             <FullCalendar
                 locale={localeService.getIntlFriendlyLocale()}
                 plugins={[interactionPlugin, dayGridPlugin]}
@@ -60,8 +51,8 @@ const ServerCalendar = ({series, firstDay, onSelect}) => {
                 firstDay={firstDay}
                 initialView='dayGridMonth'
                 navLinks={true}
-                height={800}
-                contentHeight={800}
+                height={height || 800}
+                contentHeight={height || 800}
                 headerToolbar={{
                     left: 'title',
                     center: '',
@@ -69,7 +60,7 @@ const ServerCalendar = ({series, firstDay, onSelect}) => {
                 }}
                 buttonText={buttonText}
                 editable={false}
-                selectable={Boolean(onSelect)}
+                selectable={Boolean(onSelect && !staticSite)}
                 select={onSelect}
                 unselectAuto={true}
                 events={(_fetchInfo, successCallback) => successCallback(actualSeries)}

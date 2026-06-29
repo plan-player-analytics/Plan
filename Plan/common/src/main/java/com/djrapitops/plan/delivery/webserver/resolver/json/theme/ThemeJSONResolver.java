@@ -68,10 +68,10 @@ public class ThemeJSONResolver implements NoAuthResolver {
                     @ApiResponse(responseCode = "200", content = @Content(mediaType = MimeType.JSON, schema = @Schema(implementation = ThemeDto.class))),
                     @ApiResponse(responseCode = "400", description = "If 'theme' parameter is not specified or invalid")
             },
-            parameters = @Parameter(in = ParameterIn.QUERY, name = "theme", description = "Name of the theme, alphanumeric with dashes", examples = {
+            parameters = {@Parameter(in = ParameterIn.QUERY, name = "theme", description = "Name of the theme, alphanumeric with dashes", examples = {
                     @ExampleObject("default"),
                     @ExampleObject("color-blind")
-            }),
+            }), @Parameter(in = ParameterIn.QUERY, name = "onlyJar", description = "Only accept themes from the jar", examples = {@ExampleObject("true")})},
             requestBody = @RequestBody(content = @Content(examples = @ExampleObject()))
     )
     @Override

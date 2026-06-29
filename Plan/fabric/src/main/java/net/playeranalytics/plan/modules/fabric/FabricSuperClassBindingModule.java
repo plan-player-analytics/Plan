@@ -22,12 +22,12 @@ import com.djrapitops.plan.gathering.listeners.ListenerSystem;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerServerInfo;
 import com.djrapitops.plan.settings.ConfigSystem;
-import com.djrapitops.plan.settings.FabricConfigSystem;
+import com.djrapitops.plan.settings.GameServerConfigSystem;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.version.VersionChecker;
 import dagger.Binds;
 import dagger.Module;
-import net.minecraft.server.world.ServerWorld;
+import net.minecraft.server.level.ServerLevel;
 import net.playeranalytics.plan.FabricServerShutdownSave;
 import net.playeranalytics.plan.gathering.FabricSensor;
 import net.playeranalytics.plan.gathering.listeners.FabricListenerSystem;
@@ -49,7 +49,7 @@ public interface FabricSuperClassBindingModule {
     DBSystem bindDBSystem(FabricDBSystem dbSystem);
 
     @Binds
-    ConfigSystem bindConfigSystem(FabricConfigSystem configSystem);
+    ConfigSystem bindConfigSystem(GameServerConfigSystem configSystem);
 
     @Binds
     ListenerSystem bindListenerSystem(FabricListenerSystem listenerSystem);
@@ -58,10 +58,11 @@ public interface FabricSuperClassBindingModule {
     ServerShutdownSave bindServerShutdownSave(FabricServerShutdownSave shutdownSave);
 
     @Binds
-    ServerSensor<ServerWorld> bindServerSensor(FabricSensor sensor);
+    ServerSensor<ServerLevel> bindServerSensor(FabricSensor sensor);
 
     @Binds
-    ServerSensor<?> bindGenericsServerSensor(ServerSensor<ServerWorld> sensor);
+    @SuppressWarnings("java:S1452")
+    ServerSensor<?> bindGenericsServerSensor(ServerSensor<ServerLevel> sensor);
 
     @Binds
     VersionChecker bindVersionChecker(FabricVersionChecker versionChecker);

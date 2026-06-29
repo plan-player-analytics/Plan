@@ -29,12 +29,12 @@ import com.djrapitops.plan.storage.database.transactions.events.BanStatusTransac
 import com.djrapitops.plan.storage.database.transactions.events.KickStoreTransaction;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.mojang.authlib.GameProfile;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.minecraft.network.packet.c2s.handshake.ConnectionIntent;
-import net.minecraft.network.packet.c2s.handshake.HandshakeC2SPacket;
-import net.minecraft.server.dedicated.MinecraftDedicatedServer;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.network.protocol.handshake.ClientIntent;
+import net.minecraft.network.protocol.handshake.ClientIntentionPacket;
+import net.minecraft.server.dedicated.DedicatedServer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.NameAndId;
 import net.playeranalytics.plan.gathering.FabricPlayerPositionTracker;
 import net.playeranalytics.plan.gathering.domain.FabricPlayerData;
 import net.playeranalytics.plan.gathering.listeners.FabricListener;
@@ -57,7 +57,7 @@ public class PlayerOnlineListener implements FabricListener {
     private final ServerInfo serverInfo;
     private final DBSystem dbSystem;
     private final ErrorLogger errorLogger;
-    private final MinecraftDedicatedServer server;
+    private final DedicatedServer server;
 
     private final AtomicReference<String> joinAddress = new AtomicReference<>();
 
@@ -73,7 +73,7 @@ public class PlayerOnlineListener implements FabricListener {
             ServerInfo serverInfo,
             DBSystem dbSystem,
             ErrorLogger errorLogger,
-            MinecraftDedicatedServer server
+            DedicatedServer server
     ) {
         this.joinEventConsumer = joinEventConsumer;
         this.leaveEventConsumer = leaveEventConsumer;
@@ -108,7 +108,7 @@ public class PlayerOnlineListener implements FabricListener {
             if (!this.isEnabled) {
                 return;
             }
-            for (ServerPlayerEntity target : targets) {
+            for (ServerPlayer target : targets) {
                 onPlayerKick(target);
             }
         });
@@ -129,10 +129,10 @@ public class PlayerOnlineListener implements FabricListener {
         this.wasRegistered = true;
     }
 
-    private void onHandshake(HandshakeC2SPacket packet) {
+    private void onHandshake(ClientIntentionPacket packet) {
         try {
-            if (packet.intendedState() == ConnectionIntent.LOGIN) {
-                String address = joinAddressValidator.sanitize(packet.address());
+            if (packet.intention() == ClientIntent.LOGIN) {
+                String address = joinAddressValidator.sanitize(packet.hostName());
                 joinAddress.set(address);
             }
         } catch (Exception e) {
@@ -140,9 +140,9 @@ public class PlayerOnlineListener implements FabricListener {
         }
     }
 
-    public void onPlayerLogin(SocketAddress address, GameProfile profile, boolean banned) {
+    public void onPlayerLogin(SocketAddress address, NameAndId profile, boolean banned) {
         try {
-            UUID playerUUID = profile.getId();
+            UUID playerUUID = profile.id();
             ServerUUID serverUUID = serverInfo.getServerUUID();
 
             String playerJoinAddress = joinAddress.get();
@@ -156,9 +156,9 @@ public class PlayerOnlineListener implements FabricListener {
         }
     }
 
-    public void onPlayerKick(ServerPlayerEntity player) {
+    public void onPlayerKick(ServerPlayer player) {
         try {
-            UUID uuid = player.getUuid();
+            UUID uuid = player.getUUID();
             if (FabricAFKListener.afkTracker.isAfk(uuid)) {
                 return;
             }
@@ -169,7 +169,7 @@ public class PlayerOnlineListener implements FabricListener {
         }
     }
 
-    public void onPlayerJoin(ServerPlayerEntity player) {
+    public void onPlayerJoin(ServerPlayer player) {
         try {
             actOnJoinEvent(player);
         } catch (Exception e) {
@@ -177,8 +177,8 @@ public class PlayerOnlineListener implements FabricListener {
         }
     }
 
-    private void actOnJoinEvent(ServerPlayerEntity player) {
-        UUID playerUUID = player.getUuid();
+    private void actOnJoinEvent(ServerPlayer player) {
+        UUID playerUUID = player.getUUID();
         long time = System.currentTimeMillis();
 
         FabricAFKListener.afkTracker.performedAction(playerUUID, time);
@@ -191,7 +191,7 @@ public class PlayerOnlineListener implements FabricListener {
     }
 
     // No event priorities on Fabric, so this has to be called with onPlayerQuit()
-    public void beforePlayerQuit(ServerPlayerEntity player) {
+    public void beforePlayerQuit(ServerPlayer player) {
         leaveEventConsumer.beforeLeave(PlayerLeave.builder()
                 .server(serverInfo.getServer())
                 .player(new FabricPlayerData(player, server, null))
@@ -199,7 +199,7 @@ public class PlayerOnlineListener implements FabricListener {
                 .build());
     }
 
-    public void onPlayerQuit(ServerPlayerEntity player) {
+    public void onPlayerQuit(ServerPlayer player) {
         try {
             actOnQuitEvent(player);
         } catch (Exception e) {
@@ -207,8 +207,8 @@ public class PlayerOnlineListener implements FabricListener {
         }
     }
 
-    private void actOnQuitEvent(ServerPlayerEntity player) {
-        UUID playerUUID = player.getUuid();
+    private void actOnQuitEvent(ServerPlayer player) {
+        UUID playerUUID = player.getUUID();
         long time = System.currentTimeMillis();
         FabricAFKListener.afkTracker.loggedOut(playerUUID, time);
         FabricPlayerPositionTracker.removePlayer(playerUUID);

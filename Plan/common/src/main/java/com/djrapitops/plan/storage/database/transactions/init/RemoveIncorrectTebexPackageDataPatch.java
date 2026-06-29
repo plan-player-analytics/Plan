@@ -35,7 +35,7 @@ public class RemoveIncorrectTebexPackageDataPatch extends Patch {
 
     private Query<Boolean> hasWrongRows() {
         String sql = SELECT + "COUNT(*) as c" + FROM + TABLE_NAME +
-                WHERE + "packages LIKE 'TebexPackage%'";
+                WHERE + "packages LIKE 'TebexPackage%'" + lockForUpdate();
         return db -> db.queryOptional(sql, set -> set.getInt("c") > 0).orElse(false);
     }
 

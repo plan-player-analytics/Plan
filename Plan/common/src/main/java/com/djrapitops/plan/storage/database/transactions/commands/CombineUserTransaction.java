@@ -65,7 +65,9 @@ public class CombineUserTransaction extends ChangeUserUUIDTransaction {
                 " SET " + UserInfoTable.USER_ID + "=?" +
                 WHERE + UserInfoTable.USER_ID + "=?" +
                 AND + UserInfoTable.SERVER_ID + " NOT IN (" +
-                SELECT + UserInfoTable.SERVER_ID + FROM + UserInfoTable.TABLE_NAME + WHERE + UserInfoTable.USER_ID + "=?)";
+                SELECT + UserInfoTable.SERVER_ID + FROM + UserInfoTable.TABLE_NAME + WHERE + UserInfoTable.USER_ID + "=?" +
+                lockForUpdate() +
+                ")";
         return new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

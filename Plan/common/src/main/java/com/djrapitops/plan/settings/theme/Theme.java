@@ -67,22 +67,25 @@ public class Theme implements SubSystem {
 
     @Override
     public void enable() {
+        if (files.getFileFromPluginFolder("theme.yml").exists()) {
+            migrateThemeYmlValues();
+        }
+    }
+
+    private void migrateThemeYmlValues() {
         ThemeConfig themeConfig = new ThemeConfig(files, config, logger);
-        if (themeConfig.fileExists()) {
+        if (containsNonDefaultValues(themeConfig)) {
             if (themeConfig.contains("GraphColors.WorldPie")) {
                 logger.info("Copied theme.yml 'GraphColors.WorldPie' to config.yml '" + DisplaySettings.WORLD_PIE.getPath() + "'");
                 config.set(DisplaySettings.WORLD_PIE, themeConfig.getString("GraphColors.WorldPie"));
             }
-
-            if (containsNonDefaultValues(themeConfig)) {
-                logger.warn("'theme.yml' file has been deprecated in favor of theme-editor on the website. Please delete it manually after noting necessary details (modifications from default were detected.)");
-            } else {
-                try {
-                    logger.info("Deleting deprecated 'theme.yml' file automatically since it contains only default values.");
-                    Files.deleteIfExists(ThemeConfig.getConfigFile(files).toPath());
-                } catch (IOException e) {
-                    logger.warn("'theme.yml' failed to be deleted automatically (" + e.getMessage() + "). Please delete it manually.");
-                }
+            logger.warn("'theme.yml' file has been deprecated in favor of theme-editor on the website. Please delete it manually after noting necessary details (modifications from default were detected.)");
+        } else {
+            try {
+                logger.info("Deleting deprecated 'theme.yml' file automatically since it contains only default values.");
+                Files.deleteIfExists(ThemeConfig.getConfigFile(files).toPath());
+            } catch (IOException e) {
+                logger.warn("'theme.yml' failed to be deleted automatically (" + e.getMessage() + "). Please delete it manually.");
             }
         }
     }

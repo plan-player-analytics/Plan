@@ -62,15 +62,15 @@ public class ExtensionAggregateDoublesQuery implements Query<Map<Integer, Extens
     @Override
     public Map<Integer, ExtensionData.Builder> executeQuery(SQLDB db) {
         String selectDoubleAverage = SELECT +
-                ExtensionPlayerValueTable.PROVIDER_ID +
-                ",AVG(" + ExtensionPlayerValueTable.DOUBLE_VALUE + ") as average" +
+                ExtensionPlayerValueTable.PROVIDER_ID + ',' +
+                avg(ExtensionPlayerValueTable.DOUBLE_VALUE) + " as average" +
                 FROM + ExtensionPlayerValueTable.TABLE_NAME +
                 WHERE + ExtensionPlayerValueTable.DOUBLE_VALUE + IS_NOT_NULL +
                 GROUP_BY + ExtensionPlayerValueTable.PROVIDER_ID;
 
         String selectDoubleTotal = SELECT +
-                ExtensionPlayerValueTable.PROVIDER_ID +
-                ",SUM(" + ExtensionPlayerValueTable.DOUBLE_VALUE + ") as total" +
+                ExtensionPlayerValueTable.PROVIDER_ID + ',' +
+                sum(ExtensionPlayerValueTable.DOUBLE_VALUE) + " as total" +
                 FROM + ExtensionPlayerValueTable.TABLE_NAME +
                 WHERE + ExtensionPlayerValueTable.DOUBLE_VALUE + IS_NOT_NULL +
                 GROUP_BY + ExtensionPlayerValueTable.PROVIDER_ID;
