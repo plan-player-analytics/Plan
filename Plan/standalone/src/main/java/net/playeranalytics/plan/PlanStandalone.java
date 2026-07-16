@@ -127,6 +127,8 @@ public class PlanStandalone implements PlanPlugin {
             if ("0.0.0.0".equals(ip)) {
                 // First installation, prompt for settings
                 LOGGER.info("\n--------------\n");
+                LOGGER.info("Player Analytics - First boot setup (This appears if config.yml doesn't exist)");
+                LOGGER.info("\n--------------\n");
                 promptSetting(config, ProxySettings.IP, "Please enter IP / address to access this server");
                 promptSetting(config, DatabaseSettings.MYSQL_HOST, "Please enter MySQL address");
                 promptSetting(config, DatabaseSettings.MYSQL_PORT, "Please enter MySQL port");
