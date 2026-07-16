@@ -36,7 +36,7 @@ public class TopListQueries {
 
     public static Query<Optional<TopListEntry<Long>>> fetchNthTop10PlaytimePlayerOn(ServerUUID serverUUID, int n, long after, long before) {
         @Language("SQL")
-        String sql = SELECT + UsersTable.USER_NAME + ", " +
+        String sql = SELECT + "u." + UsersTable.USER_NAME + ", " +
                 "SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as playtime" +
                 FROM + SessionsTable.TABLE_NAME + " s" +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + "=s." + SessionsTable.USER_ID +
@@ -44,7 +44,7 @@ public class TopListQueries {
                 WHERE + "(? IS NULL OR se." + ServerTable.SERVER_UUID + "=?)" +
                 AND + SessionsTable.SESSION_START + ">?" +
                 AND + SessionsTable.SESSION_END + "<?" +
-                GROUP_BY + UsersTable.USER_NAME +
+                GROUP_BY + "u." + UsersTable.USER_NAME +
                 ORDER_BY + "playtime DESC" +
                 LIMIT + "10" +
                 OFFSET + "?";
@@ -74,14 +74,14 @@ public class TopListQueries {
 
     public static Query<Optional<TopListEntry<Long>>> fetchNthTop10PlayerKillCountOn(ServerUUID serverUUID, int n, long after, long before) {
         @Language("SQL")
-        String sql = SELECT + UsersTable.USER_NAME + ", " +
+        String sql = SELECT + "u." + UsersTable.USER_NAME + ", " +
                 "COUNT(1) as kills" +
                 FROM + KillsTable.TABLE_NAME + " k" +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.USER_UUID + "=k." + KillsTable.KILLER_UUID +
                 WHERE + KillsTable.SERVER_UUID + "=?" +
                 AND + KillsTable.DATE + ">?" +
                 AND + KillsTable.DATE + "<?" +
-                GROUP_BY + UsersTable.USER_NAME +
+                GROUP_BY + "u." + UsersTable.USER_NAME +
                 ORDER_BY + "kills DESC" +
                 LIMIT + "10" +
                 OFFSET + "?";
