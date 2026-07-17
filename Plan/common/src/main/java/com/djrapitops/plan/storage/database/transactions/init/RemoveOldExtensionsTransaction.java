@@ -19,7 +19,9 @@ package com.djrapitops.plan.storage.database.transactions.init;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.ExtensionSettings;
 import com.djrapitops.plan.storage.database.queries.Query;
+import com.djrapitops.plan.storage.database.queries.QueryParameterSetter;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.extension.*;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
@@ -51,13 +53,15 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
 
     @Override
     protected void performOperations() {
-        for (Integer providerID : query(inactiveProviderIDsQuery())) {
+        Collection<Integer> providerIds = query(inactiveProviderIDsQuery());
+        for (Integer providerID : providerIds) {
             removeValues(providerID);
         }
-        for (Integer providerID : query(inactiveTableProviderIDsQuery())) {
+        Collection<Integer> tableProviderIds = query(inactiveTableProviderIDsQuery());
+        for (Integer providerID : tableProviderIds) {
             removeTableValues(providerID);
         }
-        removeProviders();
+        removeProviders(providerIds, tableProviderIds);
     }
 
     private void removeValues(int providerID) {
@@ -79,37 +83,25 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
         }
     }
 
-    private void removeProviders() {
+    private void removeProviders(Collection<Integer> providerIds, Collection<Integer> tableProviderIds) {
         execute(new ExecStatement(
                 DELETE_FROM + ExtensionProviderTable.TABLE_NAME +
                         WHERE + ExtensionProviderTable.PLUGIN_ID +
-                        " IN (" +
-                        SELECT + ExtensionPluginTable.ID +
-                        FROM + ExtensionPluginTable.TABLE_NAME +
-                        WHERE + ExtensionPluginTable.LAST_UPDATED + "<?" +
-                        AND + ExtensionPluginTable.SERVER_UUID + "=?" + lockForUpdate() +
-                        ")"
+                        " IN (" + Sql.nParameters(providerIds.size()) + ")"
         ) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, deleteOlder);
-                statement.setString(2, serverUUID.toString());
+                QueryParameterSetter.setParameters(statement, providerIds);
             }
         });
         execute(new ExecStatement(
                 DELETE_FROM + ExtensionTableProviderTable.TABLE_NAME +
                         WHERE + ExtensionTableProviderTable.PLUGIN_ID +
-                        " IN (" +
-                        SELECT + ExtensionPluginTable.ID +
-                        FROM + ExtensionPluginTable.TABLE_NAME +
-                        WHERE + ExtensionPluginTable.LAST_UPDATED + "<?" +
-                        AND + ExtensionPluginTable.SERVER_UUID + "=?" + lockForUpdate() +
-                        ")"
+                        " IN (" + Sql.nParameters(tableProviderIds.size()) + ")"
         ) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, deleteOlder);
-                statement.setString(2, serverUUID.toString());
+                QueryParameterSetter.setParameters(statement, tableProviderIds);
             }
         });
     }
@@ -143,23 +135,27 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
     }
 
     private Query<Collection<Integer>> inactiveTableProviderIDsQuery() {
-        String sql = SELECT + "pr." + ExtensionTableProviderTable.ID +
+        String sql = SELECT + "pr." + ExtensionTableProviderTable.ID + ',' +
+                "pl." + ExtensionPluginTable.LAST_UPDATED + ',' +
+                "pl." + ExtensionPluginTable.PLUGIN_NAME +
                 FROM + ExtensionTableProviderTable.TABLE_NAME + " pr" +
                 INNER_JOIN + ExtensionPluginTable.TABLE_NAME + " pl on pl." + ExtensionPluginTable.ID + "=pr." + ExtensionTableProviderTable.PLUGIN_ID +
-                WHERE + ExtensionPluginTable.LAST_UPDATED + "<?" +
-                AND + ExtensionPluginTable.SERVER_UUID + "=?" + lockForUpdate();
+                WHERE + ExtensionPluginTable.SERVER_UUID + "=?" + lockForUpdate();
         return new QueryStatement<>(sql, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, deleteOlder);
-                statement.setString(2, serverUUID.toString());
+                statement.setString(1, serverUUID.toString());
             }
 
             @Override
             public Collection<Integer> processResults(ResultSet set) throws SQLException {
                 Collection<Integer> providerIds = new HashSet<>();
                 while (set.next()) {
-                    providerIds.add(set.getInt(ExtensionProviderTable.ID));
+                    boolean manuallyDisabled = !extensionSettings.isEnabled(set.getString(ExtensionPluginTable.PLUGIN_NAME));
+                    boolean dataIsOld = set.getLong(ExtensionPluginTable.LAST_UPDATED) < deleteOlder;
+                    if (manuallyDisabled || dataIsOld) {
+                        providerIds.add(set.getInt(ExtensionTableProviderTable.ID));
+                    }
                 }
                 return providerIds;
             }
