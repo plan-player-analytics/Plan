@@ -3,12 +3,8 @@ import org.spongepowered.gradle.vanilla.repository.MinecraftPlatform
 
 plugins {
     id "org.spongepowered.gradle.plugin" version "2.3.0"
-    id "org.spongepowered.gradle.vanilla" version "0.2.1-SNAPSHOT"
+    id "org.spongepowered.gradle.vanilla" version "0.2.2"
 }
-
-// Shadow plugin applied even though shadow is not used in the module,
-// so that VanillaGradle doesn't include Minecraft in runtimeClassPath
-apply plugin: "com.gradleup.shadow"
 
 dependencies {
     implementation project(":common")
@@ -76,6 +72,6 @@ minecraft {
     platform(MinecraftPlatform.SERVER)
 }
 
-tasks.withType(JavaCompile).configureEach {
-    options.release.set(21)
+compileJava {
+    options.release = 21
 }

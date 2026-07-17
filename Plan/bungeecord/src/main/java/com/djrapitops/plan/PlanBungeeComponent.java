@@ -17,6 +17,7 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.commands.PlanCommand;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.types.DatapointModule;
 import com.djrapitops.plan.modules.*;
 import com.djrapitops.plan.modules.bungee.*;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
@@ -39,6 +40,7 @@ import javax.inject.Singleton;
         PlatformAbstractionLayerModule.class,
         FiltersModule.class,
         PlaceholderModule.class,
+        DatapointModule.class,
 
         ProxySuperClassBindingModule.class,
         BungeeSuperClassBindingModule.class,

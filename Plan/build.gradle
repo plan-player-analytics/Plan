@@ -9,9 +9,9 @@ buildscript {
 
 plugins {
     id("base")
-    id "org.sonarqube" version "7.2.3.7755"
-    id "com.gradleup.shadow" version "9.0.0-beta6" apply false
-    id "fabric-loom" version "1.15.4" apply false
+    id "org.sonarqube" version "7.3.1.8318"
+    id "com.gradleup.shadow" version "9.6.0" apply false
+    id "net.fabricmc.fabric-loom" version "1.17.14" apply false
 }
 
 apply plugin: "nebula-aggregate-javadocs"
@@ -21,9 +21,6 @@ clean {
 }
 
 allprojects {
-    group = "com.djrapitops"
-    version = "5.7-SNAPSHOT"
-
     ext {
         majorVersion = "5"
         minorVersion = "7"
@@ -38,6 +35,9 @@ allprojects {
         fullVersionFilename = majorVersion + "." + minorVersion + "-build-" + buildVersion
         fullVersionSemantic = majorVersion + "." + minorVersion + "+build." + buildVersion
     }
+
+    group = "com.djrapitops"
+    version = project.hasProperty("isRelease") ? "$fullVersionFilename" : "5.7-SNAPSHOT"
 }
 
 subprojects {
@@ -49,13 +49,8 @@ subprojects {
     apply plugin: "checkstyle"
     apply plugin: "jacoco"
 
-    compileJava {
-        options.release = 11
-        sourceCompatibility = "${JavaVersion.VERSION_11}"
-    }
-
     ext {
-        daggerVersion = "2.59.2"
+        daggerVersion = "2.60.1"
 
         palVersion = "5.3.0"
 
@@ -71,33 +66,33 @@ subprojects {
 
         commonsTextVersion = "1.15.0"
         commonsCompressVersion = "1.28.0"
-        commonsCodecVersion = "1.21.0"
-        caffeineVersion = "3.2.3"
+        commonsCodecVersion = "1.22.0"
+        caffeineVersion = "3.2.4"
         jetbrainsAnnotationsVersion = "26.1.0"
         jettyVersion = "11.0.26"
-        mysqlVersion = "9.6.0"
-        mariadbVersion = "3.5.7"
+        mysqlVersion = "9.7.0"
+        mariadbVersion = "3.5.9"
         sqliteVersion = "3.42.0.1"
         adventureVersion = "4.24.0"
-        hikariVersion = "7.0.2"
-        slf4jVersion = "2.0.17"
+        hikariVersion = "7.1.0"
+        slf4jVersion = "2.0.18"
         geoIpVersion = "4.4.0"
-        gsonVersion = "2.13.2"
+        gsonVersion = "2.14.0"
         dependencyDownloadVersion = "2.0.0"
-        ipAddressMatcherVersion = "5.6.1"
+        ipAddressMatcherVersion = "5.6.2"
         jasyptVersion = "1.9.3"
 
         bstatsVersion = "3.2.1"
         placeholderapiVersion = "2.11.5"
         nkPlaceholderapiVersion = "1.4-SNAPSHOT"
 
-        junitVersion = "6.0.3"
+        junitVersion = "6.1.2"
         mockitoVersion = "5.23.0"
-        seleniumVersion = "4.41.0"
-        testContainersVersion = "1.21.3"
+        seleniumVersion = "4.46.0"
+        testContainersVersion = "1.21.4"
         awaitilityVersion = "4.3.0"
-        swaggerVersion = "2.2.45"
-        guavaVersion = "33.5.0-jre"
+        swaggerVersion = "2.2.52"
+        guavaVersion = "33.6.0-jre"
     }
 
     repositories {
@@ -146,8 +141,14 @@ subprojects {
         }
     }
 
-    // Fix for UTF-8 files showing with wrong encoding when compiled on Windows machines.
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(25)
+        }
+    }
+
     tasks.withType(JavaCompile).configureEach {
+        options.release = 25
         options.encoding = "UTF-8"
         options.fork = true
     }

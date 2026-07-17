@@ -1,14 +1,14 @@
-import {useMetadata} from "../../hooks/metadataHook";
+import {useMetadata} from "../../hooks/metadataHook.tsx";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faBars, faClockRotateLeft, faCog, faDoorOpen, faPalette, faSyncAlt} from "@fortawesome/free-solid-svg-icons";
-import {useTheme} from "../../hooks/themeHook";
+import {useTheme} from "../../hooks/themeHook.tsx";
 import {Dropdown} from "react-bootstrap";
 import {localeService} from "../../service/localeService";
 import {useTranslation} from "react-i18next";
-import {useNavigation} from "../../hooks/navigationHook";
+import {useNavigation} from "../../hooks/navigationHook.tsx";
 import {baseAddress, staticSite} from "../../service/backendConfiguration";
-import FormattedDate from "../text/FormattedDate";
+import FormattedDate from "../text/FormattedDate.tsx";
 
 const LanguageSelector = () => {
     const languages = localeService.getLanguages();
@@ -72,9 +72,7 @@ const Header = ({page, tab, hideUpdater}) => {
                     {authRequired && user ? <>
                         <span className="me-1 login-username">{user.username} </span>
                         <img alt="user img" className="rounded-circle" src={headImageUrl} style={{height: "2rem"}}/>
-                    </> : <>
-                        <Fa icon={faCog} className="me-2"/>
-                    </>}
+                    </> : <Fa icon={faCog} className="me-2"/>}
                 </Dropdown.Toggle>
 
                 <Dropdown.Menu>

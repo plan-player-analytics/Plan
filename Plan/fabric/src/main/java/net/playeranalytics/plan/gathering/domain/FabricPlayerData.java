@@ -51,7 +51,7 @@ public class FabricPlayerData implements PlatformPlayerData {
 
     @Override
     public Optional<String> getDisplayName() {
-        return Optional.ofNullable(player.getDisplayName()).map(Component::getString);
+        return Optional.of(player.getDisplayName()).map(Component::getString);
     }
 
     @Override
@@ -61,7 +61,7 @@ public class FabricPlayerData implements PlatformPlayerData {
 
     @Override
     public Optional<String> getCurrentWorld() {
-        return Optional.of(player.level().dimension().location().toString());
+        return Optional.of(player.level().dimension().identifier().toString());
     }
 
     @Override

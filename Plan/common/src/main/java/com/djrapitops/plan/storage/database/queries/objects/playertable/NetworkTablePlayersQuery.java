@@ -72,9 +72,9 @@ public class NetworkTablePlayersQuery implements Query<List<TablePlayer>> {
 
         String selectPingData = SELECT +
                 "p." + PingTable.USER_ID + ',' +
-                "AVG(p." + PingTable.AVG_PING + ") as " + PingTable.AVG_PING + "," +
-                "MAX(p." + PingTable.MAX_PING + ") as " + PingTable.MAX_PING + "," +
-                "MIN(p." + PingTable.MIN_PING + ") as " + PingTable.MIN_PING +
+                avg("p." + PingTable.AVG_PING) + " as " + PingTable.AVG_PING + "," +
+                max("p." + PingTable.MAX_PING) + " as " + PingTable.MAX_PING + "," +
+                min("p." + PingTable.MIN_PING) + " as " + PingTable.MIN_PING +
                 FROM + PingTable.TABLE_NAME + " p" +
                 GROUP_BY + "p." + PingTable.USER_ID;
 

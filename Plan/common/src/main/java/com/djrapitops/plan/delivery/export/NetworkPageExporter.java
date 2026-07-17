@@ -16,26 +16,29 @@
  */
 package com.djrapitops.plan.delivery.export;
 
+import com.djrapitops.plan.delivery.rendering.json.datapoint.DatapointType;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.identification.Server;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import org.apache.commons.lang3.StringUtils;
-import org.apache.commons.lang3.Strings;
 import org.apache.commons.text.StringEscapeUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Handles exporting of /network page html, data and resources.
@@ -90,9 +93,7 @@ public class NetworkPageExporter extends FileExporter {
         Database.State dbState = dbSystem.getDatabase().getState();
         if (dbState == Database.State.CLOSED || dbState == Database.State.CLOSING) return;
 
-        ExportPaths exportPaths = new ExportPaths();
-        exportPaths.put("./players", toRelativePathFromRoot("players"));
-        exportJSON(exportPaths, toDirectory, server);
+        exportJSON(toDirectory, server.getUuid());
         exportReactRedirects(toDirectory);
     }
 
@@ -103,19 +104,19 @@ public class NetworkPageExporter extends FileExporter {
     /**
      * Perform export for a network page json payload.
      *
-     * @param exportPaths Replacement store for player file paths.
      * @param toDirectory Path to Export directory
-     * @param server      Server to export as Network page, {@link Server#isProxy()} assumed true.
+     * @param serverUUID  Server to export as Network page, {@link Server#isProxy()} assumed true.
      * @throws IOException       If a template can not be read from jar/disk or the result written
      * @throws NotFoundException If a file or resource that is being exported can not be found
      */
-    public void exportJSON(ExportPaths exportPaths, Path toDirectory, Server server) throws IOException {
-        String serverUUID = server.getUuid().toString();
-
-        exportJSON(exportPaths, toDirectory,
-                "network/overview",
-                "network/servers",
-                "network/sessionsOverview",
+    public void exportJSON(Path toDirectory, ServerUUID serverUUID) throws IOException {
+        long month = TimeUnit.DAYS.toMillis(30);
+        long monthAgo = System.currentTimeMillis() - month;
+        String datapointType = "datapoint?type=";
+        String after = "&after=" + monthAgo;
+        String afterMillis = "&afterMillisAgo=";
+        String beforeMillis = "&beforeMillisAgo=";
+        exportJSON(toDirectory,
                 "network/playerbaseOverview",
                 "graph?type=playersOnline&server=" + serverUUID,
                 "graph?type=playersOnlineProxies",
@@ -132,35 +133,80 @@ public class NetworkPageExporter extends FileExporter {
                 "extensionData?server=" + serverUUID,
                 "retention",
                 "joinAddresses",
-                "playersTable"
+                "playersTable",
+                datapointType + DatapointType.PLAYTIME,
+                datapointType + DatapointType.PLAYTIME + after,
+                datapointType + DatapointType.PLAYTIME + afterMillis + month,
+                datapointType + DatapointType.AFK_TIME + after,
+                datapointType + DatapointType.AFK_TIME + afterMillis + month,
+                datapointType + DatapointType.AFK_TIME_PERCENTAGE + after,
+                datapointType + DatapointType.AFK_TIME_PERCENTAGE + afterMillis + month,
+                datapointType + DatapointType.SERVER_OCCUPIED + afterMillis + month,
+                datapointType + DatapointType.MOST_ACTIVE_GAME_MODE + afterMillis + month,
+                datapointType + DatapointType.WORLD_PIE + after,
+                datapointType + DatapointType.SERVER_PIE + afterMillis + month,
+                datapointType + DatapointType.UNIQUE_PLAYERS_COUNT + afterMillis + month,
+                datapointType + DatapointType.UNIQUE_PLAYERS_COUNT + afterMillis + TimeUnit.DAYS.toMillis(7),
+                datapointType + DatapointType.UNIQUE_PLAYERS_COUNT + afterMillis + TimeUnit.DAYS.toMillis(1),
+                datapointType + DatapointType.NEW_PLAYERS,
+                datapointType + DatapointType.NEW_PLAYERS + afterMillis + month,
+                datapointType + DatapointType.NEW_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(7),
+                datapointType + DatapointType.NEW_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(1),
+                datapointType + DatapointType.REGULAR_PLAYERS,
+                datapointType + DatapointType.PLAYERS_ONLINE,
+                datapointType + DatapointType.PLAYERS_ONLINE_PEAK + afterMillis + TimeUnit.DAYS.toMillis(2),
+                datapointType + DatapointType.PLAYERS_ONLINE_PEAK,
+                datapointType + DatapointType.SESSION_COUNT,
+                datapointType + DatapointType.SESSION_COUNT + after,
+                datapointType + DatapointType.PLAYTIME_PER_PLAYER_AVERAGE,
+                datapointType + DatapointType.SESSION_LENGTH_AVERAGE,
+                datapointType + DatapointType.PLAYER_KILLS,
+                datapointType + DatapointType.MOB_KILLS,
+                datapointType + DatapointType.DEATHS,
+                datapointType + DatapointType.UPTIME_CURRENT,
+                // Week comparison
+                datapointType + DatapointType.UNIQUE_PLAYERS_COUNT + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L),
+                datapointType + DatapointType.NEW_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L),
+                datapointType + DatapointType.REGULAR_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L),
+                datapointType + DatapointType.PLAYTIME_PER_PLAYER_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L),
+                datapointType + DatapointType.SESSION_LENGTH_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L),
+                datapointType + DatapointType.SESSION_COUNT + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L),
+                datapointType + DatapointType.PLAYER_KILLS + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L),
+                datapointType + DatapointType.MOB_KILLS + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L),
+                datapointType + DatapointType.DEATHS + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L),
+                datapointType + DatapointType.REGULAR_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(7),
+                datapointType + DatapointType.PLAYTIME_PER_PLAYER_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(7),
+                datapointType + DatapointType.SESSION_LENGTH_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(7),
+                datapointType + DatapointType.SESSION_COUNT + afterMillis + TimeUnit.DAYS.toMillis(7),
+                datapointType + DatapointType.PLAYER_KILLS + afterMillis + TimeUnit.DAYS.toMillis(7),
+                datapointType + DatapointType.MOB_KILLS + afterMillis + TimeUnit.DAYS.toMillis(7),
+                datapointType + DatapointType.DEATHS + afterMillis + TimeUnit.DAYS.toMillis(7)
         );
     }
 
-    private void exportJSON(ExportPaths exportPaths, Path toDirectory, String... resources) throws IOException {
+    private void exportJSON(Path toDirectory, String... resources) throws IOException {
         for (String resource : resources) {
-            exportJSON(exportPaths, toDirectory, resource);
+            exportJSON(toDirectory, resource);
         }
     }
 
-    private void exportJSON(ExportPaths exportPaths, Path toDirectory, String resource) throws IOException {
-        Response response = getJSONResponse(resource)
-                .orElseThrow(() -> new NotFoundException(resource + " was not properly exported: not found"));
+    private void exportJSON(Path toDirectory, String resource) throws IOException {
+        Optional<Response> response = getJSONResponse(resource);
 
-        String jsonResourceName = toFileName(toJSONResourceName(resource)) + ".json";
+        String jsonResourceName = toFileName(toJSONResourceName(resource), "json");
 
         String relativePlayerLink = toRelativePathFromRoot("player");
-        export(toDirectory.resolve("data").resolve(jsonResourceName),
-                // Replace ../player in urls to fix player page links
-                StringUtils.replaceEach(response.getAsString(),
-                        new String[]{StringEscapeUtils.escapeJson("../player"), StringEscapeUtils.escapeJson("./player")},
-                        new String[]{StringEscapeUtils.escapeJson(relativePlayerLink), StringEscapeUtils.escapeJson(relativePlayerLink)}
-                )
-        );
-        exportPaths.put("./v1/" + resource, toRelativePathFromRoot("data/" + jsonResourceName));
-    }
-
-    private String toJSONResourceName(String resource) {
-        return StringUtils.replaceEach(resource, new String[]{"?", "&", "type=", "server="}, new String[]{"-", "_", "", ""});
+        if (response.isPresent()) {
+            export(toDirectory.resolve("data").resolve(jsonResourceName),
+                    // Replace ../player in urls to fix player page links
+                    StringUtils.replaceEach(response.get().getAsString(),
+                            new String[]{StringEscapeUtils.escapeJson("../player"), StringEscapeUtils.escapeJson("./player")},
+                            new String[]{StringEscapeUtils.escapeJson(relativePlayerLink), StringEscapeUtils.escapeJson(relativePlayerLink)}
+                    )
+            );
+        } else {
+            Files.deleteIfExists(toDirectory.resolve("data").resolve(jsonResourceName));
+        }
     }
 
     private Optional<Response> getJSONResponse(String resource) {
@@ -176,9 +222,4 @@ public class NetworkPageExporter extends FileExporter {
         // Network html is exported at /network//index.html or /server/index.html
         return "../" + toNonRelativePath(resourceName);
     }
-
-    private String toNonRelativePath(String resourceName) {
-        return Strings.CI.remove(Strings.CI.remove(resourceName, "../"), "./");
-    }
-
 }

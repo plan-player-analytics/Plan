@@ -1,4 +1,7 @@
-import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+plugins {
+    id "io.papermc.hangar-publish-plugin" version "0.1.4"
+    id "org.spongepowered.gradle.ore" version "2.3.0"
+}
 
 apply plugin: "com.gradleup.shadow"
 
@@ -12,11 +15,8 @@ dependencies {
     implementation project(":nukkit")
     implementation project(":sponge")
     implementation project(":bungeecord")
-    // Shadow configuration required to depend on Velocity due to newer Java version
-    implementation project(path: ":velocity", configuration: "shadow")
-
-    // Shadow configuration required to depend on Folia due to newer Java version
-    implementation project(path: ":folia", configuration: "shadow")
+    implementation project(":velocity")
+    implementation project(":folia")
 
     // Shadow configuration required to only relocate adventure calls in ComponentConverter, not whole plugin
     implementation project(path: ":extensions:adventure", configuration: "shadow")
@@ -28,7 +28,7 @@ jar {
             'MixinConfigs': 'plan-sponge.mixins.json'
     ])
 }
-tasks.named("shadowJar", ShadowJar) {
+shadowJar {
     // Exclude these files
     exclude "**/*.svg"
     exclude "**/*.psd"
@@ -115,5 +115,41 @@ publishing {
 
             artifact shadowJar
         }
+    }
+}
+
+hangarPublish {
+    publications.register("plugin") {
+        version.set(project.fullVersionSemantic)
+        id.set("Plan-Player-Analytics")
+        channel.set(providers.environmentVariable("RELEASE_PRERELEASE").map { it == "true" ? "Snapshot" : "Release" }.orElse("Release"))
+        changelog.set(providers.environmentVariable("RELEASE_CHANGELOG"))
+        apiKey.set(providers.environmentVariable("HANGAR_API_TOKEN"))
+        def downloadUrl = providers.environmentVariable("RELEASE_DOWNLOAD_URL")
+
+        platforms {
+            paper {
+                url.set(downloadUrl)
+                platformVersions.set(["1.13-1.21.11"])
+            }
+            waterfall {
+                url.set(downloadUrl)
+                platformVersions.set(["1.13-1.21"])
+            }
+            velocity {
+                url.set(downloadUrl)
+                platformVersions.set(["3.5"])
+            }
+        }
+    }
+}
+
+oreDeployment {
+    defaultPublication {
+        projectId.set('plan')
+        channel.set(providers.environmentVariable("RELEASE_PRERELEASE").map { it == "true" ? "DEV" : "Release" }.orElse("Release"))
+        versionBody.set(providers.environmentVariable("RELEASE_CHANGELOG"))
+
+        publishArtifacts.from(file(providers.environmentVariable("RELEASE_JAR_PATH").getOrElse("Plan.jar")))
     }
 }

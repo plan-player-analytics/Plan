@@ -1,9 +1,9 @@
 import React from "react";
 import InsightsFor30DaysCard from "../../common/InsightsFor30DaysCard";
-import Datapoint from "../../../Datapoint";
+import Datapoint from "../../../datapoint/Datapoint.tsx";
 import {useTranslation} from "react-i18next";
 import {faHandSparkles} from "@fortawesome/free-solid-svg-icons";
-import {CardLoader} from "../../../navigation/Loader";
+import {CardLoader} from "../../../navigation/Loader.tsx";
 
 const PvpPveInsightsCard = ({data}) => {
     const {t} = useTranslation();

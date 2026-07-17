@@ -88,6 +88,7 @@ public enum CommandLang implements Lang {
     INFO_VERSION("command.subcommand.info.version", "Cmd Info - Version", "  §2Version: §f${0}"),
     INFO_UPDATE("command.subcommand.info.update", "Cmd Info - Update", "  §2Update Available: §f${0}"),
     INFO_DATABASE("command.subcommand.info.database", "Cmd Info - Database", "  §2Current Database: §f${0}"),
+    INFO_DATABASE_QUEUE("command.subcommand.info.databaseQueue", "Cmd Info - Database Queue", "  §2Database Queue size: §f${0}"),
     INFO_PROXY_CONNECTION("command.subcommand.info.proxy", "Cmd Info - Bungee Connection", "  §2Connected to Proxy: §f${0}"),
     INFO_SERVER_UUID("command.subcommand.info.serverUUID", "Cmd Info - Server UUID", "  §2Server UUID: §f${0}"),
 

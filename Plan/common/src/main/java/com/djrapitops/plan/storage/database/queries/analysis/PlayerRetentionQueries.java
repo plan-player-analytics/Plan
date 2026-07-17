@@ -42,7 +42,7 @@ public class PlayerRetentionQueries {
 
     public static Query<List<RetentionData>> fetchRetentionData(ServerUUID serverUUID) {
         String sql = SELECT +
-                UsersTable.USER_UUID + ',' +
+                "u." + UsersTable.USER_UUID + ',' +
                 "ui." + UserInfoTable.REGISTERED + ',' +
                 "MAX(" + SessionsTable.SESSION_END + ") as last_seen," +
                 "SUM(" + SessionsTable.SESSION_END + "-" + SessionsTable.SESSION_START + ") as playtime" +
@@ -50,8 +50,9 @@ public class PlayerRetentionQueries {
                 INNER_JOIN + UserInfoTable.TABLE_NAME + " ui ON ui." + UserInfoTable.USER_ID + "=u." + UsersTable.ID +
                 INNER_JOIN + SessionsTable.TABLE_NAME + " s ON s." + SessionsTable.USER_ID + "=u." + UsersTable.ID +
                 AND + "s." + SessionsTable.SERVER_ID + "=ui." + UserInfoTable.SERVER_ID +
-                WHERE + "s." + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
-                GROUP_BY + UsersTable.USER_UUID + ",ui." + UserInfoTable.REGISTERED;
+                INNER_JOIN + ServerTable.TABLE_NAME + " se ON se." + ServerTable.ID + "=s." + SessionsTable.SERVER_ID +
+                WHERE + "se." + ServerTable.SERVER_UUID + "=?" +
+                GROUP_BY + "u." + UsersTable.USER_UUID + ",ui." + UserInfoTable.REGISTERED;
 
         return db -> db.queryList(sql, set -> {
             UUID playerUUID = UUID.fromString(set.getString(UsersTable.USER_UUID));
@@ -59,7 +60,7 @@ public class PlayerRetentionQueries {
             long lastSeenDate = set.getLong("last_seen");
             long playtime = set.getLong("playtime");
             return new RetentionData(playerUUID, registerDate, lastSeenDate, playtime);
-        }, serverUUID);
+        }, serverUUID.toString());
     }
 
     public static Query<List<RetentionData>> fetchRetentionData() {

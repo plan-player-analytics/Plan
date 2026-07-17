@@ -11,7 +11,7 @@ import {CurrentPlayerbaseCardWithData} from "../../components/cards/server/graph
 import {useTranslation} from "react-i18next";
 import GeolocationsCard from "../../components/cards/common/GeolocationsCard";
 import SessionsWithinViewCard from "../../components/cards/query/SessionsWithinViewCard";
-import {useNavigation} from "../../hooks/navigationHook";
+import {useNavigation} from "../../hooks/navigationHook.tsx";
 
 const serverCount = (count, t) => {
     if (count === 0) {

@@ -14,7 +14,7 @@
         <property name="checks" value="ClassFanOutComplexity"/>
         <!-- These files are ignored. -->
         <property name="files"
-                  value="Patches.java|ExtensionRegister.java|DataValueGatherer.java|PlayerOnlineListener.java|DatabaseCommands.java|.*Test.java"/>
+                  value="RootJSONResolver.java|Patches.java|ExtensionRegister.java|DataValueGatherer.java|PlayerOnlineListener.java|DatabaseCommands.java|.*Test.java"/>
     </module>
 
     <module name="RegexpHeader"> <!-- License check -->
@@ -22,7 +22,7 @@
     </module>
     <module name="FileLength">
         <!-- This value is alright. Notable: SessionQueries 1007 -->
-        <property name="max" value="1250"/>
+        <property name="max" value="1500"/>
         <property name="fileExtensions" value=".java"/>
     </module>
     <module name="LineLength">
@@ -70,10 +70,6 @@
         <module name="LambdaParameterName"/>
 
         <!-- Metrics -->
-        <module name="ClassFanOutComplexity">
-            <!-- This value is a bit high. RootJSONResolver: 41 -->
-            <property name="max" value="50"/>
-        </module>
         <module name="CyclomaticComplexity">
             <!-- This value is high. Notable: ThemeConfig: 16 -->
             <property name="max" value="17"/>

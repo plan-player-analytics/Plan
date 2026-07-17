@@ -41,7 +41,6 @@ public class RemoveServerTransaction extends ThrowawayTransaction {
         deleteExtensionTables();
 
         deleteFromServerTable(NicknamesTable.TABLE_NAME);
-        deleteFromServerTable(SettingsTable.TABLE_NAME);
         deleteFromServerTable(KillsTable.TABLE_NAME);
         deleteFromServerIdTable(WorldTimesTable.TABLE_NAME);
         deleteFromServerTable(WorldTable.TABLE_NAME);

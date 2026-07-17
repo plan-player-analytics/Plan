@@ -4,11 +4,11 @@ import DataTablesTable from "../table/DataTablesTable";
 import ColoredText from "../text/ColoredText";
 import {Link} from "react-router";
 import FormattedTime from "../text/FormattedTime.jsx";
-import FormattedDate from "../text/FormattedDate.jsx";
+import FormattedDate from "../text/FormattedDate.tsx";
 
 const ExtensionDataTable = ({table}) => {
-    const [id] = useState("extension-table-" + new Date().getTime() + "-" + (Math.floor(Math.random() * 100000)));
-    const mapToCell = (cell, j) => {
+    const [id] = useState("extension-table-" + Date.now() + "-" + (Math.floor(Math.random() * 100000)));
+    const mapToCell = (cell) => {
         const value = cell.value;
         switch (cell.format) {
             case 'BOOLEAN':

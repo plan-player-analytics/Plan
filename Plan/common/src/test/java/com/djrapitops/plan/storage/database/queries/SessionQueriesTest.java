@@ -16,10 +16,13 @@
  */
 package com.djrapitops.plan.storage.database.queries;
 
+import com.djrapitops.plan.delivery.domain.PlayerName;
+import com.djrapitops.plan.delivery.domain.ServerName;
 import com.djrapitops.plan.delivery.domain.TablePlayer;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.gathering.domain.*;
+import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
@@ -37,15 +40,16 @@ import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythi
 import com.djrapitops.plan.storage.database.transactions.events.*;
 import com.djrapitops.plan.utilities.java.Maps;
 import net.playeranalytics.plugin.scheduling.TimeAmount;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.RepeatedTest;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import utilities.RandomData;
 import utilities.TestConstants;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.PreparedStatement;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -221,6 +225,185 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
     }
 
     @Test
+    default void sessionFetchWithoutExtraData() {
+        prepareForSessionSave();
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        db().executeTransaction(new StoreSessionTransaction(session));
+
+        session.getExtraData().remove(PlayerKills.class);
+        session.getExtraData().remove(WorldTimes.class);
+        session.getExtraData().remove(PlayerDeaths.class);
+        session.getExtraData().remove(JoinAddress.class);
+        session.getExtraData().remove(PlayerName.class);
+        session.getExtraData().remove(ServerName.class);
+        var expected = List.of(session);
+        var sessions = db().query(SessionQueries.fetchServerSessionsWithoutKillOrWorldData(0L, Long.MAX_VALUE, serverUUID()));
+        assertEquals(expected, sessions);
+    }
+
+    @Test
+    default void sessionCountOfServer() {
+        prepareForSessionSave();
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        db().executeTransaction(new StoreSessionTransaction(session));
+
+        var expected = 1L;
+        var count = db().query(SessionQueries.sessionCount(0L, Long.MAX_VALUE, serverUUID()));
+        assertEquals(expected, count);
+    }
+
+    @Test
+    default void sessionCountOfNetwork() {
+        prepareForSessionSave();
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        db().executeTransaction(new StoreSessionTransaction(session));
+
+        var expected = 1L;
+        var count = db().query(SessionQueries.sessionCount(0L, Long.MAX_VALUE));
+        assertEquals(expected, count);
+    }
+
+    @Test
+    default void playtimeOfServer() {
+        prepareForSessionSave();
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        db().executeTransaction(new StoreSessionTransaction(session));
+
+        var expected = session.getLength();
+        var result = db().query(SessionQueries.playtime(0L, Long.MAX_VALUE, serverUUID()));
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void playtimeOfServers() {
+        prepareForSessionSave();
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        db().executeTransaction(new StoreSessionTransaction(session));
+
+        var expected = session.getLength();
+        var result = db().query(SessionQueries.playtime(0L, Long.MAX_VALUE, List.of(serverUUID())));
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void playtimeOfPlayer() {
+        prepareForSessionSave();
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        db().executeTransaction(new StoreSessionTransaction(session));
+
+        var expected = session.getLength();
+        var result = db().query(SessionQueries.playtime(0L, Long.MAX_VALUE, playerUUID, List.of()));
+        assertEquals(expected, result);
+        result = db().query(SessionQueries.playtime(0L, Long.MAX_VALUE, playerUUID, List.of(serverUUID())));
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void playtimePerDay() {
+        prepareForSessionSave();
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        db().executeTransaction(new StoreSessionTransaction(session));
+
+        var result = db().query(SessionQueries.playtimePerDay(0L, Long.MAX_VALUE, 0L, serverUUID()));
+        assertFalse(result.isEmpty());
+        result = db().query(SessionQueries.playtimePerDay(0L, Long.MAX_VALUE, 0L));
+        assertFalse(result.isEmpty());
+    }
+
+    @Test
+    default void averagePlaytimePerDay() {
+        prepareForSessionSave();
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        db().executeTransaction(new StoreSessionTransaction(session));
+
+        var result = db().query(SessionQueries.averagePlaytimePerDay(0L, Long.MAX_VALUE, 0L, serverUUID()));
+        assertNotEquals(0L, result);
+    }
+
+    @Test
+    default void averagePlaytimePerPlayer() {
+        prepareForSessionSave();
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        db().executeTransaction(new StoreSessionTransaction(session));
+
+        var result = db().query(SessionQueries.averagePlaytimePerPlayer(0L, Long.MAX_VALUE, serverUUID()));
+        assertNotEquals(0L, result);
+        result = db().query(SessionQueries.averagePlaytimePerPlayer(0L, Long.MAX_VALUE));
+        assertNotEquals(0L, result);
+    }
+
+    @Test
+    default void averageAfkPerPlayer() {
+        prepareForSessionSave();
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        db().executeTransaction(new StoreSessionTransaction(session));
+
+        var result = db().query(SessionQueries.averageAfkPerPlayer(0L, Long.MAX_VALUE, serverUUID()));
+        assertNotEquals(0L, result);
+        result = db().query(SessionQueries.averageAfkPerPlayer(0L, Long.MAX_VALUE));
+        assertNotEquals(0L, result);
+    }
+
+    @Test
+    default void afkTimeOfPlayer() {
+        prepareForSessionSave();
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        db().executeTransaction(new StoreSessionTransaction(session));
+
+        var expected = session.getAfkTime();
+        var result = db().query(SessionQueries.afkTime(0L, Long.MAX_VALUE, playerUUID, List.of(serverUUID())));
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void afkTimeOfServer() {
+        prepareForSessionSave();
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        db().executeTransaction(new StoreSessionTransaction(session));
+
+        var expected = session.getAfkTime();
+        var result = db().query(SessionQueries.afkTime(0L, Long.MAX_VALUE, serverUUID()));
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void afkTimePercentageOfServer() {
+        prepareForSessionSave();
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        db().executeTransaction(new StoreSessionTransaction(session));
+
+        var expected = session.getAfkTime() * 1.0 / session.getLength();
+        var result = db().query(SessionQueries.afkTimePercentage(0L, Long.MAX_VALUE, List.of(serverUUID())));
+        assertEquals(
+                BigDecimal.valueOf(expected).setScale(4, RoundingMode.HALF_UP).doubleValue(),
+                BigDecimal.valueOf(result).setScale(4, RoundingMode.HALF_UP).doubleValue(),
+                0.0001
+        );
+    }
+
+    @Test
+    default void activePlaytimeOfServer() {
+        prepareForSessionSave();
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        db().executeTransaction(new StoreSessionTransaction(session));
+
+        var expected = session.getLength() - session.getAfkTime();
+        var result = db().query(SessionQueries.activePlaytime(0L, Long.MAX_VALUE, serverUUID()));
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void activePlaytimeOfNetwork() {
+        prepareForSessionSave();
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        db().executeTransaction(new StoreSessionTransaction(session));
+
+        var expected = session.getLength() - session.getAfkTime();
+        var result = db().query(SessionQueries.activePlaytime(0L, Long.MAX_VALUE));
+        assertEquals(expected, result);
+    }
+
+    @Test
     default void mostRecentSessionsCanBeQueried() {
         prepareForSessionSave();
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
@@ -308,7 +491,9 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         FinishedSession session = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID)).get(serverUUID()).get(0);
         WorldTimes expected = session.getExtraData(WorldTimes.class).orElseThrow(AssertionError::new);
         WorldTimes worldTimesOfUser = db().query(WorldTimesQueries.fetchPlayerTotalWorldTimes(playerUUID));
+        WorldTimes worldTimesOfUserOnServer = db().query(WorldTimesQueries.fetchPlayerTotalWorldTimes(0L, Long.MAX_VALUE, playerUUID, List.of(serverUUID())));
         assertEquals(expected, worldTimesOfUser);
+        assertEquals(expected, worldTimesOfUserOnServer);
     }
 
     @Test
@@ -317,6 +502,15 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         FinishedSession session = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID)).get(serverUUID()).get(0);
         WorldTimes expected = session.getExtraData(WorldTimes.class).orElseThrow(AssertionError::new);
         WorldTimes worldTimesOfServer = db().query(WorldTimesQueries.fetchServerTotalWorldTimes(serverUUID()));
+        assertEquals(expected, worldTimesOfServer);
+    }
+
+    @Test
+    default void networkWorldTimesMatchTotal() {
+        worldTimesAreSavedWithSession();
+        FinishedSession session = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID)).get(serverUUID()).get(0);
+        WorldTimes expected = session.getExtraData(WorldTimes.class).orElseThrow(AssertionError::new);
+        WorldTimes worldTimesOfServer = db().query(WorldTimesQueries.fetchServerTotalWorldTimes(0L, Long.MAX_VALUE, List.of()));
         assertEquals(expected, worldTimesOfServer);
     }
 
@@ -394,7 +588,6 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         db().executeTransaction(new RemoveEverythingTransaction());
         assertTrue(db().query(LargeFetchQueries.fetchAllWorldNames()).isEmpty());
     }
-
 
     @Test
     default void worldNamesAreStored() {
@@ -502,5 +695,35 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         Map<UUID, Long> expected = Map.of(playerUUID, lastSeenP1, player2UUID, lastSeenP2);
         Map<UUID, Long> result = db().query(SessionQueries.lastSeen(serverUUID()));
         assertEquals(expected, result);
+    }
+
+    @TestFactory
+    @DisplayName("Sessions within timeframe are fetched correctly")
+    default Stream<DynamicTest> sessionsWithinTimeframe() {
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[1]));
+        db().executeTransaction(new StoreServerPlayerTransaction(player2UUID, RandomData::randomTime,
+                TestConstants.PLAYER_TWO_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        db().executeTransaction(new StoreSessionTransaction(session)).join();
+
+        List<FinishedSession> expected = List.of(session);
+        List<FinishedSession> none = List.of();
+        long beforeSession = session.getStart() - TimeUnit.MINUTES.toMillis(1);
+        long afterSession = session.getEnd() + TimeUnit.MINUTES.toMillis(1);
+        return Stream.of(
+                DynamicTest.dynamicTest("Player sessions", () -> assertEquals(expected, db().query(SessionQueries.sessionsOfPlayer(playerUUID, beforeSession, afterSession, List.of())))),
+                DynamicTest.dynamicTest("Server sessions", () -> assertEquals(expected, db().query(SessionQueries.sessionsOfServers(beforeSession, afterSession, List.of(serverUUID()))))),
+                DynamicTest.dynamicTest("Network sessions", () -> assertEquals(expected, db().query(SessionQueries.sessionsOfServers(beforeSession, afterSession, List.of())))),
+                DynamicTest.dynamicTest("Player sessions - none (before)", () -> assertEquals(none, db().query(SessionQueries.sessionsOfPlayer(playerUUID, beforeSession - TimeUnit.MINUTES.toMillis(1), beforeSession, List.of())))),
+                DynamicTest.dynamicTest("Player sessions - none (after)", () -> assertEquals(none, db().query(SessionQueries.sessionsOfPlayer(playerUUID, afterSession, afterSession + TimeUnit.MINUTES.toMillis(1), List.of())))),
+                DynamicTest.dynamicTest("Player sessions - none (wrong order)", () -> assertEquals(none, db().query(SessionQueries.sessionsOfPlayer(playerUUID, afterSession, beforeSession, List.of())))),
+                DynamicTest.dynamicTest("Server sessions - none (before)", () -> assertEquals(none, db().query(SessionQueries.sessionsOfServers(beforeSession - TimeUnit.MINUTES.toMillis(1), beforeSession, List.of(serverUUID()))))),
+                DynamicTest.dynamicTest("Server sessions - none (after)", () -> assertEquals(none, db().query(SessionQueries.sessionsOfServers(afterSession, afterSession + TimeUnit.MINUTES.toMillis(1), List.of(serverUUID()))))),
+                DynamicTest.dynamicTest("Server sessions - none (wrong order)", () -> assertEquals(none, db().query(SessionQueries.sessionsOfServers(afterSession, beforeSession, List.of(serverUUID()))))),
+                DynamicTest.dynamicTest("Network sessions - none (before)", () -> assertEquals(none, db().query(SessionQueries.sessionsOfServers(beforeSession - TimeUnit.MINUTES.toMillis(1), beforeSession, List.of())))),
+                DynamicTest.dynamicTest("Network sessions - none (after)", () -> assertEquals(none, db().query(SessionQueries.sessionsOfServers(afterSession, afterSession + TimeUnit.MINUTES.toMillis(1), List.of())))),
+                DynamicTest.dynamicTest("Network sessions - none (wrong order)", () -> assertEquals(none, db().query(SessionQueries.sessionsOfServers(afterSession, beforeSession, List.of()))))
+        );
     }
 }

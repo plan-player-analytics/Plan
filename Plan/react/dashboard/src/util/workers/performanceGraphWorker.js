@@ -9,6 +9,8 @@ self.onmessage = (e) => {
     const disk = [];
     const msptAverage = [];
     const mspt95thPercentile = [];
+    const msptJitterAverage = [];
+    const msptJitterMax = [];
 
     let i = 0;
     const length = performanceData.length;
@@ -25,7 +27,21 @@ self.onmessage = (e) => {
         disk[i] = [date, entry[7]];
         msptAverage[i] = [date, entry[8]];
         mspt95thPercentile[i] = [date, entry[9]];
+        msptJitterAverage[i] = [date, entry[10]];
+        msptJitterMax[i] = [date, entry[11]];
     }
-    const processedData = {playersOnline, tps, cpu, ram, entities, chunks, disk, msptAverage, mspt95thPercentile};
+    const processedData = {
+        playersOnline,
+        tps,
+        cpu,
+        ram,
+        entities,
+        chunks,
+        disk,
+        msptAverage,
+        mspt95thPercentile,
+        msptJitterAverage,
+        msptJitterMax
+    };
     self.postMessage(processedData);
 };

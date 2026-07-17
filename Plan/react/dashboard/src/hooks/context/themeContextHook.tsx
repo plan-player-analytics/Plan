@@ -1,5 +1,5 @@
 import React, {createContext, PropsWithChildren, useCallback, useContext, useEffect, useMemo, useState} from "react";
-import {getLocallyStoredThemes, useTheme} from "../themeHook.jsx";
+import {getLocallyStoredThemes, useTheme} from "../themeHook.js";
 import {fetchTheme} from "../../service/metadataService.js";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faExclamationTriangle} from "@fortawesome/free-solid-svg-icons";

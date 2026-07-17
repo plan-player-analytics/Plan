@@ -30,11 +30,11 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.permissions.Permissions;
 import net.playeranalytics.plan.PlanFabric;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 
@@ -56,8 +56,8 @@ public class FabricCommandManager {
 
     public static boolean checkPermission(CommandSourceStack src, String permission) {
         if (isPermissionsApiAvailable()) {
-            return Permissions.check(src, permission, 2);
-        } else if (src.hasPermission(2)) {
+            return me.lucko.fabric.api.permissions.v0.Permissions.check(src, permission, 2);
+        } else if (src.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER)) {
             return true;
         } else {
             return switch (permission) {

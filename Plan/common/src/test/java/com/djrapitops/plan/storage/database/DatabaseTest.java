@@ -26,8 +26,6 @@ import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.query.QuerySvc;
-import com.djrapitops.plan.settings.config.Config;
-import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.FormatSettings;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.database.queries.PlayerFetchQueries;
@@ -40,7 +38,6 @@ import com.djrapitops.plan.storage.database.queries.objects.playertable.NetworkT
 import com.djrapitops.plan.storage.database.queries.objects.playertable.ServerTablePlayersQuery;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.*;
-import com.djrapitops.plan.storage.database.transactions.StoreConfigTransaction;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemovePlayerTransaction;
@@ -221,29 +218,6 @@ public interface DatabaseTest extends DatabaseTestPreparer {
     }
 
     @Test
-    default void configIsStoredInTheDatabase() {
-        PlanConfig config = config();
-
-        db().executeTransaction(new StoreConfigTransaction(serverUUID(), config, System.currentTimeMillis()));
-
-        Optional<Config> foundConfig = db().query(new NewerConfigQuery(serverUUID(), 0));
-        assertTrue(foundConfig.isPresent());
-        assertEquals(config, foundConfig.get());
-    }
-
-    @Test
-    default void unchangedConfigDoesNotUpdateInDatabase() {
-        configIsStoredInTheDatabase();
-        long savedMs = System.currentTimeMillis();
-
-        PlanConfig config = config();
-
-        db().executeTransaction(new StoreConfigTransaction(serverUUID(), config, System.currentTimeMillis()));
-
-        assertFalse(db().query(new NewerConfigQuery(serverUUID(), savedMs)).isPresent());
-    }
-
-    @Test
     default void indexCreationWorksWithoutErrors() throws Exception {
         Transaction transaction = new CreateIndexTransaction();
         db().executeTransaction(transaction).get(); // get to ensure transaction is finished
@@ -257,6 +231,9 @@ public interface DatabaseTest extends DatabaseTestPreparer {
 
         Map<ServerUUID, Integer> result = db().query(ServerAggregateQueries.serverUserCounts());
         assertEquals(expected, result);
+
+        Integer singleResult = db().query(ServerAggregateQueries.serverUserCount(serverUUID()));
+        assertEquals(expected.get(serverUUID()), singleResult);
     }
 
     @Test

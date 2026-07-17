@@ -10,19 +10,12 @@ export default defineConfig({
     ],
     build: {
         outDir: 'build',
-        assetsDir: 'static',
-        rollupOptions: {
-            treeshake: {
-                // Fixes an issue where backendConfiguration.staticSite if-blocks would get removed
-                correctVarValueBeforeDeclaration: true
-            }
-        }
+        assetsDir: 'static'
     },
     server: {
         host: 'localhost',
         port: 3000,
         open: true,
-        secure: false,
         proxy: {
             "/v1": {target: packageJson.proxy, secure: false},
             "/auth": {target: packageJson.proxy, secure: false},

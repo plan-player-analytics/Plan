@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.transactions.events;
 
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.sql.building.Update;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
@@ -29,6 +30,8 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.UUID;
+
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Transaction to update a player's ban status.
@@ -53,6 +56,20 @@ public class BatchBanStatusTransaction extends Transaction {
     }
 
     private Executable updateBanStatus() {
+        if (dbType == DBType.MYSQL) {
+            String selectUserIds = SELECT + UsersTable.ID +
+                    FROM + UsersTable.TABLE_NAME +
+                    WHERE + UsersTable.USER_UUID + " IN (" + nParameters(bannedPlayerUUIDs.size() + unbannedPlayerUUIDs.size()) + ")";
+            List<Integer> userIds = query(db -> db.queryList(selectUserIds, set -> set.getInt(UsersTable.ID), bannedPlayerUUIDs, unbannedPlayerUUIDs));
+
+            String selectRowsToLock = SELECT + UserInfoTable.ID +
+                    FROM + UserInfoTable.TABLE_NAME +
+                    WHERE + UserInfoTable.USER_ID + " IN (" + nParameters(userIds.size()) + ")" +
+                    AND + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                    lockForUpdate();
+            query(db -> db.queryList(selectRowsToLock, set -> set.getInt(UserInfoTable.ID), userIds, serverUUID));
+        }
+
         String sql = Update.values(UserInfoTable.TABLE_NAME, UserInfoTable.BANNED)
                 .where(UserInfoTable.USER_ID + "=" + UsersTable.SELECT_USER_ID)
                 .and(UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID)

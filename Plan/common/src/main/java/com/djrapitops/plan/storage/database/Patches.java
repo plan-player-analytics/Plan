@@ -80,7 +80,7 @@ public class Patches {
                 new BadJoinAddressDataCorrectionPatch(),
                 new AfterBadJoinAddressDataCorrectionPatch(),
                 new CorrectWrongCharacterEncodingPatch(logger, config),
-                new UpdateWebPermissionsPatch(),
+                new UpdateMissingWebPermissionsPatch(),
                 new WebGroupDefaultGroupsPatch(),
                 new WebGroupAddMissingAdminGroupPatch(),
                 new LegacyPermissionLevelGroupsPatch(),
@@ -90,7 +90,9 @@ public class Patches {
                 new TPSTableMSPTPatch(),
                 new AllowlistIncorrectUniqueConstraintPatch(),
                 new TPSTableIdPatch(),
-                new DeleteUrlOpenEventsFromExtensionComponentsPatch()
+                new DeleteUrlOpenEventsFromExtensionComponentsPatch(),
+                new CookieTableIPLengthPatch(),
+                new DropSettingsTablePatch()
         };
     }
 }

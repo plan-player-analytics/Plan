@@ -6,11 +6,7 @@ plugins {
     id("java-test-fixtures")
     id "dev.vankka.dependencydownload.plugin" version "$dependencyDownloadVersion"
     id "com.github.node-gradle.node" version "7.1.0"
-    id "io.swagger.core.v3.swagger-gradle-plugin" version "2.2.45"
-}
-
-compileTestFixturesJava {
-    sourceCompatibility = "${JavaVersion.VERSION_17}"
+    id "io.swagger.core.v3.swagger-gradle-plugin" version "2.2.52"
 }
 
 configurations {
@@ -122,6 +118,10 @@ dependencies {
     testAnnotationProcessor "com.google.dagger:dagger-compiler:$daggerVersion"
 }
 
+compileJava {
+    options.release = 11
+}
+
 test {
     environment "PLAN_TEST_NODE_STRING", "String"
     environment "PLAN_TEST_NODE_BOOLEAN", "true"
@@ -133,7 +133,7 @@ test {
 
 node {
     download = true
-    version = "24.1.0"
+    version = "24.15.0"
     nodeProjectDir = file("$rootDir/react/dashboard")
 }
 
@@ -170,6 +170,7 @@ tasks.withType(YarnInstallTask).configureEach {
     // Skip Yarn build on Jitpack since Jitpack doesn't offer gclib version compatible with Node 20
     // Jitpack build is used mainly for java dependencies.
     onlyIf("not running in Jitpack") { !project.hasProperty("isJitpack") }
+    args = ["--ignore-scripts"]
 }
 
 tasks.register("copyYarnBuildResults") {
@@ -183,6 +184,7 @@ tasks.register("copyYarnBuildResults") {
     dependsOn bundle
     doLast {
         mkdir "$rootDir/common/build/resources/main/assets/plan/web"
+        delete "$rootDir/common/build/resources/main/assets/plan/web/static"
         copy {
             from "$rootDir/react/dashboard/build"
             into "$rootDir/common/build/resources/main/assets/plan/web"

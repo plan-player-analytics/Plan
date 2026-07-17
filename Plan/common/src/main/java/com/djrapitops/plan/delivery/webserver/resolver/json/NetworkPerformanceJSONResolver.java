@@ -29,7 +29,9 @@ import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
+import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
@@ -45,6 +47,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -57,13 +60,17 @@ import java.util.stream.Collectors;
  * Creates JSON payload for /server-page Performance tab.
  *
  * @author AuroraLS3
+ * @deprecated Use /v1/datapoint instead (types TPS_LOW_SPIKES, UPTIME, DOWNTIME, TPS_AVERAGE, PLAYERS_ONLINE_AVERAGE, MSPT_AVERAGE, CPU_AVERAGE, RAM_AVERAGE, ENTITIES_AVERAGE, CHUNKS_AVERAGE, DISK_MAX, DISK_MIN).
  */
 @Singleton
 @Path("/v1/network/performanceOverview")
+@Deprecated(since = "2026-05-24 / 5.7 build 3460")
 public class NetworkPerformanceJSONResolver implements Resolver {
 
     private final PlanConfig config;
     private final DBSystem dbSystem;
+    private final Locale locale;
+    private final PluginLogger logger;
 
     private final Formatter<Double> percentage;
     private final Formatter<Double> byteSize;
@@ -72,12 +79,14 @@ public class NetworkPerformanceJSONResolver implements Resolver {
     @Inject
     public NetworkPerformanceJSONResolver(
             PlanConfig config,
-            DBSystem dbSystem,
+            DBSystem dbSystem, Locale locale, PluginLogger logger,
             Formatters formatters,
             Gson gson
     ) {
         this.config = config;
         this.dbSystem = dbSystem;
+        this.locale = locale;
+        this.logger = logger;
 
         percentage = formatters.percentage();
         byteSize = formatters.byteSize();
@@ -104,6 +113,8 @@ public class NetworkPerformanceJSONResolver implements Resolver {
     )
     @Override
     public Optional<Response> resolve(Request request) {
+        logger.warn(locale.getString(PluginLang.DEPRECATED_ENDPOINT_CALL, "/v1/network/performanceOverview", "/v1/datapoint"));
+
         List<ServerUUID> serverUUIDs = request.getQuery().get("servers")
                 .map(this::getUUIDList)
                 .orElse(Collections.emptyList())

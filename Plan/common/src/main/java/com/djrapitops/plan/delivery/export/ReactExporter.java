@@ -168,7 +168,7 @@ public class ReactExporter extends FileExporter {
     }
 
     private void exportJson(Path toDirectory, String resource) throws IOException {
-        exportJson(toDirectory, resource, toJsonResourceName(resource));
+        exportJson(toDirectory, resource, toJSONResourceName(resource));
     }
 
     private void exportJson(Path toDirectory, String resource, String fileName) throws IOException {
@@ -177,10 +177,6 @@ public class ReactExporter extends FileExporter {
         if (jsonResponse.isPresent()) {
             export(to, jsonResponse.get().getBytes());
         }
-    }
-
-    private String toJsonResourceName(String resource) {
-        return StringUtils.replaceEach(resource, new String[]{"?", "&",}, new String[]{"-", "_"});
     }
 
     private Optional<Response> getJsonResponse(String resource) {

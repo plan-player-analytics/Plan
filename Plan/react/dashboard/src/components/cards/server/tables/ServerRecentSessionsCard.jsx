@@ -1,16 +1,17 @@
 import React from "react";
-import {useDataRequest} from "../../../../hooks/dataFetchHook";
-import {fetchSessions} from "../../../../service/serverService";
 import {ErrorViewCard} from "../../../../views/ErrorView.tsx";
 import RecentSessionsCard from "../../common/RecentSessionsCard";
+import {useSessions} from "../../../../dataHooks/sessionsHooks.ts";
+import {useGenericFilter} from "../../../../dataHooks/genericFilterContextHook.tsx";
 
 const ServerRecentSessionsCard = ({identifier}) => {
-    const {data, loadingError} = useDataRequest(fetchSessions, [identifier])
+    const {after, before} = useGenericFilter();
+    const {data: sessions, error: loadingError} = useSessions({after, before, server: identifier});
 
     if (loadingError) return <ErrorViewCard error={loadingError}/>
 
     return (
-        <RecentSessionsCard sessions={data?.sessions} isPlayer={true} isNetwork={!identifier}/>
+        <RecentSessionsCard sessions={sessions} isNetwork={!identifier}/>
     )
 }
 

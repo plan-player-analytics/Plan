@@ -44,6 +44,8 @@ public class TPSTableIdPatch extends Patch {
             dropTable(TABLE_NAME);
             execute(TPSTable.createTableSQL(dbType));
 
+            commitMidTransaction();
+
             execute(INSERT_INTO + TABLE_NAME + " ("
                     + SERVER_ID + ','
                     + DATE + ','

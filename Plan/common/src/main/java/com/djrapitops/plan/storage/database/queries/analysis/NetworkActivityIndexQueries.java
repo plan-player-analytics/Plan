@@ -152,31 +152,7 @@ public class NetworkActivityIndexQueries {
     }
 
     public static Query<Map<String, Integer>> fetchActivityIndexGroupingsOn(long date, long threshold) {
-        String selectActivityIndex = selectActivityIndexSQL();
-
-        String selectIndexes = SELECT + "activity_index" +
-                FROM + UsersTable.TABLE_NAME + " u" +
-                LEFT_JOIN + '(' + selectActivityIndex + ") s on s." + SessionsTable.USER_ID + "=u." + UsersTable.ID +
-                WHERE + "u." + UsersTable.REGISTERED + "<=?";
-
-        return new QueryStatement<>(selectIndexes) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                setSelectActivityIndexSQLParameters(statement, 1, threshold, date);
-                statement.setLong(9, date);
-            }
-
-            @Override
-            public Map<String, Integer> processResults(ResultSet set) throws SQLException {
-                Map<String, Integer> groups = new HashMap<>();
-                while (set.next()) {
-                    double activityIndex = set.getDouble("activity_index");
-                    String group = ActivityIndex.getGroup(activityIndex);
-                    groups.put(group, groups.getOrDefault(group, 0) + 1);
-                }
-                return groups;
-            }
-        };
+        return MultiServerActivityIndexQueries.fetchActivityGroupCounts(date, List.of(), threshold);
     }
 
     public static Query<Map<String, Integer>> fetchActivityIndexGroupingsOn(long date, long threshold, Collection<Integer> userIds, List<ServerUUID> serverUUIDs) {
@@ -369,71 +345,6 @@ public class NetworkActivityIndexQueries {
                     return set.next() ? (long) set.getDouble("average") : 0;
                 }
             });
-        };
-    }
-
-    public static Query<Collection<ActivityIndex>> activityIndexForNewPlayers(long after, long before, Long threshold) {
-        String selectNewUUIDs = SELECT + UsersTable.ID +
-                FROM + UsersTable.TABLE_NAME +
-                WHERE + UsersTable.REGISTERED + "<=?" +
-                AND + UsersTable.REGISTERED + ">=?";
-
-        String sql = SELECT + "activity_index" +
-                FROM + '(' + selectNewUUIDs + ") n" +
-                INNER_JOIN + '(' + selectActivityIndexSQL() + ") a on n." + UsersTable.ID + "=a." + SessionsTable.USER_ID;
-
-        return new QueryStatement<>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, before);
-                statement.setLong(2, after);
-                setSelectActivityIndexSQLParameters(statement, 3, threshold, before);
-            }
-
-            @Override
-            public Collection<ActivityIndex> processResults(ResultSet set) throws SQLException {
-                Collection<ActivityIndex> indexes = new ArrayList<>();
-                while (set.next()) {
-                    indexes.add(new ActivityIndex(set.getDouble("activity_index"), before));
-                }
-                return indexes;
-            }
-        };
-    }
-
-    public static Query<ActivityIndex> averageActivityIndexForRetainedPlayers(long after, long before, Long threshold) {
-        String selectNewUUIDs = SELECT + UsersTable.ID +
-                FROM + UsersTable.TABLE_NAME +
-                WHERE + UsersTable.REGISTERED + "<=?" +
-                AND + UsersTable.REGISTERED + ">=?";
-
-        String selectUniqueUUIDs = SELECT + "DISTINCT " + SessionsTable.USER_ID +
-                FROM + SessionsTable.TABLE_NAME +
-                WHERE + SessionsTable.SESSION_START + ">=?" +
-                AND + SessionsTable.SESSION_END + "<=?";
-
-        String sql = SELECT + "AVG(activity_index) as average" +
-                FROM + '(' + selectNewUUIDs + ") n" +
-                INNER_JOIN + '(' + selectUniqueUUIDs + ") u on n." + UsersTable.ID + "=u." + SessionsTable.USER_ID +
-                INNER_JOIN + '(' + selectActivityIndexSQL() + ") a on n." + UsersTable.ID + "=a." + SessionsTable.USER_ID;
-
-        return new QueryStatement<>(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, before);
-                statement.setLong(2, after);
-
-                // Have played in the last half of the time frame
-                long half = before - (before - after) / 2;
-                statement.setLong(3, half);
-                statement.setLong(4, before);
-                setSelectActivityIndexSQLParameters(statement, 5, threshold, before);
-            }
-
-            @Override
-            public ActivityIndex processResults(ResultSet set) throws SQLException {
-                return set.next() ? new ActivityIndex(set.getDouble("average"), before) : new ActivityIndex(0.0, before);
-            }
         };
     }
 

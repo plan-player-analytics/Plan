@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.delivery.domain.datatransfer.preferences.Preferences;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.auth.CookieMetadata;
+import com.djrapitops.plan.delivery.webserver.auth.IncompleteRegistration;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.sql.building.Select;
@@ -198,13 +199,11 @@ public class WebUserQueries {
     }
 
     public static Query<List<Integer>> fetchPermissionIds(@Untrusted Collection<String> permissions) {
+        if (permissions.isEmpty()) return db -> Collections.emptyList();
         String sql = SELECT + WebPermissionTable.ID +
                 FROM + WebPermissionTable.TABLE_NAME +
                 WHERE + WebPermissionTable.PERMISSION + " IN (" + Sql.nParameters(permissions.size()) + ")";
-        return db -> {
-            if (permissions.isEmpty()) return Collections.emptyList();
-            return db.queryList(sql, row -> row.getInt(WebPermissionTable.ID), permissions);
-        };
+        return db -> db.queryList(sql, row -> row.getInt(WebPermissionTable.ID), permissions);
     }
 
     public static Query<List<String>> fetchAllUsernames() {
@@ -227,6 +226,7 @@ public class WebUserQueries {
     }
 
     public static Query<List<Integer>> fetchGroupIds(List<String> groups) {
+        if (groups.isEmpty()) return db -> List.of();
         String sql = SELECT + WebGroupTable.ID +
                 FROM + WebGroupTable.TABLE_NAME +
                 WHERE + WebGroupTable.NAME + " IN (" + Sql.nParameters(groups.size()) + ')';
@@ -288,5 +288,18 @@ public class WebUserQueries {
     public static Query<Set<Integer>> fetchPreferencesUserIds() {
         String sql = SELECT + WebUserPreferencesTable.WEB_USER_ID + FROM + WebUserPreferencesTable.TABLE_NAME;
         return db -> db.querySet(sql, row -> row.getInt(WebUserPreferencesTable.WEB_USER_ID));
+    }
+
+    public static Query<Optional<IncompleteRegistration>> fetchIncompleteRegistration(@Untrusted String code) {
+        return db -> db.queryOptional(RegistrationTable.SELECT_BY_CODE, WebUserQueries::extractIncompleteRegistration, code, System.currentTimeMillis());
+    }
+
+    private static IncompleteRegistration extractIncompleteRegistration(ResultSet set) throws SQLException {
+        return new IncompleteRegistration(
+                set.getString(RegistrationTable.USERNAME),
+                set.getString(RegistrationTable.SALT_PASSWORD_HASH),
+                set.getString(RegistrationTable.CODE),
+                set.getLong(RegistrationTable.EXPIRY_TIME)
+        );
     }
 }

@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.transactions.webuser;
 
+import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import com.djrapitops.plan.storage.database.sql.tables.webuser.WebGroupToPermissionTable;
@@ -39,6 +40,10 @@ public class GrantWebPermissionToGroupsWithPermissionTransaction extends Transac
     private final String permissionToGive;
     private final String whenHasPermission;
 
+    public GrantWebPermissionToGroupsWithPermissionTransaction(WebPermission permissionToGive, WebPermission whenHasPermission) {
+        this(permissionToGive.getPermission(), whenHasPermission.getPermission());
+    }
+
     public GrantWebPermissionToGroupsWithPermissionTransaction(String permissionToGive, String whenHasPermission) {
         this.permissionToGive = permissionToGive;
         this.whenHasPermission = whenHasPermission;
@@ -56,7 +61,7 @@ public class GrantWebPermissionToGroupsWithPermissionTransaction extends Transac
                 .orElseThrow(() -> new DBOpException("Permission called '" + permissionToGive + "' not found in database."));
 
         @Language("SQL")
-        String sql = INSERT_INTO + WebGroupToPermissionTable.TABLE_NAME + '(' +
+        String sql = INSERT_INTO + WebGroupToPermissionTable.TABLE_NAME + " (" +
                 WebGroupToPermissionTable.GROUP_ID + ',' + WebGroupToPermissionTable.PERMISSION_ID +
                 ") VALUES (?, ?)";
         execute(new ExecBatchStatement(sql) {

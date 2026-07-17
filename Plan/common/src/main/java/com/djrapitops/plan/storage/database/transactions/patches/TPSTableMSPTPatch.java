@@ -28,17 +28,23 @@ public class TPSTableMSPTPatch extends Patch {
 
     private boolean hasAverage;
     private boolean hasPercentile;
+    private boolean hasJitterAverage;
+    private boolean hasJitterMax;
 
     @Override
     public boolean hasBeenApplied() {
         hasAverage = hasColumn(TPSTable.TABLE_NAME, TPSTable.MSPT_AVERAGE);
         hasPercentile = hasColumn(TPSTable.TABLE_NAME, TPSTable.MSPT_95TH_PERCENTILE);
-        return hasAverage && hasPercentile;
+        hasJitterAverage = hasColumn(TPSTable.TABLE_NAME, TPSTable.MSPT_JITTER_AVERAGE);
+        hasJitterMax = hasColumn(TPSTable.TABLE_NAME, TPSTable.MSPT_JITTER_MAX);
+        return hasAverage && hasPercentile && hasJitterAverage && hasJitterMax;
     }
 
     @Override
     protected void applyPatch() {
         if (!hasAverage) addColumn(TPSTable.TABLE_NAME, TPSTable.MSPT_AVERAGE + " " + Sql.DOUBLE);
         if (!hasPercentile) addColumn(TPSTable.TABLE_NAME, TPSTable.MSPT_95TH_PERCENTILE + " " + Sql.DOUBLE);
+        if (!hasJitterAverage) addColumn(TPSTable.TABLE_NAME, TPSTable.MSPT_JITTER_AVERAGE + " " + Sql.DOUBLE);
+        if (!hasJitterMax) addColumn(TPSTable.TABLE_NAME, TPSTable.MSPT_JITTER_MAX + " " + Sql.DOUBLE);
     }
 }

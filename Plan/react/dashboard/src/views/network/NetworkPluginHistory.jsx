@@ -7,7 +7,7 @@ import PluginHistoryCard from "../../components/cards/common/PluginHistoryCard";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import {fetchPluginHistory} from "../../service/serverService";
 import PluginCurrentCard from "../../components/cards/common/PluginCurrentCard";
-import {useMetadata} from "../../hooks/metadataHook";
+import {useMetadata} from "../../hooks/metadataHook.tsx";
 import Select from "../../components/input/Select";
 import {useTranslation} from "react-i18next";
 import InputGroupText from "react-bootstrap/InputGroupText";

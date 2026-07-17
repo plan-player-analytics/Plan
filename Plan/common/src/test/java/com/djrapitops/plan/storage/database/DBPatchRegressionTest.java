@@ -52,7 +52,6 @@ abstract class DBPatchRegressionTest {
                 execute("DROP TABLE " + SecurityTable.TABLE_NAME);
                 execute("DROP TABLE " + ServerTable.TABLE_NAME);
                 execute("DROP TABLE " + SessionsTable.TABLE_NAME);
-                execute("DROP TABLE " + SettingsTable.TABLE_NAME);
                 execute("DROP TABLE " + TPSTable.TABLE_NAME);
                 execute("DROP TABLE " + UserInfoTable.TABLE_NAME);
                 execute("DROP TABLE " + UsersTable.TABLE_NAME);

@@ -36,7 +36,6 @@ public class RemoveEverythingTransaction extends Patch {
 
     @Override
     protected void applyPatch() {
-        clearTable(SettingsTable.TABLE_NAME);
         clearTable(GeoInfoTable.TABLE_NAME);
         clearTable(NicknamesTable.TABLE_NAME);
         clearTable(KillsTable.TABLE_NAME);

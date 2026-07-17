@@ -27,7 +27,6 @@ import com.djrapitops.plan.gathering.timed.InstalledPluginGatheringTask;
 import com.djrapitops.plan.gathering.timed.ProxyTPSCounter;
 import com.djrapitops.plan.gathering.timed.SystemUsageBuffer;
 import com.djrapitops.plan.gathering.timed.VelocityPingCounter;
-import com.djrapitops.plan.settings.upkeep.NetworkConfigStoreTask;
 import com.djrapitops.plan.storage.upkeep.DBCleanTask;
 import com.djrapitops.plan.storage.upkeep.LogsFolderCleanTask;
 import com.djrapitops.plan.storage.upkeep.OldDependencyCacheDeletionTask;
@@ -45,10 +44,6 @@ public interface VelocityTaskModule {
     @Binds
     @IntoSet
     TaskSystem.Task bindPingCounter(VelocityPingCounter counter);
-
-    @Binds
-    @IntoSet
-    TaskSystem.Task bindNetworkConfigStoreTask(NetworkConfigStoreTask configStoreTask);
 
     @Binds
     @IntoSet

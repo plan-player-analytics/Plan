@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
 import {Outlet, useParams} from "react-router";
-import {useNavigation} from "../../hooks/navigationHook";
+import {useNavigation} from "../../hooks/navigationHook.tsx";
 import {
     faCampground,
     faChartArea,
@@ -23,7 +23,7 @@ import {useAuth} from "../../hooks/authenticationHook.tsx";
 import Sidebar from "../../components/navigation/Sidebar";
 import Header from "../../components/navigation/Header";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
-import {useMetadata} from "../../hooks/metadataHook";
+import {useMetadata} from "../../hooks/metadataHook.tsx";
 import {faCalendarCheck} from "@fortawesome/free-regular-svg-icons";
 import ErrorPage from "./ErrorPage";
 import {SwitchTransition} from "react-transition-group";

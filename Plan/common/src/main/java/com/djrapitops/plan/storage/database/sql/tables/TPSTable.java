@@ -49,6 +49,8 @@ public class TPSTable {
     public static final String FREE_DISK = "free_disk_space";
     public static final String MSPT_AVERAGE = "mspt_average";
     public static final String MSPT_95TH_PERCENTILE = "mspt_95th_percentile";
+    public static final String MSPT_JITTER_AVERAGE = "mspt_jitter_average";
+    public static final String MSPT_JITTER_MAX = "mspt_jitter_max";
 
     public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " ("
             + SERVER_ID + ','
@@ -61,10 +63,12 @@ public class TPSTable {
             + CHUNKS + ','
             + FREE_DISK + ','
             + MSPT_AVERAGE + ','
-            + MSPT_95TH_PERCENTILE
+            + MSPT_95TH_PERCENTILE + ','
+            + MSPT_JITTER_AVERAGE + ','
+            + MSPT_JITTER_MAX
             + ") VALUES ("
             + ServerTable.SELECT_SERVER_ID + ','
-            + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            + "?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
     private TPSTable() {
         /* Static information class */
@@ -84,13 +88,16 @@ public class TPSTable {
                 .column(FREE_DISK, Sql.LONG).notNull()
                 .column(MSPT_AVERAGE, Sql.DOUBLE) // Nullable
                 .column(MSPT_95TH_PERCENTILE, Sql.DOUBLE) // Nullable
+                .column(MSPT_JITTER_AVERAGE, Sql.DOUBLE) // Nullable
+                .column(MSPT_JITTER_MAX, Sql.DOUBLE) // Nullable
                 .foreignKey(SERVER_ID, ServerTable.TABLE_NAME, ServerTable.ID)
                 .toString();
     }
 
     public static class Row implements ServerIdentifiable {
         public static final String INSERT_STATEMENT = Insert.values(TABLE_NAME, SERVER_ID, DATE, TPS, PLAYERS_ONLINE,
-                CPU_USAGE, RAM_USAGE, ENTITIES, CHUNKS, FREE_DISK, MSPT_AVERAGE, MSPT_95TH_PERCENTILE);
+                CPU_USAGE, RAM_USAGE, ENTITIES, CHUNKS, FREE_DISK, MSPT_AVERAGE, MSPT_95TH_PERCENTILE,
+                MSPT_JITTER_AVERAGE, MSPT_JITTER_MAX);
 
         private int id;
         private int serverId;
@@ -104,6 +111,8 @@ public class TPSTable {
         private long freeDiskSpace;
         private Double msptAverage;
         private Double mspt95thPercentile;
+        private Double msptJitterAverage;
+        private Double msptJitterMax;
 
         public static Row extract(ResultSet set) throws SQLException {
             Row row = new Row();
@@ -119,6 +128,8 @@ public class TPSTable {
             row.freeDiskSpace = set.getLong(FREE_DISK);
             row.msptAverage = Sql.getDoubleOrNull(set, MSPT_AVERAGE);
             row.mspt95thPercentile = Sql.getDoubleOrNull(set, MSPT_95TH_PERCENTILE);
+            row.msptJitterAverage = Sql.getDoubleOrNull(set, MSPT_JITTER_AVERAGE);
+            row.msptJitterMax = Sql.getDoubleOrNull(set, MSPT_JITTER_MAX);
             return row;
         }
 
@@ -138,6 +149,8 @@ public class TPSTable {
             statement.setLong(9, freeDiskSpace);
             Sql.setDoubleOrNull(statement, 10, msptAverage);
             Sql.setDoubleOrNull(statement, 11, mspt95thPercentile);
+            Sql.setDoubleOrNull(statement, 12, msptJitterAverage);
+            Sql.setDoubleOrNull(statement, 13, msptJitterMax);
         }
 
         @Override

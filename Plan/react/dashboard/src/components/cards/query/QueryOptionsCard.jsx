@@ -4,8 +4,8 @@ import {useTranslation} from "react-i18next";
 import {useDataRequest} from "../../../hooks/dataFetchHook";
 import {fetchFilters, postQuery} from "../../../service/queryService";
 import {ErrorViewCard} from "../../../views/ErrorView.tsx";
-import {ChartLoader} from "../../navigation/Loader";
-import DateInputField from "../../input/DateInputField";
+import {ChartLoader} from "../../navigation/Loader.tsx";
+import DateInputField from "../../input/DateInputField.tsx";
 import TimeInputField from "../../input/TimeInputField";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faGear, faSearch} from "@fortawesome/free-solid-svg-icons";
@@ -19,9 +19,9 @@ import FilterDropdown from "./FilterDropdown";
 import FilterList from "./FilterList";
 import {useQueryResultContext} from "../../../hooks/queryResultContext";
 import {useNavigate} from "react-router";
-import {useNavigation} from "../../../hooks/navigationHook.jsx";
-import ActionButton from "../../input/button/ActionButton.jsx";
-import {useMetadata} from "../../../hooks/metadataHook.jsx";
+import {useNavigation} from "../../../hooks/navigationHook.tsx";
+import ActionButton from "../../input/button/ActionButton.tsx";
+import {useMetadata} from "../../../hooks/metadataHook.tsx";
 
 const parseTimeAsUTC = (dateString, timeString) => {
     const d = dateString.match(
@@ -196,6 +196,8 @@ const QueryOptionsCard = () => {
                                         setValue={setFromDate}
                                         placeholder={view.afterDate}
                                         setAsInvalid={setAsInvalid} setAsValid={setAsValid}
+                                        rangeEnd={toDate}
+                                        type="string"
                         />
                     </Col>
                     <Col md={2}>
@@ -215,6 +217,8 @@ const QueryOptionsCard = () => {
                                         setValue={setToDate}
                                         placeholder={view.beforeDate}
                                         setAsInvalid={setAsInvalid} setAsValid={setAsValid}
+                                        rangeStart={fromDate}
+                                        type="string"
                         />
                     </Col>
                     <Col md={2}>

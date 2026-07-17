@@ -36,7 +36,6 @@ import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.settings.theme.Theme;
@@ -114,7 +113,7 @@ public class PlayerJSONCreator {
         }
         if (hasPermission.test(WebPermission.PAGE_PLAYER_SESSIONS)) {
             data.put("sessions", sessionsMutator.sort(new DateHolderRecentComparator()).toServerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters));
-            data.put("sessions_per_page", config.get(DisplaySettings.SESSIONS_PER_PAGE));
+            data.put("sessions_per_page", 10000);
             WorldPie worldPie = graphs.pie().worldPie(player.getValue(PlayerKeys.WORLD_TIMES).orElse(new WorldTimes()));
             data.put("world_pie_series", worldPie.getSlices());
             data.put("gm_series", worldPie.toHighChartsDrillDownMaps());

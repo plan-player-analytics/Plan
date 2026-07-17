@@ -37,6 +37,8 @@ public class TPS implements DateHolder {
     private final long freeDiskSpace;
     private Double msptAverage = null;
     private Double mspt95thPercentile = null;
+    private Double msptJitterAverage = null;
+    private Double msptJitterMax = null;
 
     /**
      * Constructor.
@@ -154,6 +156,22 @@ public class TPS implements DateHolder {
         this.mspt95thPercentile = mspt95thPercentile;
     }
 
+    public Double getMsptJitterAverage() {
+        return msptJitterAverage;
+    }
+
+    public void setMsptJitterAverage(Double msptJitterAverage) {
+        this.msptJitterAverage = msptJitterAverage;
+    }
+
+    public Double getMsptJitterMax() {
+        return msptJitterMax;
+    }
+
+    public void setMsptJitterMax(Double msptJitterMax) {
+        this.msptJitterMax = msptJitterMax;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
@@ -199,7 +217,9 @@ public class TPS implements DateHolder {
                 chunks >= 0 ? chunks : null,
                 disk >= 0 ? disk : null,
                 msptAverage,
-                mspt95thPercentile
+                mspt95thPercentile,
+                msptJitterAverage,
+                msptJitterMax
         };
     }
 }

@@ -105,7 +105,7 @@ public abstract class Transaction {
         boolean deadlocked = mySQLDeadlock || statementFail instanceof SQLTransactionRollbackException;
         boolean lockWaitTimeout = errorCode == 1205;
         boolean duplicateEntry = errorCode == 1062;
-        if (mysqlOutdatedRead || deadlocked || duplicateEntry || lockWaitTimeout && attempts < ATTEMPT_LIMIT) {
+        if (attempts < ATTEMPT_LIMIT && (mysqlOutdatedRead || deadlocked || duplicateEntry || lockWaitTimeout)) {
             executeTransaction(db); // Recurse to attempt again.
             return;
         }

@@ -1,0 +1,87 @@
+/*Why width: 1%? Bootstrap uses that trick internally so inputs shrink properly in flex groups.*/
+.react-datepicker-wrapper {
+    flex: 1 1 auto;
+    width: 1%;
+}
+
+.react-datepicker__month-container, .react-datepicker {
+    background-color: var(--color-cards-background);
+}
+
+.react-datepicker__header {
+    background-color: var(--color-cards-header-background);
+    min-width: 325px !important;
+    padding: 0.5rem;
+}
+
+.react-datepicker__day, .react-datepicker__month-text, .react-datepicker__day-name, .react-datepicker__year-text {
+    color: var(--color-text);
+}
+
+.react-datepicker__day:hover, .react-datepicker__month-text:hover, .react-datepicker__year-text:hover {
+    background-color: var(--color-forms-dropdown-hover);
+    color: var(--contrast-color-forms-dropdown-hover);
+}
+
+.react-datepicker__day--today,
+.react-datepicker__month-text--today,
+.react-datepicker__year-text--today {
+    background-color: var(--color-calendar-today);
+}
+
+.react-datepicker__day--selected:hover,
+.react-datepicker__month-text--selected:hover,
+.react-datepicker__year-text--selected:hover,
+.react-datepicker__month-text--today:hover,
+.react-datepicker__year-text--today:hover {
+    background-color: var(--color-forms-dropdown-hover);
+    opacity: 1;
+}
+
+.in-range {
+    color: var(--contrast-color-forms-buttons-action-button);
+    background-color: color-mix(in srgb, var(--color-forms-buttons-action-button), transparent 30%);
+}
+
+.in-range:hover {
+    color: var(--contrast-color-forms-buttons-action-button);
+    background-color: var(--color-forms-buttons-action-button) !important;
+}
+
+.react-datepicker__month-text--selected,
+.react-datepicker__year-text--selected {
+    color: var(--contrast-color-forms-buttons-secondary-action-button) !important;
+    background-color: var(--color-forms-buttons-secondary-action-button) !important;
+}
+
+.react-datepicker__day--selected,
+.react-datepicker__month-text--keyboard-selected,
+.react-datepicker__year-text--keyboard-selected {
+    color: var(--contrast-color-forms-buttons-action-button) !important;
+    background-color: var(--color-forms-buttons-action-button) !important;
+}
+
+.react-datepicker__day--outside-month {
+    color: color-mix(in srgb, var(--color-text) 60%, transparent);
+}
+
+.react-datepicker__close-icon:after {
+    border-radius: unset;
+    padding: unset;
+    height: 20px;
+    width: 20px;
+    color: var(--color-text);
+    background-color: unset;
+    font-size: 20px;
+    font-weight: bold;
+    transition: color 0.1s;
+}
+
+.react-datepicker__year, .react-datepicker__year-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.react-datepicker__close-icon:hover:after {
+    color: var(--color-forms-buttons-dangerous-button);
+}

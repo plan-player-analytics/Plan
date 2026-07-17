@@ -1,7 +1,7 @@
 import React from 'react';
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faDownload} from "@fortawesome/free-solid-svg-icons";
-import ActionButton from "../input/button/ActionButton.jsx";
+import ActionButton from "../input/button/ActionButton.tsx";
 import {useTranslation} from "react-i18next";
 import {useThemeEditContext} from "../../hooks/context/themeEditContextHook.tsx";
 

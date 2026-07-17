@@ -34,7 +34,9 @@ import java.nio.file.Files;
 import java.nio.file.OpenOption;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
+import java.util.Comparator;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Abstracts File methods of Plugin classes so that they can be tested without Mocks.
@@ -112,8 +114,26 @@ public class PlanFiles implements SubSystem {
             Path dir = getDataDirectory();
             if (!Files.isSymbolicLink(dir)) Files.createDirectories(dir);
             if (!configFile.exists()) Files.createFile(configFile.toPath());
+            cleanOldUnusedFolders();
         } catch (IOException e) {
             throw new EnableException("Failed to create config.yml, " + e.getMessage(), e);
+        }
+    }
+
+    private void cleanOldUnusedFolders() {
+        Path serverConfiguration = getDataDirectory().resolve("serverConfiguration");
+        if (Files.exists(serverConfiguration)) {
+            try (Stream<Path> files = Files.walk(serverConfiguration).sorted(Comparator.reverseOrder())) {
+                files.forEach(path -> {
+                    try {
+                        Files.deleteIfExists(path);
+                    } catch (IOException e) {
+                        throw new UncheckedIOException(e);
+                    }
+                });
+            } catch (IOException | UncheckedIOException e) {
+                throw new EnableException("Failed to delete Plan serverConfiguration folder - please delete it manually, " + e.getMessage(), e);
+            }
         }
     }
 

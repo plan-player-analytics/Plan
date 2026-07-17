@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries.filter;
 
-import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
+import com.djrapitops.plan.delivery.domain.datatransfer.query.InputFilterDto;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 
 import java.util.*;

@@ -46,7 +46,7 @@ public abstract class CommandSourceStackMixin implements CMDSender {
     }
 
     @Shadow
-    public abstract void sendSuccess(Supplier<Component> supplier, boolean broadcastToOps);
+    public abstract void sendSuccess(Supplier<Component> messageSupplier, boolean broadcast);
 
     @Shadow
     @Nullable

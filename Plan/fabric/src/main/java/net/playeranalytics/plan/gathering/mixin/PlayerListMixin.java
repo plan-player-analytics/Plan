@@ -31,8 +31,8 @@ import java.net.SocketAddress;
 public class PlayerListMixin {
 
     @Inject(method = "canPlayerLogin", at = @At(value = "TAIL"))
-    public void onLogin(SocketAddress address, NameAndId profile, CallbackInfoReturnable<Component> cir) {
-        PlanFabricEvents.ON_LOGIN.invoker().onLogin(address, profile, cir.getReturnValue());
+    public void onLogin(SocketAddress address, NameAndId nameAndId, CallbackInfoReturnable<Component> cir) {
+        PlanFabricEvents.ON_LOGIN.invoker().onLogin(address, nameAndId, cir.getReturnValue());
     }
 
 }

@@ -50,8 +50,9 @@ public class PluginMetadataQueries {
 
     public static Query<List<PluginMetadata>> getInstalledPlugins(ServerUUID serverUUID) {
         @Language("SQL")
-        String sql = SELECT + "*" + FROM + PluginVersionTable.TABLE_NAME +
-                WHERE + PluginVersionTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+        String sql = SELECT + "t.*" + FROM + PluginVersionTable.TABLE_NAME + " t" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + PluginVersionTable.SERVER_ID +
+                WHERE + "s." + ServerTable.SERVER_UUID + "=?" +
                 ORDER_BY + PluginVersionTable.MODIFIED + " DESC";
         return new QueryStatement<>(sql, 100) {
             @Override
@@ -82,10 +83,11 @@ public class PluginMetadataQueries {
 
     public static Query<List<PluginHistoryMetadata>> getPluginHistory(ServerUUID serverUUID) {
         @Language("SQL")
-        String sql = SELECT + "*" + FROM + PluginVersionTable.TABLE_NAME +
-                WHERE + PluginVersionTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+        String sql = SELECT + "t.*" + FROM + PluginVersionTable.TABLE_NAME + " t" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=t." + PluginVersionTable.SERVER_ID +
+                WHERE + "s." + ServerTable.SERVER_UUID + "=?" +
                 ORDER_BY + PluginVersionTable.MODIFIED + " DESC, " + PluginVersionTable.PLUGIN_NAME;
-        return db -> db.queryList(sql, PluginMetadataQueries::extractHistoryMetadata, serverUUID);
+        return db -> db.queryList(sql, PluginMetadataQueries::extractHistoryMetadata, serverUUID.toString());
     }
 
     public static Query<List<PluginHistoryMetadata>> getPluginHistory() {

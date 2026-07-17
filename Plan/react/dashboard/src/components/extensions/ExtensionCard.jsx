@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Card, Col} from "react-bootstrap";
 import ExtensionIcon from "./ExtensionIcon";
-import Datapoint from "../Datapoint";
+import Datapoint from "../datapoint/Datapoint.tsx";
 import Masonry from 'masonry-layout'
 import ExtensionTable from "./ExtensionTable";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
@@ -10,7 +10,8 @@ import {MinecraftChat} from "react-mcjsonchat";
 import ColoredText from "../text/ColoredText";
 import {Link} from "react-router";
 import FormattedTime from "../text/FormattedTime.jsx";
-import FormattedDate from "../text/FormattedDate.jsx";
+import FormattedDate from "../text/FormattedDate.tsx";
+import {useTranslation} from "react-i18next";
 
 export const ExtensionCardWrapper = ({extension, children}) => {
     const [windowWidth, setWindowWidth] = useState(window.innerWidth);
@@ -53,9 +54,9 @@ const valueOrUndefined = (value) => {
     return typeof value === "undefined" ? undefined : value;
 }
 const sanitizeComponent = (component) => {
-    if (!component) return undefined;
+    if (!component) return [];
     return {
-        extra: sanitizeComponent(component.extra),
+        extra: component.extra ? component.extra.filter(Boolean).map(sanitizeComponent) : [],
         color: valueOrUndefined(component.color),
         bold: valueOrUndefined(component.bold),
         italic: valueOrUndefined(component.italic),
@@ -77,17 +78,18 @@ export const ExtensionValueTableCell = ({data}) => {
     } else if (data.type === 'COMPONENT') {
         return (<MinecraftChat component={sanitizeComponent(JSON.parse(data.value))}/>)
     } else if (data.type === 'TIME_MILLISECONDS') {
-        return <FormattedTime timeMs={value}/>;
+        return <FormattedTime timeMs={data.value}/>;
     } else if (data.type === 'DATE_YEAR') {
-        return <FormattedDate date={value}/>;
+        return <FormattedDate date={data.value}/>;
     } else if (data.type === 'DATE_SECOND') {
-        return <FormattedDate date={value} includeSeconds/>;
+        return <FormattedDate date={data.value} includeSeconds/>;
     } else {
         return (<span title={title}>{data.value}</span>);
     }
 }
 
 const ExtensionValue = ({data}) => {
+    const {t} = useTranslation();
     const color = data.description.icon.colorClass;
     const colorClass = color?.startsWith("col-") ? color : "col-" + color;
     const icon = [data.description.icon.familyClass, data.description.icon.iconName];

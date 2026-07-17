@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries.filter.filters;
 
-import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
+import com.djrapitops.plan.delivery.domain.datatransfer.query.InputFilterDto;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.DBSystem;
 

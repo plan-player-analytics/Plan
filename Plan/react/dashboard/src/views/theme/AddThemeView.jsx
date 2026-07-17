@@ -1,13 +1,13 @@
 import React, {useState} from 'react';
-import {useMetadata} from "../../hooks/metadataHook.jsx";
+import {useMetadata} from "../../hooks/metadataHook.tsx";
 import {faFileSignature, faInfoCircle, faPlusCircle} from "@fortawesome/free-solid-svg-icons";
-import CardHeader from "../../components/cards/CardHeader.jsx";
+import CardHeader from "../../components/cards/CardHeader.tsx";
 import {Card, Col, Row} from "react-bootstrap";
 import TextInput from "../../components/input/TextInput.jsx";
 import ThemeOption from "../../components/theme/ThemeOption.jsx";
-import {ChartLoader} from "../../components/navigation/Loader.jsx";
-import {useTheme} from "../../hooks/themeHook.jsx";
-import ActionButton from "../../components/input/button/ActionButton.jsx";
+import {ChartLoader} from "../../components/navigation/Loader.tsx";
+import {useTheme} from "../../hooks/themeHook.tsx";
+import ActionButton from "../../components/input/button/ActionButton.tsx";
 import {useTranslation} from "react-i18next";
 import {useThemeStorage} from "../../hooks/context/themeContextHook.tsx";
 import {useNavigate} from "react-router";
@@ -83,7 +83,7 @@ const AddThemeView = () => {
                                        invalidFeedback={t('html.label.themeEditor.invalidName')}
                                        placeholder={t('html.label.themeEditor.themeName')}
                                        value={name}
-                                       setValue={newValue => setName(newValue.toLowerCase().replace(/[^a-z0-9-]/g, "-"))}
+                                       setValue={newValue => setName(newValue.toLowerCase().replaceAll(/[^a-z0-9-]/g, "-"))}
                             />
                         </Col>
                     </Row>

@@ -3,7 +3,7 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {Modal} from "react-bootstrap";
 import {faCheckCircle, faDownload} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
-import ActionButton from "../input/button/ActionButton.jsx";
+import ActionButton from "../input/button/ActionButton.tsx";
 import ModalCloseButton from "../input/button/ModalCloseButton.jsx";
 import ExternalLink from "../input/button/ExternalLink.jsx";
 

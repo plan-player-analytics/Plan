@@ -50,7 +50,8 @@ public class CreateTablesTransaction extends OperationCriticalTransaction {
                 SecurityTable.TABLE_NAME,
                 WebUserPreferencesTable.TABLE_NAME,
                 PluginVersionTable.TABLE_NAME,
-                AllowlistBounceTable.TABLE_NAME
+                AllowlistBounceTable.TABLE_NAME,
+                RegistrationTable.TABLE_NAME
         };
     }
 
@@ -73,7 +74,6 @@ public class CreateTablesTransaction extends OperationCriticalTransaction {
         execute(TPSTable.createTableSQL(dbType));
         execute(WorldTable.createTableSQL(dbType));
         execute(WorldTimesTable.createTableSQL(dbType));
-        execute(SettingsTable.createTableSQL(dbType));
         execute(CookieTable.createTableSQL(dbType));
         execute(AccessLogTable.createTableSql(dbType));
         execute(WebGroupTable.createTableSQL(dbType));
@@ -85,6 +85,7 @@ public class CreateTablesTransaction extends OperationCriticalTransaction {
         execute(WebUserPreferencesTable.createTableSQL(dbType));
         execute(PluginVersionTable.createTableSQL(dbType));
         execute(AllowlistBounceTable.createTableSQL(dbType));
+        execute(RegistrationTable.createTableSql(dbType));
 
         // DataExtension tables
         execute(ExtensionIconTable.createTableSQL(dbType));

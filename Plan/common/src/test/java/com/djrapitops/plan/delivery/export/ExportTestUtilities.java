@@ -24,6 +24,7 @@ import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.TPSStoreTransaction;
 import com.djrapitops.plan.utilities.java.Lists;
 import org.apache.commons.lang3.Strings;
 import org.awaitility.Awaitility;
@@ -43,6 +44,7 @@ import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -71,7 +73,7 @@ public class ExportTestUtilities {
     private static boolean ignoredLogLines(String log) {
         return !Strings.CI.containsAny(log,
                 "fonts.gstatic.com", "fonts.googleapis.com", "cdn.jsdelivr.net", "manifest.json"
-        );
+        ) || log.contains("datapoint") && log.contains("404");
     }
 
     public static void assertNoLogsExceptFaviconError(List<LogEntry> logs) {
@@ -86,7 +88,7 @@ public class ExportTestUtilities {
     public static Optional<WebElement> getMainPageElement(ChromeDriver driver) {
         try {
             return Optional.of(driver.findElement(By.className("load-in")));
-        } catch (NoSuchElementException e) {
+        } catch (NoSuchElementException _) {
             return Optional.empty();
         }
     }
@@ -94,7 +96,7 @@ public class ExportTestUtilities {
     public static Optional<WebElement> getElementById(ChromeDriver driver, String id) {
         try {
             return Optional.of(driver.findElement(By.id(id)));
-        } catch (NoSuchElementException e) {
+        } catch (NoSuchElementException _) {
             return Optional.empty();
         }
     }
@@ -129,6 +131,14 @@ public class ExportTestUtilities {
         FinishedSession session = new FinishedSession(uuid, serverUUID, 1000L, 11000L, 500L, new DataMap());
         database.executeTransaction(new StoreWorldNameTransaction(serverUUID, "world"));
         database.executeTransaction(new StoreSessionTransaction(session));
+    }
+
+    static void saveServerData(Database database, ServerUUID serverUUID) {
+        RandomData.dateOrderedTPS(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(12)).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
+        RandomData.dateOrderedTPS(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(8)).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
+        RandomData.dateOrderedTPS(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(15)).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
+        RandomData.dateOrderedTPS(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(22)).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
+        RandomData.dateOrderedTPS(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(29)).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
     }
 
     public static List<String> getEndpointsToTest(ServerUUID serverUUID) {

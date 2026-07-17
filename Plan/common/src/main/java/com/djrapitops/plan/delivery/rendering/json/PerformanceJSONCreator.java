@@ -23,11 +23,14 @@ import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
+import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.settings.locale.lang.HtmlLang;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -40,12 +43,17 @@ import java.util.concurrent.TimeUnit;
  * Creates JSON payload for /server-page Performance tab.
  *
  * @author AuroraLS3
+ * @deprecated Use /v1/datapoint instead (types TPS_LOW_SPIKES, UPTIME, DOWNTIME, TPS_AVERAGE, PLAYERS_ONLINE_AVERAGE, MSPT_AVERAGE, CPU_AVERAGE, RAM_AVERAGE, ENTITIES_AVERAGE, CHUNKS_AVERAGE, DISK_MAX, DISK_MIN).
+ *
  */
 @Singleton
+@Deprecated(since = "2026-05-24 / 5.7 build 3460")
 public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, Object>> {
 
     private final PlanConfig config;
     private final DBSystem dbSystem;
+    private final Locale locale;
+    private final PluginLogger logger;
 
     private final Formatter<Double> decimals;
     private final Formatter<Double> percentage;
@@ -54,11 +62,13 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
     @Inject
     public PerformanceJSONCreator(
             PlanConfig config,
-            DBSystem dbSystem,
+            DBSystem dbSystem, Locale locale, PluginLogger logger,
             Formatters formatters
     ) {
         this.config = config;
         this.dbSystem = dbSystem;
+        this.locale = locale;
+        this.logger = logger;
 
         decimals = formatters.decimals();
         percentage = formatters.percentage();
@@ -67,6 +77,8 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
 
     @Override
     public Map<String, Object> createJSONAsMap(ServerUUID serverUUID) {
+        logger.warn(locale.getString(PluginLang.DEPRECATED_ENDPOINT_CALL, "/v1/performanceOverview", "/v1/datapoint"));
+
         Map<String, Object> serverOverview = new HashMap<>();
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();

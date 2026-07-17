@@ -11,7 +11,7 @@ import {
 import {useTranslation} from "react-i18next";
 import Scrollable from "../Scrollable";
 import {usePreferences} from "../../hooks/preferencesHook.jsx";
-import FormattedDate from "../text/FormattedDate.jsx";
+import FormattedDate from "../text/FormattedDate.tsx";
 import {faCalendar} from "@fortawesome/free-regular-svg-icons";
 import DataTablesTable from "./DataTablesTable.jsx";
 import {useTimeAmountFormatter} from "../../util/format/useTimeAmountFormatter.js";

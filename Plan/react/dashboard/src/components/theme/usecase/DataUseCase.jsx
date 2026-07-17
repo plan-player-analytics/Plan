@@ -1,5 +1,5 @@
 import React from 'react';
-import Datapoint from "../../Datapoint.jsx";
+import Datapoint from "../../datapoint/Datapoint.tsx";
 import {Card, Col, Row} from "react-bootstrap";
 
 const DataUseCase = ({icon, label, card, value}) => {

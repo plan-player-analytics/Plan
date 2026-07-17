@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.delivery.export;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,10 +32,6 @@ public class ExportPaths {
     public ExportPaths() {
         replace = new ArrayList<>();
         with = new ArrayList<>();
-    }
-
-    public String resolveExportPaths(String original) {
-        return StringUtils.replaceEach(original, replace.toArray(new String[0]), with.toArray(new String[0]));
     }
 
     public void put(String replace, String with) {

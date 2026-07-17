@@ -202,7 +202,7 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
         }
     }
 
-    @Test
+    @Test // This test can regress intentionally if merging rules are ignored for new tables.
     default void databaseMerge() throws Exception {
         File tempFile = Files.createTempFile(dataFolder().toPath(), "backup-", ".db").toFile();
         tempFile.deleteOnExit();
@@ -256,6 +256,7 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
             expected.put(WebGroupTable.TABLE_NAME, beforeBackupTo.get(WebGroupTable.TABLE_NAME));
             expected.put(WebPermissionTable.TABLE_NAME, beforeBackupTo.get(WebPermissionTable.TABLE_NAME));
             expected.put(WebGroupToPermissionTable.TABLE_NAME, beforeBackupTo.get(WebGroupToPermissionTable.TABLE_NAME));
+            expected.put(RegistrationTable.TABLE_NAME, 0);
             Map<String, Integer> result = backup.query(LookupTableQueries.tableCounts());
             assertEquals(expected, result);
 

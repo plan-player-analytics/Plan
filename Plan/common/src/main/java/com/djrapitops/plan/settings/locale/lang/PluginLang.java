@@ -29,6 +29,8 @@ public enum PluginLang implements Lang {
     API_ADD_RESOURCE_CSS("plugin.apiCSSAdded", "API - css+", "PageExtension: ${0} added stylesheet(s) to ${1}, ${2}"),
     RELOAD_LOCALE("plugin.localeReloaded", "API - locale reload", "Custom locale.yml was modified so it was reloaded and is now in use."),
 
+    DEPRECATED_ENDPOINT_CALL("plugin.deprecated.endpoint", null, "Webserver: Deprecated endpoint ${0} was called. Endpoint ${1} should be used instead."),
+
     ENABLE_NOTIFY_PROXY_ADDRESS("plugin.enable.notify.proxyAddress", "Enable - Notify proxy address", "Proxy server detected in the database - Proxy Webserver address is '${0}'."),
     ENABLE_NOTIFY_PROXY_DISABLED_WEBSERVER("plugin.enable.notify.proxyDisabledWebserver", "Enable - Notify proxy disabled webserver", "Disabling Webserver on this server - You can override this behavior by setting '${0}' to false."),
     ENABLE_NOTIFY_SETTING_CHANGE("plugin.enable.notify.settingChange", "Enable - Notify settingChange", "Note: Set '${0}' to ${1}"),
@@ -86,6 +88,7 @@ public enum PluginLang implements Lang {
     VERSION_DOWNLOAD("html.version.download", "HTML - Version Download", "Download Plan-${0}.jar"),
     VERSION_CURRENT("html.version.current", "HTML - Version Current", "You have version ${0}"),
 
+    DB_DOWNLOAD_DRIVER("plugin.generic.database.downloadDriver", "Downloading ${0} Driver, this may take a while..."),
     DB_APPLY_PATCH("plugin.generic.dbApplyingPatch", "Database - Apply Patch", "Applying Patch: ${0}.."),
     DB_APPLIED_PATCHES("plugin.generic.dbPatchesApplied", "Database - Patches Applied", "All database patches applied successfully."),
     DB_APPLIED_PATCHES_ALREADY("plugin.generic.dbPatchesAlreadyApplied", "Database - Patches Applied Already", "All database patches already applied."),
@@ -95,6 +98,10 @@ public enum PluginLang implements Lang {
     LOADING_SERVER_INFO("plugin.generic.loadingServerInfo", "ServerInfo - Loading", "Loading server identifying information"),
     LOADED_SERVER_INFO("plugin.generic.loadedServerInfo", "ServerInfo - Loaded", "Server identifier loaded: ${0}"),
     DB_SCHEMA_PATCH("plugin.generic.dbSchemaPatch", "Database Notify - Patch", "Database: Making sure schema is up to date.."),
+
+    EXTENSION_REGISTERED("plugin.extensions.registered", "Registered extension: ${0}"),
+    EXTENSION_FAILED("plugin.extensions.failedToRegister", "One or more extensions failed to register (They can be disabled in Plan config)."),
+    EXTENSION_ERROR("plugin.extensions.errorOnRegister", "Could not register DataExtension for ${0} due to ${1}"),
     ;
 
     private final String key;
@@ -104,6 +111,12 @@ public enum PluginLang implements Lang {
     PluginLang(String key, String identifier, String defaultValue) {
         this.key = key;
         this.identifier = identifier;
+        this.defaultValue = defaultValue;
+    }
+
+    PluginLang(String key, String defaultValue) {
+        this.key = key;
+        this.identifier = null;
         this.defaultValue = defaultValue;
     }
 

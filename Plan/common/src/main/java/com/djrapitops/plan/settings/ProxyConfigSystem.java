@@ -19,7 +19,6 @@ package com.djrapitops.plan.settings;
 import com.djrapitops.plan.settings.config.ConfigReader;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.changes.ConfigUpdater;
-import com.djrapitops.plan.settings.network.NetworkSettingManager;
 import com.djrapitops.plan.settings.theme.Theme;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
@@ -40,33 +39,18 @@ import java.io.IOException;
 public class ProxyConfigSystem extends ConfigSystem {
 
     private final ConfigUpdater configUpdater;
-    private final NetworkSettingManager networkSettingManager;
 
     @Inject
     public ProxyConfigSystem(
             PlanFiles files,
             PlanConfig config,
             ConfigUpdater configUpdater,
-            NetworkSettingManager networkSettingManager,
             Theme theme,
             PluginLogger logger,
             ErrorLogger errorLogger
     ) {
         super(files, config, theme, logger, errorLogger);
         this.configUpdater = configUpdater;
-        this.networkSettingManager = networkSettingManager;
-    }
-
-    @Override
-    public void enable() {
-        super.enable();
-        networkSettingManager.enable();
-    }
-
-    @Override
-    public void disable() {
-        networkSettingManager.disable();
-        super.disable();
     }
 
     @Override

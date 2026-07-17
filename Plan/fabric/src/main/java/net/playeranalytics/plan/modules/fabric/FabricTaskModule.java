@@ -28,7 +28,6 @@ import com.djrapitops.plan.gathering.ShutdownHook;
 import com.djrapitops.plan.gathering.timed.InstalledPluginGatheringTask;
 import com.djrapitops.plan.gathering.timed.ServerTPSCounter;
 import com.djrapitops.plan.gathering.timed.SystemUsageBuffer;
-import com.djrapitops.plan.settings.upkeep.ConfigStoreTask;
 import com.djrapitops.plan.storage.upkeep.DBCleanTask;
 import com.djrapitops.plan.storage.upkeep.LogsFolderCleanTask;
 import com.djrapitops.plan.storage.upkeep.OldDependencyCacheDeletionTask;
@@ -56,10 +55,6 @@ public interface FabricTaskModule {
     @Binds
     @IntoSet
     TaskSystem.Task bindLogCleanTask(LogsFolderCleanTask logsFolderCleanTask);
-
-    @Binds
-    @IntoSet
-    TaskSystem.Task bindConfigStoreTask(ConfigStoreTask configStoreTask);
 
     @Binds
     @IntoSet

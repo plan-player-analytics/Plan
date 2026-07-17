@@ -22,6 +22,7 @@ import {AlertPopupContextProvider} from "./hooks/context/alertPopupContext";
 import {PreferencesContextProvider} from "./hooks/preferencesHook";
 import {ThemeStorageContextProvider} from "./hooks/context/themeContextHook.js";
 import {ThemeStyleCss} from "./components/theme/ThemeStyleCss.js";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 
 const PlayerPage = React.lazy(() => import("./views/layout/PlayerPage"));
 const PlayerOverview = React.lazy(() => import("./views/player/PlayerOverview"));
@@ -88,24 +89,27 @@ const GroupsRedirect = () => {
     return (<Navigate to={"groups"} replace={true}/>)
 }
 
+const queryClient = new QueryClient()
 const ContextProviders = ({children}: React.PropsWithChildren) => (
-    <AuthenticationContextProvider>
-        <MetadataContextProvider>
-            <PreferencesContextProvider>
-                <AlertPopupContextProvider>
-                    <ThemeContextProvider>
-                        <ThemeStorageContextProvider>
-                            <NavigationContextProvider>
-                                <PageExtensionContextProvider>
-                                    {children}
-                                </PageExtensionContextProvider>
-                            </NavigationContextProvider>
-                        </ThemeStorageContextProvider>
-                    </ThemeContextProvider>
-                </AlertPopupContextProvider>
-            </PreferencesContextProvider>
-        </MetadataContextProvider>
-    </AuthenticationContextProvider>
+    <QueryClientProvider client={queryClient}>
+        <AuthenticationContextProvider>
+            <MetadataContextProvider>
+                <PreferencesContextProvider>
+                    <AlertPopupContextProvider>
+                        <ThemeContextProvider>
+                            <ThemeStorageContextProvider>
+                                <NavigationContextProvider>
+                                    <PageExtensionContextProvider>
+                                        {children}
+                                    </PageExtensionContextProvider>
+                                </NavigationContextProvider>
+                            </ThemeStorageContextProvider>
+                        </ThemeContextProvider>
+                    </AlertPopupContextProvider>
+                </PreferencesContextProvider>
+            </MetadataContextProvider>
+        </AuthenticationContextProvider>
+    </QueryClientProvider>
 )
 
 const Lazy = ({children}: React.PropsWithChildren) => {

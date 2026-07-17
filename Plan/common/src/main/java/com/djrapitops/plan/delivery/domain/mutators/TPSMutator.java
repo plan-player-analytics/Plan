@@ -294,7 +294,7 @@ public class TPSMutator {
     private void addMissingPoints(List<Number[]> arrays, Long lastX, long date, LineGraph.GapStrategy gapStrategy) {
         long iterate = lastX + gapStrategy.diffToFirstGapPointMs;
         while (iterate < date) {
-            Number[] entry = new Number[7];
+            Number[] entry = new Number[12];
             if (gapStrategy.fillWith != null) Arrays.fill(entry, gapStrategy.fillWith);
             entry[0] = iterate;
             arrays.add(entry);

@@ -78,7 +78,8 @@ public class UserIdentifierQueries {
                 FROM + UsersTable.TABLE_NAME +
                 INNER_JOIN + UserInfoTable.TABLE_NAME + " on " +
                 UsersTable.TABLE_NAME + '.' + UsersTable.ID + "=" + UserInfoTable.TABLE_NAME + '.' + UserInfoTable.USER_ID +
-                WHERE + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID;
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=" + UserInfoTable.TABLE_NAME + "." + UserInfoTable.SERVER_ID +
+                WHERE + "s." + ServerTable.SERVER_UUID + "=?";
         return new QueryStatement<>(sql, 1000) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -240,17 +241,21 @@ public class UserIdentifierQueries {
     }
 
     public static Query<Integer> fetchMaxUserId(ServerUUID serverUUID) {
-        String sql = SELECT + "MAX(" + UserInfoTable.USER_ID + ")" + FROM + UserInfoTable.TABLE_NAME + WHERE + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID;
-        return db -> db.queryOptional(sql, row -> row.getInt(1), serverUUID).orElse(0);
+        String sql = SELECT + "MAX(" + UserInfoTable.USER_ID + ")" +
+                FROM + UserInfoTable.TABLE_NAME + " ui" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=ui." + UserInfoTable.SERVER_ID +
+                WHERE + "s." + ServerTable.SERVER_UUID + "=?";
+        return db -> db.queryOptional(sql, row -> row.getInt(1), serverUUID.toString()).orElse(0);
     }
 
     public static Query<List<UUID>> fetchUUIDsStartingFromId(Integer userId, ServerUUID serverUUID, int limit) {
-        String sql = SELECT + UsersTable.USER_UUID +
+        String sql = SELECT + "u." + UsersTable.USER_UUID +
                 FROM + UserInfoTable.TABLE_NAME + " ui" +
                 LEFT_JOIN + UsersTable.TABLE_NAME + " u ON u." + UsersTable.ID + "=ui." + UserInfoTable.USER_ID +
-                WHERE + UserInfoTable.USER_ID + ">=" + userId +
-                AND + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=ui." + UserInfoTable.SERVER_ID +
+                WHERE + "ui." + UserInfoTable.USER_ID + ">=" + userId +
+                AND + "s." + ServerTable.SERVER_UUID + "=?" +
                 LIMIT + limit;
-        return db -> db.queryList(sql, row -> UUID.fromString(row.getString(UsersTable.USER_UUID)), serverUUID);
+        return db -> db.queryList(sql, row -> UUID.fromString(row.getString(UsersTable.USER_UUID)), serverUUID.toString());
     }
 }

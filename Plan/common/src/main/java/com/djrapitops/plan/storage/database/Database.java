@@ -138,11 +138,11 @@ public interface Database {
         });
     }
 
-    default CompletableFuture<?> executeInTransaction(String sql) {
+    default CompletableFuture<?> executeInTransaction(String sql, Object... parameters) {
         return executeInTransaction(new ExecStatement(sql) {
             @Override
-            public void prepare(PreparedStatement statement) {
-                // Nothing to prepare
+            public void prepare(PreparedStatement statement) throws SQLException {
+                QueryParameterSetter.setParameters(statement, parameters);
             }
         });
     }

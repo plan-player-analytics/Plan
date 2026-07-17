@@ -11,7 +11,7 @@ dependencies {
     implementation "net.playeranalytics:Extension-DKBans:2.1.2-R1.3"
     implementation "net.playeranalytics:Extension-DKCoins:3.0.5-R1.1"
     implementation "net.playeranalytics:Extension-EssentialsX:2.15.0-R2.0"
-    implementation "net.playeranalytics:Extension-CMI:9.7.4.1-R0.1"
+    implementation "net.playeranalytics:Extension-CMI:9.7.4.1-R0.2"
     implementation "net.playeranalytics:Extension-Factions:2.14.0-R1.1"
     implementation "net.playeranalytics:Extension-FactionsUUID:1.6.9.5-U0.5.25-R1.1"
     implementation "net.playeranalytics:Extension-FastLogin:R1.3"
@@ -46,4 +46,8 @@ dependencies {
     implementation "net.playeranalytics:Extension-Towny:0.99-R1.3"
     implementation "net.playeranalytics:Extension-Vault:1.7-R1.3"
     implementation "net.playeranalytics:Extension-ViaVersion:4.0.1-R1.5"
+}
+
+compileJava {
+    options.release = 11
 }

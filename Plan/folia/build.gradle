@@ -1,9 +1,7 @@
-apply plugin: "com.gradleup.shadow"
-
-tasks.withType(JavaCompile).configureEach {
-    options.release.set(17)
-}
-
 dependencies {
     runtimeOnly "net.playeranalytics:platform-abstraction-layer-folia:$palVersion"
+}
+
+compileJava {
+    options.release = 17
 }

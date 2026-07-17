@@ -69,6 +69,7 @@ public class BadJoinAddressDataCorrectionPatch extends Patch {
     }
 
     private void deleteOldIds(Set<Integer> removeIds) {
+        if (removeIds.isEmpty()) return;
         String sql = DELETE_FROM + JoinAddressTable.TABLE_NAME +
                 WHERE + JoinAddressTable.ID + " IN (" + Sql.nParameters(removeIds.size()) + ")";
         execute(new ExecStatement(sql) {
@@ -80,6 +81,7 @@ public class BadJoinAddressDataCorrectionPatch extends Patch {
     }
 
     private void updateOldIds(Map<Integer, Integer> oldToNewIds) {
+        if (oldToNewIds.isEmpty()) return;
         String sql = "UPDATE " + SessionsTable.TABLE_NAME +
                 " SET " + SessionsTable.JOIN_ADDRESS_ID + "=?" +
                 WHERE + SessionsTable.JOIN_ADDRESS_ID + "=?";
