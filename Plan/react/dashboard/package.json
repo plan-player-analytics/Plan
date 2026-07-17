@@ -73,7 +73,7 @@
     "@vitejs/plugin-react": "6.0.3",
     "baseline-browser-mapping": "2.10.40",
     "typescript": "6.0.3",
-    "vite": "8.1.0"
+    "vite": "8.1.5"
   },
   "scarfSettings": {
     "enabled": false
