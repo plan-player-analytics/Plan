@@ -50,7 +50,7 @@ subprojects {
     apply plugin: "jacoco"
 
     ext {
-        daggerVersion = "2.60"
+        daggerVersion = "2.60.1"
 
         palVersion = "5.3.0"
 
