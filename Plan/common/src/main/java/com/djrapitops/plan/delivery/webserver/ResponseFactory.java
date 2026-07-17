@@ -379,7 +379,8 @@ public class ResponseFactory {
     }
 
     public Response redirectResponse(String location) {
-        String redirectTo = addresses.get().getMainAddress().map(address -> {
+        String redirectTo = addresses.get().isAlternativeAddressEnabled()
+                ? addresses.get().getMainAddress().map(address -> {
                     if (location.startsWith("/")) {
                         if (address.endsWith("/")) {
                             return address + location.substring(1);
@@ -394,7 +395,8 @@ public class ResponseFactory {
                         }
                     }
                 })
-                .orElse(location);
+                .orElse(location)
+                : location; // Alternative IP not enabled, use path.
         return Response.builder().redirectTo(redirectTo).build();
     }
 
