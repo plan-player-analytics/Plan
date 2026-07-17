@@ -18,10 +18,20 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "noEmit": true,
-    "jsx": "react-jsx"
+    "jsx": "react-jsx",
+    "rootDir": "./src"
   },
   "include": [
     "src"
+  ],
+  "types": [
+    "node",
+    "parse-json",
+    "prop-types",
+    "react",
+    "react-dom",
+    "react-transition-group",
+    "warning"
   ],
   "references": [
     {
