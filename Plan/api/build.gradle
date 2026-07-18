@@ -11,7 +11,7 @@ compileJava {
     options.release = 8
 }
 
-def apiVersion = "5.7-R0.2"
+def apiVersion = "5.8-R0.1"
 
 publishing {
     repositories {
