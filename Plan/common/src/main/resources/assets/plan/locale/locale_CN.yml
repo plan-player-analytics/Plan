@@ -274,7 +274,7 @@ html:
         nightMode: "夜间模式"
     calendar:
         new: "新增："
-        unique: "注册："
+        unique: "活跃："
     description:
         jitter: "抖动用于描述相邻数值之间的变化，例如 [0, 5, 10, 5] -> [5, 5, 5] -> 平均值为 5。"
         moreDataThanFitInResponse: "筛选条件匹配到的数据量超出了响应可容纳的范围。"
@@ -358,7 +358,7 @@ html:
         averageSessionLength: "平均会话时长"
         averageSessions: "平均会话次数"
         averageTps: "平均TPS"
-        averageTps7days: "7日平均TPS"
+        averageTps7days: "平均TPS（近7天）"
         banned: "已被封禁"
         bestPeak: "历史最高峰值"
         bestPing: "最低延迟"
@@ -519,7 +519,7 @@ html:
         loneNewbieJoins: "单人新玩家加入"
         longestSession: "最长会话时长"
         lowTpsSpikes: "低TPS时段"
-        lowTpsSpikes7days: "低TPS时段（7天）"
+        lowTpsSpikes7days: "低TPS时段（近7天）"
         manage: "管理"
         managePage:
             addGroup:
@@ -572,8 +572,8 @@ html:
         networkPage: "跨服网络页面"
         new: "新增"
         newPlayerRetention: "新玩家留存率"
-        newPlayers: "新玩家"
-        newPlayers7days: "新玩家（7天）"
+        newPlayers: "新增玩家"
+        newPlayers7days: "新增玩家（近7天）"
         nickname: "昵称"
         noDataToDisplay: "暂无数据显示"
         now: "现在"
@@ -754,8 +754,8 @@ html:
         trend: "趋势"
         trends30days: "30日趋势"
         uninstalled: "已卸载"
-        uniquePlayers: "注册玩家"
-        uniquePlayers7days: "注册玩家（7天）"
+        uniquePlayers: "活跃玩家"
+        uniquePlayers7days: "活跃玩家（近7天）"
         unit:
             percentage: "百分比"
             playerCount: "玩家数量"

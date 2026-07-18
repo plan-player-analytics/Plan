@@ -274,7 +274,7 @@ html:
         nightMode: "夜間模式"
     calendar:
         new: "新增："
-        unique: "獨立："
+        unique: "活躍："
     description:
         jitter: "抖動用於描述相鄰數值之間的變化，例如 [0, 5, 10, 5] -> [5, 5, 5] -> 平均值為 5。"
         moreDataThanFitInResponse: "篩選條件匹配到的資料量超出了回應可容納的範圍。"
@@ -358,7 +358,7 @@ html:
         averageSessionLength: "平均工作階段時長"
         averageSessions: "平均工作階段數"
         averageTps: "平均 TPS"
-        averageTps7days: "平均 TPS（7 天）"
+        averageTps7days: "平均 TPS（近 7 天）"
         banned: "已被封鎖"
         bestPeak: "歷史最高峰值"
         bestPing: "最低延遲"
@@ -519,7 +519,7 @@ html:
         loneNewbieJoins: "單獨新玩家加入"
         longestSession: "最長工作階段時間"
         lowTpsSpikes: "低 TPS 時間"
-        lowTpsSpikes7days: "低 TPS 時間（7 天）"
+        lowTpsSpikes7days: "低 TPS 時間（近 7 天）"
         manage: "管理"
         managePage:
             addGroup:
@@ -573,7 +573,7 @@ html:
         new: "新增"
         newPlayerRetention: "新玩家留存率"
         newPlayers: "新玩家"
-        newPlayers7days: "新玩家（7 天）"
+        newPlayers7days: "新玩家（近 7 天）"
         nickname: "暱稱"
         noDataToDisplay: "無資料可顯示"
         now: "現在"
@@ -754,8 +754,8 @@ html:
         trend: "趨勢"
         trends30days: "30 天趨勢"
         uninstalled: "已解除安裝"
-        uniquePlayers: "註冊玩家"
-        uniquePlayers7days: "註冊玩家（7 天）"
+        uniquePlayers: "活躍玩家"
+        uniquePlayers7days: "活躍玩家（近 7 天）"
         unit:
             percentage: "百分比"
             playerCount: "玩家數量"
