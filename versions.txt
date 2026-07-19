@@ -1,3 +1,4 @@
+REL|5.8.3577|https://github.com/plan-player-analytics/Plan/releases/download/5.8.3577/Plan-5.8-build-3577.jar|https://github.com/plan-player-analytics/Plan/releases
 DEV|5.7.3558|https://github.com/plan-player-analytics/Plan/releases/download/5.7.3558/Plan-5.7-dev-build-3558.jar|https://github.com/plan-player-analytics/Plan/releases/tag/5.7.3558
 DEV|5.7.3506|https://github.com/plan-player-analytics/Plan/releases/download/5.7.3506/Plan-5.7-dev-build-3506.jar|https://github.com/plan-player-analytics/Plan/releases/tag/5.7.3506
 DEV|5.7.3341|https://github.com/plan-player-analytics/Plan/releases/download/5.7.3341/Plan-5.7-build-3341.jar|https://github.com/plan-player-analytics/Plan/releases/tag/5.7.3341
