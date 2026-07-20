@@ -114,7 +114,7 @@ jobs:
           changelog: ${{ github.event.release.body }}
           changelog_type: markdown
           display_name: ${{ github.event.release.name }}
-          game_versions: "2:Java 25,86297:26.2,68441:Fabric"
+          game_versions: "2:Java 25,86297:26-2,68441:Fabric"
           release_type: release
           relations: fabric-api:requiredDependency,luckperms:optionalDependency
       - name: Upload prerelease to CurseForge 🚀
@@ -128,7 +128,7 @@ jobs:
           changelog: ${{ github.event.release.body }}
           changelog_type: markdown
           display_name: ${{ github.event.release.name }}
-          game_versions: "2:Java 25,83806:26.1,68441:Fabric"
+          game_versions: "2:Java 25,86297:26-2,68441:Fabric"
           release_type: beta
           relations: fabric-api:requiredDependency,luckperms:optionalDependency
 

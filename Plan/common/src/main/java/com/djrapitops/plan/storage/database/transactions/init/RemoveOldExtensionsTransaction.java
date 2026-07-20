@@ -84,26 +84,30 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
     }
 
     private void removeProviders(Collection<Integer> providerIds, Collection<Integer> tableProviderIds) {
-        execute(new ExecStatement(
-                DELETE_FROM + ExtensionProviderTable.TABLE_NAME +
-                        WHERE + ExtensionProviderTable.PLUGIN_ID +
-                        " IN (" + Sql.nParameters(providerIds.size()) + ")"
-        ) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                QueryParameterSetter.setParameters(statement, providerIds);
-            }
-        });
-        execute(new ExecStatement(
-                DELETE_FROM + ExtensionTableProviderTable.TABLE_NAME +
-                        WHERE + ExtensionTableProviderTable.PLUGIN_ID +
-                        " IN (" + Sql.nParameters(tableProviderIds.size()) + ")"
-        ) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                QueryParameterSetter.setParameters(statement, tableProviderIds);
-            }
-        });
+        if (!providerIds.isEmpty()) {
+            execute(new ExecStatement(
+                    DELETE_FROM + ExtensionProviderTable.TABLE_NAME +
+                            WHERE + ExtensionProviderTable.PLUGIN_ID +
+                            " IN (" + Sql.nParameters(providerIds.size()) + ")"
+            ) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    QueryParameterSetter.setParameters(statement, providerIds);
+                }
+            });
+        }
+        if (!tableProviderIds.isEmpty()) {
+            execute(new ExecStatement(
+                    DELETE_FROM + ExtensionTableProviderTable.TABLE_NAME +
+                            WHERE + ExtensionTableProviderTable.PLUGIN_ID +
+                            " IN (" + Sql.nParameters(tableProviderIds.size()) + ")"
+            ) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    QueryParameterSetter.setParameters(statement, tableProviderIds);
+                }
+            });
+        }
     }
 
     private Query<Collection<Integer>> inactiveProviderIDsQuery() {
