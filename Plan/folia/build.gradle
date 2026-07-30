@@ -1,5 +1,12 @@
 dependencies {
-    runtimeOnly "net.playeranalytics:platform-abstraction-layer-folia:$palVersion"
+    implementation "net.playeranalytics:platform-abstraction-layer-folia:$palVersion"
+
+    compileOnly "dev.folia:folia-api:1.20.1-R0.1-SNAPSHOT"
+
+    testImplementation "dev.folia:folia-api:1.20.1-R0.1-SNAPSHOT"
+    testImplementation "org.junit.jupiter:junit-jupiter:$junitVersion"
+    testImplementation "org.mockito:mockito-core:$mockitoVersion"
+    testImplementation "org.mockito:mockito-junit-jupiter:$mockitoVersion"
 }
 
 compileJava {

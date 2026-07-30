@@ -66,7 +66,7 @@ public class Plan extends JavaPlugin implements PlanPlugin {
         if (isFolia()) {
             try {
                 // Attempt to load and use the Folia library for Java 17+
-                Class<?> foliaPlatformLayer = Class.forName("net.playeranalytics.plugin.FoliaPlatformLayer");
+                Class<?> foliaPlatformLayer = Class.forName("net.playeranalytics.plugin.PlanFoliaPlatformLayer");
                 abstractionLayer = (PlatformAbstractionLayer) foliaPlatformLayer.getConstructor(JavaPlugin.class).newInstance(this);
             } catch (Exception e) {
                 this.getLogger().log(Level.SEVERE, "Failed to load FoliaPlatformLayer", e);
