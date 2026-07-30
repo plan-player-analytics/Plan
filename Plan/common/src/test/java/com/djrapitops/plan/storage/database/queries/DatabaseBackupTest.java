@@ -57,9 +57,11 @@ import java.io.File;
 import java.nio.file.Files;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public interface DatabaseBackupTest extends DatabaseTestPreparer {
 
@@ -265,6 +267,36 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
             assertEquals(expectedData, resultData);
         } finally {
             backup.close();
+        }
+    }
+
+    @Test
+    default void mergeSQLiteIntoNonEmptyDatabase() throws Exception {
+        File tempFile = Files.createTempFile(dataFolder().toPath(), "merge-source-", ".db").toFile();
+        tempFile.deleteOnExit();
+        SQLiteDB source = dbSystem().getSqLiteFactory().usingFile(tempFile);
+        source.setTransactionExecutorServiceProvider(MoreExecutors::newDirectExecutorService);
+        try {
+            source.init();
+            Awaitility.await().atMost(5, TimeUnit.SECONDS).until(() -> db().getState() == Database.State.OPEN);
+            Awaitility.await().atMost(5, TimeUnit.SECONDS).until(() -> source.getState() == Database.State.OPEN);
+
+            saveDataForBackup(db(), serverUUID());
+            saveDataForBackup(source, TestConstants.SERVER_TWO_UUID);
+            int expectedSessions = db().query(SessionQueries.fetchAllSessions()).size()
+                    + source.query(SessionQueries.fetchAllSessions()).size();
+
+            List<String> feedback = new ArrayList<>();
+            new DatabaseCopyProcessor(new Locale(), new TestErrorLogger(), source, db(), feedback::add).run();
+
+            Set<ServerUUID> serverUUIDs = db().query(ServerQueries.fetchAllServers()).stream()
+                    .map(Server::getUuid)
+                    .collect(Collectors.toSet());
+            assertTrue(serverUUIDs.contains(serverUUID()));
+            assertTrue(serverUUIDs.contains(TestConstants.SERVER_TWO_UUID));
+            assertEquals(expectedSessions, db().query(SessionQueries.fetchAllSessions()).size());
+        } finally {
+            source.close();
         }
     }
 

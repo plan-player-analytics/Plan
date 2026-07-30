@@ -44,6 +44,7 @@ public enum DeepHelpLang implements Lang {
     DB_HOTSWAP("command.help.dbHotswap.inDepth", "In Depth Help - /plan db hotswap", "Reloads the plugin with the other database and changes the config to match."),
     DB_CLEAR("command.help.dbClear.inDepth", "In Depth Help - /plan db clear", "Clears all Plan tables, removing all Plan-data in the process."),
     DB_REMOVE("command.help.dbRemove.inDepth", "In Depth Help - /plan db remove", "Removes all data linked to a player from the Current database."),
+    DB_REMOVE_REGISTERED("command.help.dbRemoveRegistered.inDepth", "In Depth Help - /plan db remove_registered", "Removes all data of players whose first join date is between the two yyyy-MM-dd dates (inclusive)."),
     DB_UNINSTALLED("command.help.dbUninstalled.inDepth", "In Depth Help - /plan db uninstalled", "Marks a server in Plan database as uninstalled so that it will not show up in server queries."),
     EXPORT("command.help.export.inDepth", "In Depth Help - /plan export", "Performs an export to export location defined in the config."),
     IMPORT("command.help.import.inDepth", "In Depth Help - /plan import", "Performs an import to load data into the database."),
