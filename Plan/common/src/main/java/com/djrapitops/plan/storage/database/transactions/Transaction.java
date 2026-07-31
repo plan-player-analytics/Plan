@@ -49,6 +49,7 @@ public abstract class Transaction {
     protected DBType dbType;
     protected boolean success;
     protected int attempts;
+    private boolean executed;
     private SQLDB db;
     private Connection connection;
     private Savepoint savepoint;
@@ -65,36 +66,52 @@ public abstract class Transaction {
         this.db = db;
         this.dbType = db.getType();
 
-        attempts++; // Keeps track how many attempts have been made to avoid infinite recursion.
+        while (!success) {
+            attempts++;
+            delayIfDatabaseIsUnderHeavyLoad();
 
-        if (db.isUnderHeavyLoad()) {
+            Connection attemptConnection = null;
             try {
-                Thread.yield();
-                Thread.sleep(db.getHeavyLoadDelayMs());
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-        }
-
-        try {
-            initializeConnection(db);
-            if (shouldBeExecuted()) {
-                initializeTransaction();
-                if (this instanceof Patch) {
-                    db.getLogger().info(db.getLocale().getString(PluginLang.DB_APPLY_PATCH, getName()));
+                initializeConnection(db);
+                attemptConnection = connection;
+                if (shouldBeExecuted()) {
+                    initializeTransaction();
+                    if (this instanceof Patch) {
+                        db.getLogger().info(db.getLocale().getString(PluginLang.DB_APPLY_PATCH, getName()));
+                    }
+                    performOperations();
+                    if (connection != null) connection.commit();
+                    executed = true;
                 }
-                performOperations();
-                if (connection != null) connection.commit();
+                success = true;
+            } catch (RetryTransactionException retry) {
+                manageFailure(retry.getFailure(), null);
+            } catch (DBOpException operationFailure) {
+                SQLException sqlFailure = findSqlFailure(operationFailure);
+                if (sqlFailure == null || !isRetryable(sqlFailure)) throw operationFailure;
+                manageFailure(sqlFailure, operationFailure);
+            } catch (SQLException statementFail) {
+                manageFailure(statementFail, null);
+            } finally {
+                db.returnToPool(attemptConnection);
+                connection = null;
+                savepoint = null;
             }
-            success = true;
-        } catch (SQLException statementFail) {
-            manageFailure(statementFail); // Throws a DBOpException.
-        } finally {
-            db.returnToPool(connection);
         }
     }
 
-    private void manageFailure(SQLException statementFail) {
+    private void delayIfDatabaseIsUnderHeavyLoad() {
+        if (!db.isUnderHeavyLoad()) return;
+
+        try {
+            Thread.yield();
+            Thread.sleep(db.getHeavyLoadDelayMs());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    private void manageFailure(SQLException statementFail, DBOpException operationFailure) {
         String failMsg = getClass().getSimpleName() + " failed: " + statementFail.getMessage();
         String rollbackStatusMsg = rollbackTransaction();
 
@@ -105,19 +122,17 @@ public abstract class Transaction {
         boolean deadlocked = mySQLDeadlock || statementFail instanceof SQLTransactionRollbackException;
         boolean lockWaitTimeout = errorCode == 1205;
         boolean duplicateEntry = errorCode == 1062;
-        if (attempts < ATTEMPT_LIMIT && (mysqlOutdatedRead || deadlocked || duplicateEntry || lockWaitTimeout)) {
-            executeTransaction(db); // Recurse to attempt again.
-            return;
-        }
 
         if (dbType == DBType.MYSQL && lockWaitTimeout) {
             if (!db.isUnderHeavyLoad()) {
-                db.getLogger().warn("Database appears to be under heavy load. Dropping some unimportant transactions and adding short pauses for next 10 minutes.");
+                db.getLogger().warn("Database lock wait timed out (MySQL error 1205). Dropping some unimportant transactions and adding short pauses for the next 2 minutes.");
                 db.getRunnableFactory().create(db::assumeNoMoreHeavyLoad)
                         .runTaskLaterAsynchronously(TimeAmount.toTicks(2, TimeUnit.MINUTES));
             }
             db.increaseHeavyLoadDelay();
-            executeTransaction(db); // Recurse to attempt again.
+        }
+
+        if (attempts < ATTEMPT_LIMIT && (mysqlOutdatedRead || deadlocked || duplicateEntry || lockWaitTimeout)) {
             return;
         }
 
@@ -125,9 +140,33 @@ public abstract class Transaction {
             failMsg += " (Attempted " + attempts + " times)";
         }
 
-        throw new DBOpException(failMsg + rollbackStatusMsg, statementFail, ErrorContext.builder()
-                .related("Attempts: " + attempts)
-                .build());
+        if (operationFailure != null) {
+            throw new DBOpException(failMsg + rollbackStatusMsg, operationFailure,
+                    operationFailure.getContext().orElseGet(() -> ErrorContext.builder()
+                            .related("Attempts: " + attempts)
+                            .build()));
+        }
+        throw new DBOpException(failMsg + rollbackStatusMsg, statementFail,
+                ErrorContext.builder().related("Attempts: " + attempts).build());
+    }
+
+    private boolean isRetryable(SQLException statementFail) {
+        int errorCode = statementFail.getErrorCode();
+        boolean mysqlOutdatedRead = dbType == DBType.MYSQL && errorCode == 1020;
+        boolean mySQLDeadlock = dbType == DBType.MYSQL && errorCode == 1213;
+        boolean deadlocked = mySQLDeadlock || statementFail instanceof SQLTransactionRollbackException;
+        boolean lockWaitTimeout = errorCode == 1205;
+        boolean duplicateEntry = errorCode == 1062;
+        return mysqlOutdatedRead || deadlocked || duplicateEntry || lockWaitTimeout;
+    }
+
+    private SQLException findSqlFailure(Throwable failure) {
+        Throwable cause = failure;
+        while (cause != null) {
+            if (cause instanceof SQLException) return (SQLException) cause;
+            cause = cause.getCause();
+        }
+        return null;
     }
 
     private String rollbackTransaction() {
@@ -153,7 +192,7 @@ public abstract class Transaction {
             connection.commit();
             initializeTransaction();
         } catch (SQLException e) {
-            manageFailure(e);
+            throw new RetryTransactionException(e);
         }
     }
 
@@ -287,6 +326,15 @@ public abstract class Transaction {
         return success;
     }
 
+    /**
+     * Whether this transaction performed its operations instead of being skipped as non-critical work.
+     *
+     * @return {@code true} if the operations were committed successfully.
+     */
+    public boolean wasExecuted() {
+        return success && executed;
+    }
+
     public boolean dbIsNotUnderHeavyLoad() {
         return !db.isUnderHeavyLoad() && !db.shouldDropUnimportantTransactions();
     }
@@ -316,5 +364,18 @@ public abstract class Transaction {
     public enum IsolationLevel {
         UNCHANGED,
         READ_COMMITTED
+    }
+
+    private static final class RetryTransactionException extends RuntimeException {
+        private final SQLException failure;
+
+        private RetryTransactionException(SQLException failure) {
+            super(failure);
+            this.failure = failure;
+        }
+
+        private SQLException getFailure() {
+            return failure;
+        }
     }
 }
