@@ -61,6 +61,7 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
         for (Integer providerID : tableProviderIds) {
             removeTableValues(providerID);
         }
+        commitMidTransaction();
         removeProviders(providerIds, tableProviderIds);
     }
 

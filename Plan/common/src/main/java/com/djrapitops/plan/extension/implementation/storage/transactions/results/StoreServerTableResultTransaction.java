@@ -24,6 +24,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPluginTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionServerTableValueTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionTableProviderTable;
 import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
@@ -36,6 +37,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.List;
+import java.util.Optional;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 import static com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionServerTableValueTable.*;
@@ -82,6 +84,7 @@ public class StoreServerTableResultTransaction extends ThrowawayTransaction {
             }
 
             Integer tableID = query(tableID());
+            query(lockRows(tableID));
 
             List<Object[]> rows = table.getRows();
             Integer oldRowCount = query(currentRowCount(tableID));
@@ -100,6 +103,15 @@ public class StoreServerTableResultTransaction extends ThrowawayTransaction {
             }
             return false;
         };
+    }
+
+    private Query<Object> lockRows(Integer tableID) {
+        return db -> db.queryOptional(SELECT + ExtensionServerTableValueTable.ID +
+                        FROM + TABLE_NAME +
+                        WHERE + TABLE_ID + "=?" +
+                        AND + SERVER_UUID + "=?" + lockForUpdate(),
+                row -> Optional.empty(),
+                tableID, serverUUID);
     }
 
     private void deleteOldRows(Integer tableID, int afterRow) {
