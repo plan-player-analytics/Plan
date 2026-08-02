@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.domain.TablePlayer;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.keys.Key;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
+import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.Server;
@@ -41,6 +42,7 @@ import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemovePlayerTransaction;
+import com.djrapitops.plan.storage.database.transactions.commands.RemovePlayersRegisteredBetweenTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveServerTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.*;
 import com.djrapitops.plan.storage.database.transactions.init.CreateIndexTransaction;
@@ -57,11 +59,13 @@ import utilities.TestPluginLogger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLTransientConnectionException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
@@ -121,6 +125,21 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         assertTrue(db().query(NicknameQueries.fetchNicknameDataOfPlayer(playerUUID)).isEmpty());
         assertTrue(db().query(GeoInfoQueries.fetchPlayerGeoInformation(playerUUID)).isEmpty());
         assertMapIsEmpty(db(), SessionQueries.fetchSessionsOfPlayer(playerUUID));
+    }
+
+    @Test
+    default void removePlayersRegisteredBetweenDates() {
+        db().executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 1000L, TestConstants.PLAYER_ONE_NAME));
+        db().executeTransaction(new PlayerRegisterTransaction(player2UUID, () -> 2000L, TestConstants.PLAYER_TWO_NAME));
+        db().executeTransaction(new PlayerRegisterTransaction(player3UUID, () -> 3000L, TestConstants.PLAYER_THREE_NAME));
+
+        RemovePlayersRegisteredBetweenTransaction transaction = new RemovePlayersRegisteredBetweenTransaction(1500L, 2500L);
+        db().executeTransaction(transaction).join();
+
+        assertEquals(Set.of(player2UUID), transaction.getRemovedPlayerUUIDs());
+        assertTrue(db().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
+        assertFalse(db().query(PlayerFetchQueries.isPlayerRegistered(player2UUID)));
+        assertTrue(db().query(PlayerFetchQueries.isPlayerRegistered(player3UUID)));
     }
 
     @Test
@@ -222,6 +241,33 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         Transaction transaction = new CreateIndexTransaction();
         db().executeTransaction(transaction).get(); // get to ensure transaction is finished
         assertTrue(transaction.wasSuccessful());
+    }
+
+    @Test
+    default void transactionIsRetriedAfterTemporaryConnectionFailure() {
+        SQLDB database = (SQLDB) db();
+        database.setConnectionRetryDelays(0L, 0L);
+        AtomicInteger retryAttempts = new AtomicInteger();
+        Transaction transaction = new Transaction() {
+            @Override
+            public void executeTransaction(SQLDB db) {
+                if (retryAttempts.incrementAndGet() < 3) {
+                    throw new DBOpException("Connection unavailable", new SQLTransientConnectionException("Connection unavailable", "08001"));
+                }
+            }
+
+            @Override
+            protected void performOperations() {
+                // executeTransaction is overridden to simulate a connection outage.
+            }
+        };
+
+        try {
+            database.executeTransaction(transaction).join();
+            assertEquals(3, retryAttempts.get());
+        } finally {
+            database.resetConnectionRetryDelays();
+        }
     }
 
     @Test
