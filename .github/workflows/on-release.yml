@@ -103,34 +103,21 @@ jobs:
           jq -r '.name' asset.txt > name.txt
           wget -i url.txt
           echo "JAR_FILENAME=$(cat name.txt)" >> $GITHUB_ENV
-      - name: Upload release to CurseForge 🚀
-        if: ${{ github.event.release.prerelease == false }}
-        uses: itsmeow/curseforge-upload@master
+      - uses: Kira-NT/mc-publish@v3
         with:
-          token: ${{ secrets.CF_API_TOKEN }}
-          project_id: 508727
-          game_endpoint: minecraft
-          file_path: ${{ env.JAR_FILENAME }}
+          curseforge-id: 394468
+          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          files: ${{ env.JAR_FILENAME }}
+          name: ${{ github.event.release.name }}
           changelog: ${{ github.event.release.body }}
-          changelog_type: markdown
-          display_name: ${{ github.event.release.name }}
-          game_versions: "2:Java 25,86297:26-2,68441:Fabric"
-          release_type: release
-          relations: fabric-api:requiredDependency,luckperms:optionalDependency
-      - name: Upload prerelease to CurseForge 🚀
-        if: ${{ github.event.release.prerelease == true }}
-        uses: itsmeow/curseforge-upload@master
-        with:
-          token: ${{ secrets.CF_API_TOKEN }}
-          project_id: 508727
-          game_endpoint: minecraft
-          file_path: ${{ env.JAR_FILENAME }}
-          changelog: ${{ github.event.release.body }}
-          changelog_type: markdown
-          display_name: ${{ github.event.release.name }}
-          game_versions: "2:Java 25,86297:26-2,68441:Fabric"
-          release_type: beta
-          relations: fabric-api:requiredDependency,luckperms:optionalDependency
+          loaders: fabric
+          game-versions: |
+            >=26.2
+          version-type: ${{ github.event.release.prerelease && 'beta' || 'release' }}
+          dependencies: |
+            fabric-api(required){curseforge:306612}
+            luckperms(optional){curseforge:431733}
+          java: 25
 
   upload_release_hangar:
     name: Hangar Upload
