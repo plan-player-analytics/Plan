@@ -10,7 +10,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Get Download URL
         run: |
           curl 'https://api.github.com/repos/plan-player-analytics/plan/releases/${{ github.event.release.id }}/assets' | jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric") | not)' > asset.txt
@@ -32,7 +32,7 @@ jobs:
         uses: EndBug/add-and-commit@v10
         with:
           committer_name: GitHub Actions
-          committer_email: 41898282+github-actions[bot]@users.noreply.github.com
+          committer_email: 41898282+github-actions[bot]@users.noreply.github.action
           message: Update versions.txt ${{ github.event.release.name }}
           add: versions.txt
           push: origin HEAD:master
@@ -43,7 +43,7 @@ jobs:
 
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
       - name: Get git TAG
         id: tagName
         uses: olegtarasov/get-tag@v2.1
@@ -65,7 +65,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout 🛎️
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: Download release artifact for upload
@@ -124,7 +124,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: 📥 Checkout git repository
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: ⚙ Get Download URL
@@ -179,7 +179,7 @@ jobs:
           echo "FABRIC_JAR=$(cat name_fabric.txt)" >> $GITHUB_ENV
 
       - name: Modrinth Upload - Plugin 🚀
-        uses: Kira-NT/mc-publish@v3.3
+        uses: Kira-NT/mc-publish@v3
         with:
           modrinth-id: wJQfHhxh
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
@@ -203,7 +203,7 @@ jobs:
           version-type: ${{ github.event.release.prerelease && 'beta' || 'release' }}
 
       - name: Modrinth Upload - Fabric 🚀
-        uses: Kira-NT/mc-publish@v3.3
+        uses: Kira-NT/mc-publish@v3
         with:
           modrinth-id: plan
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
