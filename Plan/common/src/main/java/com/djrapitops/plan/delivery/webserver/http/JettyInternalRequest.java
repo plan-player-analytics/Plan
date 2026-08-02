@@ -67,7 +67,11 @@ public class JettyInternalRequest implements InternalRequest {
 
     @Override
     public String getAccessAddressFromHeader() {
-        return baseRequest.getHeader(HttpHeader.X_FORWARDED_FOR.asString());
+        String header = baseRequest.getHeader(HttpHeader.X_FORWARDED_FOR.asString());
+        if (header != null && header.contains(",")) {
+            return header.split(",")[0].trim();
+        }
+        return header;
     }
 
     @Override
