@@ -103,10 +103,11 @@ jobs:
           jq -r '.name' asset.txt > name.txt
           wget -i url.txt
           echo "JAR_FILENAME=$(cat name.txt)" >> $GITHUB_ENV
-      - uses: Kira-NT/mc-publish@v3
+      - name: CurseForge Upload - Fabric 🚀
+        uses: Kira-NT/mc-publish@v3
         with:
-          curseforge-id: 394468
-          curseforge-token: ${{ secrets.CURSEFORGE_TOKEN }}
+          curseforge-id: 508727
+          curseforge-token: ${{ secrets.CF_API_TOKEN }}
           files: ${{ env.JAR_FILENAME }}
           name: ${{ github.event.release.name }}
           changelog: ${{ github.event.release.body }}
