@@ -35,11 +35,13 @@ import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.settings.config.ExtensionSettings;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
+import com.djrapitops.plan.storage.database.transactions.init.RemoveOldExtensionsTransaction;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.BeforeEach;
@@ -54,6 +56,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -88,6 +91,28 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
     default void removeEverythingRemovesServerExtensionData() {
         extensionServerValuesAreStored();
         db().executeTransaction(new RemoveEverythingTransaction());
+        assertTrue(db().query(new ExtensionServerDataQuery(serverUUID())).isEmpty());
+    }
+
+    @Test
+    default void removeOldExtensionDataCleansData() {
+        db().executeTransaction(new PlayerRegisterTransaction(TestConstants.PLAYER_ONE_UUID, System::currentTimeMillis, TestConstants.PLAYER_ONE_NAME));
+
+        ExtensionSvc extensionService = extensionService();
+        extensionService.register(new TableExtension());
+        extensionService.register(new PlayerExtension());
+        extensionService.register(new ServerExtension());
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
+        extensionService.updateServerValues(CallEvents.MANUAL);
+
+        ExtensionSettings extensionSettings = config().getExtensionSettings();
+        extensionSettings.setEnabled("PlayerExtension", false);
+        extensionSettings.setEnabled("TableExtension", false);
+        extensionSettings.setEnabled("ServerExtension", false);
+
+        db().executeTransaction(new RemoveOldExtensionsTransaction(extensionSettings, TimeUnit.DAYS.toMillis(1), serverUUID()));
+
+        assertTrue(db().query(new ExtensionPlayerDataQuery(playerUUID)).isEmpty());
         assertTrue(db().query(new ExtensionServerDataQuery(serverUUID())).isEmpty());
     }
 
