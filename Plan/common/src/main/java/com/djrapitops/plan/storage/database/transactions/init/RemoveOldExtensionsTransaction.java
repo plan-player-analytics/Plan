@@ -88,7 +88,7 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
         if (!providerIds.isEmpty()) {
             execute(new ExecStatement(
                     DELETE_FROM + ExtensionProviderTable.TABLE_NAME +
-                            WHERE + ExtensionProviderTable.PLUGIN_ID +
+                            WHERE + ExtensionProviderTable.ID +
                             " IN (" + Sql.nParameters(providerIds.size()) + ")"
             ) {
                 @Override
@@ -100,7 +100,7 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
         if (!tableProviderIds.isEmpty()) {
             execute(new ExecStatement(
                     DELETE_FROM + ExtensionTableProviderTable.TABLE_NAME +
-                            WHERE + ExtensionTableProviderTable.PLUGIN_ID +
+                            WHERE + ExtensionTableProviderTable.ID +
                             " IN (" + Sql.nParameters(tableProviderIds.size()) + ")"
             ) {
                 @Override
