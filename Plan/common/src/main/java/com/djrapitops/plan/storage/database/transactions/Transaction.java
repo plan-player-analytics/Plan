@@ -49,6 +49,7 @@ public abstract class Transaction {
     protected DBType dbType;
     protected boolean success;
     protected int attempts;
+    private boolean executed;
     private SQLDB db;
     private Connection connection;
     private Savepoint savepoint;
@@ -85,6 +86,7 @@ public abstract class Transaction {
                 }
                 performOperations();
                 if (connection != null) connection.commit();
+                executed = true;
             }
             success = true;
         } catch (SQLException statementFail) {
@@ -285,6 +287,10 @@ public abstract class Transaction {
 
     public boolean wasSuccessful() {
         return success;
+    }
+
+    public boolean wasExecuted() {
+        return executed;
     }
 
     public boolean dbIsNotUnderHeavyLoad() {
