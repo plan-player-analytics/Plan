@@ -1170,10 +1170,10 @@ i18next-chained-backend@5.0.6:
   dependencies:
     "@babel/runtime" "^7.28.4"
 
-i18next-http-backend@4.0.0:
-  version "4.0.0"
-  resolved "https://registry.yarnpkg.com/i18next-http-backend/-/i18next-http-backend-4.0.0.tgz#6c5dc1245d122ab9036b6484ae559128ce21b227"
-  integrity sha512-EgSjO3Q1G6f2Q5oy7u9mmxuesE0oSfzAD97NFBjC8EmkK4guBSYLljM0Fng3DarMWIIkU70jfo4+mUzmyVISTA==
+i18next-http-backend@4.0.1:
+  version "4.0.1"
+  resolved "https://registry.yarnpkg.com/i18next-http-backend/-/i18next-http-backend-4.0.1.tgz#c94dff85c7a41b1db0c1eac3e004f744c15d1047"
+  integrity sha512-O+7MwPCJIKCu68vho8JtD1HF8QHyMPzoChIDFfYCrpaDqX6oq3RqASujnpKEdnNCEOb+kLMOHTNTcGKpj7B1BA==
 
 i18next-localstorage-backend@4.3.2:
   version "4.3.2"
