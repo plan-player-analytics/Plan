@@ -288,11 +288,11 @@ export const GraphSeriesCard = ({id, identifier}: Props) => {
             name: t('html.label.ping'), icon: faSignal,
             color: 'var(--color-data-performance-ping)',
             permission: 'page.server.performance.graphs.ping',
-            data: pingSeries ? [] : undefined
+            data: pingSeries ? [{}] : undefined
         }, {
             show: false,
             id: PerformanceGraphId.PING_MIN,
-            name: t('html.label.bestPing'), icon: faSignal, color: 'ping',
+            name: t('html.label.bestPing'), icon: faSignal, color: "var(--color-graphs-ping-min)",
             permission: 'page.server.performance.graphs.ping',
             data: pingSeries?.min_ping_series,
             options: {
@@ -303,7 +303,7 @@ export const GraphSeriesCard = ({id, identifier}: Props) => {
         }, {
             show: false,
             id: PerformanceGraphId.PING_AVG,
-            name: t('html.label.averagePing'), icon: faSignal, color: 'ping',
+            name: t('html.label.averagePing'), icon: faSignal, color: "var(--color-graphs-ping-avg)",
             permission: 'page.server.performance.graphs.ping',
             data: pingSeries?.avg_ping_series,
             options: {
@@ -314,7 +314,7 @@ export const GraphSeriesCard = ({id, identifier}: Props) => {
         }, {
             show: false,
             id: PerformanceGraphId.PING_MAX,
-            name: t('html.label.worstPing'), icon: faSignal, color: 'ping',
+            name: t('html.label.worstPing'), icon: faSignal, color: "var(--color-graphs-ping-max)",
             permission: 'page.server.performance.graphs.ping',
             data: pingSeries?.max_ping_series,
             options: {
