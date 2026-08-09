@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.domain.TablePlayer;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.keys.Key;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
+import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.Server;
@@ -57,11 +58,14 @@ import utilities.TestPluginLogger;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLTransientConnectionException;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
@@ -222,6 +226,48 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         Transaction transaction = new CreateIndexTransaction();
         db().executeTransaction(transaction).get(); // get to ensure transaction is finished
         assertTrue(transaction.wasSuccessful());
+    }
+
+    @Test
+    default void transactionsStayOrderedDuringTemporaryConnectionFailure() {
+        List<Integer> executionOrder = Collections.synchronizedList(new ArrayList<>());
+        AtomicInteger retryAttempts = new AtomicInteger();
+        Transaction temporarilyFailing = new Transaction() {
+            @Override
+            public void executeTransaction(SQLDB db) {
+                if (retryAttempts.incrementAndGet() == 1) {
+                    throw new DBOpException(
+                            "Connection unavailable",
+                            new SQLTransientConnectionException("Connection unavailable", "08001")
+                    );
+                }
+                executionOrder.add(1);
+            }
+
+            @Override
+            protected void performOperations() {
+                // executeTransaction is overridden to simulate a connection outage.
+            }
+        };
+        Transaction queuedAfterFailure = new Transaction() {
+            @Override
+            public void executeTransaction(SQLDB db) {
+                executionOrder.add(2);
+            }
+
+            @Override
+            protected void performOperations() {
+                // executeTransaction is overridden to observe queue order.
+            }
+        };
+
+        CompletableFuture<?> first = db().executeTransaction(temporarilyFailing);
+        CompletableFuture<?> second = db().executeTransaction(queuedAfterFailure);
+        CompletableFuture.allOf(first, second).join();
+
+        assertEquals(2, retryAttempts.get());
+        assertEquals(List.of(1, 2), executionOrder);
+        assertEquals(0, db().getTransactionQueueSize());
     }
 
     @Test
