@@ -78,6 +78,10 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         extensionService.unregister(new TableExtension());
         extensionService.unregister(new ThrowingExtension());
         extensionService.unregister(new ClickEventTestExtension());
+        ExtensionSettings extensionSettings = config().getExtensionSettings();
+        extensionSettings.setEnabled("PlayerExtension", true);
+        extensionSettings.setEnabled("TableExtension", true);
+        extensionSettings.setEnabled("ServerExtension", true);
     }
 
     @Test
