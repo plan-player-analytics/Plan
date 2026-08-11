@@ -92,34 +92,6 @@ jobs:
           cd Plan
           ./gradlew :plugin:publishToOre
 
-  upload_release_curseforge:
-    name: CurseForge Upload
-    runs-on: ubuntu-latest
-    steps:
-      - name: Download release artifact for upload
-        run: |
-          curl 'https://api.github.com/repos/plan-player-analytics/plan/releases/${{ github.event.release.id }}/assets' | jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric"))' > asset.txt
-          jq -r '.url' asset.txt > url.txt
-          jq -r '.name' asset.txt > name.txt
-          wget -i url.txt
-          echo "JAR_FILENAME=$(cat name.txt)" >> $GITHUB_ENV
-      - name: CurseForge Upload - Fabric 🚀
-        uses: Kira-NT/mc-publish@v3
-        with:
-          curseforge-id: 508727
-          curseforge-token: ${{ secrets.CF_API_TOKEN }}
-          files: ${{ env.JAR_FILENAME }}
-          name: ${{ github.event.release.name }}
-          changelog: ${{ github.event.release.body }}
-          loaders: fabric
-          game-versions: |
-            >=26.2
-          version-type: ${{ github.event.release.prerelease && 'beta' || 'release' }}
-          dependencies: |
-            fabric-api(required){curseforge:306612}
-            luckperms(optional){curseforge:431733}
-          java: 25
-
   upload_release_hangar:
     name: Hangar Upload
     runs-on: ubuntu-latest
@@ -150,8 +122,8 @@ jobs:
           cd Plan
           ./gradlew :plugin:publishPluginPublicationToHangar
 
-  upload_release_modrinth:
-    name: Modrinth Upload
+  upload_release_modrinth_curseforge:
+    name: Modrinth + Curseforge Upload
     runs-on: ubuntu-latest
     steps:
       - name: Calculate formatted version
@@ -203,11 +175,13 @@ jobs:
             >=1.13
           version-type: ${{ github.event.release.prerelease && 'beta' || 'release' }}
 
-      - name: Modrinth Upload - Fabric 🚀
+      - name: Modrinth + Curseforge Upload - Fabric 🚀
         uses: Kira-NT/mc-publish@v3
         with:
           modrinth-id: plan
           modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          curseforge-id: 508727
+          curseforge-token: ${{ secrets.CF_API_TOKEN }}
           files: ${{ env.FABRIC_JAR }}
           name: ${{ github.event.release.name }}
           version: ${{ env.FORMATTED_VERSION }}+fabric
@@ -218,5 +192,7 @@ jobs:
             >=26.2
           version-type: ${{ github.event.release.prerelease && 'beta' || 'release' }}
           dependencies: |
-            P7dR8mSH(required)
-            Vebnzrzj(optional)
+            fabric-api(required){modrinth:P7dR8mSH}{curseforge:306612}
+            luckperms(optional){modrinth:Vebnzrzj}{curseforge:431733}
+            fabric-permissions-api-v0(optional){modrinth:lzVo0Dll}
+          java: 25
