@@ -51,6 +51,9 @@ import org.apache.commons.lang3.concurrent.BasicThreadFactory;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.sql.SQLNonTransientConnectionException;
+import java.sql.SQLRecoverableException;
+import java.sql.SQLTransientConnectionException;
 import java.util.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -65,6 +68,8 @@ import java.util.function.Supplier;
  */
 public abstract class SQLDB extends AbstractDatabase {
 
+    private static final long INITIAL_CONNECTION_RETRY_DELAY_MS = TimeUnit.SECONDS.toMillis(1L);
+    private static final long MAX_CONNECTION_RETRY_DELAY_MS = TimeUnit.SECONDS.toMillis(30L);
     private static final List<Repository> DRIVER_REPOSITORIES = Arrays.asList(
             new MavenRepository("https://repo.papermc.io/repository/maven-public"),
             new MavenRepository("https://repo1.maven.org/maven2")
@@ -324,7 +329,7 @@ public abstract class SQLDB extends AbstractDatabase {
                 if (getState() == State.CLOSED) return CompletableFuture.completedFuture(null);
 
                 accessLock.performDatabaseOperation(() -> {
-                    if (!ranIntoFatalError.get()) {transaction.executeTransaction(this);}
+                    if (!ranIntoFatalError.get()) executeTransactionWithConnectionRetry(transaction);
                 }, transaction);
                 return CompletableFuture.completedFuture(null);
             } finally {
@@ -332,6 +337,59 @@ public abstract class SQLDB extends AbstractDatabase {
                 TRANSACTION_ORIGIN.remove();
             }
         }, getTransactionExecutor()).exceptionally(errorHandler(transaction, origin));
+    }
+
+    private void executeTransactionWithConnectionRetry(Transaction transaction) {
+        long retryDelayMs = INITIAL_CONNECTION_RETRY_DELAY_MS;
+        boolean connectionWasUnavailable = false;
+
+        while (getState() != State.CLOSED && getState() != State.CLOSING) {
+            try {
+                transaction.executeTransaction(this);
+                if (connectionWasUnavailable) {
+                    logger.info("Database connection restored, resuming queued transactions.");
+                }
+                return;
+            } catch (DBOpException failure) {
+                if (!isConnectionFailure(failure)) throw failure;
+
+                if (!connectionWasUnavailable) {
+                    logger.warn("Database connection is unavailable. Transactions will remain queued until it recovers.");
+                    connectionWasUnavailable = true;
+                }
+                if (!waitForConnectionRetry(retryDelayMs)) return;
+                retryDelayMs = Math.min(retryDelayMs * 2L, MAX_CONNECTION_RETRY_DELAY_MS);
+            }
+        }
+    }
+
+    private boolean waitForConnectionRetry(long retryDelayMs) {
+        try {
+            if (retryDelayMs > 0L) Thread.sleep(retryDelayMs);
+            return getState() != State.CLOSED && getState() != State.CLOSING;
+        } catch (InterruptedException interrupted) {
+            Thread.currentThread().interrupt();
+            return false;
+        }
+    }
+
+    static boolean isConnectionFailure(Throwable failure) {
+        Set<Throwable> visited = Collections.newSetFromMap(new IdentityHashMap<>());
+        Throwable cause = failure;
+        while (cause != null && visited.add(cause)) {
+            if (cause instanceof FatalDBException || cause instanceof SQLNonTransientConnectionException) {
+                return false;
+            }
+            if (cause instanceof SQLTransientConnectionException || cause instanceof SQLRecoverableException) {
+                return true;
+            }
+            if (cause instanceof SQLException) {
+                String sqlState = ((SQLException) cause).getSQLState();
+                if (sqlState != null && sqlState.startsWith("08")) return true;
+            }
+            cause = cause.getCause();
+        }
+        return false;
     }
 
     private boolean determineIfShouldDropUnimportantTransactions(int queueSize) {
