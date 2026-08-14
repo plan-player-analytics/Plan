@@ -1,0 +1,168 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
+apply plugin: "net.neoforged.moddev"
+apply plugin: "com.gradleup.shadow"
+
+ext {
+    neoVersion = "26.2.0.59"
+    minecraftVersion = "26.2"
+    // FFAPI has no 26.2 release yet; 26.1.2 is the stand-in until Sinytra ships 26.2.
+    ffapiVersion = "0.155.2+26.1.2+3.5.0"
+}
+
+configurations {
+    shade
+    implementation.extendsFrom shade
+}
+
+// Reuse Fabric platform code that is not Fabric-Loader specific.
+sourceSets {
+    main {
+        java {
+            srcDir project(":fabric").file("src/main/java")
+            exclude "net/playeranalytics/plan/PlanFabric.java"
+            exclude "net/playeranalytics/plan/PlanFabricComponent.java"
+            exclude "net/playeranalytics/plugin/FabricPlatformLayer.java"
+            exclude "net/playeranalytics/plugin/FabricPluginInformation.java"
+            exclude "net/playeranalytics/plan/gathering/FabricSensor.java"
+            exclude "net/playeranalytics/plan/identification/properties/FabricServerProperties.java"
+            exclude "net/playeranalytics/plan/modules/fabric/FabricServerPropertiesModule.java"
+            exclude "net/playeranalytics/plan/modules/fabric/FabricSuperClassBindingModule.java"
+            exclude "net/playeranalytics/plan/version/FabricVersionChecker.java"
+        }
+        resources {
+            srcDir project(":fabric").file("src/main/resources")
+            exclude "fabric.mod.json"
+        }
+    }
+    test {
+        java {
+            srcDir project(":fabric").file("src/test/java")
+            exclude "net/playeranalytics/plan/FabricSystemTest.java"
+            exclude "utilities/mocks/FabricMockComponent.java"
+            exclude "utilities/mocks/PlanFabricMocker.java"
+        }
+    }
+}
+
+neoForge {
+    version = neoVersion
+
+    runs {
+        server {
+            server()
+            programArgument "--nogui"
+        }
+        configureEach {
+            logLevel = org.slf4j.event.Level.INFO
+        }
+    }
+
+    mods {
+        plan {
+            sourceSet sourceSets.main
+        }
+    }
+}
+
+dependencies {
+    shade project(":common")
+    shade project(path: ":extensions:adventure", configuration: "shadow")
+
+    implementation "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
+
+    // Required at runtime; not shaded into PlanNeoForge.jar
+    implementation "org.sinytra.forgified-fabric-api:forgified-fabric-api:$ffapiVersion"
+
+    // Optional permissions API (same package as Fabric); present when a NeoForge port is installed
+    compileOnly "me.lucko:fabric-permissions-api:0.7.0"
+
+    testImplementation(testFixtures(project(":common")))
+    testImplementation(project(":extensions:adventure"))
+}
+
+compileJava {
+    options.release = 25
+}
+
+processResources {
+    inputs.property "version", fullVersionSemantic
+    inputs.property "neoVersion", neoVersion
+    inputs.property "minecraftVersion", minecraftVersion
+
+    filesMatching("META-INF/neoforge.mods.toml") {
+        expand([
+                "version"          : fullVersionSemantic,
+                "neo_version"      : neoVersion,
+                "minecraft_version": minecraftVersion
+        ])
+    }
+}
+
+tasks.named("shadowJar", ShadowJar) {
+    configurations = [project.configurations.shade]
+
+    exclude "**/*.svg"
+    exclude "**/*.psd"
+    exclude "**/*.map"
+    exclude "LICENSE*.txt"
+    exclude "jetty-dir.css"
+
+    exclude "**/module-info.class"
+    exclude "module-info.class"
+    exclude "META-INF/versions/"
+    exclude "mozilla/**/*"
+
+    exclude "org/checkerframework/**/*"
+    exclude "com/google/common/**/*"
+    exclude "com/google/thirdparty/**/*"
+    exclude "com/google/auto/**/*"
+
+    exclude "org.javassist:.*"
+    exclude "org/yaml/**/*"
+    exclude "nonapi/**/*"
+    exclude "io/github/classgraph/**/*"
+    exclude "io/swagger/**/*"
+    exclude "com/sun/activation/**/*"
+    exclude "jakarta/activation/**/*"
+    exclude "jakarta/validation/**/*"
+    exclude "jakarta/ws/**/*"
+    exclude "jakarta/xml/**/*"
+    exclude "javassist/**/*"
+
+    // NeoForge 26+ JPMS validates META-INF/services; Adventure SPI entries reference
+    // classes that are relocated/absent after the adventure shadow jar is merged.
+    exclude "META-INF/services/net.kyori.**"
+
+    relocate("org.apache", "plan.org.apache") {
+        exclude "org/apache/logging/**"
+        exclude "org/apache/maven/**"
+    }
+
+    relocate "dagger", "plan.dagger"
+    relocate "javax.inject", "plan.javax.inject"
+    relocate "jakarta.inject", "plan.jakarta.inject"
+
+    relocate "dev.vankka.dependencydownload", "plan.dev.vankka.dependencydownload"
+    relocate "com.github.benmanes", "plan.com.github.benmanes"
+    relocate "com.maxmind", "plan.com.maxmind"
+    relocate "com.fasterxml", "plan.com.fasterxml"
+    relocate "com.zaxxer", "plan.com.zaxxer"
+    relocate "com.google.gson", "plan.com.google.gson"
+    relocate "com.google.errorprone", "plan.com.google.errorprone"
+    relocate "org.bstats", "plan.org.bstats"
+    relocate "org.jasypt", "plan.org.jasypt"
+    relocate "org.json.simple", "plan.org.json.simple"
+    relocate "org.slf4j", "plan.org.slf4j"
+
+    relocate "org.eclipse.jetty", "plan.org.eclipse.jetty"
+    relocate "jakarta.servlet", "plan.jakarta.servlet"
+    relocate "javax.servlet", "plan.javax.servlet"
+
+    mergeServiceFiles()
+
+    destinationDirectory.set(file("$rootDir/builds/"))
+    archiveFileName.set("PlanNeoForge-${project.version}.jar")
+}
+
+tasks.assemble.dependsOn tasks.shadowJar

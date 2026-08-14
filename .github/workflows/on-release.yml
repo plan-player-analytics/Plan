@@ -13,7 +13,7 @@ jobs:
         uses: actions/checkout@v7
       - name: Get Download URL
         run: |
-          curl 'https://api.github.com/repos/plan-player-analytics/plan/releases/${{ github.event.release.id }}/assets' | jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric") | not)' > asset.txt
+          curl 'https://api.github.com/repos/plan-player-analytics/plan/releases/${{ github.event.release.id }}/assets' | jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric|NeoForge") | not)' > asset.txt
           jq -r '.url' asset.txt > url.txt
           echo "RELEASE_DOWNLOAD_URL=$(cat url.txt)" >> $GITHUB_ENV
       - name: Write REL release line
@@ -70,7 +70,7 @@ jobs:
           fetch-depth: 0
       - name: Download release artifact for upload
         run: |
-          curl 'https://api.github.com/repos/plan-player-analytics/plan/releases/${{ github.event.release.id }}/assets' | jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric") | not)' > asset.txt
+          curl 'https://api.github.com/repos/plan-player-analytics/plan/releases/${{ github.event.release.id }}/assets' | jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric|NeoForge") | not)' > asset.txt
           jq -r '.url' asset.txt > url.txt
           jq -r '.name' asset.txt > name.txt
           wget -i url.txt
@@ -102,7 +102,7 @@ jobs:
           fetch-depth: 0
       - name: ⚙ Get Download URL
         run: |
-          curl 'https://api.github.com/repos/plan-player-analytics/plan/releases/${{ github.event.release.id }}/assets' | jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric") | not)' > asset.txt
+          curl 'https://api.github.com/repos/plan-player-analytics/plan/releases/${{ github.event.release.id }}/assets' | jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric|NeoForge") | not)' > asset.txt
           jq -r '.url' asset.txt > url.txt
           echo "RELEASE_DOWNLOAD_URL=$(cat url.txt)" >> $GITHUB_ENV
       - name: ☕ Setup JDK
@@ -137,8 +137,8 @@ jobs:
           # Fetch all assets
           curl 'https://api.github.com/repos/plan-player-analytics/plan/releases/${{ github.event.release.id }}/assets' > all_assets.json
           
-          # Download regular JAR (non-Fabric)
-          jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric") | not)' all_assets.json > asset_regular.txt
+          # Download regular JAR (non-Fabric / non-NeoForge)
+          jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("Fabric|NeoForge") | not)' all_assets.json > asset_regular.txt
           jq -r '.url' asset_regular.txt > url_regular.txt
           jq -r '.name' asset_regular.txt > name_regular.txt
           wget -i url_regular.txt
@@ -150,6 +150,13 @@ jobs:
           jq -r '.name' asset_fabric.txt > name_fabric.txt
           wget -i url_fabric.txt
           echo "FABRIC_JAR=$(cat name_fabric.txt)" >> $GITHUB_ENV
+
+          # Download NeoForge JAR
+          jq -r '.[] | {name: .name, url: .browser_download_url} | select(.url | strings | test("NeoForge"))' all_assets.json > asset_neoforge.txt
+          jq -r '.url' asset_neoforge.txt > url_neoforge.txt
+          jq -r '.name' asset_neoforge.txt > name_neoforge.txt
+          wget -i url_neoforge.txt
+          echo "NEOFORGE_JAR=$(cat name_neoforge.txt)" >> $GITHUB_ENV
 
       - name: Modrinth Upload - Plugin 🚀
         uses: Kira-NT/mc-publish@v3
@@ -195,4 +202,25 @@ jobs:
             fabric-api(required){modrinth:P7dR8mSH}{curseforge:306612}
             luckperms(optional){modrinth:Vebnzrzj}{curseforge:431733}
             fabric-permissions-api-v0(optional){modrinth:lzVo0Dll}
+          java: 25
+
+      - name: Modrinth + Curseforge Upload - NeoForge 🚀
+        uses: Kira-NT/mc-publish@v3
+        with:
+          modrinth-id: plan
+          modrinth-token: ${{ secrets.MODRINTH_TOKEN }}
+          curseforge-id: 508727
+          curseforge-token: ${{ secrets.CF_API_TOKEN }}
+          files: ${{ env.NEOFORGE_JAR }}
+          name: ${{ github.event.release.name }}
+          version: ${{ env.FORMATTED_VERSION }}+neoforge
+          changelog: ${{ github.event.release.body }}
+          loaders: |
+            neoforge
+          game-versions: |
+            >=26.2
+          version-type: ${{ github.event.release.prerelease && 'beta' || 'release' }}
+          dependencies: |
+            forgified-fabric-api(required){modrinth:Aqlf1Shp}{curseforge:889079}
+            luckperms(optional){modrinth:Vebnzrzj}{curseforge:431733}
           java: 25
