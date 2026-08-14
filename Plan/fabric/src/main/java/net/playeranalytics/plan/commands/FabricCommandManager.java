@@ -35,7 +35,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.permissions.Permissions;
-import net.playeranalytics.plan.PlanFabric;
+import com.djrapitops.plan.PlanPlugin;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 
 import java.util.concurrent.CompletableFuture;
@@ -45,10 +45,10 @@ public class FabricCommandManager {
     private final CommandDispatcher<CommandSourceStack> dispatcher;
     private RunnableFactory runnableFactory;
     private LiteralArgumentBuilder<CommandSourceStack> root;
-    private final PlanFabric plugin;
+    private final PlanPlugin plugin;
     private final ErrorLogger errorLogger;
 
-    public FabricCommandManager(CommandDispatcher<CommandSourceStack> dispatcher, PlanFabric plugin, ErrorLogger errorLogger) {
+    public FabricCommandManager(CommandDispatcher<CommandSourceStack> dispatcher, PlanPlugin plugin, ErrorLogger errorLogger) {
         this.dispatcher = dispatcher;
         this.plugin = plugin;
         this.errorLogger = errorLogger;

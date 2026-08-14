@@ -28,7 +28,7 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.GameType;
-import net.playeranalytics.plan.PlanFabric;
+import com.djrapitops.plan.PlanPlugin;
 import net.playeranalytics.plan.gathering.FabricPlayerPositionTracker;
 
 import java.net.SocketAddress;
@@ -99,7 +99,7 @@ public class PlanFabricEvents {
      * </ul>
      * <p>
      * This event provides full access to the Plan instance. However, <strong>it is advised to
-     * only call {@link PlanFabric#isSystemEnabled} to determine if the enable was successful.</strong>
+     * only call {@link PlanPlugin#isSystemEnabled} to determine if the enable was successful.</strong>
      * It is not guaranteed that this event is called when the plugin fails to enable properly.
      */
     public static final Event<OnEnable> ON_ENABLE = EventFactory.createArrayBacked(OnEnable.class, callbacks -> plugin -> {
@@ -188,6 +188,6 @@ public class PlanFabricEvents {
 
     @FunctionalInterface
     public interface OnEnable {
-        void onEnable(PlanFabric plugin);
+        void onEnable(PlanPlugin plugin);
     }
 }
