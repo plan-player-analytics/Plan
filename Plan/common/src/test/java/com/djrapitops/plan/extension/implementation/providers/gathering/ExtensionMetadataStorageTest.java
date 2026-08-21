@@ -138,6 +138,23 @@ class ExtensionMetadataStorageTest {
     }
 
     @Test
+    void sparseTableColumnsStoreAllDefinedIcons() {
+        ProviderInformation information = provider("Top players", "Top players");
+        Table table = Table.builder()
+                .columnOne("First", Icon.called("gavel").build())
+                .columnTwo("Second", Icon.called("what").build())
+                .columnThree("Third", Icon.called("question").build())
+                .columnFive("Fifth", Icon.called("").build())
+                .addRow("value", 3, 0.5)
+                .build();
+
+        underTest.storeTableProvider(database, information, parameters, table);
+
+        assertEquals(4, count(StoreIconTransaction.class));
+        assertEquals(1, count(StoreTableProviderTransaction.class));
+    }
+
+    @Test
     void skippedMetadataTransactionIsNotCached() {
         ProviderInformation information = provider("Online", "Online players");
         underTest.storeProvider(database, information, parameters);

@@ -76,8 +76,10 @@ class ExtensionMetadataStorage {
         StoreTableProviderTransaction providerTransaction = new StoreTableProviderTransaction(information, parameters, table);
         try {
             Icon[] icons = table.getIcons();
-            for (int i = 0; i < table.getMaxColumnSize(); i++) {
-                database.executeTransaction(new StoreIconTransaction(icons[i]));
+            for (Icon icon : icons) {
+                if (icon != null) {
+                    database.executeTransaction(new StoreIconTransaction(icon));
+                }
             }
             invalidateIfNotStored(database.executeTransaction(providerTransaction), providerTransaction, key, fingerprint);
         } catch (RuntimeException executionFailure) {
@@ -150,9 +152,8 @@ class ExtensionMetadataStorage {
             List<Object> values = providerInformation(information);
             values.add(parameters.getMethodType());
             values.addAll(Arrays.asList(table.getColumns().clone()));
-            Icon[] icons = table.getIcons();
-            for (int i = 0; i < table.getMaxColumnSize(); i++) {
-                addIcon(values, icons[i]);
+            for (Icon icon : table.getIcons()) {
+                addIcon(values, icon);
             }
             values.addAll(Arrays.asList(table.getTableColumnFormats().clone()));
             return new MetadataFingerprint(values);
@@ -180,6 +181,12 @@ class ExtensionMetadataStorage {
         }
 
         private static void addIcon(List<Object> values, Icon icon) {
+            if (icon == null) {
+                values.add(null);
+                values.add(null);
+                values.add(null);
+                return;
+            }
             values.add(icon.getFamily());
             values.add(icon.getName());
             values.add(icon.getColor());
