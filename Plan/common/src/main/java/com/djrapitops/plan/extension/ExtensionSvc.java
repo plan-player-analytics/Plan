@@ -23,6 +23,7 @@ import com.djrapitops.plan.extension.implementation.ExtensionRegister;
 import com.djrapitops.plan.extension.implementation.ExtensionWrapper;
 import com.djrapitops.plan.extension.implementation.builder.ExtDataBuilder;
 import com.djrapitops.plan.extension.implementation.providers.gathering.DataValueGatherer;
+import com.djrapitops.plan.extension.implementation.providers.gathering.ExtensionMetadataStorage;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.UUIDUtility;
 import com.djrapitops.plan.processing.Processing;
@@ -59,6 +60,7 @@ public class ExtensionSvc implements ExtensionService {
     private final ServerInfo serverInfo;
     private final Processing processing;
     private final ExtensionRegister extensionRegister;
+    private final ExtensionMetadataStorage extensionMetadataStorage;
     private final UUIDUtility uuidUtility;
     private final PluginLogger logger;
     private final ErrorLogger errorLogger;
@@ -74,6 +76,7 @@ public class ExtensionSvc implements ExtensionService {
             ServerInfo serverInfo,
             Processing processing,
             ExtensionRegister extensionRegister,
+            ExtensionMetadataStorage extensionMetadataStorage,
             UUIDUtility uuidUtility,
             PluginLogger logger,
             ErrorLogger errorLogger
@@ -85,6 +88,7 @@ public class ExtensionSvc implements ExtensionService {
         this.serverInfo = serverInfo;
         this.processing = processing;
         this.extensionRegister = extensionRegister;
+        this.extensionMetadataStorage = extensionMetadataStorage;
         this.uuidUtility = uuidUtility;
         this.logger = logger;
         this.errorLogger = errorLogger;
@@ -124,7 +128,7 @@ public class ExtensionSvc implements ExtensionService {
             logger.warn("DataExtension API implementation mistake for " + pluginName + ": " + warning);
         }
 
-        DataValueGatherer gatherer = new DataValueGatherer(extension, dbSystem, componentService, serverInfo, errorLogger);
+        DataValueGatherer gatherer = new DataValueGatherer(extension, dbSystem, extensionMetadataStorage, componentService, serverInfo, errorLogger);
         gatherer.storeExtensionInformation();
         extensionGatherers.put(pluginName, gatherer);
 

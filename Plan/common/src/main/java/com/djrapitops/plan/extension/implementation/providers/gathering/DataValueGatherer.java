@@ -37,8 +37,6 @@ import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StorePluginTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreTabInformationTransaction;
-import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreProviderTransaction;
-import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreTableProviderTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.*;
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -65,6 +63,7 @@ public class DataValueGatherer {
     private final CallEvents[] callEvents;
     private final ExtensionWrapper extension;
     private final DBSystem dbSystem;
+    private final ExtensionMetadataStorage extensionMetadataStorage;
     private final ComponentSvc componentService;
     private final ServerInfo serverInfo;
     private final ErrorLogger errorLogger;
@@ -74,6 +73,7 @@ public class DataValueGatherer {
     public DataValueGatherer(
             ExtensionWrapper extension,
             DBSystem dbSystem,
+            ExtensionMetadataStorage extensionMetadataStorage,
             ComponentSvc componentService,
             ServerInfo serverInfo,
             ErrorLogger errorLogger
@@ -81,6 +81,7 @@ public class DataValueGatherer {
         this.callEvents = extension.getCallEvents();
         this.extension = extension;
         this.dbSystem = dbSystem;
+        this.extensionMetadataStorage = extensionMetadataStorage;
         this.componentService = componentService;
         this.serverInfo = serverInfo;
         this.errorLogger = errorLogger;
@@ -477,8 +478,8 @@ public class DataValueGatherer {
         }
 
         Database db = dbSystem.getDatabase();
-        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
-        db.executeTransaction(new StoreProviderTransaction(information, parameters));
+
+        extensionMetadataStorage.storeProvider(information, parameters);
         db.executeTransaction(new StoreServerBooleanResultTransaction(information, parameters, value));
     }
 
@@ -488,8 +489,7 @@ public class DataValueGatherer {
         if (value == null) return;
 
         Database db = dbSystem.getDatabase();
-        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
-        db.executeTransaction(new StoreProviderTransaction(information, parameters));
+        extensionMetadataStorage.storeProvider(information, parameters);
         db.executeTransaction(new StoreServerNumberResultTransaction(information, parameters, value));
     }
 
@@ -500,8 +500,7 @@ public class DataValueGatherer {
         if (value == null) return;
 
         Database db = dbSystem.getDatabase();
-        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
-        db.executeTransaction(new StoreProviderTransaction(information, parameters));
+        extensionMetadataStorage.storeProvider(information, parameters);
         db.executeTransaction(new StoreServerDoubleResultTransaction(information, parameters, value));
     }
 
@@ -511,8 +510,7 @@ public class DataValueGatherer {
         if (value == null) return;
 
         Database db = dbSystem.getDatabase();
-        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
-        db.executeTransaction(new StoreProviderTransaction(information, parameters));
+        extensionMetadataStorage.storeProvider(information, parameters);
         db.executeTransaction(new StoreServerStringResultTransaction(information, parameters, value));
     }
 
@@ -522,8 +520,7 @@ public class DataValueGatherer {
         if (value == null) return;
 
         Database db = dbSystem.getDatabase();
-        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
-        db.executeTransaction(new StoreProviderTransaction(information, parameters));
+        extensionMetadataStorage.storeProvider(information, parameters);
         db.executeTransaction(new StoreServerStringResultTransaction(information, parameters, value));
     }
 
@@ -533,10 +530,7 @@ public class DataValueGatherer {
         if (value == null) return;
 
         Database db = dbSystem.getDatabase();
-        for (Icon icon : value.getIcons()) {
-            if (icon != null) db.executeTransaction(new StoreIconTransaction(icon));
-        }
-        db.executeTransaction(new StoreTableProviderTransaction(information, parameters, value));
+        extensionMetadataStorage.storeTableProvider(information, parameters, value);
         db.executeTransaction(new StoreServerTableResultTransaction(information, parameters, value));
     }
 
@@ -551,8 +545,7 @@ public class DataValueGatherer {
         }
 
         Database db = dbSystem.getDatabase();
-        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
-        db.executeTransaction(new StoreProviderTransaction(information, parameters));
+        extensionMetadataStorage.storeProvider(information, parameters);
         db.executeTransaction(new StorePlayerBooleanResultTransaction(information, parameters, value));
     }
 
@@ -562,8 +555,7 @@ public class DataValueGatherer {
         if (value == null) return;
 
         Database db = dbSystem.getDatabase();
-        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
-        db.executeTransaction(new StoreProviderTransaction(information, parameters));
+        extensionMetadataStorage.storeProvider(information, parameters);
         db.executeTransaction(new StorePlayerNumberResultTransaction(information, parameters, value));
     }
 
@@ -573,8 +565,7 @@ public class DataValueGatherer {
         if (value == null) return;
 
         Database db = dbSystem.getDatabase();
-        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
-        db.executeTransaction(new StoreProviderTransaction(information, parameters));
+        extensionMetadataStorage.storeProvider(information, parameters);
         db.executeTransaction(new StorePlayerDoubleResultTransaction(information, parameters, value));
     }
 
@@ -584,8 +575,7 @@ public class DataValueGatherer {
         if (value == null) return;
 
         Database db = dbSystem.getDatabase();
-        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
-        db.executeTransaction(new StoreProviderTransaction(information, parameters));
+        extensionMetadataStorage.storeProvider(information, parameters);
         db.executeTransaction(new StorePlayerStringResultTransaction(information, parameters, value));
     }
 
@@ -595,8 +585,7 @@ public class DataValueGatherer {
         if (value == null) return;
 
         Database db = dbSystem.getDatabase();
-        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
-        db.executeTransaction(new StoreProviderTransaction(information, parameters));
+        extensionMetadataStorage.storeProvider(information, parameters);
         db.executeTransaction(new StorePlayerStringResultTransaction(information, parameters, value));
     }
 
@@ -606,8 +595,7 @@ public class DataValueGatherer {
         if (value == null) return;
 
         Database db = dbSystem.getDatabase();
-        db.executeTransaction(new StoreIconTransaction(information.getIcon()));
-        db.executeTransaction(new StoreProviderTransaction(information, parameters));
+        extensionMetadataStorage.storeProvider(information, parameters);
         db.executeTransaction(new StorePlayerGroupsResultTransaction(information, parameters, value));
     }
 
@@ -617,10 +605,7 @@ public class DataValueGatherer {
         if (value == null) return;
 
         Database db = dbSystem.getDatabase();
-        for (Icon icon : value.getIcons()) {
-            if (icon != null) db.executeTransaction(new StoreIconTransaction(icon));
-        }
-        db.executeTransaction(new StoreTableProviderTransaction(information, parameters, value));
+        extensionMetadataStorage.storeTableProvider(information, parameters, value);
         db.executeTransaction(new StorePlayerTableResultTransaction(information, parameters, value));
     }
 }
