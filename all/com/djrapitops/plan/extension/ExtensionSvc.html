@@ -59,7 +59,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.component.ComponentSvc,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.extension.implementation.ExtensionRegister,com.djrapitops.plan.identification.UUIDUtility,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" tabindex="0">ExtensionSvc(PlanConfig, Locale, DBSystem, ComponentSvc, ServerInfo, Processing, ExtensionRegister, UUIDUtility, PluginLogger, ErrorLogger)</a></li>
+<li><a href="#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.component.ComponentSvc,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.extension.implementation.ExtensionRegister,com.djrapitops.plan.extension.implementation.providers.gathering.ExtensionMetadataStorage,com.djrapitops.plan.identification.UUIDUtility,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" tabindex="0">ExtensionSvc(PlanConfig, Locale, DBSystem, ComponentSvc, ServerInfo, Processing, ExtensionRegister, ExtensionMetadataStorage, UUIDUtility, PluginLogger, ErrorLogger)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -74,6 +74,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#updateServerValues(com.djrapitops.plan.extension.CallEvents)" tabindex="0">updateServerValues(CallEvents)</a></li>
 <li><a href="#updateServerValues(com.djrapitops.plan.extension.implementation.providers.gathering.DataValueGatherer,com.djrapitops.plan.extension.CallEvents)" tabindex="0">updateServerValues(DataValueGatherer, CallEvents)</a></li>
 <li><a href="#disableUpdates()" tabindex="0">disableUpdates()</a></li>
+<li><a href="#getExtensionMetadataStorage()" tabindex="0">getExtensionMetadataStorage()</a></li>
 </ol>
 </li>
 </ol>
@@ -119,13 +120,14 @@ implements <a href="ExtensionService.html" title="interface in com.djrapitops.pl
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.component.ComponentSvc,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.extension.implementation.ExtensionRegister,com.djrapitops.plan.identification.UUIDUtility,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">ExtensionSvc</a><wbr>(<a href="../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.component.ComponentSvc,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.extension.implementation.ExtensionRegister,com.djrapitops.plan.extension.implementation.providers.gathering.ExtensionMetadataStorage,com.djrapitops.plan.identification.UUIDUtility,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">ExtensionSvc</a><wbr>(<a href="../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
  <a href="../settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
  <a href="../storage/database/DBSystem.html" title="class in com.djrapitops.plan.storage.database">DBSystem</a>&nbsp;dbSystem,
  <a href="../component/ComponentSvc.html" title="class in com.djrapitops.plan.component">ComponentSvc</a>&nbsp;componentService,
  <a href="../identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
  <a href="../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing,
  <a href="implementation/ExtensionRegister.html" title="class in com.djrapitops.plan.extension.implementation">ExtensionRegister</a>&nbsp;extensionRegister,
+ <a href="implementation/providers/gathering/ExtensionMetadataStorage.html" title="class in com.djrapitops.plan.extension.implementation.providers.gathering">ExtensionMetadataStorage</a>&nbsp;extensionMetadataStorage,
  <a href="../identification/UUIDUtility.html" title="class in com.djrapitops.plan.identification">UUIDUtility</a>&nbsp;uuidUtility,
  net.playeranalytics.plugin.server.PluginLogger&nbsp;logger,
  <a href="../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</code></div>
@@ -147,45 +149,48 @@ implements <a href="ExtensionService.html" title="interface in com.djrapitops.pl
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#disableUpdates()" class="member-name-link">disableUpdates</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="builder/ExtensionDataBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ExtensionDataBuilder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#newExtensionDataBuilder(com.djrapitops.plan.extension.DataExtension)" class="member-name-link">newExtensionDataBuilder</a><wbr>(<a href="DataExtension.html" title="interface in com.djrapitops.plan.extension">DataExtension</a>&nbsp;extension)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="implementation/providers/gathering/ExtensionMetadataStorage.html" title="class in com.djrapitops.plan.extension.implementation.providers.gathering">ExtensionMetadataStorage</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getExtensionMetadataStorage()" class="member-name-link">getExtensionMetadataStorage</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="builder/ExtensionDataBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ExtensionDataBuilder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#newExtensionDataBuilder(com.djrapitops.plan.extension.DataExtension)" class="member-name-link">newExtensionDataBuilder</a><wbr>(<a href="DataExtension.html" title="interface in com.djrapitops.plan.extension">DataExtension</a>&nbsp;extension)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Obtain a new <a href="builder/ExtensionDataBuilder.html" title="interface in com.djrapitops.plan.extension.builder"><code>ExtensionDataBuilder</code></a>, it is recommended to use <a href="DataExtension.html#newExtensionDataBuilder()"><code>DataExtension.newExtensionDataBuilder()</code></a>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#register()" class="member-name-link">register</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="Caller.html" title="interface in com.djrapitops.plan.extension">Caller</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#register(com.djrapitops.plan.extension.DataExtension)" class="member-name-link">register</a><wbr>(<a href="DataExtension.html" title="interface in com.djrapitops.plan.extension">DataExtension</a>&nbsp;dataExtension)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#register()" class="member-name-link">register</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="Caller.html" title="interface in com.djrapitops.plan.extension">Caller</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#register(com.djrapitops.plan.extension.DataExtension)" class="member-name-link">register</a><wbr>(<a href="DataExtension.html" title="interface in com.djrapitops.plan.extension">DataExtension</a>&nbsp;dataExtension)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Register your <a href="DataExtension.html" title="interface in com.djrapitops.plan.extension"><code>DataExtension</code></a> implementation.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#registerExtensions()" class="member-name-link">registerExtensions</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unregister(com.djrapitops.plan.extension.DataExtension)" class="member-name-link">unregister</a><wbr>(<a href="DataExtension.html" title="interface in com.djrapitops.plan.extension">DataExtension</a>&nbsp;extension)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#registerExtensions()" class="member-name-link">registerExtensions</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unregister(com.djrapitops.plan.extension.DataExtension)" class="member-name-link">unregister</a><wbr>(<a href="DataExtension.html" title="interface in com.djrapitops.plan.extension">DataExtension</a>&nbsp;extension)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Unregister your <a href="DataExtension.html" title="interface in com.djrapitops.plan.extension"><code>DataExtension</code></a> implementation.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updatePlayerValues(com.djrapitops.plan.extension.implementation.providers.gathering.DataValueGatherer,java.util.UUID,java.lang.String,com.djrapitops.plan.extension.CallEvents)" class="member-name-link">updatePlayerValues</a><wbr>(<a href="implementation/providers/gathering/DataValueGatherer.html" title="class in com.djrapitops.plan.extension.implementation.providers.gathering">DataValueGatherer</a>&nbsp;gatherer,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updatePlayerValues(com.djrapitops.plan.extension.implementation.providers.gathering.DataValueGatherer,java.util.UUID,java.lang.String,com.djrapitops.plan.extension.CallEvents)" class="member-name-link">updatePlayerValues</a><wbr>(<a href="implementation/providers/gathering/DataValueGatherer.html" title="class in com.djrapitops.plan.extension.implementation.providers.gathering">DataValueGatherer</a>&nbsp;gatherer,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;playerName,
  <a href="CallEvents.html" title="enum class in com.djrapitops.plan.extension">CallEvents</a>&nbsp;event)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updatePlayerValues(java.util.UUID,java.lang.String,com.djrapitops.plan.extension.CallEvents)" class="member-name-link">updatePlayerValues</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;playerName,
- <a href="CallEvents.html" title="enum class in com.djrapitops.plan.extension">CallEvents</a>&nbsp;event)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateServerValues(com.djrapitops.plan.extension.CallEvents)" class="member-name-link">updateServerValues</a><wbr>(<a href="CallEvents.html" title="enum class in com.djrapitops.plan.extension">CallEvents</a>&nbsp;event)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updatePlayerValues(java.util.UUID,java.lang.String,com.djrapitops.plan.extension.CallEvents)" class="member-name-link">updatePlayerValues</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;playerName,
+ <a href="CallEvents.html" title="enum class in com.djrapitops.plan.extension">CallEvents</a>&nbsp;event)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateServerValues(com.djrapitops.plan.extension.implementation.providers.gathering.DataValueGatherer,com.djrapitops.plan.extension.CallEvents)" class="member-name-link">updateServerValues</a><wbr>(<a href="implementation/providers/gathering/DataValueGatherer.html" title="class in com.djrapitops.plan.extension.implementation.providers.gathering">DataValueGatherer</a>&nbsp;gatherer,
- <a href="CallEvents.html" title="enum class in com.djrapitops.plan.extension">CallEvents</a>&nbsp;event)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateServerValues(com.djrapitops.plan.extension.CallEvents)" class="member-name-link">updateServerValues</a><wbr>(<a href="CallEvents.html" title="enum class in com.djrapitops.plan.extension">CallEvents</a>&nbsp;event)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateServerValues(com.djrapitops.plan.extension.implementation.providers.gathering.DataValueGatherer,com.djrapitops.plan.extension.CallEvents)" class="member-name-link">updateServerValues</a><wbr>(<a href="implementation/providers/gathering/DataValueGatherer.html" title="class in com.djrapitops.plan.extension.implementation.providers.gathering">DataValueGatherer</a>&nbsp;gatherer,
+ <a href="CallEvents.html" title="enum class in com.djrapitops.plan.extension">CallEvents</a>&nbsp;event)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -204,7 +209,7 @@ implements <a href="ExtensionService.html" title="interface in com.djrapitops.pl
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.component.ComponentSvc,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.extension.implementation.ExtensionRegister,com.djrapitops.plan.identification.UUIDUtility,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)">
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.storage.database.DBSystem,com.djrapitops.plan.component.ComponentSvc,com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.extension.implementation.ExtensionRegister,com.djrapitops.plan.extension.implementation.providers.gathering.ExtensionMetadataStorage,com.djrapitops.plan.identification.UUIDUtility,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)">
 <h3>ExtensionSvc</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations">@Inject
@@ -215,6 +220,7 @@ implements <a href="ExtensionService.html" title="interface in com.djrapitops.pl
  <a href="../identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
  <a href="../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing,
  <a href="implementation/ExtensionRegister.html" title="class in com.djrapitops.plan.extension.implementation">ExtensionRegister</a>&nbsp;extensionRegister,
+ <a href="implementation/providers/gathering/ExtensionMetadataStorage.html" title="class in com.djrapitops.plan.extension.implementation.providers.gathering">ExtensionMetadataStorage</a>&nbsp;extensionMetadataStorage,
  <a href="../identification/UUIDUtility.html" title="class in com.djrapitops.plan.identification">UUIDUtility</a>&nbsp;uuidUtility,
  net.playeranalytics.plugin.server.PluginLogger&nbsp;logger,
  <a href="../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</span></div>
@@ -347,6 +353,14 @@ Requires Capability DATA_EXTENSION_BUILDER_API</div>
 <h3>disableUpdates</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">disableUpdates</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getExtensionMetadataStorage()">
+<h3>getExtensionMetadataStorage</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="implementation/providers/gathering/ExtensionMetadataStorage.html" title="class in com.djrapitops.plan.extension.implementation.providers.gathering">ExtensionMetadataStorage</a></span>&nbsp;<span class="element-name">getExtensionMetadataStorage</span>()</div>
 </div>
 </section>
 </li>
