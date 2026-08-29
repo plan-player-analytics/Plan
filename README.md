@@ -12,7 +12,9 @@
 
 Player Analytics is a fully-fledged solution for the analytics needs of your Minecraft server. A built-in webserver displays insights into different aspects of the server such as Online activity, Playerbase, and how these change over time.
 
-Plan supports multiple different platforms and versions; Spigot, Paper, Fabric, Sponge, SpongeForge, Bungeecord, Velocity, Folia & all derivatives - One jar for all platforms.
+Plan supports multiple different platforms and versions; Spigot, Paper, Fabric, NeoForge (via Forgified Fabric API), Sponge, SpongeForge, Bungeecord, Velocity, Folia & all derivatives.
+
+Fabric and NeoForge each ship as separate jars (`PlanFabric-*.jar`, `PlanNeoForge-*.jar`). Other platforms share one jar.
 
 - [Version 5 Release trailer on Youtube](https://www.youtube.com/watch?v=BS_Ti9zkoRc)
 

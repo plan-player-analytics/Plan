@@ -19,7 +19,6 @@ package net.playeranalytics.plan.gathering.listeners;
 import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.capability.CapabilitySvc;
 import com.djrapitops.plan.gathering.listeners.ListenerSystem;
-import net.playeranalytics.plan.PlanFabric;
 import net.playeranalytics.plan.gathering.listeners.events.PlanFabricEvents;
 import net.playeranalytics.plan.gathering.listeners.fabric.*;
 import net.playeranalytics.plugin.server.Listeners;
@@ -84,7 +83,7 @@ public class FabricListenerSystem extends ListenerSystem {
     @Override
     public void callEnableEvent(PlanPlugin plugin) {
         boolean isEnabled = plugin.isSystemEnabled();
-        PlanFabricEvents.ON_ENABLE.invoker().onEnable((PlanFabric) plugin);
+        PlanFabricEvents.ON_ENABLE.invoker().onEnable(plugin);
         CapabilitySvc.notifyAboutEnable(isEnabled);
     }
 }

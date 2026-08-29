@@ -12,6 +12,7 @@ plugins {
     id "org.sonarqube" version "7.4.0.8496"
     id "com.gradleup.shadow" version "9.6.1" apply false
     id "net.fabricmc.fabric-loom" version "1.17.17" apply false
+    id "net.neoforged.moddev" version "2.0.143" apply false
 }
 
 apply plugin: "nebula-aggregate-javadocs"
@@ -105,6 +106,8 @@ subprojects {
         maven { url = "https://repo.playeranalytics.net/releases" } // Plan
         maven { url = "https://repo.md-5.net/content/repositories/snapshots/" } // RedisBungee
         maven { url = "https://jitpack.io" } // RedisBungee fork
+        maven { url = "https://maven.neoforged.net/releases" } // NeoForge
+        maven { url = "https://maven.sinytra.org" } // Forgified Fabric API
     }
 
     dependencies {
