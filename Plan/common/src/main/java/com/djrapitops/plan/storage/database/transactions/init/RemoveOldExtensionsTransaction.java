@@ -16,6 +16,9 @@
  */
 package com.djrapitops.plan.storage.database.transactions.init;
 
+import com.djrapitops.plan.extension.implementation.providers.gathering.ExtensionMetadataKey;
+import com.djrapitops.plan.extension.implementation.providers.gathering.ExtensionMetadataStorage;
+import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionInformationQueries;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.ExtensionSettings;
 import com.djrapitops.plan.storage.database.queries.Query;
@@ -29,8 +32,10 @@ import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -41,11 +46,13 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  */
 public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
 
+    private final ExtensionMetadataStorage extensionMetadataStorage;
     private final ExtensionSettings extensionSettings;
     private final long deleteOlder;
     private final ServerUUID serverUUID;
 
-    public RemoveOldExtensionsTransaction(ExtensionSettings extensionSettings, long deleteAfterMs, ServerUUID serverUUID) {
+    public RemoveOldExtensionsTransaction(ExtensionMetadataStorage extensionMetadataStorage, ExtensionSettings extensionSettings, long deleteAfterMs, ServerUUID serverUUID) {
+        this.extensionMetadataStorage = extensionMetadataStorage;
         this.extensionSettings = extensionSettings;
         deleteOlder = System.currentTimeMillis() - deleteAfterMs;
         this.serverUUID = serverUUID;
@@ -62,7 +69,15 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
             removeTableValues(providerID);
         }
         commitMidTransaction();
+        extensionMetadataStorage.invalidate(getInvalidatedProviders(providerIds, tableProviderIds));
         removeProviders(providerIds, tableProviderIds);
+    }
+
+    private List<ExtensionMetadataKey> getInvalidatedProviders(Collection<Integer> providerIds, Collection<Integer> tableProviderIds) {
+        List<ExtensionMetadataKey> invalidatedProviders = new ArrayList<>();
+        invalidatedProviders.addAll(query(ExtensionInformationQueries.extensionKeysById(providerIds, false)));
+        invalidatedProviders.addAll(query(ExtensionInformationQueries.extensionKeysById(tableProviderIds, true)));
+        return invalidatedProviders;
     }
 
     private void removeValues(int providerID) {

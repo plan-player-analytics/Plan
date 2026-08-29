@@ -38,22 +38,27 @@ import java.util.concurrent.CompletableFuture;
 @Singleton
 public class ExtensionMetadataStorage {
 
-    private final Map<MetadataKey, MetadataFingerprint> storedMetadata = new HashMap<>();
+    private static final Map<ExtensionMetadataKey, MetadataFingerprint> storedMetadata = new HashMap<>();
 
     private final DBSystem dbSystem;
 
     @Inject
-    public ExtensionMetadataStorage(DBSystem dbSystem) {this.dbSystem = dbSystem;}
+    public ExtensionMetadataStorage(DBSystem dbSystem) {
+        this.dbSystem = dbSystem;
+        storedMetadata.clear();
+    }
+
+    public static void invalidateAll() {
+        storedMetadata.clear();
+    }
 
     public synchronized void storeProvider(
             ProviderInformation information,
             Parameters parameters
     ) {
         Database database = dbSystem.getDatabase();
-        MetadataKey key = new MetadataKey(false, parameters.getServerUUID(), information.getPluginName(), information.getName());
+        ExtensionMetadataKey key = new ExtensionMetadataKey(false, parameters.getServerUUID(), information.getPluginName(), information.getName());
         MetadataFingerprint fingerprint = MetadataFingerprint.forProvider(information);
-        System.out.println(fingerprint);
-        System.out.println(storedMetadata.get(key));
         if (fingerprint.equals(storedMetadata.get(key))) return;
 
         Transaction[] transactions = new Transaction[]{
@@ -64,11 +69,10 @@ public class ExtensionMetadataStorage {
                 .map(database::executeTransaction)
                 .toArray(CompletableFuture[]::new)
         ).thenRun(() -> {
-            System.out.println(transactions);
             if (Arrays.stream(transactions).allMatch(Transaction::wasSuccessful)) {
                 storedMetadata.put(key, fingerprint);
             }
-        });
+        }).join();
     }
 
     public synchronized void storeTableProvider(
@@ -77,10 +81,8 @@ public class ExtensionMetadataStorage {
             Table table
     ) {
         Database database = dbSystem.getDatabase();
-        MetadataKey key = new MetadataKey(true, parameters.getServerUUID(), information.getPluginName(), information.getName());
+        ExtensionMetadataKey key = new ExtensionMetadataKey(true, parameters.getServerUUID(), information.getPluginName(), information.getName());
         MetadataFingerprint fingerprint = MetadataFingerprint.forTableProvider(information, parameters, table);
-        System.out.println(fingerprint);
-        System.out.println(storedMetadata.get(key));
         if (fingerprint.equals(storedMetadata.get(key))) return;
 
         List<Transaction> transactions = new ArrayList<>();
@@ -95,11 +97,13 @@ public class ExtensionMetadataStorage {
                 .map(database::executeTransaction)
                 .toArray(CompletableFuture[]::new)
         ).thenRun(() -> {
-            System.out.println(transactions);
             if (transactions.stream().allMatch(Transaction::wasSuccessful)) {
                 storedMetadata.put(key, fingerprint);
             }
-        });
+        }).join();
     }
 
+    public void invalidate(List<ExtensionMetadataKey> invalidatedProviders) {
+        storedMetadata.keySet().removeAll(invalidatedProviders);
+    }
 }

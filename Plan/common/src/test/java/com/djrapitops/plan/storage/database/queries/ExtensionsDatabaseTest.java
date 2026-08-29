@@ -114,7 +114,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         extensionSettings.setEnabled("TableExtension", false);
         extensionSettings.setEnabled("ServerExtension", false);
 
-        db().executeTransaction(new RemoveOldExtensionsTransaction(extensionSettings, TimeUnit.DAYS.toMillis(1), serverUUID()));
+        db().executeTransaction(new RemoveOldExtensionsTransaction(extensionService.getExtensionMetadataStorage(), extensionSettings, TimeUnit.DAYS.toMillis(1), serverUUID()));
 
         assertTrue(db().query(new ExtensionPlayerDataQuery(playerUUID)).isEmpty());
         assertTrue(db().query(new ExtensionServerDataQuery(serverUUID())).isEmpty());

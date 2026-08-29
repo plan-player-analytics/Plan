@@ -21,6 +21,7 @@ import com.djrapitops.plan.delivery.domain.TablePlayer;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.keys.Key;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
+import com.djrapitops.plan.extension.implementation.providers.gathering.ExtensionMetadataStorage;
 import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.Server;
@@ -182,6 +183,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
                 dbSystem(),
                 new QuerySvc(config(), dbSystem(), serverInfo(), null),
                 serverInfo(),
+                new ExtensionMetadataStorage(dbSystem()),
                 logger,
                 null
         ).cleanOldPlayers(db());

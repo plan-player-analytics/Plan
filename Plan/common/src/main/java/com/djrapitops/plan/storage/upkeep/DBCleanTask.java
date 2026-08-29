@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.upkeep;
 
 import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.exceptions.database.DBOpException;
+import com.djrapitops.plan.extension.implementation.providers.gathering.ExtensionMetadataStorage;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.query.QuerySvc;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -69,6 +70,7 @@ public class DBCleanTask extends TaskSystem.Task {
     private final PlanConfig config;
     private final QuerySvc queryService;
     private final ServerInfo serverInfo;
+    private final ExtensionMetadataStorage extensionMetadataStorage;
     private final PluginLogger logger;
     private final ErrorLogger errorLogger;
 
@@ -83,6 +85,7 @@ public class DBCleanTask extends TaskSystem.Task {
             DBSystem dbSystem,
             QuerySvc queryService,
             ServerInfo serverInfo,
+            ExtensionMetadataStorage extensionMetadataStorage,
             PluginLogger logger,
             ErrorLogger errorLogger
     ) {
@@ -92,6 +95,7 @@ public class DBCleanTask extends TaskSystem.Task {
         this.config = config;
         this.queryService = queryService;
         this.serverInfo = serverInfo;
+        this.extensionMetadataStorage = extensionMetadataStorage;
         this.logger = logger;
         this.errorLogger = errorLogger;
 
@@ -125,7 +129,7 @@ public class DBCleanTask extends TaskSystem.Task {
                 // This is needed since the last updated number is updated at reload and it would lead to all data
                 // for plugins being deleted all the time.
                 if (System.currentTimeMillis() - lastReload <= deleteExtensionDataAfter) {
-                    database.executeTransaction(new RemoveOldExtensionsTransaction(config.getExtensionSettings(), deleteExtensionDataAfter, serverInfo.getServerUUID()));
+                    database.executeTransaction(new RemoveOldExtensionsTransaction(extensionMetadataStorage, config.getExtensionSettings(), deleteExtensionDataAfter, serverInfo.getServerUUID()));
                 }
             }
         } catch (DBOpException e) {

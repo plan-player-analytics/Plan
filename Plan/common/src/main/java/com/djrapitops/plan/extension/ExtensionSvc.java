@@ -206,4 +206,8 @@ public class ExtensionSvc implements ExtensionService {
     public void disableUpdates() {
         enabled.set(false);
     }
+
+    public ExtensionMetadataStorage getExtensionMetadataStorage() {
+        return extensionMetadataStorage;
+    }
 }

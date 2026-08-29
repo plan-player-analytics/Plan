@@ -19,22 +19,22 @@ package com.djrapitops.plan.extension.implementation.storage.queries;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
+import com.djrapitops.plan.extension.implementation.providers.gathering.ExtensionMetadataKey;
 import com.djrapitops.plan.extension.implementation.results.ExtensionInformation;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionIconTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPluginTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionProviderTable;
 import com.djrapitops.plan.utilities.java.Lists;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -116,4 +116,19 @@ public class ExtensionInformationQueries {
         };
     }
 
+    public static Query<List<ExtensionMetadataKey>> extensionKeysById(Collection<Integer> providerIds, boolean tableProvider) {
+        String sql = SELECT +
+                ExtensionPluginTable.SERVER_UUID + ',' +
+                "p." + ExtensionPluginTable.PLUGIN_NAME + " as plugin_name," +
+                "pr." + ExtensionProviderTable.PROVIDER_NAME + " as provider_name" +
+                FROM + ExtensionProviderTable.TABLE_NAME + " pr" +
+                INNER_JOIN + ExtensionPluginTable.TABLE_NAME + " p ON p." + ExtensionPluginTable.ID + "=pr." + ExtensionProviderTable.PLUGIN_ID +
+                WHERE + "pr." + ExtensionProviderTable.ID + " IN (" + Sql.nParameters(providerIds.size()) + ")";
+        return db -> db.queryList(sql, row -> new ExtensionMetadataKey(
+                        tableProvider,
+                        ServerUUID.fromString(row.getString(ExtensionPluginTable.SERVER_UUID)),
+                        row.getString("plugin_name"),
+                        row.getString("provider_name")),
+                providerIds);
+    }
 }
