@@ -87,10 +87,9 @@ public class ThemeJSONResolver implements NoAuthResolver {
         if (themeName.isEmpty()) {
             throw new BadRequestException("'theme' name can not be empty");
         }
-        if (themeFilePattern.matcher(themeName).matches() || StringUtils.containsAny(themeName, '\n', '\t')) {
-            return responseFactory.themeResponse(themeName, request);
-        } else {
+        if (!themeFilePattern.matcher(themeName).matches() || StringUtils.containsAny(themeName, '\n', '\t')) {
             throw new BadRequestException("'theme' parameter was invalid");
         }
+        return responseFactory.themeResponse(themeName, request);
     }
 }

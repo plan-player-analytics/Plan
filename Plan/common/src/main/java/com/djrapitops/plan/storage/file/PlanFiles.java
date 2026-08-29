@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.file;
 
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.delivery.web.AssetVersions;
+import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import dagger.Lazy;
@@ -30,10 +31,7 @@ import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
 import java.io.UncheckedIOException;
-import java.nio.file.Files;
-import java.nio.file.OpenOption;
-import java.nio.file.Path;
-import java.nio.file.StandardOpenOption;
+import java.nio.file.*;
 import java.util.Comparator;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -176,7 +174,12 @@ public class PlanFiles implements SubSystem {
     public Optional<File> attemptToFind(Path dir, @Untrusted String resourceName) {
         if (Files.exists(dir) && Files.isDirectory(dir)) {
             // Path may be absolute due to resolving untrusted path
-            @Untrusted Path asPath = dir.resolve(resourceName);
+            @Untrusted Path asPath;
+            try {
+                asPath = dir.resolve(resourceName).normalize();
+            } catch (InvalidPathException badCharacter) {
+                throw new BadRequestException("Requested resource name contained a bad character.");
+            }
             if (!asPath.startsWith(dir)) {
                 return Optional.empty();
             }
