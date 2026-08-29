@@ -72,7 +72,7 @@ public class ExtensionMetadataStorage {
             if (Arrays.stream(transactions).allMatch(Transaction::wasSuccessful)) {
                 storedMetadata.put(key, fingerprint);
             }
-        }).join();
+        });
     }
 
     public synchronized void storeTableProvider(
@@ -100,7 +100,7 @@ public class ExtensionMetadataStorage {
             if (transactions.stream().allMatch(Transaction::wasSuccessful)) {
                 storedMetadata.put(key, fingerprint);
             }
-        }).join();
+        });
     }
 
     public void invalidate(List<ExtensionMetadataKey> invalidatedProviders) {
