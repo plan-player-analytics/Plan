@@ -28,12 +28,12 @@ import org.eclipse.jetty.http.HttpField;
 import org.eclipse.jetty.http.HttpHeader;
 import org.eclipse.jetty.io.Content;
 import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.util.Promise;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
 public class JettyInternalRequest implements InternalRequest {
@@ -77,7 +77,7 @@ public class JettyInternalRequest implements InternalRequest {
         String requestMethod = request.getMethod();
         @Untrusted URIPath path = new URIPath(request.getHttpURI().getDecodedPath());
         @Untrusted URIQuery query = new URIQuery(request.getHttpURI().getQuery());
-        @Untrusted byte[] requestBody = readRequestBody();
+        CompletableFuture<byte[]> requestBody = readRequestBodyAsync();
         WebUser user = getWebUser(webserverConfiguration, authenticationExtractor, accessAddress);
         @Untrusted Map<String, String> headers = getRequestHeaders();
         return new com.djrapitops.plan.delivery.web.resolver.request.Request(requestMethod, path, query, user, headers, requestBody, accessAddress);
@@ -90,13 +90,20 @@ public class JettyInternalRequest implements InternalRequest {
                         (one, two) -> one + ';' + two));
     }
 
-    private byte[] readRequestBody() {
-        try (InputStream reader = Content.Source.asInputStream(request)) {
-            return reader.readAllBytes();
-        } catch (IOException ignored) {
-            // requestBody stays empty
-            return new byte[0];
-        }
+    private CompletableFuture<byte[]> readRequestBodyAsync() {
+        CompletableFuture<byte[]> future = new CompletableFuture<>();
+        Content.Source.asByteArrayAsync(request, Integer.MAX_VALUE, new Promise.Invocable<>() {
+            @Override
+            public void succeeded(byte[] result) {
+                future.complete(result != null ? result : new byte[0]);
+            }
+
+            @Override
+            public void failed(Throwable x) {
+                future.complete(new byte[0]);
+            }
+        });
+        return future;
     }
 
     @Override

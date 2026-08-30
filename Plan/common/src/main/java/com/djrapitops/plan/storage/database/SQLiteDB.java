@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.exceptions.database.DBInitException;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.PluginLang;
@@ -70,7 +71,8 @@ public class SQLiteDB extends SQLDB {
             RunnableFactory runnableFactory,
             PluginLogger logger,
             ErrorLogger errorLogger,
-            ApplicationDependencyManager applicationDependencyManager
+            ApplicationDependencyManager applicationDependencyManager,
+            Processing processing
     ) {
         super(
                 () -> serverInfo.get().getServerUUID(),
@@ -80,7 +82,8 @@ public class SQLiteDB extends SQLDB {
                 runnableFactory,
                 logger,
                 errorLogger,
-                applicationDependencyManager
+                applicationDependencyManager,
+                processing
         );
         dbName = databaseFile.getName();
         this.databaseFile = databaseFile;
@@ -246,6 +249,7 @@ public class SQLiteDB extends SQLDB {
         private final PlanConfig config;
         private final Lazy<ServerInfo> serverInfo;
         private final RunnableFactory runnableFactory;
+        private final Processing processing;
         private final PluginLogger logger;
         private final ErrorLogger errorLogger1;
         private final PlanFiles files;
@@ -257,7 +261,7 @@ public class SQLiteDB extends SQLDB {
                 PlanConfig config,
                 PlanFiles files,
                 Lazy<ServerInfo> serverInfo,
-                RunnableFactory runnableFactory,
+                RunnableFactory runnableFactory, Processing processing,
                 PluginLogger logger,
                 ErrorLogger errorLogger1,
                 ApplicationDependencyManager applicationDependencyManager
@@ -267,6 +271,7 @@ public class SQLiteDB extends SQLDB {
             this.files = files;
             this.serverInfo = serverInfo;
             this.runnableFactory = runnableFactory;
+            this.processing = processing;
             this.logger = logger;
             this.errorLogger1 = errorLogger1;
             this.applicationDependencyManager = applicationDependencyManager;
@@ -284,7 +289,9 @@ public class SQLiteDB extends SQLDB {
             return new SQLiteDB(databaseFile,
                     locale, config, files, serverInfo,
                     runnableFactory, logger, errorLogger1,
-                    applicationDependencyManager
+                    applicationDependencyManager,
+                    processing
+
             );
         }
 

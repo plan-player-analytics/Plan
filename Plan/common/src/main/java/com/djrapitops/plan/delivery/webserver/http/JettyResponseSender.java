@@ -20,15 +20,16 @@ import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.webserver.Addresses;
 import org.apache.commons.lang3.Strings;
 import org.eclipse.jetty.http.HttpHeader;
-import org.eclipse.jetty.io.Content;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.server.Response;
+import org.eclipse.jetty.util.Callback;
 
-import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.nio.ByteBuffer;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.zip.GZIPOutputStream;
 
 public class JettyResponseSender {
@@ -46,14 +47,25 @@ public class JettyResponseSender {
     }
 
     public void send() throws IOException {
+        try {
+            sendAsync().join();
+        } catch (CompletionException e) {
+            if (e.getCause() instanceof IOException) {
+                throw (IOException) e.getCause();
+            }
+            throw new IOException(e.getCause() != null ? e.getCause() : e);
+        }
+    }
+
+    public CompletableFuture<Void> sendAsync() {
         if ("HEAD".equals(jettyRequest.getMethod()) || response.getCode() == 204 || response.getCode() == 304) {
             setResponseHeaders();
-            sendHeadResponse();
+            return sendHeadResponse();
         } else if (canGzip()) {
-            sendCompressed();
+            return sendCompressed();
         } else {
             setResponseHeaders();
-            sendRawBytes();
+            return sendRawBytes();
         }
     }
 
@@ -63,12 +75,12 @@ public class JettyResponseSender {
         return "GET".equals(method) && Strings.CS.containsAny(mimeType, MimeType.HTML, MimeType.CSS, MimeType.JS, MimeType.JSON, "text/plain");
     }
 
-    public void sendHeadResponse() throws IOException {
+    public CompletableFuture<Void> sendHeadResponse() {
         response.getHeaders().remove(HttpHeader.CONTENT_LENGTH.asString());
         beginSend();
-        try (OutputStream out = Content.Sink.asOutputStream(jettyResponse)) {
-            send(out, new byte[0]);
-        }
+        Callback.Completable completable = new Callback.Completable();
+        jettyResponse.write(true, ByteBuffer.wrap(new byte[0]), completable);
+        return completable;
     }
 
     private void setResponseHeaders() {
@@ -88,27 +100,34 @@ public class JettyResponseSender {
         }
     }
 
-    private void sendCompressed() throws IOException {
-        response.getHeaders().remove(HttpHeader.ACCEPT_RANGES.asString());
-        response.getHeaders().put(HttpHeader.CONTENT_ENCODING.asString(), "gzip");
+    private CompletableFuture<Void> sendCompressed() {
+        return response.getBytesAsync().thenCompose(rawBytes -> {
+            try {
+                response.getHeaders().remove(HttpHeader.ACCEPT_RANGES.asString());
+                response.getHeaders().put(HttpHeader.CONTENT_ENCODING.asString(), "gzip");
 
+                byte[] gzipped = gzip(rawBytes);
+                response.getHeaders().put(HttpHeader.CONTENT_LENGTH.asString(), String.valueOf(gzipped.length));
+                setResponseHeaders();
 
-        byte[] gzipped = gzip();
-        try (OutputStream out = Content.Sink.asOutputStream(jettyResponse)) {
-            response.getHeaders().put(HttpHeader.CONTENT_LENGTH.asString(), String.valueOf(gzipped.length));
-            setResponseHeaders();
+                jettyResponse.setStatus(response.getCode());
 
-            jettyResponse.setStatus(response.getCode());
-
-            send(out, gzipped);
-        }
+                Callback.Completable completable = new Callback.Completable();
+                jettyResponse.write(true, ByteBuffer.wrap(gzipped), completable);
+                return completable;
+            } catch (IOException e) {
+                CompletableFuture<Void> failed = new CompletableFuture<>();
+                failed.completeExceptionally(e);
+                return failed;
+            }
+        });
     }
 
-    private byte[] gzip() throws IOException {
+    private byte[] gzip(byte[] bytes) throws IOException {
         try (ByteArrayOutputStream bufferStream = new ByteArrayOutputStream();
              GZIPOutputStream gzipStream = new GZIPOutputStream(bufferStream)
         ) {
-            gzipStream.write(response.getBytes());
+            gzipStream.write(bytes);
             gzipStream.finish();
             gzipStream.flush();
             return bufferStream.toByteArray();
@@ -130,26 +149,12 @@ public class JettyResponseSender {
         jettyResponse.setStatus(response.getCode());
     }
 
-    private void sendRawBytes() throws IOException {
+    private CompletableFuture<Void> sendRawBytes() {
         beginSend();
-        try (OutputStream out = Content.Sink.asOutputStream(jettyResponse)) {
-            send(out);
-        }
-    }
-
-    private void send(OutputStream out) throws IOException {
-        send(out, response.getBytes());
-    }
-
-    private void send(OutputStream out, byte[] bytes) throws IOException {
-        try (
-                ByteArrayInputStream bis = new ByteArrayInputStream(bytes)
-        ) {
-            byte[] buffer = new byte[2048];
-            int count;
-            while ((count = bis.read(buffer)) != -1) {
-                out.write(buffer, 0, count);
-            }
-        }
+        return response.getBytesAsync().thenCompose(bytes -> {
+            Callback.Completable completable = new Callback.Completable();
+            jettyResponse.write(true, ByteBuffer.wrap(bytes), completable);
+            return completable;
+        });
     }
 }

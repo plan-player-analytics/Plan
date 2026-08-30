@@ -28,6 +28,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 import java.util.function.Supplier;
 
 /**
@@ -163,6 +164,8 @@ public interface Database {
 
     int getTransactionQueueSize();
 
+    Async async();
+
     /**
      * Possible State changes:
      * CLOSED to PATCHING (Database init),
@@ -176,5 +179,33 @@ public interface Database {
         PATCHING,
         OPEN,
         CLOSING
+    }
+
+    public static class Async {
+        private final Database database;
+        private final ExecutorService executorService;
+
+        public Async(Database database, ExecutorService executorService) {
+            this.database = database;
+            this.executorService = executorService;
+        }
+
+        public <T> CompletableFuture<T> query(Query<T> query) {
+            return CompletableFuture.supplyAsync(() -> database.query(query), executorService);
+        }
+
+        public <T> CompletableFuture<Optional<T>> queryOptional(String sql, RowExtractor<T> rowExtractor, Object... parameters) {
+            return CompletableFuture.supplyAsync(() -> database.queryOptional(sql, rowExtractor, parameters), executorService);
+        }
+
+        public <T> CompletableFuture<List<T>> queryList(String sql, RowExtractor<T> rowExtractor, Object... parameters) {return CompletableFuture.supplyAsync(() -> database.queryList(sql, rowExtractor, parameters), executorService);}
+
+        public <T> CompletableFuture<Set<T>> querySet(String sql, RowExtractor<T> rowExtractor, Object... parameters) {return CompletableFuture.supplyAsync(() -> database.querySet(sql, rowExtractor, parameters), executorService);}
+
+        public <C extends Collection<T>, T> CompletableFuture<C> queryCollection(String sql, RowExtractor<T> rowExtractor, Supplier<C> collectionConstructor, Object... parameters) {return CompletableFuture.supplyAsync(() -> database.queryCollection(sql, rowExtractor, collectionConstructor, parameters), executorService);}
+
+        public <K, V> CompletableFuture<Map<K, V>> queryMap(String sql, MapRowExtractor<K, V> rowExtractor, Object... parameters) {return CompletableFuture.supplyAsync(() -> database.queryMap(sql, rowExtractor, parameters), executorService);}
+
+        public <M extends Map<K, V>, K, V> CompletableFuture<M> queryMap(String sql, MapRowExtractor<K, V> rowExtractor, Supplier<M> mapConstructor, Object... parameters) {return CompletableFuture.supplyAsync(() -> database.queryMap(sql, rowExtractor, mapConstructor, parameters), executorService);}
     }
 }
