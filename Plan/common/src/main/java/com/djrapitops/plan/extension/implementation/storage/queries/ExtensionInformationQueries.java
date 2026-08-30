@@ -117,6 +117,7 @@ public class ExtensionInformationQueries {
     }
 
     public static Query<List<ExtensionMetadataKey>> extensionKeysById(Collection<Integer> providerIds, boolean tableProvider) {
+        if (providerIds.isEmpty()) return db -> new ArrayList<>();
         String sql = SELECT +
                 ExtensionPluginTable.SERVER_UUID + ',' +
                 "p." + ExtensionPluginTable.PLUGIN_NAME + " as plugin_name," +
