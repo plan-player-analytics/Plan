@@ -17,12 +17,12 @@
 package com.djrapitops.plan.delivery.webserver.http;
 
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
-import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.webserver.Addresses;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import org.apache.commons.lang3.Strings;
 import org.eclipse.jetty.http.HttpHeader;
+import org.eclipse.jetty.io.Content;
+import org.eclipse.jetty.server.Request;
+import org.eclipse.jetty.server.Response;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -33,20 +33,20 @@ import java.util.zip.GZIPOutputStream;
 
 public class JettyResponseSender {
 
-    private final Response response;
-    private final HttpServletRequest servletRequest;
-    private final HttpServletResponse servletResponse;
+    private final com.djrapitops.plan.delivery.web.resolver.Response response;
+    private final Request jettyRequest;
+    private final Response jettyResponse;
     private final Addresses addresses;
 
-    public JettyResponseSender(Response response, HttpServletRequest servletRequest, HttpServletResponse servletResponse, Addresses addresses) {
+    public JettyResponseSender(com.djrapitops.plan.delivery.web.resolver.Response response, Request jettyRequest, Response jettyResponse, Addresses addresses) {
         this.response = response;
-        this.servletRequest = servletRequest;
-        this.servletResponse = servletResponse;
+        this.jettyRequest = jettyRequest;
+        this.jettyResponse = jettyResponse;
         this.addresses = addresses;
     }
 
     public void send() throws IOException {
-        if ("HEAD".equals(servletRequest.getMethod()) || response.getCode() == 204 || response.getCode() == 304) {
+        if ("HEAD".equals(jettyRequest.getMethod()) || response.getCode() == 204 || response.getCode() == 304) {
             setResponseHeaders();
             sendHeadResponse();
         } else if (canGzip()) {
@@ -58,17 +58,16 @@ public class JettyResponseSender {
     }
 
     private boolean canGzip() {
-        String method = servletRequest.getMethod();
+        String method = jettyRequest.getMethod();
         String mimeType = response.getHeaders().get(HttpHeader.CONTENT_TYPE.asString());
         return "GET".equals(method) && Strings.CS.containsAny(mimeType, MimeType.HTML, MimeType.CSS, MimeType.JS, MimeType.JSON, "text/plain");
     }
 
     public void sendHeadResponse() throws IOException {
-        try {
-            response.getHeaders().remove(HttpHeader.CONTENT_LENGTH.asString());
-            beginSend();
-        } finally {
-            servletResponse.getOutputStream().close();
+        response.getHeaders().remove(HttpHeader.CONTENT_LENGTH.asString());
+        beginSend();
+        try (OutputStream out = Content.Sink.asOutputStream(jettyResponse)) {
+            send(out, new byte[0]);
         }
     }
 
@@ -77,7 +76,7 @@ public class JettyResponseSender {
         correctRedirect(responseHeaders);
 
         for (Map.Entry<String, String> header : responseHeaders.entrySet()) {
-            servletResponse.setHeader(header.getKey(), header.getValue());
+            jettyResponse.getHeaders().add(header.getKey(), header.getValue());
         }
     }
 
@@ -93,12 +92,13 @@ public class JettyResponseSender {
         response.getHeaders().remove(HttpHeader.ACCEPT_RANGES.asString());
         response.getHeaders().put(HttpHeader.CONTENT_ENCODING.asString(), "gzip");
 
+
         byte[] gzipped = gzip();
-        try (OutputStream out = servletResponse.getOutputStream()) {
+        try (OutputStream out = Content.Sink.asOutputStream(jettyResponse)) {
             response.getHeaders().put(HttpHeader.CONTENT_LENGTH.asString(), String.valueOf(gzipped.length));
             setResponseHeaders();
 
-            servletResponse.setStatus(response.getCode());
+            jettyResponse.setStatus(response.getCode());
 
             send(out, gzipped);
         }
@@ -121,18 +121,18 @@ public class JettyResponseSender {
                 || "0".equals(length)
                 || response.getCode() == 204
                 || response.getCode() == 304
-                || "HEAD".equals(servletRequest.getMethod())
+                || "HEAD".equals(jettyRequest.getMethod())
         ) {
-            servletResponse.setHeader(HttpHeader.CONTENT_LENGTH.asString(), null);
+            jettyResponse.getHeaders().remove(HttpHeader.CONTENT_LENGTH.asString());
         }
         // Return a content length of -1 for HTTP code 204 (No content)
         // and HEAD requests to avoid warning messages.
-        servletResponse.setStatus(response.getCode());
+        jettyResponse.setStatus(response.getCode());
     }
 
     private void sendRawBytes() throws IOException {
         beginSend();
-        try (OutputStream out = servletResponse.getOutputStream()) {
+        try (OutputStream out = Content.Sink.asOutputStream(jettyResponse)) {
             send(out);
         }
     }

@@ -24,19 +24,16 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import net.playeranalytics.plugin.server.PluginLogger;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
-import org.eclipse.jetty.server.handler.AbstractHandler;
+import org.eclipse.jetty.util.Callback;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.io.IOException;
 
 @Singleton
-public class JettyRequestHandler extends AbstractHandler {
+public class JettyRequestHandler extends Handler.Abstract {
 
     private final WebserverConfiguration webserverConfiguration;
     private final AuthenticationExtractor authenticationExtractor;
@@ -58,21 +55,23 @@ public class JettyRequestHandler extends AbstractHandler {
     }
 
     @Override
-    public void handle(String target, Request baseRequest, HttpServletRequest servletRequest, HttpServletResponse servletResponse) throws IOException, ServletException {
+    public boolean handle(Request request, org.eclipse.jetty.server.Response jettyResponse, Callback callback) throws Exception {
         try {
-            InternalRequest internalRequest = new JettyInternalRequest(baseRequest, servletRequest, webserverConfiguration, authenticationExtractor);
+            InternalRequest internalRequest = new JettyInternalRequest(request, webserverConfiguration, authenticationExtractor);
             Response response = requestHandler.getResponse(internalRequest);
-            new JettyResponseSender(response, servletRequest, servletResponse, addresses).send();
-            baseRequest.setHandled(true);
+            new JettyResponseSender(response, request, jettyResponse, addresses).send();
+            callback.succeeded();
+            return true;
         } catch (Exception e) {
             if (config.isTrue(PluginSettings.DEV_MODE)) {
                 logger.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
                 errorLogger.warn(e, ErrorContext.builder()
                         .whatToDo("THIS ERROR IS ONLY LOGGED IN DEV MODE")
-                        .related(baseRequest.getMethod(), baseRequest.getRemoteAddr(), target, baseRequest.getRequestURI())
+                        .related(request.getMethod(), Request.getRemoteAddr(request), request.getHttpURI().getPath())
                         .build());
             }
+            callback.failed(e);
+            throw e;
         }
-
     }
 }
