@@ -76,76 +76,80 @@ public class JettyWebserver implements WebServer {
             return;
         }
 
-        webserver = new Server();
-        webserver.setStopAtShutdown(true);
+        // Jetty loads its services from thread context classloader, but thread context doesn't have all Jetty classes.
+        // Because of this we swap to plugin classloader before any operations so that the loading succeeds.
+        ThreadContextClassLoaderSwap.performOperation(getClass().getClassLoader(), () -> {
+            webserver = new Server();
+            webserver.setStopAtShutdown(true);
 
-        this.port = webserverConfiguration.getPort();
+            this.port = webserverConfiguration.getPort();
 
-        HttpConfiguration configuration = new HttpConfiguration();
-        Optional<SslContextFactory.Server> sslContext = getSslContextFactory();
-        sslContext.ifPresent(ssl -> {
-            configuration.setSecureScheme("https");
-            configuration.setSecurePort(port);
+            HttpConfiguration configuration = new HttpConfiguration();
+            Optional<SslContextFactory.Server> sslContext = getSslContextFactory();
+            sslContext.ifPresent(ssl -> {
+                configuration.setSecureScheme("https");
+                configuration.setSecurePort(port);
 
-            SecureRequestCustomizer serverNameIdentifierCheckSkipper = new SecureRequestCustomizer();
-            serverNameIdentifierCheckSkipper.setSniHostCheck(false);
-            serverNameIdentifierCheckSkipper.setSniRequired(false);
-            configuration.addCustomizer(serverNameIdentifierCheckSkipper);
+                SecureRequestCustomizer serverNameIdentifierCheckSkipper = new SecureRequestCustomizer();
+                serverNameIdentifierCheckSkipper.setSniHostCheck(false);
+                serverNameIdentifierCheckSkipper.setSniRequired(false);
+                configuration.addCustomizer(serverNameIdentifierCheckSkipper);
 
-            usingHttps = true;
-        });
+                usingHttps = true;
+            });
 
-        HttpConnectionFactory httpConnector = new HttpConnectionFactory(configuration);
+            HttpConnectionFactory httpConnector = new HttpConnectionFactory(configuration);
 
-        HTTP2CServerConnectionFactory http2CConnector = new HTTP2CServerConnectionFactory(configuration);
-        http2CConnector.setConnectProtocolEnabled(true);
+            HTTP2CServerConnectionFactory http2CConnector = new HTTP2CServerConnectionFactory(configuration);
+            http2CConnector.setConnectProtocolEnabled(true);
 
 
-        ServerConnector connector = sslContext
-                .map(sslContextFactory -> {
-                    HTTP2ServerConnectionFactory http2Connector = new HTTP2ServerConnectionFactory(configuration);
-                    http2Connector.setConnectProtocolEnabled(true);
-                    ALPNServerConnectionFactory alpn = getAlpnServerConnectionFactory(httpConnector.getProtocol());
+            ServerConnector connector = sslContext
+                    .map(sslContextFactory -> {
+                        HTTP2ServerConnectionFactory http2Connector = new HTTP2ServerConnectionFactory(configuration);
+                        http2Connector.setConnectProtocolEnabled(true);
+                        ALPNServerConnectionFactory alpn = new ALPNServerConnectionFactory("h2", "h2c", "http/1.1");
+                        alpn.setDefaultProtocol(httpConnector.getProtocol());
+                        return new ServerConnector(webserver, sslContextFactory, alpn, httpConnector, http2Connector, http2CConnector);
+                    })
+                    .orElseGet(() -> {
+                        if (webserverConfiguration.isProxyModeHttps()) {
+                            webserverLogMessages.authenticationUsingProxy();
+                        } else {
+                            webserverLogMessages.authenticationNotPossible();
+                        }
+                        return new ServerConnector(webserver, httpConnector, http2CConnector);
+                    });
 
-                    return new ServerConnector(webserver, sslContextFactory, alpn, httpConnector, http2Connector, http2CConnector);
-                })
-                .orElseGet(() -> {
-                    if (webserverConfiguration.isProxyModeHttps()) {
-                        webserverLogMessages.authenticationUsingProxy();
-                    } else {
-                        webserverLogMessages.authenticationNotPossible();
-                    }
-                    return new ServerConnector(webserver, httpConnector, http2CConnector);
-                });
+            connector.setPort(port);
+            String internalIP = webserverConfiguration.getInternalIP();
+            connector.setHost(internalIP);
+            webserver.addConnector(connector);
 
-        connector.setPort(port);
-        String internalIP = webserverConfiguration.getInternalIP();
-        connector.setHost(internalIP);
-        webserver.addConnector(connector);
+            webserver.setHandler(jettyRequestHandler);
 
-        webserver.setHandler(jettyRequestHandler);
-
-        String startFailure = "Failed to start Jetty webserver: ";
-        try {
-            webserver.start();
-        } catch (IOException e) {
-            if (e.getMessage().contains("Failed to bind")) {
-                boolean defaultInternalIp = "0.0.0.0".equals(internalIP);
-                String causeHelp = defaultInternalIp ? ", is the port (" + port + ") in use?" : ", is the Internal_IP (" + internalIP + ") invalid? (Use 0.0.0.0 for automatic)";
-                throw new EnableException(startFailure + e.getMessage().replace("0.0.0.0", "") + causeHelp, e);
-            } else {
+            String startFailure = "Failed to start Jetty webserver: ";
+            try {
+                webserver.start();
+            } catch (IOException e) {
+                if (e.getMessage().contains("Failed to bind")) {
+                    boolean defaultInternalIp = "0.0.0.0".equals(internalIP);
+                    String causeHelp = defaultInternalIp ? ", is the port (" + port + ") in use?" : ", is the Internal_IP (" + internalIP + ") invalid? (Use 0.0.0.0 for automatic)";
+                    throw new EnableException(startFailure + e.getMessage().replace("0.0.0.0", "") + causeHelp, e);
+                } else {
+                    throw new EnableException(startFailure + e.toString(), e);
+                }
+            } catch (Exception e) {
                 throw new EnableException(startFailure + e.toString(), e);
             }
-        } catch (Exception e) {
-            throw new EnableException(startFailure + e.toString(), e);
-        }
 
-        webserverLogMessages.infoWebserverEnabled(getPort());
-        sslContext.map(SslContextFactory::getKeyStore).ifPresent(this::logCertificateExpiryInformation);
+            webserverLogMessages.infoWebserverEnabled(getPort());
+            sslContext.map(SslContextFactory::getKeyStore).ifPresent(this::logCertificateExpiryInformation);
 
-        responseResolver.registerPages();
+            responseResolver.registerPages();
 
-        webserverConfiguration.getAllowedIpList().prepare();
+            webserverConfiguration.getAllowedIpList().prepare();
+        });
     }
 
     private void logCertificateExpiryInformation(KeyStore keyStore) {
