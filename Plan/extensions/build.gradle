@@ -26,7 +26,7 @@ dependencies {
     implementation "net.playeranalytics:Extension-LibertyBans:1.1.0-R1.6"
     implementation "net.playeranalytics:Extension-Litebans:0.4.1-R2.0"
     implementation "net.playeranalytics:Extension-LogBlock:1.16.1.2-R1.9"
-    implementation "net.playeranalytics:Extension-LuckPerms:5.0-R1.6"
+    implementation "net.playeranalytics:Extension-LuckPerms:5.0-R1.7"
     implementation "net.playeranalytics:Extension-MarriageMaster:2.3-R1.3"
     implementation "net.playeranalytics:Extension-McMMO:2.1.149-R2.5"
     implementation "net.playeranalytics:Extension-MinigamesLib:1.14.17-R1.2"
