@@ -168,22 +168,6 @@ public class JettyWebserver implements WebServer {
         }
     }
 
-    private ALPNServerConnectionFactory getAlpnServerConnectionFactory(String protocol) {
-        ClassLoader pluginClassLoader = getClass().getClassLoader();
-        return ThreadContextClassLoaderSwap.performOperation(pluginClassLoader, () -> {
-            try {
-                Class.forName("org.eclipse.jetty.alpn.java.server.JDK9ServerALPNProcessor");
-                // ALPN is protocol upgrade protocol required for upgrading http 1.1 connections to 2
-                ALPNServerConnectionFactory alpn = new ALPNServerConnectionFactory("h2", "h2c", "http/1.1");
-                alpn.setDefaultProtocol(protocol);
-                return alpn;
-            } catch (IllegalStateException | ClassNotFoundException ignored) {
-                logger.warn("JDK9ServerALPNProcessor not found. ALPN (HTTP/2 upgrade protocol) is not available.");
-                return null;
-            }
-        });
-    }
-
     private Optional<SslContextFactory.Server> getSslContextFactory() {
         if (webserverConfiguration.isProxyModeHttps()) {
             return Optional.empty();
