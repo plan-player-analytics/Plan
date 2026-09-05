@@ -32,6 +32,7 @@ import org.eclipse.jetty.util.Callback;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Function;
 
 @Singleton
 public class JettyRequestHandler extends Handler.Abstract {
@@ -62,6 +63,7 @@ public class JettyRequestHandler extends Handler.Abstract {
         try {
             InternalRequest internalRequest = new JettyInternalRequest(request, webserverConfiguration, authenticationExtractor);
             CompletableFuture.supplyAsync(() -> requestHandler.getResponse(internalRequest), processing.getNonCriticalExecutor())
+                    .thenCompose(Function.identity())
                     .thenApply(response -> new JettyResponseSender(response, request, jettyResponse, addresses))
                     .thenCompose(JettyResponseSender::sendAsync)
                     .whenComplete((result, throwable) -> {

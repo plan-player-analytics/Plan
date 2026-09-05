@@ -31,7 +31,9 @@ import org.eclipse.jetty.http.HttpHeader;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Singleton
 public class RequestHandler {
@@ -55,61 +57,87 @@ public class RequestHandler {
         rateLimitGuard = new RateLimitGuard();
     }
 
-    public Response getResponse(InternalRequest internalRequest) {
+    public CompletableFuture<Response> getResponse(InternalRequest internalRequest) {
         @Untrusted(reason = "from header") String accessAddress = internalRequest.getAccessAddress(webserverConfiguration);
         @Untrusted String requestedPath = internalRequest.getRequestedPathAndQuery();
 
         boolean blocked = false;
-        Response response;
+        CompletableFuture<Response> response;
         @Untrusted Request request = null;
         if (bruteForceGuard.shouldPreventRequest(accessAddress)) {
-            response = responseFactory.failedLoginAttempts403();
+            response = CompletableFuture.completedFuture(responseFactory.failedLoginAttempts403());
             blocked = true;
         } else if (rateLimitGuard.shouldPreventRequest(requestedPath, accessAddress)) {
-            response = responseFactory.failedRateLimit403();
+            response = CompletableFuture.completedFuture(responseFactory.failedRateLimit403());
             blocked = true;
         } else if (!webserverConfiguration.getAllowedIpList().isAllowed(accessAddress)) {
             webserverConfiguration.getWebserverLogMessages()
                     .warnAboutWhitelistBlock(accessAddress, internalRequest.getRequestedURIString());
-            response = responseFactory.ipWhitelist403(accessAddress);
+            response = CompletableFuture.completedFuture(responseFactory.ipWhitelist403(accessAddress));
         } else {
-            try {
-                request = internalRequest.toRequest(accessAddress);
-                response = attemptToResolve(request, accessAddress);
-            } catch (WebUserAuthException thrownByAuthentication) {
-                response = processFailedAuthentication(internalRequest, accessAddress, thrownByAuthentication);
-            }
+            request = internalRequest.toRequest(accessAddress);
+            response = attemptToResolve(request, accessAddress)
+                    .exceptionallyCompose(throwable -> {
+                        Throwable cause = throwable;
+                        while (cause instanceof java.util.concurrent.CompletionException || cause instanceof java.util.concurrent.ExecutionException) {
+                            if (cause.getCause() != null) {
+                                cause = cause.getCause();
+                            } else {
+                                break;
+                            }
+                        }
+                        if (cause instanceof WebUserAuthException thrownByAuthentication) {
+                            return CompletableFuture.completedFuture(
+                                    processFailedAuthentication(internalRequest, accessAddress, thrownByAuthentication));
+                        }
+                        return CompletableFuture.failedFuture(throwable);
+                    });
         }
 
-        response.getHeaders().putIfAbsent("Access-Control-Allow-Origin", webserverConfiguration.getAllowedCorsOrigin());
-        response.getHeaders().putIfAbsent("Access-Control-Allow-Methods", "GET, OPTIONS");
-        response.getHeaders().putIfAbsent("Access-Control-Allow-Credentials", "true");
-        response.getHeaders().putIfAbsent("X-Robots-Tag", "noindex, nofollow");
+        response.whenComplete((r, e) -> {
+            if (r != null) {
+                Map<String, String> headers = r.getHeaders();
+                headers.putIfAbsent("Access-Control-Allow-Origin", webserverConfiguration.getAllowedCorsOrigin());
+                headers.putIfAbsent("Access-Control-Allow-Methods", "GET, OPTIONS");
+                headers.putIfAbsent("Access-Control-Allow-Credentials", "true");
+                headers.putIfAbsent("X-Robots-Tag", "noindex, nofollow");
+            }
+        });
 
         if (!blocked) {
-            accessLogger.log(internalRequest, request, response);
+            final Request doneRequest = request;
+            response.whenComplete((r, e) -> accessLogger.log(internalRequest, doneRequest, r));
         }
 
         return response;
     }
 
-    private Response attemptToResolve(@Untrusted Request request, @Untrusted String accessAddress) {
-        Response response = protocolUpgradeResponse(request)
-                .orElseGet(() -> responseResolver.getResponse(request));
-        request.getUser().ifPresent(user -> processSuccessfulLogin(response.getCode(), accessAddress));
+    private CompletableFuture<Response> attemptToResolve(@Untrusted Request request, @Untrusted String accessAddress) {
+        CompletableFuture<Response> response;
+        try {
+            response = protocolUpgradeResponse(request)
+                    .orElseGet(() -> responseResolver.getResponse(request));
+        } catch (Throwable t) {
+            response = responseResolver.handleException(request, t);
+        }
+        response.whenComplete((r, e) -> {
+            if (r != null) {
+                request.getUser().ifPresent(user -> processSuccessfulLogin(r.getCode(), accessAddress));
+            }
+        });
         return response;
     }
 
-    private Optional<Response> protocolUpgradeResponse(@Untrusted Request request) {
+    private Optional<CompletableFuture<Response>> protocolUpgradeResponse(@Untrusted Request request) {
         @Untrusted Optional<String> upgrade = request.getHeader(HttpHeader.UPGRADE.asString());
         if (upgrade.isPresent()) {
             @Untrusted String value = upgrade.get();
             if ("h2c".equals(value) || "h2".equals(value)) {
-                return Optional.of(Response.builder()
+                return Optional.of(CompletableFuture.completedFuture(Response.builder()
                         .setStatus(101)
                         .setHeader("Connection", HttpHeader.UPGRADE.asString())
                         .setHeader(HttpHeader.UPGRADE.asString(), value)
-                        .build());
+                        .build()));
             }
         }
         return Optional.empty();

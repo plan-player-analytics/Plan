@@ -26,8 +26,8 @@ import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.PlayersTableJSONCreator;
 import com.djrapitops.plan.delivery.rendering.json.graphs.GraphJSONCreator;
+import com.djrapitops.plan.delivery.web.resolver.AsyncResolver;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
-import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
@@ -37,6 +37,7 @@ import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionQueryResultTableDataQuery;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
@@ -70,13 +71,15 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 @Singleton
 @Path("/v1/query")
-public class QueryJSONResolver implements Resolver {
+public class QueryJSONResolver implements AsyncResolver {
 
     private final QueryFilters filters;
 
+    private final Processing processing;
     private final PlanConfig config;
     private final DBSystem dbSystem;
     private final ServerInfo serverInfo;
@@ -89,6 +92,7 @@ public class QueryJSONResolver implements Resolver {
     @Inject
     public QueryJSONResolver(
             QueryFilters filters,
+            Processing processing,
             PlanConfig config,
             DBSystem dbSystem,
             ServerInfo serverInfo, JSONStorage jsonStorage,
@@ -98,6 +102,7 @@ public class QueryJSONResolver implements Resolver {
             Gson gson
     ) {
         this.filters = filters;
+        this.processing = processing;
         this.config = config;
         this.dbSystem = dbSystem;
         this.serverInfo = serverInfo;
@@ -134,32 +139,38 @@ public class QueryJSONResolver implements Resolver {
             requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = InputQueryDto.class)))
     )
     @Override
-    public Optional<Response> resolve(Request request) {
-        return Optional.of(getResponse(request));
+    public CompletableFuture<Optional<Response>> resolveAsync(Request request) {
+        return getResponse(request);
     }
 
-    private Response getResponse(@Untrusted Request request) {
+    private CompletableFuture<Optional<Response>> getResponse(@Untrusted Request request) {
         Optional<WebUser> user = request.getUser();
         boolean canAccessCache = user.map(u -> u.hasPermission(WebPermission.ACCESS_QUERY)).orElse(true);
-        Optional<Response> cachedResult = canAccessCache ? checkForCachedResult(request) : Optional.empty();
-        if (cachedResult.isPresent()) return cachedResult.get();
-
-        InputQueryDto inputQuery = parseInputQuery(request);
-        @Untrusted List<InputFilterDto> queries = inputQuery.getFilters();
-
-        // Check user has permission for the filter if login is enabled.
-        if (user.isPresent()) {
-            Optional<Response> errorResponse = checkFilterPermissions(queries, user.get());
-            if (errorResponse.isPresent()) {
-                return errorResponse.get();
+        if (canAccessCache) {
+            Optional<Response> cached = checkForCachedResult(request);
+            if (cached.isPresent()) {
+                return CompletableFuture.completedFuture(cached);
             }
         }
 
-        Filter.Result result = filters.apply(queries);
-        List<Filter.ResultPath> resultPath = result.getInverseResultPath();
-        Collections.reverse(resultPath);
+        return request.getRequestBodyAsync().thenCompose(bodyBytes -> {
+            InputQueryDto inputQuery = parseInputQuery(request, bodyBytes);
+            List<InputFilterDto> queries = inputQuery.getFilters();
 
-        return buildAndStoreResponse(inputQuery, result, resultPath);
+            if (user.isPresent()) {
+                Optional<Response> errorResponse = checkFilterPermissions(queries, user.get());
+                if (errorResponse.isPresent()) {
+                    return CompletableFuture.completedFuture(errorResponse);
+                }
+            }
+
+            return CompletableFuture.supplyAsync(() -> {
+                Filter.Result result = filters.apply(queries);
+                List<Filter.ResultPath> resultPath = result.getInverseResultPath();
+                Collections.reverse(resultPath);
+                return Optional.of(buildAndStoreResponse(inputQuery, result, resultPath));
+            }, processing.getNonCriticalExecutor());
+        });
     }
 
     private Optional<Response> checkFilterPermissions(List<InputFilterDto> queries, WebUser user) {
@@ -203,11 +214,11 @@ public class QueryJSONResolver implements Resolver {
         }
     }
 
-    private InputQueryDto parseInputQuery(@Untrusted Request request) {
-        if (request.getRequestBody().length == 0) {
+    private InputQueryDto parseInputQuery(@Untrusted Request request, byte[] bodyBytes) {
+        if (bodyBytes.length == 0) {
             return parseInputQueryFromQueryParams(request);
         } else {
-            return RequestBodyConverter.bodyJson(request, gson, InputQueryDto.class);
+            return RequestBodyConverter.bodyJson(bodyBytes, gson, InputQueryDto.class);
         }
     }
 
