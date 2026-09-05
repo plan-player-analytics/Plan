@@ -36,14 +36,26 @@ public class RequestBodyConverter {
      * @return {@link URIQuery}.
      */
     public static URIQuery formBody(Request request) {
-        return new URIQuery(new String(request.getRequestBody(), StandardCharsets.UTF_8));
+        return formBody(request.getRequestBody());
+    }
+
+    public static URIQuery formBody(byte[] bytes) {
+        return new URIQuery(new String(bytes != null ? bytes : new byte[0], StandardCharsets.UTF_8));
     }
 
     public static <T> T bodyJson(@Untrusted Request request, Gson gson, Class<T> ofType) {
-        return gson.fromJson(new String(request.getRequestBody(), StandardCharsets.UTF_8), ofType);
+        return bodyJson(request.getRequestBody(), gson, ofType);
+    }
+
+    public static <T> T bodyJson(@Untrusted byte[] bytes, Gson gson, Class<T> ofType) {
+        return gson.fromJson(new String(bytes != null ? bytes : new byte[0], StandardCharsets.UTF_8), ofType);
     }
 
     public static <T> T bodyJson(Request request, Gson gson, TypeToken<T> ofType) {
-        return gson.fromJson(new String(request.getRequestBody(), StandardCharsets.UTF_8), ofType.getType());
+        return bodyJson(request.getRequestBody(), gson, ofType);
+    }
+
+    public static <T> T bodyJson(byte[] bytes, Gson gson, TypeToken<T> ofType) {
+        return gson.fromJson(new String(bytes != null ? bytes : new byte[0], StandardCharsets.UTF_8), ofType.getType());
     }
 }

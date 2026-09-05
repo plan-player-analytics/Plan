@@ -21,6 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Represents a HTTP request to use with {@link Resolver}.
@@ -34,7 +35,7 @@ public final class Request {
     private final URIQuery query;
     private final WebUser user;
     private final Map<String, String> headers;
-    private final byte[] requestBody;
+    private final CompletableFuture<byte[]> requestBody;
     private final String accessIpAddress;
 
     /**
@@ -65,12 +66,27 @@ public final class Request {
      * @param accessIpAddress IP address this request is coming from.
      */
     public Request(String method, URIPath path, URIQuery query, WebUser user, Map<String, String> headers, byte[] requestBody, String accessIpAddress) {
+        this(method, path, query, user, headers, CompletableFuture.completedFuture(requestBody != null ? requestBody : new byte[0]), accessIpAddress);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param method          HTTP method, GET, PUT, POST, etc
+     * @param path            Requested path /example/target
+     * @param query           Request parameters ?param=value etc
+     * @param user            Web user doing the request (if authenticated)
+     * @param headers         Request headers <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers">Documentation</a>
+     * @param requestBody     CompletableFuture of raw body bytes
+     * @param accessIpAddress IP address this request is coming from.
+     */
+    public Request(String method, URIPath path, URIQuery query, WebUser user, Map<String, String> headers, CompletableFuture<byte[]> requestBody, String accessIpAddress) {
         this.method = method;
         this.path = path;
         this.query = query;
         this.user = user;
         this.headers = headers;
-        this.requestBody = requestBody;
+        this.requestBody = requestBody != null ? requestBody : CompletableFuture.completedFuture(new byte[0]);
         this.accessIpAddress = accessIpAddress;
     }
 
@@ -109,7 +125,7 @@ public final class Request {
         }
         this.user = user;
         this.headers = headers;
-        this.requestBody = new byte[0];
+        this.requestBody = CompletableFuture.completedFuture(new byte[0]);
         this.accessIpAddress = accessIpAddress;
     }
 
@@ -142,10 +158,20 @@ public final class Request {
 
     /**
      * Get the raw body, if present.
+     * Blocks until the body is available if fetched asynchronously.
      *
      * @return byte[].
      */
     public byte[] getRequestBody() {
+        return requestBody.join();
+    }
+
+    /**
+     * Get the raw body as a {@link CompletableFuture}.
+     *
+     * @return CompletableFuture of byte[].
+     */
+    public CompletableFuture<byte[]> getRequestBodyAsync() {
         return requestBody;
     }
 
@@ -184,7 +210,7 @@ public final class Request {
                 ", query=" + query +
                 ", user=" + user +
                 ", headers=" + headers +
-                ", body=" + requestBody.length +
+                ", body=" + (requestBody.isDone() && !requestBody.isCompletedExceptionally() ? requestBody.join().length : "async") +
                 '}';
     }
 }

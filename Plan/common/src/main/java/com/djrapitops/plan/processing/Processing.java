@@ -213,4 +213,8 @@ public class Processing implements SubSystem {
     public Executor getCriticalExecutor() {
         return criticalExecutor;
     }
+
+    public ExecutorService getNonCriticalExecutor() {
+        return nonCriticalExecutor;
+    }
 }

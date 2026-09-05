@@ -18,12 +18,12 @@ package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.delivery.web.ResolverService;
 import com.djrapitops.plan.delivery.web.ResolverSvc;
+import com.djrapitops.plan.delivery.web.resolver.AsyncResolver;
 import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.exception.MethodNotAllowedException;
-import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
@@ -36,7 +36,6 @@ import com.djrapitops.plan.delivery.webserver.resolver.swagger.SwaggerJsonResolv
 import com.djrapitops.plan.delivery.webserver.resolver.swagger.SwaggerPageResolver;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.utilities.dev.Untrusted;
-import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import dagger.Lazy;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -46,8 +45,11 @@ import io.swagger.v3.oas.annotations.info.License;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
@@ -188,64 +190,87 @@ public class ResponseResolver {
         return request -> Optional.of(response.get());
     }
 
-    public Response getResponse(@Untrusted Request request) {
+    public CompletableFuture<Response> getResponse(@Untrusted Request request) {
         try {
-            return tryToGetResponse(request);
-        } catch (BadRequestException e) {
-            return responseFactory.badRequest(e.getMessage(), request.getPath().asString());
-        } catch (NotFoundException e) {
-            return responseFactory.notFound404(e.getMessage());
-        } catch (MethodNotAllowedException e) {
-            return responseFactory.methodNotAllowed405(e.getMessage(), e.getAllowedMethods());
-        } catch (WebUserAuthException e) {
-            throw e; // Pass along
-        } catch (Exception e) {
-            errorLogger.error(e, ErrorContext.builder().related(request).build());
-            return responseFactory.internalErrorResponse(e, "Failed to get a response");
+            return tryToGetResponse(request)
+                    .exceptionallyCompose(throwable -> handleException(request, throwable));
+        } catch (Exception t) {
+            return handleException(request, t);
         }
     }
 
-    /**
-     * @throws NotFoundException   In some cases when page was not found, not all.
-     * @throws BadRequestException If the request did not have required things.
-     */
-    private Response tryToGetResponse(@Untrusted Request request) {
-        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
-            // https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/OPTIONS
-            return Response.builder().setStatus(204).build();
-        }
-
-        Optional<WebUser> user = request.getUser();
-
-        List<Resolver> foundResolvers = resolverService.getResolvers(request.getPath().asString());
-        if (foundResolvers.isEmpty()) return responseFactory.pageNotFound404();
-
-        for (Resolver resolver : foundResolvers) {
-            boolean isAuthRequired = webServer.get().isAuthRequired() && resolver.requiresAuth(request);
-            if (isAuthRequired) {
-                if (user.isEmpty()) {
-                    if (webServer.get().isUsingHTTPS()) {
-                        throw new WebUserAuthException(FailReason.NO_USER_PRESENT);
-                    } else {
-                        return responseFactory.forbidden403();
-                    }
-                }
-
-                if (resolver.canAccess(request)) {
-                    Optional<Response> resolved = resolver.resolve(request);
-                    if (resolved.isPresent()) return resolved.get();
-                } else {
-                    if (request.getPath().startsWith("/v1/")) {
-                        return responseFactory.forbidden403Json();
-                    } else {
-                        return responseFactory.forbidden403();
-                    }
-                }
+    public CompletableFuture<Response> handleException(@Untrusted Request request, Throwable exception) {
+        while (exception instanceof CompletionException || exception instanceof java.util.concurrent.ExecutionException) {
+            if (exception.getCause() != null) {
+                exception = exception.getCause();
             } else {
-                Optional<Response> resolved = resolver.resolve(request);
-                if (resolved.isPresent()) return resolved.get();
+                break;
             }
         }
-        return responseFactory.pageNotFound404();
+        if (exception instanceof BadRequestException badRequest) {
+            return CompletableFuture.completedFuture(responseFactory.badRequest(
+                    badRequest.getMessage(), request.getPath().asString()));
+        }
+        if (exception instanceof MethodNotAllowedException notAllowed) {
+            return CompletableFuture.completedFuture(responseFactory.methodNotAllowed405(
+                    notAllowed.getMessage(), notAllowed.getAllowedMethods()));
+        }
+        if (exception instanceof WebUserAuthException authException) {
+            return CompletableFuture.failedFuture(authException); // Pass along
+        }
+        return CompletableFuture.completedFuture(responseFactory.internalErrorResponse(
+                exception, "Failed to get a response"));
+    }
+
+    private CompletableFuture<Response> tryToGetResponse(@Untrusted Request request) {
+        if ("OPTIONS".equalsIgnoreCase(request.getMethod())) {
+            // https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/OPTIONS
+            return CompletableFuture.completedFuture(Response.builder().setStatus(204).build());
+        }
+
+
+        List<Resolver> foundResolvers = resolverService.getResolvers(request.getPath().asString());
+        if (foundResolvers.isEmpty()) return CompletableFuture.completedFuture(responseFactory.pageNotFound404());
+        return resolveNext(foundResolvers.iterator(), request);
+    }
+
+    private CompletableFuture<Response> resolveNext(Iterator<Resolver> iterator, @Untrusted Request request) {
+        if (!iterator.hasNext()) {
+            return CompletableFuture.completedFuture(responseFactory.pageNotFound404());
+        }
+
+        Resolver resolver = iterator.next();
+        Optional<WebUser> user = request.getUser();
+        boolean isAuthRequired = webServer.get().isAuthRequired() && resolver.requiresAuth(request);
+        if (isAuthRequired) {
+            if (user.isEmpty()) {
+                if (webServer.get().isUsingHTTPS()) {
+                    throw new WebUserAuthException(FailReason.NO_USER_PRESENT);
+                } else {
+                    return CompletableFuture.completedFuture(responseFactory.forbidden403());
+                }
+            }
+
+            if (!resolver.canAccess(request)) {
+                if (request.getPath().startsWith("/v1/")) {
+                    return CompletableFuture.completedFuture(responseFactory.forbidden403Json());
+                } else {
+                    return CompletableFuture.completedFuture(responseFactory.forbidden403());
+                }
+            }
+        }
+
+        CompletableFuture<Optional<Response>> futureResponse;
+        try {
+            futureResponse = resolver instanceof AsyncResolver asyncResolver
+                    ? asyncResolver.resolveAsync(request)
+                    : CompletableFuture.supplyAsync(() -> resolver.resolve(request));
+        } catch (Exception t) { // Some exceptions may be thrown sync based on the request.
+            futureResponse = CompletableFuture.failedFuture(t);
+        }
+        return futureResponse.thenCompose(gotResponse ->
+                gotResponse.map(CompletableFuture::completedFuture) // try next resolver
+                        .orElseGet(() -> resolveNext(iterator, request))
+        );
     }
 }
