@@ -156,6 +156,8 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             copyGroupsToPermissions(webGroupLookupTable, webPermissionLookupTable);
             LookupTable<Integer> webUserIdLookupTable = copyWebUsers(webGroupLookupTable);
             copyUserPreferences(webUserIdLookupTable);
+            LookupTable<Integer> statisticsIdLookupTable = copyStatistics();
+            copyStatisticValues(statisticsIdLookupTable, userIdLookupTable, serverIdLookupTable);
             // TODO plan how to copy extension data https://github.com/plan-player-analytics/Plan/wiki/Database-Schema
 
             feedback.accept(locale.getString(CommandLang.PROGRESS_SUCCESS));
@@ -170,6 +172,30 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             removeTemporaryTables();
             doAfter.run();
         }
+    }
+
+    private void copyStatisticValues(LookupTable<Integer> statisticsIdLookupTable, LookupTable<Integer> userIdLookupTable, LookupTable<Integer> serverIdLookupTable) {
+        logCopyMessage(StatisticValueTable.TABLE_NAME);
+        batching(currentId -> {
+            List<StatisticValueTable.Row> rows = fromDB.query(StatisticsQueries.fetchStatistics(currentId, ROW_LIMIT));
+            IdMapper.mapServerIds(rows, serverIdLookupTable);
+            IdMapper.mapUserIds(rows, userIdLookupTable);
+            IdMapper.mapStatisticsIds(rows, statisticsIdLookupTable);
+            toDB.executeInTransaction(LargeStoreQueries.insertStatisticValues(rows)).join();
+            logProgress(rows.size(), StatisticValueTable.TABLE_NAME, rows.isEmpty());
+            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).getId();
+        });
+    }
+
+    private LookupTable<Integer> copyStatistics() {
+        LookupTable<String> lookupTable = fromDB.query(LookupTableQueries.statisticsLookupTable());
+        LookupTable<String> existing = toDB.query(LookupTableQueries.statisticsLookupTable());
+        Set<String> toInsert = new HashSet<>(lookupTable.keySet());
+        toInsert.removeIf(existing::contains);
+        logCopyMessage(StatisticTable.TABLE_NAME);
+        toDB.executeInTransaction(LargeStoreQueries.storeStatistics(toInsert));
+        return toDB.query(LookupTableQueries.statisticsLookupTable())
+                .constructIdToIdLookupTable(lookupTable);
     }
 
     private void removeTemporaryTables() {

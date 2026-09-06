@@ -87,6 +87,7 @@ public class ServerPageExporter extends FileExporter {
                 server + serverUUID + "/geolocations",
                 server + serverUUID + "/performance",
                 server + serverUUID + "/plugins-overview",
+                server + serverUUID + "/statistics",
         };
     }
 
@@ -148,6 +149,7 @@ public class ServerPageExporter extends FileExporter {
                 "kills?server=" + serverUUID,
                 "pingTable?server=" + serverUUID,
                 "sessions?server=" + serverUUID,
+                "statistics?server=" + serverUUID,
                 "extensionData?server=" + serverUUID,
                 "serverIdentity?server=" + serverUUID,
                 "retention?server=" + serverUUID,

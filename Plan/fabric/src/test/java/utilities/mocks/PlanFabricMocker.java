@@ -20,8 +20,6 @@ import com.djrapitops.plan.commands.use.ColorScheme;
 import net.playeranalytics.plan.PlanFabric;
 import org.mockito.Mockito;
 
-import java.io.File;
-
 import static org.mockito.Mockito.doReturn;
 
 /**
@@ -46,11 +44,6 @@ public class PlanFabricMocker {
 
         doReturn(new ColorScheme("§1", "§2", "§3")).when(planMock).getColorScheme();
 
-        return this;
-    }
-
-    public PlanFabricMocker withDataFolder(File tempFolder) {
-        doReturn(tempFolder).when(planMock).getDataFolder();
         return this;
     }
 

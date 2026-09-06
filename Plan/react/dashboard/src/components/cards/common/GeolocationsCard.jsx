@@ -6,7 +6,7 @@ import {faExclamationTriangle, faGlobe, faLayerGroup} from "@fortawesome/free-so
 import GeolocationBarGraph from "../../graphs/GeolocationBarGraph";
 import GeolocationWorldMap, {ProjectionOptions} from "../../graphs/GeolocationWorldMap";
 import {CardLoader} from "../../navigation/Loader.tsx";
-import ExtendableRow from "../../layout/extension/ExtendableRow";
+import ExtendableRow from "../../layout/extension/ExtendableRow.tsx";
 import Highcharts from "highcharts/highstock";
 import "highcharts/modules/accessibility";
 import "highcharts/modules/no-data-to-display"

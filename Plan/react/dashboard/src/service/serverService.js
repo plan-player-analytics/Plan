@@ -314,3 +314,9 @@ export const fetchPlayersOnline = async (timestamp, identifier) => {
         : `/v1/playersOnline?date=${timestamp}`;
     return doGetRequest(url, timestamp);
 }
+
+export const fetchStatistics = async (timestamp, identifier) => {
+    let url = `/v1/statistics?server=${identifier}`;
+    if (staticSite) url = `/data/statistics-${identifier}.json`;
+    return doGetRequest(url, timestamp);
+}

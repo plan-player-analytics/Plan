@@ -29,6 +29,7 @@ import utilities.TestResources;
 import utilities.mocks.objects.TestLogger;
 
 import java.io.File;
+import java.nio.file.Path;
 import java.util.HashSet;
 
 import static org.mockito.Mockito.doReturn;
@@ -41,14 +42,15 @@ import static org.mockito.Mockito.when;
  */
 public class PlanBungeeMocker {
 
+    private final Path tempDir;
     private PlanBungee planMock;
-    private File tempFolder;
 
-    private PlanBungeeMocker() {
+    private PlanBungeeMocker(Path tempDir) {
+        this.tempDir = tempDir;
     }
 
-    public static PlanBungeeMocker setUp() {
-        return new PlanBungeeMocker().mockPlugin();
+    public static PlanBungeeMocker setUp(Path tempDir) {
+        return new PlanBungeeMocker(tempDir).mockPlugin();
     }
 
     private PlanBungeeMocker mockPlugin() {
@@ -60,12 +62,6 @@ public class PlanBungeeMocker {
 
         doReturn(testLogger).when(planMock).getLogger();
 
-        return this;
-    }
-
-    PlanBungeeMocker withDataFolder(File tempFolder) {
-        this.tempFolder = tempFolder;
-        when(planMock.getDataFolder()).thenReturn(this.tempFolder);
         return this;
     }
 
@@ -93,7 +89,7 @@ public class PlanBungeeMocker {
     }
 
     PlanBungeeMocker withPluginDescription() {
-        File pluginYml = tempFolder.toPath().resolve("jar").resolve("bungee.yml").toFile();
+        File pluginYml = tempDir.resolve("jar").resolve("bungee.yml").toFile();
         TestResources.copyResourceIntoFile(pluginYml, "/bungee.yml");
         HashSet<String> empty = new HashSet<>();
         PluginDescription pluginDescription = new PluginDescription("Plan", "", "9.9.9", "AuroraLS3", empty, empty, pluginYml, "");

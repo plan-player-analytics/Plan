@@ -22,8 +22,10 @@ import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import dagger.Lazy;
+import net.playeranalytics.plugin.server.PluginLogger;
 import org.apache.commons.lang3.Strings;
 import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -34,6 +36,7 @@ import java.io.UncheckedIOException;
 import java.nio.file.*;
 import java.util.Comparator;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 /**
@@ -48,18 +51,23 @@ public class PlanFiles implements SubSystem {
 
     private final File dataFolder;
     private final File configFile;
-
     private final Lazy<AssetVersions> assetVersions;
+    private final PluginLogger logger;
+
+    @Nullable
+    private Path statsDirectory;
 
     @Inject
     public PlanFiles(
             @Named("dataFolder") File dataFolder,
             JarResource.StreamFunction getResourceStream,
-            Lazy<AssetVersions> assetVersions
+            Lazy<AssetVersions> assetVersions,
+            PluginLogger logger
     ) {
         this.dataFolder = dataFolder;
         this.getResourceStream = getResourceStream;
         this.assetVersions = assetVersions;
+        this.logger = logger;
         this.configFile = getFileFromPluginFolder("config.yml");
     }
 
@@ -112,9 +120,20 @@ public class PlanFiles implements SubSystem {
             Path dir = getDataDirectory();
             if (!Files.isSymbolicLink(dir)) Files.createDirectories(dir);
             if (!configFile.exists()) Files.createFile(configFile.toPath());
+            initializeStatsDirectory(dir);
             cleanOldUnusedFolders();
         } catch (IOException e) {
             throw new EnableException("Failed to create config.yml, " + e.getMessage(), e);
+        }
+    }
+
+    private void initializeStatsDirectory(Path dir) throws IOException {
+        Path serverRoot = dir.toAbsolutePath().getParent().getParent();
+        try {
+            this.statsDirectory = new StatsDirectoryLookup(serverRoot).lookupStatsDirectory()
+                    .orElse(null);
+        } catch (Exception e) {
+            logger.info("Failed stats folder lookup: " + e.getMessage() + " - minecraft statistics will not be stored.");
         }
     }
 
@@ -169,6 +188,16 @@ public class PlanFiles implements SubSystem {
      */
     public Resource getResourceFromPluginFolder(String resourceName) {
         return new FileResource(resourceName, getFileFromPluginFolder(resourceName));
+    }
+
+    public Optional<Resource> getPlayerStatisticsFile(UUID playerUUID) {
+        if (statsDirectory == null) return Optional.empty();
+        String statFilename = playerUUID.toString() + ".json";
+        Path statsFile = statsDirectory.resolve(statFilename);
+        if (Files.exists(statsFile) && Files.isRegularFile(statsFile) && Files.isReadable(statsFile)) {
+            return Optional.of(new FileResource(statsFile.toFile().getAbsolutePath(), statsFile.toFile()));
+        }
+        return Optional.empty();
     }
 
     public Optional<File> attemptToFind(Path dir, @Untrusted String resourceName) {

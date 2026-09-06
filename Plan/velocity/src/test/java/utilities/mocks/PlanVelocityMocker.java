@@ -21,7 +21,6 @@ import com.djrapitops.plan.commands.use.ColorScheme;
 import com.velocitypowered.api.proxy.ProxyServer;
 import org.mockito.Mockito;
 
-import java.io.File;
 import java.net.InetSocketAddress;
 import java.util.ArrayList;
 
@@ -48,11 +47,6 @@ public class PlanVelocityMocker {
 
         doReturn(new ColorScheme("§1", "§2", "§3")).when(planMock).getColorScheme();
 
-        return this;
-    }
-
-    public PlanVelocityMocker withDataFolder(File tempFolder) {
-        doReturn(tempFolder).when(planMock).getDataFolder();
         return this;
     }
 

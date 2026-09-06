@@ -25,8 +25,6 @@ import com.djrapitops.plan.commands.use.ColorScheme;
 import org.mockito.Mockito;
 import utilities.TestConstants;
 
-import java.io.File;
-
 import static org.mockito.Mockito.doReturn;
 
 /**
@@ -54,11 +52,6 @@ public class PlanNukkitMocker {
 
         doReturn(mockedLogger).when(planMock).getLogger();
 
-        return this;
-    }
-
-    PlanNukkitMocker withDataFolder(File tempFolder) {
-        doReturn(tempFolder).when(planMock).getDataFolder();
         return this;
     }
 

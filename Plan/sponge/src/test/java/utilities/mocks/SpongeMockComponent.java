@@ -58,7 +58,6 @@ public class SpongeMockComponent {
         if (planMock == null) {
             planMock = PlanPluginMocker.setUp()
                     .withLogging()
-                    .withDataFolder(tempDir.toFile())
                     .getPlanMock();
         }
         return planMock;
@@ -69,7 +68,7 @@ public class SpongeMockComponent {
             PlanPlugin planMock = getPlanMock();
             component = DaggerPlanSpongeComponent.builder()
                     .plan(planMock)
-                    .abstractionLayer(new TestPlatformAbstractionLayer(planMock))
+                    .abstractionLayer(new TestPlatformAbstractionLayer(tempDir.resolve("PlanData")))
                     .game(mockGame())
                     .build();
         }

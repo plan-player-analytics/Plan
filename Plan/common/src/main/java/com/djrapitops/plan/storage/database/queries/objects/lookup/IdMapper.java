@@ -39,6 +39,14 @@ public class IdMapper {
         );
     }
 
+    public static void mapStatisticsIds(Collection<? extends StatisticIdentifiable> rows, LookupTable<Integer> statisticsIdLookup) {
+        rows.forEach(
+                userIdentifiable -> userIdentifiable.setStatisticId(
+                        statisticsIdLookup.find(userIdentifiable.getStatisticId())
+                                .orElseGet(userIdentifiable::getStatisticId))
+        );
+    }
+
     public static void mapServerIds(Collection<? extends ServerIdentifiable> rows, LookupTable<Integer> serverIdLookupTable) {
         rows.forEach(
                 userIdentifiable -> userIdentifiable.setServerId(

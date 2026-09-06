@@ -11,7 +11,7 @@ import PlayerOverviewCard from "../../components/cards/player/PlayerOverviewCard
 import NicknamesCard from "../../components/cards/player/NicknamesCard";
 import {TableRow} from "../../components/table/TableRow";
 import LoadIn from "../../components/animation/LoadIn.tsx";
-import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import ExtendableRow from "../../components/layout/extension/ExtendableRow.tsx";
 import ConnectionsCard from "../../components/cards/player/ConnectionsCard";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 import FormattedTime from "../../components/text/FormattedTime.jsx";

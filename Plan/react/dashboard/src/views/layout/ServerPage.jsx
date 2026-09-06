@@ -3,6 +3,7 @@ import {useTranslation} from "react-i18next";
 import {Outlet, useParams} from "react-router";
 import {useNavigation} from "../../hooks/navigationHook.tsx";
 import {
+    faArrowUpRightDots,
     faCampground,
     faChartArea,
     faChartLine,
@@ -74,6 +75,12 @@ const ServerSidebar = () => {
                         icon: faCampground,
                         href: "pvppve",
                         permission: 'page.server.player.versus'
+                    },
+                    {
+                        name: 'html.label.statistics',
+                        icon: faArrowUpRightDots,
+                        href: "statistics",
+                        permission: 'page.server.statistics'
                     },
                     {
                         name: 'html.label.allowlist',

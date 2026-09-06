@@ -834,4 +834,30 @@ public class LargeStoreQueries {
             }
         };
     }
+
+    public static Executable storeStatistics(Collection<String> statistics) {
+        if (statistics.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(StatisticTable.Row.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (String statistic : statistics) {
+                    statement.setString(1, statistic);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable insertStatisticValues(List<StatisticValueTable.Row> rows) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(StatisticValueTable.Row.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (StatisticValueTable.Row row : rows) {
+                    row.insert(statement);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
 }

@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.rendering.json;
 
+import com.djrapitops.plan.delivery.domain.ServerMinecraftStatistics;
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.datatransfer.extension.ExtensionsDto;
@@ -43,6 +44,7 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.containers.PlayerContainerQuery;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
+import com.djrapitops.plan.storage.database.queries.objects.StatisticsQueries;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plan.utilities.java.Lists;
 import com.djrapitops.plan.utilities.java.Maps;
@@ -138,6 +140,11 @@ public class PlayerJSONCreator {
             data.put("server_pie_series", graphs.pie().serverPreferencePie(serverNames, worldTimesPerServer).getSlices());
             data.put("server_pie_colors", pieColors);
         }
+        if (hasPermission.test(WebPermission.PAGE_PLAYER_STATISTICS)) {
+            data.put("statistics", playerStatistics(playerUUID));
+        } else {
+            data.put("statistics", List.of());
+        }
         if (hasPermission.test(WebPermission.PAGE_PLAYER_PLUGINS)) {
             data.put("extensions", playerExtensionData(playerUUID));
         } else {
@@ -145,6 +152,10 @@ public class PlayerJSONCreator {
         }
 
         return data;
+    }
+
+    private List<ServerMinecraftStatistics> playerStatistics(UUID playerUUID) {
+        return dbSystem.getDatabase().query(StatisticsQueries.fetchStatistics(playerUUID));
     }
 
     private Map<String, Object> createPingGraphJson(PlayerContainer player) {

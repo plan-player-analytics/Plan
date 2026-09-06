@@ -78,6 +78,7 @@ public class NetworkPageExporter extends FileExporter {
                 "network/players",
                 "network/geolocations",
                 "network/plugins-overview",
+                "network/statistics",
         };
     }
 
@@ -130,6 +131,8 @@ public class NetworkPageExporter extends FileExporter {
                 "graph?type=serverCalendar",
                 "network/pingTable",
                 "sessions",
+                "statistics",
+                "statistics?aggregate=true",
                 "extensionData?server=" + serverUUID,
                 "retention",
                 "joinAddresses",

@@ -88,4 +88,7 @@ public class LookupTable<I> {
 
     public Set<I> keySet() {return identifierToId.keySet();}
 
+    public boolean isEmpty() {
+        return identifierToId.isEmpty();
+    }
 }

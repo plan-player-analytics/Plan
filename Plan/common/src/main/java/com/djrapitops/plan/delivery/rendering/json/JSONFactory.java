@@ -16,10 +16,7 @@
  */
 package com.djrapitops.plan.delivery.rendering.json;
 
-import com.djrapitops.plan.delivery.domain.DateObj;
-import com.djrapitops.plan.delivery.domain.PlayerIdentifier;
-import com.djrapitops.plan.delivery.domain.PlayerName;
-import com.djrapitops.plan.delivery.domain.RetentionData;
+import com.djrapitops.plan.delivery.domain.*;
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.domain.datatransfer.PlayerJoinAddresses;
 import com.djrapitops.plan.delivery.domain.datatransfer.ServerDto;
@@ -431,5 +428,17 @@ public class JSONFactory {
         List<Map<String, Object>> asMaps = new SessionsMutator(sessions).toPlayerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters);
         asMaps.forEach(map -> map.put("network_server", map.get("server_name")));
         return asMaps;
+    }
+
+    public List<ServerMinecraftStatistics> serverStatistics(ServerUUID serverUUID) {
+        return dbSystem.getDatabase().query(StatisticsQueries.fetchStatistics(serverUUID));
+    }
+
+    public List<ServerMinecraftStatistics> networkStatistics() {
+        return dbSystem.getDatabase().query(StatisticsQueries.fetchStatistics());
+    }
+
+    public List<ServerMinecraftStatistics> networkStatisticsAggregate() {
+        return dbSystem.getDatabase().query(StatisticsQueries.fetchStatisticsAggregate());
     }
 }

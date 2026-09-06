@@ -1,10 +1,15 @@
-import React, {useCallback, useEffect, useState} from 'react';
+import React, {PropsWithChildren, useCallback, useEffect, useState} from 'react';
 import {Row} from "react-bootstrap";
-import {usePageExtension} from "../../../hooks/pageExtensionHook.tsx";
+import {usePageExtension} from "../../../hooks/pageExtensionHook";
 
-const ExtendableRow = ({id, className, children}) => {
-    const [elementsBefore, setElementsBefore] = useState([]);
-    const [elementsAfter, setElementsAfter] = useState([]);
+type Props = {
+    id: string;
+    className?: string
+} & PropsWithChildren
+
+const ExtendableRow = ({id, className, children}: Props) => {
+    const [elementsBefore, setElementsBefore] = useState<HTMLElement[]>([]);
+    const [elementsAfter, setElementsAfter] = useState<HTMLElement[]>([]);
     const {onRender, onUnmount, context} = usePageExtension();
 
     const render = useCallback(async () => {

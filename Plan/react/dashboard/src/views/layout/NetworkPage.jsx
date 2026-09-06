@@ -3,6 +3,7 @@ import {useTranslation} from "react-i18next";
 import {Outlet} from "react-router";
 import {useNavigation} from "../../hooks/navigationHook.tsx";
 import {
+    faArrowUpRightDots,
     faChartLine,
     faCodeCompare,
     faCogs,
@@ -67,6 +68,12 @@ const NetworkSidebar = () => {
                     staticSite ? undefined : {
                         name: 'html.label.performance', icon: faCogs, href: "performance",
                         permission: 'page.network.performance'
+                    },
+                    {
+                        name: 'html.label.statistics',
+                        icon: faArrowUpRightDots,
+                        href: "statistics",
+                        permission: 'page.network.statistics'
                     },
                     {},
                     ...servers

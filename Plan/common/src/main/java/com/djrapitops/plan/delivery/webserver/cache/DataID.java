@@ -29,6 +29,8 @@ public enum DataID {
     PLAYERS_V2,
     SERVERS,
     KILLS,
+    STATISTICS,
+    STATISTICS_AGGREGATE,
     PING_TABLE,
     @Deprecated
     GRAPH_PERFORMANCE,
