@@ -21,6 +21,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Represents a response that will be sent over HTTP.
@@ -32,7 +33,7 @@ public final class Response {
 
     final Map<String, String> headers;
     int code = 200;
-    byte[] bytes;
+    CompletableFuture<byte[]> bytes;
     Charset charset; // can be null (raw bytes)
 
     Response() {
@@ -44,11 +45,19 @@ public final class Response {
     }
 
     public byte[] getBytes() {
-        return bytes;
+        return bytes != null ? bytes.join() : new byte[0];
+    }
+
+    public CompletableFuture<byte[]> getBytesAsync() {
+        return bytes != null ? bytes : CompletableFuture.completedFuture(new byte[0]);
     }
 
     public String getAsString() {
-        return new String(bytes, StandardCharsets.UTF_8);
+        return new String(getBytes(), StandardCharsets.UTF_8);
+    }
+
+    public CompletableFuture<String> getAsStringAsync() {
+        return getBytesAsync().thenApply(b -> new String(b, charset != null ? charset : StandardCharsets.UTF_8));
     }
 
     public int getCode() {

@@ -21,6 +21,7 @@ import com.djrapitops.plan.exceptions.database.DBInitException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.exceptions.database.FatalDBException;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
@@ -78,6 +79,7 @@ public abstract class SQLDB extends AbstractDatabase {
     protected final PluginLogger logger;
     protected final ErrorLogger errorLogger;
     protected final ApplicationDependencyManager applicationDependencyManager;
+    private final Processing processing;
     private final Supplier<ServerUUID> serverUUIDSupplier;
     private final AtomicInteger transactionQueueSize = new AtomicInteger(0);
     private final AtomicBoolean dropUnimportantTransactions = new AtomicBoolean(false);
@@ -85,6 +87,7 @@ public abstract class SQLDB extends AbstractDatabase {
     protected ClassLoader driverClassLoader;
     private Supplier<ExecutorService> transactionExecutorServiceProvider;
     private ExecutorService transactionExecutor;
+    private Async async;
 
     protected SQLDB(
             Supplier<ServerUUID> serverUUIDSupplier,
@@ -94,7 +97,8 @@ public abstract class SQLDB extends AbstractDatabase {
             RunnableFactory runnableFactory,
             PluginLogger logger,
             ErrorLogger errorLogger,
-            ApplicationDependencyManager applicationDependencyManager
+            ApplicationDependencyManager applicationDependencyManager,
+            Processing processing
     ) {
         this.serverUUIDSupplier = serverUUIDSupplier;
         this.locale = locale;
@@ -104,6 +108,7 @@ public abstract class SQLDB extends AbstractDatabase {
         this.logger = logger;
         this.errorLogger = errorLogger;
         this.applicationDependencyManager = applicationDependencyManager;
+        this.processing = processing;
 
         this.transactionExecutorServiceProvider = () -> {
             String nameFormat = "Plan " + getClass().getSimpleName() + "-transaction-thread-%d";
@@ -355,10 +360,9 @@ public abstract class SQLDB extends AbstractDatabase {
             if (throwable == null) {
                 return CompletableFuture.completedFuture(null);
             }
-            if (throwable.getCause() instanceof FatalDBException) {
+            if (throwable.getCause() instanceof FatalDBException actual) {
                 ranIntoFatalError.set(true);
                 logger.error("Database failed to open, " + transaction.getClass().getName() + " failed to be executed.");
-                FatalDBException actual = (FatalDBException) throwable.getCause();
                 Optional<String> whatToDo = actual.getContext().flatMap(ErrorContext::getWhatToDo);
                 whatToDo.ifPresentOrElse(
                         message -> logger.error("What to do: " + message),
@@ -428,5 +432,13 @@ public abstract class SQLDB extends AbstractDatabase {
     @Override
     public int getTransactionQueueSize() {
         return transactionQueueSize.get();
+    }
+
+    @Override
+    public Async async() {
+        if (async == null) {
+            async = new Async(this, processing.getNonCriticalExecutor());
+        }
+        return async;
     }
 }

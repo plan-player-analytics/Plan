@@ -23,7 +23,7 @@ clean {
 allprojects {
     ext {
         majorVersion = "5"
-        minorVersion = "8"
+        minorVersion = "9"
         buildVersion = providers.provider {
             def command = "git rev-list --count HEAD"
             def buildInfo = command.execute().text.trim()
@@ -37,7 +37,7 @@ allprojects {
     }
 
     group = "com.djrapitops"
-    version = project.hasProperty("isRelease") ? "$fullVersionFilename" : "5.8-SNAPSHOT"
+    version = project.hasProperty("isRelease") ? "$fullVersionFilename" : "5.9-SNAPSHOT"
 }
 
 subprojects {
@@ -69,7 +69,7 @@ subprojects {
         commonsCodecVersion = "1.22.1"
         caffeineVersion = "3.2.4"
         jetbrainsAnnotationsVersion = "26.1.0"
-        jettyVersion = "11.0.26"
+        jettyVersion = "12.1.12"
         mysqlVersion = "9.7.0"
         mariadbVersion = "3.5.10"
         sqliteVersion = "3.42.0.1"

@@ -81,7 +81,7 @@ dependencies {
     api "com.google.code.gson:gson:$gsonVersion"
     api "org.eclipse.jetty:jetty-server:$jettyVersion"
     implementation "org.eclipse.jetty:jetty-alpn-java-server:$jettyVersion"
-    implementation "org.eclipse.jetty.http2:http2-server:$jettyVersion"
+    implementation "org.eclipse.jetty.http2:jetty-http2-server:$jettyVersion"
     implementation "org.jasypt:jasypt:$jasyptVersion:lite"
 
     // Swagger annotations
@@ -119,7 +119,7 @@ dependencies {
 }
 
 compileJava {
-    options.release = 11
+    options.release = 17
 }
 
 test {
