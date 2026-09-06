@@ -15,11 +15,11 @@ import CardTabs from "../../components/CardTabs";
 import {ErrorViewCard} from "../ErrorView";
 
 const NetworkStatistics = () => {
-    const {hasPermission} = useAuth();
+    const {hasChildPermission} = useAuth();
 
     return (
         <LoadIn>
-            {hasPermission('page.network.statistics') &&
+            {hasChildPermission('page.network.statistics') &&
                 <section className="network-statistics" id={"network-statistics"}>
                     <ExtendableRow id={'row-network-statistics-0'}>
                         <Col lg={12}>
