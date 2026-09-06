@@ -72,7 +72,7 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(java.util.function.Supplier,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.file.PlanFiles,net.playeranalytics.plugin.scheduling.RunnableFactory,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,dev.vankka.dependencydownload.ApplicationDependencyManager)" tabindex="0">SQLDB(Supplier, Locale, PlanConfig, PlanFiles, RunnableFactory, PluginLogger, ErrorLogger, ApplicationDependencyManager)</a></li>
+<li><a href="#%3Cinit%3E(java.util.function.Supplier,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.file.PlanFiles,net.playeranalytics.plugin.scheduling.RunnableFactory,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,dev.vankka.dependencydownload.ApplicationDependencyManager,com.djrapitops.plan.processing.Processing)" tabindex="0">SQLDB(Supplier, Locale, PlanConfig, PlanFiles, RunnableFactory, PluginLogger, ErrorLogger, ApplicationDependencyManager, Processing)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -101,6 +101,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#getLocale()" tabindex="0">getLocale()</a></li>
 <li><a href="#shouldDropUnimportantTransactions()" tabindex="0">shouldDropUnimportantTransactions()</a></li>
 <li><a href="#getTransactionQueueSize()" tabindex="0">getTransactionQueueSize()</a></li>
+<li><a href="#async()" tabindex="0">async()</a></li>
 </ol>
 </li>
 </ol>
@@ -139,7 +140,7 @@ loadScripts(document, 'script');</script>
 <h2>Nested Class Summary</h2>
 <div class="inherited-list">
 <h3 id="nested-classes-inherited-from-class-com.djrapitops.plan.storage.database.Database">Nested classes/interfaces inherited from interface&nbsp;<a href="Database.html#nested-class-summary" title="interface in com.djrapitops.plan.storage.database">Database</a></h3>
-<code><a href="Database.State.html" title="enum class in com.djrapitops.plan.storage.database">Database.State</a></code></div>
+<code><a href="Database.Async.html" title="class in com.djrapitops.plan.storage.database">Database.Async</a>, <a href="Database.State.html" title="enum class in com.djrapitops.plan.storage.database">Database.State</a></code></div>
 </section>
 </li>
 <!-- =========== FIELD SUMMARY =========== -->
@@ -191,14 +192,15 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Constructor</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>protected </code></div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.function.Supplier,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.file.PlanFiles,net.playeranalytics.plugin.scheduling.RunnableFactory,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,dev.vankka.dependencydownload.ApplicationDependencyManager)" class="member-name-link">SQLDB</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDSupplier,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.function.Supplier,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.file.PlanFiles,net.playeranalytics.plugin.scheduling.RunnableFactory,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,dev.vankka.dependencydownload.ApplicationDependencyManager,com.djrapitops.plan.processing.Processing)" class="member-name-link">SQLDB</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDSupplier,
  <a href="../../settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
  <a href="../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
  <a href="../file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
  net.playeranalytics.plugin.scheduling.RunnableFactory&nbsp;runnableFactory,
  net.playeranalytics.plugin.server.PluginLogger&nbsp;logger,
  <a href="../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger,
- dev.vankka.dependencydownload.ApplicationDependencyManager&nbsp;applicationDependencyManager)</code></div>
+ dev.vankka.dependencydownload.ApplicationDependencyManager&nbsp;applicationDependencyManager,
+ <a href="../../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -214,87 +216,90 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#attemptToCloseTransactionExecutor()" class="member-name-link">attemptToCloseTransactionExecutor</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Database.Async.html" title="class in com.djrapitops.plan.storage.database">Database.Async</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#async()" class="member-name-link">async</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#close()" class="member-name-link">close</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#attemptToCloseTransactionExecutor()" class="member-name-link">attemptToCloseTransactionExecutor</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#downloadDriver()" class="member-name-link">downloadDriver</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#close()" class="member-name-link">close</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#downloadDriver()" class="member-name-link">downloadDriver</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a><wbr>&lt;?&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#executeTransaction(com.djrapitops.plan.storage.database.transactions.Transaction)" class="member-name-link">executeTransaction</a><wbr>(<a href="transactions/Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a>&nbsp;transaction)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#equals(java.lang.Object)" class="member-name-link">equals</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;o)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a><wbr>&lt;?&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#executeTransaction(com.djrapitops.plan.storage.database.transactions.Transaction)" class="member-name-link">executeTransaction</a><wbr>(<a href="transactions/Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a>&nbsp;transaction)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Execute an SQL Transaction.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#forceCloseTransactionExecutor()" class="member-name-link">forceCloseTransactionExecutor</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.sql/java/sql/Connection.html" title="class or interface in java.sql" class="external-link">Connection</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getConnection()" class="member-name-link">getConnection</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>protected abstract <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getDependencyResource()" class="member-name-link">getDependencyResource</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Runnable.html" title="class or interface in java.lang" class="external-link">Runnable</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#forceCloseTransactionExecutor()" class="member-name-link">forceCloseTransactionExecutor</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.sql/java/sql/Connection.html" title="class or interface in java.sql" class="external-link">Connection</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getConnection()" class="member-name-link">getConnection</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLocale()" class="member-name-link">getLocale</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>protected abstract <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getDependencyResource()" class="member-name-link">getDependencyResource</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLocale()" class="member-name-link">getLocale</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.playeranalytics.plugin.server.PluginLogger</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLogger()" class="member-name-link">getLogger</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.playeranalytics.plugin.server.PluginLogger</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getLogger()" class="member-name-link">getLogger</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.playeranalytics.plugin.scheduling.RunnableFactory</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRunnableFactory()" class="member-name-link">getRunnableFactory</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>net.playeranalytics.plugin.scheduling.RunnableFactory</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRunnableFactory()" class="member-name-link">getRunnableFactory</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a><wbr>&lt;<a href="../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getServerUUIDSupplier()" class="member-name-link">getServerUUIDSupplier</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a><wbr>&lt;<a href="../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getServerUUIDSupplier()" class="member-name-link">getServerUUIDSupplier</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/ThreadLocal.html" title="class or interface in java.lang" class="external-link">ThreadLocal</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StackTraceElement.html" title="class or interface in java.lang" class="external-link">StackTraceElement</a>[]&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTransactionOrigin()" class="member-name-link">getTransactionOrigin</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTransactionQueueSize()" class="member-name-link">getTransactionQueueSize</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/ThreadLocal.html" title="class or interface in java.lang" class="external-link">ThreadLocal</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StackTraceElement.html" title="class or interface in java.lang" class="external-link">StackTraceElement</a>[]&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#getTransactionOrigin()" class="member-name-link">getTransactionOrigin</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getTransactionQueueSize()" class="member-name-link">getTransactionQueueSize</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#init()" class="member-name-link">init</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hashCode()" class="member-name-link">hashCode</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#init()" class="member-name-link">init</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Initializes the Database.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T&gt;&nbsp;T</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#query(com.djrapitops.plan.storage.database.queries.Query)" class="member-name-link">query</a><wbr>(<a href="queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;T&gt;&nbsp;query)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T&gt;&nbsp;T</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#query(com.djrapitops.plan.storage.database.queries.Query)" class="member-name-link">query</a><wbr>(<a href="queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;T&gt;&nbsp;query)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Execute an SQL Query statement to get a result.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T&gt;&nbsp;T</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#queryWithinTransaction(com.djrapitops.plan.storage.database.queries.Query,com.djrapitops.plan.storage.database.transactions.Transaction)" class="member-name-link">queryWithinTransaction</a><wbr>(<a href="queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;T&gt;&nbsp;query,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T&gt;&nbsp;T</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#queryWithinTransaction(com.djrapitops.plan.storage.database.queries.Query,com.djrapitops.plan.storage.database.transactions.Transaction)" class="member-name-link">queryWithinTransaction</a><wbr>(<a href="queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;T&gt;&nbsp;query,
  <a href="transactions/Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a>&nbsp;transaction)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#returnToPool(java.sql.Connection)" class="member-name-link">returnToPool</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.sql/java/sql/Connection.html" title="class or interface in java.sql" class="external-link">Connection</a>&nbsp;connection)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setDownloadDriver(boolean)" class="member-name-link">setDownloadDriver</a><wbr>(boolean&nbsp;downloadDriver)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setTransactionExecutorServiceProvider(java.util.function.Supplier)" class="member-name-link">setTransactionExecutorServiceProvider</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/ExecutorService.html" title="class or interface in java.util.concurrent" class="external-link">ExecutorService</a>&gt;&nbsp;transactionExecutorServiceProvider)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#setupDataSource()" class="member-name-link">setupDataSource</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#returnToPool(java.sql.Connection)" class="member-name-link">returnToPool</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.sql/java/sql/Connection.html" title="class or interface in java.sql" class="external-link">Connection</a>&nbsp;connection)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#setDownloadDriver(boolean)" class="member-name-link">setDownloadDriver</a><wbr>(boolean&nbsp;downloadDriver)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setTransactionExecutorServiceProvider(java.util.function.Supplier)" class="member-name-link">setTransactionExecutorServiceProvider</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/ExecutorService.html" title="class or interface in java.util.concurrent" class="external-link">ExecutorService</a>&gt;&nbsp;transactionExecutorServiceProvider)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>abstract void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#setupDataSource()" class="member-name-link">setupDataSource</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Set up the source for connections.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#shouldDropUnimportantTransactions()" class="member-name-link">shouldDropUnimportantTransactions</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unloadDriverClassloader()" class="member-name-link">unloadDriverClassloader</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#shouldDropUnimportantTransactions()" class="member-name-link">shouldDropUnimportantTransactions</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>protected void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unloadDriverClassloader()" class="member-name-link">unloadDriverClassloader</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -391,7 +396,7 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(java.util.function.Supplier,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.file.PlanFiles,net.playeranalytics.plugin.scheduling.RunnableFactory,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,dev.vankka.dependencydownload.ApplicationDependencyManager)">
+<section class="detail" id="&lt;init&gt;(java.util.function.Supplier,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.file.PlanFiles,net.playeranalytics.plugin.scheduling.RunnableFactory,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,dev.vankka.dependencydownload.ApplicationDependencyManager,com.djrapitops.plan.processing.Processing)">
 <h3>SQLDB</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">protected</span>&nbsp;<span class="element-name">SQLDB</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDSupplier,
@@ -401,7 +406,8 @@ loadScripts(document, 'script');</script>
  net.playeranalytics.plugin.scheduling.RunnableFactory&nbsp;runnableFactory,
  net.playeranalytics.plugin.server.PluginLogger&nbsp;logger,
  <a href="../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger,
- dev.vankka.dependencydownload.ApplicationDependencyManager&nbsp;applicationDependencyManager)</span></div>
+ dev.vankka.dependencydownload.ApplicationDependencyManager&nbsp;applicationDependencyManager,
+ <a href="../../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing)</span></div>
 </div>
 </section>
 </li>
@@ -645,6 +651,14 @@ This method should only be called from an asynchronous thread.</div>
 <h3>getTransactionQueueSize</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">int</span>&nbsp;<span class="element-name">getTransactionQueueSize</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="async()">
+<h3>async</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="Database.Async.html" title="class in com.djrapitops.plan.storage.database">Database.Async</a></span>&nbsp;<span class="element-name">async</span>()</div>
 </div>
 </section>
 </li>

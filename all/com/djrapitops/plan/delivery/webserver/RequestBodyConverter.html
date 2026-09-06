@@ -58,8 +58,11 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#formBody(com.djrapitops.plan.delivery.web.resolver.request.Request)" tabindex="0">formBody(Request)</a></li>
+<li><a href="#formBody(byte%5B%5D)" tabindex="0">formBody(byte[])</a></li>
 <li><a href="#bodyJson(com.djrapitops.plan.delivery.web.resolver.request.Request,com.google.gson.Gson,java.lang.Class)" tabindex="0">bodyJson(Request, Gson, Class)</a></li>
+<li><a href="#bodyJson(byte%5B%5D,com.google.gson.Gson,java.lang.Class)" tabindex="0">bodyJson(byte[], Gson, Class)</a></li>
 <li><a href="#bodyJson(com.djrapitops.plan.delivery.web.resolver.request.Request,com.google.gson.Gson,com.google.gson.reflect.TypeToken)" tabindex="0">bodyJson(Request, Gson, TypeToken)</a></li>
+<li><a href="#bodyJson(byte%5B%5D,com.google.gson.Gson,com.google.gson.reflect.TypeToken)" tabindex="0">bodyJson(byte[], Gson, TypeToken)</a></li>
 </ol>
 </li>
 </ol>
@@ -93,6 +96,16 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T&gt;&nbsp;T</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#bodyJson(byte%5B%5D,com.google.gson.Gson,java.lang.Class)" class="member-name-link">bodyJson</a><wbr>(byte[]&nbsp;bytes,
+ com.google.gson.Gson&nbsp;gson,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;ofType)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T&gt;&nbsp;T</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#bodyJson(byte%5B%5D,com.google.gson.Gson,com.google.gson.reflect.TypeToken)" class="member-name-link">bodyJson</a><wbr>(byte[]&nbsp;bytes,
+ com.google.gson.Gson&nbsp;gson,
+ com.google.gson.reflect.TypeToken&lt;T&gt;&nbsp;ofType)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static &lt;T&gt;&nbsp;T</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#bodyJson(com.djrapitops.plan.delivery.web.resolver.request.Request,com.google.gson.Gson,java.lang.Class)" class="member-name-link">bodyJson</a><wbr>(<a href="../web/resolver/request/Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">Request</a>&nbsp;request,
  com.google.gson.Gson&nbsp;gson,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;ofType)</code></div>
@@ -103,8 +116,11 @@ loadScripts(document, 'script');</script>
  com.google.gson.reflect.TypeToken&lt;T&gt;&nbsp;ofType)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../web/resolver/request/URIQuery.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">URIQuery</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#formBody(com.djrapitops.plan.delivery.web.resolver.request.Request)" class="member-name-link">formBody</a><wbr>(<a href="../web/resolver/request/Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">Request</a>&nbsp;request)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#formBody(byte%5B%5D)" class="member-name-link">formBody</a><wbr>(byte[]&nbsp;bytes)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../web/resolver/request/URIQuery.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">URIQuery</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#formBody(com.djrapitops.plan.delivery.web.resolver.request.Request)" class="member-name-link">formBody</a><wbr>(<a href="../web/resolver/request/Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">Request</a>&nbsp;request)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
 <div class="block">Get the body of a request as an url-encoded form.</div>
 </div>
 </div>
@@ -138,6 +154,14 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="formBody(byte[])">
+<h3>formBody</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../web/resolver/request/URIQuery.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">URIQuery</a></span>&nbsp;<span class="element-name">formBody</span><wbr><span class="parameters">(byte[]&nbsp;bytes)</span></div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="bodyJson(com.djrapitops.plan.delivery.web.resolver.request.Request,com.google.gson.Gson,java.lang.Class)">
 <h3>bodyJson</h3>
 <div class="horizontal-scroll">
@@ -148,10 +172,30 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
+<section class="detail" id="bodyJson(byte[],com.google.gson.Gson,java.lang.Class)">
+<h3>bodyJson</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">T</span>&nbsp;<span class="element-name">bodyJson</span><wbr><span class="parameters">(byte[]&nbsp;bytes,
+ com.google.gson.Gson&nbsp;gson,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;T&gt;&nbsp;ofType)</span></div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="bodyJson(com.djrapitops.plan.delivery.web.resolver.request.Request,com.google.gson.Gson,com.google.gson.reflect.TypeToken)">
 <h3>bodyJson</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">T</span>&nbsp;<span class="element-name">bodyJson</span><wbr><span class="parameters">(<a href="../web/resolver/request/Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">Request</a>&nbsp;request,
+ com.google.gson.Gson&nbsp;gson,
+ com.google.gson.reflect.TypeToken&lt;T&gt;&nbsp;ofType)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="bodyJson(byte[],com.google.gson.Gson,com.google.gson.reflect.TypeToken)">
+<h3>bodyJson</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">T</span>&nbsp;<span class="element-name">bodyJson</span><wbr><span class="parameters">(byte[]&nbsp;bytes,
  com.google.gson.Gson&nbsp;gson,
  com.google.gson.reflect.TypeToken&lt;T&gt;&nbsp;ofType)</span></div>
 </div>

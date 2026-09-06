@@ -74,6 +74,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#getSql()" tabindex="0">getSql()</a></li>
 <li><a href="#getState()" tabindex="0">getState()</a></li>
 <li><a href="#getTransactionQueueSize()" tabindex="0">getTransactionQueueSize()</a></li>
+<li><a href="#async()" tabindex="0">async()</a></li>
 </ol>
 </li>
 </ol>
@@ -105,9 +106,12 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Interface</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code>static enum&nbsp;</code></div>
-<div class="col-second even-row-color"><code><a href="Database.State.html" class="type-name-link" title="enum class in com.djrapitops.plan.storage.database">Database.State</a></code></div>
-<div class="col-last even-row-color">
+<div class="col-first even-row-color"><code>static class&nbsp;</code></div>
+<div class="col-second even-row-color"><code><a href="Database.Async.html" class="type-name-link" title="class in com.djrapitops.plan.storage.database">Database.Async</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code>static enum&nbsp;</code></div>
+<div class="col-second odd-row-color"><code><a href="Database.State.html" class="type-name-link" title="enum class in com.djrapitops.plan.storage.database">Database.State</a></code></div>
+<div class="col-last odd-row-color">
 <div class="block">Possible State changes:
 CLOSED to PATCHING (Database init),
 PATCHING to OPEN (Database initialized),
@@ -129,77 +133,80 @@ PATCHING to CLOSED (Database closed prematurely)</div>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#close()" class="member-name-link">close</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="Database.Async.html" title="class in com.djrapitops.plan.storage.database">Database.Async</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#async()" class="member-name-link">async</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a><wbr>&lt;?&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#executeInTransaction(com.djrapitops.plan.storage.database.transactions.Executable)" class="member-name-link">executeInTransaction</a><wbr>(<a href="transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a>&nbsp;executable)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#close()" class="member-name-link">close</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a><wbr>&lt;?&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#executeInTransaction(java.lang.String,java.lang.Object...)" class="member-name-link">executeInTransaction</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;parameters)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#executeInTransaction(com.djrapitops.plan.storage.database.transactions.Executable)" class="member-name-link">executeInTransaction</a><wbr>(<a href="transactions/Executable.html" title="interface in com.djrapitops.plan.storage.database.transactions">Executable</a>&nbsp;executable)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a><wbr>&lt;?&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#executeTransaction(com.djrapitops.plan.storage.database.transactions.Transaction)" class="member-name-link">executeTransaction</a><wbr>(<a href="transactions/Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a>&nbsp;transaction)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a><wbr>&lt;?&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#executeInTransaction(java.lang.String,java.lang.Object...)" class="member-name-link">executeInTransaction</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;parameters)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a><wbr>&lt;?&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#executeTransaction(com.djrapitops.plan.storage.database.transactions.Transaction)" class="member-name-link">executeTransaction</a><wbr>(<a href="transactions/Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a>&nbsp;transaction)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Execute an SQL Transaction.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="sql/building/Sql.html" title="class in com.djrapitops.plan.storage.database.sql.building">Sql</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#getSql()" class="member-name-link">getSql</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="Database.State.html" title="enum class in com.djrapitops.plan.storage.database">Database.State</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getState()" class="member-name-link">getState</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>int</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getTransactionQueueSize()" class="member-name-link">getTransactionQueueSize</a>()</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="sql/building/Sql.html" title="class in com.djrapitops.plan.storage.database.sql.building">Sql</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#getSql()" class="member-name-link">getSql</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="Database.State.html" title="enum class in com.djrapitops.plan.storage.database">Database.State</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getState()" class="member-name-link">getState</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DBType.html" title="enum class in com.djrapitops.plan.storage.database">DBType</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getType()" class="member-name-link">getType</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>int</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getTransactionQueueSize()" class="member-name-link">getTransactionQueueSize</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DBType.html" title="enum class in com.djrapitops.plan.storage.database">DBType</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#getType()" class="member-name-link">getType</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Used to get the <code>DBType</code> of the Database</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#init()" class="member-name-link">init</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#init()" class="member-name-link">init</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Initializes the Database.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>&lt;T&gt;&nbsp;T</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#query(com.djrapitops.plan.storage.database.queries.Query)" class="member-name-link">query</a><wbr>(<a href="queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;T&gt;&nbsp;query)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code>&lt;T&gt;&nbsp;T</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#query(com.djrapitops.plan.storage.database.queries.Query)" class="member-name-link">query</a><wbr>(<a href="queries/Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;T&gt;&nbsp;query)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Execute an SQL Query statement to get a result.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default &lt;C extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;T&gt;, T&gt;<br>C</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#queryCollection(java.lang.String,com.djrapitops.plan.storage.database.queries.RowExtractor,java.util.function.Supplier,java.lang.Object...)" class="member-name-link">queryCollection</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default &lt;C extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;T&gt;, T&gt;<br>C</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#queryCollection(java.lang.String,com.djrapitops.plan.storage.database.queries.RowExtractor,java.util.function.Supplier,java.lang.Object...)" class="member-name-link">queryCollection</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
  <a href="queries/RowExtractor.html" title="interface in com.djrapitops.plan.storage.database.queries">RowExtractor</a>&lt;T&gt;&nbsp;rowExtractor,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;C&gt;&nbsp;collectionConstructor,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;parameters)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default &lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#queryList(java.lang.String,com.djrapitops.plan.storage.database.queries.RowExtractor,java.lang.Object...)" class="member-name-link">queryList</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default &lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;T&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#queryList(java.lang.String,com.djrapitops.plan.storage.database.queries.RowExtractor,java.lang.Object...)" class="member-name-link">queryList</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
  <a href="queries/RowExtractor.html" title="interface in com.djrapitops.plan.storage.database.queries">RowExtractor</a>&lt;T&gt;&nbsp;rowExtractor,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;parameters)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default &lt;K,<wbr>V&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;K,<wbr>V&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#queryMap(java.lang.String,com.djrapitops.plan.storage.database.queries.MapRowExtractor,java.lang.Object...)" class="member-name-link">queryMap</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default &lt;K,<wbr>V&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;K,<wbr>V&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#queryMap(java.lang.String,com.djrapitops.plan.storage.database.queries.MapRowExtractor,java.lang.Object...)" class="member-name-link">queryMap</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
  <a href="queries/MapRowExtractor.html" title="interface in com.djrapitops.plan.storage.database.queries">MapRowExtractor</a>&lt;K,<wbr>V&gt;&nbsp;rowExtractor,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;parameters)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default &lt;M extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;K,<wbr>V&gt;, K, V&gt;<br>M</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#queryMap(java.lang.String,com.djrapitops.plan.storage.database.queries.MapRowExtractor,java.util.function.Supplier,java.lang.Object...)" class="member-name-link">queryMap</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default &lt;M extends <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;K,<wbr>V&gt;, K, V&gt;<br>M</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#queryMap(java.lang.String,com.djrapitops.plan.storage.database.queries.MapRowExtractor,java.util.function.Supplier,java.lang.Object...)" class="member-name-link">queryMap</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
  <a href="queries/MapRowExtractor.html" title="interface in com.djrapitops.plan.storage.database.queries">MapRowExtractor</a>&lt;K,<wbr>V&gt;&nbsp;rowExtractor,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;M&gt;&nbsp;mapConstructor,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;parameters)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default &lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;T&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#queryOptional(java.lang.String,com.djrapitops.plan.storage.database.queries.RowExtractor,java.lang.Object...)" class="member-name-link">queryOptional</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
+ <a href="queries/RowExtractor.html" title="interface in com.djrapitops.plan.storage.database.queries">RowExtractor</a>&lt;T&gt;&nbsp;rowExtractor,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;parameters)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default &lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;T&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#queryOptional(java.lang.String,com.djrapitops.plan.storage.database.queries.RowExtractor,java.lang.Object...)" class="member-name-link">queryOptional</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default &lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a><wbr>&lt;T&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#querySet(java.lang.String,com.djrapitops.plan.storage.database.queries.RowExtractor,java.lang.Object...)" class="member-name-link">querySet</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
  <a href="queries/RowExtractor.html" title="interface in com.djrapitops.plan.storage.database.queries">RowExtractor</a>&lt;T&gt;&nbsp;rowExtractor,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;parameters)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default &lt;T&gt;&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a><wbr>&lt;T&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#querySet(java.lang.String,com.djrapitops.plan.storage.database.queries.RowExtractor,java.lang.Object...)" class="member-name-link">querySet</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;sql,
- <a href="queries/RowExtractor.html" title="interface in com.djrapitops.plan.storage.database.queries">RowExtractor</a>&lt;T&gt;&nbsp;rowExtractor,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>...&nbsp;parameters)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -390,6 +397,14 @@ This method should only be called from an asynchronous thread.</div>
 <h3>getTransactionQueueSize</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="return-type">int</span>&nbsp;<span class="element-name">getTransactionQueueSize</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="async()">
+<h3>async</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="return-type"><a href="Database.Async.html" title="class in com.djrapitops.plan.storage.database">Database.Async</a></span>&nbsp;<span class="element-name">async</span>()</div>
 </div>
 </section>
 </li>

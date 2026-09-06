@@ -58,18 +58,21 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#setMimeType(java.lang.String)" tabindex="0">setMimeType(String)</a></li>
 <li><a href="#setStatus(int)" tabindex="0">setStatus(int)</a></li>
 <li><a href="#setHeader(java.lang.String,java.lang.Object)" tabindex="0">setHeader(String, Object)</a></li>
 <li><a href="#removeHeader(java.lang.String)" tabindex="0">removeHeader(String)</a></li>
 <li><a href="#redirectTo(java.lang.String)" tabindex="0">redirectTo(String)</a></li>
 <li><a href="#setContent(com.djrapitops.plan.delivery.web.resource.WebResource)" tabindex="0">setContent(WebResource)</a></li>
 <li><a href="#setContent(byte%5B%5D)" tabindex="0">setContent(byte[])</a></li>
+<li><a href="#setContent(java.util.concurrent.CompletableFuture)" tabindex="0">setContent(CompletableFuture)</a></li>
 <li><a href="#setContent(java.lang.String)" tabindex="0">setContent(String)</a></li>
 <li><a href="#setContent(java.lang.String,java.nio.charset.Charset)" tabindex="0">setContent(String, Charset)</a></li>
+<li><a href="#setContent(java.util.concurrent.CompletableFuture,java.nio.charset.Charset)" tabindex="0">setContent(CompletableFuture, Charset)</a></li>
 <li><a href="#setJSONContent(java.lang.Object)" tabindex="0">setJSONContent(Object)</a></li>
 <li><a href="#setJSONContent(java.lang.String)" tabindex="0">setJSONContent(String)</a></li>
+<li><a href="#setJSONContent(java.util.concurrent.CompletableFuture)" tabindex="0">setJSONContent(CompletableFuture)</a></li>
 <li><a href="#build()" tabindex="0">build()</a></li>
+<li><a href="#setMimeType(java.lang.String)" tabindex="0">setMimeType(String)</a></li>
 </ol>
 </li>
 </ol>
@@ -146,6 +149,13 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/nio/charset/Charset.html" title="class or interface in java.nio.charset" class="external-link">Charset</a>&nbsp;charset)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ResponseBuilder.html" title="class in com.djrapitops.plan.delivery.web.resolver">ResponseBuilder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setContent(java.util.concurrent.CompletableFuture)" class="member-name-link">setContent</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a>&lt;byte[]&gt;&nbsp;bytesFuture)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ResponseBuilder.html" title="class in com.djrapitops.plan.delivery.web.resolver">ResponseBuilder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setContent(java.util.concurrent.CompletableFuture,java.nio.charset.Charset)" class="member-name-link">setContent</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;stringFuture,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/nio/charset/Charset.html" title="class or interface in java.nio.charset" class="external-link">Charset</a>&nbsp;charset)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ResponseBuilder.html" title="class in com.djrapitops.plan.delivery.web.resolver">ResponseBuilder</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setHeader(java.lang.String,java.lang.Object)" class="member-name-link">setHeader</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;header,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&nbsp;value)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -160,13 +170,16 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setJSONContent(java.lang.String)" class="member-name-link">setJSONContent</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;json)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ResponseBuilder.html" title="class in com.djrapitops.plan.delivery.web.resolver">ResponseBuilder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMimeType(java.lang.String)" class="member-name-link">setMimeType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;mimeType)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setJSONContent(java.util.concurrent.CompletableFuture)" class="member-name-link">setJSONContent</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;jsonFuture)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ResponseBuilder.html" title="class in com.djrapitops.plan.delivery.web.resolver">ResponseBuilder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setMimeType(java.lang.String)" class="member-name-link">setMimeType</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;mimeType)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Set MIME Type of the Response.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ResponseBuilder.html" title="class in com.djrapitops.plan.delivery.web.resolver">ResponseBuilder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setStatus(int)" class="member-name-link">setStatus</a><wbr>(int&nbsp;code)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ResponseBuilder.html" title="class in com.djrapitops.plan.delivery.web.resolver">ResponseBuilder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setStatus(int)" class="member-name-link">setStatus</a><wbr>(int&nbsp;code)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Set HTTP Status code.</div>
 </div>
 </div>
@@ -186,27 +199,6 @@ loadScripts(document, 'script');</script>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
-<li>
-<section class="detail" id="setMimeType(java.lang.String)">
-<h3>setMimeType</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ResponseBuilder.html" title="class in com.djrapitops.plan.delivery.web.resolver">ResponseBuilder</a></span>&nbsp;<span class="element-name">setMimeType</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;mimeType)</span></div>
-<div class="block">Set MIME Type of the Response.</div>
-<dl class="notes">
-<dt>Parameters:</dt>
-<dd><code>mimeType</code> - MIME type of the Response <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types">Documentation</a></dd>
-<dt>Returns:</dt>
-<dd>this builder.</dd>
-<dt>See Also:</dt>
-<dd>
-<ul class="tag-list">
-<li><a href="MimeType.html" title="class in com.djrapitops.plan.delivery.web.resolver">for common MIME types.</a></li>
-</ul>
-</dd>
-</dl>
-</div>
-</section>
-</li>
 <li>
 <section class="detail" id="setStatus(int)">
 <h3>setStatus</h3>
@@ -281,6 +273,14 @@ Default status code is 200 (OK) if not set.</div>
 </section>
 </li>
 <li>
+<section class="detail" id="setContent(java.util.concurrent.CompletableFuture)">
+<h3>setContent</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ResponseBuilder.html" title="class in com.djrapitops.plan.delivery.web.resolver">ResponseBuilder</a></span>&nbsp;<span class="element-name">setContent</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a>&lt;byte[]&gt;&nbsp;bytesFuture)</span></div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="setContent(java.lang.String)">
 <h3>setContent</h3>
 <div class="horizontal-scroll">
@@ -293,6 +293,15 @@ Default status code is 200 (OK) if not set.</div>
 <h3>setContent</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ResponseBuilder.html" title="class in com.djrapitops.plan.delivery.web.resolver">ResponseBuilder</a></span>&nbsp;<span class="element-name">setContent</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;content,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/nio/charset/Charset.html" title="class or interface in java.nio.charset" class="external-link">Charset</a>&nbsp;charset)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setContent(java.util.concurrent.CompletableFuture,java.nio.charset.Charset)">
+<h3>setContent</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ResponseBuilder.html" title="class in com.djrapitops.plan.delivery.web.resolver">ResponseBuilder</a></span>&nbsp;<span class="element-name">setContent</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;stringFuture,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/nio/charset/Charset.html" title="class or interface in java.nio.charset" class="external-link">Charset</a>&nbsp;charset)</span></div>
 </div>
 </section>
@@ -321,6 +330,14 @@ Default status code is 200 (OK) if not set.</div>
 </section>
 </li>
 <li>
+<section class="detail" id="setJSONContent(java.util.concurrent.CompletableFuture)">
+<h3>setJSONContent</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ResponseBuilder.html" title="class in com.djrapitops.plan.delivery.web.resolver">ResponseBuilder</a></span>&nbsp;<span class="element-name">setJSONContent</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;jsonFuture)</span></div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="build()">
 <h3>build</h3>
 <div class="horizontal-scroll">
@@ -337,6 +354,27 @@ Default status code is 200 (OK) if not set.</div>
 <dd>
 <ul class="tag-list">
 <li><a href="#setMimeType(java.lang.String)">to set MIME-type.</a></li>
+</ul>
+</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setMimeType(java.lang.String)">
+<h3>setMimeType</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ResponseBuilder.html" title="class in com.djrapitops.plan.delivery.web.resolver">ResponseBuilder</a></span>&nbsp;<span class="element-name">setMimeType</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;mimeType)</span></div>
+<div class="block">Set MIME Type of the Response.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>mimeType</code> - MIME type of the Response <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types">Documentation</a></dd>
+<dt>Returns:</dt>
+<dd>this builder.</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list">
+<li><a href="MimeType.html" title="class in com.djrapitops.plan.delivery.web.resolver">for common MIME types.</a></li>
 </ul>
 </dd>
 </dl>

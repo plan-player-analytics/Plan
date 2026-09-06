@@ -60,6 +60,7 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#%3Cinit%3E(java.lang.String,com.djrapitops.plan.delivery.web.resolver.request.URIPath,com.djrapitops.plan.delivery.web.resolver.request.URIQuery,com.djrapitops.plan.delivery.web.resolver.request.WebUser,java.util.Map,byte%5B%5D)" tabindex="0">Request(String, URIPath, URIQuery, WebUser, Map, byte[])</a></li>
 <li><a href="#%3Cinit%3E(java.lang.String,com.djrapitops.plan.delivery.web.resolver.request.URIPath,com.djrapitops.plan.delivery.web.resolver.request.URIQuery,com.djrapitops.plan.delivery.web.resolver.request.WebUser,java.util.Map,byte%5B%5D,java.lang.String)" tabindex="0">Request(String, URIPath, URIQuery, WebUser, Map, byte[], String)</a></li>
+<li><a href="#%3Cinit%3E(java.lang.String,com.djrapitops.plan.delivery.web.resolver.request.URIPath,com.djrapitops.plan.delivery.web.resolver.request.URIQuery,com.djrapitops.plan.delivery.web.resolver.request.WebUser,java.util.Map,java.util.concurrent.CompletableFuture,java.lang.String)" tabindex="0">Request(String, URIPath, URIQuery, WebUser, Map, CompletableFuture, String)</a></li>
 <li><a href="#%3Cinit%3E(java.lang.String,java.lang.String,com.djrapitops.plan.delivery.web.resolver.request.WebUser,java.util.Map)" tabindex="0">Request(String, String, WebUser, Map)</a></li>
 <li><a href="#%3Cinit%3E(java.lang.String,java.lang.String,com.djrapitops.plan.delivery.web.resolver.request.WebUser,java.util.Map,java.lang.String)" tabindex="0">Request(String, String, WebUser, Map, String)</a></li>
 </ol>
@@ -70,6 +71,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#getPath()" tabindex="0">getPath()</a></li>
 <li><a href="#getQuery()" tabindex="0">getQuery()</a></li>
 <li><a href="#getRequestBody()" tabindex="0">getRequestBody()</a></li>
+<li><a href="#getRequestBodyAsync()" tabindex="0">getRequestBodyAsync()</a></li>
 <li><a href="#getUser()" tabindex="0">getUser()</a></li>
 <li><a href="#getHeader(java.lang.String)" tabindex="0">getHeader(String)</a></li>
 <li><a href="#omitFirstInPath()" tabindex="0">omitFirstInPath()</a></li>
@@ -126,21 +128,31 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color">
 <div class="block">Constructor.</div>
 </div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String,java.lang.String,com.djrapitops.plan.delivery.web.resolver.request.WebUser,java.util.Map)" class="member-name-link">Request</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;method,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String,com.djrapitops.plan.delivery.web.resolver.request.URIPath,com.djrapitops.plan.delivery.web.resolver.request.URIQuery,com.djrapitops.plan.delivery.web.resolver.request.WebUser,java.util.Map,java.util.concurrent.CompletableFuture,java.lang.String)" class="member-name-link">Request</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;method,
+ <a href="URIPath.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">URIPath</a>&nbsp;path,
+ <a href="URIQuery.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">URIQuery</a>&nbsp;query,
+ <a href="WebUser.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">WebUser</a>&nbsp;user,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;headers,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a>&lt;byte[]&gt;&nbsp;requestBody,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;accessIpAddress)</code></div>
+<div class="col-last even-row-color">
+<div class="block">Constructor.</div>
+</div>
+<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.lang.String,java.lang.String,com.djrapitops.plan.delivery.web.resolver.request.WebUser,java.util.Map)" class="member-name-link">Request</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;method,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;target,
  <a href="WebUser.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">WebUser</a>&nbsp;user,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;headers)</code></div>
-<div class="col-last even-row-color">
+<div class="col-last odd-row-color">
 <div class="block"><span class="deprecated-label">Deprecated.</span>
 <div class="deprecation-comment">Use newer constructor with IP address.</div>
 </div>
 </div>
-<div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(java.lang.String,java.lang.String,com.djrapitops.plan.delivery.web.resolver.request.WebUser,java.util.Map,java.lang.String)" class="member-name-link">Request</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;method,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.lang.String,java.lang.String,com.djrapitops.plan.delivery.web.resolver.request.WebUser,java.util.Map,java.lang.String)" class="member-name-link">Request</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;method,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;target,
  <a href="WebUser.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">WebUser</a>&nbsp;user,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;headers,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;accessIpAddress)</code></div>
-<div class="col-last odd-row-color">
+<div class="col-last even-row-color">
 <div class="block">Special constructor that figures out URIPath and URIQuery from "/path/and?query=params" and has no request body.</div>
 </div>
 </div>
@@ -185,17 +197,22 @@ loadScripts(document, 'script');</script>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get the raw body, if present.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="WebUser.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">WebUser</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUser()" class="member-name-link">getUser</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a><wbr>&lt;byte[]&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getRequestBodyAsync()" class="member-name-link">getRequestBodyAsync</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the raw body as a <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link"><code>CompletableFuture</code></a>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="WebUser.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">WebUser</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getUser()" class="member-name-link">getUser</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get the user making the request.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">Request</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#omitFirstInPath()" class="member-name-link">omitFirstInPath</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="Request.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">Request</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#omitFirstInPath()" class="member-name-link">omitFirstInPath</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#toString()" class="member-name-link">toString</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -260,6 +277,31 @@ loadScripts(document, 'script');</script>
 <dd><code>user</code> - Web user doing the request (if authenticated)</dd>
 <dd><code>headers</code> - Request headers <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers">Documentation</a></dd>
 <dd><code>requestBody</code> - Raw body as bytes, if present</dd>
+<dd><code>accessIpAddress</code> - IP address this request is coming from.</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="&lt;init&gt;(java.lang.String,com.djrapitops.plan.delivery.web.resolver.request.URIPath,com.djrapitops.plan.delivery.web.resolver.request.URIQuery,com.djrapitops.plan.delivery.web.resolver.request.WebUser,java.util.Map,java.util.concurrent.CompletableFuture,java.lang.String)">
+<h3>Request</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">Request</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;method,
+ <a href="URIPath.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">URIPath</a>&nbsp;path,
+ <a href="URIQuery.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">URIQuery</a>&nbsp;query,
+ <a href="WebUser.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">WebUser</a>&nbsp;user,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;headers,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a>&lt;byte[]&gt;&nbsp;requestBody,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;accessIpAddress)</span></div>
+<div class="block">Constructor.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>method</code> - HTTP method, GET, PUT, POST, etc</dd>
+<dd><code>path</code> - Requested path /example/target</dd>
+<dd><code>query</code> - Request parameters ?param=value etc</dd>
+<dd><code>user</code> - Web user doing the request (if authenticated)</dd>
+<dd><code>headers</code> - Request headers <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers">Documentation</a></dd>
+<dd><code>requestBody</code> - CompletableFuture of raw body bytes</dd>
 <dd><code>accessIpAddress</code> - IP address this request is coming from.</dd>
 </dl>
 </div>
@@ -361,10 +403,24 @@ loadScripts(document, 'script');</script>
 <h3>getRequestBody</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">byte[]</span>&nbsp;<span class="element-name">getRequestBody</span>()</div>
-<div class="block">Get the raw body, if present.</div>
+<div class="block">Get the raw body, if present.
+Blocks until the body is available if fetched asynchronously.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>byte[].</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getRequestBodyAsync()">
+<h3>getRequestBodyAsync</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link">CompletableFuture</a>&lt;byte[]&gt;</span>&nbsp;<span class="element-name">getRequestBodyAsync</span>()</div>
+<div class="block">Get the raw body as a <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/concurrent/CompletableFuture.html" title="class or interface in java.util.concurrent" class="external-link"><code>CompletableFuture</code></a>.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>CompletableFuture of byte[].</dd>
 </dl>
 </div>
 </section>

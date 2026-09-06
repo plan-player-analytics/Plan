@@ -65,7 +65,7 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.file.PlanFiles,dagger.Lazy,net.playeranalytics.plugin.scheduling.RunnableFactory,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,dev.vankka.dependencydownload.ApplicationDependencyManager)" tabindex="0">MySQLDB(Locale, PlanConfig, PlanFiles, Lazy, RunnableFactory, PluginLogger, ErrorLogger, ApplicationDependencyManager)</a></li>
+<li><a href="#%3Cinit%3E(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.file.PlanFiles,dagger.Lazy,net.playeranalytics.plugin.scheduling.RunnableFactory,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,dev.vankka.dependencydownload.ApplicationDependencyManager,com.djrapitops.plan.processing.Processing)" tabindex="0">MySQLDB(Locale, PlanConfig, PlanFiles, Lazy, RunnableFactory, PluginLogger, ErrorLogger, ApplicationDependencyManager, Processing)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -114,7 +114,7 @@ loadScripts(document, 'script');</script>
 <h2>Nested Class Summary</h2>
 <div class="inherited-list">
 <h3 id="nested-classes-inherited-from-class-com.djrapitops.plan.storage.database.Database">Nested classes/interfaces inherited from interface&nbsp;<a href="Database.html#nested-class-summary" title="interface in com.djrapitops.plan.storage.database">Database</a></h3>
-<code><a href="Database.State.html" title="enum class in com.djrapitops.plan.storage.database">Database.State</a></code></div>
+<code><a href="Database.Async.html" title="class in com.djrapitops.plan.storage.database">Database.Async</a>, <a href="Database.State.html" title="enum class in com.djrapitops.plan.storage.database">Database.State</a></code></div>
 </section>
 </li>
 <!-- =========== FIELD SUMMARY =========== -->
@@ -146,14 +146,15 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.file.PlanFiles,dagger.Lazy,net.playeranalytics.plugin.scheduling.RunnableFactory,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,dev.vankka.dependencydownload.ApplicationDependencyManager)" class="member-name-link">MySQLDB</a><wbr>(<a href="../../settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.file.PlanFiles,dagger.Lazy,net.playeranalytics.plugin.scheduling.RunnableFactory,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,dev.vankka.dependencydownload.ApplicationDependencyManager,com.djrapitops.plan.processing.Processing)" class="member-name-link">MySQLDB</a><wbr>(<a href="../../settings/locale/Locale.html" title="class in com.djrapitops.plan.settings.locale">Locale</a>&nbsp;locale,
  <a href="../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
  <a href="../file/PlanFiles.html" title="class in com.djrapitops.plan.storage.file">PlanFiles</a>&nbsp;files,
  dagger.Lazy&lt;<a href="../../identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&gt;&nbsp;serverInfo,
  net.playeranalytics.plugin.scheduling.RunnableFactory&nbsp;runnableFactory,
  net.playeranalytics.plugin.server.PluginLogger&nbsp;pluginLogger,
  <a href="../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger,
- dev.vankka.dependencydownload.ApplicationDependencyManager&nbsp;applicationDependencyManager)</code></div>
+ dev.vankka.dependencydownload.ApplicationDependencyManager&nbsp;applicationDependencyManager,
+ <a href="../../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -202,7 +203,7 @@ loadScripts(document, 'script');</script>
 </div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.djrapitops.plan.storage.database.SQLDB">Methods inherited from class&nbsp;<a href="SQLDB.html#method-summary" title="class in com.djrapitops.plan.storage.database">SQLDB</a></h3>
-<code><a href="SQLDB.html#attemptToCloseTransactionExecutor()" title="attemptToCloseTransactionExecutor()">attemptToCloseTransactionExecutor</a>, <a href="SQLDB.html#downloadDriver()" title="downloadDriver()">downloadDriver</a>, <a href="SQLDB.html#executeTransaction(com.djrapitops.plan.storage.database.transactions.Transaction)" title="executeTransaction(Transaction)">executeTransaction</a>, <a href="SQLDB.html#forceCloseTransactionExecutor()" title="forceCloseTransactionExecutor()">forceCloseTransactionExecutor</a>, <a href="SQLDB.html#getLocale()" title="getLocale()">getLocale</a>, <a href="SQLDB.html#getLogger()" title="getLogger()">getLogger</a>, <a href="SQLDB.html#getRunnableFactory()" title="getRunnableFactory()">getRunnableFactory</a>, <a href="SQLDB.html#getServerUUIDSupplier()" title="getServerUUIDSupplier()">getServerUUIDSupplier</a>, <a href="SQLDB.html#getTransactionOrigin()" title="getTransactionOrigin()">getTransactionOrigin</a>, <a href="SQLDB.html#getTransactionQueueSize()" title="getTransactionQueueSize()">getTransactionQueueSize</a>, <a href="SQLDB.html#init()" title="init()">init</a>, <a href="SQLDB.html#query(com.djrapitops.plan.storage.database.queries.Query)" title="query(Query)">query</a>, <a href="SQLDB.html#queryWithinTransaction(com.djrapitops.plan.storage.database.queries.Query,com.djrapitops.plan.storage.database.transactions.Transaction)" title="queryWithinTransaction(Query, Transaction)">queryWithinTransaction</a>, <a href="SQLDB.html#setDownloadDriver(boolean)" title="setDownloadDriver(boolean)">setDownloadDriver</a>, <a href="SQLDB.html#setTransactionExecutorServiceProvider(java.util.function.Supplier)" title="setTransactionExecutorServiceProvider(Supplier)">setTransactionExecutorServiceProvider</a>, <a href="SQLDB.html#shouldDropUnimportantTransactions()" title="shouldDropUnimportantTransactions()">shouldDropUnimportantTransactions</a>, <a href="SQLDB.html#unloadDriverClassloader()" title="unloadDriverClassloader()">unloadDriverClassloader</a></code></div>
+<code><a href="SQLDB.html#async()" title="async()">async</a>, <a href="SQLDB.html#attemptToCloseTransactionExecutor()" title="attemptToCloseTransactionExecutor()">attemptToCloseTransactionExecutor</a>, <a href="SQLDB.html#downloadDriver()" title="downloadDriver()">downloadDriver</a>, <a href="SQLDB.html#executeTransaction(com.djrapitops.plan.storage.database.transactions.Transaction)" title="executeTransaction(Transaction)">executeTransaction</a>, <a href="SQLDB.html#forceCloseTransactionExecutor()" title="forceCloseTransactionExecutor()">forceCloseTransactionExecutor</a>, <a href="SQLDB.html#getLocale()" title="getLocale()">getLocale</a>, <a href="SQLDB.html#getLogger()" title="getLogger()">getLogger</a>, <a href="SQLDB.html#getRunnableFactory()" title="getRunnableFactory()">getRunnableFactory</a>, <a href="SQLDB.html#getServerUUIDSupplier()" title="getServerUUIDSupplier()">getServerUUIDSupplier</a>, <a href="SQLDB.html#getTransactionOrigin()" title="getTransactionOrigin()">getTransactionOrigin</a>, <a href="SQLDB.html#getTransactionQueueSize()" title="getTransactionQueueSize()">getTransactionQueueSize</a>, <a href="SQLDB.html#init()" title="init()">init</a>, <a href="SQLDB.html#query(com.djrapitops.plan.storage.database.queries.Query)" title="query(Query)">query</a>, <a href="SQLDB.html#queryWithinTransaction(com.djrapitops.plan.storage.database.queries.Query,com.djrapitops.plan.storage.database.transactions.Transaction)" title="queryWithinTransaction(Query, Transaction)">queryWithinTransaction</a>, <a href="SQLDB.html#setDownloadDriver(boolean)" title="setDownloadDriver(boolean)">setDownloadDriver</a>, <a href="SQLDB.html#setTransactionExecutorServiceProvider(java.util.function.Supplier)" title="setTransactionExecutorServiceProvider(Supplier)">setTransactionExecutorServiceProvider</a>, <a href="SQLDB.html#shouldDropUnimportantTransactions()" title="shouldDropUnimportantTransactions()">shouldDropUnimportantTransactions</a>, <a href="SQLDB.html#unloadDriverClassloader()" title="unloadDriverClassloader()">unloadDriverClassloader</a></code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-com.djrapitops.plan.storage.database.AbstractDatabase">Methods inherited from class&nbsp;<a href="AbstractDatabase.html#method-summary" title="class in com.djrapitops.plan.storage.database">AbstractDatabase</a></h3>
 <code><a href="AbstractDatabase.html#assumeNoMoreHeavyLoad()" title="assumeNoMoreHeavyLoad()">assumeNoMoreHeavyLoad</a>, <a href="AbstractDatabase.html#getHeavyLoadDelayMs()" title="getHeavyLoadDelayMs()">getHeavyLoadDelayMs</a>, <a href="AbstractDatabase.html#getState()" title="getState()">getState</a>, <a href="AbstractDatabase.html#increaseHeavyLoadDelay()" title="increaseHeavyLoadDelay()">increaseHeavyLoadDelay</a>, <a href="AbstractDatabase.html#isUnderHeavyLoad()" title="isUnderHeavyLoad()">isUnderHeavyLoad</a>, <a href="AbstractDatabase.html#setState(com.djrapitops.plan.storage.database.Database.State)" title="setState(Database.State)">setState</a></code></div>
@@ -240,7 +241,7 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.file.PlanFiles,dagger.Lazy,net.playeranalytics.plugin.scheduling.RunnableFactory,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,dev.vankka.dependencydownload.ApplicationDependencyManager)">
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.settings.config.PlanConfig,com.djrapitops.plan.storage.file.PlanFiles,dagger.Lazy,net.playeranalytics.plugin.scheduling.RunnableFactory,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,dev.vankka.dependencydownload.ApplicationDependencyManager,com.djrapitops.plan.processing.Processing)">
 <h3>MySQLDB</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations">@Inject
@@ -251,7 +252,8 @@ loadScripts(document, 'script');</script>
  net.playeranalytics.plugin.scheduling.RunnableFactory&nbsp;runnableFactory,
  net.playeranalytics.plugin.server.PluginLogger&nbsp;pluginLogger,
  <a href="../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger,
- dev.vankka.dependencydownload.ApplicationDependencyManager&nbsp;applicationDependencyManager)</span></div>
+ dev.vankka.dependencydownload.ApplicationDependencyManager&nbsp;applicationDependencyManager,
+ <a href="../../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing)</span></div>
 </div>
 </section>
 </li>

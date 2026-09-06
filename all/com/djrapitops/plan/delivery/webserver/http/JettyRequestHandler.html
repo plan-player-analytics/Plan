@@ -60,12 +60,12 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration,com.djrapitops.plan.delivery.webserver.auth.AuthenticationExtractor,com.djrapitops.plan.delivery.webserver.Addresses,com.djrapitops.plan.delivery.webserver.http.RequestHandler,com.djrapitops.plan.settings.config.PlanConfig,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" tabindex="0">JettyRequestHandler(WebserverConfiguration, AuthenticationExtractor, Addresses, RequestHandler, PlanConfig, PluginLogger, ErrorLogger)</a></li>
+<li><a href="#%3Cinit%3E(com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration,com.djrapitops.plan.delivery.webserver.auth.AuthenticationExtractor,com.djrapitops.plan.delivery.webserver.Addresses,com.djrapitops.plan.delivery.webserver.http.RequestHandler,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.settings.config.PlanConfig,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" tabindex="0">JettyRequestHandler(WebserverConfiguration, AuthenticationExtractor, Addresses, RequestHandler, Processing, PlanConfig, PluginLogger, ErrorLogger)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#handle(java.lang.String,org.eclipse.jetty.server.Request,jakarta.servlet.http.HttpServletRequest,jakarta.servlet.http.HttpServletResponse)" tabindex="0">handle(String, Request, HttpServletRequest, HttpServletResponse)</a></li>
+<li><a href="#handle(org.eclipse.jetty.server.Request,org.eclipse.jetty.server.Response,org.eclipse.jetty.util.Callback)" tabindex="0">handle(Request, Response, Callback)</a></li>
 </ol>
 </li>
 </ol>
@@ -78,7 +78,7 @@ loadScripts(document, 'script');</script>
 <div class="inheritance" title="Inheritance Tree"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">java.lang.Object</a>
 <div class="inheritance">org.eclipse.jetty.util.component.AbstractLifeCycle
 <div class="inheritance">org.eclipse.jetty.util.component.ContainerLifeCycle
-<div class="inheritance">org.eclipse.jetty.server.handler.AbstractHandler
+<div class="inheritance">org.eclipse.jetty.server.Handler.Abstract
 <div class="inheritance">com.djrapitops.plan.delivery.webserver.http.JettyRequestHandler</div>
 </div>
 </div>
@@ -87,13 +87,13 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code>org.eclipse.jetty.server.Handler, org.eclipse.jetty.util.component.Container, org.eclipse.jetty.util.component.Destroyable, org.eclipse.jetty.util.component.Dumpable, org.eclipse.jetty.util.component.Dumpable.DumpableContainer, org.eclipse.jetty.util.component.LifeCycle</code></dd>
+<dd><code>org.eclipse.jetty.server.Handler, org.eclipse.jetty.server.Request.Handler, org.eclipse.jetty.util.component.Container, org.eclipse.jetty.util.component.Destroyable, org.eclipse.jetty.util.component.Dumpable, org.eclipse.jetty.util.component.Dumpable.DumpableContainer, org.eclipse.jetty.util.component.LifeCycle, org.eclipse.jetty.util.thread.Invocable</code></dd>
 </dl>
 <hr>
 <div class="horizontal-scroll">
 <div class="type-signature"><span class="annotations">@Singleton
 </span><span class="modifiers">public class </span><span class="element-name type-name-label">JettyRequestHandler</span>
-<span class="extends-implements">extends org.eclipse.jetty.server.handler.AbstractHandler</span></div>
+<span class="extends-implements">extends org.eclipse.jetty.server.Handler.Abstract</span></div>
 </div>
 </section>
 <section class="summary">
@@ -103,8 +103,8 @@ loadScripts(document, 'script');</script>
 <section class="nested-class-summary" id="nested-class-summary">
 <h2>Nested Class Summary</h2>
 <div class="inherited-list">
-<h3 id="nested-classes-inherited-from-class-org.eclipse.jetty.server.handler.AbstractHandler">Nested classes/interfaces inherited from class&nbsp;org.eclipse.jetty.server.handler.AbstractHandler</h3>
-<code>org.eclipse.jetty.server.handler.AbstractHandler.ErrorDispatchHandler</code></div>
+<h3 id="nested-classes-inherited-from-class-org.eclipse.jetty.server.Handler.Abstract">Nested classes/interfaces inherited from class&nbsp;org.eclipse.jetty.server.Handler.Abstract</h3>
+<code>org.eclipse.jetty.server.Handler.Abstract.NonBlocking</code></div>
 <div class="inherited-list">
 <h3 id="nested-classes-inherited-from-class-org.eclipse.jetty.util.component.AbstractLifeCycle">Nested classes/interfaces inherited from class&nbsp;org.eclipse.jetty.util.component.AbstractLifeCycle</h3>
 <code>org.eclipse.jetty.util.component.AbstractLifeCycle.AbstractLifeCycleListener, org.eclipse.jetty.util.component.AbstractLifeCycle.StopException</code></div>
@@ -113,10 +113,19 @@ loadScripts(document, 'script');</script>
 <code>org.eclipse.jetty.util.component.Container.InheritedListener, org.eclipse.jetty.util.component.Container.Listener</code></div>
 <div class="inherited-list">
 <h3 id="nested-classes-inherited-from-class-org.eclipse.jetty.util.component.Dumpable">Nested classes/interfaces inherited from interface&nbsp;org.eclipse.jetty.util.component.Dumpable</h3>
-<code>org.eclipse.jetty.util.component.Dumpable.DumpableContainer</code></div>
+<code>org.eclipse.jetty.util.component.Dumpable.DumpableContainer, org.eclipse.jetty.util.component.Dumpable.DumpAppendable</code></div>
+<div class="inherited-list">
+<h3 id="nested-classes-inherited-from-class-org.eclipse.jetty.server.Handler">Nested classes/interfaces inherited from interface&nbsp;org.eclipse.jetty.server.Handler</h3>
+<code>org.eclipse.jetty.server.Handler.Abstract, org.eclipse.jetty.server.Handler.AbstractContainer, org.eclipse.jetty.server.Handler.Collection, org.eclipse.jetty.server.Handler.Container, org.eclipse.jetty.server.Handler.Sequence, org.eclipse.jetty.server.Handler.Singleton, org.eclipse.jetty.server.Handler.Wrapper</code></div>
+<div class="inherited-list">
+<h3 id="nested-classes-inherited-from-class-org.eclipse.jetty.util.thread.Invocable">Nested classes/interfaces inherited from interface&nbsp;org.eclipse.jetty.util.thread.Invocable</h3>
+<code>org.eclipse.jetty.util.thread.Invocable.Callable, org.eclipse.jetty.util.thread.Invocable.InvocationType, org.eclipse.jetty.util.thread.Invocable.ReadyTask, org.eclipse.jetty.util.thread.Invocable.Task</code></div>
 <div class="inherited-list">
 <h3 id="nested-classes-inherited-from-class-org.eclipse.jetty.util.component.LifeCycle">Nested classes/interfaces inherited from interface&nbsp;org.eclipse.jetty.util.component.LifeCycle</h3>
 <code>org.eclipse.jetty.util.component.LifeCycle.Listener</code></div>
+<div class="inherited-list">
+<h3 id="nested-classes-inherited-from-class-org.eclipse.jetty.server.Request.Handler">Nested classes/interfaces inherited from interface&nbsp;org.eclipse.jetty.server.Request.Handler</h3>
+<code>org.eclipse.jetty.server.Request.Handler.AbortException</code></div>
 </section>
 </li>
 <!-- =========== FIELD SUMMARY =========== -->
@@ -128,7 +137,10 @@ loadScripts(document, 'script');</script>
 <code>FAILED, STARTED, STARTING, STOPPED, STOPPING</code></div>
 <div class="inherited-list">
 <h3 id="fields-inherited-from-class-org.eclipse.jetty.util.component.Dumpable">Fields inherited from interface&nbsp;org.eclipse.jetty.util.component.Dumpable</h3>
-<code>KEY</code></div>
+<code>LEGEND</code></div>
+<div class="inherited-list">
+<h3 id="fields-inherited-from-class-org.eclipse.jetty.util.thread.Invocable">Fields inherited from interface&nbsp;org.eclipse.jetty.util.thread.Invocable</h3>
+<code>__nonBlocking, NOOP</code></div>
 </section>
 </li>
 <!-- ======== CONSTRUCTOR SUMMARY ======== -->
@@ -139,10 +151,11 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration,com.djrapitops.plan.delivery.webserver.auth.AuthenticationExtractor,com.djrapitops.plan.delivery.webserver.Addresses,com.djrapitops.plan.delivery.webserver.http.RequestHandler,com.djrapitops.plan.settings.config.PlanConfig,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">JettyRequestHandler</a><wbr>(<a href="../configuration/WebserverConfiguration.html" title="class in com.djrapitops.plan.delivery.webserver.configuration">WebserverConfiguration</a>&nbsp;webserverConfiguration,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration,com.djrapitops.plan.delivery.webserver.auth.AuthenticationExtractor,com.djrapitops.plan.delivery.webserver.Addresses,com.djrapitops.plan.delivery.webserver.http.RequestHandler,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.settings.config.PlanConfig,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">JettyRequestHandler</a><wbr>(<a href="../configuration/WebserverConfiguration.html" title="class in com.djrapitops.plan.delivery.webserver.configuration">WebserverConfiguration</a>&nbsp;webserverConfiguration,
  <a href="../auth/AuthenticationExtractor.html" title="class in com.djrapitops.plan.delivery.webserver.auth">AuthenticationExtractor</a>&nbsp;authenticationExtractor,
  <a href="../Addresses.html" title="class in com.djrapitops.plan.delivery.webserver">Addresses</a>&nbsp;addresses,
  <a href="RequestHandler.html" title="class in com.djrapitops.plan.delivery.webserver.http">RequestHandler</a>&nbsp;requestHandler,
+ <a href="../../../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing,
  <a href="../../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
  net.playeranalytics.plugin.server.PluginLogger&nbsp;logger,
  <a href="../../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</code></div>
@@ -161,21 +174,20 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handle(java.lang.String,org.eclipse.jetty.server.Request,jakarta.servlet.http.HttpServletRequest,jakarta.servlet.http.HttpServletResponse)" class="member-name-link">handle</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;target,
- org.eclipse.jetty.server.Request&nbsp;baseRequest,
- jakarta.servlet.http.HttpServletRequest&nbsp;servletRequest,
- jakarta.servlet.http.HttpServletResponse&nbsp;servletResponse)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#handle(org.eclipse.jetty.server.Request,org.eclipse.jetty.server.Response,org.eclipse.jetty.util.Callback)" class="member-name-link">handle</a><wbr>(org.eclipse.jetty.server.Request&nbsp;request,
+ org.eclipse.jetty.server.Response&nbsp;jettyResponse,
+ org.eclipse.jetty.util.Callback&nbsp;callback)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
 <div class="inherited-list">
-<h3 id="methods-inherited-from-class-org.eclipse.jetty.server.handler.AbstractHandler">Methods inherited from class&nbsp;org.eclipse.jetty.server.handler.AbstractHandler</h3>
-<code>destroy, doError, doStart, doStop, getServer, setServer</code></div>
+<h3 id="methods-inherited-from-class-org.eclipse.jetty.server.Handler.Abstract">Methods inherited from class&nbsp;org.eclipse.jetty.server.Handler.Abstract</h3>
+<code>destroy, doStart, doStop, getInvocationType, getServer, setServer</code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-org.eclipse.jetty.util.component.ContainerLifeCycle">Methods inherited from class&nbsp;org.eclipse.jetty.util.component.ContainerLifeCycle</h3>
-<code>addBean, addBean, addEventListener, addManaged, contains, dump, dump, dump, dumpObjects, dumpStdErr, getBean, getBeans, getBeans, getContainedBeans, getContainedBeans, isAuto, isManaged, isUnmanaged, manage, removeBean, removeBeans, removeEventListener, setBeans, start, stop, unmanage, updateBean, updateBean, updateBeans, updateBeans</code></div>
+<code>addBean, addBean, addEventListener, addManaged, addManaged, contains, dump, dump, dump, dumpObjects, dumpStdErr, getBean, getBeans, getBeans, getContainedBeans, getContainedBeans, installBean, installBean, isAuto, isManaged, isUnmanaged, manage, removeBean, removeBeans, removeEventListener, setBeans, start, stop, unmanage, updateBean, updateBean, updateBeans, updateBeans</code></div>
 <div class="inherited-list">
 <h3 id="methods-inherited-from-class-org.eclipse.jetty.util.component.AbstractLifeCycle">Methods inherited from class&nbsp;org.eclipse.jetty.util.component.AbstractLifeCycle</h3>
 <code>getEventListeners, getState, getState, isFailed, isRunning, isStarted, isStarting, isStopped, isStopping, setEventListeners, start, stop, toString</code></div>
@@ -206,7 +218,7 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration,com.djrapitops.plan.delivery.webserver.auth.AuthenticationExtractor,com.djrapitops.plan.delivery.webserver.Addresses,com.djrapitops.plan.delivery.webserver.http.RequestHandler,com.djrapitops.plan.settings.config.PlanConfig,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)">
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration,com.djrapitops.plan.delivery.webserver.auth.AuthenticationExtractor,com.djrapitops.plan.delivery.webserver.Addresses,com.djrapitops.plan.delivery.webserver.http.RequestHandler,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.settings.config.PlanConfig,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)">
 <h3>JettyRequestHandler</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations">@Inject
@@ -214,6 +226,7 @@ loadScripts(document, 'script');</script>
  <a href="../auth/AuthenticationExtractor.html" title="class in com.djrapitops.plan.delivery.webserver.auth">AuthenticationExtractor</a>&nbsp;authenticationExtractor,
  <a href="../Addresses.html" title="class in com.djrapitops.plan.delivery.webserver">Addresses</a>&nbsp;addresses,
  <a href="RequestHandler.html" title="class in com.djrapitops.plan.delivery.webserver.http">RequestHandler</a>&nbsp;requestHandler,
+ <a href="../../../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing,
  <a href="../../../settings/config/PlanConfig.html" title="class in com.djrapitops.plan.settings.config">PlanConfig</a>&nbsp;config,
  net.playeranalytics.plugin.server.PluginLogger&nbsp;logger,
  <a href="../../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</span></div>
@@ -229,23 +242,16 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="handle(java.lang.String,org.eclipse.jetty.server.Request,jakarta.servlet.http.HttpServletRequest,jakarta.servlet.http.HttpServletResponse)">
+<section class="detail" id="handle(org.eclipse.jetty.server.Request,org.eclipse.jetty.server.Response,org.eclipse.jetty.util.Callback)">
 <h3>handle</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">handle</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;target,
- org.eclipse.jetty.server.Request&nbsp;baseRequest,
- jakarta.servlet.http.HttpServletRequest&nbsp;servletRequest,
- jakarta.servlet.http.HttpServletResponse&nbsp;servletResponse)</span>
-            throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a>,
-jakarta.servlet.ServletException</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">boolean</span>&nbsp;<span class="element-name">handle</span><wbr><span class="parameters">(org.eclipse.jetty.server.Request&nbsp;request,
+ org.eclipse.jetty.server.Response&nbsp;jettyResponse,
+ org.eclipse.jetty.util.Callback&nbsp;callback)</span>
+               throws <span class="exceptions"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a></span></div>
 <dl class="notes">
-<dt>Specified by:</dt>
-<dd><code>handle</code>&nbsp;in interface&nbsp;<code>org.eclipse.jetty.server.Handler</code></dd>
-<dt>Specified by:</dt>
-<dd><code>handle</code>&nbsp;in class&nbsp;<code>org.eclipse.jetty.server.handler.AbstractHandler</code></dd>
 <dt>Throws:</dt>
-<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/io/IOException.html" title="class or interface in java.io" class="external-link">IOException</a></code></dd>
-<dd><code>jakarta.servlet.ServletException</code></dd>
+<dd><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Exception.html" title="class or interface in java.lang" class="external-link">Exception</a></code></dd>
 </dl>
 </div>
 </section>
