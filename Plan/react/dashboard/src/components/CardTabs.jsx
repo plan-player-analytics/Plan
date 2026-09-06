@@ -36,7 +36,7 @@ const TabButtons = ({tabs, selectedTab}) => {
 
 const CardTabs = ({tabs}) => {
     const {hash} = useLocation();
-    const firstTab = tabs ? tabs[0].href : undefined;
+    const firstTab = tabs?.length ? tabs[0].href : undefined;
     const [selectedTab, setSelectedTab] = useState(firstTab);
 
     useEffect(() => {

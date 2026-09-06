@@ -45,7 +45,7 @@ const StatisticsTabs = () => {
             icon: faArrowUpRightDots,
             href: 'byServer',
             element: <LoadingStatistics/>,
-            permission: 'page.network.statistics.byServer'
+            permission: 'page.network.statistics.by.server'
         },
     ].filter(tab => hasPermission(tab.permission));
     return <CardTabs tabs={tabs}/>
@@ -59,7 +59,7 @@ const LoadingStatistics = () => {
 
     if (loadingError) return <ErrorViewCard error={loadingError}/>
     if (!data) return <CardLoader/>;
-    return <div id={"network-aggregate-statistics"}>
+    return <div id={"network-by-server-statistics"}>
         <StatisticsTable statistics={data}/>
     </div>
 }
@@ -72,7 +72,7 @@ const LoadingAggregateStatistics = () => {
 
     if (loadingError) return <ErrorViewCard error={loadingError}/>
     if (!data) return <CardLoader/>;
-    return <div id={"network-by-server-statistics"}>
+    return <div id={"network-aggregate-statistics"}>
         <StatisticsTable statistics={data} showAllByDefault/>
     </div>
 }
