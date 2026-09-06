@@ -29,12 +29,14 @@ const PlayerOverview = React.lazy(() => import("./views/player/PlayerOverview"))
 const PlayerSessions = React.lazy(() => import("./views/player/PlayerSessions"));
 const PlayerPvpPve = React.lazy(() => import("./views/player/PlayerPvpPve"));
 const PlayerServers = React.lazy(() => import("./views/player/PlayerServers"));
+const PlayerStatistics = React.lazy(() => import("./views/player/PlayerStatistics"));
 const PlayerPluginData = React.lazy(() => import("./views/player/PlayerPluginData"));
 
 const ServerPage = React.lazy(() => import("./views/layout/ServerPage"));
 const ServerOverview = React.lazy(() => import("./views/server/ServerOverview"));
 const OnlineActivity = React.lazy(() => import("./views/server/OnlineActivity"));
 const ServerSessions = React.lazy(() => import("./views/server/ServerSessions"));
+const ServerStatistics = React.lazy(() => import("./views/server/ServerStatistics"));
 const ServerPvpPve = React.lazy(() => import("./views/server/ServerPvpPve"));
 const ServerAllowList = React.lazy(() => import("./views/server/ServerAllowList"));
 const PlayerbaseOverview = React.lazy(() => import("./views/server/PlayerbaseOverview"));
@@ -51,6 +53,7 @@ const NetworkPage = React.lazy(() => import("./views/layout/NetworkPage"));
 const NetworkOverview = React.lazy(() => import("./views/network/NetworkOverview"));
 const NetworkServers = React.lazy(() => import("./views/network/NetworkServers"));
 const NetworkSessions = React.lazy(() => import("./views/network/NetworkSessions"));
+const NetworkStatistics = React.lazy(() => import("./views/network/NetworkStatistics"));
 const NetworkJoinAddresses = React.lazy(() => import("./views/network/NetworkJoinAddresses"));
 const NetworkPlayerRetention = React.lazy(() => import("./views/network/NetworkPlayerRetention"));
 const NetworkGeolocations = React.lazy(() => import("./views/network/NetworkGeolocations"));
@@ -146,6 +149,7 @@ const router = createBrowserRouter(
                 <Route path="sessions" element={<Lazy><PlayerSessions/></Lazy>}/>
                 <Route path="pvppve" element={<Lazy><PlayerPvpPve/></Lazy>}/>
                 <Route path="servers" element={<Lazy><PlayerServers/></Lazy>}/>
+                <Route path="statistics" element={<Lazy><PlayerStatistics/></Lazy>}/>
                 <Route path="plugins/:serverName" element={<Lazy><PlayerPluginData/></Lazy>}/>
                 <Route path="" element={<Lazy><OverviewRedirect/></Lazy>}/>
                 <Route path="*" element={<ErrorView error={{
@@ -163,6 +167,7 @@ const router = createBrowserRouter(
                 <Route path="online-activity" element={<Lazy><OnlineActivity/></Lazy>}/>
                 <Route path="sessions" element={<Lazy><ServerSessions/></Lazy>}/>
                 <Route path="pvppve" element={<Lazy><ServerPvpPve/></Lazy>}/>
+                <Route path="statistics" element={<Lazy><ServerStatistics/></Lazy>}/>
                 <Route path="allowlist" element={<Lazy><ServerAllowList/></Lazy>}/>
                 <Route path="playerbase" element={<Lazy><PlayerbaseOverview/></Lazy>}/>
                 <Route path="join-addresses" element={<Lazy><ServerJoinAddresses/></Lazy>}/>
@@ -184,6 +189,7 @@ const router = createBrowserRouter(
                 <Route path="overview" element={<Lazy><NetworkOverview/></Lazy>}/>
                 <Route path="serversOverview" element={<Lazy><NetworkServers/></Lazy>}/>
                 <Route path="sessions" element={<Lazy><NetworkSessions/></Lazy>}/>
+                <Route path="statistics" element={<Lazy><NetworkStatistics/></Lazy>}/>
                 {!staticSite &&
                     <Route path="performance" element={<Lazy><NetworkPerformance/></Lazy>}/>}
                 <Route path="playerbase" element={<Lazy><NetworkPlayerbaseOverview/></Lazy>}/>

@@ -68,6 +68,7 @@ public class PlayerPageExporter extends FileExporter {
                 player + playerUUID,
                 player + playerUUID + "/overview",
                 player + playerUUID + "/sessions",
+                player + playerUUID + "/statistics",
                 player + playerUUID + "/pvppve",
                 player + playerUUID + "/servers",
         };

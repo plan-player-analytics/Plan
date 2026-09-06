@@ -20,10 +20,7 @@ import com.djrapitops.plan.delivery.domain.DateObj;
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.delivery.domain.datatransfer.AllowlistBounce;
 import com.djrapitops.plan.delivery.domain.datatransfer.preferences.Preferences;
-import com.djrapitops.plan.gathering.domain.FinishedSession;
-import com.djrapitops.plan.gathering.domain.GeoInfo;
-import com.djrapitops.plan.gathering.domain.PluginMetadata;
-import com.djrapitops.plan.gathering.domain.TPS;
+import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.processing.processors.move.DatabaseCopyProcessor;
@@ -110,6 +107,16 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
 
         db.executeTransaction(new WebGroupDefaultGroupsPatch());
         db.executeTransaction(new StoreWebGroupTransaction("admin", List.of("page", "access", "manage.groups", "manage.users")));
+
+        String statistic = "minecraft.custom:minecraft.time_played";
+        db.executeTransaction(new StoreMinecraftStatisticsTransaction(Set.of(statistic)));
+        db.executeTransaction(new StoreMinecraftStatisticsValuesTransaction(
+                new MinecraftStatistics(
+                        TestConstants.PLAYER_ONE_UUID, serverUUID, Map.of(
+                        db.query(StatisticsQueries.fetchStatisticNameToId()).get(statistic),
+                        5)
+                )
+        ));
     }
 
     @Test
@@ -241,6 +248,7 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
             expected.put(JoinAddressTable.TABLE_NAME, joinAddresses.size());
             expected.put(SecurityTable.TABLE_NAME, 1);
             expected.put(WebUserPreferencesTable.TABLE_NAME, 1);
+            expected.put(StatisticTable.TABLE_NAME, 1);
             // These tables insert if two servers are different
             expected.put(AccessLogTable.TABLE_NAME, beforeBackupTo.get(AccessLogTable.TABLE_NAME) + beforeBackupFrom.get(AccessLogTable.TABLE_NAME));
             expected.put(ServerTable.TABLE_NAME, beforeBackupTo.get(ServerTable.TABLE_NAME) + beforeBackupFrom.get(ServerTable.TABLE_NAME));
@@ -253,6 +261,7 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
             expected.put(PingTable.TABLE_NAME, beforeBackupTo.get(PingTable.TABLE_NAME) + beforeBackupFrom.get(PingTable.TABLE_NAME));
             expected.put(PluginVersionTable.TABLE_NAME, beforeBackupTo.get(PluginVersionTable.TABLE_NAME) + beforeBackupFrom.get(PluginVersionTable.TABLE_NAME));
             expected.put(AllowlistBounceTable.TABLE_NAME, beforeBackupTo.get(AllowlistBounceTable.TABLE_NAME) + beforeBackupFrom.get(AllowlistBounceTable.TABLE_NAME));
+            expected.put(StatisticValueTable.TABLE_NAME, beforeBackupTo.get(StatisticValueTable.TABLE_NAME) + beforeBackupFrom.get(StatisticValueTable.TABLE_NAME));
             expected.put(WebGroupTable.TABLE_NAME, beforeBackupTo.get(WebGroupTable.TABLE_NAME));
             expected.put(WebPermissionTable.TABLE_NAME, beforeBackupTo.get(WebPermissionTable.TABLE_NAME));
             expected.put(WebGroupToPermissionTable.TABLE_NAME, beforeBackupTo.get(WebGroupToPermissionTable.TABLE_NAME));

@@ -318,6 +318,11 @@ public enum HtmlLang implements Lang {
     LABEL_BLOCKED("html.label.blocked", "Blocked"),
     LABEL_ALLOWED("html.label.allowed", "Allowed"),
 
+    LABEL_STATISTICS("html.label.statistics", "Minecraft statistics"),
+    LABEL_STATISTIC("html.label.statistic", "Statistic"),
+    LABEL_STATISTIC_BLOCKS("html.label.stats.blocks", "{{value}} blocks"),
+    LABEL_STATISTIC_HEARTS("html.label.stats.hearts", "{{value}} ❤ (hearts)"),
+
     CATEGORY_SURVIVAL("html.label.SURVIVAL", "Survival"),
     CATEGORY_CREATIVE("html.label.CREATIVE", "Creative"),
     CATEGORY_ADVENTURE("html.label.ADVENTURE", "Adventure"),

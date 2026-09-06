@@ -2,7 +2,15 @@ import React, {useMemo} from 'react';
 import Select from 'react-select';
 import {useTranslation} from "react-i18next";
 
-const MultiSelect = ({options, selectedIndexes, setSelectedIndexes, className, style}) => {
+type Props<T> = {
+    options: T[];
+    selectedIndexes: number[];
+    setSelectedIndexes: (indexes: number[]) => void;
+    className?: string;
+    style?: CSSStyleProperties;
+}
+
+function MultiSelect<T>({options, selectedIndexes, setSelectedIndexes, className, style}: Props<T>) {
     const {t} = useTranslation();
     // Convert options to react-select format
     const selectOptions = options.map((option, index) => ({
@@ -13,14 +21,14 @@ const MultiSelect = ({options, selectedIndexes, setSelectedIndexes, className, s
     // Convert selectedIndexes to react-select format
     const selectedOptions = selectedIndexes.map(index => selectOptions[index]);
 
-    const handleChange = (selectedOptions) => {
-        const newSelectedIndexes = selectedOptions ? selectedOptions.map(option => option.value) : [];
+    const handleChange = (selectedOptions: any) => {
+        const newSelectedIndexes = selectedOptions ? selectedOptions.map((option: any) => option.value) : [];
         setSelectedIndexes(newSelectedIndexes);
     };
 
     const bootstrapStyles = useMemo(() => ({
-        container: (provided) => ({...provided, ...style}),
-        control: (provided) => ({
+        container: (provided: any) => ({...provided, ...style}),
+        control: (provided: any) => ({
             ...provided,
             background: 'var(--color-forms-input-background)',
             borderColor: 'var(--color-forms-input-border)',
@@ -28,7 +36,7 @@ const MultiSelect = ({options, selectedIndexes, setSelectedIndexes, className, s
             boxShadow: 'none',
             '&:hover': {borderColor: 'var(--color-forms-input-border)'},
         }),
-        menu: (provided) => ({
+        menu: (provided: any) => ({
             ...provided,
             background: 'var(--color-forms-input-background)',
             borderRadius: '0.375rem',
@@ -37,7 +45,7 @@ const MultiSelect = ({options, selectedIndexes, setSelectedIndexes, className, s
             marginTop: 2,
             zIndex: 9999,
         }),
-        option: (provided, state) => ({
+        option: (provided: any, state: any) => ({
             ...provided,
             background: state.isFocused
                 ? 'color-mix(in srgb, var(--contrast-color-forms-input-background), transparent 90%)'
@@ -46,18 +54,18 @@ const MultiSelect = ({options, selectedIndexes, setSelectedIndexes, className, s
             padding: '0.375rem 1.5rem',
             cursor: 'pointer',
         }),
-        multiValue: (provided) => ({
+        multiValue: (provided: any) => ({
             ...provided,
             background: 'var(--color-forms-multi-select-item-background)',
             borderRadius: '0.2rem',
             padding: '0 2px',
         }),
-        multiValueLabel: (provided) => ({
+        multiValueLabel: (provided: any) => ({
             ...provided,
             color: 'var(--color-text)',
             fontSize: '0.875em',
         }),
-        multiValueRemove: (provided) => ({
+        multiValueRemove: (provided: any) => ({
             ...provided,
             color: 'var(--color-text)',
             ':hover': {
@@ -65,20 +73,20 @@ const MultiSelect = ({options, selectedIndexes, setSelectedIndexes, className, s
                 color: 'var(--contrast-color-forms-buttons-dangerous-button)',
             },
         }),
-        dropdownIndicator: (provided) => ({
+        dropdownIndicator: (provided: any) => ({
             ...provided,
             color: 'var(--color-text)'
         }),
-        clearIndicator: (provided) => ({
+        clearIndicator: (provided: any) => ({
             ...provided,
             color: 'var(--color-text)',
             ':hover': {color: 'var(--color-forms-buttons-dangerous-button)'},
         }),
-        indicatorSeparator: (provided) => ({
+        indicatorSeparator: (provided: any) => ({
             ...provided,
             background: 'var(--color-forms-input-text)',
         }),
-        input: (provided) => ({
+        input: (provided: any) => ({
             ...provided,
             color: 'var(--color-forms-input-text)',
         })
@@ -98,6 +106,6 @@ const MultiSelect = ({options, selectedIndexes, setSelectedIndexes, className, s
             noOptionsMessage={() => t('html.label.select.noOptions')}
         />
     );
-};
+}
 
 export default MultiSelect;

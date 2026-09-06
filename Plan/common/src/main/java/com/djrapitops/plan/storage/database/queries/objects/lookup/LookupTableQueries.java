@@ -20,10 +20,7 @@ import com.djrapitops.plan.delivery.domain.World;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.sql.building.Select;
-import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
-import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
-import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
-import com.djrapitops.plan.storage.database.sql.tables.WorldTable;
+import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.sql.tables.webuser.SecurityTable;
 import com.djrapitops.plan.storage.database.sql.tables.webuser.WebGroupTable;
 import com.djrapitops.plan.storage.database.sql.tables.webuser.WebGroupToPermissionTable;
@@ -126,5 +123,13 @@ public class LookupTableQueries {
                         row.getString(Select.COLUMN_TABLE_NAME),
                         row.getInt(Select.COLUMN_MIN_ID)
                 ), TreeMap::new);
+    }
+
+    public static Query<LookupTable<String>> statisticsLookupTable() {
+        return db -> new LookupTable<>(db.queryMap(Select.all(StatisticTable.TABLE_NAME).toString(),
+                (set, map) -> map.put(
+                        set.getString(StatisticTable.STATISTIC_NAME),
+                        set.getInt(StatisticTable.ID)
+                )));
     }
 }

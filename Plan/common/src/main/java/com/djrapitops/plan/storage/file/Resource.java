@@ -19,6 +19,8 @@ package com.djrapitops.plan.storage.file;
 import com.djrapitops.plan.delivery.web.resource.WebResource;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.google.gson.Gson;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.google.gson.reflect.TypeToken;
 import org.apache.commons.lang3.Strings;
 
@@ -82,6 +84,10 @@ public interface Resource {
 
     default <T> T asParsed(Gson gson, TypeToken<T> token) throws IOException {
         return gson.fromJson(asString(), token.getType());
+    }
+
+    default JsonObject asJson() throws IOException {
+        return JsonParser.parseString(asString()).getAsJsonObject();
     }
 
     /**

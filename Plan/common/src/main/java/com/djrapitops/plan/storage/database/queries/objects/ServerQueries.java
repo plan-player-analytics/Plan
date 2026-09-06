@@ -106,6 +106,12 @@ public class ServerQueries {
         return fetchServerMatchingIdentifier(serverUUID.toString());
     }
 
+    public static Query<Optional<Integer>> fetchServerId(ServerUUID serverUUID) {
+        return db -> db.queryOptional(SELECT + ID + FROM + ServerTable.TABLE_NAME +
+                        WHERE + ServerTable.SERVER_UUID + "=?",
+                row -> row.getInt(ServerTable.ID), serverUUID);
+    }
+
     public static Query<Optional<Server>> fetchServerMatchingIdentifier(@Untrusted String identifier) {
         String sql = SELECT + '*' + FROM + ServerTable.TABLE_NAME +
                 WHERE + "(LOWER(" + ServerTable.SERVER_UUID + ") LIKE LOWER(?)" +

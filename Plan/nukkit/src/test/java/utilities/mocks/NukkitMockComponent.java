@@ -44,7 +44,6 @@ public class NukkitMockComponent {
     public PlanNukkit getPlanMock() {
         if (planMock == null) {
             planMock = PlanNukkitMocker.setUp()
-                    .withDataFolder(tempDir.toFile())
                     .withPluginDescription()
                     .withServer()
                     .getPlanMock();
@@ -57,7 +56,7 @@ public class NukkitMockComponent {
             PlanNukkit planMock = getPlanMock();
             component = DaggerPlanNukkitComponent.builder()
                     .plan(planMock)
-                    .abstractionLayer(new TestPlatformAbstractionLayer(this.planMock))
+                    .abstractionLayer(new TestPlatformAbstractionLayer(tempDir.resolve("PlanData")))
                     .build();
         }
         return component.system();

@@ -25,7 +25,7 @@ export const ErrorViewText = ({error}: ErrorViewProps) => {
         <>
             <p>{error.message} {error.url && <a href={error.url}>{error.url}</a>}</p>
             {error.data && <><br/>
-                <pre>{JSON.stringify(error.data)}</pre>
+                <pre>{JSON.stringify(error.data, null, 2)}</pre>
             </>}
         </>
     )

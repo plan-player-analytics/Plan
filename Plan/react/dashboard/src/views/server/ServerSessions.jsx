@@ -4,7 +4,7 @@ import ServerRecentSessionsCard from "../../components/cards/server/tables/Serve
 import SessionInsightsCard from "../../components/cards/server/insights/SessionInsightsCard";
 import LoadIn from "../../components/animation/LoadIn.tsx";
 import {useParams} from "react-router";
-import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import ExtendableRow from "../../components/layout/extension/ExtendableRow.tsx";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 import {ServerSessionCalendarCard} from "../../components/cards/server/graphs/ServerSessionCalendarCard.tsx";
 import {GenericFilterContextProvider} from "../../dataHooks/genericFilterContextHook.tsx";

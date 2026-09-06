@@ -49,9 +49,7 @@ public class FabricMockComponent {
 
     public PlanPlugin getPlanMock() {
         if (planMock == null) {
-            planMock = PlanFabricMocker.setUp()
-                    .withDataFolder(tempDir.resolve("data").toFile())
-                    .getPlanMock();
+            planMock = PlanFabricMocker.setUp().getPlanMock();
         }
         return planMock;
     }
@@ -61,7 +59,7 @@ public class FabricMockComponent {
             PlanPlugin planMock = getPlanMock();
             component = DaggerPlanFabricComponent.builder()
                     .plan(planMock)
-                    .abstractionLayer(new TestPlatformAbstractionLayer(planMock))
+                    .abstractionLayer(new TestPlatformAbstractionLayer(tempDir.resolve("PlanData")))
                     .server(mockServer())
                     .serverProperties(mockServerProperties())
                     .build();

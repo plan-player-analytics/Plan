@@ -11,3 +11,9 @@ export const fetchNetworkPingTable = async (timestamp) => {
     if (staticSite) url = `/data/network-pingTable.json`;
     return doGetRequest(url, timestamp);
 }
+
+export const fetchNetworkStatistics = async (timestamp, aggregate) => {
+    let url = `/v1/statistics${aggregate ? '?aggregate=true' : ''}`;
+    if (staticSite) url = `/data/statistics-${aggregate ? '-aggregate' : ''}.json`;
+    return doGetRequest(url, timestamp);
+}

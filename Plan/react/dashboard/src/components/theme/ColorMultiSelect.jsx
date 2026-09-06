@@ -1,5 +1,5 @@
 import React from 'react';
-import MultiSelect from "../input/MultiSelect.jsx";
+import MultiSelect from "../input/MultiSelect.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faSquare} from "@fortawesome/free-solid-svg-icons";
 

@@ -40,9 +40,12 @@ public abstract class JSONResolver implements Resolver {
         if (storedJSON == null) {
             return Response.builder()
                     .setMimeType(MimeType.JSON)
-                    .setJSONContent(Maps.builder(String.class, String.class)
-                            .put("error", "Json failed to generate for some reason, see /Plan/logs for errors")
+                    .setJSONContent(Maps.builder(String.class, Object.class)
+                            .put("status", 500)
+                            .put("error", "Failed to generate JSON, see plugins/Plan/logs for details")
+                            .put("requestedTarget", "")
                             .build())
+                    .setStatus(500)
                     .build();
         }
 

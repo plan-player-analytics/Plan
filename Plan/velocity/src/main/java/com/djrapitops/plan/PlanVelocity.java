@@ -40,7 +40,6 @@ import net.playeranalytics.plugin.VelocityPlatformLayer;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 import net.playeranalytics.plugin.server.PluginLogger;
 
-import java.io.File;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.logging.Level;
@@ -182,8 +181,4 @@ public class PlanVelocity implements PlanPlugin {
         return slf4jLogger;
     }
 
-    @Override
-    public File getDataFolder() {
-        return dataFolderPath.toFile();
-    }
 }

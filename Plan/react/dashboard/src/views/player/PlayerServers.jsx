@@ -10,7 +10,7 @@ import {usePlayer} from "../layout/PlayerPage";
 import {useTranslation} from "react-i18next";
 import PlayerPingGraph from "../../components/graphs/PlayerPingGraph";
 import LoadIn from "../../components/animation/LoadIn.tsx";
-import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import ExtendableRow from "../../components/layout/extension/ExtendableRow.tsx";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const PingGraphCard = ({player}) => {

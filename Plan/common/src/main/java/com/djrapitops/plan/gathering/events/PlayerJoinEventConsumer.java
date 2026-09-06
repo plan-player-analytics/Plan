@@ -26,6 +26,7 @@ import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.gathering.JoinAddressValidator;
+import com.djrapitops.plan.gathering.StatisticsIdCache;
 import com.djrapitops.plan.gathering.cache.NicknameCache;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
@@ -61,6 +62,7 @@ public class PlayerJoinEventConsumer {
     private final SessionCache sessionCache;
     private final NicknameCache nicknameCache;
     private final DatapointStore datapointStore;
+    private final StatisticsIdCache statisticsIdCache;
 
     private final ExtensionSvc extensionService;
     private final Exporter exporter;
@@ -76,6 +78,7 @@ public class PlayerJoinEventConsumer {
             SessionCache sessionCache,
             NicknameCache nicknameCache,
             DatapointStore datapointStore,
+            StatisticsIdCache statisticsIdCache,
             ExtensionSvc extensionService,
             Exporter exporter,
             PlayerExtensionDataUpdateTask.Factory playerExtensionUpdateTaskFactory
@@ -88,6 +91,7 @@ public class PlayerJoinEventConsumer {
         this.sessionCache = sessionCache;
         this.nicknameCache = nicknameCache;
         this.datapointStore = datapointStore;
+        this.statisticsIdCache = statisticsIdCache;
         this.extensionService = extensionService;
         this.exporter = exporter;
         this.playerExtensionUpdateTaskFactory = playerExtensionUpdateTaskFactory;
@@ -108,6 +112,7 @@ public class PlayerJoinEventConsumer {
             storeWorldInformation(join);
             storeGamePlayer(join)
                     .thenRunAsync(() -> {
+                        datapointStore.clearLastModified(DatapointCacheKey.SESSION);
                         storeJoinAddress(join);
                         interruptedSession.ifPresent(this::storeInterruptedSession);
                         storeGeolocation(join);
@@ -116,9 +121,13 @@ public class PlayerJoinEventConsumer {
                         updatePlayerDataExtensionValues(join);
                         updateExport(join);
                         registerExtensionUpdateTask(join);
-                        datapointStore.clearLastModified(DatapointCacheKey.SESSION);
+                        storePlayerStatistics(join);
                     }, processing.getCriticalExecutor());
         });
+    }
+
+    private void storePlayerStatistics(PlayerJoin join) {
+        statisticsIdCache.storePlayerStatistics(join.getPlayerUUID(), join.getServerUUID());
     }
 
     private void registerExtensionUpdateTask(PlayerJoin join) {

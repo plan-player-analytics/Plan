@@ -116,6 +116,7 @@ class AccessControlVisibilityTest {
                 Arguments.arguments(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_OVERVIEW, "online-activity-insights", "online-activity"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_SESSIONS_OVERVIEW, "session-insights", "sessions"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_SESSIONS_WORLD_PIE, "world-pie", "sessions"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_STATISTICS, "server-statistics", "statistics"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_SESSIONS_LIST, "session-list", "sessions"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_SESSIONS_CALENDAR, "server-calendar", "sessions"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_PLAYER_VERSUS_OVERVIEW, "pvp-pve-as-numbers", "pvppve"),
@@ -150,6 +151,8 @@ class AccessControlVisibilityTest {
                 Arguments.arguments(WebPermission.PAGE_NETWORK_SERVER_LIST, "row-network-servers-0", "serversOverview"),
                 Arguments.arguments(WebPermission.PAGE_NETWORK_SESSIONS_OVERVIEW, "session-insights", "sessions"),
                 Arguments.arguments(WebPermission.PAGE_NETWORK_SESSIONS_SERVER_PIE, "server-pie", "sessions"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_STATISTICS_AGGREGATE, "network-aggregate-statistics", "statistics"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_STATISTICS_BY_SERVER, "network-by-server-statistics", "statistics"),
                 Arguments.arguments(WebPermission.PAGE_NETWORK_SESSIONS_LIST, "session-list", "sessions"),
                 Arguments.arguments(WebPermission.PAGE_NETWORK_SESSIONS_CALENDAR, "server-calendar", "sessions"),
                 Arguments.arguments(WebPermission.PAGE_NETWORK_PLAYERBASE_OVERVIEW, "playerbase-trends", "playerbase"),
@@ -173,6 +176,7 @@ class AccessControlVisibilityTest {
                 Arguments.arguments(WebPermission.PAGE_PLAYER_SESSIONS, "player-sessions", "sessions"),
                 Arguments.arguments(WebPermission.PAGE_PLAYER_VERSUS, "player-pvp-pve", "pvppve"),
                 Arguments.arguments(WebPermission.PAGE_PLAYER_SERVERS, "player-servers", "servers"),
+                Arguments.arguments(WebPermission.PAGE_PLAYER_STATISTICS, "player-statistics", "statistics"),
                 Arguments.arguments(WebPermission.PAGE_PLAYER_PLUGINS, "player-plugin-data", "plugins/Server%201")
         );
     }

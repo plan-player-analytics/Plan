@@ -44,7 +44,6 @@ public class VelocityMockComponent {
     public PlanVelocity getPlanMock() {
         if (planMock == null) {
             planMock = PlanVelocityMocker.setUp()
-                    .withDataFolder(tempDir.toFile())
                     .withProxy()
                     .getPlanMock();
         }
@@ -56,7 +55,7 @@ public class VelocityMockComponent {
             PlanVelocity planMock = getPlanMock();
             component = DaggerPlanVelocityComponent.builder()
                     .plan(planMock)
-                    .abstractionLayer(new TestPlatformAbstractionLayer(this.planMock))
+                    .abstractionLayer(new TestPlatformAbstractionLayer(tempDir.resolve("PlanData")))
                     .build();
         }
         return component.system();

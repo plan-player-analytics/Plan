@@ -49,7 +49,6 @@ public class PluginMockComponent {
     public PlanPlugin getPlanMock() {
         if (planMock == null) {
             planMock = PlanPluginMocker.setUp()
-                    .withDataFolder(tempDir.toFile())
                     .withLogging().getPlanMock();
         }
         return planMock;
@@ -66,7 +65,7 @@ public class PluginMockComponent {
     private void initComponent() {
         if (component == null) {
             PlanPlugin planMock = getPlanMock();
-            abstractionLayer = new TestPlatformAbstractionLayer(planMock);
+            abstractionLayer = new TestPlatformAbstractionLayer(tempDir.resolve("PlanData"));
             component = DaggerPlanPluginComponent.builder()
                     .bindTemporaryDirectory(tempDir)
                     .plan(planMock)
