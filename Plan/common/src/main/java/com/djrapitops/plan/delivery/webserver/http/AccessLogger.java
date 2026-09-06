@@ -27,6 +27,7 @@ import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.server.PluginLogger;
 import org.apache.commons.lang3.StringUtils;
+import org.jspecify.annotations.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -48,18 +49,18 @@ public class AccessLogger {
         this.errorLogger = errorLogger;
     }
 
-    public void log(@Untrusted InternalRequest internalRequest, @Untrusted Request request, Response response) {
+    public void log(@Untrusted InternalRequest internalRequest, @Untrusted Request request, @Nullable Response response) {
+        int responseCode = response != null ? response.getCode() : 599;
         if (webserverConfiguration.logAccessToConsole()) {
-            int code = response.getCode();
             @Untrusted String message = "Access Log: " + internalRequest.getMethod() + " " +
                     getRequestURI(internalRequest, request) +
                     " (from " + internalRequest.getAccessAddress(webserverConfiguration) + ") - " +
-                    code;
+                    responseCode;
             if (webserverConfiguration.isDevMode()) {
                 message += " Request Headers" + internalRequest.getRequestHeaders();
             }
 
-            int codeFamily = code - (code % 100); // 5XX, 4XX etc
+            int codeFamily = responseCode - (responseCode % 100); // 5XX, 4XX etc
             switch (codeFamily) {
                 case 500:
                     logger.error(message);
@@ -81,7 +82,6 @@ public class AccessLogger {
             String method = internalRequest.getMethod();
             method = method != null ? method : "?";
             String url = StoreRequestTransaction.getTruncatedURI(request, internalRequest);
-            int responseCode = response.getCode();
             accessLogBatchTask.addLoggedRequest(new LoggedRequest(timestamp, accessAddress, method, url, responseCode));
         } catch (CompletionException | DBOpException e) {
             errorLogger.warn(e, ErrorContext.builder()
