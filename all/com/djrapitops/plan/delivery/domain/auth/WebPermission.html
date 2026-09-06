@@ -72,6 +72,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#PAGE_NETWORK_PLAYERBASE" tabindex="0">PAGE_NETWORK_PLAYERBASE</a></li>
 <li><a href="#PAGE_NETWORK_PLAYERBASE_OVERVIEW" tabindex="0">PAGE_NETWORK_PLAYERBASE_OVERVIEW</a></li>
 <li><a href="#PAGE_NETWORK_PLAYERBASE_GRAPHS" tabindex="0">PAGE_NETWORK_PLAYERBASE_GRAPHS</a></li>
+<li><a href="#PAGE_NETWORK_STATISTICS" tabindex="0">PAGE_NETWORK_STATISTICS</a></li>
+<li><a href="#PAGE_NETWORK_STATISTICS_AGGREGATE" tabindex="0">PAGE_NETWORK_STATISTICS_AGGREGATE</a></li>
+<li><a href="#PAGE_NETWORK_STATISTICS_BY_SERVER" tabindex="0">PAGE_NETWORK_STATISTICS_BY_SERVER</a></li>
 <li><a href="#PAGE_NETWORK_SESSIONS" tabindex="0">PAGE_NETWORK_SESSIONS</a></li>
 <li><a href="#PAGE_NETWORK_SESSIONS_OVERVIEW" tabindex="0">PAGE_NETWORK_SESSIONS_OVERVIEW</a></li>
 <li><a href="#PAGE_NETWORK_SESSIONS_WORLD_PIE" tabindex="0">PAGE_NETWORK_SESSIONS_WORLD_PIE</a></li>
@@ -107,6 +110,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#PAGE_SERVER_PLAYER_VERSUS" tabindex="0">PAGE_SERVER_PLAYER_VERSUS</a></li>
 <li><a href="#PAGE_SERVER_PLAYER_VERSUS_OVERVIEW" tabindex="0">PAGE_SERVER_PLAYER_VERSUS_OVERVIEW</a></li>
 <li><a href="#PAGE_SERVER_PLAYER_VERSUS_KILL_LIST" tabindex="0">PAGE_SERVER_PLAYER_VERSUS_KILL_LIST</a></li>
+<li><a href="#PAGE_SERVER_STATISTICS" tabindex="0">PAGE_SERVER_STATISTICS</a></li>
 <li><a href="#PAGE_SERVER_PLAYERS" tabindex="0">PAGE_SERVER_PLAYERS</a></li>
 <li><a href="#PAGE_SERVER_SESSIONS" tabindex="0">PAGE_SERVER_SESSIONS</a></li>
 <li><a href="#PAGE_SERVER_SESSIONS_OVERVIEW" tabindex="0">PAGE_SERVER_SESSIONS_OVERVIEW</a></li>
@@ -141,6 +145,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#PAGE_PLAYER_SESSIONS" tabindex="0">PAGE_PLAYER_SESSIONS</a></li>
 <li><a href="#PAGE_PLAYER_VERSUS" tabindex="0">PAGE_PLAYER_VERSUS</a></li>
 <li><a href="#PAGE_PLAYER_SERVERS" tabindex="0">PAGE_PLAYER_SERVERS</a></li>
+<li><a href="#PAGE_PLAYER_STATISTICS" tabindex="0">PAGE_PLAYER_STATISTICS</a></li>
 <li><a href="#PAGE_PLAYER_PLUGINS" tabindex="0">PAGE_PLAYER_PLUGINS</a></li>
 <li><a href="#DATA" tabindex="0">DATA</a></li>
 <li><a href="#DATA_PLAYER" tabindex="0">DATA_PLAYER</a></li>
@@ -609,15 +614,23 @@ implements <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code><a href="#PAGE_NETWORK_SESSIONS_WORLD_PIE" class="member-name-link">PAGE_NETWORK_SESSIONS_WORLD_PIE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_PLAYER" class="member-name-link">PAGE_PLAYER</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_NETWORK_STATISTICS" class="member-name-link">PAGE_NETWORK_STATISTICS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PAGE_PLAYER_OVERVIEW" class="member-name-link">PAGE_PLAYER_OVERVIEW</a></code></div>
+<div class="col-first even-row-color"><code><a href="#PAGE_NETWORK_STATISTICS_AGGREGATE" class="member-name-link">PAGE_NETWORK_STATISTICS_AGGREGATE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_PLAYER_PLUGINS" class="member-name-link">PAGE_PLAYER_PLUGINS</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_NETWORK_STATISTICS_BY_SERVER" class="member-name-link">PAGE_NETWORK_STATISTICS_BY_SERVER</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
-<div class="col-first even-row-color"><code><a href="#PAGE_PLAYER_SERVERS" class="member-name-link">PAGE_PLAYER_SERVERS</a></code></div>
+<div class="col-first even-row-color"><code><a href="#PAGE_PLAYER" class="member-name-link">PAGE_PLAYER</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
-<div class="col-first odd-row-color"><code><a href="#PAGE_PLAYER_SESSIONS" class="member-name-link">PAGE_PLAYER_SESSIONS</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_PLAYER_OVERVIEW" class="member-name-link">PAGE_PLAYER_OVERVIEW</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#PAGE_PLAYER_PLUGINS" class="member-name-link">PAGE_PLAYER_PLUGINS</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_PLAYER_SERVERS" class="member-name-link">PAGE_PLAYER_SERVERS</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-first even-row-color"><code><a href="#PAGE_PLAYER_SESSIONS" class="member-name-link">PAGE_PLAYER_SESSIONS</a></code></div>
+<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_PLAYER_STATISTICS" class="member-name-link">PAGE_PLAYER_STATISTICS</a></code></div>
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code><a href="#PAGE_PLAYER_VERSUS" class="member-name-link">PAGE_PLAYER_VERSUS</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
@@ -715,6 +728,8 @@ implements <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base
 <div class="col-last odd-row-color">&nbsp;</div>
 <div class="col-first even-row-color"><code><a href="#PAGE_SERVER_SESSIONS_WORLD_PIE" class="member-name-link">PAGE_SERVER_SESSIONS_WORLD_PIE</a></code></div>
 <div class="col-last even-row-color">&nbsp;</div>
+<div class="col-first odd-row-color"><code><a href="#PAGE_SERVER_STATISTICS" class="member-name-link">PAGE_SERVER_STATISTICS</a></code></div>
+<div class="col-last odd-row-color">&nbsp;</div>
 </div>
 </section>
 </li>
@@ -888,6 +903,30 @@ the order they are declared.</div>
 <h3>PAGE_NETWORK_PLAYERBASE_GRAPHS</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">PAGE_NETWORK_PLAYERBASE_GRAPHS</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="PAGE_NETWORK_STATISTICS">
+<h3>PAGE_NETWORK_STATISTICS</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">PAGE_NETWORK_STATISTICS</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="PAGE_NETWORK_STATISTICS_AGGREGATE">
+<h3>PAGE_NETWORK_STATISTICS_AGGREGATE</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">PAGE_NETWORK_STATISTICS_AGGREGATE</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="PAGE_NETWORK_STATISTICS_BY_SERVER">
+<h3>PAGE_NETWORK_STATISTICS_BY_SERVER</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">PAGE_NETWORK_STATISTICS_BY_SERVER</span></div>
 </div>
 </section>
 </li>
@@ -1174,6 +1213,14 @@ the order they are declared.</div>
 </section>
 </li>
 <li>
+<section class="detail" id="PAGE_SERVER_STATISTICS">
+<h3>PAGE_SERVER_STATISTICS</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">PAGE_SERVER_STATISTICS</span></div>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="PAGE_SERVER_PLAYERS">
 <h3>PAGE_SERVER_PLAYERS</h3>
 <div class="horizontal-scroll">
@@ -1444,6 +1491,14 @@ the order they are declared.</div>
 <h3>PAGE_PLAYER_SERVERS</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">PAGE_PLAYER_SERVERS</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="PAGE_PLAYER_STATISTICS">
+<h3>PAGE_PLAYER_STATISTICS</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="WebPermission.html" title="enum class in com.djrapitops.plan.delivery.domain.auth">WebPermission</a></span>&nbsp;<span class="element-name">PAGE_PLAYER_STATISTICS</span></div>
 </div>
 </section>
 </li>

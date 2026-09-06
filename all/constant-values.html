@@ -853,6 +853,58 @@ loadScripts(document, 'script');</script>
 </div>
 </li>
 <li>
+<div class="caption"><span>com.djrapitops.plan.storage.database.sql.tables.<a href="com/djrapitops/plan/storage/database/sql/tables/StatisticTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables">StatisticTable</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Constant Field</div>
+<div class="table-header col-last">Value</div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.StatisticTable.ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/StatisticTable.html#ID">ID</a></code></div>
+<div class="col-last even-row-color"><code>"id"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.StatisticTable.SELECT_STATISTICS">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/StatisticTable.html#SELECT_STATISTICS">SELECT_STATISTICS</a></code></div>
+<div class="col-last odd-row-color"><code>"SELECT id,statistic_name FROM plan_minecraft_statistic"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.StatisticTable.STATISTIC_NAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/StatisticTable.html#STATISTIC_NAME">STATISTIC_NAME</a></code></div>
+<div class="col-last even-row-color"><code>"statistic_name"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.StatisticTable.TABLE_NAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/StatisticTable.html#TABLE_NAME">TABLE_NAME</a></code></div>
+<div class="col-last odd-row-color"><code>"plan_minecraft_statistic"</code></div>
+</div>
+</li>
+<li>
+<div class="caption"><span>com.djrapitops.plan.storage.database.sql.tables.<a href="com/djrapitops/plan/storage/database/sql/tables/StatisticValueTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables">StatisticValueTable</a></span></div>
+<div class="summary-table three-column-summary">
+<div class="table-header col-first">Modifier and Type</div>
+<div class="table-header col-second">Constant Field</div>
+<div class="table-header col-last">Value</div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.StatisticValueTable.ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/StatisticValueTable.html#ID">ID</a></code></div>
+<div class="col-last even-row-color"><code>"id"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.StatisticValueTable.INSERT_STATEMENT">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/StatisticValueTable.html#INSERT_STATEMENT">INSERT_STATEMENT</a></code></div>
+<div class="col-last odd-row-color"><code>"INSERT INTO plan_minecraft_statistic_value(value,statistic_id,user_id,server_id) VALUES (?,?,?,?)"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.StatisticValueTable.SERVER_ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/StatisticValueTable.html#SERVER_ID">SERVER_ID</a></code></div>
+<div class="col-last even-row-color"><code>"server_id"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.StatisticValueTable.STATISTIC_ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/StatisticValueTable.html#STATISTIC_ID">STATISTIC_ID</a></code></div>
+<div class="col-last odd-row-color"><code>"statistic_id"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.StatisticValueTable.TABLE_NAME">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/StatisticValueTable.html#TABLE_NAME">TABLE_NAME</a></code></div>
+<div class="col-last even-row-color"><code>"plan_minecraft_statistic_value"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.StatisticValueTable.UPDATE_STATEMENT">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/StatisticValueTable.html#UPDATE_STATEMENT">UPDATE_STATEMENT</a></code></div>
+<div class="col-last odd-row-color"><code>"UPDATE plan_minecraft_statistic_value SET value=? WHERE statistic_id=? AND user_id=? AND server_id=?"</code></div>
+<div class="col-first even-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.StatisticValueTable.USER_ID">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/StatisticValueTable.html#USER_ID">USER_ID</a></code></div>
+<div class="col-last even-row-color"><code>"user_id"</code></div>
+<div class="col-first odd-row-color"><code id="com.djrapitops.plan.storage.database.sql.tables.StatisticValueTable.VALUE">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="com/djrapitops/plan/storage/database/sql/tables/StatisticValueTable.html#VALUE">VALUE</a></code></div>
+<div class="col-last odd-row-color"><code>"value"</code></div>
+</div>
+</li>
+<li>
 <div class="caption"><span>com.djrapitops.plan.storage.database.sql.tables.<a href="com/djrapitops/plan/storage/database/sql/tables/TPSTable.html" title="class in com.djrapitops.plan.storage.database.sql.tables">TPSTable</a></span></div>
 <div class="summary-table three-column-summary">
 <div class="table-header col-first">Modifier and Type</div>
@@ -1653,7 +1705,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-last">Value</div>
 <div class="col-first even-row-color"><code id="net.playeranalytics.plan.BuildParameters.VERSION">public&nbsp;static&nbsp;final&nbsp;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second even-row-color"><code><a href="net/playeranalytics/plan/BuildParameters.html#VERSION">VERSION</a></code></div>
-<div class="col-last even-row-color"><code>"5.8 build 3638"</code></div>
+<div class="col-last even-row-color"><code>"5.8 build 3640"</code></div>
 </div>
 </li>
 </ul>

@@ -81,6 +81,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#playerSessions(com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter)" tabindex="0">playerSessions(GenericFilter)</a></li>
 <li><a href="#serverSessions(com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter)" tabindex="0">serverSessions(GenericFilter)</a></li>
 <li><a href="#networkSessions(com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter)" tabindex="0">networkSessions(GenericFilter)</a></li>
+<li><a href="#serverStatistics(com.djrapitops.plan.identification.ServerUUID)" tabindex="0">serverStatistics(ServerUUID)</a></li>
+<li><a href="#networkStatistics()" tabindex="0">networkStatistics()</a></li>
+<li><a href="#networkStatisticsAggregate()" tabindex="0">networkStatisticsAggregate()</a></li>
 </ol>
 </li>
 </ol>
@@ -152,6 +155,12 @@ loadScripts(document, 'script');</script>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#networkSessions(com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter)" class="member-name-link">networkSessions</a><wbr>(<a href="../../domain/datatransfer/GenericFilter.html" title="class in com.djrapitops.plan.delivery.domain.datatransfer">GenericFilter</a>&nbsp;filter)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../../domain/ServerMinecraftStatistics.html" title="class in com.djrapitops.plan.delivery.domain">ServerMinecraftStatistics</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#networkStatistics()" class="member-name-link">networkStatistics</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../../domain/ServerMinecraftStatistics.html" title="class in com.djrapitops.plan.delivery.domain">ServerMinecraftStatistics</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#networkStatisticsAggregate()" class="member-name-link">networkStatisticsAggregate</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#pingPerGeolocation()" class="member-name-link">pingPerGeolocation</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -195,6 +204,9 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#serverSessions(com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter)" class="member-name-link">serverSessions</a><wbr>(<a href="../../domain/datatransfer/GenericFilter.html" title="class in com.djrapitops.plan.delivery.domain.datatransfer">GenericFilter</a>&nbsp;filter)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../../domain/ServerMinecraftStatistics.html" title="class in com.djrapitops.plan.delivery.domain">ServerMinecraftStatistics</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#serverStatistics(com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">serverStatistics</a><wbr>(<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -383,6 +395,30 @@ loadScripts(document, 'script');</script>
 <h3>networkSessions</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>,<wbr><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Object.html" title="class or interface in java.lang" class="external-link">Object</a>&gt;&gt;</span>&nbsp;<span class="element-name">networkSessions</span><wbr><span class="parameters">(<a href="../../domain/datatransfer/GenericFilter.html" title="class in com.djrapitops.plan.delivery.domain.datatransfer">GenericFilter</a>&nbsp;filter)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="serverStatistics(com.djrapitops.plan.identification.ServerUUID)">
+<h3>serverStatistics</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../domain/ServerMinecraftStatistics.html" title="class in com.djrapitops.plan.delivery.domain">ServerMinecraftStatistics</a>&gt;</span>&nbsp;<span class="element-name">serverStatistics</span><wbr><span class="parameters">(<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="networkStatistics()">
+<h3>networkStatistics</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../domain/ServerMinecraftStatistics.html" title="class in com.djrapitops.plan.delivery.domain">ServerMinecraftStatistics</a>&gt;</span>&nbsp;<span class="element-name">networkStatistics</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="networkStatisticsAggregate()">
+<h3>networkStatisticsAggregate</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="../../domain/ServerMinecraftStatistics.html" title="class in com.djrapitops.plan.delivery.domain">ServerMinecraftStatistics</a>&gt;</span>&nbsp;<span class="element-name">networkStatisticsAggregate</span>()</div>
 </div>
 </section>
 </li>
