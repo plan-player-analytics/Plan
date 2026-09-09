@@ -17,6 +17,7 @@
 package com.djrapitops.plan.settings.config;
 
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -92,21 +93,26 @@ public class ConfigWriter {
     }
 
     private void dfsTreeTraverseLineResolve(ConfigNode writing, Collection<String> lines) {
-        Map<String, ConfigNode> children = writing.childNodes;
-        for (String key : writing.getNodeOrder()) {
-            ConfigNode node = children.get(key);
-            // node is null:       Inconsistent config node state
-            // value is null:      Has no value (empty)
-            // nodeOrder is empty: Has no children
-            if (node == null || node.value == null && node.nodeOrder.isEmpty()) {
-                continue;
+        writing.nodeModificationLock.lock();
+        try {
+            Map<String, ConfigNode> children = writing.childNodes;
+            for (String key : writing.getNodeOrder()) {
+                ConfigNode node = children.get(key);
+                // node is null:       Inconsistent config node state
+                // value is null:      Has no value (empty)
+                // nodeOrder is empty: Has no children
+                if (node == null || node.value == null && node.nodeOrder.isEmpty()) {
+                    continue;
+                }
+
+                indent = node.getNodeDepth() * 4;
+                addComment(node.comment, lines);
+                addValue(node, lines);
+
+                dfsTreeTraverseLineResolve(node, lines);
             }
-
-            indent = node.getNodeDepth() * 4;
-            addComment(node.comment, lines);
-            addValue(node, lines);
-
-            dfsTreeTraverseLineResolve(node, lines);
+        } finally {
+            writing.nodeModificationLock.unlock();
         }
     }
 
@@ -116,7 +122,7 @@ public class ConfigWriter {
 
         if (value == null || value.isEmpty()) {
             addKey(key, lines);
-        } else if (StringUtils.contains(value, "\n")) {
+        } else if (Strings.CI.contains(value, "\n")) {
             // List values include newline characters,
             // see ConfigValueParser.StringListParser
             addListValue(key, StringUtils.split(value, "\n"), lines);

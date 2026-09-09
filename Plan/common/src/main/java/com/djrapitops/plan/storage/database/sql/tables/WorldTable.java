@@ -16,12 +16,18 @@
  */
 package com.djrapitops.plan.storage.database.sql.tables;
 
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBType;
+import com.djrapitops.plan.storage.database.queries.objects.lookup.ServerUUIDIdentifiable;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.transactions.patches.Version10Patch;
 import com.djrapitops.plan.storage.database.transactions.patches.WorldsOptimizationPatch;
 import com.djrapitops.plan.storage.database.transactions.patches.WorldsServerIDPatch;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -43,7 +49,7 @@ public class WorldTable {
     public static final String SERVER_UUID = "server_uuid";
     public static final String NAME = "world_name";
 
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " ("
             + NAME + ','
             + SERVER_UUID
             + ") VALUES (?, ?)";
@@ -64,6 +70,43 @@ public class WorldTable {
                 .column(NAME, Sql.varchar(100)).notNull()
                 .column(SERVER_UUID, Sql.varchar(36)).notNull()
                 .toString();
+    }
+
+    public static class Row implements ServerUUIDIdentifiable {
+        private int id;
+        private String name;
+        private ServerUUID serverUUID;
+
+        public static Row extract(ResultSet set) throws SQLException {
+            Row row = new Row();
+            row.id = set.getInt(ID);
+            row.name = set.getString(NAME);
+            row.serverUUID = ServerUUID.fromString(set.getString(SERVER_UUID));
+            return row;
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        @Override
+        public ServerUUID getServerUUID() {
+            return serverUUID;
+        }
+
+        @Override
+        public void setServerUUID(ServerUUID serverUUID) {
+            this.serverUUID = serverUUID;
+        }
+
+        public void insert(PreparedStatement statement) throws SQLException {
+            statement.setString(1, name);
+            statement.setString(2, serverUUID.toString());
+        }
     }
 }
 

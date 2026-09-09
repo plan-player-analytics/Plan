@@ -16,10 +16,12 @@
  */
 package com.djrapitops.plan.delivery.domain;
 
+import org.jspecify.annotations.NonNull;
+
 import java.util.Objects;
 import java.util.UUID;
 
-public class PlayerIdentifier {
+public class PlayerIdentifier implements Comparable<PlayerIdentifier> {
     private final UUID uuid;
     private final String name;
 
@@ -63,5 +65,10 @@ public class PlayerIdentifier {
 
     public String toJson() {
         return "{\"name\": \"" + name + "\", \"uuid\": \"" + uuid + "\"}";
+    }
+
+    @Override
+    public int compareTo(@NonNull PlayerIdentifier o) {
+        return String.CASE_INSENSITIVE_ORDER.compare(name, o.name);
     }
 }

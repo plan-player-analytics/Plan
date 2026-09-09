@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {useTranslation} from "react-i18next";
-import {useMetadata} from "../../hooks/metadataHook";
-import {useNavigation} from "../../hooks/navigationHook";
+import {useMetadata} from "../../hooks/metadataHook.tsx";
+import {useNavigation} from "../../hooks/navigationHook.tsx";
 import {staticSite} from "../../service/backendConfiguration";
 import {faSearch, faUsersGear} from "@fortawesome/free-solid-svg-icons";
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 import MainPageRedirect from "../../components/navigation/MainPageRedirect";
 import ErrorPage from "./ErrorPage";
 import Sidebar from "../../components/navigation/Sidebar";

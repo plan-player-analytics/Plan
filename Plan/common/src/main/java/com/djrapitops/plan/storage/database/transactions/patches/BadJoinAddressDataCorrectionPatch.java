@@ -69,6 +69,7 @@ public class BadJoinAddressDataCorrectionPatch extends Patch {
     }
 
     private void deleteOldIds(Set<Integer> removeIds) {
+        if (removeIds.isEmpty()) return;
         String sql = DELETE_FROM + JoinAddressTable.TABLE_NAME +
                 WHERE + JoinAddressTable.ID + " IN (" + Sql.nParameters(removeIds.size()) + ")";
         execute(new ExecStatement(sql) {
@@ -80,6 +81,7 @@ public class BadJoinAddressDataCorrectionPatch extends Patch {
     }
 
     private void updateOldIds(Map<Integer, Integer> oldToNewIds) {
+        if (oldToNewIds.isEmpty()) return;
         String sql = "UPDATE " + SessionsTable.TABLE_NAME +
                 " SET " + SessionsTable.JOIN_ADDRESS_ID + "=?" +
                 WHERE + SessionsTable.JOIN_ADDRESS_ID + "=?";
@@ -116,7 +118,7 @@ public class BadJoinAddressDataCorrectionPatch extends Patch {
     private boolean hasBadAddressIds() {
         String sql = SELECT + "COUNT(*) as c" +
                 FROM + JoinAddressTable.TABLE_NAME +
-                WHERE + "INSTR(" + JoinAddressTable.JOIN_ADDRESS + ", CHAR(0))";
+                WHERE + "INSTR(" + JoinAddressTable.JOIN_ADDRESS + ", CHAR(0))" + lockForUpdate();
         return query(db -> db.queryOptional(sql, results -> results.getInt("c") > 0))
                 .orElse(false);
     }
@@ -125,7 +127,7 @@ public class BadJoinAddressDataCorrectionPatch extends Patch {
         String sql = SELECT + JoinAddressTable.ID + ',' +
                 JoinAddressTable.JOIN_ADDRESS +
                 FROM + JoinAddressTable.TABLE_NAME +
-                WHERE + "INSTR(" + JoinAddressTable.JOIN_ADDRESS + ", CHAR(0))";
+                WHERE + "INSTR(" + JoinAddressTable.JOIN_ADDRESS + ", CHAR(0))" + lockForUpdate();
         return query(db -> db.queryMap(sql, (results, map) -> map.put(results.getString(JoinAddressTable.JOIN_ADDRESS),
                 results.getInt(JoinAddressTable.ID))));
     }

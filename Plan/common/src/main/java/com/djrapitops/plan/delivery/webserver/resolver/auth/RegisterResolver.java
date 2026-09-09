@@ -49,10 +49,12 @@ import java.util.Optional;
 public class RegisterResolver implements NoAuthResolver {
 
     private final DBSystem dbSystem;
+    private final RegistrationBin registrationBin;
 
     @Inject
-    public RegisterResolver(DBSystem dbSystem) {
+    public RegisterResolver(DBSystem dbSystem, RegistrationBin registrationBin) {
         this.dbSystem = dbSystem;
+        this.registrationBin = registrationBin;
     }
 
     @GET
@@ -85,7 +87,7 @@ public class RegisterResolver implements NoAuthResolver {
         if (checkCode.isPresent()) {
             return Response.builder()
                     .setStatus(200)
-                    .setJSONContent(Collections.singletonMap("success", !RegistrationBin.contains(checkCode.get())))
+                    .setJSONContent(Collections.singletonMap("success", !registrationBin.contains(checkCode.get())))
                     .build();
         }
 
@@ -97,7 +99,7 @@ public class RegisterResolver implements NoAuthResolver {
 
         @Untrusted String password = getPassword(form, query);
         try {
-            String code = RegistrationBin.addInfoForRegistration(username, password);
+            String code = registrationBin.addInfoForRegistration(username, password);
             return Response.builder()
                     .setStatus(200)
                     .setJSONContent(Maps.builder(String.class, Object.class)

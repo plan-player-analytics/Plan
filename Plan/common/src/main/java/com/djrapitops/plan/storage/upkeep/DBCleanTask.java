@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.upkeep;
 
 import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.exceptions.database.DBOpException;
+import com.djrapitops.plan.extension.implementation.providers.gathering.ExtensionMetadataStorage;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.query.QuerySvc;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -32,6 +33,7 @@ import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
+import com.djrapitops.plan.storage.database.sql.tables.webuser.RegistrationTable;
 import com.djrapitops.plan.storage.database.transactions.commands.RemovePlayerTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.RemoveDuplicateUserInfoTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.RemoveOldAccessLogTransaction;
@@ -68,6 +70,7 @@ public class DBCleanTask extends TaskSystem.Task {
     private final PlanConfig config;
     private final QuerySvc queryService;
     private final ServerInfo serverInfo;
+    private final ExtensionMetadataStorage extensionMetadataStorage;
     private final PluginLogger logger;
     private final ErrorLogger errorLogger;
 
@@ -82,6 +85,7 @@ public class DBCleanTask extends TaskSystem.Task {
             DBSystem dbSystem,
             QuerySvc queryService,
             ServerInfo serverInfo,
+            ExtensionMetadataStorage extensionMetadataStorage,
             PluginLogger logger,
             ErrorLogger errorLogger
     ) {
@@ -91,6 +95,7 @@ public class DBCleanTask extends TaskSystem.Task {
         this.config = config;
         this.queryService = queryService;
         this.serverInfo = serverInfo;
+        this.extensionMetadataStorage = extensionMetadataStorage;
         this.logger = logger;
         this.errorLogger = errorLogger;
 
@@ -102,7 +107,7 @@ public class DBCleanTask extends TaskSystem.Task {
         Database database = dbSystem.getDatabase();
         try {
             if (database.getState() != Database.State.CLOSED) {
-
+                database.executeInTransaction(RegistrationTable.DELETE_EXPIRED, System.currentTimeMillis());
                 database.executeTransaction(new RemoveOldAccessLogTransaction(TimeUnit.DAYS.toMillis(config.get(WebserverSettings.REMOVE_ACCESS_LOG_AFTER_DAYS))));
                 database.executeTransaction(new RemoveOldSampledDataTransaction(
                         serverInfo.getServerUUID(),
@@ -124,7 +129,7 @@ public class DBCleanTask extends TaskSystem.Task {
                 // This is needed since the last updated number is updated at reload and it would lead to all data
                 // for plugins being deleted all the time.
                 if (System.currentTimeMillis() - lastReload <= deleteExtensionDataAfter) {
-                    database.executeTransaction(new RemoveOldExtensionsTransaction(config.getExtensionSettings(), deleteExtensionDataAfter, serverInfo.getServerUUID()));
+                    database.executeTransaction(new RemoveOldExtensionsTransaction(extensionMetadataStorage, config.getExtensionSettings(), deleteExtensionDataAfter, serverInfo.getServerUUID()));
                 }
             }
         } catch (DBOpException e) {

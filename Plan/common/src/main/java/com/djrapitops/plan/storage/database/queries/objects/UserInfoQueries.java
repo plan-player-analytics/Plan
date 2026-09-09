@@ -21,6 +21,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
+import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.UserInfoTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
@@ -128,11 +129,12 @@ public class UserInfoQueries {
 
     public static Query<Map<UUID, Long>> fetchRegisterDates(long after, long before, ServerUUID serverUUID) {
         String sql = SELECT +
-                UsersTable.USER_UUID + ',' +
+                "u." + UsersTable.USER_UUID + ',' +
                 "ux." + UserInfoTable.REGISTERED +
                 FROM + UserInfoTable.TABLE_NAME + " ux" +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + '=' + "ux." + UserInfoTable.USER_ID +
-                WHERE + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=ux." + UserInfoTable.SERVER_ID +
+                WHERE + "s." + ServerTable.SERVER_UUID + "=?" +
                 AND + "ux." + UserInfoTable.REGISTERED + ">=?" +
                 AND + "ux." + UserInfoTable.REGISTERED + "<=?";
 
@@ -231,5 +233,14 @@ public class UserInfoQueries {
                 return userIds;
             }
         };
+    }
+
+    public static Query<List<UserInfoTable.Row>> fetchRows(int currentId, int rowLimit) {
+        String sql = Select.all(UserInfoTable.TABLE_NAME)
+                .where(UserInfoTable.ID + '>' + currentId)
+                .orderBy(UserInfoTable.ID)
+                .limit(rowLimit)
+                .toString();
+        return db -> db.queryList(sql, UserInfoTable.Row::extract);
     }
 }

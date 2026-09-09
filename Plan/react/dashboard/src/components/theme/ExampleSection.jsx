@@ -1,6 +1,6 @@
 import {SidebarUseCase} from "./usecase/SidebarUseCase.jsx";
 import InfoBoxUseCase from "./usecase/InfoBoxUseCase.jsx";
-import {ChartLoader} from "../navigation/Loader.jsx";
+import {ChartLoader} from "../navigation/Loader.tsx";
 import TrendUseCase from "./usecase/TrendUseCase.jsx";
 import CardUseCase from "./usecase/CardUseCase.jsx";
 import CalendarUseCase from "./usecase/CalendarUseCase.jsx";

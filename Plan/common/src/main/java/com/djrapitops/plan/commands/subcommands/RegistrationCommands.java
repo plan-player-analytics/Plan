@@ -56,6 +56,7 @@ public class RegistrationCommands {
     private final ActiveCookieStore activeCookieStore;
     private final LinkCommands linkCommands;
     private final Confirmation confirmation;
+    private final RegistrationBin registrationBin;
     private final PluginLogger logger;
     private final ErrorLogger errorLogger;
 
@@ -66,7 +67,7 @@ public class RegistrationCommands {
             DBSystem dbSystem,
             ActiveCookieStore activeCookieStore,
             LinkCommands linkCommands,
-            Confirmation confirmation,
+            Confirmation confirmation, RegistrationBin registrationBin,
             PluginLogger logger,
             ErrorLogger errorLogger
     ) {
@@ -77,6 +78,7 @@ public class RegistrationCommands {
         this.activeCookieStore = activeCookieStore;
         this.linkCommands = linkCommands;
         this.confirmation = confirmation;
+        this.registrationBin = registrationBin;
         this.logger = logger;
         this.errorLogger = errorLogger;
     }
@@ -108,7 +110,7 @@ public class RegistrationCommands {
 
     public void registerUsingCode(CMDSender sender, @Untrusted String code, @Untrusted Arguments arguments) {
         UUID linkedToUUID = sender.getUUID().orElse(null);
-        User user = RegistrationBin.register(code, linkedToUUID)
+        User user = registrationBin.register(code, linkedToUUID)
                 .orElseThrow(() -> new IllegalArgumentException(locale.getString(FailReason.USER_INFORMATION_NOT_FOUND)));
         String permissionGroup = getPermissionGroup(sender, arguments)
                 .orElseThrow(() -> new IllegalArgumentException(locale.getString(FailReason.NO_PERMISSION_GROUP)));

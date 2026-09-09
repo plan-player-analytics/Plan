@@ -18,10 +18,13 @@ package com.djrapitops.plan.delivery.rendering.json.network;
 
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.utilities.analysis.Percentage;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -34,20 +37,26 @@ import java.util.concurrent.TimeUnit;
  * Creates JSON payload for /network-page Sessions tab.
  *
  * @author AuroraLS3
+ * @deprecated Use /v1/datapoint instead (types PLAYTIME, AFK_TIME, AFK_TIME_PERCENTAGE).
  */
 @Singleton
+@Deprecated(since = "2026-04-05 / 5.7 build 3341")
 public class NetworkSessionsOverviewJSONCreator implements NetworkTabJSONCreator<Map<String, Object>> {
 
     private final DBSystem dbSystem;
+    private final PluginLogger logger;
+    private final Locale locale;
 
     private final Formatter<Double> percentage;
 
     @Inject
     public NetworkSessionsOverviewJSONCreator(
-            DBSystem dbSystem,
+            DBSystem dbSystem, PluginLogger logger, Locale locale,
             Formatters formatters
     ) {
         this.dbSystem = dbSystem;
+        this.logger = logger;
+        this.locale = locale;
 
         percentage = formatters.percentage();
     }
@@ -57,6 +66,7 @@ public class NetworkSessionsOverviewJSONCreator implements NetworkTabJSONCreator
     }
 
     private Map<String, Object> createInsightsMap() {
+        logger.warn(locale.getString(PluginLang.DEPRECATED_ENDPOINT_CALL, "/v1/network/sessionsOverview", "/v1/datapoint"));
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();
         long monthAgo = now - TimeUnit.DAYS.toMillis(30L);

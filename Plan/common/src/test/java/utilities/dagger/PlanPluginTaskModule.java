@@ -17,6 +17,7 @@
 package utilities.dagger;
 
 import com.djrapitops.plan.TaskSystem;
+import com.djrapitops.plan.delivery.AccessLogBatchTask;
 import com.djrapitops.plan.gathering.timed.BanStatusUpkeepTask;
 import dagger.Binds;
 import dagger.Module;
@@ -32,4 +33,8 @@ public interface PlanPluginTaskModule {
     @Binds
     @IntoSet
     TaskSystem.Task bindBanStatusUpkeepTask(BanStatusUpkeepTask banStatusUpkeepTask);
+
+    @Binds
+    @IntoSet
+    TaskSystem.Task bindAccessLogBatchTask(AccessLogBatchTask accessLogBatchTask);
 }

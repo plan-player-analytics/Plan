@@ -20,6 +20,7 @@ import com.djrapitops.plan.storage.database.DBType;
 import org.apache.commons.text.TextStringBuilder;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Types;
 import java.util.concurrent.TimeUnit;
@@ -41,6 +42,9 @@ public abstract class Sql {
     public static final String DISTINCT = "DISTINCT ";
     public static final String FROM = " FROM ";
     public static final String DELETE_FROM = "DELETE" + FROM;
+    public static final String INSERT_INTO = "INSERT INTO ";
+    public static final String UPDATE = "UPDATE ";
+    public static final String SET = " SET ";
     public static final String WHERE = " WHERE ";
     public static final String GROUP_BY = " GROUP BY ";
     public static final String ORDER_BY = " ORDER BY ";
@@ -53,12 +57,15 @@ public abstract class Sql {
     public static final String IS_NULL = " IS NULL";
     public static final String IS_NOT_NULL = " IS NOT NULL";
     public static final String LIMIT = " LIMIT ";
+    public static final String LIMIT_1 = " LIMIT 1 ";
     public static final String OFFSET = " OFFSET ";
     public static final String TEXT = "TEXT";
 
     private static final String FLOOR = "FLOOR(";
+    private static final String AVG = "AVG(";
     private static final String MIN = "MIN(";
     private static final String MAX = "MAX(";
+    private static final String SUM = "SUM(";
     private static final String VARCHAR = "varchar(";
 
     public static String nParameters(int n) {
@@ -73,9 +80,13 @@ public abstract class Sql {
 
     public static String floor(String expression) {return FLOOR + expression + ')';}
 
+    public static String sum(String expression) {return SUM + expression + ')';}
+
     public static String min(String expression) {return MIN + expression + ')';}
 
     public static String max(String expression) {return MAX + expression + ')';}
+
+    public static String avg(String expression) {return AVG + expression + ')';}
 
     /**
      * Turn day of week to epoch ms.
@@ -97,6 +108,22 @@ public abstract class Sql {
         }
     }
 
+    public static void setDoubleOrNull(PreparedStatement statement, int index, Double value) throws SQLException {
+        if (value != null) {
+            statement.setDouble(index, value);
+        } else {
+            statement.setNull(index, Types.DOUBLE);
+        }
+    }
+
+    public static void setIntOrNull(PreparedStatement statement, int index, Integer value) throws SQLException {
+        if (value != null) {
+            statement.setInt(index, value);
+        } else {
+            statement.setNull(index, Types.INTEGER);
+        }
+    }
+
     public static String concat(DBType dbType, String one, String two) {
         if (dbType == DBType.MYSQL) {
             return "CONCAT(" + one + ',' + two + ")";
@@ -104,6 +131,16 @@ public abstract class Sql {
             return one + " || " + two;
         }
         return one + two;
+    }
+
+    public static Double getDoubleOrNull(ResultSet set, String column) throws SQLException {
+        double value = set.getDouble(column);
+        return set.wasNull() ? null : value;
+    }
+
+    public static Integer getIntOrNull(ResultSet set, String column) throws SQLException {
+        int value = set.getInt(column);
+        return set.wasNull() ? null : value;
     }
 
     public abstract String epochSecondToDate(String sql);
@@ -119,6 +156,14 @@ public abstract class Sql {
     public abstract String dateToHour(String sql);
 
     public abstract String insertOrIgnore();
+
+    public abstract String least(String values);
+
+    public abstract String greatest(String values);
+
+    public String lockForUpdate() {
+        return "";
+    }
 
     // https://dev.mysql.com/doc/refman/5.7/en/date-and-time-functions.html
     public static class MySQL extends Sql {
@@ -156,6 +201,21 @@ public abstract class Sql {
         @Override
         public String insertOrIgnore() {
             return "INSERT IGNORE INTO ";
+        }
+
+        @Override
+        public String least(String values) {
+            return "LEAST(" + values + ")";
+        }
+
+        @Override
+        public String greatest(String values) {
+            return "GREATEST(" + values + ")";
+        }
+
+        @Override
+        public String lockForUpdate() {
+            return " FOR UPDATE";
         }
     }
 
@@ -195,6 +255,16 @@ public abstract class Sql {
         @Override
         public String insertOrIgnore() {
             return "INSERT OR IGNORE INTO ";
+        }
+
+        @Override
+        public String least(String values) {
+            return "MIN(" + values + ")";
+        }
+
+        @Override
+        public String greatest(String values) {
+            return "MAX(" + values + ")";
         }
     }
 }

@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.jetbrains.annotations.Nullable;
 
 import javax.inject.Inject;
@@ -39,7 +40,8 @@ import java.util.regex.Pattern;
 public class BundleAddressCorrection {
 
     private static final String STATIC = "static";
-    private static final Pattern JAVASCRIPT_ADDRESS_PATTERN = Pattern.compile("\"(\\./|/?static)(.+?)\\.(json|js|css|png)\"");
+    // (?:(?!\1).)+? matches any character except the beginning character
+    private static final Pattern JAVASCRIPT_ADDRESS_PATTERN = Pattern.compile("([\"`])(\\./|/?static)((?:(?!\\1).)+?)\\.(json|js|css|png)\\1");
 
     private final PlanConfig config;
     private final Addresses addresses;
@@ -92,7 +94,7 @@ public class BundleAddressCorrection {
 
     private String correctAddressInCss(String content, String basePath) {
         String endingSlash = basePath.endsWith("/") ? "" : "/";
-        return StringUtils.replace(content, "/static", basePath + endingSlash + STATIC);
+        return Strings.CS.replace(content, "/static", basePath + endingSlash + STATIC);
     }
 
     private String correctAddressInJavascript(String content, String basePath) {
@@ -101,9 +103,10 @@ public class BundleAddressCorrection {
 
         Matcher matcher = JAVASCRIPT_ADDRESS_PATTERN.matcher(content);
         while (matcher.find()) {
-            String addressStart = matcher.group(1);
-            String file = matcher.group(2);
-            String extension = matcher.group(3);
+            String usedStringChar = matcher.group(1);
+            String addressStart = matcher.group(2);
+            String file = matcher.group(3);
+            String extension = matcher.group(4);
             int startIndex = matcher.start();
             int endIndex = matcher.end();
 
@@ -134,10 +137,10 @@ public class BundleAddressCorrection {
             // "./Filename-hash.js"       -> "./Filename-hash.js" or "/plan/static/Filename-hash.js"
             // "/static/Filename-hash.js" -> "/static/Filename-hash.js" or "/plan/static/Filename-hash.js"
             // "static/Filename-hash.js"  -> "static/Filename-hash.js" or "plan/static/Filename-hash.js"
-            String replacementAddress = StringUtils.equalsAny(addressStart, "/static", STATIC)
+            String replacementAddress = Strings.CS.equalsAny(addressStart, "/static", STATIC)
                     ? staticReplacement
                     : relativeReplacement;
-            String replacement = '"' + replacementAddress + file + '.' + extension + '"';
+            String replacement = usedStringChar + replacementAddress + file + '.' + extension + usedStringChar;
 
             output.append(content, lastIndex, startIndex) // Append non-match
                     .append(replacement); // Append replaced address

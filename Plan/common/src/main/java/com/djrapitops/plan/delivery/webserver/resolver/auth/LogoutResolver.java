@@ -80,7 +80,7 @@ public class LogoutResolver implements NoAuthResolver {
     public Response getResponse() {
         return Response.builder()
                 .redirectTo("/login")
-                .setHeader("Set-Cookie", "auth=expired; Max-Age=0; SameSite=Lax; Secure;")
+                .setHeader("Set-Cookie", "auth=expired; Max-Age=0; SameSite=Lax; Secure; HTTPOnly;")
                 .build();
     }
 }

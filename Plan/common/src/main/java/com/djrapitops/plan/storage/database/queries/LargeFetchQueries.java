@@ -33,6 +33,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
+import static com.djrapitops.plan.storage.database.sql.tables.TPSTable.*;
 
 /**
  * Static method class for queries that use large amount of memory.
@@ -62,9 +63,14 @@ public class LargeFetchQueries {
                 TPSTable.ENTITIES + ',' +
                 TPSTable.CHUNKS + ',' +
                 TPSTable.FREE_DISK + ',' +
+                TPSTable.MSPT_AVERAGE + ',' +
+                TPSTable.MSPT_95TH_PERCENTILE + ',' +
+                TPSTable.MSPT_JITTER_AVERAGE + ',' +
+                TPSTable.MSPT_JITTER_MAX + ',' +
                 serverUUIDColumn +
                 FROM + TPSTable.TABLE_NAME +
-                INNER_JOIN + ServerTable.TABLE_NAME + " on " + serverIDColumn + "=" + TPSTable.SERVER_ID;
+                INNER_JOIN + ServerTable.TABLE_NAME + " on " + serverIDColumn + "=" + TPSTable.SERVER_ID +
+                ORDER_BY + serverIDColumn + ',' + TPSTable.DATE + " ASC";
 
         return new QueryAllStatement<>(sql, 50000) {
             @Override
@@ -84,6 +90,10 @@ public class LargeFetchQueries {
                             .entities(set.getInt(TPSTable.ENTITIES))
                             .chunksLoaded(set.getInt(TPSTable.CHUNKS))
                             .freeDiskSpace(set.getLong(TPSTable.FREE_DISK))
+                            .mspt95thPercentile(set.getDouble(MSPT_95TH_PERCENTILE), set.wasNull())
+                            .msptAverage(set.getDouble(MSPT_AVERAGE), set.wasNull())
+                            .msptJitterAverage(set.getDouble(MSPT_JITTER_AVERAGE), set.wasNull())
+                            .msptJitterMax(set.getDouble(MSPT_JITTER_MAX), set.wasNull())
                             .toTPS();
 
                     tpsList.add(tps);

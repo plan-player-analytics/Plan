@@ -3,21 +3,21 @@ import Sidebar from "../../components/navigation/Sidebar";
 import Header from "../../components/navigation/Header";
 import {useTranslation} from "react-i18next";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
-import {ThemeStyleCss} from "../../components/theme/ThemeStyleCss";
-import {ThemeEditContextProvider} from "../../hooks/context/themeEditContextHook.jsx";
+import {ThemeStyleCss} from "../../components/theme/ThemeStyleCss.tsx";
+import {ThemeEditContextProvider} from "../../hooks/context/themeEditContextHook.tsx";
 import {SwitchTransition} from "react-transition-group";
 import {Outlet, useParams} from "react-router";
-import {ThemeContextProvider, useTheme} from "../../hooks/themeHook.jsx";
-import {ThemeStorageContextProvider, useThemeStorage} from "../../hooks/context/themeContextHook.jsx";
-import {ChartLoader} from "../../components/navigation/Loader.jsx";
-import {useMetadata} from "../../hooks/metadataHook.jsx";
+import {ThemeContextProvider, useTheme} from "../../hooks/themeHook.tsx";
+import {ThemeStorageContextProvider, useThemeStorage} from "../../hooks/context/themeContextHook.tsx";
+import {ChartLoader} from "../../components/navigation/Loader.tsx";
+import {useMetadata} from "../../hooks/metadataHook.tsx";
 import {faInfoCircle, faPlus, faSwatchbook, faTrash} from "@fortawesome/free-solid-svg-icons";
-import ErrorView from "../ErrorView.jsx";
+import ErrorView from "../ErrorView.tsx";
 import AlertPopupArea from "../../components/alert/AlertPopupArea.jsx";
 import ErrorPage from "./ErrorPage.jsx";
 import {Alert} from "react-bootstrap";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {useAuth} from "../../hooks/authenticationHook.jsx";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const ThemeEditorPage = () => {
     const {t} = useTranslation();
@@ -35,8 +35,8 @@ const ThemeEditorPage = () => {
     const items = metadata.loaded ? metadata.getAvailableThemes().map(theme => {
         return {name: theme, icon: faSwatchbook, href: theme}
     }) : [];
-    items.push({name: t('html.label.themeEditor.addTheme'), icon: faPlus, href: 'new'});
-    items.push({name: t('html.label.themeEditor.deleteThemes'), icon: faTrash, href: 'delete'});
+    items.push({name: t('html.label.themeEditor.addTheme'), icon: faPlus, href: 'new'},
+        {name: t('html.label.themeEditor.deleteThemes'), icon: faTrash, href: 'delete'});
     return (
         <>
             <Sidebar page={title} items={items}/>
@@ -49,7 +49,7 @@ const ThemeEditorPage = () => {
                             <FontAwesomeIcon icon={faInfoCircle}/> {t('html.label.themeEditor.lightModeInfo')}
                         </Alert>}
                         <ThemeContextProvider themeOverride={identifier} key={identifier}>
-                            <ThemeStorageContextProvider>
+                            <ThemeStorageContextProvider loadMissing>
                                 <WaitUntilThemeLoads/>
                             </ThemeStorageContextProvider>
                         </ThemeContextProvider>

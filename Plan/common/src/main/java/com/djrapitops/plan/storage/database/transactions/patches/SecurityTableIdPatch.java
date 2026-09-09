@@ -59,7 +59,7 @@ public class SecurityTableIdPatch extends Patch {
                     .column(PERMISSION_LEVEL, INT)
                     .toString());
 
-            execute("INSERT INTO " + TABLE_NAME + " (" +
+            execute(INSERT_INTO + TABLE_NAME + " (" +
                     SecurityTable.USERNAME + ',' +
                     SecurityTable.SALT_PASSWORD_HASH + ',' +
                     PERMISSION_LEVEL +
@@ -88,7 +88,7 @@ public class SecurityTableIdPatch extends Patch {
                     .column(PERMISSION_LEVEL, INT)
                     .toString());
 
-            execute("INSERT INTO " + TABLE_NAME + " (" +
+            execute(INSERT_INTO + TABLE_NAME + " (" +
                     SecurityTable.USERNAME + ',' +
                     SecurityTable.SALT_PASSWORD_HASH + ',' +
                     SecurityTable.LINKED_TO + ',' +

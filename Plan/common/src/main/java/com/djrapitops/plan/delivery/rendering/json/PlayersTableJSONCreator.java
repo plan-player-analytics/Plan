@@ -34,7 +34,7 @@ import com.djrapitops.plan.extension.implementation.results.*;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.HtmlLang;
 import com.djrapitops.plan.utilities.java.Maps;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.text.StringEscapeUtils;
 
 import java.util.*;
@@ -143,6 +143,7 @@ public class PlayersTableJSONCreator {
                         .withCountry(player.getGeolocation().orElse(null))
                         .withExtensionValues(mapToExtensionValues(extensionData.get(player.getPlayerUUID())))
                         .withPing(player.getPing())
+                        .withNicknames(player.getNicknames())
                         .build()
                 ).collect(Collectors.toList());
     }
@@ -201,7 +202,7 @@ public class PlayersTableJSONCreator {
         Html link = openPlayerPageInNewTab ? Html.LINK_EXTERNAL : Html.LINK;
 
         /* Backslashes escaped to prevent json errors */
-        String escapedName = StringUtils.replace(StringEscapeUtils.escapeHtml4(name), "\\", "\\\\");
+        String escapedName = Strings.CS.replace(StringEscapeUtils.escapeHtml4(name), "\\", "\\\\");
         putDataEntry(dataJson, link.create(url, escapedName, escapedName), "name");
         putDataEntry(dataJson, activityIndex.getValue(), activityString, "index");
         putDataEntry(dataJson, activePlaytime, numberFormatters.get(FormatType.TIME_MILLISECONDS).apply(activePlaytime), "activePlaytime");

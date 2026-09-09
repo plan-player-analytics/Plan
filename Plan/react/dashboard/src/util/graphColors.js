@@ -1,7 +1,7 @@
 export const getChartTheming = () => {
     return { // Defaults
         chart: {
-            backgroundColor: null,
+            backgroundColor: undefined,
             plotBorderColor: 'var(--color-text)'
         },
         title: {

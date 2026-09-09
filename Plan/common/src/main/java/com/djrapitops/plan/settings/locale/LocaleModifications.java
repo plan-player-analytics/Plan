@@ -18,7 +18,7 @@ package com.djrapitops.plan.settings.locale;
 
 import com.djrapitops.plan.settings.locale.lang.HtmlLang;
 import com.djrapitops.plan.settings.locale.lang.Lang;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import java.util.function.UnaryOperator;
 
@@ -67,7 +67,7 @@ public class LocaleModifications {
 
         @Override
         public String apply(String s) {
-            return StringUtils.replace(s, replace, with);
+            return Strings.CS.replace(s, replace, with);
         }
     }
 }

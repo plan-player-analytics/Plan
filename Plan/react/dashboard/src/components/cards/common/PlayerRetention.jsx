@@ -1,5 +1,5 @@
-import LoadIn from "../../animation/LoadIn.jsx";
-import ExtendableRow from "../../layout/extension/ExtendableRow.jsx";
+import LoadIn from "../../animation/LoadIn.tsx";
+import ExtendableRow from "../../layout/extension/ExtendableRow.tsx";
 import {Col} from "react-bootstrap";
 import PlayerRetentionGraphCard from "./PlayerRetentionGraphCard.jsx";
 import React, {useState} from "react";

@@ -38,6 +38,12 @@ public enum CallEvents {
      */
     PLAYER_JOIN,
     /**
+     * This event represents call to player methods while player is online.
+     * <p>
+     * The call is made periodically from an async task.
+     */
+    PLAYER_PERIODICAL,
+    /**
      * This event represents a call to player methods on a Player Leave event.
      * <p>
      * The call is made from a listener at the first event priority (Bukkit/Bungee: LOWEST, Sponge: PRE).

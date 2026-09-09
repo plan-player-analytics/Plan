@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries.filter.filters;
 
-import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
+import com.djrapitops.plan.delivery.domain.datatransfer.query.InputFilterDto;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
@@ -31,7 +31,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Singleton
-public class PlayedOnServerFilter extends MultiOptionFilter {
+public class PlayedOnServerFilter implements MultiOptionFilter {
 
     private final DBSystem dbSystem;
 

@@ -28,8 +28,7 @@ import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import static com.djrapitops.plan.storage.database.sql.building.Sql.AND;
-import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Transaction for storing {@link TabInformation}s.
@@ -83,7 +82,7 @@ public class StoreTabInformationTransaction extends ThrowawayTransaction {
     }
 
     private Executable insertTab() {
-        String sql = "INSERT INTO " + ExtensionTabTable.TABLE_NAME + "(" +
+        String sql = INSERT_INTO + ExtensionTabTable.TABLE_NAME + "(" +
                 ExtensionTabTable.TAB_NAME + "," +
                 ExtensionTabTable.ELEMENT_ORDER + "," +
                 ExtensionTabTable.TAB_PRIORITY + "," +

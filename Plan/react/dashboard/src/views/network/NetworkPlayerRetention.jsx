@@ -1,5 +1,5 @@
 import React from 'react';
-import {useAuth} from "../../hooks/authenticationHook";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 import PlayerRetention from "../../components/cards/common/PlayerRetention.jsx";
 
 const NetworkPlayerRetention = () => {

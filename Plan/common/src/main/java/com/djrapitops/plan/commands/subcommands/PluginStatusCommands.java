@@ -116,6 +116,7 @@ public class PluginStatusCommands {
                 locale.getString(CommandLang.INFO_VERSION, pluginInformation.getVersion()),
                 locale.getString(CommandLang.INFO_UPDATE, updateAvailable),
                 locale.getString(CommandLang.INFO_DATABASE, database.getType().getName() + " (" + database.getState().name() + ")"),
+                locale.getString(CommandLang.INFO_DATABASE_QUEUE, database.getTransactionQueueSize()),
                 locale.getString(CommandLang.INFO_PROXY_CONNECTION, proxyAvailable),
                 locale.getString(CommandLang.INFO_SERVER_UUID, serverInfo.getServerUUID()),
                 "",

@@ -23,6 +23,7 @@ import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.webserver.CacheStrategy;
 import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
+import com.djrapitops.plan.delivery.webserver.resolver.ETag;
 import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.java.Maps;
@@ -39,26 +40,28 @@ public abstract class JSONResolver implements Resolver {
         if (storedJSON == null) {
             return Response.builder()
                     .setMimeType(MimeType.JSON)
-                    .setJSONContent(Maps.builder(String.class, String.class)
-                            .put("error", "Json failed to generate for some reason, see /Plan/logs for errors")
+                    .setJSONContent(Maps.builder(String.class, Object.class)
+                            .put("status", 500)
+                            .put("error", "Failed to generate JSON, see plugins/Plan/logs for details")
+                            .put("requestedTarget", "")
                             .build())
+                    .setStatus(500)
                     .build();
         }
 
-        Optional<Long> browserCached = Identifiers.getEtag(request);
-        if (browserCached.isPresent() && browserCached.get() == storedJSON.getTimestamp()) {
+        Optional<ETag> browserCached = Identifiers.getEtag(request);
+        if (browserCached.isEmpty() || browserCached.get().isOutdated(storedJSON.getTimestamp())) {
             return Response.builder()
-                    .setStatus(304)
-                    .setContent(new byte[0])
+                    .setMimeType(MimeType.JSON)
+                    .setJSONContent(storedJSON.getJson())
+                    .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CHECK_ETAG_USER_SPECIFIC)
+                    .setHeader(HttpHeader.LAST_MODIFIED.asString(), getHttpLastModifiedFormatter().apply(storedJSON.getTimestamp()))
+                    .setHeader(HttpHeader.ETAG.asString(), storedJSON.getTimestamp())
                     .build();
         }
-
         return Response.builder()
-                .setMimeType(MimeType.JSON)
-                .setJSONContent(storedJSON.getJson())
-                .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CHECK_ETAG_USER_SPECIFIC)
-                .setHeader(HttpHeader.LAST_MODIFIED.asString(), getHttpLastModifiedFormatter().apply(storedJSON.getTimestamp()))
-                .setHeader(HttpHeader.ETAG.asString(), storedJSON.getTimestamp())
+                .setStatus(304)
+                .setContent(new byte[0])
                 .build();
     }
 

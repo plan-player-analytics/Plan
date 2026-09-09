@@ -19,7 +19,7 @@ const correctTime = value => {
     return (hour < 10 ? "0" + hour : hour) + ":" + (minute < 10 ? "0" + minute : minute);
 };
 
-const TimeInputField = ({id, setValue, value, placeholder, setAsInvalid, setAsValid}) => {
+const TimeInputField = ({id, setValue, value, placeholder, setAsInvalid, setAsValid, disabled}) => {
     const [invalid, setInvalid] = useState(false);
 
     const onChange = (event) => {
@@ -47,6 +47,7 @@ const TimeInputField = ({id, setValue, value, placeholder, setAsInvalid, setAsVa
                    placeholder={placeholder}
                    value={value}
                    onChange={onChange}
+                   disabled={disabled}
             />
         </InputGroup>
     )

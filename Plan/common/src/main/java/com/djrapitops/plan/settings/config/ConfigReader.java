@@ -33,18 +33,16 @@ import java.util.Scanner;
  */
 public class ConfigReader implements Closeable {
 
-    private boolean closed;
-
     private final Scanner scanner;
+    private final List<String> unboundComment = new ArrayList<>();
+    private boolean closed;
     private ConfigNode previousNode;
     private ConfigNode parent;
-
     // Indent mode assumes the number of spaces used to indent the file.
     // If the first found indent is smaller, that will be used instead.
     private int indentMode = 4;
-    private final List<String> unboundComment = new ArrayList<>();
-
     private int lastDepth = -1;
+    private String lineDanglingComment;
 
     /**
      * Create a new ConfigReader for a Path.
@@ -131,11 +129,13 @@ public class ConfigReader implements Closeable {
 
     private String readNewLine() {
         String line = scanner.nextLine();
+        lineDanglingComment = null;
 
         // Removing any dangling comments
         int danglingComment = line.trim().indexOf(" #");
         if (danglingComment != -1) {
-            line = line.substring(0, danglingComment);
+            lineDanglingComment = line.trim().substring(danglingComment + 1);
+            line = line.substring(0, line.indexOf(" #"));
         }
         return line;
     }
@@ -165,8 +165,16 @@ public class ConfigReader implements Closeable {
     }
 
     private void handleUnboundComments() {
+        if (lineDanglingComment != null) {
+            unboundComment.add(lineDanglingComment.substring(1).trim());
+        }
         if (!unboundComment.isEmpty()) {
-            previousNode.setComment(new ArrayList<>(unboundComment));
+            List<String> currentComment = previousNode.getComment();
+            if (currentComment == null || currentComment.isEmpty()) {
+                previousNode.setComment(new ArrayList<>(unboundComment));
+            } else {
+                currentComment.addAll(unboundComment);
+            }
             unboundComment.clear();
         }
     }

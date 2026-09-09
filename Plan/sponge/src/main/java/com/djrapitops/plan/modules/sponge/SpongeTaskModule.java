@@ -17,6 +17,7 @@
 package com.djrapitops.plan.modules.sponge;
 
 import com.djrapitops.plan.TaskSystem;
+import com.djrapitops.plan.delivery.AccessLogBatchTask;
 import com.djrapitops.plan.delivery.web.ResourceWriteTask;
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieExpiryCleanupTask;
 import com.djrapitops.plan.delivery.webserver.cache.JSONFileStorage;
@@ -25,7 +26,6 @@ import com.djrapitops.plan.extension.ExtensionServerDataUpdater;
 import com.djrapitops.plan.gathering.ShutdownDataPreservation;
 import com.djrapitops.plan.gathering.ShutdownHook;
 import com.djrapitops.plan.gathering.timed.*;
-import com.djrapitops.plan.settings.upkeep.ConfigStoreTask;
 import com.djrapitops.plan.storage.upkeep.DBCleanTask;
 import com.djrapitops.plan.storage.upkeep.LogsFolderCleanTask;
 import com.djrapitops.plan.storage.upkeep.OldDependencyCacheDeletionTask;
@@ -52,10 +52,6 @@ public interface SpongeTaskModule {
     @Binds
     @IntoSet
     TaskSystem.Task bindLogCleanTask(LogsFolderCleanTask logsFolderCleanTask);
-
-    @Binds
-    @IntoSet
-    TaskSystem.Task bindConfigStoreTask(ConfigStoreTask configStoreTask);
 
     @Binds
     @IntoSet
@@ -104,4 +100,8 @@ public interface SpongeTaskModule {
     @Binds
     @IntoSet
     TaskSystem.Task bindBanStatusUpkeepTask(BanStatusUpkeepTask banStatusUpkeepTask);
+
+    @Binds
+    @IntoSet
+    TaskSystem.Task bindAccessLogBatchTask(AccessLogBatchTask accessLogBatchTask);
 }

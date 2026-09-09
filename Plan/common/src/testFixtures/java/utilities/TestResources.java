@@ -30,6 +30,8 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TestResources {
 
+    public static final String CONFIG_PATH = "/assets/plan/config.yml";
+
     private TestResources() {
         /* static method class */
     }

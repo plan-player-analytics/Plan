@@ -18,15 +18,15 @@ package utilities.dagger;
 
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerServerInfo;
-import com.djrapitops.plan.settings.BukkitConfigSystem;
 import com.djrapitops.plan.settings.ConfigSystem;
+import com.djrapitops.plan.settings.GameServerConfigSystem;
 import dagger.Binds;
 import dagger.Module;
 
 @Module
 public interface PlanServerPluginModule {
     @Binds
-    ConfigSystem bindBukkitConfigSystem(BukkitConfigSystem bukkitConfigSystem);
+    ConfigSystem bindGameServerConfigSystem(GameServerConfigSystem gameServerConfigSystem);
 
     @Binds
     ServerInfo bindServerInfo(ServerServerInfo serverServerInfo);

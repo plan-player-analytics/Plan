@@ -59,7 +59,8 @@ public class GeoInfoQueries {
                 GeoInfoTable.LAST_USED + ',' +
                 UsersTable.USER_UUID +
                 FROM + GeoInfoTable.TABLE_NAME + " g" +
-                INNER_JOIN + UsersTable.TABLE_NAME + " u on g.user_id=u.id";
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on g.user_id=u.id" +
+                ORDER_BY + GeoInfoTable.LAST_USED + " DESC," + GeoInfoTable.GEOLOCATION;
 
         return new QueryAllStatement<>(sql, 10000) {
             @Override
@@ -138,7 +139,7 @@ public class GeoInfoQueries {
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on a." + GeoInfoTable.USER_ID + "=u." + UsersTable.ID +
                 WHERE + "b." + GeoInfoTable.LAST_USED + IS_NULL +
                 AND + "u." + UsersTable.ID + " IN (" +
-                new TextStringBuilder().appendWithSeparators(userIds, ",").build() + ")" +
+                new TextStringBuilder().appendWithSeparators(userIds, ",").get() + ")" +
                 GROUP_BY + "a." + GeoInfoTable.GEOLOCATION;
 
         return db -> db.queryMap(sql, GeoInfoQueries::extractGeolocationCounts);
@@ -155,11 +156,12 @@ public class GeoInfoQueries {
                 LEFT_JOIN + GeoInfoTable.TABLE_NAME + " b ON a." + GeoInfoTable.USER_ID + "=b." + GeoInfoTable.USER_ID + AND + "a." + GeoInfoTable.LAST_USED + "<b." + GeoInfoTable.LAST_USED +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + "=a." + GeoInfoTable.USER_ID +
                 INNER_JOIN + UserInfoTable.TABLE_NAME + " ui on ui." + UserInfoTable.USER_ID + "=u." + UsersTable.ID +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=ui." + UserInfoTable.SERVER_ID +
                 WHERE + "b." + GeoInfoTable.LAST_USED + IS_NULL +
-                AND + "ui." + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID +
+                AND + "s." + ServerTable.SERVER_UUID + "=?" +
                 GROUP_BY + "a." + GeoInfoTable.GEOLOCATION;
 
-        return db -> db.queryMap(sql, GeoInfoQueries::extractGeolocationCounts, serverUUID);
+        return db -> db.queryMap(sql, GeoInfoQueries::extractGeolocationCounts, serverUUID.toString());
     }
 
     public static Query<List<String>> uniqueGeolocations() {
@@ -170,6 +172,7 @@ public class GeoInfoQueries {
     }
 
     public static Query<Set<Integer>> userIdsOfPlayersWithGeolocations(@Untrusted List<String> selected) {
+        if (selected.isEmpty()) return db -> Collections.emptySet();
         String sql = SELECT + "u." + UsersTable.ID +
                 FROM + GeoInfoTable.TABLE_NAME + " g" +
                 INNER_JOIN + UsersTable.TABLE_NAME + " u on u.id=g." + GeoInfoTable.USER_ID +

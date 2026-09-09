@@ -1,5 +1,5 @@
 import {Card} from "react-bootstrap";
-import Datapoint from "../../Datapoint";
+import Datapoint from "../../datapoint/Datapoint.tsx";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faLongArrowAltRight} from "@fortawesome/free-solid-svg-icons";
 import BigTrend from "../../trend/BigTrend";

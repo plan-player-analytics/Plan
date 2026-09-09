@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.util.concurrent.CompletableFuture;
 
 public class ResponseBuilder {
 
@@ -28,17 +29,6 @@ public class ResponseBuilder {
 
     ResponseBuilder() {
         this.response = new Response();
-    }
-
-    /**
-     * Set MIME Type of the Response.
-     *
-     * @param mimeType MIME type of the Response <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types">Documentation</a>
-     * @return this builder.
-     * @see MimeType for common MIME types.
-     */
-    public ResponseBuilder setMimeType(String mimeType) {
-        return setHeader("Content-Type", mimeType);
     }
 
     /**
@@ -86,9 +76,15 @@ public class ResponseBuilder {
     }
 
     public ResponseBuilder setContent(byte[] bytes) {
-        response.bytes = bytes;
-        return setHeader("Content-Length", bytes.length)
+        byte[] safeBytes = bytes != null ? bytes : new byte[0];
+        response.bytes = CompletableFuture.completedFuture(safeBytes);
+        return setHeader("Content-Length", safeBytes.length)
                 .setHeader("Accept-Ranges", "bytes"); // Does not compress
+    }
+
+    public ResponseBuilder setContent(CompletableFuture<byte[]> bytesFuture) {
+        response.bytes = bytesFuture != null ? bytesFuture : CompletableFuture.completedFuture(new byte[0]);
+        return this;
     }
 
     public ResponseBuilder setContent(String utf8String) {
@@ -112,6 +108,22 @@ public class ResponseBuilder {
                 .removeHeader("Accept-Ranges"); // Can compress
     }
 
+    public ResponseBuilder setContent(CompletableFuture<String> stringFuture, Charset charset) {
+        if (stringFuture == null) return setContent(new byte[0]);
+        Charset effectiveCharset = charset != null ? charset : StandardCharsets.UTF_8;
+        String mimeType = getMimeType();
+        response.charset = effectiveCharset;
+
+        if (mimeType != null) {
+            String[] parts = mimeType.split(";");
+            if (parts.length == 1) {
+                setMimeType(parts[0] + "; charset=" + effectiveCharset.name().toLowerCase());
+            }
+        }
+        removeHeader("Accept-Ranges");
+        return setContent(stringFuture.thenApply(string -> string == null ? null : string.getBytes(effectiveCharset)));
+    }
+
     /**
      * Set content as serialized JSON object.
      *
@@ -120,11 +132,19 @@ public class ResponseBuilder {
      */
     public ResponseBuilder setJSONContent(Object objectToSerialize) {
         if (objectToSerialize instanceof String) return setJSONContent((String) objectToSerialize);
+        if (objectToSerialize instanceof CompletableFuture) {
+            CompletableFuture<?> future = (CompletableFuture<?>) objectToSerialize;
+            return setJSONContent(future.thenApply(obj -> obj instanceof String ? (String) obj : new Gson().toJson(obj)));
+        }
         return setJSONContent(new Gson().toJson(objectToSerialize));
     }
 
     public ResponseBuilder setJSONContent(String json) {
         return setMimeType(MimeType.JSON).setContent(json);
+    }
+
+    public ResponseBuilder setJSONContent(CompletableFuture<String> jsonFuture) {
+        return setMimeType(MimeType.JSON).setContent(jsonFuture, StandardCharsets.UTF_8);
     }
 
     /**
@@ -137,21 +157,33 @@ public class ResponseBuilder {
      * @see #setMimeType(String) to set MIME-type.
      */
     public Response build() {
-        byte[] content = response.bytes;
-        if(content == null && response.code == 204) {
+        CompletableFuture<byte[]> contentFuture = response.bytes;
+        if (contentFuture == null && response.code == 204) {
             // HTTP Code 204 requires no response, so there is no need to validate it.
             return response;
         }
-        exceptionIf(content == null, "Content not defined for Response");
+        exceptionIf(contentFuture == null, "Content not defined for Response");
         String mimeType = getMimeType();
-        exceptionIf(content.length > 0 && mimeType == null, "MIME Type not defined for Response");
-        exceptionIf(content.length > 0 && mimeType.isEmpty(), "MIME Type empty for Response");
+        boolean hasContent = response.bytes != null && response.bytes.isDone() && response.bytes.join().length > 0;
+        exceptionIf(hasContent && mimeType == null, "MIME Type not defined for Response");
+        exceptionIf(hasContent && mimeType.isEmpty(), "MIME Type empty for Response");
         exceptionIf(response.code < 100 || response.code >= 600, "HTTP Status code out of bounds (" + response.code + ")");
         return response;
     }
 
     private String getMimeType() {
         return response.headers.get("Content-Type");
+    }
+
+    /**
+     * Set MIME Type of the Response.
+     *
+     * @param mimeType MIME type of the Response <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Basics_of_HTTP/MIME_types">Documentation</a>
+     * @return this builder.
+     * @see MimeType for common MIME types.
+     */
+    public ResponseBuilder setMimeType(String mimeType) {
+        return setHeader("Content-Type", mimeType);
     }
 
     private void exceptionIf(boolean value, String errorMsg) {

@@ -10,17 +10,20 @@ const TrendDownGood = ({value}) => <span title={value}><Fa icon={faCaretDown}
 const TrendSame = ({value}) => <span title={value}><Fa icon={faCaretRight} className="trend col-trend-same"/></span>;
 
 
-const SmallTrend = ({trend}) => {
+const SmallTrend = ({trend, format}) => {
     if (!trend) {
         return <TrendSame value={'?'}/>;
     }
+
+    const value = format ? format(trend.text) : trend.text;
+
     switch (trend.direction) {
         case '+':
-            return (trend.reversed ? <TrendUpBad value={trend.text}/> : <TrendUpGood value={trend.text}/>);
+            return (trend.reversed ? <TrendUpBad value={value}/> : <TrendUpGood value={value}/>);
         case '-':
-            return (trend.reversed ? <TrendDownGood value={trend.text}/> : <TrendDownBad value={trend.text}/>);
+            return (trend.reversed ? <TrendDownGood value={value}/> : <TrendDownBad value={value}/>);
         default:
-            return <TrendSame value={trend.text}/>;
+            return <TrendSame value={value}/>;
     }
 }
 

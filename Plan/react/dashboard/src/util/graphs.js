@@ -35,41 +35,23 @@ export const tooltip = {
     zeroDecimals: {valueDecimals: 0}
 }
 
+export const hasValuesInSeries = series => {
+    return Boolean(series?.find(data => Boolean(data[1])))
+};
+
 export const mapPerformanceDataToSeries = performanceData => {
-    const playersOnline = [];
-    const tps = [];
-    const cpu = [];
-    const ram = [];
-    const entities = [];
-    const chunks = [];
-    const disk = [];
-
-    return new Promise((resolve => {
-        let i = 0;
-        const length = performanceData.length;
-
-        function processNextThousand() {
-            const to = Math.min(i + 1000, length);
-            for (i; i < to; i++) {
-                const entry = performanceData[i];
-                const date = entry[0];
-                playersOnline[i] = [date, entry[1]];
-                tps[i] = [date, entry[2]];
-                cpu[i] = [date, entry[3]];
-                ram[i] = [date, entry[4]];
-                entities[i] = [date, entry[5]];
-                chunks[i] = [date, entry[6]];
-                disk[i] = [date, entry[7]];
-            }
-            if (i >= length) {
-                resolve({playersOnline, tps, cpu, ram, entities, chunks, disk})
-            } else {
-                setTimeout(processNextThousand, 10);
-            }
-        }
-
-        processNextThousand();
-    }))
+    const worker = new Worker(new URL('./workers/performanceGraphWorker.js', import.meta.url));
+    return new Promise((resolve, error) => {
+        worker.onmessage = e => {
+            resolve(e.data)
+            worker.terminate();
+        };
+        worker.onerror = e => {
+            error(new Error(e.message));
+            worker.terminate();
+        };
+        worker.postMessage(performanceData);
+    });
 };
 
 export const yAxisConfigurations = {
@@ -91,6 +73,16 @@ export const yAxisConfigurations = {
         },
         softMin: 0,
         softMax: 20
+    },
+    MSPT: {
+        opposite: true,
+        labels: {
+            formatter: function () {
+                return localeService.localizePing(this.value);
+            }
+        },
+        softMin: 0,
+        softMax: 50
     },
     CPU: {
         opposite: true,

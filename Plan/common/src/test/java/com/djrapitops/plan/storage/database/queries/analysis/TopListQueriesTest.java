@@ -56,7 +56,18 @@ public interface TopListQueriesTest extends DatabaseTestPreparer {
         storeSessionForTopListQueries();
 
         String expected = TestConstants.PLAYER_ONE_NAME;
-        String result = db().query(TopListQueries.fetchNthTop10ActivePlaytimePlayerOn(serverUUID(), 0, 0, System.currentTimeMillis()))
+        String result = db().query(TopListQueries.fetchNthTop10PlaytimePlayerOn(serverUUID(), 0, 0, System.currentTimeMillis()))
+                .orElseThrow(AssertionError::new)
+                .getPlayerName();
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void topKillCountListQueryReturnsSinglePlayer() {
+        storeSessionForTopListQueries();
+
+        String expected = TestConstants.PLAYER_ONE_NAME;
+        String result = db().query(TopListQueries.fetchNthTop10PlayerKillCountOn(serverUUID(), 0, 0, System.currentTimeMillis()))
                 .orElseThrow(AssertionError::new)
                 .getPlayerName();
         assertEquals(expected, result);

@@ -33,4 +33,9 @@ updates:
     fontawesome:
       patterns:
         - "@fortawesome/*"
-    
+    fullcalendar:
+      patterns:
+        - "@fullcalendar/*"
+    reactcolorwheel:
+      patterns:
+        - "@uiw/*"

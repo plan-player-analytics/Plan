@@ -20,6 +20,7 @@ import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.storage.database.sql.tables.WorldTable;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.FROM;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.INSERT_INTO;
 
 /**
  * Replaces server_id foreign keys with server_uuid field in world table.
@@ -55,7 +56,7 @@ public class WorldsOptimizationPatch extends Patch {
             tempOldTable();
             execute(WorldTable.createTableSQL(dbType));
 
-            execute("INSERT INTO " + tableName + " (" +
+            execute(INSERT_INTO + tableName + " (" +
                     WorldTable.ID + ',' +
                     WorldTable.SERVER_UUID + ',' +
                     WorldTable.NAME +

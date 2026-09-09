@@ -23,7 +23,7 @@ import com.djrapitops.plan.delivery.web.resolver.request.URIPath;
 import com.djrapitops.plan.delivery.webserver.ResponseFactory;
 import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.utilities.dev.Untrusted;
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -54,7 +54,7 @@ public class StaticResourceResolver implements NoAuthResolver {
 
     private Response getResponse(Request request) {
         @Untrusted String resource = getPath(request).asString().substring(1);
-        @Untrusted Optional<Long> etag = Identifiers.getEtag(request);
+        @Untrusted Optional<ETag> etag = Identifiers.getEtag(request);
         if (resource.endsWith(".css")) {
             return etag.map(tag -> responseFactory.cssResponse(tag, resource))
                     .orElseGet(() -> responseFactory.cssResponse(resource));
@@ -67,7 +67,7 @@ public class StaticResourceResolver implements NoAuthResolver {
             return etag.map(tag -> responseFactory.imageResponse(tag, resource))
                     .orElseGet(() -> responseFactory.imageResponse(resource));
         }
-        if (StringUtils.endsWithAny(resource, ".woff", ".woff2", ".eot", ".ttf")) {
+        if (Strings.CS.endsWithAny(resource, ".woff", ".woff2", ".eot", ".ttf")) {
             return etag.map(tag -> responseFactory.fontResponse(tag, resource))
                     .orElseGet(() -> responseFactory.fontResponse(resource));
         }

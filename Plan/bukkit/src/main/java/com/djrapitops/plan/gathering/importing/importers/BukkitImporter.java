@@ -138,7 +138,7 @@ public abstract class BukkitImporter implements Importer {
         db.executeTransaction(new Transaction() {
             @Override
             protected void performOperations() {
-                execute(LargeStoreQueries.storeAllCommonUserInformation(users.values()));
+                execute(LargeStoreQueries.insertBaseUsers(users.values()));
                 execute(LargeStoreQueries.storeAllSessionsWithKillAndWorldData(sessions));
                 Map<ServerUUID, List<UserInfo>> userInformation = Collections.singletonMap(serverUUID.get(), userInfo);
                 execute(LargeStoreQueries.storePerServerUserInformation(userInformation));

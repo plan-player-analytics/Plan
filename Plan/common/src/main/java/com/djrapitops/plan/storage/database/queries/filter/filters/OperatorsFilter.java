@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries.filter.filters;
 
-import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
+import com.djrapitops.plan.delivery.domain.datatransfer.query.InputFilterDto;
 import com.djrapitops.plan.settings.locale.lang.FilterLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.filter.CompleteSetException;
@@ -28,7 +28,7 @@ import javax.inject.Singleton;
 import java.util.*;
 
 @Singleton
-public class OperatorsFilter extends MultiOptionFilter {
+public class OperatorsFilter implements MultiOptionFilter {
 
     private final DBSystem dbSystem;
 

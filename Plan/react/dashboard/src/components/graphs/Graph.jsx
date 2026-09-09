@@ -1,4 +1,4 @@
-import {useTheme} from "../../hooks/themeHook";
+import {useTheme} from "../../hooks/themeHook.tsx";
 import React, {useEffect} from "react";
 import Highcharts from "highcharts/esm/highstock";
 import "highcharts/esm/modules/accessibility";
@@ -9,10 +9,10 @@ import {useTranslation} from "react-i18next";
 import {localeService} from "../../service/localeService.js";
 
 const Graph = ({
-                       id,
-                       options,
-                       tall,
-                   }) => {
+                   id,
+                   options,
+                   tall,
+               }) => {
     const {t} = useTranslation()
     const {graphTheming, nightModeEnabled} = useTheme();
 

@@ -27,8 +27,7 @@ import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import static com.djrapitops.plan.storage.database.sql.building.Sql.AND;
-import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
  * Transaction to update command usage information in the database.
@@ -82,7 +81,7 @@ public class StorePluginTransaction extends ThrowawayTransaction {
     }
 
     private Executable insertPlugin() {
-        String sql = "INSERT INTO " + ExtensionPluginTable.TABLE_NAME + "(" +
+        String sql = INSERT_INTO + ExtensionPluginTable.TABLE_NAME + "(" +
                 ExtensionPluginTable.PLUGIN_NAME + "," +
                 ExtensionPluginTable.LAST_UPDATED + "," +
                 ExtensionPluginTable.SERVER_UUID + "," +

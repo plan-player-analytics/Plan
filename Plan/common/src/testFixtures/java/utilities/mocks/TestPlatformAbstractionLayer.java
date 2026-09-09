@@ -16,7 +16,6 @@
  */
 package utilities.mocks;
 
-import com.djrapitops.plan.PlanPlugin;
 import net.playeranalytics.plugin.PlatformAbstractionLayer;
 import net.playeranalytics.plugin.PluginInformation;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
@@ -31,13 +30,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class TestPlatformAbstractionLayer implements PlatformAbstractionLayer {
 
-    private final PlanPlugin mockPlugin;
+    private final Path tempDir;
 
-    public TestPlatformAbstractionLayer(PlanPlugin mockPlugin) {
-        this.mockPlugin = mockPlugin;
+    public TestPlatformAbstractionLayer(Path tempDir) {
+        this.tempDir = tempDir;
     }
 
     @Override
@@ -71,9 +71,6 @@ public class TestPlatformAbstractionLayer implements PlatformAbstractionLayer {
             }
 
             private InputStream getAsInputStream(String fileName) {
-                if (getDataFolder() == null) {
-                    throw new IllegalStateException("withDataFolder needs to be called before setting files");
-                }
                 try {
                     File file = getFile(fileName);
                     return Files.newInputStream(file.toPath());
@@ -85,7 +82,7 @@ public class TestPlatformAbstractionLayer implements PlatformAbstractionLayer {
 
             @Override
             public File getDataFolder() {
-                return mockPlugin.getDataFolder();
+                return tempDir.toFile();
             }
 
             @Override

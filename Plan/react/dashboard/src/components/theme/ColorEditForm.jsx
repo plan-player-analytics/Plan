@@ -4,7 +4,7 @@ import {useColorEditContext} from "../../hooks/context/colorEditContextHook.jsx"
 import {useTranslation} from "react-i18next";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCheck, faExclamationTriangle, faPalette, faPlus, faTrash} from "@fortawesome/free-solid-svg-icons";
-import ActionButton from "../input/button/ActionButton.jsx";
+import ActionButton from "../input/button/ActionButton.tsx";
 import DangerButton from "../input/button/DangerButton.jsx";
 import SecondaryActionButton from "../input/button/SecondaryActionButton.jsx";
 import Chrome from "@uiw/react-color-chrome";

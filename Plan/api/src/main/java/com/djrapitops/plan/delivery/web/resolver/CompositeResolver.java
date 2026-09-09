@@ -22,6 +22,7 @@ import com.djrapitops.plan.delivery.web.resolver.request.URIPath;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -36,7 +37,7 @@ import java.util.function.Predicate;
  *
  * @author AuroraLS3
  */
-public final class CompositeResolver implements Resolver {
+public final class CompositeResolver implements AsyncResolver {
 
     private final List<String> prefixes;
     private final List<Resolver> resolvers;
@@ -94,9 +95,17 @@ public final class CompositeResolver implements Resolver {
     }
 
     @Override
-    public Optional<Response> resolve(Request request) {
+    public CompletableFuture<Optional<Response>> resolveAsync(Request request) {
         Request forThis = request.omitFirstInPath();
-        return getResolver(forThis.getPath()).flatMap(resolver -> resolver.resolve(forThis));
+        Optional<Resolver> found = getResolver(forThis.getPath());
+        if (!found.isPresent()) {
+            return CompletableFuture.completedFuture(Optional.empty());
+        }
+        Resolver resolver = found.get();
+        if (resolver instanceof AsyncResolver) {
+            return ((AsyncResolver) resolver).resolveAsync(forThis);
+        }
+        return CompletableFuture.supplyAsync(() -> resolver.resolve(forThis));
     }
 
     @Override

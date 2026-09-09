@@ -23,11 +23,14 @@ import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
+import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.settings.locale.lang.HtmlLang;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -40,12 +43,17 @@ import java.util.concurrent.TimeUnit;
  * Creates JSON payload for /server-page Performance tab.
  *
  * @author AuroraLS3
+ * @deprecated Use /v1/datapoint instead (types TPS_LOW_SPIKES, UPTIME, DOWNTIME, TPS_AVERAGE, PLAYERS_ONLINE_AVERAGE, MSPT_AVERAGE, CPU_AVERAGE, RAM_AVERAGE, ENTITIES_AVERAGE, CHUNKS_AVERAGE, DISK_MAX, DISK_MIN).
+ *
  */
 @Singleton
+@Deprecated(since = "2026-05-24 / 5.7 build 3460")
 public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, Object>> {
 
     private final PlanConfig config;
     private final DBSystem dbSystem;
+    private final Locale locale;
+    private final PluginLogger logger;
 
     private final Formatter<Double> decimals;
     private final Formatter<Double> percentage;
@@ -54,11 +62,13 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
     @Inject
     public PerformanceJSONCreator(
             PlanConfig config,
-            DBSystem dbSystem,
+            DBSystem dbSystem, Locale locale, PluginLogger logger,
             Formatters formatters
     ) {
         this.config = config;
         this.dbSystem = dbSystem;
+        this.locale = locale;
+        this.logger = logger;
 
         decimals = formatters.decimals();
         percentage = formatters.percentage();
@@ -67,6 +77,8 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
 
     @Override
     public Map<String, Object> createJSONAsMap(ServerUUID serverUUID) {
+        logger.warn(locale.getString(PluginLang.DEPRECATED_ENDPOINT_CALL, "/v1/performanceOverview", "/v1/datapoint"));
+
         Map<String, Object> serverOverview = new HashMap<>();
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();
@@ -102,24 +114,24 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
         numbers.put("server_uptime_7d", tpsDataWeek.serverUptime());
         numbers.put("server_uptime_24h", tpsDataDay.serverUptime());
 
-        numbers.put("players_30d", format(tpsDataMonth.averagePlayers()));
-        numbers.put("players_7d", format(tpsDataWeek.averagePlayers()));
-        numbers.put("players_24h", format(tpsDataDay.averagePlayers()));
-        numbers.put("tps_30d", format(tpsDataMonth.averageTPS()));
-        numbers.put("tps_7d", format(tpsDataWeek.averageTPS()));
-        numbers.put("tps_24h", format(tpsDataDay.averageTPS()));
+        numbers.put("players_30d", tpsDataMonth.averagePlayers());
+        numbers.put("players_7d", tpsDataWeek.averagePlayers());
+        numbers.put("players_24h", tpsDataDay.averagePlayers());
+        numbers.put("tps_30d", tpsDataMonth.averageTPS());
+        numbers.put("tps_7d", tpsDataWeek.averageTPS());
+        numbers.put("tps_24h", tpsDataDay.averageTPS());
         numbers.put("cpu_30d", formatPercentage(tpsDataMonth.averageCPU()));
         numbers.put("cpu_7d", formatPercentage(tpsDataWeek.averageCPU()));
         numbers.put("cpu_24h", formatPercentage(tpsDataDay.averageCPU()));
         numbers.put("ram_30d", formatBytes(tpsDataMonth.averageRAM()));
         numbers.put("ram_7d", formatBytes(tpsDataWeek.averageRAM()));
         numbers.put("ram_24h", formatBytes(tpsDataDay.averageRAM()));
-        numbers.put("entities_30d", format((int) tpsDataMonth.averageEntities()));
-        numbers.put("entities_7d", format((int) tpsDataWeek.averageEntities()));
-        numbers.put("entities_24h", format((int) tpsDataDay.averageEntities()));
-        numbers.put("chunks_30d", format((int) tpsDataMonth.averageChunks()));
-        numbers.put("chunks_7d", format((int) tpsDataWeek.averageChunks()));
-        numbers.put("chunks_24h", format((int) tpsDataDay.averageChunks()));
+        numbers.put("entities_30d", (int) tpsDataMonth.averageEntities());
+        numbers.put("entities_7d", (int) tpsDataWeek.averageEntities());
+        numbers.put("entities_24h", (int) tpsDataDay.averageEntities());
+        numbers.put("chunks_30d", (int) tpsDataMonth.averageChunks());
+        numbers.put("chunks_7d", (int) tpsDataWeek.averageChunks());
+        numbers.put("chunks_24h", (int) tpsDataDay.averageChunks());
 
         numbers.put("max_disk_30d", formatBytes(tpsDataMonth.maxFreeDisk()));
         numbers.put("max_disk_7d", formatBytes(tpsDataWeek.maxFreeDisk()));
@@ -128,11 +140,11 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
         numbers.put("min_disk_7d", formatBytes(tpsDataWeek.minFreeDisk()));
         numbers.put("min_disk_24h", formatBytes(tpsDataDay.minFreeDisk()));
 
-        return numbers;
-    }
+        numbers.put("mspt_average_30d", tpsDataMonth.averageMspt());
+        numbers.put("mspt_average_7d", tpsDataWeek.averageMspt());
+        numbers.put("mspt_average_24h", tpsDataDay.averageMspt());
 
-    private String format(double value) {
-        return value != -1 ? decimals.apply(value) : GenericLang.UNAVAILABLE.getKey();
+        return numbers;
     }
 
     private String formatBytes(double value) {
@@ -155,11 +167,13 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
         double averageCPU = lowTPS.averageCPU();
         double averageEntities = lowTPS.averageEntities();
         double averageChunks = lowTPS.averageChunks();
+        double averageMspt = lowTPS.averageMspt();
         insights.put("low_tps_players", avgPlayersOnline != -1 ? decimals.apply(avgPlayersOnline) : HtmlLang.TEXT_NO_LOW_TPS.getKey());
         insights.put("low_tps_tps", averageTPS != -1 ? decimals.apply(averageTPS) : "-");
         insights.put("low_tps_cpu", averageCPU != -1 ? decimals.apply(averageCPU) : "-");
         insights.put("low_tps_entities", averageEntities != -1 ? decimals.apply(averageEntities) : "-");
         insights.put("low_tps_chunks", averageChunks != -1 ? decimals.apply(averageChunks) : "-");
+        insights.put("low_tps_mspt", averageMspt > 0 ? decimals.apply(averageMspt) : "-");
 
         return insights;
     }

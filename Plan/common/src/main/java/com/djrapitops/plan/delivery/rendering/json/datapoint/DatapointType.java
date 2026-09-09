@@ -1,0 +1,110 @@
+/*
+ *  This file is part of Player Analytics (Plan).
+ *
+ *  Plan is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU Lesser General Public License v3 as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  Plan is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU Lesser General Public License for more details.
+ *
+ *  You should have received a copy of the GNU Lesser General Public License
+ *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
+ */
+package com.djrapitops.plan.delivery.rendering.json.datapoint;
+
+import com.djrapitops.plan.delivery.rendering.json.datapoint.types.*;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.types.performance.*;
+import com.djrapitops.plan.delivery.rendering.json.datapoint.types.playtime.*;
+import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
+
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Set;
+
+/**
+ * Types of {@link Datapoint datapoints}.
+ *
+ * @author AuroraLS3
+ */
+public enum DatapointType {
+    AFK_TIME(AfkTime.class, DatapointCacheKey.SESSION),
+    AFK_TIME_PERCENTAGE(AfkTimePercentage.class, DatapointCacheKey.SESSION),
+    CHUNKS_AVERAGE(ChunksAverage.class, DatapointCacheKey.TPS),
+    CHUNKS_PER_PLAYER(ChunksPerPlayer.class, DatapointCacheKey.TPS),
+    CPU_AVERAGE(CPUAverage.class, DatapointCacheKey.TPS),
+    CPU_IMPACT_PER_PLAYER(CPUImpactPerPlayer.class, DatapointCacheKey.TPS),
+    DEATHS(Deaths.class, DatapointCacheKey.SESSION),
+    DISK_MAX(DiskMax.class, DatapointCacheKey.TPS),
+    DISK_MIN(DiskMin.class, DatapointCacheKey.TPS),
+    DOWNTIME(Downtime.class, DatapointCacheKey.TPS),
+    ENTITIES_AVERAGE(EntitiesAverage.class, DatapointCacheKey.TPS),
+    ENTITIES_PER_CHUNK(EntitiesPerChunk.class, DatapointCacheKey.TPS),
+    MOB_KILLS(MobKills.class, DatapointCacheKey.SESSION),
+    MOST_ACTIVE_GAME_MODE(MostActiveGameMode.class, DatapointCacheKey.SESSION),
+    MOST_ACTIVE_WORLD(MostActiveWorld.class, DatapointCacheKey.SESSION),
+    MSPT_AVERAGE(MSPTAverage.class, DatapointCacheKey.TPS),
+    MSPT_JITTER_AVERAGE(MSPTJitterAverage.class, DatapointCacheKey.TPS),
+    MSPT_JITTER_MAX(MSPTJitterMax.class, DatapointCacheKey.TPS),
+    MSPT_AVERAGE_LOW_TPS(MSPTAverageWithLowTPS.class, DatapointCacheKey.TPS),
+    MSPT_MAX_95TH_LOW_TPS(MSPTMax95thWithLowTPS.class, DatapointCacheKey.TPS),
+    MSPT_IMPACT_PER_CHUNK(MSPTImpactPerChunk.class, DatapointCacheKey.TPS),
+    MSPT_IMPACT_PER_PLAYER(MSPTImpactPerPlayer.class, DatapointCacheKey.TPS),
+    NEW_PLAYERS(NewPlayers.class, DatapointCacheKey.SESSION),
+    NEW_PLAYERS_AVERAGE(NewPlayersPerDayAverage.class, DatapointCacheKey.SESSION),
+    NEW_PLAYER_RETENTION(NewPlayerRetention.class, DatapointCacheKey.SESSION),
+    PLAYERS_ONLINE(PlayersOnlineCurrent.class, DatapointCacheKey.TPS),
+    PLAYERS_ONLINE_AVERAGE(PlayersOnlineAverage.class, DatapointCacheKey.TPS),
+    PLAYERS_ONLINE_PEAK(PlayersOnlinePeak.class, DatapointCacheKey.TPS),
+    PLAYER_KILLS(PlayerKills.class, DatapointCacheKey.SESSION),
+    PLAYTIME(Playtime.class, DatapointCacheKey.SESSION),
+    PLAYTIME_PER_DAY_AVERAGE(PlaytimePerDayAverage.class, DatapointCacheKey.SESSION),
+    PLAYTIME_PER_PLAYER_AVERAGE(PlaytimePerPlayerAverage.class, DatapointCacheKey.SESSION),
+    RAM_AVERAGE(RAMAverage.class, DatapointCacheKey.TPS),
+    REGULAR_PLAYERS(RegularPlayers.class, DatapointCacheKey.SESSION),
+    SERVER_OCCUPIED(ServerOccupied.class, DatapointCacheKey.SESSION, DatapointCacheKey.TPS),
+    SERVER_PIE(ServerPie.class, DatapointCacheKey.SESSION),
+    SESSION_COUNT(SessionCount.class, DatapointCacheKey.SESSION),
+    SESSION_LENGTH_AVERAGE(SessionLengthAverage.class, DatapointCacheKey.SESSION),
+    TPS_AVERAGE(TPSAverage.class, DatapointCacheKey.TPS),
+    TPS_LOW_SPIKES(TPSLowSpikes.class, DatapointCacheKey.TPS),
+    UNIQUE_PLAYERS_AVERAGE(UniquePlayersPerDayAverage.class, DatapointCacheKey.SESSION),
+    UNIQUE_PLAYERS_COUNT(UniquePlayersCount.class, DatapointCacheKey.SESSION),
+    UPTIME(Uptime.class, DatapointCacheKey.TPS),
+    UPTIME_CURRENT(UptimeCurrent.class),
+    WORLD_PIE(WorldPie.class, DatapointCacheKey.SESSION),
+    MSPT_MAX_95TH(MSPTMax95th.class, DatapointCacheKey.TPS);
+
+    private final Class<? extends Datapoint<?>> datapointClass;
+    private final DatapointCacheKey[] cacheKeys;
+
+    DatapointType(Class<? extends Datapoint<?>> datapointClass, DatapointCacheKey... cacheKeys) {
+        this.datapointClass = datapointClass;
+        this.cacheKeys = cacheKeys;
+    }
+
+    public static DatapointType find(String name) {
+        try {
+            return DatapointType.valueOf(name.toUpperCase());
+        } catch (IllegalArgumentException e) {
+            throw new BadRequestException("Unknown type");
+        }
+    }
+
+    @SuppressWarnings("unused")
+    public Class<? extends Datapoint<?>> getDatapointClass() {
+        return datapointClass;
+    }
+
+    public Set<DatapointCacheKey> getCacheKeys() {
+        return new HashSet<>(Arrays.asList(cacheKeys));
+    }
+
+    @Override
+    public String toString() {
+        return name();
+    }
+}

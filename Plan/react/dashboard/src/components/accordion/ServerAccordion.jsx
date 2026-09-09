@@ -2,13 +2,13 @@ import React from "react";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCrosshairs, faGavel, faLocationArrow, faServer, faSkull} from "@fortawesome/free-solid-svg-icons";
 import {faCalendarCheck, faCalendarPlus, faClock} from "@fortawesome/free-regular-svg-icons";
-import Datapoint from "../Datapoint";
+import Datapoint from "../datapoint/Datapoint.tsx";
 import {Col, Row} from "react-bootstrap";
 import WorldPie from "../graphs/WorldPie";
 import Accordion from "./Accordion";
 import {faSuperpowers} from "@fortawesome/free-brands-svg-icons";
 import {useTranslation} from "react-i18next";
-import FormattedDate from "../text/FormattedDate.jsx";
+import FormattedDate from "../text/FormattedDate.tsx";
 import FormattedTime from "../text/FormattedTime.jsx";
 import ServerPageLinkButton from "../input/button/ServerPageLinkButton.jsx";
 

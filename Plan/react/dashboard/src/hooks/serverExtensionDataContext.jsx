@@ -1,7 +1,7 @@
 import {createContext, useContext, useEffect, useMemo, useState} from "react";
 import {useDataRequest} from "./dataFetchHook";
 import {fetchExtensionData} from "../service/serverService";
-import {useAuth} from "./authenticationHook";
+import {useAuth} from "./authenticationHook.tsx";
 
 const ServerExtensionContext = createContext({});
 

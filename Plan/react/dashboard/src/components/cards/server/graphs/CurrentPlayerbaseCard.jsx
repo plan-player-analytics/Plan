@@ -1,12 +1,12 @@
 import React from "react";
 import {useDataRequest} from "../../../../hooks/dataFetchHook";
 import {fetchPlayerbaseDevelopmentGraph} from "../../../../service/serverService";
-import {ErrorViewCard} from "../../../../views/ErrorView";
+import {ErrorViewCard} from "../../../../views/ErrorView.tsx";
 import {useTranslation} from "react-i18next";
 import {Card} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faUsers} from "@fortawesome/free-solid-svg-icons";
-import {CardLoader} from "../../../navigation/Loader";
+import {CardLoader} from "../../../navigation/Loader.tsx";
 import GroupVisualizer from "../../../graphs/GroupVisualizer";
 import {activityGroupToColor} from "../../../graphs/PlayerbaseGraph.jsx";
 

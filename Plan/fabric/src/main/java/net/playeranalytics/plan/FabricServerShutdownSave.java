@@ -21,7 +21,7 @@ import com.djrapitops.plan.gathering.afk.AFKTracker;
 import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import net.minecraft.server.dedicated.MinecraftDedicatedServer;
+import net.minecraft.server.dedicated.DedicatedServer;
 import net.playeranalytics.plan.gathering.listeners.fabric.FabricAFKListener;
 import net.playeranalytics.plugin.server.PluginLogger;
 
@@ -37,11 +37,11 @@ import java.util.Optional;
 @Singleton
 public class FabricServerShutdownSave extends ServerShutdownSave {
 
-    private final MinecraftDedicatedServer server;
+    private final DedicatedServer server;
 
     @Inject
     public FabricServerShutdownSave(
-            MinecraftDedicatedServer server,
+            DedicatedServer server,
             Locale locale,
             DBSystem dbSystem,
             PluginLogger logger,

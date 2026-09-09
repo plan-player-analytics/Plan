@@ -4,7 +4,7 @@ import {faCalendar} from "@fortawesome/free-regular-svg-icons";
 import {Card} from "react-bootstrap";
 import CardTabs from "../../CardTabs.jsx";
 import {useTranslation} from "react-i18next";
-import Datapoint from "../../Datapoint.jsx";
+import Datapoint from "../../datapoint/Datapoint.tsx";
 
 const Body = () => {
     return (

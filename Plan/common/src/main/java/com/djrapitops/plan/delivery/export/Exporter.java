@@ -100,11 +100,11 @@ public class Exporter extends FileExporter {
         if (failedServers.contains(serverUUID) || config.isFalse(ExportSettings.SERVER_JSON)) return false;
 
         try {
-            Path toDirectory = config.getJSONExportPath().resolve(toFileName(server.getName()));
+            Path toDirectory = config.getJSONExportPath().resolve(toDirectoryName(server.getName()));
             if (server.isProxy()) {
-                networkPageExporter.exportJSON(new ExportPaths(), toDirectory, server);
+                networkPageExporter.exportJSON(toDirectory, server.getUuid());
             } else {
-                serverPageExporter.exportJSON(toDirectory, server);
+                serverPageExporter.exportJSON(toDirectory, server.getUuid());
             }
             return true;
         } catch (IOException | NotFoundException e) {

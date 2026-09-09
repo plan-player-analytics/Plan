@@ -20,6 +20,7 @@ import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.storage.database.sql.tables.NicknamesTable;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.FROM;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.INSERT_INTO;
 
 /**
  * Replaces user_id and server_id foreign keys with respective uuid fields in nickname table.
@@ -53,7 +54,7 @@ public class NicknamesOptimizationPatch extends Patch {
             tempOldTable();
             execute(NicknamesTable.createTableSQL(dbType));
 
-            execute("INSERT INTO " + tableName + " (" +
+            execute(INSERT_INTO + tableName + " (" +
                     NicknamesTable.USER_UUID + ',' +
                     NicknamesTable.SERVER_UUID + ',' +
                     NicknamesTable.NICKNAME + ',' +

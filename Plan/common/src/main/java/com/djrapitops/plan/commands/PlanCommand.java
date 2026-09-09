@@ -41,23 +41,20 @@ import java.util.Optional;
 @Singleton
 public class PlanCommand {
 
+    private static final String DB_ARG_OPTIONS = "MySQL/SQLite";
     private final String commandName;
     private final ColorScheme colors;
     private final Confirmation confirmation;
     private final TabCompleteCache tabCompleteCache;
-
     private final LinkCommands linkCommands;
     private final RegistrationCommands registrationCommands;
     private final PluginStatusCommands statusCommands;
     private final DatabaseCommands databaseCommands;
     private final DataUtilityCommands dataUtilityCommands;
-
     private final Locale locale;
     private final PlanConfig config;
     private final ImportSystem importSystem;
     private final ErrorLogger errorLogger;
-
-    private static final String DB_ARG_OPTIONS = "MySQL/SQLite";
 
     @Inject
     public PlanCommand(
@@ -351,6 +348,7 @@ public class PlanCommand {
                 .subcommand(backupCommand())
                 .subcommand(restoreCommand())
                 .subcommand(moveCommand())
+                .subcommand(mergeCommand())
                 .subcommand(hotswapCommand())
                 .subcommand(clearCommand())
                 .subcommand(removeCommand())
@@ -435,6 +433,21 @@ public class PlanCommand {
                 .description(locale.getString(HelpLang.DB_MOVE))
                 .inDepthDescription(locale.getString(DeepHelpLang.DB_MOVE))
                 .onCommand(databaseCommands::onMove)
+                .onTabComplete((sender, arguments) -> DBType.names())
+                .build();
+    }
+
+    private Subcommand mergeCommand() {
+        return Subcommand.builder()
+                .aliases("merge")
+                .requirePermission(Permissions.DATA_MERGE)
+                .requiredArgument(DB_ARG_OPTIONS, locale.getString(HelpLang.DESC_ARG_DB_MOVE_FROM))
+                .requiredArgument(DB_ARG_OPTIONS, locale.getString(HelpLang.DESC_ARG_DB_MOVE_TO))
+                .optionalArgument("--on-conflict-delete", locale.getString(HelpLang.DESC_ARG_DB_MERGE_DELETE))
+                .optionalArgument("--on-conflict-swap", locale.getString(HelpLang.DESC_ARG_DB_MERGE_SWAP))
+                .description(locale.getString(HelpLang.DB_MERGE))
+                .inDepthDescription(locale.getString(DeepHelpLang.DB_MERGE))
+                .onCommand(databaseCommands::onMerge)
                 .onTabComplete((sender, arguments) -> DBType.names())
                 .build();
     }

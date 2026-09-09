@@ -25,6 +25,7 @@ import com.djrapitops.plan.extension.NotReadyException;
 import com.djrapitops.plan.extension.annotation.*;
 import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
 import com.djrapitops.plan.extension.icon.Color;
+import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.results.*;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
@@ -34,11 +35,13 @@ import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.settings.config.ExtensionSettings;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
+import com.djrapitops.plan.storage.database.transactions.init.RemoveOldExtensionsTransaction;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.BeforeEach;
@@ -53,6 +56,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -73,6 +77,11 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         extensionService.unregister(new ConditionalExtension());
         extensionService.unregister(new TableExtension());
         extensionService.unregister(new ThrowingExtension());
+        extensionService.unregister(new ClickEventTestExtension());
+        ExtensionSettings extensionSettings = config().getExtensionSettings();
+        extensionSettings.setEnabled("PlayerExtension", true);
+        extensionSettings.setEnabled("TableExtension", true);
+        extensionSettings.setEnabled("ServerExtension", true);
     }
 
     @Test
@@ -86,6 +95,28 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
     default void removeEverythingRemovesServerExtensionData() {
         extensionServerValuesAreStored();
         db().executeTransaction(new RemoveEverythingTransaction());
+        assertTrue(db().query(new ExtensionServerDataQuery(serverUUID())).isEmpty());
+    }
+
+    @Test
+    default void removeOldExtensionDataCleansData() {
+        db().executeTransaction(new PlayerRegisterTransaction(TestConstants.PLAYER_ONE_UUID, System::currentTimeMillis, TestConstants.PLAYER_ONE_NAME));
+
+        ExtensionSvc extensionService = extensionService();
+        extensionService.register(new TableExtension());
+        extensionService.register(new PlayerExtension());
+        extensionService.register(new ServerExtension());
+        extensionService.updatePlayerValues(playerUUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
+        extensionService.updateServerValues(CallEvents.MANUAL);
+
+        ExtensionSettings extensionSettings = config().getExtensionSettings();
+        extensionSettings.setEnabled("PlayerExtension", false);
+        extensionSettings.setEnabled("TableExtension", false);
+        extensionSettings.setEnabled("ServerExtension", false);
+
+        db().executeTransaction(new RemoveOldExtensionsTransaction(extensionService.getExtensionMetadataStorage(), extensionSettings, TimeUnit.DAYS.toMillis(1), serverUUID()));
+
+        assertTrue(db().query(new ExtensionPlayerDataQuery(playerUUID)).isEmpty());
         assertTrue(db().query(new ExtensionServerDataQuery(serverUUID())).isEmpty());
     }
 
@@ -432,6 +463,43 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         assertEquals(5, TestErrorLogger.getCaught().size(), () -> "Not all exceptions got logged, logged exceptions: " + TestErrorLogger.getCaught().toString());
     }
 
+    @Test
+    default void clickEventsNotAllowed() {
+        ExtensionSvc extensionService = extensionService();
+        extensionService.register(new ClickEventTestExtension());
+
+        extensionService.updateServerValues(CallEvents.MANUAL);
+
+        String expected = "{\"text\":\"<Component contained disallowed words or characters>\"}";
+        String result = db().query(new ExtensionServerDataQuery(serverUUID()))
+                .get(0)
+                .getTabs()
+                .get(0)
+                .getComponent("clickEventComponent")
+                .orElseThrow(AssertionError::new)
+                .getFormattedValue();
+        assertEquals(expected, result);
+    }
+
+    @Test
+    default void clickEventsNotAllowedForPlayer() {
+        ExtensionSvc extensionService = extensionService();
+        extensionService.register(new ClickEventTestExtension());
+
+        extensionService.updatePlayerValues(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
+
+        String expected = "{\"text\":\"<Component contained disallowed words or characters>\"}";
+        String result = db().query(new ExtensionPlayerDataQuery(TestConstants.PLAYER_ONE_UUID))
+                .get(serverUUID())
+                .get(0)
+                .getTabs()
+                .get(0)
+                .getComponent("clickEventPlayerComponent")
+                .orElseThrow(AssertionError::new)
+                .getFormattedValue();
+        assertEquals(expected, result);
+    }
+
 
     @PluginInfo(name = "ConditionalExtension")
     class ConditionalExtension implements DataExtension {
@@ -652,6 +720,39 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         @DataBuilderProvider
         public ExtensionDataBuilder builder3() {
             throw new NoSuchMethodError();
+        }
+    }
+
+    @PluginInfo(
+            name = "Component with click event",
+            iconName = "bug",
+            iconFamily = Family.SOLID,
+            color = Color.RED
+    )
+    public class ClickEventTestExtension implements DataExtension {
+        @ComponentProvider(
+                text = "Component with click event",
+                description = "",
+                iconName = "bug",
+                iconFamily = Family.SOLID,
+                iconColor = Color.RED
+        )
+        public Component clickEventComponent() {
+            String json = "{\"text\":\"Click here\",\"color\":\"red\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"javascript:alert(document.cookie)\"}}";
+            return ComponentService.getInstance().fromJson(json);
+        }
+
+
+        @ComponentProvider(
+                text = "Component with click event",
+                description = "",
+                iconName = "bug",
+                iconFamily = Family.SOLID,
+                iconColor = Color.RED
+        )
+        public Component clickEventPlayerComponent(UUID playerUUID) {
+            String json = "{\"text\":\"Click here\",\"color\":\"red\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"javascript:alert(document.cookie)\"}}";
+            return ComponentService.getInstance().fromJson(json);
         }
     }
 }

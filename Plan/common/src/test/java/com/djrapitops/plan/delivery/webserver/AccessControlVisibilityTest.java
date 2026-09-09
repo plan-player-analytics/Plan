@@ -19,7 +19,6 @@ package com.djrapitops.plan.delivery.webserver;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
-import com.djrapitops.plan.delivery.export.ExportTestUtilities;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -28,11 +27,13 @@ import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveWebGroupsTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreServerPlayerTransaction;
+import com.djrapitops.plan.storage.database.transactions.events.TPSStoreTransaction;
 import com.djrapitops.plan.storage.database.transactions.webuser.StoreWebGroupTransaction;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import extension.FullSystemExtension;
@@ -48,8 +49,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.logging.LogEntry;
-import org.openqa.selenium.logging.LogType;
 import utilities.RandomData;
 import utilities.TestConstants;
 import utilities.TestResources;
@@ -58,16 +57,20 @@ import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.UUID;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static com.djrapitops.plan.delivery.export.ExportTestUtilities.assertNoLogs;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
+ * Test for visibility of specific components on the website based on web permissions.
+ *
  * @author AuroraLS3
  */
 @ExtendWith({SeleniumExtension.class, FullSystemExtension.class})
@@ -93,31 +96,9 @@ class AccessControlVisibilityTest {
         system.enable();
     }
 
-    @AfterEach
-    void tearDownTest(WebDriver driver) {
-        String address = "https://localhost:" + TEST_PORT_NUMBER + "/auth/logout";
-        driver.get(address);
-        SeleniumExtension.newTab(driver);
-        driver.manage().deleteAllCookies();
-    }
-
     @AfterAll
     static void tearDown(PlanSystem system) {
         system.disable();
-    }
-
-    User registerUser(Database db, WebPermission... permissions) throws Exception {
-        String groupName = RandomData.randomString(75);
-        db.executeTransaction(
-                new StoreWebGroupTransaction(groupName, Arrays.stream(permissions)
-                        .map(WebPermission::getPermission)
-                        .collect(Collectors.toList()))
-        ).get();
-
-        User user = new User(RandomData.randomString(45), "console", null, PassEncryptUtil.createHash(PASSWORD), groupName, Collections.emptyList());
-        db.executeTransaction(new StoreWebUserTransaction(user)).get();
-
-        return user;
     }
 
     static Stream<Arguments> serverPageElementVisibleCases() {
@@ -135,7 +116,9 @@ class AccessControlVisibilityTest {
                 Arguments.arguments(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_OVERVIEW, "online-activity-insights", "online-activity"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_SESSIONS_OVERVIEW, "session-insights", "sessions"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_SESSIONS_WORLD_PIE, "world-pie", "sessions"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_STATISTICS, "server-statistics", "statistics"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_SESSIONS_LIST, "session-list", "sessions"),
+                Arguments.arguments(WebPermission.PAGE_SERVER_SESSIONS_CALENDAR, "server-calendar", "sessions"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_PLAYER_VERSUS_OVERVIEW, "pvp-pve-as-numbers", "pvppve"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_PLAYER_VERSUS_OVERVIEW, "pvp-pve-insights", "pvppve"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_PLAYER_VERSUS_KILL_LIST, "pvp-kills-table", "pvppve"),
@@ -151,7 +134,6 @@ class AccessControlVisibilityTest {
                 Arguments.arguments(WebPermission.PAGE_SERVER_GEOLOCATIONS_PING_PER_COUNTRY, "ping-per-country", "geolocations"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS, "performance-graphs", "performance"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_PERFORMANCE_OVERVIEW, "performance-as-numbers", "performance"),
-                Arguments.arguments(WebPermission.PAGE_SERVER_PERFORMANCE_OVERVIEW, "performance-insights", "performance"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_PLUGIN_HISTORY, "server-plugin-history", "plugin-history"),
                 Arguments.arguments(WebPermission.PAGE_SERVER_PLUGINS, "server-plugin-data", "plugins-overview")
         );
@@ -169,7 +151,10 @@ class AccessControlVisibilityTest {
                 Arguments.arguments(WebPermission.PAGE_NETWORK_SERVER_LIST, "row-network-servers-0", "serversOverview"),
                 Arguments.arguments(WebPermission.PAGE_NETWORK_SESSIONS_OVERVIEW, "session-insights", "sessions"),
                 Arguments.arguments(WebPermission.PAGE_NETWORK_SESSIONS_SERVER_PIE, "server-pie", "sessions"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_STATISTICS_AGGREGATE, "network-aggregate-statistics", "statistics"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_STATISTICS_BY_SERVER, "network-by-server-statistics", "statistics"),
                 Arguments.arguments(WebPermission.PAGE_NETWORK_SESSIONS_LIST, "session-list", "sessions"),
+                Arguments.arguments(WebPermission.PAGE_NETWORK_SESSIONS_CALENDAR, "server-calendar", "sessions"),
                 Arguments.arguments(WebPermission.PAGE_NETWORK_PLAYERBASE_OVERVIEW, "playerbase-trends", "playerbase"),
                 Arguments.arguments(WebPermission.PAGE_NETWORK_PLAYERBASE_OVERVIEW, "playerbase-insights", "playerbase"),
                 Arguments.arguments(WebPermission.PAGE_NETWORK_PLAYERBASE_GRAPHS, "playerbase-graph", "playerbase"),
@@ -191,6 +176,7 @@ class AccessControlVisibilityTest {
                 Arguments.arguments(WebPermission.PAGE_PLAYER_SESSIONS, "player-sessions", "sessions"),
                 Arguments.arguments(WebPermission.PAGE_PLAYER_VERSUS, "player-pvp-pve", "pvppve"),
                 Arguments.arguments(WebPermission.PAGE_PLAYER_SERVERS, "player-servers", "servers"),
+                Arguments.arguments(WebPermission.PAGE_PLAYER_STATISTICS, "player-statistics", "statistics"),
                 Arguments.arguments(WebPermission.PAGE_PLAYER_PLUGINS, "player-plugin-data", "plugins/Server%201")
         );
     }
@@ -208,6 +194,46 @@ class AccessControlVisibilityTest {
         );
     }
 
+    private static void storePlayer(Database database, ServerUUID serverUUID) throws ExecutionException, InterruptedException {
+        storePlayer(database, serverUUID, TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME);
+    }
+
+    private static void storePlayer(Database database, ServerUUID serverUUID, UUID playerUUID, String playerName) throws ExecutionException, InterruptedException {
+        database.executeTransaction(new StoreServerPlayerTransaction(playerUUID, System.currentTimeMillis(), playerName, serverUUID, TestConstants.GET_PLAYER_HOSTNAME.get()))
+                .get();
+    }
+
+    @BeforeEach
+    void setUp(Database database, ServerUUID serverUUID) {
+        RandomData.dateOrderedTPS(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(12)).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
+        RandomData.dateOrderedTPS(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(8)).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
+        RandomData.dateOrderedTPS(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(15)).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
+        RandomData.dateOrderedTPS(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(22)).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
+        RandomData.dateOrderedTPS(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(29)).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
+    }
+
+    @AfterEach
+    void tearDownTest(WebDriver driver) {
+        String address = "https://localhost:" + TEST_PORT_NUMBER + "/auth/logout";
+        driver.get(address);
+        SeleniumExtension.newTab(driver);
+        driver.manage().deleteAllCookies();
+    }
+
+    User registerUser(Database db, WebPermission... permissions) throws Exception {
+        String groupName = RandomData.randomString(75);
+        db.executeTransaction(
+                new StoreWebGroupTransaction(groupName, Arrays.stream(permissions)
+                        .map(WebPermission::getPermission)
+                        .toList())
+        ).get();
+
+        User user = new User(RandomData.randomString(45), "console", null, PassEncryptUtil.createHash(PASSWORD), groupName, Collections.emptyList());
+        db.executeTransaction(new StoreWebUserTransaction(user)).get();
+
+        return user;
+    }
+
     @DisplayName("Whole page is visible with permission")
     @ParameterizedTest(name = "Access with visibility {0} can see element #{1} in /{2}")
     @MethodSource("pageLevelVisibleCases")
@@ -223,13 +249,6 @@ class AccessControlVisibilityTest {
         SeleniumExtension.waitForElementToBeVisible(By.id(element), driver);
         assertDoesNotThrow(() -> driver.findElement(By.id(element)), () -> "Did not see #" + element + " at " + address + " with permission '" + permission.getPermission() + "'");
         assertNoLogs(driver, address);
-    }
-
-    private static void assertNoLogs(ChromeDriver driver, String address) {
-        List<LogEntry> logs = new ArrayList<>();
-        logs.addAll(driver.manage().logs().get(LogType.CLIENT).getAll());
-        logs.addAll(driver.manage().logs().get(LogType.BROWSER).getAll());
-        ExportTestUtilities.assertNoLogs(logs, address);
     }
 
     @DisplayName("Whole page is not visible with permission")
@@ -263,7 +282,7 @@ class AccessControlVisibilityTest {
     @ParameterizedTest(name = "Access to server page with visibility {0} can see element #{1} in section /server/uuid/{2}")
     @MethodSource("serverPageElementVisibleCases")
     void serverPageElementVisible(WebPermission permission, String element, String section, Database database, ServerUUID serverUUID, ChromeDriver driver) throws Exception {
-        User user = registerUser(database, WebPermission.ACCESS_SERVER, permission);
+        User user = registerUser(database, WebPermission.ACCESS_SERVER, WebPermission.DATA_SERVER, permission);
 
         String address = "https://localhost:" + TEST_PORT_NUMBER + "/server/" + serverUUID + "/" + section;
         driver.get(address);
@@ -274,20 +293,11 @@ class AccessControlVisibilityTest {
         assertNoLogs(driver, address);
     }
 
-    private static void storePlayer(Database database, ServerUUID serverUUID) throws ExecutionException, InterruptedException {
-        storePlayer(database, serverUUID, TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME);
-    }
-
-    private static void storePlayer(Database database, ServerUUID serverUUID, UUID playerUUID, String playerName) throws ExecutionException, InterruptedException {
-        database.executeTransaction(new StoreServerPlayerTransaction(playerUUID, System.currentTimeMillis(), playerName, serverUUID, TestConstants.GET_PLAYER_HOSTNAME.get()))
-                .get();
-    }
-
     @DisplayName("Server element is not visible without permission")
     @ParameterizedTest(name = "Access to server page with no visibility needs {0} can't see element #{1} in section /server/uuid/{2}")
     @MethodSource("serverPageElementVisibleCases")
     void serverPageElementNotVisible(WebPermission permission, String element, String section, Database database, ServerUUID serverUUID, ChromeDriver driver) throws Exception {
-        User user = registerUser(database, WebPermission.ACCESS_SERVER);
+        User user = registerUser(database, WebPermission.ACCESS_SERVER, WebPermission.DATA_SERVER);
 
         String address = "https://localhost:" + TEST_PORT_NUMBER + "/server/" + serverUUID + "/" + section;
         driver.get(address);
@@ -299,10 +309,11 @@ class AccessControlVisibilityTest {
         assertNoLogs(driver, address);
     }
 
-    private void registerProxy(Database database) throws ExecutionException, InterruptedException {
+    private void registerProxy(Database database) {
         database.executeTransaction(new StoreServerInformationTransaction(
                 new Server(null, TestConstants.SERVER_TWO_UUID, "Proxy", "https://localhost", true, TestConstants.VERSION)
-        )).get();
+        )).join();
+        database.executeInTransaction(DataStoreQueries.storeTPS(TestConstants.SERVER_TWO_UUID, RandomData.randomTPSAtDate(System.currentTimeMillis() - 1)));
         Awaitility.await("Proxy was not registered")
                 .atMost(5, TimeUnit.SECONDS)
                 .until(() -> !database.query(ServerQueries.fetchProxyServers()).isEmpty());
@@ -312,7 +323,7 @@ class AccessControlVisibilityTest {
     @ParameterizedTest(name = "Access to network page with visibility {0} can see element #{1} in section /network/{2}")
     @MethodSource("networkPageElementVisibleCases")
     void networkPageElementVisible(WebPermission permission, String element, String section, Database database, ChromeDriver driver) throws Exception {
-        User user = registerUser(database, WebPermission.ACCESS_NETWORK, permission);
+        User user = registerUser(database, WebPermission.ACCESS_NETWORK, WebPermission.DATA_NETWORK, permission);
         registerProxy(database);
 
         String address = "https://localhost:" + TEST_PORT_NUMBER + "/network/" + section;
@@ -328,7 +339,7 @@ class AccessControlVisibilityTest {
     @ParameterizedTest(name = "Access to network page with no visibility needs {0} can't see element #{1} in section /network/{2}")
     @MethodSource("networkPageElementVisibleCases")
     void networkPageElementNotVisible(WebPermission permission, String element, String section, Database database, ChromeDriver driver) throws Exception {
-        User user = registerUser(database, WebPermission.ACCESS_NETWORK);
+        User user = registerUser(database, WebPermission.ACCESS_NETWORK, WebPermission.DATA_NETWORK);
         registerProxy(database);
 
         String address = "https://localhost:" + TEST_PORT_NUMBER + "/network/" + section;
@@ -345,7 +356,7 @@ class AccessControlVisibilityTest {
     @ParameterizedTest(name = "Access to player page with visibility {0} can see element #{1} in section /player/uuid/{2}")
     @MethodSource("playerPageVisibleCases")
     void playerPageElementVisible(WebPermission permission, String element, String section, Database database, ServerUUID serverUUID, ChromeDriver driver) throws Exception {
-        User user = registerUser(database, WebPermission.ACCESS_PLAYER, permission);
+        User user = registerUser(database, WebPermission.ACCESS_PLAYER, WebPermission.DATA_PLAYER, permission);
         storePlayer(database, serverUUID);
 
         String address = "https://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_UUID + "/" + section;
@@ -361,7 +372,7 @@ class AccessControlVisibilityTest {
     @ParameterizedTest(name = "Access to player page with no visibility needs {0} can't see element #{1} in section /player/uuid/{2}")
     @MethodSource("playerPageVisibleCases")
     void playerPageElementNotVisible(WebPermission permission, String element, String section, Database database, ServerUUID serverUUID, ChromeDriver driver) throws Exception {
-        User user = registerUser(database, WebPermission.ACCESS_PLAYER);
+        User user = registerUser(database, WebPermission.ACCESS_PLAYER, WebPermission.DATA_PLAYER);
         storePlayer(database, serverUUID);
 
         String address = "https://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_UUID + "/" + section;
@@ -379,7 +390,7 @@ class AccessControlVisibilityTest {
     void playerSelfVisibilityTests(Database database, ServerUUID serverUUID, ChromeDriver driver) throws Exception {
         String element = "player-overview";
 
-        User user = registerUser(database, WebPermission.ACCESS_PLAYER_SELF, WebPermission.PAGE_PLAYER);
+        User user = registerUser(database, WebPermission.ACCESS_PLAYER_SELF, WebPermission.PAGE_PLAYER, WebPermission.DATA_PLAYER);
         // Link a user to the player
         User playerUser = new User("player_user", TestConstants.PLAYER_ONE_NAME, TestConstants.PLAYER_ONE_UUID, PassEncryptUtil.createHash(PASSWORD), user.getPermissionGroup(), user.getPermissions());
         database.executeTransaction(new StoreWebUserTransaction(playerUser)).get();
@@ -402,7 +413,7 @@ class AccessControlVisibilityTest {
     void playerSelfNonVisibilityTests(Database database, ServerUUID serverUUID, ChromeDriver driver) throws Exception {
         String element = "player-overview";
 
-        User user = registerUser(database, WebPermission.ACCESS_PLAYER_SELF, WebPermission.PAGE_PLAYER);
+        User user = registerUser(database, WebPermission.ACCESS_PLAYER_SELF, WebPermission.PAGE_PLAYER, WebPermission.DATA_PLAYER);
         // Link a user to the player
         User playerUser = new User("player_user", TestConstants.PLAYER_ONE_NAME, TestConstants.PLAYER_ONE_UUID, PassEncryptUtil.createHash(PASSWORD), user.getPermissionGroup(), user.getPermissions());
         database.executeTransaction(new StoreWebUserTransaction(playerUser));

@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries.filter.filters;
 
-import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
+import com.djrapitops.plan.delivery.domain.datatransfer.query.InputFilterDto;
 import com.djrapitops.plan.extension.implementation.providers.ProviderIdentifier;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionUserIdsInGroupQuery;
 import com.djrapitops.plan.identification.Server;
@@ -39,7 +39,7 @@ import java.util.*;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
-public class PluginGroupsFilter extends MultiOptionFilter {
+public class PluginGroupsFilter implements MultiOptionFilter {
 
     private final DBSystem dbSystem;
     private final List<String> groups;

@@ -87,6 +87,10 @@ public abstract class Patch extends OperationCriticalTransaction {
         execute(ALTER_TABLE + tableName + " ADD " + (dbType.supportsMySQLQueries() ? "" : "COLUMN ") + columnInfo);
     }
 
+    protected void dropColumn(String tableName, String columnName) {
+        execute(ALTER_TABLE + tableName + " DROP COLUMN " + columnName);
+    }
+
     protected void dropTable(String name) {
         execute("DROP TABLE IF EXISTS " + name);
     }
@@ -133,7 +137,7 @@ public abstract class Patch extends OperationCriticalTransaction {
     }
 
     protected boolean allValuesHaveValueZero(String tableName, String column) {
-        String sql = SELECT + '*' + FROM + tableName + WHERE + column + "=? LIMIT 1";
+        String sql = SELECT + '*' + FROM + tableName + WHERE + column + "=? LIMIT 1" + lockForUpdate();
         return query(new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

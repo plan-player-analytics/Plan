@@ -20,6 +20,7 @@ import com.djrapitops.plan.PlanPlugin;
 import com.djrapitops.plan.PlanSponge;
 import com.djrapitops.plan.delivery.web.AssetVersions;
 import dagger.Lazy;
+import net.playeranalytics.plugin.server.PluginLogger;
 import org.spongepowered.api.Sponge;
 import org.spongepowered.api.resource.ResourcePath;
 import org.spongepowered.plugin.PluginContainer;
@@ -45,9 +46,10 @@ public class SpongePlanFiles extends PlanFiles {
             @Named("dataFolder") File dataFolder,
             JarResource.StreamFunction getResourceStream,
             PlanPlugin plugin,
-            Lazy<AssetVersions> assetVersions
+            Lazy<AssetVersions> assetVersions,
+            PluginLogger logger
     ) {
-        super(dataFolder, getResourceStream, assetVersions);
+        super(dataFolder, getResourceStream, assetVersions, logger);
         this.plugin = plugin;
     }
 

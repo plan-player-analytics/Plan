@@ -64,7 +64,7 @@ public class LineGraph implements HighChart {
             }
             lastX = date;
 
-            arrayBuilder.append("[").append(date).append(",").append(y).append("]");
+            arrayBuilder.append("[").append(date).append(",").append(y < 0 ? null : y).append("]");
             if (i < size - 1) {
                 arrayBuilder.append(",");
             }

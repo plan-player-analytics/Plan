@@ -250,8 +250,4 @@ public class PlanSponge implements PlanPlugin {
         return plugin;
     }
 
-    @Override
-    public File getDataFolder() {
-        return dataFolder;
-    }
 }

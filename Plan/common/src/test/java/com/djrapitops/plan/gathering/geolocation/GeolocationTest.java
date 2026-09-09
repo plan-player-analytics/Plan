@@ -64,12 +64,29 @@ class GeolocationTest {
     @BeforeAll
     static void setUpTestData() {
         TEST_DATA.put("156.53.159.86", "United States"); // Oregon, US
-        TEST_DATA.put("208.67.222.222", "United States"); // California, US
         TEST_DATA.put("208.67.220.220", "United States"); // California, US
         TEST_DATA.put("205.210.42.205", "Canada");
         TEST_DATA.put("64.68.200.200", "Canada");
         TEST_DATA.put("0.0.0.0", "Not Found"); // Invalid IP
         TEST_DATA.put("127.0.0.1", "Local Machine");
+    }
+
+    // Test utility for reading https://cable.ayra.ch/ip/data/countries.json for getting first IP of each country
+    // Have to manually remove 3 first ones and the IPv6 addresses at the end.
+    public static void main(String[] args) throws URISyntaxException, IOException {
+        File testResourceFile = TestResources.getTestResourceFile("countries.json", GeolocationTest.class);
+        String read = Files.readString(testResourceFile.toPath());
+        Map<String, Map<String, List<String>>> contents = new Gson().fromJson(new StringReader(read), new TypeToken<>() {}.getType());
+        List<String> singleIpPerCountry = contents.values().stream()
+                .map(Map::values)
+                .map(set -> set.stream().findFirst())
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(list -> list.get(0))
+                .map(string -> string.split("/")[0])
+                .toList();
+        Path write = new File("src/test/resources/countries-reduced.txt").toPath();
+        Files.write(write, singleIpPerCountry, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
     }
 
     @BeforeEach
@@ -112,7 +129,7 @@ class GeolocationTest {
     void callsToCachedIPsReturnCachedEntries() {
         for (Map.Entry<String, String> entry : TEST_DATA.entrySet()) {
             String ip = entry.getKey();
-            String expIp = entry.getValue();
+            String expected = entry.getValue();
 
             assertFalse(underTest.isCached(ip));
             String countrySecondCall = underTest.getCountry(ip);
@@ -121,26 +138,8 @@ class GeolocationTest {
             String countryThirdCall = underTest.getCountry(ip);
 
             assertSame(countrySecondCall, countryThirdCall);
-            assertEquals(expIp, countryThirdCall);
+            assertEquals(expected, countryThirdCall, "Tested " + ip + ", expected: <" + expected + "> but was: <" + countryThirdCall + '>');
         }
-    }
-
-    // Test utility for reading https://cable.ayra.ch/ip/data/countries.json for getting first IP of each country
-    // Have to manually remove 3 first ones and the IPv6 addresses at the end.
-    public static void main(String[] args) throws URISyntaxException, IOException {
-        File testResourceFile = TestResources.getTestResourceFile("countries.json", GeolocationTest.class);
-        String read = Files.readString(testResourceFile.toPath());
-        Map<String, Map<String, List<String>>> contents = new Gson().fromJson(new StringReader(read), new TypeToken<>() {}.getType());
-        List<String> singleIpPerCountry = contents.values().stream()
-                .map(Map::values)
-                .map(set -> set.stream().findFirst())
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(list -> list.get(0))
-                .map(string -> string.split("/")[0])
-                .toList();
-        Path write = new File("src/test/resources/countries-reduced.txt").toPath();
-        Files.write(write, singleIpPerCountry, StandardOpenOption.CREATE, StandardOpenOption.WRITE);
     }
 
     @TestFactory

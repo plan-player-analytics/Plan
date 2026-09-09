@@ -23,7 +23,7 @@ import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import net.playeranalytics.plan.commands.FabricCommandManager;
 import net.playeranalytics.plan.gathering.listeners.FabricListener;
 import net.playeranalytics.plan.gathering.listeners.events.PlanFabricEvents;
@@ -62,9 +62,9 @@ public class FabricAFKListener implements FabricListener {
         return afkTracker;
     }
 
-    private void event(ServerPlayerEntity player) {
+    private void event(ServerPlayer player) {
         try {
-            UUID uuid = player.getUuid();
+            UUID uuid = player.getUUID();
             long time = System.currentTimeMillis();
 
             boolean ignored = ignorePermissionInfo.computeIfAbsent(uuid, keyUUID -> checkPermission(player, com.djrapitops.plan.settings.Permissions.IGNORE_AFK.getPermission()));
@@ -82,7 +82,7 @@ public class FabricAFKListener implements FabricListener {
         }
     }
 
-    private boolean checkPermission(ServerPlayerEntity player, String permission) {
+    private boolean checkPermission(ServerPlayer player, String permission) {
         if (FabricCommandManager.isPermissionsApiAvailable()) {
             return Permissions.check(player, permission);
         } else {
@@ -109,7 +109,7 @@ public class FabricAFKListener implements FabricListener {
             event(handler.player);
             boolean isAfkCommand = command.toLowerCase().startsWith("afk");
             if (isAfkCommand) {
-                UUID uuid = handler.player.getUuid();
+                UUID uuid = handler.player.getUUID();
                 afkTracker.usedAfkCommand(uuid, System.currentTimeMillis());
             }
         });
@@ -117,7 +117,7 @@ public class FabricAFKListener implements FabricListener {
             if (!this.isEnabled) {
                 return;
             }
-            ignorePermissionInfo.remove(handler.player.getUuid());
+            ignorePermissionInfo.remove(handler.player.getUUID());
         });
         PlanFabricEvents.ON_MOVE.register((handler, packet) -> {
             if (!this.isEnabled) {

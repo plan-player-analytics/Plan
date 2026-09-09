@@ -41,10 +41,9 @@ public class NukkitMockComponent {
         SQLDB.setDownloadDriver(false);
     }
 
-    public PlanNukkit getPlanMock() throws Exception {
+    public PlanNukkit getPlanMock() {
         if (planMock == null) {
             planMock = PlanNukkitMocker.setUp()
-                    .withDataFolder(tempDir.toFile())
                     .withPluginDescription()
                     .withServer()
                     .getPlanMock();
@@ -52,12 +51,12 @@ public class NukkitMockComponent {
         return planMock;
     }
 
-    public PlanSystem getPlanSystem() throws Exception {
+    public PlanSystem getPlanSystem() {
         if (component == null) {
             PlanNukkit planMock = getPlanMock();
             component = DaggerPlanNukkitComponent.builder()
                     .plan(planMock)
-                    .abstractionLayer(new TestPlatformAbstractionLayer(this.planMock))
+                    .abstractionLayer(new TestPlatformAbstractionLayer(tempDir.resolve("PlanData")))
                     .build();
         }
         return component.system();

@@ -53,7 +53,7 @@ public class ExtensionServerDataUpdater extends TaskSystem.Task {
 
     @Override
     public void register(RunnableFactory runnableFactory) {
-        long period = TimeAmount.toTicks(config.get(TimeSettings.EXTENSION_DATA_REFRESH_PERIOD), TimeUnit.MILLISECONDS);
+        long period = TimeAmount.toTicks(config.get(TimeSettings.EXTENSION_SERVER_DATA_REFRESH_PERIOD), TimeUnit.MILLISECONDS);
         long delay = TimeAmount.toTicks(30, TimeUnit.SECONDS);
         runnableFactory.create(this).runTaskTimerAsynchronously(delay, period);
     }

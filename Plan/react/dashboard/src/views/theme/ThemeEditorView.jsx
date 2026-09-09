@@ -1,9 +1,9 @@
 import React, {useState} from 'react';
 import {useTranslation} from "react-i18next";
-import {useThemeEditContext} from "../../hooks/context/themeEditContextHook.jsx";
+import {useThemeEditContext} from "../../hooks/context/themeEditContextHook.tsx";
 import {Card, Col, Row} from "react-bootstrap";
 import EditorMenuToast from "../../components/theme/EditorMenuToast.jsx";
-import CardHeader from "../../components/cards/CardHeader.jsx";
+import CardHeader from "../../components/cards/CardHeader.tsx";
 import TextInput from "../../components/input/TextInput.jsx";
 import {ColorEditContextProvider} from "../../hooks/context/colorEditContextHook.jsx";
 import ColorSection from "../../components/theme/ColorSection.jsx";
@@ -11,14 +11,14 @@ import ColorEditForm from "../../components/theme/ColorEditForm.jsx";
 import UseCaseSection from "../../components/theme/UseCaseSection.jsx";
 import ExampleSection from "../../components/theme/ExampleSection.jsx";
 import {faExclamationCircle, faFileSignature, faSwatchbook} from "@fortawesome/free-solid-svg-icons";
-import ActionButton from "../../components/input/button/ActionButton.jsx";
+import ActionButton from "../../components/input/button/ActionButton.tsx";
 import UnsavedChangesText from "../../components/text/UnsavedChangesText.jsx";
 import SecondaryActionButton from "../../components/input/button/SecondaryActionButton.jsx";
 import {MinHeightProvider} from "../../hooks/context/minHeightContextHook.jsx";
-import {useMetadata} from "../../hooks/metadataHook.jsx";
+import {useMetadata} from "../../hooks/metadataHook.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import DownloadButton from "../../components/theme/DownloadButton.jsx";
-import {useAuth} from "../../hooks/authenticationHook.jsx";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const ThemeEditorView = () => {
     const {hasPermission} = useAuth();

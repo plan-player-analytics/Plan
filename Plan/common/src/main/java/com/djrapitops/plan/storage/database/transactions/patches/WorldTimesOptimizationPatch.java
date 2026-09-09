@@ -20,6 +20,7 @@ import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.storage.database.sql.tables.WorldTimesTable;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.FROM;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.INSERT_INTO;
 
 /**
  * Replaces server_id foreign keys with server_uuid field in world times table.
@@ -55,7 +56,7 @@ public class WorldTimesOptimizationPatch extends Patch {
             execute(WorldTimesTable.createTableSQL(dbType));
 
             if (hasColumn(tempTableName, WorldTimesTable.ID)) {
-                execute("INSERT INTO " + tableName + " (" +
+                execute(INSERT_INTO + tableName + " (" +
                         WorldTimesTable.USER_ID + ',' +
                         WorldTimesTable.SERVER_ID + ',' +
                         WorldTimesTable.ADVENTURE + ',' +
@@ -76,7 +77,7 @@ public class WorldTimesOptimizationPatch extends Patch {
                         FROM + tempTableName
                 );
             } else {
-                execute("INSERT INTO " + tableName + " (" +
+                execute(INSERT_INTO + tableName + " (" +
                         WorldTimesTable.USER_ID + ',' +
                         WorldTimesTable.SERVER_ID + ',' +
                         WorldTimesTable.ADVENTURE + ',' +

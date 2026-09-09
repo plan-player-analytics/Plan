@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.delivery.rendering.html;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.Strings;
 import org.apache.commons.text.StringSubstitutor;
 
 import java.io.Serializable;
@@ -37,6 +37,13 @@ public enum Html {
 
     Html(String html) {
         this.html = html;
+    }
+
+    public static String encodeToURL(String string) {
+        return Strings.CS.replace(
+                URLEncoder.encode(string, StandardCharsets.UTF_8),
+                "+", "%20" // Encoding replaces spaces with +
+        );
     }
 
     /**
@@ -60,12 +67,5 @@ public enum Html {
         StringSubstitutor sub = new StringSubstitutor(replaceMap);
         sub.setEnableSubstitutionInVariables(false);
         return sub.replace(html);
-    }
-
-    public static String encodeToURL(String string) {
-        return StringUtils.replace(
-                URLEncoder.encode(string, StandardCharsets.UTF_8),
-                "+", "%20" // Encoding replaces spaces with +
-        );
     }
 }

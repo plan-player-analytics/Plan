@@ -106,6 +106,12 @@ public class ServerQueries {
         return fetchServerMatchingIdentifier(serverUUID.toString());
     }
 
+    public static Query<Optional<Integer>> fetchServerId(ServerUUID serverUUID) {
+        return db -> db.queryOptional(SELECT + ID + FROM + ServerTable.TABLE_NAME +
+                        WHERE + ServerTable.SERVER_UUID + "=?",
+                row -> row.getInt(ServerTable.ID), serverUUID);
+    }
+
     public static Query<Optional<Server>> fetchServerMatchingIdentifier(@Untrusted String identifier) {
         String sql = SELECT + '*' + FROM + ServerTable.TABLE_NAME +
                 WHERE + "(LOWER(" + ServerTable.SERVER_UUID + ") LIKE LOWER(?)" +
@@ -145,7 +151,7 @@ public class ServerQueries {
     public static Query<List<Server>> fetchAllServers() {
         String sql = SELECT + '*' + FROM + ServerTable.TABLE_NAME +
                 WHERE + ServerTable.INSTALLED + "=?";
-        return db -> db.queryList(sql, ServerQueries::extractServer, true, true);
+        return db -> db.queryList(sql, ServerQueries::extractServer, true);
     }
 
     private static @NotNull Server extractServer(ResultSet set) throws SQLException {

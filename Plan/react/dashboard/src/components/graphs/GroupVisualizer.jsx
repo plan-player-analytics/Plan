@@ -5,7 +5,7 @@ import {faBarChart, faChartColumn, faPieChart, faTable} from "@fortawesome/free-
 import {Col, Row} from "react-bootstrap";
 import GroupBarGraph from "./GroupBarGraph";
 import ErrorBoundary from "../ErrorBoundary";
-import {ErrorViewText} from "../../views/ErrorView";
+import {ErrorViewText} from "../../views/ErrorView.tsx";
 import VisualizerSelector from "../input/button/VisualizerSelector.jsx";
 
 const options = {

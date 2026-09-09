@@ -28,6 +28,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -165,6 +166,44 @@ class ConfigWriterTest {
                 "      - \"Third\"",
                 "    Value: \"Example\"",
                 "Second: 2"
+        );
+        assertEquals(expected, writtenLines);
+    }
+
+    @Test
+    void danglingCommentIsPreserved() throws IOException {
+        String read = """
+                Node:
+                  Example: example value 123 # comment
+                  OnlyKey: # comment on key
+                    ChildNode: value
+                  List: # comment on list
+                    - First # comment on list item
+                    - Second""";
+
+        Config readConfig;
+        try (ConfigReader reader = new ConfigReader(new Scanner(read))) {
+            readConfig = reader.read();
+        }
+
+        Path out = tempFolder.resolve("dangling.yml");
+        new ConfigWriter(out).write(readConfig);
+
+        List<String> writtenLines = FileResource.lines(out.toFile());
+
+        List<String> expected = Arrays.asList(
+                """
+                        Node:
+                            # comment
+                            Example: example value 123
+                            # comment on key
+                            OnlyKey: 
+                                ChildNode: value
+                            # comment on list
+                            # comment on list item
+                            List:
+                              - First
+                              - Second""".split("\n")
         );
         assertEquals(expected, writtenLines);
     }

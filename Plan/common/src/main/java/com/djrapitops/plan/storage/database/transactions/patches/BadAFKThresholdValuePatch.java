@@ -47,7 +47,7 @@ public class BadAFKThresholdValuePatch extends Patch {
                 SessionsTable.AFK_TIME +
                 " - (" + SessionsTable.SESSION_END + "-" + SessionsTable.SESSION_START +
                 ")) < 5" +
-                AND + SessionsTable.AFK_TIME + "!=0";
+                AND + SessionsTable.AFK_TIME + "!=0" + lockForUpdate();
         return query(new HasMoreThanZeroQueryStatement(sql, "found") {
             @Override
             public void prepare(PreparedStatement statement) {

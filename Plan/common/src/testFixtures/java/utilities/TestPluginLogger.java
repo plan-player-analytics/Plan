@@ -18,23 +18,41 @@ package utilities;
 
 import net.playeranalytics.plugin.server.PluginLogger;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class TestPluginLogger implements PluginLogger {
+
+    private final List<String> logMessages = new ArrayList<>();
+
+    private boolean addToList = false;
+
+    public void logMessages(boolean addToList) {
+        this.addToList = addToList;
+    }
+
+    public List<String> getLogMessages() {
+        return logMessages;
+    }
 
     @Override
     public PluginLogger info(String s) {
         System.out.println("[INFO] " + s);
+        if (addToList) logMessages.add(s);
         return this;
     }
 
     @Override
     public PluginLogger warn(String s) {
         System.out.println("[WARN] " + s);
+        if (addToList) logMessages.add(s);
         return this;
     }
 
     @Override
     public PluginLogger error(String s) {
         System.out.println("[ERROR] " + s);
+        if (addToList) logMessages.add(s);
         return this;
     }
 

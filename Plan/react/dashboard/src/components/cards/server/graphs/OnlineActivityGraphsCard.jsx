@@ -6,7 +6,7 @@ import {
     fetchPunchCardGraph,
     fetchServerCalendarGraph
 } from "../../../../service/serverService";
-import {ErrorViewBody} from "../../../../views/ErrorView";
+import {ErrorViewBody} from "../../../../views/ErrorView.tsx";
 import PunchCard from "../../../graphs/PunchCard";
 import {useTranslation} from "react-i18next";
 import {Card} from "react-bootstrap";
@@ -16,14 +16,15 @@ import {faCalendar} from "@fortawesome/free-regular-svg-icons";
 import React, {useCallback, useState} from "react";
 import TimeByTimeGraph from "../../../graphs/TimeByTimeGraph";
 import ServerCalendar from "../../../calendar/ServerCalendar";
-import {ChartLoader} from "../../../navigation/Loader";
-import {useAuth} from "../../../../hooks/authenticationHook";
+import {ChartLoader} from "../../../navigation/Loader.tsx";
+import {useAuth} from "../../../../hooks/authenticationHook.tsx";
 import Highcharts from "highcharts/highstock";
 import "highcharts/modules/no-data-to-display"
 import "highcharts/modules/accessibility";
 import {postQuery} from "../../../../service/queryService";
 import QueryPlayerListModal from "../../../modal/QueryPlayerListModal";
-import {useMetadata} from "../../../../hooks/metadataHook";
+import {useMetadata} from "../../../../hooks/metadataHook.tsx";
+import {staticSite} from "../../../../service/backendConfiguration.js";
 
 const DayByDayTab = () => {
     const {identifier} = useParams();
@@ -67,7 +68,9 @@ const ServerCalendarTab = () => {
                 kind: "playedBetween",
                 parameters: {
                     afterDate: start, afterTime: "00:00",
-                    beforeDate: end, beforeTime: "00:00"
+                    beforeDate: end, beforeTime: "00:00",
+                    servers: JSON.stringify(networkMetadata?.servers.filter(server => server.serverUUID === identifier)
+                        .map(server => server.serverName))
                 }
             }],
             view: {
@@ -90,7 +93,7 @@ const ServerCalendarTab = () => {
 
     return <>
         <ServerCalendar series={data.data} firstDay={data.firstDay} onSelect={onSelect}/>
-        <QueryPlayerListModal open={modalOpen} toggle={closeModal} queryData={queryData}/>
+        {!staticSite && <QueryPlayerListModal open={modalOpen} toggle={closeModal} queryData={queryData}/>}
     </>
 }
 

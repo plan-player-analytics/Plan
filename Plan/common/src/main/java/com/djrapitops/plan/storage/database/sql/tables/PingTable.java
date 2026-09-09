@@ -17,9 +17,18 @@
 package com.djrapitops.plan.storage.database.sql.tables;
 
 import com.djrapitops.plan.storage.database.DBType;
+import com.djrapitops.plan.storage.database.queries.objects.lookup.ServerIdentifiable;
+import com.djrapitops.plan.storage.database.queries.objects.lookup.UserIdentifiable;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
+import com.djrapitops.plan.storage.database.sql.building.Insert;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.transactions.patches.PingOptimizationPatch;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+import static com.djrapitops.plan.storage.database.sql.building.Sql.INSERT_INTO;
 
 /**
  * Table information about 'plan_ping'.
@@ -41,7 +50,7 @@ public class PingTable {
     public static final String AVG_PING = "avg_ping";
     public static final String MIN_PING = "min_ping";
 
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" +
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " (" +
             USER_ID + ',' +
             SERVER_ID + ',' +
             DATE + ',' +
@@ -66,5 +75,62 @@ public class PingTable {
                 .foreignKey(USER_ID, UsersTable.TABLE_NAME, UsersTable.ID)
                 .foreignKey(SERVER_ID, ServerTable.TABLE_NAME, ServerTable.ID)
                 .toString();
+    }
+
+    public static class Row implements UserIdentifiable, ServerIdentifiable {
+        public static final String INSERT_STATEMENT = Insert.values(TABLE_NAME, USER_ID, SERVER_ID, DATE, MAX_PING, MIN_PING, AVG_PING);
+
+        private int id;
+        private int userId;
+        private int serverId;
+        private long date;
+        private int maxPing;
+        private int minPing;
+        private double avgPing;
+
+        public static Row extract(ResultSet set) throws SQLException {
+            Row row = new Row();
+            row.id = set.getInt(ID);
+            row.userId = set.getInt(USER_ID);
+            row.serverId = set.getInt(SERVER_ID);
+            row.date = set.getLong(DATE);
+            row.maxPing = set.getInt(MAX_PING);
+            row.minPing = set.getInt(MIN_PING);
+            row.avgPing = set.getDouble(AVG_PING);
+            return row;
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void insert(PreparedStatement statement) throws SQLException {
+            statement.setInt(1, userId);
+            statement.setInt(2, serverId);
+            statement.setLong(3, date);
+            statement.setInt(4, maxPing);
+            statement.setInt(5, minPing);
+            statement.setDouble(6, avgPing);
+        }
+
+        @Override
+        public int getUserId() {
+            return userId;
+        }
+
+        @Override
+        public void setUserId(int userId) {
+            this.userId = userId;
+        }
+
+        @Override
+        public int getServerId() {
+            return serverId;
+        }
+
+        @Override
+        public void setServerId(int serverId) {
+            this.serverId = serverId;
+        }
     }
 }

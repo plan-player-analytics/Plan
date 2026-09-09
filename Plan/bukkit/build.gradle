@@ -20,6 +20,10 @@ dependencies {
     testImplementation "com.destroystokyo.paper:paper-api:$paperVersion"
 }
 
+compileJava {
+    options.release = 17
+}
+
 processResources {
     inputs.property("version", fullVersion)
 

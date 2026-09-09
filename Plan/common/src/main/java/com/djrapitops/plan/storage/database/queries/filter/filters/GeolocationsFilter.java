@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries.filter.filters;
 
-import com.djrapitops.plan.delivery.domain.datatransfer.InputFilterDto;
+import com.djrapitops.plan.delivery.domain.datatransfer.query.InputFilterDto;
 import com.djrapitops.plan.delivery.rendering.json.graphs.special.SpecialGraphFactory;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.GeoInfoQueries;
@@ -31,7 +31,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 @Singleton
-public class GeolocationsFilter extends MultiOptionFilter {
+public class GeolocationsFilter implements MultiOptionFilter {
 
     private final DBSystem dbSystem;
     private final SpecialGraphFactory specialGraphFactory;

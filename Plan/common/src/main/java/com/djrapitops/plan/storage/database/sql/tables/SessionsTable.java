@@ -17,11 +17,21 @@
 package com.djrapitops.plan.storage.database.sql.tables;
 
 import com.djrapitops.plan.storage.database.DBType;
+import com.djrapitops.plan.storage.database.queries.objects.lookup.JoinAddressIdentifiable;
+import com.djrapitops.plan.storage.database.queries.objects.lookup.ServerIdentifiable;
+import com.djrapitops.plan.storage.database.queries.objects.lookup.UserIdentifiable;
 import com.djrapitops.plan.storage.database.sql.building.CreateTableBuilder;
+import com.djrapitops.plan.storage.database.sql.building.Insert;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
+import com.djrapitops.plan.storage.database.transactions.patches.Patch;
 import com.djrapitops.plan.storage.database.transactions.patches.SessionAFKTimePatch;
 import com.djrapitops.plan.storage.database.transactions.patches.SessionsOptimizationPatch;
 import com.djrapitops.plan.storage.database.transactions.patches.Version10Patch;
+import org.jetbrains.annotations.Nullable;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -50,7 +60,7 @@ public class SessionsTable {
     public static final String AFK_TIME = "afk_time";
     public static final String JOIN_ADDRESS_ID = "join_address_id";
 
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " ("
+    public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " ("
             + USER_ID + ','
             + SESSION_START + ','
             + SESSION_END + ','
@@ -85,5 +95,138 @@ public class SessionsTable {
                 .foreignKey(USER_ID, UsersTable.TABLE_NAME, UsersTable.ID)
                 .foreignKey(SERVER_ID, ServerTable.TABLE_NAME, ServerTable.ID)
                 .toString();
+    }
+
+    public static class Row implements ServerIdentifiable, UserIdentifiable, JoinAddressIdentifiable {
+        public static final String OLD_ID = "old_id";
+
+        public static final String INSERT_STATEMENT_WITH_OLD_ID = Insert.values(TABLE_NAME, USER_ID, SERVER_ID, SESSION_START, SESSION_END,
+                MOB_KILLS, DEATHS, AFK_TIME, JOIN_ADDRESS_ID, OLD_ID);
+
+        private int id;
+        private int userId;
+        private int serverId;
+        private long sessionStart;
+        private long sessionEnd;
+        private int mobKills;
+        private int deaths;
+        private long afkTime;
+        private Integer joinAddressId;
+
+        public static Row extract(ResultSet set) throws SQLException {
+            Row row = new Row();
+            row.id = set.getInt(ID);
+            row.userId = set.getInt(USER_ID);
+            row.serverId = set.getInt(SERVER_ID);
+            row.sessionStart = set.getLong(SESSION_START);
+            row.sessionEnd = set.getLong(SESSION_END);
+            row.mobKills = set.getInt(MOB_KILLS);
+            row.deaths = set.getInt(DEATHS);
+            row.afkTime = set.getLong(AFK_TIME);
+            row.joinAddressId = Sql.getIntOrNull(set, JOIN_ADDRESS_ID);
+            return row;
+        }
+
+        public static Patch addOldIdPatch() {
+            return new AddOldIdColumnPatch();
+        }
+
+        public static Patch removeOldIdPatch() {
+            return new RemoveOldIdColumnPatch();
+        }
+
+        public int getId() {
+            return id;
+        }
+
+        public void insert(PreparedStatement statement, boolean withOldId) throws SQLException {
+            statement.setInt(1, userId);
+            statement.setInt(2, serverId);
+            statement.setLong(3, sessionStart);
+            statement.setLong(4, sessionEnd);
+            statement.setInt(5, mobKills);
+            statement.setInt(6, deaths);
+            statement.setLong(7, afkTime);
+            Sql.setIntOrNull(statement, 8, joinAddressId);
+            if (withOldId) {
+                statement.setInt(9, id);
+            }
+        }
+
+        @Override
+        public int getServerId() {
+            return serverId;
+        }
+
+        @Override
+        public void setServerId(int serverId) {
+            this.serverId = serverId;
+        }
+
+        @Override
+        public int getUserId() {
+            return userId;
+        }
+
+        @Override
+        public void setUserId(int userId) {
+            this.userId = userId;
+        }
+
+        @Override
+        public @Nullable Integer getJoinAddressId() {
+            return joinAddressId;
+        }
+
+        @Override
+        public void setJoinAddressId(Integer joinAddressId) {
+            this.joinAddressId = joinAddressId;
+        }
+
+        public static class AddOldIdColumnPatch extends Patch {
+            @Override
+            public boolean hasBeenApplied() {
+                return hasColumn(TABLE_NAME, OLD_ID);
+            }
+
+            @Override
+            protected void applyPatch() {
+                addColumn(TABLE_NAME, OLD_ID + " " + INT);
+            }
+        }
+
+        public static class RemoveOldIdColumnPatch extends Patch {
+            @Override
+            public boolean hasBeenApplied() {
+                return !hasColumn(TABLE_NAME, OLD_ID);
+            }
+
+            @Override
+            protected void applyPatch() {
+                dropColumn(TABLE_NAME, OLD_ID);
+            }
+        }
+    }
+
+    public static class TemporaryIdLookupTable {
+        public static final String TABLE_NAME = "plan_temp_session_id_lookup";
+        public static final String OLD_ID = "old_id";
+        public static final String NEW_ID = "new_id";
+
+        public static final String INSERT_ALL_STATEMENT = INSERT_INTO + TABLE_NAME + " (" + OLD_ID + ", " + NEW_ID + ")" +
+                SELECT + Row.OLD_ID + ',' + SessionsTable.ID + FROM + SessionsTable.TABLE_NAME +
+                WHERE + Row.OLD_ID + IS_NOT_NULL;
+        public static final String DROP_TABLE_STATEMENT = "DROP TABLE IF EXISTS " + TABLE_NAME;
+
+        private TemporaryIdLookupTable() {
+            /* Static method class */
+        }
+
+        public static String createTableSQL(DBType dbType) {
+            return CreateTableBuilder.create(TABLE_NAME, dbType)
+                    .column(OLD_ID, Sql.INT).primaryKey()
+                    .column(NEW_ID, Sql.INT).notNull()
+                    .toString();
+        }
     }
 }

@@ -1,12 +1,12 @@
 import React from 'react';
 import {useTranslation} from "react-i18next";
-import {useTheme} from "../../../hooks/themeHook";
+import {useTheme} from "../../../hooks/themeHook.tsx";
 import {Card} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faGlobe, faWifi} from "@fortawesome/free-solid-svg-icons";
 import Scrollable from "../../Scrollable";
 import {faClock} from "@fortawesome/free-regular-svg-icons";
-import FormattedDate from "../../text/FormattedDate.jsx";
+import FormattedDate from "../../text/FormattedDate.tsx";
 import {localeService, reverseRegionLookupMap} from "../../../service/localeService.js";
 
 const ConnectionsCard = ({connections}) => {

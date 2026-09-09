@@ -24,7 +24,7 @@ import com.djrapitops.plan.storage.database.transactions.events.StoreNicknameTra
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.fabricmc.fabric.api.message.v1.ServerMessageEvents;
-import net.minecraft.server.network.ServerPlayerEntity;
+import net.minecraft.server.level.ServerPlayer;
 import net.playeranalytics.plan.gathering.listeners.FabricListener;
 
 import javax.inject.Inject;
@@ -61,7 +61,7 @@ public class ChatListener implements FabricListener {
         this.errorLogger = errorLogger;
     }
 
-    public void onChat(ServerPlayerEntity player) {
+    public void onChat(ServerPlayer player) {
         try {
             actOnChatEvent(player);
         } catch (Exception e) {
@@ -69,9 +69,9 @@ public class ChatListener implements FabricListener {
         }
     }
 
-    private void actOnChatEvent(ServerPlayerEntity player) {
+    private void actOnChatEvent(ServerPlayer player) {
         long time = System.currentTimeMillis();
-        UUID uuid = player.getUuid();
+        UUID uuid = player.getUUID();
         String displayName = player.getDisplayName().getString();
 
         dbSystem.getDatabase().executeTransaction(new StoreNicknameTransaction(

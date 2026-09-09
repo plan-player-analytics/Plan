@@ -17,8 +17,11 @@
 package com.djrapitops.plan.delivery.webserver.auth;
 
 import com.djrapitops.plan.delivery.domain.auth.User;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
+
+import static com.djrapitops.plan.storage.database.sql.tables.CookieTable.MAX_IP_ADDRESS_LENGTH;
 
 /**
  * @author AuroraLS3
@@ -48,7 +51,7 @@ public class CookieMetadata {
     }
 
     public String getIpAddress() {
-        return ipAddress;
+        return StringUtils.truncate(ipAddress, MAX_IP_ADDRESS_LENGTH);
     }
 
     @Override

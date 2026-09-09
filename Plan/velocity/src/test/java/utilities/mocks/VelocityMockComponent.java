@@ -41,22 +41,21 @@ public class VelocityMockComponent {
         SQLDB.setDownloadDriver(false);
     }
 
-    public PlanVelocity getPlanMock() throws Exception {
+    public PlanVelocity getPlanMock() {
         if (planMock == null) {
             planMock = PlanVelocityMocker.setUp()
-                    .withDataFolder(tempDir.toFile())
                     .withProxy()
                     .getPlanMock();
         }
         return planMock;
     }
 
-    public PlanSystem getPlanSystem() throws Exception {
+    public PlanSystem getPlanSystem() {
         if (component == null) {
             PlanVelocity planMock = getPlanMock();
             component = DaggerPlanVelocityComponent.builder()
                     .plan(planMock)
-                    .abstractionLayer(new TestPlatformAbstractionLayer(this.planMock))
+                    .abstractionLayer(new TestPlatformAbstractionLayer(tempDir.resolve("PlanData")))
                     .build();
         }
         return component.system();

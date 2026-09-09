@@ -43,8 +43,7 @@ public class BungeeMockComponent {
 
     public PlanBungee getPlanMock() {
         if (planMock == null) {
-            planMock = PlanBungeeMocker.setUp()
-                    .withDataFolder(tempDir.toFile())
+            planMock = PlanBungeeMocker.setUp(tempDir)
                     .withResourceFetchingFromJar()
                     .withProxy()
                     .withPluginDescription()
@@ -58,7 +57,7 @@ public class BungeeMockComponent {
             PlanBungee planMock = getPlanMock();
             component = DaggerPlanBungeeComponent.builder()
                     .plan(planMock)
-                    .abstractionLayer(new TestPlatformAbstractionLayer(this.planMock))
+                    .abstractionLayer(new TestPlatformAbstractionLayer(tempDir.resolve("PlanData")))
                     .build();
         }
         return component.system();

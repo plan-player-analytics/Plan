@@ -65,6 +65,8 @@ public class BadFabricJoinAddressValuePatch extends Patch {
             }
         });
         execute("DELETE FROM " + JoinAddressTable.TABLE_NAME +
-                WHERE + JoinAddressTable.ID + " NOT IN (" + SELECT + DISTINCT + SessionsTable.JOIN_ADDRESS_ID + FROM + SessionsTable.TABLE_NAME + ")");
+                WHERE + JoinAddressTable.ID + " NOT IN (" +
+                SELECT + DISTINCT + SessionsTable.JOIN_ADDRESS_ID + FROM + SessionsTable.TABLE_NAME + lockForUpdate() +
+                ")");
     }
 }

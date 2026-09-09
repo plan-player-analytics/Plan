@@ -98,9 +98,10 @@ public class PlayerFetchQueries {
      */
     public static Query<Boolean> isPlayerRegisteredOnServer(UUID playerUUID, ServerUUID serverUUID) {
         String sql = SELECT + "COUNT(1) as c" +
-                FROM + UserInfoTable.TABLE_NAME +
+                FROM + UserInfoTable.TABLE_NAME + " ui" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=ui." + UserInfoTable.SERVER_ID +
                 WHERE + UserInfoTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
-                AND + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID;
+                AND + "s." + ServerTable.SERVER_UUID + "=?";
         return new HasMoreThanZeroQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

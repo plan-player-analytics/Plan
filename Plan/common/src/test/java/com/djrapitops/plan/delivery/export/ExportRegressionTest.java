@@ -30,6 +30,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.logging.LogEntry;
+import org.testcontainers.containers.BindMode;
 import org.testcontainers.containers.GenericContainer;
 import org.testcontainers.containers.wait.strategy.HttpWaitStrategy;
 import org.testcontainers.junit.jupiter.Testcontainers;
@@ -39,9 +40,8 @@ import org.testcontainers.utility.DockerImageName;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.djrapitops.plan.delivery.export.ExportTestUtilities.*;
 
@@ -65,7 +65,7 @@ class ExportRegressionTest {
 
         webserver = new GenericContainer<>(DockerImageName.parse("halverneus/static-file-server:latest"))
                 .withExposedPorts(8080)
-                .withFileSystemBind(exportDir.toFile().getAbsolutePath(), "/web")
+                .withFileSystemBind(exportDir.toFile().getAbsolutePath(), "/web", BindMode.READ_ONLY)
                 .waitingFor(new HttpWaitStrategy());
         webserver.start();
 
@@ -81,6 +81,7 @@ class ExportRegressionTest {
         system.enable();
         serverUUID = system.getServerInfo().getServerUUID();
         savePlayerData(system.getDatabaseSystem().getDatabase(), serverUUID);
+        saveServerData(system.getDatabaseSystem().getDatabase(), serverUUID);
         export(system.getExportSystem().getExporter(), system.getDatabaseSystem().getDatabase(), serverUUID);
     }
 
@@ -96,7 +97,7 @@ class ExportRegressionTest {
     }
 
     @TestFactory
-    Collection<DynamicTest> exportedWebpageDoesNotHaveErrors(ChromeDriver driver) {
+    Stream<DynamicTest> exportedWebpageDoesNotHaveErrors(ChromeDriver driver) {
         List<String> endpointsToTest = getEndpointsToTest(serverUUID);
 
         return endpointsToTest.stream().map(
@@ -106,6 +107,6 @@ class ExportRegressionTest {
                     List<LogEntry> logs = getLogsAfterRequestToAddress(driver, address);
                     assertNoLogs(logs, endpoint);
                 })
-        ).collect(Collectors.toList());
+        );
     }
 }

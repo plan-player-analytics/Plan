@@ -21,6 +21,7 @@ import com.djrapitops.plan.exceptions.database.DBInitException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.exceptions.database.FatalDBException;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
@@ -32,8 +33,7 @@ import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.init.CreateIndexTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.OperationCriticalTransaction;
-import com.djrapitops.plan.storage.database.transactions.init.RemoveIncorrectTebexPackageDataPatch;
-import com.djrapitops.plan.storage.database.transactions.patches.*;
+import com.djrapitops.plan.storage.database.transactions.patches.Patch;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.java.ThrowableUtils;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
@@ -66,15 +66,12 @@ import java.util.function.Supplier;
  */
 public abstract class SQLDB extends AbstractDatabase {
 
-    private static boolean downloadDriver = true;
-
     private static final List<Repository> DRIVER_REPOSITORIES = Arrays.asList(
             new MavenRepository("https://repo.papermc.io/repository/maven-public"),
             new MavenRepository("https://repo1.maven.org/maven2")
     );
-
-    private final Supplier<ServerUUID> serverUUIDSupplier;
-
+    private static final ThreadLocal<StackTraceElement[]> TRANSACTION_ORIGIN = new ThreadLocal<>();
+    private static boolean downloadDriver = true;
     protected final Locale locale;
     protected final PlanConfig config;
     protected final PlanFiles files;
@@ -82,16 +79,15 @@ public abstract class SQLDB extends AbstractDatabase {
     protected final PluginLogger logger;
     protected final ErrorLogger errorLogger;
     protected final ApplicationDependencyManager applicationDependencyManager;
-
-    protected ClassLoader driverClassLoader;
-
-    private Supplier<ExecutorService> transactionExecutorServiceProvider;
-    private ExecutorService transactionExecutor;
-    private static final ThreadLocal<StackTraceElement[]> TRANSACTION_ORIGIN = new ThreadLocal<>();
-
+    private final Processing processing;
+    private final Supplier<ServerUUID> serverUUIDSupplier;
     private final AtomicInteger transactionQueueSize = new AtomicInteger(0);
     private final AtomicBoolean dropUnimportantTransactions = new AtomicBoolean(false);
     private final AtomicBoolean ranIntoFatalError = new AtomicBoolean(false);
+    protected ClassLoader driverClassLoader;
+    private Supplier<ExecutorService> transactionExecutorServiceProvider;
+    private ExecutorService transactionExecutor;
+    private Async async;
 
     protected SQLDB(
             Supplier<ServerUUID> serverUUIDSupplier,
@@ -101,7 +97,8 @@ public abstract class SQLDB extends AbstractDatabase {
             RunnableFactory runnableFactory,
             PluginLogger logger,
             ErrorLogger errorLogger,
-            ApplicationDependencyManager applicationDependencyManager
+            ApplicationDependencyManager applicationDependencyManager,
+            Processing processing
     ) {
         this.serverUUIDSupplier = serverUUIDSupplier;
         this.locale = locale;
@@ -111,10 +108,11 @@ public abstract class SQLDB extends AbstractDatabase {
         this.logger = logger;
         this.errorLogger = errorLogger;
         this.applicationDependencyManager = applicationDependencyManager;
+        this.processing = processing;
 
         this.transactionExecutorServiceProvider = () -> {
             String nameFormat = "Plan " + getClass().getSimpleName() + "-transaction-thread-%d";
-            return Executors.newSingleThreadExecutor(new BasicThreadFactory.Builder()
+            return Executors.newSingleThreadExecutor(BasicThreadFactory.builder()
                     .namingPattern(nameFormat)
                     .uncaughtExceptionHandler((thread, throwable) -> {
                         if (config.isTrue(PluginSettings.DEV_MODE)) {
@@ -128,6 +126,10 @@ public abstract class SQLDB extends AbstractDatabase {
 
     public static void setDownloadDriver(boolean downloadDriver) {
         SQLDB.downloadDriver = downloadDriver;
+    }
+
+    public static ThreadLocal<StackTraceElement[]> getTransactionOrigin() {
+        return TRANSACTION_ORIGIN;
     }
 
     protected abstract List<String> getDependencyResource();
@@ -158,10 +160,6 @@ public abstract class SQLDB extends AbstractDatabase {
         } else {
             this.driverClassLoader = getClass().getClassLoader();
         }
-    }
-
-    public static ThreadLocal<StackTraceElement[]> getTransactionOrigin() {
-        return TRANSACTION_ORIGIN;
     }
 
     @Override
@@ -205,61 +203,7 @@ public abstract class SQLDB extends AbstractDatabase {
     }
 
     Patch[] patches() {
-        return new Patch[]{
-                new Version10Patch(),
-                new GeoInfoLastUsedPatch(),
-                new SessionAFKTimePatch(),
-                new KillsServerIDPatch(),
-                new WorldTimesSeverIDPatch(),
-                new WorldsServerIDPatch(),
-                new NicknameLastSeenPatch(),
-                new VersionTableRemovalPatch(),
-                new DiskUsagePatch(),
-                new WorldsOptimizationPatch(),
-                new KillsOptimizationPatch(),
-                new NicknamesOptimizationPatch(),
-                new TransferTableRemovalPatch(),
-                // new BadAFKThresholdValuePatch(),
-                new DeleteIPsPatch(),
-                new ExtensionShowInPlayersTablePatch(),
-                new ExtensionTableRowValueLengthPatch(),
-                new CommandUsageTableRemovalPatch(),
-                new BadNukkitRegisterValuePatch(),
-                new LinkedToSecurityTablePatch(),
-                new LinkUsersToPlayersSecurityTablePatch(),
-                new LitebansTableHeaderPatch(),
-                new UserInfoHostnamePatch(),
-                new ServerIsProxyPatch(),
-                new ServerTableRowPatch(),
-                new PlayerTableRowPatch(),
-                new ExtensionTableProviderValuesForPatch(),
-                new RemoveIncorrectTebexPackageDataPatch(),
-                new ExtensionTableProviderFormattersPatch(),
-                new ServerPlanVersionPatch(),
-                new RemoveDanglingUserDataPatch(),
-                new RemoveDanglingServerDataPatch(),
-                new GeoInfoOptimizationPatch(),
-                new PingOptimizationPatch(),
-                new UserInfoOptimizationPatch(),
-                new WorldTimesOptimizationPatch(),
-                new SessionsOptimizationPatch(),
-                new UserInfoHostnameAllowNullPatch(),
-                new RegisterDateMinimizationPatch(),
-                new UsersTableNameLengthPatch(),
-                new SessionJoinAddressPatch(),
-                new RemoveUsernameFromAccessLogPatch(),
-                new ComponentColumnToExtensionDataPatch(),
-                new BadJoinAddressDataCorrectionPatch(),
-                new AfterBadJoinAddressDataCorrectionPatch(),
-                new CorrectWrongCharacterEncodingPatch(logger, config),
-                new UpdateWebPermissionsPatch(),
-                new WebGroupDefaultGroupsPatch(),
-                new WebGroupAddMissingAdminGroupPatch(),
-                new LegacyPermissionLevelGroupsPatch(),
-                new SecurityTableGroupPatch(),
-                new ExtensionStringValueLengthPatch(),
-                new CookieTableIpAddressPatch()
-        };
+        return Patches.getAll(logger, config);
     }
 
     /**
@@ -303,7 +247,7 @@ public abstract class SQLDB extends AbstractDatabase {
                         errorLogger.warn(e);
                     }
                 }
-            }).runTaskLaterAsynchronously(TimeAmount.toTicks(1, TimeUnit.MINUTES));
+            }).runTaskLaterAsynchronously(TimeAmount.toTicks(0, TimeUnit.MINUTES));
         } catch (Exception ignore) {
             // Task failed to register because plugin is being disabled
         }
@@ -416,10 +360,9 @@ public abstract class SQLDB extends AbstractDatabase {
             if (throwable == null) {
                 return CompletableFuture.completedFuture(null);
             }
-            if (throwable.getCause() instanceof FatalDBException) {
+            if (throwable.getCause() instanceof FatalDBException actual) {
                 ranIntoFatalError.set(true);
                 logger.error("Database failed to open, " + transaction.getClass().getName() + " failed to be executed.");
-                FatalDBException actual = (FatalDBException) throwable.getCause();
                 Optional<String> whatToDo = actual.getContext().flatMap(ErrorContext::getWhatToDo);
                 whatToDo.ifPresentOrElse(
                         message -> logger.error("What to do: " + message),
@@ -489,5 +432,13 @@ public abstract class SQLDB extends AbstractDatabase {
     @Override
     public int getTransactionQueueSize() {
         return transactionQueueSize.get();
+    }
+
+    @Override
+    public Async async() {
+        if (async == null) {
+            async = new Async(this, processing.getNonCriticalExecutor());
+        }
+        return async;
     }
 }

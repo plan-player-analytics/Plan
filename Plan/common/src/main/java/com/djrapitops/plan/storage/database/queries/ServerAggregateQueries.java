@@ -62,8 +62,9 @@ public class ServerAggregateQueries {
      * @return Count of users registered to that server after Plan installation.
      */
     public static Query<Integer> serverUserCount(ServerUUID serverUUID) {
-        String sql = SELECT + "COUNT(1) as c FROM " + UserInfoTable.TABLE_NAME +
-                WHERE + UserInfoTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID;
+        String sql = SELECT + "COUNT(1) as c" + FROM + UserInfoTable.TABLE_NAME + " ui" +
+                INNER_JOIN + ServerTable.TABLE_NAME + " s ON s." + ServerTable.ID + "=ui." + UserInfoTable.SERVER_ID +
+                WHERE + "s." + ServerTable.SERVER_UUID + "=?";
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

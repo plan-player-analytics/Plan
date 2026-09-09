@@ -1,0 +1,1 @@
+export type LineSeries = [number, number, ...number[]][];

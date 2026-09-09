@@ -123,7 +123,7 @@ Data_gathering:
     # Does not affect already gathered data
     Preserve_case: false
     Preserve_invalid: false
-    # Replaces these join addresses with unknown
+    # Replaces these join addresses with unknown, supports regex
     Filter_out_from_data:
       - "play.example.com"
 # -----------------------------------------------------
@@ -166,9 +166,12 @@ Time:
       Time: 2
       Unit: DAYS
   Periodic_tasks:
-    Extension_data_refresh_every:
+    Extension_server_data_refresh_every:
       Time: 1
       Unit: HOURS
+    Extension_player_data_refresh_every:
+      Time: 15
+      Unit: MINUTES
     Check_DB_for_server_config_files_every:
       Time: 1
       Unit: MINUTES
@@ -182,9 +185,8 @@ Display_options:
   Theme: default
   Night_mode: false
   # Can use ${playerName} or ${playerUUID} or ${playerUUIDNoDash}
-  Player_head_image_url: "https://crafatar.com/avatars/${playerUUID}?size=120&default=MHF_Steve&overlay"
+  Player_head_image_url: "https://crafthead.net/helm/${playerUUIDNoDash}/120"
   Sessions:
-    Show_on_page: 50
     # By Default World playtime pie is ordered alphabetically.
     # Colors will be determined alphabetically in any case.
     Order_world_pies_by_percentage: false

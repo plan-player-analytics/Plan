@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.Function;
 
 /**
  * Represents URI parameters described with {@code ?param=value&param2=value2} in the URL.
@@ -96,6 +97,10 @@ public final class URIQuery {
      */
     public Optional<String> get(String key) {
         return Optional.ofNullable(byKey.get(key));
+    }
+
+    public <T> Optional<T> get(String key, Function<String, T> function) {
+        return get(key).map(function);
     }
 
     public String asString() {

@@ -1,4 +1,4 @@
-![Player Analytics](http://puu.sh/AXSg7/5f2f78c06c.jpg)
+![Player Analytics](https://raw.githubusercontent.com/plan-player-analytics/drawio-diagrams-storage/master/image/header/main-header-Plan.jpg)
 
 [![Github Actions](https://github.com/plan-player-analytics/Plan/workflows/CI/badge.svg)](https://github.com/plan-player-analytics/Plan/actions/workflows/ci.yml)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)  
@@ -12,7 +12,7 @@
 
 Player Analytics is a fully-fledged solution for the analytics needs of your Minecraft server. A built-in webserver displays insights into different aspects of the server such as Online activity, Playerbase, and how these change over time.
 
-Plan supports multiple different platforms and versions; Spigot, Paper, Sponge, SpongeForge, Bungeecord, Velocity, Cauldron & all derivatives - One jar for all platforms.
+Plan supports multiple different platforms and versions; Spigot, Paper, Fabric, Sponge, SpongeForge, Bungeecord, Velocity, Folia & all derivatives - One jar for all platforms.
 
 - [Version 5 Release trailer on Youtube](https://www.youtube.com/watch?v=BS_Ti9zkoRc)
 
@@ -52,7 +52,6 @@ cd Plan
 - **[SBAdmin 2 Template](https://github.com/BlackrockDigital/startbootstrap-sb-admin-2)** | [MIT License](https://opensource.org/licenses/MIT)
 - **[Bootstrap](https://getbootstrap.com/)** | [MIT License](https://v4-alpha.getbootstrap.com/about/license/)
 - **[HighCharts](https://www.highcharts.com/)** | [Free for non-commercial](https://www.highcharts.com/products/highcharts/#non-commercial)
-- **[jQuery Datatables](https://datatables.net/)** | [MIT License](https://datatables.net/license/mit)
 - **[FullCalendar](https://github.com/fullcalendar/fullcalendar)** | [MIT License](https://datatables.net/license/mit)
 - **[Font Awesome Icons](http://fontawesome.io/icons/)** | [SIL Open Font License](http://scripts.sil.org/cms/scripts/page.php?site_id=nrsi&id=OFL)
 - **[MaxMind GeoIP2 Country](https://www.maxmind.com/en/geoip2-country-database)** | [MaxMind End User License Agreement (EULA)](https://www.maxmind.com/en/end-user-license-agreement)

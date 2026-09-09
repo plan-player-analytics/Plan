@@ -54,7 +54,7 @@ public class StoreJoinAddressTransaction extends Transaction {
     private Query<Boolean> hasAddressAlready() {
         String sql = SELECT + "COUNT(*) as c" +
                 FROM + JoinAddressTable.TABLE_NAME +
-                WHERE + JoinAddressTable.JOIN_ADDRESS + "=?";
+                WHERE + JoinAddressTable.JOIN_ADDRESS + "=?" + lockForUpdate();
         return new HasMoreThanZeroQueryStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

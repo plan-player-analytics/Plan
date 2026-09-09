@@ -68,6 +68,11 @@ public class StorePlayerTableResultTransaction extends ThrowawayTransaction {
     }
 
     @Override
+    protected IsolationLevel getDesiredIsolationLevel() {
+        return IsolationLevel.READ_COMMITTED;
+    }
+
+    @Override
     protected void performOperations() {
         execute(storeValue());
     }
@@ -80,23 +85,42 @@ public class StorePlayerTableResultTransaction extends ThrowawayTransaction {
             }
 
             Integer tableID = query(tableID());
+            query(lockRows(tableID));
 
             List<Object[]> rows = table.getRows();
             Integer oldRowCount = query(currentRowCount(tableID));
             int newRowCount = rows.size();
 
             if (oldRowCount < newRowCount) {
-                updateRows(tableID, oldRowCount, rows);
                 insertNewRows(tableID, oldRowCount, rows);
+                updateRows(tableID, oldRowCount, rows);
             } else if (oldRowCount == newRowCount) {
                 // No need to delete or insert rows
                 updateRows(tableID, oldRowCount, rows);
             } else {
                 // oldRowCount > newRowCount
-                updateRows(tableID, newRowCount, rows);
                 deleteOldRows(tableID, newRowCount);
+                updateRows(tableID, newRowCount, rows);
             }
             return false;
+        };
+    }
+
+    private Query<Object> lockRows(Integer tableID) {
+        String sql = SELECT + "*" + FROM + TABLE_NAME +
+                WHERE + TABLE_ID + "=?" +
+                AND + USER_UUID + "=?" + lockForUpdate();
+        return new QueryStatement<>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setInt(1, tableID);
+                statement.setString(2, playerUUID.toString());
+            }
+
+            @Override
+            public Object processResults(ResultSet set) {
+                return null;
+            }
         };
     }
 
@@ -117,7 +141,7 @@ public class StorePlayerTableResultTransaction extends ThrowawayTransaction {
     }
 
     private void insertNewRows(Integer tableID, Integer afterRow, List<Object[]> rows) {
-        String sql = "INSERT INTO " + TABLE_NAME + '(' +
+        String sql = INSERT_INTO + TABLE_NAME + '(' +
                 TABLE_ID + ',' +
                 USER_UUID + ',' +
                 VALUE_1 + ',' +
@@ -132,9 +156,9 @@ public class StorePlayerTableResultTransaction extends ThrowawayTransaction {
             public void prepare(PreparedStatement statement) throws SQLException {
                 int maxColumnSize = Math.min(table.getMaxColumnSize(), 4); // Limit to maximum 4 columns, or how many column names there are.
 
+                statement.setInt(1, tableID);
                 for (int rowNumber = afterRow; rowNumber < rows.size(); rowNumber++) {
                     Object[] row = rows.get(rowNumber);
-                    statement.setInt(1, tableID);
                     statement.setString(2, playerUUID.toString());
                     for (int i = 0; i < maxColumnSize; i++) {
                         Object value = row[i];
@@ -167,6 +191,7 @@ public class StorePlayerTableResultTransaction extends ThrowawayTransaction {
             public void prepare(PreparedStatement statement) throws SQLException {
                 int maxColumnSize = Math.min(table.getMaxColumnSize(), 4); // Limit to maximum 4 columns, or how many column names there are.
 
+                statement.setInt(5, tableID);
                 for (int rowNumber = 0; rowNumber < untilRow; rowNumber++) {
                     Object[] row = rows.get(rowNumber);
 
@@ -179,7 +204,6 @@ public class StorePlayerTableResultTransaction extends ThrowawayTransaction {
                         statement.setNull(1 + valueIndex, Types.VARCHAR);
                     }
 
-                    statement.setInt(5, tableID);
                     statement.setString(6, playerUUID.toString());
                     statement.setInt(7, rowNumber);
 
@@ -193,7 +217,7 @@ public class StorePlayerTableResultTransaction extends ThrowawayTransaction {
         String sql = SELECT + "COALESCE(MAX(" + TABLE_ROW + "), -1) as m" +
                 FROM + TABLE_NAME +
                 WHERE + TABLE_ID + "=?" +
-                AND + USER_UUID + "=?";
+                AND + USER_UUID + "=?" + lockForUpdate();
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
@@ -222,7 +246,7 @@ public class StorePlayerTableResultTransaction extends ThrowawayTransaction {
                 FROM + ExtensionTableProviderTable.TABLE_NAME +
                 WHERE + ExtensionTableProviderTable.PROVIDER_NAME + "=?" +
                 AND + ExtensionTableProviderTable.PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID +
-                " LIMIT 1";
+                " LIMIT 1" + lockForUpdate();
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

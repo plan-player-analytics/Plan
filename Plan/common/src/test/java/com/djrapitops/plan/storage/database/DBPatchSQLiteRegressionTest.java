@@ -42,8 +42,6 @@ import java.nio.file.Path;
  */
 class DBPatchSQLiteRegressionTest extends DBPatchRegressionTest {
 
-    private PluginMockComponent component;
-
     private final String serverTable = "CREATE TABLE IF NOT EXISTS plan_servers (id integer PRIMARY KEY, uuid varchar(36) NOT NULL UNIQUE, name varchar(100), web_address varchar(100), is_installed boolean NOT NULL DEFAULT 1, max_players integer NOT NULL DEFAULT -1)";
     private final String usersTable = "CREATE TABLE IF NOT EXISTS plan_users (id integer PRIMARY KEY, uuid varchar(36) NOT NULL UNIQUE, registered bigint NOT NULL, name varchar(16) NOT NULL, times_kicked integer NOT NULL DEFAULT 0)";
     private final String userInfoTable = "CREATE TABLE IF NOT EXISTS plan_user_info (user_id integer NOT NULL, registered bigint NOT NULL, opped boolean NOT NULL DEFAULT 0, banned boolean NOT NULL DEFAULT 0, server_id integer NOT NULL, FOREIGN KEY(user_id) REFERENCES plan_users(id), FOREIGN KEY(server_id) REFERENCES plan_servers(id))";
@@ -58,7 +56,7 @@ class DBPatchSQLiteRegressionTest extends DBPatchRegressionTest {
     private final String worldTimesTable = "CREATE TABLE IF NOT EXISTS plan_world_times (user_id integer NOT NULL, world_id integer NOT NULL, server_id integer NOT NULL, session_id integer NOT NULL, survival_time bigint NOT NULL DEFAULT 0, creative_time bigint NOT NULL DEFAULT 0, adventure_time bigint NOT NULL DEFAULT 0, spectator_time bigint NOT NULL DEFAULT 0, FOREIGN KEY(user_id) REFERENCES plan_users(id), FOREIGN KEY(world_id) REFERENCES plan_worlds(id), FOREIGN KEY(server_id) REFERENCES plan_servers(id), FOREIGN KEY(session_id) REFERENCES plan_sessions(id))";
     private final String securityTable = "CREATE TABLE IF NOT EXISTS plan_security (username varchar(100) NOT NULL UNIQUE, salted_pass_hash varchar(100) NOT NULL UNIQUE, permission_level integer NOT NULL)";
     private final String transferTable = "CREATE TABLE IF NOT EXISTS plan_transfer (sender_server_id integer NOT NULL, expiry_date bigint NOT NULL DEFAULT 0, type varchar(100) NOT NULL, extra_variables varchar(255) DEFAULT '', content_64 varchar(1), part bigint NOT NULL DEFAULT 0, FOREIGN KEY(sender_server_id) REFERENCES plan_servers(id))";
-
+    private PluginMockComponent component;
     private SQLiteDB underTest;
 
     @BeforeEach
@@ -121,5 +119,19 @@ class DBPatchSQLiteRegressionTest extends DBPatchRegressionTest {
 
         // Make sure no foreign key checks fail on removal
         underTest.executeTransaction(new RemoveEverythingTransaction());
+    }
+
+    @Test
+    void sqlitePatchesAreOnlyAppliedOnce() {
+        Patch[] patches = underTest.patches();
+        for (Patch patch : patches) {
+            underTest.executeTransaction(patch);
+        }
+        assertPatchesHaveBeenApplied(patches);
+        patches = underTest.patches();
+        for (Patch patch : patches) {
+            underTest.executeTransaction(patch);
+        }
+        assertPatchesWereNotApplied(patches);
     }
 }

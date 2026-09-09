@@ -51,7 +51,7 @@ public class PublicHtmlResolver implements NoAuthResolver {
     @SuppressWarnings("OptionalIsPresent") // More readable
     private Response getResponse(Request request) {
         @Untrusted String resource = request.getPath().asString().substring(1);
-        @Untrusted Optional<Long> etag = Identifiers.getEtag(request);
+        @Untrusted Optional<ETag> etag = Identifiers.getEtag(request);
 
         Optional<String> mimeType = getMimeType(resource);
         if (mimeType.isEmpty()) return null;

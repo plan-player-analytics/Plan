@@ -78,7 +78,7 @@ public class StorePlayerGroupsResultTransaction extends ThrowawayTransaction {
     }
 
     private Executable insertGroup(String group) {
-        String sql = "INSERT INTO " + ExtensionGroupsTable.TABLE_NAME + "(" +
+        String sql = INSERT_INTO + ExtensionGroupsTable.TABLE_NAME + "(" +
                 ExtensionGroupsTable.GROUP_NAME + "," +
                 ExtensionGroupsTable.USER_UUID + "," +
                 ExtensionGroupsTable.PROVIDER_ID +

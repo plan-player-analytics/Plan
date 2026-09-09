@@ -26,6 +26,8 @@ import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.analysis.ActivityIndexQueries;
@@ -34,6 +36,7 @@ import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserInfoQueries;
 import com.djrapitops.plan.utilities.analysis.Percentage;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -53,6 +56,8 @@ public class OnlineActivityOverviewJSONCreator implements ServerTabJSONCreator<M
 
     private final PlanConfig config;
     private final DBSystem dbSystem;
+    private final Locale locale;
+    private final PluginLogger logger;
 
     private final Formatter<Double> decimalFormatter;
     private final Formatter<Double> percentageFormatter;
@@ -60,17 +65,28 @@ public class OnlineActivityOverviewJSONCreator implements ServerTabJSONCreator<M
     @Inject
     public OnlineActivityOverviewJSONCreator(
             PlanConfig config,
-            DBSystem dbSystem,
+            DBSystem dbSystem, Locale locale, PluginLogger logger,
             Formatters formatters
     ) {
         this.config = config;
         this.dbSystem = dbSystem;
+        this.locale = locale;
+        this.logger = logger;
 
         decimalFormatter = formatters.decimals();
         percentageFormatter = formatters.percentage();
     }
 
+    public Map<String, Object> createJustInsightsJSONAsMap(ServerUUID serverUUID) {
+        Map<String, Object> serverOverview = new HashMap<>();
+        serverOverview.put("insights", createInsightsMap(serverUUID));
+        return serverOverview;
+    }
+
+    @Deprecated(since = "24-05-2026 / 5.7 build 3460")
     public Map<String, Object> createJSONAsMap(ServerUUID serverUUID) {
+        logger.warn(locale.getString(PluginLang.DEPRECATED_ENDPOINT_CALL, "/v1/onlineOverview", "/v1/datapoint, /v1/onlineInsights"));
+
         Map<String, Object> serverOverview = new HashMap<>();
         serverOverview.put("numbers", createNumbersMap(serverUUID));
         serverOverview.put("insights", createInsightsMap(serverUUID));

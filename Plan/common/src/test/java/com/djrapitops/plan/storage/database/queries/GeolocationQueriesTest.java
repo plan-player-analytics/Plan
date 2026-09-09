@@ -171,6 +171,17 @@ public interface GeolocationQueriesTest extends DatabaseTestPreparer {
         expected.put("Denmark", expectedPing);
 
         assertEquals(expected, got);
+
+        got = db.query(PingQueries.fetchPingDataOfNetworkByGeolocation());
+        Map<String, Ping> expectedOnNetwork = new HashMap<>();
+        expectedPing = new Ping(time, null, 5, 5, 5);
+        expectedOnNetwork.put("Finland", expectedPing);
+        expectedOnNetwork.put("Sweden", expectedPing);
+        expectedOnNetwork.put("Not Known", expectedPing);
+        expectedOnNetwork.put("Local Machine", expectedPing);
+        expectedOnNetwork.put("Denmark", expectedPing);
+        
+        assertEquals(expectedOnNetwork, got);
     }
 
     @Test

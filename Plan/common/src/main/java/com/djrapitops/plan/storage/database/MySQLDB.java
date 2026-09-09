@@ -20,6 +20,7 @@ import com.djrapitops.plan.exceptions.database.DBInitException;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.exceptions.database.MariaDB11Exception;
 import com.djrapitops.plan.identification.ServerInfo;
+import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DatabaseSettings;
 import com.djrapitops.plan.settings.locale.Locale;
@@ -67,7 +68,8 @@ public class MySQLDB extends SQLDB {
             RunnableFactory runnableFactory,
             PluginLogger pluginLogger,
             ErrorLogger errorLogger,
-            ApplicationDependencyManager applicationDependencyManager
+            ApplicationDependencyManager applicationDependencyManager,
+            Processing processing
     ) {
         super(
                 () -> serverInfo.get().getServerUUID(),
@@ -77,7 +79,8 @@ public class MySQLDB extends SQLDB {
                 runnableFactory,
                 pluginLogger,
                 errorLogger,
-                applicationDependencyManager
+                applicationDependencyManager,
+                processing
         );
     }
 
@@ -106,7 +109,7 @@ public class MySQLDB extends SQLDB {
     @Override
     public void setupDataSource() {
         if (driverClassLoader == null) {
-            logger.info("Downloading " + (useMariaDbDriver ? "MariaDB" : "MySQL") + " Driver, this may take a while...");
+            logger.info(locale.getString(PluginLang.DB_DOWNLOAD_DRIVER, useMariaDbDriver ? "MariaDB" : "MySQL"));
             downloadDriver();
         }
 

@@ -1,15 +1,15 @@
 import React, {useEffect, useRef} from 'react';
-import {getLocallyStoredThemes, ThemeContextProvider, useTheme} from "../../hooks/themeHook.jsx";
-import {ThemeStorageContextProvider} from "../../hooks/context/themeContextHook.jsx";
-import {ThemeStyleCss} from "./ThemeStyleCss.jsx";
+import {getLocallyStoredThemes, ThemeContextProvider, useTheme} from "../../hooks/themeHook.tsx";
+import {ThemeStorageContextProvider} from "../../hooks/context/themeContextHook.tsx";
+import {ThemeStyleCss} from "./ThemeStyleCss.tsx";
 import {Card, Col} from "react-bootstrap";
 import logo from "../../Flaticon_circle.png";
 import drawSine from "../../util/loginSineRenderer.js";
 import {calculateCssHexColor} from "../../util/colors.js";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCheck, faDesktop, faPencilAlt} from "@fortawesome/free-solid-svg-icons";
-import OutlineButton from "../input/button/OutlineButton.jsx";
-import {useAuth} from "../../hooks/authenticationHook.jsx";
+import OutlineButton from "../input/button/OutlineButton.tsx";
+import {useAuth} from "../../hooks/authenticationHook.tsx";
 import {useNavigate} from "react-router";
 import {useTranslation} from "react-i18next";
 

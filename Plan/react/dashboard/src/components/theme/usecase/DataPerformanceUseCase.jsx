@@ -9,6 +9,7 @@ import {
     faMicrochip,
     faPowerOff,
     faSignal,
+    faStopwatch,
     faTachometerAlt
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -22,6 +23,14 @@ const DataPerformanceUseCase = () => {
                         <DataUseCase label={"tps"} icon={faTachometerAlt}/>
                         <DataUseCase label={"tps-low-spikes"} icon={faExclamationCircle}/>
                         <DataUseCase label={"tps-average"} icon={faTachometerAlt}/>
+                        <DataUseCase label={"mspt-average"} icon={faStopwatch}/>
+                        <DataUseCase label={"mspt-percentile"} icon={faStopwatch}/>
+                    </Card.Body>
+                </Card>
+            </Col>
+            <Col xs={6}>
+                <Card>
+                    <Card.Body>
                         <DataUseCase label={"cpu"} icon={faTachometerAlt}/>
                         <DataUseCase label={"ram"} icon={faMicrochip}/>
                         <DataUseCase label={"entities"} icon={faDragon}/>

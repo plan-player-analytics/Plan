@@ -46,6 +46,7 @@ public enum Permissions {
     DATA_BACKUP("plan.data.backup"),
     DATA_RESTORE("plan.data.restore"),
     DATA_MOVE("plan.data.move"),
+    DATA_MERGE("plan.data.merge"),
     DATA_HOTSWAP("plan.data.hotswap"),
     DATA_CLEAR("plan.data.clear"),
     DATA_REMOVE_PLAYER("plan.data.remove.player"),

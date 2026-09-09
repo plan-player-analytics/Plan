@@ -27,6 +27,7 @@ import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
+import static com.djrapitops.plan.storage.database.sql.building.Sql.INSERT_INTO;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.WHERE;
 import static com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionServerValueTable.*;
 
@@ -82,7 +83,7 @@ public class StoreServerDoubleResultTransaction extends ThrowawayTransaction {
     }
 
     private Executable insertValue() {
-        String sql = "INSERT INTO " + TABLE_NAME + "(" +
+        String sql = INSERT_INTO + TABLE_NAME + "(" +
                 (percentage ? PERCENTAGE_VALUE : DOUBLE_VALUE) + "," +
                 PROVIDER_ID +
                 ") VALUES (?," + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID + ")";

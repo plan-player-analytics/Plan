@@ -71,6 +71,11 @@ public class Addresses {
         this.webserver = webserver;
     }
 
+    public boolean isAlternativeAddressEnabled() {
+        boolean noProxy = dbSystem.getDatabase().query(ServerQueries.fetchProxyServers()).isEmpty();
+        return noProxy && config.get(WebserverSettings.SHOW_ALTERNATIVE_IP);
+    }
+
     public Optional<String> getMainAddress() {
         Optional<String> proxyServerAddress = getAnyValidServerAddress();
         return proxyServerAddress.isPresent() ? proxyServerAddress : getAccessAddress();

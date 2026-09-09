@@ -29,6 +29,8 @@ import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
 import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
@@ -39,6 +41,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import net.playeranalytics.plugin.server.PluginLogger;
 import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
@@ -62,16 +65,20 @@ public class GraphsJSONResolver extends JSONResolver {
     private final Identifiers identifiers;
     private final AsyncJSONResolverService jsonResolverService;
     private final GraphJSONCreator graphJSON;
+    private final PluginLogger logger;
+    private final Locale locale;
 
     @Inject
     public GraphsJSONResolver(
             Identifiers identifiers,
             AsyncJSONResolverService jsonResolverService,
-            GraphJSONCreator graphJSON
+            GraphJSONCreator graphJSON, PluginLogger logger, Locale locale
     ) {
         this.identifiers = identifiers;
         this.jsonResolverService = jsonResolverService;
         this.graphJSON = graphJSON;
+        this.logger = logger;
+        this.locale = locale;
     }
 
     @Override
@@ -248,7 +255,7 @@ public class GraphsJSONResolver extends JSONResolver {
             case GRAPH_HOURLY_UNIQUE_NEW:
                 return List.of(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_HOUR_BY_HOUR);
             case GRAPH_CALENDAR:
-                return List.of(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_CALENDAR);
+                return List.of(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_CALENDAR, WebPermission.PAGE_SERVER_SESSIONS_CALENDAR);
             case GRAPH_PUNCHCARD:
                 return List.of(WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_PUNCHCARD);
             case GRAPH_WORLD_PIE:
@@ -277,7 +284,7 @@ public class GraphsJSONResolver extends JSONResolver {
             case GRAPH_HOURLY_UNIQUE_NEW:
                 return List.of(WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_HOUR_BY_HOUR);
             case GRAPH_CALENDAR:
-                return List.of(WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_CALENDAR);
+                return List.of(WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_CALENDAR, WebPermission.PAGE_NETWORK_SESSIONS_CALENDAR);
             case GRAPH_SERVER_PIE:
                 return List.of(WebPermission.PAGE_NETWORK_SESSIONS_SERVER_PIE);
             case GRAPH_WORLD_MAP:
@@ -294,6 +301,7 @@ public class GraphsJSONResolver extends JSONResolver {
     private Object generateGraphDataJSONOfType(DataID id, ServerUUID serverUUID, @Untrusted URIQuery query) {
         switch (id) {
             case GRAPH_PERFORMANCE:
+                logger.warn(locale.getString(PluginLang.DEPRECATED_ENDPOINT_CALL, "/v1/graph?type=performance", "/v1/graph?type=optimizedPerformance"));
                 return graphJSON.performanceGraphJSON(serverUUID);
             case GRAPH_OPTIMIZED_PERFORMANCE:
                 return graphJSON.optimizedPerformanceGraphJSON(serverUUID);

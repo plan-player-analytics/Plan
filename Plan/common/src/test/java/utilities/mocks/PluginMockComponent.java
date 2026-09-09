@@ -46,16 +46,15 @@ public class PluginMockComponent {
         SQLDB.setDownloadDriver(false);
     }
 
-    public PlanPlugin getPlanMock() throws Exception {
+    public PlanPlugin getPlanMock() {
         if (planMock == null) {
             planMock = PlanPluginMocker.setUp()
-                    .withDataFolder(tempDir.toFile())
                     .withLogging().getPlanMock();
         }
         return planMock;
     }
 
-    public PlanSystem getPlanSystem() throws Exception {
+    public PlanSystem getPlanSystem() {
         initComponent();
         PlanSystem system = component.system();
         system.getConfigSystem().getConfig().set(WebserverSettings.PORT, ThreadLocalRandom.current()
@@ -63,10 +62,10 @@ public class PluginMockComponent {
         return system;
     }
 
-    private void initComponent() throws Exception {
+    private void initComponent() {
         if (component == null) {
             PlanPlugin planMock = getPlanMock();
-            abstractionLayer = new TestPlatformAbstractionLayer(planMock);
+            abstractionLayer = new TestPlatformAbstractionLayer(tempDir.resolve("PlanData"));
             component = DaggerPlanPluginComponent.builder()
                     .bindTemporaryDirectory(tempDir)
                     .plan(planMock)
@@ -75,17 +74,17 @@ public class PluginMockComponent {
         }
     }
 
-    public PluginErrorLogger getPluginErrorLogger() throws Exception {
+    public PluginErrorLogger getPluginErrorLogger() {
         initComponent();
         return component.pluginErrorLogger();
     }
 
-    public PlanPluginComponent getComponent() throws Exception {
+    public PlanPluginComponent getComponent() {
         initComponent();
         return component;
     }
 
-    public PlatformAbstractionLayer getAbstractionLayer() throws Exception {
+    public PlatformAbstractionLayer getAbstractionLayer() {
         initComponent();
         return abstractionLayer;
     }

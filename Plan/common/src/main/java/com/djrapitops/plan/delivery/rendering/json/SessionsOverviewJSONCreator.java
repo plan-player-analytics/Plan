@@ -22,12 +22,15 @@ import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.gathering.domain.GMTimes;
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.TPSQueries;
 import com.djrapitops.plan.storage.database.queries.objects.WorldTimesQueries;
 import com.djrapitops.plan.utilities.analysis.Percentage;
+import net.playeranalytics.plugin.server.PluginLogger;
 import org.apache.commons.text.WordUtils;
 
 import javax.inject.Inject;
@@ -39,20 +42,28 @@ import java.util.concurrent.TimeUnit;
  * Creates JSON payload for /server-page Sessions tab.
  *
  * @author AuroraLS3
+ * @deprecated Use /v1/datapoint instead (types SERVER_OCCUPIED, PLAYTIME, AFK_TIME, AFK_TIME_PERCENTAGE, MOST_ACTIVE_GAMEMODE).
  */
 @Singleton
+@Deprecated(since = "2026-04-05 / 5.7 build 3341")
 public class SessionsOverviewJSONCreator implements ServerTabJSONCreator<Map<String, Object>> {
 
     private final DBSystem dbSystem;
+    private final PluginLogger logger;
+    private final Locale locale;
 
     private final Formatter<Double> percentage;
 
     @Inject
     public SessionsOverviewJSONCreator(
             DBSystem dbSystem,
+            PluginLogger logger,
+            Locale locale,
             Formatters formatters
     ) {
         this.dbSystem = dbSystem;
+        this.logger = logger;
+        this.locale = locale;
 
         percentage = formatters.percentage();
     }
@@ -62,6 +73,8 @@ public class SessionsOverviewJSONCreator implements ServerTabJSONCreator<Map<Str
     }
 
     private Map<String, Object> createInsightsMap(ServerUUID serverUUID) {
+        logger.warn(locale.getString(PluginLang.DEPRECATED_ENDPOINT_CALL, "/v1/sessionsOverview", "/v1/datapoint"));
+
         Database db = dbSystem.getDatabase();
         long now = System.currentTimeMillis();
         long monthAgo = now - TimeUnit.DAYS.toMillis(30L);

@@ -203,6 +203,8 @@
     --color-data-performance-chunks: var(--color-blue-grey);
     --color-data-performance-disk: var(--color-green);
     --color-data-performance-ping: var(--color-amber);
+    --color-data-performance-mspt-average: var(--color-orange);
+    --color-data-performance-mspt-percentile: var(--color-deep-orange);
     --color-data-calculated-insights: var(--color-red);
     --color-data-calculated-join-addresses: var(--color-amber);
     --color-data-calculated-retention: var(--color-indigo);
@@ -486,13 +488,14 @@
 }
 
 .bg-sessions {
-    background-color: var(--color-data-play-sessions);
+    background-color: var(--color-data-play-sessions) !important;
+    color: var(--contrast-color-data-play-sessions) !important;
 }
 
 .bg-sessions-outline {
     border-color: var(--color-data-play-sessions);
     border-style: solid;
-    border-width: 3px;
+    border-width: 3px !important;
     outline: var(--color-data-play-sessions) solid 1px;
 }
 
@@ -542,7 +545,8 @@
 
 .bg-players-online {
     background-color: var(--color-data-players-online);
-    --bs-btn-hover-bg: var(--color-data-players-online);
+    --bs-btn-hover-bg: color-mix(in srgb, var(--color-data-players-online) 90%, var(--color-text) 10%);
+    --bs-btn-active-bg: color-mix(in srgb, var(--color-data-players-online) 90%, var(--color-text) 20%);
 }
 
 .col-players-unique {
@@ -643,6 +647,14 @@
 
 .col-tps {
     color: var(--color-data-performance-tps);
+}
+
+.col-mspt-average {
+    color: var(--color-data-performance-mspt-average);
+}
+
+.col-mspt-percentile {
+    color: var(--color-data-performance-mspt-percentile);
 }
 
 .bg-tps {
@@ -1107,4 +1119,10 @@ thead[class^='bg'], thead[class*=' bg'] {
     --bs-modal-header-border-color: var(--color-cards-border);
     --bs-modal-color: var(--color-text);
 
+}
+
+.btn-input {
+    background-color: var(--color-forms-input-background);
+    border-color: var(--color-forms-input-border);
+    color: var(--color-forms-input-text);
 }

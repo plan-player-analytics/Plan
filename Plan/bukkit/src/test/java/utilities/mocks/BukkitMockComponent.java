@@ -48,21 +48,19 @@ public class BukkitMockComponent {
         SQLDB.setDownloadDriver(false);
     }
 
-    public PlanPlugin getPlanMock() throws Exception {
+    public PlanPlugin getPlanMock() {
         if (planMock == null) {
-            planMock = PlanPluginMocker.setUp()
-                    .withDataFolder(tempDir.resolve("data").toFile())
-                    .getPlanMock();
+            planMock = PlanPluginMocker.setUp().getPlanMock();
         }
         return planMock;
     }
 
-    public PlanSystem getPlanSystem() throws Exception {
+    public PlanSystem getPlanSystem() {
         if (component == null) {
             PlanPlugin planMock = getPlanMock();
             component = DaggerPlanBukkitComponent.builder()
                     .plan(planMock)
-                    .abstractionLayer(new TestPlatformAbstractionLayer(planMock))
+                    .abstractionLayer(new TestPlatformAbstractionLayer(tempDir.resolve("PlanData")))
                     .server(mockServer())
                     .build();
         }

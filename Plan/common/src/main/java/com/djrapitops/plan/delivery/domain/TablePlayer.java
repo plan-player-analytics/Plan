@@ -40,6 +40,7 @@ public class TablePlayer implements Comparable<TablePlayer> {
     private Long lastSeen;
     private String geolocation;
     private Ping ping;
+    private String nicknames;
 
     private boolean banned = false;
 
@@ -95,6 +96,10 @@ public class TablePlayer implements Comparable<TablePlayer> {
 
     public boolean isBanned() {
         return banned;
+    }
+
+    public String getNicknames() {
+        return nicknames;
     }
 
     @Override
@@ -200,6 +205,11 @@ public class TablePlayer implements Comparable<TablePlayer> {
 
         public Builder ping(Ping ping) {
             player.ping = ping;
+            return this;
+        }
+
+        public Builder nicknames(String nicknames) {
+            player.nicknames = nicknames;
             return this;
         }
 

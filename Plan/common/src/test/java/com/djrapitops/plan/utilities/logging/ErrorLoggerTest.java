@@ -45,7 +45,7 @@ class ErrorLoggerTest {
     private static PlanSystem SYSTEM;
 
     @BeforeAll
-    static void preparePlugin(@TempDir Path dir) throws Exception {
+    static void preparePlugin(@TempDir Path dir) {
         PluginMockComponent component = new PluginMockComponent(dir);
         SYSTEM = component.getPlanSystem();
         SYSTEM.enable();

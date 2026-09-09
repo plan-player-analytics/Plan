@@ -1,8 +1,7 @@
-import {useCallback} from "react";
-import {useMetadata} from "./metadataHook";
+import {useCallback, useState} from "react";
 
 export const useDataStore = () => {
-    const {datastore} = useMetadata();
+    const [datastore] = useState({});
 
     if (datastore && !datastore.dataByMethod) datastore.dataByMethod = {};
     if (datastore && !datastore.lastUpdateByMethod) datastore.lastUpdateByMethod = {};
@@ -38,7 +37,7 @@ export const useDataStore = () => {
     }, [datastore])
 
     const isSomethingUpdating = useCallback(() => {
-        return datastore && Boolean(Object.values(datastore.currentlyUpdatingMethods).filter(value => Boolean(value)).length);
+        return datastore && Boolean(Object.values(datastore.currentlyUpdatingMethods).filter(Boolean).length);
     }, [datastore]);
 
     return {storeData, getLastUpdate, getData, isCurrentlyUpdating, isSomethingUpdating, setAsUpdating, finishUpdate};
