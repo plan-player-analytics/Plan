@@ -24,8 +24,8 @@ import com.djrapitops.plan.extension.implementation.ExtensionRegister;
 import com.djrapitops.plan.extension.implementation.ExtensionWrapper;
 import com.djrapitops.plan.extension.implementation.builder.ExtDataBuilder;
 import com.djrapitops.plan.extension.implementation.providers.gathering.DataValueGatherer;
-import com.djrapitops.plan.extension.implementation.providers.gathering.GraphSamplers;
 import com.djrapitops.plan.extension.implementation.providers.gathering.ExtensionMetadataStorage;
+import com.djrapitops.plan.extension.implementation.providers.gathering.GraphSamplers;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.UUIDUtility;
 import com.djrapitops.plan.processing.Processing;
@@ -137,7 +137,6 @@ public class ExtensionSvc implements ExtensionService {
         gatherer.storeExtensionInformation();
         extensionGatherers.put(pluginName, gatherer);
         graphSamplers.registerGraphSamplers(extension);
-        graphSamplers.storePlayerGraphMetadata(extension);
 
         processing.submitNonCritical(() -> updateServerValues(gatherer, CallEvents.SERVER_EXTENSION_REGISTER));
 

@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.extension.graph;
 
-import com.djrapitops.plan.extension.annotation.GraphPointProvider;
+import com.djrapitops.plan.extension.annotation.GraphProvider;
 
 import java.util.Arrays;
 import java.util.List;
@@ -24,7 +24,7 @@ import java.util.List;
 /**
  * Represents series of values at point x.
  * <p>
- * x can be timestamp in milliseconds, time, or a value, depending on {@link XAxisType} chosen with {@link GraphPointProvider#xAxisType()}.
+ * x can be timestamp in milliseconds, time, or a value, depending on {@link XAxisType} chosen with {@link GraphProvider#xAxisType()}.
  * <p>
  * Values can be integers, longs or doubles, even though they're stored as doubles in the database.
  * <p>

@@ -18,12 +18,11 @@ package com.djrapitops.plan.extension.implementation.providers.gathering;
 
 import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
-import com.djrapitops.plan.extension.annotation.GraphPointProvider;
+import com.djrapitops.plan.extension.annotation.GraphProvider;
 import com.djrapitops.plan.extension.extractor.ExtensionMethod;
-import com.djrapitops.plan.extension.graph.DataPoint;
+import com.djrapitops.plan.extension.graph.PlayerGraphDataSource;
 import com.djrapitops.plan.extension.implementation.ExtensionMethodErrorTracker;
 import com.djrapitops.plan.extension.implementation.ExtensionWrapper;
-import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
 import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.extension.implementation.providers.ProviderIdentifier;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerGraphPoint;
@@ -32,40 +31,53 @@ import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 
+import java.time.Duration;
+import java.util.Objects;
+import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.TimeUnit;
+
 /**
+ * Samples graph data for a player at an interval defined by the plugin.
+ *
  * @author AuroraLS3
  */
 public class PlayerGraphSampler extends TaskSystem.Task {
 
     private final ExtensionWrapper extension;
     private final DBSystem dbSystem;
+    private final PlayerGraphDataSource dataSource;
     private final ExtensionMethod provider;
-    private final GraphPointProvider annotation;
-    private final Parameters parameters;
+    private final GraphProvider annotation;
+    private final Parameters.PlayerParameters parameters;
     private final ProviderIdentifier providerIdentifier;
     private final ErrorLogger errorLogger;
 
-    public PlayerGraphSampler(ExtensionWrapper extension, ExtensionMethod provider, DBSystem dbSystem, Parameters parameters, ProviderIdentifier providerIdentifier, ErrorLogger errorLogger) {
+    public PlayerGraphSampler(ExtensionWrapper extension, PlayerGraphDataSource dataSource, ExtensionMethod provider, DBSystem dbSystem, Parameters.PlayerParameters parameters, ProviderIdentifier providerIdentifier, ErrorLogger errorLogger) {
         this.extension = extension;
+        this.dataSource = dataSource;
         this.provider = provider;
-        annotation = provider.getExistingAnnotation(GraphPointProvider.class);
+        this.annotation = provider.getExistingAnnotation(GraphProvider.class);
         this.dbSystem = dbSystem;
         this.parameters = parameters;
         this.providerIdentifier = providerIdentifier;
         this.errorLogger = errorLogger;
     }
 
-    private DataPoint callMethod() {
-        return new MethodWrapper<>(provider.getMethod(), DataPoint.class)
-                .callMethod(extension.getExtension(), parameters);
-    }
-
     @Override
     public void register(RunnableFactory runnableFactory) {
         if (ExtensionMethodErrorTracker.isDisabled(extension, provider)) return;
 
-        runnableFactory.create(this)
-                .runTaskTimerAsynchronously(0, annotation.sampleInterval(), annotation.sampleIntervalUnit());
+        Duration minimumInterval = Duration.of(30, TimeUnit.SECONDS.toChronoUnit());
+        Duration interval = Duration.of(annotation.sampleInterval(), annotation.sampleIntervalUnit().toChronoUnit());
+
+        int randomDelay = ThreadLocalRandom.current().nextInt(15);
+        if (interval.minus(minimumInterval).isNegative()) {
+            runnableFactory.create(this)
+                    .runTaskTimerAsynchronously(randomDelay, 30, TimeUnit.SECONDS);
+        } else {
+            runnableFactory.create(this)
+                    .runTaskTimerAsynchronously(randomDelay, annotation.sampleInterval(), annotation.sampleIntervalUnit());
+        }
     }
 
     public void unregister() {
@@ -75,9 +87,9 @@ public class PlayerGraphSampler extends TaskSystem.Task {
     @Override
     public void run() {
         try {
-            DataPoint dataPoint = callMethod();
-            if (dataPoint == null) return;
-            dbSystem.getDatabase().executeTransaction(new StorePlayerGraphPoint(dataPoint, parameters.getPlayerUUID(), providerIdentifier));
+            var dataPoint = dataSource.getPoint(System.currentTimeMillis(), parameters.getPlayerUUID(), parameters.getPlayerName());
+            dataPoint.ifPresent(point -> dbSystem.getDatabase().executeTransaction(
+                    new StorePlayerGraphPoint(point, parameters.getPlayerUUID(), providerIdentifier)));
         } catch (DataExtensionMethodCallException e) {
             errorLogger.warn(e, ErrorContext.builder()
                     .related(providerIdentifier)
@@ -86,5 +98,17 @@ public class PlayerGraphSampler extends TaskSystem.Task {
             ExtensionMethodErrorTracker.errored(extension, provider);
             cancel();
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        PlayerGraphSampler that = (PlayerGraphSampler) o;
+        return Objects.equals(providerIdentifier, that.providerIdentifier);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(providerIdentifier);
     }
 }

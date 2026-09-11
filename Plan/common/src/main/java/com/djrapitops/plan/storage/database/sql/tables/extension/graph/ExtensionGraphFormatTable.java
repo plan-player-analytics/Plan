@@ -47,7 +47,7 @@ public class ExtensionGraphFormatTable {
     public static String createTableSQL(DBType dbType) {
         return CreateTableBuilder.create(TABLE_NAME, dbType)
                 .column(ID, Sql.INT).primaryKey()
-                .column(FORMAT, Sql.varchar(15))
+                .column(FORMAT, Sql.varchar(20))
                 .build();
     }
 

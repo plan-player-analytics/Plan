@@ -25,7 +25,17 @@ package com.djrapitops.plan.extension.graph;
  */
 public enum HistoryStrategy {
 
+    /**
+     * No point history available, history function will not be called.
+     */
+    NO_HISTORY,
+    /**
+     * Point history function returns any values that need to be appended/replaced
+     */
     REPLACE_CHANGED_VALUES,
+    /**
+     * Points returned by history function should be appended.
+     */
     ONLY_APPEND_MISSING
 
 }

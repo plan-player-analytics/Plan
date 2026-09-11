@@ -29,7 +29,6 @@ import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
@@ -142,13 +141,13 @@ public class ExtensionGraphMetadataTable {
     }
 
     public static @NotNull String getTableName(String pluginName, String methodName) {
-        return "plan_extension_" + pluginName + "_" + methodName;
+        return "plan_extension_" + pluginName.toLowerCase() + "_" + methodName.toLowerCase();
     }
 
     public static List<String> addColumnsStatements(String pluginName, String methodName, int columnCount, int newColumnCount) {
         return IntStream.range(columnCount, newColumnCount)
                 .mapToObj(i -> "ALTER TABLE " + getTableName(pluginName, methodName) + " ADD COLUMN value_" + (i + 1) + " " + DOUBLE)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public static String insertToGraphTableSql(String pluginName, String methodName, int columnCount, TableType type) {

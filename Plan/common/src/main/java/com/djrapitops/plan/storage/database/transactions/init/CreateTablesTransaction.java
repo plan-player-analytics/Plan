@@ -54,7 +54,29 @@ public class CreateTablesTransaction extends OperationCriticalTransaction {
                 AllowlistBounceTable.TABLE_NAME,
                 RegistrationTable.TABLE_NAME,
                 StatisticTable.TABLE_NAME,
-                StatisticValueTable.TABLE_NAME
+                StatisticValueTable.TABLE_NAME,
+                // These are commented out because I don't know the impact on tests yet.
+//                ExtensionIconTable.TABLE_NAME,
+//                ExtensionPluginTable.TABLE_NAME,
+//                ExtensionTabTable.TABLE_NAME,
+//                ExtensionProviderTable.TABLE_NAME,
+//                ExtensionPlayerValueTable.TABLE_NAME,
+//                ExtensionServerValueTable.TABLE_NAME,
+//                ExtensionTableProviderTable.TABLE_NAME,
+//                ExtensionPlayerTableValueTable.TABLE_NAME,
+//                ExtensionServerTableValueTable.TABLE_NAME,
+//                ExtensionGroupsTable.TABLE_NAME,
+//                ExtensionGraphMetadataTable.TABLE_NAME,
+//                ExtensionGraphLabelTable.TABLE_NAME,
+//                ExtensionGraphLabelTable.ToProviderTable.TABLE_NAME,
+//                ExtensionGraphUnitTable.TABLE_NAME,
+//                ExtensionGraphUnitTable.ToProviderTable.TABLE_NAME,
+//                ExtensionGraphFormatTable.TABLE_NAME,
+//                ExtensionGraphFormatTable.ToProviderTable.TABLE_NAME,
+//                ExtensionGraphColorTable.TABLE_NAME,
+//                ExtensionGraphColorTable.ToProviderTable.TABLE_NAME,
+//                ExtensionGraphAggregateTypeTable.TABLE_NAME,
+//                ExtensionGraphAggregateTypeTable.ToProviderTable.TABLE_NAME
         };
     }
 
@@ -104,9 +126,15 @@ public class CreateTablesTransaction extends OperationCriticalTransaction {
         execute(ExtensionServerTableValueTable.createTableSQL(dbType));
         execute(ExtensionGroupsTable.createTableSQL(dbType));
         execute(ExtensionGraphMetadataTable.createTableSQL(dbType));
+        execute(ExtensionGraphLabelTable.createTableSQL(dbType));
+        execute(ExtensionGraphLabelTable.ToProviderTable.createTableSQL(dbType));
         execute(ExtensionGraphUnitTable.createTableSQL(dbType));
+        execute(ExtensionGraphUnitTable.ToProviderTable.createTableSQL(dbType));
         execute(ExtensionGraphFormatTable.createTableSQL(dbType));
+        execute(ExtensionGraphFormatTable.ToProviderTable.createTableSQL(dbType));
         execute(ExtensionGraphColorTable.createTableSQL(dbType));
+        execute(ExtensionGraphColorTable.ToProviderTable.createTableSQL(dbType));
         execute(ExtensionGraphAggregateTypeTable.createTableSQL(dbType));
+        execute(ExtensionGraphAggregateTypeTable.ToProviderTable.createTableSQL(dbType));
     }
 }

@@ -16,8 +16,9 @@
  */
 package com.djrapitops.plan.extension.annotation;
 
-import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.graph.Aggregates;
+import com.djrapitops.plan.extension.graph.HistoryStrategy;
+import com.djrapitops.plan.extension.graph.ServerGraphDataSource;
 import com.djrapitops.plan.extension.graph.XAxisType;
 
 import java.lang.annotation.ElementType;
@@ -29,11 +30,13 @@ import java.util.concurrent.TimeUnit;
 /**
  * Defines a method that returns {@link com.djrapitops.plan.extension.graph.DataPoint}.
  * <p>
- * This method will be sampled at specific times, defined by {@link GraphPointProvider#sampleInterval()} and {@link GraphPointProvider#sampleIntervalUnit()}.
+ * METHODS ANNOTATED BY THIS WILL BE TREATED CASE INSENSITIVE (all lowercase) to store data in the database.
+ * <p>
+ * The DataSource returned by this will sampled at specific times, defined by {@link GraphProvider#sampleInterval()} and {@link GraphProvider#sampleIntervalUnit()}.
  * <p>
  * DataPoint can have multiple values per x-axis value, to provide multiple series.
  * <p>
- * You have a lot of control over how the graph is displayed with the metadata methods specific to this annotation.
+ * You have a lot of control over how the graph is displayed with the metadata returned by the DataSource and properties in this annotation.
  * <p>
  * Requires capability DATA_EXTENSION_GRAPH_API.
  * <p>
@@ -43,7 +46,7 @@ import java.util.concurrent.TimeUnit;
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)
-public @interface GraphPointProvider {
+public @interface GraphProvider {
 
     /**
      * Name of the graph that is shown to users.
@@ -97,41 +100,24 @@ public @interface GraphPointProvider {
     int yAxisSoftMax() default 2;
 
     /**
-     * Units of each series in the datapoint.
-     * <p>
-     * If more value series are defined than points the first unit will be applied to rest of the points.
-     * <p>
-     * Include null or empty string "" in the array if you want just a numeric unit.
-     *
-     * @return Array of unit to show in the y-axis, same unit will be collapsed to same y-axis. e.g. ["Players", "Dollaridoos", "Players"].
-     */
-    String[] unitNames() default {};
-
-    /**
-     * Format of each value in the datapoint.
-     * <p>
-     * If this method returns less format types than series is used, FormatType.NONE will be applied.
-     *
-     * @return [FormatType.TIME_MILLISECONDS]
-     */
-    FormatType[] valueFormats() default {};
-
-    /**
-     * Hex color string of each series.
-     * <p>
-     * Allows you to control color of your data. You need to return hex codes at most 7 chars in length.
-     * <p>
-     * If this is left unspecified, a predefined color series used in visualization will be used.
-     *
-     * @return ["#cccccc", "#222222"]
-     */
-    String[] seriesColors() default {};
-
-    /**
      * How often this method should be called.
+     * <p>
+     * For PlayerGraphDataSource minimum is 30 SECONDS.
+     * =120 points per hour per player,
+     * with 100 players =12000 points/hour
+     * <p>
+     * Storage requirements can be calculated with (points per hour) * (players) * 64 * (2 + y)
+     * where y is amount of values returned with DataPoint.
+     * y=1: 120 * 100 * 64 * (2 + 1) = 2.3 MB of data/hour = 17.3 days to fill up 1 GB.
+     * <p>
+     * Be considerate, try to aim for at least 30 days/1 GB.
+     * <p>
+     * For ServerGraphDataSource minimum is 5 SECONDS. = 720 points per hour
+     * <p>
+     * Recommended interval is 1 MINUTE or bigger, due to data storage size.
      *
      * @return by default returns 1.
-     * @see GraphPointProvider#sampleIntervalUnit() to define unit.
+     * @see GraphProvider#sampleIntervalUnit() to define unit.
      */
     int sampleInterval() default 1;
 
@@ -139,7 +125,7 @@ public @interface GraphPointProvider {
      * How often this method should be called.
      *
      * @return by default returns TimeUnit.MINUTES.
-     * @see GraphPointProvider#sampleInterval() to define amount.
+     * @see GraphProvider#sampleInterval() to define amount.
      */
     TimeUnit sampleIntervalUnit() default TimeUnit.MINUTES;
 
@@ -148,7 +134,7 @@ public @interface GraphPointProvider {
      * <p>
      * This is useful if all values represent same kind of data.
      * <p>
-     * If {@link GraphPointProvider#unitNames()} or {@link GraphPointProvider#valueFormats()} return more than one unit name
+     * If {@link ServerGraphDataSource#getSeriesMetadata()} returns more than one unique unit name
      * or format, this method will be ignored, since different units or valueFormats don't stack.
      *
      * @return false by default.
@@ -159,11 +145,18 @@ public @interface GraphPointProvider {
      * Define any aggregate functions the value series supports.
      * <p>
      * Automatic aggregate numbers (As if using {@link NumberProvider}) will be added to the same {@link Tab} if these are defined.
-     *
+     * <p>
      * If the graph has multiple series (multiple y values) there will be no aggregates.
      *
      * @return None by default.
      */
     Aggregates[] supportedAggregateFunctions() default {};
 
+
+    /**
+     * Defines a {@link HistoryStrategy} the data will be appended to existing data.
+     *
+     * @return {@link HistoryStrategy#NO_HISTORY} by default.
+     */
+    HistoryStrategy strategy() default HistoryStrategy.NO_HISTORY;
 }

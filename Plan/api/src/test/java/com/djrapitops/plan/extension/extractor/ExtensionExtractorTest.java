@@ -18,11 +18,10 @@ package com.djrapitops.plan.extension.extractor;
 
 import com.djrapitops.plan.component.Component;
 import com.djrapitops.plan.extension.DataExtension;
-import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.Group;
 import com.djrapitops.plan.extension.annotation.*;
 import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
-import com.djrapitops.plan.extension.graph.DataPoint;
+import com.djrapitops.plan.extension.graph.ServerGraphDataSource;
 import com.djrapitops.plan.extension.table.Table;
 import org.junit.jupiter.api.Test;
 
@@ -30,7 +29,8 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 /**
  * Tests for different validations of ExtensionExtractor.
@@ -575,10 +575,10 @@ class ExtensionExtractorTest {
     }
 
     @Test
-    void graphPointProviderReturnsDataPoint() {
+    void graphPointProviderReturnsDataSource() {
         @PluginInfo(name = "Extension")
         class Extension implements DataExtension {
-            @GraphPointProvider(displayName = "bad")
+            @GraphProvider(displayName = "bad")
             public Object method() {
                 return null;
             }
@@ -586,7 +586,7 @@ class ExtensionExtractorTest {
         Extension extension = new Extension();
         ExtensionExtractor underTest = new ExtensionExtractor(extension);
         assertEquals(
-                "Extension.method has invalid return type. was: java.lang.Object, expected: com.djrapitops.plan.extension.graph.DataPoint",
+                "Extension.method has invalid return type. was: java.lang.Object, expected (one of): com.djrapitops.plan.extension.graph.ServerGraphDataSource, com.djrapitops.plan.extension.graph.PlayerGraphDataSource, com.djrapitops.plan.extension.graph.GroupGraphDataSource",
                 assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
         );
     }
@@ -596,38 +596,15 @@ class ExtensionExtractorTest {
         @PluginInfo(name = "Extension")
         class Extension implements DataExtension {
             @Conditional("bad")
-            @GraphPointProvider(displayName = "ok")
-            public DataPoint method() {
+            @GraphProvider(displayName = "ok")
+            public ServerGraphDataSource method() {
                 return null;
             }
         }
         Extension extension = new Extension();
         ExtensionExtractor underTest = new ExtensionExtractor(extension);
         assertEquals(
-                "Extension.method had Conditional, but GraphPointProvider does not support it!",
-                assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
-        );
-    }
-
-    @Test
-    void graphHistoryPointsProviderDoesNotSupportConditional() {
-        @PluginInfo(name = "Extension")
-        class Extension implements DataExtension {
-            @GraphPointProvider(displayName = "ok")
-            public DataPoint method() {
-                return null;
-            }
-
-            @Conditional("bad")
-            @GraphHistoryPointsProvider(methodName = "method")
-            public DataPoint[] method2() {
-                return null;
-            }
-        }
-        Extension extension = new Extension();
-        ExtensionExtractor underTest = new ExtensionExtractor(extension);
-        assertEquals(
-                "Extension.method2 had Conditional, but GraphHistoryPointsProvider does not support it!",
+                "Extension.method had Conditional, but GraphProvider does not support it!",
                 assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
         );
     }
@@ -636,8 +613,8 @@ class ExtensionExtractorTest {
     void graphPointProviderTooLongName() {
         @PluginInfo(name = "Extension")
         class Extension implements DataExtension {
-            @GraphPointProvider(displayName = "aaaaaAAAAAbbbbbBBBBBcccccCCCCCdddddDDDDDeeeeeEEEEEfffffFFFF")
-            public DataPoint method() {
+            @GraphProvider(displayName = "aaaaaAAAAAbbbbbBBBBBcccccCCCCCdddddDDDDDeeeeeEEEEEfffffFFFF")
+            public ServerGraphDataSource method() {
                 return null;
             }
         }
@@ -645,127 +622,6 @@ class ExtensionExtractorTest {
         ExtensionExtractor underTest = new ExtensionExtractor(extension);
         assertEquals(
                 "Warnings: [Extension.method 'displayName' was over 50 characters.]",
-                assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
-        );
-    }
-
-    @Test
-    void graphPointProviderTooLongUnitName() {
-        @PluginInfo(name = "Extension")
-        class Extension implements DataExtension {
-            @GraphPointProvider(displayName = "bad", unitNames = {"aaaaaAAAAAbbbbbBBBBBcccccCCCCCdddddDDDDDeeeeeEEEEEfffffFFFF"})
-            public DataPoint method() {
-                return null;
-            }
-        }
-        Extension extension = new Extension();
-        ExtensionExtractor underTest = new ExtensionExtractor(extension);
-        assertEquals(
-                "Warnings: [Extension.method 'unitNames' was over 50 characters.]",
-                assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
-        );
-    }
-
-    @Test
-    void graphPointProviderInvalidHex() {
-        @PluginInfo(name = "Extension")
-        class Extension implements DataExtension {
-            @GraphPointProvider(displayName = "bad", seriesColors = {"bad"})
-            public DataPoint method() {
-                return null;
-            }
-        }
-        Extension extension = new Extension();
-        ExtensionExtractor underTest = new ExtensionExtractor(extension);
-        assertEquals(
-                "Warnings: [Extension.method 'seriesColors', given 'bad' did not match regex '^#(?:[0-9a-fA-F]{3}){1,2}$' (hex code e.g. #aaaaaa).]",
-                assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
-        );
-    }
-
-    @Test
-    void graphPointProviderStackingMismatchUnits() {
-        @PluginInfo(name = "Extension")
-        class Extension implements DataExtension {
-            @GraphPointProvider(displayName = "bad", unitNames = {"Foo", "Bar"}, supportsStacking = true)
-            public DataPoint method() {
-                return null;
-            }
-        }
-        Extension extension = new Extension();
-        ExtensionExtractor underTest = new ExtensionExtractor(extension);
-        assertEquals(
-                "Warnings: [Extension.method is set to supportsStacking: true, but unitNames has more than 1 unique unit. Stacking will be disabled.]",
-                assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
-        );
-    }
-
-    @Test
-    void graphPointProviderStackingMismatchFormats() {
-        @PluginInfo(name = "Extension")
-        class Extension implements DataExtension {
-            @GraphPointProvider(displayName = "bad", valueFormats = {FormatType.DATE_SECOND, FormatType.NONE}, supportsStacking = true)
-            public DataPoint method() {
-                return null;
-            }
-        }
-        Extension extension = new Extension();
-        ExtensionExtractor underTest = new ExtensionExtractor(extension);
-        assertEquals(
-                "Warnings: [Extension.method is set to supportsStacking: true, but moreFormats has more than 1 unique format. Stacking will be disabled.]",
-                assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
-        );
-    }
-
-    @Test
-    void graphPointProviderValidHex() {
-        @PluginInfo(name = "Extension")
-        class Extension implements DataExtension {
-            @GraphPointProvider(displayName = "validHex", seriesColors = {"#333", "#abcdef", "#ABC839"})
-            public DataPoint method() {
-                return null;
-            }
-        }
-        Extension extension = new Extension();
-        ExtensionExtractor underTest = new ExtensionExtractor(extension);
-        assertDoesNotThrow(underTest::validateAnnotations);
-    }
-
-    @Test
-    void graphHistoryPointsProviderReturnsDataPointArray() {
-        @PluginInfo(name = "Extension")
-        class Extension implements DataExtension {
-            @GraphPointProvider(displayName = "ok")
-            public DataPoint method() {
-                return null;
-            }
-
-            @GraphHistoryPointsProvider(methodName = "method")
-            public Object method2() {
-                return null;
-            }
-        }
-        Extension extension = new Extension();
-        ExtensionExtractor underTest = new ExtensionExtractor(extension);
-        assertEquals(
-                "Extension.method2 has invalid return type. was: java.lang.Object, expected: [Lcom.djrapitops.plan.extension.graph.DataPoint; (an array)",
-                assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
-        );
-    }
-
-    @Test
-    void graphHistoryPointsProviderMissingMethod() {
-        @PluginInfo(name = "Extension")
-        class Extension implements DataExtension {
-            @GraphHistoryPointsProvider(methodName = "method")
-            public DataPoint[] method() {
-                return null;
-            }
-        }
-        Extension extension = new Extension();
-        ExtensionExtractor underTest = new ExtensionExtractor(extension);
-        assertEquals(
-                "Extension class had no methods called 'method' but GraphHistoryPointsProvider method 'method' refers to it.",
                 assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
         );
     }

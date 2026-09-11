@@ -16,10 +16,10 @@
  */
 package com.djrapitops.plan.storage.database.transactions.init;
 
-import com.djrapitops.plan.extension.implementation.storage.queries.graph.ExtensionGraphQueries;
 import com.djrapitops.plan.extension.implementation.providers.gathering.ExtensionMetadataKey;
 import com.djrapitops.plan.extension.implementation.providers.gathering.ExtensionMetadataStorage;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionInformationQueries;
+import com.djrapitops.plan.extension.implementation.storage.queries.graph.ExtensionGraphQueries;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.ExtensionSettings;
 import com.djrapitops.plan.storage.database.queries.Query;
@@ -63,7 +63,7 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
     @Override
     protected void performOperations() {
         Collection<Integer> providerIds = query(inactiveProviderIDsQuery());
-        query(ExtensionGraphQueries.findGraphTableNames(inactiveProviderIds))
+        query(ExtensionGraphQueries.findGraphTableNames(providerIds))
                 .forEach(tableName -> execute("DROP TABLE IF EXISTS " + tableName));
         for (Integer providerID : providerIds) {
             removeValues(providerID);
@@ -89,6 +89,7 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
                 ExtensionPlayerValueTable.TABLE_NAME,
                 ExtensionServerValueTable.TABLE_NAME,
                 ExtensionGroupsTable.TABLE_NAME,
+                ExtensionGraphLabelTable.ToProviderTable.TABLE_NAME,
                 ExtensionGraphUnitTable.ToProviderTable.TABLE_NAME,
                 ExtensionGraphFormatTable.ToProviderTable.TABLE_NAME,
                 ExtensionGraphColorTable.ToProviderTable.TABLE_NAME,

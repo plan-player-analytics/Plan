@@ -26,29 +26,29 @@ import java.util.Optional;
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
 /**
- * Represents extension_graph_color table.
+ * Represents extension_graph_label table.
  *
  * @author AuroraLS3
  */
-public class ExtensionGraphColorTable {
+public class ExtensionGraphLabelTable {
 
-    public static final String TABLE_NAME = "extension_graph_color";
+    public static final String TABLE_NAME = "extension_graph_label";
 
     public static final String ID = "id";
-    public static final String COLOR = "color";
+    public static final String LABEL = "label";
 
-    public static final String SELECT_ID_STATEMENT = SELECT + ID + FROM + TABLE_NAME + WHERE + COLOR + "=?";
-    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" + COLOR + ") VALUES (?)";
-    public static final int COLOR_MAX_LENGTH = 9;
+    public static final String SELECT_ID_STATEMENT = SELECT + ID + FROM + TABLE_NAME + WHERE + LABEL + "=?";
+    public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" + LABEL + ") VALUES (?)";
+    public static final int LABEL_MAX_LENGTH = 50;
 
-    private ExtensionGraphColorTable() {
+    private ExtensionGraphLabelTable() {
         /* Static sql utility class */
     }
 
     public static String createTableSQL(DBType dbType) {
         return CreateTableBuilder.create(TABLE_NAME, dbType)
                 .column(ID, Sql.INT).primaryKey()
-                .column(COLOR, Sql.varchar(COLOR_MAX_LENGTH))
+                .column(LABEL, Sql.varchar(LABEL_MAX_LENGTH))
                 .build();
     }
 
@@ -56,23 +56,23 @@ public class ExtensionGraphColorTable {
         if (n == 0) {
             return Optional.empty();
         }
-        return Optional.of(SELECT + COLOR + FROM + TABLE_NAME + WHERE + COLOR + " IN (" + Sql.nParameters(n) + ")");
+        return Optional.of(SELECT + LABEL + FROM + TABLE_NAME + WHERE + LABEL + " IN (" + Sql.nParameters(n) + ")");
     }
 
     /**
-     * Represents extension_graph_color_to_graph table that joins extension_graph_color to a specific graph and column.
+     * Represents extension_graph_label_to_graph table that joins extension_graph_label to a specific graph and column.
      */
     public static class ToProviderTable {
-        public static final String TABLE_NAME = "extension_graph_color_to_graph";
+        public static final String TABLE_NAME = "extension_graph_label_to_graph";
 
         public static final String ID = "id";
-        public static final String COLOR_ID = "color_id";
+        public static final String LABEL_ID = "label_id";
         public static final String PROVIDER_ID = "provider_id";
         public static final String COLUMN_INDEX = "column_index";
 
-        public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" + COLOR_ID + ',' + COLUMN_INDEX + ',' + PROVIDER_ID +
+        public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" + LABEL_ID + ',' + COLUMN_INDEX + ',' + PROVIDER_ID +
                 ") VALUES (" + SELECT_ID_STATEMENT + ",?," + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID + ")";
-        public static final String UPDATE_STATEMENT = "UPDATE " + TABLE_NAME + " SET " + COLOR_ID + "=" + SELECT_ID_STATEMENT +
+        public static final String UPDATE_STATEMENT = "UPDATE " + TABLE_NAME + " SET " + LABEL_ID + "=" + SELECT_ID_STATEMENT +
                 WHERE + COLUMN_INDEX + "=?" +
                 AND + PROVIDER_ID + "=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID;
         public static final String DELETE_STATEMENT = "DELETE" + FROM + TABLE_NAME +
@@ -89,10 +89,10 @@ public class ExtensionGraphColorTable {
         public static String createTableSQL(DBType dbType) {
             return CreateTableBuilder.create(TABLE_NAME, dbType)
                     .column(ID, Sql.INT).primaryKey()
-                    .column(COLOR_ID, Sql.INT)
+                    .column(LABEL_ID, Sql.INT)
                     .column(PROVIDER_ID, Sql.INT)
                     .column(COLUMN_INDEX, Sql.INT).notNull()
-                    .foreignKey(COLOR_ID, ExtensionGraphColorTable.TABLE_NAME, ExtensionGraphColorTable.ID)
+                    .foreignKey(LABEL_ID, ExtensionGraphLabelTable.TABLE_NAME, ExtensionGraphLabelTable.ID)
                     .foreignKey(PROVIDER_ID, ExtensionProviderTable.TABLE_NAME, ExtensionProviderTable.ID)
                     .build();
         }

@@ -21,7 +21,9 @@ import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.Group;
 import com.djrapitops.plan.extension.annotation.*;
 import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
-import com.djrapitops.plan.extension.graph.DataPoint;
+import com.djrapitops.plan.extension.graph.GroupGraphDataSource;
+import com.djrapitops.plan.extension.graph.PlayerGraphDataSource;
+import com.djrapitops.plan.extension.graph.ServerGraphDataSource;
 import com.djrapitops.plan.extension.table.Table;
 
 import java.lang.annotation.Annotation;
@@ -39,19 +41,16 @@ import java.util.stream.Collectors;
  */
 public final class ExtensionExtractor {
 
+    private static final String WAS_OVER_50_CHARACTERS = "' was over 50 characters.";
     private final DataExtension extension;
     private final String extensionName;
-
     private final List<String> warnings = new ArrayList<>();
-
     private PluginInfo pluginInfo;
     private List<TabInfo> tabInformation;
     private List<InvalidateMethod> invalidMethods;
     private Map<ExtensionMethod.ParameterType, ExtensionMethods> methods;
     private Collection<Method> conditionalMethods;
     private Collection<Tab> tabAnnotations;
-
-    private static final String WAS_OVER_50_CHARACTERS = "' was over 50 characters.";
 
     public ExtensionExtractor(DataExtension extension) {
         this.extension = extension;
@@ -105,43 +104,14 @@ public final class ExtensionExtractor {
     @Deprecated
     public void extractAnnotationInformation() {/* no-op */}
 
-    public static boolean actuallySupportsStacking(GraphPointProvider annotation) {
-        boolean supportsStacking = annotation.supportsStacking();
-        boolean moreUnits = new HashSet<>(Arrays.asList(annotation.unitNames())).size() > 1;
-        boolean moreFormats = new HashSet<>(Arrays.asList(annotation.valueFormats())).size() > 1;
-        return supportsStacking && !moreFormats && !moreUnits;
-    }
-
-    private void validateGraphPointProviderMethodsExistForHistoryProviders() {
-        Map<ExtensionMethod.ParameterType, List<String>> graphProviderMethodNames = methods.values().stream().map(ExtensionMethods::getGraphPointProviders)
-                .flatMap(Collection::stream)
-                .collect(Collectors.groupingBy(ExtensionMethod::getParameterType,
-                        Collectors.mapping(ExtensionMethod::getMethodName,
-                                Collectors.toList())));
-        methods.values().stream()
-                .map(ExtensionMethods::getGraphHistoryPointsProviders)
-                .flatMap(Collection::stream)
-                .forEach(method -> {
-                            String referencedMethod = method.getAnnotation(GraphHistoryPointsProvider.class)
-                                    .map(GraphHistoryPointsProvider::methodName).orElse(null);
-                    boolean referencedMethodExists = graphProviderMethodNames
-                            .getOrDefault(method.getParameterType(), Collections.emptyList())
-                                    .contains(referencedMethod);
-                            if (!referencedMethodExists) {
-                                throw new IllegalArgumentException(extensionName + " class had no methods called '" + referencedMethod + "' but GraphHistoryPointsProvider method '" + method.getMethodName() + "' refers to it.");
-                            }
-                        }
-                );
-    }
-
-    private <T> void validateReturnType(Method method, Class<T> expectedType) {
+    private void validateReturnType(Method method, Class<?>... expectedType) {
         Class<?> returnType = method.getReturnType();
-        if (!expectedType.isAssignableFrom(returnType)) {
-            String expectedName = expectedType.getName();
+        if (Arrays.stream(expectedType).noneMatch(a -> a.isAssignableFrom(returnType))) {
+            String expectedName = Arrays.stream(expectedType).map(Class::getName).collect(Collectors.joining(", "));
             throw new IllegalArgumentException(extensionName + "." + method.getName() +
                     " has invalid return type. was: " +
                     returnType.getName() +
-                    ", expected: " +
+                    ", expected" + (expectedType.length > 1 ? " (one of)" : "") + ": " +
                     (expectedName.startsWith("[L") ? expectedName + " (an array)" : expectedName));
         }
     }
@@ -281,34 +251,12 @@ public final class ExtensionExtractor {
         validateMethodArguments(method, false, UUID.class, String.class, Group.class);
     }
 
-    private void validateMethod(ExtensionMethod extensionMethod, GraphPointProvider annotation) {
+    private void validateMethod(ExtensionMethod extensionMethod, GraphProvider annotation) {
         Method method = extensionMethod.getMethod();
 
-        validateReturnType(method, DataPoint.class);
+        validateReturnType(method, ServerGraphDataSource.class, PlayerGraphDataSource.class, GroupGraphDataSource.class);
         validateMethodAnnotationPropertyLength(annotation.displayName(), "displayName", 50, method);
-        Arrays.stream(annotation.unitNames()).forEach(unitName -> validateMethodAnnotationPropertyLength(unitName, "unitNames", 50, method));
-        Arrays.stream(annotation.seriesColors()).forEach(color -> validateMethodAnnotationPropertyRegex(color, "seriesColors", "^#(?:[0-9a-fA-F]{3}){1,2}$", "hex code e.g. #aaaaaa", method));
-        validateMethodArguments(method, false, UUID.class, String.class, Group.class);
-        validateGraphStacking(method, annotation);
-    }
-
-    private void validateMethod(ExtensionMethod extensionMethod) {
-        Method method = extensionMethod.getMethod();
-
-        validateReturnType(method, DataPoint[].class);
-        validateMethodArguments(method, false, UUID.class, String.class, Group.class);
-    }
-
-    private void validateGraphStacking(Method method, GraphPointProvider annotation) {
-        boolean supportsStacking = annotation.supportsStacking();
-        boolean moreUnits = new HashSet<>(Arrays.asList(annotation.unitNames())).size() > 1;
-        boolean moreFormats = new HashSet<>(Arrays.asList(annotation.valueFormats())).size() > 1;
-        if (supportsStacking && moreUnits) {
-            warnings.add(extensionName + "." + method.getName() + " is set to supportsStacking: true, but unitNames has more than 1 unique unit. Stacking will be disabled.");
-        }
-        if (supportsStacking && moreFormats) {
-            warnings.add(extensionName + "." + method.getName() + " is set to supportsStacking: true, but moreFormats has more than 1 unique format. Stacking will be disabled.");
-        }
+        validateMethodArguments(method, false);
     }
 
     private void extractMethods() {
@@ -371,13 +319,9 @@ public final class ExtensionExtractor {
                 validateMethod(method, annotation);
                 methods.get(method.getParameterType()).addDataBuilderMethod(method);
             });
-            method.getAnnotation(GraphPointProvider.class).ifPresent(annotation -> {
+            method.getAnnotation(GraphProvider.class).ifPresent(annotation -> {
                 validateMethod(method, annotation);
                 methods.get(method.getParameterType()).addGraphPointProviderMethod(method);
-            });
-            method.getAnnotation(GraphHistoryPointsProvider.class).ifPresent(annotation -> {
-                validateMethod(method);
-                methods.get(method.getParameterType()).addGraphHistoryPointsProviderMethod(method);
             });
 
             method.getAnnotation(Conditional.class).ifPresent(annotation -> conditionalMethods.add(method.getMethod()));
@@ -387,7 +331,6 @@ public final class ExtensionExtractor {
         if (methods.values().stream().allMatch(ExtensionMethods::isEmpty)) {
             throw new IllegalArgumentException(extensionName + " class had no methods annotated with a Provider annotation");
         }
-        validateGraphPointProviderMethodsExistForHistoryProviders();
         validateConditionals();
     }
 
@@ -398,18 +341,15 @@ public final class ExtensionExtractor {
                     BooleanProvider.class, DoubleProvider.class, NumberProvider.class,
                     PercentageProvider.class, StringProvider.class, ComponentProvider.class,
                     TableProvider.class, GroupProvider.class, DataBuilderProvider.class,
-                    GraphPointProvider.class, GraphHistoryPointsProvider.class
+                    GraphProvider.class
             )) {
                 throw new IllegalArgumentException(extensionName + "." + conditionalMethod.getName() + " did not have any associated Provider for Conditional.");
             }
             if (hasAnyOf(conditionalMethod, DataBuilderProvider.class)) {
                 throw new IllegalArgumentException(extensionName + "." + conditionalMethod.getName() + " had Conditional, but DataBuilderProvider does not support it!");
             }
-            if (hasAnyOf(conditionalMethod, GraphPointProvider.class)) {
-                throw new IllegalArgumentException(extensionName + "." + conditionalMethod.getName() + " had Conditional, but GraphPointProvider does not support it!");
-            }
-            if (hasAnyOf(conditionalMethod, GraphHistoryPointsProvider.class)) {
-                throw new IllegalArgumentException(extensionName + "." + conditionalMethod.getName() + " had Conditional, but GraphHistoryPointsProvider does not support it!");
+            if (hasAnyOf(conditionalMethod, GraphProvider.class)) {
+                throw new IllegalArgumentException(extensionName + "." + conditionalMethod.getName() + " had Conditional, but GraphProvider does not support it!");
             }
         }
     }

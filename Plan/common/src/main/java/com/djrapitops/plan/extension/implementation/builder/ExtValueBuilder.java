@@ -21,12 +21,11 @@ import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.annotation.BooleanProvider;
 import com.djrapitops.plan.extension.annotation.Conditional;
-import com.djrapitops.plan.extension.annotation.GraphPointProvider;
+import com.djrapitops.plan.extension.annotation.GraphProvider;
 import com.djrapitops.plan.extension.annotation.PluginInfo;
 import com.djrapitops.plan.extension.builder.DataValue;
 import com.djrapitops.plan.extension.builder.ValueBuilder;
 import com.djrapitops.plan.extension.extractor.ExtensionMethod;
-import com.djrapitops.plan.extension.graph.DataPoint;
 import com.djrapitops.plan.extension.graph.HistoryStrategy;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Icon;
@@ -136,7 +135,7 @@ public class ExtValueBuilder implements ValueBuilder {
         return getProviderInformation(true, false, null);
     }
 
-    public ProviderInformation buildProviderInfo(@SuppressWarnings("unused") GraphPointProvider annotation) {
+    public ProviderInformation buildProviderInfo(@SuppressWarnings("unused") GraphProvider annotation) {
         return getProviderInformation();
     }
 
@@ -268,11 +267,6 @@ public class ExtValueBuilder implements ValueBuilder {
     @Override
     public DataValue<String[]> buildGroup(Supplier<String[]> groups) {
         return new GroupsDataValue(groups, getProviderInformation());
-    }
-
-    @Override
-    public DataValue<DataPoint[]> buildGraphHistoryPoints(Supplier<DataPoint[]> historyData, String methodName, HistoryStrategy appendStrategy) {
-        return new GraphHistoryPoints(historyData, getGraphHistoryProviderInformation(methodName, appendStrategy));
     }
 
     @Override
