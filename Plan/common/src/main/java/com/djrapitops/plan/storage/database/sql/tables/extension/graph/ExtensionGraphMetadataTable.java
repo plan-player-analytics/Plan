@@ -108,7 +108,7 @@ public class ExtensionGraphMetadataTable {
                 .column(Y_AXIS_SOFT_MIN, Sql.LONG).notNull()
                 .column(X_AXIS_SOFT_MAX, Sql.LONG).notNull()
                 .column(X_AXIS_SOFT_MIN, Sql.LONG).notNull()
-                .column(GRAPH_TABLE_NAME, Sql.varchar(116)).notNull() // plan_extension_pluginName_methodName
+                .column(GRAPH_TABLE_NAME, Sql.varchar(121)).notNull() // plan_extension_graph_pluginName_methodName
                 .column(COLUMN_COUNT, Sql.INT).defaultValue("1").notNull()
                 .column(TABLE_TYPE, INT).notNull()
                 .foreignKey(PROVIDER_ID, ExtensionProviderTable.TABLE_NAME, ExtensionProviderTable.ID)
@@ -141,7 +141,7 @@ public class ExtensionGraphMetadataTable {
     }
 
     public static @NotNull String getTableName(String pluginName, String methodName) {
-        return "plan_extension_" + pluginName.toLowerCase() + "_" + methodName.toLowerCase();
+        return "plan_extension_graph_" + pluginName.toLowerCase() + "_" + methodName.toLowerCase();
     }
 
     public static List<String> addColumnsStatements(String pluginName, String methodName, int columnCount, int newColumnCount) {
@@ -164,6 +164,12 @@ public class ExtensionGraphMetadataTable {
                 Sql.nParameters(columnCount) +
                 (type == TableType.PLAYER ? ',' + UsersTable.SELECT_USER_ID : "") +
                 ")";
+    }
+
+    public static String selectFromGraphTableSql(String graphTableName, TableType type) {
+        return SELECT + "*" + FROM + graphTableName + WHERE +
+                "server_id=" + ServerTable.SELECT_SERVER_ID +
+                (type == TableType.PLAYER ? AND + "user_id=" + UsersTable.SELECT_USER_ID : "");
     }
 
     public enum TableType {

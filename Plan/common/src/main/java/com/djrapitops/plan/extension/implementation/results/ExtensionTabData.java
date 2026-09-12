@@ -39,6 +39,7 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
     private final Map<String, ExtensionComponentData> componentData;
 
     private final List<ExtensionTableData> tableData;
+    private final List<String> graphNames;
     private final List<ExtensionDescription> descriptions;
 
     private List<String> order;
@@ -56,6 +57,7 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         componentData = new HashMap<>();
 
         tableData = new ArrayList<>();
+        graphNames = new ArrayList<>();
         descriptions = new ArrayList<>();
     }
 
@@ -95,6 +97,10 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         return tableData;
     }
 
+    public List<String> getGraphNames() {
+        return graphNames;
+    }
+
     /**
      * Get all descriptions for data in this tab.
      * <p>
@@ -114,8 +120,7 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ExtensionTabData)) return false;
-        ExtensionTabData that = (ExtensionTabData) o;
+        if (!(o instanceof ExtensionTabData that)) return false;
         return tabInformation.equals(that.tabInformation) &&
                 order.equals(that.order);
     }
@@ -133,6 +138,7 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         this.stringData.putAll(other.stringData);
         this.componentData.putAll(other.componentData);
 
+        this.graphNames.addAll(other.graphNames);
         this.tableData.addAll(other.tableData);
 
         createOrderingList();
@@ -208,6 +214,11 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
 
         public Builder putTableData(ExtensionTableData extensionTableData) {
             data.tableData.add(extensionTableData);
+            return this;
+        }
+
+        public Builder putGraphName(String graphName) {
+            data.graphNames.add(graphName);
             return this;
         }
 

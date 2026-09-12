@@ -27,27 +27,30 @@ import com.djrapitops.plan.utilities.dev.Untrusted;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.stream.IntStream;
 
 /**
- * Query for fetching data of a server graph.
+ * Query for fetching data of a player graph.
  *
  * @author AuroraLS3
  */
-public class ExtensionServerGraphQuery implements Query<Optional<ExtensionGraphDto>> {
+public class ExtensionPlayerGraphQuery implements Query<Optional<ExtensionGraphDto>> {
 
     private final ServerUUID serverUUID;
+    private final UUID playerUUID;
     @Untrusted
     private final String graphTableName;
 
-    public ExtensionServerGraphQuery(ServerUUID serverUUID, @Untrusted String graphTableName) {
+    public ExtensionPlayerGraphQuery(ServerUUID serverUUID, UUID playerUUID, @Untrusted String graphTableName) {
         this.serverUUID = serverUUID;
+        this.playerUUID = playerUUID;
         this.graphTableName = graphTableName;
     }
 
     @Override
     public Optional<ExtensionGraphDto> executeQuery(SQLDB db) {
-        Optional<ExtensionGraphDto> metadata = db.query(ExtensionGraphQueries.getGraphMetadata(graphTableName, ExtensionGraphMetadataTable.TableType.SERVER, serverUUID));
+        Optional<ExtensionGraphDto> metadata = db.query(ExtensionGraphQueries.getGraphMetadata(graphTableName, ExtensionGraphMetadataTable.TableType.PLAYER, serverUUID));
         if (metadata.isEmpty()) {
             return Optional.empty();
         }
@@ -80,8 +83,8 @@ public class ExtensionServerGraphQuery implements Query<Optional<ExtensionGraphD
 
     private void addValues(SQLDB db, ExtensionGraphDto extensionGraphDto) {
         extensionGraphDto.getDataPoints().addAll(db.queryList(ExtensionGraphMetadataTable.selectFromGraphTableSql(
-                        extensionGraphDto.getGraphTableName(), ExtensionGraphMetadataTable.TableType.SERVER),
-                row -> extractDataPoint(row, extensionGraphDto), serverUUID));
+                        extensionGraphDto.getGraphTableName(), ExtensionGraphMetadataTable.TableType.PLAYER),
+                row -> extractDataPoint(row, extensionGraphDto), serverUUID, playerUUID));
     }
 
     private Number[] extractDataPoint(ResultSet row, ExtensionGraphDto extensionGraphDto) throws SQLException {

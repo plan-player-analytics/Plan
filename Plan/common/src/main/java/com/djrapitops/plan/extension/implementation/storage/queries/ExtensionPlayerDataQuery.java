@@ -23,6 +23,7 @@ import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.extension.implementation.results.*;
+import com.djrapitops.plan.extension.implementation.storage.queries.graph.ExtensionGraphQueries;
 import com.djrapitops.plan.extension.implementation.storage.queries.table.ExtensionPlayerTablesQuery;
 import com.djrapitops.plan.extension.implementation.storage.queries.table.QueriedTables;
 import com.djrapitops.plan.identification.ServerUUID;
@@ -33,6 +34,7 @@ import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionIconTa
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPlayerValueTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionProviderTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionTabTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.graph.ExtensionGraphMetadataTable;
 import com.djrapitops.plan.utilities.java.Lists;
 
 import java.sql.PreparedStatement;
@@ -70,6 +72,7 @@ public class ExtensionPlayerDataQuery implements Query<Map<ServerUUID, List<Exte
 
         combine(extensionDataByPluginID, db.query(new ExtensionPlayerTablesQuery(playerUUID)));
         combine(extensionDataByPluginID, db.query(new ExtensionPlayerGroupsQuery(playerUUID)));
+        combine(extensionDataByPluginID, db.query(ExtensionGraphQueries.findGraphTableNames(playerUUID, ExtensionGraphMetadataTable.TableType.PLAYER)));
 
         return flatMapByServerUUID(extensionsByServerUUID, extensionDataByPluginID);
     }

@@ -16,9 +16,11 @@
  */
 package com.djrapitops.plan.storage.database.transactions.commands;
 
+import com.djrapitops.plan.extension.implementation.storage.queries.graph.ExtensionGraphQueries;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.sql.tables.extension.*;
+import com.djrapitops.plan.storage.database.sql.tables.extension.graph.ExtensionGraphMetadataTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 
@@ -67,8 +69,11 @@ public class RemoveServerTransaction extends ThrowawayTransaction {
                 FROM + ExtensionPluginTable.TABLE_NAME + " p" +
                 WHERE + ExtensionPluginTable.SERVER_UUID + "=?" + lockForUpdate();
 
-        // Provider values
         String in = " IN (";
+        // Graphs
+        query(ExtensionGraphQueries.findGraphTableNames(serverUUID)).forEach(this::dropTable);
+        executeServerRemoval(DELETE_FROM + ExtensionGraphMetadataTable.TABLE_NAME + WHERE + ExtensionGraphMetadataTable.PROVIDER_ID + in + selectProviderIdsOfServer + ')');
+        // Provider values
         executeServerRemoval(DELETE_FROM + ExtensionGroupsTable.TABLE_NAME + WHERE + ExtensionGroupsTable.PROVIDER_ID + in + selectProviderIdsOfServer + ')');
         executeServerRemoval(DELETE_FROM + ExtensionServerValueTable.TABLE_NAME + WHERE + ExtensionServerValueTable.PROVIDER_ID + in + selectProviderIdsOfServer + ')');
         executeServerRemoval(DELETE_FROM + ExtensionPlayerValueTable.TABLE_NAME + WHERE + ExtensionPlayerValueTable.PROVIDER_ID + in + selectProviderIdsOfServer + ')');
@@ -81,6 +86,10 @@ public class RemoveServerTransaction extends ThrowawayTransaction {
         executeServerRemoval(DELETE_FROM + ExtensionTabTable.TABLE_NAME + WHERE + ExtensionTabTable.PLUGIN_ID + in + selectPluginIdOfServer + ')');
         // Plugins
         executeServerRemoval(DELETE_FROM + ExtensionPluginTable.TABLE_NAME + WHERE + ExtensionPluginTable.SERVER_UUID + "=?");
+    }
+
+    protected void dropTable(String name) {
+        execute("DROP TABLE IF EXISTS " + name);
     }
 
     private void executeServerRemoval(String sql) {
