@@ -23,6 +23,7 @@ import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
 import com.djrapitops.plan.delivery.webserver.http.WebServer;
 import com.djrapitops.plan.delivery.webserver.resolver.json.metadata.*;
+import com.djrapitops.plan.delivery.webserver.resolver.json.plugins.ExtensionGraphJSONResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.json.plugins.ExtensionJSONResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.json.plugins.PluginHistoryJSONResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.json.query.DataPointJSONResolver;
@@ -93,6 +94,7 @@ public class RootJSONResolver {
             WhoAmIJSONResolver whoAmIJSONResolver,
             ServerIdentityJSONResolver serverIdentityJSONResolver,
             ExtensionJSONResolver extensionJSONResolver,
+            ExtensionGraphJSONResolver extensionGraphJSONResolver,
             RetentionJSONResolver retentionJSONResolver,
             PlayerJoinAddressJSONResolver playerJoinAddressJSONResolver,
             PluginHistoryJSONResolver pluginHistoryJSONResolver,
@@ -143,6 +145,7 @@ public class RootJSONResolver {
                 .add("serverIdentity", serverIdentityJSONResolver)
                 .add("whoami", whoAmIJSONResolver)
                 .add("extensionData", extensionJSONResolver)
+                .add("extensionGraph", extensionGraphJSONResolver)
                 .add("retention", retentionJSONResolver)
                 .add("joinAddresses", playerJoinAddressJSONResolver)
                 .add("preferences", preferencesJSONResolver)

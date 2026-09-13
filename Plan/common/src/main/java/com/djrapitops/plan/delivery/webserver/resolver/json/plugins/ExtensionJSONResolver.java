@@ -43,6 +43,7 @@ import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.GET;
+import jakarta.ws.rs.Path;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -52,9 +53,12 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
+ * Extension data from /v1/extensionData for server/network.
+ *
  * @author AuroraLS3
  */
 @Singleton
+@Path("/v1/extensionData")
 public class ExtensionJSONResolver extends JSONResolver {
 
     private final DBSystem dbSystem;

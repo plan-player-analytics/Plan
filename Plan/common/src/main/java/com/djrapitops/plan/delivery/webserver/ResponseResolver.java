@@ -24,6 +24,7 @@ import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.exception.MethodNotAllowedException;
+import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.auth.FailReason;
@@ -36,6 +37,7 @@ import com.djrapitops.plan.delivery.webserver.resolver.swagger.SwaggerJsonResolv
 import com.djrapitops.plan.delivery.webserver.resolver.swagger.SwaggerPageResolver;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
 import com.djrapitops.plan.utilities.dev.Untrusted;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import dagger.Lazy;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -211,6 +213,9 @@ public class ResponseResolver {
             return CompletableFuture.completedFuture(responseFactory.badRequest(
                     badRequest.getMessage(), request.getPath().asString()));
         }
+        if (exception instanceof NotFoundException notFound) {
+            return CompletableFuture.completedFuture(responseFactory.notFound404(notFound.getMessage()));
+        }
         if (exception instanceof MethodNotAllowedException notAllowed) {
             return CompletableFuture.completedFuture(responseFactory.methodNotAllowed405(
                     notAllowed.getMessage(), notAllowed.getAllowedMethods()));
@@ -218,6 +223,11 @@ public class ResponseResolver {
         if (exception instanceof WebUserAuthException authException) {
             return CompletableFuture.failedFuture(authException); // Pass along
         }
+        errorLogger.error(exception, ErrorContext.builder()
+                .logErrorMessage()
+                .related(request.getPath())
+                .related(request.getQuery().asString())
+                .build());
         return CompletableFuture.completedFuture(responseFactory.internalErrorResponse(
                 exception, "Failed to get a response"));
     }

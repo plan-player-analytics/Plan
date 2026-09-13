@@ -52,10 +52,11 @@ public class ExtensionServerGraphQuery implements Query<Optional<ExtensionGraphD
             return Optional.empty();
         }
         // Optional being found means that the table name should exist and is no longer an SQL injection risk.
-        addLabels(db, metadata.get());
-        addUnits(db, metadata.get());
-        addFormats(db, metadata.get());
-        addValues(db, metadata.get());
+        ExtensionGraphDto found = metadata.get();
+        addLabels(db, found);
+        addUnits(db, found);
+        addFormats(db, found);
+        addValues(db, found);
 
         return metadata;
     }

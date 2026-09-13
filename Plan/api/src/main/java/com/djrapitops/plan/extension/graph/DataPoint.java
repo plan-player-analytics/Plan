@@ -20,6 +20,7 @@ import com.djrapitops.plan.extension.annotation.GraphProvider;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Represents series of values at point x.
@@ -41,13 +42,13 @@ public class DataPoint {
     private final long x;
     private final List<Double> values;
 
-    public DataPoint(long x, Double... values) {
+    public DataPoint(long x, Number... values) {
         this(x, Arrays.asList(values));
     }
 
-    public DataPoint(long x, List<Double> values) {
+    public DataPoint(long x, List<Number> values) {
         this.x = x;
-        this.values = values;
+        this.values = values.stream().map(Number::doubleValue).collect(Collectors.toList());
     }
 
     public long getX() {

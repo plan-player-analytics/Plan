@@ -59,7 +59,6 @@ public class ExtensionGraphDto {
         this.yAxisSoftMin = yAxisSoftMin;
         this.yAxisSoftMax = yAxisSoftMax;
         this.columnCount = columnCount;
-        this.tabInformation = tabInformation;
         this.supportsStacking = supportsStacking;
     }
 

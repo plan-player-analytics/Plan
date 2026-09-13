@@ -28,6 +28,7 @@ import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.storage.database.queries.ExtensionsDatabaseTest;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPluginTable;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
@@ -64,6 +65,8 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
+import static com.djrapitops.plan.storage.database.sql.building.Sql.SET;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.UPDATE;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -86,33 +89,38 @@ class AccessControlTest {
                 Arguments.of("/", WebPermission.ACCESS, 302, 403),
                 Arguments.of("/pageExtensionApi.js", WebPermission.ACCESS, 200, 200),
                 Arguments.of("/server", WebPermission.ACCESS_SERVER, 302, 403),
-                Arguments.of("/server/" + TestConstants.SERVER_UUID_STRING + "", WebPermission.ACCESS_SERVER, 200, 403),
-                Arguments.of("/v1/serverOverview?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_OVERVIEW_NUMBERS, 200, 403),
-                Arguments.of("/v1/onlineOverview?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_OVERVIEW, 200, 403),
-                Arguments.of("/v1/onlineInsights?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_OVERVIEW, 200, 403),
-                Arguments.of("/v1/sessionsOverview?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_SESSIONS, 200, 403),
-                Arguments.of("/v1/playerVersus?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_PLAYER_VERSUS, 200, 403),
-                Arguments.of("/v1/playerbaseOverview?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_PLAYERBASE_OVERVIEW, 200, 403),
-                Arguments.of("/v1/performanceOverview?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_PERFORMANCE_OVERVIEW, 200, 403),
-                Arguments.of("/v1/graph?type=optimizedPerformance&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS, 200, 403),
-                Arguments.of("/v1/graph?type=aggregatedPing&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS, 200, 403),
-                Arguments.of("/v1/graph?type=worldPie&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_SESSIONS_WORLD_PIE, 200, 403),
-                Arguments.of("/v1/graph?type=activity&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_PLAYERBASE_GRAPHS, 200, 403),
-                Arguments.of("/v1/graph?type=geolocation&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_GEOLOCATIONS_MAP, 200, 403),
-                Arguments.of("/v1/graph?type=uniqueAndNew&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_DAY_BY_DAY, 200, 403),
-                Arguments.of("/v1/graph?type=hourlyUniqueAndNew&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_HOUR_BY_HOUR, 200, 403),
-                Arguments.of("/v1/graph?type=serverCalendar&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_CALENDAR, 200, 403),
-                Arguments.of("/v1/graph?type=punchCard&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_PUNCHCARD, 200, 403),
-                Arguments.of("/v1/graph?type=joinAddressByDay&server=" + TestConstants.SERVER_UUID_STRING + "&after=0&before=" + 123456L + "", WebPermission.PAGE_SERVER_JOIN_ADDRESSES_GRAPHS_TIME, 200, 403),
-                Arguments.of("/v1/players?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_PLAYERS, 200, 403),
-                Arguments.of("/v1/kills?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_PLAYER_VERSUS_KILL_LIST, 200, 403),
-                Arguments.of("/v1/pingTable?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_GEOLOCATIONS_PING_PER_COUNTRY, 200, 403),
-                Arguments.of("/v1/sessions?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_SESSIONS_LIST, 200, 403),
-                Arguments.of("/v1/sessions?player=" + TestConstants.PLAYER_ONE_UUID_STRING + "", WebPermission.PAGE_PLAYER_SESSIONS, 200, 403),
-                Arguments.of("/v1/retention?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_RETENTION, 200, 403),
+                Arguments.of("/server/" + TestConstants.SERVER_UUID_STRING, WebPermission.ACCESS_SERVER, 200, 403),
+                Arguments.of("/v1/serverOverview?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_OVERVIEW_NUMBERS, 200, 403),
+                Arguments.of("/v1/onlineOverview?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_OVERVIEW, 200, 403),
+                Arguments.of("/v1/onlineInsights?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_OVERVIEW, 200, 403),
+                Arguments.of("/v1/sessionsOverview?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_SESSIONS, 200, 403),
+                Arguments.of("/v1/playerVersus?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_PLAYER_VERSUS, 200, 403),
+                Arguments.of("/v1/playerbaseOverview?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_PLAYERBASE_OVERVIEW, 200, 403),
+                Arguments.of("/v1/performanceOverview?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_PERFORMANCE_OVERVIEW, 200, 403),
+                Arguments.of("/v1/graph?type=optimizedPerformance&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS, 200, 403),
+                Arguments.of("/v1/graph?type=aggregatedPing&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_PERFORMANCE_GRAPHS, 200, 403),
+                Arguments.of("/v1/graph?type=worldPie&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_SESSIONS_WORLD_PIE, 200, 403),
+                Arguments.of("/v1/graph?type=activity&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_PLAYERBASE_GRAPHS, 200, 403),
+                Arguments.of("/v1/graph?type=geolocation&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_GEOLOCATIONS_MAP, 200, 403),
+                Arguments.of("/v1/graph?type=uniqueAndNew&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_DAY_BY_DAY, 200, 403),
+                Arguments.of("/v1/graph?type=hourlyUniqueAndNew&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_HOUR_BY_HOUR, 200, 403),
+                Arguments.of("/v1/graph?type=serverCalendar&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_CALENDAR, 200, 403),
+                Arguments.of("/v1/graph?type=punchCard&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_ONLINE_ACTIVITY_GRAPHS_PUNCHCARD, 200, 403),
+                Arguments.of("/v1/graph?type=joinAddressByDay&server=" + TestConstants.SERVER_UUID_STRING + "&after=0&before=" + 123456L, WebPermission.PAGE_SERVER_JOIN_ADDRESSES_GRAPHS_TIME, 200, 403),
+                Arguments.of("/v1/extensionData?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_PLUGINS, 200, 403),
+                Arguments.of("/v1/extensionData?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_NETWORK_PLUGINS, 200, 403),
+                Arguments.of("/v1/extensionGraph?graph=plan_extension_graph_graphextension_test&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_NETWORK_PLUGINS, 200, 403),
+                Arguments.of("/v1/extensionGraph?graph=plan_extension_graph_graphextension_test&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_PLUGINS, 200, 403),
+                Arguments.of("/v1/extensionGraph?graph=plan_extension_graph_graphextension_testplayer&server=" + TestConstants.SERVER_UUID_STRING + "&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.PAGE_PLAYER_PLUGINS, 200, 403),
+                Arguments.of("/v1/players?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_PLAYERS, 200, 403),
+                Arguments.of("/v1/kills?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_PLAYER_VERSUS_KILL_LIST, 200, 403),
+                Arguments.of("/v1/pingTable?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_GEOLOCATIONS_PING_PER_COUNTRY, 200, 403),
+                Arguments.of("/v1/sessions?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_SESSIONS_LIST, 200, 403),
+                Arguments.of("/v1/sessions?player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.PAGE_PLAYER_SESSIONS, 200, 403),
+                Arguments.of("/v1/retention?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_RETENTION, 200, 403),
                 Arguments.of("/v1/joinAddresses", WebPermission.PAGE_NETWORK_RETENTION, 200, 403),
                 Arguments.of("/v1/joinAddresses?listOnly=true", WebPermission.PAGE_NETWORK_JOIN_ADDRESSES_GRAPHS_TIME, 200, 403),
-                Arguments.of("/v1/joinAddresses?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_RETENTION, 200, 403),
+                Arguments.of("/v1/joinAddresses?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_RETENTION, 200, 403),
                 Arguments.of("/v1/joinAddresses?server=" + TestConstants.SERVER_UUID_STRING + "&listOnly=true", WebPermission.PAGE_SERVER_JOIN_ADDRESSES_GRAPHS_TIME, 200, 403),
                 Arguments.of("/network", WebPermission.ACCESS_NETWORK, 302, 403),
                 Arguments.of("/v1/network/overview", WebPermission.PAGE_NETWORK_OVERVIEW_NUMBERS, 200, 403),
@@ -120,7 +128,7 @@ class AccessControlTest {
                 Arguments.of("/v1/network/sessionsOverview", WebPermission.PAGE_NETWORK_SESSIONS_OVERVIEW, 200, 403),
                 Arguments.of("/v1/network/playerbaseOverview", WebPermission.PAGE_NETWORK_PLAYERBASE_OVERVIEW, 200, 403),
                 Arguments.of("/v1/sessions", WebPermission.PAGE_NETWORK_SESSIONS_LIST, 200, 403),
-                Arguments.of("/v1/graph?type=playersOnline&server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.PAGE_SERVER_OVERVIEW_PLAYERS_ONLINE_GRAPH, 200, 403),
+                Arguments.of("/v1/graph?type=playersOnline&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.PAGE_SERVER_OVERVIEW_PLAYERS_ONLINE_GRAPH, 200, 403),
                 Arguments.of("/v1/graph?type=uniqueAndNew", WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_DAY_BY_DAY, 200, 403),
                 Arguments.of("/v1/graph?type=hourlyUniqueAndNew", WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_HOUR_BY_HOUR, 200, 403),
                 Arguments.of("/v1/graph?type=serverCalendar", WebPermission.PAGE_NETWORK_OVERVIEW_GRAPHS_CALENDAR, 200, 403),
@@ -128,12 +136,12 @@ class AccessControlTest {
                 Arguments.of("/v1/graph?type=activity", WebPermission.PAGE_NETWORK_PLAYERBASE_GRAPHS, 200, 403),
                 Arguments.of("/v1/graph?type=geolocation", WebPermission.PAGE_NETWORK_GEOLOCATIONS_MAP, 200, 403),
                 Arguments.of("/v1/network/pingTable", WebPermission.PAGE_NETWORK_GEOLOCATIONS_PING_PER_COUNTRY, 200, 403),
-                Arguments.of("/player/" + TestConstants.PLAYER_ONE_NAME + "", WebPermission.ACCESS_PLAYER, 200, 403),
-                Arguments.of("/player/" + TestConstants.PLAYER_TWO_NAME + "", WebPermission.ACCESS_PLAYER, 404, 403),
-                Arguments.of("/player/" + TestConstants.PLAYER_ONE_UUID_STRING + "", WebPermission.ACCESS_PLAYER, 200, 403),
-                Arguments.of("/player/" + TestConstants.PLAYER_TWO_UUID_STRING + "", WebPermission.ACCESS_PLAYER, 404, 403),
-                Arguments.of("/v1/player?player=" + TestConstants.PLAYER_ONE_NAME + "", WebPermission.ACCESS_PLAYER, 200, 403),
-                Arguments.of("/v1/player?player=" + TestConstants.PLAYER_TWO_NAME + "", WebPermission.ACCESS_PLAYER, 400, 403),
+                Arguments.of("/player/" + TestConstants.PLAYER_ONE_NAME, WebPermission.ACCESS_PLAYER, 200, 403),
+                Arguments.of("/player/" + TestConstants.PLAYER_TWO_NAME, WebPermission.ACCESS_PLAYER, 404, 403),
+                Arguments.of("/player/" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.ACCESS_PLAYER, 200, 403),
+                Arguments.of("/player/" + TestConstants.PLAYER_TWO_UUID_STRING, WebPermission.ACCESS_PLAYER, 404, 403),
+                Arguments.of("/v1/player?player=" + TestConstants.PLAYER_ONE_NAME, WebPermission.ACCESS_PLAYER, 200, 403),
+                Arguments.of("/v1/player?player=" + TestConstants.PLAYER_TWO_NAME, WebPermission.ACCESS_PLAYER, 400, 403),
                 Arguments.of("/players", WebPermission.ACCESS_PLAYERS, 200, 403),
                 Arguments.of("/v1/players", WebPermission.ACCESS_PLAYERS, 200, 403),
                 Arguments.of("/query", WebPermission.ACCESS_QUERY, 200, 403),
@@ -153,7 +161,7 @@ class AccessControlTest {
                 Arguments.of("/v1/whoami", WebPermission.ACCESS, 200, 200),
                 Arguments.of("/v1/metadata", WebPermission.ACCESS, 200, 200),
                 Arguments.of("/v1/networkMetadata", WebPermission.ACCESS, 200, 200),
-                Arguments.of("/v1/serverIdentity?server=" + TestConstants.SERVER_UUID_STRING + "", WebPermission.ACCESS_SERVER, 200, 403),
+                Arguments.of("/v1/serverIdentity?server=" + TestConstants.SERVER_UUID_STRING, WebPermission.ACCESS_SERVER, 200, 403),
                 Arguments.of("/v1/locale", WebPermission.ACCESS, 200, 200),
                 Arguments.of("/v1/locale/EN", WebPermission.ACCESS, 200, 200),
                 Arguments.of("/v1/locale/NonexistingLanguage", WebPermission.ACCESS, 404, 404),
@@ -347,6 +355,16 @@ class AccessControlTest {
 
         User userNoAccess = new User("test0", "console", null, PassEncryptUtil.createHash("testPass"), "no_access", Collections.emptyList());
 
+        storeData(userNoAccess);
+
+        assertTrue(system.getWebServerSystem().getWebServer().isUsingHTTPS());
+        assertTrue(system.getWebServerSystem().getWebServer().isAuthRequired());
+
+        address = "https://localhost:" + TEST_PORT_NUMBER;
+        cookieNoAccess = login(address, userNoAccess.getUsername());
+    }
+
+    private static void storeData(User userNoAccess) {
         Database database = system.getDatabaseSystem().getDatabase();
         database.executeTransaction(new StoreWebUserTransaction(userNoAccess));
 
@@ -363,13 +381,11 @@ class AccessControlTest {
 
         Caller caller = system.getApiServices().getExtensionService().register(new ExtensionsDatabaseTest.PlayerExtension())
                 .orElseThrow(AssertionError::new);
+        system.getApiServices().getExtensionService().register(new ExtensionsDatabaseTest.GraphExtension());
+        // System server uuid differs from test data uuid
+        database.executeInTransaction(UPDATE + ExtensionPluginTable.TABLE_NAME + SET +
+                ExtensionPluginTable.SERVER_UUID + "='" + TestConstants.SERVER_UUID_STRING + "'");
         caller.updatePlayerData(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME);
-
-        assertTrue(system.getWebServerSystem().getWebServer().isUsingHTTPS());
-        assertTrue(system.getWebServerSystem().getWebServer().isAuthRequired());
-
-        address = "https://localhost:" + TEST_PORT_NUMBER;
-        cookieNoAccess = login(address, userNoAccess.getUsername());
     }
 
     @AfterAll

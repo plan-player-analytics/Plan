@@ -18,12 +18,13 @@ package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.component.Component;
 import com.djrapitops.plan.component.ComponentService;
-import com.djrapitops.plan.extension.CallEvents;
-import com.djrapitops.plan.extension.DataExtension;
-import com.djrapitops.plan.extension.ExtensionSvc;
-import com.djrapitops.plan.extension.NotReadyException;
+import com.djrapitops.plan.extension.*;
 import com.djrapitops.plan.extension.annotation.*;
 import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
+import com.djrapitops.plan.extension.graph.DataPoint;
+import com.djrapitops.plan.extension.graph.PlayerGraphDataSource;
+import com.djrapitops.plan.extension.graph.SeriesMetadata;
+import com.djrapitops.plan.extension.graph.ServerGraphDataSource;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
@@ -52,10 +53,7 @@ import utilities.RandomData;
 import utilities.TestConstants;
 import utilities.TestErrorLogger;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -648,6 +646,39 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         @ComponentProvider(text = "colored text")
         public Component componentVal(UUID playerUUID) {
             return ComponentService.getInstance().fromLegacy("&aTest", '&');
+        }
+    }
+
+    @PluginInfo(name = "GraphExtension")
+    class GraphExtension implements DataExtension {
+        @GraphProvider(displayName = "test")
+        public ServerGraphDataSource test() {
+            return new ServerGraphDataSource() {
+                @Override
+                public Optional<DataPoint> getPoint(long currentTimestamp) {
+                    return Optional.of(new DataPoint(System.currentTimeMillis(), 1));
+                }
+
+                @Override
+                public List<SeriesMetadata> getSeriesMetadata() {
+                    return List.of(new SeriesMetadata("value", "", FormatType.NONE, "#222"));
+                }
+            };
+        }
+
+        @GraphProvider(displayName = "test")
+        public PlayerGraphDataSource testPlayer() {
+            return new PlayerGraphDataSource() {
+                @Override
+                public Optional<DataPoint> getPoint(long currentTimestamp, UUID playerUUID, String playerName) {
+                    return Optional.of(new DataPoint(System.currentTimeMillis(), 1));
+                }
+
+                @Override
+                public List<SeriesMetadata> getSeriesMetadata() {
+                    return List.of(new SeriesMetadata("value", "", FormatType.NONE, "#222"));
+                }
+            };
         }
     }
 

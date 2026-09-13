@@ -27,6 +27,8 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
+import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
+import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPluginTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionProviderTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionTabTable;
@@ -34,6 +36,7 @@ import com.djrapitops.plan.storage.database.sql.tables.extension.graph.Extension
 import com.djrapitops.plan.storage.database.sql.tables.extension.graph.ExtensionGraphLabelTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.graph.ExtensionGraphMetadataTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.graph.ExtensionGraphUnitTable;
+import com.djrapitops.plan.utilities.dev.Untrusted;
 import org.intellij.lang.annotations.Language;
 
 import java.sql.PreparedStatement;
@@ -85,7 +88,7 @@ public class ExtensionGraphQueries {
     }
 
     public static Query<Optional<ExtensionGraphDto>> getGraphMetadata(String graphTableName, ExtensionGraphMetadataTable.TableType tableType, ServerUUID serverUUID) {
-        String sql = SELECT + "m.*, t.*" +
+        String sql = SELECT + "*" +
                 FROM + ExtensionGraphMetadataTable.TABLE_NAME + " m " +
                 INNER_JOIN + ExtensionProviderTable.TABLE_NAME + " p ON p.id=m." + ExtensionGraphMetadataTable.PROVIDER_ID +
                 INNER_JOIN + ExtensionPluginTable.TABLE_NAME + " pl ON pl.id=p." + ExtensionProviderTable.PLUGIN_ID +
@@ -183,8 +186,8 @@ public class ExtensionGraphQueries {
 
     public static Query<Map<Integer, ExtensionData.Builder>> findGraphTableNames(ServerUUID serverUUID, ExtensionGraphMetadataTable.TableType tableType) {
         String sql = SELECT +
-                ExtensionProviderTable.PLUGIN_ID + ',' +
-                ExtensionTabTable.TAB_NAME + " as tab_name," +
+                "p." + ExtensionProviderTable.PLUGIN_ID + ',' +
+                "t." + ExtensionTabTable.TAB_NAME + " as tab_name," +
                 ExtensionGraphMetadataTable.GRAPH_TABLE_NAME +
                 FROM + ExtensionGraphMetadataTable.TABLE_NAME + " g" +
                 JOIN + ExtensionProviderTable.TABLE_NAME + " p ON p.id=g." + ExtensionGraphMetadataTable.PROVIDER_ID +
@@ -215,8 +218,8 @@ public class ExtensionGraphQueries {
 
     public static Query<Map<Integer, ExtensionData.Builder>> findGraphTableNames(UUID playerUUID, ExtensionGraphMetadataTable.TableType tableType) {
         String sql = SELECT +
-                ExtensionProviderTable.PLUGIN_ID + ',' +
-                ExtensionTabTable.TAB_NAME + " as tab_name," +
+                "p." + ExtensionProviderTable.PLUGIN_ID + ',' +
+                "t." + ExtensionTabTable.TAB_NAME + " as tab_name," +
                 ExtensionGraphMetadataTable.GRAPH_TABLE_NAME +
                 FROM + ExtensionGraphMetadataTable.TABLE_NAME + " g" +
                 JOIN + ExtensionProviderTable.TABLE_NAME + " p ON p.id=g." + ExtensionGraphMetadataTable.PROVIDER_ID +
@@ -241,5 +244,26 @@ public class ExtensionGraphQueries {
                 return queriedTabData.toExtensionDataByPluginID();
             }
         };
+    }
+
+    public static Query<Optional<String>> findGraphTableName(@Untrusted String graph) {
+        String sql = SELECT + ExtensionGraphMetadataTable.GRAPH_TABLE_NAME +
+                FROM + ExtensionGraphMetadataTable.TABLE_NAME +
+                WHERE + ExtensionGraphMetadataTable.GRAPH_TABLE_NAME + "=?";
+        return db -> db.queryOptional(sql, row -> row.getString(ExtensionGraphMetadataTable.GRAPH_TABLE_NAME), graph);
+    }
+
+    public static Query<Optional<Long>> findLastModified(ServerUUID serverUUID, UUID playerUUID, String graph) {
+        String sql = SELECT + "MAX(x) as max" +
+                FROM + graph +
+                WHERE + "server_id=" + ServerTable.SELECT_SERVER_ID + AND + "user_id=" + UsersTable.SELECT_USER_ID;
+        return db -> db.queryOptional(sql, row -> row.getLong(1), serverUUID, playerUUID);
+    }
+
+    public static Query<Optional<Long>> findLastModified(ServerUUID serverUUID, String graph) {
+        String sql = SELECT + "MAX(x) as max" +
+                FROM + graph +
+                WHERE + "server_id=" + ServerTable.SELECT_SERVER_ID;
+        return db -> db.queryOptional(sql, row -> row.getLong(1), serverUUID);
     }
 }

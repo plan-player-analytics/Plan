@@ -80,8 +80,8 @@ public class GraphSamplers {
         var byReturnType = graphPointProviders.stream()
                 .collect(Collectors.groupingBy(ExtensionMethod::getReturnType));
         // TODO History data storage
-        registerServerProvidersAndSamplers(extension, byReturnType.get(ServerGraphSampler.class));
-        registerPlayerProviders(extension, byReturnType.get(PlayerGraphSampler.class));
+        registerServerProvidersAndSamplers(extension, byReturnType.get(ServerGraphDataSource.class));
+        registerPlayerProviders(extension, byReturnType.get(PlayerGraphDataSource.class));
     }
 
     private void registerPlayerProviders(ExtensionWrapper extension, List<ExtensionMethod> graphPointProviders) {
