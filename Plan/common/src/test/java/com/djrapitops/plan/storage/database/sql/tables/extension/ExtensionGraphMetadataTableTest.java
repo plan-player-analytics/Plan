@@ -26,6 +26,8 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.DOUBLE;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
+ * Tests for ExtensionMetadataTable column count expansion genrators.
+ *
  * @author AuroraLS3
  */
 class ExtensionGraphMetadataTableTest {
@@ -52,7 +54,7 @@ class ExtensionGraphMetadataTableTest {
     })
     void alterTableGenerationValueNSanityTest(int existingColumnCount, int newColumnCount, int expectedAddition) {
         List<String> result = ExtensionGraphMetadataTable.addColumnsStatements("test", "test", existingColumnCount, newColumnCount);
-        List<String> expected = List.of("ALTER TABLE plan_extension_test_test ADD COLUMN value_" + expectedAddition + " " + DOUBLE);
+        List<String> expected = List.of("ALTER TABLE plan_extension_graph_test_test ADD COLUMN value_" + expectedAddition + " " + DOUBLE);
         assertEquals(expected, result);
     }
 
