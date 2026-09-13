@@ -36,6 +36,7 @@ import com.djrapitops.plan.storage.database.transactions.StoreServerInformationT
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.*;
+import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.storage.database.transactions.patches.WebGroupDefaultGroupsPatch;
 import com.djrapitops.plan.storage.database.transactions.webuser.StoreWebGroupTransaction;
 import com.djrapitops.plan.storage.database.transactions.webuser.StoreWebUserPreferencesTransaction;
@@ -266,6 +267,9 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
             expected.put(WebPermissionTable.TABLE_NAME, beforeBackupTo.get(WebPermissionTable.TABLE_NAME));
             expected.put(WebGroupToPermissionTable.TABLE_NAME, beforeBackupTo.get(WebGroupToPermissionTable.TABLE_NAME));
             expected.put(RegistrationTable.TABLE_NAME, 0);
+            // Insert any missed tables as 0
+            Arrays.stream(CreateTablesTransaction.tableNames())
+                    .forEach(tableName -> expected.putIfAbsent(tableName, 0));
             Map<String, Integer> result = backup.query(LookupTableQueries.tableCounts());
             assertEquals(expected, result);
 

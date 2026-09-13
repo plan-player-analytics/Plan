@@ -119,7 +119,9 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
 
         tableCounts = fromDB.query(LookupTableQueries.tableCounts());
         feedback.accept(locale.getString(CommandLang.DB_COPY_LIST_TITLE_SOURCE));
-        tableCounts.forEach((key, value) -> feedback.accept(locale.getString(CommandLang.DB_COPY_LIST_ROW, key, value)));
+        tableCounts.entrySet().stream()
+                .filter(e -> !e.getKey().contains("extension"))
+                .forEach(e -> feedback.accept(locale.getString(CommandLang.DB_COPY_LIST_ROW, e.getKey(), e.getValue())));
 
         if (strategies.contains(Strategy.CLEAR_DESTINATION_DATABASE)) {
             feedback.accept(locale.getString(CommandLang.DB_COPY_CLEAR_START));
