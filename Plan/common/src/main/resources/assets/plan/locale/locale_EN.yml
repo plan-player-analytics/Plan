@@ -4,6 +4,12 @@ command:
         backupFile:
             description: "Name of the backup file (case sensitive)"
             name: "backup-file"
+        afterDate:
+            description: "First registration date to remove, formatted yyyy-MM-dd"
+            name: "after-date"
+        beforeDate:
+            description: "Last registration date to remove, formatted yyyy-MM-dd"
+            name: "before-date"
         code:
             description: "Code used to finalize registration."
             name: "${code}"
@@ -51,6 +57,7 @@ command:
         dbMerge: "You are about to merge data in ${0} to data in ${1}"
         dbOverwrite: "You are about to overwrite data in Plan ${0} with data in ${1}"
         dbRemovePlayer: "You are about to remove data of ${0} from ${1}"
+        dbRemovePlayersBetween: "You are about to remove players registered from ${0} through ${1} from ${2}"
         deny: "Cancel"
         expired: "Confirmation expired, use the command again"
         unregister: "You are about to unregister '${0}' linked to ${1}"
@@ -97,6 +104,8 @@ command:
             start: "> §2Processing data.."
             success: "> §aSuccess!"
         playerRemoval: "Removing data of ${0} from ${1}.."
+        playersRemoval: "Removing players in the selected registration date range from ${0}.."
+        playersRemovalSuccess: "> §aRemoved ${0} players."
         removal: "Removing Plan-data from ${0}.."
         serverUninstalled: "§aIf the server is still installed, it will automatically set itself as installed in the database."
         unregister: "Unregistering '${0}'.."
@@ -105,6 +114,8 @@ command:
     fail:
         emptyString: "The search string can not be empty"
         invalidArguments: "Accepts following as ${0}: ${1}"
+        invalidDate: "Date '${0}' is invalid. Use yyyy-MM-dd."
+        invalidDateRange: "Start date ${0} can not be later than end date ${1}."
         invalidUsername: "§cUser does not have an UUID."
         missingArguments: "§cArguments required (${0}) ${1}"
         missingFeature: "§eDefine a feature to disable! (currently supports ${0})"
@@ -169,6 +180,9 @@ command:
         dbRemove:
             description: "Remove player's data from Current database"
             inDepth: "Removes all data linked to a player from the Current database."
+        dbRemoveRegistered:
+            description: "Remove players registered in a date range"
+            inDepth: "Removes all data of players whose first join date is between the two yyyy-MM-dd dates (inclusive)."
         dbRestore:
             description: "Restore data from a file to a database"
             inDepth: "Uses SQLite backup file and overwrites contents of the target database."

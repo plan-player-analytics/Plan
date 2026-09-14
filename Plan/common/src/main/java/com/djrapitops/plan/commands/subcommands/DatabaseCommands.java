@@ -58,6 +58,9 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.time.format.DateTimeParseException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
@@ -410,6 +413,73 @@ public class DatabaseCommands {
         } catch (DBOpException e) {
             sender.send(locale.getString(CommandLang.PROGRESS_FAIL, e.getMessage()));
             errorLogger.error(e, ErrorContext.builder().related(sender, database.getType().getName(), playerToRemove).build());
+        }
+    }
+
+    public void onRemoveRegisteredBetween(CMDSender sender, @Untrusted Arguments arguments) {
+        @Untrusted String afterDate = arguments.get(0)
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ARGS, 2, "<yyyy-MM-dd> <yyyy-MM-dd>")));
+        @Untrusted String beforeDate = arguments.get(1)
+                .orElseThrow(() -> new IllegalArgumentException(locale.getString(CommandLang.FAIL_REQ_ARGS, 2, "<yyyy-MM-dd> <yyyy-MM-dd>")));
+
+        DateRange range = parseDateRange(afterDate, beforeDate, config.getTimeZone().toZoneId());
+        Database database = dbSystem.getDatabase();
+        String prompt = locale.getString(CommandLang.CONFIRM_REMOVE_PLAYERS_BETWEEN_DB,
+                afterDate,
+                beforeDate,
+                database.getType().getName());
+
+        confirmation.confirm(sender, prompt, choice -> {
+            if (Boolean.TRUE.equals(choice)) {
+                performRegisteredBetweenRemoval(sender, database, range);
+            } else {
+                sender.send(colors.getMainColor() + locale.getString(CommandLang.CONFIRM_CANCELLED_DATA));
+            }
+        });
+    }
+
+    private DateRange parseDateRange(String afterDate, String beforeDate, ZoneId zoneId) {
+        try {
+            LocalDate after = LocalDate.parse(afterDate);
+            LocalDate before = LocalDate.parse(beforeDate);
+            if (after.isAfter(before)) {
+                throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_DATE_RANGE, afterDate, beforeDate));
+            }
+            long afterTimestamp = after.atStartOfDay(zoneId).toInstant().toEpochMilli();
+            long beforeTimestamp = before.plusDays(1L).atStartOfDay(zoneId).toInstant().toEpochMilli() - 1L;
+            return new DateRange(afterTimestamp, beforeTimestamp);
+        } catch (DateTimeParseException invalidDate) {
+            throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_DATE_FORMAT, invalidDate.getParsedString()));
+        }
+    }
+
+    private void performRegisteredBetweenRemoval(CMDSender sender, Database database, DateRange range) {
+        try {
+            sender.send(locale.getString(CommandLang.DB_REMOVAL_PLAYERS, database.getType().getName()));
+            RemovePlayersRegisteredBetweenTransaction transaction = new RemovePlayersRegisteredBetweenTransaction(range.after, range.before);
+            database.executeTransaction(transaction).join();
+
+            Set<UUID> removedPlayerUUIDs = transaction.getRemovedPlayerUUIDs();
+            removedPlayerUUIDs.forEach(queryService::playerRemoved);
+            sender.send(locale.getString(CommandLang.DB_REMOVAL_PLAYERS_SUCCESS, removedPlayerUUIDs.size()));
+        } catch (DBOpException e) {
+            sender.send(locale.getString(CommandLang.PROGRESS_FAIL, e.getMessage()));
+            errorLogger.error(e, ErrorContext.builder().related(sender, database.getType().getName(), range).build());
+        }
+    }
+
+    private static class DateRange {
+        private final long after;
+        private final long before;
+
+        private DateRange(long after, long before) {
+            this.after = after;
+            this.before = before;
+        }
+
+        @Override
+        public String toString() {
+            return after + "-" + before;
         }
     }
 
