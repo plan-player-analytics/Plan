@@ -1,6 +1,6 @@
 ![Player Analytics](https://raw.githubusercontent.com/plan-player-analytics/drawio-diagrams-storage/master/image/header/main-header-Plan.jpg)
 
-[![Github Actions](https://github.com/plan-player-analytics/Plan/workflows/CI/badge.svg)](https://github.com/plan-player-analytics/Plan/actions/workflows/ci.yml)
+[![CI](https://github.com/plan-player-analytics/Plan/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/plan-player-analytics/Plan/actions/workflows/ci.yml)
 [![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=alert_status)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)  
 ![Java](https://custom-icon-badges.demolab.com/badge/⮞-red?logo=java-white)
 [![Lines of Code](https://sonarcloud.io/api/project_badges/measure?project=com.djrapitops%3APlan&metric=ncloc)](https://sonarcloud.io/dashboard?id=com.djrapitops%3APlan)
