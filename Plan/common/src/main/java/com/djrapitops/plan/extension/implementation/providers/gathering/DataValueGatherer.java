@@ -26,7 +26,6 @@ import com.djrapitops.plan.extension.builder.DataValue;
 import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
 import com.djrapitops.plan.extension.extractor.ExtensionMethod;
 import com.djrapitops.plan.extension.extractor.ExtensionMethods;
-import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.ExtensionWrapper;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
@@ -190,7 +189,7 @@ public class DataValueGatherer {
         try {
             return dataBuilder.valueBuilder(annotation.text())
                     .methodName(provider)
-                    .icon(annotation.iconName(), annotation.iconFamily(), Color.NONE)
+                    .icon(annotation.iconName(), annotation.iconFamily(), annotation.groupColor())
                     .conditional(provider.getAnnotationOrNull(Conditional.class))
                     .showOnTab(provider.getAnnotationOrNull(Tab.class))
                     .buildGroup(() -> callMethod(provider, parameters, String[].class));
