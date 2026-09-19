@@ -97,6 +97,15 @@ public class BaseUserQueries {
         return db -> db.querySet(sql, RowExtractors.getInt(UsersTable.ID), after, before);
     }
 
+    public static Query<Set<UUID>> playerUUIDsOfRegisteredBetween(long after, long before) {
+        String sql = SELECT + DISTINCT + UsersTable.USER_UUID +
+                FROM + UsersTable.TABLE_NAME +
+                WHERE + UsersTable.REGISTERED + ">=?" +
+                AND + UsersTable.REGISTERED + "<=?";
+
+        return db -> db.querySet(sql, RowExtractors.getUUID(UsersTable.USER_UUID), after, before);
+    }
+
     public static Query<Optional<Long>> minimumRegisterDate() {
         String sql = SELECT + min(UsersTable.REGISTERED) + " as min" +
                 FROM + UsersTable.TABLE_NAME;
