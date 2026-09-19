@@ -80,6 +80,7 @@ public class ExtensionGraphQueries {
     }
 
     public static Query<List<String>> findGraphTableNames(Collection<Integer> providerIds) {
+        if (providerIds.isEmpty()) return db -> List.of();
         @Language("SQL")
         String sql = SELECT + ExtensionGraphMetadataTable.GRAPH_TABLE_NAME +
                 FROM + ExtensionGraphMetadataTable.TABLE_NAME +
