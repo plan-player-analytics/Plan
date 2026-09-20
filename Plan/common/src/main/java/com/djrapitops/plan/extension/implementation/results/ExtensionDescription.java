@@ -71,8 +71,7 @@ public class ExtensionDescription implements Comparable<ExtensionDescription> {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof ExtensionDescription)) return false;
-        ExtensionDescription that = (ExtensionDescription) o;
+        if (!(o instanceof ExtensionDescription that)) return false;
         return priority == that.priority &&
                 name.equals(that.name) &&
                 text.equals(that.text) &&

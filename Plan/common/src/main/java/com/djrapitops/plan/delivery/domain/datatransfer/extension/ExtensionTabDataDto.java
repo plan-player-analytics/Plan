@@ -24,19 +24,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
-// TODO #2544 Add Table names to ExtensionTabDto
 public class ExtensionTabDataDto {
 
     private final TabInformationDto tabInformation; // Can be null in case where no tab was defined for provider.
     private final List<ExtensionValueDataDto> values;
     private final List<ExtensionTableDataDto> tableData;
+    private final List<String> graphNames;
 
     public ExtensionTabDataDto(ExtensionTabData extensionTabData) {
         this.tabInformation = new TabInformationDto(extensionTabData.getTabInformation());
         values = constructValues(extensionTabData.getValueOrder(), extensionTabData);
-        tableData = extensionTabData.getTableData().stream().map(ExtensionTableDataDto::new).collect(Collectors.toList());
+        tableData = extensionTabData.getTableData().stream().map(ExtensionTableDataDto::new).toList();
+        graphNames = extensionTabData.getGraphNames();
     }
 
     public static Optional<ExtensionValueDataDto> mapToValue(ExtensionTabData tabData, String key) {
@@ -78,17 +78,24 @@ public class ExtensionTabDataDto {
         return tableData;
     }
 
+    public List<String> getGraphNames() {
+        return graphNames;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ExtensionTabDataDto that = (ExtensionTabDataDto) o;
-        return Objects.equals(getTabInformation(), that.getTabInformation()) && Objects.equals(getValues(), that.getValues()) && Objects.equals(getTableData(), that.getTableData());
+        return Objects.equals(getTabInformation(), that.getTabInformation())
+                && Objects.equals(getValues(), that.getValues())
+                && Objects.equals(getTableData(), that.getTableData())
+                && Objects.equals(getGraphNames(), that.getGraphNames());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getTabInformation(), getValues(), getTableData());
+        return Objects.hash(getTabInformation(), getValues(), getTableData(), getGraphNames());
     }
 
     @Override
@@ -97,6 +104,7 @@ public class ExtensionTabDataDto {
                 "tabInformation=" + tabInformation +
                 ", values=" + values +
                 ", tableData=" + tableData +
+                ", graphNames=" + graphNames +
                 '}';
     }
 }

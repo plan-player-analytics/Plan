@@ -1,0 +1,20 @@
+.progressBarContainer {
+  margin-top: 1px;
+  margin-bottom: -1px;
+  width: 100%;
+  height: 3px;
+  background: var(--color-graphs-style-scrollbar-bar-background);
+  border-radius: 2px;
+  overflow: hidden;
+  display: flex;
+
+  .positiveBar {
+    height: 100%;
+    background: var(--color-themeText);
+  }
+
+  .negativeBar {
+    height: 100%;
+    background: var(--color-forms-buttons-dangerous-button);
+  }
+}

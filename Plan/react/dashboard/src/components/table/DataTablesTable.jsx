@@ -19,10 +19,20 @@ import {faMinusSquare, faPlusSquare} from "@fortawesome/free-regular-svg-icons";
 import {Trans, useTranslation} from "react-i18next";
 import {download, generateCsv, mkConfig} from "export-to-csv";
 import {classNames} from "../../util/classNames.ts";
+import styles from './DataTablesTable.module.scss';
 
-const PaginationOption = ({onClick, children, selected}) => (
+const PaginationOption = ({onClick, children, selected, icon}) => (
     <li>
-        <button className={"btn col-text " + (selected ? "btn-action" : '')} onClick={onClick}>{children}</button>
+        <button className={classNames(
+            "btn col-text",
+            styles.paginationButton,
+            {
+                "btn-action": selected,
+                [styles.paginationIcon]: icon
+            }
+        )} onClick={onClick}>
+            {children}
+        </button>
     </li>
 )
 
@@ -33,30 +43,34 @@ const Pagination = ({page, maxPage, setPage}) => {
     const lastPage = () => setPage(maxPage - 1);
 
     const elements = [];
-    elements.push(<PaginationOption key={"<<"} onClick={firstPage}><FontAwesomeIcon
-            icon={faAnglesLeft}/></PaginationOption>,
-        <PaginationOption key={"<"} onClick={previousPage}><FontAwesomeIcon
-            icon={faAngleLeft}/></PaginationOption>)
+    elements.push(<PaginationOption key={"<<"} onClick={firstPage} icon>
+            <FontAwesomeIcon icon={faAnglesLeft}/>
+        </PaginationOption>,
+        <PaginationOption key={"<"} onClick={previousPage} icon>
+            <FontAwesomeIcon icon={faAngleLeft}/>
+        </PaginationOption>)
     const pagesStart = Math.max(1, page - 2);
     const pagesEnd = Math.min(maxPage, pagesStart + 7);
     for (let i = pagesStart; i <= pagesEnd; i++) {
         elements.push(<PaginationOption key={i} selected={page === i - 1}
                                         onClick={() => setPage(i - 1)}>{i}</PaginationOption>)
     }
-    elements.push(<PaginationOption key={">"} onClick={nextPage}><FontAwesomeIcon
+    elements.push(<PaginationOption key={">"} onClick={nextPage} icon><FontAwesomeIcon
             icon={faAngleRight}/></PaginationOption>,
-        <PaginationOption key={">>"} onClick={lastPage}><FontAwesomeIcon
+        <PaginationOption key={">>"} onClick={lastPage} icon><FontAwesomeIcon
             icon={faAnglesRight}/></PaginationOption>)
 
     return (
-        <ul className={"dataTables_paginate input-group pagination"}>
+        <ul className={"input-group pagination"}>
             {elements}
         </ul>
     )
 }
 
-const SortIcon = ({selected, reversed}) => {
-    if (!selected) return <FontAwesomeIcon className={"opaque-text"} icon={faSort}/>;
+const SortIcon = ({selected, reversed, hideNonSorted}) => {
+    if (!selected) {
+        return hideNonSorted ? null : <FontAwesomeIcon className={"opaque-text"} icon={faSort}/>;
+    }
     if (reversed) return <FontAwesomeIcon icon={faSortAsc}/>;
     return <FontAwesomeIcon icon={faSortDesc}/>;
 }
@@ -244,33 +258,39 @@ const DataTablesTable = ({id, rowKeyFunction, options, className, colorClass, ex
 
     return (
         <div id={id + "-container"}>
-            <div className={"float-start"}>
-                <InputGroup className={"dataTables_length"}>
-                    <label className={"input-group-text"}>{t('html.label.table.showPerPage')}</label>
-                    <Select options={paginationCountOptions} selectedIndex={selectedPaginationCount}
-                            setSelectedIndex={setSelectedPaginationCount}/>
-                </InputGroup>
-            </div>
-            <div className={"float-end"}>
-                <SearchField className={"dataTables_filter"} value={filter} setValue={setFilter}/>
-            </div>
-            {columns.length > 2 && <div className={"float-start dataTables_columns"}>
-                <VisibleColumnsSelector columns={columns} visibleColumnIndexes={visibleColumnIndexes}
-                                        toggleColumn={toggleColumn}/>
-            </div>}
-            <div className={"float-end dataTables_columns"}>
-                <ExportMenu matchingData={matchingData} columns={columns}/>
-            </div>
+            <section className={styles.header}>
+                <div className={styles.perPage}>
+                    <InputGroup>
+                        <label className={"input-group-text"}>{t('html.label.table.showPerPage')}</label>
+                        <Select options={paginationCountOptions} selectedIndex={selectedPaginationCount}
+                                setSelectedIndex={setSelectedPaginationCount}/>
+                    </InputGroup>
+                </div>
+                {(columns.length > 2 || someColumnsHidden) && <div className={styles.columns}>
+                    <VisibleColumnsSelector columns={columns} visibleColumnIndexes={visibleColumnIndexes}
+                                            toggleColumn={toggleColumn}/>
+                </div>}
+                <div className={styles.export}>
+                    <ExportMenu matchingData={matchingData} columns={columns}/>
+                </div>
+                <div className={styles.filter}>
+                    <SearchField value={filter} setValue={setFilter}/>
+                </div>
+            </section>
             <table id={id}
                    className={classNames("datatable table table-bordered table-striped", nightModeEnabled && " table-dark", className)}
                    style={{width: "100%"}}>
                 <thead id={id + '-head'} className={colorClass}>
                 <tr>
-                    {visibleColumns.map((column, i) => <th key={JSON.stringify(column.data)}>
-                        <button onClick={() => changeSort(i)}>
-                            {column.title} <span className={"float-end"}>
-                        <SortIcon selected={i === sortBy}
-                                  reversed={sortReversed}/>
+                    {visibleColumns.map((column, i) => <th key={JSON.stringify(column.data)} style={{
+                        verticalAlign: "middle"
+                    }}>
+                        <button
+                            className={classNames(styles.tableHeaderButton, {[styles.smallerText]: visibleColumns.length > 9})}
+                            onClick={() => changeSort(i)}>
+                            {column.title} <span>
+                        <SortIcon selected={i === sortBy} reversed={sortReversed}
+                                  hideNonSorted={visibleColumns.length > 10}/>
                         </span>
                         </button>
                     </th>)}
@@ -330,18 +350,19 @@ const DataTablesTable = ({id, rowKeyFunction, options, className, colorClass, ex
                 </React.Fragment>)}
                 </tbody>
             </table>
-            <p className={"dataTables_info float-start col-text"}
-               style={{maxWidth: "40%", textOverflow: "ellipsis", whiteSpace: "nowrap"}}>
-                <Trans i18nKey={"html.label.table.showNofM"}
-                       defaults={"Showing {{n}} of {{m}} entries"}
-                       values={{
-                           n: `${page * paginationCount + 1}-${page * paginationCount + rows.length}`,
-                           m: matchingData.length
-                       }}/>
-            </p>
-            <div className={"float-end"} style={{maxWidth: "60%"}}>
-                <Pagination page={page} setPage={setPage} maxPage={maxPage}/>
-            </div>
+            {maxPage > 1 && <section className={styles.footer}>
+                <p className={styles.info}>
+                    <Trans i18nKey={"html.label.table.showNofM"}
+                           defaults={"Showing {{n}} of {{m}} entries"}
+                           values={{
+                               n: `${page * paginationCount + 1}-${page * paginationCount + rows.length}`,
+                               m: matchingData.length
+                           }}/>
+                </p>
+                <div className={styles.paginate}>
+                    <Pagination page={page} setPage={setPage} maxPage={maxPage}/>
+                </div>
+            </section>}
         </div>
     )
 };

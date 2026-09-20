@@ -20,7 +20,6 @@ import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.utilities.java.Lists;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 /**
  * Represents data on an extension tab.
@@ -155,7 +154,7 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         order = descriptions.stream().sorted()
                 .map(ExtensionDescription::getName)
                 .distinct()// Method names are usually different, but in case someone had same method name with different parameters.
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

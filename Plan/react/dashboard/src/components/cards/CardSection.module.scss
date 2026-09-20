@@ -1,0 +1,15 @@
+.cardSection {
+  background: unset;
+  margin: 0.3rem;
+  padding: 0.7rem;
+  border: 1px solid var(--color-cards-header-border);
+  border-radius: 5px;
+
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+
+  * {
+    margin: 0;
+  }
+}

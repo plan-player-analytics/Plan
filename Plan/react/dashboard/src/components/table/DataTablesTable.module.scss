@@ -1,0 +1,78 @@
+@container (max-width: 599px) {
+  .perPage {
+    label {
+      display: none;
+    }
+  }
+}
+
+.header {
+  container-type: inline-size;
+  display: flex;
+
+  .perPage {
+    padding: 0.5rem;
+    margin: 0;
+  }
+
+  .filter {
+    padding: 0.5rem;
+    margin: 0;
+  }
+
+  .columns {
+    padding: 0.5rem 0;
+    margin: 0;
+  }
+
+  .export {
+    padding: 0.5rem 0;
+    margin: 0 0 0 auto;
+  }
+}
+
+.smallerText {
+  font-size: 14px;
+}
+
+.tableHeaderButton {
+  width: 100%;
+  margin: 0;
+  text-align: left;
+
+  span {
+    float: inline-end;
+  }
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+
+  .info {
+    padding: 1rem;
+    padding-left: 0.5rem;
+    margin: 0;
+    max-width: 40%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .paginate {
+    padding: 0.5rem;
+    margin: 0;
+    max-width: 60%;
+
+    :global(.pagination) {
+      margin: 0;
+    }
+  }
+}
+
+.paginationButton {
+  padding: 6px 12px;
+}
+
+.paginationIcon {
+  padding: 6px 6px;
+}
