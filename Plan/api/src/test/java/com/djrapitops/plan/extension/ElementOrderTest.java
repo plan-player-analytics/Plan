@@ -47,7 +47,9 @@ class ElementOrderTest {
 
     @Test
     void elementOrderValuesList() {
-        List<ElementOrder> expected = Arrays.asList(ElementOrder.values());
+        List<ElementOrder> expected = Arrays.asList(
+                ElementOrder.VALUES, ElementOrder.GRAPH, ElementOrder.TABLE,
+                ElementOrder.GROUPS, ElementOrder.STATISTICS, ElementOrder.FLAGS);
         List<ElementOrder> result = ElementOrder.valuesAsList();
         assertEquals(expected, result);
     }
