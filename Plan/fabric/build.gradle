@@ -16,8 +16,8 @@ dependencies {
 
     implementation "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
 
-    minecraft "com.mojang:minecraft:26.2"
-    implementation "net.fabricmc:fabric-loader:0.19.3"
+    minecraft "com.mojang:minecraft:26.3"
+    implementation "net.fabricmc:fabric-loader:0.19.5"
     implementation("me.lucko:fabric-permissions-api:0.7.0")
 
     // Fabric API
@@ -31,7 +31,7 @@ dependencies {
     ]
 
     apiModules.forEach {
-        implementation(fabricApi.module(it, "0.153.0+26.2"))
+        implementation(fabricApi.module(it, "0.161.0+26.3"))
     }
 
     testImplementation(testFixtures(project(":common")))
