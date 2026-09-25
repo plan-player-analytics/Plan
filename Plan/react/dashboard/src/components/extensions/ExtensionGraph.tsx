@@ -18,5 +18,16 @@ export const ExtensionGraph = (props: Props) => {
 
     const graphOptions = useExtensionGraphAsOptions(graph);
 
-    return <LineGraph id={props.graph} options={graphOptions} tall/>
+    return <LineGraph
+        id={props.graph} options={graphOptions} tall
+        alreadyOffsetTimezone={undefined}
+        extraOptions={undefined}
+        extremes={undefined}
+        legendEnabled={undefined}
+        onMouseLeave={undefined}
+        onSetExtremes={undefined}
+        selectedRange={undefined}
+        series={undefined}
+        yAxis={undefined}
+    />
 }
