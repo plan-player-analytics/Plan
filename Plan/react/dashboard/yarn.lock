@@ -1143,10 +1143,10 @@ hasown@^2.0.4:
   dependencies:
     function-bind "^1.1.2"
 
-highcharts@12.5.0:
-  version "12.5.0"
-  resolved "https://registry.yarnpkg.com/highcharts/-/highcharts-12.5.0.tgz#1cf5bc1214bb7bbd717096420089d130e84847ff"
-  integrity sha512-uNSSv1KqRLNvkyXlf1FbeGWB1mJ/8/IYpVeqYiTIop5Wo8peUvNyzUfLa58vILsmXyz+XrETtgKIEOcSgBBKuQ==
+highcharts@13.1.1:
+  version "13.1.1"
+  resolved "https://registry.yarnpkg.com/highcharts/-/highcharts-13.1.1.tgz#47906c1fc5bdae2900efa895b092e758a8c6dd6d"
+  integrity sha512-k/smhxCgaqHDsuy9ZCWs8FJNTPrbzc8BmMA4M/8f9JMwv9HgmNZjulyWwZ9q9ly6AzHpskL9mhlW8vgsSqnstg==
 
 hoist-non-react-statics@^3.3.1:
   version "3.3.2"
