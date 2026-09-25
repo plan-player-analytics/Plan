@@ -18,6 +18,7 @@ package com.djrapitops.plan.extension.implementation.providers.gathering;
 
 import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
+import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.annotation.GraphProvider;
 import com.djrapitops.plan.extension.extractor.ExtensionMethod;
 import com.djrapitops.plan.extension.graph.PlayerGraphDataSource;
@@ -32,6 +33,7 @@ import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 
 import java.time.Duration;
+import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
@@ -81,6 +83,9 @@ public class PlayerGraphSampler extends TaskSystem.Task {
     }
 
     public void unregister() {
+        if (Arrays.asList(extension.getCallEvents()).contains(CallEvents.PLAYER_LEAVE)) {
+            run(); // Player data sampled one more time on leave event.
+        }
         cancel();
     }
 
