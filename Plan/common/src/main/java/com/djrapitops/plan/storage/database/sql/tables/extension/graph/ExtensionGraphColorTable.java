@@ -39,7 +39,7 @@ public class ExtensionGraphColorTable {
 
     public static final String SELECT_ID_STATEMENT = SELECT + ID + FROM + TABLE_NAME + WHERE + COLOR + "=?";
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" + COLOR + ") VALUES (?)";
-    public static final int COLOR_MAX_LENGTH = 9;
+    public static final int COLOR_MAX_LENGTH = 50;
 
     private ExtensionGraphColorTable() {
         /* Static sql utility class */

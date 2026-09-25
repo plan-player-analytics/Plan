@@ -19,7 +19,9 @@ package com.djrapitops.plan.extension.graph;
 import com.djrapitops.plan.extension.FormatType;
 
 /**
- * Represents state metadata presented to the user.
+ * Represents series metadata presented to the user.
+ * <p>
+ * Series is a collection of numbers at the same index in {@link DataPoint}.
  * <p>
  * seriesName: If null "series #n" will be shown instead - max 50 characters.
  * unitLabel: If null "" or no unit will be shown - max 50 characters.
@@ -35,6 +37,14 @@ public class SeriesMetadata {
     private final FormatType formatType;
     private final String hexColor;
 
+    /**
+     * Metadata for series in specific index of DataPoint
+     *
+     * @param seriesName name of the series (falls back to "series #n" if null)
+     * @param unitLabel  Unit of measurement the number uses (can be null)
+     * @param formatType Formatting to apply to the number (can be null)
+     * @param hexColor   Hex color or one of {@link GraphColors}.
+     */
     public SeriesMetadata(String seriesName, String unitLabel, FormatType formatType, String hexColor) {
         this.seriesName = seriesName;
         this.unitLabel = unitLabel;

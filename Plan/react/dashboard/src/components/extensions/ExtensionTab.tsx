@@ -5,6 +5,7 @@ import {ExtensionTables} from "./ExtensionTables";
 import {ExtensionLayoutWidths} from "../../dataHooks/model/extension/ExtensionLayoutWidths";
 import {optimizeCardOrder} from "../../util/optimizeCardOrder";
 import Masonry from "masonry-layout";
+import {ExtensionGraphs} from "./ExtensionGraphs";
 
 type Props = {
     tab: DataType,
@@ -41,13 +42,13 @@ export const ExtensionTab = ({tab, widths}: Props) => {
         {ordered.map(type => {
             switch (type) {
                 case "GRAPH":
-                    break;
+                    return <ExtensionGraphs key={type} tab={tab} width={widths?.GRAPH || 12}/>
                 case "GROUPS":
-                    break;
+                    return null;
                 case "STATISTICS":
-                    break;
+                    return null;
                 case "FLAGS":
-                    break;
+                    return null;
                 case "VALUES":
                     return <ExtensionValues key={type} tab={tab} width={widths?.VALUES || 12}/>
                 case "TABLE":

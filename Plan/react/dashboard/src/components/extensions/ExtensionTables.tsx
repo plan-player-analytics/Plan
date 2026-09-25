@@ -11,8 +11,8 @@ type Props = {
 export const ExtensionTables = ({tab, width}: Props) => {
     return (<>
         {tab.tableData.map(table => (
-            <Col md={width} className="extension-section-wrapper">
-                <ExtensionTable key={table.tableName} table={table}/>
+            <Col key={table.tableName} md={width} className="extension-section-wrapper">
+                <ExtensionTable table={table}/>
             </Col>
         ))}
     </>);

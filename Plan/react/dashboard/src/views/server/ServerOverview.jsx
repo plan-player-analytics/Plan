@@ -19,10 +19,11 @@ import LoadIn from "../../components/animation/LoadIn.tsx";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow.tsx";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {QueryDatapoint, useDatapointQuery} from "../../components/datapoint/QueryDatapoint.tsx";
+import {QueryDatapoint} from "../../components/datapoint/QueryDatapoint.tsx";
 import {DatapointType} from "../../dataHooks/model/datapoint/Datapoint.ts";
 import {MS_WEEK} from "../../util/format/useDateFormatter.js";
 import {GenericFilterContextProvider} from "../../dataHooks/genericFilterContextHook.tsx";
+import {useDatapointQuery} from "../../dataHooks/useDatapointQuery";
 
 const Last7DaysCard = () => {
     const {t} = useTranslation();

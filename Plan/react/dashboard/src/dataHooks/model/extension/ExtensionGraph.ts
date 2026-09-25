@@ -12,10 +12,10 @@ export type ExtensionGraph = {
     yAxisSoftMin: number;
     yAxisSoftMax: number;
     columnCount: number;
-    seriesLabels: string[];
-    unitNames: string[];
-    valueFormats: FormatType[];
-    seriesColors: string[];
+    seriesLabels: (string | null)[];
+    unitNames: (string | null)[];
+    valueFormats: (FormatType | null)[];
+    seriesColors: (string | null)[];
     supportsStacking: boolean;
-    dataPoints: number[][];
+    dataPoints: (number | null)[][];
 };
