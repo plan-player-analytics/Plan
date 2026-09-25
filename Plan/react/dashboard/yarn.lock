@@ -274,17 +274,20 @@
   resolved "https://registry.yarnpkg.com/@fortawesome/react-fontawesome/-/react-fontawesome-3.5.0.tgz#ce8152e556809326e1253682088bfdd116a453bd"
   integrity sha512-63mlRr6fiBbJ0wjr1Cf6dsDGtP2lNvk9lnatKgxs/fIkhslsZT291hIUzJkuUkI9yr69ZvWnWfgb2qXm4QyVaA==
 
+"@full-ui/headless-calendar@7.1.0":
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/@full-ui/headless-calendar/-/headless-calendar-7.1.0.tgz#8efd95c2f2650d5444c7d203e8fc3c3b8dd50e3e"
+  integrity sha512-T54tSUik/ia9Jj4xduFHv1p98eVBgLnE33Q6qhpg+WWkqKCLBCbtVyMcTPPIOP5jjTV2MbtjrRvRt1RLSryGHA==
+
 "@fullcalendar/bootstrap@6.1.21":
   version "6.1.21"
   resolved "https://registry.yarnpkg.com/@fullcalendar/bootstrap/-/bootstrap-6.1.21.tgz#da3be75df4db3ede6bd4bb11dd11c9d583a42d69"
   integrity sha512-bg7F4U0kpQiHZyDM4BQKev7n94TekFgR4ZWkFY+HSaPfIYXuW5zkAs4f10WMu0xyp9pcR2v930gYtPw9bnRj+A==
 
-"@fullcalendar/core@6.1.21":
-  version "6.1.21"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/core/-/core-6.1.21.tgz#e8b0ed592a60aba44499802fefdbb1fcc91b0a07"
-  integrity sha512-t3u/+sqh3Iq7TWtUnVLcGDUE6OWZh0UD3c04bI/l7lSLAgAKr3kngBmhHiQD1QXpwC8ZN5iNqG7a7gOVixhSKQ==
-  dependencies:
-    preact "~10.12.1"
+"@fullcalendar/core@7.1.0":
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/core/-/core-7.1.0.tgz#72af83347d9191997248e72e8b5569f39b4984ab"
+  integrity sha512-a+ABP7zQpPWpwPT8EsOdShpeOVrJyx/XYStqERd8ibld/FLi/dzpd95r7w3RIdFqFm9iUv0gdGvBshSlI/dbPw==
 
 "@fullcalendar/daygrid@6.1.21":
   version "6.1.21"
@@ -296,10 +299,13 @@
   resolved "https://registry.yarnpkg.com/@fullcalendar/interaction/-/interaction-6.1.21.tgz#e7fd36d7d328a02e1d7a1dcc174db7650a6edf31"
   integrity sha512-WPYpqtljDWmU0Xm2cOtFrLlocgxv7cgkOppj34Q6OUUat8a6Cnd6kYo2JR+irP223PE5lBYHFNp1qh7SIpJc0w==
 
-"@fullcalendar/react@6.1.21":
-  version "6.1.21"
-  resolved "https://registry.yarnpkg.com/@fullcalendar/react/-/react-6.1.21.tgz#6f396ab7460d3ad9d07f4c32b1ac483b9b21120f"
-  integrity sha512-TLpmGUd5k/PMdCh8XbeFC9PW9wuGvMms1oCxWgXyjK3EFPXAAd0PLfcvwKdyxoAS5eK1E4RJFkjMHvsYHpimcg==
+"@fullcalendar/react@7.1.0":
+  version "7.1.0"
+  resolved "https://registry.yarnpkg.com/@fullcalendar/react/-/react-7.1.0.tgz#cd6d94eabeb37dd37ed5b913ec81883acfda9c3d"
+  integrity sha512-FI5hTnbiVLcW+/ZnPKteBgLpK/ldyTaSDWn9A3ri3vLToAbGt49JqRhQ9CMpH+nhmuNX4ihnCQcVzoqVCsIbBw==
+  dependencies:
+    "@full-ui/headless-calendar" "7.1.0"
+    "@fullcalendar/core" "7.1.0"
 
 "@highcharts/map-collection@2.3.3":
   version "2.3.3"
@@ -1464,11 +1470,6 @@ postcss@^8.5.26:
     nanoid "^3.3.17"
     picocolors "^1.1.1"
     source-map-js "^1.2.1"
-
-preact@~10.12.1:
-  version "10.12.1"
-  resolved "https://registry.yarnpkg.com/preact/-/preact-10.12.1.tgz#8f9cb5442f560e532729b7d23d42fd1161354a21"
-  integrity sha512-l8386ixSsBdbreOAkqtrwqHwdvR35ID8c3rKPa8lCWuO86dBi32QWHV4vfsZK1utLLFMvw+Z5Ad4XLkZzchscg==
 
 prop-types-extra@^1.1.0:
   version "1.1.1"
