@@ -31,7 +31,7 @@
     "i18next-http-backend": "4.0.2",
     "i18next-localstorage-backend": "4.3.2",
     "masonry-layout": "4.2.2",
-    "moment": "2.30.1",
+    "moment": "2.31.0",
     "react": "19.1.1",
     "react-bootstrap": "2.10.10",
     "react-bootstrap-range-slider": "3.0.8",
