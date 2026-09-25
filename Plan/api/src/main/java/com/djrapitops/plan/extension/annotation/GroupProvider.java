@@ -77,4 +77,18 @@ public @interface GroupProvider {
      */
     Family iconFamily() default Family.SOLID;
 
+    /**
+     * Sample player counts of the data gathered as if there was a graph provider.
+     * <p>
+     * Sample rate: 1 / 15min
+     * Sample: COUNT(*) WHERE sessionStart > 7d ago GROUP BY groupName
+     * <p>
+     * Requires Capability DATA_EXTENSION_GRAPH_API.
+     * <p>
+     * Not implemented yet.
+     *
+     * @return false by default
+     */
+    boolean sampleAsGraph() default false;
+
 }

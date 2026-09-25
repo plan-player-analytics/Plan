@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
  * x can be timestamp in milliseconds, time, or a value, depending on {@link XAxisType} chosen with {@link GraphProvider#xAxisType()}.
  * <p>
  * Values can be integers, longs or doubles, even though they're stored as doubles in the database.
+ * VALUES OF SAME SERIES OF DATA NEED TO BE AT SAME INDEX ALL THE TIME.
  * <p>
  * Series are defined by index in the array. If you want more series, you need to add more data to the array.
  * <p>

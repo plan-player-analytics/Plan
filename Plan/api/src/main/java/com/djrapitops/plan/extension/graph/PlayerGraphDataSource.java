@@ -31,6 +31,7 @@ public abstract class PlayerGraphDataSource {
      * Implement this method to return newest datapoint.
      * <p>
      * {@link DataPoint} should return value for X axis and all values for Y axis.
+     * VALUES OF SAME SERIES OF DATA NEED TO BE AT SAME INDEX ALL THE TIME.
      *
      * @param currentTimestamp Epoch millisecond of method call time.
      * @param playerUUID       UUID of the player.
@@ -41,6 +42,8 @@ public abstract class PlayerGraphDataSource {
 
     /**
      * Override this method to return point history for your data.
+     * <p>
+     * VALUES OF SAME SERIES OF DATA NEED TO BE AT SAME INDEX ALL THE TIME.
      *
      * @param currentTimestamp Epoch millisecond of method call time.
      * @param playerUUID       UUID of the player.
@@ -53,6 +56,8 @@ public abstract class PlayerGraphDataSource {
 
     /**
      * Implement this method to return {@link SeriesMetadata} for each Y axis value.
+     * <p>
+     * VALUES OF SAME SERIES OF DATA NEED TO BE AT SAME INDEX ALL THE TIME.
      * <p>
      * This method will be called when Extension is registered, and any time DataPoint has more values than previously.
      * <p>

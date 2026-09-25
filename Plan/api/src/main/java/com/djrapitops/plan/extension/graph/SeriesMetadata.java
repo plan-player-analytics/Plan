@@ -22,6 +22,7 @@ import com.djrapitops.plan.extension.FormatType;
  * Represents series metadata presented to the user.
  * <p>
  * Series is a collection of numbers at the same index in {@link DataPoint}.
+ * VALUES OF SAME SERIES OF DATA NEED TO BE AT SAME INDEX ALL THE TIME.
  * <p>
  * seriesName: If null "series #n" will be shown instead - max 50 characters.
  * unitLabel: If null "" or no unit will be shown - max 50 characters.
