@@ -42,7 +42,7 @@ dependencies {
     implementation "net.playeranalytics:Extension-RedProtect:7.7.3-R1.1"
     implementation "net.playeranalytics:Extension-Sponge-Economy:8.0.0-R1.3"
     implementation "net.playeranalytics:Extension-SuperbVote:0.5.4-R1.1"
-    implementation "net.playeranalytics:Extension-Tebex:R2.4"
+    implementation "net.playeranalytics:Extension-Tebex:R3.0"
     implementation "net.playeranalytics:Extension-Towny:0.99-R1.3"
     implementation "net.playeranalytics:Extension-Vault:1.7-R1.3"
     implementation "net.playeranalytics:Extension-ViaVersion:4.0.1-R1.5"
