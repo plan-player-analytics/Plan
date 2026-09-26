@@ -19,7 +19,6 @@ export const useExtensionGraphAsOptions = (graph: ExtensionGraph) => {
             if (unitNamesAndIndex.unit === null) continue;
             unitNamesToAxis[unitNamesAndIndex.unit] = unitNamesAndIndex.i;
         }
-        console.log(unitNamesAndIndexes)
         return {
             yAxis: unitNamesAndIndexes.map(unitAndIndex => ({
                 title: {text: unitAndIndex.unit},
@@ -83,7 +82,11 @@ export const useExtensionGraphAsOptions = (graph: ExtensionGraph) => {
     }, [columnCount, seriesLabels, seriesColors, yAxisIndexes, dataPoints]);
 
     return useMemo(() => ({
-        title: {text: displayName},
+        title: {
+            text: displayName,
+            floating: true,
+            y: 16
+        },
         rangeSelector: {
             selected: 2,
             buttons: translateLinegraphButtons(t)

@@ -58,6 +58,7 @@ public class ExtensionPlayerGraphQuery implements Query<Optional<ExtensionGraphD
         addLabels(db, metadata.get());
         addUnits(db, metadata.get());
         addFormats(db, metadata.get());
+        addColors(db, metadata.get());
         addValues(db, metadata.get());
 
         return metadata;
@@ -78,6 +79,12 @@ public class ExtensionPlayerGraphQuery implements Query<Optional<ExtensionGraphD
     private void addLabels(SQLDB db, ExtensionGraphDto extensionGraphDto) {
         extensionGraphDto.getSeriesLabels().addAll(
                 db.query(ExtensionGraphQueries.getGraphSeriesLabels(extensionGraphDto.getProviderId(), extensionGraphDto.getColumnCount()))
+        );
+    }
+
+    private void addColors(SQLDB db, ExtensionGraphDto extensionGraphDto) {
+        extensionGraphDto.getSeriesColors().addAll(
+                db.query(ExtensionGraphQueries.getGraphColors(extensionGraphDto.getProviderId(), extensionGraphDto.getColumnCount()))
         );
     }
 

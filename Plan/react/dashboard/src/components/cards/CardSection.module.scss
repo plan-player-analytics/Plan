@@ -16,5 +16,9 @@
 
   &.noPadding {
     padding: 0;
+
+    :global(.chart-area) {
+      padding: 0;
+    }
   }
 }

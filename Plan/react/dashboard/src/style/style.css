@@ -1423,3 +1423,8 @@ ul.filters {
 .sticky-top {
     z-index: unset;
 }
+
+/* Hide bootstrap row spacers inside extension cards */
+.extension-wrapper .row {
+    --bs-gutter-x: 0;
+}
