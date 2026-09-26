@@ -18,6 +18,8 @@ package com.djrapitops.plan.delivery.webserver.resolver.json.plugins;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.domain.datatransfer.extension.ExtensionGraphDto;
+import com.djrapitops.plan.delivery.formatting.Formatter;
+import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
@@ -26,7 +28,7 @@ import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.URIQuery;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
-import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
+import com.djrapitops.plan.delivery.webserver.CacheStrategy;
 import com.djrapitops.plan.delivery.webserver.resolver.ETag;
 import com.djrapitops.plan.extension.implementation.storage.queries.graph.ExtensionGraphQueries;
 import com.djrapitops.plan.extension.implementation.storage.queries.graph.ExtensionPlayerGraphQuery;
@@ -44,6 +46,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.GET;
 import jakarta.ws.rs.Path;
+import org.eclipse.jetty.http.HttpHeader;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -61,11 +64,13 @@ public class ExtensionGraphJSONResolver implements Resolver {
 
     private final DBSystem dbSystem;
     private final Identifiers identifiers;
+    private final Formatter<Long> httpLastModifiedFormatter;
 
     @Inject
-    public ExtensionGraphJSONResolver(DBSystem dbSystem, Identifiers identifiers, AsyncJSONResolverService jsonResolverService) {
+    public ExtensionGraphJSONResolver(DBSystem dbSystem, Identifiers identifiers, Formatters formatters) {
         this.dbSystem = dbSystem;
         this.identifiers = identifiers;
+        httpLastModifiedFormatter = formatters.httpLastModifiedLong();
     }
 
     @Override
@@ -139,6 +144,9 @@ public class ExtensionGraphJSONResolver implements Resolver {
         return Response.builder()
                 .setStatus(200)
                 .setJSONContent(data)
+                .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CHECK_ETAG)
+                .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(lastModified))
+                .setHeader(HttpHeader.ETAG.asString(), lastModified)
                 .build();
     }
 
@@ -156,6 +164,9 @@ public class ExtensionGraphJSONResolver implements Resolver {
         return Response.builder()
                 .setStatus(200)
                 .setJSONContent(data)
+                .setHeader(HttpHeader.CACHE_CONTROL.asString(), CacheStrategy.CHECK_ETAG)
+                .setHeader(HttpHeader.LAST_MODIFIED.asString(), httpLastModifiedFormatter.apply(lastModified))
+                .setHeader(HttpHeader.ETAG.asString(), lastModified)
                 .build();
     }
 

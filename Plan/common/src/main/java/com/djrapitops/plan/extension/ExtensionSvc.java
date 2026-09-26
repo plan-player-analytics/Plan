@@ -174,13 +174,15 @@ public class ExtensionSvc implements ExtensionService {
     }
 
     public void updatePlayerValues(UUID playerUUID, String playerName, CallEvents event) {
-        if (!enabled.get()) return; // Plugin is disabling
+        if (!enabled.get()) return; // Plugin is disabling, don't gather data
+
+        if (event == CallEvents.PLAYER_LEAVE) {
+            graphSamplers.unregisterPlayerSamplers(playerUUID);
+        }
+        if (event == CallEvents.PLAYER_JOIN) {
+            graphSamplers.registerPlayerGraphSamplers(playerUUID, playerName);
+        }
         for (DataValueGatherer gatherer : extensionGatherers.values()) {
-            if (event == CallEvents.PLAYER_JOIN) {
-                graphSamplers.registerPlayerGraphSamplers(gatherer.getExtension(), playerUUID, playerName);
-            } else if (event == CallEvents.PLAYER_LEAVE) {
-                graphSamplers.unregisterPlayerSamplers(playerUUID);
-            }
             updatePlayerValues(gatherer, playerUUID, playerName, event);
         }
     }

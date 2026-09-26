@@ -24,6 +24,7 @@ import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionProviderTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionTabTable;
+import org.apache.commons.lang3.RegExUtils;
 import org.apache.commons.text.TextStringBuilder;
 import org.intellij.lang.annotations.Language;
 import org.jetbrains.annotations.NotNull;
@@ -141,7 +142,8 @@ public class ExtensionGraphMetadataTable {
     }
 
     public static @NotNull String getTableName(String pluginName, String methodName) {
-        return "plan_extension_graph_" + pluginName.toLowerCase() + "_" + methodName.toLowerCase();
+        String sanitized = RegExUtils.removeAll(pluginName, "[^a-zA-Z0-9_]*").toLowerCase();
+        return "plan_extension_graph_" + sanitized + "_" + methodName.toLowerCase();
     }
 
     public static List<String> addColumnsStatements(String pluginName, String methodName, int columnCount, int newColumnCount) {
@@ -157,12 +159,14 @@ public class ExtensionGraphMetadataTable {
                 .toString();
         return "INSERT INTO " + getTableName(pluginName, methodName) + " (" +
                 "server_id," +
+                "x," +
+                (type == TableType.PLAYER ? "user_id," : "") +
                 valueList +
-                (type == TableType.PLAYER ? ",user_id" : "") +
                 ") VALUES (" +
                 ServerTable.SELECT_SERVER_ID + ',' +
+                "?," +
+                (type == TableType.PLAYER ? UsersTable.SELECT_USER_ID + ',' : "") +
                 Sql.nParameters(columnCount) +
-                (type == TableType.PLAYER ? ',' + UsersTable.SELECT_USER_ID : "") +
                 ")";
     }
 

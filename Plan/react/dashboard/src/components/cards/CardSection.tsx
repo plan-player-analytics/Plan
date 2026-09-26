@@ -1,9 +1,14 @@
 import {PropsWithChildren} from "react";
 import styles from './CardSection.module.scss';
+import {classNames} from "../../util/classNames";
 
-export const CardSection = ({children}: PropsWithChildren) => {
+type Props = {
+    noPadding?: boolean
+} & PropsWithChildren
+
+export const CardSection = ({noPadding, children}: Props) => {
     return (
-        <section className={styles.cardSection}>
+        <section className={classNames(styles.cardSection, {[styles.noPadding]: noPadding})}>
             {children}
         </section>
     )

@@ -6,6 +6,7 @@ import {ExtensionLayoutWidths} from "../../dataHooks/model/extension/ExtensionLa
 import {optimizeCardOrder} from "../../util/optimizeCardOrder";
 import Masonry from "masonry-layout";
 import {ExtensionGraphs} from "./ExtensionGraphs";
+import {Row} from "react-bootstrap";
 
 type Props = {
     tab: DataType,
@@ -38,7 +39,7 @@ export const ExtensionTab = ({tab, widths}: Props) => {
         }
     }, [tab]);
 
-    return (<div className="extension-tab-row">
+    return (<Row id="extension-tab-row">
         {ordered.map(type => {
             switch (type) {
                 case "GRAPH":
@@ -57,5 +58,5 @@ export const ExtensionTab = ({tab, widths}: Props) => {
                     return null;
             }
         })}
-    </div>);
+    </Row>);
 }

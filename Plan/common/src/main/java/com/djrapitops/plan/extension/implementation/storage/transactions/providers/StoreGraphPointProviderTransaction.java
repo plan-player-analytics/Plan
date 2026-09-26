@@ -150,6 +150,7 @@ public class StoreGraphPointProviderTransaction extends Transaction {
                         statement.setString(1, StringUtils.truncate(values.get(i), truncate));
                         statement.setInt(2, i);
                         ExtensionProviderTable.set3PluginValuesToStatement(statement, 3, info.getName(), info.getPluginName(), serverUUID);
+                        statement.addBatch();
                     }
                 }
             });
@@ -159,6 +160,7 @@ public class StoreGraphPointProviderTransaction extends Transaction {
                     for (int i = columnCount; i < storedColumnCount; i++) {
                         ExtensionProviderTable.set3PluginValuesToStatement(statement, 1, info.getName(), info.getPluginName(), serverUUID);
                         statement.setInt(4, i);
+                        statement.addBatch();
                     }
                 }
             });
@@ -172,6 +174,7 @@ public class StoreGraphPointProviderTransaction extends Transaction {
                         statement.setString(1, values.get(i));
                         statement.setInt(2, i);
                         ExtensionProviderTable.set3PluginValuesToStatement(statement, 3, info.getName(), info.getPluginName(), serverUUID);
+                        statement.addBatch();
                     }
                 }
             });
@@ -182,6 +185,7 @@ public class StoreGraphPointProviderTransaction extends Transaction {
                         statement.setString(1, values.get(i));
                         statement.setInt(2, i);
                         ExtensionProviderTable.set3PluginValuesToStatement(statement, 3, info.getName(), info.getPluginName(), serverUUID);
+                        statement.addBatch();
                     }
                 }
             });
@@ -241,9 +245,9 @@ public class StoreGraphPointProviderTransaction extends Transaction {
         execute(new ExecBatchStatement(insertStatement) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                for (String color : items) {
-                    if (storedItems.contains(color)) continue;
-                    statement.setString(1, color);
+                for (String item : items) {
+                    if (storedItems.contains(item)) continue;
+                    statement.setString(1, item);
                     statement.addBatch();
                 }
             }

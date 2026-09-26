@@ -30,12 +30,12 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  */
 public class ExtensionGraphAggregateTypeTable {
 
-    public static final String TABLE_NAME = "extension_graph_aggregate_type";
+    public static final String TABLE_NAME = "plan_extension_graph_aggregate_type";
 
     public static final String ID = "id";
     public static final String AGGREGATE_TYPE = "aggregate_type";
 
-    public static final String SELECT_ID_STATEMENT = SELECT + ID + FROM + TABLE_NAME + WHERE + AGGREGATE_TYPE + "=?";
+    public static final String SELECT_ID_STATEMENT = '(' + SELECT + ID + FROM + TABLE_NAME + WHERE + AGGREGATE_TYPE + "=?)";
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" + AGGREGATE_TYPE + ") VALUES (?)";
 
     private ExtensionGraphAggregateTypeTable() {
@@ -58,7 +58,7 @@ public class ExtensionGraphAggregateTypeTable {
      * Represents extension_graph_aggregate_type_to_graph table that joins extension_graph_aggregate_type to a specific graph.
      */
     public static class ToProviderTable {
-        public static final String TABLE_NAME = "extension_graph_aggregate_type_to_graph";
+        public static final String TABLE_NAME = "plan_extension_graph_aggregate_type_to_graph";
 
         public static final String ID = "id";
         public static final String AGGREGATE_TYPE_ID = "aggregate_type_id";

@@ -32,13 +32,13 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  */
 public class ExtensionGraphUnitTable {
 
-    public static final String TABLE_NAME = "extension_graph_unit";
+    public static final String TABLE_NAME = "plan_extension_graph_unit";
 
     public static final String ID = "id";
     public static final String UNIT = "unit";
     public static final int UNIT_MAX_LENGTH = 50;
 
-    public static final String SELECT_ID_STATEMENT = SELECT + ID + FROM + TABLE_NAME + WHERE + UNIT + "=?";
+    public static final String SELECT_ID_STATEMENT = '(' + SELECT + ID + FROM + TABLE_NAME + WHERE + UNIT + "=?)";
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" + UNIT + ") VALUES (?)";
 
     private ExtensionGraphUnitTable() {
@@ -63,7 +63,7 @@ public class ExtensionGraphUnitTable {
      * Represents extension_graph_unit_to_graph table that joins extension_graph_unit to a specific graph and column.
      */
     public static class ToProviderTable {
-        public static final String TABLE_NAME = "extension_graph_unit_to_graph";
+        public static final String TABLE_NAME = "plan_extension_graph_unit_to_graph";
 
         public static final String ID = "id";
         public static final String UNIT_ID = "unit_id";

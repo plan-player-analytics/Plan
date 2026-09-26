@@ -88,7 +88,7 @@ public class ExtensionPlayerGraphQuery implements Query<Optional<ExtensionGraphD
     }
 
     private Number[] extractDataPoint(ResultSet row, ExtensionGraphDto extensionGraphDto) throws SQLException {
-        Number[] point = new Number[extensionGraphDto.getColumnCount()];
+        Number[] point = new Number[extensionGraphDto.getColumnCount() + 1];
         point[0] = row.getLong("x");
 
         IntStream.range(0, extensionGraphDto.getColumnCount())

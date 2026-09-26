@@ -56,6 +56,7 @@ public class ExtensionServerGraphQuery implements Query<Optional<ExtensionGraphD
         addLabels(db, found);
         addUnits(db, found);
         addFormats(db, found);
+        addColors(db, found);
         addValues(db, found);
 
         return metadata;
@@ -79,6 +80,12 @@ public class ExtensionServerGraphQuery implements Query<Optional<ExtensionGraphD
         );
     }
 
+    private void addColors(SQLDB db, ExtensionGraphDto extensionGraphDto) {
+        extensionGraphDto.getSeriesColors().addAll(
+                db.query(ExtensionGraphQueries.getGraphColors(extensionGraphDto.getProviderId(), extensionGraphDto.getColumnCount()))
+        );
+    }
+
     private void addValues(SQLDB db, ExtensionGraphDto extensionGraphDto) {
         extensionGraphDto.getDataPoints().addAll(db.queryList(ExtensionGraphMetadataTable.selectFromGraphTableSql(
                         extensionGraphDto.getGraphTableName(), ExtensionGraphMetadataTable.TableType.SERVER),
@@ -86,7 +93,7 @@ public class ExtensionServerGraphQuery implements Query<Optional<ExtensionGraphD
     }
 
     private Number[] extractDataPoint(ResultSet row, ExtensionGraphDto extensionGraphDto) throws SQLException {
-        Number[] point = new Number[extensionGraphDto.getColumnCount()];
+        Number[] point = new Number[extensionGraphDto.getColumnCount() + 1];
         point[0] = row.getLong("x");
 
         IntStream.range(0, extensionGraphDto.getColumnCount())

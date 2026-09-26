@@ -19,9 +19,15 @@ export const useExtensionGraphAsOptions = (graph: ExtensionGraph) => {
             if (unitNamesAndIndex.unit === null) continue;
             unitNamesToAxis[unitNamesAndIndex.unit] = unitNamesAndIndex.i;
         }
+        console.log(unitNamesAndIndexes)
         return {
             yAxis: unitNamesAndIndexes.map(unitAndIndex => ({
                 title: {text: unitAndIndex.unit},
+                // labels: {
+                //     formatter: function (): string {
+                //         return this.value + (unitAndIndex.unit || '');
+                //     }
+                // },
                 softMax: yAxisSoftMax,
                 softMin: yAxisSoftMin
             })),
@@ -103,5 +109,5 @@ export const useExtensionGraphAsOptions = (graph: ExtensionGraph) => {
             pointFormat: '<b>{point.y}</b>'
         },
         series: series
-    }), []);
+    }), [yAxis, series]);
 }

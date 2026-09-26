@@ -4,6 +4,7 @@
   padding: 0.7rem;
   border: 1px solid var(--color-cards-header-border);
   border-radius: 5px;
+  height: 100%;
 
   display: flex;
   flex-direction: column;
@@ -11,5 +12,9 @@
 
   * {
     margin: 0;
+  }
+
+  &.noPadding {
+    padding: 0;
   }
 }

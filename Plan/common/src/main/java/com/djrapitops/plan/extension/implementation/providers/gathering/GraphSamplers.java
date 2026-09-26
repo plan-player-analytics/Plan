@@ -39,8 +39,6 @@ import com.djrapitops.plan.storage.database.sql.tables.extension.graph.Extension
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -61,7 +59,7 @@ public class GraphSamplers {
     private final RunnableFactory runnableFactory;
     private final ErrorLogger errorLogger;
 
-    private final List<Pair<ExtensionMethod, PlayerGraphDataSource>> playerGraphSources = new ArrayList<>();
+    private final List<PlayerGraphSource> playerGraphSources = new ArrayList<>();
     private final Map<UUID, Set<PlayerGraphSampler>> activePlayerGraphSamplers = new ConcurrentHashMap<>();
 
     @Inject
@@ -99,7 +97,7 @@ public class GraphSamplers {
                         playerGraphDataSource.getSeriesMetadata(),
                         ExtensionGraphMetadataTable.TableType.PLAYER
                 );
-                playerGraphSources.add(ImmutablePair.of(provider, playerGraphDataSource));
+                playerGraphSources.add(new PlayerGraphSource(extension, provider, playerGraphDataSource));
             } catch (DataExtensionMethodCallException e) {
                 errorLogger.warn(e, ErrorContext.builder()
                         .related(providerIdentifier)
@@ -153,11 +151,12 @@ public class GraphSamplers {
         dbSystem.getDatabase().executeTransaction(new StoreGraphPointProviderTransaction(annotation, provider, info, serverInfo.getServerUUID(), seriesMetadata, tableType));
     }
 
-    public void registerPlayerGraphSamplers(ExtensionWrapper extension, UUID playerUUID, String playerName) {
+    public void registerPlayerGraphSamplers(UUID playerUUID, String playerName) {
         Parameters.PlayerParameters parameters = (Parameters.PlayerParameters) Parameters.player(serverInfo.getServerUUID(), playerUUID, playerName);
-        for (var dataSource : playerGraphSources) {
-            var provider = dataSource.getLeft();
-            var playerDataSource = dataSource.getRight();
+        for (var graphSource : playerGraphSources) {
+            var extension = graphSource.extension();
+            var provider = graphSource.method();
+            var playerDataSource = graphSource.dataSource();
             var providerIdentifier = new ProviderIdentifier(serverInfo.getServerUUID(), extension.getPluginName(), provider.getMethodName());
             PlayerGraphSampler sampler = new PlayerGraphSampler(
                     extension,

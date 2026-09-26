@@ -32,12 +32,12 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  */
 public class ExtensionGraphColorTable {
 
-    public static final String TABLE_NAME = "extension_graph_color";
+    public static final String TABLE_NAME = "plan_extension_graph_color";
 
     public static final String ID = "id";
     public static final String COLOR = "color";
 
-    public static final String SELECT_ID_STATEMENT = SELECT + ID + FROM + TABLE_NAME + WHERE + COLOR + "=?";
+    public static final String SELECT_ID_STATEMENT = '(' + SELECT + ID + FROM + TABLE_NAME + WHERE + COLOR + "=?)";
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" + COLOR + ") VALUES (?)";
     public static final int COLOR_MAX_LENGTH = 50;
 
@@ -63,7 +63,7 @@ public class ExtensionGraphColorTable {
      * Represents extension_graph_color_to_graph table that joins extension_graph_color to a specific graph and column.
      */
     public static class ToProviderTable {
-        public static final String TABLE_NAME = "extension_graph_color_to_graph";
+        public static final String TABLE_NAME = "plan_extension_graph_color_to_graph";
 
         public static final String ID = "id";
         public static final String COLOR_ID = "color_id";

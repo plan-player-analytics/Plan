@@ -1,4 +1,4 @@
-type stringOrUndefined = string | undefined | { [key: string]: boolean }
+type stringOrUndefined = string | undefined | { [key: string]: boolean | undefined }
 
 export const classNames = (...names: stringOrUndefined[]) => {
     return names

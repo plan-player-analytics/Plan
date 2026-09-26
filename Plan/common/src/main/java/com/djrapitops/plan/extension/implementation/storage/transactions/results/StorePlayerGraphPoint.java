@@ -54,15 +54,15 @@ public class StorePlayerGraphPoint extends Transaction {
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, getServerUUID().toString());
                 statement.setLong(2, dataPoint.getX());
+                statement.setString(3, playerUUID.toString());
                 for (int i = 0; i < columnCount; i++) {
                     Double value = dataPoint.getValues().get(i);
                     if (value == null) {
-                        statement.setNull(i + 3, Types.DOUBLE);
+                        statement.setNull(i + 4, Types.DOUBLE);
                     } else {
-                        statement.setDouble(i + 3, value);
+                        statement.setDouble(i + 4, value);
                     }
                 }
-                statement.setString(columnCount + 1, playerUUID.toString());
             }
         });
     }

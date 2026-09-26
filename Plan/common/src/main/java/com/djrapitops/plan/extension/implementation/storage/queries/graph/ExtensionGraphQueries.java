@@ -32,10 +32,7 @@ import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPluginTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionProviderTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionTabTable;
-import com.djrapitops.plan.storage.database.sql.tables.extension.graph.ExtensionGraphFormatTable;
-import com.djrapitops.plan.storage.database.sql.tables.extension.graph.ExtensionGraphLabelTable;
-import com.djrapitops.plan.storage.database.sql.tables.extension.graph.ExtensionGraphMetadataTable;
-import com.djrapitops.plan.storage.database.sql.tables.extension.graph.ExtensionGraphUnitTable;
+import com.djrapitops.plan.storage.database.sql.tables.extension.graph.*;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import org.intellij.lang.annotations.Language;
 
@@ -125,12 +122,12 @@ public class ExtensionGraphQueries {
 
             @Override
             public List<FormatType> processResults(ResultSet set) throws SQLException {
-                List<FormatType> formats = new ArrayList<>(columnCount);
+                FormatType[] formats = new FormatType[columnCount];
                 while (set.next()) {
-                    formats.set(set.getInt(ExtensionGraphFormatTable.ToProviderTable.COLUMN_INDEX),
-                            FormatType.getByName(set.getString(ExtensionGraphFormatTable.FORMAT)).orElse(FormatType.NONE));
+                    formats[set.getInt(ExtensionGraphFormatTable.ToProviderTable.COLUMN_INDEX)] =
+                            FormatType.getByName(set.getString(ExtensionGraphFormatTable.FORMAT)).orElse(FormatType.NONE);
                 }
-                return formats;
+                return Arrays.asList(formats);
             }
         };
     }
@@ -150,12 +147,37 @@ public class ExtensionGraphQueries {
 
             @Override
             public List<String> processResults(ResultSet set) throws SQLException {
-                List<String> units = new ArrayList<>(columnCount);
+                String[] units = new String[columnCount];
                 while (set.next()) {
-                    units.set(set.getInt(ExtensionGraphUnitTable.ToProviderTable.COLUMN_INDEX),
-                            set.getString(ExtensionGraphUnitTable.UNIT));
+                    units[set.getInt(ExtensionGraphUnitTable.ToProviderTable.COLUMN_INDEX)] =
+                            set.getString(ExtensionGraphUnitTable.UNIT);
                 }
-                return units;
+                return Arrays.asList(units);
+            }
+        };
+    }
+
+    public static Query<List<String>> getGraphColors(int providerId, int columnCount) {
+        String sql = SELECT +
+                ExtensionGraphColorTable.COLOR + ',' +
+                ExtensionGraphColorTable.ToProviderTable.COLUMN_INDEX +
+                FROM + ExtensionGraphColorTable.ToProviderTable.TABLE_NAME + " tp" +
+                JOIN + ExtensionGraphColorTable.TABLE_NAME + " i ON i.id=tp." + ExtensionGraphColorTable.ToProviderTable.COLOR_ID +
+                WHERE + ExtensionGraphColorTable.ToProviderTable.PROVIDER_ID + "=?";
+        return new QueryStatement<>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setInt(1, providerId);
+            }
+
+            @Override
+            public List<String> processResults(ResultSet set) throws SQLException {
+                String[] colors = new String[columnCount];
+                while (set.next()) {
+                    colors[set.getInt(ExtensionGraphColorTable.ToProviderTable.COLUMN_INDEX)] =
+                            set.getString(ExtensionGraphColorTable.COLOR);
+                }
+                return Arrays.asList(colors);
             }
         };
     }
@@ -175,12 +197,12 @@ public class ExtensionGraphQueries {
 
             @Override
             public List<String> processResults(ResultSet set) throws SQLException {
-                List<String> units = new ArrayList<>(columnCount);
+                String[] labels = new String[columnCount];
                 while (set.next()) {
-                    units.set(set.getInt(ExtensionGraphLabelTable.ToProviderTable.COLUMN_INDEX),
-                            set.getString(ExtensionGraphLabelTable.LABEL));
+                    labels[set.getInt(ExtensionGraphLabelTable.ToProviderTable.COLUMN_INDEX)] =
+                            set.getString(ExtensionGraphLabelTable.LABEL);
                 }
-                return units;
+                return Arrays.asList(labels);
             }
         };
     }

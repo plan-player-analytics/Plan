@@ -32,12 +32,12 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  */
 public class ExtensionGraphFormatTable {
 
-    public static final String TABLE_NAME = "extension_graph_format";
+    public static final String TABLE_NAME = "plan_extension_graph_format";
 
     public static final String ID = "id";
     public static final String FORMAT = "format";
 
-    public static final String SELECT_ID_STATEMENT = SELECT + ID + FROM + TABLE_NAME + WHERE + FORMAT + "=?";
+    public static final String SELECT_ID_STATEMENT = '(' + SELECT + ID + FROM + TABLE_NAME + WHERE + FORMAT + "=?)";
     public static final String INSERT_STATEMENT = "INSERT INTO " + TABLE_NAME + " (" + FORMAT + ") VALUES (?)";
 
     private ExtensionGraphFormatTable() {
@@ -62,7 +62,7 @@ public class ExtensionGraphFormatTable {
      * Represents extension_graph_format_to_graph table that joins extension_graph_format to a specific graph and column.
      */
     public static class ToProviderTable {
-        public static final String TABLE_NAME = "extension_graph_format_to_graph";
+        public static final String TABLE_NAME = "plan_extension_graph_format_to_graph";
 
         public static final String ID = "id";
         public static final String FORMAT_ID = "format_id";
