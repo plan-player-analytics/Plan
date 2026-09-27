@@ -22,10 +22,13 @@ import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
+import com.djrapitops.plan.extension.implementation.storage.queries.graph.ExtensionGraphQueries;
+import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.PlayerFetchQueries;
+import com.djrapitops.plan.storage.database.sql.tables.extension.graph.ExtensionGraphMetadataTable;
 import com.djrapitops.plan.storage.file.PlanFiles;
 
 import javax.inject.Inject;
@@ -106,6 +109,13 @@ public class PlayerPageExporter extends FileExporter {
                 "sessions?player=" + playerUUID,
                 datapointType + DatapointType.WORLD_PIE.name() + player
         );
+
+        for (var graphsOfServer : dbSystem.getDatabase().query(ExtensionGraphQueries.findGraphTableNamesByServerUUID(ExtensionGraphMetadataTable.TableType.PLAYER)).entrySet()) {
+            ServerUUID serverUUID = graphsOfServer.getKey();
+            for (String graphTableName : graphsOfServer.getValue()) {
+                exportJSON(toDirectory, "extensionGraph?graph=" + graphTableName + "&server=" + serverUUID + player);
+            }
+        }
     }
 
     private void exportJSON(Path toDirectory, String... resources) throws IOException {

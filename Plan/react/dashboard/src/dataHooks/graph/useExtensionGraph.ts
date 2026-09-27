@@ -3,6 +3,7 @@ import {ExtensionGraph} from "../model/extension/ExtensionGraph";
 import {useNavigation} from "../../hooks/navigationHook";
 import {useEffect, useRef} from "react";
 import {queryRetry} from "../queryRetry";
+import {staticSite} from "../../service/backendConfiguration";
 
 type Props = {
     graph: string;
@@ -29,8 +30,11 @@ export const useExtensionGraph = ({graph, server, player}: Props) => {
 }
 
 async function getExtensionGraph(graph: string, server: string, player?: string) {
+    const staticUrl = player ? `/player/${player}/extensionGraph-${graph}_${server}_${player}.json`
+        : `/data/extensionGraph-${graph}_${server}.json`;
+
     const playerParam = player ? `&player=${player}` : '';
-    const url = `/v1/extensionGraph?graph=${graph}&server=${server}${playerParam}`;
+    const url = staticSite ? staticUrl : `/v1/extensionGraph?graph=${graph}&server=${server}${playerParam}`;
     const response = await fetch(url);
     if (!response.ok) throw {status: response.status, message: response.statusText, data: response.body};
     return await response.json() as Promise<ExtensionGraph>;

@@ -34,12 +34,14 @@ import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionProvid
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionTabTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.graph.*;
 import com.djrapitops.plan.utilities.dev.Untrusted;
+import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.intellij.lang.annotations.Language;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 
@@ -74,6 +76,29 @@ public class ExtensionGraphQueries {
                 FROM + ExtensionGraphMetadataTable.TABLE_NAME +
                 WHERE + ExtensionGraphMetadataTable.TABLE_TYPE + "=?";
         return db -> db.queryList(sql, row -> row.getString(1), type.getType());
+    }
+
+    public static Query<List<String>> findGraphTableNames(ServerUUID serverUUID, ExtensionGraphMetadataTable.TableType type) {
+        @Language("SQL")
+        String sql = SELECT + ExtensionGraphMetadataTable.GRAPH_TABLE_NAME +
+                FROM + ExtensionGraphMetadataTable.TABLE_NAME + " g" +
+                JOIN + ExtensionProviderTable.TABLE_NAME + " p ON p.id=g." + ExtensionGraphMetadataTable.PROVIDER_ID +
+                JOIN + ExtensionPluginTable.TABLE_NAME + " pl ON pl.id=p." + ExtensionProviderTable.PLUGIN_ID +
+                WHERE + ExtensionGraphMetadataTable.TABLE_TYPE + "=?" +
+                AND + ExtensionPluginTable.SERVER_UUID + "=?";
+        return db -> db.queryList(sql, row -> row.getString(1), type.getType(), serverUUID);
+    }
+
+    public static Query<Map<ServerUUID, List<String>>> findGraphTableNamesByServerUUID(ExtensionGraphMetadataTable.TableType type) {
+        @Language("SQL")
+        String sql = SELECT + ExtensionGraphMetadataTable.GRAPH_TABLE_NAME + ',' + ExtensionPluginTable.SERVER_UUID +
+                FROM + ExtensionGraphMetadataTable.TABLE_NAME + " g" +
+                JOIN + ExtensionProviderTable.TABLE_NAME + " p ON p.id=g." + ExtensionGraphMetadataTable.PROVIDER_ID +
+                JOIN + ExtensionPluginTable.TABLE_NAME + " pl ON pl.id=p." + ExtensionProviderTable.PLUGIN_ID +
+                WHERE + ExtensionGraphMetadataTable.TABLE_TYPE + "=?";
+        return db -> db.queryList(sql, row -> ImmutablePair.of(ServerUUID.fromString(row.getString(ExtensionPluginTable.SERVER_UUID)), row.getString(ExtensionGraphMetadataTable.GRAPH_TABLE_NAME)), type.getType())
+                .stream().collect(Collectors.groupingBy(ImmutablePair::getLeft,
+                        Collectors.mapping(ImmutablePair::getRight, Collectors.toList())));
     }
 
     public static Query<List<String>> findGraphTableNames(Collection<Integer> providerIds) {
@@ -207,7 +232,7 @@ public class ExtensionGraphQueries {
         };
     }
 
-    public static Query<Map<Integer, ExtensionData.Builder>> findGraphTableNames(ServerUUID serverUUID, ExtensionGraphMetadataTable.TableType tableType) {
+    public static Query<Map<Integer, ExtensionData.Builder>> findGraphTableNameTabs(ServerUUID serverUUID, ExtensionGraphMetadataTable.TableType tableType) {
         String sql = SELECT +
                 "p." + ExtensionProviderTable.PLUGIN_ID + ',' +
                 "t." + ExtensionTabTable.TAB_NAME + " as tab_name," +

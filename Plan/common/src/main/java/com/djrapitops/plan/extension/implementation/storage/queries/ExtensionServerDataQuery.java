@@ -76,7 +76,7 @@ public class ExtensionServerDataQuery implements Query<List<ExtensionData>> {
         combine(extensionDataByPluginID, db.query(new ExtensionAggregatePercentagesQuery(serverUUID)));
         combine(extensionDataByPluginID, db.query(new ExtensionServerTablesQuery(serverUUID)));
         combine(extensionDataByPluginID, db.query(new ExtensionAggregateGroupsQuery(serverUUID)));
-        combine(extensionDataByPluginID, db.query(ExtensionGraphQueries.findGraphTableNames(serverUUID, ExtensionGraphMetadataTable.TableType.SERVER)));
+        combine(extensionDataByPluginID, db.query(ExtensionGraphQueries.findGraphTableNameTabs(serverUUID, ExtensionGraphMetadataTable.TableType.SERVER)));
 
         return combineWithExtensionInfo(extensionsOfServer, extensionDataByPluginID);
     }
