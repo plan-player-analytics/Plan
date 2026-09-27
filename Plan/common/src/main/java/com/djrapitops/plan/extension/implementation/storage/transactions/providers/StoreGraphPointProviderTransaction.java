@@ -22,6 +22,7 @@ import com.djrapitops.plan.extension.extractor.ExtensionMethod;
 import com.djrapitops.plan.extension.graph.Aggregates;
 import com.djrapitops.plan.extension.graph.SeriesMetadata;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
+import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionProviderTable;
@@ -86,6 +87,7 @@ public class StoreGraphPointProviderTransaction extends Transaction {
                     info.getName(), info.getPluginName(), serverUUID));
         }
 
+        executeOther(new StoreIconTransaction(info.getIcon()));
         executeOther(new StoreProviderTransaction(info, serverUUID));
         execute(storeMetadata());
         execute(ExtensionGraphMetadataTable.createGraphTableSQL(dbType, info.getPluginName(), method.getMethodName(), tableType));
@@ -137,7 +139,7 @@ public class StoreGraphPointProviderTransaction extends Transaction {
         if (dbType == DBType.MYSQL) {
             // Lock rows for update
             query(db -> db.queryOptional(selectColumnCount.replace("COUNT(*)", "id") + lockForUpdate(),
-                    set -> null));
+                    set -> null, info.getName(), info.getPluginName(), serverUUID));
         }
         int columnCount = values.size();
         if (storedColumnCount >= columnCount) {

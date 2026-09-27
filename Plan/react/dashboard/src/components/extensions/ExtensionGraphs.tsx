@@ -19,11 +19,13 @@ export const ExtensionGraphs = ({uuid, tab, width}: Props) => {
     if (!metadata?.loaded || !metadata.networkMetadata) return null;
 
     const {servers} = metadata.networkMetadata;
+    const {serverUUID: networkUUID} = metadata;
     const {identifier, serverName} = useParams();
-    const {player} = usePlayer() as { player?: { info: { uuid: string } } };
+    const playerPayload = usePlayer() as { player?: { info: { uuid: string } } };
+    const player = playerPayload?.player || undefined;
 
-    const server = player ? serverName : identifier;
-    const serverUUID = servers.find(s => s.serverName === server)?.serverUUID;
+    const server = player ? serverName : (identifier || networkUUID);
+    const serverUUID = servers.find(s => s.serverName === server || s.serverUUID === server)?.serverUUID;
 
     if (!server) return null;
 
