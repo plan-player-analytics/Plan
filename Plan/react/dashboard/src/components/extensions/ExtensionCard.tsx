@@ -55,7 +55,10 @@ export const ExtensionCard = ({extension}: Props) => {
                                     header: <><ExtensionIcon
                                         icon={tab.tabInformation.icon}/> {tab.tabInformation.tabName}</>
                                 }))}>
-                        {activeIndex => <ExtensionTab tab={extension.tabs[activeIndex]} widths={extension.widths}/>}
+                        {activeIndex => <ExtensionTab
+                            tab={extension.tabs[activeIndex]}
+                            widths={extension.widths}
+                        />}
                     </TopNavTabs>
                 </div>
             </Card>

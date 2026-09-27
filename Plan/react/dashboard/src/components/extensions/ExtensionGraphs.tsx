@@ -8,11 +8,12 @@ import {useMetadata} from "../../hooks/metadataHook";
 import {CardSection} from "../cards/CardSection";
 
 type Props = {
+    uuid: string;
     tab: ExtensionTab;
     width: number;
 }
 
-export const ExtensionGraphs = ({tab, width}: Props) => {
+export const ExtensionGraphs = ({uuid, tab, width}: Props) => {
     const metadata = useMetadata();
 
     if (!metadata?.loaded || !metadata.networkMetadata) return null;
@@ -28,7 +29,7 @@ export const ExtensionGraphs = ({tab, width}: Props) => {
 
     return (<>
         {tab.graphNames.map(graphName => (
-            <Col key={graphName} md={width} className="extension-section-wrapper">
+            <Col key={graphName} md={width} className={"extension-section-wrapper-" + uuid}>
                 <CardSection noPadding>
                     <ExtensionGraph graph={graphName} server={serverUUID || server} player={player?.info.uuid}/>
                 </CardSection>

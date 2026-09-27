@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useMemo} from "react";
 import {defaultElementOrder, ExtensionTab as DataType} from "../../dataHooks/model/extension/ExtensionData";
 import {ExtensionValues} from "./ExtensionValues";
 import {ExtensionTables} from "./ExtensionTables";
@@ -7,6 +7,7 @@ import {optimizeCardOrder} from "../../util/optimizeCardOrder";
 import Masonry from "masonry-layout";
 import {ExtensionGraphs} from "./ExtensionGraphs";
 import {Row} from "react-bootstrap";
+import {randomUuid} from "../../util/uuid";
 
 type Props = {
     tab: DataType,
@@ -14,6 +15,7 @@ type Props = {
 }
 
 export const ExtensionTab = ({tab, widths}: Props) => {
+    const uuid = useMemo(randomUuid, []);
     const elementOrder = tab.tabInformation.elementOrder || defaultElementOrder;
 
     const ordered = widths ? optimizeCardOrder(elementOrder
@@ -31,7 +33,7 @@ export const ExtensionTab = ({tab, widths}: Props) => {
         if (!masonry) {
             masonry = new Masonry(masonryRow, {
                 percentPosition: true,
-                itemSelector: ".extension-section-wrapper"
+                itemSelector: ".extension-section-wrapper-" + uuid
             });
         }
         return () => {
@@ -43,7 +45,7 @@ export const ExtensionTab = ({tab, widths}: Props) => {
         {ordered.map(type => {
             switch (type) {
                 case "GRAPH":
-                    return <ExtensionGraphs key={type} tab={tab} width={widths?.GRAPH || 12}/>
+                    return <ExtensionGraphs key={type} uuid={uuid} tab={tab} width={widths?.GRAPH || 12}/>
                 case "GROUPS":
                     return null;
                 case "STATISTICS":
@@ -51,9 +53,9 @@ export const ExtensionTab = ({tab, widths}: Props) => {
                 case "FLAGS":
                     return null;
                 case "VALUES":
-                    return <ExtensionValues key={type} tab={tab} width={widths?.VALUES || 12}/>
+                    return <ExtensionValues key={type} uuid={uuid} tab={tab} width={widths?.VALUES || 12}/>
                 case "TABLE":
-                    return <ExtensionTables key={type} tab={tab} width={widths?.TABLE || 12}/>
+                    return <ExtensionTables key={type} uuid={uuid} tab={tab} width={widths?.TABLE || 12}/>
                 default:
                     return null;
             }
