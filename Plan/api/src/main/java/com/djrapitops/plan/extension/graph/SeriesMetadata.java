@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.extension.graph;
 
-import com.djrapitops.plan.extension.FormatType;
-
 /**
  * Represents series metadata presented to the user.
  * <p>
@@ -35,7 +33,7 @@ public class SeriesMetadata {
 
     private final String seriesName;
     private final String unitLabel;
-    private final FormatType formatType;
+    private final GraphFormatType formatType;
     private final String hexColor;
 
     /**
@@ -46,7 +44,7 @@ public class SeriesMetadata {
      * @param formatType Formatting to apply to the number (can be null)
      * @param hexColor   Hex color or one of {@link GraphColors}.
      */
-    public SeriesMetadata(String seriesName, String unitLabel, FormatType formatType, String hexColor) {
+    public SeriesMetadata(String seriesName, String unitLabel, GraphFormatType formatType, String hexColor) {
         this.seriesName = seriesName;
         this.unitLabel = unitLabel;
         this.formatType = formatType;
@@ -61,7 +59,7 @@ public class SeriesMetadata {
         return unitLabel;
     }
 
-    public FormatType getFormatType() {
+    public GraphFormatType getFormatType() {
         return formatType;
     }
 

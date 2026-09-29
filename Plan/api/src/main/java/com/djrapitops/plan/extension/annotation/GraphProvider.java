@@ -74,16 +74,16 @@ public @interface GraphProvider {
     /**
      * Minimum for x-axis, growing if necessary.
      *
-     * @return 0 by default.
+     * @return disabled by default (Int min value).
      */
-    int xAxisSoftMin() default 0;
+    int xAxisSoftMin() default Integer.MIN_VALUE;
 
     /**
      * Maximum for x-axis, growing if necessary.
      *
-     * @return 2 by default.
+     * @return disabled by default (Int min value).
      */
-    int xAxisSoftMax() default 2;
+    int xAxisSoftMax() default Integer.MIN_VALUE;
 
     /**
      * Minimum for y-axis, growing if necessary.

@@ -16,10 +16,10 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions.providers;
 
-import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.annotation.GraphProvider;
 import com.djrapitops.plan.extension.extractor.ExtensionMethod;
 import com.djrapitops.plan.extension.graph.Aggregates;
+import com.djrapitops.plan.extension.graph.GraphFormatType;
 import com.djrapitops.plan.extension.graph.SeriesMetadata;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIconTransaction;
@@ -219,7 +219,7 @@ public class StoreGraphPointProviderTransaction extends Transaction {
     private List<String> storeFormats() {
         List<String> formats = metadata.stream()
                 .map(SeriesMetadata::getFormatType)
-                .map(FormatType::name)
+                .map(GraphFormatType::name)
                 .toList();
         String insertStatement = ExtensionGraphFormatTable.INSERT_STATEMENT;
         Optional<String> selectStatement = ExtensionGraphFormatTable.selectInSql(formats.size());

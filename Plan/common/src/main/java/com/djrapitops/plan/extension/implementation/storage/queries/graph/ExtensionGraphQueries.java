@@ -17,7 +17,7 @@
 package com.djrapitops.plan.extension.implementation.storage.queries.graph;
 
 import com.djrapitops.plan.delivery.domain.datatransfer.extension.ExtensionGraphDto;
-import com.djrapitops.plan.extension.FormatType;
+import com.djrapitops.plan.extension.graph.GraphFormatType;
 import com.djrapitops.plan.extension.graph.XAxisType;
 import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
@@ -132,7 +132,7 @@ public class ExtensionGraphQueries {
         ), graphTableName, tableType.getType(), serverUUID);
     }
 
-    public static Query<List<FormatType>> getGraphFormats(int providerId, int columnCount) {
+    public static Query<List<GraphFormatType>> getGraphFormats(int providerId, int columnCount) {
         String sql = SELECT +
                 ExtensionGraphFormatTable.FORMAT + ',' +
                 ExtensionGraphFormatTable.ToProviderTable.COLUMN_INDEX +
@@ -146,11 +146,11 @@ public class ExtensionGraphQueries {
             }
 
             @Override
-            public List<FormatType> processResults(ResultSet set) throws SQLException {
-                FormatType[] formats = new FormatType[columnCount];
+            public List<GraphFormatType> processResults(ResultSet set) throws SQLException {
+                GraphFormatType[] formats = new GraphFormatType[columnCount];
                 while (set.next()) {
                     formats[set.getInt(ExtensionGraphFormatTable.ToProviderTable.COLUMN_INDEX)] =
-                            FormatType.getByName(set.getString(ExtensionGraphFormatTable.FORMAT)).orElse(FormatType.NONE);
+                            GraphFormatType.getByName(set.getString(ExtensionGraphFormatTable.FORMAT)).orElse(GraphFormatType.NONE);
                 }
                 return Arrays.asList(formats);
             }

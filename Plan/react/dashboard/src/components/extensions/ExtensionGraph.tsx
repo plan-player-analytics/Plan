@@ -4,6 +4,7 @@ import {ChartLoader} from "../navigation/Loader";
 import {useExtensionGraphAsOptions} from "../../dataHooks/graph/options/useExtensionGraphAsOptions";
 import LineGraph from "../graphs/LineGraph";
 import {ExtensionGraph as DataType} from "../../dataHooks/model/extension/ExtensionGraph";
+import FunctionPlotGraph from "../graphs/FunctionPlotGraph";
 
 type Props = {
     graph: string;
@@ -28,17 +29,29 @@ type InnerProps = {
 const Inner = ({graphName, graph}: InnerProps) => {
     const graphOptions = useExtensionGraphAsOptions(graph);
 
-    return <LineGraph
-        id={graphName} options={graphOptions}
-        alreadyOffsetTimezone={undefined}
-        extraOptions={undefined}
-        extremes={undefined}
-        legendEnabled={undefined}
-        onMouseLeave={undefined}
-        onSetExtremes={undefined}
-        selectedRange={undefined}
-        series={undefined}
-        yAxis={undefined}
-        tall={false}
-    />
+    const dateXAxis = graph.xAxisType === "DATE_MILLIS";
+
+    return dateXAxis
+        ? <LineGraph
+            id={graphName} options={graphOptions}
+            alreadyOffsetTimezone={undefined}
+            extraOptions={undefined}
+            extremes={undefined}
+            legendEnabled={undefined}
+            onMouseLeave={undefined}
+            onSetExtremes={undefined}
+            selectedRange={undefined}
+            series={undefined}
+            yAxis={undefined}
+            tall={false}
+        />
+        : <FunctionPlotGraph
+            id={graphName} options={graphOptions}
+            series={undefined}
+            legendEnabled={undefined}
+            yPlotLines={undefined}
+            yPlotBands={undefined}
+            xPlotLines={undefined}
+            xPlotBands={undefined}
+            tall={false}/>
 }

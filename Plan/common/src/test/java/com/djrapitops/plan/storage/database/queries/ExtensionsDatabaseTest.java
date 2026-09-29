@@ -18,13 +18,13 @@ package com.djrapitops.plan.storage.database.queries;
 
 import com.djrapitops.plan.component.Component;
 import com.djrapitops.plan.component.ComponentService;
-import com.djrapitops.plan.extension.*;
+import com.djrapitops.plan.extension.CallEvents;
+import com.djrapitops.plan.extension.DataExtension;
+import com.djrapitops.plan.extension.ExtensionSvc;
+import com.djrapitops.plan.extension.NotReadyException;
 import com.djrapitops.plan.extension.annotation.*;
 import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
-import com.djrapitops.plan.extension.graph.DataPoint;
-import com.djrapitops.plan.extension.graph.PlayerGraphDataSource;
-import com.djrapitops.plan.extension.graph.SeriesMetadata;
-import com.djrapitops.plan.extension.graph.ServerGraphDataSource;
+import com.djrapitops.plan.extension.graph.*;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
@@ -661,7 +661,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
                 @Override
                 public List<SeriesMetadata> getSeriesMetadata() {
-                    return List.of(new SeriesMetadata("value", "", FormatType.NONE, "#222"));
+                    return List.of(new SeriesMetadata("value", "", GraphFormatType.NONE, "#222"));
                 }
             };
         }
@@ -676,7 +676,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
 
                 @Override
                 public List<SeriesMetadata> getSeriesMetadata() {
-                    return List.of(new SeriesMetadata("value", "", FormatType.NONE, "#222"));
+                    return List.of(new SeriesMetadata("value", "", GraphFormatType.NONE, "#222"));
                 }
             };
         }

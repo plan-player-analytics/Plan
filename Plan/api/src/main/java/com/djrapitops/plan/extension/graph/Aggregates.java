@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.extension.graph;
 
+import com.djrapitops.plan.extension.annotation.GraphProvider;
+
 /**
  * Aggregates that a graph supports.
  * <p>
@@ -26,36 +28,48 @@ package com.djrapitops.plan.extension.graph;
 public enum Aggregates {
 
     /**
+     * Maximum seen point.
+     * <p>
+     * Produces a data point.
+     */
+    MAX_PEAK,
+    /**
+     * Minimum seen point.
+     * <p>
+     * Produces a data point.
+     */
+    MIN_VALLEY,
+    /**
+     * MAX that can be filtered by time value x, eg. last 30 days
+     * <p>
+     * Produces a data point.
+     */
+    MAX_PEAK_OVER_TIME,
+    /**
+     * MIN that can be filtered by time value x, eg. last 30 days
+     * <p>
+     * Produces a data point.
+     */
+    MIN_VALLEY_OVER_TIME,
+    /**
      * SUM that can be filtered by time value x, eg. last 30 days
+     * <p>
+     * Produces a data point.
      */
     SUM_OVER_TIME,
     /**
-     * MEAN (average) that can be filtered by time value x, eg. last 30 days
-     */
-    MEAN_OVER_TIME,
-    /**
-     * MIN that can be filtered by time value x, eg. last 30 days
-     */
-    MIN_OVER_TIME,
-    /**
-     * MAX that can be filtered by time value x, eg. last 30 days
-     */
-    MAX_OVER_TIME,
-    /**
      * Cumulative SUM over all points
+     * <p>
+     * Produces a data point.
      */
-    SUM_TOTAL,
+    SUM_ALL,
     /**
-     * MEAN (average) over all points
+     * SUM over all player graphs points into a single server graph - Only used with {@link PlayerGraphDataSource}.
+     * <p>
+     * Granularity of the sum is {@link GraphProvider#sampleInterval()}.
+     * <p>
+     * Produces a graph on server page.
      */
-    MEAN_TOTAL,
-    /**
-     * Minimum seen point.
-     */
-    MIN_TOTAL,
-    /**
-     * Maximum seen point.
-     */
-    MAX_TOTAL,
+    SUM_INTO_GRAPH
 
 }

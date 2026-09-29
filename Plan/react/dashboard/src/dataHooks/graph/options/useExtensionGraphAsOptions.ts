@@ -1,14 +1,59 @@
-import {ExtensionGraph} from "../../model/extension/ExtensionGraph";
-import {useMemo} from "react";
+import {ExtensionGraph, GraphFormatType, XAxisType} from "../../model/extension/ExtensionGraph";
+import {useCallback, useMemo} from "react";
 import {tooltip, translateLinegraphButtons} from "../../../util/graphs";
 import {useTranslation} from "react-i18next";
+import {useTimeAmountFormatter} from "../../../util/format/useTimeAmountFormatter";
+import {useDecimalFormatter} from "../../../util/format/useDecimalFormatter";
+import {useByteSizeFormatter} from "../../../util/format/useByteSizeFormatter";
+import {usePingFormatter} from "../../../util/format/usePingFormatter";
+import {useDateFormatter} from "../../../util/format/useDateFormatter";
+import {Point} from "highcharts";
+import {useMetadata} from "../../../hooks/metadataHook";
+import {removeUndefined} from "../../../util/removeUndefined";
 
 export const useExtensionGraphAsOptions = (graph: ExtensionGraph) => {
     const {t} = useTranslation();
+    const {formatDate} = useDateFormatter();
+    const {formatTime} = useTimeAmountFormatter();
+    const {formatDecimals} = useDecimalFormatter();
+    const {formatByteSize} = useByteSizeFormatter();
+    const {formatPing} = usePingFormatter();
+    const metadata = useMetadata();
     const {
         columnCount, dataPoints, seriesColors, seriesLabels, unitNames, valueFormats,
         displayName, xAxisSoftMin, xAxisSoftMax, yAxisSoftMin, yAxisSoftMax, xAxisType, supportsStacking
     } = graph;
+
+    const formatX = useCallback((value: number, formatType: XAxisType | null) => {
+        switch (formatType) {
+            case "DATE_MILLIS":
+                return formatDate(value);
+            case "TIME_AMOUNT_MILLIS":
+                return formatTime(value as number);
+            case "VALUE":
+            default:
+                return value;
+        }
+    }, []);
+
+    const formatValue = useCallback((value: number | undefined, formatType: GraphFormatType | null) => {
+        if (value === undefined) return value;
+        switch (formatType) {
+            case "TIME_AMOUNT":
+                return formatTime(value);
+            case "MILLISECONDS":
+                return formatPing(value as number);
+            case "PERCENTAGE":
+                return formatDecimals(value as number * 100) + '%';
+            case "BYTES":
+                return formatByteSize(value as number);
+            case "INTEGER":
+                return value.toFixed(0);
+            case "NONE":
+            default:
+                return value;
+        }
+    }, []);
 
     const {yAxis, yAxisIndexes} = useMemo(() => {
         unitNames.fill("", unitNames.length, columnCount);
@@ -20,19 +65,22 @@ export const useExtensionGraphAsOptions = (graph: ExtensionGraph) => {
             unitNamesToAxis[unitNamesAndIndex.unit] = unitNamesAndIndex.i;
         }
         return {
-            yAxis: unitNamesAndIndexes.map(unitAndIndex => ({
+            yAxis: unitNamesAndIndexes.map((unitAndIndex, i) => ({
                 title: {text: unitAndIndex.unit},
-                // labels: {
-                //     formatter: function (): string {
-                //         return this.value + (unitAndIndex.unit || '');
-                //     }
-                // },
+                zoomEnabled: xAxisType !== "DATE_MILLIS",
                 softMax: yAxisSoftMax,
-                softMin: yAxisSoftMin
+                softMin: yAxisSoftMin,
+                labels: {
+                    formatter: function () {
+                        if ('value' in this) {
+                            return formatValue(this.value as number, valueFormats[i]) + ' ' + (unitAndIndex.unit || '')
+                        }
+                    }
+                }
             })),
             yAxisIndexes: unitNames.map(unit => unitNamesToAxis[unit || ""])
         }
-    }, [unitNames]);
+    }, [unitNames, valueFormats]);
 
     const actuallySupportsStacking = useMemo(() => supportsStacking && yAxis.length <= 1, [supportsStacking, yAxis])
 
@@ -86,7 +134,7 @@ export const useExtensionGraphAsOptions = (graph: ExtensionGraph) => {
         return ser;
     }, [columnCount, seriesLabels, seriesColors, yAxisIndexes, dataPoints]);
 
-    return useMemo(() => ({
+    return useMemo(() => removeUndefined({
         title: {
             text: displayName,
             floating: true,
@@ -111,19 +159,42 @@ export const useExtensionGraphAsOptions = (graph: ExtensionGraph) => {
                 stacking: actuallySupportsStacking ? "normal" : undefined
             }
         },
+        chart: xAxisType !== "DATE_MILLIS" ? {
+            zooming: {
+                type: 'x'
+            }
+        } : undefined,
         xAxis: {
-            zoomEnabled: true,
+            zoomEnabled: xAxisType !== "DATE_MILLIS",
             title: {
                 text: ""
             },
             softMin: xAxisSoftMin,
-            softMax: xAxisSoftMax
+            softMax: xAxisSoftMax,
+            labels: xAxisType !== "DATE_MILLIS" ? {
+                formatter: function () {
+                    if ('value' in this) {
+                        return formatX(this.value as number, xAxisType)
+                    }
+                }
+            } : undefined
         },
         yAxis,
+        time: {
+            timezoneOffset: metadata.loaded && metadata.timeZoneOffsetMinutes || 0
+        },
         tooltip: {
             enabled: true,
-            valueDecimals: 2
+            valueDecimals: 2,
+            formatter: function (): string | string[] {
+                const ctx = this as unknown as Point;
+                if (ctx.points) {
+                    return [formatX(ctx.x, xAxisType), ...ctx.points.map((point: Point) => `<span style="color:${point.color}">●</span> ${point.series.name}: <b>${formatValue(point.y, valueFormats[point.series.index as number])}</b>`)]
+                } else {
+                    return `${formatX(ctx.x, xAxisType)}<br><br><span style="color:${ctx.color}">●</span> ${ctx.series.name}: <b>${formatValue(ctx.y, valueFormats[ctx.series.index])}</b>`
+                }
+            }
         },
         series: series
-    }), [yAxis, series]);
+    }), [yAxis, series, xAxisType]);
 }

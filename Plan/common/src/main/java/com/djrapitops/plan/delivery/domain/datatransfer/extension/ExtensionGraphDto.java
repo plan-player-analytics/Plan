@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.delivery.domain.datatransfer.extension;
 
-import com.djrapitops.plan.extension.FormatType;
+import com.djrapitops.plan.extension.graph.GraphFormatType;
 import com.djrapitops.plan.extension.graph.XAxisType;
 
 import java.util.ArrayList;
@@ -31,14 +31,14 @@ public class ExtensionGraphDto {
     private final String graphTableName;
     private final String displayName;
     private final XAxisType xAxisType;
-    private final int xAxisSoftMin;
-    private final int xAxisSoftMax;
+    private final Integer xAxisSoftMin;
+    private final Integer xAxisSoftMax;
     private final int yAxisSoftMin;
     private final int yAxisSoftMax;
     private final int columnCount;
     private final List<String> seriesLabels = new ArrayList<>();
     private final List<String> unitNames = new ArrayList<>();
-    private final List<FormatType> valueFormats = new ArrayList<>();
+    private final List<GraphFormatType> valueFormats = new ArrayList<>();
     private final List<String> seriesColors = new ArrayList<>();
     private final boolean supportsStacking;
 
@@ -54,8 +54,8 @@ public class ExtensionGraphDto {
         this.graphTableName = graphTableName;
         this.displayName = displayName;
         this.xAxisType = xAxisType;
-        this.xAxisSoftMin = xAxisSoftMin;
-        this.xAxisSoftMax = xAxisSoftMax;
+        this.xAxisSoftMin = xAxisSoftMin == Integer.MIN_VALUE ? null : xAxisSoftMin;
+        this.xAxisSoftMax = xAxisSoftMax == Integer.MIN_VALUE ? null : xAxisSoftMax;
         this.yAxisSoftMin = yAxisSoftMin;
         this.yAxisSoftMax = yAxisSoftMax;
         this.columnCount = columnCount;
@@ -106,7 +106,7 @@ public class ExtensionGraphDto {
         return unitNames;
     }
 
-    public List<FormatType> getValueFormats() {
+    public List<GraphFormatType> getValueFormats() {
         return valueFormats;
     }
 
