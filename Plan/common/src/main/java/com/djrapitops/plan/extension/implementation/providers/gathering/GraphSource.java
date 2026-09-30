@@ -17,11 +17,13 @@
 package com.djrapitops.plan.extension.implementation.providers.gathering;
 
 import com.djrapitops.plan.extension.extractor.ExtensionMethod;
-import com.djrapitops.plan.extension.graph.PlayerGraphDataSource;
 import com.djrapitops.plan.extension.implementation.ExtensionWrapper;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author AuroraLS3
  */
-public record PlayerGraphSource(ExtensionWrapper extension, ExtensionMethod method, PlayerGraphDataSource dataSource) {
+public record GraphSource<T>(ExtensionWrapper extension, ExtensionMethod method, T dataSource,
+                             AtomicInteger lastSeenColumnCount, Runnable refreshMetadata) {
 }

@@ -26,6 +26,7 @@ import com.djrapitops.plan.extension.annotation.PluginInfo;
 import com.djrapitops.plan.extension.builder.DataValue;
 import com.djrapitops.plan.extension.builder.ValueBuilder;
 import com.djrapitops.plan.extension.extractor.ExtensionMethod;
+import com.djrapitops.plan.extension.graph.Aggregates;
 import com.djrapitops.plan.extension.graph.HistoryStrategy;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Icon;
@@ -49,6 +50,7 @@ public class ExtValueBuilder implements ValueBuilder {
     private boolean formatAsPlayerName = false;
     private FormatType formatType = FormatType.NONE;
     private Conditional conditional;
+    private Aggregates[] aggregates;
 
     public ExtValueBuilder(String text, DataExtension extension) {
         this.text = text;
@@ -119,6 +121,12 @@ public class ExtValueBuilder implements ValueBuilder {
         return this;
     }
 
+    @Override
+    public ValueBuilder aggregateTypes(Aggregates[] aggregates) {
+        this.aggregates = aggregates;
+        return this;
+    }
+
     private ProviderInformation getProviderInformation() {
         return getProviderInformation(false, false, null);
     }
@@ -136,6 +144,7 @@ public class ExtValueBuilder implements ValueBuilder {
     }
 
     public ProviderInformation buildProviderInfo(@SuppressWarnings("unused") GraphProvider annotation) {
+        aggregateTypes(annotation.supportedAggregateFunctions());
         return getProviderInformation();
     }
 

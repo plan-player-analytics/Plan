@@ -185,6 +185,7 @@ public class ExtensionSvc implements ExtensionService {
         for (DataValueGatherer gatherer : extensionGatherers.values()) {
             updatePlayerValues(gatherer, playerUUID, playerName, event);
         }
+        graphSamplers.updatePlayerHistory(playerUUID, playerName, event);
     }
 
     public void updatePlayerValues(DataValueGatherer gatherer, UUID playerUUID, String playerName, CallEvents event) {
@@ -207,6 +208,7 @@ public class ExtensionSvc implements ExtensionService {
         for (DataValueGatherer gatherer : extensionGatherers.values()) {
             updateServerValues(gatherer, event);
         }
+        graphSamplers.updateServerHistory(event);
     }
 
     public void updateServerValues(DataValueGatherer gatherer, CallEvents event) {

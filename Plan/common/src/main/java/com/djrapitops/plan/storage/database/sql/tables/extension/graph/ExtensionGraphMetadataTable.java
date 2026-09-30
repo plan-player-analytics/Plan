@@ -157,7 +157,7 @@ public class ExtensionGraphMetadataTable {
                         .mapToObj(i -> "value_" + (i + 1))
                         .iterator(), ",")
                 .toString();
-        return "INSERT INTO " + getTableName(pluginName, methodName) + " (" +
+        return INSERT_INTO + getTableName(pluginName, methodName) + " (" +
                 "server_id," +
                 "x," +
                 (type == TableType.PLAYER ? "user_id," : "") +
@@ -170,9 +170,28 @@ public class ExtensionGraphMetadataTable {
                 ")";
     }
 
+
+    public static String updateGraphTableSql(String pluginName, String methodName, int columnCount, TableType type) {
+        String valueList = new TextStringBuilder().appendWithSeparators(IntStream.range(0, columnCount)
+                        .mapToObj(i -> "value_" + (i + 1) + "=?")
+                        .iterator(), ",")
+                .toString();
+        return UPDATE + getTableName(pluginName, methodName) + SET +
+                valueList +
+                WHERE + "server_id=" + ServerTable.SELECT_SERVER_ID +
+                AND + "x=?" +
+                (type == TableType.PLAYER ? AND + "user_id=" + UsersTable.SELECT_USER_ID : "");
+    }
+
     public static String selectFromGraphTableSql(String graphTableName, TableType type) {
         return SELECT + "*" + FROM + graphTableName + WHERE +
                 "server_id=" + ServerTable.SELECT_SERVER_ID +
+                (type == TableType.PLAYER ? AND + "user_id=" + UsersTable.SELECT_USER_ID : "");
+    }
+
+    public static String selectXValuesSql(String pluginName, String providerName, TableType type) {
+        return SELECT + "x" + FROM + getTableName(pluginName, providerName) +
+                WHERE + "server_id=" + ServerTable.SELECT_SERVER_ID +
                 (type == TableType.PLAYER ? AND + "user_id=" + UsersTable.SELECT_USER_ID : "");
     }
 

@@ -17,14 +17,14 @@
 package com.djrapitops.plan.extension.implementation.providers.gathering;
 
 import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
+import com.djrapitops.plan.extension.CallEvents;
+import com.djrapitops.plan.extension.NotReadyException;
 import com.djrapitops.plan.extension.annotation.GraphProvider;
 import com.djrapitops.plan.extension.annotation.Tab;
 import com.djrapitops.plan.extension.builder.ValueBuilder;
 import com.djrapitops.plan.extension.extractor.ExtensionMethod;
 import com.djrapitops.plan.extension.extractor.ExtensionMethods;
-import com.djrapitops.plan.extension.graph.PlayerGraphDataSource;
-import com.djrapitops.plan.extension.graph.SeriesMetadata;
-import com.djrapitops.plan.extension.graph.ServerGraphDataSource;
+import com.djrapitops.plan.extension.graph.*;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.ExtensionWrapper;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
@@ -33,6 +33,8 @@ import com.djrapitops.plan.extension.implementation.providers.MethodWrapper;
 import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.extension.implementation.providers.ProviderIdentifier;
 import com.djrapitops.plan.extension.implementation.storage.transactions.providers.StoreGraphPointProviderTransaction;
+import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerGraphPoints;
+import com.djrapitops.plan.extension.implementation.storage.transactions.results.StoreServerGraphPoints;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.sql.tables.extension.graph.ExtensionGraphMetadataTable;
@@ -44,6 +46,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 /**
@@ -59,7 +62,8 @@ public class GraphSamplers {
     private final RunnableFactory runnableFactory;
     private final ErrorLogger errorLogger;
 
-    private final List<PlayerGraphSource> playerGraphSources = new ArrayList<>();
+    private final List<GraphSource<PlayerGraphDataSource>> playerGraphSources = new ArrayList<>();
+    private final List<GraphSource<ServerGraphDataSource>> serverGraphSources = new ArrayList<>();
     private final Map<UUID, Set<PlayerGraphSampler>> activePlayerGraphSamplers = new ConcurrentHashMap<>();
 
     @Inject
@@ -77,7 +81,6 @@ public class GraphSamplers {
         List<ExtensionMethod> graphPointProviders = extensionMethods.getGraphPointProviders();
         var byReturnType = graphPointProviders.stream()
                 .collect(Collectors.groupingBy(ExtensionMethod::getReturnType));
-        // TODO History data storage
         registerServerProvidersAndSamplers(extension, byReturnType.get(ServerGraphDataSource.class));
         registerPlayerProviders(extension, byReturnType.get(PlayerGraphDataSource.class));
     }
@@ -91,13 +94,21 @@ public class GraphSamplers {
                 var playerGraphDataSource = new MethodWrapper<>(provider.getMethod(), PlayerGraphDataSource.class)
                         .callMethod(extension.getExtension(), parameters);
                 if (playerGraphDataSource == null) continue;
+                List<SeriesMetadata> seriesMetadata = playerGraphDataSource.getSeriesMetadata();
                 storeGraphMetadata(
                         extension,
                         provider,
-                        playerGraphDataSource.getSeriesMetadata(),
+                        seriesMetadata,
                         ExtensionGraphMetadataTable.TableType.PLAYER
                 );
-                playerGraphSources.add(new PlayerGraphSource(extension, provider, playerGraphDataSource));
+                playerGraphSources.add(new GraphSource<>(extension, provider, playerGraphDataSource,
+                        new AtomicInteger(seriesMetadata.size()),
+                        () -> storeGraphMetadata(
+                                extension,
+                                provider,
+                                playerGraphDataSource.getSeriesMetadata(),
+                                ExtensionGraphMetadataTable.TableType.PLAYER
+                        )));
             } catch (DataExtensionMethodCallException e) {
                 errorLogger.warn(e, ErrorContext.builder()
                         .related(providerIdentifier)
@@ -116,24 +127,29 @@ public class GraphSamplers {
                 var serverGraphDataSource = new MethodWrapper<>(provider.getMethod(), ServerGraphDataSource.class)
                         .callMethod(extension.getExtension(), parameters);
                 if (serverGraphDataSource == null) continue;
+                List<SeriesMetadata> seriesMetadata = serverGraphDataSource.getSeriesMetadata();
                 storeGraphMetadata(
                         extension,
                         provider,
-                        serverGraphDataSource.getSeriesMetadata(),
+                        seriesMetadata,
                         ExtensionGraphMetadataTable.TableType.SERVER
                 );
+                var graphSource = new GraphSource<>(extension, provider, serverGraphDataSource,
+                        new AtomicInteger(seriesMetadata.size()),
+                        () -> storeGraphMetadata(
+                                extension,
+                                provider,
+                                serverGraphDataSource.getSeriesMetadata(),
+                                ExtensionGraphMetadataTable.TableType.SERVER
+                        ));
+                serverGraphSources.add(graphSource);
                 ServerGraphSampler sampler = new ServerGraphSampler(
                         serverGraphDataSource,
                         provider.getExistingAnnotation(GraphProvider.class),
                         dbSystem,
                         providerIdentifier,
                         errorLogger,
-                        () -> storeGraphMetadata(
-                                extension,
-                                provider,
-                                serverGraphDataSource.getSeriesMetadata(),
-                                ExtensionGraphMetadataTable.TableType.SERVER
-                        )
+                        graphSource.refreshMetadata()
                 );
                 sampler.register(runnableFactory);
             } catch (DataExtensionMethodCallException e) {
@@ -172,12 +188,7 @@ public class GraphSamplers {
                     parameters,
                     providerIdentifier,
                     errorLogger,
-                    () -> storeGraphMetadata(
-                            extension,
-                            provider,
-                            playerDataSource.getSeriesMetadata(),
-                            ExtensionGraphMetadataTable.TableType.PLAYER
-                    )
+                    graphSource.refreshMetadata()
             );
             activePlayerGraphSamplers.computeIfAbsent(playerUUID, u -> Collections.newSetFromMap(new ConcurrentHashMap<>()))
                     .add(sampler);
@@ -192,5 +203,86 @@ public class GraphSamplers {
         samplers.forEach(PlayerGraphSampler::unregister);
         samplers.clear();
         activePlayerGraphSamplers.remove(playerUUID);
+    }
+
+    public void updateServerHistory(CallEvents event) {
+        for (var graphSource : serverGraphSources) {
+            if (shouldGatherEvent(event, graphSource.extension().getCallEvents())) {
+                gatherServerHistory(graphSource);
+            }
+        }
+    }
+
+    private void gatherServerHistory(GraphSource<ServerGraphDataSource> graphSource) {
+        var extension = graphSource.extension();
+        var provider = graphSource.method();
+        var providerIdentifier = new ProviderIdentifier(serverInfo.getServerUUID(), extension.getPluginName(), provider.getMethodName());
+
+        HistoryStrategy historyStrategy = provider.getAnnotationOrNull(GraphProvider.class).strategy();
+        if (historyStrategy == HistoryStrategy.NO_HISTORY) return;
+
+        try {
+            List<DataPoint> pointHistory = graphSource.dataSource().getPointHistory(System.currentTimeMillis());
+            if (pointHistory == null || pointHistory.isEmpty()) return;
+
+            int maxColumns = pointHistory.stream().mapToInt(point -> point.getValues().size()).max()
+                    .orElse(1);
+            int lastSeenColumns = graphSource.lastSeenColumnCount().get();
+            if (maxColumns > lastSeenColumns) {
+                graphSource.refreshMetadata().run();
+                graphSource.lastSeenColumnCount().set(maxColumns);
+            }
+
+            dbSystem.getDatabase().executeTransaction(new StoreServerGraphPoints(historyStrategy, maxColumns, pointHistory, providerIdentifier));
+        } catch (NotReadyException | UnsupportedOperationException ignored) {
+            // Data or API not available to make the call, no-op.
+        } catch (Exception | IllegalAccessError | NoClassDefFoundError | NoSuchFieldError |
+                 NoSuchMethodError e) {
+            throw new DataExtensionMethodCallException("", e, providerIdentifier.getPluginName(), providerIdentifier.getProviderName());
+        }
+    }
+
+    public void updatePlayerHistory(UUID playerUUID, String playerName, CallEvents event) {
+        for (var graphSource : playerGraphSources) {
+            if (shouldGatherEvent(event, graphSource.extension().getCallEvents())) {
+                gatherPlayerHistory(playerUUID, playerName, graphSource);
+            }
+        }
+    }
+
+    private void gatherPlayerHistory(UUID playerUUID, String playerName, GraphSource<PlayerGraphDataSource> graphSource) {
+        var extension = graphSource.extension();
+        var provider = graphSource.method();
+        var providerIdentifier = new ProviderIdentifier(serverInfo.getServerUUID(), extension.getPluginName(), provider.getMethodName());
+
+        HistoryStrategy historyStrategy = provider.getAnnotationOrNull(GraphProvider.class).strategy();
+        if (historyStrategy == HistoryStrategy.NO_HISTORY) return;
+
+        try {
+            List<DataPoint> pointHistory = graphSource.dataSource().getPointHistory(System.currentTimeMillis(), playerUUID, playerName);
+            if (pointHistory == null || pointHistory.isEmpty()) return;
+
+            int maxColumns = pointHistory.stream().mapToInt(point -> point.getValues().size()).max()
+                    .orElse(1);
+            int lastSeenColumns = graphSource.lastSeenColumnCount().get();
+            if (maxColumns > lastSeenColumns) {
+                graphSource.refreshMetadata().run();
+                graphSource.lastSeenColumnCount().set(maxColumns);
+            }
+
+            dbSystem.getDatabase().executeTransaction(new StorePlayerGraphPoints(historyStrategy, maxColumns, pointHistory, playerUUID, providerIdentifier));
+        } catch (NotReadyException | UnsupportedOperationException ignored) {
+            // Data or API not available to make the call, no-op.
+        } catch (Exception | IllegalAccessError | NoClassDefFoundError | NoSuchFieldError |
+                 NoSuchMethodError e) {
+            throw new DataExtensionMethodCallException("", e, providerIdentifier.getPluginName(), providerIdentifier.getProviderName());
+        }
+    }
+
+    private boolean shouldGatherEvent(CallEvents event, CallEvents[] callEvents) {
+        if (event == CallEvents.MANUAL) {
+            return true;
+        }
+        return event.isIn(callEvents);
     }
 }
