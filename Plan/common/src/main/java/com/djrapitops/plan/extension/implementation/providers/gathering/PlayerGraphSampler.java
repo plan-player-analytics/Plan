@@ -26,6 +26,7 @@ import com.djrapitops.plan.extension.implementation.ExtensionMethodErrorTracker;
 import com.djrapitops.plan.extension.implementation.ExtensionWrapper;
 import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.extension.implementation.providers.ProviderIdentifier;
+import com.djrapitops.plan.extension.implementation.storage.queries.graph.ExtensionGraphQueries;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StorePlayerGraphPoint;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
@@ -54,7 +55,10 @@ public class PlayerGraphSampler extends TaskSystem.Task {
     private final ProviderIdentifier providerIdentifier;
     private final ErrorLogger errorLogger;
 
-    public PlayerGraphSampler(ExtensionWrapper extension, PlayerGraphDataSource dataSource, ExtensionMethod provider, DBSystem dbSystem, Parameters.PlayerParameters parameters, ProviderIdentifier providerIdentifier, ErrorLogger errorLogger) {
+    private final Runnable refreshMetadata;
+    private Integer lastSeenColumnCount;
+
+    public PlayerGraphSampler(ExtensionWrapper extension, PlayerGraphDataSource dataSource, ExtensionMethod provider, DBSystem dbSystem, Parameters.PlayerParameters parameters, ProviderIdentifier providerIdentifier, ErrorLogger errorLogger, Runnable refreshMetadata) {
         this.extension = extension;
         this.dataSource = dataSource;
         this.provider = provider;
@@ -63,11 +67,14 @@ public class PlayerGraphSampler extends TaskSystem.Task {
         this.parameters = parameters;
         this.providerIdentifier = providerIdentifier;
         this.errorLogger = errorLogger;
+        this.refreshMetadata = refreshMetadata;
     }
 
     @Override
     public void register(RunnableFactory runnableFactory) {
         if (ExtensionMethodErrorTracker.isDisabled(extension, provider)) return;
+
+        lastSeenColumnCount = dbSystem.getDatabase().query(ExtensionGraphQueries.getColumnCount(providerIdentifier.getPluginName(), providerIdentifier.getProviderName(), providerIdentifier.getServerUUID()));
 
         Duration minimumInterval = Duration.of(30, TimeUnit.SECONDS.toChronoUnit());
         Duration interval = Duration.of(annotation.sampleInterval(), annotation.sampleIntervalUnit().toChronoUnit());
@@ -93,8 +100,14 @@ public class PlayerGraphSampler extends TaskSystem.Task {
     public void run() {
         try {
             var dataPoint = dataSource.getPoint(System.currentTimeMillis(), parameters.getPlayerUUID(), parameters.getPlayerName());
-            dataPoint.ifPresent(point -> dbSystem.getDatabase().executeTransaction(
-                    new StorePlayerGraphPoint(point, parameters.getPlayerUUID(), providerIdentifier)));
+            dataPoint.ifPresent(point -> {
+                int size = point.getValues().size();
+                if (size > lastSeenColumnCount) {
+                    refreshMetadata.run();
+                    lastSeenColumnCount = size;
+                }
+                dbSystem.getDatabase().executeTransaction(new StorePlayerGraphPoint(point, parameters.getPlayerUUID(), providerIdentifier));
+            });
         } catch (DataExtensionMethodCallException e) {
             errorLogger.warn(e, ErrorContext.builder()
                     .related(providerIdentifier)

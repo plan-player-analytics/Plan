@@ -127,7 +127,13 @@ public class GraphSamplers {
                         provider.getExistingAnnotation(GraphProvider.class),
                         dbSystem,
                         providerIdentifier,
-                        errorLogger
+                        errorLogger,
+                        () -> storeGraphMetadata(
+                                extension,
+                                provider,
+                                serverGraphDataSource.getSeriesMetadata(),
+                                ExtensionGraphMetadataTable.TableType.SERVER
+                        )
                 );
                 sampler.register(runnableFactory);
             } catch (DataExtensionMethodCallException e) {
@@ -165,7 +171,13 @@ public class GraphSamplers {
                     dbSystem,
                     parameters,
                     providerIdentifier,
-                    errorLogger
+                    errorLogger,
+                    () -> storeGraphMetadata(
+                            extension,
+                            provider,
+                            playerDataSource.getSeriesMetadata(),
+                            ExtensionGraphMetadataTable.TableType.PLAYER
+                    )
             );
             activePlayerGraphSamplers.computeIfAbsent(playerUUID, u -> Collections.newSetFromMap(new ConcurrentHashMap<>()))
                     .add(sampler);

@@ -314,4 +314,14 @@ public class ExtensionGraphQueries {
                 WHERE + "server_id=" + ServerTable.SELECT_SERVER_ID;
         return db -> db.queryOptional(sql, row -> row.getLong(1), serverUUID);
     }
+
+    public static Query<Integer> getColumnCount(String pluginName, String providerName, ServerUUID serverUUID) {
+        String sql = SELECT + ExtensionGraphMetadataTable.COLUMN_COUNT +
+                FROM + ExtensionGraphMetadataTable.TABLE_NAME +
+                WHERE + ExtensionGraphMetadataTable.PROVIDER_ID + "=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID;
+        return db -> db.queryOptional(sql,
+                        row -> row.getInt(ExtensionGraphMetadataTable.COLUMN_COUNT),
+                        providerName, pluginName, serverUUID)
+                .orElse(1);
+    }
 }

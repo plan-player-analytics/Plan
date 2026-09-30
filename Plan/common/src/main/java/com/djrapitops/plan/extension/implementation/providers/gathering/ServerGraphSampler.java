@@ -22,6 +22,7 @@ import com.djrapitops.plan.extension.NotReadyException;
 import com.djrapitops.plan.extension.annotation.GraphProvider;
 import com.djrapitops.plan.extension.graph.ServerGraphDataSource;
 import com.djrapitops.plan.extension.implementation.providers.ProviderIdentifier;
+import com.djrapitops.plan.extension.implementation.storage.queries.graph.ExtensionGraphQueries;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.StoreServerGraphPoint;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
@@ -43,22 +44,29 @@ public class ServerGraphSampler extends TaskSystem.Task {
     private final ProviderIdentifier providerIdentifier;
     private final ErrorLogger errorLogger;
 
+    private final Runnable refreshMetadata;
+    private Integer lastSeenColumnCount;
+
     public ServerGraphSampler(
             ServerGraphDataSource dataSource,
             GraphProvider annotation,
             DBSystem dbSystem,
             ProviderIdentifier providerIdentifier,
-            ErrorLogger errorLogger
+            ErrorLogger errorLogger,
+            Runnable refreshMetadata
     ) {
         this.dataSource = dataSource;
         this.annotation = annotation;
         this.dbSystem = dbSystem;
         this.providerIdentifier = providerIdentifier;
         this.errorLogger = errorLogger;
+        this.refreshMetadata = refreshMetadata;
     }
 
     @Override
     public void register(RunnableFactory runnableFactory) {
+        lastSeenColumnCount = dbSystem.getDatabase().query(ExtensionGraphQueries.getColumnCount(providerIdentifier.getPluginName(), providerIdentifier.getProviderName(), providerIdentifier.getServerUUID()));
+
         Duration minimumInterval = Duration.of(5, TimeUnit.SECONDS.toChronoUnit());
         Duration interval = Duration.of(annotation.sampleInterval(), annotation.sampleIntervalUnit().toChronoUnit());
 
@@ -87,8 +95,14 @@ public class ServerGraphSampler extends TaskSystem.Task {
     private void storePoint() {
         try {
             var dataPoint = dataSource.getPoint(System.currentTimeMillis());
-            dataPoint.ifPresent(point -> dbSystem.getDatabase().executeTransaction(
-                    new StoreServerGraphPoint(point, providerIdentifier)));
+            dataPoint.ifPresent(point -> {
+                int size = point.getValues().size();
+                if (size > lastSeenColumnCount) {
+                    refreshMetadata.run();
+                    lastSeenColumnCount = size;
+                }
+                dbSystem.getDatabase().executeTransaction(new StoreServerGraphPoint(point, providerIdentifier));
+            });
         } catch (NotReadyException | UnsupportedOperationException ignored) {
             // Data or API not available to make the call, no-op.
         } catch (Exception | IllegalAccessError | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
