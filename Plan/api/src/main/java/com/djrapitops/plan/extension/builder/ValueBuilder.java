@@ -18,11 +18,9 @@ package com.djrapitops.plan.extension.builder;
 
 import com.djrapitops.plan.component.Component;
 import com.djrapitops.plan.extension.FormatType;
-import com.djrapitops.plan.extension.annotation.BooleanProvider;
-import com.djrapitops.plan.extension.annotation.Conditional;
-import com.djrapitops.plan.extension.annotation.StringProvider;
-import com.djrapitops.plan.extension.annotation.Tab;
+import com.djrapitops.plan.extension.annotation.*;
 import com.djrapitops.plan.extension.extractor.ExtensionMethod;
+import com.djrapitops.plan.extension.graph.Aggregates;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
@@ -138,6 +136,15 @@ public interface ValueBuilder {
      * @return This builder.
      */
     ValueBuilder showAsPlayerPageLink();
+
+    /**
+     * {@link ValueBuilder#buildNumber(Long)} or {@link ValueBuilder#buildDouble(Double)} specific method, adds runtime calculated server aggregates across all players.
+     *
+     * @param aggregates Aggregate types.
+     * @return This builder.
+     * @see NumberProvider#supportedAggregateFunctions()
+     */
+    ValueBuilder aggregateTypes(Aggregates[] aggregates);
 
     /**
      * Build a Boolean. Displayed as "Yes/No" on the page.

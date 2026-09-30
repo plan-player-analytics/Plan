@@ -145,8 +145,6 @@ public @interface GraphProvider {
      * Define any aggregate functions the value series supports.
      * <p>
      * Automatic aggregate numbers (As if using {@link NumberProvider}) will be added to the same {@link Tab} if these are defined.
-     * <p>
-     * If the graph has multiple series (multiple y values) there will be no aggregates.
      *
      * @return None by default.
      */
