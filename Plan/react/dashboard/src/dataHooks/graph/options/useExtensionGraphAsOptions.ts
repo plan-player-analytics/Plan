@@ -51,7 +51,7 @@ export const useExtensionGraphAsOptions = (graph: ExtensionGraph) => {
                 return value.toFixed(0);
             case "NONE":
             default:
-                return value;
+                return formatDecimals(value);
         }
     }, []);
 
@@ -189,7 +189,7 @@ export const useExtensionGraphAsOptions = (graph: ExtensionGraph) => {
             formatter: function (): string | string[] {
                 const ctx = this as unknown as Point;
                 if (ctx.points) {
-                    return [formatX(ctx.x, xAxisType), ...ctx.points.map((point: Point) => `<span style="color:${point.color}">●</span> ${point.series.name}: <b>${formatValue(point.y, valueFormats[point.series.index as number])}</b>`)]
+                    return [formatX(ctx.x, xAxisType), ...ctx.points.map((point: Point) => `<span style="color:${point.color}">●</span> ${point.series.name}: <b>${formatValue(point.y, valueFormats[point.series.index as number])} ${unitNames[point.series.index as number] || ''}</b>`)]
                 } else {
                     return `${formatX(ctx.x, xAxisType)}<br><br><span style="color:${ctx.color}">●</span> ${ctx.series.name}: <b>${formatValue(ctx.y, valueFormats[ctx.series.index])}</b>`
                 }
