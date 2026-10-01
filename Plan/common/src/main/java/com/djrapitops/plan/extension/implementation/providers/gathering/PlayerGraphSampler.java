@@ -34,7 +34,6 @@ import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 
 import java.time.Duration;
-import java.util.Arrays;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
@@ -90,7 +89,7 @@ public class PlayerGraphSampler extends TaskSystem.Task {
     }
 
     public void unregister() {
-        if (Arrays.asList(extension.getCallEvents()).contains(CallEvents.PLAYER_LEAVE)) {
+        if (CallEvents.PLAYER_LEAVE.isIn(extension.getCallEvents())) {
             run(); // Player data sampled one more time on leave event.
         }
         cancel();

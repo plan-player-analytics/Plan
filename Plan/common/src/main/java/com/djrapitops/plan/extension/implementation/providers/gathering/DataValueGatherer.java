@@ -96,7 +96,7 @@ public class DataValueGatherer {
         if (event == CallEvents.MANUAL) {
             return false;
         }
-        return event.isIn(callEvents);
+        return !event.isIn(callEvents);
     }
 
     public String getPluginName() {
