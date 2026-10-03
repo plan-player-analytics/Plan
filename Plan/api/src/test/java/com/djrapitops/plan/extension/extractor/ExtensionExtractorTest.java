@@ -21,6 +21,7 @@ import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.Group;
 import com.djrapitops.plan.extension.annotation.*;
 import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
+import com.djrapitops.plan.extension.graph.ServerGraphDataSource;
 import com.djrapitops.plan.extension.table.Table;
 import org.junit.jupiter.api.Test;
 
@@ -34,14 +35,14 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 /**
  * Tests for different validations of ExtensionExtractor.
  * <p>
- * This Test class contains only INVALID implementations of the DataExtension API.
+ * This Test class contains mostly INVALID implementations of the DataExtension API.
  *
  * @author AuroraLS3
  */
 class ExtensionExtractorTest {
 
     @Test
-    void pluginInfoIsRequired() {
+    void pluginInfoIsRequiredDuringValidation() {
         class Extension implements DataExtension {}
 
         ExtensionExtractor underTest = new ExtensionExtractor(new Extension());
@@ -49,7 +50,7 @@ class ExtensionExtractorTest {
     }
 
     @Test
-    void pluginInfoIsRequired2() {
+    void pluginInfoIsRequiredForPluginName() {
         class Extension implements DataExtension {}
 
         assertEquals("Extension did not have @PluginInfo annotation!", assertThrows(IllegalArgumentException.class, new Extension()::getPluginName).getMessage());
@@ -569,6 +570,58 @@ class ExtensionExtractorTest {
         ExtensionExtractor underTest = new ExtensionExtractor(extension);
         assertEquals(
                 "Extension.method had Conditional, but DataBuilderProvider does not support it!",
+                assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
+        );
+    }
+
+    @Test
+    void graphPointProviderReturnsDataSource() {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @GraphProvider(displayName = "bad")
+            public Object method() {
+                return null;
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+        assertEquals(
+                "Extension.method has invalid return type. was: java.lang.Object, expected (one of): com.djrapitops.plan.extension.graph.ServerGraphDataSource, com.djrapitops.plan.extension.graph.PlayerGraphDataSource, com.djrapitops.plan.extension.graph.GroupGraphDataSource",
+                assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
+        );
+    }
+
+    @Test
+    void graphPointProviderDoesNotSupportConditional() {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @Conditional("bad")
+            @GraphProvider(displayName = "ok")
+            public ServerGraphDataSource method() {
+                return null;
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+        assertEquals(
+                "Extension.method had Conditional, but GraphProvider does not support it!",
+                assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
+        );
+    }
+
+    @Test
+    void graphPointProviderTooLongName() {
+        @PluginInfo(name = "Extension")
+        class Extension implements DataExtension {
+            @GraphProvider(displayName = "aaaaaAAAAAbbbbbBBBBBcccccCCCCCdddddDDDDDeeeeeEEEEEfffffFFFF")
+            public ServerGraphDataSource method() {
+                return null;
+            }
+        }
+        Extension extension = new Extension();
+        ExtensionExtractor underTest = new ExtensionExtractor(extension);
+        assertEquals(
+                "Warnings: [Extension.method 'displayName' was over 50 characters.]",
                 assertThrows(IllegalArgumentException.class, underTest::validateAnnotations).getMessage()
         );
     }

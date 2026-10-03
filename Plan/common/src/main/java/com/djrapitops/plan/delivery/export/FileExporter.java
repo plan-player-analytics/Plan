@@ -153,8 +153,8 @@ abstract class FileExporter {
         }
 
         return StringUtils.replaceEach(replaced,
-                new String[]{"?", "&", "type=", "server=", "player=", "afterMillisAgo=", "beforeMillisAgo=", "activityType=", "aggregate=true"},
-                new String[]{"-", "_", "", "", "", "", "", "activityType-", "-aggregate"});
+                new String[]{"?", "&", "graph=", "type=", "server=", "player=", "afterMillisAgo=", "beforeMillisAgo=", "activityType=", "aggregate=true"},
+                new String[]{"-", "_", "", "", "", "", "", "", "activityType-", "-aggregate"});
     }
 
     protected String toNonRelativePath(String resourceName) {

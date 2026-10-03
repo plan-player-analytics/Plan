@@ -18,6 +18,7 @@ package com.djrapitops.plan.extension.extractor;
 
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.Group;
+import org.apache.commons.lang3.StringUtils;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -74,7 +75,11 @@ public class ExtensionMethod {
     }
 
     public String getMethodName() {
-        return getMethod().getName();
+        return StringUtils.truncate(getMethod().getName(), 50);
+    }
+
+    public DataExtension getExtension() {
+        return extension;
     }
 
     /**
@@ -84,6 +89,28 @@ public class ExtensionMethod {
         if (!method.isAccessible()) {
             method.setAccessible(true);
         }
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ExtensionMethod that = (ExtensionMethod) o;
+        return Objects.equals(extension.getPluginName(), that.extension.getPluginName()) && Objects.equals(method, that.method) && Objects.equals(returnType, that.returnType);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(extension.getPluginName(), method, returnType);
+    }
+
+    @Override
+    public String toString() {
+        return "ExtensionMethod{" +
+                "extension=" + extension +
+                ", method=" + method +
+                ", returnType=" + returnType +
+                '}';
     }
 
     public enum ParameterType {
@@ -118,27 +145,5 @@ public class ExtensionMethod {
         public Class<?> getType() {
             return type;
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ExtensionMethod that = (ExtensionMethod) o;
-        return Objects.equals(extension.getPluginName(), that.extension.getPluginName()) && Objects.equals(method, that.method) && Objects.equals(returnType, that.returnType);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(extension.getPluginName(), method, returnType);
-    }
-
-    @Override
-    public String toString() {
-        return "ExtensionMethod{" +
-                "extension=" + extension +
-                ", method=" + method +
-                ", returnType=" + returnType +
-                '}';
     }
 }

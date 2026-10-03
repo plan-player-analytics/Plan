@@ -17,6 +17,7 @@
 package com.djrapitops.plan.capability;
 
 import com.djrapitops.plan.delivery.web.ResourceService;
+import com.djrapitops.plan.extension.annotation.GraphProvider;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -94,7 +95,11 @@ enum Capability {
     /**
      * {@link  com.djrapitops.plan.delivery.web.ResolverService#registerPermissions(String...)}
      */
-    PAGE_EXTENSION_USER_PERMISSIONS;
+    PAGE_EXTENSION_USER_PERMISSIONS,
+    /**
+     * {@link GraphProvider}.
+     */
+    DATA_EXTENSION_GRAPH_API;
 
     static Optional<Capability> getByName(String name) {
         if (name == null) {

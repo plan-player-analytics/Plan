@@ -49,6 +49,7 @@ public abstract class Sql {
     public static final String GROUP_BY = " GROUP BY ";
     public static final String ORDER_BY = " ORDER BY ";
     public static final String INNER_JOIN = " JOIN ";
+    public static final String JOIN = INNER_JOIN;
     public static final String LEFT_JOIN = " LEFT JOIN ";
     public static final String UNION = " UNION ";
     public static final String UNION_ALL = " UNION ALL ";

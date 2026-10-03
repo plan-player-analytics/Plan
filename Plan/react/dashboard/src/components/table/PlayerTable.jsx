@@ -8,7 +8,7 @@ import {faCheck, faGlobe, faSignal, faUser, faUserPlus} from "@fortawesome/free-
 import {faCalendarCheck, faCalendarPlus, faClock} from "@fortawesome/free-regular-svg-icons";
 import ExtensionIcon from "../extensions/ExtensionIcon.jsx";
 import {Link} from "react-router";
-import {ExtensionValueTableCell} from "../extensions/ExtensionCard.jsx";
+import {ExtensionValueTableCell} from "../extensions/ExtensionValue.tsx";
 import {ChartLoader} from "../navigation/Loader.tsx";
 import DataTablesTable from "./DataTablesTable.jsx";
 import {localeService, reverseRegionLookupMap} from "../../service/localeService.js";

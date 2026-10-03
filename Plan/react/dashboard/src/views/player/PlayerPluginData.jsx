@@ -1,11 +1,13 @@
 import React, {useEffect} from "react";
-import ExtensionCard, {ExtensionCardWrapper} from "../../components/extensions/ExtensionCard";
 import {Card, Col, Row} from "react-bootstrap";
 import {useParams} from "react-router";
 import Masonry from "masonry-layout";
 import {usePlayer} from "../layout/PlayerPage";
 import LoadIn from "../../components/animation/LoadIn.tsx";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
+import {ExtensionCard} from "../../components/extensions/ExtensionCard.tsx";
+import {computeLayoutWidths} from "../../dataHooks/model/extension/ExtensionLayoutWidths.ts";
+import {optimizeCardOrder} from "../../util/optimizeCardOrder.ts";
 
 const PlayerPluginData = () => {
     const {hasPermission} = useAuth();
@@ -48,16 +50,17 @@ const PlayerPluginData = () => {
         )
     }
 
+    extensions?.extensionData?.forEach(extension => extension.widths = computeLayoutWidths(extension));
+    const ordered = optimizeCardOrder(extensions?.extensionData);
+
     return (
         <LoadIn>
             <section className="player_plugin_data" id={"player-plugin-data"}>
                 <Row id="extension-masonry-row"
                      data-masonry='{"percentPosition": true, "itemSelector": ".extension-wrapper"}'
                      style={{overflowY: 'hidden'}}>
-                    {extensions?.extensionData?.map((extension, i) =>
-                        <ExtensionCardWrapper key={'ext-' + i} extension={extension}>
-                            <ExtensionCard extension={extension}/>
-                        </ExtensionCardWrapper>
+                    {ordered.map(extension =>
+                        <ExtensionCard key={extension.extensionInformation.pluginName} extension={extension}/>
                     )}
                 </Row>
             </section>

@@ -4,12 +4,12 @@ import CardHeader from "../../CardHeader.tsx";
 import {faBookOpen} from "@fortawesome/free-solid-svg-icons";
 import {Card} from "react-bootstrap";
 import {useTranslation} from "react-i18next";
-import {useDatapointQuery} from "../../../datapoint/QueryDatapoint.tsx";
 import {DatapointType} from "../../../../dataHooks/model/datapoint/Datapoint.ts";
 import {MS_24H, MS_MONTH, MS_WEEK} from "../../../../util/format/useDateFormatter.js";
 import {useNavigation} from "../../../../hooks/navigationHook.tsx";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
+import {useDatapointQuery} from "../../../../dataHooks/useDatapointQuery";
 
 const NoDataAlert = ({servers}) => {
     const {t} = useTranslation();

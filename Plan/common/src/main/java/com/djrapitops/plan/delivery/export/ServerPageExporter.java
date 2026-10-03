@@ -23,12 +23,14 @@ import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
+import com.djrapitops.plan.extension.implementation.storage.queries.graph.ExtensionGraphQueries;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.sql.tables.extension.graph.ExtensionGraphMetadataTable;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import org.apache.commons.lang3.Strings;
 import org.apache.commons.text.StringEscapeUtils;
@@ -250,6 +252,10 @@ public class ServerPageExporter extends FileExporter {
         exportDatapointJSON(toDirectory, DatapointType.DISK_MAX, serverUUID);
         exportDatapointJSON(toDirectory, DatapointType.DISK_MIN, serverUUID);
         exportDatapointJSON(toDirectory, DatapointType.TPS_AVERAGE, serverUUID);
+
+        for (String graphTableName : dbSystem.getDatabase().query(ExtensionGraphQueries.findGraphTableNames(ExtensionGraphMetadataTable.TableType.SERVER))) {
+            exportJSON(toDirectory, "extensionGraph?graph=" + graphTableName + "&server=" + serverUUID);
+        }
     }
 
     private void exportDatapointJSON(Path toDirectory, DatapointType type, ServerUUID serverUUID) throws IOException {

@@ -1,6 +1,6 @@
 import React from "react";
 import {Col} from 'react-bootstrap';
-import {HoverTrigger, useHoverContext} from "../../hooks/interaction/hoverHook.jsx";
+import {HoverTrigger, useHoverContext} from "../../hooks/interaction/hoverHook.tsx";
 import {useColorEditContext} from "../../hooks/context/colorEditContextHook.jsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faPencil, faTrash} from "@fortawesome/free-solid-svg-icons";

@@ -66,7 +66,7 @@ public @interface GroupProvider {
      *
      * @return Name of the icon, if name is not valid no icon is shown.
      */
-    String iconName() default "circle";
+    String iconName() default "user-group";
 
     /**
      * Family of Font Awesome icon.
@@ -76,5 +76,19 @@ public @interface GroupProvider {
      * @return Family that matches an icon, if there is no icon for this family no icon is shown.
      */
     Family iconFamily() default Family.SOLID;
+
+    /**
+     * Sample player counts of the data gathered as if there was a graph provider.
+     * <p>
+     * Sample rate: 1 / 15min
+     * Sample: COUNT(*) WHERE sessionStart > 7d ago GROUP BY groupName
+     * <p>
+     * Requires Capability DATA_EXTENSION_GRAPH_API.
+     * <p>
+     * Not implemented yet.
+     *
+     * @return false by default
+     */
+    boolean sampleAsGraph() default false;
 
 }

@@ -28,7 +28,7 @@ import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
-import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerTableDataQuery;
+import com.djrapitops.plan.extension.implementation.storage.queries.table.ExtensionServerTableDataQuery;
 import com.djrapitops.plan.gathering.ServerUptimeCalculator;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.*;

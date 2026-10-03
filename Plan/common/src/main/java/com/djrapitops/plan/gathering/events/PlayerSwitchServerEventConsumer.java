@@ -35,7 +35,6 @@ public class PlayerSwitchServerEventConsumer {
         this.serverInfo = serverInfo;
     }
 
-    // TODO introduce an abstract event/interface for leave/join/switch since they share code.
     public void onServerSwitch(PlatformPlayerData player, long time) {
         PlayerJoin asJoin = PlayerJoin.builder()
                 .player(player)

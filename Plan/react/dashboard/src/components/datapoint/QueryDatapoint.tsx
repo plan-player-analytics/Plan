@@ -8,10 +8,7 @@ import {
     NumericDatapointType
 } from "../../dataHooks/model/datapoint/Datapoint";
 import {GenericFilter} from "../../dataHooks/model/GenericFilter";
-import {useNavigation} from "../../hooks/navigationHook";
-import {useQueries, useQuery} from "@tanstack/react-query";
-import {queryRetry} from "../../dataHooks/queryRetry";
-import React, {useEffect, useRef} from "react";
+import React from "react";
 import {Datapoint as DatapointComponent, DatapointProps} from "./Datapoint";
 import FormattedTime from "../text/FormattedTime";
 import {DatapointLoader} from "../navigation/Loader";
@@ -27,6 +24,7 @@ import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 import {useByteSizeFormatter} from "../../util/format/useByteSizeFormatter";
 import {usePingFormatter} from "../../util/format/usePingFormatter";
+import {useDatapointQuery} from "../../dataHooks/useDatapointQuery";
 
 type Props<K extends DatapointType> = {
     dataType: K;
@@ -198,46 +196,6 @@ export function QueryDatapointTrend<K extends NumericDatapointType>({
         }} format={(value: number) => <Format value={value} formatType={before.formatType}/>}/>
         : <DatapointLoader/>
 }
-
-
-export function useDatapointQuery<K extends DatapointType>(allowed: boolean, dataType: K, filter?: GenericFilter) {
-    const {updateRequested} = useNavigation() as { updateRequested: number };
-    const prevUpdateRef = useRef<number | undefined>(undefined);
-    const query = useQuery({
-        queryKey: filter ? ['datapoint', dataType, ...Object.values(filter)] : ['datapoint', dataType],
-        queryFn: () => getDatapoint(dataType, filter),
-        retry: queryRetry,
-        enabled: Boolean(allowed)
-    });
-    useEffect(() => {
-        if (allowed && prevUpdateRef.current && prevUpdateRef.current <= updateRequested) {
-            query.refetch()
-        }
-        prevUpdateRef.current = updateRequested;
-    }, [updateRequested, allowed]);
-    return query;
-}
-
-export function useDatapointQueries<K extends DatapointType>(allowed: boolean, dataType: K, filters: GenericFilter[]) {
-    const {updateRequested} = useNavigation() as { updateRequested: number };
-    const prevUpdateRef = useRef<number | undefined>(undefined);
-    const query = useQueries({
-        queries: filters.map(filter => ({
-            queryKey: filter ? ['datapoint', dataType, ...Object.values(filter)] : ['datapoint', dataType],
-            queryFn: () => getDatapoint(dataType, filter),
-            retry: queryRetry,
-            enabled: Boolean(allowed)
-        }))
-    });
-    useEffect(() => {
-        if (allowed && prevUpdateRef.current && prevUpdateRef.current <= updateRequested) {
-            query.forEach(q => q.refetch())
-        }
-        prevUpdateRef.current = updateRequested;
-    }, [updateRequested, allowed]);
-    return query;
-}
-
 
 async function getDatapoint<K extends DatapointType>(dataType: K, filter?: GenericFilter) {
     const url = getDatapointUrl(dataType, filter);

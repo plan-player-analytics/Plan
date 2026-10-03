@@ -93,7 +93,7 @@ public @interface BooleanProvider {
      *
      * @return Name of the icon, if name is not valid no icon is shown.
      */
-    String iconName() default "question";
+    String iconName() default "tag";
 
     /**
      * Family of Font Awesome icon.

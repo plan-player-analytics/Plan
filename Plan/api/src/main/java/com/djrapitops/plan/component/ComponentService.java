@@ -20,7 +20,7 @@ import java.util.Optional;
 import java.util.concurrent.atomic.AtomicReference;
 
 /**
- * A utility api class for dealing with rich and less-rich Minecraft message formats.
+ * A utility api class for dealing with rich and less-rich Minecraft message valueFormats.
  *
  * @author Vankka
  * @see #getInstance()

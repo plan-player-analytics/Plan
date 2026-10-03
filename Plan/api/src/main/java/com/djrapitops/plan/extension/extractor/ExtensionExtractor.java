@@ -21,6 +21,9 @@ import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.Group;
 import com.djrapitops.plan.extension.annotation.*;
 import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
+import com.djrapitops.plan.extension.graph.GroupGraphDataSource;
+import com.djrapitops.plan.extension.graph.PlayerGraphDataSource;
+import com.djrapitops.plan.extension.graph.ServerGraphDataSource;
 import com.djrapitops.plan.extension.table.Table;
 
 import java.lang.annotation.Annotation;
@@ -38,19 +41,16 @@ import java.util.stream.Collectors;
  */
 public final class ExtensionExtractor {
 
+    private static final String WAS_OVER_50_CHARACTERS = "' was over 50 characters.";
     private final DataExtension extension;
     private final String extensionName;
-
     private final List<String> warnings = new ArrayList<>();
-
     private PluginInfo pluginInfo;
     private List<TabInfo> tabInformation;
     private List<InvalidateMethod> invalidMethods;
     private Map<ExtensionMethod.ParameterType, ExtensionMethods> methods;
     private Collection<Method> conditionalMethods;
     private Collection<Tab> tabAnnotations;
-
-    private static final String WAS_OVER_50_CHARACTERS = "' was over 50 characters.";
 
     public ExtensionExtractor(DataExtension extension) {
         this.extension = extension;
@@ -104,84 +104,14 @@ public final class ExtensionExtractor {
     @Deprecated
     public void extractAnnotationInformation() {/* no-op */}
 
-    private void extractMethods() {
-        methods = new EnumMap<>(ExtensionMethod.ParameterType.class);
-        methods.put(ExtensionMethod.ParameterType.SERVER_NONE, new ExtensionMethods());
-        methods.put(ExtensionMethod.ParameterType.PLAYER_STRING, new ExtensionMethods());
-        methods.put(ExtensionMethod.ParameterType.PLAYER_UUID, new ExtensionMethods());
-        methods.put(ExtensionMethod.ParameterType.GROUP, new ExtensionMethods());
-
-        conditionalMethods = new ArrayList<>();
-        tabAnnotations = new ArrayList<>();
-
-        for (ExtensionMethod method : getExtensionMethods()) {
-            if (method.isInaccessible()) {
-                continue;
-            }
-
-            try {
-                method.makeAccessible();
-            } catch (SecurityException failedToMakeAccessible) {
-                throw new IllegalArgumentException(extensionName + "." + method.getMethodName() + " could not be made accessible: " +
-                        failedToMakeAccessible.getMessage(), failedToMakeAccessible);
-            }
-
-            method.getAnnotation(BooleanProvider.class).ifPresent(annotation -> {
-                validateMethod(method, annotation);
-                methods.get(method.getParameterType()).addBooleanMethod(method);
-            });
-            method.getAnnotation(NumberProvider.class).ifPresent(annotation -> {
-                validateMethod(method, annotation);
-                methods.get(method.getParameterType()).addNumberMethod(method);
-            });
-            method.getAnnotation(DoubleProvider.class).ifPresent(annotation -> {
-                validateMethod(method, annotation);
-                methods.get(method.getParameterType()).addDoubleMethod(method);
-            });
-            method.getAnnotation(PercentageProvider.class).ifPresent(annotation -> {
-                validateMethod(method, annotation);
-                methods.get(method.getParameterType()).addPercentageMethod(method);
-            });
-            method.getAnnotation(StringProvider.class).ifPresent(annotation -> {
-                validateMethod(method, annotation);
-                methods.get(method.getParameterType()).addStringMethod(method);
-            });
-            method.getAnnotation(ComponentProvider.class).ifPresent(annotation -> {
-                validateMethod(method, annotation);
-                methods.get(method.getParameterType()).addComponentMethod(method);
-            });
-            method.getAnnotation(TableProvider.class).ifPresent(annotation -> {
-                validateMethod(method, annotation);
-                methods.get(method.getParameterType()).addTableMethod(method);
-            });
-            method.getAnnotation(GroupProvider.class).ifPresent(annotation -> {
-                validateMethod(method, annotation);
-                methods.get(method.getParameterType()).addGroupMethod(method);
-            });
-            method.getAnnotation(DataBuilderProvider.class).ifPresent(annotation -> {
-                validateMethod(method, annotation);
-                methods.get(method.getParameterType()).addDataBuilderMethod(method);
-            });
-
-            method.getAnnotation(Conditional.class).ifPresent(annotation -> conditionalMethods.add(method.getMethod()));
-            method.getAnnotation(Tab.class).ifPresent(tabAnnotations::add);
-        }
-
-        if (methods.values().stream().allMatch(ExtensionMethods::isEmpty)) {
-            throw new IllegalArgumentException(extensionName + " class had no methods annotated with a Provider annotation");
-        }
-
-        validateConditionals();
-    }
-
-    private <T> void validateReturnType(Method method, Class<T> expectedType) {
+    private void validateReturnType(Method method, Class<?>... expectedType) {
         Class<?> returnType = method.getReturnType();
-        if (!expectedType.isAssignableFrom(returnType)) {
-            String expectedName = expectedType.getName();
+        if (Arrays.stream(expectedType).noneMatch(a -> a.isAssignableFrom(returnType))) {
+            String expectedName = Arrays.stream(expectedType).map(Class::getName).collect(Collectors.joining(", "));
             throw new IllegalArgumentException(extensionName + "." + method.getName() +
                     " has invalid return type. was: " +
                     returnType.getName() +
-                    ", expected: " +
+                    ", expected" + (expectedType.length > 1 ? " (one of)" : "") + ": " +
                     (expectedName.startsWith("[L") ? expectedName + " (an array)" : expectedName));
         }
     }
@@ -189,6 +119,12 @@ public final class ExtensionExtractor {
     private void validateMethodAnnotationPropertyLength(String property, String name, int maxLength, Method method) {
         if (property.length() > maxLength) {
             warnings.add(extensionName + "." + method.getName() + " '" + name + "' was over " + maxLength + " characters.");
+        }
+    }
+
+    private void validateMethodAnnotationPropertyRegex(String property, String name, String pattern, String explanation, Method method) {
+        if (!property.matches(pattern)) {
+            warnings.add(extensionName + "." + method.getName() + " '" + name + "', given '" + property + "' did not match regex '" + pattern + "' (" + explanation + ").");
         }
     }
 
@@ -315,18 +251,105 @@ public final class ExtensionExtractor {
         validateMethodArguments(method, false, UUID.class, String.class, Group.class);
     }
 
+    private void validateMethod(ExtensionMethod extensionMethod, GraphProvider annotation) {
+        Method method = extensionMethod.getMethod();
+
+        validateReturnType(method, ServerGraphDataSource.class, PlayerGraphDataSource.class, GroupGraphDataSource.class);
+        validateMethodAnnotationPropertyLength(annotation.displayName(), "displayName", 50, method);
+        validateMethodArguments(method, false);
+    }
+
+    private void extractMethods() {
+        methods = new EnumMap<>(ExtensionMethod.ParameterType.class);
+        methods.put(ExtensionMethod.ParameterType.SERVER_NONE, new ExtensionMethods());
+        methods.put(ExtensionMethod.ParameterType.PLAYER_STRING, new ExtensionMethods());
+        methods.put(ExtensionMethod.ParameterType.PLAYER_UUID, new ExtensionMethods());
+        methods.put(ExtensionMethod.ParameterType.GROUP, new ExtensionMethods());
+
+        conditionalMethods = new ArrayList<>();
+        tabAnnotations = new ArrayList<>();
+
+        for (ExtensionMethod method : getExtensionMethods()) {
+            if (method.isInaccessible()) {
+                continue;
+            }
+
+            try {
+                method.makeAccessible();
+            } catch (SecurityException failedToMakeAccessible) {
+                throw new IllegalArgumentException(extensionName + "." + method.getMethodName() + " could not be made accessible: " +
+                        failedToMakeAccessible.getMessage(), failedToMakeAccessible);
+            }
+
+            validateMethodAnnotationPropertyLength(method.getMethod().getName(), "methodName", 50, method.getMethod());
+
+            method.getAnnotation(BooleanProvider.class).ifPresent(annotation -> {
+                validateMethod(method, annotation);
+                methods.get(method.getParameterType()).addBooleanMethod(method);
+            });
+            method.getAnnotation(NumberProvider.class).ifPresent(annotation -> {
+                validateMethod(method, annotation);
+                methods.get(method.getParameterType()).addNumberMethod(method);
+            });
+            method.getAnnotation(DoubleProvider.class).ifPresent(annotation -> {
+                validateMethod(method, annotation);
+                methods.get(method.getParameterType()).addDoubleMethod(method);
+            });
+            method.getAnnotation(PercentageProvider.class).ifPresent(annotation -> {
+                validateMethod(method, annotation);
+                methods.get(method.getParameterType()).addPercentageMethod(method);
+            });
+            method.getAnnotation(StringProvider.class).ifPresent(annotation -> {
+                validateMethod(method, annotation);
+                methods.get(method.getParameterType()).addStringMethod(method);
+            });
+            method.getAnnotation(ComponentProvider.class).ifPresent(annotation -> {
+                validateMethod(method, annotation);
+                methods.get(method.getParameterType()).addComponentMethod(method);
+            });
+            method.getAnnotation(TableProvider.class).ifPresent(annotation -> {
+                validateMethod(method, annotation);
+                methods.get(method.getParameterType()).addTableMethod(method);
+            });
+            method.getAnnotation(GroupProvider.class).ifPresent(annotation -> {
+                validateMethod(method, annotation);
+                methods.get(method.getParameterType()).addGroupMethod(method);
+            });
+            method.getAnnotation(DataBuilderProvider.class).ifPresent(annotation -> {
+                validateMethod(method, annotation);
+                methods.get(method.getParameterType()).addDataBuilderMethod(method);
+            });
+            method.getAnnotation(GraphProvider.class).ifPresent(annotation -> {
+                validateMethod(method, annotation);
+                methods.get(method.getParameterType()).addGraphPointProviderMethod(method);
+            });
+
+            method.getAnnotation(Conditional.class).ifPresent(annotation -> conditionalMethods.add(method.getMethod()));
+            method.getAnnotation(Tab.class).ifPresent(tabAnnotations::add);
+        }
+
+        if (methods.values().stream().allMatch(ExtensionMethods::isEmpty)) {
+            throw new IllegalArgumentException(extensionName + " class had no methods annotated with a Provider annotation");
+        }
+        validateConditionals();
+    }
+
     private void validateConditionals() {
         // Make sure that all methods annotated with Conditional have a Provider annotation
         for (Method conditionalMethod : conditionalMethods) {
             if (!hasAnyOf(conditionalMethod,
                     BooleanProvider.class, DoubleProvider.class, NumberProvider.class,
                     PercentageProvider.class, StringProvider.class, ComponentProvider.class,
-                    TableProvider.class, GroupProvider.class, DataBuilderProvider.class
+                    TableProvider.class, GroupProvider.class, DataBuilderProvider.class,
+                    GraphProvider.class
             )) {
                 throw new IllegalArgumentException(extensionName + "." + conditionalMethod.getName() + " did not have any associated Provider for Conditional.");
             }
             if (hasAnyOf(conditionalMethod, DataBuilderProvider.class)) {
                 throw new IllegalArgumentException(extensionName + "." + conditionalMethod.getName() + " had Conditional, but DataBuilderProvider does not support it!");
+            }
+            if (hasAnyOf(conditionalMethod, GraphProvider.class)) {
+                throw new IllegalArgumentException(extensionName + "." + conditionalMethod.getName() + " had Conditional, but GraphProvider does not support it!");
             }
         }
     }

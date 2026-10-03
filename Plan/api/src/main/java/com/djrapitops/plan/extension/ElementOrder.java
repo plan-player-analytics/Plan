@@ -29,17 +29,29 @@ import java.util.List;
  */
 public enum ElementOrder {
     /**
-     * Represents text - value pair box.
+     * Represents values by {@link com.djrapitops.plan.extension.annotation.NumberProvider}, {@link com.djrapitops.plan.extension.annotation.StringProvider}, {@link com.djrapitops.plan.extension.annotation.BooleanProvider}, {@link com.djrapitops.plan.extension.annotation.PercentageProvider}, {@link com.djrapitops.plan.extension.annotation.DoubleProvider}
      */
     VALUES,
     /**
-     * Represents graphs.
+     * Represents {@link com.djrapitops.plan.extension.annotation.GraphProvider} data.
      */
     GRAPH,
     /**
-     * Represents tables.
+     * Represents {@link com.djrapitops.plan.extension.annotation.TableProvider} data.
      */
-    TABLE;
+    TABLE,
+    /**
+     * Represents {@link com.djrapitops.plan.extension.annotation.GroupProvider} data.
+     */
+    GROUPS,
+    /**
+     * Represents key-value numeric data (not yet implemented).
+     */
+    STATISTICS,
+    /**
+     * Represents key-value boolean data (not yet implemented).
+     */
+    FLAGS;
 
     public static String serialize(ElementOrder[] order) {
         StringBuilder builder = new StringBuilder();

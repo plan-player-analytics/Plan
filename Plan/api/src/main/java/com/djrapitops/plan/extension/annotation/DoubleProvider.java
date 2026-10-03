@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.extension.annotation;
 
+import com.djrapitops.plan.extension.graph.Aggregates;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 
@@ -71,7 +72,7 @@ public @interface DoubleProvider {
      *
      * @return Name of the icon, if name is not valid no icon is shown.
      */
-    String iconName() default "question";
+    String iconName() default "hashtag";
 
     /**
      * Family of Font Awesome icon.
@@ -97,4 +98,15 @@ public @interface DoubleProvider {
      * @return false by default.
      */
     boolean showInPlayerTable() default false;
+
+    /**
+     * Define any aggregate functions the value supports if a Player provider.
+     * <p>
+     * Automatic aggregate numbers (As if defining another NumberProvider for server) will be added to the same {@link Tab} if these are defined.
+     * <p>
+     * e.g. returning {@link Aggregates#SUM_ALL} adds "Total {displayName}" to Server plugin values.
+     *
+     * @return None by default.
+     */
+    Aggregates[] supportedAggregateFunctions() default {};
 }

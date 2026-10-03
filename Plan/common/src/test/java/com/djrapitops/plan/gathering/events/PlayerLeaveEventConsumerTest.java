@@ -96,6 +96,7 @@ class PlayerLeaveEventConsumerTest {
 
         database.executeTransaction(new RemoveEverythingTransaction());
         database.executeTransaction(new StoreServerInformationTransaction(new Server(serverUUID, TestConstants.SERVER_NAME, "", TestConstants.VERSION)));
+        database.executeTransaction(new StoreWorldNameTransaction(serverUUID, "World"));
     }
 
     PlayerLeave createPlayerLeave(PlatformPlayerData player) {
@@ -115,7 +116,6 @@ class PlayerLeaveEventConsumerTest {
         SessionCache sessionCache = system.getCacheSystem().getSessionCache();
         long sessionStart = System.currentTimeMillis();
         sessionCache.cacheSession(TestConstants.PLAYER_ONE_UUID, new ActiveSession(TestConstants.PLAYER_ONE_UUID, serverUUID, sessionStart, "World", GMTimes.SURVIVAL));
-        database.executeTransaction(new StoreWorldNameTransaction(serverUUID, "World"));
 
         PlayerLeave leave = createPlayerLeave(createTestPlayer());
 
@@ -249,7 +249,6 @@ class PlayerLeaveEventConsumerTest {
         sessionCache.cacheSession(TestConstants.PLAYER_ONE_UUID, activeSession);
 
         database.executeTransaction(new StoreJoinAddressTransaction("play.uppercase.com")); // The wrong address
-        database.executeTransaction(new StoreWorldNameTransaction(serverUUID, "World"));
 
         PlayerLeave leave = createPlayerLeave(createTestPlayer()
                 .setJoinAddress("PLAY.UPPERCASE.COM"));

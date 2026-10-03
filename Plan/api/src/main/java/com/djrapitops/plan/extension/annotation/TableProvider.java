@@ -17,6 +17,7 @@
 package com.djrapitops.plan.extension.annotation;
 
 import com.djrapitops.plan.extension.icon.Color;
+import com.djrapitops.plan.extension.icon.Family;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -45,5 +46,24 @@ public @interface TableProvider {
      * @return Preferred color. If none are specified defaults are used.
      */
     Color tableColor() default Color.NONE;
+
+
+    /**
+     * Name of Font Awesome icon.
+     * <p>
+     * See <a href="https://fontawesome.com/icons">FontAwesome</a> (select 'free')) for icons and their {@link Family}.
+     *
+     * @return Name of the icon, if name is not valid no icon is shown.
+     */
+    String iconName() default "table";
+
+    /**
+     * Family of Font Awesome icon.
+     * <p>
+     * See <a href="https://fontawesome.com/icons">FontAwesome</a> (select 'free')) for icons and their {@link Family}.
+     *
+     * @return Family that matches an icon, if there is no icon for this family no icon is shown.
+     */
+    Family iconFamily() default Family.SOLID;
 
 }

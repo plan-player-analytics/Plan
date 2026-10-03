@@ -19,14 +19,10 @@ import Scrollable from "../Scrollable";
 import {NavLink} from "react-router";
 import ActionButton from "../input/button/ActionButton.tsx";
 import {DatapointType} from "../../dataHooks/model/datapoint/Datapoint.ts";
-import {
-    calculatePermission,
-    QueryDatapointValue,
-    useDatapointQueries,
-    useDatapointQuery
-} from "../datapoint/QueryDatapoint.tsx";
+import {calculatePermission, QueryDatapointValue} from "../datapoint/QueryDatapoint.tsx";
 import {MS_24H, MS_MONTH, MS_WEEK} from "../../util/format/useDateFormatter.js";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
+import {useDatapointQueries, useDatapointQuery} from "../../dataHooks/useDatapointQuery.ts";
 
 const ServerRow = ({server, sortedBy, onQuickView}) => {
     const {t} = useTranslation();

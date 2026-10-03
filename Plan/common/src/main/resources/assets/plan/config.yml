@@ -77,7 +77,7 @@ Webserver:
       Remove_logs_after_days: 30
     IP_whitelist:
       Enabled: false
-      # Supported formats:
+      # Supported valueFormats:
       # IPv4 exact: "192.168.0.1", wildcard: "192.168.*.*", cidr: "192.168.0.0/16"
       # IPv6 exact: "0:0:0:0:0:0:0:1", compressed: "1::1", cidr: "1234:db8:1234:1a:20::/64"
       # More: https://seancfoley.github.io/IPAddress/ipaddress.html#supported-ip-address-parsing-formats

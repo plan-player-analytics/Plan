@@ -66,6 +66,13 @@ public enum CallEvents {
      * Periodic task with a runs user configured period (Plan config).
      * Method calls are asynchronous.
      */
-    SERVER_PERIODICAL
+    SERVER_PERIODICAL;
+
+    public boolean isIn(CallEvents... events) {
+        for (CallEvents event : events) {
+            if (event == this) return true;
+        }
+        return false;
+    }
 
 }

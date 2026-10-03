@@ -89,6 +89,10 @@ public final class URIQuery {
         }
     }
 
+    public boolean contains(String key) {
+        return byKey.containsKey(key);
+    }
+
     /**
      * Obtain an URI parameter by key.
      *

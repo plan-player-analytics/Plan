@@ -19,11 +19,13 @@ package com.djrapitops.plan.extension;
 import com.djrapitops.plan.component.ComponentSvc;
 import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
 import com.djrapitops.plan.extension.implementation.CallerImplementation;
+import com.djrapitops.plan.extension.implementation.ExtensionMethodErrorTracker;
 import com.djrapitops.plan.extension.implementation.ExtensionRegister;
 import com.djrapitops.plan.extension.implementation.ExtensionWrapper;
 import com.djrapitops.plan.extension.implementation.builder.ExtDataBuilder;
 import com.djrapitops.plan.extension.implementation.providers.gathering.DataValueGatherer;
 import com.djrapitops.plan.extension.implementation.providers.gathering.ExtensionMetadataStorage;
+import com.djrapitops.plan.extension.implementation.providers.gathering.GraphSamplers;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.UUIDUtility;
 import com.djrapitops.plan.processing.Processing;
@@ -61,6 +63,7 @@ public class ExtensionSvc implements ExtensionService {
     private final Processing processing;
     private final ExtensionRegister extensionRegister;
     private final ExtensionMetadataStorage extensionMetadataStorage;
+    private final GraphSamplers graphSamplers;
     private final UUIDUtility uuidUtility;
     private final PluginLogger logger;
     private final ErrorLogger errorLogger;
@@ -77,6 +80,7 @@ public class ExtensionSvc implements ExtensionService {
             Processing processing,
             ExtensionRegister extensionRegister,
             ExtensionMetadataStorage extensionMetadataStorage,
+            GraphSamplers graphSamplers,
             UUIDUtility uuidUtility,
             PluginLogger logger,
             ErrorLogger errorLogger
@@ -89,6 +93,7 @@ public class ExtensionSvc implements ExtensionService {
         this.processing = processing;
         this.extensionRegister = extensionRegister;
         this.extensionMetadataStorage = extensionMetadataStorage;
+        this.graphSamplers = graphSamplers;
         this.uuidUtility = uuidUtility;
         this.logger = logger;
         this.errorLogger = errorLogger;
@@ -131,6 +136,7 @@ public class ExtensionSvc implements ExtensionService {
         DataValueGatherer gatherer = new DataValueGatherer(extension, dbSystem, extensionMetadataStorage, componentService, serverInfo, errorLogger);
         gatherer.storeExtensionInformation();
         extensionGatherers.put(pluginName, gatherer);
+        graphSamplers.registerGraphSamplers(extension);
 
         processing.submitNonCritical(() -> updateServerValues(gatherer, CallEvents.SERVER_EXTENSION_REGISTER));
 
@@ -141,6 +147,7 @@ public class ExtensionSvc implements ExtensionService {
     @Override
     public void unregister(DataExtension extension) {
         extensionGatherers.remove(extension.getPluginName());
+        graphSamplers.unregister(extension);
     }
 
     @Override
@@ -168,10 +175,18 @@ public class ExtensionSvc implements ExtensionService {
     }
 
     public void updatePlayerValues(UUID playerUUID, String playerName, CallEvents event) {
-        if (!enabled.get()) return; // Plugin is disabling
+        if (!enabled.get()) return; // Plugin is disabling, don't gather data
+
+        if (event == CallEvents.PLAYER_LEAVE) {
+            graphSamplers.unregisterPlayerSamplers(playerUUID);
+        }
+        if (event == CallEvents.PLAYER_JOIN) {
+            graphSamplers.registerPlayerGraphSamplers(playerUUID, playerName);
+        }
         for (DataValueGatherer gatherer : extensionGatherers.values()) {
             updatePlayerValues(gatherer, playerUUID, playerName, event);
         }
+        graphSamplers.updatePlayerHistory(playerUUID, playerName, event);
     }
 
     public void updatePlayerValues(DataValueGatherer gatherer, UUID playerUUID, String playerName, CallEvents event) {
@@ -194,6 +209,7 @@ public class ExtensionSvc implements ExtensionService {
         for (DataValueGatherer gatherer : extensionGatherers.values()) {
             updateServerValues(gatherer, event);
         }
+        graphSamplers.updateServerHistory(event);
     }
 
     public void updateServerValues(DataValueGatherer gatherer, CallEvents event) {
@@ -205,9 +221,14 @@ public class ExtensionSvc implements ExtensionService {
 
     public void disableUpdates() {
         enabled.set(false);
+        ExtensionMethodErrorTracker.clear();
     }
 
     public ExtensionMetadataStorage getExtensionMetadataStorage() {
         return extensionMetadataStorage;
+    }
+
+    public GraphSamplers getGraphSamplers() {
+        return graphSamplers;
     }
 }

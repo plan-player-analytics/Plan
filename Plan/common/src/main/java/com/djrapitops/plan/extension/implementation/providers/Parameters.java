@@ -48,13 +48,8 @@ public interface Parameters {
         return null;
     }
 
-    class ServerParameters implements Parameters {
-        private final ServerUUID serverUUID;
-
-        private ServerParameters(ServerUUID serverUUID) {
-            this.serverUUID = serverUUID;
-        }
-
+    record ServerParameters(ServerUUID serverUUID) implements Parameters {
+        @Override
         public ServerUUID getServerUUID() {
             return serverUUID;
         }
@@ -70,17 +65,8 @@ public interface Parameters {
         }
     }
 
-    class PlayerParameters implements Parameters {
-        private final ServerUUID serverUUID;
-        private final UUID playerUUID;
-        private final String playerName;
-
-        private PlayerParameters(ServerUUID serverUUID, UUID playerUUID, String playerName) {
-            this.serverUUID = serverUUID;
-            this.playerUUID = playerUUID;
-            this.playerName = playerName;
-        }
-
+    record PlayerParameters(ServerUUID serverUUID, UUID playerUUID, String playerName) implements Parameters {
+        @Override
         public ServerUUID getServerUUID() {
             return serverUUID;
         }
@@ -110,15 +96,8 @@ public interface Parameters {
         }
     }
 
-    class GroupParameters implements Parameters {
-        private final ServerUUID serverUUID;
-        private final String groupName;
-
-        private GroupParameters(ServerUUID serverUUID, String groupName) {
-            this.serverUUID = serverUUID;
-            this.groupName = groupName;
-        }
-
+    record GroupParameters(ServerUUID serverUUID, String groupName) implements Parameters {
+        @Override
         public ServerUUID getServerUUID() {
             return serverUUID;
         }

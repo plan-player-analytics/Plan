@@ -19,7 +19,6 @@ type Props = {
     statistics: ServerStatistics[];
     showAllByDefault?: boolean;
     hideFilter?: boolean;
-    noCard?: boolean;
 }
 
 export const StatisticsTable = ({statistics, showAllByDefault, hideFilter}: Props) => {
@@ -80,10 +79,12 @@ export const StatisticsTable = ({statistics, showAllByDefault, hideFilter}: Prop
                 </tr>
                 </thead>
                 <tbody>
-                {grouped.filter(() => serverCount).map(group => <>
-                    <tr key={group[0]}>
+                {grouped.filter(() => serverCount).map(group => <React.Fragment key={group[0]}>
+                    <tr>
                         <td className={"sticky-top"}><b>{formatStatisticName(group[0])}</b></td>
-                        <td colSpan={serverCount}/>
+                        <td colSpan={serverUUIDs
+                            .filter((_, index) => filterFunction(_, index))
+                            .length}/>
                     </tr>
                     {group[1]?.map(key => <tr key={key} title={key}>
                         <td>
@@ -91,14 +92,14 @@ export const StatisticsTable = ({statistics, showAllByDefault, hideFilter}: Prop
                         </td>
                         {serverUUIDs
                             .filter((_, index) => filterFunction(_, index))
-                            .map((serverUUID, index) => <td key={serverUUID}>
+                            .map((serverUUID, index) => <td key={key + serverUUID}>
                                 {formatStatistic(key, statistics[index].statistics[key])}
                             </td>)}
-                    </tr>)}</>)}
-                {!!(statisticsKeys.length && serverCount) && <tr>
+                    </tr>)}</React.Fragment>)}
+                {!!(statisticsKeys.length && serverCount > 1) && <tr key="server-select">
                     <td>{t('html.label.selectSomeServer')}</td>
                 </tr>}
-                {!statisticsKeys.length && <tr>
+                {!statisticsKeys.length && <tr key="no-data">
                     <td>{t('generic.noData')}</td>
                 </tr>}
                 </tbody>

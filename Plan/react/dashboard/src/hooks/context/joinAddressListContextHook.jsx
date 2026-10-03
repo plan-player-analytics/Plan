@@ -1,5 +1,5 @@
 import {createContext, useCallback, useContext, useEffect, useMemo, useState} from "react";
-import {randomUuid} from "../../util/uuid.js";
+import {randomUuid} from "../../util/uuid.ts";
 import {fetchPlayerJoinAddresses} from "../../service/serverService.js";
 import {useNavigation} from "../navigationHook.tsx";
 import {usePreferences} from "../preferencesHook.jsx";

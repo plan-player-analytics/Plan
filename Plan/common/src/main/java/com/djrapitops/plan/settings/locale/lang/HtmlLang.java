@@ -328,6 +328,10 @@ public enum HtmlLang implements Lang {
     CATEGORY_ADVENTURE("html.label.ADVENTURE", "Adventure"),
     CATEGORY_SPECTATOR("html.label.SPECTATOR", "Spectator"),
 
+
+    LABEL_PLAYERS_WITH_DATA("html.label.playersWithData", "{{positivePercentage}}% players in data"),
+    LABEL_TITLE_PLAYERS_HAVE_DATA("html.label.titlePlayersHaveData", "({{positivePercentage}}%) {{positiveCount}} of {{total}} players have data for {{extensionName}}"),
+
     LOGIN_LOGIN("html.login.login", "Login"),
     LOGIN_LOGOUT("html.login.logout", "Logout"),
     LOGIN_USERNAME("html.login.username", "Username"),

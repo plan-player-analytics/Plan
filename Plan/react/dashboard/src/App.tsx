@@ -45,7 +45,6 @@ const ServerGeolocations = React.lazy(() => import("./views/server/ServerGeoloca
 const ServerPerformance = React.lazy(() => import("./views/server/ServerPerformance"));
 const ServerPluginHistory = React.lazy(() => import('./views/server/ServerPluginHistory'));
 const ServerPluginData = React.lazy(() => import("./views/server/ServerPluginData"));
-const ServerWidePluginData = React.lazy(() => import("./views/server/ServerWidePluginData"));
 const ServerJoinAddresses = React.lazy(() => import("./views/server/ServerJoinAddresses"));
 const ServerPlayerRetention = React.lazy(() => import("./views/server/ServerPlayerRetention"));
 
@@ -177,7 +176,6 @@ const router = createBrowserRouter(
                 <Route path="performance" element={<Lazy><ServerPerformance/></Lazy>}/>
                 <Route path="plugin-history" element={<Lazy><ServerPluginHistory/></Lazy>}/>
                 <Route path="plugins-overview" element={<Lazy><ServerPluginData/></Lazy>}/>
-                <Route path="plugins/:plugin" element={<Lazy><ServerWidePluginData/></Lazy>}/>
                 <Route path="" element={<OverviewRedirect/>}/>
                 <Route path="*" element={<ErrorView error={{
                     message: 'Unknown tab address, please correct the address',
@@ -199,7 +197,6 @@ const router = createBrowserRouter(
                 <Route path="geolocations" element={<Lazy><NetworkGeolocations/></Lazy>}/>
                 <Route path="plugin-history" element={<Lazy><NetworkPluginHistory/></Lazy>}/>
                 <Route path="plugins-overview" element={<Lazy><ServerPluginData/></Lazy>}/>
-                <Route path="plugins/:plugin" element={<Lazy><ServerWidePluginData/></Lazy>}/>
                 <Route path="" element={<OverviewRedirect/>}/>
                 <Route path="*" element={<ErrorView error={{
                     message: 'Unknown tab address, please correct the address',

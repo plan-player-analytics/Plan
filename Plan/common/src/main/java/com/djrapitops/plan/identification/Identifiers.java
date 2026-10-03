@@ -18,9 +18,11 @@ package com.djrapitops.plan.identification;
 
 import com.djrapitops.plan.delivery.domain.datatransfer.GenericFilter;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
+import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.URIQuery;
 import com.djrapitops.plan.delivery.webserver.resolver.ETag;
+import com.djrapitops.plan.extension.implementation.storage.queries.graph.ExtensionGraphQueries;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
@@ -162,5 +164,16 @@ public class Identifiers {
             filter.setServerUUIDs(getServerUUIDs(filter.getServerIdentifiers()));
         }
         return filter;
+    }
+
+    public String getGraphName(@Untrusted URIQuery query) {
+        @Untrusted String unsafeGraph = query.get("graph")
+                .orElseThrow(() -> new BadRequestException("'graph' parameter was not given"))
+                .replaceAll("[^a-z_]", "!");
+        if (!unsafeGraph.matches("[a-z_]+") || !unsafeGraph.startsWith("plan_extension_graph_")) {
+            throw new BadRequestException("Invalid 'graph' parameter");
+        }
+        return dbSystem.getDatabase().query(ExtensionGraphQueries.findGraphTableName(unsafeGraph))
+                .orElseThrow(() -> new NotFoundException("Graph with given graph-parameter was not found in database"));
     }
 }
