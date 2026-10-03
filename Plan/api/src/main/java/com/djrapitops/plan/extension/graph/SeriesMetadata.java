@@ -51,6 +51,10 @@ public class SeriesMetadata {
         this.hexColor = hexColor;
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     public String getSeriesName() {
         return seriesName;
     }
@@ -65,5 +69,40 @@ public class SeriesMetadata {
 
     public String getHexColor() {
         return hexColor;
+    }
+
+    public static class Builder {
+
+        private String seriesName;
+        private String unitLabel;
+        private GraphFormatType formatType;
+        private String hexColor;
+
+        private Builder() {
+        }
+
+        public Builder seriesName(String seriesName) {
+            this.seriesName = seriesName;
+            return this;
+        }
+
+        public Builder unitLabel(String unitLabel) {
+            this.unitLabel = unitLabel;
+            return this;
+        }
+
+        public Builder formatType(GraphFormatType formatType) {
+            this.formatType = formatType;
+            return this;
+        }
+
+        public Builder hexColor(String hexColor) {
+            this.hexColor = hexColor;
+            return this;
+        }
+
+        public SeriesMetadata build() {
+            return new SeriesMetadata(seriesName, unitLabel, formatType, hexColor);
+        }
     }
 }
