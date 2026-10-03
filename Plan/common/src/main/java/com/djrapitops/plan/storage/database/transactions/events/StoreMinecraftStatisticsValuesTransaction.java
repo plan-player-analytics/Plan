@@ -25,6 +25,8 @@ import com.djrapitops.plan.storage.database.transactions.Transaction;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -55,18 +57,37 @@ public class StoreMinecraftStatisticsValuesTransaction extends Transaction {
 
         Set<Integer> existingStatisticIds = query(db -> db.querySet(selectStatisticsForUpdate, row -> row.getInt(1), userId, serverId));
         Map<Integer, Integer> valuesById = statistics.getValuesById();
+        List<Integer> removedIds = new ArrayList<>();
         execute(new ExecBatchStatement(StatisticValueTable.UPDATE_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setInt(3, userId);
                 statement.setInt(4, serverId);
                 for (Integer id : existingStatisticIds) {
-                    statement.setInt(1, valuesById.get(id));
+                    Integer value = valuesById.get(id);
+                    if (value == null) {
+                        removedIds.add(id);
+                        continue; // Value has been removed.
+                    }
+                    statement.setInt(1, value);
                     statement.setInt(2, id);
                     statement.addBatch();
                 }
             }
         });
+        if (!removedIds.isEmpty()) {
+            execute(new ExecBatchStatement(StatisticValueTable.DELETE_STATEMENT) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setInt(2, userId);
+                    statement.setInt(3, serverId);
+                    for (Integer id : removedIds) {
+                        statement.setInt(1, id);
+                        statement.addBatch();
+                    }
+                }
+            });
+        }
         execute(new ExecBatchStatement(StatisticValueTable.INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

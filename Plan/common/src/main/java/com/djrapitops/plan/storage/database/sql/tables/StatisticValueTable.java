@@ -56,6 +56,10 @@ public class StatisticValueTable {
             WHERE + STATISTIC_ID + "=?" +
             AND + USER_ID + "=?" +
             AND + SERVER_ID + "=?";
+    public static final String DELETE_STATEMENT = DELETE_FROM + TABLE_NAME +
+            WHERE + STATISTIC_ID + "=?" +
+            AND + USER_ID + "=?" +
+            AND + SERVER_ID + "=?";
 
     private StatisticValueTable() {
         /* Static information class */
