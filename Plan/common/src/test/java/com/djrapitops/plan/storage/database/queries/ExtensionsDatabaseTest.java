@@ -227,7 +227,7 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         List<ExtensionTableData> tableData = tabData.getTableData();
         assertEquals(1, tableData.size());
         Table expected = Table.builder()
-                .columnOne("a group", Icon.called("circle").build())
+                .columnOne("a group", Icon.called("user-group").build())
                 .columnTwo("Players", Icon.called("user").build())
                 .addRow("Group", 1).build();
         Table result = tableData.get(0).getTable();
