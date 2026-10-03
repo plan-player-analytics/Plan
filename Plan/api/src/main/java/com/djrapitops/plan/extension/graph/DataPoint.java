@@ -49,7 +49,9 @@ public class DataPoint {
 
     public DataPoint(long x, List<Number> values) {
         this.x = x;
-        this.values = values.stream().map(Number::doubleValue).collect(Collectors.toList());
+        this.values = values.stream()
+                .map(value -> value != null ? value.doubleValue() : null)
+                .collect(Collectors.toList());
     }
 
     public long getX() {

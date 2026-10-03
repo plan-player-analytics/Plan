@@ -15,7 +15,7 @@ const ServerPluginData = () => {
     const {hasPermission} = useAuth();
     const {t} = useTranslation();
     const {extensionData, extensionDataLoadingError, proxy} = useServerExtensionContext();
-    const extensions = useMemo(() => extensionData?.extensions ? extensionData.extensions.filter(extension => !extension.wide) : [], [extensionData]);
+    const extensions = useMemo(() => extensionData?.extensions ? extensionData.extensions : [], [extensionData]);
     const seePlugins = hasPermission(proxy ? 'page.network.plugins' : 'page.server.plugins');
 
     useEffect(() => {
@@ -43,7 +43,7 @@ const ServerPluginData = () => {
     if (!extensions?.length) {
         return (
             <LoadIn>
-                <section className="server_plugin_data" id={"server-plugin-data"}>
+                <section id="server-plugin-data" className="server_plugin_data">
                     <Row>
                         <Col md={12}>
                             <Card>
@@ -65,7 +65,7 @@ const ServerPluginData = () => {
 
     return (
         <LoadIn>
-            <section className="server_plugin_data">
+            <section id="server-plugin-data" className="server_plugin_data">
                 <Row id="extension-masonry-row"
                      data-masonry='{"percentPosition": true, "itemSelector": ".extension-wrapper"}'
                      style={{overflowY: 'hidden'}}>

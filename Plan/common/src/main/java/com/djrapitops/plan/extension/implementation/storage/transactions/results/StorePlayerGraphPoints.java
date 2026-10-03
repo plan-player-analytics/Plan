@@ -29,6 +29,7 @@ import java.sql.SQLException;
 import java.sql.Types;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -64,10 +65,14 @@ public class StorePlayerGraphPoints extends Transaction {
         List<DataPoint> replace = new ArrayList<>();
         List<DataPoint> append = new ArrayList<>();
         if (historyStrategy == HistoryStrategy.ONLY_APPEND_MISSING) {
-            append = dataPoints.stream().filter(point -> existingX.contains(point.getX())).toList();
+            append = dataPoints.stream()
+                    .filter(Objects::nonNull)
+                    .filter(point -> !existingX.contains(point.getX())).toList();
         }
         if (historyStrategy == HistoryStrategy.REPLACE_CHANGED_VALUES) {
-            var replaceOrAppend = dataPoints.stream().collect(Collectors.groupingBy(point -> existingX.contains(point.getX())));
+            var replaceOrAppend = dataPoints.stream()
+                    .filter(Objects::nonNull)
+                    .collect(Collectors.groupingBy(point -> existingX.contains(point.getX())));
             replace = replaceOrAppend.getOrDefault(true, List.of());
             append = replaceOrAppend.getOrDefault(false, List.of());
         }

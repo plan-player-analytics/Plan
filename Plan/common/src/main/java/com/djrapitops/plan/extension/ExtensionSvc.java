@@ -147,6 +147,7 @@ public class ExtensionSvc implements ExtensionService {
     @Override
     public void unregister(DataExtension extension) {
         extensionGatherers.remove(extension.getPluginName());
+        graphSamplers.unregister(extension);
     }
 
     @Override
@@ -225,5 +226,9 @@ public class ExtensionSvc implements ExtensionService {
 
     public ExtensionMetadataStorage getExtensionMetadataStorage() {
         return extensionMetadataStorage;
+    }
+
+    public GraphSamplers getGraphSamplers() {
+        return graphSamplers;
     }
 }

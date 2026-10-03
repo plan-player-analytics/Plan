@@ -32,7 +32,8 @@ export const ExtensionCard = ({extension}: Props) => {
     }
 
     return (
-        <Col md={extension.widths?.cardWidth || 12} className="extension-wrapper">
+        <Col md={extension.widths?.cardWidth || 12} className="extension-wrapper"
+             id={extension.extensionInformation.pluginName}>
             <Card>
                 <Card.Header>
                     <h6 className="col-text" style={{width: "100%"}}>

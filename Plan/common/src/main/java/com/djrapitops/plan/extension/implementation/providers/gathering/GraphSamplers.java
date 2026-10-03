@@ -18,6 +18,7 @@ package com.djrapitops.plan.extension.implementation.providers.gathering;
 
 import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
 import com.djrapitops.plan.extension.CallEvents;
+import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.NotReadyException;
 import com.djrapitops.plan.extension.annotation.GraphProvider;
 import com.djrapitops.plan.extension.annotation.Tab;
@@ -38,9 +39,12 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.results
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.sql.tables.extension.graph.ExtensionGraphMetadataTable;
+import com.djrapitops.plan.utilities.java.ThrowingSupplier;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
+import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -65,6 +69,9 @@ public class GraphSamplers {
     private final List<GraphSource<PlayerGraphDataSource>> playerGraphSources = new ArrayList<>();
     private final List<GraphSource<ServerGraphDataSource>> serverGraphSources = new ArrayList<>();
     private final Map<UUID, Set<PlayerGraphSampler>> activePlayerGraphSamplers = new ConcurrentHashMap<>();
+    private final Map<String, Set<ServerGraphSampler>> activeServerGraphSamplers = new ConcurrentHashMap<>();
+
+    private final Set<ProviderIdentifier> disabledGraphHistoryIdentifiers = new HashSet<>();
 
     @Inject
     public GraphSamplers(ServerInfo serverInfo, DBSystem dbSystem, RunnableFactory runnableFactory, ErrorLogger errorLogger) {
@@ -72,6 +79,21 @@ public class GraphSamplers {
         this.dbSystem = dbSystem;
         this.runnableFactory = runnableFactory;
         this.errorLogger = errorLogger;
+    }
+
+    private static List<SeriesMetadata> wrapException(ThrowingSupplier<List<SeriesMetadata>, RuntimeException> metadataGetter, ProviderIdentifier providerIdentifier) {
+        try {
+            return metadataGetter.get();
+        } catch (NotReadyException | UnsupportedOperationException ignored) {
+            // Data or API not available to make the call, no-op.
+            return List.of();
+        } catch (Exception | IllegalAccessError | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
+            throw new DataExtensionMethodCallException("", e, providerIdentifier.getPluginName(), providerIdentifier.getProviderName());
+        }
+    }
+
+    private static @NonNull String getPrefix(ProviderIdentifier providerIdentifier) {
+        return "Graph sampler for " + providerIdentifier.getPluginName() + "." + providerIdentifier.getProviderName();
     }
 
     public void registerGraphSamplers(ExtensionWrapper extension) {
@@ -94,7 +116,7 @@ public class GraphSamplers {
                 var playerGraphDataSource = new MethodWrapper<>(provider.getMethod(), PlayerGraphDataSource.class)
                         .callMethod(extension.getExtension(), parameters);
                 if (playerGraphDataSource == null) continue;
-                List<SeriesMetadata> seriesMetadata = playerGraphDataSource.getSeriesMetadata();
+                List<SeriesMetadata> seriesMetadata = wrapException(playerGraphDataSource::getSeriesMetadata, providerIdentifier);
                 storeGraphMetadata(
                         extension,
                         provider,
@@ -102,7 +124,7 @@ public class GraphSamplers {
                         ExtensionGraphMetadataTable.TableType.PLAYER
                 );
                 playerGraphSources.add(new GraphSource<>(extension, provider, playerGraphDataSource,
-                        new AtomicInteger(seriesMetadata.size()),
+                        new AtomicInteger(seriesMetadata != null ? seriesMetadata.size() : 1),
                         () -> storeGraphMetadata(
                                 extension,
                                 provider,
@@ -112,7 +134,7 @@ public class GraphSamplers {
             } catch (DataExtensionMethodCallException e) {
                 errorLogger.warn(e, ErrorContext.builder()
                         .related(providerIdentifier)
-                        .whatToDo("Graph sampler for " + providerIdentifier.getPluginName() + "." + providerIdentifier.getProviderName() + " ran into error and was not registered.")
+                        .whatToDo(getPrefix(providerIdentifier) + " ran into error and was not registered.")
                         .build());
             }
         }
@@ -127,7 +149,7 @@ public class GraphSamplers {
                 var serverGraphDataSource = new MethodWrapper<>(provider.getMethod(), ServerGraphDataSource.class)
                         .callMethod(extension.getExtension(), parameters);
                 if (serverGraphDataSource == null) continue;
-                List<SeriesMetadata> seriesMetadata = serverGraphDataSource.getSeriesMetadata();
+                List<SeriesMetadata> seriesMetadata = wrapException(serverGraphDataSource::getSeriesMetadata, providerIdentifier);
                 storeGraphMetadata(
                         extension,
                         provider,
@@ -135,7 +157,7 @@ public class GraphSamplers {
                         ExtensionGraphMetadataTable.TableType.SERVER
                 );
                 var graphSource = new GraphSource<>(extension, provider, serverGraphDataSource,
-                        new AtomicInteger(seriesMetadata.size()),
+                        new AtomicInteger(seriesMetadata != null ? seriesMetadata.size() : 1),
                         () -> storeGraphMetadata(
                                 extension,
                                 provider,
@@ -151,17 +173,19 @@ public class GraphSamplers {
                         errorLogger,
                         graphSource.refreshMetadata()
                 );
+                activeServerGraphSamplers.computeIfAbsent(extension.getPluginName(), u -> Collections.newSetFromMap(new ConcurrentHashMap<>()))
+                        .add(sampler);
                 sampler.register(runnableFactory);
             } catch (DataExtensionMethodCallException e) {
                 errorLogger.warn(e, ErrorContext.builder()
                         .related(providerIdentifier)
-                        .whatToDo("Graph sampler for " + providerIdentifier.getPluginName() + "." + providerIdentifier.getProviderName() + " ran into error and was not registered.")
+                        .whatToDo(getPrefix(providerIdentifier) + " ran into error and was not registered.")
                         .build());
             }
         }
     }
 
-    private void storeGraphMetadata(ExtensionWrapper extension, ExtensionMethod provider, List<SeriesMetadata> seriesMetadata, ExtensionGraphMetadataTable.TableType tableType) {
+    private void storeGraphMetadata(ExtensionWrapper extension, ExtensionMethod provider, @Nullable List<SeriesMetadata> seriesMetadata, ExtensionGraphMetadataTable.TableType tableType) {
         GraphProvider annotation = provider.getExistingAnnotation(GraphProvider.class);
         ValueBuilder valueBuilder = extension.getExtension().valueBuilder(annotation.displayName())
                 .showOnTab(provider.getAnnotationOrNull(Tab.class))
@@ -170,7 +194,9 @@ public class GraphSamplers {
                 .icon(Icon.called("question").build());
         ProviderInformation info = ((ExtValueBuilder) valueBuilder).buildProviderInfo(annotation);
 
-        dbSystem.getDatabase().executeTransaction(new StoreGraphPointProviderTransaction(annotation, provider, info, serverInfo.getServerUUID(), seriesMetadata, tableType));
+        dbSystem.getDatabase().executeTransaction(new StoreGraphPointProviderTransaction(annotation, provider, info, serverInfo.getServerUUID(),
+                seriesMetadata == null ? List.of() : seriesMetadata,
+                tableType));
     }
 
     public void registerPlayerGraphSamplers(UUID playerUUID, String playerName) {
@@ -218,6 +244,8 @@ public class GraphSamplers {
         var provider = graphSource.method();
         var providerIdentifier = new ProviderIdentifier(serverInfo.getServerUUID(), extension.getPluginName(), provider.getMethodName());
 
+        if (disabledGraphHistoryIdentifiers.contains(providerIdentifier)) return;
+
         HistoryStrategy historyStrategy = provider.getAnnotationOrNull(GraphProvider.class).strategy();
         if (historyStrategy == HistoryStrategy.NO_HISTORY) return;
 
@@ -225,7 +253,10 @@ public class GraphSamplers {
             List<DataPoint> pointHistory = graphSource.dataSource().getPointHistory(System.currentTimeMillis());
             if (pointHistory == null || pointHistory.isEmpty()) return;
 
-            int maxColumns = pointHistory.stream().mapToInt(point -> point.getValues().size()).max()
+            int maxColumns = pointHistory.stream()
+                    .filter(Objects::nonNull)
+                    .filter(point -> !point.getValues().isEmpty())
+                    .mapToInt(point -> point.getValues().size()).max()
                     .orElse(1);
             int lastSeenColumns = graphSource.lastSeenColumnCount().get();
             if (maxColumns > lastSeenColumns) {
@@ -238,7 +269,11 @@ public class GraphSamplers {
             // Data or API not available to make the call, no-op.
         } catch (Exception | IllegalAccessError | NoClassDefFoundError | NoSuchFieldError |
                  NoSuchMethodError e) {
-            throw new DataExtensionMethodCallException("", e, providerIdentifier.getPluginName(), providerIdentifier.getProviderName());
+            disabledGraphHistoryIdentifiers.add(providerIdentifier);
+            errorLogger.warn(e, ErrorContext.builder()
+                    .related(providerIdentifier)
+                    .whatToDo(getPrefix(providerIdentifier) + " point history method ran into error and was disabled.")
+                    .build());
         }
     }
 
@@ -255,6 +290,8 @@ public class GraphSamplers {
         var provider = graphSource.method();
         var providerIdentifier = new ProviderIdentifier(serverInfo.getServerUUID(), extension.getPluginName(), provider.getMethodName());
 
+        if (disabledGraphHistoryIdentifiers.contains(providerIdentifier)) return;
+
         HistoryStrategy historyStrategy = provider.getAnnotationOrNull(GraphProvider.class).strategy();
         if (historyStrategy == HistoryStrategy.NO_HISTORY) return;
 
@@ -262,7 +299,10 @@ public class GraphSamplers {
             List<DataPoint> pointHistory = graphSource.dataSource().getPointHistory(System.currentTimeMillis(), playerUUID, playerName);
             if (pointHistory == null || pointHistory.isEmpty()) return;
 
-            int maxColumns = pointHistory.stream().mapToInt(point -> point.getValues().size()).max()
+            int maxColumns = pointHistory.stream()
+                    .filter(Objects::nonNull)
+                    .filter(point -> !point.getValues().isEmpty())
+                    .mapToInt(point -> point.getValues().size()).max()
                     .orElse(1);
             int lastSeenColumns = graphSource.lastSeenColumnCount().get();
             if (maxColumns > lastSeenColumns) {
@@ -275,7 +315,11 @@ public class GraphSamplers {
             // Data or API not available to make the call, no-op.
         } catch (Exception | IllegalAccessError | NoClassDefFoundError | NoSuchFieldError |
                  NoSuchMethodError e) {
-            throw new DataExtensionMethodCallException("", e, providerIdentifier.getPluginName(), providerIdentifier.getProviderName());
+            disabledGraphHistoryIdentifiers.add(providerIdentifier);
+            errorLogger.warn(e, ErrorContext.builder()
+                    .related(providerIdentifier)
+                    .whatToDo(getPrefix(providerIdentifier) + " point history method ran into error and was disabled.")
+                    .build());
         }
     }
 
@@ -284,5 +328,32 @@ public class GraphSamplers {
             return true;
         }
         return event.isIn(callEvents);
+    }
+
+    public void unregister(DataExtension extension) {
+        String pluginName = extension.getPluginName();
+        Set<ServerGraphSampler> serverGraphSamplers = activeServerGraphSamplers.get(pluginName);
+        if (serverGraphSamplers != null) {
+            for (ServerGraphSampler serverGraphSampler : serverGraphSamplers) {
+                serverGraphSampler.cancel();
+            }
+        }
+        activeServerGraphSamplers.remove(pluginName);
+        serverGraphSources.removeIf(source -> pluginName.equals(source.extension().getPluginName()));
+
+        activePlayerGraphSamplers.values().forEach(
+                samplers -> {
+                    List<PlayerGraphSampler> toRemove = samplers.stream()
+                            .filter(sampler -> pluginName.equals(sampler.getPluginName()))
+                            .toList();
+                    samplers.removeAll(toRemove);
+                    toRemove.forEach(PlayerGraphSampler::cancel);
+                }
+        );
+        playerGraphSources.removeIf(source -> pluginName.equals(source.extension().getPluginName()));
+    }
+
+    public Map<String, Set<ServerGraphSampler>> getActiveServerGraphSamplers() {
+        return activeServerGraphSamplers;
     }
 }

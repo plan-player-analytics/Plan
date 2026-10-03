@@ -19,7 +19,14 @@ package com.djrapitops.plan.extension.graph;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
-import com.djrapitops.plan.extension.ExtensionService;
+import com.djrapitops.plan.extension.CallEvents;
+import com.djrapitops.plan.extension.ExtensionSvc;
+import com.djrapitops.plan.extension.NotReadyException;
+import com.djrapitops.plan.extension.implementation.providers.gathering.ExtensionMetadataStorage;
+import com.djrapitops.plan.extension.implementation.providers.gathering.ServerGraphSampler;
+import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
+import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
+import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.changes.ConfigUpdater;
@@ -27,17 +34,15 @@ import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreServerPlayerTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.TPSStoreTransaction;
+import com.djrapitops.plan.storage.database.transactions.init.RemoveOldExtensionsTransaction;
 import com.djrapitops.plan.storage.database.transactions.webuser.StoreWebGroupTransaction;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import extension.FullSystemExtension;
 import extension.SeleniumExtension;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -46,22 +51,19 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import utilities.RandomData;
-import utilities.TestConstants;
-import utilities.TestExtensions;
-import utilities.TestResources;
+import utilities.*;
 
 import java.io.File;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
 import static com.djrapitops.plan.delivery.export.ExportTestUtilities.assertNoLogs;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.mock;
 
 /**
  * Test for visibility of extension graphs.
@@ -74,7 +76,7 @@ class ExtensionGraphTest {
     private static final String PASSWORD = "testPass";
 
     @BeforeAll
-    static void setUp(PlanSystem system, @TempDir Path tempDir, PlanConfig config) throws Exception {
+    static void setUp(PlanSystem system, @TempDir Path tempDir, PlanConfig config, ChromeDriver driver) throws Exception {
         File certFile = tempDir.resolve("TestCert.p12").toFile();
         File testCert = TestResources.getTestResourceFile("TestCert.p12", ConfigUpdater.class);
         Files.copy(testCert.toPath(), certFile.toPath(), StandardCopyOption.REPLACE_EXISTING);
@@ -89,50 +91,214 @@ class ExtensionGraphTest {
         config.set(DataGatheringSettings.ACCEPT_GEOLITE2_EULA, true);
         config.set(DataGatheringSettings.GEOLOCATIONS, true);
         system.enable();
+
+        User user = registerUser(system.getDatabaseSystem().getDatabase(), WebPermission.ACCESS, WebPermission.PAGE, WebPermission.DATA);
+        driver.get("https://localhost:" + TEST_PORT_NUMBER + "/");
+        login(driver, user);
     }
 
     @AfterAll
-    static void tearDown(PlanSystem system) {
+    static void tearDown(PlanSystem system, ChromeDriver driver) {
+        String address = "https://localhost:" + TEST_PORT_NUMBER + "/auth/logout";
+        driver.get(address);
+        driver.manage().deleteAllCookies();
         system.disable();
     }
 
-    private static void storePlayer(Database database, ServerUUID serverUUID) throws ExecutionException, InterruptedException {
+    private static void storePlayer(Database database, ServerUUID serverUUID) {
         storePlayer(database, serverUUID, TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME);
     }
 
-    private static void storePlayer(Database database, ServerUUID serverUUID, UUID playerUUID, String playerName) throws ExecutionException, InterruptedException {
+    private static void storePlayer(Database database, ServerUUID serverUUID, UUID playerUUID, String playerName) {
         database.executeTransaction(new StoreServerPlayerTransaction(playerUUID, System.currentTimeMillis(), playerName, serverUUID, TestConstants.GET_PLAYER_HOSTNAME.get()))
-                .get();
+                .join();
     }
 
-    static Stream<Arguments> testCases() {
+    static Stream<Arguments> playerTestCases() {
         return Stream.of(
-                Arguments.of(new TestExtensions.PlayerGraphExtension()
-                        .point(() -> Optional.empty())
-                        .pointHistory(() -> List.of())
+                Arguments.of("1. Green path: n values and n metadata", new TestExtensions.PlayerGraphExtension()
+                        .point(() -> Optional.of(new DataPoint(System.currentTimeMillis(), 10.0, 20.0)))
+                        .pointHistory(() -> List.of(
+                                new DataPoint(System.currentTimeMillis() - 1000, 5.0, 15.0),
+                                new DataPoint(System.currentTimeMillis(), 10.0, 20.0)
+                        ))
+                        .seriesMetadata(() -> List.of(
+                                new SeriesMetadata("Series A", "ms", GraphFormatType.MILLISECONDS, "#ff0000"),
+                                new SeriesMetadata("Series B", "MB", GraphFormatType.BYTES, "#00ff00")
+                        ))
+                ),
+                Arguments.of("2. Empty defaults (omit builder methods)", new TestExtensions.PlayerGraphExtension()),
+                Arguments.of("3. Nulls returned: point returns null", new TestExtensions.PlayerGraphExtension()
+                        .point(() -> null)
+                ),
+                Arguments.of("4. Nulls returned: pointHistory returns null", new TestExtensions.PlayerGraphExtension()
+                        .pointHistory(() -> null)
+                ),
+                Arguments.of("5. Nulls returned: seriesMetadata returns null", new TestExtensions.PlayerGraphExtension()
+                        .seriesMetadata(() -> null)
+                ),
+                Arguments.of("6. Nulls returned: all return null", new TestExtensions.PlayerGraphExtension()
+                        .point(() -> null)
+                        .pointHistory(() -> null)
+                        .seriesMetadata(() -> null)
+                ),
+                Arguments.of("7. Nulls returned: DataPoint contains null values and series metadata contains null fields", new TestExtensions.PlayerGraphExtension()
+                        .point(() -> Optional.of(new DataPoint(System.currentTimeMillis(), Arrays.asList(null, 42.0))))
+                        .pointHistory(() -> Collections.singletonList(null))
+                        .seriesMetadata(() -> List.of(
+                                new SeriesMetadata(null, null, null, null),
+                                new SeriesMetadata("Series 2", null, GraphFormatType.NONE, null)
+                        ))
+                ),
+                Arguments.of("8. Length mismatch: metadata > dataPoint values", new TestExtensions.PlayerGraphExtension()
+                        .point(() -> Optional.of(new DataPoint(System.currentTimeMillis(), 10.0)))
+                        .pointHistory(() -> List.of(new DataPoint(System.currentTimeMillis(), 10.0)))
+                        .seriesMetadata(() -> List.of(
+                                new SeriesMetadata("Series 1", "ms", GraphFormatType.MILLISECONDS, null),
+                                new SeriesMetadata("Series 2", "ms", GraphFormatType.MILLISECONDS, null),
+                                new SeriesMetadata("Series 3", "ms", GraphFormatType.MILLISECONDS, null)
+                        ))
+                ),
+                Arguments.of("9. Length mismatch: metadata < dataPoint values", new TestExtensions.PlayerGraphExtension()
+                        .point(() -> Optional.of(new DataPoint(System.currentTimeMillis(), 10.0, 20.0, 30.0)))
+                        .pointHistory(() -> List.of(new DataPoint(System.currentTimeMillis(), 10.0, 20.0, 30.0)))
+                        .seriesMetadata(() -> List.of(
+                                new SeriesMetadata("Series 1", "ms", GraphFormatType.MILLISECONDS, null)
+                        ))
+                ),
+                Arguments.of("10. Length mismatch: empty metadata, non-empty data points", new TestExtensions.PlayerGraphExtension()
+                        .point(() -> Optional.of(new DataPoint(System.currentTimeMillis(), 10.0, 20.0)))
+                        .pointHistory(() -> List.of(new DataPoint(System.currentTimeMillis(), 10.0, 20.0)))
                         .seriesMetadata(() -> List.of())
+                ),
+                Arguments.of("11. Length mismatch: non-empty metadata, empty data points", new TestExtensions.PlayerGraphExtension()
+                        .point(() -> Optional.of(new DataPoint(System.currentTimeMillis())))
+                        .pointHistory(() -> List.of(new DataPoint(System.currentTimeMillis())))
+                        .seriesMetadata(() -> List.of(
+                                new SeriesMetadata("Series 1", "ms", GraphFormatType.MILLISECONDS, null)
+                        ))
+                ),
+                Arguments.of("12. Exceptions: point throws RuntimeException", new TestExtensions.PlayerGraphExtension()
+                        .point(() -> {
+                            throw new RuntimeException("Error in getPoint");
+                        })
+                ),
+                Arguments.of("13. Exceptions: pointHistory throws RuntimeException", new TestExtensions.PlayerGraphExtension()
+                        .pointHistory(() -> {
+                            throw new RuntimeException("Error in getPointHistory");
+                        })
+                ),
+                Arguments.of("15. point NotReadyException", new TestExtensions.PlayerGraphExtension()
+                        .point(() -> {
+                            throw new NotReadyException();
+                        })
+                ),
+                Arguments.of("16. pointHistory NotReadyException", new TestExtensions.PlayerGraphExtension()
+                        .pointHistory(() -> {
+                            throw new NotReadyException();
+                        })
+                ),
+                Arguments.of("17. seriesMetadata NotReadyException", new TestExtensions.PlayerGraphExtension()
+                        .seriesMetadata(() -> {
+                            throw new NotReadyException();
+                        })
                 )
         );
     }
 
-    @BeforeEach
-    void setUp(Database database, ServerUUID serverUUID) {
-        RandomData.dateOrderedTPS(System.currentTimeMillis() - TimeUnit.HOURS.toMillis(12)).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
-        RandomData.dateOrderedTPS(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(8)).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
-        RandomData.dateOrderedTPS(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(15)).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
-        RandomData.dateOrderedTPS(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(22)).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
-        RandomData.dateOrderedTPS(System.currentTimeMillis() - TimeUnit.DAYS.toMillis(29)).forEach(tps -> database.executeTransaction(new TPSStoreTransaction(serverUUID, tps)).join());
+    static Stream<Arguments> serverTestCases() {
+        return Stream.of(
+                Arguments.of("1. Green path: n values and n metadata", new TestExtensions.ServerGraphExtension()
+                        .point(() -> Optional.of(new DataPoint(System.currentTimeMillis(), 10.0, 20.0)))
+                        .pointHistory(() -> List.of(
+                                new DataPoint(System.currentTimeMillis() - 1000, 5.0, 15.0),
+                                new DataPoint(System.currentTimeMillis(), 10.0, 20.0)
+                        ))
+                        .seriesMetadata(() -> List.of(
+                                new SeriesMetadata("Series A", "ms", GraphFormatType.MILLISECONDS, "#ff0000"),
+                                new SeriesMetadata("Series B", "MB", GraphFormatType.BYTES, "#00ff00")
+                        ))
+                ),
+                Arguments.of("2. Empty defaults (omit builder methods)", new TestExtensions.ServerGraphExtension()),
+                Arguments.of("3. Nulls returned: point returns null", new TestExtensions.ServerGraphExtension()
+                        .point(() -> null)
+                ),
+                Arguments.of("4. Nulls returned: pointHistory returns null", new TestExtensions.ServerGraphExtension()
+                        .pointHistory(() -> null)
+                ),
+                Arguments.of("5. Nulls returned: seriesMetadata returns null", new TestExtensions.ServerGraphExtension()
+                        .seriesMetadata(() -> null)
+                ),
+                Arguments.of("6. Nulls returned: all return null", new TestExtensions.ServerGraphExtension()
+                        .point(() -> null)
+                        .pointHistory(() -> null)
+                        .seriesMetadata(() -> null)
+                ),
+                Arguments.of("7. Nulls returned: DataPoint contains null values and series metadata contains null fields", new TestExtensions.ServerGraphExtension()
+                        .point(() -> Optional.of(new DataPoint(System.currentTimeMillis(), Arrays.asList(null, 42.0))))
+                        .pointHistory(() -> Collections.singletonList(null))
+                        .seriesMetadata(() -> List.of(
+                                new SeriesMetadata(null, null, null, null),
+                                new SeriesMetadata("Series 2", null, GraphFormatType.NONE, null)
+                        ))
+                ),
+                Arguments.of("8. Length mismatch: metadata > dataPoint values", new TestExtensions.ServerGraphExtension()
+                        .point(() -> Optional.of(new DataPoint(System.currentTimeMillis(), 10.0)))
+                        .pointHistory(() -> List.of(new DataPoint(System.currentTimeMillis(), 10.0)))
+                        .seriesMetadata(() -> List.of(
+                                new SeriesMetadata("Series 1", "ms", GraphFormatType.MILLISECONDS, null),
+                                new SeriesMetadata("Series 2", "ms", GraphFormatType.MILLISECONDS, null),
+                                new SeriesMetadata("Series 3", "ms", GraphFormatType.MILLISECONDS, null)
+                        ))
+                ),
+                Arguments.of("9. Length mismatch: metadata < dataPoint values", new TestExtensions.ServerGraphExtension()
+                        .point(() -> Optional.of(new DataPoint(System.currentTimeMillis(), 10.0, 20.0, 30.0)))
+                        .pointHistory(() -> List.of(new DataPoint(System.currentTimeMillis(), 10.0, 20.0, 30.0)))
+                        .seriesMetadata(() -> List.of(
+                                new SeriesMetadata("Series 1", "ms", GraphFormatType.MILLISECONDS, null)
+                        ))
+                ),
+                Arguments.of("10. Length mismatch: empty metadata, non-empty data points", new TestExtensions.ServerGraphExtension()
+                        .point(() -> Optional.of(new DataPoint(System.currentTimeMillis(), 10.0, 20.0)))
+                        .pointHistory(() -> List.of(new DataPoint(System.currentTimeMillis(), 10.0, 20.0)))
+                        .seriesMetadata(() -> List.of())
+                ),
+                Arguments.of("11. Length mismatch: non-empty metadata, empty data points", new TestExtensions.ServerGraphExtension()
+                        .point(() -> Optional.of(new DataPoint(System.currentTimeMillis())))
+                        .pointHistory(() -> List.of(new DataPoint(System.currentTimeMillis())))
+                        .seriesMetadata(() -> List.of(
+                                new SeriesMetadata("Series 1", "ms", GraphFormatType.MILLISECONDS, null)
+                        ))
+                ),
+                Arguments.of("12. Exceptions: point throws RuntimeException", new TestExtensions.ServerGraphExtension()
+                        .point(() -> {
+                            throw new RuntimeException("Error in getPoint");
+                        })
+                ),
+                Arguments.of("13. Exceptions: pointHistory throws RuntimeException", new TestExtensions.ServerGraphExtension()
+                        .pointHistory(() -> {
+                            throw new RuntimeException("Error in getPointHistory");
+                        })
+                ),
+                Arguments.of("15. point NotReadyException", new TestExtensions.ServerGraphExtension()
+                        .point(() -> {
+                            throw new NotReadyException();
+                        })
+                ),
+                Arguments.of("16. pointHistory NotReadyException", new TestExtensions.ServerGraphExtension()
+                        .pointHistory(() -> {
+                            throw new NotReadyException();
+                        })
+                ),
+                Arguments.of("17. seriesMetadata NotReadyException", new TestExtensions.ServerGraphExtension()
+                        .seriesMetadata(() -> {
+                            throw new NotReadyException();
+                        })
+                )
+        );
     }
 
-    @AfterEach
-    void tearDownTest(WebDriver driver) {
-        String address = "https://localhost:" + TEST_PORT_NUMBER + "/auth/logout";
-        driver.get(address);
-        SeleniumExtension.newTab(driver);
-        driver.manage().deleteAllCookies();
-    }
-
-    User registerUser(Database db, WebPermission... permissions) throws Exception {
+    static User registerUser(Database db, WebPermission... permissions) throws Exception {
         String groupName = RandomData.randomString(75);
         db.executeTransaction(
                 new StoreWebGroupTransaction(groupName, Arrays.stream(permissions)
@@ -146,24 +312,7 @@ class ExtensionGraphTest {
         return user;
     }
 
-    @ParameterizedTest
-    @MethodSource("testCases")
-    void graphVisible(TestExtensions.PlayerGraphExtension graphExtension, Database database, ExtensionService extensionService, ChromeDriver driver) throws Exception {
-        User user = registerUser(database, WebPermission.ACCESS, WebPermission.PAGE, WebPermission.DATA);
-
-        extensionService.register(graphExtension);
-
-        String address = "https://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_UUID_STRING + "/plugins/" + TestConstants.SERVER_NAME;
-        driver.get(address);
-        login(driver, user);
-
-        String element = "plan_extension_graph_playergraphextension_graph";
-        SeleniumExtension.waitForElementToBeVisible(By.id(element), driver);
-        assertDoesNotThrow(() -> driver.findElement(By.id(element)), () -> "Did not see #" + element + " at " + address);
-        assertNoLogs(driver, address);
-    }
-
-    void login(ChromeDriver driver, User user) {
+    static void login(ChromeDriver driver, User user) {
 //        String cookie = AccessControlTest.login("https://localhost:" + TEST_PORT_NUMBER, user.getUsername());
 //        driver.manage().addCookie(new Cookie("auth", cookie.split("=")[1]));
         SeleniumExtension.waitForPageLoadForSeconds(5, driver);
@@ -172,5 +321,87 @@ class ExtensionGraphTest {
         driver.findElement(By.id("inputUser")).sendKeys(user.getUsername());
         driver.findElement(By.id("inputPassword")).sendKeys(PASSWORD);
         driver.findElement(By.id("login-button")).click();
+    }
+
+    @BeforeEach
+    void setUp(Database database, ServerUUID serverUUID, ChromeDriver driver) {
+        storePlayer(database, serverUUID);
+    }
+
+    @AfterEach
+    void tearDownTest(WebDriver driver, Database database, PlanConfig config, ServerUUID serverUUID) {
+        SeleniumExtension.newTab(driver);
+        removeExtensionData(database, config, serverUUID);
+    }
+
+    private void removeExtensionData(Database database, PlanConfig config, ServerUUID serverUUID) {
+        config.getExtensionSettings().setEnabled("PlayerGraphExtension", false);
+        config.getExtensionSettings().setEnabled("ServerGraphExtension", false);
+        database.executeTransaction(new RemoveOldExtensionsTransaction(mock(ExtensionMetadataStorage.class), config.getExtensionSettings(), -TimeUnit.MINUTES.toMillis(60), serverUUID))
+                .join();
+        assertEquals(Map.of(), database.query(new ExtensionPlayerDataQuery(TestConstants.PLAYER_ONE_UUID)));
+        assertEquals(List.of(), database.query(new ExtensionServerDataQuery(serverUUID)));
+    }
+
+    @DisplayName("Player extension graph functionality")
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("playerTestCases")
+    void playerGraphVisible(String testCase, TestExtensions.PlayerGraphExtension graphExtension, PlanConfig config, Database database, ServerUUID serverUUID, ExtensionSvc extensionService, ChromeDriver driver) {
+        try {
+            TestErrorLogger.throwErrors(!testCase.contains("throws"));
+            config.getExtensionSettings().setEnabled("PlayerGraphExtension", true);
+            assertDoesNotThrow(() -> extensionService.register(graphExtension));
+            // Player join registers the sampler
+            assertDoesNotThrow(() -> extensionService.updatePlayerValues(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME, CallEvents.PLAYER_JOIN));
+            // Player leave calls the sampler
+            assertDoesNotThrow(() -> extensionService.updatePlayerValues(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME, CallEvents.PLAYER_LEAVE));
+            TestErrorLogger.throwErrors(true);
+
+            String serverName = database.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID)).map(Server::getIdentifiableName).orElse(serverUUID.toString())
+                    .replace(" ", "%20");
+            String address = "https://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_UUID_STRING + "/plugins/" + serverName;
+            driver.get(address);
+
+            String element = "plan_extension_graph_playergraphextension_playergraph";
+            SeleniumExtension.waitForElementToBeVisible(By.id("player-plugin-data"), driver);
+            assertAll(
+                    () -> assertDoesNotThrow(() -> driver.findElement(By.id(element)), () -> "Did not see #" + element + " at " + address),
+                    () -> assertNoLogs(driver, address)
+            );
+        } finally {
+            extensionService.unregister(graphExtension);
+        }
+    }
+
+    @DisplayName("Server extension graph functionality")
+    @ParameterizedTest(name = "{0}")
+    @MethodSource("serverTestCases")
+    void serverGraphVisible(String testCase, TestExtensions.ServerGraphExtension graphExtension, PlanConfig config, ServerUUID serverUUID, ExtensionSvc extensionService, ChromeDriver driver) {
+        try {
+            TestErrorLogger.throwErrors(!testCase.contains("throws"));
+            config.getExtensionSettings().setEnabled("ServerGraphExtension", true);
+            assertDoesNotThrow(() -> extensionService.register(graphExtension));
+            // Stores point history
+            assertDoesNotThrow(() -> extensionService.updateServerValues(CallEvents.SERVER_EXTENSION_REGISTER));
+            // calls the sampler
+            assertDoesNotThrow(() -> extensionService.getGraphSamplers().getActiveServerGraphSamplers()
+                    .values().stream()
+                    .flatMap(Collection::stream)
+                    .forEach(ServerGraphSampler::run)
+            );
+            TestErrorLogger.throwErrors(true);
+
+            String address = "https://localhost:" + TEST_PORT_NUMBER + "/server/" + serverUUID + "/plugins-overview";
+            driver.get(address);
+
+            String element = "plan_extension_graph_servergraphextension_servergraph";
+            SeleniumExtension.waitForElementToBeVisible(By.id("server-plugin-data"), driver);
+            assertAll(
+                    () -> assertDoesNotThrow(() -> driver.findElement(By.id(element)), () -> "Did not see #" + element + " at " + address),
+                    () -> assertNoLogs(driver, address)
+            );
+        } finally {
+            extensionService.unregister(graphExtension);
+        }
     }
 }

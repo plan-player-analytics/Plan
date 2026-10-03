@@ -133,7 +133,7 @@ public class ExtensionGraphMetadataTable {
                     .column(serverIdColumn, INT).notNull()
                     .column("x", Sql.LONG).notNull()
                     .column("value_1", Sql.DOUBLE)
-                    .column("user_id", INT)
+                    .column("user_id", INT).notNull()
                     .foreignKey("user_id", UsersTable.TABLE_NAME, UsersTable.ID)
                     .foreignKey(serverIdColumn, ServerTable.TABLE_NAME, ServerTable.ID)
                     .build();
@@ -153,6 +153,18 @@ public class ExtensionGraphMetadataTable {
     }
 
     public static String insertToGraphTableSql(String pluginName, String methodName, int columnCount, TableType type) {
+        if (columnCount == 0) {
+            return INSERT_INTO + getTableName(pluginName, methodName) + " (" +
+                    "server_id," +
+                    "x" +
+                    (type == TableType.PLAYER ? ",user_id" : "") +
+                    ") VALUES (" +
+                    ServerTable.SELECT_SERVER_ID + ',' +
+                    "?" +
+                    (type == TableType.PLAYER ? ',' + UsersTable.SELECT_USER_ID : "") +
+                    ")"; // Handles 0 value insert
+        }
+
         String valueList = new TextStringBuilder().appendWithSeparators(IntStream.range(0, columnCount)
                         .mapToObj(i -> "value_" + (i + 1))
                         .iterator(), ",")
@@ -186,7 +198,8 @@ public class ExtensionGraphMetadataTable {
     public static String selectFromGraphTableSql(String graphTableName, TableType type) {
         return SELECT + "*" + FROM + graphTableName + WHERE +
                 "server_id=" + ServerTable.SELECT_SERVER_ID +
-                (type == TableType.PLAYER ? AND + "user_id=" + UsersTable.SELECT_USER_ID : "");
+                (type == TableType.PLAYER ? AND + "user_id=" + UsersTable.SELECT_USER_ID : "") +
+                ORDER_BY + "x ASC";
     }
 
     public static String selectXValuesSql(String pluginName, String providerName, TableType type) {

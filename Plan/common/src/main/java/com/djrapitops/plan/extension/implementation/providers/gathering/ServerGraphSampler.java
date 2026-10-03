@@ -31,8 +31,10 @@ import net.playeranalytics.plugin.scheduling.RunnableFactory;
 
 import java.time.Duration;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 /**
  * @author AuroraLS3
@@ -94,7 +96,8 @@ public class ServerGraphSampler extends TaskSystem.Task {
 
     private void storePoint() {
         try {
-            var dataPoint = dataSource.getPoint(System.currentTimeMillis());
+            var dataPoint = Optional.ofNullable(dataSource.getPoint(System.currentTimeMillis()))
+                    .flatMap(Function.identity());
             dataPoint.ifPresent(point -> {
                 int size = point.getValues().size();
                 if (size > lastSeenColumnCount) {

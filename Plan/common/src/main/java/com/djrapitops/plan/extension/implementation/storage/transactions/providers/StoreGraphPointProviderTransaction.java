@@ -219,6 +219,7 @@ public class StoreGraphPointProviderTransaction extends Transaction {
     private List<String> storeFormats() {
         List<String> formats = metadata.stream()
                 .map(SeriesMetadata::getFormatType)
+                .map(formatType -> formatType != null ? formatType : GraphFormatType.NONE)
                 .map(GraphFormatType::name)
                 .toList();
         String insertStatement = ExtensionGraphFormatTable.INSERT_STATEMENT;

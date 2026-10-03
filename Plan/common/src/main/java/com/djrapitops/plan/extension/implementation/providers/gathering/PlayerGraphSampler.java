@@ -19,6 +19,7 @@ package com.djrapitops.plan.extension.implementation.providers.gathering;
 import com.djrapitops.plan.TaskSystem;
 import com.djrapitops.plan.exceptions.DataExtensionMethodCallException;
 import com.djrapitops.plan.extension.CallEvents;
+import com.djrapitops.plan.extension.NotReadyException;
 import com.djrapitops.plan.extension.annotation.GraphProvider;
 import com.djrapitops.plan.extension.extractor.ExtensionMethod;
 import com.djrapitops.plan.extension.graph.PlayerGraphDataSource;
@@ -35,8 +36,10 @@ import net.playeranalytics.plugin.scheduling.RunnableFactory;
 
 import java.time.Duration;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Function;
 
 /**
  * Samples graph data for a player at an interval defined by the plugin.
@@ -98,7 +101,21 @@ public class PlayerGraphSampler extends TaskSystem.Task {
     @Override
     public void run() {
         try {
-            var dataPoint = dataSource.getPoint(System.currentTimeMillis(), parameters.getPlayerUUID(), parameters.getPlayerName());
+            storePoint();
+        } catch (DataExtensionMethodCallException e) {
+            errorLogger.warn(e, ErrorContext.builder()
+                    .related(providerIdentifier)
+                    .whatToDo("Player Graph sampler for " + providerIdentifier.getPluginName() + "." + providerIdentifier.getProviderName() + " ran into error and was disabled. You can disable the plugin from Plan config and report this.")
+                    .build());
+            ExtensionMethodErrorTracker.errored(extension, provider);
+            cancel();
+        }
+    }
+
+    private void storePoint() {
+        try {
+            var dataPoint = Optional.ofNullable(dataSource.getPoint(System.currentTimeMillis(), parameters.getPlayerUUID(), parameters.getPlayerName()))
+                    .flatMap(Function.identity());
             dataPoint.ifPresent(point -> {
                 int size = point.getValues().size();
                 if (size > lastSeenColumnCount) {
@@ -107,13 +124,10 @@ public class PlayerGraphSampler extends TaskSystem.Task {
                 }
                 dbSystem.getDatabase().executeTransaction(new StorePlayerGraphPoint(point, parameters.getPlayerUUID(), providerIdentifier));
             });
-        } catch (DataExtensionMethodCallException e) {
-            errorLogger.warn(e, ErrorContext.builder()
-                    .related(providerIdentifier)
-                    .whatToDo("Player Graph sampler for " + providerIdentifier.getPluginName() + "." + providerIdentifier.getProviderName() + " ran into error and was disabled. You can disable the plugin from Plan config and report this.")
-                    .build());
-            ExtensionMethodErrorTracker.errored(extension, provider);
-            cancel();
+        } catch (NotReadyException | UnsupportedOperationException ignored) {
+            // Data or API not available to make the call, no-op.
+        } catch (Exception | IllegalAccessError | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError e) {
+            throw new DataExtensionMethodCallException("", e, providerIdentifier.getPluginName(), providerIdentifier.getProviderName());
         }
     }
 
@@ -127,5 +141,9 @@ public class PlayerGraphSampler extends TaskSystem.Task {
     @Override
     public int hashCode() {
         return Objects.hash(providerIdentifier);
+    }
+
+    public String getPluginName() {
+        return extension.getPluginName();
     }
 }

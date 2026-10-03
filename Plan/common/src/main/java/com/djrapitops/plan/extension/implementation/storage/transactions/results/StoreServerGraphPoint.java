@@ -47,13 +47,14 @@ public class StoreServerGraphPoint extends Transaction {
         int columnCount = dataPoint.getValues().size();
         executeOther(new ExpandGraphColumnCountTransaction(identifier, columnCount));
 
-        execute(new ExecStatement(ExtensionGraphMetadataTable.insertToGraphTableSql(identifier.getPluginName(), identifier.getProviderName(), columnCount,
-                ExtensionGraphMetadataTable.TableType.SERVER)) {
+        String sql = ExtensionGraphMetadataTable.insertToGraphTableSql(identifier.getPluginName(), identifier.getProviderName(), columnCount,
+                ExtensionGraphMetadataTable.TableType.SERVER);
+        execute(new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, getServerUUID().toString());
                 statement.setLong(2, dataPoint.getX());
-                for (int i = 0; i < dataPoint.getValues().size(); i++) {
+                for (int i = 0; i < columnCount; i++) {
                     Double value = dataPoint.getValues().get(i);
                     if (value == null) {
                         statement.setNull(i + 3, Types.DOUBLE);

@@ -147,12 +147,12 @@ public class ExtensionGraphQueries {
 
             @Override
             public List<GraphFormatType> processResults(ResultSet set) throws SQLException {
-                GraphFormatType[] formats = new GraphFormatType[columnCount];
-                while (set.next()) {
-                    formats[set.getInt(ExtensionGraphFormatTable.ToProviderTable.COLUMN_INDEX)] =
-                            GraphFormatType.getByName(set.getString(ExtensionGraphFormatTable.FORMAT)).orElse(GraphFormatType.NONE);
-                }
-                return Arrays.asList(formats);
+                return extractMetadataStringArray(set,
+                        columnCount,
+                        ExtensionGraphFormatTable.ToProviderTable.COLUMN_INDEX,
+                        ExtensionGraphFormatTable.FORMAT).stream()
+                        .map(format -> GraphFormatType.getByName(format).orElse(GraphFormatType.NONE))
+                        .toList();
             }
         };
     }
@@ -172,12 +172,10 @@ public class ExtensionGraphQueries {
 
             @Override
             public List<String> processResults(ResultSet set) throws SQLException {
-                String[] units = new String[columnCount];
-                while (set.next()) {
-                    units[set.getInt(ExtensionGraphUnitTable.ToProviderTable.COLUMN_INDEX)] =
-                            set.getString(ExtensionGraphUnitTable.UNIT);
-                }
-                return Arrays.asList(units);
+                return extractMetadataStringArray(set,
+                        columnCount,
+                        ExtensionGraphUnitTable.ToProviderTable.COLUMN_INDEX,
+                        ExtensionGraphUnitTable.UNIT);
             }
         };
     }
@@ -197,12 +195,10 @@ public class ExtensionGraphQueries {
 
             @Override
             public List<String> processResults(ResultSet set) throws SQLException {
-                String[] colors = new String[columnCount];
-                while (set.next()) {
-                    colors[set.getInt(ExtensionGraphColorTable.ToProviderTable.COLUMN_INDEX)] =
-                            set.getString(ExtensionGraphColorTable.COLOR);
-                }
-                return Arrays.asList(colors);
+                return extractMetadataStringArray(set,
+                        columnCount,
+                        ExtensionGraphColorTable.ToProviderTable.COLUMN_INDEX,
+                        ExtensionGraphColorTable.COLOR);
             }
         };
     }
@@ -222,14 +218,23 @@ public class ExtensionGraphQueries {
 
             @Override
             public List<String> processResults(ResultSet set) throws SQLException {
-                String[] labels = new String[columnCount];
-                while (set.next()) {
-                    labels[set.getInt(ExtensionGraphLabelTable.ToProviderTable.COLUMN_INDEX)] =
-                            set.getString(ExtensionGraphLabelTable.LABEL);
-                }
-                return Arrays.asList(labels);
+                return extractMetadataStringArray(set,
+                        columnCount,
+                        ExtensionGraphLabelTable.ToProviderTable.COLUMN_INDEX,
+                        ExtensionGraphLabelTable.LABEL);
             }
         };
+    }
+
+    private static List<String> extractMetadataStringArray(ResultSet set, int columnCount, String columnIndexCol, String itemCol) throws SQLException {
+        String[] items = new String[columnCount];
+        while (set.next()) {
+            int index = set.getInt(columnIndexCol);
+            if (index < items.length) {
+                items[index] = set.getString(itemCol);
+            }
+        }
+        return Arrays.asList(items);
     }
 
     public static Query<Map<Integer, ExtensionData.Builder>> findGraphTableNameTabs(ServerUUID serverUUID, ExtensionGraphMetadataTable.TableType tableType) {
@@ -305,14 +310,20 @@ public class ExtensionGraphQueries {
         String sql = SELECT + "MAX(x) as max" +
                 FROM + graph +
                 WHERE + "server_id=" + ServerTable.SELECT_SERVER_ID + AND + "user_id=" + UsersTable.SELECT_USER_ID;
-        return db -> db.queryOptional(sql, row -> row.getLong(1), serverUUID, playerUUID);
+        return db -> db.queryOptional(sql, row -> {
+            long value = row.getLong(1);
+            return row.wasNull() ? null : value;
+        }, serverUUID, playerUUID);
     }
 
     public static Query<Optional<Long>> findLastModified(ServerUUID serverUUID, String graph) {
         String sql = SELECT + "MAX(x) as max" +
                 FROM + graph +
                 WHERE + "server_id=" + ServerTable.SELECT_SERVER_ID;
-        return db -> db.queryOptional(sql, row -> row.getLong(1), serverUUID);
+        return db -> db.queryOptional(sql, row -> {
+            long value = row.getLong(1);
+            return row.wasNull() ? null : value;
+        }, serverUUID);
     }
 
     public static Query<Integer> getColumnCount(String pluginName, String providerName, ServerUUID serverUUID) {

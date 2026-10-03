@@ -19,10 +19,7 @@ package utilities;
 import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.annotation.GraphProvider;
 import com.djrapitops.plan.extension.annotation.PluginInfo;
-import com.djrapitops.plan.extension.graph.DataPoint;
-import com.djrapitops.plan.extension.graph.PlayerGraphDataSource;
-import com.djrapitops.plan.extension.graph.SeriesMetadata;
-import com.djrapitops.plan.extension.graph.ServerGraphDataSource;
+import com.djrapitops.plan.extension.graph.*;
 
 import java.util.List;
 import java.util.Optional;
@@ -57,8 +54,8 @@ public class TestExtensions {
             return this;
         }
 
-        @GraphProvider(displayName = "graph")
-        public PlayerGraphDataSource graph() {
+        @GraphProvider(displayName = "playergraph", strategy = HistoryStrategy.ONLY_APPEND_MISSING)
+        public PlayerGraphDataSource playergraph() {
             return new PlayerGraphDataSource() {
                 @Override
                 public Optional<DataPoint> getPoint(long currentTimestamp, UUID playerUUID, String playerName) {
@@ -99,8 +96,8 @@ public class TestExtensions {
             return this;
         }
 
-        @GraphProvider(displayName = "graph")
-        public ServerGraphDataSource graph() {
+        @GraphProvider(displayName = "servergraph", strategy = HistoryStrategy.ONLY_APPEND_MISSING)
+        public ServerGraphDataSource servergraph() {
             return new ServerGraphDataSource() {
                 @Override
                 public Optional<DataPoint> getPoint(long currentTimestamp) {

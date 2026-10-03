@@ -99,7 +99,8 @@ public class ExtensionServerGraphQuery implements Query<Optional<ExtensionGraphD
         IntStream.range(0, extensionGraphDto.getColumnCount())
                 .forEach(i -> {
                     try {
-                        point[i + 1] = row.getDouble("value_" + (i + 1));
+                        double value = row.getDouble("value_" + (i + 1));
+                        point[i + 1] = row.wasNull() ? null : value;
                     } catch (SQLException e) {
                         throw DBOpException.forCause("Failed to get double", e);
                     }

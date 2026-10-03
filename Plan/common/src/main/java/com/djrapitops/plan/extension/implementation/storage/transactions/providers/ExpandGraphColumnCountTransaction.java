@@ -42,7 +42,7 @@ public class ExpandGraphColumnCountTransaction extends Transaction {
 
     @Override
     protected void performOperations() {
-        Integer existingColCount = query(db -> db.queryOptional(ExtensionGraphMetadataTable.STATEMENT_SELECT_COLUMN_COUNT,
+        int existingColCount = query(db -> db.queryOptional(ExtensionGraphMetadataTable.STATEMENT_SELECT_COLUMN_COUNT,
                 row -> row.getInt(ExtensionGraphMetadataTable.COLUMN_COUNT),
                 identifier.getProviderName(), identifier.getPluginName(), identifier.getServerUUID()))
                 .orElseThrow(() -> new DBOpException("Graph table metadata does not exist"));

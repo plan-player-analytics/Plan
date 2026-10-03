@@ -63,8 +63,8 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
     @Override
     protected void performOperations() {
         Collection<Integer> providerIds = query(inactiveProviderIDsQuery());
-        query(ExtensionGraphQueries.findGraphTableNames(providerIds))
-                .forEach(tableName -> execute("DROP TABLE IF EXISTS " + tableName));
+        List<String> tablesToDrop = query(ExtensionGraphQueries.findGraphTableNames(providerIds));
+        tablesToDrop.forEach(tableName -> execute("DROP TABLE IF EXISTS " + tableName));
         for (Integer providerID : providerIds) {
             removeValues(providerID);
         }

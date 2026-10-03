@@ -58,6 +58,8 @@ public abstract class ServerGraphDataSource {
      * Index in List defines which series metadata is for - if series stops getting data return null in that index.
      *
      * @return {@code List.of({metadata for Y series of DataPoint#values[0]}, {metadata for Y series of DataPoint#values[1]}, ...etc)}
+     * @throws com.djrapitops.plan.extension.NotReadyException If you can't call this yet - empty metadata will be given.
+     * @throws RuntimeException                                Data source registration will fail.
      */
     public abstract List<SeriesMetadata> getSeriesMetadata();
 }
