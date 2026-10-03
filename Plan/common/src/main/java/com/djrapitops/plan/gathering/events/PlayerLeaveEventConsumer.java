@@ -97,7 +97,7 @@ public class PlayerLeaveEventConsumer {
     }
 
     private void storePlayerStatistics(PlayerLeave leave) {
-        statisticsIdCache.storePlayerStatistics(leave.getPlayerUUID(), leave.getServerUUID());
+        processing.submitCritical(() -> statisticsIdCache.storePlayerStatistics(leave.getPlayerUUID(), leave.getServerUUID()));
     }
 
     public void onLeaveProxyServer(PlayerLeave leave) {
