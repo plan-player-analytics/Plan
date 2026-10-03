@@ -68,6 +68,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#formatAsTimeAmount()" tabindex="0">formatAsTimeAmount()</a></li>
 <li><a href="#format(com.djrapitops.plan.extension.FormatType)" tabindex="0">format(FormatType)</a></li>
 <li><a href="#showAsPlayerPageLink()" tabindex="0">showAsPlayerPageLink()</a></li>
+<li><a href="#aggregateTypes(com.djrapitops.plan.extension.graph.Aggregates%5B%5D)" tabindex="0">aggregateTypes(Aggregates[])</a></li>
 <li><a href="#buildBoolean(boolean)" tabindex="0">buildBoolean(boolean)</a></li>
 <li><a href="#buildBooleanProvidingCondition(boolean,java.lang.String)" tabindex="0">buildBooleanProvidingCondition(boolean, String)</a></li>
 <li><a href="#buildString(java.lang.String)" tabindex="0">buildString(String)</a></li>
@@ -127,195 +128,200 @@ Obtain an instance with <a href="ExtensionDataBuilder.html#valueBuilder(java.lan
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildBoolean(boolean)" class="member-name-link">buildBoolean</a><wbr>(boolean&nbsp;value)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#aggregateTypes(com.djrapitops.plan.extension.graph.Aggregates%5B%5D)" class="member-name-link">aggregateTypes</a><wbr>(<a href="../graph/Aggregates.html" title="enum class in com.djrapitops.plan.extension.graph">Aggregates</a>[]&nbsp;aggregates)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block"><a href="#buildNumber(java.lang.Long)"><code>buildNumber(Long)</code></a> or <a href="#buildDouble(java.lang.Double)"><code>buildDouble(Double)</code></a> specific method, adds runtime calculated server aggregates across all players.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildBoolean(boolean)" class="member-name-link">buildBoolean</a><wbr>(boolean&nbsp;value)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Build a Boolean.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildBoolean(java.util.function.Supplier)" class="member-name-link">buildBoolean</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;&nbsp;value)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildBoolean(java.util.function.Supplier)" class="member-name-link">buildBoolean</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;&nbsp;value)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildBooleanProvidingCondition(boolean,java.lang.String)" class="member-name-link">buildBooleanProvidingCondition</a><wbr>(boolean&nbsp;value,
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildBooleanProvidingCondition(boolean,java.lang.String)" class="member-name-link">buildBooleanProvidingCondition</a><wbr>(boolean&nbsp;value,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;providedCondition)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Build a Boolean that provides a value for <a href="../annotation/Conditional.html" title="annotation interface in com.djrapitops.plan.extension.annotation"><code>Conditional</code></a>.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildBooleanProvidingCondition(java.util.function.Supplier,java.lang.String)" class="member-name-link">buildBooleanProvidingCondition</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;&nbsp;value,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildBooleanProvidingCondition(java.util.function.Supplier,java.lang.String)" class="member-name-link">buildBooleanProvidingCondition</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Boolean.html" title="class or interface in java.lang" class="external-link">Boolean</a>&gt;&nbsp;value,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;providedCondition)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="../../component/Component.html" title="interface in com.djrapitops.plan.component">Component</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildComponent(com.djrapitops.plan.component.Component)" class="member-name-link">buildComponent</a><wbr>(<a href="../../component/Component.html" title="interface in com.djrapitops.plan.component">Component</a>&nbsp;value)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Build a <a href="../../component/Component.html" title="interface in com.djrapitops.plan.component"><code>Component</code></a>.</div>
+<div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="../../component/Component.html" title="interface in com.djrapitops.plan.component">Component</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildComponent(java.util.function.Supplier)" class="member-name-link">buildComponent</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="../../component/Component.html" title="interface in com.djrapitops.plan.component">Component</a>&gt;&nbsp;value)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildComponent(com.djrapitops.plan.component.Component)" class="member-name-link">buildComponent</a><wbr>(<a href="../../component/Component.html" title="interface in com.djrapitops.plan.component">Component</a>&nbsp;value)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.</div>
+<div class="block">Build a <a href="../../component/Component.html" title="interface in com.djrapitops.plan.component"><code>Component</code></a>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildDouble(java.lang.Double)" class="member-name-link">buildDouble</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&nbsp;value)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="../../component/Component.html" title="interface in com.djrapitops.plan.component">Component</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildComponent(java.util.function.Supplier)" class="member-name-link">buildComponent</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="../../component/Component.html" title="interface in com.djrapitops.plan.component">Component</a>&gt;&nbsp;value)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Build a Floating point number.</div>
+<div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildDouble(java.util.function.Supplier)" class="member-name-link">buildDouble</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;&nbsp;value)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildDouble(java.lang.Double)" class="member-name-link">buildDouble</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&nbsp;value)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.</div>
+<div class="block">Build a Floating point number.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildGroup(java.lang.String%5B%5D)" class="member-name-link">buildGroup</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;groups)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildDouble(java.util.function.Supplier)" class="member-name-link">buildDouble</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;&nbsp;value)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Build a list of groups.</div>
+<div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildGroup(java.util.function.Supplier)" class="member-name-link">buildGroup</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&gt;&nbsp;groups)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildGroup(java.lang.String%5B%5D)" class="member-name-link">buildGroup</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&nbsp;groups)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Build a list of groups.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildGroup(java.util.function.Supplier)" class="member-name-link">buildGroup</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>[]&gt;&nbsp;groups)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#buildNumber(java.lang.Double)" class="member-name-link">buildNumber</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&nbsp;value)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
-<div class="block">Build a Number.</div>
-</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#buildNumber(java.lang.Integer)" class="member-name-link">buildNumber</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;value)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#buildNumber(java.lang.Double)" class="member-name-link">buildNumber</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&nbsp;value)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
 <div class="block">Build a Number.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildNumber(java.lang.Long)" class="member-name-link">buildNumber</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;value)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#buildNumber(java.lang.Integer)" class="member-name-link">buildNumber</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&nbsp;value)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
 <div class="block">Build a Number.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildNumber(java.util.function.Supplier)" class="member-name-link">buildNumber</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;&nbsp;value)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildNumber(java.lang.Long)" class="member-name-link">buildNumber</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&nbsp;value)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.</div>
+<div class="block">Build a Number.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildPercentage(java.lang.Double)" class="member-name-link">buildPercentage</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&nbsp;percentage)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildNumber(java.util.function.Supplier)" class="member-name-link">buildNumber</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;&nbsp;value)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Build a Percentage.</div>
+<div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildPercentage(java.util.function.Supplier)" class="member-name-link">buildPercentage</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;&nbsp;percentage)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildPercentage(java.lang.Double)" class="member-name-link">buildPercentage</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&nbsp;percentage)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.</div>
+<div class="block">Build a Percentage.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildString(java.lang.String)" class="member-name-link">buildString</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;value)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildPercentage(java.util.function.Supplier)" class="member-name-link">buildPercentage</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;&nbsp;percentage)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Build a String.</div>
+<div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildString(java.util.function.Supplier)" class="member-name-link">buildString</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;value)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildString(java.lang.String)" class="member-name-link">buildString</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;value)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.</div>
+<div class="block">Build a String.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="../table/Table.html" title="class in com.djrapitops.plan.extension.table">Table</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildTable(com.djrapitops.plan.extension.table.Table,com.djrapitops.plan.extension.icon.Color)" class="member-name-link">buildTable</a><wbr>(<a href="../table/Table.html" title="class in com.djrapitops.plan.extension.table">Table</a>&nbsp;table,
- <a href="../icon/Color.html" title="enum class in com.djrapitops.plan.extension.icon">Color</a>&nbsp;tableColor)</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildString(java.util.function.Supplier)" class="member-name-link">buildString</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;value)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Build a table.</div>
+<div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="../table/Table.html" title="class in com.djrapitops.plan.extension.table">Table</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildTable(java.util.function.Supplier,com.djrapitops.plan.extension.icon.Color)" class="member-name-link">buildTable</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="../table/Table.html" title="class in com.djrapitops.plan.extension.table">Table</a>&gt;&nbsp;table,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildTable(com.djrapitops.plan.extension.table.Table,com.djrapitops.plan.extension.icon.Color)" class="member-name-link">buildTable</a><wbr>(<a href="../table/Table.html" title="class in com.djrapitops.plan.extension.table">Table</a>&nbsp;table,
  <a href="../icon/Color.html" title="enum class in com.djrapitops.plan.extension.icon">Color</a>&nbsp;tableColor)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Build a table.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="../table/Table.html" title="class in com.djrapitops.plan.extension.table">Table</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildTable(java.util.function.Supplier,com.djrapitops.plan.extension.icon.Color)" class="member-name-link">buildTable</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="../table/Table.html" title="class in com.djrapitops.plan.extension.table">Table</a>&gt;&nbsp;table,
+ <a href="../icon/Color.html" title="enum class in com.djrapitops.plan.extension.icon">Color</a>&nbsp;tableColor)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#conditional(com.djrapitops.plan.extension.annotation.Conditional)" class="member-name-link">conditional</a><wbr>(<a href="../annotation/Conditional.html" title="annotation interface in com.djrapitops.plan.extension.annotation">Conditional</a>&nbsp;conditional)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#conditional(com.djrapitops.plan.extension.annotation.Conditional)" class="member-name-link">conditional</a><wbr>(<a href="../annotation/Conditional.html" title="annotation interface in com.djrapitops.plan.extension.annotation">Conditional</a>&nbsp;conditional)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Implementation detail - for abstracting annotations with the builder API.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#description(java.lang.String)" class="member-name-link">description</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;description)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#description(java.lang.String)" class="member-name-link">description</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;description)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Description about the value that is shown on hover.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#format(com.djrapitops.plan.extension.FormatType)" class="member-name-link">format</a><wbr>(<a href="../FormatType.html" title="enum class in com.djrapitops.plan.extension">FormatType</a>&nbsp;formatType)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#format(com.djrapitops.plan.extension.FormatType)" class="member-name-link">format</a><wbr>(<a href="../FormatType.html" title="enum class in com.djrapitops.plan.extension">FormatType</a>&nbsp;formatType)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block"><a href="#buildNumber(java.lang.Long)"><code>buildNumber(Long)</code></a> specific method, format the value with <a href="../FormatType.html" title="enum class in com.djrapitops.plan.extension"><code>FormatType</code></a></div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#formatAsDateWithSeconds()" class="member-name-link">formatAsDateWithSeconds</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
-<div class="block"><a href="#buildNumber(java.lang.Long)"><code>buildNumber(Long)</code></a> specific method, format the value as a epoch ms timestamp.</div>
-</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#formatAsDateWithYear()" class="member-name-link">formatAsDateWithYear</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#formatAsDateWithSeconds()" class="member-name-link">formatAsDateWithSeconds</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
 <div class="block"><a href="#buildNumber(java.lang.Long)"><code>buildNumber(Long)</code></a> specific method, format the value as a epoch ms timestamp.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#formatAsTimeAmount()" class="member-name-link">formatAsTimeAmount</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#formatAsDateWithYear()" class="member-name-link">formatAsDateWithYear</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="block"><a href="#buildNumber(java.lang.Long)"><code>buildNumber(Long)</code></a> specific method, format the value as a epoch ms timestamp.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#formatAsTimeAmount()" class="member-name-link">formatAsTimeAmount</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
 <div class="block"><a href="#buildNumber(java.lang.Long)"><code>buildNumber(Long)</code></a> specific method, format the value as milliseconds of time.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#hideFromUsers(com.djrapitops.plan.extension.annotation.BooleanProvider)" class="member-name-link">hideFromUsers</a><wbr>(<a href="../annotation/BooleanProvider.html" title="annotation interface in com.djrapitops.plan.extension.annotation">BooleanProvider</a>&nbsp;annotation)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Implementation detail - for abstracting annotations with the builder API.</div>
-</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#icon(com.djrapitops.plan.extension.icon.Icon)" class="member-name-link">icon</a><wbr>(<a href="../icon/Icon.html" title="class in com.djrapitops.plan.extension.icon">Icon</a>&nbsp;icon)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Icon displayed next to the value.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#icon(java.lang.String,com.djrapitops.plan.extension.icon.Family,com.djrapitops.plan.extension.icon.Color)" class="member-name-link">icon</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;iconName,
- <a href="../icon/Family.html" title="enum class in com.djrapitops.plan.extension.icon">Family</a>&nbsp;iconFamily,
- <a href="../icon/Color.html" title="enum class in com.djrapitops.plan.extension.icon">Color</a>&nbsp;iconColor)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
-<div class="block">Icon displayed next to the value.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#methodName(com.djrapitops.plan.extension.extractor.ExtensionMethod)" class="member-name-link">methodName</a><wbr>(<a href="../extractor/ExtensionMethod.html" title="class in com.djrapitops.plan.extension.extractor">ExtensionMethod</a>&nbsp;method)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#hideFromUsers(com.djrapitops.plan.extension.annotation.BooleanProvider)" class="member-name-link">hideFromUsers</a><wbr>(<a href="../annotation/BooleanProvider.html" title="annotation interface in com.djrapitops.plan.extension.annotation">BooleanProvider</a>&nbsp;annotation)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Implementation detail - for abstracting annotations with the builder API.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#priority(int)" class="member-name-link">priority</a><wbr>(int&nbsp;priority)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#icon(com.djrapitops.plan.extension.icon.Icon)" class="member-name-link">icon</a><wbr>(<a href="../icon/Icon.html" title="class in com.djrapitops.plan.extension.icon">Icon</a>&nbsp;icon)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Display-priority of the value, highest value is placed top most.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#showAsPlayerPageLink()" class="member-name-link">showAsPlayerPageLink</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block"><a href="#buildString(java.lang.String)"><code>buildString(String)</code></a> specific method, link the value to a player page.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#showAsPlayerPageLink(com.djrapitops.plan.extension.annotation.StringProvider)" class="member-name-link">showAsPlayerPageLink</a><wbr>(<a href="../annotation/StringProvider.html" title="annotation interface in com.djrapitops.plan.extension.annotation">StringProvider</a>&nbsp;annotation)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
-<div class="block">Implementation detail - for abstracting annotations with the builder API.</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#showInPlayerTable()" class="member-name-link">showInPlayerTable</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
-<div class="block">Show this value in the players table.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#showInPlayerTable(boolean)" class="member-name-link">showInPlayerTable</a><wbr>(boolean&nbsp;show)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
-<div class="block">Implementation detail - for abstracting annotations with the builder API.</div>
+<div class="block">Icon displayed next to the value.</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#showOnTab(com.djrapitops.plan.extension.annotation.Tab)" class="member-name-link">showOnTab</a><wbr>(<a href="../annotation/Tab.html" title="annotation interface in com.djrapitops.plan.extension.annotation">Tab</a>&nbsp;annotation)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#icon(java.lang.String,com.djrapitops.plan.extension.icon.Family,com.djrapitops.plan.extension.icon.Color)" class="member-name-link">icon</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;iconName,
+ <a href="../icon/Family.html" title="enum class in com.djrapitops.plan.extension.icon">Family</a>&nbsp;iconFamily,
+ <a href="../icon/Color.html" title="enum class in com.djrapitops.plan.extension.icon">Color</a>&nbsp;iconColor)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="block">Icon displayed next to the value.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#methodName(com.djrapitops.plan.extension.extractor.ExtensionMethod)" class="member-name-link">methodName</a><wbr>(<a href="../extractor/ExtensionMethod.html" title="class in com.djrapitops.plan.extension.extractor">ExtensionMethod</a>&nbsp;method)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Implementation detail - for abstracting annotations with the builder API.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#priority(int)" class="member-name-link">priority</a><wbr>(int&nbsp;priority)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Display-priority of the value, highest value is placed top most.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#showAsPlayerPageLink()" class="member-name-link">showAsPlayerPageLink</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block"><a href="#buildString(java.lang.String)"><code>buildString(String)</code></a> specific method, link the value to a player page.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#showAsPlayerPageLink(com.djrapitops.plan.extension.annotation.StringProvider)" class="member-name-link">showAsPlayerPageLink</a><wbr>(<a href="../annotation/StringProvider.html" title="annotation interface in com.djrapitops.plan.extension.annotation">StringProvider</a>&nbsp;annotation)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
 <div class="block">Implementation detail - for abstracting annotations with the builder API.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#showOnTab(java.lang.String)" class="member-name-link">showOnTab</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;tabName)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#showInPlayerTable()" class="member-name-link">showInPlayerTable</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Show this value in the players table.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#showInPlayerTable(boolean)" class="member-name-link">showInPlayerTable</a><wbr>(boolean&nbsp;show)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="block">Implementation detail - for abstracting annotations with the builder API.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code>default <a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5"><code><a href="#showOnTab(com.djrapitops.plan.extension.annotation.Tab)" class="member-name-link">showOnTab</a><wbr>(<a href="../annotation/Tab.html" title="annotation interface in com.djrapitops.plan.extension.annotation">Tab</a>&nbsp;annotation)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab5">
+<div class="block">Implementation detail - for abstracting annotations with the builder API.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#showOnTab(java.lang.String)" class="member-name-link">showOnTab</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;tabName)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Show the value on a specific tab.</div>
 </div>
 </div>
@@ -493,6 +499,27 @@ Remember to define <a href="../annotation/TabInfo.html" title="annotation interf
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>This builder.</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="aggregateTypes(com.djrapitops.plan.extension.graph.Aggregates[])">
+<h3>aggregateTypes</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="return-type"><a href="ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></span>&nbsp;<span class="element-name">aggregateTypes</span><wbr><span class="parameters">(<a href="../graph/Aggregates.html" title="enum class in com.djrapitops.plan.extension.graph">Aggregates</a>[]&nbsp;aggregates)</span></div>
+<div class="block"><a href="#buildNumber(java.lang.Long)"><code>buildNumber(Long)</code></a> or <a href="#buildDouble(java.lang.Double)"><code>buildDouble(Double)</code></a> specific method, adds runtime calculated server aggregates across all players.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>aggregates</code> - Aggregate types.</dd>
+<dt>Returns:</dt>
+<dd>This builder.</dd>
+<dt>See Also:</dt>
+<dd>
+<ul class="tag-list-long">
+<li><a href="../annotation/NumberProvider.html#supportedAggregateFunctions()"><code>NumberProvider.supportedAggregateFunctions()</code></a></li>
+</ul>
+</dd>
 </dl>
 </div>
 </section>

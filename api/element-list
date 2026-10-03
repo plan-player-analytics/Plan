@@ -9,6 +9,7 @@ com.djrapitops.plan.extension
 com.djrapitops.plan.extension.annotation
 com.djrapitops.plan.extension.builder
 com.djrapitops.plan.extension.extractor
+com.djrapitops.plan.extension.graph
 com.djrapitops.plan.extension.icon
 com.djrapitops.plan.extension.table
 com.djrapitops.plan.query

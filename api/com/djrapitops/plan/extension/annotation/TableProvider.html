@@ -58,6 +58,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#annotation-interface-element-detail" tabindex="0">Element Details</a>
 <ol class="toc-list">
 <li><a href="#tableColor()" tabindex="0">tableColor</a></li>
+<li><a href="#iconName()" tabindex="0">iconName</a></li>
+<li><a href="#iconFamily()" tabindex="0">iconFamily</a></li>
 </ol>
 </li>
 </ol>
@@ -94,6 +96,16 @@ It is recommended to place each table on their own tab with a <a href="Tab.html"
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Optional Element</div>
 <div class="table-header col-last">Description</div>
+<div class="col-first even-row-color"><code><a href="../icon/Family.html" title="enum class in com.djrapitops.plan.extension.icon">Family</a></code></div>
+<div class="col-second even-row-color"><code><a href="#iconFamily()" class="member-name-link">iconFamily</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Family of Font Awesome icon.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second odd-row-color"><code><a href="#iconName()" class="member-name-link">iconName</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Name of Font Awesome icon.</div>
+</div>
 <div class="col-first even-row-color"><code><a href="../icon/Color.html" title="enum class in com.djrapitops.plan.extension.icon">Color</a></code></div>
 <div class="col-second even-row-color"><code><a href="#tableColor()" class="member-name-link">tableColor</a></code></div>
 <div class="col-last even-row-color">
@@ -124,6 +136,44 @@ It is recommended to place each table on their own tab with a <a href="Tab.html"
 <dl class="notes">
 <dt>Default:</dt>
 <dd><code>NONE</code></dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="iconName()">
+<h3>iconName</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">iconName</span></div>
+<div class="block">Name of Font Awesome icon.
+<p>
+See <a href="https://fontawesome.com/icons">FontAwesome</a> (select 'free')) for icons and their <a href="../icon/Family.html" title="enum class in com.djrapitops.plan.extension.icon"><code>Family</code></a>.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>Name of the icon, if name is not valid no icon is shown.</dd>
+</dl>
+<dl class="notes">
+<dt>Default:</dt>
+<dd><code>"table"</code></dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="iconFamily()">
+<h3>iconFamily</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="return-type"><a href="../icon/Family.html" title="enum class in com.djrapitops.plan.extension.icon">Family</a></span>&nbsp;<span class="element-name">iconFamily</span></div>
+<div class="block">Family of Font Awesome icon.
+<p>
+See <a href="https://fontawesome.com/icons">FontAwesome</a> (select 'free')) for icons and their <a href="../icon/Family.html" title="enum class in com.djrapitops.plan.extension.icon"><code>Family</code></a>.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>Family that matches an icon, if there is no icon for this family no icon is shown.</dd>
+</dl>
+<dl class="notes">
+<dt>Default:</dt>
+<dd><code>SOLID</code></dd>
 </dl>
 </div>
 </section>

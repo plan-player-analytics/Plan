@@ -80,6 +80,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#setAsPercentage()" tabindex="0">setAsPercentage()</a></li>
 <li><a href="#setAsComponent()" tabindex="0">setAsComponent()</a></li>
 <li><a href="#build()" tabindex="0">build()</a></li>
+<li><a href="#setAppendStrategy(com.djrapitops.plan.extension.graph.HistoryStrategy)" tabindex="0">setAppendStrategy(HistoryStrategy)</a></li>
 </ol>
 </li>
 </ol>
@@ -133,50 +134,53 @@ loadScripts(document, 'script');</script>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#build()" class="member-name-link">build</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ProviderInformation.Builder.html" title="class in com.djrapitops.plan.extension.implementation">ProviderInformation.Builder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAsComponent()" class="member-name-link">setAsComponent</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAppendStrategy(com.djrapitops.plan.extension.graph.HistoryStrategy)" class="member-name-link">setAppendStrategy</a><wbr>(<a href="../graph/HistoryStrategy.html" title="enum class in com.djrapitops.plan.extension.graph">HistoryStrategy</a>&nbsp;appendStrategy)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ProviderInformation.Builder.html" title="class in com.djrapitops.plan.extension.implementation">ProviderInformation.Builder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAsPercentage()" class="member-name-link">setAsPercentage</a>()</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAsComponent()" class="member-name-link">setAsComponent</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ProviderInformation.Builder.html" title="class in com.djrapitops.plan.extension.implementation">ProviderInformation.Builder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCondition(com.djrapitops.plan.extension.annotation.Conditional)" class="member-name-link">setCondition</a><wbr>(<a href="../annotation/Conditional.html" title="annotation interface in com.djrapitops.plan.extension.annotation">Conditional</a>&nbsp;condition)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setAsPercentage()" class="member-name-link">setAsPercentage</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ProviderInformation.Builder.html" title="class in com.djrapitops.plan.extension.implementation">ProviderInformation.Builder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDescription(java.lang.String)" class="member-name-link">setDescription</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;description)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setCondition(com.djrapitops.plan.extension.annotation.Conditional)" class="member-name-link">setCondition</a><wbr>(<a href="../annotation/Conditional.html" title="annotation interface in com.djrapitops.plan.extension.annotation">Conditional</a>&nbsp;condition)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ProviderInformation.Builder.html" title="class in com.djrapitops.plan.extension.implementation">ProviderInformation.Builder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setFormatType(com.djrapitops.plan.extension.FormatType)" class="member-name-link">setFormatType</a><wbr>(<a href="../FormatType.html" title="enum class in com.djrapitops.plan.extension">FormatType</a>&nbsp;formatType)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setDescription(java.lang.String)" class="member-name-link">setDescription</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;description)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ProviderInformation.Builder.html" title="class in com.djrapitops.plan.extension.implementation">ProviderInformation.Builder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setHidden(boolean)" class="member-name-link">setHidden</a><wbr>(boolean&nbsp;hidden)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setFormatType(com.djrapitops.plan.extension.FormatType)" class="member-name-link">setFormatType</a><wbr>(<a href="../FormatType.html" title="enum class in com.djrapitops.plan.extension">FormatType</a>&nbsp;formatType)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ProviderInformation.Builder.html" title="class in com.djrapitops.plan.extension.implementation">ProviderInformation.Builder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setIcon(com.djrapitops.plan.extension.icon.Icon)" class="member-name-link">setIcon</a><wbr>(<a href="../icon/Icon.html" title="class in com.djrapitops.plan.extension.icon">Icon</a>&nbsp;icon)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setHidden(boolean)" class="member-name-link">setHidden</a><wbr>(boolean&nbsp;hidden)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ProviderInformation.Builder.html" title="class in com.djrapitops.plan.extension.implementation">ProviderInformation.Builder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setName(java.lang.String)" class="member-name-link">setName</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setIcon(com.djrapitops.plan.extension.icon.Icon)" class="member-name-link">setIcon</a><wbr>(<a href="../icon/Icon.html" title="class in com.djrapitops.plan.extension.icon">Icon</a>&nbsp;icon)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ProviderInformation.Builder.html" title="class in com.djrapitops.plan.extension.implementation">ProviderInformation.Builder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPlayerName(boolean)" class="member-name-link">setPlayerName</a><wbr>(boolean&nbsp;playerName)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setName(java.lang.String)" class="member-name-link">setName</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ProviderInformation.Builder.html" title="class in com.djrapitops.plan.extension.implementation">ProviderInformation.Builder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPriority(int)" class="member-name-link">setPriority</a><wbr>(int&nbsp;priority)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPlayerName(boolean)" class="member-name-link">setPlayerName</a><wbr>(boolean&nbsp;playerName)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ProviderInformation.Builder.html" title="class in com.djrapitops.plan.extension.implementation">ProviderInformation.Builder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setProvidedCondition(java.lang.String)" class="member-name-link">setProvidedCondition</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;providedCondition)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setPriority(int)" class="member-name-link">setPriority</a><wbr>(int&nbsp;priority)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ProviderInformation.Builder.html" title="class in com.djrapitops.plan.extension.implementation">ProviderInformation.Builder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setShowInPlayersTable(boolean)" class="member-name-link">setShowInPlayersTable</a><wbr>(boolean&nbsp;showInPlayersTable)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setProvidedCondition(java.lang.String)" class="member-name-link">setProvidedCondition</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;providedCondition)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ProviderInformation.Builder.html" title="class in com.djrapitops.plan.extension.implementation">ProviderInformation.Builder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setTab(java.lang.String)" class="member-name-link">setTab</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;tab)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setShowInPlayersTable(boolean)" class="member-name-link">setShowInPlayersTable</a><wbr>(boolean&nbsp;showInPlayersTable)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ProviderInformation.Builder.html" title="class in com.djrapitops.plan.extension.implementation">ProviderInformation.Builder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setTableColor(com.djrapitops.plan.extension.icon.Color)" class="member-name-link">setTableColor</a><wbr>(<a href="../icon/Color.html" title="enum class in com.djrapitops.plan.extension.icon">Color</a>&nbsp;tableColor)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setTab(java.lang.String)" class="member-name-link">setTab</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;tab)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ProviderInformation.Builder.html" title="class in com.djrapitops.plan.extension.implementation">ProviderInformation.Builder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setText(java.lang.String)" class="member-name-link">setText</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;text)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setTableColor(com.djrapitops.plan.extension.icon.Color)" class="member-name-link">setTableColor</a><wbr>(<a href="../icon/Color.html" title="enum class in com.djrapitops.plan.extension.icon">Color</a>&nbsp;tableColor)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="ProviderInformation.Builder.html" title="class in com.djrapitops.plan.extension.implementation">ProviderInformation.Builder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#setText(java.lang.String)" class="member-name-link">setText</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;text)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -335,6 +339,14 @@ loadScripts(document, 'script');</script>
 <h3>build</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ProviderInformation.html" title="class in com.djrapitops.plan.extension.implementation">ProviderInformation</a></span>&nbsp;<span class="element-name">build</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="setAppendStrategy(com.djrapitops.plan.extension.graph.HistoryStrategy)">
+<h3>setAppendStrategy</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="ProviderInformation.Builder.html" title="class in com.djrapitops.plan.extension.implementation">ProviderInformation.Builder</a></span>&nbsp;<span class="element-name">setAppendStrategy</span><wbr><span class="parameters">(<a href="../graph/HistoryStrategy.html" title="enum class in com.djrapitops.plan.extension.graph">HistoryStrategy</a>&nbsp;appendStrategy)</span></div>
 </div>
 </section>
 </li>

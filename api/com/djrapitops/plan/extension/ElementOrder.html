@@ -62,6 +62,9 @@ loadScripts(document, 'script');</script>
 <li><a href="#VALUES" tabindex="0">VALUES</a></li>
 <li><a href="#GRAPH" tabindex="0">GRAPH</a></li>
 <li><a href="#TABLE" tabindex="0">TABLE</a></li>
+<li><a href="#GROUPS" tabindex="0">GROUPS</a></li>
+<li><a href="#STATISTICS" tabindex="0">STATISTICS</a></li>
+<li><a href="#FLAGS" tabindex="0">FLAGS</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -119,17 +122,29 @@ using <a href="annotation/TabInfo.html" title="annotation interface in com.djrap
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Enum Constant</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color"><code><a href="#GRAPH" class="member-name-link">GRAPH</a></code></div>
+<div class="col-first even-row-color"><code><a href="#FLAGS" class="member-name-link">FLAGS</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Represents graphs.</div>
+<div class="block">Represents key-value boolean data (not yet implemented).</div>
 </div>
-<div class="col-first odd-row-color"><code><a href="#TABLE" class="member-name-link">TABLE</a></code></div>
+<div class="col-first odd-row-color"><code><a href="#GRAPH" class="member-name-link">GRAPH</a></code></div>
 <div class="col-last odd-row-color">
-<div class="block">Represents tables.</div>
+<div class="block">Represents <a href="annotation/GraphProvider.html" title="annotation interface in com.djrapitops.plan.extension.annotation"><code>GraphProvider</code></a> data.</div>
 </div>
-<div class="col-first even-row-color"><code><a href="#VALUES" class="member-name-link">VALUES</a></code></div>
+<div class="col-first even-row-color"><code><a href="#GROUPS" class="member-name-link">GROUPS</a></code></div>
 <div class="col-last even-row-color">
-<div class="block">Represents text - value pair box.</div>
+<div class="block">Represents <a href="annotation/GroupProvider.html" title="annotation interface in com.djrapitops.plan.extension.annotation"><code>GroupProvider</code></a> data.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="#STATISTICS" class="member-name-link">STATISTICS</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Represents key-value numeric data (not yet implemented).</div>
+</div>
+<div class="col-first even-row-color"><code><a href="#TABLE" class="member-name-link">TABLE</a></code></div>
+<div class="col-last even-row-color">
+<div class="block">Represents <a href="annotation/TableProvider.html" title="annotation interface in com.djrapitops.plan.extension.annotation"><code>TableProvider</code></a> data.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="#VALUES" class="member-name-link">VALUES</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Represents values by <a href="annotation/NumberProvider.html" title="annotation interface in com.djrapitops.plan.extension.annotation"><code>NumberProvider</code></a>, <a href="annotation/StringProvider.html" title="annotation interface in com.djrapitops.plan.extension.annotation"><code>StringProvider</code></a>, <a href="annotation/BooleanProvider.html" title="annotation interface in com.djrapitops.plan.extension.annotation"><code>BooleanProvider</code></a>, <a href="annotation/PercentageProvider.html" title="annotation interface in com.djrapitops.plan.extension.annotation"><code>PercentageProvider</code></a>, <a href="annotation/DoubleProvider.html" title="annotation interface in com.djrapitops.plan.extension.annotation"><code>DoubleProvider</code></a></div>
 </div>
 </div>
 </section>
@@ -190,7 +205,7 @@ the order they are declared.</div>
 <h3>VALUES</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ElementOrder.html" title="enum class in com.djrapitops.plan.extension">ElementOrder</a></span>&nbsp;<span class="element-name">VALUES</span></div>
-<div class="block">Represents text - value pair box.</div>
+<div class="block">Represents values by <a href="annotation/NumberProvider.html" title="annotation interface in com.djrapitops.plan.extension.annotation"><code>NumberProvider</code></a>, <a href="annotation/StringProvider.html" title="annotation interface in com.djrapitops.plan.extension.annotation"><code>StringProvider</code></a>, <a href="annotation/BooleanProvider.html" title="annotation interface in com.djrapitops.plan.extension.annotation"><code>BooleanProvider</code></a>, <a href="annotation/PercentageProvider.html" title="annotation interface in com.djrapitops.plan.extension.annotation"><code>PercentageProvider</code></a>, <a href="annotation/DoubleProvider.html" title="annotation interface in com.djrapitops.plan.extension.annotation"><code>DoubleProvider</code></a></div>
 </div>
 </section>
 </li>
@@ -199,7 +214,7 @@ the order they are declared.</div>
 <h3>GRAPH</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ElementOrder.html" title="enum class in com.djrapitops.plan.extension">ElementOrder</a></span>&nbsp;<span class="element-name">GRAPH</span></div>
-<div class="block">Represents graphs.</div>
+<div class="block">Represents <a href="annotation/GraphProvider.html" title="annotation interface in com.djrapitops.plan.extension.annotation"><code>GraphProvider</code></a> data.</div>
 </div>
 </section>
 </li>
@@ -208,7 +223,34 @@ the order they are declared.</div>
 <h3>TABLE</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ElementOrder.html" title="enum class in com.djrapitops.plan.extension">ElementOrder</a></span>&nbsp;<span class="element-name">TABLE</span></div>
-<div class="block">Represents tables.</div>
+<div class="block">Represents <a href="annotation/TableProvider.html" title="annotation interface in com.djrapitops.plan.extension.annotation"><code>TableProvider</code></a> data.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="GROUPS">
+<h3>GROUPS</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ElementOrder.html" title="enum class in com.djrapitops.plan.extension">ElementOrder</a></span>&nbsp;<span class="element-name">GROUPS</span></div>
+<div class="block">Represents <a href="annotation/GroupProvider.html" title="annotation interface in com.djrapitops.plan.extension.annotation"><code>GroupProvider</code></a> data.</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="STATISTICS">
+<h3>STATISTICS</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ElementOrder.html" title="enum class in com.djrapitops.plan.extension">ElementOrder</a></span>&nbsp;<span class="element-name">STATISTICS</span></div>
+<div class="block">Represents key-value numeric data (not yet implemented).</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="FLAGS">
+<h3>FLAGS</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static final</span>&nbsp;<span class="return-type"><a href="ElementOrder.html" title="enum class in com.djrapitops.plan.extension">ElementOrder</a></span>&nbsp;<span class="element-name">FLAGS</span></div>
+<div class="block">Represents key-value boolean data (not yet implemented).</div>
 </div>
 </section>
 </li>

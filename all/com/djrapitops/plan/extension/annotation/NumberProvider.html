@@ -66,6 +66,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#iconFamily()" tabindex="0">iconFamily</a></li>
 <li><a href="#iconColor()" tabindex="0">iconColor</a></li>
 <li><a href="#showInPlayerTable()" tabindex="0">showInPlayerTable</a></li>
+<li><a href="#supportedAggregateFunctions()" tabindex="0">supportedAggregateFunctions</a></li>
 </ol>
 </li>
 </ol>
@@ -151,6 +152,11 @@ Usage: <code>@NumberProvider long method(UUID playerUUID)</code></div>
 <div class="col-second even-row-color"><code><a href="#showInPlayerTable()" class="member-name-link">showInPlayerTable</a></code></div>
 <div class="col-last even-row-color">
 <div class="block">When the parameter is set to <code>true</code> the value from this Provider is shown on a table alongside players.</div>
+</div>
+<div class="col-first odd-row-color"><code><a href="../graph/Aggregates.html" title="enum class in com.djrapitops.plan.extension.graph">Aggregates</a>[]</code></div>
+<div class="col-second odd-row-color"><code><a href="#supportedAggregateFunctions()" class="member-name-link">supportedAggregateFunctions</a></code></div>
+<div class="col-last odd-row-color">
+<div class="block">Define any aggregate functions the value supports if a Player provider.</div>
 </div>
 </div>
 </section>
@@ -256,7 +262,7 @@ See <a href="https://fontawesome.com/icons">FontAwesome</a> (select 'free')) for
 </dl>
 <dl class="notes">
 <dt>Default:</dt>
-<dd><code>"question"</code></dd>
+<dd><code>"hashtag"</code></dd>
 </dl>
 </div>
 </section>
@@ -312,6 +318,27 @@ This color will be set as the default color to use for plugin's elements.</div>
 <dl class="notes">
 <dt>Default:</dt>
 <dd><code>false</code></dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="supportedAggregateFunctions()">
+<h3>supportedAggregateFunctions</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="return-type"><a href="../graph/Aggregates.html" title="enum class in com.djrapitops.plan.extension.graph">Aggregates</a>[]</span>&nbsp;<span class="element-name">supportedAggregateFunctions</span></div>
+<div class="block">Define any aggregate functions the value supports if a Player provider.
+<p>
+Automatic aggregate numbers (As if defining another NumberProvider for server) will be added to the same <a href="Tab.html" title="annotation interface in com.djrapitops.plan.extension.annotation"><code>Tab</code></a> if these are defined.
+<p>
+e.g. returning <a href="../graph/Aggregates.html#SUM_ALL"><code>Aggregates.SUM_ALL</code></a> adds "Total {displayName}" to Server plugin values.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>None by default.</dd>
+</dl>
+<dl class="notes">
+<dt>Default:</dt>
+<dd><code>{}</code></dd>
 </dl>
 </div>
 </section>

@@ -61,6 +61,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#groupColor()" tabindex="0">groupColor</a></li>
 <li><a href="#iconName()" tabindex="0">iconName</a></li>
 <li><a href="#iconFamily()" tabindex="0">iconFamily</a></li>
+<li><a href="#sampleAsGraph()" tabindex="0">sampleAsGraph</a></li>
 </ol>
 </li>
 </ol>
@@ -114,9 +115,14 @@ Requires Capability <code>DATA_EXTENSION_GROUPS</code></div>
 <div class="col-last even-row-color">
 <div class="block">Name of Font Awesome icon.</div>
 </div>
-<div class="col-first odd-row-color"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second odd-row-color"><code><a href="#text()" class="member-name-link">text</a></code></div>
+<div class="col-first odd-row-color"><code>boolean</code></div>
+<div class="col-second odd-row-color"><code><a href="#sampleAsGraph()" class="member-name-link">sampleAsGraph</a></code></div>
 <div class="col-last odd-row-color">
+<div class="block">Sample player counts of the data gathered as if there was a graph provider.</div>
+</div>
+<div class="col-first even-row-color"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
+<div class="col-second even-row-color"><code><a href="#text()" class="member-name-link">text</a></code></div>
+<div class="col-last even-row-color">
 <div class="block">Text displayed before the value, limited to 50 characters.</div>
 </div>
 </div>
@@ -182,7 +188,7 @@ See <a href="https://fontawesome.com/icons">FontAwesome</a> (select 'free')) for
 </dl>
 <dl class="notes">
 <dt>Default:</dt>
-<dd><code>"circle"</code></dd>
+<dd><code>"user-group"</code></dd>
 </dl>
 </div>
 </section>
@@ -202,6 +208,30 @@ See <a href="https://fontawesome.com/icons">FontAwesome</a> (select 'free')) for
 <dl class="notes">
 <dt>Default:</dt>
 <dd><code>SOLID</code></dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="sampleAsGraph()">
+<h3>sampleAsGraph</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="return-type">boolean</span>&nbsp;<span class="element-name">sampleAsGraph</span></div>
+<div class="block">Sample player counts of the data gathered as if there was a graph provider.
+<p>
+Sample rate: 1 / 15min
+Sample: COUNT(*) WHERE sessionStart &gt; 7d ago GROUP BY groupName
+<p>
+Requires Capability DATA_EXTENSION_GRAPH_API.
+<p>
+Not implemented yet.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>false by default</dd>
+</dl>
+<dl class="notes">
+<dt>Default:</dt>
+<dd><code>false</code></dd>
 </dl>
 </div>
 </section>
