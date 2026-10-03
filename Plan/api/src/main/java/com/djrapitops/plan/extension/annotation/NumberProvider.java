@@ -84,7 +84,7 @@ public @interface NumberProvider {
      *
      * @return Name of the icon, if name is not valid no icon is shown.
      */
-    String iconName() default "question";
+    String iconName() default "hashtag";
 
     /**
      * Family of Font Awesome icon.

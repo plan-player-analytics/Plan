@@ -20,6 +20,8 @@ import com.djrapitops.plan.extension.graph.Aggregates;
 import com.djrapitops.plan.extension.graph.HistoryStrategy;
 import com.djrapitops.plan.extension.graph.ServerGraphDataSource;
 import com.djrapitops.plan.extension.graph.XAxisType;
+import com.djrapitops.plan.extension.icon.Color;
+import com.djrapitops.plan.extension.icon.Family;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -63,6 +65,33 @@ public @interface GraphProvider {
      * @return Priority between 0 and {@code Integer.MAX_VALUE}.
      */
     int priority() default 0;
+
+    /**
+     * Name of Font Awesome icon.
+     * <p>
+     * See <a href="https://fontawesome.com/icons">FontAwesome</a> (select 'free')) for icons and their {@link Family}.
+     *
+     * @return Name of the icon, if name is not valid no icon is shown.
+     */
+    String iconName() default "chart-line";
+
+    /**
+     * Family of Font Awesome icon.
+     * <p>
+     * See <a href="https://fontawesome.com/icons">FontAwesome</a> (select 'free')) for icons and their {@link Family}.
+     *
+     * @return Family that matches an icon, if there is no icon for this family no icon is shown.
+     */
+    Family iconFamily() default Family.SOLID;
+
+    /**
+     * Color preference of the plugin.
+     * <p>
+     * This color will be set as the default color to use for plugin's elements.
+     *
+     * @return Preferred color. If none are specified defaults are used.
+     */
+    Color iconColor() default Color.NONE;
 
     /**
      * Define what formatter to use for x-axis.

@@ -191,7 +191,7 @@ public class GraphSamplers {
                 .showOnTab(provider.getAnnotationOrNull(Tab.class))
                 .methodName(provider)
                 .priority(annotation.priority())
-                .icon(Icon.called("question").build());
+                .icon(Icon.called(annotation.iconName()).of(annotation.iconFamily()).of(annotation.iconColor()).build());
         ProviderInformation info = ((ExtValueBuilder) valueBuilder).buildProviderInfo(annotation);
 
         dbSystem.getDatabase().executeTransaction(new StoreGraphPointProviderTransaction(annotation, provider, info, serverInfo.getServerUUID(),

@@ -66,7 +66,7 @@ public @interface GroupProvider {
      *
      * @return Name of the icon, if name is not valid no icon is shown.
      */
-    String iconName() default "circle";
+    String iconName() default "user-group";
 
     /**
      * Family of Font Awesome icon.
