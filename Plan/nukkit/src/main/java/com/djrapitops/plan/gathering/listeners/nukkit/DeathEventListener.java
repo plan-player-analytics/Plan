@@ -38,6 +38,7 @@ import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.processing.processors.player.MobKillProcessor;
 import com.djrapitops.plan.processing.processors.player.PlayerKillProcessor;
+import com.djrapitops.plan.utilities.java.ThrowableUtils;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 
@@ -72,6 +73,10 @@ public class DeathEventListener implements Listener {
         long time = System.currentTimeMillis();
         Player dead = event.getEntity();
         SessionCache.getCachedSession(dead.getUniqueId()).ifPresent(ActiveSession::addDeath);
+
+        if (ThrowableUtils.findMethodCall("setHealth").isPresent()) {
+            return; // Death was caused by setHealth call, not another player.
+        }
 
         try {
             Optional<Player> foundKiller = findKiller(dead);

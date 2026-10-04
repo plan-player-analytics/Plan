@@ -84,4 +84,12 @@ public class ThrowableUtils {
         return "Unknown";
     }
 
+    public static Optional<StackTraceElement> findMethodCall(String methodName) {
+        for (StackTraceElement element : Thread.currentThread().getStackTrace()) {
+            if (methodName.equals(element.getMethodName())) {
+                return Optional.of(element);
+            }
+        }
+        return Optional.empty();
+    }
 }
