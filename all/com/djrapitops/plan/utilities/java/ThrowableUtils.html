@@ -57,8 +57,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
-<li><a href="#appendEntryPointToCause(java.lang.Throwable,java.lang.StackTraceElement%5B%5D)" tabindex="0">appendEntryPointToCause(Throwable, StackTraceElement[])</a></li>
-<li><a href="#findCallSites(java.lang.StackTraceElement%5B%5D,java.lang.String...)" tabindex="0">findCallSites(StackTraceElement[], String...)</a></li>
+<li><a href="#appendEntryPointAsSuppressed(java.lang.Throwable,java.lang.StackTraceElement%5B%5D)" tabindex="0">appendEntryPointAsSuppressed(Throwable, StackTraceElement[])</a></li>
+<li><a href="#findCallSites(java.lang.StackTraceElement%5B%5D,int,java.lang.String...)" tabindex="0">findCallSites(StackTraceElement[], int, String...)</a></li>
 <li><a href="#combineStackTrace(java.lang.StackTraceElement%5B%5D,java.lang.StackTraceElement%5B%5D)" tabindex="0">combineStackTrace(StackTraceElement[], StackTraceElement[])</a></li>
 <li><a href="#findCallerAfterClass(java.lang.StackTraceElement%5B%5D,java.lang.Class)" tabindex="0">findCallerAfterClass(StackTraceElement[], Class)</a></li>
 </ol>
@@ -95,7 +95,7 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#appendEntryPointToCause(java.lang.Throwable,java.lang.StackTraceElement%5B%5D)" class="member-name-link">appendEntryPointToCause</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link">Throwable</a>&nbsp;throwable,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#appendEntryPointAsSuppressed(java.lang.Throwable,java.lang.StackTraceElement%5B%5D)" class="member-name-link">appendEntryPointAsSuppressed</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link">Throwable</a>&nbsp;throwable,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StackTraceElement.html" title="class or interface in java.lang" class="external-link">StackTraceElement</a>[]&nbsp;originPoint)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static @NotNull <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StackTraceElement.html" title="class or interface in java.lang" class="external-link">StackTraceElement</a>[]</code></div>
@@ -107,7 +107,8 @@ loadScripts(document, 'script');</script>
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;afterThis)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StackTraceElement.html" title="class or interface in java.lang" class="external-link">StackTraceElement</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#findCallSites(java.lang.StackTraceElement%5B%5D,java.lang.String...)" class="member-name-link">findCallSites</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StackTraceElement.html" title="class or interface in java.lang" class="external-link">StackTraceElement</a>[]&nbsp;origin,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#findCallSites(java.lang.StackTraceElement%5B%5D,int,java.lang.String...)" class="member-name-link">findCallSites</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StackTraceElement.html" title="class or interface in java.lang" class="external-link">StackTraceElement</a>[]&nbsp;origin,
+ int&nbsp;howMany,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;calledMethods)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
@@ -128,19 +129,20 @@ loadScripts(document, 'script');</script>
 <h2>Method Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="appendEntryPointToCause(java.lang.Throwable,java.lang.StackTraceElement[])">
-<h3>appendEntryPointToCause</h3>
+<section class="detail" id="appendEntryPointAsSuppressed(java.lang.Throwable,java.lang.StackTraceElement[])">
+<h3>appendEntryPointAsSuppressed</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">appendEntryPointToCause</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link">Throwable</a>&nbsp;throwable,
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">appendEntryPointAsSuppressed</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Throwable.html" title="class or interface in java.lang" class="external-link">Throwable</a>&nbsp;throwable,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StackTraceElement.html" title="class or interface in java.lang" class="external-link">StackTraceElement</a>[]&nbsp;originPoint)</span></div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="findCallSites(java.lang.StackTraceElement[],java.lang.String...)">
+<section class="detail" id="findCallSites(java.lang.StackTraceElement[],int,java.lang.String...)">
 <h3>findCallSites</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StackTraceElement.html" title="class or interface in java.lang" class="external-link">StackTraceElement</a>&gt;</span>&nbsp;<span class="element-name">findCallSites</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StackTraceElement.html" title="class or interface in java.lang" class="external-link">StackTraceElement</a>[]&nbsp;origin,
+ int&nbsp;howMany,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;calledMethods)</span></div>
 </div>
 </section>
