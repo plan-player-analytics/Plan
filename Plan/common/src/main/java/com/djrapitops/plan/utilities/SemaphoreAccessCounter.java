@@ -43,11 +43,11 @@ public class SemaphoreAccessCounter {
 
         // Transaction origin is captured in execute transaction block already
         List<StackTraceElement> transactionOrigin = SQLDB.getTransactionOrigin().get();
-        if (transactionOrigin != null) accessors.addAll(transactionOrigin);
+        if (transactionOrigin != null && !transactionOrigin.isEmpty()) accessors.add(transactionOrigin.get(0));
 
         // Queries are captured from direct calls since they are not wrapped in completable futures.
         StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-        accessors.addAll(ThrowableUtils.findCallSites(stackTrace, "com.djrapitops.plan.storage.database.SQLDB.query"));
+        accessors.addAll(ThrowableUtils.findCallSites(stackTrace, 1, "com.djrapitops.plan.storage.database.SQLDB.query"));
 
         if (accessors.isEmpty()) accessors.addAll(Arrays.asList(stackTrace));
         return accessors.toString();

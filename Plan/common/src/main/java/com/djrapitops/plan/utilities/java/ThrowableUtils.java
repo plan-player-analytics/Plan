@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.utilities.java;
 
+import com.djrapitops.plan.exceptions.CallSource;
+import org.apache.commons.lang3.Strings;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -32,29 +34,26 @@ public class ThrowableUtils {
         /* Static method class */
     }
 
-    public static void appendEntryPointToCause(Throwable throwable, StackTraceElement[] originPoint) {
-        Throwable cause = throwable.getCause();
-        while (cause.getCause() != null) {
-            cause = cause.getCause();
-        }
-
-        cause.setStackTrace(
-                combineStackTrace(originPoint, cause.getStackTrace())
-        );
+    public static void appendEntryPointAsSuppressed(Throwable throwable, StackTraceElement[] originPoint) {
+        CallSource source = new CallSource();
+        source.setStackTrace(originPoint);
+        throwable.addSuppressed(source);
     }
 
-    public static List<StackTraceElement> findCallSites(StackTraceElement[] origin, String... calledMethods) {
-        boolean previousWasAccess = false;
+    public static List<StackTraceElement> findCallSites(StackTraceElement[] origin, int howMany, String... calledMethods) {
+        int remainingToAdd = 0;
         List<StackTraceElement> accessors = new ArrayList<>();
         Set<String> lookup = new HashSet<>(Arrays.asList(calledMethods));
         for (StackTraceElement e : origin) {
-            if (previousWasAccess) {
+            if (Strings.CI.startsWithAny(e.getModuleName(), "jdk.", "java.")) continue;
+
+            if (remainingToAdd > 0) {
                 accessors.add(e);
-                previousWasAccess = false;
+                remainingToAdd--;
             }
             String call = e.getClassName() + "." + e.getMethodName();
             if (lookup.contains(call)) {
-                previousWasAccess = true;
+                remainingToAdd = howMany;
             }
         }
         return List.copyOf(accessors);

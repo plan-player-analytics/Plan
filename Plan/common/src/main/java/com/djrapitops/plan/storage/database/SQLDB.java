@@ -323,6 +323,7 @@ public abstract class SQLDB extends AbstractDatabase {
                 return CompletableFuture.completedFuture(null);
             }
             List<StackTraceElement> callSites = ThrowableUtils.findCallSites(Thread.currentThread().getStackTrace(),
+                    20,
                     "com.djrapitops.plan.storage.database.SQLDB.executeTransaction");
 
             return CompletableFuture.runAsync(() -> {

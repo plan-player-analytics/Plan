@@ -17,9 +17,12 @@
 package com.djrapitops.plan.exceptions.database;
 
 import com.djrapitops.plan.exceptions.ExceptionWithContext;
+import com.djrapitops.plan.storage.database.SQLDB;
+import com.djrapitops.plan.utilities.java.ThrowableUtils;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -46,6 +49,10 @@ public class DBOpException extends IllegalStateException implements ExceptionWit
     public DBOpException(String message, Throwable cause, ErrorContext context) {
         super(message, cause);
         this.context = context;
+        List<StackTraceElement> origin = SQLDB.getTransactionOrigin().get();
+        if (origin != null) {
+            ThrowableUtils.appendEntryPointAsSuppressed(this, origin.toArray(new StackTraceElement[0]));
+        }
     }
 
     // Checkstyle.OFF: CyclomaticComplexity

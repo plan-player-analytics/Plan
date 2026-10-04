@@ -382,10 +382,11 @@ class AccessControlTest {
         Caller caller = system.getApiServices().getExtensionService().register(new ExtensionsDatabaseTest.PlayerExtension())
                 .orElseThrow(AssertionError::new);
         system.getApiServices().getExtensionService().register(new ExtensionsDatabaseTest.GraphExtension());
+        caller.updatePlayerData(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME);
+
         // System server uuid differs from test data uuid
         database.executeInTransaction(UPDATE + ExtensionPluginTable.TABLE_NAME + SET +
                 ExtensionPluginTable.SERVER_UUID + "='" + TestConstants.SERVER_UUID_STRING + "'");
-        caller.updatePlayerData(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME);
     }
 
     @AfterAll
