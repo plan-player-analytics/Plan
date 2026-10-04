@@ -18,7 +18,7 @@ package com.djrapitops.plan.utilities.java;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
+import java.util.*;
 import java.util.stream.Stream;
 
 /**
@@ -41,6 +41,23 @@ public class ThrowableUtils {
         cause.setStackTrace(
                 combineStackTrace(originPoint, cause.getStackTrace())
         );
+    }
+
+    public static List<StackTraceElement> findCallSites(StackTraceElement[] origin, String... calledMethods) {
+        boolean previousWasAccess = false;
+        List<StackTraceElement> accessors = new ArrayList<>();
+        Set<String> lookup = new HashSet<>(Arrays.asList(calledMethods));
+        for (StackTraceElement e : origin) {
+            if (previousWasAccess) {
+                accessors.add(e);
+                previousWasAccess = false;
+            }
+            String call = e.getClassName() + "." + e.getMethodName();
+            if (lookup.contains(call)) {
+                previousWasAccess = true;
+            }
+        }
+        return List.copyOf(accessors);
     }
 
     @NotNull

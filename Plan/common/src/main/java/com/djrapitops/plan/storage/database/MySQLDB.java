@@ -226,11 +226,7 @@ public class MySQLDB extends SQLDB {
         Connection connection = dataSource.getConnection();
         if (!connection.isValid(5)) {
             connection.close();
-            try {
-                return getConnection();
-            } catch (StackOverflowError databaseHasGoneDown) {
-                throw new DBOpException("Valid connection could not be fetched (Is MySQL down?) - attempted until StackOverflowError occurred.", databaseHasGoneDown);
-            }
+            throw new DBOpException("Valid connection could not be fetched (Is MySQL down?)");
         }
         if (connection.getAutoCommit()) connection.setAutoCommit(false);
         setTimezoneToUTC(connection);

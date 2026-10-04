@@ -39,24 +39,17 @@ public class SemaphoreAccessCounter {
 
     @NotNull
     private static String getAccessingThing() {
-        boolean previousWasAccess = false;
         List<StackTraceElement> accessors = new ArrayList<>();
-        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
-        StackTraceElement[] origin = SQLDB.getTransactionOrigin().get();
-        StackTraceElement[] callSite = ThrowableUtils.combineStackTrace(origin, stackTrace);
 
-        for (StackTraceElement e : callSite) {
-            if (previousWasAccess) {
-                accessors.add(e);
-                previousWasAccess = false;
-            }
-            String call = e.getClassName() + "." + e.getMethodName();
-            if ("com.djrapitops.plan.storage.database.SQLDB.query".equals(call)
-                    || "com.djrapitops.plan.storage.database.SQLDB.executeTransaction".equals(call)) {
-                previousWasAccess = true;
-            }
-        }
-        if (accessors.isEmpty()) accessors.addAll(Arrays.asList(callSite));
+        // Transaction origin is captured in execute transaction block already
+        List<StackTraceElement> transactionOrigin = SQLDB.getTransactionOrigin().get();
+        if (transactionOrigin != null) accessors.addAll(transactionOrigin);
+
+        // Queries are captured from direct calls since they are not wrapped in completable futures.
+        StackTraceElement[] stackTrace = Thread.currentThread().getStackTrace();
+        accessors.addAll(ThrowableUtils.findCallSites(stackTrace, "com.djrapitops.plan.storage.database.SQLDB.query"));
+
+        if (accessors.isEmpty()) accessors.addAll(Arrays.asList(stackTrace));
         return accessors.toString();
     }
 

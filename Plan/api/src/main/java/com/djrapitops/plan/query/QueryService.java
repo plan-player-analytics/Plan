@@ -20,7 +20,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.Optional;
 import java.util.UUID;
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Consumer;
 
@@ -81,7 +81,7 @@ public interface QueryService {
      * @return A Future that tells when the transaction has completed. Blocks thread if Future#get is called.
      * @throws IllegalStateException If something goes wrong with the query. SQLException might be as cause.
      */
-    Future<?> execute(
+    CompletableFuture<Void> execute(
             String sql,
             ThrowingConsumer<PreparedStatement> performStatement
     ) throws IllegalStateException;

@@ -35,7 +35,7 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 @Singleton
@@ -82,7 +82,7 @@ public class QuerySvc implements QueryService {
     }
 
     @Override
-    public Future<?> execute(String sql, ThrowingConsumer<PreparedStatement> performStatement) {
+    public CompletableFuture<Void> execute(String sql, ThrowingConsumer<PreparedStatement> performStatement) {
         return dbSystem.getDatabase().executeTransaction(
                 new Transaction() {
                     @Override

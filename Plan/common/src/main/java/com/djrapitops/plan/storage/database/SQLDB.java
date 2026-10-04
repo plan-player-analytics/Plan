@@ -70,7 +70,7 @@ public abstract class SQLDB extends AbstractDatabase {
             new MavenRepository("https://repo.papermc.io/repository/maven-public"),
             new MavenRepository("https://repo1.maven.org/maven2")
     );
-    private static final ThreadLocal<StackTraceElement[]> TRANSACTION_ORIGIN = new ThreadLocal<>();
+    private static final ThreadLocal<List<StackTraceElement>> TRANSACTION_ORIGIN = new ThreadLocal<>();
     private static boolean downloadDriver = true;
     protected final Locale locale;
     protected final PlanConfig config;
@@ -128,7 +128,7 @@ public abstract class SQLDB extends AbstractDatabase {
         SQLDB.downloadDriver = downloadDriver;
     }
 
-    public static ThreadLocal<StackTraceElement[]> getTransactionOrigin() {
+    public static ThreadLocal<List<StackTraceElement>> getTransactionOrigin() {
         return TRANSACTION_ORIGIN;
     }
 
@@ -310,33 +310,38 @@ public abstract class SQLDB extends AbstractDatabase {
     }
 
     @Override
-    public CompletableFuture<?> executeTransaction(Transaction transaction) {
+    public CompletableFuture<Void> executeTransaction(Transaction transaction) {
         if (getState() == State.CLOSED) {
             throw new DBClosedException("Transaction tried to execute although database is closed.");
         }
 
-        StackTraceElement[] origin = Thread.currentThread().getStackTrace();
-
-        if (determineIfShouldDropUnimportantTransactions(transactionQueueSize.incrementAndGet())
-                && transaction instanceof ThrowawayTransaction) {
-            // Drop throwaway transaction immediately.
-            return CompletableFuture.completedFuture(null);
-        }
-
-        return CompletableFuture.supplyAsync(() -> {
-            try {
-                TRANSACTION_ORIGIN.set(origin);
-                if (getState() == State.CLOSED) return CompletableFuture.completedFuture(null);
-
-                accessLock.performDatabaseOperation(() -> {
-                    if (!ranIntoFatalError.get()) {transaction.executeTransaction(this);}
-                }, transaction);
-                return CompletableFuture.completedFuture(null);
-            } finally {
+        try {
+            if (determineIfShouldDropUnimportantTransactions(transactionQueueSize.incrementAndGet())
+                    && transaction instanceof ThrowawayTransaction) {
+                // Drop throwaway transaction immediately.
                 transactionQueueSize.decrementAndGet();
-                TRANSACTION_ORIGIN.remove();
+                return CompletableFuture.completedFuture(null);
             }
-        }, getTransactionExecutor()).exceptionally(errorHandler(transaction, origin));
+            List<StackTraceElement> callSites = ThrowableUtils.findCallSites(Thread.currentThread().getStackTrace(),
+                    "com.djrapitops.plan.storage.database.SQLDB.executeTransaction");
+
+            return CompletableFuture.runAsync(() -> {
+                try {
+                    if (getState() == State.CLOSED) return; // Database closed in the meanwhile
+
+                    TRANSACTION_ORIGIN.set(callSites);
+                    accessLock.performDatabaseOperation(() -> {
+                        if (!ranIntoFatalError.get()) {transaction.executeTransaction(this);}
+                    }, transaction);
+                } finally {
+                    transactionQueueSize.decrementAndGet();
+                    TRANSACTION_ORIGIN.remove();
+                }
+            }, getTransactionExecutor()).exceptionally(errorHandler(transaction));
+        } catch (RuntimeException e) {
+            transactionQueueSize.decrementAndGet();
+            throw e;
+        }
     }
 
     private boolean determineIfShouldDropUnimportantTransactions(int queueSize) {
@@ -355,10 +360,10 @@ public abstract class SQLDB extends AbstractDatabase {
         return dropTransactions;
     }
 
-    private Function<Throwable, CompletableFuture<Object>> errorHandler(Transaction transaction, StackTraceElement[] origin) {
+    private Function<Throwable, Void> errorHandler(Transaction transaction) {
         return throwable -> {
             if (throwable == null) {
-                return CompletableFuture.completedFuture(null);
+                return null;
             }
             if (throwable.getCause() instanceof FatalDBException actual) {
                 ranIntoFatalError.set(true);
@@ -370,7 +375,6 @@ public abstract class SQLDB extends AbstractDatabase {
                 );
                 setState(State.CLOSED);
             }
-            ThrowableUtils.appendEntryPointToCause(throwable, origin);
 
             ErrorContext errorContext = ErrorContext.builder()
                     .related("Transaction: " + transaction.getClass())
@@ -381,7 +385,7 @@ public abstract class SQLDB extends AbstractDatabase {
             } else {
                 errorLogger.error(throwable, errorContext);
             }
-            return CompletableFuture.completedFuture(null);
+            return null;
         };
     }
 

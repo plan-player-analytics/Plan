@@ -128,9 +128,9 @@ public interface Database {
      * @param transaction Transaction to execute.
      * @return Future that is finished when the transaction has been executed.
      */
-    CompletableFuture<?> executeTransaction(Transaction transaction);
+    CompletableFuture<Void> executeTransaction(Transaction transaction);
 
-    default CompletableFuture<?> executeInTransaction(Executable executable) {
+    default CompletableFuture<Void> executeInTransaction(Executable executable) {
         return executeTransaction(new Transaction() {
             @Override
             protected void performOperations() {
@@ -139,7 +139,7 @@ public interface Database {
         });
     }
 
-    default CompletableFuture<?> executeInTransaction(String sql, Object... parameters) {
+    default CompletableFuture<Void> executeInTransaction(String sql, Object... parameters) {
         return executeInTransaction(new ExecStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {

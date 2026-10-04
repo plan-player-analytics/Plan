@@ -28,10 +28,12 @@ import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.queries.schema.MySQLSchemaQueries;
 import com.djrapitops.plan.storage.database.queries.schema.SQLiteSchemaQueries;
 import com.djrapitops.plan.storage.database.transactions.patches.Patch;
+import com.djrapitops.plan.utilities.java.ThrowableUtils;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import net.playeranalytics.plugin.scheduling.TimeAmount;
 
 import java.sql.*;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -125,9 +127,12 @@ public abstract class Transaction {
             failMsg += " (Attempted " + attempts + " times)";
         }
 
-        throw new DBOpException(failMsg + rollbackStatusMsg, statementFail, ErrorContext.builder()
+        DBOpException exception = new DBOpException(failMsg + rollbackStatusMsg, statementFail, ErrorContext.builder()
                 .related("Attempts: " + attempts)
                 .build());
+        List<StackTraceElement> origin = SQLDB.getTransactionOrigin().get();
+        ThrowableUtils.appendEntryPointToCause(exception, origin.toArray(new StackTraceElement[0]));
+        throw exception;
     }
 
     private String rollbackTransaction() {
