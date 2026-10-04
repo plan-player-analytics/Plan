@@ -61,6 +61,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#findCallSites(java.lang.StackTraceElement%5B%5D,int,java.lang.String...)" tabindex="0">findCallSites(StackTraceElement[], int, String...)</a></li>
 <li><a href="#combineStackTrace(java.lang.StackTraceElement%5B%5D,java.lang.StackTraceElement%5B%5D)" tabindex="0">combineStackTrace(StackTraceElement[], StackTraceElement[])</a></li>
 <li><a href="#findCallerAfterClass(java.lang.StackTraceElement%5B%5D,java.lang.Class)" tabindex="0">findCallerAfterClass(StackTraceElement[], Class)</a></li>
+<li><a href="#findMethodCall(java.lang.String)" tabindex="0">findMethodCall(String)</a></li>
 </ol>
 </li>
 </ol>
@@ -111,6 +112,9 @@ loadScripts(document, 'script');</script>
  int&nbsp;howMany,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>...&nbsp;calledMethods)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StackTraceElement.html" title="class or interface in java.lang" class="external-link">StackTraceElement</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#findMethodCall(java.lang.String)" class="member-name-link">findMethodCall</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -163,6 +167,14 @@ loadScripts(document, 'script');</script>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">findCallerAfterClass</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StackTraceElement.html" title="class or interface in java.lang" class="external-link">StackTraceElement</a>[]&nbsp;stackTrace,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Class.html" title="class or interface in java.lang" class="external-link">Class</a>&lt;?&gt;&nbsp;afterThis)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="findMethodCall(java.lang.String)">
+<h3>findMethodCall</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/StackTraceElement.html" title="class or interface in java.lang" class="external-link">StackTraceElement</a>&gt;</span>&nbsp;<span class="element-name">findMethodCall</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;methodName)</span></div>
 </div>
 </section>
 </li>
