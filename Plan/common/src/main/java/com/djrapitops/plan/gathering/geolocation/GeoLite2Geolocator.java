@@ -151,8 +151,8 @@ public class GeoLite2Geolocator implements Geolocator {
                 DatabaseReader reader = new DatabaseReader.Builder(in).build()
         ) {
             CountryResponse response = reader.country(inetAddress);
-            Country country = response.getCountry();
-            String countryName = country.getName();
+            Country country = response.country();
+            String countryName = country.name();
 
             return Optional.ofNullable(countryName);
         } catch (IOException | GeoIp2Exception e) {
