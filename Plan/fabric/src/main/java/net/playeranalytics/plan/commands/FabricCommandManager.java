@@ -30,10 +30,11 @@ import com.mojang.brigadier.builder.RequiredArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.commands.Commands;
 import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.permissions.PermissionLevel;
 import net.minecraft.server.permissions.Permissions;
 import net.playeranalytics.plan.PlanFabric;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
@@ -43,10 +44,10 @@ import java.util.concurrent.CompletableFuture;
 public class FabricCommandManager {
 
     private final CommandDispatcher<CommandSourceStack> dispatcher;
-    private RunnableFactory runnableFactory;
-    private LiteralArgumentBuilder<CommandSourceStack> root;
     private final PlanFabric plugin;
     private final ErrorLogger errorLogger;
+    private RunnableFactory runnableFactory;
+    private LiteralArgumentBuilder<CommandSourceStack> root;
 
     public FabricCommandManager(CommandDispatcher<CommandSourceStack> dispatcher, PlanFabric plugin, ErrorLogger errorLogger) {
         this.dispatcher = dispatcher;
@@ -56,13 +57,13 @@ public class FabricCommandManager {
 
     public static boolean checkPermission(CommandSourceStack src, String permission) {
         if (isPermissionsApiAvailable()) {
-            return me.lucko.fabric.api.permissions.v0.Permissions.check(src, permission, 2);
+            return me.lucko.fabric.api.permissions.v0.Permissions.check(src, permission, PermissionLevel.GAMEMASTERS);
         } else if (src.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER)) {
             return true;
         } else {
             return switch (permission) {
-                case "plan.player.self", "plan.ingame.self", "plan.register.self", "plan.unregister.self", "plan.json.self" ->
-                        true;
+                case "plan.player.self", "plan.ingame.self", "plan.register.self", "plan.unregister.self",
+                     "plan.json.self" -> true;
                 default -> false;
             };
         }
