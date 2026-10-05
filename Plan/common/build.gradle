@@ -206,12 +206,6 @@ tasks.named("checkstyleTest").configure {
     it.dependsOn(copyYarnBuildResults)
 }
 
-// Add support for exec block https://stackoverflow.com/a/79720796/20825073
-interface InjectedExecOps {
-    @Inject
-    ExecOperations getExecOps()
-}
-
 tasks.register("determineAssetModifications") {
     // Skip Yarn build on Jitpack since Jitpack doesn't offer gclib version compatible with Node 20
     // Jitpack build is used mainly for java dependencies.
@@ -223,19 +217,15 @@ tasks.register("determineAssetModifications") {
     inputs.files(fileTree(dir: "src/main/resources/assets/plan/themes"))
     outputs.file("build/resources/main/assets/plan/AssetVersion.yml")
 
-    def execOps = project.objects.newInstance(InjectedExecOps).execOps
     doLast {
         mkdir "build/resources/main/assets/plan"
         def versionFile = file("build/resources/main/assets/plan/AssetVersion.yml")
         versionFile.text = "" // Clear previous build
         ConfigurableFileTree tree = fileTree(dir: "src/main/resources/assets/plan/web")
         tree.forEach { File f ->
-            def gitModified = new ByteArrayOutputStream()
-            execOps.exec {
+            def gitModifiedAsString = providers.exec {
                 commandLine "git", "log", "-1", "--pretty=%ct", f.toString()
-                standardOutput = gitModified
-            }
-            def gitModifiedAsString = gitModified.toString().strip()
+            }.standardOutput.asText.get().strip()
             // git returns UNIX time in seconds, but most things in Java use UNIX time in milliseconds
             def modified = gitModifiedAsString.isEmpty() ? System.currentTimeMillis() : Long.parseLong(gitModifiedAsString) * 1000
             def relativePath = tree.getDir().toPath().relativize(f.toPath()) // File path relative to the tree
@@ -246,12 +236,9 @@ tasks.register("determineAssetModifications") {
 
         tree = fileTree(dir: "src/main/resources/assets/plan/locale")
         tree.forEach { File f ->
-            def gitModified = new ByteArrayOutputStream()
-            execOps.exec {
+            def gitModifiedAsString = providers.exec {
                 commandLine "git", "log", "-1", "--pretty=%ct", f.toString()
-                standardOutput = gitModified
-            }
-            def gitModifiedAsString = gitModified.toString().strip()
+            }.standardOutput.asText.get().strip()
             // git returns UNIX time in seconds, but most things in Java use UNIX time in milliseconds
             def modified = gitModifiedAsString.isEmpty() ? System.currentTimeMillis() : Long.parseLong(gitModifiedAsString) * 1000
             def relativePath = tree.getDir().toPath().relativize(f.toPath()) // File path relative to the tree
@@ -262,12 +249,9 @@ tasks.register("determineAssetModifications") {
 
         tree = fileTree(dir: "src/main/resources/assets/plan/themes")
         tree.forEach { File f ->
-            def gitModified = new ByteArrayOutputStream()
-            execOps.exec {
+            def gitModifiedAsString = providers.exec {
                 commandLine "git", "log", "-1", "--pretty=%ct", f.toString()
-                standardOutput = gitModified
-            }
-            def gitModifiedAsString = gitModified.toString().strip()
+            }.standardOutput.asText.get().strip()
             // git returns UNIX time in seconds, but most things in Java use UNIX time in milliseconds
             def modified = gitModifiedAsString.isEmpty() ? System.currentTimeMillis() : Long.parseLong(gitModifiedAsString) * 1000
             def relativePath = tree.getDir().toPath().relativize(f.toPath()) // File path relative to the tree
