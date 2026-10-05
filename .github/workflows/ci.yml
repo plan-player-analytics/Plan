@@ -53,7 +53,7 @@ jobs:
           distribution: 'temurin'
           java-version: '25'
       - name: 💼 Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+        uses: gradle/actions/setup-gradle@v6
       - name: 🛠 Build jars
         env:
           npm_config_ignore_scripts: true
