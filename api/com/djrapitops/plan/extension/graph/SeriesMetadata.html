@@ -90,11 +90,12 @@ loadScripts(document, 'script');</script>
 <p>
 Series is a collection of numbers at the same index in <a href="DataPoint.html" title="class in com.djrapitops.plan.extension.graph"><code>DataPoint</code></a>.
 VALUES OF SAME SERIES OF DATA NEED TO BE AT SAME INDEX ALL THE TIME.
-<p>
-seriesName: If null "series #n" will be shown instead - max 50 characters.
-unitLabel: If null "" or no unit will be shown - max 50 characters.
-formatType: If null no formatting will be applied.
-hexColor: If null, default color series will be used - max 9 characters, in format #000000 or #00000000 to #ffffff or #ffffffff.</div>
+<ul>
+    <li>seriesName: If null "series #n" will be shown instead - max 50 characters.</li>
+    <li>unitLabel: If null "" or no unit will be shown - max 50 characters.</li>
+    <li>formatType: If null no formatting will be applied.</li>
+    <li>hexColor: If null, default color series will be used - max 9 characters, in format #000000 or #00000000 to #ffffff or #ffffffff.</li>
+</ul></div>
 </div>
 </section>
 <section class="summary">
@@ -110,7 +111,9 @@ hexColor: If null, default color series will be used - max 9 characters, in form
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color"><code>static class&nbsp;</code></div>
 <div class="col-second even-row-color"><code><a href="SeriesMetadata.Builder.html" class="type-name-link" title="class in com.djrapitops.plan.extension.graph">SeriesMetadata.Builder</a></code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Builder for <a href="SeriesMetadata.html" title="class in com.djrapitops.plan.extension.graph"><code>SeriesMetadata</code></a> - get using <a href="#builder()"><code>builder()</code></a>.</div>
+</div>
 </div>
 </section>
 </li>
@@ -145,7 +148,9 @@ hexColor: If null, default color series will be used - max 9 characters, in form
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="SeriesMetadata.Builder.html" title="class in com.djrapitops.plan.extension.graph">SeriesMetadata.Builder</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#builder()" class="member-name-link">builder</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Get a new builder for SeriesMetadata.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="GraphFormatType.html" title="enum class in com.djrapitops.plan.extension.graph">GraphFormatType</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getFormatType()" class="member-name-link">getFormatType</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
@@ -207,6 +212,11 @@ hexColor: If null, default color series will be used - max 9 characters, in form
 <h3>builder</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="SeriesMetadata.Builder.html" title="class in com.djrapitops.plan.extension.graph">SeriesMetadata.Builder</a></span>&nbsp;<span class="element-name">builder</span>()</div>
+<div class="block">Get a new builder for SeriesMetadata.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>new builder.</dd>
+</dl>
 </div>
 </section>
 </li>

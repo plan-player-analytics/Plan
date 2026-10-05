@@ -162,10 +162,14 @@ using <a href="annotation/TabInfo.html" title="annotation interface in com.djrap
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ElementOrder.html" title="enum class in com.djrapitops.plan.extension">ElementOrder</a>[]</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#deserialize(java.lang.String)" class="member-name-link">deserialize</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;serializedOrder)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Deserializes string to array of ElementOrder from storage.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#serialize(com.djrapitops.plan.extension.ElementOrder%5B%5D)" class="member-name-link">serialize</a><wbr>(<a href="ElementOrder.html" title="enum class in com.djrapitops.plan.extension">ElementOrder</a>[]&nbsp;order)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Serializes array of ElementOrder to a string for storage.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="ElementOrder.html" title="enum class in com.djrapitops.plan.extension">ElementOrder</a></code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#valueOf(java.lang.String)" class="member-name-link">valueOf</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;name)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
@@ -179,7 +183,9 @@ the order they are declared.</div>
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="ElementOrder.html" title="enum class in com.djrapitops.plan.extension">ElementOrder</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#valuesAsList()" class="member-name-link">valuesAsList</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">
+<div class="block">Utility function to get List of enum#values.</div>
+</div>
 </div>
 </div>
 </div>
@@ -302,6 +308,13 @@ not permitted.)</div>
 <h3>serialize</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">serialize</span><wbr><span class="parameters">(<a href="ElementOrder.html" title="enum class in com.djrapitops.plan.extension">ElementOrder</a>[]&nbsp;order)</span></div>
+<div class="block">Serializes array of ElementOrder to a string for storage.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>order</code> - Array of element order.</dd>
+<dt>Returns:</dt>
+<dd>String concatenation.</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -310,6 +323,13 @@ not permitted.)</div>
 <h3>deserialize</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="ElementOrder.html" title="enum class in com.djrapitops.plan.extension">ElementOrder</a>[]</span>&nbsp;<span class="element-name">deserialize</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;serializedOrder)</span></div>
+<div class="block">Deserializes string to array of ElementOrder from storage.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>serializedOrder</code> - String concatenation.</dd>
+<dt>Returns:</dt>
+<dd>Array of element order, null if given null or empty string.</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -318,6 +338,11 @@ not permitted.)</div>
 <h3>valuesAsList</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="ElementOrder.html" title="enum class in com.djrapitops.plan.extension">ElementOrder</a>&gt;</span>&nbsp;<span class="element-name">valuesAsList</span>()</div>
+<div class="block">Utility function to get List of enum#values.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>List of all the enum values.</dd>
+</dl>
 </div>
 </section>
 </li>

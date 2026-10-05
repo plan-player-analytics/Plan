@@ -109,10 +109,14 @@ Requires capability DATA_EXTENSION_GRAPH_API.</div>
 <div class="table-header col-last">Description</div>
 <div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(long,java.lang.Number...)" class="member-name-link">DataPoint</a><wbr>(long&nbsp;x,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Number.html" title="class or interface in java.lang" class="external-link">Number</a>...&nbsp;values)</code></div>
-<div class="col-last even-row-color">&nbsp;</div>
+<div class="col-last even-row-color">
+<div class="block">Create a new datapoint.</div>
+</div>
 <div class="col-constructor-name odd-row-color"><code><a href="#%3Cinit%3E(long,java.util.List)" class="member-name-link">DataPoint</a><wbr>(long&nbsp;x,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Number.html" title="class or interface in java.lang" class="external-link">Number</a>&gt;&nbsp;values)</code></div>
-<div class="col-last odd-row-color">&nbsp;</div>
+<div class="col-last odd-row-color">
+<div class="block">Create a new datapoint with a List.</div>
+</div>
 </div>
 </section>
 </li>
@@ -129,10 +133,14 @@ Requires capability DATA_EXTENSION_GRAPH_API.</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getValues()" class="member-name-link">getValues</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the values for this datapoint.</div>
+</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>long</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getX()" class="member-name-link">getX</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Get the x value.</div>
+</div>
 </div>
 </div>
 </div>
@@ -156,6 +164,14 @@ Requires capability DATA_EXTENSION_GRAPH_API.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">DataPoint</span><wbr><span class="parameters">(long&nbsp;x,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Number.html" title="class or interface in java.lang" class="external-link">Number</a>...&nbsp;values)</span></div>
+<div class="block">Create a new datapoint.
+<p>
+Supports nulls in values.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>x</code> - value of x on the x-axis for this value.</dd>
+<dd><code>values</code> - 1 to n numbers (double/long/int etc) - index determines series, series need to remain at same index every time forever.</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -165,6 +181,14 @@ Requires capability DATA_EXTENSION_GRAPH_API.</div>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">DataPoint</span><wbr><span class="parameters">(long&nbsp;x,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Number.html" title="class or interface in java.lang" class="external-link">Number</a>&gt;&nbsp;values)</span></div>
+<div class="block">Create a new datapoint with a List.
+<p>
+Supports nulls in values.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>x</code> - value of x on the x-axis for this value.</dd>
+<dd><code>values</code> - 1 to n numbers (double/long/int etc) - index determines series, series need to remain at same index every time forever.</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -181,6 +205,11 @@ Requires capability DATA_EXTENSION_GRAPH_API.</div>
 <h3>getX</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">long</span>&nbsp;<span class="element-name">getX</span>()</div>
+<div class="block">Get the x value.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>long</dd>
+</dl>
 </div>
 </section>
 </li>
@@ -189,6 +218,11 @@ Requires capability DATA_EXTENSION_GRAPH_API.</div>
 <h3>getValues</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</span>&nbsp;<span class="element-name">getValues</span>()</div>
+<div class="block">Get the values for this datapoint.</div>
+<dl class="notes">
+<dt>Returns:</dt>
+<dd>List of doubles.</dd>
+</dl>
 </div>
 </section>
 </li>
