@@ -83,6 +83,8 @@ public class ExtensionMethod {
     }
 
     /**
+     * Changes method to be accessible if it is not.
+     *
      * @throws SecurityException If access modification fails.
      */
     public void makeAccessible() {

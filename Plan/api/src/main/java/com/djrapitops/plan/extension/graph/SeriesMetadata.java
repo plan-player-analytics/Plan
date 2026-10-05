@@ -21,11 +21,12 @@ package com.djrapitops.plan.extension.graph;
  * <p>
  * Series is a collection of numbers at the same index in {@link DataPoint}.
  * VALUES OF SAME SERIES OF DATA NEED TO BE AT SAME INDEX ALL THE TIME.
- * <p>
- * seriesName: If null "series #n" will be shown instead - max 50 characters.
- * unitLabel: If null "" or no unit will be shown - max 50 characters.
- * formatType: If null no formatting will be applied.
- * hexColor: If null, default color series will be used - max 9 characters, in format #000000 or #00000000 to #ffffff or #ffffffff.
+ * <ul>
+ *     <li>seriesName: If null "series #n" will be shown instead - max 50 characters.</li>
+ *     <li>unitLabel: If null "" or no unit will be shown - max 50 characters.</li>
+ *     <li>formatType: If null no formatting will be applied.</li>
+ *     <li>hexColor: If null, default color series will be used - max 9 characters, in format #000000 or #00000000 to #ffffff or #ffffffff.</li>
+ * </ul>
  *
  * @author AuroraLS3
  */
@@ -51,6 +52,11 @@ public class SeriesMetadata {
         this.hexColor = hexColor;
     }
 
+    /**
+     * Get a new builder for SeriesMetadata.
+     *
+     * @return new builder.
+     */
     public static Builder builder() {
         return new Builder();
     }
@@ -71,6 +77,9 @@ public class SeriesMetadata {
         return hexColor;
     }
 
+    /**
+     * Builder for {@link SeriesMetadata} - get using {@link SeriesMetadata#builder()}.
+     */
     public static class Builder {
 
         private String seriesName;

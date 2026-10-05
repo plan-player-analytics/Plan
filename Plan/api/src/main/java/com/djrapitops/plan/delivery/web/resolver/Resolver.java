@@ -17,7 +17,6 @@
 package com.djrapitops.plan.delivery.web.resolver;
 
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
-import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 
 import java.util.HashSet;
 import java.util.Optional;
@@ -38,7 +37,7 @@ public interface Resolver {
      *
      * @param request HTTP request, contains all information necessary to check access.
      * @return true if allowed or invalid target, false if response should be 403 (forbidden)
-     * @see Request#getUser() for {@link WebUser} that has access permissions.
+     * @see Request#getUser() WebUser that has access permissions.
      */
     boolean canAccess(Request request);
 

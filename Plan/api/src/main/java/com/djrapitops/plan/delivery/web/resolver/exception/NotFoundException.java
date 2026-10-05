@@ -24,6 +24,11 @@ package com.djrapitops.plan.delivery.web.resolver.exception;
  * @author AuroraLS3
  */
 public class NotFoundException extends IllegalArgumentException {
+    /**
+     * Construct a NotFoundException.
+     *
+     * @param message Message to display to the user.
+     */
     public NotFoundException(String message) {
         super(message);
     }

@@ -25,26 +25,89 @@ import java.util.Optional;
  */
 public enum Color {
 
+    /**
+     * Red color set in the theme.
+     */
     RED,
+    /**
+     * Pink color set in the theme.
+     */
     PINK,
+    /**
+     * Purple color set in the theme.
+     */
     PURPLE,
+    /**
+     * Deep purple color set in the theme.
+     */
     DEEP_PURPLE,
+    /**
+     * Indigo color set in the theme.
+     */
     INDIGO,
+    /**
+     * Blue color set in the theme.
+     */
     BLUE,
+    /**
+     * Light blue color set in the theme.
+     */
     LIGHT_BLUE,
+    /**
+     * Cyan color set in the theme.
+     */
     CYAN,
+    /**
+     * Teal color set in the theme.
+     */
     TEAL,
+    /**
+     * Green color set in the theme.
+     */
     GREEN,
+    /**
+     * Light green color set in the theme.
+     */
     LIGHT_GREEN,
+    /**
+     * Lime color set in the theme.
+     */
     LIME,
+    /**
+     * Yellow color set in the theme.
+     */
     YELLOW,
+    /**
+     * Amber color set in the theme.
+     */
     AMBER,
+    /**
+     * Orange color set in the theme.
+     */
     ORANGE,
+    /**
+     * Deep orange color set in the theme.
+     */
     DEEP_ORANGE,
+    /**
+     * Brown color set in the theme.
+     */
     BROWN,
+    /**
+     * Grey color set in the theme.
+     */
     GREY,
+    /**
+     * Blue grey color set in the theme.
+     */
     BLUE_GREY,
+    /**
+     * Black color set in the theme.
+     */
     BLACK,
+    /**
+     * No color that renders as text color.
+     */
     NONE;
 
     /**

@@ -24,7 +24,13 @@ package com.djrapitops.plan.component;
  */
 public interface Component {
 
+    /**
+     * Ampersand character, commonly used as a replacement for section symbol.
+     */
     char AMPERSAND = '&';
+    /**
+     * Section symbol.
+     */
     char SECTION = '\u00A7';
 
 }

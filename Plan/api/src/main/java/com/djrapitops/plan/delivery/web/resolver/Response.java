@@ -40,6 +40,11 @@ public final class Response {
         headers = new HashMap<>();
     }
 
+    /**
+     * Create a builder for a new response.
+     *
+     * @return New response builder.
+     */
     public static ResponseBuilder builder() {
         return new ResponseBuilder();
     }

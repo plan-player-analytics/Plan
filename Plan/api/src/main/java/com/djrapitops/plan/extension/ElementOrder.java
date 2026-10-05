@@ -53,6 +53,12 @@ public enum ElementOrder {
      */
     FLAGS;
 
+    /**
+     * Serializes array of ElementOrder to a string for storage.
+     *
+     * @param order Array of element order.
+     * @return String concatenation.
+     */
     public static String serialize(ElementOrder[] order) {
         StringBuilder builder = new StringBuilder();
 
@@ -67,6 +73,12 @@ public enum ElementOrder {
         return builder.toString();
     }
 
+    /**
+     * Deserializes string to array of ElementOrder from storage.
+     *
+     * @param serializedOrder String concatenation.
+     * @return Array of element order, null if given null or empty string.
+     */
     public static ElementOrder[] deserialize(String serializedOrder) {
         if (serializedOrder == null || serializedOrder.isEmpty()) {
             return null;
@@ -87,6 +99,11 @@ public enum ElementOrder {
         return deserialized;
     }
 
+    /**
+     * Utility function to get List of enum#values.
+     *
+     * @return List of all the enum values.
+     */
     public static List<ElementOrder> valuesAsList() {
         return Arrays.asList(values());
     }

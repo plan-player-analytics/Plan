@@ -26,25 +26,85 @@ package com.djrapitops.plan.extension.graph;
  * @author AuroraLS3
  */
 public class GraphColors {
+    /**
+     * Red color set in the theme.
+     */
     public static String RED = "var(--color-red)";
+    /**
+     * Pink color set in the theme.
+     */
     public static String PINK = "var(--color-pink)";
+    /**
+     * Purple color set in the theme.
+     */
     public static String PURPLE = "var(--color-purple)";
+    /**
+     * Deep purple color set in the theme.
+     */
     public static String DEEP_PURPLE = "var(--color-deep-purple)";
+    /**
+     * Indigo color set in the theme.
+     */
     public static String INDIGO = "var(--color-indigo)";
+    /**
+     * Blue color set in the theme.
+     */
     public static String BLUE = "var(--color-blue)";
+    /**
+     * Light blue color set in the theme.
+     */
     public static String LIGHT_BLUE = "var(--color-light-blue)";
+    /**
+     * Cyan color set in the theme.
+     */
     public static String CYAN = "var(--color-cyan)";
+    /**
+     * Teal color set in the theme.
+     */
     public static String TEAL = "var(--color-teal)";
+    /**
+     * Green color set in the theme.
+     */
     public static String GREEN = "var(--color-green)";
+    /**
+     * Light green color set in the theme.
+     */
     public static String LIGHT_GREEN = "var(--color-light-green)";
+    /**
+     * Lime color set in the theme.
+     */
     public static String LIME = "var(--color-lime)";
+    /**
+     * Yellow color set in the theme.
+     */
     public static String YELLOW = "var(--color-yellow)";
+    /**
+     * Amber color set in the theme.
+     */
     public static String AMBER = "var(--color-amber)";
+    /**
+     * Orange color set in the theme.
+     */
     public static String ORANGE = "var(--color-orange)";
+    /**
+     * Deep orange color set in the theme.
+     */
     public static String DEEP_ORANGE = "var(--color-deep-orange)";
+    /**
+     * Brown color set in the theme.
+     */
     public static String BROWN = "var(--color-brown)";
+    /**
+     * Grey color set in the theme.
+     */
     public static String GREY = "var(--color-grey)";
+    /**
+     * Blue grey color set in the theme.
+     */
     public static String BLUE_GREY = "var(--color-blue-grey)";
+    /**
+     * Black color set in the theme.
+     */
     public static String BLACK = "var(--color-black)";
 
     private GraphColors() {

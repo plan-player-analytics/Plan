@@ -52,12 +52,24 @@ public final class ExtensionExtractor {
     private Collection<Method> conditionalMethods;
     private Collection<Tab> tabAnnotations;
 
+    /**
+     * Utility for extracting annotations and methods from DataExtension.
+     * <p>
+     * Use with unit tests if necessary.
+     *
+     * @param extension Your DataExtension implementation.
+     */
     public ExtensionExtractor(DataExtension extension) {
         this.extension = extension;
         extensionName = extension.getClass().getSimpleName();
     }
 
     /**
+     * Deprecated plugin name get method.
+     *
+     * @param extensionClass Class that has PluginInfo annotation
+     * @param <T>            Type of the class
+     * @return Plugin name in {@link PluginInfo} annotation.
      * @deprecated Use {@link DataExtension#getPluginName()} instead.
      */
     @Deprecated
@@ -436,30 +448,60 @@ public final class ExtensionExtractor {
         });
     }
 
+    /**
+     * Get list of warnings produced by the parser.
+     * <p>
+     * These will be logged to console when your extension registers.
+     *
+     * @return List of warning strings.
+     */
     public List<String> getWarnings() {
         return warnings;
     }
 
+    /**
+     * Get the plugin info annotation
+     *
+     * @return Annotation.
+     */
     public PluginInfo getPluginInfo() {
         if (pluginInfo == null) extractPluginInfo();
         return pluginInfo;
     }
 
+    /**
+     * Get the TabOrder annotation if present.
+     *
+     * @return Annotation or empty optional.
+     */
     public Optional<TabOrder> getTabOrder() {
         return getClassAnnotation(TabOrder.class);
     }
 
+    /**
+     * Get Tab annotations if present.
+     *
+     * @return Collection of annotations.
+     */
     public Collection<Tab> getTabAnnotations() {
         if (tabAnnotations == null) extractMethods();
         return tabAnnotations;
     }
 
+    /**
+     * Get the TabInfo annotations if present.
+     *
+     * @return List of TabInfo annotations.
+     */
     public List<TabInfo> getTabInformation() {
         if (tabInformation == null) extractTabInfo();
         return tabInformation;
     }
 
     /**
+     * Deprecated method for method annotation access.
+     *
+     * @return Old utility for method annotation access.
      * @deprecated During refactoring MethodAnnotations was removed. Using {@link ExtensionExtractor#getMethods()} instead.
      */
     @Deprecated
@@ -467,11 +509,21 @@ public final class ExtensionExtractor {
         return new MethodAnnotations();
     }
 
+    /**
+     * Gets the extracted method utilities.
+     *
+     * @return Method utilities for calling the code.
+     */
     public Map<ExtensionMethod.ParameterType, ExtensionMethods> getMethods() {
         if (methods == null) extractMethods();
         return methods;
     }
 
+    /**
+     * Get list of invalidated methods.
+     *
+     * @return List of annotations.
+     */
     public List<InvalidateMethod> getInvalidateMethodAnnotations() {
         if (invalidMethods == null) extractInvalidMethods();
         return invalidMethods;

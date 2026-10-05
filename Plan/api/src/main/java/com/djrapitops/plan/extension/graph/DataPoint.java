@@ -43,10 +43,26 @@ public class DataPoint {
     private final long x;
     private final List<Double> values;
 
+    /**
+     * Create a new datapoint.
+     * <p>
+     * Supports nulls in values.
+     *
+     * @param x      value of x on the x-axis for this value.
+     * @param values 1 to n numbers (double/long/int etc) - index determines series, series need to remain at same index every time forever.
+     */
     public DataPoint(long x, Number... values) {
         this(x, Arrays.asList(values));
     }
 
+    /**
+     * Create a new datapoint with a List.
+     * <p>
+     * Supports nulls in values.
+     *
+     * @param x      value of x on the x-axis for this value.
+     * @param values 1 to n numbers (double/long/int etc) - index determines series, series need to remain at same index every time forever.
+     */
     public DataPoint(long x, List<Number> values) {
         this.x = x;
         this.values = values.stream()
@@ -54,10 +70,20 @@ public class DataPoint {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Get the x value.
+     *
+     * @return long
+     */
     public long getX() {
         return x;
     }
 
+    /**
+     * Get the values for this datapoint.
+     *
+     * @return List of doubles.
+     */
     public List<Double> getValues() {
         return values;
     }

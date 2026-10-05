@@ -23,6 +23,11 @@ import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * Builder for {@link Response}.
+ *
+ * @author AuroraLS3
+ */
 public class ResponseBuilder {
 
     private final Response response;

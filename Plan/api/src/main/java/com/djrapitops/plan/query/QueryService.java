@@ -127,6 +127,8 @@ public interface QueryService {
 
     /**
      * See <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/package-summary.html">Functional Interfaces</a>
+     *
+     * @param <T> Type of output.
      */
     @FunctionalInterface
     interface ThrowingConsumer<T> {
@@ -135,6 +137,9 @@ public interface QueryService {
 
     /**
      * See <a href="https://docs.oracle.com/javase/8/docs/api/java/util/function/package-summary.html">Functional Interfaces</a>
+     *
+     * @param <T> Type of Input
+     * @param <R> Type of output.
      */
     @FunctionalInterface
     interface ThrowingFunction<T, R> {

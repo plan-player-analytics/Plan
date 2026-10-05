@@ -23,7 +23,7 @@ import java.util.UUID;
  * <p>
  * You can obtain an instance by registering an extension via {@link ExtensionService#register(DataExtension)}.
  * <p>
- * Plan calls the methods in DataExtension based on {@link CallEvents} defined by {@link }
+ * Plan calls the methods in DataExtension based on {@link CallEvents} defined by {@link DataExtension#callExtensionMethodsOn()}.
  *
  * @author AuroraLS3
  */

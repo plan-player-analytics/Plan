@@ -40,6 +40,11 @@ public class MethodNotAllowedException extends IllegalStateException {
         this.allowedMethods = allowedMethods;
     }
 
+    /**
+     * Returns the allowed methods for this request.
+     *
+     * @return POST, GET, etc.
+     */
     public String[] getAllowedMethods() {
         return allowedMethods;
     }

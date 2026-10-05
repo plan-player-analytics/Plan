@@ -68,6 +68,12 @@ public enum CallEvents {
      */
     SERVER_PERIODICAL;
 
+    /**
+     * Utility function for checking if CallEvents array contains the item.
+     *
+     * @param events Array/varargs of CallEvents.
+     * @return true if this item is in the given events.
+     */
     public boolean isIn(CallEvents... events) {
         for (CallEvents event : events) {
             if (event == this) return true;
