@@ -17,7 +17,6 @@
 package com.djrapitops.plan.commands.use;
 
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.spongepowered.api.service.permission.Subject;
 
@@ -61,7 +60,7 @@ public class SpongeCMDSender implements CMDSender {
 
     @Override
     public void send(String text) {
-        audience.sendMessage(Identity.nil(), LegacyComponentSerializer.legacySection().deserialize(text));
+        audience.sendMessage(LegacyComponentSerializer.legacySection().deserialize(text));
     }
 
     @Override
