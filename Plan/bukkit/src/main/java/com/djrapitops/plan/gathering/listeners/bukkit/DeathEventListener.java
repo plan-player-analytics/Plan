@@ -113,7 +113,12 @@ public class DeathEventListener implements Listener {
         if (killer instanceof Tameable) return getOwner((Tameable) killer);
         if (killer instanceof Projectile) return getShooter((Projectile) killer);
         if (killer instanceof EnderCrystal) return findKiller(killer); // Recursive call
-
+        if (killer instanceof TNTPrimed tnt) {
+            Entity source = tnt.getSource();
+            if (source instanceof Player player) {
+                return Optional.of(player);
+            }
+        }
         return Optional.empty();
     }
 
@@ -123,7 +128,7 @@ public class DeathEventListener implements Listener {
         Entity killer = ((EntityDamageByEntityEvent) entityDamageEvent).getDamager();
         if (killer instanceof Player) return getItemInHand((Player) killer);
         if (killer instanceof Tameable) return getPetType((Tameable) killer);
-
+        if (killer instanceof TNTPrimed) return "TNT";
         // Projectile, EnderCrystal and all other causes that are not known yet
         return new EntityNameFormatter().apply(killer.getType().name());
     }
