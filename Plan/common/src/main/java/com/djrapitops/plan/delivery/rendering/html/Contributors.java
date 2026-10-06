@@ -123,6 +123,7 @@ public class Contributors {
             new Contributor("Jsinco", CODE),
             new Contributor("julianvdhogen", LANG),
             new Contributor("Zoriot", CODE),
+            new Contributor("RomainCabaret", CODE),
     };
 
     private Contributors() {
