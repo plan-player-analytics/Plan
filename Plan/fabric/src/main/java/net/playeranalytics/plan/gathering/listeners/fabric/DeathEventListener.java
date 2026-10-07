@@ -29,6 +29,7 @@ import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityCombatEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.TamableAnimal;
+import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.server.level.ServerPlayer;
@@ -37,6 +38,7 @@ import net.playeranalytics.plan.gathering.listeners.events.PlanFabricEvents;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.Objects;
 import java.util.Optional;
 
 @Singleton
@@ -71,11 +73,12 @@ public class DeathEventListener implements FabricListener {
                     if (!this.isEnabled) {
                         return;
                     }
-                    PlanFabricEvents.ON_KILLED.invoker().onKilled(killedEntity, killer);
+                    Entity directCause = Objects.requireNonNullElse(damageSource.getDirectEntity(), killer);
+                    PlanFabricEvents.ON_KILLED.invoker().onKilled(killedEntity, directCause);
                 }
         );
 
-        PlanFabricEvents.ON_KILLED.register((victim, killer) -> {
+        PlanFabricEvents.ON_KILLED.register((victim, directCause) -> {
             if (!this.isEnabled) {
                 return;
             }
@@ -86,7 +89,7 @@ public class DeathEventListener implements FabricListener {
             }
 
             try {
-                Optional<ServerPlayer> foundKiller = getCause(killer);
+                Optional<ServerPlayer> foundKiller = getCause(directCause);
                 if (foundKiller.isEmpty()) {
                     return;
                 }
@@ -94,11 +97,11 @@ public class DeathEventListener implements FabricListener {
                 ServerPlayer player = foundKiller.get();
 
                 Runnable processor = victim instanceof ServerPlayer
-                        ? new PlayerKillProcessor(getKiller(player), getVictim((ServerPlayer) victim), serverInfo.getServerIdentifier(), findWeapon(player), time)
+                        ? new PlayerKillProcessor(getKiller(player), getVictim((ServerPlayer) victim), serverInfo.getServerIdentifier(), findWeapon(directCause), time)
                         : new MobKillProcessor(player.getUUID());
                 processing.submitCritical(processor);
             } catch (Exception | NoSuchMethodError e) {
-                errorLogger.error(e, ErrorContext.builder().related(getClass(), victim, killer).build());
+                errorLogger.error(e, ErrorContext.builder().related(getClass(), victim, directCause).build());
             }
 
         });
@@ -119,11 +122,17 @@ public class DeathEventListener implements FabricListener {
         if (killer instanceof ServerPlayer player) return Optional.of(player);
         if (killer instanceof TamableAnimal tamed) return getOwner(tamed);
         if (killer instanceof Projectile projectile) return getShooter(projectile);
+        if (killer instanceof PrimedTnt tnt) {
+            Entity source = tnt.getOwner();
+            if (source instanceof ServerPlayer player) return Optional.of(player);
+        }
+
         return Optional.empty();
     }
 
     public String findWeapon(Entity killer) {
         if (killer instanceof ServerPlayer player) return getItemInHand(player);
+        if (killer instanceof PrimedTnt) return "TNT";
 
         // Projectile, EnderCrystal and all other causes that are not known yet
         return new EntityNameFormatter().apply(killer.getType().getDescription().getString());
