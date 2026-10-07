@@ -33,7 +33,6 @@ import net.playeranalytics.plugin.server.PluginLogger;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.concurrent.Future;
-import java.util.stream.Collectors;
 
 /**
  * Class in charge of performing save operations when the server shuts down.
@@ -70,7 +69,8 @@ public abstract class ServerShutdownSave {
     }
 
     public Optional<Future<?>> performSave() {
-        if (!checkServerShuttingDownStatus() && !shuttingDown) {
+        var shutdownImminent = shuttingDown || checkServerShuttingDownStatus();
+        if (!shutdownImminent) {
             return Optional.empty();
         }
 
@@ -119,10 +119,11 @@ public abstract class ServerShutdownSave {
         return activeSessions.stream().map(session -> {
             getAfkTracker().ifPresent(afkTracker -> afkTracker.performedAction(session.getPlayerUUID(), now));
             return session.toFinishedSession(now);
-        }).collect(Collectors.toList());
+        }).toList();
     }
 
     private Future<?> saveSessions(Collection<FinishedSession> finishedSessions, Database database) {
-        return database.executeTransaction(new ServerShutdownTransaction(finishedSessions));
+        return database.executeTransaction(new ServerShutdownTransaction(finishedSessions))
+                .thenRun(SessionCache::clear); // Clear session cache if successful to prevent 2nd storage by JVM shutdown hook.
     }
 }

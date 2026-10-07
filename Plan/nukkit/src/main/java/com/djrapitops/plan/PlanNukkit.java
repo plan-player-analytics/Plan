@@ -54,11 +54,10 @@ import java.util.logging.Logger;
  */
 public class PlanNukkit extends PluginBase implements PlanPlugin {
 
+    private final Map<String, Subcommand> commands = new HashMap<>();
     private PlanSystem system;
     private Locale locale;
     private ServerShutdownSave serverShutdownSave;
-
-    private final Map<String, Subcommand> commands = new HashMap<>();
     private PluginLogger logger;
     private RunnableFactory runnableFactory;
     private PlatformAbstractionLayer abstractionLayer;

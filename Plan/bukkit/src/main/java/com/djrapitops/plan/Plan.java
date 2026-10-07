@@ -36,7 +36,6 @@ import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.lang.reflect.Constructor;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -60,6 +59,15 @@ public class Plan extends JavaPlugin implements PlanPlugin {
     private PlatformAbstractionLayer abstractionLayer;
     private ErrorLogger errorLogger;
     private PlanBukkitComponent component;
+
+    private static boolean isFolia() {
+        try {
+            Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
+            return true;
+        } catch (ClassNotFoundException e) {
+            return false;
+        }
+    }
 
     @Override
     public void onLoad() {
@@ -181,15 +189,6 @@ public class Plan extends JavaPlugin implements PlanPlugin {
         runnableFactory.cancelAllKnownTasks();
         if (!isFolia()) {
             Bukkit.getScheduler().cancelTasks(this);
-        }
-    }
-
-    private static boolean isFolia() {
-        try {
-            Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
-            return true;
-        } catch (ClassNotFoundException e) {
-            return false;
         }
     }
 

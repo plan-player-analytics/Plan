@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.storage.database.transactions.events;
 
-import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.storage.database.queries.LargeStoreQueries;
 import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
@@ -39,6 +38,5 @@ public class ServerShutdownTransaction extends ThrowawayTransaction {
     @Override
     protected void performOperations() {
         execute(LargeStoreQueries.storeAllSessionsWithKillAndWorldData(unsavedSessions));
-        SessionCache.clear();
     }
 }

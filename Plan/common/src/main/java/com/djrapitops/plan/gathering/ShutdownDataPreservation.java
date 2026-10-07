@@ -41,7 +41,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 @Singleton
@@ -126,7 +125,7 @@ public class ShutdownDataPreservation extends TaskSystem.Task {
             return lines.map(this::deserializeToSession)
                     .filter(Optional::isPresent)
                     .map(Optional::get)
-                    .collect(Collectors.toList());
+                    .toList();
         } catch (IOException e) {
             throw new IllegalStateException("Could not read " + storeLocation.toFile().getAbsolutePath() + ", " + e.getMessage(), e);
         }
@@ -148,7 +147,7 @@ public class ShutdownDataPreservation extends TaskSystem.Task {
                     serverShutdownSave.getAfkTracker().ifPresent(afkTracker -> afkTracker.performedAction(session.getPlayerUUID(), now));
                     return session.toFinishedSession(now);
                 })
-                .collect(Collectors.toList());
+                .toList();
         storeFinishedSessions(finishedSessions);
     }
 
@@ -158,7 +157,7 @@ public class ShutdownDataPreservation extends TaskSystem.Task {
             sessions.addAll(loadFinishedSessions());
         }
 
-        List<String> lines = sessions.stream().map(FinishedSession::serializeCSV).collect(Collectors.toList());
+        List<String> lines = sessions.stream().map(FinishedSession::serializeCSV).toList();
         try {
             Files.write(storeLocation, lines, StandardCharsets.UTF_8,
                     StandardOpenOption.CREATE,
