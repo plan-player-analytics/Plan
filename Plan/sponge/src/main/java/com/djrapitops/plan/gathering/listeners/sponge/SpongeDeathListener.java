@@ -33,10 +33,13 @@ import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.data.value.Value;
 import org.spongepowered.api.entity.Entity;
 import org.spongepowered.api.entity.explosive.EndCrystal;
+import org.spongepowered.api.entity.explosive.fused.FusedExplosive;
+import org.spongepowered.api.entity.explosive.fused.PrimedTNT;
 import org.spongepowered.api.entity.living.Living;
 import org.spongepowered.api.entity.living.animal.Wolf;
 import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.Projectile;
+import org.spongepowered.api.entity.vehicle.minecart.TNTMinecart;
 import org.spongepowered.api.event.Listener;
 import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
@@ -124,6 +127,7 @@ public class SpongeDeathListener {
             case Wolf wolf -> getOwner(wolf);
             case Projectile projectile -> getShooter(projectile);
             case EndCrystal endCrystal -> findKiller(causes, depth + 1);
+            case FusedExplosive explosive -> getExplosiveIgniter(explosive, damageSource);
             default -> Optional.empty();
         };
     }
@@ -140,6 +144,8 @@ public class SpongeDeathListener {
 
             if (killerEntity instanceof Player player) return getItemInHand(player);
             if (killerEntity instanceof Wolf) return "Wolf";
+            if (killerEntity instanceof PrimedTNT) return "TNT";
+            if (killerEntity instanceof TNTMinecart) return "TNT Minecart";
 
             Optional<ResourceKey> entityType = killerEntity.type().findKey(RegistryTypes.ENTITY_TYPE);
             if (entityType.isPresent()) {
@@ -167,5 +173,22 @@ public class SpongeDeathListener {
 
     private Optional<Player> getOwner(Wolf wolf) {
         return wolf.owner().flatMap(uuid -> Sponge.game().server().player(uuid.get()));
+    }
+
+    private Optional<Player> getExplosiveIgniter(FusedExplosive explosive, DamageSource damageSource) {
+        Optional<Player> creator = explosive.creator()
+                .map(Value::get)
+                .flatMap(uuid -> Sponge.game().server().player(uuid));
+
+        if (creator.isPresent()) {
+            return creator;
+        }
+
+        Optional<Entity> indirectSource = damageSource.indirectSource();
+        if (indirectSource.isPresent() && indirectSource.get() instanceof Player player) {
+            return Optional.of(player);
+        }
+
+        return Optional.empty();
     }
 }
