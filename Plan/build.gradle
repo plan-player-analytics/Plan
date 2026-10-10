@@ -92,7 +92,7 @@ subprojects {
         testContainersVersion = "1.21.4"
         awaitilityVersion = "4.3.0"
         swaggerVersion = "2.2.55"
-        guavaVersion = "33.7.1-jre"
+        guavaVersion = "33.7.2-jre"
     }
 
     repositories {
