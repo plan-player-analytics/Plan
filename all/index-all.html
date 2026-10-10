@@ -2258,7 +2258,7 @@ loadScripts(document, 'script');</script>
 <dd>
 <div class="block">ServerShutdownSave implementation for Bukkit based servers.</div>
 </dd>
-<dt><a href="com/djrapitops/plan/BukkitServerShutdownSave.html#%3Cinit%3E(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.storage.database.DBSystem,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">BukkitServerShutdownSave(Locale, DBSystem, PluginLogger, ErrorLogger)</a> - Constructor for class com.djrapitops.plan.<a href="com/djrapitops/plan/BukkitServerShutdownSave.html" title="class in com.djrapitops.plan">BukkitServerShutdownSave</a></dt>
+<dt><a href="com/djrapitops/plan/BukkitServerShutdownSave.html#%3Cinit%3E(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.gathering.ShutdownSessionLock,com.djrapitops.plan.storage.database.DBSystem,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">BukkitServerShutdownSave(Locale, ShutdownSessionLock, DBSystem, PluginLogger, ErrorLogger)</a> - Constructor for class com.djrapitops.plan.<a href="com/djrapitops/plan/BukkitServerShutdownSave.html" title="class in com.djrapitops.plan">BukkitServerShutdownSave</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/modules/bukkit/BukkitSuperClassBindingModule.html" class="type-name-link" title="interface in com.djrapitops.plan.modules.bukkit">BukkitSuperClassBindingModule</a> - Interface in <a href="com/djrapitops/plan/modules/bukkit/package-summary.html">com.djrapitops.plan.modules.bukkit</a></dt>
 <dd>
@@ -6787,7 +6787,7 @@ PATCHING to CLOSED (Database closed prematurely)</div>
 <dd>
 <div class="block">ServerShutdownSave implementation for Fabric-based servers.</div>
 </dd>
-<dt><a href="net/playeranalytics/plan/FabricServerShutdownSave.html#%3Cinit%3E(net.minecraft.server.dedicated.DedicatedServer,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.storage.database.DBSystem,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">FabricServerShutdownSave(DedicatedServer, Locale, DBSystem, PluginLogger, ErrorLogger)</a> - Constructor for class net.playeranalytics.plan.<a href="net/playeranalytics/plan/FabricServerShutdownSave.html" title="class in net.playeranalytics.plan">FabricServerShutdownSave</a></dt>
+<dt><a href="net/playeranalytics/plan/FabricServerShutdownSave.html#%3Cinit%3E(net.minecraft.server.dedicated.DedicatedServer,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.gathering.ShutdownSessionLock,com.djrapitops.plan.storage.database.DBSystem,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">FabricServerShutdownSave(DedicatedServer, Locale, ShutdownSessionLock, DBSystem, PluginLogger, ErrorLogger)</a> - Constructor for class net.playeranalytics.plan.<a href="net/playeranalytics/plan/FabricServerShutdownSave.html" title="class in net.playeranalytics.plan">FabricServerShutdownSave</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="net/playeranalytics/plan/modules/fabric/FabricSuperClassBindingModule.html" class="type-name-link" title="interface in net.playeranalytics.plan.modules.fabric">FabricSuperClassBindingModule</a> - Interface in <a href="net/playeranalytics/plan/modules/fabric/package-summary.html">net.playeranalytics.plan.modules.fabric</a></dt>
 <dd>
@@ -15825,7 +15825,7 @@ player.</div>
 <dd>
 <div class="block">ServerShutdownSave implementation for Nukkit based servers.</div>
 </dd>
-<dt><a href="com/djrapitops/plan/NukkitServerShutdownSave.html#%3Cinit%3E(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.storage.database.DBSystem,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">NukkitServerShutdownSave(Locale, DBSystem, PluginLogger, ErrorLogger)</a> - Constructor for class com.djrapitops.plan.<a href="com/djrapitops/plan/NukkitServerShutdownSave.html" title="class in com.djrapitops.plan">NukkitServerShutdownSave</a></dt>
+<dt><a href="com/djrapitops/plan/NukkitServerShutdownSave.html#%3Cinit%3E(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.gathering.ShutdownSessionLock,com.djrapitops.plan.storage.database.DBSystem,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">NukkitServerShutdownSave(Locale, ShutdownSessionLock, DBSystem, PluginLogger, ErrorLogger)</a> - Constructor for class com.djrapitops.plan.<a href="com/djrapitops/plan/NukkitServerShutdownSave.html" title="class in com.djrapitops.plan">NukkitServerShutdownSave</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/modules/nukkit/NukkitSuperClassBindingModule.html" class="type-name-link" title="interface in com.djrapitops.plan.modules.nukkit">NukkitSuperClassBindingModule</a> - Interface in <a href="com/djrapitops/plan/modules/nukkit/package-summary.html">com.djrapitops.plan.modules.nukkit</a></dt>
 <dd>
@@ -16788,6 +16788,8 @@ player.</div>
 <dt><a href="com/djrapitops/plan/storage/database/DBAccessLock.html#performDatabaseOperation(com.djrapitops.plan.utilities.java.ThrowingVoidFunction,com.djrapitops.plan.storage.database.transactions.Transaction)" class="member-name-link">performDatabaseOperation(ThrowingVoidFunction, Transaction)</a> - Method in class com.djrapitops.plan.storage.database.<a href="com/djrapitops/plan/storage/database/DBAccessLock.html" title="class in com.djrapitops.plan.storage.database">DBAccessLock</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/afk/AFKTracker.html#performedAction(java.util.UUID,long)" class="member-name-link">performedAction(UUID, long)</a> - Method in class com.djrapitops.plan.gathering.afk.<a href="com/djrapitops/plan/gathering/afk/AFKTracker.html" title="class in com.djrapitops.plan.gathering.afk">AFKTracker</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/ShutdownSessionLock.html#performLockedOperation(com.djrapitops.plan.utilities.java.ThrowingVoidFunction)" class="member-name-link">performLockedOperation(ThrowingVoidFunction)</a> - Method in class com.djrapitops.plan.gathering.<a href="com/djrapitops/plan/gathering/ShutdownSessionLock.html" title="class in com.djrapitops.plan.gathering">ShutdownSessionLock</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/utilities/java/ThreadContextClassLoaderSwap.html#performOperation(java.lang.ClassLoader,java.lang.Runnable)" class="member-name-link">performOperation(ClassLoader, Runnable)</a> - Static method in class com.djrapitops.plan.utilities.java.<a href="com/djrapitops/plan/utilities/java/ThreadContextClassLoaderSwap.html" title="class in com.djrapitops.plan.utilities.java">ThreadContextClassLoaderSwap</a></dt>
 <dd>&nbsp;</dd>
@@ -20512,7 +20514,7 @@ without a reload.</div>
 <dd>
 <div class="block">Class in charge of performing save operations when the server shuts down.</div>
 </dd>
-<dt><a href="com/djrapitops/plan/gathering/ServerShutdownSave.html#%3Cinit%3E(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.storage.database.DBSystem,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">ServerShutdownSave(Locale, DBSystem, PluginLogger, ErrorLogger)</a> - Constructor for class com.djrapitops.plan.gathering.<a href="com/djrapitops/plan/gathering/ServerShutdownSave.html" title="class in com.djrapitops.plan.gathering">ServerShutdownSave</a></dt>
+<dt><a href="com/djrapitops/plan/gathering/ServerShutdownSave.html#%3Cinit%3E(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.storage.database.DBSystem,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.gathering.ShutdownSessionLock,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">ServerShutdownSave(Locale, DBSystem, PluginLogger, ShutdownSessionLock, ErrorLogger)</a> - Constructor for class com.djrapitops.plan.gathering.<a href="com/djrapitops/plan/gathering/ServerShutdownSave.html" title="class in com.djrapitops.plan.gathering">ServerShutdownSave</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/events/ServerShutdownTransaction.html" class="type-name-link" title="class in com.djrapitops.plan.storage.database.transactions.events">ServerShutdownTransaction</a> - Class in <a href="com/djrapitops/plan/storage/database/transactions/events/package-summary.html">com.djrapitops.plan.storage.database.transactions.events</a></dt>
 <dd>
@@ -21236,7 +21238,7 @@ without a reload.</div>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/ShutdownDataPreservation.html" class="type-name-link" title="class in com.djrapitops.plan.gathering">ShutdownDataPreservation</a> - Class in <a href="com/djrapitops/plan/gathering/package-summary.html">com.djrapitops.plan.gathering</a></dt>
 <dd>&nbsp;</dd>
-<dt><a href="com/djrapitops/plan/gathering/ShutdownDataPreservation.html#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.storage.database.DBSystem,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.gathering.ServerShutdownSave)" class="member-name-link">ShutdownDataPreservation(PlanFiles, Locale, DBSystem, PluginLogger, ErrorLogger, ServerShutdownSave)</a> - Constructor for class com.djrapitops.plan.gathering.<a href="com/djrapitops/plan/gathering/ShutdownDataPreservation.html" title="class in com.djrapitops.plan.gathering">ShutdownDataPreservation</a></dt>
+<dt><a href="com/djrapitops/plan/gathering/ShutdownDataPreservation.html#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.storage.database.DBSystem,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.gathering.ServerShutdownSave,com.djrapitops.plan.gathering.ShutdownSessionLock)" class="member-name-link">ShutdownDataPreservation(PlanFiles, Locale, DBSystem, PluginLogger, ErrorLogger, ServerShutdownSave, ShutdownSessionLock)</a> - Constructor for class com.djrapitops.plan.gathering.<a href="com/djrapitops/plan/gathering/ShutdownDataPreservation.html" title="class in com.djrapitops.plan.gathering">ShutdownDataPreservation</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/events/ShutdownDataPreservationTransaction.html" class="type-name-link" title="class in com.djrapitops.plan.storage.database.transactions.events">ShutdownDataPreservationTransaction</a> - Class in <a href="com/djrapitops/plan/storage/database/transactions/events/package-summary.html">com.djrapitops.plan.storage.database.transactions.events</a></dt>
 <dd>&nbsp;</dd>
@@ -21249,6 +21251,10 @@ without a reload.</div>
 <dt><a href="com/djrapitops/plan/gathering/ShutdownHook.html#%3Cinit%3E(com.djrapitops.plan.gathering.ShutdownDataPreservation)" class="member-name-link">ShutdownHook(ShutdownDataPreservation)</a> - Constructor for class com.djrapitops.plan.gathering.<a href="com/djrapitops/plan/gathering/ShutdownHook.html" title="class in com.djrapitops.plan.gathering">ShutdownHook</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/ShutdownHook.Registrar.html" class="type-name-link" title="class in com.djrapitops.plan.gathering">ShutdownHook.Registrar</a> - Class in <a href="com/djrapitops/plan/gathering/package-summary.html">com.djrapitops.plan.gathering</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/ShutdownSessionLock.html" class="type-name-link" title="class in com.djrapitops.plan.gathering">ShutdownSessionLock</a> - Class in <a href="com/djrapitops/plan/gathering/package-summary.html">com.djrapitops.plan.gathering</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/ShutdownSessionLock.html#%3Cinit%3E()" class="member-name-link">ShutdownSessionLock()</a> - Constructor for class com.djrapitops.plan.gathering.<a href="com/djrapitops/plan/gathering/ShutdownSessionLock.html" title="class in com.djrapitops.plan.gathering">ShutdownSessionLock</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/settings/locale/lang/HtmlLang.html#SIDE_DOCS" class="member-name-link">SIDE_DOCS</a> - Enum constant in enum class com.djrapitops.plan.settings.locale.lang.<a href="com/djrapitops/plan/settings/locale/lang/HtmlLang.html" title="enum class in com.djrapitops.plan.settings.locale.lang">HtmlLang</a></dt>
 <dd>&nbsp;</dd>
@@ -21446,7 +21452,7 @@ without a reload.</div>
 <dd>
 <div class="block">ServerShutdownSave implementation for Sponge</div>
 </dd>
-<dt><a href="com/djrapitops/plan/SpongeServerShutdownSave.html#%3Cinit%3E(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.storage.database.DBSystem,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">SpongeServerShutdownSave(Locale, DBSystem, PluginLogger, ErrorLogger)</a> - Constructor for class com.djrapitops.plan.<a href="com/djrapitops/plan/SpongeServerShutdownSave.html" title="class in com.djrapitops.plan">SpongeServerShutdownSave</a></dt>
+<dt><a href="com/djrapitops/plan/SpongeServerShutdownSave.html#%3Cinit%3E(com.djrapitops.plan.settings.locale.Locale,com.djrapitops.plan.gathering.ShutdownSessionLock,com.djrapitops.plan.storage.database.DBSystem,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">SpongeServerShutdownSave(Locale, ShutdownSessionLock, DBSystem, PluginLogger, ErrorLogger)</a> - Constructor for class com.djrapitops.plan.<a href="com/djrapitops/plan/SpongeServerShutdownSave.html" title="class in com.djrapitops.plan">SpongeServerShutdownSave</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/modules/sponge/SpongeSuperClassBindingModule.html" class="type-name-link" title="interface in com.djrapitops.plan.modules.sponge">SpongeSuperClassBindingModule</a> - Interface in <a href="com/djrapitops/plan/modules/sponge/package-summary.html">com.djrapitops.plan.modules.sponge</a></dt>
 <dd>
