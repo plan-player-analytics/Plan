@@ -45,6 +45,7 @@ class ShutdownDataPreservationTest {
         PlanSystem system = pluginMockComponent.getPlanSystem();
         PlatformAbstractionLayer abstractionLayer = pluginMockComponent.getAbstractionLayer();
 
+        ShutdownSessionLock shutdownSessionLock = new ShutdownSessionLock();
         TestErrorLogger errorLogger = new TestErrorLogger();
         underTest = new ShutdownDataPreservation(
                 system.getPlanFiles(),
@@ -52,7 +53,7 @@ class ShutdownDataPreservationTest {
                 system.getDatabaseSystem(),
                 abstractionLayer.getPluginLogger(),
                 errorLogger,
-                new ServerShutdownSave(system.getLocaleSystem().getLocale(), system.getDatabaseSystem(), new TestPluginLogger(), errorLogger) {
+                new ServerShutdownSave(system.getLocaleSystem().getLocale(), system.getDatabaseSystem(), new TestPluginLogger(), shutdownSessionLock, errorLogger) {
                     @Override
                     protected boolean checkServerShuttingDownStatus() {
                         return false;
@@ -62,7 +63,8 @@ class ShutdownDataPreservationTest {
                     public Optional<AFKTracker> getAfkTracker() {
                         return Optional.empty();
                     }
-                });
+                },
+                shutdownSessionLock);
     }
 
     @Test

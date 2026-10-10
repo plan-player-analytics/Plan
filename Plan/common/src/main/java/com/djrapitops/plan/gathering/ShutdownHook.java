@@ -38,9 +38,8 @@ import javax.inject.Singleton;
 @Singleton
 public class ShutdownHook extends Thread {
 
-    private static ShutdownHook activated;
-
     // Static variables to keep these classes loaded until JVM shutdown hook has run.
+    private static final ShutdownSessionLock shutdownSessionLock = new ShutdownSessionLock();
     private static final SessionCache sessionCache = new SessionCache();
     private static final ActiveSession activeSession = new ActiveSession(null, null, 0, null, null);
     private static final FinishedSession finishedSession = new FinishedSession(null, null, 0, 0, 0, null);
@@ -52,7 +51,7 @@ public class ShutdownHook extends Thread {
     private static final MobKillCounter mobKillCounter = new MobKillCounter();
     private static final DeathCounter deathCounter = new DeathCounter();
     private static final TextStringBuilder textStringBuilder = new TextStringBuilder(0);
-
+    private static ShutdownHook activated;
     private final ShutdownDataPreservation dataPreservation;
 
     @Inject

@@ -82,7 +82,7 @@ class ShutdownSaveTest {
         when(dbSystemMock.getDatabase()).thenReturn(database);
 
         TestPluginLogger logger = new TestPluginLogger();
-        underTest = new ServerShutdownSave(new Locale(), dbSystemMock, logger, new TestErrorLogger()) {
+        underTest = new ServerShutdownSave(new Locale(), dbSystemMock, logger, new ShutdownSessionLock(), new TestErrorLogger()) {
             @Override
             protected boolean checkServerShuttingDownStatus() {
                 return shutdownStatus;

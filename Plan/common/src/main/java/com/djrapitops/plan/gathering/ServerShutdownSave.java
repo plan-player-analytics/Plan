@@ -42,6 +42,7 @@ import java.util.concurrent.Future;
 public abstract class ServerShutdownSave {
 
     protected final PluginLogger logger;
+    private final ShutdownSessionLock shutdownSessionLock;
     private final DBSystem dbSystem;
     private final Locale locale;
     private final ErrorLogger errorLogger;
@@ -52,11 +53,13 @@ public abstract class ServerShutdownSave {
             Locale locale,
             DBSystem dbSystem,
             PluginLogger logger,
+            ShutdownSessionLock shutdownSessionLock,
             ErrorLogger errorLogger
     ) {
         this.locale = locale;
         this.dbSystem = dbSystem;
         this.logger = logger;
+        this.shutdownSessionLock = shutdownSessionLock;
         this.errorLogger = errorLogger;
     }
 

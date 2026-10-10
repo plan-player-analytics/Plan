@@ -51,6 +51,7 @@ public class ShutdownDataPreservation extends TaskSystem.Task {
     private final PluginLogger logger;
     private final ErrorLogger errorLogger;
     private final ServerShutdownSave serverShutdownSave;
+    private final ShutdownSessionLock shutdownSessionLock;
 
     private final Path storeLocation;
 
@@ -61,7 +62,7 @@ public class ShutdownDataPreservation extends TaskSystem.Task {
             DBSystem dbSystem,
             PluginLogger logger,
             ErrorLogger errorLogger,
-            ServerShutdownSave serverShutdownSave
+            ServerShutdownSave serverShutdownSave, ShutdownSessionLock shutdownSessionLock
     ) {
         this.locale = locale;
         this.dbSystem = dbSystem;
@@ -70,6 +71,7 @@ public class ShutdownDataPreservation extends TaskSystem.Task {
         this.logger = logger;
         this.errorLogger = errorLogger;
         this.serverShutdownSave = serverShutdownSave;
+        this.shutdownSessionLock = shutdownSessionLock;
     }
 
     public void storePreviouslyPreservedSessions() {
@@ -142,13 +144,15 @@ public class ShutdownDataPreservation extends TaskSystem.Task {
 
     public void preserveSessionsInCache() {
         long now = System.currentTimeMillis();
-        List<FinishedSession> finishedSessions = SessionCache.getActiveSessions().stream()
-                .map(session -> {
-                    serverShutdownSave.getAfkTracker().ifPresent(afkTracker -> afkTracker.performedAction(session.getPlayerUUID(), now));
-                    return session.toFinishedSession(now);
-                })
-                .toList();
-        storeFinishedSessions(finishedSessions);
+        shutdownSessionLock.performLockedOperation(() -> {
+            List<FinishedSession> finishedSessions = SessionCache.getActiveSessions().stream()
+                    .map(session -> {
+                        serverShutdownSave.getAfkTracker().ifPresent(afkTracker -> afkTracker.performedAction(session.getPlayerUUID(), now));
+                        return session.toFinishedSession(now);
+                    })
+                    .toList();
+            storeFinishedSessions(finishedSessions);
+        });
     }
 
     void storeFinishedSessions(List<FinishedSession> sessions) {

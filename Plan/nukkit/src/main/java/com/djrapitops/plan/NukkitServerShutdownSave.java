@@ -17,6 +17,7 @@
 package com.djrapitops.plan;
 
 import com.djrapitops.plan.gathering.ServerShutdownSave;
+import com.djrapitops.plan.gathering.ShutdownSessionLock;
 import com.djrapitops.plan.gathering.afk.AFKTracker;
 import com.djrapitops.plan.gathering.listeners.nukkit.NukkitAFKListener;
 import com.djrapitops.plan.settings.locale.Locale;
@@ -39,11 +40,12 @@ public class NukkitServerShutdownSave extends ServerShutdownSave {
     @Inject
     public NukkitServerShutdownSave(
             Locale locale,
+            ShutdownSessionLock shutdownSessionLock,
             DBSystem dbSystem,
             PluginLogger logger,
             ErrorLogger errorLogger
     ) {
-        super(locale, dbSystem, logger, errorLogger);
+        super(locale, dbSystem, logger, shutdownSessionLock, errorLogger);
     }
 
     @Override
