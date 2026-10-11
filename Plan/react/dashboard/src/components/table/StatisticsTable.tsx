@@ -14,14 +14,16 @@ import MultiSelect from "../input/MultiSelect";
 import {faArrowUpRightDots, faServer} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {CardLoader} from "../navigation/Loader";
+import {classNames} from "../../util/classNames";
 
 type Props = {
     statistics: ServerStatistics[];
     showAllByDefault?: boolean;
     hideFilter?: boolean;
+    tableColor?: string;
 }
 
-export const StatisticsTable = ({statistics, showAllByDefault, hideFilter}: Props) => {
+export const StatisticsTable = ({statistics, showAllByDefault, hideFilter, tableColor}: Props) => {
     const {t} = useTranslation();
     const {nightModeEnabled} = useTheme();
     const formatStatistic = useStatisticFormatter();
@@ -66,7 +68,7 @@ export const StatisticsTable = ({statistics, showAllByDefault, hideFilter}: Prop
                     </InputGroup>}
             </CardHeader>
             <table className={"table table-striped" + (nightModeEnabled ? " table-dark" : '')}>
-                <thead className={"sticky-top"}>
+                <thead className={classNames("sticky-top", {[`bg-${tableColor}`]: !!tableColor})}>
                 <tr>
                     <th style={{width: "12rem"}}>
                         {t('html.label.statistic')}

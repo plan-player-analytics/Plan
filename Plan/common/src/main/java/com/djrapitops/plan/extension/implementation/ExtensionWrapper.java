@@ -95,7 +95,7 @@ public class ExtensionWrapper {
                             tabInfo.elementOrder(),
                             order.getOrDefault(tabName, 100)
                     );
-                }).collect(Collectors.toList());
+                }).toList();
     }
 
     private Map<String, Integer> orderToMap(String[] order) {

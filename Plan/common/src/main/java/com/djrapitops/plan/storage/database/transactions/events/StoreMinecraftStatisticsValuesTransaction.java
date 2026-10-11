@@ -96,7 +96,7 @@ public class StoreMinecraftStatisticsValuesTransaction extends Transaction {
                 for (Map.Entry<Integer, Integer> entry : valuesById.entrySet()) {
                     Integer id = entry.getKey();
                     if (!existingStatisticIds.contains(id)) {
-                        statement.setInt(1, entry.getValue());
+                        statement.setLong(1, entry.getValue());
                         statement.setInt(2, id);
                         statement.addBatch();
                     }

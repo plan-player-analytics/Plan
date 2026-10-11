@@ -37,19 +37,19 @@ import com.djrapitops.plan.extension.implementation.storage.transactions.StoreIc
 import com.djrapitops.plan.extension.implementation.storage.transactions.StorePluginTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.StoreTabInformationTransaction;
 import com.djrapitops.plan.extension.implementation.storage.transactions.results.*;
+import com.djrapitops.plan.extension.statistic.Statistics;
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import org.apache.commons.lang3.Strings;
+import org.apache.commons.lang3.function.TriFunction;
 
-import java.util.HashSet;
-import java.util.Optional;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.RejectedExecutionException;
 
 /**
@@ -121,47 +121,33 @@ public class DataValueGatherer {
         database.executeTransaction(new RemoveInvalidResultsTransaction(pluginName, serverUUID, extension.getInvalidatedMethods()));
     }
 
-    private void addValuesToBuilder(ExtensionDataBuilder dataBuilder, ExtensionMethods methods, Parameters parameters) {
-        for (ExtensionMethod provider : methods.getBooleanProviders()) {
-            if (brokenMethods.contains(provider)) continue;
-            dataBuilder.addValue(Boolean.class, tryToBuildBoolean(dataBuilder, parameters, provider));
-        }
-        for (ExtensionMethod provider : methods.getDoubleProviders()) {
-            if (brokenMethods.contains(provider)) continue;
-            dataBuilder.addValue(Double.class, tryToBuildDouble(dataBuilder, parameters, provider));
-        }
-        for (ExtensionMethod provider : methods.getPercentageProviders()) {
-            if (brokenMethods.contains(provider)) continue;
-            dataBuilder.addValue(Double.class, tryToBuildPercentage(dataBuilder, parameters, provider));
-        }
-        for (ExtensionMethod provider : methods.getNumberProviders()) {
-            if (brokenMethods.contains(provider)) continue;
-            dataBuilder.addValue(Long.class, tryToBuildNumber(dataBuilder, parameters, provider));
-        }
-        for (ExtensionMethod provider : methods.getStringProviders()) {
-            if (brokenMethods.contains(provider)) continue;
-            dataBuilder.addValue(String.class, tryToBuildString(dataBuilder, parameters, provider));
-        }
-        for (ExtensionMethod provider : methods.getComponentProviders()) {
-            if (brokenMethods.contains(provider)) continue;
-            dataBuilder.addValue(Component.class, tryToBuildComponent(dataBuilder, parameters, provider));
-        }
-        for (ExtensionMethod provider : methods.getGroupProviders()) {
-            if (brokenMethods.contains(provider)) continue;
-            dataBuilder.addValue(String[].class, tryToBuildGroups(dataBuilder, parameters, provider));
-        }
-        for (ExtensionMethod provider : methods.getTableProviders()) {
-            if (brokenMethods.contains(provider)) continue;
-            dataBuilder.addValue(Table.class, tryToBuildTable(dataBuilder, parameters, provider));
-        }
-        addValuesToBuilder2(dataBuilder, methods, parameters);
-    }
+    private void addValuesToBuilder(ExtensionDataBuilder b, ExtensionMethods methods, Parameters parameters) {
+        addToBuilder(b, Boolean.class, this::tryToBuildBoolean, methods.getBooleanProviders(), parameters);
+        addToBuilder(b, Double.class, this::tryToBuildDouble, methods.getDoubleProviders(), parameters);
+        addToBuilder(b, Double.class, this::tryToBuildPercentage, methods.getPercentageProviders(), parameters);
+        addToBuilder(b, Long.class, this::tryToBuildNumber, methods.getNumberProviders(), parameters);
+        addToBuilder(b, String.class, this::tryToBuildString, methods.getStringProviders(), parameters);
+        addToBuilder(b, Component.class, this::tryToBuildComponent, methods.getComponentProviders(), parameters);
+        addToBuilder(b, String[].class, this::tryToBuildGroups, methods.getGroupProviders(), parameters);
+        addToBuilder(b, Table.class, this::tryToBuildTable, methods.getTableProviders(), parameters);
+        addToBuilder(b, Statistics.class, this::tryToBuildStatistics, methods.getStatisticsProviders(), parameters);
 
-    // TODO refactor to reduce cyclomatic complexity of the calling method
-    private void addValuesToBuilder2(ExtensionDataBuilder dataBuilder, ExtensionMethods methods, Parameters parameters) {
         for (ExtensionMethod provider : methods.getDataBuilderProviders()) {
             if (brokenMethods.contains(provider)) continue;
-            addDataFromAnotherBuilder(dataBuilder, parameters, provider);
+            addDataFromAnotherBuilder(b, parameters, provider);
+        }
+    }
+
+    private <T> void addToBuilder(
+            ExtensionDataBuilder builder,
+            Class<T> type,
+            TriFunction<ExtensionDataBuilder, Parameters, ExtensionMethod, DataValue<T>> buildMethod,
+            List<ExtensionMethod> providers,
+            Parameters parameters
+    ) {
+        for (ExtensionMethod provider : providers) {
+            if (brokenMethods.contains(provider)) continue;
+            builder.addValue(type, buildMethod.apply(builder, parameters, provider));
         }
     }
 
@@ -173,6 +159,21 @@ public class DataValueGatherer {
                     .conditional(provider.getAnnotationOrNull(Conditional.class))
                     .showOnTab(provider.getAnnotationOrNull(Tab.class))
                     .buildTable(() -> callMethod(provider, parameters, Table.class), annotation.tableColor());
+        } catch (IllegalArgumentException e) {
+            logFailure(e, getPluginName(), provider.getMethodName());
+            return null;
+        }
+    }
+
+    private DataValue<Statistics> tryToBuildStatistics(ExtensionDataBuilder dataBuilder, Parameters parameters, ExtensionMethod provider) {
+        StatisticsProvider annotation = provider.getExistingAnnotation(StatisticsProvider.class);
+        try {
+            return dataBuilder.valueBuilder(provider.getMethodName())
+                    .methodName(provider)
+                    .conditional(provider.getAnnotationOrNull(Conditional.class))
+                    .showOnTab(provider.getAnnotationOrNull(Tab.class))
+                    .icon(Icon.called(annotation.iconName()).of(annotation.iconFamily()).build())
+                    .buildStatistics(() -> callMethod(provider, parameters, Statistics.class), annotation.tableColor());
         } catch (IllegalArgumentException e) {
             logFailure(e, getPluginName(), provider.getMethodName());
             return null;
@@ -368,20 +369,22 @@ public class DataValueGatherer {
         Conditions conditions = new Conditions();
         for (ExtDataBuilder.ClassValuePair pair : dataBuilder.getValues()) {
             try {
-                pair.getValue(Boolean.class).flatMap(data -> data.getMetadata(BooleanDataValue.class))
-                        .ifPresent(data -> storePlayerBoolean(parameters, conditions, data));
-                pair.getValue(Long.class).flatMap(data -> data.getMetadata(NumberDataValue.class))
-                        .ifPresent(data -> storePlayerNumber(parameters, conditions, data));
-                pair.getValue(Double.class).flatMap(data -> data.getMetadata(DoubleDataValue.class))
-                        .ifPresent(data -> storePlayerDouble(parameters, conditions, data));
-                pair.getValue(String.class).flatMap(data -> data.getMetadata(StringDataValue.class))
-                        .ifPresent(data -> storePlayerString(parameters, conditions, data));
-                pair.getValue(Component.class).flatMap(data -> data.getMetadata(ComponentDataValue.class))
-                        .ifPresent(data -> storePlayerComponent(parameters, conditions, data));
-                pair.getValue(String[].class).flatMap(data -> data.getMetadata(GroupsDataValue.class))
-                        .ifPresent(data -> storePlayerGroups(parameters, conditions, data));
-                pair.getValue(Table.class).flatMap(data -> data.getMetadata(TableDataValue.class))
-                        .ifPresent(data -> storePlayerTable(parameters, conditions, data));
+                valueFromPair(pair, Boolean.class, BooleanDataValue.class).ifPresent(data ->
+                        storePlayerBoolean(parameters, conditions, data));
+                valueFromPair(pair, Long.class, NumberDataValue.class).ifPresent(data ->
+                        storeValue(parameters, conditions, data, StorePlayerNumberResultTransaction::new));
+                valueFromPair(pair, Double.class, DoubleDataValue.class).ifPresent(data ->
+                        storeValue(parameters, conditions, data, StorePlayerDoubleResultTransaction::new));
+                valueFromPair(pair, String.class, StringDataValue.class).ifPresent(data ->
+                        storeValue(parameters, conditions, data, StorePlayerStringResultTransaction::new));
+                valueFromPair(pair, Component.class, ComponentDataValue.class).ifPresent(data ->
+                        storePlayerComponent(parameters, conditions, data));
+                valueFromPair(pair, String[].class, GroupsDataValue.class).ifPresent(data ->
+                        storeValue(parameters, conditions, data, StorePlayerGroupsResultTransaction::new));
+                valueFromPair(pair, Table.class, TableDataValue.class).ifPresent(data ->
+                        storePlayerTable(parameters, conditions, data));
+                valueFromPair(pair, Statistics.class, StatisticsDataValue.class).ifPresent(data ->
+                        storePlayerStatistics(parameters, conditions, data));
             } catch (DataExtensionMethodCallException methodError) {
                 logFailure(methodError);
             } catch (Exception | NoClassDefFoundError | NoSuchFieldError | NoSuchMethodError unexpectedError) {
@@ -394,18 +397,20 @@ public class DataValueGatherer {
         Conditions conditions = new Conditions();
         for (ExtDataBuilder.ClassValuePair pair : dataBuilder.getValues()) {
             try {
-                pair.getValue(Boolean.class).flatMap(data -> data.getMetadata(BooleanDataValue.class))
-                        .ifPresent(data -> storeBoolean(parameters, conditions, data));
-                pair.getValue(Long.class).flatMap(data -> data.getMetadata(NumberDataValue.class))
-                        .ifPresent(data -> storeNumber(parameters, conditions, data));
-                pair.getValue(Double.class).flatMap(data -> data.getMetadata(DoubleDataValue.class))
-                        .ifPresent(data -> storeDouble(parameters, conditions, data));
-                pair.getValue(String.class).flatMap(data -> data.getMetadata(StringDataValue.class))
-                        .ifPresent(data -> storeString(parameters, conditions, data));
-                pair.getValue(Component.class).flatMap(data -> data.getMetadata(ComponentDataValue.class))
-                        .ifPresent(data -> storeComponent(parameters, conditions, data));
-                pair.getValue(Table.class).flatMap(data -> data.getMetadata(TableDataValue.class))
-                        .ifPresent(data -> storeTable(parameters, conditions, data));
+                valueFromPair(pair, Boolean.class, BooleanDataValue.class).ifPresent(data ->
+                        storeBoolean(parameters, conditions, data));
+                valueFromPair(pair, Long.class, NumberDataValue.class).ifPresent(data ->
+                        storeValue(parameters, conditions, data, StoreServerNumberResultTransaction::new));
+                valueFromPair(pair, Double.class, DoubleDataValue.class).ifPresent(data ->
+                        storeValue(parameters, conditions, data, StoreServerDoubleResultTransaction::new));
+                valueFromPair(pair, String.class, StringDataValue.class).ifPresent(data ->
+                        storeValue(parameters, conditions, data, StoreServerStringResultTransaction::new));
+                valueFromPair(pair, Component.class, ComponentDataValue.class).ifPresent(data ->
+                        storeComponent(parameters, conditions, data));
+                valueFromPair(pair, Table.class, TableDataValue.class).ifPresent(data ->
+                        storeTable(parameters, conditions, data));
+                valueFromPair(pair, Statistics.class, StatisticsDataValue.class).ifPresent(data ->
+                        storeStatistics(parameters, conditions, data));
             } catch (DataExtensionMethodCallException methodError) {
                 logFailure(methodError);
             } catch (RejectedExecutionException ignore) {
@@ -415,6 +420,10 @@ public class DataValueGatherer {
                 logFailure(unexpectedError);
             }
         }
+    }
+
+    private <T extends BuiltDataValue<V>, V> Optional<T> valueFromPair(ExtDataBuilder.ClassValuePair pair, Class<V> type, Class<T> valueWrapper) {
+        return pair.getValue(type).flatMap(data -> data.getMetadata(valueWrapper));
     }
 
     private void logFailure(Throwable cause, String pluginName, String methodName) {
@@ -466,8 +475,8 @@ public class DataValueGatherer {
     }
 
     private void storeBoolean(Parameters parameters, Conditions conditions, BooleanDataValue data) {
-        ProviderInformation information = data.getInformation();
-        Boolean value = getValue(conditions, data, information);
+        var information = data.getInformation();
+        var value = getValue(conditions, data, information);
         if (value == null) return;
         if (value) {
             conditions.conditionFulfilled(information.getProvidedCondition());
@@ -476,45 +485,13 @@ public class DataValueGatherer {
         }
 
         Database db = dbSystem.getDatabase();
-
         extensionMetadataStorage.storeProvider(information, parameters);
         db.executeTransaction(new StoreServerBooleanResultTransaction(information, parameters, value));
     }
 
-    private void storeNumber(Parameters parameters, Conditions conditions, NumberDataValue data) {
-        ProviderInformation information = data.getInformation();
-        Long value = getValue(conditions, data, information);
-        if (value == null) return;
-
-        Database db = dbSystem.getDatabase();
-        extensionMetadataStorage.storeProvider(information, parameters);
-        db.executeTransaction(new StoreServerNumberResultTransaction(information, parameters, value));
-    }
-
-
-    private void storeDouble(Parameters parameters, Conditions conditions, DoubleDataValue data) {
-        ProviderInformation information = data.getInformation();
-        Double value = getValue(conditions, data, information);
-        if (value == null) return;
-
-        Database db = dbSystem.getDatabase();
-        extensionMetadataStorage.storeProvider(information, parameters);
-        db.executeTransaction(new StoreServerDoubleResultTransaction(information, parameters, value));
-    }
-
-    private void storeString(Parameters parameters, Conditions conditions, StringDataValue data) {
-        ProviderInformation information = data.getInformation();
-        String value = getValue(conditions, data, information);
-        if (value == null) return;
-
-        Database db = dbSystem.getDatabase();
-        extensionMetadataStorage.storeProvider(information, parameters);
-        db.executeTransaction(new StoreServerStringResultTransaction(information, parameters, value));
-    }
-
     private void storeComponent(Parameters parameters, Conditions conditions, ComponentDataValue data) {
-        ProviderInformation information = data.getInformation();
-        String value = getComponentAsJson(getValue(conditions, data, information));
+        var information = data.getInformation();
+        var value = getComponentAsJson(getValue(conditions, data, information));
         if (value == null) return;
 
         Database db = dbSystem.getDatabase();
@@ -523,8 +500,8 @@ public class DataValueGatherer {
     }
 
     private void storeTable(Parameters parameters, Conditions conditions, TableDataValue data) {
-        ProviderInformation information = data.getInformation();
-        Table value = getValue(conditions, data, information);
+        var information = data.getInformation();
+        var value = getValue(conditions, data, information);
         if (value == null) return;
 
         Database db = dbSystem.getDatabase();
@@ -532,9 +509,19 @@ public class DataValueGatherer {
         db.executeTransaction(new StoreServerTableResultTransaction(information, parameters, value));
     }
 
+    private void storeStatistics(Parameters parameters, Conditions conditions, StatisticsDataValue data) {
+        var information = data.getInformation();
+        var value = getValue(conditions, data, information);
+        if (value == null) return;
+
+        Database db = dbSystem.getDatabase();
+        extensionMetadataStorage.storeProvider(information, parameters);
+        db.executeTransaction(new StoreServerStatisticsResultTransaction(information, parameters, value));
+    }
+
     private void storePlayerBoolean(Parameters parameters, Conditions conditions, BooleanDataValue data) {
-        ProviderInformation information = data.getInformation();
-        Boolean value = getValue(conditions, data, information);
+        var information = data.getInformation();
+        var value = getValue(conditions, data, information);
         if (value == null) return;
         if (value) {
             conditions.conditionFulfilled(information.getProvidedCondition());
@@ -547,39 +534,22 @@ public class DataValueGatherer {
         db.executeTransaction(new StorePlayerBooleanResultTransaction(information, parameters, value));
     }
 
-    private void storePlayerNumber(Parameters parameters, Conditions conditions, NumberDataValue data) {
-        ProviderInformation information = data.getInformation();
-        Long value = getValue(conditions, data, information);
+    public <T> void storeValue(
+            Parameters parameters, Conditions conditions, BuiltDataValue<T> data,
+            TriFunction<ProviderInformation, Parameters, T, Transaction> transactionConstructor
+    ) {
+        var information = data.getInformation();
+        var value = getValue(conditions, data, information);
         if (value == null) return;
 
         Database db = dbSystem.getDatabase();
         extensionMetadataStorage.storeProvider(information, parameters);
-        db.executeTransaction(new StorePlayerNumberResultTransaction(information, parameters, value));
-    }
-
-    private void storePlayerDouble(Parameters parameters, Conditions conditions, DoubleDataValue data) {
-        ProviderInformation information = data.getInformation();
-        Double value = getValue(conditions, data, information);
-        if (value == null) return;
-
-        Database db = dbSystem.getDatabase();
-        extensionMetadataStorage.storeProvider(information, parameters);
-        db.executeTransaction(new StorePlayerDoubleResultTransaction(information, parameters, value));
-    }
-
-    private void storePlayerString(Parameters parameters, Conditions conditions, StringDataValue data) {
-        ProviderInformation information = data.getInformation();
-        String value = getValue(conditions, data, information);
-        if (value == null) return;
-
-        Database db = dbSystem.getDatabase();
-        extensionMetadataStorage.storeProvider(information, parameters);
-        db.executeTransaction(new StorePlayerStringResultTransaction(information, parameters, value));
+        db.executeTransaction(transactionConstructor.apply(information, parameters, value));
     }
 
     private void storePlayerComponent(Parameters parameters, Conditions conditions, ComponentDataValue data) {
-        ProviderInformation information = data.getInformation();
-        String value = getComponentAsJson(getValue(conditions, data, information));
+        var information = data.getInformation();
+        var value = getComponentAsJson(getValue(conditions, data, information));
         if (value == null) return;
 
         Database db = dbSystem.getDatabase();
@@ -587,23 +557,23 @@ public class DataValueGatherer {
         db.executeTransaction(new StorePlayerStringResultTransaction(information, parameters, value));
     }
 
-    private void storePlayerGroups(Parameters parameters, Conditions conditions, GroupsDataValue data) {
-        ProviderInformation information = data.getInformation();
-        String[] value = getValue(conditions, data, information);
-        if (value == null) return;
-
-        Database db = dbSystem.getDatabase();
-        extensionMetadataStorage.storeProvider(information, parameters);
-        db.executeTransaction(new StorePlayerGroupsResultTransaction(information, parameters, value));
-    }
-
     private void storePlayerTable(Parameters parameters, Conditions conditions, TableDataValue data) {
-        ProviderInformation information = data.getInformation();
-        Table value = getValue(conditions, data, information);
+        var information = data.getInformation();
+        var value = getValue(conditions, data, information);
         if (value == null) return;
 
         Database db = dbSystem.getDatabase();
         extensionMetadataStorage.storeTableProvider(information, parameters, value);
         db.executeTransaction(new StorePlayerTableResultTransaction(information, parameters, value));
+    }
+
+    private void storePlayerStatistics(Parameters parameters, Conditions conditions, StatisticsDataValue data) {
+        var information = data.getInformation();
+        var value = getValue(conditions, data, information);
+        if (value == null) return;
+
+        Database db = dbSystem.getDatabase();
+        extensionMetadataStorage.storeProvider(information, parameters);
+        db.executeTransaction(new StorePlayerStatisticsResultTransaction(information, parameters, value));
     }
 }

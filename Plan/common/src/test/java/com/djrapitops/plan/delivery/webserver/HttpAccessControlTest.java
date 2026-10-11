@@ -21,7 +21,6 @@ import com.djrapitops.plan.extension.Caller;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.Database;
-import com.djrapitops.plan.storage.database.queries.ExtensionsDatabaseTest;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
 import extension.FullSystemExtension;
@@ -34,6 +33,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import utilities.HTTPConnector;
 import utilities.RandomData;
 import utilities.TestConstants;
+import utilities.TestExtensions;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -70,7 +70,7 @@ class HttpAccessControlTest {
                 ADDRESS,
                 TestConstants.VERSION)));
 
-        Caller caller = system.getApiServices().getExtensionService().register(new ExtensionsDatabaseTest.PlayerExtension())
+        Caller caller = system.getApiServices().getExtensionService().register(new TestExtensions.PlayerExtension())
                 .orElseThrow(AssertionError::new);
         caller.updatePlayerData(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME);
 

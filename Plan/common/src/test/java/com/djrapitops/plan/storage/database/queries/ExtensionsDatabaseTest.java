@@ -16,22 +16,16 @@
  */
 package com.djrapitops.plan.storage.database.queries;
 
-import com.djrapitops.plan.component.Component;
-import com.djrapitops.plan.component.ComponentService;
 import com.djrapitops.plan.extension.CallEvents;
-import com.djrapitops.plan.extension.DataExtension;
 import com.djrapitops.plan.extension.ExtensionSvc;
-import com.djrapitops.plan.extension.NotReadyException;
-import com.djrapitops.plan.extension.annotation.*;
-import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
-import com.djrapitops.plan.extension.graph.*;
 import com.djrapitops.plan.extension.icon.Color;
-import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.results.*;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionPlayerDataQuery;
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionServerDataQuery;
-import com.djrapitops.plan.extension.implementation.storage.queries.table.ExtensionServerTableDataQuery;
+import com.djrapitops.plan.extension.implementation.storage.queries.playertable.ExtensionServerTableDataQuery;
+import com.djrapitops.plan.extension.implementation.storage.queries.statistics.ExtensionPlayerStatisticsQuery;
+import com.djrapitops.plan.extension.implementation.storage.queries.statistics.ExtensionServerStatisticsQuery;
 import com.djrapitops.plan.extension.table.Table;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.gathering.domain.WorldTimes;
@@ -47,13 +41,18 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import utilities.OptionalAssert;
 import utilities.RandomData;
 import utilities.TestConstants;
 import utilities.TestErrorLogger;
+import utilities.TestExtensions.*;
 
-import java.util.*;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -76,10 +75,14 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
         extensionService.unregister(new TableExtension());
         extensionService.unregister(new ThrowingExtension());
         extensionService.unregister(new ClickEventTestExtension());
+        extensionService.unregister(new StatisticsExtension());
+        extensionService.unregister(new PlayerStatisticsExtension());
         ExtensionSettings extensionSettings = config().getExtensionSettings();
         extensionSettings.setEnabled("PlayerExtension", true);
         extensionSettings.setEnabled("TableExtension", true);
         extensionSettings.setEnabled("ServerExtension", true);
+        extensionSettings.setEnabled("StatisticsExtension", true);
+        extensionSettings.setEnabled("PlayerStatisticsExtension", true);
     }
 
     @Test
@@ -499,291 +502,137 @@ public interface ExtensionsDatabaseTest extends DatabaseTestPreparer {
     }
 
 
-    @PluginInfo(name = "ConditionalExtension")
-    class ConditionalExtension implements DataExtension {
+    @Test
+    @DisplayName("ExtensionServerStatisticsQuery retrieves server statistics correctly")
+    default void serverStatisticsAreQueriedCorrectly() {
+        ExtensionSvc extensionService = extensionService();
+        extensionService.register(new StatisticsExtension());
+        extensionService.updateServerValues(CallEvents.SERVER_EXTENSION_REGISTER);
 
-        static boolean condition = true;
+        Map<Integer, ExtensionData.Builder> result = db().query(new ExtensionServerStatisticsQuery(serverUUID()));
+        assertFalse(result.isEmpty());
 
-        @BooleanProvider(text = "a boolean", conditionName = "condition")
-        public boolean isCondition(UUID playerUUID) {
-            return condition;
-        }
+        List<ExtensionData> serverDataList = db().query(new ExtensionServerDataQuery(serverUUID()));
+        assertFalse(serverDataList.isEmpty());
 
-        @StringProvider(text = "Conditional Value")
-        @Conditional("condition")
-        public String conditionalValue(UUID playerUUID) {
-            return "Conditional";
-        }
+        ExtensionData extensionData = serverDataList.stream()
+                .filter(data -> "StatisticsExtension".equals(data.getExtensionInformation().getPluginName()))
+                .findFirst()
+                .orElseThrow(AssertionError::new);
 
-        @StringProvider(text = "Reversed Conditional Value")
-        @Conditional(value = "condition", negated = true)
-        public String reversedConditionalValue(UUID playerUUID) {
-            return "Reversed";
-        }
+        List<ExtensionTabData> tabs = extensionData.getTabs();
+        assertEquals(2, tabs.size());
 
-        @StringProvider(text = "Unconditional")
-        public String unconditional(UUID playerUUID) {
-            return "unconditional";
-        }
+        ExtensionTabData defaultTab = tabs.stream()
+                .filter(t -> t.getTabInformation().getTabName().isEmpty())
+                .findFirst()
+                .orElseThrow(AssertionError::new);
 
-        @BooleanProvider(text = "a boolean", conditionName = "condition")
-        public boolean isCondition() {
-            return condition;
-        }
+        List<ExtensionStatisticsData> defaultStatsData = defaultTab.getStatisticsData();
+        assertEquals(1, defaultStatsData.size());
+        ExtensionStatisticsData statData1 = defaultStatsData.get(0);
+        assertEquals("stats", statData1.getProviderName());
+        assertEquals(Color.GREEN, statData1.getTableColor());
+        assertEquals(Map.of("stat_one", 42L, "group:stat_two", 100L), statData1.getStatistics().getValueByKey());
 
-        @StringProvider(text = "Conditional Value")
-        @Conditional("condition")
-        public String conditionalValue() {
-            return "Conditional";
-        }
+        ExtensionTabData customTab = tabs.stream()
+                .filter(t -> "CustomTab".equals(t.getTabInformation().getTabName()))
+                .findFirst()
+                .orElseThrow(AssertionError::new);
 
-        @StringProvider(text = "Reversed Conditional Value")
-        @Conditional(value = "condition", negated = true)
-        public String reversedConditionalValue() {
-            return "Reversed";
-        }
-
-        @GroupProvider(text = "Conditional Group")
-        @Conditional("condition")
-        public String[] conditionalGroups(UUID playerUUID) {
-            return new String[]{"Group"};
-        }
-
-        @StringProvider(text = "Unconditional")
-        public String unconditional() {
-            return "unconditional";
-        }
+        List<ExtensionStatisticsData> customStatsData = customTab.getStatisticsData();
+        assertEquals(1, customStatsData.size());
+        ExtensionStatisticsData statData2 = customStatsData.get(0);
+        assertEquals("tabStats", statData2.getProviderName());
+        assertEquals(Color.BLUE, statData2.getTableColor());
+        assertEquals(Map.of("custom_stat", 999L), statData2.getStatistics().getValueByKey());
     }
 
-    @PluginInfo(name = "ConditionalExtension")
-    class RemovingConditionalExtension implements DataExtension {
+    @Test
+    @DisplayName("ExtensionPlayerStatisticsQuery retrieves player statistics correctly")
+    default void playerStatisticsAreQueriedCorrectly() {
+        db().executeTransaction(new PlayerRegisterTransaction(TestConstants.PLAYER_ONE_UUID, System::currentTimeMillis, TestConstants.PLAYER_ONE_NAME));
 
-        static boolean condition = true;
+        ExtensionSvc extensionService = extensionService();
+        extensionService.register(new PlayerStatisticsExtension());
+        extensionService.updatePlayerValues(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
 
-        @BooleanProvider(text = "a boolean", conditionName = "condition")
-        public boolean isCondition(UUID playerUUID) {
-            return condition;
-        }
+        Map<Integer, ExtensionData.Builder> result = db().query(new ExtensionPlayerStatisticsQuery(TestConstants.PLAYER_ONE_UUID));
+        assertFalse(result.isEmpty());
 
-        @StringProvider(text = "Conditional Value")
-        @Conditional("condition")
-        public String conditionalValue(UUID playerUUID) {
-            return "Conditional";
-        }
+        Map<ServerUUID, List<ExtensionData>> playerDataMap = db().query(new ExtensionPlayerDataQuery(TestConstants.PLAYER_ONE_UUID));
+        assertFalse(playerDataMap.isEmpty());
 
-        @BooleanProvider(text = "a boolean", conditionName = "condition")
-        public boolean isCondition() {
-            return condition;
-        }
+        List<ExtensionData> playerDataList = playerDataMap.get(serverUUID());
+        assertNotNull(playerDataList);
 
-        @StringProvider(text = "Conditional Value")
-        @Conditional("condition")
-        public String conditionalValue() {
-            return "Conditional";
-        }
+        ExtensionData extensionData = playerDataList.stream()
+                .filter(data -> "PlayerStatisticsExtension".equals(data.getExtensionInformation().getPluginName()))
+                .findFirst()
+                .orElseThrow(AssertionError::new);
+
+        List<ExtensionTabData> tabs = extensionData.getTabs();
+        assertEquals(2, tabs.size());
+
+        ExtensionTabData defaultTab = tabs.stream()
+                .filter(t -> t.getTabInformation().getTabName().isEmpty())
+                .findFirst()
+                .orElseThrow(AssertionError::new);
+
+        List<ExtensionStatisticsData> defaultStatsData = defaultTab.getStatisticsData();
+        assertEquals(1, defaultStatsData.size());
+        ExtensionStatisticsData statData1 = defaultStatsData.get(0);
+        assertEquals("stats", statData1.getProviderName());
+        assertEquals(Color.GREEN, statData1.getTableColor());
+        assertEquals(Map.of("stat_one", 42L, "group:stat_two", 100L), statData1.getStatistics().getValueByKey());
+
+        ExtensionTabData customTab = tabs.stream()
+                .filter(t -> "CustomTab".equals(t.getTabInformation().getTabName()))
+                .findFirst()
+                .orElseThrow(AssertionError::new);
+
+        List<ExtensionStatisticsData> customStatsData = customTab.getStatisticsData();
+        assertEquals(1, customStatsData.size());
+        ExtensionStatisticsData statData2 = customStatsData.get(0);
+        assertEquals("tabStats", statData2.getProviderName());
+        assertEquals(Color.BLUE, statData2.getTableColor());
+        assertEquals(Map.of("custom_stat", 999L), statData2.getStatistics().getValueByKey());
     }
 
-    @PluginInfo(name = "ServerExtension")
-    class ServerExtension implements DataExtension {
-        @NumberProvider(text = "a number")
-        public long value() {
-            return 5L;
-        }
+    @Test
+    @DisplayName("ExtensionPlayerStatisticsQuery includes missing player statistics as null")
+    default void playerMissingStatisticsAreNull() {
+        db().executeTransaction(new PlayerRegisterTransaction(TestConstants.PLAYER_ONE_UUID, System::currentTimeMillis, TestConstants.PLAYER_ONE_NAME));
+        db().executeTransaction(new PlayerRegisterTransaction(TestConstants.PLAYER_TWO_UUID, System::currentTimeMillis, TestConstants.PLAYER_TWO_NAME));
 
-        @BooleanProvider(text = "a boolean")
-        public boolean boolVal() {
-            return false;
-        }
+        ExtensionSvc extensionService = extensionService();
+        extensionService.register(new PlayerStatisticsExtension());
+        // First update player one so that stat_one and group:stat_two are registered in ExtensionStatisticTable
+        extensionService.updatePlayerValues(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME, CallEvents.MANUAL);
+        // Player two only has stat_one
+        extensionService.updatePlayerValues(TestConstants.PLAYER_TWO_UUID, TestConstants.PLAYER_TWO_NAME, CallEvents.MANUAL);
 
-        @DoubleProvider(text = "a double")
-        public double doubleVal() {
-            return 0.5;
-        }
+        Map<Integer, ExtensionData.Builder> result = db().query(new ExtensionPlayerStatisticsQuery(TestConstants.PLAYER_TWO_UUID));
+        assertFalse(result.isEmpty());
 
-        @PercentageProvider(text = "a percentage")
-        public double percentageVal() {
-            return 0.5;
-        }
+        Map<ServerUUID, List<ExtensionData>> playerDataMap = db().query(new ExtensionPlayerDataQuery(TestConstants.PLAYER_TWO_UUID));
+        List<ExtensionData> playerDataList = playerDataMap.get(serverUUID());
+        assertNotNull(playerDataList);
 
-        @StringProvider(text = "a string")
-        public String stringVal() {
-            return "Something";
-        }
-    }
+        ExtensionData extensionData = playerDataList.stream()
+                .filter(data -> "PlayerStatisticsExtension".equals(data.getExtensionInformation().getPluginName()))
+                .findFirst()
+                .orElseThrow(AssertionError::new);
 
-    @PluginInfo(name = "PlayerExtension")
-    class PlayerExtension implements DataExtension {
-        @NumberProvider(text = "a number", showInPlayerTable = true)
-        public long value(UUID playerUUD) {
-            return 5L;
-        }
+        ExtensionTabData defaultTab = extensionData.getTabs().stream()
+                .filter(t -> t.getTabInformation().getTabName().isEmpty())
+                .findFirst()
+                .orElseThrow(AssertionError::new);
 
-        @BooleanProvider(text = "a boolean", showInPlayerTable = true)
-        public boolean boolVal(UUID playerUUID) {
-            return false;
-        }
-
-        @DoubleProvider(text = "a double", showInPlayerTable = true)
-        public double doubleVal(UUID playerUUID) {
-            return 0.5;
-        }
-
-        @PercentageProvider(text = "a percentage", showInPlayerTable = true)
-        public double percentageVal(UUID playerUUID) {
-            return 0.5;
-        }
-
-        @StringProvider(text = "a string", showInPlayerTable = true)
-        public String stringVal(UUID playerUUID) {
-            return "Something";
-        }
-
-        @GroupProvider(text = "a group")
-        public String[] groupVal(UUID playerUUID) {
-            return new String[]{"Group"};
-        }
-
-        @ComponentProvider(text = "colored text")
-        public Component componentVal(UUID playerUUID) {
-            return ComponentService.getInstance().fromLegacy("&aTest", '&');
-        }
-    }
-
-    @PluginInfo(name = "GraphExtension")
-    class GraphExtension implements DataExtension {
-        @GraphProvider(displayName = "test")
-        public ServerGraphDataSource test() {
-            return new ServerGraphDataSource() {
-                @Override
-                public Optional<DataPoint> getPoint(long currentTimestamp) {
-                    return Optional.of(new DataPoint(System.currentTimeMillis(), 1));
-                }
-
-                @Override
-                public List<SeriesMetadata> getSeriesMetadata() {
-                    return List.of(new SeriesMetadata("value", "", GraphFormatType.NONE, "#222"));
-                }
-            };
-        }
-
-        @GraphProvider(displayName = "test")
-        public PlayerGraphDataSource testPlayer() {
-            return new PlayerGraphDataSource() {
-                @Override
-                public Optional<DataPoint> getPoint(long currentTimestamp, UUID playerUUID, String playerName) {
-                    return Optional.of(new DataPoint(System.currentTimeMillis(), 1));
-                }
-
-                @Override
-                public List<SeriesMetadata> getSeriesMetadata() {
-                    return List.of(new SeriesMetadata("value", "", GraphFormatType.NONE, "#222"));
-                }
-            };
-        }
-    }
-
-    @PluginInfo(name = "TableExtension")
-    class TableExtension implements DataExtension {
-        @TableProvider(tableColor = Color.AMBER)
-        public Table table() {
-            return createTestTable();
-        }
-
-        @TableProvider(tableColor = Color.AMBER)
-        public Table playerTable(UUID playerUUID) {
-            return createTestTable();
-        }
-
-        private Table createTestTable() {
-            return Table.builder()
-                    .columnOne("first", Icon.called("gavel").of(Color.AMBER).build())
-                    .columnTwo("second", Icon.called("what").of(Color.BROWN).build()) // Colors are ignored
-                    .columnThree("third", null)                  // Can handle improper icons
-                    .columnFive("five", Icon.called("").build()) // Can handle null column in between and ignore the next column
-                    .addRow("value", 3, 0.5, 400L)               // Can handle too many row values
-                    .build();
-        }
-    }
-
-    @PluginInfo(name = "ThrowingExtension")
-    class ThrowingExtension implements DataExtension {
-        @BooleanProvider(text = "a boolean")
-        public boolean booleanMethod() {
-            throw new IllegalArgumentException("Failed to catch");
-        }
-
-        @BooleanProvider(text = "a boolean")
-        public boolean booleanPlayerMethod(UUID playerUUID) {
-            throw new NotReadyException();
-        }
-
-        @StringProvider(text = "a string")
-        public String stringMethod() {
-            throw new NoSuchMethodError();
-        }
-
-        @NumberProvider(text = "a string")
-        public long numberMethod() {
-            throw new UnsupportedOperationException();
-        }
-
-        @GroupProvider(text = "group")
-        public String[] groupMethod(UUID playerUUID) {
-            throw new NoClassDefFoundError();
-        }
-
-        @DataBuilderProvider
-        public ExtensionDataBuilder builder() {
-            return newExtensionDataBuilder()
-                    .addValue(String.class, () -> {
-                        throw new NotReadyException();
-                    });
-        }
-
-        @DataBuilderProvider
-        public ExtensionDataBuilder builder2() {
-            return newExtensionDataBuilder()
-                    .addValue(String.class, () -> {
-                        throw new NoClassDefFoundError();
-                    });
-        }
-
-        @DataBuilderProvider
-        public ExtensionDataBuilder builder3() {
-            throw new NoSuchMethodError();
-        }
-    }
-
-    @PluginInfo(
-            name = "Component with click event",
-            iconName = "bug",
-            iconFamily = Family.SOLID,
-            color = Color.RED
-    )
-    public class ClickEventTestExtension implements DataExtension {
-        @ComponentProvider(
-                text = "Component with click event",
-                description = "",
-                iconName = "bug",
-                iconFamily = Family.SOLID,
-                iconColor = Color.RED
-        )
-        public Component clickEventComponent() {
-            String json = "{\"text\":\"Click here\",\"color\":\"red\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"javascript:alert(document.cookie)\"}}";
-            return ComponentService.getInstance().fromJson(json);
-        }
-
-
-        @ComponentProvider(
-                text = "Component with click event",
-                description = "",
-                iconName = "bug",
-                iconFamily = Family.SOLID,
-                iconColor = Color.RED
-        )
-        public Component clickEventPlayerComponent(UUID playerUUID) {
-            String json = "{\"text\":\"Click here\",\"color\":\"red\",\"underlined\":true,\"clickEvent\":{\"action\":\"open_url\",\"value\":\"javascript:alert(document.cookie)\"}}";
-            return ComponentService.getInstance().fromJson(json);
-        }
+        ExtensionStatisticsData statData1 = defaultTab.getStatisticsData().get(0);
+        Map<String, Long> values = statData1.getStatistics().getValueByKey();
+        assertEquals(10L, values.get("stat_one"));
+        assertTrue(values.containsKey("group:stat_two"));
+        assertNull(values.get("group:stat_two"));
     }
 }

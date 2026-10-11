@@ -65,8 +65,10 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
         Collection<Integer> providerIds = query(inactiveProviderIDsQuery());
         List<String> tablesToDrop = query(ExtensionGraphQueries.findGraphTableNames(providerIds));
         tablesToDrop.forEach(tableName -> execute("DROP TABLE IF EXISTS " + tableName));
-        for (Integer providerID : providerIds) {
-            removeValues(providerID);
+
+        for (Integer providerId : providerIds) {
+            removeStatistics(providerId);
+            removeValues(providerId);
         }
         Collection<Integer> tableProviderIds = query(inactiveTableProviderIDsQuery());
         for (Integer providerID : tableProviderIds) {
@@ -75,6 +77,15 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
         commitMidTransaction();
         extensionMetadataStorage.invalidate(getInvalidatedProviders(providerIds, tableProviderIds));
         removeProviders(providerIds, tableProviderIds);
+    }
+
+    private void removeStatistics(Integer providerId) {
+        execute(DELETE_FROM + ExtensionStatisticPlayerValueTable.TABLE_NAME + WHERE + ExtensionStatisticPlayerValueTable.STATISTIC_ID + " IN ("
+                + SELECT + ExtensionStatisticTable.ID + FROM + ExtensionStatisticTable.TABLE_NAME + WHERE + ExtensionStatisticTable.PROVIDER_ID + "=" + providerId +
+                ")");
+        execute(DELETE_FROM + ExtensionStatisticServerValueTable.TABLE_NAME + WHERE + ExtensionStatisticServerValueTable.STATISTIC_ID + " IN ("
+                + SELECT + ExtensionStatisticTable.ID + FROM + ExtensionStatisticTable.TABLE_NAME + WHERE + ExtensionStatisticTable.PROVIDER_ID + "=" + providerId +
+                ")");
     }
 
     private List<ExtensionMetadataKey> getInvalidatedProviders(Collection<Integer> providerIds, Collection<Integer> tableProviderIds) {
@@ -94,7 +105,8 @@ public class RemoveOldExtensionsTransaction extends ThrowawayTransaction {
                 ExtensionGraphFormatTable.ToProviderTable.TABLE_NAME,
                 ExtensionGraphColorTable.ToProviderTable.TABLE_NAME,
                 ExtensionGraphAggregateTypeTable.ToProviderTable.TABLE_NAME,
-                ExtensionGraphMetadataTable.TABLE_NAME
+                ExtensionGraphMetadataTable.TABLE_NAME,
+                ExtensionStatisticTable.TABLE_NAME
         }) {
             execute(DELETE_FROM + table + WHERE + "provider_id=" + providerID);
         }

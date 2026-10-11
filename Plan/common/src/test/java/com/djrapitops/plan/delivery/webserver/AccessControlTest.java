@@ -27,7 +27,6 @@ import com.djrapitops.plan.settings.config.changes.ConfigUpdater;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
-import com.djrapitops.plan.storage.database.queries.ExtensionsDatabaseTest;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPluginTable;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
@@ -44,10 +43,7 @@ import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
-import utilities.HTTPConnector;
-import utilities.RandomData;
-import utilities.TestConstants;
-import utilities.TestResources;
+import utilities.*;
 import utilities.mocks.PluginMockComponent;
 
 import java.io.File;
@@ -379,9 +375,9 @@ class AccessControlTest {
         }
         database.executeInTransaction(DataStoreQueries.storeTPS(TestConstants.SERVER_UUID, RandomData.randomTPSAtDate(System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(5))));
 
-        Caller caller = system.getApiServices().getExtensionService().register(new ExtensionsDatabaseTest.PlayerExtension())
+        Caller caller = system.getApiServices().getExtensionService().register(new TestExtensions.PlayerExtension())
                 .orElseThrow(AssertionError::new);
-        system.getApiServices().getExtensionService().register(new ExtensionsDatabaseTest.GraphExtension());
+        system.getApiServices().getExtensionService().register(new TestExtensions.GraphExtension());
         caller.updatePlayerData(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME);
 
         // System server uuid differs from test data uuid

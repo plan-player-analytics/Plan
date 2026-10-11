@@ -38,6 +38,7 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
     private final Map<String, ExtensionComponentData> componentData;
 
     private final List<ExtensionTableData> tableData;
+    private final List<ExtensionStatisticsData> statisticsData;
     private final List<String> graphNames;
     private final List<ExtensionDescription> descriptions;
 
@@ -58,6 +59,7 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         tableData = new ArrayList<>();
         graphNames = new ArrayList<>();
         descriptions = new ArrayList<>();
+        statisticsData = new ArrayList<>();
     }
 
     public TabInformation getTabInformation() {
@@ -100,6 +102,11 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         return graphNames;
     }
 
+    // TODO Dto
+    public List<ExtensionStatisticsData> getStatisticsData() {
+        return statisticsData;
+    }
+
     /**
      * Get all descriptions for data in this tab.
      * <p>
@@ -139,6 +146,7 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
 
         this.graphNames.addAll(other.graphNames);
         this.tableData.addAll(other.tableData);
+        this.statisticsData.addAll(other.statisticsData);
 
         createOrderingList();
     }
@@ -206,13 +214,17 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
 
         public Builder putGroupData(ExtensionStringData extensionStringData) {
             String name = extensionStringData.getDescription().getName();
-            ExtensionStringData previous = data.stringData.get(name);
-            data.stringData.put(name, previous != null ? previous.concatenate(extensionStringData) : extensionStringData);
+            data.stringData.compute(name, (k, previous) -> previous != null ? previous.concatenate(extensionStringData) : extensionStringData);
             return this;
         }
 
         public Builder putTableData(ExtensionTableData extensionTableData) {
             data.tableData.add(extensionTableData);
+            return this;
+        }
+
+        public Builder putStatisticsData(ExtensionStatisticsData statisticsData) {
+            data.statisticsData.add(statisticsData);
             return this;
         }
 
