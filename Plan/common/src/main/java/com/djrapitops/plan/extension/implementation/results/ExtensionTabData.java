@@ -102,7 +102,6 @@ public class ExtensionTabData implements Comparable<ExtensionTabData> {
         return graphNames;
     }
 
-    // TODO Dto
     public List<ExtensionStatisticsData> getStatisticsData() {
         return statisticsData;
     }

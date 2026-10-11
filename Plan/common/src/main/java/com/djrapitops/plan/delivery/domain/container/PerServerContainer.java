@@ -82,7 +82,7 @@ public class PerServerContainer extends HashMap<ServerUUID, DataContainer> {
             return;
         }
 
-        ServerUUID serverUUID = session.getServerUUID();
+        ServerUUID serverUUID = session.serverUUID();
         DataContainer container = getOrDefault(serverUUID, new DynamicDataContainer());
         if (!container.supports(PerServerKeys.SESSIONS)) {
             container.putRawData(PerServerKeys.SESSIONS, new ArrayList<>());

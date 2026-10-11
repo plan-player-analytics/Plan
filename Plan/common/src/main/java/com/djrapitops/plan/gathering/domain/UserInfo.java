@@ -56,7 +56,7 @@ public class UserInfo {
     }
 
     /**
-     * @deprecated Join address is now stored in {@link FinishedSession#getExtraData()}, this method may become unreliable in the future.
+     * @deprecated Join address is now stored in {@link FinishedSession#extraData()}, this method may become unreliable in the future.
      */
     @Deprecated(since = "5.4 build 1722")
     public String getJoinAddress() {

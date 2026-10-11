@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Represents extension graph point data and metadata for displaying a spline graph.
+ *
  * @author AuroraLS3
  */
 public record ExtensionGraphDto(

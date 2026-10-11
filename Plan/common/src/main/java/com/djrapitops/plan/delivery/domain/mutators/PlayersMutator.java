@@ -57,8 +57,8 @@ public class PlayersMutator {
         return filterBy(
                 player -> player.getValue(PlayerKeys.SESSIONS)
                         .map(sessions -> sessions.stream().anyMatch(session -> {
-                            long start = session.getStart();
-                            long end = session.getEnd();
+                            long start = session.start();
+                            long end = session.end();
                             return after <= start && start <= before || after <= end && end <= before;
                         })).orElse(false)
         );
@@ -111,7 +111,7 @@ public class PlayersMutator {
 
         for (PlayerContainer player : players) {
             Optional<GeoInfo> mostRecent = GeoInfoMutator.forContainer(player).mostRecent();
-            geolocations.add(mostRecent.map(GeoInfo::getGeolocation).orElse("Unknown"));
+            geolocations.add(mostRecent.map(GeoInfo::geolocation).orElse("Unknown"));
         }
 
         return geolocations;
@@ -125,7 +125,7 @@ public class PlayersMutator {
                 continue;
             }
             List<Ping> pings = player.getValue(PlayerKeys.PING).orElse(new ArrayList<>());
-            String country = mostRecent.get().getGeolocation();
+            String country = mostRecent.get().geolocation();
             List<Ping> countryPings = pingPerCountry.computeIfAbsent(country, Lists::create);
             countryPings.addAll(new PingMutator(pings).filterByServer(serverUUID).all());
         }

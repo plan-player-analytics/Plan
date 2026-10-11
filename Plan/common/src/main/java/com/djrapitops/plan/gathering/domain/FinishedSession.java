@@ -26,6 +26,7 @@ import com.djrapitops.plan.utilities.java.OptionalArray;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.apache.commons.lang3.StringUtils;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -120,7 +121,7 @@ public record FinishedSession(UUID playerUUID, ServerUUID serverUUID, long start
     }
 
     @Override
-    public String toString() {
+    public @NonNull String toString() {
         return "FinishedSession{" +
                 "playerUUID=" + playerUUID +
                 ", serverUUID=" + serverUUID +

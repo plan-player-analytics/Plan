@@ -29,6 +29,7 @@ public record ExtensionTabDataDto(
         @Nullable(/* no tab was defined for provider */) TabInformationDto tabInformation,
         List<ExtensionValueDataDto> values,
         List<ExtensionTableDataDto> tableData,
+        List<ExtensionStatisticsDataDto> statisticsData,
         List<String> graphNames
 ) {
 
@@ -37,6 +38,7 @@ public record ExtensionTabDataDto(
                 new TabInformationDto(extensionTabData.getTabInformation()),
                 constructValues(extensionTabData.getValueOrder(), extensionTabData),
                 extensionTabData.getTableData().stream().map(ExtensionTableDataDto::new).toList(),
+                extensionTabData.getStatisticsData().stream().map(ExtensionStatisticsDataDto::new).toList(),
                 extensionTabData.getGraphNames()
         );
     }

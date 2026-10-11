@@ -66,7 +66,7 @@ public class PerServerContainerQuery implements Query<PerServerContainer> {
             ServerUUID serverUUID = entry.getKey();
             List<FinishedSession> serverSessions = entry.getValue();
             if (!serverSessions.isEmpty()) {
-                serverSessions.get(0).getExtraData().get(JoinAddress.class).map(JoinAddress::getAddress)
+                serverSessions.get(0).extraData().get(JoinAddress.class).map(JoinAddress::getAddress)
                         .ifPresent(address ->
                                 perServerContainer.putToContainerOfServer(serverUUID, PerServerKeys.JOIN_ADDRESS, address)
                         );

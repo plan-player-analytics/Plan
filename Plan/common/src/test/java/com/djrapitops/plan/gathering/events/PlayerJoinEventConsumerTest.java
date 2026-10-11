@@ -31,19 +31,18 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.storage.database.Database;
-import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.objects.*;
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.storage.database.sql.tables.WorldTable;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import extension.FullSystemExtension;
+import org.awaitility.Awaitility;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.awaitility.Awaitility;
 import utilities.TestConstants;
 import utilities.dagger.PlanPluginComponent;
 import utilities.mocks.objects.TestPlayerData;
@@ -192,7 +191,7 @@ class PlayerJoinEventConsumerTest {
     private void waitUntilDatabaseIsDone(Database database) {
         Awaitility.await()
                 .atMost(2, TimeUnit.SECONDS)
-                .until(() -> ((SQLDB) database).getTransactionQueueSize() < 1);
+                .until(() -> database.getTransactionQueueSize() < 1);
     }
 
     @Test
@@ -219,7 +218,7 @@ class PlayerJoinEventConsumerTest {
 
         List<String> expected = List.of("Nickname");
         List<String> result = database.query(NicknameQueries.fetchNicknameDataOfPlayer(TestConstants.PLAYER_ONE_UUID))
-                .stream().map(Nickname::getName)
+                .stream().map(Nickname::name)
                 .collect(Collectors.toList());
         assertEquals(expected, result);
     }

@@ -165,7 +165,7 @@ class ShutdownSaveTest {
         long endTime = System.currentTimeMillis();
         Collection<ActiveSession> activeSessions = SessionCache.getActiveSessions();
         for (FinishedSession session : underTest.finishSessions(activeSessions, endTime)) {
-            assertEquals(endTime, session.getEnd(), "One of the sessions had differing end time");
+            assertEquals(endTime, session.end(), "One of the sessions had differing end time");
         }
     }
 

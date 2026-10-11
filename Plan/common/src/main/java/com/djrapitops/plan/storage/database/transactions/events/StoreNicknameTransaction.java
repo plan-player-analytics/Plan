@@ -42,7 +42,7 @@ public class StoreNicknameTransaction extends ThrowawayTransaction {
 
     @Override
     protected boolean shouldBeExecuted() {
-        return !isNicknameCachedCheck.test(playerUUID, nickname.getName());
+        return !isNicknameCachedCheck.test(playerUUID, nickname.name());
     }
 
     @Override

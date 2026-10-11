@@ -51,7 +51,7 @@ public class ActiveSession {
     public FinishedSession toFinishedSessionFromStillActive() {
         updateState();
         FinishedSession finishedSession = toFinishedSession(System.currentTimeMillis());
-        finishedSession.getExtraData().put(ActiveSession.class, this);
+        finishedSession.extraData().put(ActiveSession.class, this);
         return finishedSession;
     }
 

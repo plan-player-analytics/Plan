@@ -258,7 +258,7 @@ public class DataUtilityCommands {
         Long lastSeen = player.getValue(PlayerKeys.LAST_SEEN).orElse(0L);
         List<GeoInfo> geoInfo = player.getValue(PlayerKeys.GEO_INFO).orElse(new ArrayList<>());
         Optional<GeoInfo> mostRecentGeoInfo = new GeoInfoMutator(geoInfo).mostRecent();
-        String geolocation = mostRecentGeoInfo.isPresent() ? mostRecentGeoInfo.get().getGeolocation() : "-";
+        String geolocation = mostRecentGeoInfo.isPresent() ? mostRecentGeoInfo.get().geolocation() : "-";
         SessionsMutator sessionsMutator = SessionsMutator.forContainer(player);
         String latestJoinAddress = sessionsMutator.latestSession()
                 .flatMap(session -> session.getExtraData(JoinAddress.class))

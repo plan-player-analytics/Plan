@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 public record TableDto(
         List<String> columns,
@@ -61,13 +60,13 @@ public record TableDto(
                     }
                     return mapped.toArray(new TableCellDto[0]);
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static List<List<TableCellDto>> mapToRows(List<Object[]> rows, TableColumnFormat[] tableColumnFormats, List<String> columns) {
         return mapToRows(rows, tableColumnFormats).stream()
                 .map(row -> constructRow(columns, row))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static List<TableCellDto> constructRow(List<String> columns, TableCellDto[] row) {
