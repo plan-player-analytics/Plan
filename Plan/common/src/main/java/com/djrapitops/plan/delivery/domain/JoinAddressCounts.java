@@ -19,24 +19,10 @@ package com.djrapitops.plan.delivery.domain;
 import java.util.List;
 
 /**
+ * Represents a count of join addresses on a specific date.
+ *
  * @author AuroraLS3
  */
-public class JoinAddressCounts implements DateHolder {
+public record JoinAddressCounts(long date, List<JoinAddressCount> joinAddresses) implements DateHolder {
 
-    private final long date;
-    private final List<JoinAddressCount> joinAddresses;
-
-    public JoinAddressCounts(long date, List<JoinAddressCount> joinAddresses) {
-        this.date = date;
-        this.joinAddresses = joinAddresses;
-    }
-
-    @Override
-    public long getDate() {
-        return date;
-    }
-
-    public List<JoinAddressCount> getJoinAddresses() {
-        return joinAddresses;
-    }
 }

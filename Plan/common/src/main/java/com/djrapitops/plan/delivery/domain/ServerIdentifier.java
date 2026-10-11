@@ -20,51 +20,14 @@ import com.djrapitops.plan.identification.ServerUUID;
 
 import java.util.Objects;
 
-public class ServerIdentifier {
-
-    private final ServerUUID uuid;
-    private final String name;
-
-    public ServerIdentifier(ServerUUID uuid, String name) {
-        this.uuid = uuid;
-        this.name = name;
-    }
+public record ServerIdentifier(ServerUUID uuid, String name) {
 
     public ServerIdentifier(ServerUUID serverUUID, ServerName serverName) {
         this(serverUUID, serverName.get());
     }
 
-    public ServerUUID getUuid() {
-        return uuid;
-    }
-
-    public String getName() {
-        return name;
-    }
-
     public boolean isSame(ServerIdentifier that) {
-        return Objects.equals(getUuid(), that.getUuid()) && Objects.equals(getName(), that.getName());
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ServerIdentifier that = (ServerIdentifier) o;
-        return Objects.equals(getUuid(), that.getUuid()) && Objects.equals(getName(), that.getName());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getUuid(), getName());
-    }
-
-    @Override
-    public String toString() {
-        return "ServerIdentifier{" +
-                "uuid=" + uuid +
-                ", name='" + name + '\'' +
-                '}';
+        return Objects.equals(uuid(), that.uuid()) && Objects.equals(name(), that.name());
     }
 
     public String toJson() {

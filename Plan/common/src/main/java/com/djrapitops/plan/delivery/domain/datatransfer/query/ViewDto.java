@@ -68,7 +68,7 @@ public class ViewDto {
 
     public List<ServerUUID> getServerUUIDs() {
         return servers.stream()
-                .map(ServerDto::getServerUUID)
+                .map(ServerDto::serverUUID)
                 .map(ServerUUID::fromString)
                 .collect(Collectors.toList());
     }

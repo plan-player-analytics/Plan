@@ -80,7 +80,7 @@ public class PlayersOnlineCurrent implements Datapoint<Integer> {
                 return Optional.of(serverSensor.getOnlinePlayerCount());
             }
             return dbSystem.getDatabase().query(TPSQueries.fetchLatestTPSEntryForServer(serverUUID))
-                    .filter(tps -> tps.getDate() > System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(2))
+                    .filter(tps -> tps.date() > System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(2))
                     .map(TPS::getPlayers);
         }
 
@@ -97,7 +97,7 @@ public class PlayersOnlineCurrent implements Datapoint<Integer> {
                 addedValues = true;
             } else {
                 Optional<Integer> found = dbSystem.getDatabase().query(TPSQueries.fetchLatestTPSEntryForServer(serverUUID))
-                        .filter(tps -> tps.getDate() > System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(2))
+                        .filter(tps -> tps.date() > System.currentTimeMillis() - TimeUnit.MINUTES.toMillis(2))
                         .map(TPS::getPlayers);
                 total += found.orElse(0);
                 if (!addedValues) addedValues = found.isPresent();

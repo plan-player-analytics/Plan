@@ -88,25 +88,25 @@ public class KillsTable {
     }
 
     public static void addSessionKillsToBatch(PreparedStatement statement, FinishedSession session) throws SQLException {
-        UUID playerUUID = session.getPlayerUUID();
-        ServerUUID serverUUID = session.getServerUUID();
+        UUID playerUUID = session.playerUUID();
+        ServerUUID serverUUID = session.serverUUID();
 
-        Optional<PlayerKills> playerKills = session.getExtraData().get(PlayerKills.class);
+        Optional<PlayerKills> playerKills = session.extraData().get(PlayerKills.class);
         if (playerKills.isEmpty()) return;
 
         for (PlayerKill kill : playerKills.get().asList()) {
             // Session ID select statement parameters
             statement.setString(1, playerUUID.toString());
             statement.setString(2, serverUUID.toString());
-            statement.setLong(3, session.getStart());
-            statement.setLong(4, session.getEnd());
+            statement.setLong(3, session.start());
+            statement.setLong(4, session.end());
 
             // Kill data
             statement.setString(5, playerUUID.toString());
-            statement.setString(6, kill.getVictim().getUuid().toString());
+            statement.setString(6, kill.victim().getUuid().toString());
             statement.setString(7, serverUUID.toString());
-            statement.setLong(8, kill.getDate());
-            statement.setString(9, StringUtils.truncate(kill.getWeapon(), WEAPON_COLUMN_LENGTH));
+            statement.setLong(8, kill.date());
+            statement.setString(9, StringUtils.truncate(kill.weapon(), WEAPON_COLUMN_LENGTH));
             statement.addBatch();
         }
     }

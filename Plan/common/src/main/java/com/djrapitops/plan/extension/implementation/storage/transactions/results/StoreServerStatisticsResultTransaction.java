@@ -171,6 +171,7 @@ public class StoreServerStatisticsResultTransaction extends Transaction {
                     }
                 }
             });
+            commitMidTransaction();
 
             // Re-fetch mapping after inserting missing keys
             statisticNameToId = query(db -> db.queryMap(

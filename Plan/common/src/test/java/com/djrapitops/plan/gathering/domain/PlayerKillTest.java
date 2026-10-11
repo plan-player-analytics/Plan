@@ -38,23 +38,23 @@ class PlayerKillTest {
 
     @Test
     void victimUUIDIsReturned() {
-        assertEquals(testUUID, underTest.getVictim().getUuid());
+        assertEquals(testUUID, underTest.victim().getUuid());
     }
 
     @Test
     void dateIsReturned() {
-        assertEquals(100L, underTest.getDate());
+        assertEquals(100L, underTest.date());
     }
 
     @Test
     void weaponIsReturned() {
-        assertEquals(weapon, underTest.getWeapon());
+        assertEquals(weapon, underTest.weapon());
     }
 
     @Test
     void victimFound() {
         String expectedName = "player_name";
         PlayerKill underTest = TestData.getPlayerKill(testUUID, testUUID, TestConstants.SERVER_UUID, weapon, 100L);
-        assertEquals(expectedName, underTest.getVictim().getName());
+        assertEquals(expectedName, underTest.victim().getName());
     }
 }

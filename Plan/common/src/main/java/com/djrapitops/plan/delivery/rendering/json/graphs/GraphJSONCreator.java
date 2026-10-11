@@ -521,7 +521,7 @@ public class GraphJSONCreator {
 
                     removeFilteredAddresses(addresses, filteredJoinAddresses);
 
-                    return new JoinAddressCounts(addressesOnDay.getDate(), addresses);
+                    return new JoinAddressCounts(addressesOnDay.date(), addresses);
                 })
                 .sorted(new DateHolderOldestComparator())
                 .collect(Collectors.toList());

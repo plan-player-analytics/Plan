@@ -63,13 +63,13 @@ public class DataStoreQueries {
         return new ExecStatement(SessionsTable.INSERT_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, session.getPlayerUUID().toString());
-                statement.setLong(2, session.getStart());
-                statement.setLong(3, session.getEnd());
+                statement.setString(1, session.playerUUID().toString());
+                statement.setLong(2, session.start());
+                statement.setLong(3, session.end());
                 statement.setInt(4, session.getDeathCount());
                 statement.setInt(5, session.getMobKillCount());
-                statement.setLong(6, session.getAfkTime());
-                statement.setString(7, session.getServerUUID().toString());
+                statement.setLong(6, session.afkTime());
+                statement.setString(7, session.serverUUID().toString());
                 statement.setString(8, session.getExtraData(JoinAddress.class)
                         .map(JoinAddress::getAddress).orElse(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP));
             }
@@ -124,9 +124,9 @@ public class DataStoreQueries {
         return new ExecStatement(GeoInfoTable.UPDATE_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, geoInfo.getDate());
+                statement.setLong(1, geoInfo.date());
                 statement.setString(2, playerUUID.toString());
-                statement.setString(3, geoInfo.getGeolocation());
+                statement.setString(3, geoInfo.geolocation());
             }
         };
     }
@@ -136,8 +136,8 @@ public class DataStoreQueries {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
-                statement.setString(2, geoInfo.getGeolocation());
-                statement.setLong(3, geoInfo.getDate());
+                statement.setString(2, geoInfo.geolocation());
+                statement.setLong(3, geoInfo.date());
             }
         };
     }
@@ -230,7 +230,7 @@ public class DataStoreQueries {
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
                 statement.setString(2, serverUUID.toString());
-                statement.setLong(3, ping.getDate());
+                statement.setLong(3, ping.date());
                 statement.setInt(4, ping.getMin());
                 statement.setInt(5, ping.getMax());
                 statement.setDouble(6, ping.getAverage());
@@ -250,7 +250,7 @@ public class DataStoreQueries {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, serverUUID.toString());
-                statement.setLong(2, tps.getDate());
+                statement.setLong(2, tps.date());
                 statement.setDouble(3, tps.getTicksPerSecond());
                 statement.setInt(4, tps.getPlayers());
                 statement.setDouble(5, tps.getCPUUsage());
@@ -286,10 +286,10 @@ public class DataStoreQueries {
         return new ExecStatement(NicknamesTable.UPDATE_STATEMENT) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setLong(1, nickname.getDate());
-                statement.setString(2, nickname.getName());
+                statement.setLong(1, nickname.date());
+                statement.setString(2, nickname.name());
                 statement.setString(3, playerUUID.toString());
-                statement.setString(4, nickname.getServerUUID().toString());
+                statement.setString(4, nickname.serverUUID().toString());
             }
         };
     }
@@ -299,9 +299,9 @@ public class DataStoreQueries {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setString(1, playerUUID.toString());
-                statement.setString(2, nickname.getServerUUID().toString());
-                statement.setString(3, nickname.getName());
-                statement.setLong(4, nickname.getDate());
+                statement.setString(2, nickname.serverUUID().toString());
+                statement.setString(3, nickname.name());
+                statement.setLong(4, nickname.date());
             }
         };
     }

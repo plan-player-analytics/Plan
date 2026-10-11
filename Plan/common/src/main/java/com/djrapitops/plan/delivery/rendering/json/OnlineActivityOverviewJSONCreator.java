@@ -220,8 +220,8 @@ public class OnlineActivityOverviewJSONCreator implements ServerTabJSONCreator<M
 
         PlayersOnlineResolver playersOnlineResolver = new PlayersOnlineResolver(new TPSMutator(tpsData));
         SessionsMutator firstSessions = sessions.filterBy(session -> {
-            long registered = registerDates.getOrDefault(session.getPlayerUUID(), -501L);
-            long start = session.getDate();
+            long registered = registerDates.getOrDefault(session.playerUUID(), -501L);
+            long start = session.date();
             return Math.abs(registered - start) < 500L;
         });
         SessionsMutator firstSessionsBefore = firstSessions.filterSessionsBetween(monthAgo, halfMonthAgo);

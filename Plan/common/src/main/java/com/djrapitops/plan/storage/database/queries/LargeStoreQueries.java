@@ -77,8 +77,8 @@ public class LargeStoreQueries {
                     UUID playerUUID = playerEntry.getKey();
                     // Every GeoInfo
                     for (GeoInfo info : playerEntry.getValue()) {
-                        String geoLocation = info.getGeolocation();
-                        long lastUsed = info.getDate();
+                        String geoLocation = info.geolocation();
+                        long lastUsed = info.date();
 
                         statement.setString(1, playerUUID.toString());
                         statement.setString(2, geoLocation);
@@ -114,8 +114,8 @@ public class LargeStoreQueries {
                         for (Nickname nickname : nicknames) {
                             statement.setString(1, uuid.toString());
                             statement.setString(2, serverUUID.toString());
-                            statement.setString(3, nickname.getName());
-                            statement.setLong(4, nickname.getDate());
+                            statement.setString(3, nickname.name());
+                            statement.setLong(4, nickname.date());
                             statement.addBatch();
                         }
                     }
@@ -194,7 +194,7 @@ public class LargeStoreQueries {
                     List<TPS> tpsList = entry.getValue();
                     for (TPS tps : tpsList) {
                         statement.setString(1, serverUUID.toString());
-                        statement.setLong(2, tps.getDate());
+                        statement.setLong(2, tps.date());
                         statement.setDouble(3, tps.getTicksPerSecond());
                         statement.setInt(4, tps.getPlayers());
                         statement.setDouble(5, tps.getCPUUsage());
@@ -297,13 +297,13 @@ public class LargeStoreQueries {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (FinishedSession session : sessions) {
-                    statement.setString(1, session.getPlayerUUID().toString());
-                    statement.setLong(2, session.getStart());
-                    statement.setLong(3, session.getEnd());
+                    statement.setString(1, session.playerUUID().toString());
+                    statement.setLong(2, session.start());
+                    statement.setLong(3, session.end());
                     statement.setInt(4, session.getDeathCount());
                     statement.setInt(5, session.getMobKillCount());
-                    statement.setLong(6, session.getAfkTime());
-                    statement.setString(7, session.getServerUUID().toString());
+                    statement.setLong(6, session.afkTime());
+                    statement.setString(7, session.serverUUID().toString());
                     statement.setString(8, StringUtils.truncate(session.getExtraData(JoinAddress.class)
                             .map(JoinAddress::getAddress).orElse(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP), JoinAddressTable.JOIN_ADDRESS_MAX_LENGTH));
                     statement.addBatch();
@@ -333,7 +333,7 @@ public class LargeStoreQueries {
             @Override
             public void prepare(PreparedStatement statement) {
                 sessions.stream()
-                        .map(FinishedSession::getExtraData)
+                        .map(FinishedSession::extraData)
                         .map(extraData -> extraData.get(JoinAddress.class))
                         .filter(Optional::isPresent)
                         .map(Optional::get)
@@ -355,7 +355,7 @@ public class LargeStoreQueries {
 
     private static Executable storeAllWorldNames(Collection<FinishedSession> sessions, Set<World> existingWorlds) {
         Set<World> worlds = sessions.stream().flatMap(session -> {
-                    ServerUUID serverUUID = session.getServerUUID();
+                    ServerUUID serverUUID = session.serverUUID();
                     return session.getExtraData(WorldTimes.class)
                             .map(WorldTimes::getWorldTimes)
                             .map(Map::keySet)
@@ -371,8 +371,8 @@ public class LargeStoreQueries {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (World world : worlds) {
-                    statement.setString(1, world.getWorldName());
-                    statement.setString(2, world.getServerUUID().toString());
+                    statement.setString(1, world.worldName());
+                    statement.setString(2, world.serverUUID().toString());
                     statement.addBatch();
                 }
             }
@@ -418,7 +418,7 @@ public class LargeStoreQueries {
                     List<Ping> pings = entry.getValue();
                     for (Ping ping : pings) {
                         ServerUUID serverUUID = ping.getServerUUID();
-                        long date = ping.getDate();
+                        long date = ping.date();
                         int minPing = ping.getMin();
                         int maxPing = ping.getMax();
                         double avgPing = ping.getAverage();

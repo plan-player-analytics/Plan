@@ -73,7 +73,7 @@ public class StoreGeoInfoTransaction extends Transaction {
     @Override
     protected void performOperations() {
         if (geoInfo == null) geoInfo = createGeoInfo();
-        if (geoInfo.getGeolocation() == null) return; // Don't save null geolocation.
+        if (geoInfo.geolocation() == null) return; // Don't save null geolocation.
 
         if (Boolean.FALSE.equals(query(PlayerFetchQueries.isPlayerRegistered(playerUUID)))) {
             registerPlayer();
@@ -102,7 +102,7 @@ public class StoreGeoInfoTransaction extends Transaction {
 
     private void registerPlayer() {
         try {
-            execute(DataStoreQueries.registerBaseUser(playerUUID, geoInfo.getDate(), playerUUID.toString()));
+            execute(DataStoreQueries.registerBaseUser(playerUUID, geoInfo.date(), playerUUID.toString()));
         } catch (DBOpException ignored) {
             // Ignored. Likely that another transaction managed to insert first.
         }

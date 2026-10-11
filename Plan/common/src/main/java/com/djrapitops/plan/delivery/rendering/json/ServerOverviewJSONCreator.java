@@ -142,9 +142,9 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
         numbers.put("online_players", getOnlinePlayers(serverUUID, db));
         Optional<DateObj<Integer>> lastPeak = db.query(TPSQueries.fetchPeakPlayerCount(serverUUID, twoDaysAgo, Long.MAX_VALUE));
         Optional<DateObj<Integer>> allTimePeak = db.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID));
-        numbers.put("last_peak_date", lastPeak.map(DateObj::getDate).map(Object.class::cast).orElse("-"));
+        numbers.put("last_peak_date", lastPeak.map(DateObj::date).map(Object.class::cast).orElse("-"));
         numbers.put("last_peak_players", lastPeak.map(dateObj -> dateObj.getValue().toString()).orElse("-"));
-        numbers.put("best_peak_date", allTimePeak.map(DateObj::getDate).map(Object.class::cast).orElse("-"));
+        numbers.put("best_peak_date", allTimePeak.map(DateObj::date).map(Object.class::cast).orElse("-"));
         numbers.put("best_peak_players", allTimePeak.map(dateObj -> dateObj.getValue().toString()).orElse("-"));
         Long totalPlaytime = db.query(SessionQueries.playtime(0L, now, serverUUID));
         numbers.put("playtime", totalPlaytime);
@@ -164,8 +164,8 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
         return serverUUID.equals(serverInfo.getServerUUID())
                 ? serverSensor.getOnlinePlayerCount()
                 : db.query(TPSQueries.fetchLatestTPSEntryForServer(serverUUID))
-                  .map(TPS::getPlayers).map(Object::toString)
-                  .orElse(GenericLang.UNKNOWN.getKey());
+                .map(TPS::getPlayers).map(Object::toString)
+                .orElse(GenericLang.UNKNOWN.getKey());
     }
 
     private Map<String, Object> createWeeksMap(ServerUUID serverUUID) {

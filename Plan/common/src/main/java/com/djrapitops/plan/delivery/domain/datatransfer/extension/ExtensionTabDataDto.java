@@ -19,24 +19,26 @@ package com.djrapitops.plan.delivery.domain.datatransfer.extension;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.extension.FormatType;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
+import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 
-public class ExtensionTabDataDto {
-
-    private final TabInformationDto tabInformation; // Can be null in case where no tab was defined for provider.
-    private final List<ExtensionValueDataDto> values;
-    private final List<ExtensionTableDataDto> tableData;
-    private final List<String> graphNames;
+public record ExtensionTabDataDto(
+        @Nullable(/* no tab was defined for provider */) TabInformationDto tabInformation,
+        List<ExtensionValueDataDto> values,
+        List<ExtensionTableDataDto> tableData,
+        List<String> graphNames
+) {
 
     public ExtensionTabDataDto(ExtensionTabData extensionTabData) {
-        this.tabInformation = new TabInformationDto(extensionTabData.getTabInformation());
-        values = constructValues(extensionTabData.getValueOrder(), extensionTabData);
-        tableData = extensionTabData.getTableData().stream().map(ExtensionTableDataDto::new).toList();
-        graphNames = extensionTabData.getGraphNames();
+        this(
+                new TabInformationDto(extensionTabData.getTabInformation()),
+                constructValues(extensionTabData.getValueOrder(), extensionTabData),
+                extensionTabData.getTableData().stream().map(ExtensionTableDataDto::new).toList(),
+                extensionTabData.getGraphNames()
+        );
     }
 
     public static Optional<ExtensionValueDataDto> mapToValue(ExtensionTabData tabData, String key) {
@@ -57,54 +59,11 @@ public class ExtensionTabDataDto {
         return tabData.getComponent(key).map(data -> new ExtensionValueDataDto(data.getDescription(), "COMPONENT", data.getFormattedValue()));
     }
 
-    private List<ExtensionValueDataDto> constructValues(List<String> order, ExtensionTabData tabData) {
-
+    private static List<ExtensionValueDataDto> constructValues(List<String> order, ExtensionTabData tabData) {
         List<ExtensionValueDataDto> extensionValues = new ArrayList<>();
         for (String key : order) {
             mapToValue(tabData, key).ifPresent(extensionValues::add);
         }
         return extensionValues;
-    }
-
-    public TabInformationDto getTabInformation() {
-        return tabInformation;
-    }
-
-    public List<ExtensionValueDataDto> getValues() {
-        return values;
-    }
-
-    public List<ExtensionTableDataDto> getTableData() {
-        return tableData;
-    }
-
-    public List<String> getGraphNames() {
-        return graphNames;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ExtensionTabDataDto that = (ExtensionTabDataDto) o;
-        return Objects.equals(getTabInformation(), that.getTabInformation())
-                && Objects.equals(getValues(), that.getValues())
-                && Objects.equals(getTableData(), that.getTableData())
-                && Objects.equals(getGraphNames(), that.getGraphNames());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getTabInformation(), getValues(), getTableData(), getGraphNames());
-    }
-
-    @Override
-    public String toString() {
-        return "ExtensionTabDataDto{" +
-                "tabInformation=" + tabInformation +
-                ", values=" + values +
-                ", tableData=" + tableData +
-                ", graphNames=" + graphNames +
-                '}';
     }
 }

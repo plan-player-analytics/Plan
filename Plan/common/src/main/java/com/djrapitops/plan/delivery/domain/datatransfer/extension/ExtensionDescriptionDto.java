@@ -18,65 +18,21 @@ package com.djrapitops.plan.delivery.domain.datatransfer.extension;
 
 import com.djrapitops.plan.extension.implementation.results.ExtensionDescription;
 
-import java.util.Objects;
-
-public class ExtensionDescriptionDto {
-
-    private final String name;
-    private final String text;
-    private final String description;
-    private final IconDto icon;
-    private final int priority;
+public record ExtensionDescriptionDto(
+        String name,
+        String text,
+        String description,
+        IconDto icon,
+        int priority
+) {
 
     public ExtensionDescriptionDto(ExtensionDescription description) {
-        this.name = description.getName();
-        this.text = description.getText();
-        this.description = description.getDescription().orElse(null);
-        this.icon = new IconDto(description.getIcon());
-        this.priority = description.getPriority();
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getText() {
-        return text;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public IconDto getIcon() {
-        return icon;
-    }
-
-    public int getPriority() {
-        return priority;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ExtensionDescriptionDto that = (ExtensionDescriptionDto) o;
-        return getPriority() == that.getPriority() && Objects.equals(getName(), that.getName()) && Objects.equals(getText(), that.getText()) && Objects.equals(getDescription(), that.getDescription()) && Objects.equals(getIcon(), that.getIcon());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getName(), getText(), getDescription(), getIcon(), getPriority());
-    }
-
-    @Override
-    public String toString() {
-        return "ExtensionDescriptionDto{" +
-                "name='" + name + '\'' +
-                ", text='" + text + '\'' +
-                ", description='" + description + '\'' +
-                ", icon=" + icon +
-                ", priority=" + priority +
-                '}';
+        this(
+                description.getName(),
+                description.getText(),
+                description.getDescription().orElse(null),
+                new IconDto(description.getIcon()),
+                description.getPriority()
+        );
     }
 }

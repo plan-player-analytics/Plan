@@ -39,7 +39,7 @@ public class DateHoldersMutator<T extends DateHolder> {
 
         long sectionLength = TimeUnit.MINUTES.toMillis(1L);
         for (T holder : dateHolders) {
-            long date = holder.getDate();
+            long date = holder.date();
             long startOfSection = date - (date % sectionLength);
 
             List<T> list = map.computeIfAbsent(startOfSection, Lists::create);
@@ -57,7 +57,7 @@ public class DateHoldersMutator<T extends DateHolder> {
         }
 
         for (T holder : dateHolders) {
-            long date = holder.getDate();
+            long date = holder.date();
             long dateWithOffset = date + timeZone.getOffset(date);
             long startOfSection = dateWithOffset - (dateWithOffset % twentyFourHours);
 

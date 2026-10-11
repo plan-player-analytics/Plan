@@ -29,7 +29,7 @@ public class TPSComparator implements Comparator<TPS> {
 
     @Override
     public int compare(TPS o1, TPS o2) {
-        return Long.compare(o1.getDate(), o2.getDate());
+        return Long.compare(o1.date(), o2.date());
     }
 
 }

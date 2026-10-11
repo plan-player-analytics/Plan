@@ -52,12 +52,12 @@ class ComparatorTest {
     void sessionDataComparator() {
         List<FinishedSession> sessions = RandomData.randomSessions();
 
-        List<Long> expected = sessions.stream().map(FinishedSession::getStart)
+        List<Long> expected = sessions.stream().map(FinishedSession::start)
                 .sorted(Long::compare).collect(Collectors.toList());
         Collections.reverse(expected);
 
         sessions.sort(new SessionStartComparator());
-        List<Long> result = Lists.map(sessions, FinishedSession::getStart);
+        List<Long> result = Lists.map(sessions, FinishedSession::start);
 
         assertEquals(expected, result);
     }
@@ -66,11 +66,11 @@ class ComparatorTest {
     void tpsComparator() {
         List<TPS> tpsList = RandomData.randomTPS();
 
-        List<Long> expected = tpsList.stream().map(TPS::getDate)
+        List<Long> expected = tpsList.stream().map(TPS::date)
                 .sorted(Long::compare).collect(Collectors.toList());
 
         tpsList.sort(new TPSComparator());
-        List<Long> result = tpsList.stream().map(TPS::getDate).collect(Collectors.toList());
+        List<Long> result = tpsList.stream().map(TPS::date).collect(Collectors.toList());
 
         assertEquals(expected, result);
     }
@@ -78,15 +78,15 @@ class ComparatorTest {
     @Test
     void stringLengthComparator() {
         List<Integer> result = Stream.of(
-                RandomData.randomString(10),
-                RandomData.randomString(3),
-                RandomData.randomString(4),
-                RandomData.randomString(20),
-                RandomData.randomString(7),
-                RandomData.randomString(4),
-                RandomData.randomString(86),
-                RandomData.randomString(6)
-        )
+                        RandomData.randomString(10),
+                        RandomData.randomString(3),
+                        RandomData.randomString(4),
+                        RandomData.randomString(20),
+                        RandomData.randomString(7),
+                        RandomData.randomString(4),
+                        RandomData.randomString(86),
+                        RandomData.randomString(6)
+                )
                 .sorted(new StringLengthComparator())
                 .map(String::length)
                 .collect(Collectors.toList());
@@ -119,12 +119,12 @@ class ComparatorTest {
     void geoInfoComparator() {
         List<GeoInfo> geoInfos = RandomData.randomGeoInfo();
 
-        List<Long> expected = geoInfos.stream().map(GeoInfo::getDate)
+        List<Long> expected = geoInfos.stream().map(GeoInfo::date)
                 .sorted(Long::compare).collect(Collectors.toList());
         Collections.reverse(expected);
 
         geoInfos.sort(new GeoInfoComparator());
-        List<Long> result = geoInfos.stream().map(GeoInfo::getDate).collect(Collectors.toList());
+        List<Long> result = geoInfos.stream().map(GeoInfo::date).collect(Collectors.toList());
         assertEquals(expected, result);
     }
 }

@@ -62,7 +62,7 @@ public class SessionsMutator {
     public static Map<UUID, List<FinishedSession>> sortByPlayers(List<FinishedSession> sessions) {
         Map<UUID, List<FinishedSession>> sorted = new HashMap<>();
         for (FinishedSession session : sessions) {
-            UUID playerUUID = session.getPlayerUUID();
+            UUID playerUUID = session.playerUUID();
             List<FinishedSession> playerSessions = sorted.computeIfAbsent(playerUUID, Lists::create);
             playerSessions.add(session);
             sorted.put(playerUUID, playerSessions);
@@ -73,7 +73,7 @@ public class SessionsMutator {
     public static Map<ServerUUID, List<FinishedSession>> sortByServers(List<FinishedSession> sessions) {
         Map<ServerUUID, List<FinishedSession>> sorted = new HashMap<>();
         for (FinishedSession session : sessions) {
-            ServerUUID serverUUID = session.getServerUUID();
+            ServerUUID serverUUID = session.serverUUID();
             List<FinishedSession> serverSessions = sorted.computeIfAbsent(serverUUID, Lists::create);
             serverSessions.add(session);
         }
@@ -83,9 +83,9 @@ public class SessionsMutator {
     public static Map<ServerUUID, TreeMap<Long, FinishedSession>> sortByServersToMaps(List<FinishedSession> sessions) {
         Map<ServerUUID, TreeMap<Long, FinishedSession>> sorted = new HashMap<>();
         for (FinishedSession session : sessions) {
-            ServerUUID serverUUID = session.getServerUUID();
+            ServerUUID serverUUID = session.serverUUID();
             TreeMap<Long, FinishedSession> serverSessions = sorted.getOrDefault(serverUUID, new TreeMap<>());
-            serverSessions.put(session.getDate(), session);
+            serverSessions.put(session.date(), session);
             sorted.put(serverUUID, serverSessions);
         }
         return sorted;
@@ -110,7 +110,7 @@ public class SessionsMutator {
 
     public SessionsMutator filterPlayedOnServer(ServerUUID serverUUID) {
         return filterBy(session ->
-                session.getServerUUID().equals(serverUUID)
+                session.serverUUID().equals(serverUUID)
         );
     }
 
@@ -155,7 +155,7 @@ public class SessionsMutator {
 
     public long toAfkTime() {
         return sessions.stream()
-                .mapToLong(FinishedSession::getAfkTime)
+                .mapToLong(FinishedSession::afkTime)
                 .sum();
     }
 
@@ -167,7 +167,7 @@ public class SessionsMutator {
 
     public long toLastSeen() {
         return sessions.stream()
-                .mapToLong(session -> Math.max(session.getStart(), session.getEnd())).max()
+                .mapToLong(session -> Math.max(session.start(), session.end())).max()
                 .orElse(-1);
     }
 
@@ -203,15 +203,15 @@ public class SessionsMutator {
 
     public int toUniquePlayers() {
         return (int) sessions.stream()
-                .map(FinishedSession::getPlayerUUID)
+                .map(FinishedSession::playerUUID)
                 .distinct()
                 .count();
     }
 
     private Predicate<FinishedSession> getBetweenPredicate(long after, long before) {
         return session -> {
-            long start = session.getStart();
-            long end = session.getEnd();
+            long start = session.start();
+            long end = session.end();
             return after <= end && start <= before;
         };
     }
@@ -231,13 +231,13 @@ public class SessionsMutator {
 
     public List<Long> toSessionStarts() {
         return sessions.stream()
-                .map(FinishedSession::getStart)
+                .map(FinishedSession::start)
                 .sorted()
                 .collect(Collectors.toList());
     }
 
     public double toAveragePlayersOnline(PlayersOnlineResolver playersOnlineResolver) {
-        return sessions.stream().map(session -> playersOnlineResolver.getOnlineOn(session.getDate()))
+        return sessions.stream().map(session -> playersOnlineResolver.getOnlineOn(session.date()))
                 .filter(Optional::isPresent)
                 .mapToDouble(Optional::get)
                 .average().orElse(0.0);
@@ -269,8 +269,8 @@ public class SessionsMutator {
     ) {
         return Lists.map(sessions, session -> {
             Map<String, Object> sessionMap = new HashMap<>();
-            String playerUUID = session.getPlayerUUID().toString();
-            String serverUUID = session.getServerUUID().toString();
+            String playerUUID = session.playerUUID().toString();
+            String serverUUID = session.serverUUID().toString();
             String playerName = session.getExtraData(PlayerName.class).map(PlayerName::get).orElse(playerUUID);
             String serverName = session.getExtraData(ServerName.class).map(ServerName::get).orElse(serverUUID);
             sessionMap.put("player_name", playerName);
@@ -281,11 +281,11 @@ public class SessionsMutator {
             sessionMap.put("server_uuid", serverUUID);
             sessionMap.put("name", nameFunction.apply(sessionMap));
             sessionMap.put("online", session.getExtraData(ActiveSession.class).isPresent());
-            sessionMap.put("start", session.getStart());
-            sessionMap.put("end", session.getEnd());
+            sessionMap.put("start", session.start());
+            sessionMap.put("end", session.end());
             sessionMap.put("most_used_world", worldAliasSettings.getLongestWorldPlayed(session));
             sessionMap.put("length", session.getLength());
-            sessionMap.put("afk_time", session.getAfkTime());
+            sessionMap.put("afk_time", session.afkTime());
             sessionMap.put("mob_kills", session.getMobKillCount());
             sessionMap.put("deaths", session.getDeathCount());
             sessionMap.put("player_kills", session.getExtraData(PlayerKills.class)
@@ -300,7 +300,7 @@ public class SessionsMutator {
                     .map(JoinAddress::getAddress).orElse("-"));
 
             session.getExtraData(AveragePing.class).ifPresent(averagePing ->
-                    sessionMap.put("avg_ping", averagePing.getValue())
+                    sessionMap.put("avg_ping", averagePing.value())
             );
             return sessionMap;
         });

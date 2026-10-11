@@ -20,7 +20,6 @@ import com.djrapitops.plan.delivery.domain.DateHolder;
 import com.djrapitops.plan.delivery.domain.PlayerIdentifier;
 import com.djrapitops.plan.delivery.domain.ServerIdentifier;
 
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -28,37 +27,11 @@ import java.util.UUID;
  *
  * @author AuroraLS3
  */
-public class PlayerKill implements DateHolder {
-
-    private final Killer killer;
-    private final Victim victim;
-    private final String weapon;
-    private final long date;
-    private final ServerIdentifier server;
+public record PlayerKill(Killer killer, Victim victim, String weapon, long date,
+                         ServerIdentifier server) implements DateHolder {
 
     public PlayerKill(Killer killer, Victim victim, ServerIdentifier server, String weapon, long date) {
-        this.killer = killer;
-        this.victim = victim;
-        this.weapon = weapon;
-        this.date = date;
-        this.server = server;
-    }
-
-    public Killer getKiller() {
-        return killer;
-    }
-
-    public Victim getVictim() {
-        return victim;
-    }
-
-    public ServerIdentifier getServer() {
-        return server;
-    }
-
-    @Override
-    public long getDate() {
-        return date;
+        this(killer, victim, weapon, date, server);
     }
 
     /**
@@ -66,25 +39,9 @@ public class PlayerKill implements DateHolder {
      *
      * @return For example DIAMOND_SWORD
      */
-    public String getWeapon() {
+    @Override
+    public String weapon() {
         return weapon;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PlayerKill that = (PlayerKill) o;
-        return date == that.date &&
-                Objects.equals(killer, that.killer) &&
-                Objects.equals(victim, that.victim) &&
-                Objects.equals(server, that.server) &&
-                Objects.equals(weapon, that.weapon);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(killer, victim, server, date, weapon);
     }
 
     @Override

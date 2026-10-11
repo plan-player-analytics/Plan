@@ -39,7 +39,7 @@ public class Point {
 
     public static <V extends Number> Point fromDateObj(DateObj<V> dateObj) {
         V value = dateObj.getValue();
-        return new Point(dateObj.getDate(), value != null ? value.doubleValue() : null);
+        return new Point(dateObj.date(), value != null ? value.doubleValue() : null);
     }
 
     public double getX() {

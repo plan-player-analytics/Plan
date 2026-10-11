@@ -18,50 +18,13 @@ package com.djrapitops.plan.delivery.domain.datatransfer.extension;
 
 import com.djrapitops.plan.extension.implementation.results.ExtensionDescription;
 
-import java.util.Objects;
-
-public class ExtensionValueDataDto {
-
-    private final ExtensionDescriptionDto description;
-    private final String type;
-    private final Object value;
+public record ExtensionValueDataDto(
+        ExtensionDescriptionDto description,
+        String type,
+        Object value
+) {
 
     public ExtensionValueDataDto(ExtensionDescription description, String type, Object value) {
-        this.description = new ExtensionDescriptionDto(description);
-        this.type = type;
-        this.value = value;
-    }
-
-    public ExtensionDescriptionDto getDescription() {
-        return description;
-    }
-
-    public Object getValue() {
-        return value;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ExtensionValueDataDto that = (ExtensionValueDataDto) o;
-        return Objects.equals(getDescription(), that.getDescription()) && Objects.equals(getValue(), that.getValue());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getDescription(), getValue());
-    }
-
-    @Override
-    public String toString() {
-        return "ExtensionValueDataDto{" +
-                "description=" + description +
-                ", value=" + value +
-                '}';
+        this(new ExtensionDescriptionDto(description), type, value);
     }
 }

@@ -130,7 +130,7 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
     @RepeatedTest(value = 3, name = "Activity Index calculations match with missing data {currentRepetition}/{totalRepetitions}")
     default void activityIndexCalculationsMatchWithMissingData() {
         long keepAfter = System.currentTimeMillis() - TimeUnit.DAYS.toMillis(7L);
-        storeSessions(session -> session.getDate() >= keepAfter && session.getEnd() >= keepAfter);
+        storeSessions(session -> session.date() >= keepAfter && session.end() >= keepAfter);
 
         long date = System.currentTimeMillis();
         long playtimeThreshold = TimeUnit.HOURS.toMillis(5L);

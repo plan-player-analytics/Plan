@@ -17,19 +17,8 @@
 package com.djrapitops.plan.delivery.domain;
 
 import java.util.Comparator;
-import java.util.Objects;
 
-public class TimeSegment<T> {
-
-    private final long start;
-    private final long end;
-    private final T value;
-
-    public TimeSegment(long start, long end, T value) {
-        this.start = start;
-        this.end = end;
-        this.value = value;
-    }
+public record TimeSegment<T>(long start, long end, T value) {
 
     public static <V> Comparator<TimeSegment<V>> earliestStartFirstComparator() {
         return Comparator.comparingLong(segment -> segment.start);
@@ -37,39 +26,5 @@ public class TimeSegment<T> {
 
     public static <V> Comparator<TimeSegment<V>> earliestEndFirstComparator() {
         return Comparator.comparingLong(segment -> segment.end);
-    }
-
-    public long getStart() {
-        return start;
-    }
-
-    public long getEnd() {
-        return end;
-    }
-
-    public T getValue() {
-        return value;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TimeSegment<?> that = (TimeSegment<?>) o;
-        return getStart() == that.getStart() && getEnd() == that.getEnd() && Objects.equals(getValue(), that.getValue());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getStart(), getEnd(), getValue());
-    }
-
-    @Override
-    public String toString() {
-        return "TimeSegment{" +
-                "start=" + start +
-                ", end=" + end +
-                ", value=" + value +
-                '}';
     }
 }

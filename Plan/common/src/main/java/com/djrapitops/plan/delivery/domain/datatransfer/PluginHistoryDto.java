@@ -19,42 +19,11 @@ package com.djrapitops.plan.delivery.domain.datatransfer;
 import com.djrapitops.plan.delivery.domain.PluginHistoryMetadata;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * History of plugin versions, sorted most recent first.
  *
  * @author AuroraLS3
  */
-public class PluginHistoryDto {
-
-    private final List<PluginHistoryMetadata> history;
-
-    public PluginHistoryDto(List<PluginHistoryMetadata> history) {
-        this.history = history;
-    }
-
-    public List<PluginHistoryMetadata> getHistory() {
-        return history;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PluginHistoryDto that = (PluginHistoryDto) o;
-        return Objects.equals(getHistory(), that.getHistory());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getHistory());
-    }
-
-    @Override
-    public String toString() {
-        return "PluginHistoryDto{" +
-                "history=" + history +
-                '}';
-    }
+public record PluginHistoryDto(List<PluginHistoryMetadata> history) {
 }

@@ -289,14 +289,14 @@ public class JSONFactory {
 
                     Optional<DateObj<Integer>> recentPeak = db.query(TPSQueries.fetchPeakPlayerCount(serverUUID, now - TimeUnit.DAYS.toMillis(2L), Long.MAX_VALUE));
                     Optional<DateObj<Integer>> allTimePeak = db.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID));
-                    server.put("last_peak_date", recentPeak.map(DateObj::getDate).map(Object.class::cast).orElse("-"));
-                    server.put("best_peak_date", allTimePeak.map(DateObj::getDate).map(Object.class::cast).orElse("-"));
+                    server.put("last_peak_date", recentPeak.map(DateObj::date).map(Object.class::cast).orElse("-"));
+                    server.put("best_peak_date", allTimePeak.map(DateObj::date).map(Object.class::cast).orElse("-"));
                     server.put("last_peak_players", recentPeak.map(DateObj::getValue).orElse(0));
                     server.put("best_peak_players", allTimePeak.map(DateObj::getValue).orElse(0));
 
                     TPSMutator tpsMonth = new TPSMutator(tpsDataByServerId.getOrDefault(serverUuidToId.get(serverUUID), Collections.emptyList()));
                     server.put("playersOnline", tpsMonth.all().stream()
-                            .map(tps -> new double[]{tps.getDate(), tps.getPlayers()})
+                            .map(tps -> new double[]{tps.date(), tps.getPlayers()})
                             .toArray(double[][]::new));
                     server.put("players", totalPlayerCounts.getOrDefault(serverUUID, 0));
                     server.put("new_players", newPlayerCounts.getOrDefault(serverUUID, 0));
@@ -310,7 +310,7 @@ public class JSONFactory {
                             .orElse(GenericLang.UNAVAILABLE.getKey()));
 
                     Optional<TPS> online = tpsWeek.getLast();
-                    server.put("online", online.map(point -> point.getDate() >= now - TimeUnit.MINUTES.toMillis(3L) ? point.getPlayers() : HtmlLang.LABEL_POSSIBLY_OFFLINE.getKey())
+                    server.put("online", online.map(point -> point.date() >= now - TimeUnit.MINUTES.toMillis(3L) ? point.getPlayers() : HtmlLang.LABEL_POSSIBLY_OFFLINE.getKey())
                             .orElse(HtmlLang.UNIT_NO_DATA.getKey()));
                     servers.add(server);
                 });

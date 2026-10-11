@@ -53,7 +53,7 @@ public class PingStoreTransaction extends Transaction {
 
         DBOpException userInsertError = null;
         if (Boolean.FALSE.equals(query(PlayerFetchQueries.isPlayerRegistered(playerUUID)))) {
-            userInsertError = tryToRegisterUser(ping.getDate());
+            userInsertError = tryToRegisterUser(ping.date());
         }
 
         try {
@@ -71,7 +71,7 @@ public class PingStoreTransaction extends Transaction {
     private void retry(Ping ping, DBOpException failed) {
         DBOpException userInsertError = null;
         try {
-            userInsertError = tryToRegisterUser(ping.getDate());
+            userInsertError = tryToRegisterUser(ping.date());
             execute(DataStoreQueries.storePing(playerUUID, serverUUID, ping));
         } catch (DBOpException failedAgain) {
             if (userInsertError != null) failedAgain.addSuppressed(userInsertError);
@@ -90,7 +90,7 @@ public class PingStoreTransaction extends Transaction {
     }
 
     private Ping calculateAggregatePing() {
-        long lastDate = pingList.get(pingList.size() - 1).getDate();
+        long lastDate = pingList.get(pingList.size() - 1).date();
 
         int minValue = getMinValue();
         int meanValue = getMeanValue();

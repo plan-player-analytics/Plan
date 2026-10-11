@@ -367,9 +367,9 @@ public class PlayerJSONCreator {
             List<Nickname> mapped = new ArrayList<>();
             for (com.djrapitops.plan.delivery.domain.Nickname nickname : nicknames) {
                 mapped.add(new Nickname(
-                        nickname.getName(),
-                        serverNames.getOrDefault(nickname.getServerUUID(), nickname.getServerUUID().toString()),
-                        nickname.getDate()
+                        nickname.name(),
+                        serverNames.getOrDefault(nickname.serverUUID(), nickname.serverUUID().toString()),
+                        nickname.date()
                 ));
             }
             return mapped;
@@ -386,7 +386,7 @@ public class PlayerJSONCreator {
         }
 
         public static List<ConnectionInfo> fromGeoInfo(List<GeoInfo> geoInfo) {
-            return Lists.map(geoInfo, i -> new ConnectionInfo(i.getGeolocation(), i.getDate()));
+            return Lists.map(geoInfo, i -> new ConnectionInfo(i.geolocation(), i.date()));
         }
     }
 

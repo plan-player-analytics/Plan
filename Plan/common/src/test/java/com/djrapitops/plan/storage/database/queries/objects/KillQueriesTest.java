@@ -56,7 +56,7 @@ public interface KillQueriesTest extends DatabaseTestPreparer {
                 new PlayerKill.Victim(TestConstants.PLAYER_TWO_UUID, TestConstants.PLAYER_TWO_NAME, TestConstants.REGISTER_TIME),
                 new ServerIdentifier(serverUUID(), TestConstants.SERVER_NAME),
                 TestConstants.WEAPON_SWORD,
-                session.getDate()
+                session.date()
         );
     }
 

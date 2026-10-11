@@ -37,8 +37,8 @@ public class TimeSegmentsMutator<T> {
         List<DateObj<Integer>> changes = new ArrayList<>();
 
         for (FinishedSession session : sessions) {
-            long startTime = (session.getStart()) % TimeUnit.DAYS.toMillis(1);
-            long endTime = (session.getEnd()) % TimeUnit.DAYS.toMillis(1);
+            long startTime = (session.start()) % TimeUnit.DAYS.toMillis(1);
+            long endTime = (session.end()) % TimeUnit.DAYS.toMillis(1);
             changes.add(new DateObj<>(startTime, 1));
             changes.add(new DateObj<>(endTime, -1));
         }
@@ -49,9 +49,9 @@ public class TimeSegmentsMutator<T> {
         long previousTime = 0L;
         List<TimeSegment<Integer>> segments = new ArrayList<>();
         for (DateObj<Integer> change : changes) {
-            segments.add(new TimeSegment<>(previousTime, change.getDate(), count));
+            segments.add(new TimeSegment<>(previousTime, change.date(), count));
             count += change.getValue();
-            previousTime = change.getDate();
+            previousTime = change.date();
         }
 
         return new TimeSegmentsMutator<>(segments);

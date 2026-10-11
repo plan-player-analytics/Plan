@@ -40,7 +40,7 @@ public class PingGraph {
         List<Point> avg = new ArrayList<>();
 
         for (Ping ping : pings) {
-            long date = ping.getDate();
+            long date = ping.date();
 
             max.add(new Point(date, ping.getMax()));
             min.add(new Point(date, ping.getMin()));

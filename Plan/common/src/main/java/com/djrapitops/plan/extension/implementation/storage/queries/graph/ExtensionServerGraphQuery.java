@@ -63,40 +63,40 @@ public class ExtensionServerGraphQuery implements Query<Optional<ExtensionGraphD
     }
 
     private void addFormats(SQLDB db, ExtensionGraphDto extensionGraphDto) {
-        extensionGraphDto.getValueFormats().addAll(
-                db.query(ExtensionGraphQueries.getGraphFormats(extensionGraphDto.getProviderId(), extensionGraphDto.getColumnCount()))
+        extensionGraphDto.valueFormats().addAll(
+                db.query(ExtensionGraphQueries.getGraphFormats(extensionGraphDto.providerId(), extensionGraphDto.columnCount()))
         );
     }
 
     private void addUnits(SQLDB db, ExtensionGraphDto extensionGraphDto) {
-        extensionGraphDto.getUnitNames().addAll(
-                db.query(ExtensionGraphQueries.getGraphUnits(extensionGraphDto.getProviderId(), extensionGraphDto.getColumnCount()))
+        extensionGraphDto.unitNames().addAll(
+                db.query(ExtensionGraphQueries.getGraphUnits(extensionGraphDto.providerId(), extensionGraphDto.columnCount()))
         );
     }
 
     private void addLabels(SQLDB db, ExtensionGraphDto extensionGraphDto) {
-        extensionGraphDto.getSeriesLabels().addAll(
-                db.query(ExtensionGraphQueries.getGraphSeriesLabels(extensionGraphDto.getProviderId(), extensionGraphDto.getColumnCount()))
+        extensionGraphDto.seriesLabels().addAll(
+                db.query(ExtensionGraphQueries.getGraphSeriesLabels(extensionGraphDto.providerId(), extensionGraphDto.columnCount()))
         );
     }
 
     private void addColors(SQLDB db, ExtensionGraphDto extensionGraphDto) {
-        extensionGraphDto.getSeriesColors().addAll(
-                db.query(ExtensionGraphQueries.getGraphColors(extensionGraphDto.getProviderId(), extensionGraphDto.getColumnCount()))
+        extensionGraphDto.seriesColors().addAll(
+                db.query(ExtensionGraphQueries.getGraphColors(extensionGraphDto.providerId(), extensionGraphDto.columnCount()))
         );
     }
 
     private void addValues(SQLDB db, ExtensionGraphDto extensionGraphDto) {
-        extensionGraphDto.getDataPoints().addAll(db.queryList(ExtensionGraphMetadataTable.selectFromGraphTableSql(
-                        extensionGraphDto.getGraphTableName(), ExtensionGraphMetadataTable.TableType.SERVER),
+        extensionGraphDto.dataPoints().addAll(db.queryList(ExtensionGraphMetadataTable.selectFromGraphTableSql(
+                        extensionGraphDto.graphTableName(), ExtensionGraphMetadataTable.TableType.SERVER),
                 row -> extractDataPoint(row, extensionGraphDto), serverUUID));
     }
 
     private Number[] extractDataPoint(ResultSet row, ExtensionGraphDto extensionGraphDto) throws SQLException {
-        Number[] point = new Number[extensionGraphDto.getColumnCount() + 1];
+        Number[] point = new Number[extensionGraphDto.columnCount() + 1];
         point[0] = row.getLong("x");
 
-        IntStream.range(0, extensionGraphDto.getColumnCount())
+        IntStream.range(0, extensionGraphDto.columnCount())
                 .forEach(i -> {
                     try {
                         double value = row.getDouble("value_" + (i + 1));

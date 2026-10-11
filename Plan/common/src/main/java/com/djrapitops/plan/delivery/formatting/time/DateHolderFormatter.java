@@ -34,6 +34,6 @@ public class DateHolderFormatter implements Formatter<DateHolder> {
 
     @Override
     public String apply(DateHolder dateHolder) {
-        return formatter.apply(dateHolder.getDate());
+        return formatter.apply(dateHolder.date());
     }
 }

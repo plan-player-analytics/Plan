@@ -93,7 +93,7 @@ class ImportBuilderTest {
 
         assertEquals(10, data.getTpsData().size());
 
-        assertEquals(randomInt, data.getTpsData().get(0).getDate());
+        assertEquals(randomInt, data.getTpsData().get(0).date());
     }
 
     @Test

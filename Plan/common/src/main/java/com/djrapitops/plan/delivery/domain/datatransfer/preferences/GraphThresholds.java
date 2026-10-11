@@ -16,55 +16,8 @@
  */
 package com.djrapitops.plan.delivery.domain.datatransfer.preferences;
 
-import java.util.Objects;
-
 /**
  * @author AuroraLS3
  */
-public class GraphThresholds {
-
-    private double highThreshold;
-    private double mediumThreshold;
-
-    public GraphThresholds(double highThreshold, double mediumThreshold) {
-        this.highThreshold = highThreshold;
-        this.mediumThreshold = mediumThreshold;
-    }
-
-    public double getHighThreshold() {
-        return highThreshold;
-    }
-
-    public void setHighThreshold(int highThreshold) {
-        this.highThreshold = highThreshold;
-    }
-
-    public double getMediumThreshold() {
-        return mediumThreshold;
-    }
-
-    public void setMediumThreshold(int mediumThreshold) {
-        this.mediumThreshold = mediumThreshold;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        GraphThresholds that = (GraphThresholds) o;
-        return getHighThreshold() == that.getHighThreshold() && getMediumThreshold() == that.getMediumThreshold();
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getHighThreshold(), getMediumThreshold());
-    }
-
-    @Override
-    public String toString() {
-        return "GraphThresholds{" +
-                "highThreshold=" + highThreshold +
-                ", mediumThreshold=" + mediumThreshold +
-                '}';
-    }
+public record GraphThresholds(double highThreshold, double mediumThreshold) {
 }

@@ -52,7 +52,7 @@ public interface AllowlistQueriesTest extends DatabaseTestPreparer {
     @DisplayName("Allowlist bounce is stored")
     default void allowListBounceIsStored() throws ExecutionException, InterruptedException {
         AllowlistBounce bounce = new AllowlistBounce(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME, 1, System.currentTimeMillis());
-        db().executeTransaction(new StoreAllowlistBounceTransaction(bounce.getPlayerUUID(), bounce.getPlayerName(), serverUUID(), bounce.getLastTime()))
+        db().executeTransaction(new StoreAllowlistBounceTransaction(bounce.playerUUID(), bounce.playerName(), serverUUID(), bounce.lastTime()))
                 .get();
 
         List<AllowlistBounce> expected = List.of(bounce);

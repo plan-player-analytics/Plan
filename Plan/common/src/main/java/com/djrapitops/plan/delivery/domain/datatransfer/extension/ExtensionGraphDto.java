@@ -25,24 +25,23 @@ import java.util.List;
 /**
  * @author AuroraLS3
  */
-public class ExtensionGraphDto {
-
-    private final int providerId;
-    private final String graphTableName;
-    private final String displayName;
-    private final XAxisType xAxisType;
-    private final Integer xAxisSoftMin;
-    private final Integer xAxisSoftMax;
-    private final int yAxisSoftMin;
-    private final int yAxisSoftMax;
-    private final int columnCount;
-    private final List<String> seriesLabels = new ArrayList<>();
-    private final List<String> unitNames = new ArrayList<>();
-    private final List<GraphFormatType> valueFormats = new ArrayList<>();
-    private final List<String> seriesColors = new ArrayList<>();
-    private final boolean supportsStacking;
-
-    private final List<Number[]> dataPoints = new ArrayList<>();
+public record ExtensionGraphDto(
+        int providerId,
+        String graphTableName,
+        String displayName,
+        XAxisType xAxisType,
+        Integer xAxisSoftMin,
+        Integer xAxisSoftMax,
+        int yAxisSoftMin,
+        int yAxisSoftMax,
+        int columnCount,
+        List<String> seriesLabels,
+        List<String> unitNames,
+        List<GraphFormatType> valueFormats,
+        List<String> seriesColors,
+        boolean supportsStacking,
+        List<Number[]> dataPoints
+) {
 
     public ExtensionGraphDto(
             int providerId, String graphTableName, String displayName,
@@ -50,75 +49,22 @@ public class ExtensionGraphDto {
             int yAxisSoftMin, int yAxisSoftMax, int columnCount,
             boolean supportsStacking
     ) {
-        this.providerId = providerId;
-        this.graphTableName = graphTableName;
-        this.displayName = displayName;
-        this.xAxisType = xAxisType;
-        this.xAxisSoftMin = xAxisSoftMin == Integer.MIN_VALUE ? null : xAxisSoftMin;
-        this.xAxisSoftMax = xAxisSoftMax == Integer.MIN_VALUE ? null : xAxisSoftMax;
-        this.yAxisSoftMin = yAxisSoftMin;
-        this.yAxisSoftMax = yAxisSoftMax;
-        this.columnCount = columnCount;
-        this.supportsStacking = supportsStacking;
-    }
-
-    public int getProviderId() {
-        return providerId;
-    }
-
-    public String getGraphTableName() {
-        return graphTableName;
-    }
-
-    public String getDisplayName() {
-        return displayName;
-    }
-
-    public XAxisType getxAxisType() {
-        return xAxisType;
-    }
-
-    public int getxAxisSoftMin() {
-        return xAxisSoftMin;
-    }
-
-    public int getxAxisSoftMax() {
-        return xAxisSoftMax;
-    }
-
-    public int getyAxisSoftMin() {
-        return yAxisSoftMin;
-    }
-
-    public int getyAxisSoftMax() {
-        return yAxisSoftMax;
-    }
-
-    public int getColumnCount() {
-        return columnCount;
-    }
-
-    public List<String> getSeriesLabels() {
-        return seriesLabels;
-    }
-
-    public List<String> getUnitNames() {
-        return unitNames;
-    }
-
-    public List<GraphFormatType> getValueFormats() {
-        return valueFormats;
-    }
-
-    public List<String> getSeriesColors() {
-        return seriesColors;
-    }
-
-    public boolean isSupportsStacking() {
-        return supportsStacking;
-    }
-
-    public List<Number[]> getDataPoints() {
-        return dataPoints;
+        this(
+                providerId,
+                graphTableName,
+                displayName,
+                xAxisType,
+                xAxisSoftMin == Integer.MIN_VALUE ? null : xAxisSoftMin,
+                xAxisSoftMax == Integer.MIN_VALUE ? null : xAxisSoftMax,
+                yAxisSoftMin,
+                yAxisSoftMax,
+                columnCount,
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                new ArrayList<>(),
+                supportsStacking,
+                new ArrayList<>()
+        );
     }
 }
