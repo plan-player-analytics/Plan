@@ -24,7 +24,7 @@ import com.google.gson.JsonObject;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Map.Entry;
 import java.util.UUID;
 
 /**
@@ -32,17 +32,7 @@ import java.util.UUID;
  *
  * @author AuroraLS3
  */
-public class MinecraftStatistics {
-
-    private final UUID playerUUID;
-    private final ServerUUID serverUUID;
-    private final Map<Integer, Integer> valuesById;
-
-    public MinecraftStatistics(UUID playerUUID, ServerUUID serverUUID, Map<Integer, Integer> valuesById) {
-        this.playerUUID = playerUUID;
-        this.serverUUID = serverUUID;
-        this.valuesById = valuesById;
-    }
+public record MinecraftStatistics(UUID playerUUID, ServerUUID serverUUID, Map<Integer, Integer> valuesById) {
 
     public static Map<String, Integer> parse(Resource statsFile) throws IOException {
         JsonObject json = statsFile.asJson();
@@ -55,7 +45,7 @@ public class MinecraftStatistics {
 
     private static void addToMap(String currentKey, JsonElement current, Map<String, Integer> valueByKey) {
         if (current.isJsonObject()) {
-            for (Map.Entry<String, JsonElement> element : current.getAsJsonObject().entrySet()) {
+            for (Entry<String, JsonElement> element : current.getAsJsonObject().entrySet()) {
                 String key = currentKey + element.getKey().replace(':', '.');
                 JsonElement value = element.getValue();
                 if (value.isJsonObject()) {
@@ -69,38 +59,5 @@ public class MinecraftStatistics {
                 }
             }
         }
-    }
-
-    public UUID getPlayerUUID() {
-        return playerUUID;
-    }
-
-    public ServerUUID getServerUUID() {
-        return serverUUID;
-    }
-
-    public Map<Integer, Integer> getValuesById() {
-        return valuesById;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        MinecraftStatistics that = (MinecraftStatistics) o;
-        return Objects.equals(getPlayerUUID(), that.getPlayerUUID()) && Objects.equals(getServerUUID(), that.getServerUUID()) && Objects.equals(getValuesById(), that.getValuesById());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getPlayerUUID(), getServerUUID(), getValuesById());
-    }
-
-    @Override
-    public String toString() {
-        return "MinecraftStatistics{" +
-                "playerUUID=" + playerUUID +
-                ", serverUUID=" + serverUUID +
-                ", valuesById=" + valuesById +
-                '}';
     }
 }

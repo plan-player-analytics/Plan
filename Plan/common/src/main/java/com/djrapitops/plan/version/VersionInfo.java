@@ -23,38 +23,11 @@ import java.util.Objects;
  *
  * @author AuroraLS3
  */
-public class VersionInfo implements Comparable<VersionInfo> {
-
-    private final boolean release;
-    private final VersionNumber version;
-    private final String downloadUrl;
-    private final String changeLogUrl;
+public record VersionInfo(boolean release, VersionNumber version, String downloadUrl,
+                          String changeLogUrl) implements Comparable<VersionInfo> {
 
     public VersionInfo(boolean release, String version, String downloadUrl, String changeLogUrl) {
         this(release, new VersionNumber(version), downloadUrl, changeLogUrl);
-    }
-
-    public VersionInfo(boolean release, VersionNumber version, String downloadUrl, String changeLogUrl) {
-        this.release = release;
-        this.version = version;
-        this.downloadUrl = downloadUrl;
-        this.changeLogUrl = changeLogUrl;
-    }
-
-    public boolean isRelease() {
-        return release;
-    }
-
-    public VersionNumber getVersion() {
-        return version;
-    }
-
-    public String getDownloadUrl() {
-        return downloadUrl;
-    }
-
-    public String getChangeLogUrl() {
-        return changeLogUrl;
     }
 
     @Override
@@ -74,15 +47,5 @@ public class VersionInfo implements Comparable<VersionInfo> {
     @Override
     public int compareTo(VersionInfo o) {
         return this.version.compareTo(o.version);
-    }
-
-    @Override
-    public String toString() {
-        return "VersionInfo{" +
-               "release=" + release +
-               ", version=" + version +
-               ", downloadUrl='" + downloadUrl + '\'' +
-               ", changeLogUrl='" + changeLogUrl + '\'' +
-               '}';
     }
 }

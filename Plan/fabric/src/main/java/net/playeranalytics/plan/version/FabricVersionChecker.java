@@ -52,10 +52,10 @@ public class FabricVersionChecker extends VersionChecker {
             return Optional.empty();
         } else {
             return Optional.of(new VersionInfo(
-                    newVersionAvailable.isRelease(),
-                    newVersionAvailable.getVersion(),
-                    newVersionAvailable.getDownloadUrl().replace("Plan-", "PlanFabric-"),
-                    newVersionAvailable.getChangeLogUrl()
+                    newVersionAvailable.release(),
+                    newVersionAvailable.version(),
+                    newVersionAvailable.downloadUrl().replace("Plan-", "PlanFabric-"),
+                    newVersionAvailable.changeLogUrl()
             ));
         }
     }

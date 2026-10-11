@@ -77,9 +77,9 @@ public class VersionChecker implements SubSystem {
             return Optional.of(VersionInfoLoader.load());
         } catch (IOException e) {
             errorLogger.warn(e, ErrorContext.builder()
-                .related(locale.getString(PluginLang.VERSION_FAIL_READ_VERSIONS))
-                .whatToDo("Allow Plan to check for updates from Github/versions.txt or disable update check.")
-                .build());
+                    .related(locale.getString(PluginLang.VERSION_FAIL_READ_VERSIONS))
+                    .whatToDo("Allow Plan to check for updates from Github/versions.txt or disable update check.")
+                    .build());
             return Optional.empty();
         }
     }
@@ -87,16 +87,16 @@ public class VersionChecker implements SubSystem {
     private void checkForUpdates() {
         loadVersionInfo().ifPresent(versions -> {
             if (config.isFalse(PluginSettings.NOTIFY_ABOUT_DEV_RELEASES)) {
-                versions = Lists.filter(versions, VersionInfo::isRelease);
+                versions = Lists.filter(versions, VersionInfo::release);
             }
             VersionInfo newestVersion = versions.get(0);
-            if (newestVersion.getVersion().isNewerThan(currentVersion)) {
+            if (newestVersion.version().isNewerThan(currentVersion)) {
                 newVersionAvailable = newestVersion;
                 String notification = locale.getString(
-                    PluginLang.VERSION_AVAILABLE,
-                    newestVersion.getVersion().asString(),
-                    newestVersion.getChangeLogUrl()
-                ) + (newestVersion.isRelease() ? "" : locale.getString(PluginLang.VERSION_AVAILABLE_DEV));
+                        PluginLang.VERSION_AVAILABLE,
+                        newestVersion.version().asString(),
+                        newestVersion.changeLogUrl()
+                ) + (newestVersion.release() ? "" : locale.getString(PluginLang.VERSION_AVAILABLE_DEV));
                 logger.info("§a----------------------------------------");
                 logger.info("§a" + notification);
                 logger.info("§a----------------------------------------");

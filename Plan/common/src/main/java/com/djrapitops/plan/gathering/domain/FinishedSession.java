@@ -167,7 +167,7 @@ public record FinishedSession(UUID playerUUID, ServerUUID serverUUID, long start
                 getExtraData(JoinAddress.class).map(JoinAddress::getAddress)
                         .map(address -> address.replace(';', ':'))
                         .orElse(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP) + ';' +
-                getExtraData(PlayerName.class).map(PlayerName::get).orElseGet(playerUUID::toString))
+                getExtraData(PlayerName.class).map(PlayerName::name).orElseGet(playerUUID::toString))
                 .replace('\\', '_'); // Untrusted data can contain escape characters that fail json serialization.
     }
 

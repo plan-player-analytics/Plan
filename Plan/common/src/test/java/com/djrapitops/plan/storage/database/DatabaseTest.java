@@ -426,8 +426,8 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         db().executeTransaction(new BadFabricJoinAddressValuePatch(randomSecondServer));
 
         Set<UserInfo> expected = Set.of(
-                new UserInfo(playerUUID, serverUUID(), time, false, "test1", false),
-                new UserInfo(playerUUID, randomSecondServer, time, false, null, false)
+                new UserInfo(playerUUID, serverUUID(), time, false, false, "test1"),
+                new UserInfo(playerUUID, randomSecondServer, time, false, false, null)
         );
         Set<UserInfo> result = db().query(UserInfoQueries.fetchUserInformationOfUser(playerUUID));
         assertEquals(expected, result);

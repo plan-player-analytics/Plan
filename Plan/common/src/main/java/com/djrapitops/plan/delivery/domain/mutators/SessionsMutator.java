@@ -271,8 +271,8 @@ public class SessionsMutator {
             Map<String, Object> sessionMap = new HashMap<>();
             String playerUUID = session.playerUUID().toString();
             String serverUUID = session.serverUUID().toString();
-            String playerName = session.getExtraData(PlayerName.class).map(PlayerName::get).orElse(playerUUID);
-            String serverName = session.getExtraData(ServerName.class).map(ServerName::get).orElse(serverUUID);
+            String playerName = session.getExtraData(PlayerName.class).map(PlayerName::name).orElse(playerUUID);
+            String serverName = session.getExtraData(ServerName.class).map(ServerName::name).orElse(serverUUID);
             sessionMap.put("player_name", playerName);
             sessionMap.put("player_url_name", Html.encodeToURL(playerName));
             sessionMap.put("player_uuid", playerUUID);

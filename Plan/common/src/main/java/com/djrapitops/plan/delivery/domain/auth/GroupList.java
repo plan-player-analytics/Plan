@@ -16,41 +16,19 @@
  */
 package com.djrapitops.plan.delivery.domain.auth;
 
+import org.jspecify.annotations.NonNull;
+
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Represents Plan web permission group listing without associated permissions.
  *
  * @author AuroraLS3
  */
-public class GroupList {
-
-    private final List<Group> groups;
-
-    public GroupList(List<Group> groups) {
-        this.groups = groups;
-    }
-
-    public List<Group> getGroups() {
-        return groups;
-    }
+public record GroupList(List<Group> groups) {
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        GroupList that = (GroupList) o;
-        return Objects.equals(getGroups(), that.getGroups());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getGroups());
-    }
-
-    @Override
-    public String toString() {
+    public @NonNull String toString() {
         return "WebGroupList{" +
                 "groups=" + groups +
                 '}';

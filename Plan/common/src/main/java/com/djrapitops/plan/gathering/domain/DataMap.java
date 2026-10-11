@@ -33,8 +33,9 @@ public class DataMap {
         this.data = new HashMap<>(data);
     }
 
-    public <T> void put(Class<T> type, T value) {
+    public <T> DataMap put(Class<T> type, T value) {
         data.put(type.getName(), value);
+        return this;
     }
 
     public <T> Optional<T> get(Class<T> ofType) {

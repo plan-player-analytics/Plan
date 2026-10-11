@@ -16,49 +16,11 @@
  */
 package com.djrapitops.plan.gathering.domain;
 
-import java.util.Objects;
-
 /**
  * Represents a plugin that is installed on a server.
  *
  * @author AuroraLS3
  */
-public class PluginMetadata {
+public record PluginMetadata(String name, String version) {
 
-    private final String name;
-    private final String version;
-
-    public PluginMetadata(String name, String version) {
-        this.name = name;
-        this.version = version;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PluginMetadata that = (PluginMetadata) o;
-        return Objects.equals(getName(), that.getName()) && Objects.equals(getVersion(), that.getVersion());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getName(), getVersion());
-    }
-
-    @Override
-    public String toString() {
-        return "PluginMetadata{" +
-                "name='" + name + '\'' +
-                ", version='" + version + '\'' +
-                '}';
-    }
 }

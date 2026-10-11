@@ -73,18 +73,18 @@ public class InstalledPluginGatheringTask extends TaskSystem.Task {
 
         Set<String> installedPluginNames = new HashSet<>();
         for (PluginMetadata installedPlugin : installedPlugins) {
-            installedPluginNames.add(installedPlugin.getName());
+            installedPluginNames.add(installedPlugin.name());
 
             Optional<PluginMetadata> match = previouslyInstalledPlugins.stream()
-                    .filter(plugin -> plugin.getName().equals(installedPlugin.getName()))
+                    .filter(plugin -> plugin.name().equals(installedPlugin.name()))
                     .findFirst();
             if (match.isEmpty()) {
                 // New plugins are installedPlugins missing from previous list
                 newPlugins.add(installedPlugin);
             } else {
                 PluginMetadata previousVersion = match.get();
-                String installedVersion = StringUtils.truncate(installedPlugin.getVersion(), PluginVersionTable.MAX_VERSION_LENGTH);
-                if (!installedVersion.equals(previousVersion.getVersion())) {
+                String installedVersion = StringUtils.truncate(installedPlugin.version(), PluginVersionTable.MAX_VERSION_LENGTH);
+                if (!installedVersion.equals(previousVersion.version())) {
                     // Updated plugins are plugins in the list with different version
                     updatedPlugins.add(installedPlugin);
                 }
@@ -93,7 +93,7 @@ public class InstalledPluginGatheringTask extends TaskSystem.Task {
 
         // Removed plugins are previously installed plugins missing from installed list
         List<PluginMetadata> removedPlugins = previouslyInstalledPlugins.stream()
-                .map(PluginMetadata::getName)
+                .map(PluginMetadata::name)
                 .filter(pluginName -> !installedPluginNames.contains(pluginName))
                 // Uninstalled plugin version is marked as null
                 .map(pluginName -> new PluginMetadata(pluginName, null))

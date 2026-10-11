@@ -31,8 +31,8 @@ class VersionInfoLoaderTest {
         List<VersionInfo> versions = VersionInfoLoader.load();
 
         VersionInfo oldest = versions.get(versions.size() - 1);
-        assertEquals(new VersionNumber("4.1.7"), oldest.getVersion());
-        assertTrue(oldest.isRelease());
+        assertEquals(new VersionNumber("4.1.7"), oldest.version());
+        assertTrue(oldest.release());
     }
 
 }

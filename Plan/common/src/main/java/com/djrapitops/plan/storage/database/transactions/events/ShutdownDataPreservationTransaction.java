@@ -59,7 +59,7 @@ public class ShutdownDataPreservationTransaction extends Transaction {
                     });
 
             finishedSession.getExtraData(PlayerName.class)
-                    .map(PlayerName::get)
+                    .map(PlayerName::name)
                     .ifPresent(playerName -> playerNames.put(playerUUID, playerName));
             long start = finishedSession.start();
             Long previous = earliestDates.get(playerUUID);

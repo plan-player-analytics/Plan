@@ -80,7 +80,7 @@ public class UserInfoQueries {
                     boolean op = set.getBoolean(UserInfoTable.OP);
                     String joinAddress = set.getString(UserInfoTable.JOIN_ADDRESS);
 
-                    userInfos.add(new UserInfo(uuid, serverUUID, registered, op, joinAddress, banned));
+                    userInfos.add(new UserInfo(uuid, serverUUID, registered, banned, op, joinAddress));
                 }
                 return serverMap;
             }
@@ -120,7 +120,7 @@ public class UserInfoQueries {
                     ServerUUID serverUUID = ServerUUID.fromString(set.getString(ServerTable.SERVER_UUID));
                     String joinAddress = set.getString(UserInfoTable.JOIN_ADDRESS);
 
-                    userInformation.add(new UserInfo(playerUUID, serverUUID, registered, op, joinAddress, banned));
+                    userInformation.add(new UserInfo(playerUUID, serverUUID, registered, banned, op, joinAddress));
                 }
                 return userInformation;
             }

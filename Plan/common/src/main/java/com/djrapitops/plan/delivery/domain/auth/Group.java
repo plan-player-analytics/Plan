@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.delivery.domain.auth;
 
-import java.util.Objects;
+import org.jspecify.annotations.NonNull;
 
 /**
  * Represents Plan web permission group without permissions or users.
@@ -25,33 +25,10 @@ import java.util.Objects;
  *
  * @author AuroraLS3
  */
-public class Group {
-
-    private final String name;
-
-    public Group(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
-    }
+public record Group(String name) {
 
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Group group = (Group) o;
-        return Objects.equals(getName(), group.getName());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getName());
-    }
-
-    @Override
-    public String toString() {
+    public @NonNull String toString() {
         return "WebGroup{" +
                 "name='" + name + '\'' +
                 '}';

@@ -358,7 +358,7 @@ public class JSONFactory {
         Set<PlayerIdentifier> online = new HashSet<>(dbSystem.getDatabase().query(SessionQueries.playersOnlineOn(date)));
         SessionCache.getActiveSessions().stream()
                 .filter(session -> session.getStart() <= date)
-                .map(session -> new PlayerIdentifier(session.getPlayerUUID(), session.getExtraData(PlayerName.class).map(PlayerName::get).orElse(session.getPlayerUUID().toString())))
+                .map(session -> new PlayerIdentifier(session.getPlayerUUID(), session.getExtraData(PlayerName.class).map(PlayerName::name).orElse(session.getPlayerUUID().toString())))
                 .forEach(online::add);
         return online.stream()
                 .sorted()
@@ -370,7 +370,7 @@ public class JSONFactory {
         if (serverUUID.equals(serverInfo.getServerUUID())) {
             SessionCache.getActiveSessions().stream()
                     .filter(session -> session.getStart() <= date)
-                    .map(session -> new PlayerIdentifier(session.getPlayerUUID(), session.getExtraData(PlayerName.class).map(PlayerName::get).orElse(session.getPlayerUUID().toString())))
+                    .map(session -> new PlayerIdentifier(session.getPlayerUUID(), session.getExtraData(PlayerName.class).map(PlayerName::name).orElse(session.getPlayerUUID().toString())))
                     .forEach(online::add);
         }
         return online.stream()

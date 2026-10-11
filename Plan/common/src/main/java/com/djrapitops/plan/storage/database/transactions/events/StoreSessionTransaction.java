@@ -81,7 +81,7 @@ public class StoreSessionTransaction extends Transaction {
         try {
             UUID playerUUID = session.playerUUID();
             String playerName = session.getExtraData(PlayerName.class)
-                    .map(PlayerName::get)
+                    .map(PlayerName::name)
                     .orElseGet(playerUUID::toString);
             execute(DataStoreQueries.registerBaseUser(playerUUID, session.start(), playerName));
         } catch (DBOpException ignored) {

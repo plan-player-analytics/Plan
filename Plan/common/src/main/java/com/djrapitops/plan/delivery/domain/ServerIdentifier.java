@@ -23,7 +23,7 @@ import java.util.Objects;
 public record ServerIdentifier(ServerUUID uuid, String name) {
 
     public ServerIdentifier(ServerUUID serverUUID, ServerName serverName) {
-        this(serverUUID, serverName.get());
+        this(serverUUID, serverName.name());
     }
 
     public boolean isSame(ServerIdentifier that) {

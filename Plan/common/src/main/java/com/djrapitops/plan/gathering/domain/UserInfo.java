@@ -18,7 +18,6 @@ package com.djrapitops.plan.gathering.domain;
 
 import com.djrapitops.plan.identification.ServerUUID;
 
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -29,79 +28,23 @@ import java.util.UUID;
  *
  * @author AuroraLS3
  */
-public class UserInfo {
-
-    private final UUID playerUUID;
-    private final ServerUUID serverUUID;
-    private final long registered;
-    private final boolean banned;
-    private final boolean opped;
-    private final String joinAddress;
-
-    public UserInfo(UUID playerUUID, ServerUUID serverUUID, long registered, boolean opped, String joinAddress, boolean banned) {
-        this.playerUUID = playerUUID;
-        this.serverUUID = serverUUID;
-        this.registered = registered;
-        this.opped = opped;
-        this.banned = banned;
-        this.joinAddress = joinAddress;
-    }
+public record UserInfo(UUID playerUUID,
+                       ServerUUID serverUUID,
+                       long registered,
+                       boolean banned,
+                       boolean isOperator,
+                       @Deprecated(since = "5.4 build 1722") String joinAddress) {
 
     public UUID getPlayerUuid() {
         return playerUUID;
     }
 
-    public ServerUUID getServerUUID() {
-        return serverUUID;
-    }
-
     /**
      * @deprecated Join address is now stored in {@link FinishedSession#extraData()}, this method may become unreliable in the future.
      */
+    @Override
     @Deprecated(since = "5.4 build 1722")
-    public String getJoinAddress() {
+    public String joinAddress() {
         return joinAddress;
-    }
-
-    public long getRegistered() {
-        return registered;
-    }
-
-    public boolean isBanned() {
-        return banned;
-    }
-
-    public boolean isOperator() {
-        return opped;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        UserInfo userInfo = (UserInfo) o;
-        return registered == userInfo.registered
-                && banned == userInfo.banned
-                && opped == userInfo.opped
-                && Objects.equals(playerUUID, userInfo.playerUUID)
-                && Objects.equals(serverUUID, userInfo.serverUUID)
-                && Objects.equals(joinAddress, userInfo.joinAddress);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(playerUUID, serverUUID, registered, banned, joinAddress, opped);
-    }
-
-    @Override
-    public String toString() {
-        return "UserInfo{" +
-                "playerUUID=" + playerUUID +
-                ", serverUUID=" + serverUUID +
-                ", registered=" + registered +
-                ", banned=" + banned +
-                ", opped=" + opped +
-                ", joinAddress=" + joinAddress +
-                '}';
     }
 }

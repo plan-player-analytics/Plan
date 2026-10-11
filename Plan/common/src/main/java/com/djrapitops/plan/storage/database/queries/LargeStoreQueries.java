@@ -231,10 +231,10 @@ public class LargeStoreQueries {
                     // Every User
                     for (UserInfo user : entry.getValue()) {
                         statement.setString(1, user.getPlayerUuid().toString());
-                        statement.setLong(2, user.getRegistered());
+                        statement.setLong(2, user.registered());
                         statement.setString(3, serverUUID.toString());
-                        statement.setBoolean(4, user.isBanned());
-                        statement.setString(5, StringUtils.truncate(user.getJoinAddress(), JoinAddressTable.JOIN_ADDRESS_MAX_LENGTH));
+                        statement.setBoolean(4, user.banned());
+                        statement.setString(5, StringUtils.truncate(user.joinAddress(), JoinAddressTable.JOIN_ADDRESS_MAX_LENGTH));
                         statement.setBoolean(6, user.isOperator());
                         statement.addBatch();
                     }
