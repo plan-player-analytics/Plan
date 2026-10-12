@@ -76,6 +76,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#conditional(com.djrapitops.plan.extension.annotation.Conditional)" tabindex="0">conditional(Conditional)</a></li>
 <li><a href="#aggregateTypes(com.djrapitops.plan.extension.graph.Aggregates%5B%5D)" tabindex="0">aggregateTypes(Aggregates[])</a></li>
 <li><a href="#buildProviderInfo(com.djrapitops.plan.extension.annotation.GraphProvider)" tabindex="0">buildProviderInfo(GraphProvider)</a></li>
+<li><a href="#getStatisticsProviderInformation(com.djrapitops.plan.extension.icon.Color)" tabindex="0">getStatisticsProviderInformation(Color)</a></li>
 <li><a href="#buildBoolean(boolean)" tabindex="0">buildBoolean(boolean)</a></li>
 <li><a href="#buildBooleanProvidingCondition(boolean,java.lang.String)" tabindex="0">buildBooleanProvidingCondition(boolean, String)</a></li>
 <li><a href="#buildString(java.lang.String)" tabindex="0">buildString(String)</a></li>
@@ -94,6 +95,8 @@ loadScripts(document, 'script');</script>
 <li><a href="#buildGroup(java.util.function.Supplier)" tabindex="0">buildGroup(Supplier)</a></li>
 <li><a href="#buildTable(com.djrapitops.plan.extension.table.Table,com.djrapitops.plan.extension.icon.Color)" tabindex="0">buildTable(Table, Color)</a></li>
 <li><a href="#buildTable(java.util.function.Supplier,com.djrapitops.plan.extension.icon.Color)" tabindex="0">buildTable(Supplier, Color)</a></li>
+<li><a href="#buildStatistics(com.djrapitops.plan.extension.statistic.Statistics,com.djrapitops.plan.extension.icon.Color)" tabindex="0">buildStatistics(Statistics, Color)</a></li>
+<li><a href="#buildStatistics(java.util.function.Supplier,com.djrapitops.plan.extension.icon.Color)" tabindex="0">buildStatistics(Supplier, Color)</a></li>
 </ol>
 </li>
 </ol>
@@ -225,6 +228,18 @@ implements <a href="../../builder/ValueBuilder.html" title="interface in com.djr
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../ProviderInformation.html" title="class in com.djrapitops.plan.extension.implementation">ProviderInformation</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#buildProviderInfo(com.djrapitops.plan.extension.annotation.GraphProvider)" class="member-name-link">buildProviderInfo</a><wbr>(<a href="../../annotation/GraphProvider.html" title="annotation interface in com.djrapitops.plan.extension.annotation">GraphProvider</a>&nbsp;annotation)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../builder/DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="../../statistic/Statistics.html" title="class in com.djrapitops.plan.extension.statistic">Statistics</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#buildStatistics(com.djrapitops.plan.extension.statistic.Statistics,com.djrapitops.plan.extension.icon.Color)" class="member-name-link">buildStatistics</a><wbr>(<a href="../../statistic/Statistics.html" title="class in com.djrapitops.plan.extension.statistic">Statistics</a>&nbsp;statistics,
+ <a href="../../icon/Color.html" title="enum class in com.djrapitops.plan.extension.icon">Color</a>&nbsp;tableColor)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Build statistics.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../builder/DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="../../statistic/Statistics.html" title="class in com.djrapitops.plan.extension.statistic">Statistics</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#buildStatistics(java.util.function.Supplier,com.djrapitops.plan.extension.icon.Color)" class="member-name-link">buildStatistics</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="../../statistic/Statistics.html" title="class in com.djrapitops.plan.extension.statistic">Statistics</a>&gt;&nbsp;statistics,
+ <a href="../../icon/Color.html" title="enum class in com.djrapitops.plan.extension.icon">Color</a>&nbsp;tableColor)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Lambda version for conditional return or throwing <a href="../../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.</div>
+</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../builder/DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#buildString(java.lang.String)" class="member-name-link">buildString</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;value)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
@@ -265,39 +280,42 @@ implements <a href="../../builder/ValueBuilder.html" title="interface in com.djr
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#formatTextAsIdentifier(java.lang.String)" class="member-name-link">formatTextAsIdentifier</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;text)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hideFromUsers(com.djrapitops.plan.extension.annotation.BooleanProvider)" class="member-name-link">hideFromUsers</a><wbr>(<a href="../../annotation/BooleanProvider.html" title="annotation interface in com.djrapitops.plan.extension.annotation">BooleanProvider</a>&nbsp;annotation)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../ProviderInformation.html" title="class in com.djrapitops.plan.extension.implementation">ProviderInformation</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getStatisticsProviderInformation(com.djrapitops.plan.extension.icon.Color)" class="member-name-link">getStatisticsProviderInformation</a><wbr>(<a href="../../icon/Color.html" title="enum class in com.djrapitops.plan.extension.icon">Color</a>&nbsp;tableColor)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#hideFromUsers(com.djrapitops.plan.extension.annotation.BooleanProvider)" class="member-name-link">hideFromUsers</a><wbr>(<a href="../../annotation/BooleanProvider.html" title="annotation interface in com.djrapitops.plan.extension.annotation">BooleanProvider</a>&nbsp;annotation)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Implementation detail - for abstracting annotations with the builder API.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#icon(com.djrapitops.plan.extension.icon.Icon)" class="member-name-link">icon</a><wbr>(<a href="../../icon/Icon.html" title="class in com.djrapitops.plan.extension.icon">Icon</a>&nbsp;icon)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#icon(com.djrapitops.plan.extension.icon.Icon)" class="member-name-link">icon</a><wbr>(<a href="../../icon/Icon.html" title="class in com.djrapitops.plan.extension.icon">Icon</a>&nbsp;icon)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Icon displayed next to the value.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#methodName(com.djrapitops.plan.extension.extractor.ExtensionMethod)" class="member-name-link">methodName</a><wbr>(<a href="../../extractor/ExtensionMethod.html" title="class in com.djrapitops.plan.extension.extractor">ExtensionMethod</a>&nbsp;method)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#methodName(com.djrapitops.plan.extension.extractor.ExtensionMethod)" class="member-name-link">methodName</a><wbr>(<a href="../../extractor/ExtensionMethod.html" title="class in com.djrapitops.plan.extension.extractor">ExtensionMethod</a>&nbsp;method)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Implementation detail - for abstracting annotations with the builder API.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#priority(int)" class="member-name-link">priority</a><wbr>(int&nbsp;priority)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#priority(int)" class="member-name-link">priority</a><wbr>(int&nbsp;priority)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Display-priority of the value, highest value is placed top most.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#showAsPlayerPageLink()" class="member-name-link">showAsPlayerPageLink</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#showAsPlayerPageLink()" class="member-name-link">showAsPlayerPageLink</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block"><a href="../../builder/ValueBuilder.html#buildString(java.lang.String)"><code>ValueBuilder.buildString(String)</code></a> specific method, link the value to a player page.</div>
 </div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#showInPlayerTable()" class="member-name-link">showInPlayerTable</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#showInPlayerTable()" class="member-name-link">showInPlayerTable</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Show this value in the players table.</div>
 </div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#showOnTab(java.lang.String)" class="member-name-link">showOnTab</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;tabName)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#showOnTab(java.lang.String)" class="member-name-link">showOnTab</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;tabName)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Show the value on a specific tab.</div>
 </div>
 </div>
@@ -554,6 +572,14 @@ Remember to define <a href="../../annotation/TabInfo.html" title="annotation int
 <h3>buildProviderInfo</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../ProviderInformation.html" title="class in com.djrapitops.plan.extension.implementation">ProviderInformation</a></span>&nbsp;<span class="element-name">buildProviderInfo</span><wbr><span class="parameters">(<a href="../../annotation/GraphProvider.html" title="annotation interface in com.djrapitops.plan.extension.annotation">GraphProvider</a>&nbsp;annotation)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="getStatisticsProviderInformation(com.djrapitops.plan.extension.icon.Color)">
+<h3>getStatisticsProviderInformation</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../ProviderInformation.html" title="class in com.djrapitops.plan.extension.implementation">ProviderInformation</a></span>&nbsp;<span class="element-name">getStatisticsProviderInformation</span><wbr><span class="parameters">(<a href="../../icon/Color.html" title="enum class in com.djrapitops.plan.extension.icon">Color</a>&nbsp;tableColor)</span></div>
 </div>
 </section>
 </li>
@@ -864,6 +890,43 @@ Remember to define <a href="../../annotation/TabInfo.html" title="annotation int
 <dl class="notes">
 <dt>Specified by:</dt>
 <dd><code><a href="../../builder/ValueBuilder.html#buildTable(java.util.function.Supplier,com.djrapitops.plan.extension.icon.Color)">buildTable</a></code>&nbsp;in interface&nbsp;<code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="buildStatistics(com.djrapitops.plan.extension.statistic.Statistics,com.djrapitops.plan.extension.icon.Color)">
+<h3>buildStatistics</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../builder/DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;<a href="../../statistic/Statistics.html" title="class in com.djrapitops.plan.extension.statistic">Statistics</a>&gt;</span>&nbsp;<span class="element-name">buildStatistics</span><wbr><span class="parameters">(<a href="../../statistic/Statistics.html" title="class in com.djrapitops.plan.extension.statistic">Statistics</a>&nbsp;statistics,
+ <a href="../../icon/Color.html" title="enum class in com.djrapitops.plan.extension.icon">Color</a>&nbsp;tableColor)</span></div>
+<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../../builder/ValueBuilder.html#buildStatistics(com.djrapitops.plan.extension.statistic.Statistics,com.djrapitops.plan.extension.icon.Color)">ValueBuilder</a></code></span></div>
+<div class="block">Build statistics.</div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../../builder/ValueBuilder.html#buildStatistics(com.djrapitops.plan.extension.statistic.Statistics,com.djrapitops.plan.extension.icon.Color)">buildStatistics</a></code>&nbsp;in interface&nbsp;<code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></dd>
+<dt>Parameters:</dt>
+<dd><code>statistics</code> - Statistics built using <a href="../../statistic/Statistics.html#create()"><code>Statistics.create()</code></a></dd>
+<dd><code>tableColor</code> - Color of the table</dd>
+<dt>Returns:</dt>
+<dd>a data value to give to <a href="../../builder/ExtensionDataBuilder.html" title="interface in com.djrapitops.plan.extension.builder"><code>ExtensionDataBuilder</code></a>.</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="buildStatistics(java.util.function.Supplier,com.djrapitops.plan.extension.icon.Color)">
+<h3>buildStatistics</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../builder/DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;<a href="../../statistic/Statistics.html" title="class in com.djrapitops.plan.extension.statistic">Statistics</a>&gt;</span>&nbsp;<span class="element-name">buildStatistics</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="../../statistic/Statistics.html" title="class in com.djrapitops.plan.extension.statistic">Statistics</a>&gt;&nbsp;statistics,
+ <a href="../../icon/Color.html" title="enum class in com.djrapitops.plan.extension.icon">Color</a>&nbsp;tableColor)</span></div>
+<div class="block"><span class="description-from-type-label">Description copied from interface:&nbsp;<code><a href="../../builder/ValueBuilder.html#buildStatistics(java.util.function.Supplier,com.djrapitops.plan.extension.icon.Color)">ValueBuilder</a></code></span></div>
+<div class="block">Lambda version for conditional return or throwing <a href="../../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.
+<p>
+<a href="../../builder/ValueBuilder.html#buildStatistics(com.djrapitops.plan.extension.statistic.Statistics,com.djrapitops.plan.extension.icon.Color)"><code>ValueBuilder.buildStatistics(Statistics, Color)</code></a></div>
+<dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="../../builder/ValueBuilder.html#buildStatistics(java.util.function.Supplier,com.djrapitops.plan.extension.icon.Color)">buildStatistics</a></code>&nbsp;in interface&nbsp;<code><a href="../../builder/ValueBuilder.html" title="interface in com.djrapitops.plan.extension.builder">ValueBuilder</a></code></dd>
 </dl>
 </div>
 </section>

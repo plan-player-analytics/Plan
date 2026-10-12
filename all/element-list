@@ -79,10 +79,12 @@ com.djrapitops.plan.extension.implementation.storage.queries
 com.djrapitops.plan.extension.implementation.storage.queries.aggregate
 com.djrapitops.plan.extension.implementation.storage.queries.graph
 com.djrapitops.plan.extension.implementation.storage.queries.playertable
+com.djrapitops.plan.extension.implementation.storage.queries.statistics
 com.djrapitops.plan.extension.implementation.storage.queries.table
 com.djrapitops.plan.extension.implementation.storage.transactions
 com.djrapitops.plan.extension.implementation.storage.transactions.providers
 com.djrapitops.plan.extension.implementation.storage.transactions.results
+com.djrapitops.plan.extension.statistic
 com.djrapitops.plan.extension.table
 com.djrapitops.plan.gathering
 com.djrapitops.plan.gathering.afk

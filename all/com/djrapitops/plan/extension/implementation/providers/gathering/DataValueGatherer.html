@@ -69,6 +69,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#storeExtensionInformation()" tabindex="0">storeExtensionInformation()</a></li>
 <li><a href="#updateValues(java.util.UUID,java.lang.String)" tabindex="0">updateValues(UUID, String)</a></li>
 <li><a href="#updateValues()" tabindex="0">updateValues()</a></li>
+<li><a href="#storeValue(com.djrapitops.plan.extension.implementation.providers.Parameters,com.djrapitops.plan.extension.implementation.providers.gathering.Conditions,com.djrapitops.plan.extension.implementation.builder.BuiltDataValue,org.apache.commons.lang3.function.TriFunction)" tabindex="0">storeValue(Parameters, Conditions, BuiltDataValue, TriFunction)</a></li>
 </ol>
 </li>
 </ol>
@@ -132,13 +133,19 @@ loadScripts(document, 'script');</script>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#storeExtensionInformation()" class="member-name-link">storeExtensionInformation</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateValues()" class="member-name-link">updateValues</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T&gt;&nbsp;void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#storeValue(com.djrapitops.plan.extension.implementation.providers.Parameters,com.djrapitops.plan.extension.implementation.providers.gathering.Conditions,com.djrapitops.plan.extension.implementation.builder.BuiltDataValue,org.apache.commons.lang3.function.TriFunction)" class="member-name-link">storeValue</a><wbr>(<a href="../Parameters.html" title="interface in com.djrapitops.plan.extension.implementation.providers">Parameters</a>&nbsp;parameters,
+ <a href="Conditions.html" title="class in com.djrapitops.plan.extension.implementation.providers.gathering">Conditions</a>&nbsp;conditions,
+ <a href="../../builder/BuiltDataValue.html" title="class in com.djrapitops.plan.extension.implementation.builder">BuiltDataValue</a>&lt;T&gt;&nbsp;data,
+ org.apache.commons.lang3.function.TriFunction&lt;<a href="../../ProviderInformation.html" title="class in com.djrapitops.plan.extension.implementation">ProviderInformation</a>, <a href="../Parameters.html" title="interface in com.djrapitops.plan.extension.implementation.providers">Parameters</a>, T, <a href="../../../../storage/database/transactions/Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a>&gt;&nbsp;transactionConstructor)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateValues(java.util.UUID,java.lang.String)" class="member-name-link">updateValues</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;playerName)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateValues()" class="member-name-link">updateValues</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateValues(java.util.UUID,java.lang.String)" class="member-name-link">updateValues</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;playerName)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -223,6 +230,17 @@ loadScripts(document, 'script');</script>
 <h3>updateValues</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">updateValues</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="storeValue(com.djrapitops.plan.extension.implementation.providers.Parameters,com.djrapitops.plan.extension.implementation.providers.gathering.Conditions,com.djrapitops.plan.extension.implementation.builder.BuiltDataValue,org.apache.commons.lang3.function.TriFunction)">
+<h3>storeValue</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="type-parameters">&lt;T&gt;</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">storeValue</span><wbr><span class="parameters">(<a href="../Parameters.html" title="interface in com.djrapitops.plan.extension.implementation.providers">Parameters</a>&nbsp;parameters,
+ <a href="Conditions.html" title="class in com.djrapitops.plan.extension.implementation.providers.gathering">Conditions</a>&nbsp;conditions,
+ <a href="../../builder/BuiltDataValue.html" title="class in com.djrapitops.plan.extension.implementation.builder">BuiltDataValue</a>&lt;T&gt;&nbsp;data,
+ org.apache.commons.lang3.function.TriFunction&lt;<a href="../../ProviderInformation.html" title="class in com.djrapitops.plan.extension.implementation">ProviderInformation</a>, <a href="../Parameters.html" title="interface in com.djrapitops.plan.extension.implementation.providers">Parameters</a>, T, <a href="../../../../storage/database/transactions/Transaction.html" title="class in com.djrapitops.plan.storage.database.transactions">Transaction</a>&gt;&nbsp;transactionConstructor)</span></div>
 </div>
 </section>
 </li>

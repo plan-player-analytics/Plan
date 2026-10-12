@@ -80,6 +80,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#buildPercentage(java.lang.Double)" tabindex="0">buildPercentage(Double)</a></li>
 <li><a href="#buildGroup(java.lang.String%5B%5D)" tabindex="0">buildGroup(String[])</a></li>
 <li><a href="#buildTable(com.djrapitops.plan.extension.table.Table,com.djrapitops.plan.extension.icon.Color)" tabindex="0">buildTable(Table, Color)</a></li>
+<li><a href="#buildStatistics(com.djrapitops.plan.extension.statistic.Statistics,com.djrapitops.plan.extension.icon.Color)" tabindex="0">buildStatistics(Statistics, Color)</a></li>
 <li><a href="#buildBoolean(java.util.function.Supplier)" tabindex="0">buildBoolean(Supplier)</a></li>
 <li><a href="#buildBooleanProvidingCondition(java.util.function.Supplier,java.lang.String)" tabindex="0">buildBooleanProvidingCondition(Supplier, String)</a></li>
 <li><a href="#buildString(java.util.function.Supplier)" tabindex="0">buildString(Supplier)</a></li>
@@ -89,6 +90,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#buildPercentage(java.util.function.Supplier)" tabindex="0">buildPercentage(Supplier)</a></li>
 <li><a href="#buildGroup(java.util.function.Supplier)" tabindex="0">buildGroup(Supplier)</a></li>
 <li><a href="#buildTable(java.util.function.Supplier,com.djrapitops.plan.extension.icon.Color)" tabindex="0">buildTable(Supplier, Color)</a></li>
+<li><a href="#buildStatistics(java.util.function.Supplier,com.djrapitops.plan.extension.icon.Color)" tabindex="0">buildStatistics(Supplier, Color)</a></li>
 <li><a href="#hideFromUsers(com.djrapitops.plan.extension.annotation.BooleanProvider)" tabindex="0">hideFromUsers(BooleanProvider)</a></li>
 <li><a href="#conditional(com.djrapitops.plan.extension.annotation.Conditional)" tabindex="0">conditional(Conditional)</a></li>
 <li><a href="#showAsPlayerPageLink(com.djrapitops.plan.extension.annotation.StringProvider)" tabindex="0">showAsPlayerPageLink(StringProvider)</a></li>
@@ -216,6 +218,18 @@ Obtain an instance with <a href="ExtensionDataBuilder.html#valueBuilder(java.lan
 </div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildPercentage(java.util.function.Supplier)" class="member-name-link">buildPercentage</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Double.html" title="class or interface in java.lang" class="external-link">Double</a>&gt;&nbsp;percentage)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="../statistic/Statistics.html" title="class in com.djrapitops.plan.extension.statistic">Statistics</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildStatistics(com.djrapitops.plan.extension.statistic.Statistics,com.djrapitops.plan.extension.icon.Color)" class="member-name-link">buildStatistics</a><wbr>(<a href="../statistic/Statistics.html" title="class in com.djrapitops.plan.extension.statistic">Statistics</a>&nbsp;statistics,
+ <a href="../icon/Color.html" title="enum class in com.djrapitops.plan.extension.icon">Color</a>&nbsp;tableColor)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
+<div class="block">Build statistics.</div>
+</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a><wbr>&lt;<a href="../statistic/Statistics.html" title="class in com.djrapitops.plan.extension.statistic">Statistics</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3"><code><a href="#buildStatistics(java.util.function.Supplier,com.djrapitops.plan.extension.icon.Color)" class="member-name-link">buildStatistics</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="../statistic/Statistics.html" title="class in com.djrapitops.plan.extension.statistic">Statistics</a>&gt;&nbsp;statistics,
+ <a href="../icon/Color.html" title="enum class in com.djrapitops.plan.extension.icon">Color</a>&nbsp;tableColor)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab3">
 <div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.</div>
 </div>
@@ -697,6 +711,23 @@ Remember to define <a href="../annotation/TabInfo.html" title="annotation interf
 </section>
 </li>
 <li>
+<section class="detail" id="buildStatistics(com.djrapitops.plan.extension.statistic.Statistics,com.djrapitops.plan.extension.icon.Color)">
+<h3>buildStatistics</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="return-type"><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;<a href="../statistic/Statistics.html" title="class in com.djrapitops.plan.extension.statistic">Statistics</a>&gt;</span>&nbsp;<span class="element-name">buildStatistics</span><wbr><span class="parameters">(<a href="../statistic/Statistics.html" title="class in com.djrapitops.plan.extension.statistic">Statistics</a>&nbsp;statistics,
+ <a href="../icon/Color.html" title="enum class in com.djrapitops.plan.extension.icon">Color</a>&nbsp;tableColor)</span></div>
+<div class="block">Build statistics.</div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>statistics</code> - Statistics built using <a href="../statistic/Statistics.html#create()"><code>Statistics.create()</code></a></dd>
+<dd><code>tableColor</code> - Color of the table</dd>
+<dt>Returns:</dt>
+<dd>a data value to give to <a href="ExtensionDataBuilder.html" title="interface in com.djrapitops.plan.extension.builder"><code>ExtensionDataBuilder</code></a>.</dd>
+</dl>
+</div>
+</section>
+</li>
+<li>
 <section class="detail" id="buildBoolean(java.util.function.Supplier)">
 <h3>buildBoolean</h3>
 <div class="horizontal-scroll">
@@ -794,6 +825,18 @@ Remember to define <a href="../annotation/TabInfo.html" title="annotation interf
 <div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.
 <p>
 <a href="#buildTable(com.djrapitops.plan.extension.table.Table,com.djrapitops.plan.extension.icon.Color)"><code>buildTable(Table, Color)</code></a></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="buildStatistics(java.util.function.Supplier,com.djrapitops.plan.extension.icon.Color)">
+<h3>buildStatistics</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="return-type"><a href="DataValue.html" title="interface in com.djrapitops.plan.extension.builder">DataValue</a>&lt;<a href="../statistic/Statistics.html" title="class in com.djrapitops.plan.extension.statistic">Statistics</a>&gt;</span>&nbsp;<span class="element-name">buildStatistics</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;<a href="../statistic/Statistics.html" title="class in com.djrapitops.plan.extension.statistic">Statistics</a>&gt;&nbsp;statistics,
+ <a href="../icon/Color.html" title="enum class in com.djrapitops.plan.extension.icon">Color</a>&nbsp;tableColor)</span></div>
+<div class="block">Lambda version for conditional return or throwing <a href="../NotReadyException.html" title="class in com.djrapitops.plan.extension"><code>NotReadyException</code></a>.
+<p>
+<a href="#buildStatistics(com.djrapitops.plan.extension.statistic.Statistics,com.djrapitops.plan.extension.icon.Color)"><code>buildStatistics(Statistics, Color)</code></a></div>
 </div>
 </section>
 </li>
