@@ -185,7 +185,6 @@ public class PlanNeoForge implements PlanPlugin {
         }
     }
 
-    @Override
     public File getDataFolder() {
         return FMLPaths.CONFIGDIR.get().resolve("plan").toFile();
     }

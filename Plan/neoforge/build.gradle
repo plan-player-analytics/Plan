@@ -1,7 +1,14 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 
-apply plugin: "net.neoforged.moddev"
-apply plugin: "com.gradleup.shadow"
+plugins {
+    id "net.neoforged.moddev" version "2.0.148"
+    id "com.gradleup.shadow"
+}
+
+repositories {
+    maven { url = "https://maven.neoforged.net/releases" }
+    maven { url = "https://maven.sinytra.org" }
+}
 
 ext {
     neoVersion = "26.2.0.90"
@@ -13,6 +20,11 @@ ext {
 configurations {
     shade
     implementation.extendsFrom shade
+
+    // Keep the compile classpath compatible with Minecraft 26.2 when common updates.
+    compileClasspath {
+        resolutionStrategy.force "commons-codec:commons-codec:1.22.0", "org.jspecify:jspecify:1.0.0"
+    }
 }
 
 // Reuse Fabric platform code that is not Fabric-Loader specific.
@@ -20,6 +32,8 @@ sourceSets {
     main {
         java {
             srcDir project(":fabric").file("src/main/java")
+            // Use the local 26.2 adapter while Fabric follows newer Minecraft APIs.
+            exclude { it.file == project(":fabric").file("src/main/java/net/playeranalytics/plan/commands/FabricCommandManager.java") }
             exclude "net/playeranalytics/plan/PlanFabric.java"
             exclude "net/playeranalytics/plan/PlanFabricComponent.java"
             exclude "net/playeranalytics/plugin/FabricPlatformLayer.java"
