@@ -31,7 +31,7 @@ public record ExtensionStatisticsDataDto(
         this(
                 statisticsData.getProviderName(),
                 new StatisticsDto(statisticsData.getStatistics()),
-                new IconDto(statisticsData.getIcon()),
+                new IconDto(statisticsData.getIcon().setColor(com.djrapitops.plan.extension.icon.Color.NONE)),
                 statisticsData.getTableColor().name(),
                 Color.getByName(statisticsData.getTableColor().name()).orElse(Color.NONE)
                         .getBackgroundColorClass()

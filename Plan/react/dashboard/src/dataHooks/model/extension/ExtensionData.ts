@@ -68,6 +68,7 @@ export type ExtensionStatisticsData = {
     providerName: string;
     statistics: ExtensionStatistics;
     tableColor: string;
+    icon: ExtensionIcon;
     tableColorClass: string;
 }
 

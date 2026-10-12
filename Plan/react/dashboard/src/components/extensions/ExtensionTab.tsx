@@ -8,6 +8,7 @@ import Masonry from "masonry-layout";
 import {ExtensionGraphs} from "./ExtensionGraphs";
 import {Row} from "react-bootstrap";
 import {randomUuid} from "../../util/uuid";
+import {ExtensionStatistics} from "./ExtensionStatistics";
 
 type Props = {
     tab: DataType,
@@ -49,7 +50,7 @@ export const ExtensionTab = ({tab, widths}: Props) => {
                 case "GROUPS":
                     return null;
                 case "STATISTICS":
-                    return null;
+                    return <ExtensionStatistics key={type} uuid={uuid} tab={tab} width={widths?.STATISTICS || 12}/>;
                 case "FLAGS":
                     return null;
                 case "VALUES":

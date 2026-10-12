@@ -3,7 +3,7 @@ import {Col} from "react-bootstrap";
 import LoadIn from "../../components/animation/LoadIn";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 import {useAuth} from "../../hooks/authenticationHook";
-import {StatisticsTable} from "../../components/table/StatisticsTable";
+import {StatisticsTableCard} from "../../components/table/StatisticsTable";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import {PlanDataResponse} from "../../service/PlanResponse";
 import {CardLoader} from "../../components/navigation/Loader";
@@ -60,7 +60,7 @@ const LoadingStatistics = () => {
     if (loadingError) return <ErrorViewCard error={loadingError}/>
     if (!data) return <CardLoader/>;
     return <div id={"network-by-server-statistics"}>
-        <StatisticsTable statistics={data}/>
+        <StatisticsTableCard statistics={data}/>
     </div>
 }
 
@@ -73,7 +73,7 @@ const LoadingAggregateStatistics = () => {
     if (loadingError) return <ErrorViewCard error={loadingError}/>
     if (!data) return <CardLoader/>;
     return <div id={"network-aggregate-statistics"}>
-        <StatisticsTable statistics={data} showAllByDefault/>
+        <StatisticsTableCard statistics={data} showAllByDefault/>
     </div>
 }
 

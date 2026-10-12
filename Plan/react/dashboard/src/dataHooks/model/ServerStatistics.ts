@@ -1,6 +1,6 @@
 export type ServerStatistics = {
     serverUUID: string;
     statistics: {
-        [key: string]: number;
+        [key: string]: number | null;
     }
 }
