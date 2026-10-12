@@ -28,6 +28,8 @@ import java.util.Objects;
  * Statistics can be grouped together by placing a : in the key, for example group:key1, group:key2
  * <p>
  * Player statistics will be automatically summed up into server-wide statistics.
+ * <p>
+ * Requires Capability DATA_EXTENSION_STATISTICS_API.
  *
  * @author AuroraLS3
  */

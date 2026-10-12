@@ -32,6 +32,8 @@ import java.lang.annotation.Target;
  * Used for key-number statistical data.
  * <p>
  * It is recommended to place each statistics set on their own tab with a {@link Tab} annotation on the same method.
+ * <p>
+ * Requires capability DATA_EXTENSION_STATISTICS_API.
  *
  * @author AuroraLS3
  */
