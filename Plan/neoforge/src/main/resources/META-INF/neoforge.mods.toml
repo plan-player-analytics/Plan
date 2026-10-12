@@ -31,10 +31,10 @@ versionRange="[${minecraft_version}]"
 ordering="NONE"
 side="SERVER"
 
-# Published FFAPI is installed separately.
+# FFAPI is installed separately.
 [[dependencies.plan]]
 modId="fabric_api"
 type="required"
-versionRange="[0.161.0,)"
+versionRange="[0.162.0,)"
 ordering="NONE"
 side="SERVER"

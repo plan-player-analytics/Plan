@@ -4,10 +4,10 @@ apply plugin: "net.neoforged.moddev"
 apply plugin: "com.gradleup.shadow"
 
 ext {
-    neoVersion = "26.2.0.90"
-    minimumNeoVersion = "26.2.0.88"
-    minecraftVersion = "26.2"
-    ffapiVersion = "0.161.0+26.2+4.0.1"
+    neoVersion = "26.3.0.76"
+    minimumNeoVersion = "26.3.0.57-beta"
+    minecraftVersion = "26.3"
+    ffapiVersion = "0.162.0+26.3+5.0.0+local"
 }
 
 configurations {
@@ -47,7 +47,7 @@ dependencies {
 
     implementation "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
 
-    // Install the published FFAPI jar alongside Plan; do not shade or patch its modules.
+    // Development build from BluSpring/ForgifiedFabricAPI at 52385d08cafb31a98ed7aaa1b1c010085294ebd4.
     implementation "org.sinytra.forgified-fabric-api:forgified-fabric-api:$ffapiVersion"
 
     // Optional permissions API (same package as Fabric); present when a NeoForge port is installed

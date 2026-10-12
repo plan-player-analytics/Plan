@@ -8,11 +8,11 @@ buildscript {
 }
 
 plugins {
+    id "net.neoforged.moddev" version "2.0.148" apply false
     id("base")
     id "org.sonarqube" version "7.3.1.8318"
     id "com.gradleup.shadow" version "9.6.1" apply false
-    id "net.fabricmc.fabric-loom" version "1.17.17" apply false
-    id "net.neoforged.moddev" version "2.0.148" apply false
+    id "net.fabricmc.fabric-loom" version "1.18.2" apply false
 }
 
 apply plugin: "nebula-aggregate-javadocs"

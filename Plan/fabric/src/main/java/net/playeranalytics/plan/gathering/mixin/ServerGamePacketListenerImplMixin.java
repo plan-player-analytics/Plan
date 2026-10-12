@@ -33,14 +33,7 @@ public class ServerGamePacketListenerImplMixin {
         PlanFabricEvents.ON_COMMAND.invoker().onCommand((ServerGamePacketListenerImpl) (Object) this, packet.command());
     }
 
-    @Inject(
-        method = "handleMovePlayer",
-        at = @At(
-            value = "INVOKE",
-            target = "Lnet/minecraft/server/level/ServerPlayer;level()Lnet/minecraft/server/level/ServerLevel;",
-            ordinal = 1
-        )
-    )
+    @Inject(method = "handleMovePlayer", at = @At("TAIL"))
     public void onPlayerMove(ServerboundMovePlayerPacket packet, CallbackInfo ci) {
         PlanFabricEvents.ON_MOVE.invoker().onMove((ServerGamePacketListenerImpl) (Object) this, packet);
     }

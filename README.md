@@ -16,7 +16,7 @@ Plan supports multiple different platforms and versions; Spigot, Paper, Fabric, 
 
 Fabric and NeoForge each ship as separate jars (`PlanFabric-*.jar`, `PlanNeoForge-*.jar`). Other platforms share one jar.
 
-For NeoForge dedicated servers on Minecraft 26.2, use Java 25 and NeoForge 26.2.0.88 or newer. Install `PlanNeoForge-*.jar` and [Forgified Fabric API](https://modrinth.com/mod/forgified-fabric-api) `0.161.0+26.2+4.0.1` or a newer compatible 26.2 release in `mods/`.
+For NeoForge dedicated servers on Minecraft 26.3, use Java 25 and NeoForge 26.3.0.76. Install `PlanNeoForge-*.jar` alongside FFAPI development build `0.162.0+26.3+5.0.0+local`, built from [the 26.3 port](https://github.com/Sinytra/ForgifiedFabricAPI/pull/297) at commit `52385d08cafb31a98ed7aaa1b1c010085294ebd4`. A released FFAPI 26.3 dependency is not yet available.
 
 FFAPI is a separate dependency; Sinytra Connector is not required. Plan stores its configuration and database under `config/plan/`.
 

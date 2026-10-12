@@ -35,7 +35,7 @@ import net.minecraft.commands.Commands;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.permissions.Permissions;
-import com.djrapitops.plan.PlanPlugin;
+import net.minecraft.server.permissions.PermissionLevel;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
 
 import java.util.concurrent.CompletableFuture;
@@ -43,20 +43,18 @@ import java.util.concurrent.CompletableFuture;
 public class FabricCommandManager {
 
     private final CommandDispatcher<CommandSourceStack> dispatcher;
+    private final ErrorLogger errorLogger;
     private RunnableFactory runnableFactory;
     private LiteralArgumentBuilder<CommandSourceStack> root;
-    private final PlanPlugin plugin;
-    private final ErrorLogger errorLogger;
 
-    public FabricCommandManager(CommandDispatcher<CommandSourceStack> dispatcher, PlanPlugin plugin, ErrorLogger errorLogger) {
+    public FabricCommandManager(CommandDispatcher<CommandSourceStack> dispatcher, ErrorLogger errorLogger) {
         this.dispatcher = dispatcher;
-        this.plugin = plugin;
         this.errorLogger = errorLogger;
     }
 
     public static boolean checkPermission(CommandSourceStack src, String permission) {
         if (isPermissionsApiAvailable()) {
-            return me.lucko.fabric.api.permissions.v0.Permissions.check(src, permission, 2);
+            return me.lucko.fabric.api.permissions.v0.Permissions.check(src, permission, PermissionLevel.GAMEMASTERS);
         } else if (src.permissions().hasPermission(Permissions.COMMANDS_GAMEMASTER)) {
             return true;
         } else {

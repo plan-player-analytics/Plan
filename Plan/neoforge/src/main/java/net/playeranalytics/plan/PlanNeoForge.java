@@ -117,7 +117,7 @@ public class PlanNeoForge implements PlanPlugin {
     @Override
     public void registerCommand(Subcommand command) {
         rootCommand = command;
-        new FabricCommandManager(commandDispatcher, this, errorLogger).registerRoot(command, runnableFactory);
+        new FabricCommandManager(commandDispatcher, errorLogger).registerRoot(command, runnableFactory);
     }
 
     @Override
@@ -185,7 +185,6 @@ public class PlanNeoForge implements PlanPlugin {
         }
     }
 
-    @Override
     public File getDataFolder() {
         return FMLPaths.CONFIGDIR.get().resolve("plan").toFile();
     }
