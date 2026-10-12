@@ -4,10 +4,10 @@ apply plugin: "net.neoforged.moddev"
 apply plugin: "com.gradleup.shadow"
 
 ext {
-    neoVersion = "26.2.0.59"
+    neoVersion = "26.2.0.90"
+    minimumNeoVersion = "26.2.0.88"
     minecraftVersion = "26.2"
-    // FFAPI has no 26.2 release yet; 26.1.2 is the stand-in until Sinytra ships 26.2.
-    ffapiVersion = "0.155.2+26.1.2+3.5.0"
+    ffapiVersion = "0.161.0+26.2+4.0.1"
 }
 
 configurations {
@@ -35,34 +35,10 @@ sourceSets {
             exclude "fabric.mod.json"
         }
     }
-    test {
-        java {
-            srcDir project(":fabric").file("src/test/java")
-            exclude "net/playeranalytics/plan/FabricSystemTest.java"
-            exclude "utilities/mocks/FabricMockComponent.java"
-            exclude "utilities/mocks/PlanFabricMocker.java"
-        }
-    }
 }
 
 neoForge {
     version = neoVersion
-
-    runs {
-        server {
-            server()
-            programArgument "--nogui"
-        }
-        configureEach {
-            logLevel = org.slf4j.event.Level.INFO
-        }
-    }
-
-    mods {
-        plan {
-            sourceSet sourceSets.main
-        }
-    }
 }
 
 dependencies {
@@ -71,7 +47,7 @@ dependencies {
 
     implementation "net.playeranalytics:platform-abstraction-layer-api:$palVersion"
 
-    // Required at runtime; not shaded into PlanNeoForge.jar
+    // Install the published FFAPI jar alongside Plan; do not shade or patch its modules.
     implementation "org.sinytra.forgified-fabric-api:forgified-fabric-api:$ffapiVersion"
 
     // Optional permissions API (same package as Fabric); present when a NeoForge port is installed
@@ -87,15 +63,13 @@ compileJava {
 
 processResources {
     inputs.property "version", fullVersionSemantic
-    inputs.property "neoVersion", neoVersion
+    inputs.property "minimumNeoVersion", minimumNeoVersion
     inputs.property "minecraftVersion", minecraftVersion
 
     filesMatching("META-INF/neoforge.mods.toml") {
-        expand([
-                "version"          : fullVersionSemantic,
-                "neo_version"      : neoVersion,
+        expand "version": fullVersionSemantic,
+                "neo_version": minimumNeoVersion,
                 "minecraft_version": minecraftVersion
-        ])
     }
 }
 
@@ -159,6 +133,9 @@ tasks.named("shadowJar", ShadowJar) {
     relocate "jakarta.servlet", "plan.jakarta.servlet"
     relocate "javax.servlet", "plan.javax.servlet"
 
+    filesMatching("META-INF/services/**") {
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
+    }
     mergeServiceFiles()
 
     destinationDirectory.set(file("$rootDir/builds/"))

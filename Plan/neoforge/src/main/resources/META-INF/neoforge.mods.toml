@@ -7,6 +7,7 @@ issueTrackerURL="https://github.com/plan-player-analytics/Plan/issues"
 modId="plan"
 version="${version}"
 displayName="Plan"
+displayTest="IGNORE_ALL_VERSION"
 displayURL="https://github.com/plan-player-analytics/Plan"
 authors="AuroraLS3, Player Analytics contributors"
 description='''
@@ -21,18 +22,19 @@ modId="neoforge"
 type="required"
 versionRange="[${neo_version},)"
 ordering="NONE"
-side="BOTH"
+side="SERVER"
 
 [[dependencies.plan]]
 modId="minecraft"
 type="required"
 versionRange="[${minecraft_version}]"
 ordering="NONE"
-side="BOTH"
+side="SERVER"
 
+# Published FFAPI is installed separately.
 [[dependencies.plan]]
 modId="fabric_api"
 type="required"
-versionRange="*"
+versionRange="[0.161.0,)"
 ordering="NONE"
-side="BOTH"
+side="SERVER"

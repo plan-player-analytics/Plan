@@ -27,12 +27,17 @@ import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.settings.theme.PlanColorScheme;
 import com.djrapitops.plan.utilities.java.ThreadContextClassLoaderSwap;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import com.mojang.brigadier.CommandDispatcher;
+import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.dedicated.DedicatedServer;
+import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.loading.FMLPaths;
+import net.neoforged.neoforge.common.NeoForge;
+import net.neoforged.neoforge.event.RegisterCommandsEvent;
+import net.neoforged.neoforge.event.server.ServerStartingEvent;
+import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.playeranalytics.plan.commands.FabricCommandManager;
 import net.playeranalytics.plan.identification.properties.NeoForgeServerProperties;
 import net.playeranalytics.plugin.NeoForgePlatformLayer;
@@ -49,13 +54,15 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 /**
- * Main class for Plan's NeoForge version (FFAPI).
+ * Main class for Plan's NeoForge version, using native lifecycle and command events
+ * and FFAPI for shared Fabric listeners.
  */
-@Mod("plan")
+@Mod(value = "plan", dist = Dist.DEDICATED_SERVER)
 public class PlanNeoForge implements PlanPlugin {
 
     private DedicatedServer server;
-    private FabricCommandManager fabricCommandManager;
+    private CommandDispatcher<CommandSourceStack> commandDispatcher;
+    private Subcommand rootCommand;
 
     private PlanSystem system;
     private Locale locale;
@@ -71,17 +78,25 @@ public class PlanNeoForge implements PlanPlugin {
         pluginLogger = (FabricPluginLogger) abstractionLayer.getPluginLogger();
         runnableFactory = abstractionLayer.getRunnableFactory();
 
-        ServerLifecycleEvents.SERVER_STARTING.register(minecraftServer -> {
-            this.server = (DedicatedServer) minecraftServer;
-            onEnable();
-        });
+        NeoForge.EVENT_BUS.addListener(this::onRegisterCommands);
+        NeoForge.EVENT_BUS.addListener(this::onServerStarting);
+        NeoForge.EVENT_BUS.addListener(this::onServerStopping);
+    }
 
-        CommandRegistrationCallback.EVENT.register(
-                (dispatcher, registryAccess, environment) ->
-                        fabricCommandManager = new FabricCommandManager(dispatcher, this, errorLogger)
-        );
+    private void onRegisterCommands(RegisterCommandsEvent event) {
+        commandDispatcher = event.getDispatcher();
+        if (system != null && system.isEnabled() && rootCommand != null) {
+            registerCommand(rootCommand);
+        }
+    }
 
-        ServerLifecycleEvents.SERVER_STOPPING.register(minecraftServer -> onDisable());
+    private void onServerStarting(ServerStartingEvent event) {
+        this.server = (DedicatedServer) event.getServer();
+        onEnable();
+    }
+
+    private void onServerStopping(ServerStoppingEvent event) {
+        onDisable();
     }
 
     @Override
@@ -101,7 +116,8 @@ public class PlanNeoForge implements PlanPlugin {
 
     @Override
     public void registerCommand(Subcommand command) {
-        fabricCommandManager.registerRoot(command, runnableFactory);
+        rootCommand = command;
+        new FabricCommandManager(commandDispatcher, this, errorLogger).registerRoot(command, runnableFactory);
     }
 
     @Override
