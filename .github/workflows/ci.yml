@@ -82,6 +82,12 @@ jobs:
           name: PlanFabric-${{ env.versionString }}-${{ env.git_hash }}.jar
           path: ${{ env.artifactPath }}/PlanFabric-${{ env.snapshotVersion }}.jar
           archive: false
+      - name: 📤 Upload PlanNeoForge.jar
+        uses: actions/upload-artifact@v7
+        with:
+          name: PlanNeoForge-${{ env.versionString }}-${{ env.git_hash }}.jar
+          path: ${{ env.artifactPath }}/PlanNeoForge-${{ env.snapshotVersion }}.jar
+          archive: false
       - name: 🚦 Setup Selenium Webdriver
         uses: nanasess/setup-chromedriver@v2
       - name: 🚦 Setup Selenium Webdriver settings

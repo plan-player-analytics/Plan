@@ -12,7 +12,13 @@
 
 Player Analytics is a fully-fledged solution for the analytics needs of your Minecraft server. A built-in webserver displays insights into different aspects of the server such as Online activity, Playerbase, and how these change over time.
 
-Plan supports multiple different platforms and versions; Spigot, Paper, Fabric, Sponge, SpongeForge, Bungeecord, Velocity, Folia & all derivatives - One jar for all platforms.
+Plan supports multiple different platforms and versions; Spigot, Paper, Fabric, NeoForge (via Forgified Fabric API), Sponge, SpongeForge, Bungeecord, Velocity, Folia & all derivatives.
+
+Fabric and NeoForge each ship as separate jars (`PlanFabric-*.jar`, `PlanNeoForge-*.jar`). Other platforms share one jar.
+
+For NeoForge dedicated servers on Minecraft 26.2, use Java 25 and NeoForge 26.2.0.88 or newer. Install `PlanNeoForge-*.jar` and [Forgified Fabric API](https://modrinth.com/mod/forgified-fabric-api) `0.161.0+26.2+4.0.1` or a newer compatible 26.2 release in `mods/`.
+
+FFAPI is a separate dependency; Sinytra Connector is not required. Plan stores its configuration and database under `config/plan/`.
 
 - [Version 5 Release trailer on Youtube](https://www.youtube.com/watch?v=BS_Ti9zkoRc)
 
