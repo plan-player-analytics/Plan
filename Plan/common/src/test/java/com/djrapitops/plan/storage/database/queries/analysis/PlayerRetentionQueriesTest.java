@@ -38,7 +38,7 @@ public interface PlayerRetentionQueriesTest extends DatabaseTestPreparer {
     @Test
     default void networkBasedRetentionDataIsFetched() {
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
-        long registerTime = session.getStart();
+        long registerTime = session.start();
 
         db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
         db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[1]));
@@ -50,7 +50,7 @@ public interface PlayerRetentionQueriesTest extends DatabaseTestPreparer {
 
         db().executeTransaction(new StoreSessionTransaction(session));
 
-        List<RetentionData> expected = List.of(new RetentionData(playerUUID, registerTime, session.getEnd(), session.getLength()));
+        List<RetentionData> expected = List.of(new RetentionData(playerUUID, registerTime, session.end(), session.getLength()));
         List<RetentionData> result = db().query(PlayerRetentionQueries.fetchRetentionData());
         assertEquals(expected, result);
     }
@@ -58,7 +58,7 @@ public interface PlayerRetentionQueriesTest extends DatabaseTestPreparer {
     @Test
     default void serverBasedRetentionDataIsFetched() {
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
-        long registerTime = session.getStart();
+        long registerTime = session.start();
 
         db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
         db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[1]));
@@ -69,7 +69,7 @@ public interface PlayerRetentionQueriesTest extends DatabaseTestPreparer {
 
         db().executeTransaction(new StoreSessionTransaction(session));
 
-        List<RetentionData> expected = List.of(new RetentionData(playerUUID, registerTime, session.getEnd(), session.getLength()));
+        List<RetentionData> expected = List.of(new RetentionData(playerUUID, registerTime, session.end(), session.getLength()));
         List<RetentionData> result = db().query(PlayerRetentionQueries.fetchRetentionData(serverUUID()));
         assertEquals(expected, result);
     }

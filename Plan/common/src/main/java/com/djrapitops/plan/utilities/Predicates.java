@@ -33,7 +33,7 @@ public class Predicates {
 
     public static <T extends DateHolder> Predicate<T> within(long after, long before) {
         return holder -> {
-            long date = holder.getDate();
+            long date = holder.date();
             return after < date && date <= before;
         };
     }

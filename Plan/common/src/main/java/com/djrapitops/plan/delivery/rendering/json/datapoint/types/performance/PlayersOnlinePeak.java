@@ -64,11 +64,11 @@ public class PlayersOnlinePeak implements Datapoint<DateObj<Long>> {
         List<ServerUUID> serverUUIDs = filter.getServerUUIDs();
         if (serverUUIDs.isEmpty()) {
             return dbSystem.getDatabase().query(TPSQueries.fetchNetworkPeakPlayerCount(filter.getAfter(), filter.getBefore(), serverSensor.usingRedisBungee()))
-                    .map(peak -> new DateObj<>(peak.getDate(), peak.getValue().longValue()));
+                    .map(peak -> new DateObj<>(peak.date(), peak.getValue().longValue()));
         }
 
         return dbSystem.getDatabase().query(TPSQueries.fetchPeakPlayerCount(serverUUIDs, filter.getAfter(), filter.getBefore()))
-                .map(peak -> new DateObj<>(peak.getDate(), peak.getValue().longValue()));
+                .map(peak -> new DateObj<>(peak.date(), peak.getValue().longValue()));
     }
 
     @Override

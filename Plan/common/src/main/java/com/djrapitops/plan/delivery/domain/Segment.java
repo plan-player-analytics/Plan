@@ -17,6 +17,8 @@
 package com.djrapitops.plan.delivery.domain;
 
 /**
+ * Represents a timeframe that started and ended at some point in time.
+ *
  * @author AuroraLS3
  */
 public class Segment {

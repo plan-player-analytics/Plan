@@ -64,6 +64,9 @@ public class RemoveEverythingTransaction extends Patch {
         clearTable(ExtensionPlayerValueTable.TABLE_NAME);
         clearTable(ExtensionServerValueTable.TABLE_NAME);
         clearTable(ExtensionGroupsTable.TABLE_NAME);
+        clearTable(ExtensionStatisticServerValueTable.TABLE_NAME);
+        clearTable(ExtensionStatisticPlayerValueTable.TABLE_NAME);
+        clearTable(ExtensionStatisticTable.TABLE_NAME);
         clearTable(ExtensionProviderTable.TABLE_NAME);
         clearTable(ExtensionPlayerTableValueTable.TABLE_NAME);
         clearTable(ExtensionServerTableValueTable.TABLE_NAME);

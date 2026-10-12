@@ -75,7 +75,7 @@ public interface TPSQueriesTest extends DatabaseTestPreparer {
         execute(LargeStoreQueries.storeAllTPSData(Map.of(serverUUID(), tps)));
 
         tps.sort(new TPSComparator());
-        var expected = tps.stream().map(t -> new DateObj<>(t.getDate(), t.getPlayers())).toList();
+        var expected = tps.stream().map(t -> new DateObj<>(t.date(), t.getPlayers())).toList();
         var result = db().query(TPSQueries.fetchViewPreviewGraphData(serverUUID()));
         assertEquals(expected, result);
     }
@@ -86,7 +86,7 @@ public interface TPSQueriesTest extends DatabaseTestPreparer {
         execute(LargeStoreQueries.storeAllTPSData(Map.of(serverUUID(), tps)));
 
         tps.sort(new TPSComparator());
-        var expected = tps.stream().map(t -> new DateObj<>(t.getDate(), t.getPlayers())).toList();
+        var expected = tps.stream().map(t -> new DateObj<>(t.date(), t.getPlayers())).toList();
         var result = db().query(TPSQueries.fetchPlayersOnlineOfServer(Long.MIN_VALUE, Long.MAX_VALUE, serverUUID()));
         assertEquals(expected, result);
     }
@@ -102,7 +102,7 @@ public interface TPSQueriesTest extends DatabaseTestPreparer {
                 .orElseThrow();
         assertEquals(expected, result);
 
-        var expectedDate = expected.getDate();
+        var expectedDate = expected.date();
         var resultDate = db().query(TPSQueries.fetchLastStoredTpsDate(serverUUID()))
                 .orElseThrow();
         assertEquals(expectedDate, resultDate);
@@ -209,7 +209,7 @@ public interface TPSQueriesTest extends DatabaseTestPreparer {
         }
 
         long expected = tpsData.stream()
-                .mapToLong(TPS::getDate)
+                .mapToLong(TPS::date)
                 .max()
                 .orElseThrow(AssertionError::new);
         long result = db().query(TPSQueries.fetchLastStoredTpsDate(serverUUID()))
@@ -237,27 +237,27 @@ public interface TPSQueriesTest extends DatabaseTestPreparer {
     default void serverStartDateIsFetched() {
         List<TPS> tpsData = RandomData.randomTPS();
         TPS stored = tpsData.get(0);
-        TPS stored2 = TPSBuilder.get().date(stored.getDate() + TimeUnit.MINUTES.toMillis(1L)).toTPS();
+        TPS stored2 = TPSBuilder.get().date(stored.date() + TimeUnit.MINUTES.toMillis(1L)).toTPS();
         db().executeTransaction(new TPSStoreTransaction(serverUUID(), stored));
         db().executeTransaction(new TPSStoreTransaction(serverUUID(), stored2));
 
         Optional<Long> result = db().query(TPSQueries.fetchLatestServerStartTime(serverUUID(), TimeUnit.MINUTES.toMillis(3)));
         assertTrue(result.isPresent());
-        assertEquals(stored.getDate(), result.get());
+        assertEquals(stored.date(), result.get());
     }
 
     @Test
     default void serverStartDateIsCorrect() {
         List<TPS> tpsData = RandomData.randomTPS();
         TPS stored = tpsData.get(0);
-        TPS stored2 = TPSBuilder.get().date(stored.getDate() + TimeUnit.MINUTES.toMillis(4L)).toTPS();
-        TPS stored3 = TPSBuilder.get().date(stored.getDate() + TimeUnit.MINUTES.toMillis(5L)).toTPS();
+        TPS stored2 = TPSBuilder.get().date(stored.date() + TimeUnit.MINUTES.toMillis(4L)).toTPS();
+        TPS stored3 = TPSBuilder.get().date(stored.date() + TimeUnit.MINUTES.toMillis(5L)).toTPS();
         db().executeTransaction(new TPSStoreTransaction(serverUUID(), stored));
         db().executeTransaction(new TPSStoreTransaction(serverUUID(), stored2));
         db().executeTransaction(new TPSStoreTransaction(serverUUID(), stored3));
 
         Optional<Long> result = db().query(TPSQueries.fetchLatestServerStartTime(serverUUID(), TimeUnit.MINUTES.toMillis(3)));
         assertTrue(result.isPresent());
-        assertEquals(stored2.getDate(), result.get());
+        assertEquals(stored2.date(), result.get());
     }
 }

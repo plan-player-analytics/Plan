@@ -29,6 +29,6 @@ public class DateHolderRecentComparator implements Comparator<DateHolder> {
 
     @Override
     public int compare(DateHolder one, DateHolder two) {
-        return Long.compare(two.getDate(), one.getDate());
+        return Long.compare(two.date(), one.date());
     }
 }

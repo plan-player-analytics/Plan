@@ -406,8 +406,8 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
         batching(currentId -> {
             List<WorldTable.Row> rows = fromDB.query(WorldTimesQueries.fetchWorldRows(currentId, ROW_LIMIT))
                     .stream().filter(row -> !worldLookupTable.contains(world ->
-                            world.getWorldName().equals(row.getName())
-                                    && world.getServerUUID().equals(row.getServerUUID())))
+                            world.worldName().equals(row.getName())
+                                    && world.serverUUID().equals(row.getServerUUID())))
                     .collect(Collectors.toList());
             mapServerUUIDs(rows);
             toDB.executeInTransaction(LargeStoreQueries.insertWorlds(rows)).join();

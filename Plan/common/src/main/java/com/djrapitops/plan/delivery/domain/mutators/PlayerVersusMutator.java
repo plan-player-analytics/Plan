@@ -92,7 +92,7 @@ public class PlayerVersusMutator {
 
     public List<String> toTopWeapons(int limit) {
         return kills.stream()
-                .map(PlayerKill::getWeapon)
+                .map(PlayerKill::weapon)
                 .collect(HashMap<String, Integer>::new, (map, weapon) -> map.put(weapon, map.getOrDefault(weapon, 0) + 1), (mapOne, mapTwo) -> {
                 }) // Collected to Map with weapon counts
                 .entrySet().stream()

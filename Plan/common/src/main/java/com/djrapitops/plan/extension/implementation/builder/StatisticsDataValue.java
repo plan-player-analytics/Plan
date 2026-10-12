@@ -14,33 +14,19 @@
  *  You should have received a copy of the GNU Lesser General Public License
  *  along with Plan. If not, see <https://www.gnu.org/licenses/>.
  */
-package com.djrapitops.plan.delivery.export;
+package com.djrapitops.plan.extension.implementation.builder;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.djrapitops.plan.extension.implementation.ProviderInformation;
+import com.djrapitops.plan.extension.statistic.Statistics;
 
-/**
- * Export utility that takes care of path replacement for different resources referenced in other files.
- *
- * @author AuroraLS3
- */
-public class ExportPaths {
+import java.util.function.Supplier;
 
-    private final List<String> replace;
-    private final List<String> with;
-
-    public ExportPaths() {
-        replace = new ArrayList<>();
-        with = new ArrayList<>();
+public class StatisticsDataValue extends BuiltDataValue<Statistics> {
+    public StatisticsDataValue(Statistics value, ProviderInformation information) {
+        super(value, information);
     }
 
-    public void put(String replace, String with) {
-        this.replace.add(replace);
-        this.with.add(with);
-    }
-
-    public void clear() {
-        this.replace.clear();
-        this.with.clear();
+    public StatisticsDataValue(Supplier<Statistics> supplier, ProviderInformation information) {
+        super(supplier, information);
     }
 }

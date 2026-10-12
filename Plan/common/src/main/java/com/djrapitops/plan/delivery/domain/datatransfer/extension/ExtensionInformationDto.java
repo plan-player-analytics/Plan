@@ -18,44 +18,15 @@ package com.djrapitops.plan.delivery.domain.datatransfer.extension;
 
 import com.djrapitops.plan.extension.implementation.results.ExtensionInformation;
 
-import java.util.Objects;
-
-public class ExtensionInformationDto {
-
-    private final String pluginName;
-    private final IconDto icon;
+public record ExtensionInformationDto(
+        String pluginName,
+        IconDto icon
+) {
 
     public ExtensionInformationDto(ExtensionInformation extensionInformation) {
-        this.pluginName = extensionInformation.getPluginName();
-        this.icon = new IconDto(extensionInformation.getIcon());
-    }
-
-    public String getPluginName() {
-        return pluginName;
-    }
-
-    public IconDto getIcon() {
-        return icon;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ExtensionInformationDto that = (ExtensionInformationDto) o;
-        return Objects.equals(getPluginName(), that.getPluginName()) && Objects.equals(getIcon(), that.getIcon());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getPluginName(), getIcon());
-    }
-
-    @Override
-    public String toString() {
-        return "ExtensionInformationDto{" +
-                "pluginName='" + pluginName + '\'' +
-                ", icon=" + icon +
-                '}';
+        this(
+                extensionInformation.getPluginName(),
+                new IconDto(extensionInformation.getIcon())
+        );
     }
 }

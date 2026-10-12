@@ -175,7 +175,7 @@ public abstract class BukkitImporter implements Importer {
         boolean banned = userImportData.isBanned();
         String joinAddress = userImportData.getJoinAddress();
 
-        return new UserInfo(uuid, serverUUID.get(), registered, op, joinAddress, banned);
+        return new UserInfo(uuid, serverUUID.get(), registered, banned, op, joinAddress);
     }
 
     private FinishedSession toSession(UserImportData userImportData) {

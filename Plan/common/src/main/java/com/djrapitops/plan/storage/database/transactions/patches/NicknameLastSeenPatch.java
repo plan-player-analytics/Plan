@@ -133,9 +133,9 @@ public class NicknameLastSeenPatch extends Patch {
                     Set<Nickname> nicks = entry.getValue();
                     statement.setInt(3, userId);
                     for (Nickname nick : nicks) {
-                        Integer serverID = serverIDsByUUID.get(nick.getServerUUID());
-                        statement.setLong(1, nick.getDate());
-                        statement.setString(2, nick.getName());
+                        Integer serverID = serverIDsByUUID.get(nick.serverUUID());
+                        statement.setLong(1, nick.date());
+                        statement.setString(2, nick.name());
                         statement.setInt(4, serverID);
                         statement.addBatch();
                     }

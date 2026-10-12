@@ -19,49 +19,11 @@ package com.djrapitops.plan.delivery.domain.datatransfer.graphs;
 import com.djrapitops.plan.delivery.domain.datatransfer.ServerDto;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Represents a line graph of some server so that they can be stacked.
  *
  * @author AuroraLS3
  */
-public class ServerSpecificLineGraph {
-
-    private final List<Number[]> points;
-    private final ServerDto server;
-
-    public ServerSpecificLineGraph(List<Number[]> points, ServerDto server) {
-        this.points = points;
-        this.server = server;
-    }
-
-    public List<Number[]> getPoints() {
-        return points;
-    }
-
-    public ServerDto getServer() {
-        return server;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ServerSpecificLineGraph that = (ServerSpecificLineGraph) o;
-        return Objects.equals(getPoints(), that.getPoints()) && Objects.equals(getServer(), that.getServer());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getPoints(), getServer());
-    }
-
-    @Override
-    public String toString() {
-        return "ServerSpecificLineGraph{" +
-                "points=" + points +
-                ", server=" + server +
-                '}';
-    }
+public record ServerSpecificLineGraph(List<Number[]> points, ServerDto server) {
 }

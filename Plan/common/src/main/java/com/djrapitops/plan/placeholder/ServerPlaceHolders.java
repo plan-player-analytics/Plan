@@ -93,7 +93,7 @@ public class ServerPlaceHolders implements Placeholders {
                         new DateObjMutator<>(data)
                                 .mostRecent()
                                 .ifPresent(playersOnline -> {
-                                    if (Math.abs(count.getDate() - playersOnline.getDate()) < TimeUnit.MINUTES.toMillis(2L)) {
+                                    if (Math.abs(count.date() - playersOnline.date()) < TimeUnit.MINUTES.toMillis(2L)) {
                                         count.setValue(count.getValue() + playersOnline.getValue());
                                     }
                                 });

@@ -71,7 +71,7 @@ public class StatisticValueTable {
                 .column(STATISTIC_ID, Sql.INT).notNull()
                 .column(USER_ID, Sql.INT).notNull()
                 .column(SERVER_ID, Sql.INT).notNull()
-                .column(VALUE, Sql.INT).notNull()
+                .column(VALUE, LONG).notNull()
                 .foreignKey(STATISTIC_ID, StatisticTable.TABLE_NAME, StatisticTable.ID)
                 .foreignKey(USER_ID, UsersTable.TABLE_NAME, UsersTable.ID)
                 .foreignKey(SERVER_ID, ServerTable.TABLE_NAME, ServerTable.ID)
@@ -85,7 +85,7 @@ public class StatisticValueTable {
         private int statisticId;
         private int userId;
         private int serverId;
-        private int value;
+        private long value;
 
         public static Row extract(ResultSet set) throws SQLException {
             Row row = new Row();
@@ -93,7 +93,7 @@ public class StatisticValueTable {
             row.statisticId = set.getInt(STATISTIC_ID);
             row.userId = set.getInt(USER_ID);
             row.serverId = set.getInt(SERVER_ID);
-            row.value = set.getInt(VALUE);
+            row.value = set.getLong(VALUE);
             return row;
         }
 
@@ -101,7 +101,7 @@ public class StatisticValueTable {
             statement.setInt(1, statisticId);
             statement.setInt(2, userId);
             statement.setInt(3, serverId);
-            statement.setInt(4, value);
+            statement.setLong(4, value);
         }
 
         public int getId() {

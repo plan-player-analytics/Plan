@@ -44,9 +44,9 @@ public class PerServerContainer extends HashMap<ServerUUID, DataContainer> {
     }
 
     public void putUserInfo(UserInfo userInfo) {
-        ServerUUID serverUUID = userInfo.getServerUUID();
-        putToContainerOfServer(serverUUID, PerServerKeys.REGISTERED, userInfo.getRegistered());
-        putToContainerOfServer(serverUUID, PerServerKeys.BANNED, userInfo.isBanned());
+        ServerUUID serverUUID = userInfo.serverUUID();
+        putToContainerOfServer(serverUUID, PerServerKeys.REGISTERED, userInfo.registered());
+        putToContainerOfServer(serverUUID, PerServerKeys.BANNED, userInfo.banned());
         putToContainerOfServer(serverUUID, PerServerKeys.OPERATOR, userInfo.isOperator());
     }
 
@@ -82,7 +82,7 @@ public class PerServerContainer extends HashMap<ServerUUID, DataContainer> {
             return;
         }
 
-        ServerUUID serverUUID = session.getServerUUID();
+        ServerUUID serverUUID = session.serverUUID();
         DataContainer container = getOrDefault(serverUUID, new DynamicDataContainer());
         if (!container.supports(PerServerKeys.SESSIONS)) {
             container.putRawData(PerServerKeys.SESSIONS, new ArrayList<>());

@@ -41,7 +41,7 @@ public class StoreSessionTransaction extends Transaction {
 
     @Override
     protected void performOperations() {
-        if (Boolean.FALSE.equals(query(PlayerFetchQueries.isPlayerRegistered(session.getPlayerUUID())))) {
+        if (Boolean.FALSE.equals(query(PlayerFetchQueries.isPlayerRegistered(session.playerUUID())))) {
             registerPlayer();
         }
         try {
@@ -79,11 +79,11 @@ public class StoreSessionTransaction extends Transaction {
 
     private void registerPlayer() {
         try {
-            UUID playerUUID = session.getPlayerUUID();
+            UUID playerUUID = session.playerUUID();
             String playerName = session.getExtraData(PlayerName.class)
-                    .map(PlayerName::get)
+                    .map(PlayerName::name)
                     .orElseGet(playerUUID::toString);
-            execute(DataStoreQueries.registerBaseUser(playerUUID, session.getStart(), playerName));
+            execute(DataStoreQueries.registerBaseUser(playerUUID, session.start(), playerName));
         } catch (DBOpException ignored) {
             // Ignored. Likely that another transaction managed to insert first.
         }

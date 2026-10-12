@@ -130,7 +130,7 @@ class JSErrorRegressionTest {
                 .orElseThrow(AssertionError::new)
                 .updatePlayerData(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME);
 
-        String address = "http://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_UUID_STRING + "/plugins/" + system.getServerInfo().getServerIdentifier().getName().replaceAll(" ", "%20");
+        String address = "http://localhost:" + TEST_PORT_NUMBER + "/player/" + TestConstants.PLAYER_ONE_UUID_STRING + "/plugins/" + system.getServerInfo().getServerIdentifier().name().replaceAll(" ", "%20");
         return Stream.of(testAddress(address, driver, system));
     }
 

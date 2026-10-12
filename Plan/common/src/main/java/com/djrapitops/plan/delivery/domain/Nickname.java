@@ -26,12 +26,7 @@ import java.util.Objects;
  *
  * @author AuroraLS3
  */
-public class Nickname implements DateHolder {
-
-    @Untrusted
-    private final String name;
-    private final long date;
-    private final ServerUUID serverUUID;
+public record Nickname(@Untrusted String name, long date, ServerUUID serverUUID) implements DateHolder {
 
     public Nickname(String name, long date, ServerUUID serverUUID) {
         this.name = name;
@@ -39,18 +34,10 @@ public class Nickname implements DateHolder {
         this.serverUUID = serverUUID;
     }
 
-    @Untrusted
-    public String getName() {
-        return name.length() <= 75 ? name : name.substring(0, 74);
-    }
-
     @Override
-    public long getDate() {
-        return date;
-    }
-
-    public ServerUUID getServerUUID() {
-        return serverUUID;
+    @Untrusted
+    public String name() {
+        return name.length() <= 75 ? name : name.substring(0, 74);
     }
 
     @Override
@@ -65,15 +52,9 @@ public class Nickname implements DateHolder {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (!(o instanceof Nickname)) return false;
-        Nickname nickname = (Nickname) o;
-        return Objects.equals(getName(), nickname.getName()) &&
+        if (!(o instanceof Nickname nickname)) return false;
+        return Objects.equals(name(), nickname.name()) &&
                 Objects.equals(serverUUID, nickname.serverUUID);
     }
 
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(name, date, serverUUID);
-    }
 }

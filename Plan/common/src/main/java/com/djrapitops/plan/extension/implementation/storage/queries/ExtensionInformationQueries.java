@@ -132,4 +132,15 @@ public class ExtensionInformationQueries {
                         row.getString("provider_name")),
                 providerIds);
     }
+
+    public static Query<Optional<Integer>> findProviderId(String pluginName, String providerName, ServerUUID serverUUID) {
+        String selectProviderId = SELECT + ExtensionProviderTable.ID +
+                FROM + ExtensionProviderTable.TABLE_NAME +
+                WHERE + ExtensionProviderTable.PROVIDER_NAME + "=?" +
+                AND + ExtensionProviderTable.PLUGIN_ID + "=" + ExtensionPluginTable.STATEMENT_SELECT_PLUGIN_ID;
+
+        return db -> db.queryOptional(selectProviderId,
+                row -> row.getInt(ExtensionProviderTable.ID),
+                providerName, pluginName, serverUUID);
+    }
 }

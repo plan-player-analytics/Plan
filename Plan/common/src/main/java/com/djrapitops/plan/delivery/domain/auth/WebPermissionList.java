@@ -17,42 +17,12 @@
 package com.djrapitops.plan.delivery.domain.auth;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Represents a list of web permissions.
  *
  * @author AuroraLS3
  */
-public class WebPermissionList {
+public record WebPermissionList(List<String> permissions) {
 
-    private final List<String> permissions;
-
-    public WebPermissionList(List<String> permissions) {
-        this.permissions = permissions;
-    }
-
-    public List<String> getPermissions() {
-        return permissions;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        WebPermissionList that = (WebPermissionList) o;
-        return Objects.equals(getPermissions(), that.getPermissions());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getPermissions());
-    }
-
-    @Override
-    public String toString() {
-        return "PermissionList{" +
-                "permissions=" + permissions +
-                '}';
-    }
 }

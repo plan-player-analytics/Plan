@@ -42,19 +42,19 @@ public class PingMutator {
         return new PingMutator(container.getValue(CommonKeys.PING).orElse(Collections.emptyList()));
     }
 
-    public PingMutator filterBy(Predicate<Ping> predicate) {
-        return new PingMutator(Lists.filter(pings, predicate));
-    }
-
     public static Map<ServerUUID, SortedMap<Long, Ping>> sortByServers(List<Ping> pings) {
         Map<ServerUUID, SortedMap<Long, Ping>> sorted = new HashMap<>();
         for (Ping ping : pings) {
             ServerUUID serverUUID = ping.getServerUUID();
             SortedMap<Long, Ping> serverSessions = sorted.getOrDefault(serverUUID, new TreeMap<>());
-            serverSessions.put(ping.getDate(), ping);
+            serverSessions.put(ping.date(), ping);
             sorted.put(serverUUID, serverSessions);
         }
         return sorted;
+    }
+
+    public PingMutator filterBy(Predicate<Ping> predicate) {
+        return new PingMutator(Lists.filter(pings, predicate));
     }
 
     public PingMutator mutateToByMinutePings() {
@@ -91,8 +91,8 @@ public class PingMutator {
             int pingEntries = 0;
 
             for (FinishedSession session : sessionsOfServer) {
-                long start = session.getDate();
-                long end = session.getEnd();
+                long start = session.date();
+                long end = session.end();
                 if (end < start) continue;
                 // Calculate average ping for each session with a section of the Ping map
                 SortedMap<Long, Ping> duringSession = pingOfServer.subMap(start, end);
@@ -101,7 +101,7 @@ public class PingMutator {
                     pingEntries++;
                 }
                 if (pingEntries != 0) {
-                    session.getExtraData().put(AveragePing.class, new AveragePing(pingCount / pingEntries));
+                    session.extraData().put(AveragePing.class, new AveragePing(pingCount / pingEntries));
                 }
                 pingCount = 0.0;
                 pingEntries = 0;

@@ -26,24 +26,7 @@ import java.util.Objects;
  *
  * @author AuroraLS3
  */
-public class GeoInfo implements DateHolder, Serializable {
-
-    private final String geolocation;
-    private final long date;
-
-    public GeoInfo(String geolocation, long lastUsed) {
-        this.geolocation = geolocation;
-        this.date = lastUsed;
-    }
-
-    public String getGeolocation() {
-        return geolocation;
-    }
-
-    @Override
-    public long getDate() {
-        return date;
-    }
+public record GeoInfo(String geolocation, long date) implements DateHolder, Serializable {
 
     @Override
     public boolean equals(Object o) {

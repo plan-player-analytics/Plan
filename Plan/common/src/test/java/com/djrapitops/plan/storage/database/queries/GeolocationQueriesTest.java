@@ -180,7 +180,7 @@ public interface GeolocationQueriesTest extends DatabaseTestPreparer {
         expectedOnNetwork.put("Not Known", expectedPing);
         expectedOnNetwork.put("Local Machine", expectedPing);
         expectedOnNetwork.put("Denmark", expectedPing);
-        
+
         assertEquals(expectedOnNetwork, got);
     }
 
@@ -201,7 +201,7 @@ public interface GeolocationQueriesTest extends DatabaseTestPreparer {
             save(playerUUID, geoInfo);
         }
 
-        Set<String> expected = savedData.stream().map(GeoInfo::getGeolocation)
+        Set<String> expected = savedData.stream().map(GeoInfo::geolocation)
                 .collect(Collectors.toSet());
         Set<String> result = new HashSet<>(db().query(GeoInfoQueries.uniqueGeolocations()));
         assertEquals(expected, result);
@@ -219,7 +219,7 @@ public interface GeolocationQueriesTest extends DatabaseTestPreparer {
 
         Set<Integer> expected = Set.of(db().query(BaseUserQueries.fetchUserId(playerUUID)).orElseThrow(AssertionError::new));
         Set<Integer> result = db().query(GeoInfoQueries.userIdsOfPlayersWithGeolocations(
-                Collections.singletonList(savedData.get(0).getGeolocation()))
+                Collections.singletonList(savedData.get(0).geolocation()))
         );
         assertEquals(expected, result);
     }

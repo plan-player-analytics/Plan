@@ -104,9 +104,9 @@ public class WorldTimesTable {
     }
 
     public static void addSessionWorldTimesToBatch(PreparedStatement statement, FinishedSession session, String[] gms) throws SQLException {
-        UUID uuid = session.getPlayerUUID();
-        ServerUUID serverUUID = session.getServerUUID();
-        Optional<WorldTimes> worldTimes = session.getExtraData().get(WorldTimes.class);
+        UUID uuid = session.playerUUID();
+        ServerUUID serverUUID = session.serverUUID();
+        Optional<WorldTimes> worldTimes = session.extraData().get(WorldTimes.class);
         if (worldTimes.isEmpty()) return;
 
         for (Map.Entry<String, GMTimes> worldTimesEntry : worldTimes.get().getWorldTimes().entrySet()) {
@@ -116,8 +116,8 @@ public class WorldTimesTable {
             // Session ID select statement
             statement.setString(1, uuid.toString());
             statement.setString(2, serverUUID.toString());
-            statement.setLong(3, session.getStart());
-            statement.setLong(4, session.getEnd());
+            statement.setLong(3, session.start());
+            statement.setLong(4, session.end());
 
             // World ID select statement
             statement.setString(5, worldName);

@@ -3,7 +3,7 @@ import {Col} from "react-bootstrap";
 import LoadIn from "../../components/animation/LoadIn";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow";
 import {useAuth} from "../../hooks/authenticationHook";
-import {StatisticsTable} from "../../components/table/StatisticsTable";
+import {StatisticsTableCard} from "../../components/table/StatisticsTable";
 import {useParams} from "react-router";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import {fetchStatistics} from "../../service/serverService";
@@ -41,7 +41,7 @@ const LoadingStatistics = ({identifier}: Props) => {
 
     if (loadingError) return <ErrorViewCard error={loadingError}/>
     if (!data) return <CardLoader/>;
-    return <StatisticsTable statistics={data} showAllByDefault/>
+    return <StatisticsTableCard statistics={data} showAllByDefault/>
 }
 
 export default ServerStatistics;

@@ -18,47 +18,10 @@ package com.djrapitops.plan.delivery.domain;
 
 import com.djrapitops.plan.identification.ServerUUID;
 
-import java.util.Objects;
-
 /**
  * Represents a world stored in the Plan database.
+ *
+ * @author AuroraLS3
  */
-public class World {
-
-    private final String worldName;
-    private final ServerUUID serverUUID;
-
-    public World(String worldName, ServerUUID serverUUID) {
-        this.worldName = worldName;
-        this.serverUUID = serverUUID;
-    }
-
-    public String getWorldName() {
-        return worldName;
-    }
-
-    public ServerUUID getServerUUID() {
-        return serverUUID;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        World world = (World) o;
-        return Objects.equals(getWorldName(), world.getWorldName()) && Objects.equals(getServerUUID(), world.getServerUUID());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getWorldName(), getServerUUID());
-    }
-
-    @Override
-    public String toString() {
-        return "World{" +
-                "worldName='" + worldName + '\'' +
-                ", serverUUID=" + serverUUID +
-                '}';
-    }
+public record World(String worldName, ServerUUID serverUUID) {
 }

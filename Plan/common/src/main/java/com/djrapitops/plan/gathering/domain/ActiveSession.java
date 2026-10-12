@@ -39,11 +39,11 @@ public class ActiveSession {
         this.start = start;
         this.afkTime = 0L;
 
-        extraData = new DataMap();
-        extraData.put(WorldTimes.class, new WorldTimes(world, gameMode, start));
-        extraData.put(MobKillCounter.class, new MobKillCounter());
-        extraData.put(DeathCounter.class, new DeathCounter());
-        extraData.put(PlayerKills.class, new PlayerKills());
+        extraData = new DataMap()
+                .put(WorldTimes.class, new WorldTimes(world, gameMode, start))
+                .put(MobKillCounter.class, new MobKillCounter())
+                .put(DeathCounter.class, new DeathCounter())
+                .put(PlayerKills.class, new PlayerKills());
 
         lastMovementForAfkCalculation = start;
     }
@@ -51,7 +51,7 @@ public class ActiveSession {
     public FinishedSession toFinishedSessionFromStillActive() {
         updateState();
         FinishedSession finishedSession = toFinishedSession(System.currentTimeMillis());
-        finishedSession.getExtraData().put(ActiveSession.class, this);
+        finishedSession.extraData().put(ActiveSession.class, this);
         return finishedSession;
     }
 

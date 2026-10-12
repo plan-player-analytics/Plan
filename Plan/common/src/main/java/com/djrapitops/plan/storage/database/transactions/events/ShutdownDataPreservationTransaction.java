@@ -47,21 +47,21 @@ public class ShutdownDataPreservationTransaction extends Transaction {
         Map<UUID, String> playerNames = new HashMap<>();
         Map<UUID, Long> earliestDates = new HashMap<>();
         for (FinishedSession finishedSession : finishedSessions) {
-            UUID playerUUID = finishedSession.getPlayerUUID();
+            UUID playerUUID = finishedSession.playerUUID();
             playerUUIDs.add(playerUUID);
             finishedSession.getExtraData(PlayerKills.class)
                     .map(PlayerKills::asList)
                     .ifPresent(kills -> {
                         for (PlayerKill kill : kills) {
-                            playerUUIDs.add(kill.getKiller().getUuid());
-                            playerUUIDs.add(kill.getVictim().getUuid());
+                            playerUUIDs.add(kill.killer().getUuid());
+                            playerUUIDs.add(kill.victim().getUuid());
                         }
                     });
 
             finishedSession.getExtraData(PlayerName.class)
-                    .map(PlayerName::get)
+                    .map(PlayerName::name)
                     .ifPresent(playerName -> playerNames.put(playerUUID, playerName));
-            long start = finishedSession.getStart();
+            long start = finishedSession.start();
             Long previous = earliestDates.get(playerUUID);
             if (previous == null || start < previous) {
                 earliestDates.put(playerUUID, start);

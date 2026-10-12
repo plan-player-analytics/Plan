@@ -82,8 +82,8 @@ public class PlayerCalendar {
         long fiveMinutes = TimeUnit.MINUTES.toMillis(5L);
 
         for (FinishedSession session : allSessions) {
-            long start = session.getStart();
-            long end = session.getEnd();
+            long start = session.start();
+            long end = session.end();
 
             entries.add(CalendarEntry
                     .of(HtmlLang.SESSION.getKey(), session.getLength(), start + timeZone.getOffset(start))
@@ -92,8 +92,8 @@ public class PlayerCalendar {
             );
 
             for (PlayerKill kill : session.getExtraData(PlayerKills.class).map(PlayerKills::asList).orElseGet(ArrayList::new)) {
-                long time = kill.getDate();
-                String victim = kill.getVictim().getName();
+                long time = kill.date();
+                String victim = kill.victim().getName();
                 entries.add(CalendarEntry
                         .of(HtmlLang.KILLED.getKey(), victim, time)
                         .withEnd(time + fiveMinutes)
@@ -108,7 +108,7 @@ public class PlayerCalendar {
     private Map<String, List<FinishedSession>> getSessionsByDay() {
         Map<String, List<FinishedSession>> sessionsByDay = new HashMap<>();
         for (FinishedSession session : allSessions) {
-            String day = iso8601Formatter.apply(session.getDate());
+            String day = iso8601Formatter.apply(session.date());
 
             List<FinishedSession> sessionsOfDay = sessionsByDay.computeIfAbsent(day, Lists::create);
             sessionsOfDay.add(session);

@@ -16,52 +16,16 @@
  */
 package com.djrapitops.plan.delivery.domain.datatransfer;
 
+import com.djrapitops.plan.delivery.webserver.resolver.json.PlayerJoinAddressJSONResolver;
+
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Represents data returned by {@link com.djrapitops.plan.delivery.webserver.resolver.json.PlayerJoinAddressJSONResolver}.
+ * Represents data returned by {@link PlayerJoinAddressJSONResolver}.
  *
  * @author AuroraLS3
  */
-public class PlayerJoinAddresses {
-
-    private final List<String> joinAddresses;
-    private final Map<UUID, String> joinAddressByPlayer;
-
-    public PlayerJoinAddresses(List<String> joinAddresses, Map<UUID, String> joinAddressByPlayer) {
-        this.joinAddresses = joinAddresses;
-        this.joinAddressByPlayer = joinAddressByPlayer;
-    }
-
-    public List<String> getJoinAddresses() {
-        return joinAddresses;
-    }
-
-    public Map<UUID, String> getJoinAddressByPlayer() {
-        return joinAddressByPlayer;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        PlayerJoinAddresses that = (PlayerJoinAddresses) o;
-        return Objects.equals(getJoinAddresses(), that.getJoinAddresses()) && Objects.equals(getJoinAddressByPlayer(), that.getJoinAddressByPlayer());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getJoinAddresses(), getJoinAddressByPlayer());
-    }
-
-    @Override
-    public String toString() {
-        return "PlayerJoinAddresses{" +
-                "joinAddresses=" + joinAddresses +
-                ", joinAddressByPlayer=" + joinAddressByPlayer +
-                '}';
-    }
+public record PlayerJoinAddresses(List<String> joinAddresses, Map<UUID, String> joinAddressByPlayer) {
 }

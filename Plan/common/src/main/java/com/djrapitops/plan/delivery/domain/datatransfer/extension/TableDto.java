@@ -23,27 +23,26 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
-public class TableDto {
-
-    private final List<String> columns;
-    private final List<IconDto> icons;
-
-    private final List<List<TableCellDto>> rows;
+public record TableDto(
+        List<String> columns,
+        List<IconDto> icons,
+        List<List<TableCellDto>> rows
+) {
 
     public TableDto(Table table) {
-        columns = Arrays.stream(table.getColumns())
-                .filter(Objects::nonNull)
-                .collect(Collectors.toList());
-        icons = Arrays.stream(table.getIcons())
-                .filter(Objects::nonNull)
-                .map(IconDto::new)
-                .collect(Collectors.toList());
-
-        rows = mapToRows(table.getRows(), table.getTableColumnFormats()).stream()
-                .map(row -> constructRow(columns, row))
-                .collect(Collectors.toList());
+        this(
+                Arrays.stream(table.getColumns())
+                        .filter(Objects::nonNull)
+                        .toList(),
+                Arrays.stream(table.getIcons())
+                        .filter(Objects::nonNull)
+                        .map(IconDto::new)
+                        .toList(),
+                mapToRows(table.getRows(), table.getTableColumnFormats(), Arrays.stream(table.getColumns())
+                        .filter(Objects::nonNull)
+                        .toList())
+        );
     }
 
     public static List<TableCellDto[]> mapToRows(List<Object[]> rows, TableColumnFormat[] tableColumnFormats) {
@@ -61,10 +60,16 @@ public class TableDto {
                     }
                     return mapped.toArray(new TableCellDto[0]);
                 })
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    private List<TableCellDto> constructRow(List<String> columns, TableCellDto[] row) {
+    private static List<List<TableCellDto>> mapToRows(List<Object[]> rows, TableColumnFormat[] tableColumnFormats, List<String> columns) {
+        return mapToRows(rows, tableColumnFormats).stream()
+                .map(row -> constructRow(columns, row))
+                .toList();
+    }
+
+    private static List<TableCellDto> constructRow(List<String> columns, TableCellDto[] row) {
         List<TableCellDto> constructedRow = new ArrayList<>();
 
         int headerLength = row.length - 1;
@@ -78,39 +83,5 @@ public class TableDto {
             }
         }
         return constructedRow;
-    }
-
-    public List<String> getColumns() {
-        return columns;
-    }
-
-    public List<IconDto> getIcons() {
-        return icons;
-    }
-
-    public List<List<TableCellDto>> getRows() {
-        return rows;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        TableDto tableDto = (TableDto) o;
-        return Objects.equals(getColumns(), tableDto.getColumns()) && Objects.equals(getIcons(), tableDto.getIcons()) && Objects.equals(getRows(), tableDto.getRows());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getColumns(), getIcons(), getRows());
-    }
-
-    @Override
-    public String toString() {
-        return "TableDto{" +
-                "columns=" + columns +
-                ", icons=" + icons +
-                ", rows=" + rows +
-                '}';
     }
 }

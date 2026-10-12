@@ -75,7 +75,7 @@ export const computeLayoutWidths = (extension: ExtensionData): ExtensionLayoutWi
     const hasGraph = tabs.some(tab => tab.graphNames?.length);
     const hasTable = tabs.some(tab => tab.tableData?.length);
     const hasGroups = false;
-    const hasStatistics = false;
+    const hasStatistics = tabs.some(tab => tab.statisticsData?.length);
     const hasFlags = false;
     const includedItems: Set<ElementOrder> = new Set([
         hasValues ? 'VALUES' as const : undefined,

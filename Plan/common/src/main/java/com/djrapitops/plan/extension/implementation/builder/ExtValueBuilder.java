@@ -27,10 +27,10 @@ import com.djrapitops.plan.extension.builder.DataValue;
 import com.djrapitops.plan.extension.builder.ValueBuilder;
 import com.djrapitops.plan.extension.extractor.ExtensionMethod;
 import com.djrapitops.plan.extension.graph.Aggregates;
-import com.djrapitops.plan.extension.graph.HistoryStrategy;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
+import com.djrapitops.plan.extension.statistic.Statistics;
 import com.djrapitops.plan.extension.table.Table;
 
 import java.util.function.Supplier;
@@ -189,12 +189,16 @@ public class ExtValueBuilder implements ValueBuilder {
                 .build();
     }
 
-    private ProviderInformation getGraphHistoryProviderInformation(String methodName, HistoryStrategy appendStrategy) {
+    public ProviderInformation getStatisticsProviderInformation(Color tableColor) {
         return ProviderInformation.builder(pluginName)
-                .setName(methodName)
+                .setText(providerName)
+                .setName(providerName != null ? providerName
+                        : formatTextAsIdentifier(text))
                 .setPriority(0)
+                .setCondition(conditional)
                 .setTab(tabName)
-                .setAppendStrategy(appendStrategy)
+                .setIcon(icon.setColor(tableColor))
+                .setTableColor(tableColor)
                 .build();
     }
 
@@ -286,5 +290,15 @@ public class ExtValueBuilder implements ValueBuilder {
     @Override
     public DataValue<Table> buildTable(Supplier<Table> table, Color tableColor) {
         return new TableDataValue(table, getTableProviderInformation(tableColor));
+    }
+
+    @Override
+    public DataValue<Statistics> buildStatistics(Statistics statistics, Color tableColor) {
+        return new StatisticsDataValue(statistics, getStatisticsProviderInformation(tableColor));
+    }
+
+    @Override
+    public DataValue<Statistics> buildStatistics(Supplier<Statistics> statistics, Color tableColor) {
+        return new StatisticsDataValue(statistics, getStatisticsProviderInformation(tableColor));
     }
 }

@@ -99,7 +99,11 @@ enum Capability {
     /**
      * {@link GraphProvider}.
      */
-    DATA_EXTENSION_GRAPH_API;
+    DATA_EXTENSION_GRAPH_API,
+    /**
+     * {@link com.djrapitops.plan.extension.annotation.StatisticsProvider}
+     */
+    DATA_EXTENSION_STATISTICS_API;
 
     static Optional<Capability> getByName(String name) {
         if (name == null) {

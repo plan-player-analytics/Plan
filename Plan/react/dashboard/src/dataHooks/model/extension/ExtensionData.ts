@@ -64,10 +64,23 @@ export type ExtensionTable = {
     rows: ExtensionTableCell[][]
 }
 
+export type ExtensionStatisticsData = {
+    providerName: string;
+    statistics: ExtensionStatistics;
+    tableColor: string;
+    icon: ExtensionIcon;
+    tableColorClass: string;
+}
+
+export type ExtensionStatistics = {
+    valueByKey: { [key: string]: number | null }
+}
+
 export type ExtensionTab = {
     tabInformation: ExtensionTabInformation;
     values: ExtensionValue[];
     tableData: ExtensionTableData[];
+    statisticsData: ExtensionStatisticsData[];
     graphNames: string[];
 }
 

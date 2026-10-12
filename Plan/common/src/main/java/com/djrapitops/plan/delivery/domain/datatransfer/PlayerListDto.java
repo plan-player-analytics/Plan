@@ -21,31 +21,9 @@ import com.djrapitops.plan.delivery.domain.datatransfer.extension.ExtensionDescr
 import java.util.List;
 
 /**
+ * Represents /v1/playerTable data.
+ *
  * @author AuroraLS3
  */
-public class PlayerListDto {
-
-    private final List<TablePlayerDto> players;
-    private final List<ExtensionDescriptionDto> extensionDescriptors;
-
-    public PlayerListDto(List<TablePlayerDto> players, List<ExtensionDescriptionDto> extensionDescriptors) {
-        this.players = players;
-        this.extensionDescriptors = extensionDescriptors;
-    }
-
-    public List<TablePlayerDto> getPlayers() {
-        return players;
-    }
-
-    public List<ExtensionDescriptionDto> getExtensionDescriptors() {
-        return extensionDescriptors;
-    }
-
-    @Override
-    public String toString() {
-        return "PlayerListDto{" +
-                "players=" + players +
-                ", extensionDescriptors=" + extensionDescriptors +
-                '}';
-    }
+public record PlayerListDto(List<TablePlayerDto> players, List<ExtensionDescriptionDto> extensionDescriptors) {
 }

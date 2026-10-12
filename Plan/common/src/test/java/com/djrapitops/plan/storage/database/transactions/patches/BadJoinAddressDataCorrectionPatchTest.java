@@ -89,7 +89,7 @@ public interface BadJoinAddressDataCorrectionPatchTest extends DatabaseTestPrepa
         executeTransactions(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
         executeTransactions(new StoreWorldNameTransaction(serverUUID(), worlds[1]));
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
-        session.getExtraData().put(JoinAddress.class, new JoinAddress(bad));
+        session.extraData().put(JoinAddress.class, new JoinAddress(bad));
         executeTransactions(new StoreSessionTransaction(session));
 
         Set<String> preTestExpected = Set.of(bad);

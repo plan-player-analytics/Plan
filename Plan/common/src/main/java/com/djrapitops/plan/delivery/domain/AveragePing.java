@@ -16,41 +16,10 @@
  */
 package com.djrapitops.plan.delivery.domain;
 
-import java.util.Objects;
-
 /**
  * Data class for Average ping during a timespan (defined by the container).
  *
  * @author AuroraLS3
  */
-public class AveragePing {
-    private final double value;
-
-    public AveragePing(double value) {
-        this.value = value;
-    }
-
-    public double getValue() {
-        return value;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        AveragePing that = (AveragePing) o;
-        return Double.compare(that.value, value) == 0;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(value);
-    }
-
-    @Override
-    public String toString() {
-        return "AveragePing{" +
-                "value=" + value +
-                '}';
-    }
+public record AveragePing(double value) {
 }

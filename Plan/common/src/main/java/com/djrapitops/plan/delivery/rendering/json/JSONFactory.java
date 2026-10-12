@@ -28,7 +28,7 @@ import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.extension.implementation.results.ExtensionTabData;
-import com.djrapitops.plan.extension.implementation.storage.queries.table.ExtensionServerTableDataQuery;
+import com.djrapitops.plan.extension.implementation.storage.queries.playertable.ExtensionServerTableDataQuery;
 import com.djrapitops.plan.gathering.ServerUptimeCalculator;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.*;
@@ -289,14 +289,14 @@ public class JSONFactory {
 
                     Optional<DateObj<Integer>> recentPeak = db.query(TPSQueries.fetchPeakPlayerCount(serverUUID, now - TimeUnit.DAYS.toMillis(2L), Long.MAX_VALUE));
                     Optional<DateObj<Integer>> allTimePeak = db.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID));
-                    server.put("last_peak_date", recentPeak.map(DateObj::getDate).map(Object.class::cast).orElse("-"));
-                    server.put("best_peak_date", allTimePeak.map(DateObj::getDate).map(Object.class::cast).orElse("-"));
+                    server.put("last_peak_date", recentPeak.map(DateObj::date).map(Object.class::cast).orElse("-"));
+                    server.put("best_peak_date", allTimePeak.map(DateObj::date).map(Object.class::cast).orElse("-"));
                     server.put("last_peak_players", recentPeak.map(DateObj::getValue).orElse(0));
                     server.put("best_peak_players", allTimePeak.map(DateObj::getValue).orElse(0));
 
                     TPSMutator tpsMonth = new TPSMutator(tpsDataByServerId.getOrDefault(serverUuidToId.get(serverUUID), Collections.emptyList()));
                     server.put("playersOnline", tpsMonth.all().stream()
-                            .map(tps -> new double[]{tps.getDate(), tps.getPlayers()})
+                            .map(tps -> new double[]{tps.date(), tps.getPlayers()})
                             .toArray(double[][]::new));
                     server.put("players", totalPlayerCounts.getOrDefault(serverUUID, 0));
                     server.put("new_players", newPlayerCounts.getOrDefault(serverUUID, 0));
@@ -310,7 +310,7 @@ public class JSONFactory {
                             .orElse(GenericLang.UNAVAILABLE.getKey()));
 
                     Optional<TPS> online = tpsWeek.getLast();
-                    server.put("online", online.map(point -> point.getDate() >= now - TimeUnit.MINUTES.toMillis(3L) ? point.getPlayers() : HtmlLang.LABEL_POSSIBLY_OFFLINE.getKey())
+                    server.put("online", online.map(point -> point.date() >= now - TimeUnit.MINUTES.toMillis(3L) ? point.getPlayers() : HtmlLang.LABEL_POSSIBLY_OFFLINE.getKey())
                             .orElse(HtmlLang.UNIT_NO_DATA.getKey()));
                     servers.add(server);
                 });
@@ -358,7 +358,7 @@ public class JSONFactory {
         Set<PlayerIdentifier> online = new HashSet<>(dbSystem.getDatabase().query(SessionQueries.playersOnlineOn(date)));
         SessionCache.getActiveSessions().stream()
                 .filter(session -> session.getStart() <= date)
-                .map(session -> new PlayerIdentifier(session.getPlayerUUID(), session.getExtraData(PlayerName.class).map(PlayerName::get).orElse(session.getPlayerUUID().toString())))
+                .map(session -> new PlayerIdentifier(session.getPlayerUUID(), session.getExtraData(PlayerName.class).map(PlayerName::name).orElse(session.getPlayerUUID().toString())))
                 .forEach(online::add);
         return online.stream()
                 .sorted()
@@ -370,7 +370,7 @@ public class JSONFactory {
         if (serverUUID.equals(serverInfo.getServerUUID())) {
             SessionCache.getActiveSessions().stream()
                     .filter(session -> session.getStart() <= date)
-                    .map(session -> new PlayerIdentifier(session.getPlayerUUID(), session.getExtraData(PlayerName.class).map(PlayerName::get).orElse(session.getPlayerUUID().toString())))
+                    .map(session -> new PlayerIdentifier(session.getPlayerUUID(), session.getExtraData(PlayerName.class).map(PlayerName::name).orElse(session.getPlayerUUID().toString())))
                     .forEach(online::add);
         }
         return online.stream()

@@ -147,7 +147,7 @@ public class PlayerPlaceHolders implements Placeholders {
         );
         placeholders.register("player_lastseen_server",
                 player -> SessionsMutator.forContainer(player).latestSession()
-                        .map(FinishedSession::getServerUUID)
+                        .map(FinishedSession::serverUUID)
                         .flatMap(serverUUID -> dbSystem.getDatabase().query(ServerQueries.fetchServerMatchingIdentifier(serverUUID)))
                         .map(Server::getIdentifiableName)
                         .orElse("-")
@@ -169,7 +169,7 @@ public class PlayerPlaceHolders implements Placeholders {
         placeholders.register("player_geolocation",
                 player -> GeoInfoMutator.forContainer(player)
                         .mostRecent()
-                        .map(GeoInfo::getGeolocation)
+                        .map(GeoInfo::geolocation)
                         .orElse(locale.getString(GenericLang.UNKNOWN))
         );
 
@@ -265,7 +265,7 @@ public class PlayerPlaceHolders implements Placeholders {
                     player -> player.getValue(PlayerKeys.PLAYER_KILLS)
                             .filter(list -> list.size() >= index)
                             .map(list -> list.get(index - 1))
-                            .map(PlayerKill::getVictim)
+                            .map(PlayerKill::victim)
                             .map(PlayerKill.Victim::getName)
                             .orElse("-")
             );
@@ -273,7 +273,7 @@ public class PlayerPlaceHolders implements Placeholders {
                     player -> player.getValue(PlayerKeys.PLAYER_DEATHS_KILLS)
                             .filter(list -> list.size() >= index)
                             .map(list -> list.get(index - 1))
-                            .map(PlayerKill::getKiller)
+                            .map(PlayerKill::killer)
                             .map(PlayerKill.Killer::getName)
                             .orElse("-")
             );

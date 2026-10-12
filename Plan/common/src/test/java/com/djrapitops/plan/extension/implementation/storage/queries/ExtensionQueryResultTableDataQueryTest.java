@@ -25,7 +25,6 @@ import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
-import com.djrapitops.plan.storage.database.queries.ExtensionsDatabaseTest;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
@@ -35,6 +34,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import utilities.RandomData;
 import utilities.TestConstants;
+import utilities.TestExtensions;
 
 import java.util.List;
 import java.util.Map;
@@ -48,7 +48,7 @@ public interface ExtensionQueryResultTableDataQueryTest extends DatabaseTestPrep
     @BeforeEach
     default void unregisterExtension() {
         ExtensionSvc extensionService = extensionService();
-        extensionService.unregister(new ExtensionsDatabaseTest.PlayerExtension());
+        extensionService.unregister(new TestExtensions.PlayerExtension());
     }
 
     @Test
@@ -66,7 +66,7 @@ public interface ExtensionQueryResultTableDataQueryTest extends DatabaseTestPrep
 
     private void storeDataForTest() {
         ExtensionSvc extensionService = extensionService();
-        extensionService.register(new ExtensionsDatabaseTest.PlayerExtension());
+        extensionService.register(new TestExtensions.PlayerExtension());
 
         Database database = db();
         ServerUUID serverUUID = serverUUID();

@@ -45,22 +45,22 @@ public class PlayerKillMutator {
     public List<Map<String, Object>> toJSONAsMap(Formatters formatters) {
         return Lists.map(kills,
                 kill -> {
-                    PlayerKill.Killer killer = kill.getKiller();
-                    PlayerKill.Victim victim = kill.getVictim();
-                    ServerIdentifier server = kill.getServer();
+                    PlayerKill.Killer killer = kill.killer();
+                    PlayerKill.Victim victim = kill.victim();
+                    ServerIdentifier server = kill.server();
 
                     Map<String, Object> killMap = new HashMap<>();
-                    killMap.put("date", kill.getDate());
+                    killMap.put("date", kill.date());
                     killMap.put("killer", killer.getName());
                     killMap.put("victim", victim.getName());
                     killMap.put("killerUUID", killer.getUuid().toString());
                     killMap.put("victimUUID", victim.getUuid().toString());
                     killMap.put("killerName", killer.getName());
                     killMap.put("victimName", victim.getName());
-                    killMap.put("serverUUID", server.getUuid().toString());
-                    killMap.put("serverName", server.getName());
-                    killMap.put("weapon", kill.getWeapon());
-                    long timeSinceRegister = kill.getDate() - kill.getVictim().getRegisterDate();
+                    killMap.put("serverUUID", server.uuid().toString());
+                    killMap.put("serverName", server.name());
+                    killMap.put("weapon", kill.weapon());
+                    long timeSinceRegister = kill.date() - kill.victim().getRegisterDate();
                     killMap.put("timeSinceRegisterMillis", timeSinceRegister);
                     killMap.put("timeSinceRegisterFormatted", formatters.secondLong().apply(timeSinceRegister));
                     return killMap;

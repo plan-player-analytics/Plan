@@ -28,7 +28,6 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
 
 /**
  * Represents query page view that the user wants to see data for.
@@ -68,9 +67,9 @@ public class ViewDto {
 
     public List<ServerUUID> getServerUUIDs() {
         return servers.stream()
-                .map(ServerDto::getServerUUID)
+                .map(ServerDto::serverUUID)
                 .map(ServerUUID::fromString)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override

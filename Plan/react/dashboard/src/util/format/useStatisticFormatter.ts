@@ -9,7 +9,7 @@ export const useStatisticFormatter = () => {
     const {t} = useTranslation();
     const {formatDecimals} = useDecimalFormatter();
     const {formatTime} = useTimeAmountFormatter();
-    return useCallback((name: string, value: number) => {
+    return useCallback((name: string, value: number | null) => {
         if (!value) return '-';
         if (name.includes("damage_")) return t('html.label.stats.hearts', {value: value / 2});
         if (name.includes("_cm")) return t('html.label.stats.blocks', {value: formatDecimals(value / 10)});
@@ -18,9 +18,10 @@ export const useStatisticFormatter = () => {
     }, []);
 }
 
-export const formatStatisticName = (name: string) => {
-    const split = name.split(".");
-    const last = split[split.length - 1];
+export const formatStatisticName = (name: string, splitter: string = '.') => {
+    const split = name.split(splitter);
+    const last = split.at(-1);
+    if (!last) return '-'
     return capitalize(last.replaceAll("_", " ").replaceAll("one cm", ""))
 }
 

@@ -34,7 +34,7 @@ public class DateObj<T> implements DateHolder {
     }
 
     @Override
-    public long getDate() {
+    public long date() {
         return date;
     }
 
@@ -51,12 +51,12 @@ public class DateObj<T> implements DateHolder {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         DateObj<?> dateObj = (DateObj<?>) o;
-        return getDate() == dateObj.getDate() && Objects.equals(getValue(), dateObj.getValue());
+        return date() == dateObj.date() && Objects.equals(getValue(), dateObj.getValue());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getDate(), getValue());
+        return Objects.hash(date(), getValue());
     }
 
     @Override

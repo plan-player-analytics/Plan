@@ -163,7 +163,7 @@ public class SessionQueries {
                     new DataMap()
             ));
 
-            DataMap extraData = session.getExtraData();
+            DataMap extraData = session.extraData();
             extraData.put(FinishedSession.Id.class, new FinishedSession.Id(set.getInt(SessionsTable.ID)));
             extraData.put(MobKillCounter.class, new MobKillCounter(set.getInt(SessionsTable.MOB_KILLS)));
             extraData.put(DeathCounter.class, new DeathCounter(set.getInt(SessionsTable.DEATHS)));
@@ -345,7 +345,7 @@ public class SessionQueries {
             String sql = SELECT + "COUNT(1) as count" +
                     FROM + SessionsTable.TABLE_NAME +
                     WHERE + (!serverUUIDs.isEmpty() ? SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
-                                                      AND : "") + SessionsTable.SESSION_START + ">=?" +
+                    AND : "") + SessionsTable.SESSION_START + ">=?" +
                     AND + SessionsTable.SESSION_START + "<?";
             return db.query(new QueryStatement<>(sql) {
                 @Override
@@ -367,7 +367,7 @@ public class SessionQueries {
             String sql = SELECT + "COUNT(1) as count" +
                     FROM + SessionsTable.TABLE_NAME +
                     WHERE + (!serverUUIDs.isEmpty() ? SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
-                                                      AND : "") + SessionsTable.SESSION_START + ">=?" +
+                    AND : "") + SessionsTable.SESSION_START + ">=?" +
                     AND + SessionsTable.SESSION_START + "<?" +
                     AND + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID;
             return db.query(new QueryStatement<>(sql) {
@@ -501,7 +501,7 @@ public class SessionQueries {
                     playtimeColumn(db.getSql(), after, before) +
                     FROM + SessionsTable.TABLE_NAME +
                     WHERE + (!serverUUIDs.isEmpty() ? SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
-                                                      AND : "") + SessionsTable.SESSION_END + ">=?" +
+                    AND : "") + SessionsTable.SESSION_END + ">=?" +
                     AND + SessionsTable.SESSION_START + "<=?";
             return db.query(new QueryStatement<>(sql) {
                 @Override
@@ -524,7 +524,7 @@ public class SessionQueries {
                     playtimeColumn(db.getSql(), after, before) +
                     FROM + SessionsTable.TABLE_NAME +
                     WHERE + (!serverUUIDs.isEmpty() ? SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
-                                                      AND : "") + SessionsTable.SESSION_END + ">=?" +
+                    AND : "") + SessionsTable.SESSION_END + ">=?" +
                     AND + SessionsTable.SESSION_START + "<=?" +
                     AND + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID;
             return db.query(new QueryStatement<>(sql) {
@@ -550,7 +550,7 @@ public class SessionQueries {
                     "COUNT(1) as count" +
                     FROM + SessionsTable.TABLE_NAME +
                     WHERE + (!serverUUIDs.isEmpty() ? SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
-                                                      AND : "") + SessionsTable.SESSION_END + ">=?" +
+                    AND : "") + SessionsTable.SESSION_END + ">=?" +
                     AND + SessionsTable.SESSION_START + "<=?";
             return db.query(new QueryStatement<>(sql) {
                 @Override
@@ -574,7 +574,7 @@ public class SessionQueries {
                     "COUNT(1) as count" +
                     FROM + SessionsTable.TABLE_NAME +
                     WHERE + (!serverUUIDs.isEmpty() ? SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
-                                                      AND : "") + SessionsTable.SESSION_END + ">=?" +
+                    AND : "") + SessionsTable.SESSION_END + ">=?" +
                     AND + SessionsTable.SESSION_START + "<=?" +
                     AND + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID;
             return db.query(new QueryStatement<>(sql) {

@@ -78,10 +78,10 @@ public class VersionJSONResolver implements NoAuthResolver {
         json.put("updateAvailable", updateAvailable);
 
         if (updateAvailable) {
-            json.put("newVersion", newVersion.get().getVersion().asString());
-            json.put("downloadUrl", newVersion.get().getDownloadUrl());
-            json.put("changelogUrl", newVersion.get().getChangeLogUrl());
-            json.put("isRelease", newVersion.get().isRelease());
+            json.put("newVersion", newVersion.get().version().asString());
+            json.put("downloadUrl", newVersion.get().downloadUrl());
+            json.put("changelogUrl", newVersion.get().changeLogUrl());
+            json.put("isRelease", newVersion.get().release());
         }
 
         return Response.builder().setJSONContent(json).build();

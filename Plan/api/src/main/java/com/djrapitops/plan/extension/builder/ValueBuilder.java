@@ -24,6 +24,7 @@ import com.djrapitops.plan.extension.graph.Aggregates;
 import com.djrapitops.plan.extension.icon.Color;
 import com.djrapitops.plan.extension.icon.Family;
 import com.djrapitops.plan.extension.icon.Icon;
+import com.djrapitops.plan.extension.statistic.Statistics;
 import com.djrapitops.plan.extension.table.Table;
 
 import java.util.function.Supplier;
@@ -240,6 +241,15 @@ public interface ValueBuilder {
     DataValue<Table> buildTable(Table table, Color tableColor);
 
     /**
+     * Build statistics.
+     *
+     * @param statistics Statistics built using {@link Statistics#create()}
+     * @param tableColor Color of the table
+     * @return a data value to give to {@link ExtensionDataBuilder}.
+     */
+    DataValue<Statistics> buildStatistics(Statistics statistics, Color tableColor);
+
+    /**
      * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
      * <p>
      * {@link ValueBuilder#buildBoolean(boolean)}
@@ -301,6 +311,13 @@ public interface ValueBuilder {
      * {@link ValueBuilder#buildTable(Table, Color)}
      */
     DataValue<Table> buildTable(Supplier<Table> table, Color tableColor);
+
+    /**
+     * Lambda version for conditional return or throwing {@link com.djrapitops.plan.extension.NotReadyException}.
+     * <p>
+     * {@link ValueBuilder#buildStatistics(Statistics, Color)}
+     */
+    DataValue<Statistics> buildStatistics(Supplier<Statistics> statistics, Color tableColor);
 
     /**
      * Implementation detail - for abstracting annotations with the builder API.

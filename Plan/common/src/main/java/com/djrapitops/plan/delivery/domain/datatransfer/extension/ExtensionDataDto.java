@@ -19,59 +19,20 @@ package com.djrapitops.plan.delivery.domain.datatransfer.extension;
 import com.djrapitops.plan.extension.implementation.results.ExtensionData;
 
 import java.util.List;
-import java.util.Objects;
-import java.util.stream.Collectors;
 
-public class ExtensionDataDto {
-
-    private final ExtensionInformationDto extensionInformation;
-    private final List<ExtensionTabDataDto> tabs;
-
-    private final boolean onlyGenericTab;
-    private final boolean wide;
+public record ExtensionDataDto(
+        ExtensionInformationDto extensionInformation,
+        List<ExtensionTabDataDto> tabs,
+        boolean onlyGenericTab,
+        boolean wide
+) {
 
     public ExtensionDataDto(ExtensionData extensionData) {
-        this.extensionInformation = new ExtensionInformationDto(extensionData.getExtensionInformation());
-        this.tabs = extensionData.getTabs().stream().map(ExtensionTabDataDto::new).collect(Collectors.toList());
-
-        onlyGenericTab = extensionData.hasOnlyGenericTab();
-        wide = extensionData.doesNeedWiderSpace();
-    }
-
-    public ExtensionInformationDto getExtensionInformation() {
-        return extensionInformation;
-    }
-
-    public List<ExtensionTabDataDto> getTabs() {
-        return tabs;
-    }
-
-    public boolean isOnlyGenericTab() {
-        return onlyGenericTab;
-    }
-
-    public boolean isWide() {
-        return wide;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ExtensionDataDto that = (ExtensionDataDto) o;
-        return Objects.equals(getExtensionInformation(), that.getExtensionInformation()) && Objects.equals(getTabs(), that.getTabs());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getExtensionInformation(), getTabs());
-    }
-
-    @Override
-    public String toString() {
-        return "ExtensionDataDto{" +
-                "extensionInformation=" + extensionInformation +
-                ", tabs=" + tabs +
-                '}';
+        this(
+                new ExtensionInformationDto(extensionData.getExtensionInformation()),
+                extensionData.getTabs().stream().map(ExtensionTabDataDto::new).toList(),
+                extensionData.hasOnlyGenericTab(),
+                extensionData.doesNeedWiderSpace()
+        );
     }
 }

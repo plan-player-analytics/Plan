@@ -16,7 +16,9 @@
  */
 package com.djrapitops.plan.delivery.domain.datatransfer.query;
 
+import com.djrapitops.plan.modules.FiltersModule;
 import com.djrapitops.plan.storage.database.queries.filter.Filter;
+import org.jspecify.annotations.NonNull;
 
 import java.util.Arrays;
 import java.util.Map;
@@ -26,48 +28,38 @@ import java.util.Objects;
  * Represents a query filter.
  *
  * @see Filter
- * @see com.djrapitops.plan.modules.FiltersModule
+ * @see FiltersModule
  */
-public class FilterDto implements Comparable<FilterDto> {
-    private final String kind;
-    private final Map<String, Object> options;
-    private final String[] expectedParameters;
+public record FilterDto(String kind, Map<String, Object> options,
+                        String[] expectedParameters) implements Comparable<FilterDto> {
 
     public FilterDto(String kind, Filter filter) {
-        this.kind = kind;
-        this.options = filter.getOptions();
-        this.expectedParameters = filter.getExpectedParameters();
-    }
-
-    public String getKind() {
-        return kind;
-    }
-
-    public Map<String, Object> getOptions() {
-        return options;
-    }
-
-    public String[] getExpectedParameters() {
-        return expectedParameters;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        FilterDto that = (FilterDto) o;
-        return Objects.equals(kind, that.kind) && Objects.equals(options, that.options) && Arrays.equals(expectedParameters, that.expectedParameters);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = Objects.hash(kind, options);
-        result = 31 * result + Arrays.hashCode(expectedParameters);
-        return result;
+        this(kind, filter.getOptions(), filter.getExpectedParameters());
     }
 
     @Override
     public int compareTo(FilterDto o) {
         return String.CASE_INSENSITIVE_ORDER.compare(this.kind, o.kind);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        FilterDto filterDto = (FilterDto) o;
+        return Objects.equals(kind(), filterDto.kind()) && Objects.equals(options(), filterDto.options()) && Objects.deepEquals(expectedParameters(), filterDto.expectedParameters());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(kind(), options(), Arrays.hashCode(expectedParameters()));
+    }
+
+    @Override
+    public @NonNull String toString() {
+        return "FilterDto{" +
+                "kind='" + kind + '\'' +
+                ", options=" + options +
+                ", expectedParameters=" + Arrays.toString(expectedParameters) +
+                '}';
     }
 }

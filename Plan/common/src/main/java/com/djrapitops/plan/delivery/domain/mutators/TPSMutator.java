@@ -55,7 +55,7 @@ public class TPSMutator {
     }
 
     public TPSMutator filterDataBetween(long after, long before) {
-        return filterBy(tps -> tps.getDate() >= after && tps.getDate() <= before);
+        return filterBy(tps -> tps.date() >= after && tps.date() <= before);
     }
 
     public TPSMutator filterTPSBetween(double above, double below) {
@@ -67,35 +67,35 @@ public class TPSMutator {
     }
 
     public List<Point> playersOnlinePoints() {
-        return Lists.map(tpsData, tps -> new Point(tps.getDate(), tps.getPlayers()));
+        return Lists.map(tpsData, tps -> new Point(tps.date(), tps.getPlayers()));
     }
 
     public List<Point> tpsPoints() {
-        return Lists.map(tpsData, tps -> new Point(tps.getDate(), tps.getTicksPerSecond()));
+        return Lists.map(tpsData, tps -> new Point(tps.date(), tps.getTicksPerSecond()));
     }
 
     public List<Point> cpuPoints() {
         return tpsData.stream()
-                .map(tps -> new Point(tps.getDate(), tps.getCPUUsage()))
+                .map(tps -> new Point(tps.date(), tps.getCPUUsage()))
                 .filter(point -> point.getY() != -1)
                 .collect(Collectors.toList());
     }
 
     public List<Point> ramUsagePoints() {
-        return Lists.map(tpsData, tps -> new Point(tps.getDate(), tps.getUsedMemory()));
+        return Lists.map(tpsData, tps -> new Point(tps.date(), tps.getUsedMemory()));
     }
 
     public List<Point> entityPoints() {
-        return Lists.map(tpsData, tps -> new Point(tps.getDate(), tps.getEntityCount()));
+        return Lists.map(tpsData, tps -> new Point(tps.date(), tps.getEntityCount()));
     }
 
     public List<Point> chunkPoints() {
-        return Lists.map(tpsData, tps -> new Point(tps.getDate(), tps.getChunksLoaded()));
+        return Lists.map(tpsData, tps -> new Point(tps.date(), tps.getChunksLoaded()));
     }
 
     public List<Point> freeDiskPoints() {
         return tpsData.stream()
-                .map(tps -> new Point(tps.getDate(), tps.getFreeDiskSpace()))
+                .map(tps -> new Point(tps.date(), tps.getFreeDiskSpace()))
                 .filter(point -> point.getY() != -1)
                 .collect(Collectors.toList());
     }
@@ -105,7 +105,7 @@ public class TPSMutator {
         long downTime = 0;
         tpsData.sort(new TPSComparator());
         for (TPS tps : tpsData) {
-            long date = tps.getDate();
+            long date = tps.date();
             if (lastDate == -1) {
                 lastDate = date;
                 continue;
@@ -127,7 +127,7 @@ public class TPSMutator {
         tpsData.sort(new TPSComparator());
 
         for (TPS tps : tpsData) {
-            long date = tps.getDate();
+            long date = tps.date();
             if (lastDate == -1) {
                 lastDate = date;
                 continue;
@@ -148,7 +148,7 @@ public class TPSMutator {
         long activeTime = 0;
         tpsData.sort(new TPSComparator());
         for (TPS tps : tpsData) {
-            long date = tps.getDate();
+            long date = tps.date();
             if (lastDate == -1) {
                 lastDate = date;
                 continue;
@@ -280,7 +280,7 @@ public class TPSMutator {
         List<Number[]> arrays = new ArrayList<>();
         Long lastX = null;
         for (TPS tps : tpsData) {
-            long date = tps.getDate();
+            long date = tps.date();
             if (gapStrategy.fillGaps && lastX != null && date - lastX > gapStrategy.acceptableGapMs) {
                 addMissingPoints(arrays, lastX, date, gapStrategy);
             }

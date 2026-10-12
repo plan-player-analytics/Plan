@@ -53,7 +53,7 @@ public interface PingQueriesTest extends DatabaseTestPreparer {
         )).get();
 
         Map<UUID, List<Ping>> expected = Collections.singletonMap(player2UUID, Collections.singletonList(
-                new Ping(saved.getDate(), serverUUID(), value, value, value)
+                new Ping(saved.date(), serverUUID(), value, value, value)
         ));
         Map<UUID, List<Ping>> fetched = db().query(PingQueries.fetchAllPingData());
         assertEquals(expected, fetched);
@@ -82,7 +82,7 @@ public interface PingQueriesTest extends DatabaseTestPreparer {
                 Collections.singletonList(saved)
         )).get();
         Map<UUID, List<Ping>> expected = Collections.singletonMap(playerUUID, Collections.singletonList(
-                new Ping(saved.getDate(), serverUUID(), value, value, value)
+                new Ping(saved.date(), serverUUID(), value, value, value)
         ));
         Map<UUID, List<Ping>> fetched = db().query(PingQueries.fetchAllPingData());
         assertEquals(expected, fetched);

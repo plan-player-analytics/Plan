@@ -73,7 +73,7 @@ public class TPS implements DateHolder {
     }
 
     @Override
-    public long getDate() {
+    public long date() {
         return date;
     }
 
@@ -176,12 +176,12 @@ public class TPS implements DateHolder {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         TPS tps = (TPS) o;
-        return getDate() == tps.getDate() && Double.compare(getTicksPerSecond(), tps.getTicksPerSecond()) == 0 && getPlayers() == tps.getPlayers() && Double.compare(cpuUsage, tps.cpuUsage) == 0 && getUsedMemory() == tps.getUsedMemory() && getEntityCount() == tps.getEntityCount() && getChunksLoaded() == tps.getChunksLoaded() && getFreeDiskSpace() == tps.getFreeDiskSpace() && Objects.equals(getMsptAverage(), tps.getMsptAverage()) && Objects.equals(getMspt95thPercentile(), tps.getMspt95thPercentile());
+        return date() == tps.date() && Double.compare(getTicksPerSecond(), tps.getTicksPerSecond()) == 0 && getPlayers() == tps.getPlayers() && Double.compare(cpuUsage, tps.cpuUsage) == 0 && getUsedMemory() == tps.getUsedMemory() && getEntityCount() == tps.getEntityCount() && getChunksLoaded() == tps.getChunksLoaded() && getFreeDiskSpace() == tps.getFreeDiskSpace() && Objects.equals(getMsptAverage(), tps.getMsptAverage()) && Objects.equals(getMspt95thPercentile(), tps.getMspt95thPercentile());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getDate(), getTicksPerSecond(), getPlayers(), cpuUsage, getUsedMemory(), getEntityCount(), getChunksLoaded(), getFreeDiskSpace(), getMsptAverage(), getMspt95thPercentile());
+        return Objects.hash(date(), getTicksPerSecond(), getPlayers(), cpuUsage, getUsedMemory(), getEntityCount(), getChunksLoaded(), getFreeDiskSpace(), getMsptAverage(), getMspt95thPercentile());
     }
 
     @Override
@@ -208,7 +208,7 @@ public class TPS implements DateHolder {
         int chunks = getChunksLoaded();
         long disk = getFreeDiskSpace();
         return new Number[]{
-                getDate(),
+                date(),
                 getPlayers(),
                 tps >= 0 ? tps : null,
                 cpu >= 0 ? cpu : null,

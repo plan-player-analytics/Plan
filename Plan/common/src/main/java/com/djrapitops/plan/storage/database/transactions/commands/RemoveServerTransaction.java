@@ -73,6 +73,10 @@ public class RemoveServerTransaction extends ThrowawayTransaction {
         // Graphs
         query(ExtensionGraphQueries.findGraphTableNames(serverUUID)).forEach(this::dropTable);
         executeServerRemoval(DELETE_FROM + ExtensionGraphMetadataTable.TABLE_NAME + WHERE + ExtensionGraphMetadataTable.PROVIDER_ID + in + selectProviderIdsOfServer + ')');
+        // Statistics
+        executeServerRemoval(DELETE_FROM + ExtensionStatisticPlayerValueTable.TABLE_NAME + WHERE + ExtensionStatisticPlayerValueTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID);
+        executeServerRemoval(DELETE_FROM + ExtensionStatisticServerValueTable.TABLE_NAME + WHERE + ExtensionStatisticServerValueTable.SERVER_ID + "=" + ServerTable.SELECT_SERVER_ID);
+        executeServerRemoval(DELETE_FROM + ExtensionStatisticTable.TABLE_NAME + WHERE + ExtensionStatisticTable.PROVIDER_ID + in + selectProviderIdsOfServer + ')');
         // Provider values
         executeServerRemoval(DELETE_FROM + ExtensionGroupsTable.TABLE_NAME + WHERE + ExtensionGroupsTable.PROVIDER_ID + in + selectProviderIdsOfServer + ')');
         executeServerRemoval(DELETE_FROM + ExtensionServerValueTable.TABLE_NAME + WHERE + ExtensionServerValueTable.PROVIDER_ID + in + selectProviderIdsOfServer + ')');

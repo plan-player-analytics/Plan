@@ -19,63 +19,17 @@ package com.djrapitops.plan.delivery.domain.datatransfer;
 import com.djrapitops.plan.identification.Server;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
-
 /**
  * Represents outgoing server information json.
  */
-public class ServerDto implements Comparable<ServerDto> {
-
-    private final String serverUUID;
-    private final String serverName;
-    private final boolean proxy;
-
-    public ServerDto(String serverUUID, String serverName, boolean proxy) {
-        this.serverUUID = serverUUID;
-        this.serverName = serverName;
-        this.proxy = proxy;
-    }
+public record ServerDto(String serverUUID, String serverName, boolean proxy) implements Comparable<ServerDto> {
 
     public static ServerDto fromServer(Server server) {
         return new ServerDto(server.getUuid().toString(), server.getIdentifiableName(), server.isProxy());
     }
 
-    public String getServerUUID() {
-        return serverUUID;
-    }
-
-    public String getServerName() {
-        return serverName;
-    }
-
-    public boolean isProxy() {
-        return proxy;
-    }
-
     @Override
     public int compareTo(@NotNull ServerDto other) {
         return String.CASE_INSENSITIVE_ORDER.compare(this.serverName, other.serverName);
-    }
-
-    @Override
-    public boolean equals(Object other) {
-        if (this == other) return true;
-        if (other == null || getClass() != other.getClass()) return false;
-        ServerDto serverDto = (ServerDto) other;
-        return isProxy() == serverDto.isProxy() && Objects.equals(getServerUUID(), serverDto.getServerUUID()) && Objects.equals(getServerName(), serverDto.getServerName());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getServerUUID(), getServerName(), isProxy());
-    }
-
-    @Override
-    public String toString() {
-        return "ServerDto{" +
-                "serverUUID='" + serverUUID + '\'' +
-                ", serverName='" + serverName + '\'' +
-                ", proxy=" + proxy +
-                '}';
     }
 }

@@ -180,7 +180,7 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
 
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
         long expectedLength = session.getLength();
-        long sessionEnd = session.getEnd();
+        long sessionEnd = session.end();
 
         db().executeTransaction(new StoreSessionTransaction(session));
 
@@ -230,12 +230,12 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
         db().executeTransaction(new StoreSessionTransaction(session));
 
-        session.getExtraData().remove(PlayerKills.class);
-        session.getExtraData().remove(WorldTimes.class);
-        session.getExtraData().remove(PlayerDeaths.class);
-        session.getExtraData().remove(JoinAddress.class);
-        session.getExtraData().remove(PlayerName.class);
-        session.getExtraData().remove(ServerName.class);
+        session.extraData().remove(PlayerKills.class);
+        session.extraData().remove(WorldTimes.class);
+        session.extraData().remove(PlayerDeaths.class);
+        session.extraData().remove(JoinAddress.class);
+        session.extraData().remove(PlayerName.class);
+        session.extraData().remove(ServerName.class);
         var expected = List.of(session);
         var sessions = db().query(SessionQueries.fetchServerSessionsWithoutKillOrWorldData(0L, Long.MAX_VALUE, serverUUID()));
         assertEquals(expected, sessions);
@@ -350,7 +350,7 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
         db().executeTransaction(new StoreSessionTransaction(session));
 
-        var expected = session.getAfkTime();
+        var expected = session.afkTime();
         var result = db().query(SessionQueries.afkTime(0L, Long.MAX_VALUE, playerUUID, List.of(serverUUID())));
         assertEquals(expected, result);
     }
@@ -361,7 +361,7 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
         db().executeTransaction(new StoreSessionTransaction(session));
 
-        var expected = session.getAfkTime();
+        var expected = session.afkTime();
         var result = db().query(SessionQueries.afkTime(0L, Long.MAX_VALUE, serverUUID()));
         assertEquals(expected, result);
     }
@@ -372,7 +372,7 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
         db().executeTransaction(new StoreSessionTransaction(session));
 
-        var expected = session.getAfkTime() * 1.0 / session.getLength();
+        var expected = session.afkTime() * 1.0 / session.getLength();
         var result = db().query(SessionQueries.afkTimePercentage(0L, Long.MAX_VALUE, List.of(serverUUID())));
         assertEquals(
                 BigDecimal.valueOf(expected).setScale(4, RoundingMode.HALF_UP).doubleValue(),
@@ -387,7 +387,7 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
         db().executeTransaction(new StoreSessionTransaction(session));
 
-        var expected = session.getLength() - session.getAfkTime();
+        var expected = session.getLength() - session.afkTime();
         var result = db().query(SessionQueries.activePlaytime(0L, Long.MAX_VALUE, serverUUID()));
         assertEquals(expected, result);
     }
@@ -398,7 +398,7 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
         db().executeTransaction(new StoreSessionTransaction(session));
 
-        var expected = session.getLength() - session.getAfkTime();
+        var expected = session.getLength() - session.afkTime();
         var result = db().query(SessionQueries.activePlaytime(0L, Long.MAX_VALUE));
         assertEquals(expected, result);
     }
@@ -420,7 +420,7 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
 
         WorldTimes worldTimes = RandomData.randomWorldTimes(worlds);
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID);
-        session.getExtraData().put(WorldTimes.class, worldTimes);
+        session.extraData().put(WorldTimes.class, worldTimes);
         List<FinishedSession> sessions = Collections.singletonList(session);
         db().executeTransaction(new Transaction() {
             @Override
@@ -440,7 +440,7 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
 
         WorldTimes worldTimes = RandomData.randomWorldTimes(worlds);
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID);
-        session.getExtraData().put(WorldTimes.class, worldTimes);
+        session.extraData().put(WorldTimes.class, worldTimes);
         List<FinishedSession> sessions = new ArrayList<>();
         sessions.add(session);
         db().executeTransaction(new Transaction() {
@@ -469,7 +469,7 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
 
         WorldTimes worldTimes = RandomData.randomWorldTimes(worlds);
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID);
-        session.getExtraData().put(WorldTimes.class, worldTimes);
+        session.extraData().put(WorldTimes.class, worldTimes);
         List<FinishedSession> sessions = new ArrayList<>();
         sessions.add(session);
         db().executeTransaction(new Transaction() {
@@ -709,8 +709,8 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
 
         List<FinishedSession> expected = List.of(session);
         List<FinishedSession> none = List.of();
-        long beforeSession = session.getStart() - TimeUnit.MINUTES.toMillis(1);
-        long afterSession = session.getEnd() + TimeUnit.MINUTES.toMillis(1);
+        long beforeSession = session.start() - TimeUnit.MINUTES.toMillis(1);
+        long afterSession = session.end() + TimeUnit.MINUTES.toMillis(1);
         return Stream.of(
                 DynamicTest.dynamicTest("Player sessions", () -> assertEquals(expected, db().query(SessionQueries.sessionsOfPlayer(playerUUID, beforeSession, afterSession, List.of())))),
                 DynamicTest.dynamicTest("Server sessions", () -> assertEquals(expected, db().query(SessionQueries.sessionsOfServers(beforeSession, afterSession, List.of(serverUUID()))))),

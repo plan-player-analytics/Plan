@@ -53,11 +53,11 @@ public class StorePluginVersionsTransaction extends Transaction {
                 statement.setLong(4, time);
                 for (PluginMetadata plugin : changeList) {
                     statement.setString(1, serverUUID.toString());
-                    statement.setString(2, StringUtils.truncate(plugin.getName(), PluginVersionTable.MAX_NAME_LENGTH));
-                    if (plugin.getVersion() == null) {
+                    statement.setString(2, StringUtils.truncate(plugin.name(), PluginVersionTable.MAX_NAME_LENGTH));
+                    if (plugin.version() == null) {
                         statement.setNull(3, Types.VARCHAR);
                     } else {
-                        statement.setString(3, StringUtils.truncate(plugin.getVersion(), PluginVersionTable.MAX_VERSION_LENGTH));
+                        statement.setString(3, StringUtils.truncate(plugin.version(), PluginVersionTable.MAX_VERSION_LENGTH));
                     }
                     statement.addBatch();
                 }

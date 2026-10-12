@@ -104,7 +104,7 @@ public interface DatabaseBackupTest extends DatabaseTestPreparer {
         db.executeTransaction(new StorePluginVersionsTransaction(System.currentTimeMillis(), serverUUID, changeSet));
 
         AllowlistBounce bounce = new AllowlistBounce(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME, 1, System.currentTimeMillis());
-        db.executeTransaction(new StoreAllowlistBounceTransaction(bounce.getPlayerUUID(), bounce.getPlayerName(), serverUUID, bounce.getLastTime())).join();
+        db.executeTransaction(new StoreAllowlistBounceTransaction(bounce.playerUUID(), bounce.playerName(), serverUUID, bounce.lastTime())).join();
 
         db.executeTransaction(new WebGroupDefaultGroupsPatch());
         db.executeTransaction(new StoreWebGroupTransaction("admin", List.of("page", "access", "manage.groups", "manage.users")));

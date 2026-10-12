@@ -50,7 +50,7 @@ public interface AfterBadJoinAddressDataCorrectionPatchTest extends DatabaseTest
         executeTransactions(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
         executeTransactions(new StoreWorldNameTransaction(serverUUID(), worlds[1]));
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
-        session.getExtraData().put(JoinAddress.class, new JoinAddress(joinAddress));
+        session.extraData().put(JoinAddress.class, new JoinAddress(joinAddress));
         executeTransactions(new StoreSessionTransaction(session));
         execute(new ExecStatement(DELETE_FROM + JoinAddressTable.TABLE_NAME + WHERE + JoinAddressTable.JOIN_ADDRESS + "=?") {
             @Override
@@ -82,7 +82,7 @@ public interface AfterBadJoinAddressDataCorrectionPatchTest extends DatabaseTest
         executeTransactions(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
         executeTransactions(new StoreWorldNameTransaction(serverUUID(), worlds[1]));
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
-        session.getExtraData().put(JoinAddress.class, new JoinAddress(joinAddress));
+        session.extraData().put(JoinAddress.class, new JoinAddress(joinAddress));
         executeTransactions(new StoreSessionTransaction(session));
         execute(new ExecStatement("UPDATE " + SessionsTable.TABLE_NAME + " SET " + SessionsTable.JOIN_ADDRESS_ID + "=-1" +
                 WHERE + SessionsTable.JOIN_ADDRESS_ID + "=(" +
@@ -117,7 +117,7 @@ public interface AfterBadJoinAddressDataCorrectionPatchTest extends DatabaseTest
         executeTransactions(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
         executeTransactions(new StoreWorldNameTransaction(serverUUID(), worlds[1]));
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
-        session.getExtraData().put(JoinAddress.class, new JoinAddress(joinAddress));
+        session.extraData().put(JoinAddress.class, new JoinAddress(joinAddress));
         executeTransactions(new StoreSessionTransaction(session));
         execute(new ExecStatement("UPDATE " + SessionsTable.TABLE_NAME + " SET " + SessionsTable.JOIN_ADDRESS_ID + "=-1" +
                 WHERE + SessionsTable.JOIN_ADDRESS_ID + "=(" +
@@ -152,7 +152,7 @@ public interface AfterBadJoinAddressDataCorrectionPatchTest extends DatabaseTest
         executeTransactions(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
         executeTransactions(new StoreWorldNameTransaction(serverUUID(), worlds[1]));
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
-        session.getExtraData().put(JoinAddress.class, new JoinAddress(joinAddress));
+        session.extraData().put(JoinAddress.class, new JoinAddress(joinAddress));
         executeTransactions(new StoreSessionTransaction(session));
 
         AfterBadJoinAddressDataCorrectionPatch patch = new AfterBadJoinAddressDataCorrectionPatch();

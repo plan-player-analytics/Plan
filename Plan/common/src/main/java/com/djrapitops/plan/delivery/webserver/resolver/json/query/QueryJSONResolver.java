@@ -155,7 +155,7 @@ public class QueryJSONResolver implements AsyncResolver {
 
         return request.getRequestBodyAsync().thenCompose(bodyBytes -> {
             InputQueryDto inputQuery = parseInputQuery(request, bodyBytes);
-            List<InputFilterDto> queries = inputQuery.getFilters();
+            List<InputFilterDto> queries = inputQuery.filters();
 
             if (user.isPresent()) {
                 Optional<Response> errorResponse = checkFilterPermissions(queries, user.get());
@@ -230,7 +230,7 @@ public class QueryJSONResolver implements AsyncResolver {
             ViewDto view = request.getQuery().get("view")
                     .map(viewJson -> gson.fromJson(viewJson, ViewDto.class))
                     .orElseThrow(() -> new BadRequestException("'view' parameter not set (expecting json object {afterDate, afterTime, beforeDate, beforeTime})"));
-            return new InputQueryDto(view, queryFilters);
+            return new InputQueryDto(queryFilters, view);
         } catch (IOException e) {
             throw new BadRequestException("Failed to decode json");
         }
@@ -255,12 +255,12 @@ public class QueryJSONResolver implements AsyncResolver {
             long timestamp = System.currentTimeMillis();
             @Untrusted Map<String, Object> json = Maps.builder(String.class, Object.class)
                     .put("path", resultPath)
-                    .put("view", input.getView())
-                    .put("filters", input.getFilters()) // filters json may contain untrusted data
+                    .put("view", input.view())
+                    .put("filters", input.filters()) // filters json may contain untrusted data
                     .put("timestamp", timestamp)
                     .build();
             if (!result.isEmpty()) {
-                json.put("data", getDataFor(result.getResultUserIds(), input.getView()));
+                json.put("data", getDataFor(result.getResultUserIds(), input.view()));
             }
 
             JSONStorage.StoredJSON stored = jsonStorage.storeJson("query", json, timestamp);

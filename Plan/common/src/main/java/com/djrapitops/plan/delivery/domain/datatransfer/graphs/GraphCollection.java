@@ -17,49 +17,11 @@
 package com.djrapitops.plan.delivery.domain.datatransfer.graphs;
 
 import java.util.List;
-import java.util.Objects;
 
 /**
  * Represents multiple graphs of same type.
  *
  * @author AuroraLS3
  */
-public class GraphCollection<T> {
-
-    private final List<T> graphs;
-    private final String color;
-
-    public GraphCollection(List<T> graphs, String color) {
-        this.graphs = graphs;
-        this.color = color;
-    }
-
-    public List<T> getGraphs() {
-        return graphs;
-    }
-
-    public String getColor() {
-        return color;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        GraphCollection<?> that = (GraphCollection<?>) o;
-        return Objects.equals(getGraphs(), that.getGraphs()) && Objects.equals(getColor(), that.getColor());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getGraphs(), getColor());
-    }
-
-    @Override
-    public String toString() {
-        return "GraphCollection{" +
-                "graphs=" + graphs +
-                ", color='" + color + '\'' +
-                '}';
-    }
+public record GraphCollection<T>(List<T> graphs, String color) {
 }

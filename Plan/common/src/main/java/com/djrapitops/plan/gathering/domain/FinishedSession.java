@@ -18,12 +18,15 @@ package com.djrapitops.plan.gathering.domain;
 
 import com.djrapitops.plan.delivery.domain.DateHolder;
 import com.djrapitops.plan.delivery.domain.PlayerName;
+import com.djrapitops.plan.gathering.domain.ActiveSession.FirstSession;
 import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.utilities.java.OptionalArray;
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import org.apache.commons.lang3.StringUtils;
+import org.jspecify.annotations.NonNull;
 
 import java.util.List;
 import java.util.Objects;
@@ -31,15 +34,8 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
-public class FinishedSession implements DateHolder {
-
-    private final UUID playerUUID;
-    private final ServerUUID serverUUID;
-    private final long start;
-    private final long end;
-
-    private final long afkTime;
-    private final DataMap extraData;
+public record FinishedSession(UUID playerUUID, ServerUUID serverUUID, long start, long end, long afkTime,
+                              DataMap extraData) implements DateHolder {
 
     public FinishedSession(
             UUID playerUUID, ServerUUID serverUUID,
@@ -54,75 +50,12 @@ public class FinishedSession implements DateHolder {
         this.extraData = extraData != null ? extraData : new DataMap();
     }
 
-    public UUID getPlayerUUID() {
-        return playerUUID;
-    }
-
-    public ServerUUID getServerUUID() {
-        return serverUUID;
-    }
-
-    public long getStart() {
-        return start;
-    }
-
-    public long getEnd() {
-        return end;
-    }
-
-    public long getAfkTime() {
-        return afkTime;
-    }
-
-    public long getLength() {
-        return end - start;
-    }
-
-    public long getActiveTime() {
-        return getLength() - getAfkTime();
-    }
-
-    public int getMobKillCount() {
-        return extraData.get(MobKillCounter.class).map(MobKillCounter::getCount).orElse(0);
-    }
-
-    public int getDeathCount() {
-        return extraData.get(DeathCounter.class).map(DeathCounter::getCount).orElse(0);
-    }
-
-    public int getPlayerKillCount() {
-        return extraData.get(PlayerKills.class).map(PlayerKills::asList).map(List::size).orElse(0);
-    }
-
-    public void setAsFirstSessionIfMatches(Long registerDate) {
-        if (registerDate != null && Math.abs(start - registerDate) < TimeUnit.SECONDS.toMillis(15L)) {
-            extraData.put(ActiveSession.FirstSession.class, new ActiveSession.FirstSession());
-        }
-    }
-
-    public boolean isFirstSession() {
-        return extraData.get(ActiveSession.FirstSession.class).isPresent();
-    }
-
-    public DataMap getExtraData() {
-        return extraData;
-    }
-
-    public <T> Optional<T> getExtraData(Class<T> ofType) {
-        return getExtraData().get(ofType);
-    }
-
-    @Override
-    public long getDate() {
-        return getStart();
-    }
-
     /**
      * Deserialize csv format of the session.
      *
      * @param serialized Serialized version of the session
      * @return Proper session if the csv had 9 columns or more
-     * @throws com.google.gson.JsonSyntaxException if serialized format has a json syntax error
+     * @throws JsonSyntaxException if serialized format has a json syntax error
      */
     public static Optional<FinishedSession> deserializeCSV(String serialized) {
         String[] array = StringUtils.split(serialized, ';');
@@ -148,13 +81,47 @@ public class FinishedSession implements DateHolder {
         return Optional.of(new FinishedSession(playerUUID, serverUUID, start, end, afkTime, extraData));
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(playerUUID, serverUUID, start, end, afkTime, extraData);
+    public long getLength() {
+        return end - start;
+    }
+
+    public long getActiveTime() {
+        return getLength() - afkTime();
+    }
+
+    public int getMobKillCount() {
+        return extraData.get(MobKillCounter.class).map(MobKillCounter::getCount).orElse(0);
+    }
+
+    public int getDeathCount() {
+        return extraData.get(DeathCounter.class).map(DeathCounter::getCount).orElse(0);
+    }
+
+    public int getPlayerKillCount() {
+        return extraData.get(PlayerKills.class).map(PlayerKills::asList).map(List::size).orElse(0);
+    }
+
+    public void setAsFirstSessionIfMatches(Long registerDate) {
+        if (registerDate != null && Math.abs(start - registerDate) < TimeUnit.SECONDS.toMillis(15L)) {
+            extraData.put(FirstSession.class, new FirstSession());
+        }
+    }
+
+    public boolean isFirstSession() {
+        return extraData.get(FirstSession.class).isPresent();
+    }
+
+    public <T> Optional<T> getExtraData(Class<T> ofType) {
+        return extraData().get(ofType);
     }
 
     @Override
-    public String toString() {
+    public long date() {
+        return start();
+    }
+
+    @Override
+    public @NonNull String toString() {
         return "FinishedSession{" +
                 "playerUUID=" + playerUUID +
                 ", serverUUID=" + serverUUID +
@@ -200,7 +167,7 @@ public class FinishedSession implements DateHolder {
                 getExtraData(JoinAddress.class).map(JoinAddress::getAddress)
                         .map(address -> address.replace(';', ':'))
                         .orElse(JoinAddressTable.DEFAULT_VALUE_FOR_LOOKUP) + ';' +
-                getExtraData(PlayerName.class).map(PlayerName::get).orElseGet(playerUUID::toString))
+                getExtraData(PlayerName.class).map(PlayerName::name).orElseGet(playerUUID::toString))
                 .replace('\\', '_'); // Untrusted data can contain escape characters that fail json serialization.
     }
 

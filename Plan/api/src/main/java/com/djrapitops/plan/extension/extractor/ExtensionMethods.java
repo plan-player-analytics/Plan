@@ -32,6 +32,7 @@ public class ExtensionMethods {
     private final List<ExtensionMethod> stringProviders;
     private final List<ExtensionMethod> componentProviders;
     private final List<ExtensionMethod> tableProviders;
+    private final List<ExtensionMethod> statisticsProviders;
     private final List<ExtensionMethod> groupProviders;
     private final List<ExtensionMethod> dataBuilderProviders;
     private final List<ExtensionMethod> graphPointProviders;
@@ -44,6 +45,7 @@ public class ExtensionMethods {
         stringProviders = new ArrayList<>();
         componentProviders = new ArrayList<>();
         tableProviders = new ArrayList<>();
+        statisticsProviders = new ArrayList<>();
         groupProviders = new ArrayList<>();
         dataBuilderProviders = new ArrayList<>();
         graphPointProviders = new ArrayList<>();
@@ -75,6 +77,10 @@ public class ExtensionMethods {
 
     public List<ExtensionMethod> getTableProviders() {
         return tableProviders;
+    }
+
+    public List<ExtensionMethod> getStatisticsProviders() {
+        return statisticsProviders;
     }
 
     public List<ExtensionMethod> getGroupProviders() {
@@ -117,6 +123,10 @@ public class ExtensionMethods {
         tableProviders.add(method);
     }
 
+    public void addStatisticsMethod(ExtensionMethod method) {
+        statisticsProviders.add(method);
+    }
+
     public void addGroupMethod(ExtensionMethod method) {
         groupProviders.add(method);
     }
@@ -141,6 +151,7 @@ public class ExtensionMethods {
                 && Objects.equals(stringProviders, that.stringProviders)
                 && Objects.equals(componentProviders, that.componentProviders)
                 && Objects.equals(tableProviders, that.tableProviders)
+                && Objects.equals(statisticsProviders, that.statisticsProviders)
                 && Objects.equals(groupProviders, that.groupProviders)
                 && Objects.equals(dataBuilderProviders, that.dataBuilderProviders)
                 && Objects.equals(graphPointProviders, that.graphPointProviders);
@@ -148,7 +159,7 @@ public class ExtensionMethods {
 
     @Override
     public int hashCode() {
-        return Objects.hash(booleanProviders, numberProviders, doubleProviders, percentageProviders, stringProviders, componentProviders, tableProviders, groupProviders, dataBuilderProviders, graphPointProviders);
+        return Objects.hash(booleanProviders, numberProviders, doubleProviders, percentageProviders, stringProviders, componentProviders, tableProviders, statisticsProviders, groupProviders, dataBuilderProviders, graphPointProviders);
     }
 
     @Override
@@ -161,6 +172,7 @@ public class ExtensionMethods {
                 ", stringProviders=" + stringProviders +
                 ", componentProviders=" + componentProviders +
                 ", tableProviders=" + tableProviders +
+                ", statisticsProviders=" + statisticsProviders +
                 ", groupProviders=" + groupProviders +
                 ", dataBuilderProviders=" + dataBuilderProviders +
                 ", graphPointProviders=" + graphPointProviders +
@@ -175,6 +187,7 @@ public class ExtensionMethods {
                 && stringProviders.isEmpty()
                 && componentProviders.isEmpty()
                 && tableProviders.isEmpty()
+                && statisticsProviders.isEmpty()
                 && groupProviders.isEmpty()
                 && dataBuilderProviders.isEmpty()
                 && graphPointProviders.isEmpty();

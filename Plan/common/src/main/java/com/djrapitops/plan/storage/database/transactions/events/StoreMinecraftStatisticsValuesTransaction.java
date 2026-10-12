@@ -45,9 +45,9 @@ public class StoreMinecraftStatisticsValuesTransaction extends Transaction {
 
     @Override
     protected void performOperations() {
-        Integer userId = query(UserIdentifierQueries.fetchUserId(statistics.getPlayerUUID()))
+        Integer userId = query(UserIdentifierQueries.fetchUserId(statistics.playerUUID()))
                 .orElseThrow(() -> new IllegalArgumentException("Player not stored."));
-        Integer serverId = query(ServerQueries.fetchServerId(statistics.getServerUUID()))
+        Integer serverId = query(ServerQueries.fetchServerId(statistics.serverUUID()))
                 .orElseThrow(() -> new IllegalArgumentException("Server not stored."));
         String selectStatisticsForUpdate = SELECT + StatisticValueTable.STATISTIC_ID +
                 FROM + StatisticValueTable.TABLE_NAME +
@@ -56,7 +56,7 @@ public class StoreMinecraftStatisticsValuesTransaction extends Transaction {
                 lockForUpdate();
 
         Set<Integer> existingStatisticIds = query(db -> db.querySet(selectStatisticsForUpdate, row -> row.getInt(1), userId, serverId));
-        Map<Integer, Integer> valuesById = statistics.getValuesById();
+        Map<Integer, Integer> valuesById = statistics.valuesById();
         List<Integer> removedIds = new ArrayList<>();
         execute(new ExecBatchStatement(StatisticValueTable.UPDATE_STATEMENT) {
             @Override
@@ -96,7 +96,7 @@ public class StoreMinecraftStatisticsValuesTransaction extends Transaction {
                 for (Map.Entry<Integer, Integer> entry : valuesById.entrySet()) {
                     Integer id = entry.getKey();
                     if (!existingStatisticIds.contains(id)) {
-                        statement.setInt(1, entry.getValue());
+                        statement.setLong(1, entry.getValue());
                         statement.setInt(2, id);
                         statement.addBatch();
                     }

@@ -24,6 +24,7 @@ import com.djrapitops.plan.extension.builder.ExtensionDataBuilder;
 import com.djrapitops.plan.extension.graph.GroupGraphDataSource;
 import com.djrapitops.plan.extension.graph.PlayerGraphDataSource;
 import com.djrapitops.plan.extension.graph.ServerGraphDataSource;
+import com.djrapitops.plan.extension.statistic.Statistics;
 import com.djrapitops.plan.extension.table.Table;
 
 import java.lang.annotation.Annotation;
@@ -248,6 +249,13 @@ public final class ExtensionExtractor {
         validateMethodArguments(method, false, UUID.class, String.class, Group.class);
     }
 
+    private void validateMethod(ExtensionMethod extensionMethod, StatisticsProvider annotation) {
+        Method method = extensionMethod.getMethod();
+
+        validateReturnType(method, Statistics.class);
+        validateMethodArguments(method, false, UUID.class, String.class, Group.class);
+    }
+
     private void validateMethod(ExtensionMethod extensionMethod, GroupProvider annotation) {
         Method method = extensionMethod.getMethod();
 
@@ -323,6 +331,10 @@ public final class ExtensionExtractor {
                 validateMethod(method, annotation);
                 methods.get(method.getParameterType()).addTableMethod(method);
             });
+            method.getAnnotation(StatisticsProvider.class).ifPresent(annotation -> {
+                validateMethod(method, annotation);
+                methods.get(method.getParameterType()).addStatisticsMethod(method);
+            });
             method.getAnnotation(GroupProvider.class).ifPresent(annotation -> {
                 validateMethod(method, annotation);
                 methods.get(method.getParameterType()).addGroupMethod(method);
@@ -352,8 +364,8 @@ public final class ExtensionExtractor {
             if (!hasAnyOf(conditionalMethod,
                     BooleanProvider.class, DoubleProvider.class, NumberProvider.class,
                     PercentageProvider.class, StringProvider.class, ComponentProvider.class,
-                    TableProvider.class, GroupProvider.class, DataBuilderProvider.class,
-                    GraphProvider.class
+                    TableProvider.class, StatisticsProvider.class,
+                    GroupProvider.class, DataBuilderProvider.class, GraphProvider.class
             )) {
                 throw new IllegalArgumentException(extensionName + "." + conditionalMethod.getName() + " did not have any associated Provider for Conditional.");
             }
@@ -392,18 +404,31 @@ public final class ExtensionExtractor {
 
     private void extractTabInfo() {
         tabInformation = new ArrayList<>();
-        getClassAnnotation(TabInfo.Multiple.class).ifPresent(tabs -> {
-            for (TabInfo tabInfo : tabs.value()) {
-                String tabName = tabInfo.tab();
+        getClassAnnotation(TabInfo.Multiple.class).ifPresent(annotations -> {
+            for (TabInfo annotation : annotations.value()) {
+                String tabName = annotation.tab();
 
                 // Length restriction check
                 if (tabName.length() > 50) {
                     warnings.add(extensionName + " tabName '" + tabName + WAS_OVER_50_CHARACTERS);
                 }
 
-                tabInformation.add(tabInfo);
+                tabInformation.add(annotation);
             }
         });
+        // Only single annotation present
+        if (tabInformation.isEmpty()) {
+            getClassAnnotation(TabInfo.class).ifPresent(annotation -> {
+                String tabName = annotation.tab();
+
+                // Length restriction check
+                if (tabName.length() > 50) {
+                    warnings.add(extensionName + " tabName '" + tabName + WAS_OVER_50_CHARACTERS);
+                }
+
+                tabInformation.add(annotation);
+            });
+        }
 
         getClassAnnotation(TabOrder.class).map(TabOrder::value)
                 .ifPresent(order -> {
@@ -434,18 +459,30 @@ public final class ExtensionExtractor {
 
     private void extractInvalidMethods() {
         invalidMethods = new ArrayList<>();
-        getClassAnnotation(InvalidateMethod.Multiple.class).ifPresent(tabs -> {
-            for (InvalidateMethod tabInfo : tabs.value()) {
-                String methodName = tabInfo.value();
+        getClassAnnotation(InvalidateMethod.Multiple.class).ifPresent(annotations -> {
+            for (InvalidateMethod annotation : annotations.value()) {
+                String methodName = annotation.value();
 
                 // Length restriction check
                 if (methodName.length() > 50) {
                     warnings.add(extensionName + " invalidated method '" + methodName + WAS_OVER_50_CHARACTERS);
                 }
 
-                invalidMethods.add(tabInfo);
+                invalidMethods.add(annotation);
             }
         });
+        if (invalidMethods.isEmpty()) {
+            getClassAnnotation(InvalidateMethod.class).ifPresent(annotation -> {
+                String methodName = annotation.value();
+
+                // Length restriction check
+                if (methodName.length() > 50) {
+                    warnings.add(extensionName + " invalidated method '" + methodName + WAS_OVER_50_CHARACTERS);
+                }
+
+                invalidMethods.add(annotation);
+            });
+        }
     }
 
     /**

@@ -23,21 +23,5 @@ import java.util.Map;
  *
  * @author AuroraLS3
  */
-public class ServerMinecraftStatistics {
-
-    private final String serverUUID;
-    private final Map<String, Integer> statistics;
-
-    public ServerMinecraftStatistics(String serverUUID, Map<String, Integer> statistics) {
-        this.serverUUID = serverUUID;
-        this.statistics = statistics;
-    }
-
-    public String getServerUUID() {
-        return serverUUID;
-    }
-
-    public Map<String, Integer> getStatistics() {
-        return statistics;
-    }
+public record ServerMinecraftStatistics(String serverUUID, Map<String, Integer> statistics) {
 }

@@ -24,6 +24,7 @@ import com.djrapitops.plan.extension.icon.Icon;
 import com.djrapitops.plan.extension.implementation.TabInformation;
 import com.djrapitops.plan.extension.implementation.results.*;
 import com.djrapitops.plan.extension.implementation.storage.queries.graph.ExtensionGraphQueries;
+import com.djrapitops.plan.extension.implementation.storage.queries.statistics.ExtensionPlayerStatisticsQuery;
 import com.djrapitops.plan.extension.implementation.storage.queries.table.ExtensionPlayerTablesQuery;
 import com.djrapitops.plan.extension.implementation.storage.queries.table.QueriedTables;
 import com.djrapitops.plan.identification.ServerUUID;
@@ -73,6 +74,7 @@ public class ExtensionPlayerDataQuery implements Query<Map<ServerUUID, List<Exte
         combine(extensionDataByPluginID, db.query(new ExtensionPlayerTablesQuery(playerUUID)));
         combine(extensionDataByPluginID, db.query(new ExtensionPlayerGroupsQuery(playerUUID)));
         combine(extensionDataByPluginID, db.query(ExtensionGraphQueries.findGraphTableNames(playerUUID, ExtensionGraphMetadataTable.TableType.PLAYER)));
+        combine(extensionDataByPluginID, db.query(new ExtensionPlayerStatisticsQuery(playerUUID)));
 
         return flatMapByServerUUID(extensionsByServerUUID, extensionDataByPluginID);
     }

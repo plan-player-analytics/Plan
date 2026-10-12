@@ -16,7 +16,6 @@
  */
 package com.djrapitops.plan.delivery.domain;
 
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -24,63 +23,9 @@ import java.util.UUID;
  *
  * @author AuroraLS3
  */
-public class RetentionData {
-
-    private final UUID playerUUID;
-    private final long registerDate;
-    private final long lastSeenDate;
-    private final long playtime;
-    private final long timeDifference;
+public record RetentionData(UUID playerUUID, long registerDate, long lastSeenDate, long playtime, long timeDifference) {
 
     public RetentionData(UUID playerUUID, long registerDate, long lastSeenDate, long playtime) {
-        this.playerUUID = playerUUID;
-        this.registerDate = registerDate;
-        this.lastSeenDate = lastSeenDate;
-        this.playtime = playtime;
-        timeDifference = lastSeenDate - registerDate;
-    }
-
-    public UUID getPlayerUUID() {
-        return playerUUID;
-    }
-
-    public long getRegisterDate() {
-        return registerDate;
-    }
-
-    public long getLastSeenDate() {
-        return lastSeenDate;
-    }
-
-    public long getTimeDifference() {
-        return timeDifference;
-    }
-
-    public long getPlaytime() {
-        return playtime;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        RetentionData that = (RetentionData) o;
-        return getRegisterDate() == that.getRegisterDate() && getLastSeenDate() == that.getLastSeenDate() && getPlaytime() == that.getPlaytime() && getTimeDifference() == that.getTimeDifference() && Objects.equals(getPlayerUUID(), that.getPlayerUUID());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getPlayerUUID(), getRegisterDate(), getLastSeenDate(), getPlaytime(), getTimeDifference());
-    }
-
-    @Override
-    public String toString() {
-        return "RetentionData{" +
-                "playerUUID=" + playerUUID +
-                ", registerDate=" + registerDate +
-                ", lastSeenDate=" + lastSeenDate +
-                ", playtime=" + playtime +
-                ", timeDifference=" + timeDifference +
-                '}';
+        this(playerUUID, registerDate, lastSeenDate, playtime, lastSeenDate - registerDate);
     }
 }

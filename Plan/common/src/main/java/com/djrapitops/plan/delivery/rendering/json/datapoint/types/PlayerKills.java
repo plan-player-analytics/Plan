@@ -82,7 +82,7 @@ public class PlayerKills implements Datapoint<Long> {
                         .filter(session -> session.isWithin(after, before))
                         .flatMap(session -> session.getExtraData(com.djrapitops.plan.gathering.domain.PlayerKills.class))
                         .map(kills -> kills.asList().stream()
-                                .filter(kill -> kill.getDate() >= after && kill.getDate() < before)
+                                .filter(kill -> kill.date() >= after && kill.date() < before)
                                 .count())
                         .orElse(0L);
             }
@@ -95,7 +95,7 @@ public class PlayerKills implements Datapoint<Long> {
                     .filter(session -> session.isWithin(after, before))
                     .flatMap(session -> session.getExtraData(com.djrapitops.plan.gathering.domain.PlayerKills.class).stream())
                     .mapToLong(kills -> kills.asList().stream()
-                            .filter(kill -> kill.getDate() >= after && kill.getDate() < before)
+                            .filter(kill -> kill.date() >= after && kill.date() < before)
                             .count())
                     .sum();
         }
