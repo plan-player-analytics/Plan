@@ -44,7 +44,7 @@ command:
             name: "使用者名稱"
     confirmation:
         accept: "接受"
-        cancelNoChanges: "已取消。沒有資料被更改。"
+        cancelNoChanges: "已取消。沒有資料被變更。"
         cancelNoUnregister: "已取消。「${0}」仍保持註冊狀態"
         confirm: "確認："
         dbClear: "您即將刪除 ${0} 中所有的 Plan 資料"
@@ -681,10 +681,10 @@ html:
             canNotDeleteBuiltIn: "注意：無法刪除內建主題，只能刪除您對它們所做的修改。"
             changes:
                 addColor: "新增了 {{name}} 顏色 {{color}}"
-                changeNightMode: "將夜間模式 {{path}} 更改為 {{name}}"
-                changeNightModeArray: "更改了夜間模式 {{path}} 列表"
-                changeUseCase: "將 {{path}} 更改為 {{name}}"
-                changeUseCaseArray: "更改了 {{path}} 列表"
+                changeNightMode: "將夜間模式 {{path}} 變更為 {{name}}"
+                changeNightModeArray: "變更了夜間模式 {{path}} 列表"
+                changeUseCase: "將 {{path}} 變更為 {{name}}"
+                changeUseCaseArray: "變更了 {{path}} 列表"
                 deleteColor: "刪除了顏色 {{name}}"
                 discardedChanges: "已放棄變更："
                 removeNightMode: "移除了夜間模式覆寫 {{path}}"
