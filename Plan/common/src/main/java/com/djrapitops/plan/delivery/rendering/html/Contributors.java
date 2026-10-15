@@ -93,7 +93,7 @@ public class Contributors {
             new Contributor("Perchun_Pak", LANG),
             new Contributor("HexedHero", CODE),
             new Contributor("DrexHD", CODE),
-            new Contributor("Tokas", LANG),
+            new Contributor("Tokas (zisunny104)", LANG),
             new Contributor("SkipM4", LANG),
             new Contributor("ahdg6", CODE),
             new Contributor("BratishkaErik", LANG),
