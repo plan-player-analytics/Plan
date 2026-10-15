@@ -93,7 +93,7 @@ public class Contributors {
             new Contributor("Perchun_Pak", LANG),
             new Contributor("HexedHero", CODE),
             new Contributor("DrexHD", CODE),
-            new Contributor("zisunny104", LANG),
+            new Contributor("Tokas (zisunny104)", LANG),
             new Contributor("SkipM4", LANG),
             new Contributor("ahdg6", CODE),
             new Contributor("BratishkaErik", LANG),
@@ -124,6 +124,8 @@ public class Contributors {
             new Contributor("julianvdhogen", LANG),
             new Contributor("Zoriot", CODE),
             new Contributor("RomainCabaret", CODE),
+            new Contributor("angela0930", LANG),
+            new Contributor("OutHimic", LANG),
     };
 
     private Contributors() {
