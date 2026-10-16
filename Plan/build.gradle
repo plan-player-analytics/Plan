@@ -66,7 +66,7 @@ subprojects {
 
         commonsTextVersion = "1.15.0"
         commonsCompressVersion = "1.28.0"
-        commonsCodecVersion = "1.22.1"
+        commonsCodecVersion = "1.23.0"
         caffeineVersion = "3.3.0"
         jetbrainsAnnotationsVersion = "26.1.0"
         jettyVersion = "12.1.14"
