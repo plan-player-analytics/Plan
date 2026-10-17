@@ -27,7 +27,7 @@ import java.lang.annotation.Target;
  * @author AuroraLS3
  */
 @Retention(RetentionPolicy.SOURCE)
-@Target({ElementType.PARAMETER, ElementType.FIELD, ElementType.METHOD, ElementType.LOCAL_VARIABLE, ElementType.TYPE_PARAMETER, ElementType.TYPE_USE, ElementType.CONSTRUCTOR, ElementType.TYPE})
+@Target({ElementType.PARAMETER, ElementType.RECORD_COMPONENT, ElementType.FIELD, ElementType.METHOD, ElementType.LOCAL_VARIABLE, ElementType.TYPE_PARAMETER, ElementType.TYPE_USE, ElementType.CONSTRUCTOR, ElementType.TYPE})
 public @interface Untrusted {
     String reason() default "";
 }

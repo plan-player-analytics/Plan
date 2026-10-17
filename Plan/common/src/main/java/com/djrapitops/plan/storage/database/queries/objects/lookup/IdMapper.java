@@ -89,4 +89,23 @@ public class IdMapper {
                                 .orElseGet(userIdentifiable::getGroupId))
         );
     }
+
+    public static void mapTokenIds(Collection<? extends TokenIdentifiable> rows, LookupTable<Integer> tokenIdLookupTable) {
+        rows.forEach(
+                tokenIdentifiable -> tokenIdentifiable.setTokenId(
+                        tokenIdLookupTable.find(tokenIdentifiable.getTokenId())
+                                .orElseGet(tokenIdentifiable::getTokenId))
+        );
+    }
+
+    public static Map<Integer, List<Integer>> mapTokenPermissionIds(Map<Integer, List<Integer>> permissionsByToken, LookupTable<Integer> apiTokenLookupTable, LookupTable<Integer> webPermissionLookupTable) {
+        return permissionsByToken.entrySet().stream()
+                .filter(entry -> apiTokenLookupTable.contains(entry.getKey()))
+                .collect(Collectors.toMap(tokenId -> apiTokenLookupTable.find(tokenId.getKey()).orElse(null),
+                        value -> value.getValue().stream()
+                                .map(id -> webPermissionLookupTable.find(id).orElse(null))
+                                .filter(Objects::nonNull)
+                                .sorted()
+                                .collect(Collectors.toList())));
+    }
 }

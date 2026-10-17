@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.http;
 
+import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.auth.Authentication;
@@ -69,7 +70,8 @@ public interface InternalRequest {
 
     default WebUser getWebUser(WebserverConfiguration webserverConfiguration, AuthenticationExtractor authenticationExtractor, @Untrusted String accessAddress) {
         return getAuthentication(webserverConfiguration, authenticationExtractor)
-                .map(Authentication::getWebUser) // Can throw WebUserAuthException
+                .map(Authentication::getUser) // Can throw WebUserAuthException
+                .map(User::toWebUser)
                 .orElse(null);
     }
 

@@ -40,18 +40,18 @@ public class AuthenticationExtractor {
         return getCookieAuthentication(internalRequest);
     }
 
-    private Optional<Authentication> getCookieAuthentication(@Untrusted List<Cookie> cookies) {
-        for (@Untrusted Cookie cookie : cookies) {
+    private Optional<Authentication> getCookieAuthentication(InternalRequest request) {
+        for (@Untrusted Cookie cookie : request.getCookies()) {
             if ("auth".equals(cookie.getName())) {
                 return Optional.of(new CookieAuthentication(activeCookieStore, cookie.getValue()));
             }
         }
 
-        return internalRequest.getHeader("X-Plan-Token")
-                .map(token -> {
-                    List<String> permissions = authTokenStore.getPermissions(token);
-                    if (permissions.isEmpty()) return null;
-                    return new TokenAuthentication(token, permissions);
-                });
+        @Untrusted var header = request.getHeader("X-Plan-Token");
+        return header.map(token -> {
+            List<String> permissions = authTokenStore.getPermissions(token);
+            if (permissions.isEmpty()) return null;
+            return new TokenAuthentication(token, permissions);
+        });
     }
 }

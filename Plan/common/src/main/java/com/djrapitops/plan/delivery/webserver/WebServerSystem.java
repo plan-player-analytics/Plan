@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.webserver;
 
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.delivery.webserver.auth.ActiveCookieStore;
+import com.djrapitops.plan.delivery.webserver.auth.AuthTokenStore;
 import com.djrapitops.plan.delivery.webserver.auth.RegistrationBin;
 import com.djrapitops.plan.delivery.webserver.http.WebServer;
 import com.djrapitops.plan.storage.file.PublicHtmlFiles;
@@ -36,6 +37,7 @@ public class WebServerSystem implements SubSystem {
 
     private final Addresses addresses;
     private final ActiveCookieStore activeCookieStore;
+    private final AuthTokenStore authTokenStore;
     private final RegistrationBin registrationBin;
     private final PublicHtmlFiles publicHtmlFiles;
     private final WebServer webServer;
@@ -44,12 +46,15 @@ public class WebServerSystem implements SubSystem {
     @Inject
     public WebServerSystem(
             Addresses addresses,
-            ActiveCookieStore activeCookieStore, RegistrationBin registrationBin,
+            ActiveCookieStore activeCookieStore,
+            AuthTokenStore authTokenStore,
+            RegistrationBin registrationBin,
             PublicHtmlFiles publicHtmlFiles,
             WebServer webServer,
             PluginLogger logger) {
         this.addresses = addresses;
         this.activeCookieStore = activeCookieStore;
+        this.authTokenStore = authTokenStore;
         this.registrationBin = registrationBin;
         this.publicHtmlFiles = publicHtmlFiles;
         this.webServer = webServer;
@@ -58,11 +63,15 @@ public class WebServerSystem implements SubSystem {
 
     @Override
     public void enable() {
-        activeCookieStore.enable();
         webServer.enable();
 
         if (publicHtmlFiles.findPublicHtmlResource("index.html").isPresent()) {
             logger.info("Found index.html in public_html, using a custom React bundle!");
+        }
+
+        if (webServer.isEnabled()) {
+            activeCookieStore.enable();
+            authTokenStore.enable();
         }
     }
 
