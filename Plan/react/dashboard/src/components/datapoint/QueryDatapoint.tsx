@@ -29,8 +29,8 @@ import {useDatapointQuery} from "../../dataHooks/useDatapointQuery";
 type Props<K extends DatapointType> = {
     dataType: K;
     filter?: GenericFilter;
-    fallbackUnavailableExplanation?: string,
-    noDataFallback?: string,
+    fallbackUnavailableExplanation?: string;
+    noDataFallback?: string;
 } & Omit<DatapointProps, 'value'>;
 
 type ValueProps<K extends DatapointType> = Omit<Props<K>, 'color' | 'name' | 'icon'>;
@@ -72,7 +72,7 @@ function Format<K extends DatapointType>({value, formatType}: FormatProps<K>) {
     if (value === undefined) return null;
     switch (formatType) {
         case "TIME_AMOUNT":
-            return <FormattedTime timeMs={value}/>;
+            return <FormattedTime timeMs={value as number}/>;
         case "MILLIS":
             return formatPing(value as number);
         case "PERCENTAGE":

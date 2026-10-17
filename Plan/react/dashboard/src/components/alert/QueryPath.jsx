@@ -1,5 +1,5 @@
 import React from 'react';
-import {useQueryResultContext} from "../../hooks/queryResultContext";
+import {useQueryResultContext} from "../../hooks/queryResultContext.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faFilter} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";

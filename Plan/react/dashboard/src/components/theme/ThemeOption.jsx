@@ -44,9 +44,9 @@ const ThemeOption = ({theme, nightMode, selected, setSelected}) => {
         }
     }
 
-    const onClickEdit = () => {
+    const onClickEdit = async () => {
         themeHook.toggleColorChooser();
-        navigate(`/theme-editor/${theme}`);
+        await navigate(`/theme-editor/${theme}`);
     }
 
     return (

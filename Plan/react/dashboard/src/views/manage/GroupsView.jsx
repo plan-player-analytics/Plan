@@ -21,11 +21,11 @@ import {Trans, useTranslation} from "react-i18next";
 import {
     ConfigurationStorageContextProvider,
     useConfigurationStorageContext
-} from "../../hooks/context/configurationStorageContextHook";
+} from "../../hooks/context/configurationStorageContextHook.tsx";
 import SideNavTabs from "../../components/layout/SideNavTabs";
 import Select from "../../components/input/Select";
-import Scrollable from "../../components/Scrollable";
-import OpaqueText from "../../components/layout/OpaqueText";
+import Scrollable from "../../components/Scrollable.tsx";
+import OpaqueText from "../../components/layout/OpaqueText.tsx";
 import {useAlertPopupContext} from "../../hooks/context/alertPopupContext.tsx";
 import {DropdownStatusContextProvider, useDropdownStatusContext} from "../../hooks/context/dropdownStatusContextHook";
 import {useNavigation} from "../../hooks/navigationHook.tsx";
@@ -33,11 +33,11 @@ import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 import Checkbox from "../../components/input/Checkbox.tsx";
 import TextInput from "../../components/input/TextInput.jsx";
-import UnsavedChangesText from "../../components/text/UnsavedChangesText.jsx";
+import UnsavedChangesText from "../../components/text/UnsavedChangesText.tsx";
 import ActionButton from "../../components/input/button/ActionButton.tsx";
-import DangerButton from "../../components/input/button/DangerButton.jsx";
+import DangerButton from "../../components/input/button/DangerButton.tsx";
 import OutlineButton from "../../components/input/button/OutlineButton.tsx";
-import SecondaryActionButton from "../../components/input/button/SecondaryActionButton.jsx";
+import SecondaryActionButton from "../../components/input/button/SecondaryActionButton.tsx";
 
 const GroupsHeader = ({groupName, icon}) => {
     return (

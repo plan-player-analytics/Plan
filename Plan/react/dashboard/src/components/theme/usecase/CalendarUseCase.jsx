@@ -1,7 +1,7 @@
 import React from 'react';
 import PlayerSessionCalendar from "../../calendar/PlayerSessionCalendar.jsx";
 import {calculateCssHexColor} from "../../../util/colors.js";
-import Background from "./Background.jsx";
+import Background from "./Background.tsx";
 import {GenericFilterContextProvider} from "../../../dataHooks/genericFilterContextHook.tsx";
 
 const CalendarUseCase = () => {

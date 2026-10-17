@@ -4,7 +4,7 @@ import {useTheme} from "../../../hooks/themeHook.tsx";
 import {Card} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faGlobe, faWifi} from "@fortawesome/free-solid-svg-icons";
-import Scrollable from "../../Scrollable";
+import Scrollable from "../../Scrollable.tsx";
 import {faClock} from "@fortawesome/free-regular-svg-icons";
 import FormattedDate from "../../text/FormattedDate.tsx";
 import {localeService, reverseRegionLookupMap} from "../../../service/localeService.js";

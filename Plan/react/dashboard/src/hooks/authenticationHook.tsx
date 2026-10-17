@@ -22,7 +22,7 @@ type WhoAmI =
     user: User
 }
 
-type AuthenticationContextValues = {
+type AuthenticationContextValues = { // TODO clearer type
     authLoaded: boolean;
     authRequired: boolean;
     loggedIn: boolean;

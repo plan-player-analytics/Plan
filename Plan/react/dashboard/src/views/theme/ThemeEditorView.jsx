@@ -12,12 +12,12 @@ import UseCaseSection from "../../components/theme/UseCaseSection.jsx";
 import ExampleSection from "../../components/theme/ExampleSection.jsx";
 import {faExclamationCircle, faFileSignature, faSwatchbook} from "@fortawesome/free-solid-svg-icons";
 import ActionButton from "../../components/input/button/ActionButton.tsx";
-import UnsavedChangesText from "../../components/text/UnsavedChangesText.jsx";
-import SecondaryActionButton from "../../components/input/button/SecondaryActionButton.jsx";
+import UnsavedChangesText from "../../components/text/UnsavedChangesText.tsx";
+import SecondaryActionButton from "../../components/input/button/SecondaryActionButton.tsx";
 import {MinHeightProvider} from "../../hooks/context/minHeightContextHook.jsx";
 import {useMetadata} from "../../hooks/metadataHook.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import DownloadButton from "../../components/theme/DownloadButton.jsx";
+import DownloadButton from "../../components/theme/DownloadButton.tsx";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const ThemeEditorView = () => {

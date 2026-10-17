@@ -2,7 +2,7 @@ import React from "react";
 import {Card, Col} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faHandPointer} from "@fortawesome/free-regular-svg-icons";
-import Scrollable from "../../components/Scrollable";
+import Scrollable from "../../components/Scrollable.tsx";
 import {faNetworkWired, faSignal} from "@fortawesome/free-solid-svg-icons";
 import ServerPie from "../../components/graphs/ServerPie";
 import ServerAccordion from "../../components/accordion/ServerAccordion";

@@ -26,10 +26,10 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import {faSuperpowers} from "@fortawesome/free-brands-svg-icons";
 import Datapoint from "../../datapoint/Datapoint.tsx";
-import FormattedTime from "../../text/FormattedTime.jsx";
+import FormattedTime from "../../text/FormattedTime.tsx";
 import FormattedDate from "../../text/FormattedDate.tsx";
-import {useDecimalFormatter} from "../../../util/format/useDecimalFormatter.js";
-import {usePingFormatter} from "../../../util/format/usePingFormatter.js";
+import {useDecimalFormatter} from "../../../util/format/useDecimalFormatter.ts";
+import {usePingFormatter} from "../../../util/format/usePingFormatter.ts";
 
 const PlayerHeadSection = ({player}) => {
     const {t} = useTranslation();

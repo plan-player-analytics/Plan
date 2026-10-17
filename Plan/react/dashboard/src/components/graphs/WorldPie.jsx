@@ -7,11 +7,11 @@ import "highcharts/esm/modules/no-data-to-display"
 import {useTheme} from "../../hooks/themeHook.tsx";
 import {nameToCssVariable, withReducedSaturation} from "../../util/colors";
 import {useTranslation} from "react-i18next";
-import {usePreferences} from "../../hooks/preferencesHook.jsx";
+import {usePreferences} from "../../hooks/preferences/preferencesHook.tsx";
 import Loader from "../navigation/Loader.tsx";
 import {useThemeStorage} from "../../hooks/context/themeContextHook.tsx";
 import {classNames} from "../../util/classNames.ts";
-import {useTimeAmountFormatter} from "../../util/format/useTimeAmountFormatter.js";
+import {useTimeAmountFormatter} from "../../util/format/useTimeAmountFormatter.ts";
 
 const WorldPie = ({id, worldSeries, gmSeries}) => {
     const {t} = useTranslation();

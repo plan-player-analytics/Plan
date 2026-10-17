@@ -2,7 +2,7 @@ import React, {useCallback} from "react";
 import {useTranslation} from "react-i18next";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faDoorOpen, faRepeat, faUser} from "@fortawesome/free-solid-svg-icons";
-import {usePreferences} from "../../hooks/preferencesHook.jsx";
+import {usePreferences} from "../../hooks/preferences/preferencesHook.tsx";
 import DataTablesTable from "./DataTablesTable.jsx";
 import FormattedDate from "../text/FormattedDate.tsx";
 import {faCalendarCheck, faCalendarTimes} from "@fortawesome/free-regular-svg-icons";

@@ -11,9 +11,9 @@ import {ThemeStorageContextProvider, useThemeStorage} from "../../hooks/context/
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import LoadIn from "../../components/animation/LoadIn.tsx";
 import Checkbox from "../../components/input/Checkbox.tsx";
-import DangerButton from "../../components/input/button/DangerButton.jsx";
+import DangerButton from "../../components/input/button/DangerButton.tsx";
 import {ThemeEditContextProvider} from "../../hooks/context/themeEditContextHook.tsx";
-import DownloadButton from "../../components/theme/DownloadButton.jsx";
+import DownloadButton from "../../components/theme/DownloadButton.tsx";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 import {deleteTheme} from "../../service/metadataService.js";
 

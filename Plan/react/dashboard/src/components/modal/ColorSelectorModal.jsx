@@ -8,10 +8,10 @@ import {useThemeStorage} from "../../hooks/context/themeContextHook.tsx";
 import {useMetadata} from "../../hooks/metadataHook.tsx";
 import ThemeOption from "../theme/ThemeOption.jsx";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
-import AddThemeButton from "../theme/AddThemeButton.jsx";
+import AddThemeButton from "../theme/AddThemeButton.tsx";
 import ActionButton from "../input/button/ActionButton.tsx";
 import ColorSelectorButton from "../theme/ColorSelectorButton.jsx";
-import ModalCloseButton from "../input/button/ModalCloseButton.jsx";
+import ModalCloseButton from "../input/button/ModalCloseButton.tsx";
 
 const ColorSelectorModal = () => {
     const {t} = useTranslation();

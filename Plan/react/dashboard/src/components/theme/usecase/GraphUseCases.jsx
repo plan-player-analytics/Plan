@@ -10,7 +10,7 @@ import DiskPerformanceGraph from "../../graphs/performance/DiskPerformanceGraph.
 import PingGraph from "../../graphs/performance/PingGraph.jsx";
 import GeolocationsCard from "../../cards/common/GeolocationsCard.jsx";
 import {calculateCssHexColor} from "../../../util/colors.js";
-import Background from "./Background.jsx";
+import Background from "./Background.tsx";
 
 const randomDate = (start, end) => {
     return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
@@ -57,7 +57,7 @@ const PlayersOnlineGraphUseCase = () => {
 
 const TpsGraphUseCase = () => {
     return <Background><TpsPerformanceGraph id={'tps-graph'} data={{zones: {tpsThresholdHigh: 15, tpsThresholdMed: 5}}}
-                                dataSeries={{playersOnline: [], tps: generatePoints(0, 20)}}
+                                            dataSeries={{playersOnline: [], tps: generatePoints(0, 20)}}
                                             pluginHistorySeries={{}}/></Background>
 }
 const CpuGraphUseCase = () => {
@@ -67,7 +67,7 @@ const CpuGraphUseCase = () => {
         ram: []
     };
     return <Background><CpuRamPerformanceGraph id={'cpu-graph'}
-                                   dataSeries={dataSeries}
+                                               dataSeries={dataSeries}
                                                pluginHistorySeries={{}}/></Background>
 }
 
@@ -78,7 +78,7 @@ const RamGraphUseCase = () => {
         ram: generatePoints(10000, 11000)
     };
     return <Background><CpuRamPerformanceGraph id={'ram-graph'}
-                                   dataSeries={dataSeries}
+                                               dataSeries={dataSeries}
                                                pluginHistorySeries={{}}/></Background>
 }
 
@@ -89,7 +89,7 @@ const ChunksGraphUseCase = () => {
         entities: []
     };
     return <Background><WorldPerformanceGraph id={'chunk-graph'}
-                                  dataSeries={dataSeries}
+                                              dataSeries={dataSeries}
                                               pluginHistorySeries={{}}/></Background>
 }
 
@@ -100,7 +100,7 @@ const EntitiesGraphUseCase = () => {
         entities: generatePoints(100, 20000)
     };
     return <Background><WorldPerformanceGraph id={'entities-graph'}
-                                  dataSeries={dataSeries}
+                                              dataSeries={dataSeries}
                                               pluginHistorySeries={{}}/></Background>
 }
 
@@ -109,7 +109,7 @@ const DiskGraphUseCase = () => {
         disk: generatePoints(50, 2000),
     }
     return <Background><DiskPerformanceGraph id={'disk-graph'} dataSeries={dataSeries}
-                                 data={{zones: {diskThresholdHigh: 500, diskThresholdMed: 100}}}
+                                             data={{zones: {diskThresholdHigh: 500, diskThresholdMed: 100}}}
                                              pluginHistorySeries={{}}/></Background>
 }
 

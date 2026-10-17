@@ -6,7 +6,7 @@ import {Col, Row} from "react-bootstrap";
 import GroupBarGraph from "./GroupBarGraph";
 import ErrorBoundary from "../ErrorBoundary";
 import {ErrorViewText} from "../../views/ErrorView.tsx";
-import VisualizerSelector from "../input/button/VisualizerSelector.jsx";
+import VisualizerSelector from "../input/button/VisualizerSelector.tsx";
 
 const options = {
     BAR: 'bar',

@@ -136,7 +136,7 @@ const PageNavigationItem = ({page}) => {
                         aria-label="Page selector"
                         className="form-select form-select-sm scrollbar"
                         id="pageSelector"
-                        defaultValue={currentPage ? currentPage : items[0].id}>
+                        defaultValue={currentPage || items[0].id}>
                     {items.map(item =>
                         <option key={item.id} value={item.id}>{item.displayName}</option>)}
                 </select>

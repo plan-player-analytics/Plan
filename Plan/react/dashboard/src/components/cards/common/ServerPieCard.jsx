@@ -10,7 +10,7 @@ import {nameToCssVariable} from "../../../util/colors.js";
 import {useServerPie} from "../../../dataHooks/graphHooks.ts";
 import {useGenericFilter} from "../../../dataHooks/genericFilterContextHook.tsx";
 import {TitleWithDates} from "../../text/TitleWithDates.tsx";
-import {MS_MONTH} from "../../../util/format/useDateFormatter.js";
+import {MS_MONTH} from "../../../util/format/useDateFormatter.ts";
 
 const ServerPieCard = () => {
     const {after, before, server} = useGenericFilter();

@@ -5,7 +5,7 @@ import {useNavigation} from "../../hooks/navigationHook.tsx";
 import {staticSite} from "../../service/backendConfiguration";
 import {faSearch, faUsersGear} from "@fortawesome/free-solid-svg-icons";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
-import MainPageRedirect from "../../components/navigation/MainPageRedirect";
+import MainPageRedirect from "../../components/navigation/MainPageRedirect.tsx";
 import ErrorPage from "./ErrorPage";
 import Sidebar from "../../components/navigation/Sidebar";
 import Header from "../../components/navigation/Header";

@@ -1,6 +1,6 @@
 import React, {createContext, useCallback, useContext, useEffect, useMemo, useState} from "react";
 import {fetchAvailablePermissions, fetchGroupPermissions, saveGroupPermissions} from "../../service/manageService";
-import {useConfigurationStorageContext} from "./configurationStorageContextHook";
+import {useConfigurationStorageContext} from "./configurationStorageContextHook.tsx";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCheck, faExclamationTriangle} from "@fortawesome/free-solid-svg-icons";
 import {useAlertPopupContext} from "./alertPopupContext.tsx";

@@ -2,7 +2,7 @@ import React, {useState} from 'react';
 import {Col} from "react-bootstrap";
 import ServersTableCard from "../../components/cards/network/ServersTableCard";
 import QuickViewGraphCard from "../../components/cards/network/QuickViewGraphCard";
-import QuickViewDataCard from "../../components/cards/network/QuickViewDataCard";
+import QuickViewDataCard from "../../components/cards/network/QuickViewDataCard.tsx";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow.tsx";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 import {useMetadata} from "../../hooks/metadataHook.tsx";

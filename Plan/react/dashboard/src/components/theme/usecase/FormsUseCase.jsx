@@ -10,9 +10,10 @@ import TimeInputField from "../../input/TimeInputField.jsx";
 import MultiSelect from "../../input/MultiSelect.tsx";
 import Checkbox from "../../input/Checkbox.tsx";
 import {BasicDropdown} from "../../input/BasicDropdown.jsx";
-import SecondaryActionButton from "../../input/button/SecondaryActionButton.jsx";
-import DangerButton from "../../input/button/DangerButton.jsx";
+import SecondaryActionButton from "../../input/button/SecondaryActionButton.tsx";
+import DangerButton from "../../input/button/DangerButton.tsx";
 import Toggle from "../../input/Toggle.jsx";
+import {noop} from "@tanstack/react-query";
 
 const FormsUseCase = () => {
     const {t} = useTranslation();
@@ -26,28 +27,28 @@ const FormsUseCase = () => {
     return (
         <Card>
             <Card.Body>
-                <ActionButton disabled={false} className={"m-2"}>
+                <ActionButton disabled={false} className={"m-2"} onClick={noop}>
                     <FontAwesomeIcon icon={faSearch}/> {label}
                 </ActionButton>
-                <ActionButton disabled={true} className={"m-2"}>
+                <ActionButton disabled={true} className={"m-2"} onClick={noop}>
                     <FontAwesomeIcon icon={faSearch}/> {label}
                 </ActionButton>
-                <SecondaryActionButton disabled={false} className={"m-2"}>
+                <SecondaryActionButton disabled={false} className={"m-2"} onClick={noop}>
                     <FontAwesomeIcon icon={faQuestion}/> {label}
                 </SecondaryActionButton>
-                <SecondaryActionButton disabled={true} className={"m-2"}>
+                <SecondaryActionButton disabled={true} className={"m-2"} onClick={noop}>
                     <FontAwesomeIcon icon={faQuestion}/> {label}
                 </SecondaryActionButton>
-                <DangerButton disabled={false} className={"m-2"}>
+                <DangerButton disabled={false} className={"m-2"} onClick={noop}>
                     <FontAwesomeIcon icon={faTrash}/> {label}
                 </DangerButton>
-                <DangerButton disabled={true} className={"m-2"}>
+                <DangerButton disabled={true} className={"m-2"} onClick={noop}>
                     <FontAwesomeIcon icon={faTrash}/> {label}
                 </DangerButton>
-                <OutlineButton disabled={false} className={"m-2"}>
+                <OutlineButton disabled={false} className={"m-2"} onClick={noop}>
                     <FontAwesomeIcon icon={faArrowRight}/> {label}
                 </OutlineButton>
-                <OutlineButton disabled={true} className={"m-2"}>
+                <OutlineButton disabled={true} className={"m-2"} onClick={noop}>
                     <FontAwesomeIcon icon={faArrowRight}/> {label}
                 </OutlineButton>
                 <hr/>

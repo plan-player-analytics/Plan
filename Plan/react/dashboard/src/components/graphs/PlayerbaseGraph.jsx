@@ -6,7 +6,7 @@ import "highcharts/esm/modules/no-data-to-display";
 import "highcharts/esm/modules/accessibility";
 import {nameToCssVariable} from "../../util/colors";
 import {useI18nFriendlyLanguage} from "../../service/localeService.js";
-import {useDateFormatter} from "../../util/format/useDateFormatter.js";
+import {useDateFormatter} from "../../util/format/useDateFormatter.ts";
 
 export const activityGroupToColor = label => {
     switch (label) {

@@ -2,7 +2,7 @@ import React from 'react';
 import LoadIn from "../../components/animation/LoadIn.tsx";
 import {Col} from "react-bootstrap";
 import {useParams} from "react-router";
-import PerformanceAsNumbersCard from "../../components/cards/server/tables/PerformanceAsNumbersCard";
+import PerformanceAsNumbersCard from "../../components/cards/server/tables/PerformanceAsNumbersCard.tsx";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow.tsx";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 import {GraphSeriesCard} from "../../components/cards/server/graphs/GraphSeriesCard.tsx";

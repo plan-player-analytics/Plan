@@ -5,7 +5,7 @@ import LoadIn from "../../components/animation/LoadIn.tsx";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow.tsx";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 import {NetworkSessionCalendarCard} from "../../components/cards/server/graphs/ServerSessionCalendarCard.tsx";
-import SessionInsightsCard from "../../components/cards/server/insights/SessionInsightsCard.jsx";
+import SessionInsightsCard from "../../components/cards/server/insights/SessionInsightsCard.tsx";
 import {GenericFilterContextProvider} from "../../dataHooks/genericFilterContextHook.tsx";
 import {DateFilterControls} from "../../components/input/DateFilterControls.tsx";
 import ServerPieCard from "../../components/cards/common/ServerPieCard.jsx";

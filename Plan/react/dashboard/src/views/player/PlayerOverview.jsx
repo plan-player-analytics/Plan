@@ -4,7 +4,7 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faCalendarCheck, faClock} from "@fortawesome/free-regular-svg-icons";
 import {faBookOpen, faBraille, faCrosshairs, faSkull} from "@fortawesome/free-solid-svg-icons";
 import PunchCard from "../../components/graphs/PunchCard";
-import AsNumbersTable from "../../components/table/AsNumbersTable";
+import AsNumbersTable from "../../components/table/AsNumbersTable.tsx";
 import {usePlayer} from "../layout/PlayerPage";
 import {useTranslation} from "react-i18next";
 import PlayerOverviewCard from "../../components/cards/player/PlayerOverviewCard";
@@ -14,7 +14,7 @@ import LoadIn from "../../components/animation/LoadIn.tsx";
 import ExtendableRow from "../../components/layout/extension/ExtendableRow.tsx";
 import ConnectionsCard from "../../components/cards/player/ConnectionsCard";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
-import FormattedTime from "../../components/text/FormattedTime.jsx";
+import FormattedTime from "../../components/text/FormattedTime.tsx";
 
 const PunchCardCard = ({player}) => {
     const {t} = useTranslation();

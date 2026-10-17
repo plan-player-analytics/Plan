@@ -2,14 +2,14 @@ import {useTranslation} from "react-i18next";
 import {Card} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faExchangeAlt, faUsers} from "@fortawesome/free-solid-svg-icons";
-import ComparisonTable from "../../../table/ComparisonTable";
+import ComparisonTable from "../../../table/ComparisonTable.tsx";
 import BigTrend from "../../../trend/BigTrend";
 import React from "react";
 import {faClock} from "@fortawesome/free-regular-svg-icons";
 import {TableRow} from "../../../table/TableRow";
 import {CardLoader} from "../../../navigation/Loader.tsx";
-import FormattedTime from "../../../text/FormattedTime.jsx";
-import {useTimeAmountFormatter} from "../../../../util/format/useTimeAmountFormatter.js";
+import FormattedTime from "../../../text/FormattedTime.tsx";
+import {useTimeAmountFormatter} from "../../../../util/format/useTimeAmountFormatter.ts";
 
 const PlayerbaseTrendsCard = ({data}) => {
     const {t} = useTranslation();

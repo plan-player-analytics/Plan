@@ -2,7 +2,7 @@ import {createContext, useCallback, useContext, useEffect, useMemo, useState} fr
 import {randomUuid} from "../../util/uuid.ts";
 import {fetchPlayerJoinAddresses} from "../../service/serverService.js";
 import {useNavigation} from "../navigationHook.tsx";
-import {usePreferences} from "../preferencesHook.jsx";
+import {usePreferences} from "../preferences/preferencesHook.tsx";
 import {useTranslation} from "react-i18next";
 
 const JoinAddressListContext = createContext({});

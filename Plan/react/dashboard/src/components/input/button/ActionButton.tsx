@@ -6,14 +6,14 @@ type Props = {
     disabled?: boolean,
     onClick: (() => void) | (() => Promise<void>);
     style?: CSSProperties;
-    title: string;
+    title?: string;
 } & PropsWithChildren;
 
 const ActionButton = ({id, className, disabled, onClick, children, style, title}: Props) => {
     return (
-        <button id={id}
+        <button className={"btn btn-action " + className}
+                id={id}
                 title={title}
-                className={"btn btn-action " + className}
                 onClick={onClick}
                 disabled={disabled}
                 style={style}>

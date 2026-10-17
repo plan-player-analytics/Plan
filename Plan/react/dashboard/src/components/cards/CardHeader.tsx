@@ -6,8 +6,8 @@ import {IconProp} from "@fortawesome/fontawesome-svg-core";
 
 type Props = {
     icon: IconProp;
-    color: string;
-    label: string | any;
+    color?: string;
+    label: any;
     children?: ReactNode;
 }
 

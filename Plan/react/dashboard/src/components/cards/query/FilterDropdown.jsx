@@ -3,7 +3,7 @@ import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {Dropdown} from "react-bootstrap";
 import {faPlus} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
-import Scrollable from "../../Scrollable";
+import Scrollable from "../../Scrollable.tsx";
 
 const FilterDropdown = ({filterOptions, filters, setFilters}) => {
     const {t} = useTranslation();

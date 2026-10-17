@@ -7,7 +7,7 @@ import {faInfoCircle, faServer} from "@fortawesome/free-solid-svg-icons";
 import MultiSelect from "../../components/input/MultiSelect.tsx";
 import {useTranslation} from "react-i18next";
 import {fetchOptimizedPerformance} from "../../service/serverService";
-import PerformanceAsNumbersCard from "../../components/cards/server/tables/PerformanceAsNumbersCard";
+import PerformanceAsNumbersCard from "../../components/cards/server/tables/PerformanceAsNumbersCard.tsx";
 import {useNavigation} from "../../hooks/navigationHook.tsx";
 import {mapPerformanceDataToSeries} from "../../util/graphs";
 import PerformanceGraphsCard from "../../components/cards/network/PerformanceGraphsCard";

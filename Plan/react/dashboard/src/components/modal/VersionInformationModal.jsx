@@ -4,8 +4,8 @@ import {Modal} from "react-bootstrap";
 import {faCheckCircle, faDownload} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
 import ActionButton from "../input/button/ActionButton.tsx";
-import ModalCloseButton from "../input/button/ModalCloseButton.jsx";
-import ExternalLink from "../input/button/ExternalLink.jsx";
+import ModalCloseButton from "../input/button/ModalCloseButton.tsx";
+import ExternalLink from "../input/button/ExternalLink.tsx";
 
 const UpdateAvailableModal = ({open, toggle, versionInfo}) => {
     const {t} = useTranslation();

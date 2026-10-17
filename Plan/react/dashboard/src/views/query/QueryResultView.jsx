@@ -2,7 +2,7 @@ import React, {useCallback, useEffect} from 'react';
 import LoadIn from "../../components/animation/LoadIn.tsx";
 import {Col, Row} from "react-bootstrap";
 import QueryPath from "../../components/alert/QueryPath";
-import {useQueryResultContext} from "../../hooks/queryResultContext";
+import {useQueryResultContext} from "../../hooks/queryResultContext.tsx";
 import {useNavigate} from "react-router";
 import PlayerListCard from "../../components/cards/common/PlayerListCard";
 import {fetchExistingResults} from "../../service/queryService";

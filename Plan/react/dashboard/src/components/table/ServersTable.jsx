@@ -15,12 +15,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import {useTheme} from "../../hooks/themeHook.tsx";
 import {useTranslation} from "react-i18next";
-import Scrollable from "../Scrollable";
+import Scrollable from "../Scrollable.tsx";
 import {NavLink} from "react-router";
 import ActionButton from "../input/button/ActionButton.tsx";
 import {DatapointType} from "../../dataHooks/model/datapoint/Datapoint.ts";
 import {calculatePermission, QueryDatapointValue} from "../datapoint/QueryDatapoint.tsx";
-import {MS_24H, MS_MONTH, MS_WEEK} from "../../util/format/useDateFormatter.js";
+import {MS_24H, MS_MONTH, MS_WEEK} from "../../util/format/useDateFormatter.ts";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 import {useDatapointQueries, useDatapointQuery} from "../../dataHooks/useDatapointQuery.ts";
 

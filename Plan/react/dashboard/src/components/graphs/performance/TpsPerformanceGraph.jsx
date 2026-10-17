@@ -10,7 +10,7 @@ import {useMetadata} from "../../../hooks/metadataHook.tsx";
 import {useAuth} from "../../../hooks/authenticationHook.tsx";
 import {useGraphExtremesContext} from "../../../hooks/interaction/graphExtremesContextHook.jsx";
 import {localeService} from "../../../service/localeService.js";
-import {usePingFormatter} from "../../../util/format/usePingFormatter.js";
+import {usePingFormatter} from "../../../util/format/usePingFormatter.ts";
 
 const TpsPerformanceGraph = ({id, data, dataSeries, pluginHistorySeries}) => {
     const {t} = useTranslation();

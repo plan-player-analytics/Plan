@@ -25,7 +25,7 @@ import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
 import {useMetadata} from "../../hooks/metadataHook.tsx";
 import {faCalendarCheck} from "@fortawesome/free-regular-svg-icons";
 import {SwitchTransition} from "react-transition-group";
-import MainPageRedirect from "../../components/navigation/MainPageRedirect";
+import MainPageRedirect from "../../components/navigation/MainPageRedirect.tsx";
 import {ServerExtensionContextProvider, useServerExtensionContext} from "../../hooks/serverExtensionDataContext";
 import {iconTypeToFontAwesomeClass} from "../../util/icons.ts";
 import {staticSite} from "../../service/backendConfiguration";

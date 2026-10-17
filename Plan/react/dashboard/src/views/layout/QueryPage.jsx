@@ -8,9 +8,9 @@ import Header from "../../components/navigation/Header";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
 import {useMetadata} from "../../hooks/metadataHook.tsx";
 import ErrorPage from "./ErrorPage";
-import {QueryResultContextProvider} from "../../hooks/queryResultContext";
+import {QueryResultContextProvider} from "../../hooks/queryResultContext.tsx";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
-import MainPageRedirect from "../../components/navigation/MainPageRedirect";
+import MainPageRedirect from "../../components/navigation/MainPageRedirect.tsx";
 
 const HelpModal = React.lazy(() => import("../../components/modal/HelpModal"));
 

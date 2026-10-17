@@ -1,0 +1,61 @@
+import React, {useMemo} from "react";
+import InsightsFor30DaysCard from "../../common/InsightsFor30DaysCard";
+import {useTranslation} from "react-i18next";
+import {faGamepad, faUsers} from "@fortawesome/free-solid-svg-icons";
+import {faCalendarCheck, faClock} from "@fortawesome/free-regular-svg-icons";
+import {useGenericFilter} from "../../../../dataHooks/genericFilterContextHook";
+import {QueryDatapoint, QueryDatapointValue} from "../../../datapoint/QueryDatapoint";
+import {DatapointType} from "../../../../dataHooks/model/datapoint/Datapoint";
+import {TitleWithDates} from "../../../text/TitleWithDates";
+import {MS_MONTH} from "../../../../util/format/useDateFormatter";
+import {useDateConverter} from "../../../../util/format/useDateConverter";
+
+type Props = {
+    identifier?: string;
+}
+
+const SessionInsightsCard = ({identifier}: Props) => {
+    const {t} = useTranslation();
+    const {after, before, server} = useGenericFilter();
+    const {convert} = useDateConverter();
+
+    const filter = useMemo(() => ({
+        after: after ? convert(after).toServerEpochMs() : undefined,
+        before: before ? convert(before).toServerEpochMs() : undefined,
+        afterMillisAgo: after ? undefined : MS_MONTH,
+        server
+    }), [after, before, server]);
+
+    const title = <TitleWithDates label={'html.label.insights'} fallback={'html.label.insights30days'} after={after}
+                                  before={before}/>;
+
+    return (
+        <InsightsFor30DaysCard id={'session-insights'} title={title}>
+            {identifier && <QueryDatapoint name={t('html.label.mostActiveGamemode')}
+                                           icon={faGamepad} color="gamemode"
+                                           dataType={DatapointType.MOST_ACTIVE_GAME_MODE}
+                                           filter={filter}/>}
+            {identifier && <QueryDatapoint name={t('html.label.serverOccupied')}
+                                           icon={faUsers} color="sessions" prefix={'~'}
+                                           dataType={DatapointType.SERVER_OCCUPIED}
+                                           filter={filter}/>}
+            <QueryDatapoint name={t('html.label.sessions')}
+                            icon={faCalendarCheck} color="sessions"
+                            dataType={DatapointType.SESSION_COUNT}
+                            filter={filter}/>
+            <QueryDatapoint name={t('html.label.playtime')}
+                            icon={faClock} color="playtime"
+                            dataType={DatapointType.PLAYTIME}
+                            filter={filter}/>
+            <QueryDatapoint name={t('html.label.afkTime')}
+                            icon={faClock} color="playtime-afk"
+                            dataType={DatapointType.AFK_TIME}
+                            filter={filter}
+                            valueLabel={<>(<QueryDatapointValue dataType={DatapointType.AFK_TIME_PERCENTAGE}
+                                                                filter={filter}/>)</>}
+            />
+        </InsightsFor30DaysCard>
+    )
+}
+
+export default SessionInsightsCard;

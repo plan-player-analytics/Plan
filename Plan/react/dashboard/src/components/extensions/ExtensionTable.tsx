@@ -3,7 +3,7 @@ import ExtensionIcon from "./ExtensionIcon";
 import DataTablesTable from "../table/DataTablesTable";
 import ColoredText from "../text/ColoredText";
 import {Link} from "react-router";
-import FormattedTime from "../text/FormattedTime.jsx";
+import FormattedTime from "../text/FormattedTime.js";
 import FormattedDate from "../text/FormattedDate";
 import {ExtensionTableCell, ExtensionTableData} from "../../dataHooks/model/extension/ExtensionData";
 import {useTranslation} from "react-i18next";

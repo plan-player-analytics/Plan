@@ -4,7 +4,7 @@ import {useMetadata} from "../../hooks/metadataHook.tsx";
 import {Modal} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faHandPointRight} from "@fortawesome/free-regular-svg-icons";
-import ModalCloseButton from "../input/button/ModalCloseButton.jsx";
+import ModalCloseButton from "../input/button/ModalCloseButton.tsx";
 
 const FinalizeRegistrationModal = ({show, toggle, registerCode}) => {
     const {t} = useTranslation();

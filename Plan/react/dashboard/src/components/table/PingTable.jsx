@@ -2,11 +2,11 @@ import React from "react";
 import {useTranslation} from "react-i18next";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faGlobe, faSignal} from "@fortawesome/free-solid-svg-icons";
-import {usePreferences} from "../../hooks/preferencesHook.jsx";
+import {usePreferences} from "../../hooks/preferences/preferencesHook.tsx";
 import DataTablesTable from "./DataTablesTable.jsx";
 import {localeService, reverseRegionLookupMap} from "../../service/localeService.js";
-import {usePingFormatter} from "../../util/format/usePingFormatter.js";
-import {useDecimalFormatter} from "../../util/format/useDecimalFormatter.js";
+import {usePingFormatter} from "../../util/format/usePingFormatter.ts";
+import {useDecimalFormatter} from "../../util/format/useDecimalFormatter.ts";
 
 const PingTable = ({countries}) => {
     const {t} = useTranslation();

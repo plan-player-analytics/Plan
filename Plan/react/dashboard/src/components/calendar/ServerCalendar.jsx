@@ -4,7 +4,7 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import {useTranslation} from "react-i18next";
 import {localeService} from "../../service/localeService.js";
-import {useTimeAmountFormatter} from "../../util/format/useTimeAmountFormatter.js";
+import {useTimeAmountFormatter} from "../../util/format/useTimeAmountFormatter.ts";
 import {staticSite} from "../../service/backendConfiguration.js";
 
 const ServerCalendar = ({series, firstDay, onSelect, height}) => {

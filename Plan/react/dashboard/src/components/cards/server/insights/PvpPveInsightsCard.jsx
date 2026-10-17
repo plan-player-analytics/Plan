@@ -1,5 +1,5 @@
 import React from "react";
-import InsightsFor30DaysCard from "../../common/InsightsFor30DaysCard";
+import InsightsFor30DaysCard from "../../common/InsightsFor30DaysCard.tsx";
 import Datapoint from "../../../datapoint/Datapoint.tsx";
 import {useTranslation} from "react-i18next";
 import {faHandSparkles} from "@fortawesome/free-solid-svg-icons";

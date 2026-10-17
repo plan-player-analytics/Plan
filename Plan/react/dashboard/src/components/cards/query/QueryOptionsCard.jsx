@@ -17,7 +17,7 @@ import MultiSelect from "../../input/MultiSelect.tsx";
 import CollapseWithButton from "../../layout/CollapseWithButton";
 import FilterDropdown from "./FilterDropdown";
 import FilterList from "./FilterList";
-import {useQueryResultContext} from "../../../hooks/queryResultContext";
+import {useQueryResultContext} from "../../../hooks/queryResultContext.tsx";
 import {useNavigate} from "react-router";
 import {useNavigation} from "../../../hooks/navigationHook.tsx";
 import ActionButton from "../../input/button/ActionButton.tsx";

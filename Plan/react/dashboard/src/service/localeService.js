@@ -5,7 +5,7 @@ import I18NextHttpBackend from 'i18next-http-backend';
 import {initReactI18next, useTranslation} from 'react-i18next';
 import {fetchAvailableLocales} from "./metadataService";
 import {baseAddress, staticSite} from "./backendConfiguration";
-import {isNumber} from "../util/isNumber.js";
+import {isNumber} from "../util/isNumber.ts";
 import {useMemo} from "react";
 
 /**

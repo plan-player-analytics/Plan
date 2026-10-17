@@ -3,10 +3,10 @@ import {useTheme} from "../../../hooks/themeHook.tsx";
 import {Card} from "react-bootstrap";
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import {faServer, faSignature} from "@fortawesome/free-solid-svg-icons";
-import Scrollable from "../../Scrollable";
+import Scrollable from "../../Scrollable.tsx";
 import {faClock} from "@fortawesome/free-regular-svg-icons";
 import React from "react";
-import ColoredText from "../../text/ColoredText";
+import ColoredText from "../../text/ColoredText.tsx";
 import FormattedDate from "../../text/FormattedDate.tsx";
 
 const NicknamesCard = ({nicknames}) => {

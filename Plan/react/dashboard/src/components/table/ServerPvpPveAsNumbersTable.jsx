@@ -1,5 +1,5 @@
 import {useTranslation} from "react-i18next";
-import AsNumbersTable from "./AsNumbersTable";
+import AsNumbersTable from "./AsNumbersTable.tsx";
 import {faCrosshairs, faSkull} from "@fortawesome/free-solid-svg-icons";
 import React from "react";
 import {TableRow} from "./TableRow";

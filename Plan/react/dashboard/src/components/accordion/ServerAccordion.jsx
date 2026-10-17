@@ -9,8 +9,8 @@ import Accordion from "./Accordion";
 import {faSuperpowers} from "@fortawesome/free-brands-svg-icons";
 import {useTranslation} from "react-i18next";
 import FormattedDate from "../text/FormattedDate.tsx";
-import FormattedTime from "../text/FormattedTime.jsx";
-import ServerPageLinkButton from "../input/button/ServerPageLinkButton.jsx";
+import FormattedTime from "../text/FormattedTime.tsx";
+import ServerPageLinkButton from "../input/button/ServerPageLinkButton.tsx";
 
 const ServerHeader = ({server}) => {
     const {t} = useTranslation();

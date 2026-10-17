@@ -1,6 +1,6 @@
 import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
 import React, {ReactNode} from "react";
-import End from "../layout/End.jsx";
+import End from "../layout/End.js";
 import {useTranslation} from "react-i18next";
 import {Trend} from "../../dataHooks/model/datapoint/Trend";
 import {IconProp} from "@fortawesome/fontawesome-svg-core";
@@ -19,7 +19,7 @@ const ExtraLabel = ({valueLabel}: { valueLabel: string | ReactNode }) => {
 
 export type DatapointProps = {
     icon: IconProp;
-    color: string;
+    color?: string;
     name: string | ReactNode;
     value: any;
     valueLabel?: string | ReactNode;

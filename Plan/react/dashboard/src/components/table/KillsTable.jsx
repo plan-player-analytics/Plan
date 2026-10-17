@@ -9,12 +9,12 @@ import {
     faSkullCrossbones
 } from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
-import Scrollable from "../Scrollable";
-import {usePreferences} from "../../hooks/preferencesHook.jsx";
+import Scrollable from "../Scrollable.tsx";
+import {usePreferences} from "../../hooks/preferences/preferencesHook.tsx";
 import FormattedDate from "../text/FormattedDate.tsx";
 import {faCalendar} from "@fortawesome/free-regular-svg-icons";
 import DataTablesTable from "./DataTablesTable.jsx";
-import {useTimeAmountFormatter} from "../../util/format/useTimeAmountFormatter.js";
+import {useTimeAmountFormatter} from "../../util/format/useTimeAmountFormatter.ts";
 
 const VictimName = ({kill}) => {
     const {t} = useTranslation();

@@ -4,8 +4,8 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
 import {useTranslation} from "react-i18next";
 import {localeService} from "../../service/localeService.js";
-import {useTimeAmountFormatter} from "../../util/format/useTimeAmountFormatter.js";
-import {useDateFormatter} from "../../util/format/useDateFormatter.js";
+import {useTimeAmountFormatter} from "../../util/format/useTimeAmountFormatter.ts";
+import {useDateFormatter} from "../../util/format/useDateFormatter.ts";
 import {useMetadata} from "../../hooks/metadataHook.tsx";
 import {useGenericFilter} from "../../dataHooks/genericFilterContextHook.tsx";
 import {staticSite} from "../../service/backendConfiguration.js";

@@ -6,9 +6,9 @@ import "highcharts/esm/modules/accessibility";
 import {useTheme} from "../../hooks/themeHook.tsx";
 import {withReducedSaturation} from "../../util/colors";
 import {useTranslation} from "react-i18next";
-import {usePreferences} from "../../hooks/preferencesHook.jsx";
+import {usePreferences} from "../../hooks/preferences/preferencesHook.tsx";
 import {classNames} from "../../util/classNames.ts";
-import {useTimeAmountFormatter} from "../../util/format/useTimeAmountFormatter.js";
+import {useTimeAmountFormatter} from "../../util/format/useTimeAmountFormatter.ts";
 import {useI18nFriendlyLanguage} from "../../service/localeService.js";
 
 const ServerPie = ({colors, series}) => {

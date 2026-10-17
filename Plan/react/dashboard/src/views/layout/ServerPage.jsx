@@ -28,7 +28,7 @@ import {useMetadata} from "../../hooks/metadataHook.tsx";
 import {faCalendarCheck} from "@fortawesome/free-regular-svg-icons";
 import ErrorPage from "./ErrorPage";
 import {SwitchTransition} from "react-transition-group";
-import MainPageRedirect from "../../components/navigation/MainPageRedirect";
+import MainPageRedirect from "../../components/navigation/MainPageRedirect.tsx";
 import {useDataRequest} from "../../hooks/dataFetchHook";
 import {fetchServerIdentity} from "../../service/serverService";
 import {ServerExtensionContextProvider, useServerExtensionContext} from "../../hooks/serverExtensionDataContext";
