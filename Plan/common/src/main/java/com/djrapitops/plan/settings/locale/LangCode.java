@@ -39,7 +39,7 @@ public enum LangCode {
     TR("Türkçe", "TDJisvan, BruilsiozPro & EyuphanMandiraci"),
     UK("україн\u0441ька \u043cо\u0432а", "xlanyleeet"),
     PT_BR("Português", "jvmuller"),
-    ZH_TW("\u6F22\u8A9E", "\u6d1b\u4f0a & zisunny104");
+    ZH_TW("\u6F22\u8A9E", "\u6d1b\u4f0a, Tokas (zisunny104), angela0930, TWJohnJohn20116 & OutHimic");
 
     private final String name;
     private final String authors;
