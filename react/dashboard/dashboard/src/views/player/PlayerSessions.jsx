@@ -8,7 +8,7 @@ import {useTranslation} from "react-i18next";
 import PlayerWorldPieCard from "../../components/cards/player/PlayerWorldPieCard";
 import PlayerRecentSessionsCard from "../../components/cards/player/PlayerRecentSessionsCard";
 import LoadIn from "../../components/animation/LoadIn.tsx";
-import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import ExtendableRow from "../../components/layout/extension/ExtendableRow.tsx";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 import {GenericFilterContextProvider} from "../../dataHooks/genericFilterContextHook.tsx";
 import {DateFilterControls} from "../../components/input/DateFilterControls.tsx";

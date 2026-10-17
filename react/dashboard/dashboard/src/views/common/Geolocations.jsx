@@ -4,7 +4,7 @@ import {ErrorViewCard} from "../ErrorView.tsx";
 import GeolocationsCard from "../../components/cards/common/GeolocationsCard";
 import PingTableCard from "../../components/cards/common/PingTableCard";
 import LoadIn from "../../components/animation/LoadIn.tsx";
-import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import ExtendableRow from "../../components/layout/extension/ExtendableRow.tsx";
 
 const Geolocations = (
     {className, identifier, geolocationData, pingData, geolocationError, pingError, seeGeolocations, seePing}

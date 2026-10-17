@@ -9,7 +9,7 @@ import {ErrorViewCard} from "../ErrorView.tsx";
 import PlayerbaseTrendsCard from "../../components/cards/server/tables/PlayerbaseTrendsCard";
 import PlayerbaseInsightsCard from "../../components/cards/server/insights/PlayerbaseInsightsCard";
 import LoadIn from "../../components/animation/LoadIn.tsx";
-import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import ExtendableRow from "../../components/layout/extension/ExtendableRow.tsx";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const PlayerbaseOverview = () => {

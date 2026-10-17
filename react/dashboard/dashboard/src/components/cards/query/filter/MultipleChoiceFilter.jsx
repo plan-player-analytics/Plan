@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useTranslation} from "react-i18next";
-import MultiSelect from "../../../input/MultiSelect";
+import MultiSelect from "../../../input/MultiSelect.tsx";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faTrashAlt} from "@fortawesome/free-regular-svg-icons";
 import {Col, Row} from "react-bootstrap";

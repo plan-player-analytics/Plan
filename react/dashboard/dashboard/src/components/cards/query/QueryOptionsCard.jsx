@@ -13,7 +13,7 @@ import PlayersOnlineGraph from "../../graphs/PlayersOnlineGraph";
 import Highcharts from "highcharts/highstock";
 import "highcharts/modules/no-data-to-display"
 import "highcharts/modules/accessibility";
-import MultiSelect from "../../input/MultiSelect";
+import MultiSelect from "../../input/MultiSelect.tsx";
 import CollapseWithButton from "../../layout/CollapseWithButton";
 import FilterDropdown from "./FilterDropdown";
 import FilterList from "./FilterList";

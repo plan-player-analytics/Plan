@@ -1,18 +1,25 @@
-import React, {useState} from 'react';
+import React, {ReactNode, useState} from 'react';
 import ExtensionIcon from "./ExtensionIcon";
 import DataTablesTable from "../table/DataTablesTable";
 import ColoredText from "../text/ColoredText";
 import {Link} from "react-router";
 import FormattedTime from "../text/FormattedTime.jsx";
-import FormattedDate from "../text/FormattedDate.tsx";
+import FormattedDate from "../text/FormattedDate";
+import {ExtensionTableCell, ExtensionTableData} from "../../dataHooks/model/extension/ExtensionData";
+import {useTranslation} from "react-i18next";
+import styles from './ExtensionTable.module.scss';
 
-const ExtensionDataTable = ({table}) => {
+type Props = { table: ExtensionTableData }
+
+const ExtensionDataTable = ({table}: Props) => {
+    const {t} = useTranslation();
+
     const [id] = useState("extension-table-" + Date.now() + "-" + (Math.floor(Math.random() * 100000)));
-    const mapToCell = (cell) => {
+    const mapToCell = (cell: ExtensionTableCell) => {
         const value = cell.value;
         switch (cell.format) {
             case 'BOOLEAN':
-                return t(Boolean(value) ? 'plugin.generic.yes' : 'plugin.generic.no')
+                return t(value ? 'plugin.generic.yes' : 'plugin.generic.no')
             case 'TIME_MILLISECONDS':
                 return <FormattedTime timeMs={value}/>;
             case 'DATE_YEAR':
@@ -38,10 +45,10 @@ const ExtensionDataTable = ({table}) => {
             };
         }),
         data: table.table.rows.map((row) => {
-            const dataRow = {};
+            const dataRow: { [key: string]: string | ReactNode } = {};
             row.forEach((cell, j) => {
                 dataRow[`col${j}Value`] = cell.value || cell;
-                dataRow[`col${j}Display`] = mapToCell(cell, j);
+                dataRow[`col${j}Display`] = mapToCell(cell);
             });
             return dataRow;
         })
@@ -54,7 +61,7 @@ const ExtensionDataTable = ({table}) => {
         pagingType: "numbers",
         order: [[1, "desc"]]
     }
-    const rowKeyFunction = (row, column) => {
+    const rowKeyFunction = (row: any, column: any) => {
         const valueFields = Object.entries(row)
             .filter(e => typeof e[0] === 'string' && e[0].includes('Value'))
             .map(e => String(e[1]));
@@ -62,11 +69,19 @@ const ExtensionDataTable = ({table}) => {
     }
 
     return (
-        <DataTablesTable id={id} options={options} rowKeyFunction={rowKeyFunction} colorClass={table.tableColorClass}/>
+        <DataTablesTable
+            id={id}
+            options={options}
+            rowKeyFunction={rowKeyFunction}
+            colorClass={table.tableColorClass}
+            className={styles.extensionTable}
+            expandComponent={undefined}
+            clickableRows={undefined}
+        />
     )
 }
 
-const ExtensionTable = ({table}) => {
+const ExtensionTable = ({table}: Props) => {
     return <ExtensionDataTable table={table}/>;
 }
 

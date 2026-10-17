@@ -1,7 +1,7 @@
 import {Col, InputGroup} from "react-bootstrap";
 import React, {useEffect, useState} from "react";
 import LoadIn from "../../components/animation/LoadIn.tsx";
-import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import ExtendableRow from "../../components/layout/extension/ExtendableRow.tsx";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 import PluginHistoryCard from "../../components/cards/common/PluginHistoryCard";
 import {useDataRequest} from "../../hooks/dataFetchHook";

@@ -3,7 +3,13 @@ import Sidebar from "../../components/navigation/Sidebar";
 import {Outlet, useOutletContext, useParams} from "react-router";
 import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
 import {fetchPlayer} from "../../service/playerService";
-import {faCampground, faCubes, faInfoCircle, faNetworkWired} from "@fortawesome/free-solid-svg-icons";
+import {
+    faArrowUpRightDots,
+    faCampground,
+    faCubes,
+    faInfoCircle,
+    faNetworkWired
+} from "@fortawesome/free-solid-svg-icons";
 import Header from "../../components/navigation/Header";
 import {useNavigation} from "../../hooks/navigationHook.tsx";
 import {useTranslation} from "react-i18next";
@@ -41,7 +47,13 @@ const PlayerPage = () => {
             },
             {name: 'html.label.sessions', icon: faCalendarCheck, href: "sessions", permission: 'page.player.sessions'},
             {name: 'html.label.pvpPve', icon: faCampground, href: "pvppve", permission: 'page.player.versus'},
-            {name: 'html.label.servers', icon: faNetworkWired, href: "servers", permission: 'page.player.servers'}
+            {name: 'html.label.servers', icon: faNetworkWired, href: "servers", permission: 'page.player.servers'},
+            {
+                name: 'html.label.statistics',
+                icon: faArrowUpRightDots,
+                href: "statistics",
+                permission: 'page.player.statistics'
+            }
         ]
 
         if (player?.extensions?.filter(extension => extension?.extensionData?.length).length) {

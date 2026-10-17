@@ -8,7 +8,7 @@ import {useDataRequest} from "../../hooks/dataFetchHook";
 import {fetchKills, fetchPvpPve} from "../../service/serverService";
 import ErrorView from "../ErrorView.tsx";
 import LoadIn from "../../components/animation/LoadIn.tsx";
-import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import ExtendableRow from "../../components/layout/extension/ExtendableRow.tsx";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const ServerPvpPve = () => {

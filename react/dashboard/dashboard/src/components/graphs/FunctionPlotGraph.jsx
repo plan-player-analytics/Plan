@@ -28,7 +28,7 @@ const FunctionPlotGraph = ({
             }
         })
         Highcharts.setOptions(graphTheming);
-        Highcharts.chart(id, options ? options : {
+        Highcharts.chart(id, options || {
             chart: {
                 noData: t('html.label.noDataToDisplay')
             },

@@ -1,8 +1,8 @@
-import {createContext, useContext, useState} from "react";
+import {createContext, PropsWithChildren, useContext, useState} from "react";
 
-const HoverContext = createContext({});
+const HoverContext = createContext<boolean | undefined>(undefined);
 
-export const HoverTrigger = ({children}) => {
+export const HoverTrigger = ({children}: PropsWithChildren) => {
     const [hovered, setHovered] = useState(false);
 
     const onHoverEnter = () => {
@@ -23,5 +23,7 @@ export const HoverTrigger = ({children}) => {
 }
 
 export const useHoverContext = () => {
-    return useContext(HoverContext);
+    const context = useContext(HoverContext);
+    if (context === undefined) throw new Error("HoverContext must be used inside HoverTrigger")
+    return context;
 }

@@ -13,7 +13,7 @@ import {useTranslation} from "react-i18next";
 import {Collapse} from "react-bootstrap";
 import {baseAddress} from "../../service/backendConfiguration";
 import PageNavigationItem from "./PageNavigationItem";
-import {useWindowWidth} from "../../hooks/interaction/windowWidthHook.jsx";
+import {useWindowWidth} from "../../hooks/interaction/windowWidthHook.tsx";
 
 const Logo = () => (
     <Link className="sidebar-brand d-flex align-items-center justify-content-center" to="/">

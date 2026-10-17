@@ -2,7 +2,7 @@ import {Col} from "react-bootstrap";
 import React from "react";
 import ServerRecentSessionsCard from "../../components/cards/server/tables/ServerRecentSessionsCard";
 import LoadIn from "../../components/animation/LoadIn.tsx";
-import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import ExtendableRow from "../../components/layout/extension/ExtendableRow.tsx";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 import {NetworkSessionCalendarCard} from "../../components/cards/server/graphs/ServerSessionCalendarCard.tsx";
 import SessionInsightsCard from "../../components/cards/server/insights/SessionInsightsCard.jsx";

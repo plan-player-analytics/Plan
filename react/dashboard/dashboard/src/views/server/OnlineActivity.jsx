@@ -4,7 +4,7 @@ import OnlineActivityGraphsCard from "../../components/cards/server/graphs/Onlin
 import OnlineActivityAsNumbersCard from "../../components/cards/server/tables/OnlineActivityAsNumbersCard";
 import OnlineActivityInsightsCard from "../../components/cards/server/insights/OnlineActivityInsightsCard";
 import LoadIn from "../../components/animation/LoadIn.tsx";
-import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import ExtendableRow from "../../components/layout/extension/ExtendableRow.tsx";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const OnlineActivity = () => {

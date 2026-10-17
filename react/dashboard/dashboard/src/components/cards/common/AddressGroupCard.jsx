@@ -4,7 +4,7 @@ import {Card, Form} from "react-bootstrap";
 import CardHeader from "../CardHeader.tsx";
 import {faCheck, faList, faPencil} from "@fortawesome/free-solid-svg-icons";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import MultiSelect from "../../input/MultiSelect.jsx";
+import MultiSelect from "../../input/MultiSelect.tsx";
 import {faTrashAlt} from "@fortawesome/free-regular-svg-icons";
 import ActionButton from "../../input/button/ActionButton.tsx";
 import OutlineButton from "../../input/button/OutlineButton.tsx";

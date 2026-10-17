@@ -12,7 +12,7 @@ import {
     faQuestionCircle
 } from "@fortawesome/free-regular-svg-icons";
 import ExtendableCardBody from "../../layout/extension/ExtendableCardBody.tsx";
-import ExtendableRow from "../../layout/extension/ExtendableRow";
+import ExtendableRow from "../../layout/extension/ExtendableRow.tsx";
 import {
     faCircle,
     faCrosshairs,

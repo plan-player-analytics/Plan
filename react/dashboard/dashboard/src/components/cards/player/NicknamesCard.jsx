@@ -37,7 +37,7 @@ const NicknamesCard = ({nicknames}) => {
                     </tbody>}
                     {!nicknames?.length && <tbody>
                     <tr>
-                        <td colSpan={2}>{t('generic.noData')}</td>
+                        <td colSpan={3}>{t('generic.noData')}</td>
                     </tr>
                     </tbody>}
                 </table>

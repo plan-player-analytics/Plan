@@ -7,7 +7,7 @@ import OutlineButton from "../../input/button/OutlineButton.tsx";
 import {Card, Col, Row} from "react-bootstrap";
 import DateInputField from "../../input/DateInputField.tsx";
 import TimeInputField from "../../input/TimeInputField.jsx";
-import MultiSelect from "../../input/MultiSelect.jsx";
+import MultiSelect from "../../input/MultiSelect.tsx";
 import Checkbox from "../../input/Checkbox.tsx";
 import {BasicDropdown} from "../../input/BasicDropdown.jsx";
 import SecondaryActionButton from "../../input/button/SecondaryActionButton.jsx";

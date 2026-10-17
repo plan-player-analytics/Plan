@@ -3,6 +3,7 @@ import {useTranslation} from "react-i18next";
 import {Outlet, useParams} from "react-router";
 import {useNavigation} from "../../hooks/navigationHook.tsx";
 import {
+    faArrowUpRightDots,
     faCampground,
     faChartArea,
     faChartLine,
@@ -76,6 +77,12 @@ const ServerSidebar = () => {
                         permission: 'page.server.player.versus'
                     },
                     {
+                        name: 'html.label.statistics',
+                        icon: faArrowUpRightDots,
+                        href: "statistics",
+                        permission: 'page.server.statistics'
+                    },
+                    {
                         name: 'html.label.allowlist',
                         icon: faFilterCircleXmark,
                         href: "allowlist",
@@ -145,7 +152,7 @@ const ServerSidebar = () => {
                     return {
                         name: info.pluginName,
                         icon: [iconTypeToFontAwesomeClass(info.icon.family), info.icon.iconName],
-                        href: `plugins/${encodeURIComponent(info.pluginName)}`,
+                        href: `plugins-overview#${encodeURIComponent(info.pluginName)}`,
                         permission: 'page.network.plugins'
                     }
                 }).forEach(item => items.push(item))

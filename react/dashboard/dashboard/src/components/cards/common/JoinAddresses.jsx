@@ -1,5 +1,5 @@
 import LoadIn from "../../animation/LoadIn.tsx";
-import ExtendableRow from "../../layout/extension/ExtendableRow.jsx";
+import ExtendableRow from "../../layout/extension/ExtendableRow.tsx";
 import JoinAddressGraphCard from "../server/graphs/JoinAddressGraphCard.jsx";
 import {Col} from "react-bootstrap";
 import React from "react";

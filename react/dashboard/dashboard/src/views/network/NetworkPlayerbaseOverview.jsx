@@ -8,7 +8,7 @@ import PlayerbaseTrendsCard from "../../components/cards/server/tables/Playerbas
 import PlayerbaseInsightsCard from "../../components/cards/server/insights/PlayerbaseInsightsCard";
 import LoadIn from "../../components/animation/LoadIn.tsx";
 import {fetchNetworkPlayerbaseOverview} from "../../service/networkService";
-import ExtendableRow from "../../components/layout/extension/ExtendableRow";
+import ExtendableRow from "../../components/layout/extension/ExtendableRow.tsx";
 import {useAuth} from "../../hooks/authenticationHook.tsx";
 
 const NetworkPlayerbaseOverview = () => {
