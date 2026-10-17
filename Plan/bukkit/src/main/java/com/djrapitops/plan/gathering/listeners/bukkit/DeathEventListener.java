@@ -18,6 +18,8 @@ package com.djrapitops.plan.gathering.listeners.bukkit;
 
 import com.djrapitops.plan.delivery.formatting.EntityNameFormatter;
 import com.djrapitops.plan.delivery.formatting.ItemNameFormatter;
+import com.djrapitops.plan.gathering.cache.ExplosionCache;
+import com.djrapitops.plan.gathering.cache.ExplosionMetadata;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
@@ -28,18 +30,25 @@ import com.djrapitops.plan.processing.processors.player.PlayerKillProcessor;
 import com.djrapitops.plan.utilities.java.ThrowableUtils;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import org.bukkit.Bukkit;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.projectiles.ProjectileSource;
 
 import javax.inject.Inject;
 import java.util.Optional;
+import java.util.UUID;
 
 /**
  * Event Listener for EntityDeathEvents.
@@ -51,16 +60,19 @@ public class DeathEventListener implements Listener {
     private final ServerInfo serverInfo;
     private final Processing processing;
     private final ErrorLogger errorLogger;
+    private final ExplosionCache explosionCache;
 
     @Inject
     public DeathEventListener(
             ServerInfo serverInfo,
             Processing processing,
-            ErrorLogger errorLogger
+            ErrorLogger errorLogger,
+            ExplosionCache explosionCache
     ) {
         this.serverInfo = serverInfo;
         this.processing = processing;
         this.errorLogger = errorLogger;
+        this.explosionCache = explosionCache;
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -93,6 +105,33 @@ public class DeathEventListener implements Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onBlockExplodeInteract(PlayerInteractEvent event) {
+        if (event.getAction() != Action.RIGHT_CLICK_BLOCK) return;
+        Block block = event.getClickedBlock();
+        if (block == null) return;
+
+        Material type = block.getType();
+        if (isExplodingBlockType(type.name())) {
+            // Minecraft removes the block before creating the explosion and passes null as the source entity,
+            // so the interacting player and block type must be tracked before the explosion occurs.
+            explosionCache.store(new ExplosionMetadata(
+                    type.name(),
+                    event.getPlayer().getUniqueId(),
+                    block.getWorld().getUID().toString(),
+                    block.getX(),
+                    block.getY(),
+                    block.getZ(),
+                    System.currentTimeMillis()
+            ));
+        }
+    }
+
+    private boolean isExplodingBlockType(String typeName) {
+        // BED_BLOCK is used prior to 1.12, color-prefixed _BED materials in 1.12+, RESPAWN_ANCHOR in 1.16+
+        return typeName.endsWith("_BED") || "BED_BLOCK".equals(typeName) || "RESPAWN_ANCHOR".equals(typeName);
+    }
+
     private PlayerKill.Killer getKiller(Player killer) {
         return new PlayerKill.Killer(killer.getUniqueId(), killer.getName());
     }
@@ -103,6 +142,10 @@ public class DeathEventListener implements Listener {
 
     public Optional<Player> findKiller(Entity dead) {
         EntityDamageEvent entityDamageEvent = dead.getLastDamageCause();
+        if (entityDamageEvent instanceof EntityDamageByBlockEvent) {
+            return getBlockExplosionKiller(dead, entityDamageEvent);
+        }
+
         if (!(entityDamageEvent instanceof EntityDamageByEntityEvent)) {
             // Not damaged by entity, can't be a player
             return Optional.empty();
@@ -125,6 +168,10 @@ public class DeathEventListener implements Listener {
     public String findWeapon(Entity dead) {
         EntityDamageEvent entityDamageEvent = dead.getLastDamageCause();
         if (entityDamageEvent == null) return "Unknown (No damage cause defined)";
+        if (entityDamageEvent instanceof EntityDamageByBlockEvent) {
+            return getBlockExplosionWeapon(dead);
+        }
+
         Entity killer = ((EntityDamageByEntityEvent) entityDamageEvent).getDamager();
         if (killer instanceof Player) return getItemInHand((Player) killer);
         if (killer instanceof Tameable) return getPetType((Tameable) killer);
@@ -176,6 +223,36 @@ public class DeathEventListener implements Listener {
             return Optional.of((Player) owner);
         }
 
+        return Optional.empty();
+    }
+
+    private Optional<ExplosionMetadata> getRecentBlockExplosion(Entity dead) {
+        Location loc = dead.getLocation();
+        if (loc.getWorld() == null) return Optional.empty();
+        return explosionCache.getRecentExplosion(
+                loc.getWorld().getUID().toString(),
+                loc.getX(),
+                loc.getY(),
+                loc.getZ(),
+                System.currentTimeMillis()
+        );
+    }
+
+    private String getBlockExplosionWeapon(Entity dead) {
+        Optional<ExplosionMetadata> explosion = getRecentBlockExplosion(dead);
+        if (explosion.isPresent()) {
+            return new ItemNameFormatter().apply(explosion.get().explosionBlockName());
+        }
+        return "Block Explosion";
+    }
+
+    private Optional<Player> getBlockExplosionKiller(Entity dead, EntityDamageEvent damageEvent) {
+        if (damageEvent.getCause() == EntityDamageEvent.DamageCause.BLOCK_EXPLOSION) {
+            Optional<ExplosionMetadata> explosion = getRecentBlockExplosion(dead);
+            if (explosion.isPresent()) {
+                return Optional.ofNullable(Bukkit.getPlayer(explosion.get().playerUUID()));
+            }
+        }
         return Optional.empty();
     }
 }
