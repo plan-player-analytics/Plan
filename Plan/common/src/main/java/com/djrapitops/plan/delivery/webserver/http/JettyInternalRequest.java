@@ -18,7 +18,6 @@ package com.djrapitops.plan.delivery.webserver.http;
 
 import com.djrapitops.plan.delivery.web.resolver.request.URIPath;
 import com.djrapitops.plan.delivery.web.resolver.request.URIQuery;
-import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.auth.AuthenticationExtractor;
 import com.djrapitops.plan.delivery.webserver.auth.Cookie;
 import com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration;
@@ -33,6 +32,7 @@ import org.eclipse.jetty.util.Promise;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 import java.util.stream.Collectors;
 
@@ -74,13 +74,15 @@ public class JettyInternalRequest implements InternalRequest {
 
     @Override
     public com.djrapitops.plan.delivery.web.resolver.request.Request toRequest(@Untrusted String accessAddress) {
-        String requestMethod = request.getMethod();
-        @Untrusted URIPath path = new URIPath(request.getHttpURI().getDecodedPath());
-        @Untrusted URIQuery query = new URIQuery(request.getHttpURI().getQuery());
-        CompletableFuture<byte[]> requestBody = readRequestBodyAsync();
-        WebUser user = getWebUser(webserverConfiguration, authenticationExtractor, accessAddress);
-        @Untrusted Map<String, String> headers = getRequestHeaders();
-        return new com.djrapitops.plan.delivery.web.resolver.request.Request(requestMethod, path, query, user, headers, requestBody, accessAddress);
+        return new com.djrapitops.plan.delivery.web.resolver.request.Request(
+                request.getMethod(),
+                new URIPath(request.getHttpURI().getDecodedPath()),
+                new URIQuery(request.getHttpURI().getQuery()),
+                getWebUser(webserverConfiguration, authenticationExtractor, accessAddress),
+                getRequestHeaders(),
+                readRequestBodyAsync(),
+                accessAddress
+        );
     }
 
     @Override
@@ -135,5 +137,10 @@ public class JettyInternalRequest implements InternalRequest {
                 ", webserverConfiguration=" + webserverConfiguration +
                 ", authenticationExtractor=" + authenticationExtractor +
                 '}';
+    }
+
+    @Override
+    public Optional<String> getHeader(String headerName) {
+        return Optional.ofNullable(getRequestHeaders().get(headerName));
     }
 }

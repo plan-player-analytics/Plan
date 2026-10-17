@@ -45,6 +45,8 @@ public class CreateTablesTransaction extends OperationCriticalTransaction {
                 WorldTable.TABLE_NAME,
                 WorldTimesTable.TABLE_NAME,
                 AccessLogTable.TABLE_NAME,
+                ApiTokenTable.TABLE_NAME,
+                ApiTokenToPermissionTable.TABLE_NAME,
                 WebGroupTable.TABLE_NAME,
                 WebPermissionTable.TABLE_NAME,
                 WebGroupToPermissionTable.TABLE_NAME,
@@ -103,9 +105,11 @@ public class CreateTablesTransaction extends OperationCriticalTransaction {
         execute(WorldTimesTable.createTableSQL(dbType));
         execute(CookieTable.createTableSQL(dbType));
         execute(AccessLogTable.createTableSql(dbType));
+        execute(ApiTokenTable.createTableSQL(dbType));
         execute(WebGroupTable.createTableSQL(dbType));
         execute(WebPermissionTable.createTableSQL(dbType));
         execute(WebGroupToPermissionTable.createTableSQL(dbType));
+        execute(ApiTokenToPermissionTable.createTableSQL(dbType));
         execute(SecurityTable.createTableSQL(dbType));
         // Ensure plan_security has id column
         executeOther(new SecurityTableIdPatch());

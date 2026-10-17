@@ -513,6 +513,29 @@ public class LargeStoreQueries {
         };
     }
 
+    public static Executable storeTokenPermissionIdRelations(Map<Integer, List<Integer>> tokenPermissions) {
+        if (tokenPermissions == null || tokenPermissions.isEmpty()) return Executable.empty();
+
+        @Language("SQL")
+        String sql = INSERT_INTO + ApiTokenToPermissionTable.TABLE_NAME + " (" +
+                ApiTokenToPermissionTable.TOKEN_ID + ',' + ApiTokenToPermissionTable.PERMISSION_ID +
+                ") VALUES (?, ?)";
+
+        return new ExecBatchStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (var permissionsOfToken : tokenPermissions.entrySet()) {
+                    Integer tokenId = permissionsOfToken.getKey();
+                    statement.setInt(1, tokenId);
+                    for (Integer permissionId : permissionsOfToken.getValue()) {
+                        statement.setInt(2, permissionId);
+                        statement.addBatch();
+                    }
+                }
+            }
+        };
+    }
+
     public static Executable storeAllPreferences(Map<String, String> preferencesByUsername) {
         if (preferencesByUsername.isEmpty()) return Executable.empty();
 
@@ -815,6 +838,19 @@ public class LargeStoreQueries {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 for (SecurityTable.Row row : rows) {
+                    row.insert(statement);
+                    statement.addBatch();
+                }
+            }
+        };
+    }
+
+    public static Executable storeApiTokens(List<ApiTokenTable.Row> rows) {
+        if (rows.isEmpty()) return Executable.empty();
+        return new ExecBatchStatement(ApiTokenTable.INSERT_STATEMENT) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                for (ApiTokenTable.Row row : rows) {
                     row.insert(statement);
                     statement.addBatch();
                 }

@@ -156,6 +156,8 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
             LookupTable<Integer> webGroupLookupTable = copyGroups();
             LookupTable<Integer> webPermissionLookupTable = copyPermissions();
             copyGroupsToPermissions(webGroupLookupTable, webPermissionLookupTable);
+            LookupTable<Integer> apiTokenLookupTable = copyApiTokens();
+            copyApiTokensToPermissions(apiTokenLookupTable, webPermissionLookupTable);
             LookupTable<Integer> webUserIdLookupTable = copyWebUsers(webGroupLookupTable);
             copyUserPreferences(webUserIdLookupTable);
             LookupTable<Integer> statisticsIdLookupTable = copyStatistics();
@@ -508,6 +510,41 @@ public class DatabaseCopyProcessor implements CriticalRunnable {
         logCopyMessage(WebGroupToPermissionTable.TABLE_NAME);
         toDB.executeInTransaction(LargeStoreQueries.storeGroupPermissionIdRelations(idsToCopy)).join();
         logProgress(tableCounts.get(WebGroupToPermissionTable.TABLE_NAME), WebGroupToPermissionTable.TABLE_NAME, false);
+        if (toCopy == 0) {
+            feedback.accept(locale.getString(CommandLang.DB_COPY_ALL_DATA_EXISTED));
+        }
+    }
+
+    private LookupTable<Integer> copyApiTokens() {
+        LookupTable<String> lookupTable = toDB.query(LookupTableQueries.apiTokenLookupTable());
+        logCopyMessage(ApiTokenTable.TABLE_NAME);
+        batching(currentId -> {
+            List<ApiTokenTable.Row> rows = fromDB.query(ApiTokenTable.fetchRows(currentId, ROW_LIMIT));
+            rows.removeIf(row -> lookupTable.contains(row.getToken()));
+            toDB.executeInTransaction(LargeStoreQueries.storeApiTokens(rows)).join();
+            logProgress(tableCounts.get(ApiTokenTable.TABLE_NAME), ApiTokenTable.TABLE_NAME, false);
+            return progressTracker.isDone() ? DONE_SIGNAL : rows.get(rows.size() - 1).getId();
+        });
+        return toDB.query(LookupTableQueries.apiTokenLookupTable())
+                .constructIdToIdLookupTable(fromDB.query(LookupTableQueries.apiTokenLookupTable()));
+    }
+
+    private void copyApiTokensToPermissions(LookupTable<Integer> apiTokenLookupTable, LookupTable<Integer> webPermissionLookupTable) {
+        Map<Integer, List<Integer>> idsToCopy = IdMapper.mapTokenPermissionIds(fromDB.query(LookupTableQueries.apiTokenToPermissionIds()), apiTokenLookupTable, webPermissionLookupTable);
+        Map<Integer, List<Integer>> existingIds = toDB.query(LookupTableQueries.apiTokenToPermissionIds());
+        int toCopy = idsToCopy.size();
+        // Filter out existing ids
+        existingIds.forEach((id, ids) -> {
+            if (Objects.equals(idsToCopy.get(id), ids)) {
+                idsToCopy.remove(id);
+            } else {
+                idsToCopy.get(id).removeAll(ids);
+            }
+        });
+
+        logCopyMessage(ApiTokenToPermissionTable.TABLE_NAME);
+        toDB.executeInTransaction(LargeStoreQueries.storeTokenPermissionIdRelations(idsToCopy)).join();
+        logProgress(tableCounts.get(ApiTokenToPermissionTable.TABLE_NAME), ApiTokenToPermissionTable.TABLE_NAME, false);
         if (toCopy == 0) {
             feedback.accept(locale.getString(CommandLang.DB_COPY_ALL_DATA_EXISTED));
         }

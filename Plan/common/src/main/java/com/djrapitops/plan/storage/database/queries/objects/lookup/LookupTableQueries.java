@@ -21,10 +21,7 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.tables.*;
-import com.djrapitops.plan.storage.database.sql.tables.webuser.SecurityTable;
-import com.djrapitops.plan.storage.database.sql.tables.webuser.WebGroupTable;
-import com.djrapitops.plan.storage.database.sql.tables.webuser.WebGroupToPermissionTable;
-import com.djrapitops.plan.storage.database.sql.tables.webuser.WebPermissionTable;
+import com.djrapitops.plan.storage.database.sql.tables.webuser.*;
 import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransaction;
 import com.djrapitops.plan.utilities.java.Lists;
 
@@ -106,6 +103,20 @@ public class LookupTableQueries {
                         set.getString(SecurityTable.USERNAME),
                         set.getInt(SecurityTable.ID)
                 )));
+    }
+
+    public static Query<LookupTable<String>> apiTokenLookupTable() {
+        return db -> new LookupTable<>(db.queryMap(Select.all(ApiTokenTable.TABLE_NAME).toString(),
+                (set, map) -> map.put(
+                        set.getString(ApiTokenTable.TOKEN),
+                        set.getInt(ApiTokenTable.ID)
+                )));
+    }
+
+    public static Query<Map<Integer, List<Integer>>> apiTokenToPermissionIds() {
+        return db -> db.queryMap(ApiTokenToPermissionTable.SELECT_IDS, (set, map) ->
+                map.computeIfAbsent(set.getInt(ApiTokenToPermissionTable.TOKEN_ID), Lists::create)
+                        .add(set.getInt(ApiTokenToPermissionTable.PERMISSION_ID)));
     }
 
     public static Query<Map<String, Integer>> tableCounts() {

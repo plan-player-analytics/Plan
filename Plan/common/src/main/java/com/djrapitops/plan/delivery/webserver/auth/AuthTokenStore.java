@@ -17,34 +17,56 @@
 package com.djrapitops.plan.delivery.webserver.auth;
 
 import com.djrapitops.plan.SubSystem;
+import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.storage.database.DBSystem;
+import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * Storage for authentication tokens.
+ *
  * @author AuroraLS3
  */
 @Singleton
 public class AuthTokenStore implements SubSystem {
 
     private final DBSystem dbSystem;
+    private final Processing processing;
+
     private final Map<String, List<String>> permissionsByToken;
 
     @Inject
-    public AuthTokenStore(DBSystem dbSystem) {
+    public AuthTokenStore(DBSystem dbSystem, Processing processing) {
         this.dbSystem = dbSystem;
-        this.permissionsByToken = new HashMap<>();
+        this.processing = processing;
+        this.permissionsByToken = new ConcurrentHashMap<>();
     }
 
     @Override
     public void enable() {
-//        dbSystem.getDatabase().query();
-        // TODO Implement authentication token storage
+        refreshTokens();
+    }
+
+    public void refreshTokens() {
+        processing.submitNonCritical(this::updateTokens);
+    }
+
+    private void updateTokens() {
+        permissionsByToken.putAll(dbSystem.getDatabase().query(WebUserQueries.fetchTokenPermissions()));
+    }
+
+    public void addToken(String token) {
+        processing.submitNonCritical(() -> {
+            var permissions = dbSystem.getDatabase().query(WebUserQueries.fetchTokenPermissions(token));
+            if (permissions.isEmpty()) return;
+            permissionsByToken.put(token, permissions);
+        });
     }
 
     @Override

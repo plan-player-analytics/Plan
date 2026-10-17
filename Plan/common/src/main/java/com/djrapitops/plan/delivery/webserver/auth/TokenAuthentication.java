@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver.auth;
 
-import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
+import com.djrapitops.plan.delivery.domain.auth.User;
 
 import java.util.List;
 
@@ -25,18 +25,15 @@ import java.util.List;
  *
  * @author AuroraLS3
  */
-public class TokenAuthentication implements Authentication {
-
-    private final String token;
-    private final List<String> permissions;
-
-    public TokenAuthentication(String token, List<String> permissions) {
-        this.token = token;
-        this.permissions = permissions;
-    }
+public record TokenAuthentication(String token, List<String> permissions) implements Authentication {
 
     @Override
-    public WebUser getWebUser() {
-        return new WebUser("console", null, token, permissions);
+    public User getUser() {
+        return new User(token,
+                null,
+                null,
+                null,
+                token,
+                permissions);
     }
 }

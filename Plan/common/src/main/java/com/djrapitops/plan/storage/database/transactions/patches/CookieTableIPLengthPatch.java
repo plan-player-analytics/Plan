@@ -18,7 +18,7 @@ package com.djrapitops.plan.storage.database.transactions.patches;
 
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
-import com.djrapitops.plan.storage.database.sql.tables.CookieTable;
+import com.djrapitops.plan.storage.database.sql.tables.webuser.CookieTable;
 
 public class CookieTableIPLengthPatch extends Patch {
     @Override
