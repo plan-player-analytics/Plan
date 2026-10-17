@@ -43,7 +43,7 @@
     "react-select": "5.10.2",
     "react-transition-group": "4.4.5",
     "sass": "1.105.1",
-    "swagger-ui-dist": "5.33.1"
+    "swagger-ui-dist": "5.33.2"
   },
   "scripts": {
     "start": "vite",
