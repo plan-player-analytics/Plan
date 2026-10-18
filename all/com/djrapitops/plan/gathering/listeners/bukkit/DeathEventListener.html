@@ -58,12 +58,13 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.utilities.logging.ErrorLogger)" tabindex="0">DeathEventListener(ServerInfo, Processing, ErrorLogger)</a></li>
+<li><a href="#%3Cinit%3E(com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.gathering.cache.ExplosionCache)" tabindex="0">DeathEventListener(ServerInfo, Processing, ErrorLogger, ExplosionCache)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#onDeath(org.bukkit.event.entity.EntityDeathEvent)" tabindex="0">onDeath(EntityDeathEvent)</a></li>
+<li><a href="#onBlockExplodeInteract(org.bukkit.event.player.PlayerInteractEvent)" tabindex="0">onBlockExplodeInteract(PlayerInteractEvent)</a></li>
 <li><a href="#findKiller(org.bukkit.entity.Entity)" tabindex="0">findKiller(Entity)</a></li>
 <li><a href="#findWeapon(org.bukkit.entity.Entity)" tabindex="0">findWeapon(Entity)</a></li>
 </ol>
@@ -101,9 +102,10 @@ implements org.bukkit.event.Listener</span></div>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">DeathEventListener</a><wbr>(<a href="../../../identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.gathering.cache.ExplosionCache)" class="member-name-link">DeathEventListener</a><wbr>(<a href="../../../identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
  <a href="../../../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing,
- <a href="../../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</code></div>
+ <a href="../../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger,
+ <a href="../../cache/ExplosionCache.html" title="class in com.djrapitops.plan.gathering.cache">ExplosionCache</a>&nbsp;explosionCache)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -126,8 +128,11 @@ implements org.bukkit.event.Listener</span></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findWeapon(org.bukkit.entity.Entity)" class="member-name-link">findWeapon</a><wbr>(org.bukkit.entity.Entity&nbsp;dead)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onDeath(org.bukkit.event.entity.EntityDeathEvent)" class="member-name-link">onDeath</a><wbr>(org.bukkit.event.entity.EntityDeathEvent&nbsp;event)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onBlockExplodeInteract(org.bukkit.event.player.PlayerInteractEvent)" class="member-name-link">onBlockExplodeInteract</a><wbr>(org.bukkit.event.player.PlayerInteractEvent&nbsp;event)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onDeath(org.bukkit.event.entity.EntityDeathEvent)" class="member-name-link">onDeath</a><wbr>(org.bukkit.event.entity.EntityDeathEvent&nbsp;event)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -146,13 +151,14 @@ implements org.bukkit.event.Listener</span></div>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.utilities.logging.ErrorLogger)">
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.gathering.cache.ExplosionCache)">
 <h3>DeathEventListener</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations">@Inject
 </span><span class="modifiers">public</span>&nbsp;<span class="element-name">DeathEventListener</span><wbr><span class="parameters">(<a href="../../../identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
  <a href="../../../processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing,
- <a href="../../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</span></div>
+ <a href="../../../utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger,
+ <a href="../../cache/ExplosionCache.html" title="class in com.djrapitops.plan.gathering.cache">ExplosionCache</a>&nbsp;explosionCache)</span></div>
 </div>
 </section>
 </li>
@@ -169,6 +175,14 @@ implements org.bukkit.event.Listener</span></div>
 <h3>onDeath</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onDeath</span><wbr><span class="parameters">(org.bukkit.event.entity.EntityDeathEvent&nbsp;event)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="onBlockExplodeInteract(org.bukkit.event.player.PlayerInteractEvent)">
+<h3>onBlockExplodeInteract</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onBlockExplodeInteract</span><wbr><span class="parameters">(org.bukkit.event.player.PlayerInteractEvent&nbsp;event)</span></div>
 </div>
 </section>
 </li>
