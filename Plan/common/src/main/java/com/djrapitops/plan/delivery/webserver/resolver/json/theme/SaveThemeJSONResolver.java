@@ -176,7 +176,7 @@ public class SaveThemeJSONResolver implements Resolver {
                 throw new BadRequestException("'theme' parameter was invalid");
             }
 
-            Files.write(themeFile, gson.toJson(result).getBytes(StandardCharsets.UTF_8), PlanFiles.replaceIfExists());
+            Files.writeString(themeFile, gson.toJson(result), PlanFiles.replaceIfExists());
 
             request.getQuery().get("originalName")
                     .ifPresent(originalName -> deleteOriginal(themeName, originalName, themeDirectory));
@@ -219,12 +219,12 @@ public class SaveThemeJSONResolver implements Resolver {
             String prefixedKey = prefix + entry.getKey();
             Object value = entry.getValue();
             try {
-                if (value instanceof String) {
-                    validateVariable(issues, (String) value, prefixedKey);
-                } else if (value instanceof List) {
-                    validateListVariables(issues, (List<String>) value, prefixedKey);
-                } else if (value instanceof Map) {
-                    validateUseCases(prefixedKey + '.', (Map<String, Object>) value, issues);
+                if (value instanceof String string) {
+                    validateVariable(issues, string, prefixedKey);
+                } else if (value instanceof List list) {
+                    validateListVariables(issues, list, prefixedKey);
+                } else if (value instanceof Map map) {
+                    validateUseCases(prefixedKey + '.', map, issues);
                 } else {
                     issues.add(prefixedKey + " had unknown type (Can be object, string or string[])");
                 }

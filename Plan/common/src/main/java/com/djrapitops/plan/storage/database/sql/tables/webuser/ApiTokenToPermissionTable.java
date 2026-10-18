@@ -47,6 +47,9 @@ public class ApiTokenToPermissionTable {
     public static final String DELETE_BY_TOKEN_ID = DELETE_FROM + TABLE_NAME +
             WHERE + TOKEN_ID + "=?";
 
+    public static final String SELECT_IDS_BY_TOKEN_ID = SELECT + ID +
+            FROM + TABLE_NAME + WHERE + TOKEN_ID + "=?";
+
     public static final String SELECT_IDS = SELECT + TOKEN_ID + ',' + PERMISSION_ID +
             FROM + TABLE_NAME + ORDER_BY + TOKEN_ID + ',' + PERMISSION_ID;
 

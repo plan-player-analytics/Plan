@@ -16,10 +16,17 @@
  */
 package com.djrapitops.plan.delivery.domain.auth;
 
+import com.djrapitops.plan.utilities.dev.Untrusted;
+import org.jspecify.annotations.Nullable;
+
 /**
  * Represents Plan API token that can be used instead of cookies.
  *
  * @author AuroraLS3
  */
-public record ApiToken(Integer id, String identifier, String token, long issued, long lastUsed) {
+public record ApiToken(Integer id,
+                       @Untrusted String identifier,
+                       @Untrusted String token,
+                       long issued,
+                       @Nullable Long lastUsed) {
 }

@@ -17,8 +17,8 @@
 package com.djrapitops.plan.delivery.webserver.resolver.json.webgroup;
 
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
+import com.djrapitops.plan.delivery.web.resolver.AsyncResolver;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
-import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.exception.MethodNotAllowedException;
@@ -39,7 +39,7 @@ import jakarta.ws.rs.Path;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Endpoint for adding a group.
@@ -48,7 +48,7 @@ import java.util.concurrent.ExecutionException;
  */
 @Singleton
 @Path("/v1/deleteGroup")
-public class WebGroupDeleteJSONResolver implements Resolver {
+public class WebGroupDeleteJSONResolver implements AsyncResolver {
 
     private final DBSystem dbSystem;
     private final ActiveCookieStore activeCookieStore;
@@ -78,7 +78,7 @@ public class WebGroupDeleteJSONResolver implements Resolver {
             requestBody = @RequestBody(content = @Content(examples = @ExampleObject()))
     )
     @Override
-    public Optional<Response> resolve(Request request) {
+    public CompletableFuture<Optional<Response>> resolveAsync(Request request) {
         if (!"DELETE".equals(request.getMethod())) {
             throw new MethodNotAllowedException("DELETE");
         }
@@ -87,23 +87,15 @@ public class WebGroupDeleteJSONResolver implements Resolver {
         @Untrusted String moveTo = request.getQuery().get("moveTo")
                 .orElseThrow(() -> new BadRequestException("'moveTo' parameter not given."));
 
-        return Optional.of(getResponse(groupName, moveTo));
+        return getResponse(groupName, moveTo);
     }
 
-    private Response getResponse(@Untrusted String groupName, @Untrusted String moveTo) {
-        try {
-            dbSystem.getDatabase().executeTransaction(new DeleteWebGroupTransaction(groupName, moveTo))
-                    .get();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        } catch (ExecutionException e) {
-            throw new IllegalStateException(e);
-        }
-        activeCookieStore.reloadActiveCookies();
-
-        return Response.builder()
-                .setStatus(200)
-                .setJSONContent("{\"success\": true}")
-                .build();
+    private CompletableFuture<Optional<Response>> getResponse(@Untrusted String groupName, @Untrusted String moveTo) {
+        return dbSystem.getDatabase().executeTransaction(new DeleteWebGroupTransaction(groupName, moveTo))
+                .thenCompose(v -> activeCookieStore.reloadActiveCookies())
+                .thenApply(v -> Optional.of(Response.builder()
+                        .setStatus(200)
+                        .setJSONContent("{\"success\": true}")
+                        .build()));
     }
 }

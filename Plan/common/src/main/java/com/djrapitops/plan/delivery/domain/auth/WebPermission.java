@@ -238,6 +238,7 @@ public enum WebPermission implements Supplier<String>, Lang {
     ACCESS_THEME_EDITOR("Allows accessing /theme-editor page"),
 
     MANAGE_GROUPS("Allows modifying group permissions & Access to /manage/groups page"),
+    MANAGE_TOKENS("Allows modifying API tokens & Access to /manage/tokens page"),
     MANAGE_USERS("Allows modifying what users belong to what group"),
     MANAGE_THEMES("Allows saving or deleting themes via theme-editor for everyone");
 

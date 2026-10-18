@@ -43,6 +43,9 @@ public class ApiTokenTable {
     public static final String ID = "id";
     public static final String IDENTIFIER = "identifier";
     public static final String TOKEN = "token";
+    public static final String SELECT_TOKEN_ID = SELECT + ID +
+            FROM + TABLE_NAME +
+            WHERE + TOKEN + "=?";
     public static final String ISSUED = "issued";
     public static final String LAST_USED = "last_used";
 
@@ -55,6 +58,10 @@ public class ApiTokenTable {
     public static final String UPDATE_LAST_USED_STATEMENT = UPDATE + TABLE_NAME +
             SET + LAST_USED + "=?" +
             WHERE + TOKEN + "=?";
+
+    public static final String UPDATE_IDENTIFIER_STATEMENT = UPDATE + TABLE_NAME +
+            SET + IDENTIFIER + "=?" +
+            WHERE + ID + "=?";
 
     public static final String DELETE_BY_ID_STATEMENT = DELETE_FROM + TABLE_NAME +
             WHERE + ID + "=?";

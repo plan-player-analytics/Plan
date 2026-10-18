@@ -125,6 +125,14 @@ public abstract class Sql {
         }
     }
 
+    public static void setLongOrNull(PreparedStatement statement, int index, Long value) throws SQLException {
+        if (value != null) {
+            statement.setLong(index, value);
+        } else {
+            statement.setNull(index, Types.INTEGER);
+        }
+    }
+
     public static String concat(DBType dbType, String one, String two) {
         if (dbType == DBType.MYSQL) {
             return "CONCAT(" + one + ',' + two + ")";

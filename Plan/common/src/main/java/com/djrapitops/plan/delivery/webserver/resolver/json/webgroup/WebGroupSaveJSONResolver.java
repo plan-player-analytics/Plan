@@ -16,10 +16,9 @@
  */
 package com.djrapitops.plan.delivery.webserver.resolver.json.webgroup;
 
-import com.djrapitops.plan.delivery.domain.auth.GroupList;
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
+import com.djrapitops.plan.delivery.web.resolver.AsyncResolver;
 import com.djrapitops.plan.delivery.web.resolver.MimeType;
-import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.exception.MethodNotAllowedException;
@@ -32,7 +31,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.POST;
@@ -44,7 +42,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * Endpoint for storing new permissions for a group.
@@ -53,7 +51,7 @@ import java.util.concurrent.ExecutionException;
  */
 @Singleton
 @Path("/v1/saveGroupPermissions")
-public class WebGroupSaveJSONResolver implements Resolver {
+public class WebGroupSaveJSONResolver implements AsyncResolver {
 
     private final DBSystem dbSystem;
     private final ActiveCookieStore activeCookieStore;
@@ -76,14 +74,12 @@ public class WebGroupSaveJSONResolver implements Resolver {
                     @Parameter(name = "group", description = "Name of the group", required = true),
             },
             responses = {
-                    @ApiResponse(responseCode = "200", content = @Content(
-                            mediaType = MimeType.JSON,
-                            schema = @Schema(implementation = GroupList.class))),
+                    @ApiResponse(responseCode = "200", content = @Content(mediaType = MimeType.JSON, examples = @ExampleObject("{\"success\": true}"))),
             },
             requestBody = @RequestBody(content = @Content(examples = @ExampleObject("[\"page\"]")))
     )
     @Override
-    public Optional<Response> resolve(Request request) {
+    public CompletableFuture<Optional<Response>> resolveAsync(Request request) {
         if (!"POST".equals(request.getMethod())) {
             throw new MethodNotAllowedException("POST");
         }
@@ -92,23 +88,15 @@ public class WebGroupSaveJSONResolver implements Resolver {
                 .orElseThrow(() -> new BadRequestException("'group' parameter not given."));
         String requestBody = new String(request.getRequestBody(), StandardCharsets.UTF_8);
         List<String> permissions = Arrays.asList(new Gson().fromJson(requestBody, String[].class));
-        return Optional.of(getResponse(groupName, permissions));
+        return getResponse(groupName, permissions);
     }
 
-    private Response getResponse(String groupName, List<String> permissions) {
-        try {
-            dbSystem.getDatabase().executeTransaction(new StoreWebGroupTransaction(groupName, permissions))
-                    .get();
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        } catch (ExecutionException e) {
-            throw new IllegalStateException(e);
-        }
-        activeCookieStore.reloadActiveCookies();
-
-        return Response.builder()
-                .setStatus(200)
-                .setJSONContent("{\"success\": true}")
-                .build();
+    private CompletableFuture<Optional<Response>> getResponse(String groupName, List<String> permissions) {
+        return dbSystem.getDatabase().executeTransaction(new StoreWebGroupTransaction(groupName, permissions))
+                .thenCompose(v -> activeCookieStore.reloadActiveCookies())
+                .thenApply(v -> Optional.of(Response.builder()
+                        .setStatus(200)
+                        .setJSONContent("{\"success\": true}")
+                        .build()));
     }
 }
