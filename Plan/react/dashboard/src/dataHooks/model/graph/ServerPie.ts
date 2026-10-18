@@ -1,5 +1,5 @@
-import {PieSlice} from "./PieSlice";
+import { PieSlice } from './PieSlice';
 
 export type ServerPie = {
     slices: PieSlice[];
-}
+};

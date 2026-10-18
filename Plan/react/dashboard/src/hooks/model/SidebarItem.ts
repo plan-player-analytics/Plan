@@ -1,1 +1,1 @@
-export type SidebarItem = {}
+export type SidebarItem = {};

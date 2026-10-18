@@ -1,119 +1,226 @@
-import {useTranslation} from "react-i18next";
-import {usePreferences} from "../../hooks/preferences/preferencesHook.tsx";
-import React, {useCallback, useEffect, useState} from "react";
-import FormattedTime from "../text/FormattedTime.tsx";
-import FormattedDate from "../text/FormattedDate.tsx";
-import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import {faCheck, faGlobe, faSignal, faUser, faUserPlus} from "@fortawesome/free-solid-svg-icons";
-import {faCalendarCheck, faCalendarPlus, faClock} from "@fortawesome/free-regular-svg-icons";
-import ExtensionIcon from "../extensions/ExtensionIcon.tsx";
-import {Link} from "react-router";
-import {ExtensionValueTableCell} from "../extensions/ExtensionValue.tsx";
-import {ChartLoader} from "../navigation/Loader.tsx";
-import DataTablesTable from "./DataTablesTable.jsx";
-import {localeService, reverseRegionLookupMap} from "../../service/localeService.js";
-import {usePingFormatter} from "../../util/format/usePingFormatter.ts";
-import {useDecimalFormatter} from "../../util/format/useDecimalFormatter.ts";
+import { useTranslation } from 'react-i18next';
+import { usePreferences } from '../../hooks/preferences/preferencesHook.tsx';
+import React, { useCallback, useEffect, useState } from 'react';
+import FormattedTime from '../text/FormattedTime.tsx';
+import FormattedDate from '../text/FormattedDate.tsx';
+import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
+import {
+    faCheck,
+    faGlobe,
+    faSignal,
+    faUser,
+    faUserPlus,
+} from '@fortawesome/free-solid-svg-icons';
+import {
+    faCalendarCheck,
+    faCalendarPlus,
+    faClock,
+} from '@fortawesome/free-regular-svg-icons';
+import ExtensionIcon from '../extensions/ExtensionIcon.tsx';
+import { Link } from 'react-router';
+import { ExtensionValueTableCell } from '../extensions/ExtensionValue.tsx';
+import { ChartLoader } from '../navigation/Loader.tsx';
+import DataTablesTable from './DataTablesTable.jsx';
+import {
+    localeService,
+    reverseRegionLookupMap,
+} from '../../service/localeService.js';
+import { usePingFormatter } from '../../util/format/usePingFormatter.ts';
+import { useDecimalFormatter } from '../../util/format/useDecimalFormatter.ts';
 
-const getActivityGroup = value => {
+const getActivityGroup = (value) => {
     const VERY_ACTIVE = 3.75;
     const ACTIVE = 3;
     const REGULAR = 2;
     const IRREGULAR = 1;
     if (value >= VERY_ACTIVE) {
-        return "html.label.veryActive"
+        return 'html.label.veryActive';
     } else if (value >= ACTIVE) {
-        return "html.label.active"
+        return 'html.label.active';
     } else if (value >= REGULAR) {
-        return "html.label.indexRegular"
+        return 'html.label.indexRegular';
     } else if (value >= IRREGULAR) {
-        return "html.label.irregular"
+        return 'html.label.irregular';
     } else {
-        return "html.label.indexInactive"
+        return 'html.label.indexInactive';
     }
-}
+};
 
-const PlayerTable = ({data, orderBy}) => {
-    const {t} = useTranslation();
-    const {formatPing} = usePingFormatter();
-    const {formatDecimals} = useDecimalFormatter();
-    const {preferencesLoaded} = usePreferences();
+const PlayerTable = ({ data, orderBy }) => {
+    const { t } = useTranslation();
+    const { formatPing } = usePingFormatter();
+    const { formatDecimals } = useDecimalFormatter();
+    const { preferencesLoaded } = usePreferences();
 
     const [options, setOptions] = useState(undefined);
 
     useEffect(() => {
         if (!data) return;
 
-        const columns = [{
-            title: <><Fa icon={faUser}/> {t('html.label.name')}</>,
-            data: {_: "name", display: "link"}
-        }, {
-            title: <><Fa icon={faCheck}/> {t('html.label.activityIndex')}</>,
-            data: {_: "activityIndex", display: "activityIndexAndGroup"}
-        }, {
-            title: <><Fa icon={faClock}/> {t('html.label.activePlaytime')}</>,
-            data: {_: "activePlaytime", display: "activePlaytimeFormatted"}
-        }, {
-            title: <><Fa icon={faCalendarPlus}/> {t('html.label.sessions')}</>,
-            data: "sessions"
-        }, {
-            title: <><Fa icon={faUserPlus}/> {t('html.label.registered')}</>,
-            data: {_: "registered", display: "registeredFormatted"}
-        }, {
-            title: <><Fa icon={faCalendarCheck}/> {t('html.label.lastSeen')}</>,
-            data: {_: "lastSeen", display: "lastSeenFormatted"}
-        }, {
-            title: <><Fa icon={faGlobe}/> {t('html.label.country')}</>,
-            data: "country"
-        }, {
-            title: <><Fa icon={faSignal}/> {t('html.label.averagePing')}</>,
-            data: {_: "pingAverage", display: "pingAverageFormatted"}
-        }, {
-            title: <><Fa icon={faSignal}/> {t('html.label.bestPing')}</>,
-            data: {_: "pingMin", display: "pingMinFormatted"}
-        }, {
-            title: <><Fa icon={faSignal}/> {t('html.label.worstPing')}</>,
-            data: {_: "pingMax", display: "pingMaxFormatted"}
-        }];
+        const columns = [
+            {
+                title: (
+                    <>
+                        <Fa icon={faUser} /> {t('html.label.name')}
+                    </>
+                ),
+                data: { _: 'name', display: 'link' },
+            },
+            {
+                title: (
+                    <>
+                        <Fa icon={faCheck} /> {t('html.label.activityIndex')}
+                    </>
+                ),
+                data: { _: 'activityIndex', display: 'activityIndexAndGroup' },
+            },
+            {
+                title: (
+                    <>
+                        <Fa icon={faClock} /> {t('html.label.activePlaytime')}
+                    </>
+                ),
+                data: {
+                    _: 'activePlaytime',
+                    display: 'activePlaytimeFormatted',
+                },
+            },
+            {
+                title: (
+                    <>
+                        <Fa icon={faCalendarPlus} /> {t('html.label.sessions')}
+                    </>
+                ),
+                data: 'sessions',
+            },
+            {
+                title: (
+                    <>
+                        <Fa icon={faUserPlus} /> {t('html.label.registered')}
+                    </>
+                ),
+                data: { _: 'registered', display: 'registeredFormatted' },
+            },
+            {
+                title: (
+                    <>
+                        <Fa icon={faCalendarCheck} /> {t('html.label.lastSeen')}
+                    </>
+                ),
+                data: { _: 'lastSeen', display: 'lastSeenFormatted' },
+            },
+            {
+                title: (
+                    <>
+                        <Fa icon={faGlobe} /> {t('html.label.country')}
+                    </>
+                ),
+                data: 'country',
+            },
+            {
+                title: (
+                    <>
+                        <Fa icon={faSignal} /> {t('html.label.averagePing')}
+                    </>
+                ),
+                data: { _: 'pingAverage', display: 'pingAverageFormatted' },
+            },
+            {
+                title: (
+                    <>
+                        <Fa icon={faSignal} /> {t('html.label.bestPing')}
+                    </>
+                ),
+                data: { _: 'pingMin', display: 'pingMinFormatted' },
+            },
+            {
+                title: (
+                    <>
+                        <Fa icon={faSignal} /> {t('html.label.worstPing')}
+                    </>
+                ),
+                data: { _: 'pingMax', display: 'pingMaxFormatted' },
+            },
+        ];
 
-        columns.push(...data.extensionDescriptors.map(descriptor => {
-            return {
-                title: <><ExtensionIcon icon={descriptor.icon}/> {descriptor.text}</>,
-                data: {_: descriptor.name + "Value", display: descriptor.name}
-            }
-        }));
-        const regions = new Intl.DisplayNames([localeService.getIntlFriendlyLocale()], {type: 'region'});
+        columns.push(
+            ...data.extensionDescriptors.map((descriptor) => {
+                return {
+                    title: (
+                        <>
+                            <ExtensionIcon icon={descriptor.icon} />{' '}
+                            {descriptor.text}
+                        </>
+                    ),
+                    data: {
+                        _: descriptor.name + 'Value',
+                        display: descriptor.name,
+                    },
+                };
+            }),
+        );
+        const regions = new Intl.DisplayNames(
+            [localeService.getIntlFriendlyLocale()],
+            { type: 'region' },
+        );
 
-        const rows = data.players.map(player => {
+        const rows = data.players.map((player) => {
             const code = reverseRegionLookupMap[player.country];
-            const location = code ? regions.of(code) : player.country?.replace('Local Machine', t('html.value.localMachine'));
+            const location = code
+                ? regions.of(code)
+                : player.country?.replace(
+                      'Local Machine',
+                      t('html.value.localMachine'),
+                  );
             const row = {
                 name: player.playerName,
                 uuid: player.playerUUID,
-                link: <Link to={"/player/" + player.playerUUID}>{player.playerName}</Link>,
+                link: (
+                    <Link to={'/player/' + player.playerUUID}>
+                        {player.playerName}
+                    </Link>
+                ),
                 activityIndex: player.activityIndex,
                 activityGroup: t(getActivityGroup(player.activityIndex)),
-                activityIndexAndGroup: formatDecimals(player.activityIndex) + " (" + t(getActivityGroup(player.activityIndex)) + ")",
+                activityIndexAndGroup:
+                    formatDecimals(player.activityIndex) +
+                    ' (' +
+                    t(getActivityGroup(player.activityIndex)) +
+                    ')',
                 activePlaytime: player.playtimeActive,
-                activePlaytimeFormatted: <FormattedTime timeMs={player.playtimeActive}/>,
+                activePlaytimeFormatted: (
+                    <FormattedTime timeMs={player.playtimeActive} />
+                ),
                 sessions: player.sessionCount,
                 registered: player.registered,
-                registeredFormatted: <FormattedDate date={player.registered} react/>,
+                registeredFormatted: (
+                    <FormattedDate date={player.registered} react />
+                ),
                 lastSeen: player.lastSeen,
-                lastSeenFormatted: <FormattedDate date={player.lastSeen} react/>,
+                lastSeenFormatted: (
+                    <FormattedDate date={player.lastSeen} react />
+                ),
                 country: location,
                 pingAverage: player.pingAverage,
-                pingAverageFormatted: formatPing(formatDecimals(player.pingAverage)),
+                pingAverageFormatted: formatPing(
+                    formatDecimals(player.pingAverage),
+                ),
                 pingMax: player.pingMax,
                 pingMaxFormatted: formatPing(player.pingMax),
                 pingMin: player.pingMin,
                 pingMinFormatted: formatPing(player.pingMin),
                 nicknames: player.nicknames,
             };
-            data.extensionDescriptors.forEach(descriptor => {
-                row[descriptor.name] = <ExtensionValueTableCell data={player.extensionValues[descriptor.name]}/>;
-                row[descriptor.name + "Value"] = JSON.stringify(player.extensionValues[descriptor.name]?.value);
-            })
+            data.extensionDescriptors.forEach((descriptor) => {
+                row[descriptor.name] = (
+                    <ExtensionValueTableCell
+                        data={player.extensionValues[descriptor.name]}
+                    />
+                );
+                row[descriptor.name + 'Value'] = JSON.stringify(
+                    player.extensionValues[descriptor.name]?.value,
+                );
+            });
             return row;
         });
 
@@ -122,20 +229,24 @@ const PlayerTable = ({data, orderBy}) => {
             deferRender: true,
             columns: columns,
             data: rows,
-            order: [[orderBy === undefined ? 5 : orderBy, "desc"]]
+            order: [[orderBy === undefined ? 5 : orderBy, 'desc']],
         });
     }, [data, orderBy, t, formatPing, formatDecimals]);
 
     const rowKeyFunction = useCallback((row, column) => {
-        return row.uuid + "-" + (column ? JSON.stringify(column.data) : '');
+        return row.uuid + '-' + (column ? JSON.stringify(column.data) : '');
     }, []);
 
     if (!preferencesLoaded) return <></>;
-    if (!options) return <ChartLoader/>;
+    if (!options) return <ChartLoader />;
 
     return (
-        <DataTablesTable id={"players-table"} rowKeyFunction={rowKeyFunction} options={options}/>
+        <DataTablesTable
+            id={'players-table'}
+            rowKeyFunction={rowKeyFunction}
+            options={options}
+        />
     );
-}
+};
 
 export default PlayerTable;

@@ -1,26 +1,27 @@
-import {Col, InputGroup} from "react-bootstrap";
-import React, {useEffect, useState} from "react";
-import LoadIn from "../../components/animation/LoadIn.tsx";
-import ExtendableRow from "../../components/layout/extension/ExtendableRow.tsx";
-import {useAuth} from "../../hooks/authenticationHook.tsx";
-import PluginHistoryCard from "../../components/cards/common/PluginHistoryCard";
-import {useDataRequest} from "../../hooks/dataFetchHook";
-import {fetchPluginHistory} from "../../service/serverService";
-import PluginCurrentCard from "../../components/cards/common/PluginCurrentCard";
-import {useMetadata} from "../../hooks/metadataHook.tsx";
-import Select from "../../components/input/Select.tsx";
-import {useTranslation} from "react-i18next";
-import InputGroupText from "react-bootstrap/InputGroupText";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faServer} from "@fortawesome/free-solid-svg-icons";
+import { Col, InputGroup } from 'react-bootstrap';
+import React, { useEffect, useState } from 'react';
+import LoadIn from '../../components/animation/LoadIn.tsx';
+import ExtendableRow from '../../components/layout/extension/ExtendableRow.tsx';
+import { useAuth } from '../../hooks/authenticationHook.tsx';
+import PluginHistoryCard from '../../components/cards/common/PluginHistoryCard';
+import { useDataRequest } from '../../hooks/dataFetchHook';
+import { fetchPluginHistory } from '../../service/serverService';
+import PluginCurrentCard from '../../components/cards/common/PluginCurrentCard';
+import { useMetadata } from '../../hooks/metadataHook.tsx';
+import Select from '../../components/input/Select.tsx';
+import { useTranslation } from 'react-i18next';
+import InputGroupText from 'react-bootstrap/InputGroupText';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faServer } from '@fortawesome/free-solid-svg-icons';
 
 const NetworkPluginHistory = () => {
-    const {t} = useTranslation();
-    const {authRequired, hasPermission} = useAuth();
+    const { t } = useTranslation();
+    const { authRequired, hasPermission } = useAuth();
 
-    const seeHistory = authRequired && hasPermission('page.network.plugin.history');
+    const seeHistory =
+        authRequired && hasPermission('page.network.plugin.history');
 
-    const {networkMetadata} = useMetadata();
+    const { networkMetadata } = useMetadata();
     const [serverOptions, setServerOptions] = useState([]);
     const [selectedOption, setSelectedOption] = useState(0);
     const [identifier, setIdentifier] = useState(undefined);
@@ -29,8 +30,11 @@ const NetworkPluginHistory = () => {
             const options = networkMetadata.servers;
             setServerOptions(options);
 
-            const indexOfProxy = options
-                .findIndex(option => option.serverName === networkMetadata.currentServer.serverName);
+            const indexOfProxy = options.findIndex(
+                (option) =>
+                    option.serverName ===
+                    networkMetadata.currentServer.serverName,
+            );
 
             setSelectedOption(indexOfProxy);
         }
@@ -39,34 +43,53 @@ const NetworkPluginHistory = () => {
         if (serverOptions.length) {
             setIdentifier(serverOptions[selectedOption].serverUUID);
         }
-    }, [selectedOption, serverOptions])
+    }, [selectedOption, serverOptions]);
 
-    let {data, loadingError} = useDataRequest(fetchPluginHistory, [identifier], Boolean(identifier) && seeHistory);
-    if (!identifier) data = {history: []};
+    let { data, loadingError } = useDataRequest(
+        fetchPluginHistory,
+        [identifier],
+        Boolean(identifier) && seeHistory,
+    );
+    if (!identifier) data = { history: [] };
     return (
         <LoadIn>
-            {seeHistory && <section id="network-plugin-history">
-                <ExtendableRow id={'row-network-plugin-history-0'}>
-                    <Col md={4} className={"mb-4"}>
-                        <InputGroup>
-                            <InputGroupText><FontAwesomeIcon icon={faServer}/> {t('html.label.serverSelector')}
-                            </InputGroupText>
-                            <Select options={serverOptions.map(server => server.serverName)}
-                                    selectedIndex={selectedOption} setSelectedIndex={setSelectedOption}/>
-                        </InputGroup>
-                    </Col>
-                </ExtendableRow>
-                <ExtendableRow id={'row-network-plugin-history-1'}>
-                    <Col md={6}>
-                        <PluginCurrentCard data={data} loadingError={loadingError}/>
-                    </Col>
-                    <Col md={6}>
-                        <PluginHistoryCard data={data} loadingError={loadingError}/>
-                    </Col>
-                </ExtendableRow>
-            </section>}
+            {seeHistory && (
+                <section id='network-plugin-history'>
+                    <ExtendableRow id={'row-network-plugin-history-0'}>
+                        <Col md={4} className={'mb-4'}>
+                            <InputGroup>
+                                <InputGroupText>
+                                    <FontAwesomeIcon icon={faServer} />{' '}
+                                    {t('html.label.serverSelector')}
+                                </InputGroupText>
+                                <Select
+                                    options={serverOptions.map(
+                                        (server) => server.serverName,
+                                    )}
+                                    selectedIndex={selectedOption}
+                                    setSelectedIndex={setSelectedOption}
+                                />
+                            </InputGroup>
+                        </Col>
+                    </ExtendableRow>
+                    <ExtendableRow id={'row-network-plugin-history-1'}>
+                        <Col md={6}>
+                            <PluginCurrentCard
+                                data={data}
+                                loadingError={loadingError}
+                            />
+                        </Col>
+                        <Col md={6}>
+                            <PluginHistoryCard
+                                data={data}
+                                loadingError={loadingError}
+                            />
+                        </Col>
+                    </ExtendableRow>
+                </section>
+            )}
         </LoadIn>
-    )
-}
+    );
+};
 
 export default NetworkPluginHistory;

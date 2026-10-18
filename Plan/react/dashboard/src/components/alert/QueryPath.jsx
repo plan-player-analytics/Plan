@@ -1,52 +1,56 @@
 import React from 'react';
-import {useQueryResultContext} from "../../hooks/queryResultContext.tsx";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faFilter} from "@fortawesome/free-solid-svg-icons";
-import {useTranslation} from "react-i18next";
-import {Link} from "react-router";
+import { useQueryResultContext } from '../../hooks/queryResultContext.tsx';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faFilter } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
+import { Link } from 'react-router';
 
-const QueryPath = ({newQuery}) => {
-    const {t} = useTranslation();
-    const {result} = useQueryResultContext();
+const QueryPath = ({ newQuery }) => {
+    const { t } = useTranslation();
+    const { result } = useQueryResultContext();
     const hasResults = Boolean(result?.data);
     const path = result?.path;
     if (!path?.length || (newQuery && hasResults)) return <></>;
 
-
-    const getReadableFilterName = kind => {
-        if (kind.endsWith(" (skip)")) {
-            return getReadableFilterName(kind.substring(0, kind.length - 5)) + " (" + t('html.query.filter.skipped') + ")";
+    const getReadableFilterName = (kind) => {
+        if (kind.endsWith(' (skip)')) {
+            return (
+                getReadableFilterName(kind.substring(0, kind.length - 5)) +
+                ' (' +
+                t('html.query.filter.skipped') +
+                ')'
+            );
         }
 
-        if (kind.startsWith("pluginGroups-")) {
+        if (kind.startsWith('pluginGroups-')) {
             return t('html.query.filter.pluginGroup.name') + kind.substring(13);
         }
         switch (kind) {
-            case "allPlayers":
-                return t('html.query.filter.generic.allPlayers')
-            case "activityIndexNow":
+            case 'allPlayers':
+                return t('html.query.filter.generic.allPlayers');
+            case 'activityIndexNow':
                 return t('html.query.filter.title.activityGroup');
-            case "activityIndexOn":
+            case 'activityIndexOn':
                 return t('html.query.filter.title.activityGroupOnDate');
-            case "banned":
+            case 'banned':
                 return t('html.query.filter.banStatus.name');
-            case "operators":
+            case 'operators':
                 return t('html.query.filter.operatorStatus.name');
-            case "joinAddresses":
+            case 'joinAddresses':
                 return t('html.label.joinAddresses');
-            case "geolocations":
+            case 'geolocations':
                 return t('html.label.geolocations');
-            case "playedBetween":
+            case 'playedBetween':
                 return t('html.query.filter.playedBetween.text');
-            case "registeredBetween":
+            case 'registeredBetween':
                 return t('html.query.filter.registeredBetween.text');
-            case "lastSeenBetween":
+            case 'lastSeenBetween':
                 return t('html.query.filter.lastSeenBetween.text');
-            case "pluginsBooleanGroups":
+            case 'pluginsBooleanGroups':
                 return t('html.query.filter.hasPluginBooleanValue.name');
-            case "playedOnServer":
+            case 'playedOnServer':
                 return t('html.query.filter.hasPlayedOnServers.name');
-            case "playedOn":
+            case 'playedOn':
                 return t('html.query.filter.hasPlayedOnDate.name');
             default:
                 return kind;
@@ -54,15 +58,28 @@ const QueryPath = ({newQuery}) => {
     };
 
     return (
-        <aside id={"result-path"} className={"alert shadow " + (hasResults ? "alert-success" : "alert-warning")}>
-            {!newQuery && <Link className={"link float-end"} to={"/query/new"}>{t('html.query.label.editQuery')}</Link>}
-            {path.map((step, i) => <p key={step.kind + step.size}
-                                      style={{marginBottom: 0, marginLeft: i * 0.7 + "rem"}}>
-                <FontAwesomeIcon
-                    icon={faFilter}/> '{getReadableFilterName(step.kind)}' {t('html.query.results.match', {resultCount: step.size})}
-            </p>)}
+        <aside
+            id={'result-path'}
+            className={
+                'alert shadow ' +
+                (hasResults ? 'alert-success' : 'alert-warning')
+            }>
+            {!newQuery && (
+                <Link className={'link float-end'} to={'/query/new'}>
+                    {t('html.query.label.editQuery')}
+                </Link>
+            )}
+            {path.map((step, i) => (
+                <p
+                    key={step.kind + step.size}
+                    style={{ marginBottom: 0, marginLeft: i * 0.7 + 'rem' }}>
+                    <FontAwesomeIcon icon={faFilter} /> '
+                    {getReadableFilterName(step.kind)}'{' '}
+                    {t('html.query.results.match', { resultCount: step.size })}
+                </p>
+            ))}
         </aside>
-    )
+    );
 };
 
-export default QueryPath
+export default QueryPath;

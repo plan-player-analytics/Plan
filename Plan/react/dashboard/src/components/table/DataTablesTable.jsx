@@ -1,9 +1,9 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import {useTheme} from "../../hooks/themeHook.tsx";
-import {Card, Dropdown, InputGroup} from "react-bootstrap";
-import Select from "../input/Select.tsx";
-import SearchField from "../input/SearchField.tsx";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import React, { useCallback, useEffect, useState } from 'react';
+import { useTheme } from '../../hooks/themeHook.tsx';
+import { Card, Dropdown, InputGroup } from 'react-bootstrap';
+import Select from '../input/Select.tsx';
+import SearchField from '../input/SearchField.tsx';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
     faAngleLeft,
     faAngleRight,
@@ -11,92 +11,121 @@ import {
     faAnglesRight,
     faSort,
     faSortAsc,
-    faSortDesc
-} from "@fortawesome/free-solid-svg-icons";
-import Toggle from "../input/Toggle";
-import CollapseWithButton from "../layout/CollapseWithButton";
-import {faMinusSquare, faPlusSquare} from "@fortawesome/free-regular-svg-icons";
-import {Trans, useTranslation} from "react-i18next";
-import {download, generateCsv, mkConfig} from "export-to-csv";
-import {classNames} from "../../util/classNames.ts";
+    faSortDesc,
+} from '@fortawesome/free-solid-svg-icons';
+import Toggle from '../input/Toggle';
+import CollapseWithButton from '../layout/CollapseWithButton';
+import {
+    faMinusSquare,
+    faPlusSquare,
+} from '@fortawesome/free-regular-svg-icons';
+import { Trans, useTranslation } from 'react-i18next';
+import { download, generateCsv, mkConfig } from 'export-to-csv';
+import { classNames } from '../../util/classNames.ts';
 import styles from './DataTablesTable.module.scss';
 
-const PaginationOption = ({onClick, children, selected, icon}) => (
+const PaginationOption = ({ onClick, children, selected, icon }) => (
     <li>
-        <button className={classNames(
-            "btn col-text",
-            styles.paginationButton,
-            {
-                "btn-action": selected,
-                [styles.paginationIcon]: icon
-            }
-        )} onClick={onClick}>
+        <button
+            className={classNames('btn col-text', styles.paginationButton, {
+                'btn-action': selected,
+                [styles.paginationIcon]: icon,
+            })}
+            onClick={onClick}>
             {children}
         </button>
     </li>
-)
+);
 
-const Pagination = ({page, maxPage, setPage}) => {
+const Pagination = ({ page, maxPage, setPage }) => {
     const firstPage = () => setPage(0);
     const previousPage = () => setPage(Math.max(0, page - 1));
     const nextPage = () => setPage(Math.min(maxPage - 1, page + 1));
     const lastPage = () => setPage(maxPage - 1);
 
     const elements = [];
-    elements.push(<PaginationOption key={"<<"} onClick={firstPage} icon>
-            <FontAwesomeIcon icon={faAnglesLeft}/>
+    elements.push(
+        <PaginationOption key={'<<'} onClick={firstPage} icon>
+            <FontAwesomeIcon icon={faAnglesLeft} />
         </PaginationOption>,
-        <PaginationOption key={"<"} onClick={previousPage} icon>
-            <FontAwesomeIcon icon={faAngleLeft}/>
-        </PaginationOption>)
+        <PaginationOption key={'<'} onClick={previousPage} icon>
+            <FontAwesomeIcon icon={faAngleLeft} />
+        </PaginationOption>,
+    );
     const pagesStart = Math.max(1, page - 2);
     const pagesEnd = Math.min(maxPage, pagesStart + 7);
     for (let i = pagesStart; i <= pagesEnd; i++) {
-        elements.push(<PaginationOption key={i} selected={page === i - 1}
-                                        onClick={() => setPage(i - 1)}>{i}</PaginationOption>)
+        elements.push(
+            <PaginationOption
+                key={i}
+                selected={page === i - 1}
+                onClick={() => setPage(i - 1)}>
+                {i}
+            </PaginationOption>,
+        );
     }
-    elements.push(<PaginationOption key={">"} onClick={nextPage} icon><FontAwesomeIcon
-            icon={faAngleRight}/></PaginationOption>,
-        <PaginationOption key={">>"} onClick={lastPage} icon><FontAwesomeIcon
-            icon={faAnglesRight}/></PaginationOption>)
+    elements.push(
+        <PaginationOption key={'>'} onClick={nextPage} icon>
+            <FontAwesomeIcon icon={faAngleRight} />
+        </PaginationOption>,
+        <PaginationOption key={'>>'} onClick={lastPage} icon>
+            <FontAwesomeIcon icon={faAnglesRight} />
+        </PaginationOption>,
+    );
 
-    return (
-        <ul className={"input-group pagination"}>
-            {elements}
-        </ul>
-    )
-}
+    return <ul className={'input-group pagination'}>{elements}</ul>;
+};
 
-const SortIcon = ({selected, reversed, hideNonSorted}) => {
+const SortIcon = ({ selected, reversed, hideNonSorted }) => {
     if (!selected) {
-        return hideNonSorted ? null : <FontAwesomeIcon className={"opaque-text"} icon={faSort}/>;
+        return hideNonSorted ? null : (
+            <FontAwesomeIcon className={'opaque-text'} icon={faSort} />
+        );
     }
-    if (reversed) return <FontAwesomeIcon icon={faSortAsc}/>;
-    return <FontAwesomeIcon icon={faSortDesc}/>;
-}
+    if (reversed) return <FontAwesomeIcon icon={faSortAsc} />;
+    return <FontAwesomeIcon icon={faSortDesc} />;
+};
 
-const VisibleColumnsSelector = ({columns, visibleColumnIndexes, toggleColumn}) => {
-    const {t} = useTranslation();
+const VisibleColumnsSelector = ({
+    columns,
+    visibleColumnIndexes,
+    toggleColumn,
+}) => {
+    const { t } = useTranslation();
     return (
-        <CollapseWithButton title={t('html.label.table.visibleColumns')} coverToggle>
-            <Card style={{position: "absolute", zIndex: 3}}>
+        <CollapseWithButton
+            title={t('html.label.table.visibleColumns')}
+            coverToggle>
+            <Card style={{ position: 'absolute', zIndex: 3 }}>
                 <Card.Body>
-                    <ul style={{listStyle: "none", paddingLeft: "0.25rem", margin: 0}}>
+                    <ul
+                        style={{
+                            listStyle: 'none',
+                            paddingLeft: '0.25rem',
+                            margin: 0,
+                        }}>
                         {columns.map((column, i) => {
-                            return <li className={'col-text'} key={JSON.stringify(column.data)}>
-                                <Toggle value={visibleColumnIndexes.includes(i)}
-                                        onValueChange={() => toggleColumn(i)}>{column.title}</Toggle>
-                            </li>
+                            return (
+                                <li
+                                    className={'col-text'}
+                                    key={JSON.stringify(column.data)}>
+                                    <Toggle
+                                        value={visibleColumnIndexes.includes(i)}
+                                        onValueChange={() => toggleColumn(i)}>
+                                        {column.title}
+                                    </Toggle>
+                                </li>
+                            );
                         })}
                     </ul>
                 </Card.Body>
             </Card>
         </CollapseWithButton>
-    )
-}
+    );
+};
 
-const ExportMenu = ({matchingData}) => {
-    const {t} = useTranslation();
+const ExportMenu = ({ matchingData }) => {
+    const { t } = useTranslation();
     const [generating, setGenerating] = useState(false);
 
     const hasData = matchingData.length > 0;
@@ -104,10 +133,13 @@ const ExportMenu = ({matchingData}) => {
     const exportCSV = useCallback(async () => {
         setGenerating(true);
 
-        const rows = matchingData.map(row => {
+        const rows = matchingData.map((row) => {
             const mapped = {};
             for (let entry of Object.entries(row)) {
-                if (entry[1] === undefined || entry[1]["$$typeof"] === undefined) {
+                if (
+                    entry[1] === undefined ||
+                    entry[1]['$$typeof'] === undefined
+                ) {
                     mapped[entry[0]] = entry[1];
                 }
                 if (Array.isArray(entry[1])) {
@@ -115,110 +147,176 @@ const ExportMenu = ({matchingData}) => {
                 }
             }
             return mapped;
-        })
+        });
 
         const csvConfig = mkConfig({
             useKeysAsHeaders: true,
-            filename: "data-" + new Date().toISOString().replaceAll(":", '').substring(0, 17)
+            filename:
+                'data-' +
+                new Date().toISOString().replaceAll(':', '').substring(0, 17),
         });
         const csvOutput = generateCsv(csvConfig)(rows);
         download(csvConfig)(csvOutput);
-        setGenerating(false)
-    }, [matchingData, setGenerating])
+        setGenerating(false);
+    }, [matchingData, setGenerating]);
 
     return (
-        <>{hasData &&
-            <Dropdown>
-                <Dropdown.Toggle variant={""} id="dropdown-basic" className={"col-text"}
-                                 style={{'--bs-btn-color': 'var(--color-forms-input-text)'}}>
-                    {generating && <span title={t('html.label.export')}>
-                            <FontAwesomeIcon icon={"gear"} className={"fa-spin"}/>
-                    </span>}
-                    {!generating && <span title={t('html.label.export')}><FontAwesomeIcon icon={"file-export"}/></span>}
-                </Dropdown.Toggle>
-                <Dropdown.Menu>
-                    <Dropdown.Item onClick={exportCSV}><FontAwesomeIcon
-                        icon={"file-export"}/> {t('html.label.export')} CSV</Dropdown.Item>
-                </Dropdown.Menu>
-            </Dropdown>
-        }</>
-    )
-}
+        <>
+            {hasData && (
+                <Dropdown>
+                    <Dropdown.Toggle
+                        variant={''}
+                        id='dropdown-basic'
+                        className={'col-text'}
+                        style={{
+                            '--bs-btn-color': 'var(--color-forms-input-text)',
+                        }}>
+                        {generating && (
+                            <span title={t('html.label.export')}>
+                                <FontAwesomeIcon
+                                    icon={'gear'}
+                                    className={'fa-spin'}
+                                />
+                            </span>
+                        )}
+                        {!generating && (
+                            <span title={t('html.label.export')}>
+                                <FontAwesomeIcon icon={'file-export'} />
+                            </span>
+                        )}
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                        <Dropdown.Item onClick={exportCSV}>
+                            <FontAwesomeIcon icon={'file-export'} />{' '}
+                            {t('html.label.export')} CSV
+                        </Dropdown.Item>
+                    </Dropdown.Menu>
+                </Dropdown>
+            )}
+        </>
+    );
+};
 
-const DataTablesTable = ({id, rowKeyFunction, options, className, colorClass, expandComponent, clickableRows}) => {
-    const {t} = useTranslation();
-    const {nightModeEnabled} = useTheme();
+const DataTablesTable = ({
+    id,
+    rowKeyFunction,
+    options,
+    className,
+    colorClass,
+    expandComponent,
+    clickableRows,
+}) => {
+    const { t } = useTranslation();
+    const { nightModeEnabled } = useTheme();
 
     const columns = options.columns;
     const [sortBy, setSortBy] = useState(options.order[0][0] || 0);
-    const [sortReversed, setSortReversed] = useState(options.order[0][1] === 'asc');
-    const [visibleColumnIndexes, setVisibleColumnIndexes] = useState(columns.map((_, i) => i));
-    const toggleColumn = useCallback(index => {
-        const currentSortIndex = visibleColumnIndexes[sortBy];
-        if (visibleColumnIndexes.includes(index)) {
-            if (visibleColumnIndexes.length === 1) return;
-            const newVisible = visibleColumnIndexes.filter(i => i !== index);
-            newVisible.sort((a, b) => a - b);
-            setVisibleColumnIndexes(newVisible);
-            if (currentSortIndex === index) {
-                setSortBy(0);
-                setSortReversed(false);
-            } else if (index <= currentSortIndex) {
-                setSortBy(sortBy - 1);  // Keep the current sort
+    const [sortReversed, setSortReversed] = useState(
+        options.order[0][1] === 'asc',
+    );
+    const [visibleColumnIndexes, setVisibleColumnIndexes] = useState(
+        columns.map((_, i) => i),
+    );
+    const toggleColumn = useCallback(
+        (index) => {
+            const currentSortIndex = visibleColumnIndexes[sortBy];
+            if (visibleColumnIndexes.includes(index)) {
+                if (visibleColumnIndexes.length === 1) return;
+                const newVisible = visibleColumnIndexes.filter(
+                    (i) => i !== index,
+                );
+                newVisible.sort((a, b) => a - b);
+                setVisibleColumnIndexes(newVisible);
+                if (currentSortIndex === index) {
+                    setSortBy(0);
+                    setSortReversed(false);
+                } else if (index <= currentSortIndex) {
+                    setSortBy(sortBy - 1); // Keep the current sort
+                }
+            } else {
+                const newVisible = [index, ...visibleColumnIndexes];
+                newVisible.sort((a, b) => a - b);
+                setVisibleColumnIndexes(newVisible);
+                if (currentSortIndex >= index) {
+                    setSortBy(sortBy + 1); // Keep the current sort
+                }
             }
-        } else {
-            const newVisible = [index, ...visibleColumnIndexes];
-            newVisible.sort((a, b) => a - b);
-            setVisibleColumnIndexes(newVisible);
-            if (currentSortIndex >= index) {
-                setSortBy(sortBy + 1);  // Keep the current sort
-            }
-        }
-    }, [visibleColumnIndexes, setVisibleColumnIndexes, sortBy, setSortBy, setSortReversed]);
-    const visibleColumns = visibleColumnIndexes.map(i => columns[i]);
-    const invisibleColumns = columns.filter((c, i) => !visibleColumnIndexes.includes(i));
+        },
+        [
+            visibleColumnIndexes,
+            setVisibleColumnIndexes,
+            sortBy,
+            setSortBy,
+            setSortReversed,
+        ],
+    );
+    const visibleColumns = visibleColumnIndexes.map((i) => columns[i]);
+    const invisibleColumns = columns.filter(
+        (c, i) => !visibleColumnIndexes.includes(i),
+    );
 
-    const [selectedPaginationCount, setSelectedPaginationCount] = useState(options.paginationCount || 0)
-    const paginationCountOptions = ["10", "25", "100"];
-    const paginationCount = Number(paginationCountOptions[selectedPaginationCount]);
+    const [selectedPaginationCount, setSelectedPaginationCount] = useState(
+        options.paginationCount || 0,
+    );
+    const paginationCountOptions = ['10', '25', '100'];
+    const paginationCount = Number(
+        paginationCountOptions[selectedPaginationCount],
+    );
 
     const sortingFunction = (a, b) => {
-        const key = visibleColumns[sortBy].data._ || visibleColumns[sortBy].data;
+        const key =
+            visibleColumns[sortBy].data._ || visibleColumns[sortBy].data;
         const valA = a[key];
         const valB = b[key];
         if (valA === undefined && valB === undefined) return 0;
         if (valA === undefined) return sortReversed ? 1 : -1;
         if (valB === undefined) return sortReversed ? 1 : -1;
-        const isNumberA = typeof valA === 'number' || !Number.isNaN(Number(valA));
-        const isNumberB = typeof valB === 'number' || !Number.isNaN(Number(valB));
+        const isNumberA =
+            typeof valA === 'number' || !Number.isNaN(Number(valA));
+        const isNumberB =
+            typeof valB === 'number' || !Number.isNaN(Number(valB));
         if (isNumberA && isNumberB) {
             return sortReversed ? valA - valB : valB - valA;
         }
-        return sortReversed ? valB.localeCompare(valA) : valA.localeCompare(valB);
-    }
-    const changeSort = index => {
+        return sortReversed
+            ? valB.localeCompare(valA)
+            : valA.localeCompare(valB);
+    };
+    const changeSort = (index) => {
         setSortBy(index);
         setSortReversed(index === sortBy && !sortReversed);
-    }
+    };
 
-    const keys = visibleColumns.flatMap(column => [column.data._ || column.data, column.data.display]);
+    const keys = visibleColumns.flatMap((column) => [
+        column.data._ || column.data,
+        column.data.display,
+    ]);
     const [filter, setFilter] = useState('');
     const filterWords = filter.split(' ').filter(Boolean);
-    const matchingData = options.data.filter(row => {
+    const matchingData = options.data.filter((row) => {
         if (!filter) return true;
 
-        return Boolean(keys.some(key => filterWords.some(word => String(row[key]).toLowerCase().includes(word))));
+        return Boolean(
+            keys.some((key) =>
+                filterWords.some((word) =>
+                    String(row[key]).toLowerCase().includes(word),
+                ),
+            ),
+        );
     });
     matchingData.sort(sortingFunction);
 
     const [expandedRows, setExpandedRows] = useState([]);
-    const toggleRow = useCallback(i => {
-        if (expandedRows.includes(i)) {
-            setExpandedRows(expandedRows.filter(index => index !== i));
-        } else {
-            setExpandedRows([...expandedRows, i]);
-        }
-    }, [setExpandedRows, expandedRows]);
+    const toggleRow = useCallback(
+        (i) => {
+            if (expandedRows.includes(i)) {
+                setExpandedRows(expandedRows.filter((index) => index !== i));
+            } else {
+                setExpandedRows([...expandedRows, i]);
+            }
+        },
+        [setExpandedRows, expandedRows],
+    );
     useEffect(() => {
         if (visibleColumnIndexes.length === columns.length) {
             setExpandedRows([]);
@@ -228,7 +326,10 @@ const DataTablesTable = ({id, rowKeyFunction, options, className, colorClass, ex
     const [page, setPage] = useState(0);
     const maxPage = Math.ceil(matchingData.length / paginationCount);
 
-    const rows = matchingData.slice(page * paginationCount, Math.min(page * paginationCount + paginationCount, options.data.length));
+    const rows = matchingData.slice(
+        page * paginationCount,
+        Math.min(page * paginationCount + paginationCount, options.data.length),
+    );
 
     useEffect(() => {
         setPage(0);
@@ -236,134 +337,293 @@ const DataTablesTable = ({id, rowKeyFunction, options, className, colorClass, ex
 
     if (!rowKeyFunction) {
         rowKeyFunction = (row, column) => {
-            return JSON.stringify(row) + "-" + JSON.stringify(column?.data);
-        }
+            return JSON.stringify(row) + '-' + JSON.stringify(column?.data);
+        };
     }
 
     // Overflow protection
     const onResize = useCallback(() => {
-        const container = document.getElementById(id + "-container");
+        const container = document.getElementById(id + '-container');
         const table = document.getElementById(id);
         if (!container || !table) return;
         const overflowing = table.scrollWidth > container.clientWidth;
-        if (overflowing) toggleColumn(visibleColumnIndexes[visibleColumnIndexes.length - 1]);
+        if (overflowing)
+            toggleColumn(visibleColumnIndexes[visibleColumnIndexes.length - 1]);
     }, [id, toggleColumn, visibleColumnIndexes]);
     useEffect(() => {
         window.addEventListener('resize', onResize);
         return () => window.removeEventListener('resize', onResize);
     }, [onResize]);
 
-    const someColumnsHidden = expandComponent || columns.length !== visibleColumns.length;
+    const someColumnsHidden =
+        expandComponent || columns.length !== visibleColumns.length;
 
     return (
-        <div id={id + "-container"}>
+        <div id={id + '-container'}>
             <section className={styles.header}>
                 <div className={styles.perPage}>
                     <InputGroup>
-                        <label className={"input-group-text"}>{t('html.label.table.showPerPage')}</label>
-                        <Select options={paginationCountOptions} selectedIndex={selectedPaginationCount}
-                                setSelectedIndex={setSelectedPaginationCount}/>
+                        <label className={'input-group-text'}>
+                            {t('html.label.table.showPerPage')}
+                        </label>
+                        <Select
+                            options={paginationCountOptions}
+                            selectedIndex={selectedPaginationCount}
+                            setSelectedIndex={setSelectedPaginationCount}
+                        />
                     </InputGroup>
                 </div>
-                {(columns.length > 2 || someColumnsHidden) && <div className={styles.columns}>
-                    <VisibleColumnsSelector columns={columns} visibleColumnIndexes={visibleColumnIndexes}
-                                            toggleColumn={toggleColumn}/>
-                </div>}
+                {(columns.length > 2 || someColumnsHidden) && (
+                    <div className={styles.columns}>
+                        <VisibleColumnsSelector
+                            columns={columns}
+                            visibleColumnIndexes={visibleColumnIndexes}
+                            toggleColumn={toggleColumn}
+                        />
+                    </div>
+                )}
                 <div className={styles.export}>
-                    <ExportMenu matchingData={matchingData} columns={columns}/>
+                    <ExportMenu matchingData={matchingData} columns={columns} />
                 </div>
                 <div className={styles.filter}>
-                    <SearchField value={filter} setValue={setFilter}/>
+                    <SearchField value={filter} setValue={setFilter} />
                 </div>
             </section>
-            <table id={id}
-                   className={classNames("datatable table table-bordered table-striped", nightModeEnabled && " table-dark", className)}
-                   style={{width: "100%"}}>
+            <table
+                id={id}
+                className={classNames(
+                    'datatable table table-bordered table-striped',
+                    nightModeEnabled && ' table-dark',
+                    className,
+                )}
+                style={{ width: '100%' }}>
                 <thead id={id + '-head'} className={colorClass}>
-                <tr>
-                    {visibleColumns.map((column, i) => <th key={JSON.stringify(column.data)} style={{
-                        verticalAlign: "middle"
-                    }}>
-                        <button
-                            className={classNames(styles.tableHeaderButton, {[styles.smallerText]: visibleColumns.length > 9})}
-                            onClick={() => changeSort(i)}>
-                            {column.title} <span>
-                        <SortIcon selected={i === sortBy} reversed={sortReversed}
-                                  hideNonSorted={visibleColumns.length > 10}/>
-                        </span>
-                        </button>
-                    </th>)}
-                </tr>
+                    <tr>
+                        {visibleColumns.map((column, i) => (
+                            <th
+                                key={JSON.stringify(column.data)}
+                                style={{
+                                    verticalAlign: 'middle',
+                                }}>
+                                <button
+                                    className={classNames(
+                                        styles.tableHeaderButton,
+                                        {
+                                            [styles.smallerText]:
+                                                visibleColumns.length > 9,
+                                        },
+                                    )}
+                                    onClick={() => changeSort(i)}>
+                                    {column.title}{' '}
+                                    <span>
+                                        <SortIcon
+                                            selected={i === sortBy}
+                                            reversed={sortReversed}
+                                            hideNonSorted={
+                                                visibleColumns.length > 10
+                                            }
+                                        />
+                                    </span>
+                                </button>
+                            </th>
+                        ))}
+                    </tr>
                 </thead>
                 <tbody id={id + '-body'}>
-                {!rows.length && <tr>
-                    {visibleColumns.map((column, i) => <td key={"col-" + rowKeyFunction(0, column)}>
-                        {i === 0 && t('html.label.noDataToDisplay')}
-                    </td>)}
-                </tr>}
-                {rows.map(row => <React.Fragment key={"frag-" + rowKeyFunction(row, null)}>
-                    <tr key={"row-" + rowKeyFunction(row, null)} className={row.colorClass}
-                        style={clickableRows ? {cursor: 'pointer'} : undefined}
-                        onClick={clickableRows ? () => toggleRow(rowKeyFunction(row, null)) : undefined}>
-                        {visibleColumns.map((column, i) => {
-                            if (column.data._ !== undefined) {
-                                return <td key={"col-" + rowKeyFunction(row, column)}>
-                                    {rows.length === 1 || i === 0 && someColumnsHidden &&
-                                        <button style={{paddingRight: "0.5rem"}}
-                                                onClick={() => toggleRow(rowKeyFunction(row, null))}>
-                                            <FontAwesomeIcon
-                                                icon={expandedRows.includes(rowKeyFunction(row, null)) ? faMinusSquare : faPlusSquare}
-                                                className={"col-green"}/>
-                                        </button>}
-                                    {row[column.data.display]}
+                    {!rows.length && (
+                        <tr>
+                            {visibleColumns.map((column, i) => (
+                                <td key={'col-' + rowKeyFunction(0, column)}>
+                                    {i === 0 && t('html.label.noDataToDisplay')}
                                 </td>
-                            } else {
-                                return <td key={"col-" + rowKeyFunction(row, column)}>
-                                    {i === 0 && someColumnsHidden &&
-                                        <button style={{paddingRight: "0.5rem"}}
-                                                onClick={() => toggleRow(rowKeyFunction(row, null))}>
-                                            <FontAwesomeIcon
-                                                icon={expandedRows.includes(rowKeyFunction(row, null)) ? faMinusSquare : faPlusSquare}
-                                                className={"col-green"}/>
-                                        </button>}
-                                    {row[column.data]}
-                                </td>
-                            }
-                        })}
-                    </tr>
-                    {(rows.length === 1 || expandedRows.includes(rowKeyFunction(row, null))) &&
-                        <tr key={"hidden-row" + rowKeyFunction(row, null)}>
-                            <td colSpan={visibleColumns.length}>
-                                {expandComponent && expandComponent({row})}
-                                {invisibleColumns.map(column => {
-                                    if (column.data._ === undefined) {
-                                        return <p key={"p-" + rowKeyFunction(row, column)}>
-                                            <b>{column.title}:</b> {row[column.data]}</p>
+                            ))}
+                        </tr>
+                    )}
+                    {rows.map((row) => (
+                        <React.Fragment
+                            key={'frag-' + rowKeyFunction(row, null)}>
+                            <tr
+                                key={'row-' + rowKeyFunction(row, null)}
+                                className={row.colorClass}
+                                style={
+                                    clickableRows
+                                        ? { cursor: 'pointer' }
+                                        : undefined
+                                }
+                                onClick={
+                                    clickableRows
+                                        ? () =>
+                                              toggleRow(
+                                                  rowKeyFunction(row, null),
+                                              )
+                                        : undefined
+                                }>
+                                {visibleColumns.map((column, i) => {
+                                    if (column.data._ !== undefined) {
+                                        return (
+                                            <td
+                                                key={
+                                                    'col-' +
+                                                    rowKeyFunction(row, column)
+                                                }>
+                                                {rows.length === 1 ||
+                                                    (i === 0 &&
+                                                        someColumnsHidden && (
+                                                            <button
+                                                                style={{
+                                                                    paddingRight:
+                                                                        '0.5rem',
+                                                                }}
+                                                                onClick={() =>
+                                                                    toggleRow(
+                                                                        rowKeyFunction(
+                                                                            row,
+                                                                            null,
+                                                                        ),
+                                                                    )
+                                                                }>
+                                                                <FontAwesomeIcon
+                                                                    icon={
+                                                                        expandedRows.includes(
+                                                                            rowKeyFunction(
+                                                                                row,
+                                                                                null,
+                                                                            ),
+                                                                        )
+                                                                            ? faMinusSquare
+                                                                            : faPlusSquare
+                                                                    }
+                                                                    className={
+                                                                        'col-green'
+                                                                    }
+                                                                />
+                                                            </button>
+                                                        ))}
+                                                {row[column.data.display]}
+                                            </td>
+                                        );
                                     } else {
-                                        return <p key={"p-" + rowKeyFunction(row, column)}>
-                                            <b>{column.title}:</b> {row[column.data.display]}</p>
+                                        return (
+                                            <td
+                                                key={
+                                                    'col-' +
+                                                    rowKeyFunction(row, column)
+                                                }>
+                                                {i === 0 &&
+                                                    someColumnsHidden && (
+                                                        <button
+                                                            style={{
+                                                                paddingRight:
+                                                                    '0.5rem',
+                                                            }}
+                                                            onClick={() =>
+                                                                toggleRow(
+                                                                    rowKeyFunction(
+                                                                        row,
+                                                                        null,
+                                                                    ),
+                                                                )
+                                                            }>
+                                                            <FontAwesomeIcon
+                                                                icon={
+                                                                    expandedRows.includes(
+                                                                        rowKeyFunction(
+                                                                            row,
+                                                                            null,
+                                                                        ),
+                                                                    )
+                                                                        ? faMinusSquare
+                                                                        : faPlusSquare
+                                                                }
+                                                                className={
+                                                                    'col-green'
+                                                                }
+                                                            />
+                                                        </button>
+                                                    )}
+                                                {row[column.data]}
+                                            </td>
+                                        );
                                     }
                                 })}
-                            </td>
-                        </tr>}
-                </React.Fragment>)}
+                            </tr>
+                            {(rows.length === 1 ||
+                                expandedRows.includes(
+                                    rowKeyFunction(row, null),
+                                )) && (
+                                <tr
+                                    key={
+                                        'hidden-row' + rowKeyFunction(row, null)
+                                    }>
+                                    <td colSpan={visibleColumns.length}>
+                                        {expandComponent &&
+                                            expandComponent({ row })}
+                                        {invisibleColumns.map((column) => {
+                                            if (column.data._ === undefined) {
+                                                return (
+                                                    <p
+                                                        key={
+                                                            'p-' +
+                                                            rowKeyFunction(
+                                                                row,
+                                                                column,
+                                                            )
+                                                        }>
+                                                        <b>{column.title}:</b>{' '}
+                                                        {row[column.data]}
+                                                    </p>
+                                                );
+                                            } else {
+                                                return (
+                                                    <p
+                                                        key={
+                                                            'p-' +
+                                                            rowKeyFunction(
+                                                                row,
+                                                                column,
+                                                            )
+                                                        }>
+                                                        <b>{column.title}:</b>{' '}
+                                                        {
+                                                            row[
+                                                                column.data
+                                                                    .display
+                                                            ]
+                                                        }
+                                                    </p>
+                                                );
+                                            }
+                                        })}
+                                    </td>
+                                </tr>
+                            )}
+                        </React.Fragment>
+                    ))}
                 </tbody>
             </table>
-            {maxPage > 1 && <section className={styles.footer}>
-                <p className={styles.info}>
-                    <Trans i18nKey={"html.label.table.showNofM"}
-                           defaults={"Showing {{n}} of {{m}} entries"}
-                           values={{
-                               n: `${page * paginationCount + 1}-${page * paginationCount + rows.length}`,
-                               m: matchingData.length
-                           }}/>
-                </p>
-                <div className={styles.paginate}>
-                    <Pagination page={page} setPage={setPage} maxPage={maxPage}/>
-                </div>
-            </section>}
+            {maxPage > 1 && (
+                <section className={styles.footer}>
+                    <p className={styles.info}>
+                        <Trans
+                            i18nKey={'html.label.table.showNofM'}
+                            defaults={'Showing {{n}} of {{m}} entries'}
+                            values={{
+                                n: `${page * paginationCount + 1}-${page * paginationCount + rows.length}`,
+                                m: matchingData.length,
+                            }}
+                        />
+                    </p>
+                    <div className={styles.paginate}>
+                        <Pagination
+                            page={page}
+                            setPage={setPage}
+                            maxPage={maxPage}
+                        />
+                    </div>
+                </section>
+            )}
         </div>
-    )
+    );
 };
 
-export default DataTablesTable
+export default DataTablesTable;

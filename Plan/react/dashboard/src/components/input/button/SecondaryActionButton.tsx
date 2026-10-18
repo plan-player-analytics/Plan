@@ -1,24 +1,33 @@
-import React, {CSSProperties, PropsWithChildren} from 'react';
+import React, { CSSProperties, PropsWithChildren } from 'react';
 
 type Props = {
     id?: string;
     className?: string;
-    disabled?: boolean,
+    disabled?: boolean;
     onClick: (() => void) | (() => Promise<void>);
     style?: CSSProperties;
     title?: string;
 } & PropsWithChildren;
-const SecondaryActionButton = ({className, onClick, disabled, children, id, title, style}: Props) => {
+const SecondaryActionButton = ({
+    className,
+    onClick,
+    disabled,
+    children,
+    id,
+    title,
+    style,
+}: Props) => {
     return (
-        <button className={`btn btn-secondary-action ${className}`}
-                id={id}
-                title={title}
-                onClick={onClick}
-                disabled={disabled}
-                style={style}>
+        <button
+            className={`btn btn-secondary-action ${className}`}
+            id={id}
+            title={title}
+            onClick={onClick}
+            disabled={disabled}
+            style={style}>
             {children}
         </button>
-    )
+    );
 };
 
-export default SecondaryActionButton
+export default SecondaryActionButton;

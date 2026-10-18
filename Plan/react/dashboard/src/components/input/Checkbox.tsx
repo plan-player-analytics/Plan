@@ -1,4 +1,4 @@
-import React, {ChangeEventHandler, PropsWithChildren, useState} from 'react';
+import React, { ChangeEventHandler, PropsWithChildren, useState } from 'react';
 
 type Props = {
     checked: boolean;
@@ -8,24 +8,37 @@ type Props = {
     className?: string;
 } & PropsWithChildren;
 
-const Checkbox = ({children, className, indeterminate, checked, onChange, readOnly}: Props) => {
+const Checkbox = ({
+    children,
+    className,
+    indeterminate,
+    checked,
+    onChange,
+    readOnly,
+}: Props) => {
     const [renderTime] = useState(Date.now());
     const id = 'checkbox-' + renderTime;
 
     return (
         <span>
-            <input id={id} className={"form-check-input " + className} type={"checkbox"}
-                   value={indeterminate ? "" : String(checked)}
-                   checked={checked}
-                   ref={input => {
-                       if (input && indeterminate) input.indeterminate = indeterminate
-                   }}
-                   onChange={onChange}
-                   readOnly={readOnly}
+            <input
+                id={id}
+                className={'form-check-input ' + className}
+                type={'checkbox'}
+                value={indeterminate ? '' : String(checked)}
+                checked={checked}
+                ref={(input) => {
+                    if (input && indeterminate)
+                        input.indeterminate = indeterminate;
+                }}
+                onChange={onChange}
+                readOnly={readOnly}
             />
-            <label className="form-check-label ms-1" htmlFor={id}>{children}</label>
+            <label className='form-check-label ms-1' htmlFor={id}>
+                {children}
+            </label>
         </span>
-    )
+    );
 };
 
-export default Checkbox
+export default Checkbox;

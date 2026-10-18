@@ -1,28 +1,32 @@
 import React from 'react';
-import {useTranslation} from "react-i18next";
-import {useConfigurationStorageContext} from "../../hooks/context/configurationStorageContextHook";
+import { useTranslation } from 'react-i18next';
+import { useConfigurationStorageContext } from '../../hooks/context/configurationStorageContextHook';
 
 type Props = {
     visible?: boolean;
     className?: string;
 };
 
-const UnsavedChangesText = ({visible, className}: Props) => {
-    const {t} = useTranslation();
-    const {dirty} = useConfigurationStorageContext();
+const UnsavedChangesText = ({ visible, className }: Props) => {
+    const { t } = useTranslation();
+    const { dirty } = useConfigurationStorageContext();
     const show = visible ?? dirty;
     if (show) {
         return (
-            <p className={className} style={{
-                display: "inline-block",
-                marginLeft: "1rem",
-                marginBottom: 0,
-                opacity: 0.6
-            }}>{t('html.label.managePage.changes.unsaved')}</p>
-        )
+            <p
+                className={className}
+                style={{
+                    display: 'inline-block',
+                    marginLeft: '1rem',
+                    marginBottom: 0,
+                    opacity: 0.6,
+                }}>
+                {t('html.label.managePage.changes.unsaved')}
+            </p>
+        );
     } else {
-        return <></>
+        return <></>;
     }
-}
+};
 
-export default UnsavedChangesText
+export default UnsavedChangesText;

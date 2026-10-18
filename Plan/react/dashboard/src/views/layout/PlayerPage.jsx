@@ -1,39 +1,43 @@
-import React, {useEffect} from "react";
-import Sidebar from "../../components/navigation/Sidebar";
-import {Outlet, useOutletContext, useParams} from "react-router";
-import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
-import {fetchPlayer} from "../../service/playerService";
+import React, { useEffect } from 'react';
+import Sidebar from '../../components/navigation/Sidebar';
+import { Outlet, useOutletContext, useParams } from 'react-router';
+import ColorSelectorModal from '../../components/modal/ColorSelectorModal';
+import { fetchPlayer } from '../../service/playerService';
 import {
     faArrowUpRightDots,
     faCampground,
     faCubes,
     faInfoCircle,
-    faNetworkWired
-} from "@fortawesome/free-solid-svg-icons";
-import Header from "../../components/navigation/Header";
-import {useNavigation} from "../../hooks/navigationHook.tsx";
-import {useTranslation} from "react-i18next";
-import {faCalendarCheck} from "@fortawesome/free-regular-svg-icons";
-import {useDataRequest} from "../../hooks/dataFetchHook";
-import ErrorPage from "./ErrorPage";
-import {useAuth} from "../../hooks/authenticationHook.tsx";
-import MainPageRedirect from "../../components/navigation/MainPageRedirect.tsx";
-import {SwitchTransition} from "react-transition-group";
-import {ChartLoader} from "../../components/navigation/Loader.tsx";
+    faNetworkWired,
+} from '@fortawesome/free-solid-svg-icons';
+import Header from '../../components/navigation/Header';
+import { useNavigation } from '../../hooks/navigationHook.tsx';
+import { useTranslation } from 'react-i18next';
+import { faCalendarCheck } from '@fortawesome/free-regular-svg-icons';
+import { useDataRequest } from '../../hooks/dataFetchHook';
+import ErrorPage from './ErrorPage';
+import { useAuth } from '../../hooks/authenticationHook.tsx';
+import MainPageRedirect from '../../components/navigation/MainPageRedirect.tsx';
+import { SwitchTransition } from 'react-transition-group';
+import { ChartLoader } from '../../components/navigation/Loader.tsx';
 
-const HelpModal = React.lazy(() => import("../../components/modal/HelpModal"));
+const HelpModal = React.lazy(() => import('../../components/modal/HelpModal'));
 
 const PlayerPage = () => {
-    const {t, i18n} = useTranslation();
-    const {hasChildPermission} = useAuth();
-    const seePlayer = hasChildPermission('access.player')
+    const { t, i18n } = useTranslation();
+    const { hasChildPermission } = useAuth();
+    const seePlayer = hasChildPermission('access.player');
 
-    const {sidebarItems, setSidebarItems} = useNavigation();
+    const { sidebarItems, setSidebarItems } = useNavigation();
 
-    const {identifier} = useParams();
-    const {currentTab, finishUpdate} = useNavigation();
+    const { identifier } = useParams();
+    const { currentTab, finishUpdate } = useNavigation();
 
-    const {data: player, loadingError} = useDataRequest(fetchPlayer, [identifier], seePlayer)
+    const { data: player, loadingError } = useDataRequest(
+        fetchPlayer,
+        [identifier],
+        seePlayer,
+    );
 
     useEffect(() => {
         if (!player) return;
@@ -42,34 +46,54 @@ const PlayerPage = () => {
             {
                 name: 'html.label.playerOverview',
                 icon: faInfoCircle,
-                href: "overview",
-                permission: 'page.player.overview'
+                href: 'overview',
+                permission: 'page.player.overview',
             },
-            {name: 'html.label.sessions', icon: faCalendarCheck, href: "sessions", permission: 'page.player.sessions'},
-            {name: 'html.label.pvpPve', icon: faCampground, href: "pvppve", permission: 'page.player.versus'},
-            {name: 'html.label.servers', icon: faNetworkWired, href: "servers", permission: 'page.player.servers'},
+            {
+                name: 'html.label.sessions',
+                icon: faCalendarCheck,
+                href: 'sessions',
+                permission: 'page.player.sessions',
+            },
+            {
+                name: 'html.label.pvpPve',
+                icon: faCampground,
+                href: 'pvppve',
+                permission: 'page.player.versus',
+            },
+            {
+                name: 'html.label.servers',
+                icon: faNetworkWired,
+                href: 'servers',
+                permission: 'page.player.servers',
+            },
             {
                 name: 'html.label.statistics',
                 icon: faArrowUpRightDots,
-                href: "statistics",
-                permission: 'page.player.statistics'
-            }
-        ]
+                href: 'statistics',
+                permission: 'page.player.statistics',
+            },
+        ];
 
-        if (player?.extensions?.filter(extension => extension?.extensionData?.length).length) {
+        if (
+            player?.extensions?.filter(
+                (extension) => extension?.extensionData?.length,
+            ).length
+        ) {
             items.push({
                 name: 'html.label.plugins',
                 permission: 'page.player.plugins',
                 icon: faCubes,
-                contents: player?.extensions?.filter(extension => extension?.extensionData?.length)
-                    .map(extension => {
+                contents: player?.extensions
+                    ?.filter((extension) => extension?.extensionData?.length)
+                    .map((extension) => {
                         return {
                             name: `${t('html.label.plugins')} (${extension.serverName})`,
                             icon: faCubes,
                             href: `plugins/${encodeURIComponent(extension.serverName)}`,
-                            permission: 'page.player.plugins'
-                        }
-                    })
+                            permission: 'page.player.plugins',
+                        };
+                    }),
             });
         }
 
@@ -77,36 +101,43 @@ const PlayerPage = () => {
         window.document.title = `Plan | ${player?.info?.name}`;
 
         finishUpdate(player.timestamp, player.timestamp_f);
-    }, [player, t, i18n, finishUpdate, setSidebarItems])
+    }, [player, t, i18n, finishUpdate, setSidebarItems]);
 
-    const {authRequired, loggedIn} = useAuth();
-    if (authRequired && !loggedIn) return <MainPageRedirect/>;
-    if (loadingError) return <ErrorPage error={loadingError}/>;
+    const { authRequired, loggedIn } = useAuth();
+    if (authRequired && !loggedIn) return <MainPageRedirect />;
+    if (loadingError) return <ErrorPage error={loadingError} />;
 
     return (
         <>
-            <Sidebar page={player?.info?.name} items={player ? sidebarItems : []}/>
-            <div className="d-flex flex-column" id="content-wrapper">
-                <Header page={player?.info?.name} tab={currentTab}/>
-                <div id="content" style={{display: 'flex'}}>
-                    <main className="container-fluid mt-4">
-                        {player && <SwitchTransition>
-                            <Outlet context={{player: player}}/>
-                        </SwitchTransition>}
-                        {!player && <ChartLoader/>}
+            <Sidebar
+                page={player?.info?.name}
+                items={player ? sidebarItems : []}
+            />
+            <div className='d-flex flex-column' id='content-wrapper'>
+                <Header page={player?.info?.name} tab={currentTab} />
+                <div id='content' style={{ display: 'flex' }}>
+                    <main className='container-fluid mt-4'>
+                        {player && (
+                            <SwitchTransition>
+                                <Outlet context={{ player: player }} />
+                            </SwitchTransition>
+                        )}
+                        {!player && <ChartLoader />}
                     </main>
                     <aside>
-                        <ColorSelectorModal/>
-                        <React.Suspense fallback={""}><HelpModal/></React.Suspense>
+                        <ColorSelectorModal />
+                        <React.Suspense fallback={''}>
+                            <HelpModal />
+                        </React.Suspense>
                     </aside>
                 </div>
             </div>
         </>
-    )
-}
+    );
+};
 
 export const usePlayer = () => {
     return useOutletContext();
-}
+};
 
 export default PlayerPage;

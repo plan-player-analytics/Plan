@@ -1,4 +1,11 @@
-import React, {createContext, PropsWithChildren, useCallback, useContext, useMemo, useState} from "react";
+import React, {
+    createContext,
+    PropsWithChildren,
+    useCallback,
+    useContext,
+    useMemo,
+    useState,
+} from 'react';
 
 type ContextType = {
     dirty: boolean;
@@ -7,9 +14,11 @@ type ContextType = {
     requestSave: () => void;
     requestDiscard: () => void;
     markDirty: () => void;
-}
+};
 
-const ConfigurationStorageContext = createContext<ContextType | undefined>(undefined);
+const ConfigurationStorageContext = createContext<ContextType | undefined>(
+    undefined,
+);
 
 /**
  * This context provides a way to independently manage state and its storage, while managing save and discard together.
@@ -17,7 +26,9 @@ const ConfigurationStorageContext = createContext<ContextType | undefined>(undef
  * @returns {JSX.Element}
  * @constructor
  */
-export const ConfigurationStorageContextProvider = ({children}: PropsWithChildren) => {
+export const ConfigurationStorageContextProvider = ({
+    children,
+}: PropsWithChildren) => {
     const [saveRequested, setSaveRequested] = useState(0);
     const [discardRequested, setDiscardRequested] = useState(0);
     const [dirty, setDirty] = useState(false);
@@ -38,7 +49,7 @@ export const ConfigurationStorageContextProvider = ({children}: PropsWithChildre
 
     const markDirty = useCallback(() => {
         setDirty(true);
-    }, [setDirty])
+    }, [setDirty]);
 
     const sharedState = useMemo(() => {
         return {
@@ -47,25 +58,28 @@ export const ConfigurationStorageContextProvider = ({children}: PropsWithChildre
             discardRequested,
             requestSave,
             requestDiscard,
-            markDirty
-        }
+            markDirty,
+        };
     }, [
         dirty,
         saveRequested,
         discardRequested,
         requestSave,
         requestDiscard,
-        markDirty
-    ])
+        markDirty,
+    ]);
     return (
         <ConfigurationStorageContext.Provider value={sharedState}>
             {children}
         </ConfigurationStorageContext.Provider>
-    )
-}
+    );
+};
 
 export const useConfigurationStorageContext = () => {
     const context = useContext(ConfigurationStorageContext);
-    if (!context) throw new Error("useConfigurationStorageContext has to be used inside ConfigurationStorageContextProvider");
+    if (!context)
+        throw new Error(
+            'useConfigurationStorageContext has to be used inside ConfigurationStorageContextProvider',
+        );
     return context;
-}
+};

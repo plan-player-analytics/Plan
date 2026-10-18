@@ -1,29 +1,30 @@
-import React, {useEffect, useMemo} from "react";
+import React, { useEffect, useMemo } from 'react';
 import Highcharts from 'highcharts/esm/highcharts';
-import "highcharts/esm/modules/no-data-to-display";
-import "highcharts/esm/modules/accessibility";
+import 'highcharts/esm/modules/no-data-to-display';
+import 'highcharts/esm/modules/accessibility';
 
-import {useTheme} from "../../hooks/themeHook.tsx";
-import {withReducedSaturation} from "../../util/colors";
-import {useTranslation} from "react-i18next";
-import {usePreferences} from "../../hooks/preferences/preferencesHook.tsx";
-import {classNames} from "../../util/classNames.ts";
-import {useTimeAmountFormatter} from "../../util/format/useTimeAmountFormatter.ts";
-import {useI18nFriendlyLanguage} from "../../service/localeService.js";
+import { useTheme } from '../../hooks/themeHook.tsx';
+import { withReducedSaturation } from '../../util/colors';
+import { useTranslation } from 'react-i18next';
+import { usePreferences } from '../../hooks/preferences/preferencesHook.tsx';
+import { classNames } from '../../util/classNames.ts';
+import { useTimeAmountFormatter } from '../../util/format/useTimeAmountFormatter.ts';
+import { useI18nFriendlyLanguage } from '../../service/localeService.js';
 
-const ServerPie = ({colors, series}) => {
-    const {t} = useTranslation();
-    const {nightModeEnabled, graphTheming} = useTheme();
-    const {preferencesLoaded} = usePreferences();
-    const {formatTime} = useTimeAmountFormatter();
+const ServerPie = ({ colors, series }) => {
+    const { t } = useTranslation();
+    const { nightModeEnabled, graphTheming } = useTheme();
+    const { preferencesLoaded } = usePreferences();
+    const { formatTime } = useTimeAmountFormatter();
 
     const chart = useMemo(() => {
-        const reduceColors = (colorsToReduce) => colorsToReduce.map(color => withReducedSaturation(color));
+        const reduceColors = (colorsToReduce) =>
+            colorsToReduce.map((color) => withReducedSaturation(color));
         const pieSeries = {
             name: t('html.label.serverPlaytime'),
             colorByPoint: true,
             colors: nightModeEnabled ? reduceColors(colors) : colors,
-            data: series
+            data: series,
         };
         return {
             chart: {
@@ -31,44 +32,60 @@ const ServerPie = ({colors, series}) => {
                 backgroundColor: 'transparent',
                 plotBorderWidth: null,
                 plotShadow: false,
-                type: 'pie'
+                type: 'pie',
             },
-            title: {text: ''},
+            title: { text: '' },
             plotOptions: {
                 pie: {
                     allowPointSelect: true,
                     cursor: 'pointer',
                     dataLabels: {
-                        enabled: false
+                        enabled: false,
                     },
-                    showInLegend: true
-                }
+                    showInLegend: true,
+                },
             },
             tooltip: {
                 formatter: function () {
-                    return '<b>' + this.point.name + ':</b> ' + formatTime(this.y) + ' (' + this.percentage.toFixed(2) + '%)';
-                }
+                    return (
+                        '<b>' +
+                        this.point.name +
+                        ':</b> ' +
+                        formatTime(this.y) +
+                        ' (' +
+                        this.percentage.toFixed(2) +
+                        '%)'
+                    );
+                },
             },
-            series: [pieSeries]
-        }
-    }, [series, colors, formatTime, t])
+            series: [pieSeries],
+        };
+    }, [series, colors, formatTime, t]);
     const locale = useI18nFriendlyLanguage();
     useEffect(() => {
         Highcharts.setOptions({
             lang: {
                 locale: locale,
-                noData: t('html.label.noDataToDisplay')
-            }
-        })
+                noData: t('html.label.noDataToDisplay'),
+            },
+        });
     }, [locale]);
     useEffect(() => {
         Highcharts.setOptions(graphTheming);
         Highcharts.chart('server-pie', chart);
     }, [chart, graphTheming]);
 
-    if (!preferencesLoaded) return <Loader/>;
+    if (!preferencesLoaded) return <Loader />;
 
-    return (<div className={classNames("chart-pie", series.length > 7 ? 'big' : undefined)} id="server-pie"/>);
-}
+    return (
+        <div
+            className={classNames(
+                'chart-pie',
+                series.length > 7 ? 'big' : undefined,
+            )}
+            id='server-pie'
+        />
+    );
+};
 
 export default ServerPie;

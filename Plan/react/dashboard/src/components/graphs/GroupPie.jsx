@@ -1,27 +1,27 @@
-import React, {useEffect} from 'react';
-import {useTranslation} from "react-i18next";
-import {useTheme} from "../../hooks/themeHook.tsx";
-import Highcharts from "highcharts/esm/highcharts";
-import "highcharts/esm/modules/accessibility";
-import "highcharts/esm/modules/no-data-to-display"
+import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useTheme } from '../../hooks/themeHook.tsx';
+import Highcharts from 'highcharts/esm/highcharts';
+import 'highcharts/esm/modules/accessibility';
+import 'highcharts/esm/modules/no-data-to-display';
 
-const GroupPie = ({id, groups, colors, name}) => {
-    const {t} = useTranslation();
-    const {graphTheming} = useTheme();
+const GroupPie = ({ id, groups, colors, name }) => {
+    const { t } = useTranslation();
+    const { graphTheming } = useTheme();
 
     useEffect(() => {
         function getColors() {
-            return colors ? colors : groups.map(group => group.color);
+            return colors ? colors : groups.map((group) => group.color);
         }
 
-        const series = groups.map(group => {
-            return {name: t(group.name), y: group.y}
+        const series = groups.map((group) => {
+            return { name: t(group.name), y: group.y };
         });
         const pieSeries = {
             name: name,
             colorByPoint: true,
             colors: getColors(),
-            data: series
+            data: series,
         };
 
         Highcharts.setOptions(graphTheming);
@@ -31,29 +31,29 @@ const GroupPie = ({id, groups, colors, name}) => {
                 backgroundColor: 'transparent',
                 plotBorderWidth: null,
                 plotShadow: false,
-                type: 'pie'
+                type: 'pie',
             },
-            title: {text: ''},
+            title: { text: '' },
             plotOptions: {
                 pie: {
                     allowPointSelect: true,
                     cursor: 'pointer',
                     dataLabels: {
-                        enabled: false
+                        enabled: false,
                     },
-                    showInLegend: true
-                }
+                    showInLegend: true,
+                },
             },
             tooltip: {
                 formatter: function () {
                     return '<b>' + this.point.name + ':</b> ' + this.y;
-                }
+                },
             },
-            series: [pieSeries]
+            series: [pieSeries],
         });
     }, [id, colors, groups, name, graphTheming, t]);
 
-    return (<div className="chart-area" id={id}/>);
+    return <div className='chart-area' id={id} />;
 };
 
 export default GroupPie;

@@ -1,32 +1,30 @@
-import React, {useCallback, useEffect, useMemo, useState} from 'react';
-import {Card, Col, Row} from "react-bootstrap";
-import {useTranslation} from "react-i18next";
-import {useDataRequest} from "../../../hooks/dataFetchHook";
-import {fetchFilters, postQuery} from "../../../service/queryService";
-import {ErrorViewCard} from "../../../views/ErrorView.tsx";
-import {ChartLoader} from "../../navigation/Loader.tsx";
-import DateInputField from "../../input/DateInputField.tsx";
-import TimeInputField from "../../input/TimeInputField";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faGear, faSearch} from "@fortawesome/free-solid-svg-icons";
-import PlayersOnlineGraph from "../../graphs/PlayersOnlineGraph";
-import Highcharts from "highcharts/highstock";
-import "highcharts/modules/no-data-to-display"
-import "highcharts/modules/accessibility";
-import MultiSelect from "../../input/MultiSelect.tsx";
-import CollapseWithButton from "../../layout/CollapseWithButton";
-import FilterDropdown from "./FilterDropdown";
-import FilterList from "./FilterList";
-import {useQueryResultContext} from "../../../hooks/queryResultContext.tsx";
-import {useNavigate} from "react-router";
-import {useNavigation} from "../../../hooks/navigationHook.tsx";
-import ActionButton from "../../input/button/ActionButton.tsx";
-import {useMetadata} from "../../../hooks/metadataHook.tsx";
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import { Card, Col, Row } from 'react-bootstrap';
+import { useTranslation } from 'react-i18next';
+import { useDataRequest } from '../../../hooks/dataFetchHook';
+import { fetchFilters, postQuery } from '../../../service/queryService';
+import { ErrorViewCard } from '../../../views/ErrorView.tsx';
+import { ChartLoader } from '../../navigation/Loader.tsx';
+import DateInputField from '../../input/DateInputField.tsx';
+import TimeInputField from '../../input/TimeInputField';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faGear, faSearch } from '@fortawesome/free-solid-svg-icons';
+import PlayersOnlineGraph from '../../graphs/PlayersOnlineGraph';
+import Highcharts from 'highcharts/highstock';
+import 'highcharts/modules/no-data-to-display';
+import 'highcharts/modules/accessibility';
+import MultiSelect from '../../input/MultiSelect.tsx';
+import CollapseWithButton from '../../layout/CollapseWithButton';
+import FilterDropdown from './FilterDropdown';
+import FilterList from './FilterList';
+import { useQueryResultContext } from '../../../hooks/queryResultContext.tsx';
+import { useNavigate } from 'react-router';
+import { useNavigation } from '../../../hooks/navigationHook.tsx';
+import ActionButton from '../../input/button/ActionButton.tsx';
+import { useMetadata } from '../../../hooks/metadataHook.tsx';
 
 const parseTimeAsUTC = (dateString, timeString) => {
-    const d = dateString.match(
-        /^(0\d|\d{2})[/|-]?(0\d|\d{2})[/|-]?(\d{4,5})$/
-    );
+    const d = dateString.match(/^(0\d|\d{2})[/|-]?(0\d|\d{2})[/|-]?(\d{4,5})$/);
     const t = timeString.match(/^(0\d|\d{2}):?(0\d|\d{2})$/);
 
     // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Date/Date
@@ -40,11 +38,11 @@ const parseTimeAsUTC = (dateString, timeString) => {
 };
 
 const QueryOptionsCard = () => {
-    const {t} = useTranslation();
-    const navigate = useNavigate()
-    const {result, setResult} = useQueryResultContext();
-    const {setCurrentTab} = useNavigation();
-    const {timeZoneOffsetMinutes} = useMetadata();
+    const { t } = useTranslation();
+    const navigate = useNavigate();
+    const { result, setResult } = useQueryResultContext();
+    const { setCurrentTab } = useNavigation();
+    const { timeZoneOffsetMinutes } = useMetadata();
 
     const [loadingResults, setLoadingResults] = useState(false);
 
@@ -58,19 +56,29 @@ const QueryOptionsCard = () => {
     const [filters, setFilters] = useState([]);
 
     // View & filter data
-    const {data: options, loadingError} = useDataRequest(fetchFilters, []);
+    const { data: options, loadingError } = useDataRequest(fetchFilters, []);
 
     const [graphData, setGraphData] = useState(undefined);
     useEffect(() => {
         if (options) {
-            setGraphData({playersOnline: options.viewPoints, color: '#9E9E9E'})
+            setGraphData({
+                playersOnline: options.viewPoints,
+                color: '#9E9E9E',
+            });
         }
     }, [options, setGraphData]);
 
     // View state handling
     const [invalidFields, setInvalidFields] = useState([]);
-    const setAsInvalid = useCallback(id => setInvalidFields([...invalidFields, id]), [setInvalidFields, invalidFields]);
-    const setAsValid = useCallback(id => setInvalidFields(invalidFields.filter(invalid => id !== invalid)), [setInvalidFields, invalidFields]);
+    const setAsInvalid = useCallback(
+        (id) => setInvalidFields([...invalidFields, id]),
+        [setInvalidFields, invalidFields],
+    );
+    const setAsValid = useCallback(
+        (id) =>
+            setInvalidFields(invalidFields.filter((invalid) => id !== invalid)),
+        [setInvalidFields, invalidFields],
+    );
 
     const [extremes, setExtremes] = useState(undefined);
     /*eslint-disable react-hooks/exhaustive-deps */
@@ -82,34 +90,51 @@ const QueryOptionsCard = () => {
         setExtremes({
             min: parseTimeAsUTC(
                 fromDate || options.view.afterDate,
-                fromTime || options.view.afterTime
+                fromTime || options.view.afterTime,
             ),
             max: parseTimeAsUTC(
                 toDate || options.view.beforeDate,
-                toTime || options.view.beforeTime
-            )
+                toTime || options.view.beforeTime,
+            ),
         });
     }, [invalidFields, options]);
     /* eslint-enable react-hooks/exhaustive-deps */
     useEffect(updateExtremes, [updateExtremes]);
 
-    const onSetExtremes = useCallback((event) => {
-        if (event?.trigger) {
-            const afterDate = Highcharts.dateFormat('%d/%m/%Y', event.min);
-            const afterTime = Highcharts.dateFormat('%H:%M', event.min - timeZoneOffsetMinutes * 60000);
-            const beforeDate = Highcharts.dateFormat('%d/%m/%Y', event.max);
-            const beforeTime = Highcharts.dateFormat('%H:%M', event.max - timeZoneOffsetMinutes * 60000);
-            setFromDate(afterDate);
-            setFromTime(afterTime);
-            setToDate(beforeDate);
-            setToTime(beforeTime);
-        }
-    }, [setFromTime, setFromDate, setToTime, setToDate]);
+    const onSetExtremes = useCallback(
+        (event) => {
+            if (event?.trigger) {
+                const afterDate = Highcharts.dateFormat('%d/%m/%Y', event.min);
+                const afterTime = Highcharts.dateFormat(
+                    '%H:%M',
+                    event.min - timeZoneOffsetMinutes * 60000,
+                );
+                const beforeDate = Highcharts.dateFormat('%d/%m/%Y', event.max);
+                const beforeTime = Highcharts.dateFormat(
+                    '%H:%M',
+                    event.max - timeZoneOffsetMinutes * 60000,
+                );
+                setFromDate(afterDate);
+                setFromTime(afterTime);
+                setToDate(beforeDate);
+                setToTime(beforeTime);
+            }
+        },
+        [setFromTime, setFromDate, setToTime, setToDate],
+    );
 
     useEffect(() => {
         if (!options?.view || !result?.view) return;
 
-        setSelectedServers(result.view.servers?.map(server => options.view.servers?.findIndex(s => s.serverUUID === server.serverUUID))?.filter(i => i !== -1) || [])
+        setSelectedServers(
+            result.view.servers
+                ?.map((server) =>
+                    options.view.servers?.findIndex(
+                        (s) => s.serverUUID === server.serverUUID,
+                    ),
+                )
+                ?.filter((i) => i !== -1) || [],
+        );
 
         setFromDate(result.view.afterDate);
         setFromTime(result.view.afterTime);
@@ -117,21 +142,36 @@ const QueryOptionsCard = () => {
         setToTime(result.view.beforeTime);
 
         const existingFilters = result.filters;
-        existingFilters.forEach(f => f.options = options.filters.find(fo => fo.kind === f.kind).options);
+        existingFilters.forEach(
+            (f) =>
+                (f.options = options.filters.find(
+                    (fo) => fo.kind === f.kind,
+                ).options),
+        );
         setFilters(existingFilters);
 
         setExtremes({
             min: parseTimeAsUTC(
                 result.view.afterDate || options.view.afterDate,
-                result.view.afterTime || options.view.afterTime
+                result.view.afterTime || options.view.afterTime,
             ),
             max: parseTimeAsUTC(
                 result.view.beforeDate || options.view.beforeDate,
-                result.view.beforeTime || options.view.beforeTime
-            )
+                result.view.beforeTime || options.view.beforeTime,
+            ),
         });
-        setCurrentTab('html.query.label.editQuery')
-    }, [options, result, setFromDate, setFromTime, setToDate, setToTime, setFilters, setSelectedServers, setExtremes]);
+        setCurrentTab('html.query.label.editQuery');
+    }, [
+        options,
+        result,
+        setFromDate,
+        setFromTime,
+        setToDate,
+        setToTime,
+        setFilters,
+        setSelectedServers,
+        setExtremes,
+    ]);
 
     const serverSelectorMessage = useMemo(() => {
         if (!options?.view) return t('html.query.filters.loading');
@@ -144,7 +184,10 @@ const QueryOptionsCard = () => {
         } else if (selected === 2) {
             return t('html.query.label.servers.two');
         } else {
-            return t('html.query.label.servers.many').replace('{number}', selected);
+            return t('html.query.label.servers.many').replace(
+                '{number}',
+                selected,
+            );
         }
     }, [options, selectedServers]);
 
@@ -157,28 +200,33 @@ const QueryOptionsCard = () => {
                 afterTime: fromTime || options.view.afterTime,
                 beforeDate: toDate || options.view.beforeDate,
                 beforeTime: toTime || options.view.beforeTime,
-                servers: selectedServers.map(index => options.view.servers[index])
+                servers: selectedServers.map(
+                    (index) => options.view.servers[index],
+                ),
             },
-            filters
-        }
+            filters,
+        };
 
         // TODO handle error
         setLoadingResults(true);
-        const {data} = await postQuery(inputDto);
+        const { data } = await postQuery(inputDto);
         setLoadingResults(false);
         setResult(data);
         window.scrollTo(0, 0);
         if (data?.data) {
             navigate('../result?timestamp=' + data.timestamp);
         }
-    }
+    };
 
-    if (loadingError) return <ErrorViewCard error={loadingError}/>
-    if (!options) return (<Card>
-        <Card.Body>
-            <ChartLoader/>
-        </Card.Body>
-    </Card>)
+    if (loadingError) return <ErrorViewCard error={loadingError} />;
+    if (!options)
+        return (
+            <Card>
+                <Card.Body>
+                    <ChartLoader />
+                </Card.Body>
+            </Card>
+        );
 
     const view = options?.view;
 
@@ -186,47 +234,58 @@ const QueryOptionsCard = () => {
         <Card>
             <Card.Body>
                 <label>{t('html.query.label.view')}</label>
-                <Row className={"my-2 justify-content-start justify-content-md-center"}>
-                    <Col className={"my-2"}>
+                <Row
+                    className={
+                        'my-2 justify-content-start justify-content-md-center'
+                    }>
+                    <Col className={'my-2'}>
                         <label>{t('html.query.label.from')}</label>
                     </Col>
                     <Col md={3}>
-                        <DateInputField id={"viewFromDateField"}
-                                        value={fromDate}
-                                        setValue={setFromDate}
-                                        placeholder={view.afterDate}
-                                        setAsInvalid={setAsInvalid} setAsValid={setAsValid}
-                                        rangeEnd={toDate}
-                                        type="string"
+                        <DateInputField
+                            id={'viewFromDateField'}
+                            value={fromDate}
+                            setValue={setFromDate}
+                            placeholder={view.afterDate}
+                            setAsInvalid={setAsInvalid}
+                            setAsValid={setAsValid}
+                            rangeEnd={toDate}
+                            type='string'
                         />
                     </Col>
                     <Col md={2}>
-                        <TimeInputField id={"viewFromTimeField"}
-                                        value={fromTime}
-                                        setValue={setFromTime}
-                                        placeholder={view.afterTime}
-                                        setAsInvalid={setAsInvalid} setAsValid={setAsValid}
+                        <TimeInputField
+                            id={'viewFromTimeField'}
+                            value={fromTime}
+                            setValue={setFromTime}
+                            placeholder={view.afterTime}
+                            setAsInvalid={setAsInvalid}
+                            setAsValid={setAsValid}
                         />
                     </Col>
-                    <Col md={1} className={"my-2 text-center"}>
+                    <Col md={1} className={'my-2 text-center'}>
                         <label>{t('html.query.label.to')}</label>
                     </Col>
                     <Col md={3}>
-                        <DateInputField id={"viewToDateField"}
-                                        value={toDate}
-                                        setValue={setToDate}
-                                        placeholder={view.beforeDate}
-                                        setAsInvalid={setAsInvalid} setAsValid={setAsValid}
-                                        rangeStart={fromDate}
-                                        type="string"
+                        <DateInputField
+                            id={'viewToDateField'}
+                            value={toDate}
+                            setValue={setToDate}
+                            placeholder={view.beforeDate}
+                            setAsInvalid={setAsInvalid}
+                            setAsValid={setAsValid}
+                            rangeStart={fromDate}
+                            type='string'
                         />
                     </Col>
                     <Col md={2}>
-                        <TimeInputField id={"viewToTimeField"}
-                                        value={toTime}
-                                        setValue={setToTime}
-                                        placeholder={view.beforeTime}
-                                        setAsInvalid={setAsInvalid} setAsValid={setAsValid}
+                        <TimeInputField
+                            id={'viewToTimeField'}
+                            value={toTime}
+                            setValue={setToTime}
+                            placeholder={view.beforeTime}
+                            setAsInvalid={setAsInvalid}
+                            setAsValid={setAsValid}
                         />
                     </Col>
                 </Row>
@@ -243,33 +302,50 @@ const QueryOptionsCard = () => {
                 <Row>
                     <Col md={12}>
                         <CollapseWithButton title={serverSelectorMessage}>
-                            <MultiSelect options={view.servers.map(server => server.serverName)}
-                                         selectedIndexes={selectedServers}
-                                         setSelectedIndexes={setSelectedServers}/>
+                            <MultiSelect
+                                options={view.servers.map(
+                                    (server) => server.serverName,
+                                )}
+                                selectedIndexes={selectedServers}
+                                setSelectedIndexes={setSelectedServers}
+                            />
                         </CollapseWithButton>
                     </Col>
                 </Row>
-                <hr style={{marginBottom: 0}}/>
+                <hr style={{ marginBottom: 0 }} />
                 <Row>
                     <Col md={12}>
-                        <FilterList filters={filters} setFilters={setFilters}
-                                    setAsInvalid={setAsInvalid} setAsValid={setAsValid}/>
+                        <FilterList
+                            filters={filters}
+                            setFilters={setFilters}
+                            setAsInvalid={setAsInvalid}
+                            setAsValid={setAsValid}
+                        />
                     </Col>
                 </Row>
                 <Row>
                     <Col md={12}>
-                        <FilterDropdown filterOptions={options.filters} filters={filters} setFilters={setFilters}/>
+                        <FilterDropdown
+                            filterOptions={options.filters}
+                            filters={filters}
+                            setFilters={setFilters}
+                        />
                     </Col>
                 </Row>
             </Card.Body>
-            <ActionButton id={"query-button"} className={"m-2"}
-                          disabled={Boolean(invalidFields.length) || loadingResults}
-                          onClick={performQuery}>
-                <FontAwesomeIcon icon={loadingResults ? faGear : faSearch}
-                                 spin={loadingResults}/> {t('html.query.performQuery')}
+            <ActionButton
+                id={'query-button'}
+                className={'m-2'}
+                disabled={Boolean(invalidFields.length) || loadingResults}
+                onClick={performQuery}>
+                <FontAwesomeIcon
+                    icon={loadingResults ? faGear : faSearch}
+                    spin={loadingResults}
+                />{' '}
+                {t('html.query.performQuery')}
             </ActionButton>
         </Card>
-    )
+    );
 };
 
-export default QueryOptionsCard
+export default QueryOptionsCard;

@@ -1,61 +1,86 @@
 import React from 'react';
-import Sidebar from "../../components/navigation/Sidebar";
-import Header from "../../components/navigation/Header";
-import {useTranslation} from "react-i18next";
-import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
-import {ThemeStyleCss} from "../../components/theme/ThemeStyleCss.tsx";
-import {ThemeEditContextProvider} from "../../hooks/context/themeEditContextHook.tsx";
-import {SwitchTransition} from "react-transition-group";
-import {Outlet, useParams} from "react-router";
-import {ThemeContextProvider, useTheme} from "../../hooks/themeHook.tsx";
-import {ThemeStorageContextProvider, useThemeStorage} from "../../hooks/context/themeContextHook.tsx";
-import {ChartLoader} from "../../components/navigation/Loader.tsx";
-import {useMetadata} from "../../hooks/metadataHook.tsx";
-import {faInfoCircle, faPlus, faSwatchbook, faTrash} from "@fortawesome/free-solid-svg-icons";
-import ErrorView from "../ErrorView.tsx";
-import AlertPopupArea from "../../components/alert/AlertPopupArea.jsx";
-import ErrorPage from "./ErrorPage.jsx";
-import {Alert} from "react-bootstrap";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {useAuth} from "../../hooks/authenticationHook.tsx";
+import Sidebar from '../../components/navigation/Sidebar';
+import Header from '../../components/navigation/Header';
+import { useTranslation } from 'react-i18next';
+import ColorSelectorModal from '../../components/modal/ColorSelectorModal';
+import { ThemeStyleCss } from '../../components/theme/ThemeStyleCss.tsx';
+import { ThemeEditContextProvider } from '../../hooks/context/themeEditContextHook.tsx';
+import { SwitchTransition } from 'react-transition-group';
+import { Outlet, useParams } from 'react-router';
+import { ThemeContextProvider, useTheme } from '../../hooks/themeHook.tsx';
+import {
+    ThemeStorageContextProvider,
+    useThemeStorage,
+} from '../../hooks/context/themeContextHook.tsx';
+import { ChartLoader } from '../../components/navigation/Loader.tsx';
+import { useMetadata } from '../../hooks/metadataHook.tsx';
+import {
+    faInfoCircle,
+    faPlus,
+    faSwatchbook,
+    faTrash,
+} from '@fortawesome/free-solid-svg-icons';
+import ErrorView from '../ErrorView.tsx';
+import AlertPopupArea from '../../components/alert/AlertPopupArea.jsx';
+import ErrorPage from './ErrorPage.jsx';
+import { Alert } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useAuth } from '../../hooks/authenticationHook.tsx';
 
 const ThemeEditorPage = () => {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
     const metadata = useMetadata();
-    const title = t("html.label.themeEditor.title");
-    const {identifier} = useParams();
-    const {nightModeEnabled} = useTheme();
-    const {authRequired, loggedIn} = useAuth();
+    const title = t('html.label.themeEditor.title');
+    const { identifier } = useParams();
+    const { nightModeEnabled } = useTheme();
+    const { authRequired, loggedIn } = useAuth();
 
-    if (authRequired && !loggedIn) return <MainPageRedirect/>;
+    if (authRequired && !loggedIn) return <MainPageRedirect />;
     if (metadata.metadataError) {
-        return <ErrorPage error={metadata.metadataError}/>
+        return <ErrorPage error={metadata.metadataError} />;
     }
 
-    const items = metadata.loaded ? metadata.getAvailableThemes().map(theme => {
-        return {name: theme, icon: faSwatchbook, href: theme}
-    }) : [];
-    items.push({name: t('html.label.themeEditor.addTheme'), icon: faPlus, href: 'new'},
-        {name: t('html.label.themeEditor.deleteThemes'), icon: faTrash, href: 'delete'});
+    const items = metadata.loaded
+        ? metadata.getAvailableThemes().map((theme) => {
+              return { name: theme, icon: faSwatchbook, href: theme };
+          })
+        : [];
+    items.push(
+        {
+            name: t('html.label.themeEditor.addTheme'),
+            icon: faPlus,
+            href: 'new',
+        },
+        {
+            name: t('html.label.themeEditor.deleteThemes'),
+            icon: faTrash,
+            href: 'delete',
+        },
+    );
     return (
         <>
-            <Sidebar page={title} items={items}/>
-            <div className="d-flex flex-column" id="content-wrapper">
-                <AlertPopupArea/>
-                <Header page={title} hideUpdater/>
-                <div id="content" style={{display: 'flex'}}>
-                    <main className="container-fluid mt-4">
-                        {nightModeEnabled && <Alert variant={"warning"}>
-                            <FontAwesomeIcon icon={faInfoCircle}/> {t('html.label.themeEditor.lightModeInfo')}
-                        </Alert>}
-                        <ThemeContextProvider themeOverride={identifier} key={identifier}>
+            <Sidebar page={title} items={items} />
+            <div className='d-flex flex-column' id='content-wrapper'>
+                <AlertPopupArea />
+                <Header page={title} hideUpdater />
+                <div id='content' style={{ display: 'flex' }}>
+                    <main className='container-fluid mt-4'>
+                        {nightModeEnabled && (
+                            <Alert variant={'warning'}>
+                                <FontAwesomeIcon icon={faInfoCircle} />{' '}
+                                {t('html.label.themeEditor.lightModeInfo')}
+                            </Alert>
+                        )}
+                        <ThemeContextProvider
+                            themeOverride={identifier}
+                            key={identifier}>
                             <ThemeStorageContextProvider loadMissing>
-                                <WaitUntilThemeLoads/>
+                                <WaitUntilThemeLoads />
                             </ThemeStorageContextProvider>
                         </ThemeContextProvider>
                     </main>
                     <aside>
-                        <ColorSelectorModal/>
+                        <ColorSelectorModal />
                     </aside>
                 </div>
             </div>
@@ -65,19 +90,19 @@ const ThemeEditorPage = () => {
 
 const WaitUntilThemeLoads = () => {
     const theme = useThemeStorage();
-    if (theme.error) return <ErrorView error={theme.error}/>
-    if (!theme.loaded) return <ChartLoader/>
+    if (theme.error) return <ErrorView error={theme.error} />;
+    if (!theme.loaded) return <ChartLoader />;
 
     return (
         <ThemeEditContextProvider>
-            <ThemeStyleCss editMode applyToClass={'theme-editor-wrapper'}/>
+            <ThemeStyleCss editMode applyToClass={'theme-editor-wrapper'} />
             <div className={'theme-editor-wrapper'}>
                 <SwitchTransition>
-                    <Outlet/>
+                    <Outlet />
                 </SwitchTransition>
             </div>
         </ThemeEditContextProvider>
-    )
-}
+    );
+};
 
-export default ThemeEditorPage; 
+export default ThemeEditorPage;

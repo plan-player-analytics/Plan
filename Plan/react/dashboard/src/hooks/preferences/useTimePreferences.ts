@@ -1,8 +1,8 @@
-import {usePreferences} from "./preferencesHook";
-import {useMemo} from "react";
+import { usePreferences } from './preferencesHook';
+import { useMemo } from 'react';
 
 export const useTimePreferences = () => {
-    const {preferencesLoaded, timeFormat} = usePreferences();
+    const { preferencesLoaded, timeFormat } = usePreferences();
 
     return useMemo(() => {
         if (!preferencesLoaded || !timeFormat) return undefined;
@@ -16,7 +16,7 @@ export const useTimePreferences = () => {
             HOURS: timeFormat.hours,
             MINUTES: timeFormat.minutes,
             SECONDS: timeFormat.seconds,
-            ZERO: timeFormat.zero
-        }
-    }, [preferencesLoaded, timeFormat])
-}
+            ZERO: timeFormat.zero,
+        };
+    }, [preferencesLoaded, timeFormat]);
+};

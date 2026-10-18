@@ -1,4 +1,4 @@
-import {Server} from "./Metadata";
+import { Server } from './Metadata';
 
 export type QueryResult = {
     path: QueryPath[];
@@ -6,12 +6,12 @@ export type QueryResult = {
     filters: QueryFilter[];
     timestamp: number;
     data?: QueryData;
-}
+};
 
 export type QueryPath = {
     kind: string;
     size: number;
-}
+};
 
 export type QueryView = {
     afterDate: string;
@@ -19,21 +19,21 @@ export type QueryView = {
     beforeDate: string;
     beforeTime: string;
     servers: Server[];
-}
+};
 
 export type QueryFilter = {
     kind: string;
     parameters: {
         [key: string]: string;
-    }
-}
+    };
+};
 
 export type QueryData = {
     players: any; //PlayerListDto;
     activity: any; //ActivityGraphData;
     geolocation: any; //GeolocationData;
     sessions: QuerySessionSummary;
-}
+};
 
 export type QuerySessionSummary = {
     total_playtime: string;
@@ -45,5 +45,4 @@ export type QuerySessionSummary = {
     total_sessions: string; // number
     average_sessions: string; // number
     average_session_length: string;
-
-}
+};

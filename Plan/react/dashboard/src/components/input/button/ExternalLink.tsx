@@ -1,16 +1,19 @@
-import React, {PropsWithChildren} from 'react';
+import React, { PropsWithChildren } from 'react';
 
 type Props = {
     href: string;
 } & PropsWithChildren;
 
-const ExternalLink = ({href, children}: Props) => {
+const ExternalLink = ({ href, children }: Props) => {
     return (
-        <a className="btn col-theme" href={href}
-           rel="noopener noreferrer" target="_blank">
+        <a
+            className='btn col-theme'
+            href={href}
+            rel='noopener noreferrer'
+            target='_blank'>
             {children}
         </a>
-    )
+    );
 };
 
-export default ExternalLink
+export default ExternalLink;

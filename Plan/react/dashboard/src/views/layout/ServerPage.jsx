@@ -1,7 +1,7 @@
-import React, {useEffect, useState} from "react";
-import {useTranslation} from "react-i18next";
-import {Outlet, useParams} from "react-router";
-import {useNavigation} from "../../hooks/navigationHook.tsx";
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { Outlet, useParams } from 'react-router';
+import { useNavigation } from '../../hooks/navigationHook.tsx';
 import {
     faArrowUpRightDots,
     faCampground,
@@ -18,41 +18,44 @@ import {
     faSignsPost,
     faUserGroup,
     faUsers,
-    faUsersViewfinder
-} from "@fortawesome/free-solid-svg-icons";
-import {useAuth} from "../../hooks/authenticationHook.tsx";
-import Sidebar from "../../components/navigation/Sidebar";
-import Header from "../../components/navigation/Header";
-import ColorSelectorModal from "../../components/modal/ColorSelectorModal";
-import {useMetadata} from "../../hooks/metadataHook.tsx";
-import {faCalendarCheck} from "@fortawesome/free-regular-svg-icons";
-import ErrorPage from "./ErrorPage";
-import {SwitchTransition} from "react-transition-group";
-import MainPageRedirect from "../../components/navigation/MainPageRedirect.tsx";
-import {useDataRequest} from "../../hooks/dataFetchHook";
-import {fetchServerIdentity} from "../../service/serverService";
-import {ServerExtensionContextProvider, useServerExtensionContext} from "../../hooks/serverExtensionDataContext";
-import {iconTypeToFontAwesomeClass} from "../../util/icons.ts";
-import {staticSite} from "../../service/backendConfiguration";
+    faUsersViewfinder,
+} from '@fortawesome/free-solid-svg-icons';
+import { useAuth } from '../../hooks/authenticationHook.tsx';
+import Sidebar from '../../components/navigation/Sidebar';
+import Header from '../../components/navigation/Header';
+import ColorSelectorModal from '../../components/modal/ColorSelectorModal';
+import { useMetadata } from '../../hooks/metadataHook.tsx';
+import { faCalendarCheck } from '@fortawesome/free-regular-svg-icons';
+import ErrorPage from './ErrorPage';
+import { SwitchTransition } from 'react-transition-group';
+import MainPageRedirect from '../../components/navigation/MainPageRedirect.tsx';
+import { useDataRequest } from '../../hooks/dataFetchHook';
+import { fetchServerIdentity } from '../../service/serverService';
+import {
+    ServerExtensionContextProvider,
+    useServerExtensionContext,
+} from '../../hooks/serverExtensionDataContext';
+import { iconTypeToFontAwesomeClass } from '../../util/icons.ts';
+import { staticSite } from '../../service/backendConfiguration';
 
-const HelpModal = React.lazy(() => import("../../components/modal/HelpModal"));
+const HelpModal = React.lazy(() => import('../../components/modal/HelpModal'));
 
 const ServerSidebar = () => {
-    const {t, i18n} = useTranslation();
-    const {authRequired} = useAuth();
-    const {sidebarItems, setSidebarItems} = useNavigation();
-    const {extensionData} = useServerExtensionContext();
+    const { t, i18n } = useTranslation();
+    const { authRequired } = useAuth();
+    const { sidebarItems, setSidebarItems } = useNavigation();
+    const { extensionData } = useServerExtensionContext();
 
     useEffect(() => {
         let items = [
             {
                 name: 'html.label.serverOverview',
                 icon: faInfoCircle,
-                href: "overview",
-                permission: 'page.server.overview'
+                href: 'overview',
+                permission: 'page.server.overview',
             },
             {},
-            {name: 'html.label.information'},
+            { name: 'html.label.information' },
             {
                 name: 'html.label.onlineActivity',
                 icon: faChartArea,
@@ -61,33 +64,33 @@ const ServerSidebar = () => {
                         nameShort: 'html.label.overview',
                         name: 'html.label.playersOnlineOverview',
                         icon: faChartArea,
-                        href: "online-activity",
-                        permission: 'page.server.online.activity'
+                        href: 'online-activity',
+                        permission: 'page.server.online.activity',
                     },
                     {
                         name: 'html.label.sessions',
                         icon: faCalendarCheck,
-                        href: "sessions",
-                        permission: 'page.server.sessions'
+                        href: 'sessions',
+                        permission: 'page.server.sessions',
                     },
                     {
                         name: 'html.label.pvpPve',
                         icon: faCampground,
-                        href: "pvppve",
-                        permission: 'page.server.player.versus'
+                        href: 'pvppve',
+                        permission: 'page.server.player.versus',
                     },
                     {
                         name: 'html.label.statistics',
                         icon: faArrowUpRightDots,
-                        href: "statistics",
-                        permission: 'page.server.statistics'
+                        href: 'statistics',
+                        permission: 'page.server.statistics',
                     },
                     {
                         name: 'html.label.allowlist',
                         icon: faFilterCircleXmark,
-                        href: "allowlist",
-                        permission: 'page.server.allowlist.bounce'
-                    }
+                        href: 'allowlist',
+                        permission: 'page.server.allowlist.bounce',
+                    },
                 ],
             },
             {
@@ -98,101 +101,113 @@ const ServerSidebar = () => {
                         nameShort: 'html.label.overview',
                         name: 'html.label.playerbaseOverview',
                         icon: faChartLine,
-                        href: "playerbase",
-                        permission: 'page.server.playerbase'
+                        href: 'playerbase',
+                        permission: 'page.server.playerbase',
                     },
                     {
                         name: 'html.label.joinAddresses',
                         icon: faLocationArrow,
-                        href: "join-addresses",
-                        permission: 'page.server.join.addresses'
+                        href: 'join-addresses',
+                        permission: 'page.server.join.addresses',
                     },
                     {
                         name: 'html.label.playerRetention',
                         icon: faUsersViewfinder,
-                        href: "retention",
-                        permission: 'page.server.retention'
+                        href: 'retention',
+                        permission: 'page.server.retention',
                     },
                     {
                         name: 'html.label.playerList',
                         icon: faUserGroup,
-                        href: "players",
-                        permission: 'page.server.players'
+                        href: 'players',
+                        permission: 'page.server.players',
                     },
                     {
                         name: 'html.label.geolocations',
                         icon: faGlobe,
-                        href: "geolocations",
-                        permission: 'page.server.geolocations'
+                        href: 'geolocations',
+                        permission: 'page.server.geolocations',
                     },
-                ]
+                ],
             },
-            {name: 'html.label.performance', icon: faCogs, href: "performance", permission: 'page.server.performance'},
+            {
+                name: 'html.label.performance',
+                icon: faCogs,
+                href: 'performance',
+                permission: 'page.server.performance',
+            },
             {},
-            {name: 'html.label.plugins', permission: 'page.server.plugins'},
+            { name: 'html.label.plugins', permission: 'page.server.plugins' },
             {
                 name: 'html.label.pluginHistory',
                 icon: faCodeCompare,
-                href: "plugin-history",
+                href: 'plugin-history',
                 permission: 'page.server.plugin.history',
-                authRequired: true
+                authRequired: true,
             },
             {
                 name: 'html.label.pluginsOverview',
                 icon: faCubes,
-                href: "plugins-overview",
-                permission: 'page.server.plugins'
-            }
-        ]
+                href: 'plugins-overview',
+                permission: 'page.server.plugins',
+            },
+        ];
 
         if (extensionData?.extensions) {
-            extensionData.extensions.filter(extension => extension.wide)
-                .map(extension => extension.extensionInformation)
-                .map(info => {
+            extensionData.extensions
+                .filter((extension) => extension.wide)
+                .map((extension) => extension.extensionInformation)
+                .map((info) => {
                     return {
                         name: info.pluginName,
-                        icon: [iconTypeToFontAwesomeClass(info.icon.family), info.icon.iconName],
+                        icon: [
+                            iconTypeToFontAwesomeClass(info.icon.family),
+                            info.icon.iconName,
+                        ],
                         href: `plugins-overview#${encodeURIComponent(info.pluginName)}`,
-                        permission: 'page.network.plugins'
-                    }
-                }).forEach(item => items.push(item))
+                        permission: 'page.network.plugins',
+                    };
+                })
+                .forEach((item) => items.push(item));
         }
 
         if (!staticSite) {
             items.push(
                 {},
-                {name: 'html.label.links', permission: 'access.query'},
-                {name: 'html.label.query', icon: faSearch, href: "/query", permission: 'access.query'}
+                { name: 'html.label.links', permission: 'access.query' },
+                {
+                    name: 'html.label.query',
+                    icon: faSearch,
+                    href: '/query',
+                    permission: 'access.query',
+                },
             );
         }
 
         // Filter out items that need authentication
-        items = items
-            .filter(item => !item.authRequired || (authRequired && item.authRequired))
+        items = items.filter(
+            (item) => !item.authRequired || (authRequired && item.authRequired),
+        );
         setSidebarItems(items);
         window.document.title = `Plan | Server Analysis`;
-    }, [t, i18n, extensionData, setSidebarItems, authRequired])
+    }, [t, i18n, extensionData, setSidebarItems, authRequired]);
 
-    return (
-        <Sidebar items={sidebarItems}/>
-    )
-}
+    return <Sidebar items={sidebarItems} />;
+};
 
 const ServerPage = () => {
-    const {t} = useTranslation();
-    const {identifier} = useParams();
-    const {isProxy, serverName, networkMetadata} = useMetadata();
+    const { t } = useTranslation();
+    const { identifier } = useParams();
+    const { isProxy, serverName, networkMetadata } = useMetadata();
 
-    const {
-        data: serverIdentity,
-        loadingError: identityLoadingError
-    } = useDataRequest(fetchServerIdentity, [identifier]);
+    const { data: serverIdentity, loadingError: identityLoadingError } =
+        useDataRequest(fetchServerIdentity, [identifier]);
     const [error] = useState(undefined);
 
-    const {currentTab} = useNavigation();
+    const { currentTab } = useNavigation();
 
-    const {authRequired, loggedIn} = useAuth();
-    if (authRequired && !loggedIn) return <MainPageRedirect/>
+    const { authRequired, loggedIn } = useAuth();
+    if (authRequired && !loggedIn) return <MainPageRedirect />;
 
     const getDisplayedServerName = () => {
         if (serverIdentity) {
@@ -200,44 +215,56 @@ const ServerPage = () => {
         }
 
         if (isProxy) {
-            const fromMetadata = networkMetadata?.servers?.find(server => server.serverUUID === identifier);
+            const fromMetadata = networkMetadata?.servers?.find(
+                (server) => server.serverUUID === identifier,
+            );
             return fromMetadata ? fromMetadata.serverName : identifier;
         } else {
-            return serverName?.startsWith('Server') ? "Plan" : serverName
+            return serverName?.startsWith('Server') ? 'Plan' : serverName;
         }
-    }
+    };
     const displayedServerName = getDisplayedServerName();
 
-    if (error) return <ErrorPage error={error}/>;
+    if (error) return <ErrorPage error={error} />;
     if (identityLoadingError) {
-        if (identityLoadingError.status === 404) return <ErrorPage
-            error={{
-                title: t('html.error.404NotFound'),
-                message: t(staticSite ? 'html.error.serverNotExported' : 'html.error.serverNotSeen'),
-                icon: faSignsPost
-            }}/>
-        return <ErrorPage error={identityLoadingError}/>
+        if (identityLoadingError.status === 404)
+            return (
+                <ErrorPage
+                    error={{
+                        title: t('html.error.404NotFound'),
+                        message: t(
+                            staticSite
+                                ? 'html.error.serverNotExported'
+                                : 'html.error.serverNotSeen',
+                        ),
+                        icon: faSignsPost,
+                    }}
+                />
+            );
+        return <ErrorPage error={identityLoadingError} />;
     }
 
     return (
         <ServerExtensionContextProvider identifier={identifier}>
-            <ServerSidebar/>
-            <div className="d-flex flex-column" id="content-wrapper">
-                <Header page={displayedServerName} tab={currentTab}/>
-                <div id="content" style={{display: 'flex'}}>
-                    <main className="container-fluid mt-4">
+            <ServerSidebar />
+            <div className='d-flex flex-column' id='content-wrapper'>
+                <Header page={displayedServerName} tab={currentTab} />
+                <div id='content' style={{ display: 'flex' }}>
+                    <main className='container-fluid mt-4'>
                         <SwitchTransition>
-                            <Outlet/>
+                            <Outlet />
                         </SwitchTransition>
                     </main>
                     <aside>
-                        <ColorSelectorModal/>
-                        <React.Suspense fallback={""}><HelpModal/></React.Suspense>
+                        <ColorSelectorModal />
+                        <React.Suspense fallback={''}>
+                            <HelpModal />
+                        </React.Suspense>
                     </aside>
                 </div>
             </div>
         </ServerExtensionContextProvider>
-    )
-}
+    );
+};
 
 export default ServerPage;

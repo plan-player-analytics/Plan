@@ -1,19 +1,19 @@
-import {LineSeries} from "../LineSeries";
-import {PerformanceZones} from "./PerformanceZones";
+import { LineSeries } from '../LineSeries';
+import { PerformanceZones } from './PerformanceZones';
 
 export enum PerformanceGraphKeys {
-    DATE = "date",
-    PLAYERS_ONLINE = "playersOnline",
-    TPS = "tps",
-    CPU = "cpu",
-    RAM = "ram",
-    ENTITIES = "entities",
-    CHUNKS = "chunks",
-    DISK = "disk",
-    MSPT_AVERAGE = "msptAverage",
-    MSPT_95TH = "mspt95thPercentile",
-    MSPT_JITTER_AVERAGE = "msptJitterAverage",
-    MSPT_JITTER_MAX = "msptJitterMax"
+    DATE = 'date',
+    PLAYERS_ONLINE = 'playersOnline',
+    TPS = 'tps',
+    CPU = 'cpu',
+    RAM = 'ram',
+    ENTITIES = 'entities',
+    CHUNKS = 'chunks',
+    DISK = 'disk',
+    MSPT_AVERAGE = 'msptAverage',
+    MSPT_95TH = 'mspt95thPercentile',
+    MSPT_JITTER_AVERAGE = 'msptJitterAverage',
+    MSPT_JITTER_MAX = 'msptJitterMax',
 }
 
 export type PerformanceGraph = {
@@ -22,7 +22,7 @@ export type PerformanceGraph = {
     zones: PerformanceZones;
     serverName: string;
     serverUUID: string;
-}
+};
 
 export type ParsedPerformanceGraph = {
     playersOnline: LineSeries;
@@ -36,4 +36,4 @@ export type ParsedPerformanceGraph = {
     mspt95thPercentile: LineSeries;
     msptJitterAverage: LineSeries;
     msptJitterMax: LineSeries;
-}
+};

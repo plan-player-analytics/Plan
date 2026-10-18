@@ -1,25 +1,37 @@
-import React, {useState} from 'react';
-import {InputGroup} from "react-bootstrap";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faClock} from "@fortawesome/free-regular-svg-icons";
+import React, { useState } from 'react';
+import { InputGroup } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faClock } from '@fortawesome/free-regular-svg-icons';
 
-const isValidTime = value => {
+const isValidTime = (value) => {
     if (!value) return true;
     const regex = /^[0-2]\d:[0-5]\d$/;
     return regex.test(value);
 };
 
-const correctTime = value => {
+const correctTime = (value) => {
     const d = value.match(/^(0\d|\d{2}):?(0\d|\d{2})$/);
     if (!d) return value;
     let hour = Number(d[1]);
     while (hour > 23) hour--;
     let minute = Number(d[2]);
     while (minute > 59) minute--;
-    return (hour < 10 ? "0" + hour : hour) + ":" + (minute < 10 ? "0" + minute : minute);
+    return (
+        (hour < 10 ? '0' + hour : hour) +
+        ':' +
+        (minute < 10 ? '0' + minute : minute)
+    );
 };
 
-const TimeInputField = ({id, setValue, value, placeholder, setAsInvalid, setAsValid, disabled}) => {
+const TimeInputField = ({
+    id,
+    setValue,
+    value,
+    placeholder,
+    setAsInvalid,
+    setAsValid,
+    disabled,
+}) => {
     const [invalid, setInvalid] = useState(false);
 
     const onChange = (event) => {
@@ -35,22 +47,24 @@ const TimeInputField = ({id, setValue, value, placeholder, setAsInvalid, setAsVa
         } else {
             setAsValid(id);
         }
-    }
+    };
 
     return (
         <InputGroup>
-            <div className={"input-group-text"}>
-                <FontAwesomeIcon icon={faClock}/>
+            <div className={'input-group-text'}>
+                <FontAwesomeIcon icon={faClock} />
             </div>
-            <input type="text" className={"form-control" + (invalid ? " is-invalid" : '')}
-                   id={id}
-                   placeholder={placeholder}
-                   value={value}
-                   onChange={onChange}
-                   disabled={disabled}
+            <input
+                type='text'
+                className={'form-control' + (invalid ? ' is-invalid' : '')}
+                id={id}
+                placeholder={placeholder}
+                value={value}
+                onChange={onChange}
+                disabled={disabled}
             />
         </InputGroup>
-    )
+    );
 };
 
-export default TimeInputField
+export default TimeInputField;

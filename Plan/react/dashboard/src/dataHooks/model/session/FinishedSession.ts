@@ -1,6 +1,6 @@
-import {PlayerKill} from "./PlayerKill";
-import {PieSlice} from "../graph/PieSlice";
-import {PieDrilldown} from "../graph/PieDrilldown";
+import { PlayerKill } from './PlayerKill';
+import { PieSlice } from '../graph/PieSlice';
+import { PieDrilldown } from '../graph/PieDrilldown';
 
 export type FinishedSession = {
     player_name: string;
@@ -24,4 +24,4 @@ export type FinishedSession = {
     world_series: PieSlice[];
     gm_series: PieDrilldown[];
     avgPing?: number;
-}
+};

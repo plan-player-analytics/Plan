@@ -1,13 +1,13 @@
-import {WorldPie} from "../graph/WorldPie";
-import {ServerPie} from "../graph/ServerPie";
-import {OutOf} from "./OutOf";
-import {OutOfCategory} from "./OutOfCategory";
-import {baseAddress, staticSite} from "../../../service/backendConfiguration";
-import {filterToQueryString, GenericFilter} from "../GenericFilter";
-import {MS_24H, MS_WEEK} from "../../../util/format/useDateFormatter";
+import { WorldPie } from '../graph/WorldPie';
+import { ServerPie } from '../graph/ServerPie';
+import { OutOf } from './OutOf';
+import { OutOfCategory } from './OutOfCategory';
+import { baseAddress, staticSite } from '../../../service/backendConfiguration';
+import { filterToQueryString, GenericFilter } from '../GenericFilter';
+import { MS_24H, MS_WEEK } from '../../../util/format/useDateFormatter';
 
 export type FormatType =
-    'NONE'
+    | 'NONE'
     | 'TIME_AMOUNT'
     | 'MILLIS'
     | 'TIME_SINCE'
@@ -27,49 +27,49 @@ export enum DatapointType {
     MOST_ACTIVE_WORLD = 'MOST_ACTIVE_WORLD',
     MOST_ACTIVE_GAME_MODE = 'MOST_ACTIVE_GAME_MODE',
     SERVER_PIE = 'SERVER_PIE',
-    UNIQUE_PLAYERS_COUNT = "UNIQUE_PLAYERS_COUNT",
-    UNIQUE_PLAYERS_AVERAGE = "UNIQUE_PLAYERS_AVERAGE",
-    NEW_PLAYERS = "NEW_PLAYERS",
-    NEW_PLAYERS_AVERAGE = "NEW_PLAYERS_AVERAGE",
-    NEW_PLAYER_RETENTION = "NEW_PLAYER_RETENTION",
-    REGULAR_PLAYERS = "REGULAR_PLAYERS",
-    PLAYERS_ONLINE = "PLAYERS_ONLINE",
-    PLAYERS_ONLINE_AVERAGE = "PLAYERS_ONLINE_AVERAGE",
-    PLAYERS_ONLINE_PEAK = "PLAYERS_ONLINE_PEAK",
-    UPTIME = "UPTIME",
-    UPTIME_CURRENT = "UPTIME_CURRENT",
-    DOWNTIME = "DOWNTIME",
-    SESSION_COUNT = "SESSION_COUNT",
-    SESSION_LENGTH_AVERAGE = "SESSION_LENGTH_AVERAGE",
-    PLAYTIME_PER_PLAYER_AVERAGE = "PLAYTIME_PER_PLAYER_AVERAGE",
-    DEATHS = "DEATHS",
-    PLAYER_KILLS = "PLAYER_KILLS",
-    MOB_KILLS = "MOB_KILLS",
-    TPS_AVERAGE = "TPS_AVERAGE",
-    TPS_LOW_SPIKES = "TPS_LOW_SPIKES",
-    MSPT_AVERAGE = "MSPT_AVERAGE",
-    MSPT_JITTER_AVERAGE = "MSPT_JITTER_AVERAGE",
-    MSPT_JITTER_MAX = "MSPT_JITTER_MAX",
-    MSPT_AVERAGE_LOW_TPS = "MSPT_AVERAGE_LOW_TPS",
-    MSPT_MAX_95TH = "MSPT_MAX_95TH",
-    MSPT_MAX_95TH_LOW_TPS = "MSPT_MAX_95TH_LOW_TPS",
-    MSPT_IMPACT_PER_PLAYER = "MSPT_IMPACT_PER_PLAYER",
-    MSPT_IMPACT_PER_CHUNK = "MSPT_IMPACT_PER_CHUNK",
-    CPU_AVERAGE = "CPU_AVERAGE",
-    CPU_IMPACT_PER_PLAYER = "CPU_IMPACT_PER_PLAYER",
-    RAM_AVERAGE = "RAM_AVERAGE",
-    ENTITIES_AVERAGE = "ENTITIES_AVERAGE",
-    ENTITIES_PER_CHUNK = "ENTITIES_PER_CHUNK",
-    CHUNKS_AVERAGE = "CHUNKS_AVERAGE",
-    CHUNKS_PER_PLAYER = "CHUNKS_PER_PLAYER",
-    DISK_MAX = "DISK_MAX",
-    DISK_MIN = "DISK_MIN",
+    UNIQUE_PLAYERS_COUNT = 'UNIQUE_PLAYERS_COUNT',
+    UNIQUE_PLAYERS_AVERAGE = 'UNIQUE_PLAYERS_AVERAGE',
+    NEW_PLAYERS = 'NEW_PLAYERS',
+    NEW_PLAYERS_AVERAGE = 'NEW_PLAYERS_AVERAGE',
+    NEW_PLAYER_RETENTION = 'NEW_PLAYER_RETENTION',
+    REGULAR_PLAYERS = 'REGULAR_PLAYERS',
+    PLAYERS_ONLINE = 'PLAYERS_ONLINE',
+    PLAYERS_ONLINE_AVERAGE = 'PLAYERS_ONLINE_AVERAGE',
+    PLAYERS_ONLINE_PEAK = 'PLAYERS_ONLINE_PEAK',
+    UPTIME = 'UPTIME',
+    UPTIME_CURRENT = 'UPTIME_CURRENT',
+    DOWNTIME = 'DOWNTIME',
+    SESSION_COUNT = 'SESSION_COUNT',
+    SESSION_LENGTH_AVERAGE = 'SESSION_LENGTH_AVERAGE',
+    PLAYTIME_PER_PLAYER_AVERAGE = 'PLAYTIME_PER_PLAYER_AVERAGE',
+    DEATHS = 'DEATHS',
+    PLAYER_KILLS = 'PLAYER_KILLS',
+    MOB_KILLS = 'MOB_KILLS',
+    TPS_AVERAGE = 'TPS_AVERAGE',
+    TPS_LOW_SPIKES = 'TPS_LOW_SPIKES',
+    MSPT_AVERAGE = 'MSPT_AVERAGE',
+    MSPT_JITTER_AVERAGE = 'MSPT_JITTER_AVERAGE',
+    MSPT_JITTER_MAX = 'MSPT_JITTER_MAX',
+    MSPT_AVERAGE_LOW_TPS = 'MSPT_AVERAGE_LOW_TPS',
+    MSPT_MAX_95TH = 'MSPT_MAX_95TH',
+    MSPT_MAX_95TH_LOW_TPS = 'MSPT_MAX_95TH_LOW_TPS',
+    MSPT_IMPACT_PER_PLAYER = 'MSPT_IMPACT_PER_PLAYER',
+    MSPT_IMPACT_PER_CHUNK = 'MSPT_IMPACT_PER_CHUNK',
+    CPU_AVERAGE = 'CPU_AVERAGE',
+    CPU_IMPACT_PER_PLAYER = 'CPU_IMPACT_PER_PLAYER',
+    RAM_AVERAGE = 'RAM_AVERAGE',
+    ENTITIES_AVERAGE = 'ENTITIES_AVERAGE',
+    ENTITIES_PER_CHUNK = 'ENTITIES_PER_CHUNK',
+    CHUNKS_AVERAGE = 'CHUNKS_AVERAGE',
+    CHUNKS_PER_PLAYER = 'CHUNKS_PER_PLAYER',
+    DISK_MAX = 'DISK_MAX',
+    DISK_MIN = 'DISK_MIN',
 }
 
 export const differingPermissions: Partial<Record<DatapointType, string>> = {
-    PLAYERS_ONLINE: "players.online.current",
-    AFK_TIME_PERCENTAGE: "afk.time"
-}
+    PLAYERS_ONLINE: 'players.online.current',
+    AFK_TIME_PERCENTAGE: 'afk.time',
+};
 
 export type DatapointTypeMap = {
     WORLD_PIE: WorldPie;
@@ -117,12 +117,11 @@ export type DatapointTypeMap = {
     MOST_ACTIVE_WORLD: OutOfCategory;
     MOST_ACTIVE_GAME_MODE: OutOfCategory;
     SERVER_PIE: ServerPie;
-    PLAYERS_ONLINE_PEAK: { date: number, value: number };
-}
+    PLAYERS_ONLINE_PEAK: { date: number; value: number };
+};
 
 export type NumericDatapointType = {
-    [K in DatapointType]:
-    DatapointTypeMap[K] extends number ? K : never
+    [K in DatapointType]: DatapointTypeMap[K] extends number ? K : never;
 }[DatapointType];
 
 export type Datapoint<K extends keyof DatapointTypeMap> = {
@@ -140,32 +139,42 @@ export function getDatapointPermission(suffix: string, filter?: GenericFilter) {
     return 'data.network.' + suffix;
 }
 
-export function getDatapointUrl(dataType: DatapointType, filter?: GenericFilter) {
-    let url = baseAddress + `/v1/datapoint?type=${dataType}&${filterToQueryString(filter)}`;
+export function getDatapointUrl(
+    dataType: DatapointType,
+    filter?: GenericFilter,
+) {
+    let url =
+        baseAddress +
+        `/v1/datapoint?type=${dataType}&${filterToQueryString(filter)}`;
     if (staticSite) {
-        let timespan = "";
+        let timespan = '';
         if (filter?.after) {
             const diff = (filter?.before || Date.now()) - filter.after;
             if (diff < MS_24H * 2) {
-                timespan = "_1d";
+                timespan = '_1d';
             } else if (diff < MS_WEEK * 2) {
-                timespan = "_7d";
+                timespan = '_7d';
             } else {
-                timespan = "_30d";
+                timespan = '_30d';
             }
         }
         if (filter?.afterMillisAgo) {
-            timespan = "_" + filter.afterMillisAgo + (filter?.beforeMillisAgo ? "_" + filter.beforeMillisAgo : '');
+            timespan =
+                '_' +
+                filter.afterMillisAgo +
+                (filter?.beforeMillisAgo ? '_' + filter.beforeMillisAgo : '');
         }
-        const folder = filter?.player ? "/player/" + filter?.player : "/data";
-        const server = filter?.server ? "_" + filter?.server : "";
-        let extra = ""
+        const folder = filter?.player ? '/player/' + filter?.player : '/data';
+        const server = filter?.server ? '_' + filter?.server : '';
+        let extra = '';
         if (filter?.extra) {
             Object.entries(filter.extra).forEach(([key, value]) => {
-                extra += "_" + key + "-" + value;
-            })
+                extra += '_' + key + '-' + value;
+            });
         }
-        url = baseAddress + `${folder}/datapoint-${dataType}${timespan}${server}${extra}.json`;
+        url =
+            baseAddress +
+            `${folder}/datapoint-${dataType}${timespan}${server}${extra}.json`;
     }
     return url;
 }

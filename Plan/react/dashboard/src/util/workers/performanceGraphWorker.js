@@ -41,7 +41,7 @@ self.onmessage = (e) => {
         msptAverage,
         mspt95thPercentile,
         msptJitterAverage,
-        msptJitterMax
+        msptJitterMax,
     };
     self.postMessage(processedData);
 };

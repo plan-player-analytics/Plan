@@ -1,82 +1,131 @@
 import React from 'react';
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faArrowRight, faQuestion, faSearch, faTrash} from "@fortawesome/free-solid-svg-icons";
-import {useTranslation} from "react-i18next";
-import ActionButton from "../../input/button/ActionButton.tsx";
-import OutlineButton from "../../input/button/OutlineButton.tsx";
-import {Card, Col, Row} from "react-bootstrap";
-import DateInputField from "../../input/DateInputField.tsx";
-import TimeInputField from "../../input/TimeInputField.jsx";
-import MultiSelect from "../../input/MultiSelect.tsx";
-import Checkbox from "../../input/Checkbox.tsx";
-import {BasicDropdown} from "../../input/BasicDropdown.tsx";
-import SecondaryActionButton from "../../input/button/SecondaryActionButton.tsx";
-import DangerButton from "../../input/button/DangerButton.tsx";
-import Toggle from "../../input/Toggle.jsx";
-import {noop} from "@tanstack/react-query";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import {
+    faArrowRight,
+    faQuestion,
+    faSearch,
+    faTrash,
+} from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
+import ActionButton from '../../input/button/ActionButton.tsx';
+import OutlineButton from '../../input/button/OutlineButton.tsx';
+import { Card, Col, Row } from 'react-bootstrap';
+import DateInputField from '../../input/DateInputField.tsx';
+import TimeInputField from '../../input/TimeInputField.jsx';
+import MultiSelect from '../../input/MultiSelect.tsx';
+import Checkbox from '../../input/Checkbox.tsx';
+import { BasicDropdown } from '../../input/BasicDropdown.tsx';
+import SecondaryActionButton from '../../input/button/SecondaryActionButton.tsx';
+import DangerButton from '../../input/button/DangerButton.tsx';
+import Toggle from '../../input/Toggle.jsx';
+import { noop } from '@tanstack/react-query';
 
 const FormsUseCase = () => {
-    const {t} = useTranslation();
+    const { t } = useTranslation();
 
     const label = t('html.label.themeEditor.example');
     const options = [
-        {name: 'label-1', displayName: label},
-        {name: 'label-2', displayName: label},
-        {name: 'label-3', displayName: label}
+        { name: 'label-1', displayName: label },
+        { name: 'label-2', displayName: label },
+        { name: 'label-3', displayName: label },
     ];
     return (
         <Card>
             <Card.Body>
-                <ActionButton disabled={false} className={"m-2"} onClick={noop}>
-                    <FontAwesomeIcon icon={faSearch}/> {label}
+                <ActionButton disabled={false} className={'m-2'} onClick={noop}>
+                    <FontAwesomeIcon icon={faSearch} /> {label}
                 </ActionButton>
-                <ActionButton disabled={true} className={"m-2"} onClick={noop}>
-                    <FontAwesomeIcon icon={faSearch}/> {label}
+                <ActionButton disabled={true} className={'m-2'} onClick={noop}>
+                    <FontAwesomeIcon icon={faSearch} /> {label}
                 </ActionButton>
-                <SecondaryActionButton disabled={false} className={"m-2"} onClick={noop}>
-                    <FontAwesomeIcon icon={faQuestion}/> {label}
+                <SecondaryActionButton
+                    disabled={false}
+                    className={'m-2'}
+                    onClick={noop}>
+                    <FontAwesomeIcon icon={faQuestion} /> {label}
                 </SecondaryActionButton>
-                <SecondaryActionButton disabled={true} className={"m-2"} onClick={noop}>
-                    <FontAwesomeIcon icon={faQuestion}/> {label}
+                <SecondaryActionButton
+                    disabled={true}
+                    className={'m-2'}
+                    onClick={noop}>
+                    <FontAwesomeIcon icon={faQuestion} /> {label}
                 </SecondaryActionButton>
-                <DangerButton disabled={false} className={"m-2"} onClick={noop}>
-                    <FontAwesomeIcon icon={faTrash}/> {label}
+                <DangerButton disabled={false} className={'m-2'} onClick={noop}>
+                    <FontAwesomeIcon icon={faTrash} /> {label}
                 </DangerButton>
-                <DangerButton disabled={true} className={"m-2"} onClick={noop}>
-                    <FontAwesomeIcon icon={faTrash}/> {label}
+                <DangerButton disabled={true} className={'m-2'} onClick={noop}>
+                    <FontAwesomeIcon icon={faTrash} /> {label}
                 </DangerButton>
-                <OutlineButton disabled={false} className={"m-2"} onClick={noop}>
-                    <FontAwesomeIcon icon={faArrowRight}/> {label}
+                <OutlineButton
+                    disabled={false}
+                    className={'m-2'}
+                    onClick={noop}>
+                    <FontAwesomeIcon icon={faArrowRight} /> {label}
                 </OutlineButton>
-                <OutlineButton disabled={true} className={"m-2"} onClick={noop}>
-                    <FontAwesomeIcon icon={faArrowRight}/> {label}
+                <OutlineButton disabled={true} className={'m-2'} onClick={noop}>
+                    <FontAwesomeIcon icon={faArrowRight} /> {label}
                 </OutlineButton>
-                <hr/>
+                <hr />
                 <Row>
-                    <Col md={6}><DateInputField id={"viewToDateField"} placeholder={"01/07/2025"}/></Col>
-                    <Col md={6}><TimeInputField id={"viewToTimeField"} placeholder={"12:00"}/></Col>
-                </Row>
-                <hr/>
-                <Row>
-                    <Col md={12}>
-                        <MultiSelect options={[label, label, label]} selectedIndexes={[0]}/>
+                    <Col md={6}>
+                        <DateInputField
+                            id={'viewToDateField'}
+                            placeholder={'01/07/2025'}
+                        />
+                    </Col>
+                    <Col md={6}>
+                        <TimeInputField
+                            id={'viewToTimeField'}
+                            placeholder={'12:00'}
+                        />
                     </Col>
                 </Row>
-                <hr/>
-                <Checkbox indeterminate={false} checked={false} className={"ms-2"} readOnly>{label}</Checkbox>
-                <Checkbox indeterminate={false} checked={true} className={"ms-2"} readOnly>{label}</Checkbox>
-                <Checkbox indeterminate={true} checked={false} className={"ms-2"} readOnly>{label}</Checkbox>
-                <Toggle value={true} inline className={"ms-2"} readOnly>{label}</Toggle>
-                <Toggle value={false} inline className={"ms-2"} readOnly>{label}</Toggle>
-                <hr/>
+                <hr />
                 <Row>
                     <Col md={12}>
-                        <BasicDropdown selected={'label-1'} options={options}/>
+                        <MultiSelect
+                            options={[label, label, label]}
+                            selectedIndexes={[0]}
+                        />
+                    </Col>
+                </Row>
+                <hr />
+                <Checkbox
+                    indeterminate={false}
+                    checked={false}
+                    className={'ms-2'}
+                    readOnly>
+                    {label}
+                </Checkbox>
+                <Checkbox
+                    indeterminate={false}
+                    checked={true}
+                    className={'ms-2'}
+                    readOnly>
+                    {label}
+                </Checkbox>
+                <Checkbox
+                    indeterminate={true}
+                    checked={false}
+                    className={'ms-2'}
+                    readOnly>
+                    {label}
+                </Checkbox>
+                <Toggle value={true} inline className={'ms-2'} readOnly>
+                    {label}
+                </Toggle>
+                <Toggle value={false} inline className={'ms-2'} readOnly>
+                    {label}
+                </Toggle>
+                <hr />
+                <Row>
+                    <Col md={12}>
+                        <BasicDropdown selected={'label-1'} options={options} />
                     </Col>
                 </Row>
             </Card.Body>
         </Card>
-    )
+    );
 };
 
-export default FormsUseCase
+export default FormsUseCase;

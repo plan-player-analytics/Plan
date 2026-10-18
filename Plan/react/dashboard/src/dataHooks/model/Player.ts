@@ -1,5 +1,5 @@
-import {ServerStatistics} from "./ServerStatistics";
+import { ServerStatistics } from './ServerStatistics';
 
 export type Player = {
     statistics: ServerStatistics[];
-}
+};

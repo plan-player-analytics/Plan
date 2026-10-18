@@ -11,4 +11,4 @@ export type PlayerKill = {
     timeSinceRegisterMillis: number;
     timeSinceRegisterFormatted: string;
     weapon: string;
-}
+};

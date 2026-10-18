@@ -1,5 +1,5 @@
-import {PlanError} from "../../../views/ErrorView";
-import {ColorPropertyMap, ThemeConfig, UseCaseMap} from "./ThemeConfig";
+import { PlanError } from '../../../views/ErrorView';
+import { ColorPropertyMap, ThemeConfig, UseCaseMap } from './ThemeConfig';
 
 export type ThemeContextValue = {
     loaded: boolean;
@@ -12,8 +12,12 @@ export type ThemeContextValue = {
     currentNightModeUseCases: UseCaseMap;
     usedColors: ColorPropertyMap;
     usedUseCases: UseCaseMap;
-    cloneThemeLocally: (themeToClone: string, name: string) => Promise<boolean>,
-    saveUploadedThemeLocally: (name: string, themeJson: ThemeConfig, originalName?: string) => void,
-    deleteThemeLocally: (name?: string) => void,
-    reloadTheme: () => void,
-}
+    cloneThemeLocally: (themeToClone: string, name: string) => Promise<boolean>;
+    saveUploadedThemeLocally: (
+        name: string,
+        themeJson: ThemeConfig,
+        originalName?: string,
+    ) => void;
+    deleteThemeLocally: (name?: string) => void;
+    reloadTheme: () => void;
+};

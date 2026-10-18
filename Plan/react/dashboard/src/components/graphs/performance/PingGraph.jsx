@@ -1,21 +1,21 @@
-import React, {useEffect} from 'react';
+import React, { useEffect } from 'react';
 
-import {tooltip, translateLinegraphButtons} from "../../../util/graphs";
-import Highcharts from "highcharts/esm/highstock";
-import "highcharts/esm/modules/no-data-to-display"
-import "highcharts/esm/modules/accessibility";
-import {useTranslation} from "react-i18next";
-import {useTheme} from "../../../hooks/themeHook.tsx";
-import {useMetadata} from "../../../hooks/metadataHook.tsx";
-import {localeService} from "../../../service/localeService.js";
+import { tooltip, translateLinegraphButtons } from '../../../util/graphs';
+import Highcharts from 'highcharts/esm/highstock';
+import 'highcharts/esm/modules/no-data-to-display';
+import 'highcharts/esm/modules/accessibility';
+import { useTranslation } from 'react-i18next';
+import { useTheme } from '../../../hooks/themeHook.tsx';
+import { useMetadata } from '../../../hooks/metadataHook.tsx';
+import { localeService } from '../../../service/localeService.js';
 
-const PingGraph = ({id, data}) => {
-    const {t} = useTranslation();
-    const {graphTheming, nightModeEnabled} = useTheme();
-    const {timeZoneOffsetMinutes} = useMetadata();
+const PingGraph = ({ id, data }) => {
+    const { t } = useTranslation();
+    const { graphTheming, nightModeEnabled } = useTheme();
+    const { timeZoneOffsetMinutes } = useMetadata();
 
     useEffect(() => {
-        const spline = 'spline'
+        const spline = 'spline';
 
         const series = {
             avgPing: {
@@ -23,63 +23,63 @@ const PingGraph = ({id, data}) => {
                 type: spline,
                 tooltip: tooltip.twoDecimals,
                 data: data.avg_ping_series,
-                color: "var(--color-graphs-ping-avg)",
+                color: 'var(--color-graphs-ping-avg)',
             },
             maxPing: {
                 name: t('html.label.worstPing'),
                 type: spline,
                 tooltip: tooltip.zeroDecimals,
                 data: data.max_ping_series,
-                color: "var(--color-graphs-ping-max)",
+                color: 'var(--color-graphs-ping-max)',
             },
             minPing: {
                 name: t('html.label.bestPing'),
                 type: spline,
                 tooltip: tooltip.zeroDecimals,
                 data: data.min_ping_series,
-                color: "var(--color-graphs-ping-min)",
-            }
+                color: 'var(--color-graphs-ping-min)',
+            },
         };
 
         Highcharts.setOptions({
             lang: {
                 locale: localeService.getIntlFriendlyLocale(),
-                noData: t('html.label.noDataToDisplay')
-            }
-        })
+                noData: t('html.label.noDataToDisplay'),
+            },
+        });
         Highcharts.setOptions(graphTheming);
         Highcharts.stockChart(id, {
             chart: {
-                noData: t('html.label.noDataToDisplay')
+                noData: t('html.label.noDataToDisplay'),
             },
             rangeSelector: {
                 selected: 2,
-                buttons: translateLinegraphButtons(t)
+                buttons: translateLinegraphButtons(t),
             },
             yAxis: {
                 labels: {
                     formatter: function () {
-                        return this.value + ' ms'
-                    }
+                        return this.value + ' ms';
+                    },
                 },
-                softMin: 0
+                softMin: 0,
             },
-            title: {text: ''},
+            title: { text: '' },
             legend: {
-                enabled: true
+                enabled: true,
             },
             time: {
-                timezoneOffset: timeZoneOffsetMinutes
+                timezoneOffset: timeZoneOffsetMinutes,
             },
-            series: [series.avgPing, series.maxPing, series.minPing]
+            series: [series.avgPing, series.maxPing, series.minPing],
         });
-    }, [data, graphTheming, nightModeEnabled, id, t, timeZoneOffsetMinutes])
+    }, [data, graphTheming, nightModeEnabled, id, t, timeZoneOffsetMinutes]);
 
     return (
-        <div className="chart-area" style={{height: "450px"}} id={id}>
-            <span className="loader"/>
+        <div className='chart-area' style={{ height: '450px' }} id={id}>
+            <span className='loader' />
         </div>
-    )
+    );
 };
 
-export default PingGraph
+export default PingGraph;

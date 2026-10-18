@@ -1,63 +1,68 @@
-import {Modal} from "react-bootstrap";
-import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import React, {useCallback} from "react";
-import {useNavigation} from "../../hooks/navigationHook.tsx";
-import {useTranslation} from "react-i18next";
-import ActivityIndexHelp from "./help/ActivityIndexHelp";
-import {faQuestionCircle} from "@fortawesome/free-regular-svg-icons";
-import NewPlayerRetentionHelp from "./help/NewPlayerRetentionHelp";
-import PlayerRetentionGraphHelp from "./help/PlayerRetentionGraphHelp";
-import GroupPermissionHelp from "./help/GroupPermissionHelp";
-import ActionButton from "../input/button/ActionButton.tsx";
-import ModalCloseButton from "../input/button/ModalCloseButton.tsx";
-import {PerformanceHelp} from "./help/PerformanceHelp.tsx";
+import { Modal } from 'react-bootstrap';
+import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
+import React, { useCallback } from 'react';
+import { useNavigation } from '../../hooks/navigationHook.tsx';
+import { useTranslation } from 'react-i18next';
+import ActivityIndexHelp from './help/ActivityIndexHelp';
+import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
+import NewPlayerRetentionHelp from './help/NewPlayerRetentionHelp';
+import PlayerRetentionGraphHelp from './help/PlayerRetentionGraphHelp';
+import GroupPermissionHelp from './help/GroupPermissionHelp';
+import ActionButton from '../input/button/ActionButton.tsx';
+import ModalCloseButton from '../input/button/ModalCloseButton.tsx';
+import { PerformanceHelp } from './help/PerformanceHelp.tsx';
 
 const HelpModal = () => {
-    const {t} = useTranslation();
-    const {helpModalTopic, setHelpModalTopic} = useNavigation();
-    const toggle = useCallback(() => setHelpModalTopic(undefined), [setHelpModalTopic]);
+    const { t } = useTranslation();
+    const { helpModalTopic, setHelpModalTopic } = useNavigation();
+    const toggle = useCallback(
+        () => setHelpModalTopic(undefined),
+        [setHelpModalTopic],
+    );
 
     const helpTopics = {
-        "activity-index": {
+        'activity-index': {
             title: t('html.label.activityIndex'),
-            body: <ActivityIndexHelp/>
+            body: <ActivityIndexHelp />,
         },
-        "new-player-retention": {
+        'new-player-retention': {
             title: t('html.label.newPlayerRetention'),
-            body: <NewPlayerRetentionHelp/>
+            body: <NewPlayerRetentionHelp />,
         },
-        "player-retention-graph": {
+        'player-retention-graph': {
             title: t('html.label.playerRetention'),
-            body: <PlayerRetentionGraphHelp/>
+            body: <PlayerRetentionGraphHelp />,
         },
-        "group-permissions": {
+        'group-permissions': {
             title: t('html.label.managePage.groupHeader'),
-            body: <GroupPermissionHelp/>
+            body: <GroupPermissionHelp />,
         },
-        "performance": {
+        performance: {
             title: t('html.label.performance'),
-            body: <PerformanceHelp/>
-        }
-    }
+            body: <PerformanceHelp />,
+        },
+    };
 
     const helpTopic = helpTopics[helpModalTopic];
     return (
-        <Modal id="versionModal" aria-labelledby="versionModalLabel" show={Boolean(helpTopic)} onHide={toggle}
-               size="lg">
+        <Modal
+            id='versionModal'
+            aria-labelledby='versionModalLabel'
+            show={Boolean(helpTopic)}
+            onHide={toggle}
+            size='lg'>
             <Modal.Header>
-                <Modal.Title id="versionModalLabel">
-                    <Fa icon={faQuestionCircle}/> {helpTopic?.title}
+                <Modal.Title id='versionModalLabel'>
+                    <Fa icon={faQuestionCircle} /> {helpTopic?.title}
                 </Modal.Title>
-                <ModalCloseButton onClick={toggle}/>
+                <ModalCloseButton onClick={toggle} />
             </Modal.Header>
-            <Modal.Body>
-                {helpTopic?.body}
-            </Modal.Body>
+            <Modal.Body>{helpTopic?.body}</Modal.Body>
             <Modal.Footer>
                 <ActionButton onClick={toggle}>OK</ActionButton>
             </Modal.Footer>
         </Modal>
     );
-}
+};
 
 export default HelpModal;

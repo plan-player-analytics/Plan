@@ -1,7 +1,7 @@
 export type PreferencesResponse = {
     defaultPreferences: Preferences;
     preferences: Partial<Preferences>;
-}
+};
 
 export type Preferences = {
     recentDaysInDateFormat: boolean;
@@ -16,7 +16,7 @@ export type Preferences = {
 
     tpsThresholds: GraphThresholds;
     diskThresholds: GraphThresholds;
-}
+};
 
 export type TimeFormat = {
     year: string;
@@ -29,9 +29,9 @@ export type TimeFormat = {
     minutes: string;
     seconds: string;
     zero: string;
-}
+};
 
 export type GraphThresholds = {
     highThreshold: number;
     mediumThreshold: number;
-}
+};

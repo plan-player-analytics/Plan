@@ -11,23 +11,33 @@ import {
     rgbStringToArray,
     rgbToHexString,
     rgbToHsl,
-    rgbToString
-} from "./colors.js";
+    rgbToString,
+} from './colors.js';
 
-export const getColorConverter = color => {
+export const getColorConverter = (color) => {
     try {
         if (typeof color === 'string') {
-            if (color.startsWith("var(")) return new HexColor(calculateCssHexColor(color));
+            if (color.startsWith('var('))
+                return new HexColor(calculateCssHexColor(color));
             if (color.startsWith('#')) return new HexColor(color);
-            if (color.startsWith("rgb(") || color.startsWith("rgba(") && color.endsWith(')')) return new RgbaColor(color);
-            if (color.startsWith("hsl(") || color.startsWith("hsla(") && color.endsWith(')')) return new HslaColor(color);
-            if (color.startsWith("hsv(") && color.endsWith(')')) return new HsvColor(color);
+            if (
+                color.startsWith('rgb(') ||
+                (color.startsWith('rgba(') && color.endsWith(')'))
+            )
+                return new RgbaColor(color);
+            if (
+                color.startsWith('hsl(') ||
+                (color.startsWith('hsla(') && color.endsWith(')'))
+            )
+                return new HslaColor(color);
+            if (color.startsWith('hsv(') && color.endsWith(')'))
+                return new HsvColor(color);
         }
     } catch (e) {
         console.warn('failed to parse color', color, e);
     }
     return undefined;
-}
+};
 
 export const getColorArrayConverter = (color, type) => {
     switch (type) {
@@ -44,16 +54,24 @@ export const getColorArrayConverter = (color, type) => {
         default:
             return undefined;
     }
-}
+};
 
 export const withReducedSaturationRgba = (rgba, reduceSaturationPercentage) => {
-    const saturationReduction = reduceSaturationPercentage || 0.70;
+    const saturationReduction = reduceSaturationPercentage || 0.7;
 
     const [h, s, l] = getColorArrayConverter(rgba, 'rgba').toHslArray();
     if (isNaN(h)) console.log(rgba, [h, s, l]);
 
-    return 'hsl(' + h * 360 + ',' + s * 100 * saturationReduction + '%,' + l * 95 + '%)';
-}
+    return (
+        'hsl(' +
+        h * 360 +
+        ',' +
+        s * 100 * saturationReduction +
+        '%,' +
+        l * 95 +
+        '%)'
+    );
+};
 export const getContrastColor = (color) => {
     const converter = getColorConverter(color);
     if (!converter) return undefined;
@@ -63,11 +81,11 @@ export const getContrastColor = (color) => {
 
 export class Color {
     toHex() {
-        return rgbToHexString(this.toRgbArray())
+        return rgbToHexString(this.toRgbArray());
     }
 
     toRgbString() {
-        return rgbToString(this.toRgbArray())
+        return rgbToString(this.toRgbArray());
     }
 
     toRgbArray() {
@@ -75,7 +93,7 @@ export class Color {
     }
 
     toRgbaString() {
-        return rgbaToString(this.toRgbaArray())
+        return rgbaToString(this.toRgbaArray());
     }
 
     toRgbaArray() {
@@ -83,11 +101,11 @@ export class Color {
     }
 
     toHslString() {
-        return hslToString(this.toHslArray())
+        return hslToString(this.toHslArray());
     }
 
     toHslArray() {
-        return rgbToHsl(this.toRgbArray())
+        return rgbToHsl(this.toRgbArray());
     }
 
     toHsvString() {
@@ -105,7 +123,9 @@ export class Color {
 
     reduceSaturation(reductionPercentage) {
         const rgba = this.toRgbaArray();
-        const hslArray = new HslaColor(withReducedSaturationRgba(rgba, reductionPercentage)).toHslArray();
+        const hslArray = new HslaColor(
+            withReducedSaturationRgba(rgba, reductionPercentage),
+        ).toHslArray();
         return new HslaColor([...hslArray, rgba[3]]);
     }
 
@@ -135,7 +155,7 @@ class HexColor extends Color {
     }
 
     toRgbArray() {
-        return hexToRgb(this.hexString)
+        return hexToRgb(this.hexString);
     }
 }
 
@@ -143,7 +163,7 @@ class RgbaColor extends Color {
     constructor(rgba) {
         super();
         if (typeof rgba === 'string') {
-            if (rgba.startsWith("rgba")) {
+            if (rgba.startsWith('rgba')) {
                 this.rgba = rgbaStringToArray(rgba);
             } else {
                 this.rgba = [...rgbStringToArray(rgba), 1];
@@ -174,7 +194,7 @@ class HslaColor extends Color {
     constructor(hsla) {
         super();
         if (typeof hsla === 'string') {
-            if (hsla.startsWith("hsla")) {
+            if (hsla.startsWith('hsla')) {
                 this.hsla = hslaStringToArray(hsla);
             } else {
                 this.hsla = [...hsxStringToArray(hsla), 1];
@@ -193,11 +213,11 @@ class HslaColor extends Color {
     }
 
     toRgbArray() {
-        return hsvToRgb(this.toHsvArray())
+        return hsvToRgb(this.toHsvArray());
     }
 
     toRgbaArray() {
-        return [...this.toRgbArray(), this.hsla[3]]
+        return [...this.toRgbArray(), this.hsla[3]];
     }
 
     toHslArray() {
@@ -205,7 +225,7 @@ class HslaColor extends Color {
     }
 
     toHsvArray() {
-        return hslToHsv(this.toHslArray())
+        return hslToHsv(this.toHslArray());
     }
 }
 
@@ -224,6 +244,6 @@ class HsvColor extends Color {
     }
 
     toRgbArray() {
-        return hsvToRgb(this.hsv)
+        return hsvToRgb(this.hsv);
     }
 }

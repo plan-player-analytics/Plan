@@ -1,7 +1,11 @@
-import React, {PropsWithChildren} from 'react';
+import React, { PropsWithChildren } from 'react';
 
-const Background = ({children}: PropsWithChildren) => {
-    return <div style={{backgroundColor: "var(--color-cards-background"}}>{children}</div>
-}
+const Background = ({ children }: PropsWithChildren) => {
+    return (
+        <div style={{ backgroundColor: 'var(--color-cards-background' }}>
+            {children}
+        </div>
+    );
+};
 
-export default Background
+export default Background;

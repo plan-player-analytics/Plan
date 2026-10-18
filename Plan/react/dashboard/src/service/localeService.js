@@ -1,12 +1,12 @@
-import i18next from "i18next";
-import I18NextChainedBackend from "i18next-chained-backend";
-import I18NextLocalStorageBackend from "i18next-localstorage-backend";
+import i18next from 'i18next';
+import I18NextChainedBackend from 'i18next-chained-backend';
+import I18NextLocalStorageBackend from 'i18next-localstorage-backend';
 import I18NextHttpBackend from 'i18next-http-backend';
-import {initReactI18next, useTranslation} from 'react-i18next';
-import {fetchAvailableLocales} from "./metadataService";
-import {baseAddress, staticSite} from "./backendConfiguration";
-import {isNumber} from "../util/isNumber.ts";
-import {useMemo} from "react";
+import { initReactI18next, useTranslation } from 'react-i18next';
+import { fetchAvailableLocales } from './metadataService';
+import { baseAddress, staticSite } from './backendConfiguration';
+import { isNumber } from '../util/isNumber.ts';
+import { useMemo } from 'react';
 
 /**
  * A locale system for localizing the website.
@@ -25,7 +25,7 @@ export const localeService = {
      * @type {string}
      * @readonly
      */
-    defaultLanguage: "",
+    defaultLanguage: '',
 
     /**
      * The current available languages reported by the server.
@@ -33,53 +33,60 @@ export const localeService = {
      * @readonly
      */
     availableLanguages: {},
-    clientLocale: "",
+    clientLocale: '',
 
     /**
      * Initializes the locale system. Gets the default & available languages from `/v1/locale`, and initializes i18next.
      */
     init: async function () {
         try {
-            const {data} = await fetchAvailableLocales();
+            const { data } = await fetchAvailableLocales();
             if (data !== undefined) {
                 this.defaultLanguage = data.defaultLanguage;
                 this.availableLanguages = data.languages;
                 this.languageVersions = data.languageVersions;
             } else {
-                this.defaultLanguage = 'en'
+                this.defaultLanguage = 'en';
                 this.availableLanguages = {};
                 this.languageVersions = [];
             }
 
-            this.clientLocale = window.localStorage.getItem("locale");
+            this.clientLocale = window.localStorage.getItem('locale');
             if (!this.clientLocale) {
                 this.clientLocale = this.defaultLanguage;
             }
             let loadPath = baseAddress + '/v1/locale/{{lng}}';
-            if (staticSite) loadPath = baseAddress + '/locale/{{lng}}.json'
+            if (staticSite) loadPath = baseAddress + '/locale/{{lng}}.json';
             await i18next
                 .use(I18NextChainedBackend)
                 .use(initReactI18next)
-                .init({
-                    debug: false,
-                    lng: this.clientLocale,
-                    fallbackLng: false,
-                    supportedLngs: Object.keys(this.availableLanguages),
-                    showSupportNotice: false,
-                    backend: {
-                        backends: [
-                            I18NextLocalStorageBackend,
-                            I18NextHttpBackend
-                        ],
-                        backendOptions: [{
-                            expirationTime: 7 * 24 * 60 * 60 * 1000, // 7 days
-                            versions: this.languageVersions
-                        }, {
-                            loadPath: loadPath
-                        }]
+                .init(
+                    {
+                        debug: false,
+                        lng: this.clientLocale,
+                        fallbackLng: false,
+                        supportedLngs: Object.keys(this.availableLanguages),
+                        showSupportNotice: false,
+                        backend: {
+                            backends: [
+                                I18NextLocalStorageBackend,
+                                I18NextHttpBackend,
+                            ],
+                            backendOptions: [
+                                {
+                                    expirationTime: 7 * 24 * 60 * 60 * 1000, // 7 days
+                                    versions: this.languageVersions,
+                                },
+                                {
+                                    loadPath: loadPath,
+                                },
+                            ],
+                        },
                     },
-                }, () => {/* No need to initialize anything */
-                });
+                    () => {
+                        /* No need to initialize anything */
+                    },
+                );
         } catch (e) {
             console.error(e);
         }
@@ -100,60 +107,72 @@ export const localeService = {
             throw Error(`The locale ${langCode} isn't available!`);
         }
 
-        window.localStorage.setItem("locale", langCode);
+        window.localStorage.setItem('locale', langCode);
         await i18next.changeLanguage(langCode);
         this.clientLocale = langCode;
     },
 
     getLanguages: function () {
-        let languages = Object.fromEntries(Object.entries(this.availableLanguages)
-            .sort((a, b) => a[0].localeCompare(b[0])));
+        let languages = Object.fromEntries(
+            Object.entries(this.availableLanguages).sort((a, b) =>
+                a[0].localeCompare(b[0]),
+            ),
+        );
         if ('CUSTOM' in languages) {
             // Move "Custom" to first in list
-            delete languages["CUSTOM"]
-            languages = Object.assign({"CUSTOM": "Custom"}, languages);
+            delete languages['CUSTOM'];
+            languages = Object.assign({ CUSTOM: 'Custom' }, languages);
         }
 
-        return Object.entries(languages)
-            .map(entry => {
-                return {name: entry[0], displayName: entry[1]}
-            });
+        return Object.entries(languages).map((entry) => {
+            return { name: entry[0], displayName: entry[1] };
+        });
     },
 
     getIntlFriendlyLocale: () => {
         if (localeService.clientLocale === 'CUSTOM') return 'en';
-        return localeService.clientLocale === 'CN' ? 'zh-cn' : localeService.clientLocale.toLocaleLowerCase().replace('_', '-')
+        return localeService.clientLocale === 'CN'
+            ? 'zh-cn'
+            : localeService.clientLocale.toLocaleLowerCase().replace('_', '-');
     },
 
     localizePing: (value) => {
         if (isNumber(value)) {
-            return new Intl.DurationFormat(localeService.getIntlFriendlyLocale(), {style: 'narrow'})
-                .format({milliseconds: 1})
+            return new Intl.DurationFormat(
+                localeService.getIntlFriendlyLocale(),
+                {
+                    style: 'narrow',
+                },
+            )
+                .format({ milliseconds: 1 })
                 .replace('1', value);
         }
         return value;
-    }
-}
+    },
+};
 
 const generateGeolocationMap = () => {
-    const regions = new Intl.DisplayNames(['en'], {type: 'region'});
-    const map = {}
+    const regions = new Intl.DisplayNames(['en'], { type: 'region' });
+    const map = {};
     for (let i = 0; i < 26; i++) {
         for (let j = 0; j < 26; j++) {
-            let code = String.fromCharCode(97 + i) + String.fromCharCode(97 + j)
+            let code =
+                String.fromCharCode(97 + i) + String.fromCharCode(97 + j);
             const result = regions.of(`${code}`);
             map[result] = code;
         }
     }
     return map;
-}
+};
 export const reverseRegionLookupMap = generateGeolocationMap();
 
 export const useI18nFriendlyLanguage = () => {
-    const {i18n} = useTranslation();
+    const { i18n } = useTranslation();
 
     return useMemo(() => {
         if (i18n.language === 'CUSTOM') return 'en';
-        return i18n.language === 'CN' ? 'zh-cn' : i18n.language.toLocaleLowerCase().replace('_', '-')
+        return i18n.language === 'CN'
+            ? 'zh-cn'
+            : i18n.language.toLocaleLowerCase().replace('_', '-');
     });
-}
+};

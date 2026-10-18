@@ -1,56 +1,73 @@
-import React, {ChangeEvent, useState} from 'react';
-import {InputGroup} from "react-bootstrap";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {faSearch} from "@fortawesome/free-solid-svg-icons";
+import React, { ChangeEvent, useState } from 'react';
+import { InputGroup } from 'react-bootstrap';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSearch } from '@fortawesome/free-solid-svg-icons';
 
-type Props = | {
-    id: never;
-    setAsInvalid: never;
-    setAsValid: never;
-    value: string;
-    setValue: (value: string) => void;
-    placeholder?: string;
-    className?: string;
-    caseSensitive?: boolean;
-} | {
-    id: string;
-    setAsInvalid: (id: string) => void;
-    setAsValid: (id: string) => void;
-    value: string;
-    setValue: (value: string) => void;
-    placeholder?: string;
-    className?: string;
-    caseSensitive?: boolean;
-}
+type Props =
+    | {
+          id: never;
+          setAsInvalid: never;
+          setAsValid: never;
+          value: string;
+          setValue: (value: string) => void;
+          placeholder?: string;
+          className?: string;
+          caseSensitive?: boolean;
+      }
+    | {
+          id: string;
+          setAsInvalid: (id: string) => void;
+          setAsValid: (id: string) => void;
+          value: string;
+          setValue: (value: string) => void;
+          placeholder?: string;
+          className?: string;
+          caseSensitive?: boolean;
+      };
 
-const SearchField = ({id, className, setValue, value, placeholder, setAsInvalid, setAsValid, caseSensitive}: Props) => {
+const SearchField = ({
+    id,
+    className,
+    setValue,
+    value,
+    placeholder,
+    setAsInvalid,
+    setAsValid,
+    caseSensitive,
+}: Props) => {
     const [invalid] = useState(false);
 
     const onChange = (event: ChangeEvent<HTMLInputElement>) => {
         const invalid = false;
         // Value has to change before invalidity events
         // because all-valid fields triggers graph refresh with the current value
-        setValue(caseSensitive ? event.target.value : event.target.value.toLowerCase());
+        setValue(
+            caseSensitive
+                ? event.target.value
+                : event.target.value.toLowerCase(),
+        );
         if (invalid && setAsInvalid) {
             setAsInvalid(id);
         } else if (setAsValid) {
             setAsValid(id);
         }
-    }
+    };
 
     return (
         <InputGroup className={className}>
-            <div className={"input-group-text"}>
-                <FontAwesomeIcon icon={faSearch}/>
+            <div className={'input-group-text'}>
+                <FontAwesomeIcon icon={faSearch} />
             </div>
-            <input type="text" className={"form-control" + (invalid ? " is-invalid" : '')}
-                   id={id}
-                   placeholder={placeholder}
-                   value={value}
-                   onChange={onChange}
+            <input
+                type='text'
+                className={'form-control' + (invalid ? ' is-invalid' : '')}
+                id={id}
+                placeholder={placeholder}
+                value={value}
+                onChange={onChange}
             />
         </InputGroup>
-    )
+    );
 };
 
-export default SearchField
+export default SearchField;

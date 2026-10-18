@@ -1,8 +1,8 @@
-import {PlanResponse} from "../../../service/PlanResponse";
-import {IconPrefix} from "@fortawesome/free-brands-svg-icons";
-import {IconName} from "@fortawesome/fontawesome-svg-core";
-import {ExtensionLayoutWidths} from "./ExtensionLayoutWidths";
-import {IconFamily} from "../../../util/icons";
+import { PlanResponse } from '../../../service/PlanResponse';
+import { IconPrefix } from '@fortawesome/free-brands-svg-icons';
+import { IconName } from '@fortawesome/fontawesome-svg-core';
+import { ExtensionLayoutWidths } from './ExtensionLayoutWidths';
+import { IconFamily } from '../../../util/icons';
 
 export type ExtensionIcon = {
     family: IconFamily;
@@ -10,18 +10,33 @@ export type ExtensionIcon = {
     color: string;
     colorClass: string;
     iconName: IconName;
-}
+};
 
-export type ElementOrder = 'VALUES' | 'GRAPH' | 'TABLE' | 'GROUPS' | 'STATISTICS' | 'FLAGS';
-export const defaultElementOrder: ElementOrder[] = ['VALUES', 'GRAPH', 'TABLE', 'GROUPS', 'STATISTICS', 'FLAGS'];
+export type ElementOrder =
+    'VALUES' | 'GRAPH' | 'TABLE' | 'GROUPS' | 'STATISTICS' | 'FLAGS';
+export const defaultElementOrder: ElementOrder[] = [
+    'VALUES',
+    'GRAPH',
+    'TABLE',
+    'GROUPS',
+    'STATISTICS',
+    'FLAGS',
+];
 
-export type ExtensionType = 'BOOLEAN' | 'DOUBLE' | 'PERCENTAGE' | 'NUMBER' | 'LINK' | 'STRING' | 'COMPONENT'
+export type ExtensionType =
+    | 'BOOLEAN'
+    | 'DOUBLE'
+    | 'PERCENTAGE'
+    | 'NUMBER'
+    | 'LINK'
+    | 'STRING'
+    | 'COMPONENT'
     | 'TIME_MILLISECONDS'
     | 'DATE_YEAR'
     | 'DATE_SECOND';
 
 export type TableColumnFormat =
-    'BOOLEAN'
+    | 'BOOLEAN'
     | 'PLAYER_NAME'
     | 'CHAT_COLORED'
     | 'TIME_MILLISECONDS'
@@ -32,7 +47,7 @@ export type TableColumnFormat =
 export type ExtensionInformation = {
     pluginName: string;
     icon: ExtensionIcon;
-}
+};
 
 export type ExtensionDescription = {
     name: string;
@@ -40,13 +55,13 @@ export type ExtensionDescription = {
     description?: string;
     icon: ExtensionIcon;
     priority: number;
-}
+};
 
 export type ExtensionValue = {
     description: ExtensionDescription;
     type: ExtensionType;
     value: any;
-}
+};
 
 export type ExtensionTableData = {
     tableName: string;
@@ -54,15 +69,15 @@ export type ExtensionTableData = {
     tableColorClass: string;
     wide: boolean;
     table: ExtensionTable;
-}
+};
 
-export type ExtensionTableCell = { value: any; format: TableColumnFormat }
+export type ExtensionTableCell = { value: any; format: TableColumnFormat };
 
 export type ExtensionTable = {
     columns: string[];
     icons: ExtensionIcon[];
-    rows: ExtensionTableCell[][]
-}
+    rows: ExtensionTableCell[][];
+};
 
 export type ExtensionStatisticsData = {
     providerName: string;
@@ -70,11 +85,11 @@ export type ExtensionStatisticsData = {
     tableColor: string;
     icon: ExtensionIcon;
     tableColorClass: string;
-}
+};
 
 export type ExtensionStatistics = {
-    valueByKey: { [key: string]: number | null }
-}
+    valueByKey: { [key: string]: number | null };
+};
 
 export type ExtensionTab = {
     tabInformation: ExtensionTabInformation;
@@ -82,14 +97,14 @@ export type ExtensionTab = {
     tableData: ExtensionTableData[];
     statisticsData: ExtensionStatisticsData[];
     graphNames: string[];
-}
+};
 
 export type ExtensionTabInformation = {
     tabName: string;
     icon?: ExtensionIcon;
     elementOrder?: ElementOrder[];
     tabPriority: number;
-}
+};
 
 export type ExtensionData = {
     extensionInformation: ExtensionInformation;
@@ -97,10 +112,10 @@ export type ExtensionData = {
     onlyGenericTab: boolean;
     wide: boolean;
     widths?: ExtensionLayoutWidths;
-}
+};
 
 export type ExtensionDataResponseContent = {
     extensions: ExtensionData[];
-}
+};
 
 export type ExtensionDataResponse = PlanResponse<ExtensionDataResponseContent>;

@@ -1,55 +1,55 @@
-import React, {useEffect} from 'react';
-import {useTranslation} from "react-i18next";
-import {useTheme} from "../../hooks/themeHook.tsx";
-import Highcharts from "highcharts/esm/highcharts";
-import "highcharts/esm/modules/accessibility";
-import "highcharts/esm/modules/no-data-to-display"
+import React, { useEffect } from 'react';
+import { useTranslation } from 'react-i18next';
+import { useTheme } from '../../hooks/themeHook.tsx';
+import Highcharts from 'highcharts/esm/highcharts';
+import 'highcharts/esm/modules/accessibility';
+import 'highcharts/esm/modules/no-data-to-display';
 
-const GroupBarGraph = ({id, groups, colors, horizontal, name}) => {
-    const {t} = useTranslation();
-    const {graphTheming} = useTheme();
+const GroupBarGraph = ({ id, groups, colors, horizontal, name }) => {
+    const { t } = useTranslation();
+    const { graphTheming } = useTheme();
 
     useEffect(() => {
         function getColors() {
-            return colors ? colors : groups.map(group => group.color);
+            return colors ? colors : groups.map((group) => group.color);
         }
 
-        const bars = groups.map(group => group.y);
-        const categories = groups.map(group => t(group.name));
+        const bars = groups.map((group) => group.y);
+        const categories = groups.map((group) => t(group.name));
         const barSeries = {
             name: name,
             colorByPoint: true,
             data: bars,
-            colors: getColors()
+            colors: getColors(),
         };
 
         Highcharts.setOptions(graphTheming);
         Highcharts.chart(id, {
             chart: {
                 noData: t('html.label.noDataToDisplay'),
-                type: horizontal ? 'bar' : 'column'
+                type: horizontal ? 'bar' : 'column',
             },
-            title: {text: ''},
+            title: { text: '' },
             xAxis: {
                 categories: categories,
-                title: {text: ''}
+                title: { text: '' },
             },
             yAxis: {
                 min: 0,
-                title: {text: '', align: 'high'},
-                labels: {overflow: 'justify'}
+                title: { text: '', align: 'high' },
+                labels: { overflow: 'justify' },
             },
-            legend: {enabled: false},
+            legend: { enabled: false },
             plotOptions: {
                 bar: {
-                    dataLabels: {enabled: true}
-                }
+                    dataLabels: { enabled: true },
+                },
             },
-            series: [barSeries]
-        })
+            series: [barSeries],
+        });
     }, [id, groups, colors, horizontal, name, graphTheming, t]);
 
-    return (<div id={id} className="chart-area"/>);
+    return <div id={id} className='chart-area' />;
 };
 
-export default GroupBarGraph
+export default GroupBarGraph;

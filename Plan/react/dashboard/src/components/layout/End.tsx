@@ -1,7 +1,7 @@
-import React, {PropsWithChildren} from "react";
+import React, { PropsWithChildren } from 'react';
 
-const End = ({children}: PropsWithChildren) => (
-    <span className="float-end">{children}</span>
-)
+const End = ({ children }: PropsWithChildren) => (
+    <span className='float-end'>{children}</span>
+);
 
 export default End;

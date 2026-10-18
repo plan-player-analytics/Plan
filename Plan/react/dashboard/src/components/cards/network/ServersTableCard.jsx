@@ -1,74 +1,98 @@
-import React, {useCallback, useState} from 'react';
-import {Card, Dropdown} from "react-bootstrap";
-import ServersTable, {ServerSortOption} from "../../table/ServersTable";
-import {faNetworkWired} from "@fortawesome/free-solid-svg-icons";
-import {useTranslation} from "react-i18next";
-import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import {useAuth} from "../../../hooks/authenticationHook.tsx";
-import {calculatePermission} from "../../datapoint/QueryDatapoint.tsx";
+import React, { useCallback, useState } from 'react';
+import { Card, Dropdown } from 'react-bootstrap';
+import ServersTable, { ServerSortOption } from '../../table/ServersTable';
+import { faNetworkWired } from '@fortawesome/free-solid-svg-icons';
+import { useTranslation } from 'react-i18next';
+import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
+import { useAuth } from '../../../hooks/authenticationHook.tsx';
+import { calculatePermission } from '../../datapoint/QueryDatapoint.tsx';
 
-const SortDropDown = ({sortBy, sortReversed, setSortBy}) => {
-    const {t} = useTranslation();
-    const {hasPermission} = useAuth();
+const SortDropDown = ({ sortBy, sortReversed, setSortBy }) => {
+    const { t } = useTranslation();
+    const { hasPermission } = useAuth();
 
-    const sortOptions = Object.values(ServerSortOption)
-        .filter(sortBy => hasPermission(calculatePermission(sortBy.data, {server: "true"})));
+    const sortOptions = Object.values(ServerSortOption).filter((sortBy) =>
+        hasPermission(calculatePermission(sortBy.data, { server: 'true' })),
+    );
 
     const getSortIcon = useCallback(() => {
         return sortReversed ? sortBy.iconDesc : sortBy.iconAsc;
     }, [sortBy, sortReversed]);
 
     return (
-        <Dropdown className="float-end" style={{position: "absolute", right: "0.5rem"}}>
-            <Dropdown.Toggle variant='' style={{'--bs-btn-color': 'var(--color-forms-input-text)'}}>
-                <Fa icon={getSortIcon()}/> {t(sortBy.label)}
+        <Dropdown
+            className='float-end'
+            style={{ position: 'absolute', right: '0.5rem' }}>
+            <Dropdown.Toggle
+                variant=''
+                style={{ '--bs-btn-color': 'var(--color-forms-input-text)' }}>
+                <Fa icon={getSortIcon()} /> {t(sortBy.label)}
             </Dropdown.Toggle>
 
             <Dropdown.Menu>
-                <h6 className="dropdown-header">{t('html.label.sortBy')}</h6>
-                {sortOptions.map(option => (
-                    <Dropdown.Item key={option} onClick={() => setSortBy(option)}>
+                <h6 className='dropdown-header'>{t('html.label.sortBy')}</h6>
+                {sortOptions.map((option) => (
+                    <Dropdown.Item
+                        key={option}
+                        onClick={() => setSortBy(option)}>
                         {t(option.label)}
                     </Dropdown.Item>
                 ))}
             </Dropdown.Menu>
         </Dropdown>
-    )
-}
+    );
+};
 
-const ServersTableCard = ({servers, onSelect}) => {
-    const {t} = useTranslation();
+const ServersTableCard = ({ servers, onSelect }) => {
+    const { t } = useTranslation();
     const [sortBy, setSortBy] = useState(ServerSortOption.ALPHABETICAL);
     const [sortReversed, setSortReversed] = useState(false);
 
-    const setSort = option => {
+    const setSort = (option) => {
         if (sortBy === option) {
             setSortReversed(!sortReversed);
         } else {
             setSortBy(option);
             setSortReversed(false);
         }
-    }
+    };
 
     return (
         <Card>
-            <Card.Header style={{width: "100%"}}>
-                <h6 className="col-text">
-                    <Fa icon={faNetworkWired} className={"col-servers"}/> {t('html.label.servers')}
+            <Card.Header style={{ width: '100%' }}>
+                <h6 className='col-text'>
+                    <Fa icon={faNetworkWired} className={'col-servers'} />{' '}
+                    {t('html.label.servers')}
                 </h6>
-                <SortDropDown sortBy={sortBy} setSortBy={setSort} sortReversed={sortReversed}/>
+                <SortDropDown
+                    sortBy={sortBy}
+                    setSortBy={setSort}
+                    sortReversed={sortReversed}
+                />
             </Card.Header>
-            {!servers.length && <Card.Body>
-                <p>No servers found in the database.</p>
-                <p>It appears that Plan is not installed on any game servers or not connected to the same database.
-                    See <a href="https://github.com/plan-player-analytics/Plan/wiki">wiki</a> for Network tutorial.</p>
-            </Card.Body>}
-            {Boolean(servers.length) && <ServersTable servers={servers}
-                                                      onSelect={onSelect}
-                                                      sortBy={sortBy}
-                                                      sortReversed={sortReversed}/>}
+            {!servers.length && (
+                <Card.Body>
+                    <p>No servers found in the database.</p>
+                    <p>
+                        It appears that Plan is not installed on any game
+                        servers or not connected to the same database. See{' '}
+                        <a href='https://github.com/plan-player-analytics/Plan/wiki'>
+                            wiki
+                        </a>{' '}
+                        for Network tutorial.
+                    </p>
+                </Card.Body>
+            )}
+            {Boolean(servers.length) && (
+                <ServersTable
+                    servers={servers}
+                    onSelect={onSelect}
+                    sortBy={sortBy}
+                    sortReversed={sortReversed}
+                />
+            )}
         </Card>
-    )
+    );
 };
 
-export default ServersTableCard
+export default ServersTableCard;

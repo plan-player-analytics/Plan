@@ -1,24 +1,24 @@
 enum ContributedFor {
-    LANG = "LANG",
-    CODE = "CODE"
+    LANG = 'LANG',
+    CODE = 'CODE',
 }
 
 export type Contributor = {
-    name: string,
-    contributed: ContributedFor[]
-}
+    name: string;
+    contributed: ContributedFor[];
+};
 
 export type Server = {
     serverUUID: string;
     serverName: string;
     proxy: boolean;
-}
+};
 
 export type NetworkMetadata = {
     servers: Server[];
     currentServer: Server;
     usingRedisBungee: boolean;
-}
+};
 
 export type Metadata = {
     timestamp: number;
@@ -39,4 +39,4 @@ export type Metadata = {
     refreshBarrierMs: number;
     registrationDisabled: boolean;
     networkMetadata?: NetworkMetadata;
-}
+};

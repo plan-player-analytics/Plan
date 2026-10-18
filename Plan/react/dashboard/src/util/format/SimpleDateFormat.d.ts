@@ -6,4 +6,4 @@ declare class SimpleDateFormat {
     format(date: number, locale: string): string;
 }
 
-export {SimpleDateFormat};
+export { SimpleDateFormat };

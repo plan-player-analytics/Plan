@@ -1,36 +1,43 @@
-import React, {useCallback, useMemo} from "react";
-import FullCalendar from '@fullcalendar/react'
-import dayGridPlugin from '@fullcalendar/daygrid'
-import interactionPlugin from '@fullcalendar/interaction'
-import {useTranslation} from "react-i18next";
-import {localeService} from "../../service/localeService.js";
-import {useTimeAmountFormatter} from "../../util/format/useTimeAmountFormatter.ts";
-import {staticSite} from "../../service/backendConfiguration.js";
+import React, { useCallback, useMemo } from 'react';
+import FullCalendar from '@fullcalendar/react';
+import dayGridPlugin from '@fullcalendar/daygrid';
+import interactionPlugin from '@fullcalendar/interaction';
+import { useTranslation } from 'react-i18next';
+import { localeService } from '../../service/localeService.js';
+import { useTimeAmountFormatter } from '../../util/format/useTimeAmountFormatter.ts';
+import { staticSite } from '../../service/backendConfiguration.js';
 
-const ServerCalendar = ({series, firstDay, onSelect, height}) => {
-    const {t} = useTranslation();
-    const {formatTime} = useTimeAmountFormatter();
+const ServerCalendar = ({ series, firstDay, onSelect, height }) => {
+    const { t } = useTranslation();
+    const { formatTime } = useTimeAmountFormatter();
 
-    const formatTitle = useCallback(entry => {
-        switch (entry.title) {
-            case 'html.label.playtime':
-                return t(entry.title) + ": " + formatTime(entry.value)
-            case 'html.calendar.unique':
-            case 'html.calendar.new':
-                return t(entry.title) + " " + entry.value
-            default:
-                return t(entry.title) + ": " + entry.value;
-        }
-    }, [formatTime, t]);
+    const formatTitle = useCallback(
+        (entry) => {
+            switch (entry.title) {
+                case 'html.label.playtime':
+                    return t(entry.title) + ': ' + formatTime(entry.value);
+                case 'html.calendar.unique':
+                case 'html.calendar.new':
+                    return t(entry.title) + ' ' + entry.value;
+                default:
+                    return t(entry.title) + ': ' + entry.value;
+            }
+        },
+        [formatTime, t],
+    );
 
-    const actualSeries = useMemo(() => series.map(entry => {
-        return {
-            title: formatTitle(entry),
-            start: entry.start,
-            end: entry.end,
-            color: entry.color
-        }
-    }), [series, formatTitle]);
+    const actualSeries = useMemo(
+        () =>
+            series.map((entry) => {
+                return {
+                    title: formatTitle(entry),
+                    start: entry.start,
+                    end: entry.end,
+                    color: entry.color,
+                };
+            }),
+        [series, formatTitle],
+    );
 
     const buttonText = {
         today: t('plugin.generic.today').toLowerCase().replaceAll("'", ''),
@@ -44,7 +51,7 @@ const ServerCalendar = ({series, firstDay, onSelect, height}) => {
             <FullCalendar
                 locale={localeService.getIntlFriendlyLocale()}
                 plugins={[interactionPlugin, dayGridPlugin]}
-                timeZone="UTC"
+                timeZone='UTC'
                 themeSystem='bootstrap'
                 eventColor='#2196F3'
                 // dayMaxEventRows={4}
@@ -56,17 +63,19 @@ const ServerCalendar = ({series, firstDay, onSelect, height}) => {
                 headerToolbar={{
                     left: 'title',
                     center: '',
-                    right: 'dayGridMonth dayGridWeek dayGridDay today prev next'
+                    right: 'dayGridMonth dayGridWeek dayGridDay today prev next',
                 }}
                 buttonText={buttonText}
                 editable={false}
                 selectable={Boolean(onSelect && !staticSite)}
                 select={onSelect}
                 unselectAuto={true}
-                events={(_fetchInfo, successCallback) => successCallback(actualSeries)}
+                events={(_fetchInfo, successCallback) =>
+                    successCallback(actualSeries)
+                }
             />
         </div>
-    )
-}
+    );
+};
 
-export default ServerCalendar
+export default ServerCalendar;

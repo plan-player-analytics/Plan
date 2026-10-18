@@ -1,26 +1,26 @@
-import React, {useCallback, useEffect, useState} from 'react';
-import LoadIn from "../../components/animation/LoadIn.tsx";
-import {Alert, Card, Col} from "react-bootstrap";
-import {useMetadata} from "../../hooks/metadataHook.tsx";
-import CardHeader from "../../components/cards/CardHeader.tsx";
-import {faInfoCircle, faServer} from "@fortawesome/free-solid-svg-icons";
-import MultiSelect from "../../components/input/MultiSelect.tsx";
-import {useTranslation} from "react-i18next";
-import {fetchOptimizedPerformance} from "../../service/serverService";
-import PerformanceAsNumbersCard from "../../components/cards/server/tables/PerformanceAsNumbersCard.tsx";
-import {useNavigation} from "../../hooks/navigationHook.tsx";
-import {mapPerformanceDataToSeries} from "../../util/graphs";
-import PerformanceGraphsCard from "../../components/cards/network/PerformanceGraphsCard";
-import ExtendableRow from "../../components/layout/extension/ExtendableRow.tsx";
-import {useAuth} from "../../hooks/authenticationHook.tsx";
-import ActionButton from "../../components/input/button/ActionButton.tsx";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import React, { useCallback, useEffect, useState } from 'react';
+import LoadIn from '../../components/animation/LoadIn.tsx';
+import { Alert, Card, Col } from 'react-bootstrap';
+import { useMetadata } from '../../hooks/metadataHook.tsx';
+import CardHeader from '../../components/cards/CardHeader.tsx';
+import { faInfoCircle, faServer } from '@fortawesome/free-solid-svg-icons';
+import MultiSelect from '../../components/input/MultiSelect.tsx';
+import { useTranslation } from 'react-i18next';
+import { fetchOptimizedPerformance } from '../../service/serverService';
+import PerformanceAsNumbersCard from '../../components/cards/server/tables/PerformanceAsNumbersCard.tsx';
+import { useNavigation } from '../../hooks/navigationHook.tsx';
+import { mapPerformanceDataToSeries } from '../../util/graphs';
+import PerformanceGraphsCard from '../../components/cards/network/PerformanceGraphsCard';
+import ExtendableRow from '../../components/layout/extension/ExtendableRow.tsx';
+import { useAuth } from '../../hooks/authenticationHook.tsx';
+import ActionButton from '../../components/input/button/ActionButton.tsx';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const NetworkPerformance = () => {
-    const {hasPermission} = useAuth();
-    const {t} = useTranslation();
-    const {networkMetadata} = useMetadata();
-    const {updateRequested} = useNavigation();
+    const { hasPermission } = useAuth();
+    const { t } = useTranslation();
+    const { networkMetadata } = useMetadata();
+    const { updateRequested } = useNavigation();
 
     const [serverOptions, setServerOptions] = useState([]);
     const [selectedOptions, setSelectedOptions] = useState([]);
@@ -33,8 +33,11 @@ const NetworkPerformance = () => {
             const options = networkMetadata.servers;
             setServerOptions(options);
 
-            const indexOfProxy = options
-                .findIndex(option => option.serverName === networkMetadata.currentServer.serverName);
+            const indexOfProxy = options.findIndex(
+                (option) =>
+                    option.serverName ===
+                    networkMetadata.currentServer.serverName,
+            );
 
             if (indexOfProxy >= 0) {
                 setSelectedOptions([indexOfProxy]);
@@ -45,7 +48,7 @@ const NetworkPerformance = () => {
 
     const applySelected = () => {
         setVisualizedServers(selectedOptions);
-    }
+    };
 
     const [performanceData, setPerformanceData] = useState({});
     const loadPerformanceData = useCallback(async () => {
@@ -57,14 +60,17 @@ const NetworkPerformance = () => {
             errors: [],
             zones: {},
             colors: {},
-            timestamp_f: ''
-        }
+            timestamp_f: '',
+        };
         const time = Date.now();
 
         for (const index of visualizedServers) {
             const server = serverOptions[index];
 
-            const {data, error} = await fetchOptimizedPerformance(time, encodeURIComponent(server.serverUUID));
+            const { data, error } = await fetchOptimizedPerformance(
+                time,
+                encodeURIComponent(server.serverUUID),
+            );
             if (data) {
                 loaded.servers.push(server);
                 const values = data.values;
@@ -80,56 +86,93 @@ const NetworkPerformance = () => {
         }
 
         setPerformanceData(loaded);
-    }, [visualizedServers, serverOptions, setPerformanceData, seePerformance])
+    }, [visualizedServers, serverOptions, setPerformanceData, seePerformance]);
 
     useEffect(() => {
         loadPerformanceData();
     }, [loadPerformanceData, visualizedServers, updateRequested]);
 
-    const isUpToDate = selectedOptions.length === visualizedServers.length && selectedOptions.every(
-        (s, i) => s === visualizedServers[i]);
-    const dataIncludesGameServers = !performanceData.servers || Boolean(performanceData.servers.filter(server => !server.proxy).length);
+    const isUpToDate =
+        selectedOptions.length === visualizedServers.length &&
+        selectedOptions.every((s, i) => s === visualizedServers[i]);
+    const dataIncludesGameServers =
+        !performanceData.servers ||
+        Boolean(
+            performanceData.servers.filter((server) => !server.proxy).length,
+        );
     return (
         <LoadIn>
-            {seePerformance && <section className={"network-performance"}>
-                <ExtendableRow id={'row-network-performance-0'}>
-                    <Col>
-                        {!!performanceData.servers?.length && <PerformanceGraphsCard data={performanceData}/>}
-                        {!performanceData.servers?.length && <Card>
-                            <Card.Body>
-                                <p>{t('html.label.selectSomeServer')}</p>
-                            </Card.Body>
-                        </Card>}
-                    </Col>
-                </ExtendableRow>
-                <ExtendableRow id={'row-network-performance-1'}>
-                    <Col md={10}>
-                        {!!performanceData.servers?.length &&
-                            <PerformanceAsNumbersCard servers={performanceData.servers || []}/>}
-                        {!performanceData.servers?.length && <Card>
-                            <Card.Body>
-                                <p>{t('html.label.selectSomeServer')}</p>
-                            </Card.Body>
-                        </Card>}
-                    </Col>
-                    <Col md={2}>
-                        <Card>
-                            <CardHeader icon={faServer} color={'servers'} label={t('html.label.serverSelector')}/>
-                            <MultiSelect options={serverOptions.map(server => server.serverName)}
-                                         selectedIndexes={selectedOptions}
-                                         setSelectedIndexes={setSelectedOptions}/>
-                            <ActionButton onClick={applySelected} disabled={isUpToDate || !selectedOptions.length}>
-                                {t('html.label.apply')}
-                            </ActionButton>
-                        </Card>
-                        {!dataIncludesGameServers && <Alert className='alert-warning mb-0'>
-                            <FontAwesomeIcon icon={faInfoCircle}/> {t('html.description.performanceNoGameServers')}
-                        </Alert>}
-                    </Col>
-                </ExtendableRow>
-            </section>}
+            {seePerformance && (
+                <section className={'network-performance'}>
+                    <ExtendableRow id={'row-network-performance-0'}>
+                        <Col>
+                            {!!performanceData.servers?.length && (
+                                <PerformanceGraphsCard data={performanceData} />
+                            )}
+                            {!performanceData.servers?.length && (
+                                <Card>
+                                    <Card.Body>
+                                        <p>
+                                            {t('html.label.selectSomeServer')}
+                                        </p>
+                                    </Card.Body>
+                                </Card>
+                            )}
+                        </Col>
+                    </ExtendableRow>
+                    <ExtendableRow id={'row-network-performance-1'}>
+                        <Col md={10}>
+                            {!!performanceData.servers?.length && (
+                                <PerformanceAsNumbersCard
+                                    servers={performanceData.servers || []}
+                                />
+                            )}
+                            {!performanceData.servers?.length && (
+                                <Card>
+                                    <Card.Body>
+                                        <p>
+                                            {t('html.label.selectSomeServer')}
+                                        </p>
+                                    </Card.Body>
+                                </Card>
+                            )}
+                        </Col>
+                        <Col md={2}>
+                            <Card>
+                                <CardHeader
+                                    icon={faServer}
+                                    color={'servers'}
+                                    label={t('html.label.serverSelector')}
+                                />
+                                <MultiSelect
+                                    options={serverOptions.map(
+                                        (server) => server.serverName,
+                                    )}
+                                    selectedIndexes={selectedOptions}
+                                    setSelectedIndexes={setSelectedOptions}
+                                />
+                                <ActionButton
+                                    onClick={applySelected}
+                                    disabled={
+                                        isUpToDate || !selectedOptions.length
+                                    }>
+                                    {t('html.label.apply')}
+                                </ActionButton>
+                            </Card>
+                            {!dataIncludesGameServers && (
+                                <Alert className='alert-warning mb-0'>
+                                    <FontAwesomeIcon icon={faInfoCircle} />{' '}
+                                    {t(
+                                        'html.description.performanceNoGameServers',
+                                    )}
+                                </Alert>
+                            )}
+                        </Col>
+                    </ExtendableRow>
+                </section>
+            )}
         </LoadIn>
-    )
+    );
 };
 
-export default NetworkPerformance
+export default NetworkPerformance;

@@ -1,38 +1,47 @@
 import React from 'react';
-import {Modal} from "react-bootstrap";
-import {FontAwesomeIcon as Fa} from "@fortawesome/react-fontawesome";
-import {faHandPointRight} from "@fortawesome/free-regular-svg-icons";
-import {useTranslation} from "react-i18next";
-import {useMetadata} from "../../hooks/metadataHook.tsx";
-import {Link} from "react-router";
-import ModalCloseButton from "../input/button/ModalCloseButton.tsx";
+import { Modal } from 'react-bootstrap';
+import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
+import { faHandPointRight } from '@fortawesome/free-regular-svg-icons';
+import { useTranslation } from 'react-i18next';
+import { useMetadata } from '../../hooks/metadataHook.tsx';
+import { Link } from 'react-router';
+import ModalCloseButton from '../input/button/ModalCloseButton.tsx';
 
-const ForgotPasswordModal = ({show, toggle}) => {
-    const {t} = useTranslation();
-    const {mainCommand} = useMetadata();
+const ForgotPasswordModal = ({ show, toggle }) => {
+    const { t } = useTranslation();
+    const { mainCommand } = useMetadata();
 
     return (
-        <Modal id="forgotPasswordModal"
-               aria-labelledby="forgotModalLabel"
-               show={show}
-               onHide={toggle}
-        >
+        <Modal
+            id='forgotPasswordModal'
+            aria-labelledby='forgotModalLabel'
+            show={show}
+            onHide={toggle}>
             <Modal.Header>
-                <Modal.Title id="forgotModalLabel">
-                    <Fa icon={faHandPointRight}/> {t('html.login.forgotPassword1')}
+                <Modal.Title id='forgotModalLabel'>
+                    <Fa icon={faHandPointRight} />{' '}
+                    {t('html.login.forgotPassword1')}
                 </Modal.Title>
-                <ModalCloseButton onClick={toggle}/>
+                <ModalCloseButton onClick={toggle} />
             </Modal.Header>
             <Modal.Body>
                 <p>{t('html.login.forgotPassword2')}</p>
-                <p><code>/{mainCommand || 'plan'} unregister</code></p>
+                <p>
+                    <code>/{mainCommand || 'plan'} unregister</code>
+                </p>
                 <p>{t('html.login.forgotPassword3')}</p>
-                <p><code>/{mainCommand || 'plan'} unregister [username]</code></p>
-                <p>{t('html.login.forgotPassword4')} <Link to="/register"
-                                                           className="col-plan">{t('html.login.register')}</Link></p>
+                <p>
+                    <code>/{mainCommand || 'plan'} unregister [username]</code>
+                </p>
+                <p>
+                    {t('html.login.forgotPassword4')}{' '}
+                    <Link to='/register' className='col-plan'>
+                        {t('html.login.register')}
+                    </Link>
+                </p>
             </Modal.Body>
         </Modal>
-    )
+    );
 };
 
-export default ForgotPasswordModal
+export default ForgotPasswordModal;
