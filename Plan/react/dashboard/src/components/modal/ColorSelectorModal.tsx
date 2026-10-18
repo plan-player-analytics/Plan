@@ -1,17 +1,17 @@
 import React from 'react';
-import { useTheme } from '../../hooks/themeHook.tsx';
+import { useTheme } from '../../hooks/themeHook';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faCloudMoon, faPalette } from '@fortawesome/free-solid-svg-icons';
 import { Col, Modal, Row } from 'react-bootstrap';
 import { useTranslation } from 'react-i18next';
-import { useThemeStorage } from '../../hooks/context/themeContextHook.tsx';
-import { useMetadata } from '../../hooks/metadataHook.tsx';
-import ThemeOption from '../theme/ThemeOption.jsx';
-import { useAuth } from '../../hooks/authenticationHook.tsx';
-import AddThemeButton from '../theme/AddThemeButton.tsx';
-import ActionButton from '../input/button/ActionButton.tsx';
-import ColorSelectorButton from '../theme/ColorSelectorButton.jsx';
-import ModalCloseButton from '../input/button/ModalCloseButton.tsx';
+import { useThemeStorage } from '../../hooks/context/themeContextHook';
+import { useMetadata } from '../../hooks/metadataHook';
+import ThemeOption from '../theme/ThemeOption.js';
+import { useAuth } from '../../hooks/authenticationHook';
+import AddThemeButton from '../theme/AddThemeButton';
+import ActionButton from '../input/button/ActionButton';
+import ColorSelectorButton from '../theme/ColorSelectorButton.js';
+import ModalCloseButton from '../input/button/ModalCloseButton';
 
 const ColorSelectorModal = () => {
     const { t } = useTranslation();
@@ -45,14 +45,15 @@ const ColorSelectorModal = () => {
                 <Row>
                     <Col>
                         <h5>{t('html.label.themeEditor.themeColorOptions')}</h5>
-                        {colorOptions.map((color) => (
-                            <ColorSelectorButton
-                                key={color}
-                                color={color}
-                                setColor={theme.setColor}
-                                active={color === theme.color}
-                            />
-                        ))}
+                        {colorOptions &&
+                            colorOptions.map((color) => (
+                                <ColorSelectorButton
+                                    key={color}
+                                    color={color}
+                                    setColor={theme.setColor}
+                                    active={color === theme.color}
+                                />
+                            ))}
                     </Col>
                 </Row>
                 <hr />

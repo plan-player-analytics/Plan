@@ -2,7 +2,7 @@ import React from 'react';
 import Sidebar from '../../components/navigation/Sidebar';
 import Header from '../../components/navigation/Header';
 import { useTranslation } from 'react-i18next';
-import ColorSelectorModal from '../../components/modal/ColorSelectorModal';
+import ColorSelectorModal from '../../components/modal/ColorSelectorModal.tsx';
 import { ThemeStyleCss } from '../../components/theme/ThemeStyleCss.tsx';
 import { ThemeEditContextProvider } from '../../hooks/context/themeEditContextHook.tsx';
 import { SwitchTransition } from 'react-transition-group';

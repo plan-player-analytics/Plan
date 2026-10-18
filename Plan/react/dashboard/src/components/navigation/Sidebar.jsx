@@ -9,8 +9,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { Link, NavLink, useLocation } from 'react-router';
 import { useTheme } from '../../hooks/themeHook.tsx';
-import PluginInformationModal from '../modal/PluginInformationModal';
-import VersionInformationModal from '../modal/VersionInformationModal';
+import PluginInformationModal from '../modal/PluginInformationModal.tsx';
+import VersionInformationModal from '../modal/VersionInformationModal.tsx';
 import { fetchPlanVersion } from '../../service/metadataService';
 import { useAuth } from '../../hooks/authenticationHook.tsx';
 import { useNavigation } from '../../hooks/navigationHook.tsx';

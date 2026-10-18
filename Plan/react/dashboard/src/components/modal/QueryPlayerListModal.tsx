@@ -4,14 +4,22 @@ import { Modal } from 'react-bootstrap';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faArrowRight, faSearch } from '@fortawesome/free-solid-svg-icons';
 import { getViewTitle } from '../../views/query/QueryResultView';
-import { ChartLoader } from '../navigation/Loader.tsx';
+import { ChartLoader } from '../navigation/Loader';
 import { useNavigate } from 'react-router';
-import { useAuth } from '../../hooks/authenticationHook.tsx';
+import { useAuth } from '../../hooks/authenticationHook';
 import PlayerTable from '../table/PlayerTable.jsx';
-import ActionButton from '../input/button/ActionButton.tsx';
-import ModalCloseButton from '../input/button/ModalCloseButton.tsx';
+import ActionButton from '../input/button/ActionButton';
+import ModalCloseButton from '../input/button/ModalCloseButton';
+import { QueryResult } from '../../hooks/model/QueryResult';
 
-const QueryPlayerListModal = ({ open, toggle, queryData, title }) => {
+type Props = {
+    open: boolean;
+    toggle: () => void;
+    queryData?: QueryResult;
+    title?: string;
+};
+
+const QueryPlayerListModal = ({ open, toggle, queryData, title }: Props) => {
     const { t } = useTranslation();
     const navigate = useNavigate();
     const { hasPermission } = useAuth();

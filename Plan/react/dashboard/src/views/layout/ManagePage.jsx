@@ -10,7 +10,7 @@ import ErrorPage from './ErrorPage';
 import Sidebar from '../../components/navigation/Sidebar';
 import Header from '../../components/navigation/Header';
 import { Outlet } from 'react-router';
-import ColorSelectorModal from '../../components/modal/ColorSelectorModal';
+import ColorSelectorModal from '../../components/modal/ColorSelectorModal.tsx';
 import AlertPopupArea from '../../components/alert/AlertPopupArea';
 
 const HelpModal = React.lazy(() => import('../../components/modal/HelpModal'));

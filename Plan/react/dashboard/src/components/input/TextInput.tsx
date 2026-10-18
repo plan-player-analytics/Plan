@@ -1,21 +1,34 @@
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, KeyboardEvent, useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { InputGroup } from 'react-bootstrap';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+
+type Props = {
+    value: string;
+    setValue: (value: string) => void;
+    icon: IconProp;
+    placeholder?: string;
+    id?: string;
+    isInvalid?: (value: string) => boolean;
+    invalidFeedback?: string;
+    disabled?: boolean;
+    disabledFeedback?: string;
+};
 
 const TextInput = ({
-    id,
-    icon,
-    invalidFeedback,
-    placeholder,
     value,
     setValue,
+    icon,
+    placeholder,
+    id,
     isInvalid,
+    invalidFeedback,
     disabled,
     disabledFeedback,
-}) => {
+}: Props) => {
     const [cachedValue, setCachedValue] = useState(value);
     const [invalid, setInvalid] = useState(false);
-    const onChange = (event) => {
+    const onChange = (event: ChangeEvent<HTMLInputElement>) => {
         const newValue = event.target.value;
         setCachedValue(newValue);
         setInvalid(isInvalid ? isInvalid(newValue) : false);
@@ -25,7 +38,7 @@ const TextInput = ({
         setValue(cachedValue);
     };
 
-    const onKeyDown = (event) => {
+    const onKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
         if (event.key === 'Enter') {
             setValue(cachedValue);
         }

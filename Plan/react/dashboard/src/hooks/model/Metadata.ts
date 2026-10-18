@@ -1,4 +1,4 @@
-enum ContributedFor {
+export enum ContributedFor {
     LANG = 'LANG',
     CODE = 'CODE',
 }

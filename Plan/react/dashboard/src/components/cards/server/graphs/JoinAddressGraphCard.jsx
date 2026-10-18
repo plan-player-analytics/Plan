@@ -10,7 +10,7 @@ import {
 } from '@fortawesome/react-fontawesome';
 import { faChartColumn } from '@fortawesome/free-solid-svg-icons';
 import JoinAddressGraph from '../../../graphs/JoinAddressGraph';
-import Toggle from '../../../input/Toggle';
+import Toggle from '../../../input/Toggle.tsx';
 import { useJoinAddressListContext } from '../../../../hooks/context/joinAddressListContextHook.jsx';
 import { useNavigation } from '../../../../hooks/navigationHook.tsx';
 import { staticSite } from '../../../../service/backendConfiguration.js';

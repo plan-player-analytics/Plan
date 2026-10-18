@@ -5,7 +5,7 @@ import RangeSlider from 'react-bootstrap-range-slider';
 
 const NewPlayerRetentionHelp = () => {
     const { t } = useTranslation();
-    const clockNow = new Date().getTime() % (24 * 60 * 60 * 1000);
+    const clockNow = Date.now() % (24 * 60 * 60 * 1000);
     const start = clockNow;
     const retentionStart = clockNow + 12 * 60 * 60 * 1000;
     const end = clockNow + 24 * 60 * 60 * 1000;

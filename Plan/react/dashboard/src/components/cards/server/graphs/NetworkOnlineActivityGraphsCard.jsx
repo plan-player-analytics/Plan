@@ -23,7 +23,7 @@ import { postQuery } from '../../../../service/queryService';
 import Highcharts from 'highcharts/highstock';
 import 'highcharts/modules/no-data-to-display';
 import 'highcharts/modules/accessibility';
-import QueryPlayerListModal from '../../../modal/QueryPlayerListModal';
+import QueryPlayerListModal from '../../../modal/QueryPlayerListModal.tsx';
 import { staticSite } from '../../../../service/backendConfiguration.js';
 
 const SingleProxyPlayersOnlineGraph = ({ serverUUID }) => {

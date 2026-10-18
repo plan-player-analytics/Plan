@@ -14,7 +14,7 @@ import DataPlayerVersusUseCase from './usecase/DataPlayerVersusUseCase.tsx';
 import DataPlayerStatusUseCase from './usecase/DataPlayerStatusUseCase.tsx';
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import CollapseWithButton from '../layout/CollapseWithButton.jsx';
+import CollapseWithButton from '../layout/CollapseWithButton.tsx';
 import FormsUseCase from './usecase/FormsUseCase.jsx';
 import { addToObject } from '../../util/mutator.js';
 import { graphUseCases } from './usecase/GraphUseCases.jsx';

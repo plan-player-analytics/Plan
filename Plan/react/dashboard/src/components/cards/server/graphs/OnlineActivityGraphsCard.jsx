@@ -22,7 +22,7 @@ import Highcharts from 'highcharts/highstock';
 import 'highcharts/modules/no-data-to-display';
 import 'highcharts/modules/accessibility';
 import { postQuery } from '../../../../service/queryService';
-import QueryPlayerListModal from '../../../modal/QueryPlayerListModal';
+import QueryPlayerListModal from '../../../modal/QueryPlayerListModal.tsx';
 import { useMetadata } from '../../../../hooks/metadataHook.tsx';
 import { staticSite } from '../../../../service/backendConfiguration.js';
 

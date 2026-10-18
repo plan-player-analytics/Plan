@@ -21,7 +21,7 @@ import 'highcharts/modules/accessibility';
 import 'highcharts/modules/no-data-to-display';
 import { postQuery } from '../../../service/queryService';
 import { useMetadata } from '../../../hooks/metadataHook.tsx';
-import QueryPlayerListModal from '../../modal/QueryPlayerListModal';
+import QueryPlayerListModal from '../../modal/QueryPlayerListModal.tsx';
 import { faHandPointer } from '@fortawesome/free-regular-svg-icons';
 import CardHeader from '../CardHeader.tsx';
 

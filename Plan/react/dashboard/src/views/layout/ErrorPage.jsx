@@ -2,7 +2,7 @@ import React from 'react';
 import Sidebar from '../../components/navigation/Sidebar';
 import Header from '../../components/navigation/Header';
 import ErrorView from '../ErrorView.tsx';
-import ColorSelectorModal from '../../components/modal/ColorSelectorModal';
+import ColorSelectorModal from '../../components/modal/ColorSelectorModal.tsx';
 
 const ErrorPage = ({ error }) => {
     return (

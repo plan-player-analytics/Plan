@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 import { InputGroup } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 
-const isValidTime = (value) => {
+const isValidTime = (value?: string) => {
     if (!value) return true;
     const regex = /^[0-2]\d:[0-5]\d$/;
     return regex.test(value);
 };
 
-const correctTime = (value) => {
+const correctTime = (value: string) => {
     const d = value.match(/^(0\d|\d{2}):?(0\d|\d{2})$/);
     if (!d) return value;
     let hour = Number(d[1]);
@@ -23,6 +23,26 @@ const correctTime = (value) => {
     );
 };
 
+type Props =
+    | {
+          id: never;
+          setAsInvalid: never;
+          setAsValid: never;
+          value: string;
+          setValue: (value: string) => void;
+          placeholder?: string;
+          disabled?: boolean;
+      }
+    | {
+          id: string;
+          setAsInvalid: (id: string) => void;
+          setAsValid: (id: string) => void;
+          value: string;
+          setValue: (value: string) => void;
+          placeholder?: string;
+          disabled?: boolean;
+      };
+
 const TimeInputField = ({
     id,
     setValue,
@@ -31,10 +51,10 @@ const TimeInputField = ({
     setAsInvalid,
     setAsValid,
     disabled,
-}) => {
+}: Props) => {
     const [invalid, setInvalid] = useState(false);
 
-    const onChange = (event) => {
+    const onChange = (event: ChangeEvent<HTMLInputElement>) => {
         const value = correctTime(event.target.value);
         const invalid = !isValidTime(value);
         setInvalid(invalid);
@@ -42,10 +62,12 @@ const TimeInputField = ({
         // Value has to change before invalidity events
         // because all-valid fields triggers graph refresh with the current value
         setValue(value);
-        if (invalid) {
-            setAsInvalid(id);
-        } else {
-            setAsValid(id);
+        if (id) {
+            if (invalid) {
+                setAsInvalid(id);
+            } else {
+                setAsValid(id);
+            }
         }
     };
 

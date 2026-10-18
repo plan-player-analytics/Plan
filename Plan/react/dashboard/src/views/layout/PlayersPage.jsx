@@ -5,7 +5,7 @@ import { useNavigation } from '../../hooks/navigationHook.tsx';
 import { faSearch } from '@fortawesome/free-solid-svg-icons';
 import Sidebar from '../../components/navigation/Sidebar';
 import Header from '../../components/navigation/Header';
-import ColorSelectorModal from '../../components/modal/ColorSelectorModal';
+import ColorSelectorModal from '../../components/modal/ColorSelectorModal.tsx';
 import { useMetadata } from '../../hooks/metadataHook.tsx';
 import ErrorPage from './ErrorPage';
 import { staticSite } from '../../service/backendConfiguration';

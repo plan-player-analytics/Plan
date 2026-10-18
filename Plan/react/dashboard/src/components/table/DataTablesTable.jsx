@@ -13,8 +13,8 @@ import {
     faSortAsc,
     faSortDesc,
 } from '@fortawesome/free-solid-svg-icons';
-import Toggle from '../input/Toggle';
-import CollapseWithButton from '../layout/CollapseWithButton';
+import Toggle from '../input/Toggle.tsx';
+import CollapseWithButton from '../layout/CollapseWithButton.tsx';
 import {
     faMinusSquare,
     faPlusSquare,

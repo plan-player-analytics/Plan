@@ -1,7 +1,7 @@
 import React from 'react';
 import Sidebar from '../../components/navigation/Sidebar';
 import Header from '../../components/navigation/Header';
-import ColorSelectorModal from '../../components/modal/ColorSelectorModal';
+import ColorSelectorModal from '../../components/modal/ColorSelectorModal.tsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBug } from '@fortawesome/free-solid-svg-icons';
 import { useDataRequest } from '../../hooks/dataFetchHook';

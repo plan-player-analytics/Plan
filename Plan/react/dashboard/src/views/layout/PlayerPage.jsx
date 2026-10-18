@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import Sidebar from '../../components/navigation/Sidebar';
 import { Outlet, useOutletContext, useParams } from 'react-router';
-import ColorSelectorModal from '../../components/modal/ColorSelectorModal';
+import ColorSelectorModal from '../../components/modal/ColorSelectorModal.tsx';
 import { fetchPlayer } from '../../service/playerService';
 import {
     faArrowUpRightDots,

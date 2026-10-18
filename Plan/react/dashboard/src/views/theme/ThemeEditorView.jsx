@@ -4,7 +4,7 @@ import { useThemeEditContext } from '../../hooks/context/themeEditContextHook.ts
 import { Card, Col, Row } from 'react-bootstrap';
 import EditorMenuToast from '../../components/theme/EditorMenuToast.jsx';
 import CardHeader from '../../components/cards/CardHeader.tsx';
-import TextInput from '../../components/input/TextInput.jsx';
+import TextInput from '../../components/input/TextInput.tsx';
 import { ColorEditContextProvider } from '../../hooks/context/colorEditContextHook.jsx';
 import ColorSection from '../../components/theme/ColorSection.jsx';
 import ColorEditForm from '../../components/theme/ColorEditForm.jsx';

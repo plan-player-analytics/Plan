@@ -6,8 +6,15 @@ import {
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faCheck, faPalette } from '@fortawesome/free-solid-svg-icons';
 
-const ColorSelectorButton = ({ color, setColor, disabled, active }) => {
-    const validCssColor = (color) => {
+type Props = {
+    color: string;
+    setColor: (color: string) => void;
+    disabled?: boolean;
+    active?: boolean;
+};
+
+const ColorSelectorButton = ({ color, setColor, disabled, active }: Props) => {
+    const validCssColor = (color: string) => {
         return color === 'theme' ? 'reference-colors-theme' : color;
     };
     return (

@@ -7,9 +7,9 @@ import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faPalette } from '@fortawesome/free-solid-svg-icons';
 import { useTheme } from '../../hooks/themeHook.tsx';
-import ColorSelectorModal from '../../components/modal/ColorSelectorModal';
+import ColorSelectorModal from '../../components/modal/ColorSelectorModal.tsx';
 import { useAuth } from '../../hooks/authenticationHook.tsx';
-import FinalizeRegistrationModal from '../../components/modal/FinalizeRegistrationModal';
+import FinalizeRegistrationModal from '../../components/modal/FinalizeRegistrationModal.tsx';
 import {
     fetchRegisterCheck,
     postRegister,

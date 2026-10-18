@@ -11,13 +11,13 @@ import ActionButton from '../../input/button/ActionButton.tsx';
 import OutlineButton from '../../input/button/OutlineButton.tsx';
 import { Card, Col, Row } from 'react-bootstrap';
 import DateInputField from '../../input/DateInputField.tsx';
-import TimeInputField from '../../input/TimeInputField.jsx';
+import TimeInputField from '../../input/TimeInputField.tsx';
 import MultiSelect from '../../input/MultiSelect.tsx';
 import Checkbox from '../../input/Checkbox.tsx';
 import { BasicDropdown } from '../../input/BasicDropdown.tsx';
 import SecondaryActionButton from '../../input/button/SecondaryActionButton.tsx';
 import DangerButton from '../../input/button/DangerButton.tsx';
-import Toggle from '../../input/Toggle.jsx';
+import Toggle from '../../input/Toggle.tsx';
 import { noop } from '@tanstack/react-query';
 
 const FormsUseCase = () => {

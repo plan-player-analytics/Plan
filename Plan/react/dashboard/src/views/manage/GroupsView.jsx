@@ -48,7 +48,7 @@ import { useNavigation } from '../../hooks/navigationHook.tsx';
 import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 import { useAuth } from '../../hooks/authenticationHook.tsx';
 import Checkbox from '../../components/input/Checkbox.tsx';
-import TextInput from '../../components/input/TextInput.jsx';
+import TextInput from '../../components/input/TextInput.tsx';
 import UnsavedChangesText from '../../components/text/UnsavedChangesText.tsx';
 import ActionButton from '../../components/input/button/ActionButton.tsx';
 import DangerButton from '../../components/input/button/DangerButton.tsx';

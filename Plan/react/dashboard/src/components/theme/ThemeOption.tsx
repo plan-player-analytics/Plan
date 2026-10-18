@@ -3,9 +3,9 @@ import {
     getLocallyStoredThemes,
     ThemeContextProvider,
     useTheme,
-} from '../../hooks/themeHook.tsx';
-import { ThemeStorageContextProvider } from '../../hooks/context/themeContextHook.tsx';
-import { ThemeStyleCss } from './ThemeStyleCss.tsx';
+} from '../../hooks/themeHook';
+import { ThemeStorageContextProvider } from '../../hooks/context/themeContextHook';
+import { ThemeStyleCss } from './ThemeStyleCss';
 import { Card, Col } from 'react-bootstrap';
 import logo from '../../Flaticon_circle.png';
 import drawSine from '../../util/loginSineRenderer.js';
@@ -16,12 +16,12 @@ import {
     faDesktop,
     faPencilAlt,
 } from '@fortawesome/free-solid-svg-icons';
-import OutlineButton from '../input/button/OutlineButton.tsx';
-import { useAuth } from '../../hooks/authenticationHook.tsx';
+import OutlineButton from '../input/button/OutlineButton';
+import { useAuth } from '../../hooks/authenticationHook';
 import { useNavigate } from 'react-router';
 import { useTranslation } from 'react-i18next';
 
-const StorageIcon = ({ theme }) => {
+const StorageIcon = ({ theme }: { theme: string }) => {
     const { t } = useTranslation();
     const onlyLocal = getLocallyStoredThemes().includes(theme);
 
@@ -35,8 +35,15 @@ const StorageIcon = ({ theme }) => {
     );
 };
 
-const ThemeOption = ({ theme, nightMode, selected, setSelected }) => {
-    const ref = useRef();
+type Props = {
+    theme: string;
+    nightMode?: boolean;
+    selected: boolean;
+    setSelected?: (selected: string) => void;
+};
+
+const ThemeOption = ({ theme, nightMode, selected, setSelected }: Props) => {
+    const ref = useRef<HTMLDivElement>(null);
     useEffect(() => {
         drawSine(
             `theme-plot-${theme}`,

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import DateInputField from '../../../input/DateInputField.tsx';
-import TimeInputField from '../../../input/TimeInputField';
+import TimeInputField from '../../../input/TimeInputField.tsx';
 import { Col, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';

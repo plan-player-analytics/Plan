@@ -5,17 +5,22 @@ import {
     faBug,
     faChartArea,
     faCode,
+    faExclamationTriangle,
     faGraduationCap,
     faLanguage,
     faQuestionCircle,
     faStar,
 } from '@fortawesome/free-solid-svg-icons';
 import { faDiscord } from '@fortawesome/free-brands-svg-icons';
-import { useMetadata } from '../../hooks/metadataHook.tsx';
+import { useMetadata } from '../../hooks/metadataHook';
 import { Trans, useTranslation } from 'react-i18next';
-import ActionButton from '../input/button/ActionButton.tsx';
-import ExternalLink from '../input/button/ExternalLink.tsx';
-import ModalCloseButton from '../input/button/ModalCloseButton.tsx';
+import ActionButton from '../input/button/ActionButton';
+import ExternalLink from '../input/button/ExternalLink';
+import ModalCloseButton from '../input/button/ModalCloseButton';
+import {
+    ContributedFor,
+    Contributor as ContributorType,
+} from '../../hooks/model/Metadata';
 
 const LicenseSection = () => {
     const { t } = useTranslation();
@@ -49,20 +54,20 @@ const Links = () => {
     );
 };
 
-const getContributionIcon = (type) => {
+const getContributionIcon = (type: ContributedFor) => {
     switch (type) {
         case 'LANG':
-            return 'language';
+            return faLanguage;
         case 'CODE':
-            return 'code';
+            return faCode;
         default:
-            return 'exclamation-triangle';
+            return faExclamationTriangle;
     }
 };
 
-const Contributor = ({ contributor }) => {
+const Contributor = ({ contributor }: { contributor: ContributorType }) => {
     const icons = contributor.contributed.map((type) => (
-        <Fa key={'' + type} icon={['fa', getContributionIcon(type)]} />
+        <Fa key={'' + type} icon={getContributionIcon(type)} />
     ));
     return (
         <li className='contributor'>
@@ -74,14 +79,8 @@ const Contributor = ({ contributor }) => {
 const Contributions = () => {
     const { t } = useTranslation();
     const metadata = useMetadata();
-    const contributors = metadata.contributors
-        ? metadata.contributors
-        : [
-              {
-                  name: '(Error getting contributors)',
-                  contributed: ['exclamation-triangle'],
-              },
-          ];
+    if (!metadata.loaded) return null;
+    const { contributors } = metadata;
 
     return (
         <>
@@ -137,7 +136,12 @@ const MetricsLinks = () => {
     );
 };
 
-const PluginInformationModal = ({ open, toggle }) => {
+type Props = {
+    open: boolean;
+    toggle: () => void;
+};
+
+const PluginInformationModal = ({ open, toggle }: Props) => {
     const { t } = useTranslation();
     return (
         <Modal

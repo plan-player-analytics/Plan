@@ -23,7 +23,7 @@ import {
 import { useAuth } from '../../hooks/authenticationHook.tsx';
 import Sidebar from '../../components/navigation/Sidebar';
 import Header from '../../components/navigation/Header';
-import ColorSelectorModal from '../../components/modal/ColorSelectorModal';
+import ColorSelectorModal from '../../components/modal/ColorSelectorModal.tsx';
 import { useMetadata } from '../../hooks/metadataHook.tsx';
 import { faCalendarCheck } from '@fortawesome/free-regular-svg-icons';
 import ErrorPage from './ErrorPage';

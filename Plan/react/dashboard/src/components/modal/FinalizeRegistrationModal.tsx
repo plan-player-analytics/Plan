@@ -1,14 +1,22 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useMetadata } from '../../hooks/metadataHook.tsx';
+import { useMetadata } from '../../hooks/metadataHook';
 import { Modal } from 'react-bootstrap';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faHandPointRight } from '@fortawesome/free-regular-svg-icons';
-import ModalCloseButton from '../input/button/ModalCloseButton.tsx';
+import ModalCloseButton from '../input/button/ModalCloseButton';
 
-const FinalizeRegistrationModal = ({ show, toggle, registerCode }) => {
+type Props = {
+    show: boolean;
+    toggle: () => void;
+    registerCode: string;
+};
+
+const FinalizeRegistrationModal = ({ show, toggle, registerCode }: Props) => {
     const { t } = useTranslation();
-    const { mainCommand } = useMetadata();
+    const metadata = useMetadata();
+    if (!metadata.loaded) return null;
+    const { mainCommand } = metadata;
 
     return (
         <Modal

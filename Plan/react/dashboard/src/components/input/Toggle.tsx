@@ -1,4 +1,13 @@
-import React, { useState } from 'react';
+import React, { PropsWithChildren, useState } from 'react';
+
+type Props = {
+    value: boolean;
+    onValueChange: (value: boolean) => void;
+    color?: string;
+    inline?: boolean;
+    readOnly?: boolean;
+    className?: string;
+} & PropsWithChildren;
 
 const Toggle = ({
     children,
@@ -8,8 +17,8 @@ const Toggle = ({
     inline,
     className,
     readOnly,
-}) => {
-    const [renderTime] = useState(new Date().getTime());
+}: Props) => {
+    const [renderTime] = useState(Date.now());
     const id = 'checkbox-' + renderTime;
 
     const handleChange = () => {

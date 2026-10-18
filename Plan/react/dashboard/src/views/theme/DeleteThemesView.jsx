@@ -7,7 +7,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import CardHeader from '../../components/cards/CardHeader.tsx';
 import { Card, Col, Row } from 'react-bootstrap';
-import ThemeOption from '../../components/theme/ThemeOption.jsx';
+import ThemeOption from '../../components/theme/ThemeOption.tsx';
 import { ChartLoader } from '../../components/navigation/Loader.tsx';
 import {
     getLocallyStoredThemes,

@@ -3,13 +3,20 @@ import { Modal } from 'react-bootstrap';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faHandPointRight } from '@fortawesome/free-regular-svg-icons';
 import { useTranslation } from 'react-i18next';
-import { useMetadata } from '../../hooks/metadataHook.tsx';
+import { useMetadata } from '../../hooks/metadataHook';
 import { Link } from 'react-router';
-import ModalCloseButton from '../input/button/ModalCloseButton.tsx';
+import ModalCloseButton from '../input/button/ModalCloseButton';
 
-const ForgotPasswordModal = ({ show, toggle }) => {
+type Props = {
+    show: boolean;
+    toggle: () => void;
+};
+
+const ForgotPasswordModal = ({ show, toggle }: Props) => {
     const { t } = useTranslation();
-    const { mainCommand } = useMetadata();
+    const metadata = useMetadata();
+    if (!metadata.loaded) return null;
+    const { mainCommand } = metadata;
 
     return (
         <Modal

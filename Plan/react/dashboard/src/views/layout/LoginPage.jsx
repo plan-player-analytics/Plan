@@ -7,10 +7,10 @@ import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faPalette } from '@fortawesome/free-solid-svg-icons';
 import { useTheme } from '../../hooks/themeHook.tsx';
-import ColorSelectorModal from '../../components/modal/ColorSelectorModal';
+import ColorSelectorModal from '../../components/modal/ColorSelectorModal.tsx';
 import drawSine from '../../util/loginSineRenderer';
 import { fetchLogin } from '../../service/authenticationService';
-import ForgotPasswordModal from '../../components/modal/ForgotPasswordModal';
+import ForgotPasswordModal from '../../components/modal/ForgotPasswordModal.tsx';
 import { useAuth } from '../../hooks/authenticationHook.tsx';
 import ActionButton from '../../components/input/button/ActionButton.tsx';
 

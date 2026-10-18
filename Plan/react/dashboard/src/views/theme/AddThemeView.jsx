@@ -7,8 +7,8 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import CardHeader from '../../components/cards/CardHeader.tsx';
 import { Card, Col, Row } from 'react-bootstrap';
-import TextInput from '../../components/input/TextInput.jsx';
-import ThemeOption from '../../components/theme/ThemeOption.jsx';
+import TextInput from '../../components/input/TextInput.tsx';
+import ThemeOption from '../../components/theme/ThemeOption.tsx';
 import { ChartLoader } from '../../components/navigation/Loader.tsx';
 import { useTheme } from '../../hooks/themeHook.tsx';
 import ActionButton from '../../components/input/button/ActionButton.tsx';

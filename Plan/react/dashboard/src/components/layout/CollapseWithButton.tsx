@@ -1,4 +1,12 @@
-import React, { useState } from 'react';
+import React, { PropsWithChildren, useState } from 'react';
+import style from './CollapseWithButton.module.scss';
+
+type Props = {
+    title: string;
+    coverToggle: boolean;
+    open?: boolean;
+    disabled?: boolean;
+} & PropsWithChildren;
 
 const CollapseWithButton = ({
     title,
@@ -6,27 +14,22 @@ const CollapseWithButton = ({
     coverToggle,
     disabled,
     open,
-}) => {
+}: Props) => {
     const [collapsed, setCollapsed] = useState(!open);
 
     const toggle = () => {
         setCollapsed(!collapsed);
     };
 
-    const modalCloseStyle = {
-        position: 'fixed',
-        top: '-4.9rem',
-        left: '-5rem',
-        width: '100vw',
-        height: '100vh',
-        zIndex: 2,
-        backgroundColor: 'rgba(0,0,0,0.1)',
-    };
-
     return (
         <>
             {coverToggle && !collapsed && (
-                <div onClick={toggle} style={modalCloseStyle}></div>
+                <div
+                    className={style.collapseToggleBackground}
+                    onClick={toggle}
+                    onTouchStart={toggle}
+                    onKeyDown={toggle}
+                />
             )}
             <button
                 disabled={disabled}

@@ -3,12 +3,21 @@ import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { Modal } from 'react-bootstrap';
 import { faCheckCircle, faDownload } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
-import ActionButton from '../input/button/ActionButton.tsx';
-import ModalCloseButton from '../input/button/ModalCloseButton.tsx';
-import ExternalLink from '../input/button/ExternalLink.tsx';
+import ActionButton from '../input/button/ActionButton';
+import ModalCloseButton from '../input/button/ModalCloseButton';
+import ExternalLink from '../input/button/ExternalLink';
+import { VersionInfo } from '../../service/model/VersionInfo';
 
-const UpdateAvailableModal = ({ open, toggle, versionInfo }) => {
+type Props = {
+    open: boolean;
+    toggle: () => void;
+    versionInfo: VersionInfo;
+};
+
+const UpdateAvailableModal = ({ open, toggle, versionInfo }: Props) => {
     const { t } = useTranslation();
+    if (!versionInfo.updateAvailable) return null;
+
     return (
         <Modal
             id='versionModal'
@@ -46,7 +55,7 @@ const UpdateAvailableModal = ({ open, toggle, versionInfo }) => {
 };
 
 /*eslint no-template-curly-in-string: "off"*/
-const NewestVersionModal = ({ open, toggle, versionInfo }) => {
+const NewestVersionModal = ({ open, toggle, versionInfo }: Props) => {
     const { t } = useTranslation();
     return (
         <Modal
@@ -73,7 +82,7 @@ const NewestVersionModal = ({ open, toggle, versionInfo }) => {
     );
 };
 
-const VersionInformationModal = ({ open, toggle, versionInfo }) => {
+const VersionInformationModal = ({ open, toggle, versionInfo }: Props) => {
     return versionInfo.updateAvailable ? (
         <UpdateAvailableModal
             open={open}
