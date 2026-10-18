@@ -4,7 +4,7 @@ import CardHeader from "../CardHeader.tsx";
 import {faUsersViewfinder} from "@fortawesome/free-solid-svg-icons";
 import {useTranslation} from "react-i18next";
 import ExtendableCardBody from "../../layout/extension/ExtendableCardBody.tsx";
-import {BasicDropdown} from "../../input/BasicDropdown";
+import {BasicDropdown} from "../../input/BasicDropdown.tsx";
 import {useDataRequest} from "../../../hooks/dataFetchHook";
 import {fetchPlayerJoinAddresses, fetchRetentionData} from "../../../service/serverService";
 import {ErrorViewCard} from "../../../views/ErrorView.tsx";

@@ -23,7 +23,7 @@ import {
     useConfigurationStorageContext
 } from "../../hooks/context/configurationStorageContextHook.tsx";
 import SideNavTabs from "../../components/layout/SideNavTabs";
-import Select from "../../components/input/Select";
+import Select from "../../components/input/Select.tsx";
 import Scrollable from "../../components/Scrollable.tsx";
 import OpaqueText from "../../components/layout/OpaqueText.tsx";
 import {useAlertPopupContext} from "../../hooks/context/alertPopupContext.tsx";

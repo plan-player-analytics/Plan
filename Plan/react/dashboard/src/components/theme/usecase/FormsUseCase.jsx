@@ -9,7 +9,7 @@ import DateInputField from "../../input/DateInputField.tsx";
 import TimeInputField from "../../input/TimeInputField.jsx";
 import MultiSelect from "../../input/MultiSelect.tsx";
 import Checkbox from "../../input/Checkbox.tsx";
-import {BasicDropdown} from "../../input/BasicDropdown.jsx";
+import {BasicDropdown} from "../../input/BasicDropdown.tsx";
 import SecondaryActionButton from "../../input/button/SecondaryActionButton.tsx";
 import DangerButton from "../../input/button/DangerButton.tsx";
 import Toggle from "../../input/Toggle.jsx";

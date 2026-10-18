@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useMemo, useState} from 'react';
 import {useTranslation} from "react-i18next";
 import {faChartArea, faGears} from "@fortawesome/free-solid-svg-icons";
 import CardTabs from "../../CardTabs"
-import {BasicDropdown} from "../../input/BasicDropdown";
+import {BasicDropdown} from "../../input/BasicDropdown.tsx";
 import RangeSlider from "react-bootstrap-range-slider";
 import {tooltip} from "../../../util/graphs";
 import {hsvToRgb, randomHSVColor, rgbToHexString} from "../../../util/colors";
