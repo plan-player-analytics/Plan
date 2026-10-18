@@ -109,20 +109,20 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
 
         Map<String, Object> sevenDays = new HashMap<>();
 
-        sevenDays.put("unique_players", db.query(PlayerCountQueries.uniquePlayerCount(weekAgo, now, serverUUID)));
-        sevenDays.put("unique_players_day", db.query(PlayerCountQueries.averageUniquePlayerCount(weekAgo, now, config.getTimeZone().getOffset(now), serverUUID)));
+        sevenDays.put("uniquePlayers", db.query(PlayerCountQueries.uniquePlayerCount(weekAgo, now, serverUUID)));
+        sevenDays.put("uniquePlayersDay", db.query(PlayerCountQueries.averageUniquePlayerCount(weekAgo, now, config.getTimeZone().getOffset(now), serverUUID)));
 
         int new7d = db.query(PlayerCountQueries.newPlayerCount(weekAgo, now, serverUUID));
         int retained7d = db.query(PlayerCountQueries.retainedPlayerCount(weekAgo, now, serverUUID));
         double retentionPercentage7d = Percentage.calculate(retained7d, new7d, -1);
 
-        sevenDays.put("new_players", new7d);
-        sevenDays.put("new_players_retention", retained7d);
-        sevenDays.put("new_players_retention_perc", percentage.apply(retentionPercentage7d));
+        sevenDays.put("newPlayers", new7d);
+        sevenDays.put("newPlayersRetention", retained7d);
+        sevenDays.put("newPlayersRetentionPerc", percentage.apply(retentionPercentage7d));
         TPSMutator tpsMutator = new TPSMutator(db.query(TPSQueries.fetchTPSDataOfServer(weekAgo, now, serverUUID)));
         double averageTPS = tpsMutator.averageTPS();
-        sevenDays.put("average_tps", averageTPS != -1 ? decimals.apply(averageTPS) : GenericLang.UNAVAILABLE.getKey());
-        sevenDays.put("low_tps_spikes", tpsMutator.lowTpsSpikeCount(config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED)));
+        sevenDays.put("averageTps", averageTPS != -1 ? decimals.apply(averageTPS) : GenericLang.UNAVAILABLE.getKey());
+        sevenDays.put("lowTpsSpikes", tpsMutator.lowTpsSpikeCount(config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED)));
         sevenDays.put("downtime", tpsMutator.serverDownTime());
 
         return sevenDays;
@@ -137,23 +137,23 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
         Map<String, Object> numbers = new HashMap<>();
 
         Integer userCount = db.query(ServerAggregateQueries.serverUserCount(serverUUID));
-        numbers.put("total_players", userCount);
-        numbers.put("regular_players", db.query(ActivityIndexQueries.fetchRegularPlayerCount(now, serverUUID, playtimeThreshold)));
-        numbers.put("online_players", getOnlinePlayers(serverUUID, db));
+        numbers.put("totalPlayers", userCount);
+        numbers.put("regularPlayers", db.query(ActivityIndexQueries.fetchRegularPlayerCount(now, serverUUID, playtimeThreshold)));
+        numbers.put("onlinePlayers", getOnlinePlayers(serverUUID, db));
         Optional<DateObj<Integer>> lastPeak = db.query(TPSQueries.fetchPeakPlayerCount(serverUUID, twoDaysAgo, Long.MAX_VALUE));
         Optional<DateObj<Integer>> allTimePeak = db.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID));
-        numbers.put("last_peak_date", lastPeak.map(DateObj::date).map(Object.class::cast).orElse("-"));
-        numbers.put("last_peak_players", lastPeak.map(dateObj -> dateObj.getValue().toString()).orElse("-"));
-        numbers.put("best_peak_date", allTimePeak.map(DateObj::date).map(Object.class::cast).orElse("-"));
-        numbers.put("best_peak_players", allTimePeak.map(dateObj -> dateObj.getValue().toString()).orElse("-"));
+        numbers.put("lastPeakDate", lastPeak.map(DateObj::date).map(Object.class::cast).orElse("-"));
+        numbers.put("lastPeakPlayers", lastPeak.map(dateObj -> dateObj.getValue().toString()).orElse("-"));
+        numbers.put("bestPeakDate", allTimePeak.map(DateObj::date).map(Object.class::cast).orElse("-"));
+        numbers.put("bestPeakPlayers", allTimePeak.map(dateObj -> dateObj.getValue().toString()).orElse("-"));
         Long totalPlaytime = db.query(SessionQueries.playtime(0L, now, serverUUID));
         numbers.put("playtime", totalPlaytime);
-        numbers.put("player_playtime", userCount != 0 ? totalPlaytime / userCount : "-");
+        numbers.put("playerPlaytime", userCount != 0 ? totalPlaytime / userCount : "-");
         numbers.put("sessions", db.query(SessionQueries.sessionCount(0L, now, serverUUID)));
-        numbers.put("player_kills", db.query(KillQueries.playerKillCount(0L, now, serverUUID)));
-        numbers.put("mob_kills", db.query(KillQueries.mobKillCount(0L, now, serverUUID)));
+        numbers.put("playerKills", db.query(KillQueries.playerKillCount(0L, now, serverUUID)));
+        numbers.put("mobKills", db.query(KillQueries.mobKillCount(0L, now, serverUUID)));
         numbers.put("deaths", db.query(KillQueries.deathCount(0L, now, serverUUID)));
-        numbers.put("current_uptime", serverUptimeCalculator.getServerUptimeMillis(serverUUID)
+        numbers.put("currentUptime", serverUptimeCalculator.getServerUptimeMillis(serverUUID)
                 .map(Object.class::cast)
                 .orElse(GenericLang.UNAVAILABLE.getKey()));
 
@@ -184,59 +184,59 @@ public class ServerOverviewJSONCreator implements ServerTabJSONCreator<Map<Strin
         Integer uniqueBefore = db.query(PlayerCountQueries.uniquePlayerCount(twoWeeksAgo, oneWeekAgo, serverUUID));
         Integer uniqueAfter = db.query(PlayerCountQueries.uniquePlayerCount(oneWeekAgo, now, serverUUID));
         Trend uniqueTrend = new Trend(uniqueBefore, uniqueAfter, false);
-        weeks.put("unique_before", uniqueBefore);
-        weeks.put("unique_after", uniqueAfter);
-        weeks.put("unique_trend", uniqueTrend);
+        weeks.put("uniqueBefore", uniqueBefore);
+        weeks.put("uniqueAfter", uniqueAfter);
+        weeks.put("uniqueTrend", uniqueTrend);
 
         Integer newBefore = db.query(PlayerCountQueries.newPlayerCount(twoWeeksAgo, oneWeekAgo, serverUUID));
         Integer newAfter = db.query(PlayerCountQueries.newPlayerCount(oneWeekAgo, now, serverUUID));
         Trend newTrend = new Trend(newBefore, newAfter, false);
-        weeks.put("new_before", newBefore);
-        weeks.put("new_after", newAfter);
-        weeks.put("new_trend", newTrend);
+        weeks.put("newBefore", newBefore);
+        weeks.put("newAfter", newAfter);
+        weeks.put("newTrend", newTrend);
 
         int regularBefore = db.query(ActivityIndexQueries.fetchRegularPlayerCount(oneWeekAgo, serverUUID, playtimeThreshold));
         int regularAfter = db.query(ActivityIndexQueries.fetchRegularPlayerCount(now, serverUUID, playtimeThreshold));
-        weeks.put("regular_before", regularBefore);
-        weeks.put("regular_after", regularAfter);
-        weeks.put("regular_trend", new Trend(regularBefore, regularAfter, false));
+        weeks.put("regularBefore", regularBefore);
+        weeks.put("regularAfter", regularAfter);
+        weeks.put("regularTrend", new Trend(regularBefore, regularAfter, false));
 
         Long playtimeBefore = db.query(SessionQueries.playtime(twoWeeksAgo, oneWeekAgo, serverUUID));
         Long playtimeAfter = db.query(SessionQueries.playtime(oneWeekAgo, now, serverUUID));
         long avgPlaytimeBefore = uniqueBefore != 0 ? playtimeBefore / uniqueBefore : 0L;
         long avgPlaytimeAfter = uniqueAfter != 0 ? playtimeAfter / uniqueAfter : 0L;
         Trend avgPlaytimeTrend = new Trend(avgPlaytimeBefore, avgPlaytimeAfter, false);
-        weeks.put("average_playtime_before", avgPlaytimeBefore);
-        weeks.put("average_playtime_after", avgPlaytimeAfter);
-        weeks.put("average_playtime_trend", avgPlaytimeTrend);
+        weeks.put("averagePlaytimeBefore", avgPlaytimeBefore);
+        weeks.put("averagePlaytimeAfter", avgPlaytimeAfter);
+        weeks.put("averagePlaytimeTrend", avgPlaytimeTrend);
 
         Long sessionsBefore = db.query(SessionQueries.sessionCount(twoWeeksAgo, oneWeekAgo, serverUUID));
         Long sessionsAfter = db.query(SessionQueries.sessionCount(oneWeekAgo, now, serverUUID));
         Trend sessionsTrend = new Trend(sessionsBefore, sessionsAfter, false);
-        weeks.put("sessions_before", sessionsBefore);
-        weeks.put("sessions_after", sessionsAfter);
-        weeks.put("sessions_trend", sessionsTrend);
+        weeks.put("sessionsBefore", sessionsBefore);
+        weeks.put("sessionsAfter", sessionsAfter);
+        weeks.put("sessionsTrend", sessionsTrend);
 
         Long pksBefore = db.query(KillQueries.playerKillCount(twoWeeksAgo, oneWeekAgo, serverUUID));
         Long pksAfter = db.query(KillQueries.playerKillCount(oneWeekAgo, now, serverUUID));
         Trend pksTrend = new Trend(pksBefore, pksAfter, false);
-        weeks.put("player_kills_before", pksBefore);
-        weeks.put("player_kills_after", pksAfter);
-        weeks.put("player_kills_trend", pksTrend);
+        weeks.put("playerKillsBefore", pksBefore);
+        weeks.put("playerKillsAfter", pksAfter);
+        weeks.put("playerKillsTrend", pksTrend);
 
         Long mkBefore = db.query(KillQueries.mobKillCount(twoWeeksAgo, oneWeekAgo, serverUUID));
         Long mkAfter = db.query(KillQueries.mobKillCount(oneWeekAgo, now, serverUUID));
         Trend mkTrend = new Trend(mkBefore, mkAfter, false);
-        weeks.put("mob_kills_before", mkBefore);
-        weeks.put("mob_kills_after", mkAfter);
-        weeks.put("mob_kills_trend", mkTrend);
+        weeks.put("mobKillsBefore", mkBefore);
+        weeks.put("mobKillsAfter", mkAfter);
+        weeks.put("mobKillsTrend", mkTrend);
 
         Long deathsBefore = db.query(KillQueries.deathCount(twoWeeksAgo, oneWeekAgo, serverUUID));
         Long deathsAfter = db.query(KillQueries.deathCount(oneWeekAgo, now, serverUUID));
         Trend deathTrend = new Trend(deathsBefore, deathsAfter, true);
-        weeks.put("deaths_before", deathsBefore);
-        weeks.put("deaths_after", deathsAfter);
-        weeks.put("deaths_trend", deathTrend);
+        weeks.put("deathsBefore", deathsBefore);
+        weeks.put("deathsAfter", deathsAfter);
+        weeks.put("deathsTrend", deathTrend);
 
         return weeks;
     }

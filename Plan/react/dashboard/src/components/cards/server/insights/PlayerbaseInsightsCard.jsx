@@ -38,8 +38,8 @@ const PlayerbaseInsightsCard = ({ data }) => {
                         labelAfter={t('html.label.regular')}
                     />
                 }
-                value={data.new_to_regular}
-                trend={<SmallTrend trend={data.new_to_regular_trend} />}
+                value={data.newToRegular}
+                trend={<SmallTrend trend={data.newToRegularTrend} />}
             />
             <Datapoint
                 name={
@@ -50,8 +50,8 @@ const PlayerbaseInsightsCard = ({ data }) => {
                         labelAfter={t('html.label.inactive')}
                     />
                 }
-                value={data.regular_to_inactive}
-                trend={<SmallTrend trend={data.regular_to_inactive_trend} />}
+                value={data.regularToInactive}
+                trend={<SmallTrend trend={data.regularToInactiveTrend} />}
             />
             <End>
                 <ComparingLabel>

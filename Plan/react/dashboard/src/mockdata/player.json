@@ -1,36 +1,36 @@
 {
-    "kill_data": {
-        "deaths_7d": 0,
-        "mob_deaths_7d": 0,
-        "mob_kills_total": 0,
-        "player_kdr_30d": "0",
-        "player_kills_7d": 0,
-        "player_deaths_total": 0,
-        "deaths_30d": 0,
-        "deaths_total": 1,
-        "player_kills_total": 0,
-        "mob_deaths_30d": 0,
-        "player_deaths_30d": 0,
-        "mob_kdr_30d": "0",
-        "player_kdr_total": "0",
-        "weapon_3rd": "-",
-        "mob_kdr_7d": "0",
-        "player_kdr_7d": "0",
-        "player_kills_30d": 0,
-        "weapon_2nd": "-",
-        "player_deaths_7d": 0,
-        "mob_deaths_total": 1,
-        "mob_kills_7d": 0,
-        "mob_kdr_total": "0",
-        "weapon_1st": "-",
-        "mob_kills_30d": 0
+    "killData": {
+        "deaths7d": 0,
+        "mobDeaths7d": 0,
+        "mobKillsTotal": 0,
+        "playerKdr30d": "0",
+        "playerKills7d": 0,
+        "playerDeathsTotal": 0,
+        "deaths30d": 0,
+        "deathsTotal": 1,
+        "playerKillsTotal": 0,
+        "mobDeaths30d": 0,
+        "playerDeaths30d": 0,
+        "mobKdr30d": "0",
+        "playerKdrTotal": "0",
+        "weapon3rd": "-",
+        "mobKdr7d": "0",
+        "playerKdr7d": "0",
+        "playerKills30d": 0,
+        "weapon2nd": "-",
+        "playerDeaths7d": 0,
+        "mobDeathsTotal": 1,
+        "mobKills7d": 0,
+        "mobKdrTotal": "0",
+        "weapon1st": "-",
+        "mobKills30d": 0
     },
     "sessions": [
         {
-            "server_name": "Server 1",
+            "serverName": "Server 1",
             "start": "Apr 27 2021, 20:05",
             "length": "4m 4s",
-            "gm_series": [
+            "gmSeries": [
                 {
                     "data": [
                         ["SURVIVAL", 244828],
@@ -42,17 +42,17 @@
                     "id": "world"
                 }
             ],
-            "player_uuid": "993a2401-65c4-4cb0-805c-9d543690c8b4",
-            "most_used_world": "world (100%)",
-            "first_session": false,
-            "mob_kills": 0,
-            "player_url_name": "AuroraLS3",
-            "afk_time": "0s",
+            "playerUUID": "993a2401-65c4-4cb0-805c-9d543690c8b4",
+            "mostUsedWorld": "world (100%)",
+            "firstSession": false,
+            "mobKills": 0,
+            "playerUrlName": "AuroraLS3",
+            "afkTime": "0s",
             "name": "Server 1",
-            "player_kills": [],
+            "playerKills": [],
             "end": "Apr 27 2021, 20:09",
-            "player_name": "AuroraLS3",
-            "world_series": [
+            "playerName": "AuroraLS3",
+            "worldSeries": [
                 {
                     "name": "world",
                     "y": 244828,
@@ -60,15 +60,15 @@
                     "drilldown": "world"
                 }
             ],
-            "server_url_name": "Server%201",
-            "server_uuid": "53ae017f-5851-467b-9b44-d01e96620447",
+            "serverUrlName": "Server%201",
+            "serverUUID": "53ae017f-5851-467b-9b44-d01e96620447",
             "deaths": 1
         },
         {
-            "server_name": "Server 1",
+            "serverName": "Server 1",
             "start": "Apr 27 2021, 20:01",
             "length": "3m 29s",
-            "gm_series": [
+            "gmSeries": [
                 {
                     "data": [
                         ["SURVIVAL", 209257],
@@ -80,17 +80,17 @@
                     "id": "world"
                 }
             ],
-            "player_uuid": "993a2401-65c4-4cb0-805c-9d543690c8b4",
-            "most_used_world": "world (100%)",
-            "first_session": false,
-            "mob_kills": 0,
-            "player_url_name": "AuroraLS3",
-            "afk_time": "3m 26s",
+            "playerUUID": "993a2401-65c4-4cb0-805c-9d543690c8b4",
+            "mostUsedWorld": "world (100%)",
+            "firstSession": false,
+            "mobKills": 0,
+            "playerUrlName": "AuroraLS3",
+            "afkTime": "3m 26s",
             "name": "Server 1",
-            "player_kills": [],
+            "playerKills": [],
             "end": "Apr 27 2021, 20:05",
-            "player_name": "AuroraLS3",
-            "world_series": [
+            "playerName": "AuroraLS3",
+            "worldSeries": [
                 {
                     "name": "world",
                     "y": 209257,
@@ -98,15 +98,15 @@
                     "drilldown": "world"
                 }
             ],
-            "server_url_name": "Server%201",
-            "server_uuid": "53ae017f-5851-467b-9b44-d01e96620447",
+            "serverUrlName": "Server%201",
+            "serverUUID": "53ae017f-5851-467b-9b44-d01e96620447",
             "deaths": 0
         },
         {
-            "server_name": "Server 1",
+            "serverName": "Server 1",
             "start": "Apr 27 2021, 20:00",
             "length": "27s",
-            "gm_series": [
+            "gmSeries": [
                 {
                     "data": [
                         ["SURVIVAL", 27915],
@@ -118,17 +118,17 @@
                     "id": "world"
                 }
             ],
-            "player_uuid": "993a2401-65c4-4cb0-805c-9d543690c8b4",
-            "most_used_world": "world (100%)",
-            "first_session": false,
-            "mob_kills": 0,
-            "player_url_name": "AuroraLS3",
-            "afk_time": "0s",
+            "playerUUID": "993a2401-65c4-4cb0-805c-9d543690c8b4",
+            "mostUsedWorld": "world (100%)",
+            "firstSession": false,
+            "mobKills": 0,
+            "playerUrlName": "AuroraLS3",
+            "afkTime": "0s",
             "name": "Server 1",
-            "player_kills": [],
+            "playerKills": [],
             "end": "Apr 27 2021, 20:00",
-            "player_name": "AuroraLS3",
-            "world_series": [
+            "playerName": "AuroraLS3",
+            "worldSeries": [
                 {
                     "name": "world",
                     "y": 27915,
@@ -136,15 +136,15 @@
                     "drilldown": "world"
                 }
             ],
-            "server_url_name": "Server%201",
-            "server_uuid": "53ae017f-5851-467b-9b44-d01e96620447",
+            "serverUrlName": "Server%201",
+            "serverUUID": "53ae017f-5851-467b-9b44-d01e96620447",
             "deaths": 0
         },
         {
-            "server_name": "Server 1",
+            "serverName": "Server 1",
             "start": "Apr 25 2021, 15:47",
             "length": "28s",
-            "gm_series": [
+            "gmSeries": [
                 {
                     "data": [
                         ["SURVIVAL", 28465],
@@ -156,17 +156,17 @@
                     "id": "world"
                 }
             ],
-            "player_uuid": "993a2401-65c4-4cb0-805c-9d543690c8b4",
-            "most_used_world": "world (100%)",
-            "first_session": false,
-            "mob_kills": 0,
-            "player_url_name": "AuroraLS3",
-            "afk_time": "0s",
+            "playerUUID": "993a2401-65c4-4cb0-805c-9d543690c8b4",
+            "mostUsedWorld": "world (100%)",
+            "firstSession": false,
+            "mobKills": 0,
+            "playerUrlName": "AuroraLS3",
+            "afkTime": "0s",
             "name": "Server 1",
-            "player_kills": [],
+            "playerKills": [],
             "end": "Apr 25 2021, 15:48",
-            "player_name": "AuroraLS3",
-            "world_series": [
+            "playerName": "AuroraLS3",
+            "worldSeries": [
                 {
                     "name": "world",
                     "y": 28465,
@@ -174,15 +174,15 @@
                     "drilldown": "world"
                 }
             ],
-            "server_url_name": "Server%201",
-            "server_uuid": "53ae017f-5851-467b-9b44-d01e96620447",
+            "serverUrlName": "Server%201",
+            "serverUUID": "53ae017f-5851-467b-9b44-d01e96620447",
             "deaths": 0
         },
         {
-            "server_name": "Server 1",
+            "serverName": "Server 1",
             "start": "Apr 25 2021, 15:36",
             "length": "29s",
-            "gm_series": [
+            "gmSeries": [
                 {
                     "data": [
                         ["SURVIVAL", 29682],
@@ -194,17 +194,17 @@
                     "id": "world"
                 }
             ],
-            "player_uuid": "993a2401-65c4-4cb0-805c-9d543690c8b4",
-            "most_used_world": "world (100%)",
-            "first_session": true,
-            "mob_kills": 0,
-            "player_url_name": "AuroraLS3",
-            "afk_time": "0s",
+            "playerUUID": "993a2401-65c4-4cb0-805c-9d543690c8b4",
+            "mostUsedWorld": "world (100%)",
+            "firstSession": true,
+            "mobKills": 0,
+            "playerUrlName": "AuroraLS3",
+            "afkTime": "0s",
             "name": "Server 1",
-            "player_kills": [],
+            "playerKills": [],
             "end": "Apr 25 2021, 15:37",
-            "player_name": "AuroraLS3",
-            "world_series": [
+            "playerName": "AuroraLS3",
+            "worldSeries": [
                 {
                     "name": "world",
                     "y": 29682,
@@ -212,12 +212,12 @@
                     "drilldown": "world"
                 }
             ],
-            "server_url_name": "Server%201",
-            "server_uuid": "53ae017f-5851-467b-9b44-d01e96620447",
+            "serverUrlName": "Server%201",
+            "serverUUID": "53ae017f-5851-467b-9b44-d01e96620447",
             "deaths": 0
         }
     ],
-    "calendar_series": [
+    "calendarSeries": [
         {
             "title": "Registered: Apr 25 2021, 15:36",
             "start": 1619354208457,
@@ -267,8 +267,8 @@
             "end": 1619365038543
         }
     ],
-    "player_deaths": [],
-    "gm_series": [
+    "playerDeaths": [],
+    "gmSeries": [
         {
             "data": [
                 ["SURVIVAL", 540147],
@@ -280,7 +280,7 @@
             "id": "world"
         }
     ],
-    "world_pie_series": [
+    "worldPieSeries": [
         {
             "name": "world",
             "y": 540147,
@@ -288,7 +288,7 @@
             "drilldown": "world"
         }
     ],
-    "server_pie_colors": [
+    "serverPieColors": [
         "#0099C6",
         "#66AA00",
         "#316395",
@@ -1785,10 +1785,10 @@
     ],
     "servers": [
         {
-            "server_name": "Server 1",
-            "last_seen": "Apr 27 2021, 20:09",
+            "serverName": "Server 1",
+            "lastSeen": "Apr 27 2021, 20:09",
             "registered": "Apr 25 2021, 15:36",
-            "gm_series": [
+            "gmSeries": [
                 {
                     "data": [
                         ["SURVIVAL", 540147],
@@ -1801,8 +1801,8 @@
                 }
             ],
             "playtime": "9m ",
-            "session_median": "29s",
-            "world_pie_series": [
+            "sessionMedian": "29s",
+            "worldPieSeries": [
                 {
                     "name": "world",
                     "y": 540147,
@@ -1811,45 +1811,45 @@
                 }
             ],
             "operator": false,
-            "mob_kills": 0,
-            "afk_time": "3m 26s",
-            "session_count": 5,
-            "join_address": "localhost",
-            "player_kills": 0,
-            "longest_session_length": "4m 4s",
+            "mobKills": 0,
+            "afkTime": "3m 26s",
+            "sessionCount": 5,
+            "joinAddress": "localhost",
+            "playerKills": 0,
+            "longestSessionLength": "4m 4s",
             "banned": false,
             "deaths": 1
         }
     ],
-    "server_pie_series": [
+    "serverPieSeries": [
         {
             "name": "Server 1",
             "y": 540147
         }
     ],
-    "online_activity": {
-        "session_count_30d": 0,
-        "session_count_7d": 0,
-        "afk_time_7d": "0s",
-        "mob_kill_count_30d": 0,
-        "active_playtime_7d": "0s",
-        "mob_kill_count_7d": 0,
-        "afk_time_30d": "0s",
-        "average_session_length_30d": "0s",
-        "death_count_30d": 0,
-        "active_playtime_30d": "0s",
-        "average_session_length_7d": "0s",
-        "median_session_length_7d": "-",
-        "median_session_length_30d": "-",
-        "playtime_30d": "0s",
-        "player_kill_count_30d": 0,
-        "death_count_7d": 0,
-        "playtime_7d": "0s",
-        "player_kill_count_7d": 0
+    "onlineActivity": {
+        "sessionCount30d": 0,
+        "sessionCount7d": 0,
+        "afkTime7d": "0s",
+        "mobKillCount30d": 0,
+        "activePlaytime7d": "0s",
+        "mobKillCount7d": 0,
+        "afkTime30d": "0s",
+        "averageSessionLength30d": "0s",
+        "deathCount30d": 0,
+        "activePlaytime30d": "0s",
+        "averageSessionLength7d": "0s",
+        "medianSessionLength7d": "-",
+        "medianSessionLength30d": "-",
+        "playtime30d": "0s",
+        "playerKillCount30d": 0,
+        "deathCount7d": 0,
+        "playtime7d": "0s",
+        "playerKillCount7d": 0
     },
-    "player_kills": [],
-    "sessions_per_page": 50,
-    "punchcard_series": [
+    "playerKills": [],
+    "sessionsPerPage": 50,
+    "punchcardSeries": [
         {
             "x": 0,
             "y": 0,
@@ -3209,30 +3209,30 @@
         }
     ],
     "info": {
-        "kick_count": 1,
-        "last_seen": "Apr 27 2021, 20:09",
-        "favorite_server": "Server 1",
-        "mob_kill_count": 0,
-        "player_kill_count": 0,
+        "kickCount": 1,
+        "lastSeen": "Apr 27 2021, 20:09",
+        "favoriteServer": "Server 1",
+        "mobKillCount": 0,
+        "playerKillCount": 0,
         "registered": "Apr 25 2021, 15:36",
-        "activity_index_group": "Inactive",
+        "activityIndexGroup": "Inactive",
         "playtime": "9m ",
-        "session_median": "29s",
+        "sessionMedian": "29s",
         "uuid": "993a2401-65c4-4cb0-805c-9d543690c8b4",
-        "active_playtime": "5m 34s",
+        "activePlaytime": "5m 34s",
         "operator": false,
-        "afk_time": "3m 26s",
-        "death_count": 1,
-        "latest_join_address": "localhost",
-        "worst_ping": "Unavailable",
-        "session_count": 5,
+        "afkTime": "3m 26s",
+        "deathCount": 1,
+        "latestJoinAddress": "localhost",
+        "worstPing": "Unavailable",
+        "sessionCount": 5,
         "name": "AuroraLS3",
         "online": false,
-        "longest_session_length": "4m 4s",
-        "best_ping": "Unavailable",
+        "longestSessionLength": "4m 4s",
+        "bestPing": "Unavailable",
         "banned": false,
-        "activity_index": "0",
-        "average_ping": "Unavailable"
+        "activityIndex": "0",
+        "averagePing": "Unavailable"
     },
-    "first_day": 1
+    "firstDay": 1
 }

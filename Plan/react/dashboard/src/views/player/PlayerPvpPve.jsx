@@ -28,19 +28,19 @@ const InsightsCard = ({ player }) => {
                     icon={faHandSparkles}
                     color='top-3-first'
                     name={t('html.label.deadliestWeapon')}
-                    value={player.kill_data.weapon_1st}
+                    value={player.killData.weapon1st}
                 />
                 <Datapoint
                     icon={faHandSparkles}
                     color='top-3-second'
                     name={t('html.label.secondDeadliestWeapon')}
-                    value={player.kill_data.weapon_2nd}
+                    value={player.killData.weapon2nd}
                 />
                 <Datapoint
                     icon={faHandSparkles}
                     color='top-3-third'
                     name={t('html.label.thirdDeadliestWeapon')}
-                    value={player.kill_data.weapon_3rd}
+                    value={player.killData.weapon3rd}
                 />
             </Card.Body>
         </Card>
@@ -57,7 +57,7 @@ const PvpDeathsTableCard = ({ player }) => {
                     {t('html.label.recentPvpDeaths')}
                 </h6>
             </Card.Header>
-            <KillsTable kills={player.player_deaths} deaths />
+            <KillsTable kills={player.playerDeaths} deaths />
         </Card>
     );
 };
@@ -80,7 +80,7 @@ const PlayerPvpPve = () => {
                     <ExtendableRow id={'row-player-pvp-pve-1'}>
                         <Col lg={6}>
                             <PvpKillsTableCard
-                                player_kills={player.player_kills}
+                                playerKills={player.playerKills}
                             />
                         </Col>
                         <Col lg={6}>

@@ -60,7 +60,7 @@ const NetworkPerformance = () => {
             errors: [],
             zones: {},
             colors: {},
-            timestamp_f: '',
+            timestampF: '',
         };
         const time = Date.now();
 
@@ -79,7 +79,7 @@ const NetworkPerformance = () => {
                 loaded.values.push(await mapPerformanceDataToSeries(values));
                 loaded.zones = data.zones;
                 loaded.colors = data.colors;
-                loaded.timestamp_f = data.timestamp_f;
+                loaded.timestampF = data.timestampF;
             } else if (error) {
                 loaded.errors.push(error);
             }

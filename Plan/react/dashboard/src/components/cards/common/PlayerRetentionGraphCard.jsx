@@ -398,7 +398,7 @@ const PlayerRetentionGraphCard = ({
     useEffect(() => {
         if (!data || !playerAddresses) return;
 
-        createSeries(data.player_retention, playerAddresses).then((series) =>
+        createSeries(data.playerRetention, playerAddresses).then((series) =>
             setSeries(series.flat()),
         );
     }, [data, playerAddresses, createSeries, setSeries]);

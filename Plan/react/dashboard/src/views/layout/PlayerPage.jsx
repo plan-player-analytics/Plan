@@ -100,7 +100,7 @@ const PlayerPage = () => {
         setSidebarItems(items);
         window.document.title = `Plan | ${player?.info?.name}`;
 
-        finishUpdate(player.timestamp, player.timestamp_f);
+        finishUpdate(player.timestamp, player.timestampF);
     }, [player, t, i18n, finishUpdate, setSidebarItems]);
 
     const { authRequired, loggedIn } = useAuth();

@@ -16,7 +16,7 @@ import { useAuth } from '../../hooks/authenticationHook.tsx';
 const PingGraphCard = ({ player }) => {
     const { t } = useTranslation();
 
-    const hasPingData = Boolean(player.ping_graph.avg_ping_series.length);
+    const hasPingData = Boolean(player.pingGraph.avgPingSeries.length);
 
     return (
         <Card>
@@ -26,7 +26,7 @@ const PingGraphCard = ({ player }) => {
                     {t('html.label.ping')}
                 </h6>
             </Card.Header>
-            {hasPingData && <PlayerPingGraph data={player.ping_graph} />}
+            {hasPingData && <PlayerPingGraph data={player.pingGraph} />}
             {!hasPingData && (
                 <Card.Body>
                     <p>{t('generic.noData')}</p>
@@ -68,8 +68,8 @@ const ServerPieCard = ({ player }) => {
                 </h6>
             </Card.Header>
             <ServerPie
-                colors={player.server_pie_colors}
-                series={player.server_pie_series}
+                colors={player.serverPieColors}
+                series={player.serverPieSeries}
             />
         </Card>
     );

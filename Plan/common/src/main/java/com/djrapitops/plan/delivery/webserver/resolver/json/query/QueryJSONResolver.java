@@ -295,8 +295,8 @@ public class QueryJSONResolver implements AsyncResolver {
         for (Map.Entry<String, Long> entry : summary.entrySet()) {
             formattedSummary.put(entry.getKey(), timeAmount.apply(entry.getValue()));
         }
-        formattedSummary.put("total_sessions", Long.toString(summary.get("total_sessions")));
-        formattedSummary.put("average_sessions", Long.toString(summary.get("average_sessions")));
+        formattedSummary.put("totalSessions", Long.toString(summary.get("totalSessions")));
+        formattedSummary.put("averageSessions", Long.toString(summary.get("averageSessions")));
         return formattedSummary;
     }
 

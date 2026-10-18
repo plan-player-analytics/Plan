@@ -38,11 +38,11 @@ const PlayerbaseTrendsCard = ({ data }) => {
                     color='players-count'
                     text={t('html.label.totalPlayers')}
                     values={[
-                        data.total_players_then,
-                        data.total_players_now,
+                        data.totalPlayersThen,
+                        data.totalPlayersNow,
                         <BigTrend
-                            key={JSON.stringify(data.total_players_trend)}
-                            trend={data.total_players_trend}
+                            key={JSON.stringify(data.totalPlayersTrend)}
+                            trend={data.totalPlayersTrend}
                         />,
                     ]}
                 />
@@ -51,11 +51,11 @@ const PlayerbaseTrendsCard = ({ data }) => {
                     color='players-regular'
                     text={t('html.label.regularPlayers')}
                     values={[
-                        data.regular_players_then,
-                        data.regular_players_now,
+                        data.regularPlayersThen,
+                        data.regularPlayersNow,
                         <BigTrend
-                            key={JSON.stringify(data.regular_players_trend)}
-                            trend={data.regular_players_trend}
+                            key={JSON.stringify(data.regularPlayersTrend)}
+                            trend={data.regularPlayersTrend}
                         />,
                     ]}
                 />
@@ -70,15 +70,15 @@ const PlayerbaseTrendsCard = ({ data }) => {
                     values={[
                         <FormattedTime
                             key={'p-a-t'}
-                            timeMs={data.playtime_avg_then}
+                            timeMs={data.playtimeAvgThen}
                         />,
                         <FormattedTime
                             key={'p-a-n'}
-                            timeMs={data.playtime_avg_now}
+                            timeMs={data.playtimeAvgNow}
                         />,
                         <BigTrend
-                            key={JSON.stringify(data.total_players_trend)}
-                            trend={data.playtime_avg_trend}
+                            key={JSON.stringify(data.totalPlayersTrend)}
+                            trend={data.playtimeAvgTrend}
                             format={formatTime}
                         />,
                     ]}
@@ -88,11 +88,11 @@ const PlayerbaseTrendsCard = ({ data }) => {
                     color='playtime-afk'
                     text={t('html.label.afk') + ' ' + t('html.label.perPlayer')}
                     values={[
-                        data.afk_then,
-                        data.afk_now,
+                        data.afkThen,
+                        data.afkNow,
                         <BigTrend
-                            key={JSON.stringify(data.afk_trend)}
-                            trend={data.afk_trend}
+                            key={JSON.stringify(data.afkTrend)}
+                            trend={data.afkTrend}
                         />,
                     ]}
                 />
@@ -107,17 +107,15 @@ const PlayerbaseTrendsCard = ({ data }) => {
                     values={[
                         <FormattedTime
                             key={'rg-pl-avg-th'}
-                            timeMs={data.regular_playtime_avg_then}
+                            timeMs={data.regularPlaytimeAvgThen}
                         />,
                         <FormattedTime
                             key={'rg-pl-av-n'}
-                            timeMs={data.regular_playtime_avg_now}
+                            timeMs={data.regularPlaytimeAvgNow}
                         />,
                         <BigTrend
-                            key={JSON.stringify(
-                                data.regular_playtime_avg_trend,
-                            )}
-                            trend={data.regular_playtime_avg_trend}
+                            key={JSON.stringify(data.regularPlaytimeAvgTrend)}
+                            trend={data.regularPlaytimeAvgTrend}
                             format={formatTime}
                         />,
                     ]}
@@ -133,15 +131,15 @@ const PlayerbaseTrendsCard = ({ data }) => {
                     values={[
                         <FormattedTime
                             key={'rg-s-a-t'}
-                            timeMs={data.regular_session_avg_then}
+                            timeMs={data.regularSessionAvgThen}
                         />,
                         <FormattedTime
                             key={'rg-s-a-n'}
-                            timeMs={data.regular_session_avg_now}
+                            timeMs={data.regularSessionAvgNow}
                         />,
                         <BigTrend
-                            key={JSON.stringify(data.regular_session_avg_trend)}
-                            trend={data.regular_session_avg_trend}
+                            key={JSON.stringify(data.regularSessionAvgTrend)}
+                            trend={data.regularSessionAvgTrend}
                             format={formatTime}
                         />,
                     ]}
@@ -155,11 +153,11 @@ const PlayerbaseTrendsCard = ({ data }) => {
                         t('html.label.perRegularPlayer')
                     }
                     values={[
-                        data.regular_afk_avg_then,
-                        data.regular_afk_avg_now,
+                        data.regularAfkAvgThen,
+                        data.regularAfkAvgNow,
                         <BigTrend
-                            key={JSON.stringify(data.regular_afk_avg_trend)}
-                            trend={data.regular_afk_avg_trend}
+                            key={JSON.stringify(data.regularAfkAvgTrend)}
+                            trend={data.regularAfkAvgTrend}
                         />,
                     ]}
                 />

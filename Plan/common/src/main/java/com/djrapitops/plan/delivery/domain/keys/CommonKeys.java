@@ -31,27 +31,24 @@ import java.util.UUID;
  */
 public class CommonKeys {
 
-    private CommonKeys() {
-        /* Static variable class */
-    }
-
     public static final Key<UUID> UUID = new Key<>(UUID.class, "uuid");
-    public static final Key<UUID> SERVER_UUID = new Key<>(UUID.class, "server_uuid");
+    public static final Key<UUID> SERVER_UUID = new Key<>(UUID.class, "serverUUID");
     public static final Key<String> NAME = new Key<>(String.class, "name");
     public static final PlaceholderKey<Long> REGISTERED = new PlaceholderKey<>(Long.class, "registered");
     public static final Key<List<Ping>> PING = new Key<>(new Type<>() {}, "ping");
-
     public static final Key<List<FinishedSession>> SESSIONS = new Key<>(new Type<>() {}, "sessions");
-    public static final Key<WorldTimes> WORLD_TIMES = new Key<>(WorldTimes.class, "world_times");
+    public static final Key<WorldTimes> WORLD_TIMES = new Key<>(WorldTimes.class, "worldTimes");
     public static final PlaceholderKey<Long> LAST_SEEN = new PlaceholderKey<>(Long.class, "lastSeen");
-
-    public static final Key<List<PlayerKill>> PLAYER_KILLS = new Key<>(new Type<>() {}, "player_kills");
-    public static final Key<Integer> PLAYER_KILL_COUNT = new Key<>(Integer.class, "player_kill_count");
-    public static final Key<Integer> MOB_KILL_COUNT = new Key<>(Integer.class, "mob_kill_count");
-    public static final Key<Integer> DEATH_COUNT = new Key<>(Integer.class, "death_count");
-
+    public static final Key<List<PlayerKill>> PLAYER_KILLS = new Key<>(new Type<>() {}, "playerKills");
+    public static final Key<Integer> PLAYER_KILL_COUNT = new Key<>(Integer.class, "playerKillCount");
+    public static final Key<Integer> MOB_KILL_COUNT = new Key<>(Integer.class, "mobKillCount");
+    public static final Key<Integer> DEATH_COUNT = new Key<>(Integer.class, "deathCount");
     public static final Key<Boolean> BANNED = new Key<>(Boolean.class, "banned");
     public static final Key<Boolean> OPERATOR = new Key<>(Boolean.class, "operator");
-    public static final Key<String> JOIN_ADDRESS = new Key<>(String.class, "join_address");
+    public static final Key<String> JOIN_ADDRESS = new Key<>(String.class, "joinAddress");
+
+    private CommonKeys() {
+        /* Static variable class */
+    }
 
 }

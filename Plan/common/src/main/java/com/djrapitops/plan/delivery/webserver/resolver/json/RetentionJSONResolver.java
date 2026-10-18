@@ -105,12 +105,12 @@ public class RetentionJSONResolver extends JSONResolver {
         if (request.getQuery().get("server").isPresent()) {
             ServerUUID serverUUID = identifiers.getServerUUID(request);
             return jsonResolverService.resolve(timestamp, DataID.PLAYER_RETENTION, serverUUID,
-                    theUUID -> Collections.singletonMap("player_retention", jsonFactory.playerRetentionAsJSONMap(theUUID))
+                    theUUID -> Collections.singletonMap("playerRetention", jsonFactory.playerRetentionAsJSONMap(theUUID))
             );
         }
         // Assume network
         return jsonResolverService.resolve(timestamp, DataID.PLAYER_RETENTION,
-                () -> Collections.singletonMap("player_retention", jsonFactory.networkPlayerRetentionAsJSONMap())
+                () -> Collections.singletonMap("playerRetention", jsonFactory.networkPlayerRetentionAsJSONMap())
         );
     }
 }

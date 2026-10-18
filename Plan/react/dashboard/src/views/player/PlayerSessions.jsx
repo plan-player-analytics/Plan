@@ -31,8 +31,8 @@ const SessionCalendarCard = ({ player }) => {
                 )}
             </CardHeader>
             <PlayerSessionCalendar
-                series={player.calendar_series}
-                firstDay={player.first_day}
+                series={player.calendarSeries}
+                firstDay={player.firstDay}
             />
         </Card>
     );

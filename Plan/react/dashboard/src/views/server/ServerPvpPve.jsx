@@ -38,7 +38,7 @@ const ServerPvpPve = () => {
                 {seeKillNumbers && (
                     <ExtendableRow id={'row-server-pvp-pve-0'}>
                         <Col lg={8}>
-                            <PvpPveAsNumbersCard kill_data={data?.numbers} />
+                            <PvpPveAsNumbersCard killData={data?.numbers} />
                         </Col>
                         <Col lg={4}>
                             <PvpPveInsightsCard data={data?.insights} />
@@ -49,7 +49,7 @@ const ServerPvpPve = () => {
                     <ExtendableRow id={'row-server-pvp-pve-1'}>
                         <Col lg={8}>
                             <PvpKillsTableCard
-                                player_kills={killsData?.player_kills}
+                                playerKills={killsData?.playerKills}
                             />
                         </Col>
                     </ExtendableRow>

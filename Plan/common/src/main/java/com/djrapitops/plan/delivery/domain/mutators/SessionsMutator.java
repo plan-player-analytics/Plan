@@ -249,7 +249,7 @@ public class SessionsMutator {
             Formatters formatters
     ) {
         return toJSONMaps(graphs, worldAliasSettings, formatters,
-                sessionMap -> sessionMap.get("player_name"));
+                sessionMap -> sessionMap.get("playerName"));
     }
 
     public List<Map<String, Object>> toServerNameJSONMaps(
@@ -258,7 +258,7 @@ public class SessionsMutator {
             Formatters formatters
     ) {
         return toJSONMaps(graphs, worldAliasSettings, formatters,
-                sessionMap -> sessionMap.get("server_name"));
+                sessionMap -> sessionMap.get("serverName"));
     }
 
     private List<Map<String, Object>> toJSONMaps(
@@ -273,34 +273,34 @@ public class SessionsMutator {
             String serverUUID = session.serverUUID().toString();
             String playerName = session.getExtraData(PlayerName.class).map(PlayerName::name).orElse(playerUUID);
             String serverName = session.getExtraData(ServerName.class).map(ServerName::name).orElse(serverUUID);
-            sessionMap.put("player_name", playerName);
-            sessionMap.put("player_url_name", Html.encodeToURL(playerName));
-            sessionMap.put("player_uuid", playerUUID);
-            sessionMap.put("server_name", serverName);
-            sessionMap.put("server_url_name", Html.encodeToURL(serverName));
-            sessionMap.put("server_uuid", serverUUID);
+            sessionMap.put("playerName", playerName);
+            sessionMap.put("playerUrlName", Html.encodeToURL(playerName));
+            sessionMap.put("playerUUID", playerUUID);
+            sessionMap.put("serverName", serverName);
+            sessionMap.put("serverUrlName", Html.encodeToURL(serverName));
+            sessionMap.put("serverUUID", serverUUID);
             sessionMap.put("name", nameFunction.apply(sessionMap));
             sessionMap.put("online", session.getExtraData(ActiveSession.class).isPresent());
             sessionMap.put("start", session.start());
             sessionMap.put("end", session.end());
-            sessionMap.put("most_used_world", worldAliasSettings.getLongestWorldPlayed(session));
+            sessionMap.put("mostUsedWorld", worldAliasSettings.getLongestWorldPlayed(session));
             sessionMap.put("length", session.getLength());
-            sessionMap.put("afk_time", session.afkTime());
-            sessionMap.put("mob_kills", session.getMobKillCount());
+            sessionMap.put("afkTime", session.afkTime());
+            sessionMap.put("mobKills", session.getMobKillCount());
             sessionMap.put("deaths", session.getDeathCount());
-            sessionMap.put("player_kills", session.getExtraData(PlayerKills.class)
+            sessionMap.put("playerKills", session.getExtraData(PlayerKills.class)
                     .map(PlayerKills::asMutator)
                     .map(killsMutator -> killsMutator.toJSONAsMap(formatters))
                     .orElseGet(ArrayList::new));
-            sessionMap.put("first_session", session.isFirstSession());
+            sessionMap.put("firstSession", session.isFirstSession());
             WorldPie worldPie = graphs.pie().worldPie(session.getExtraData(WorldTimes.class).orElseGet(WorldTimes::new));
-            sessionMap.put("world_series", worldPie.getSlices());
-            sessionMap.put("gm_series", worldPie.toHighChartsDrillDownMaps());
-            sessionMap.put("join_address", session.getExtraData(JoinAddress.class)
+            sessionMap.put("worldSeries", worldPie.getSlices());
+            sessionMap.put("gmSeries", worldPie.toHighChartsDrillDownMaps());
+            sessionMap.put("joinAddress", session.getExtraData(JoinAddress.class)
                     .map(JoinAddress::getAddress).orElse("-"));
 
             session.getExtraData(AveragePing.class).ifPresent(averagePing ->
-                    sessionMap.put("avg_ping", averagePing.value())
+                    sessionMap.put("avgPing", averagePing.value())
             );
             return sessionMap;
         });

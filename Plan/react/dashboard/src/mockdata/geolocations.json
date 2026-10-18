@@ -1,5 +1,5 @@
 {
-    "geolocation_bar_series": [
+    "geolocationBarSeries": [
         {
             "label": "Finland",
             "value": 100
@@ -81,8 +81,8 @@
             "value": 6
         }
     ],
-    "geolocations_enabled": true,
-    "geolocation_series": [
+    "geolocationsEnabled": true,
+    "geolocationSeries": [
         {
             "code": "DNK",
             "value": 14

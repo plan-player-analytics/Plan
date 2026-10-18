@@ -49,7 +49,8 @@ import static com.djrapitops.plan.utilities.MiscUtils.*;
 /**
  * Placeholders about a servers.
  *
- * @author aidn5, AuroraLS3
+ * @author aidn5
+ * @author AuroraLS3
  */
 @Singleton
 public class ServerPlaceHolders implements Placeholders {

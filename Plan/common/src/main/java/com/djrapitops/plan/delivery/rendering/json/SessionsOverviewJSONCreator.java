@@ -86,20 +86,20 @@ public class SessionsOverviewJSONCreator implements ServerTabJSONCreator<Map<Str
 
         long uptime = tpsMutator.serverUptime();
         long occupied = tpsMutator.serverOccupiedTime();
-        insights.put("server_occupied", occupied);
-        insights.put("server_occupied_perc", percentage.apply(Percentage.calculate(occupied, uptime, -1)));
+        insights.put("serverOccupied", occupied);
+        insights.put("serverOccupiedPerc", percentage.apply(Percentage.calculate(occupied, uptime, -1)));
 
         Long playtime = db.query(SessionQueries.playtime(monthAgo, now, serverUUID));
         Long afkTime = db.query(SessionQueries.afkTime(monthAgo, now, serverUUID));
-        insights.put("total_playtime", playtime);
-        insights.put("afk_time", afkTime);
-        insights.put("afk_time_perc", percentage.apply(Percentage.calculate(afkTime, playtime, -1)));
+        insights.put("totalPlaytime", playtime);
+        insights.put("afkTime", afkTime);
+        insights.put("afkTimePerc", percentage.apply(Percentage.calculate(afkTime, playtime, -1)));
 
         GMTimes gmTimes = db.query(WorldTimesQueries.fetchGMTimes(monthAgo, now, serverUUID));
         Optional<String> mostUsedGameMode = gmTimes.getMostUsedGameMode();
         Long longestGMTime = mostUsedGameMode.map(gmTimes::getTime).orElse(-1L);
-        insights.put("most_active_gamemode", mostUsedGameMode.map(WordUtils::capitalizeFully).orElse("Not Known"));
-        insights.put("most_active_gamemode_perc", percentage.apply(Percentage.calculate(longestGMTime, playtime, -1)));
+        insights.put("mostActiveGamemode", mostUsedGameMode.map(WordUtils::capitalizeFully).orElse("Not Known"));
+        insights.put("mostActiveGamemodePerc", percentage.apply(Percentage.calculate(longestGMTime, playtime, -1)));
 
         return insights;
     }

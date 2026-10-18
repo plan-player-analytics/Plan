@@ -47,7 +47,7 @@ export const useDataRequest = (fetchMethod, parameters, shouldRequest) => {
                         datastore.finishUpdate(fetchMethod);
                         finishUpdate(
                             json.timestamp,
-                            json.timestamp_f,
+                            json.timestampF,
                             datastore.isSomethingUpdating(),
                         );
                     }
@@ -58,7 +58,7 @@ export const useDataRequest = (fetchMethod, parameters, shouldRequest) => {
                         datastore.storeData(fetchMethod, json);
                         finishUpdate(
                             json.timestamp,
-                            json.timestamp_f,
+                            json.timestampF,
                             datastore.isSomethingUpdating(),
                         );
                     }
@@ -68,7 +68,7 @@ export const useDataRequest = (fetchMethod, parameters, shouldRequest) => {
                     datastore.finishUpdate(fetchMethod);
                     finishUpdate(
                         json.timestamp,
-                        json.timestamp_f,
+                        json.timestampF,
                         datastore.isSomethingUpdating(),
                     );
                 }

@@ -15,7 +15,7 @@ const PvpPveAsNumbersCard = ({ player }) => {
                     {t('html.label.pvpPveAsNumbers')}
                 </h6>
             </Card.Header>
-            <PlayerPvpPveAsNumbersTable killData={player.kill_data} />
+            <PlayerPvpPveAsNumbersTable killData={player.killData} />
         </Card>
     );
 };

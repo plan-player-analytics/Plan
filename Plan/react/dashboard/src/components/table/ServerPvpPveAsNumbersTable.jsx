@@ -21,9 +21,9 @@ const ServerPvpPveAsNumbersTable = ({ killData }) => {
                 color='player-kills'
                 text={t('html.label.averageKdr')}
                 values={[
-                    killData.player_kdr_avg,
-                    killData.player_kdr_avg_30d,
-                    killData.player_kdr_avg_7d,
+                    killData.playerKdrAvg,
+                    killData.playerKdrAvg30d,
+                    killData.playerKdrAvg7d,
                 ]}
             />
             <TableRow
@@ -31,9 +31,9 @@ const ServerPvpPveAsNumbersTable = ({ killData }) => {
                 color='player-kills'
                 text={t('html.label.playerKills')}
                 values={[
-                    killData.player_kills_total,
-                    killData.player_kills_30d,
-                    killData.player_kills_7d,
+                    killData.playerKillsTotal,
+                    killData.playerKills30d,
+                    killData.playerKills7d,
                 ]}
             />
             <TableRow
@@ -41,9 +41,9 @@ const ServerPvpPveAsNumbersTable = ({ killData }) => {
                 color='mob-kills'
                 text={t('html.label.averageMobKdr')}
                 values={[
-                    killData.mob_kdr_total,
-                    killData.mob_kdr_30d,
-                    killData.mob_kdr_7d,
+                    killData.mobKdrTotal,
+                    killData.mobKdr30d,
+                    killData.mobKdr7d,
                 ]}
             />
             <TableRow
@@ -51,9 +51,9 @@ const ServerPvpPveAsNumbersTable = ({ killData }) => {
                 color='mob-kills'
                 text={t('html.label.mobKills')}
                 values={[
-                    killData.mob_kills_total,
-                    killData.mob_kills_30d,
-                    killData.mob_kills_7d,
+                    killData.mobKillsTotal,
+                    killData.mobKills30d,
+                    killData.mobKills7d,
                 ]}
             />
             <TableRow
@@ -61,9 +61,9 @@ const ServerPvpPveAsNumbersTable = ({ killData }) => {
                 color='mob-kills'
                 text={t('html.label.mobDeaths')}
                 values={[
-                    killData.mob_deaths_total,
-                    killData.mob_deaths_30d,
-                    killData.mob_deaths_7d,
+                    killData.mobDeathsTotal,
+                    killData.mobDeaths30d,
+                    killData.mobDeaths7d,
                 ]}
             />
             <TableRow
@@ -71,9 +71,9 @@ const ServerPvpPveAsNumbersTable = ({ killData }) => {
                 color='deaths'
                 text={t('html.label.deaths')}
                 values={[
-                    killData.deaths_total,
-                    killData.deaths_30d,
-                    killData.deaths_7d,
+                    killData.deathsTotal,
+                    killData.deaths30d,
+                    killData.deaths7d,
                 ]}
             />
         </AsNumbersTable>

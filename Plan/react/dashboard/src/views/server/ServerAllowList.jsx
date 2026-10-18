@@ -29,8 +29,8 @@ const ServerAllowList = () => {
                     <ExtendableRow id={'row-server-allowlist-0'}>
                         <Col md={12}>
                             <AllowlistBounceTableCard
-                                bounces={data?.allowlist_bounces || []}
-                                lastSeen={data?.last_seen_by_uuid || {}}
+                                bounces={data?.allowlistBounces || []}
+                                lastSeen={data?.lastSeenByUUID || {}}
                             />
                         </Col>
                     </ExtendableRow>

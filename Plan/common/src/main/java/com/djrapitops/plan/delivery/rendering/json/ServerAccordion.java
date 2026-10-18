@@ -70,28 +70,28 @@ public class ServerAccordion {
             WorldTimes worldTimes = ofServer.getValue(PerServerKeys.WORLD_TIMES).orElse(new WorldTimes());
             SessionsMutator sessionsMutator = SessionsMutator.forContainer(ofServer);
 
-            server.put("server_name", serverName);
-            server.put("server_uuid", serverUUID.toString());
+            server.put("serverName", serverName);
+            server.put("serverUUID", serverUUID.toString());
 
             server.put("banned", ofServer.getValue(PerServerKeys.BANNED).orElse(false));
             server.put("operator", ofServer.getValue(PerServerKeys.OPERATOR).orElse(false));
             server.put("registered", ofServer.getValue(PerServerKeys.REGISTERED).orElse(0L));
-            server.put("last_seen", sessionsMutator.toLastSeen());
-            server.put("join_address", ofServer.getValue(PerServerKeys.JOIN_ADDRESS).orElse("-"));
+            server.put("lastSeen", sessionsMutator.toLastSeen());
+            server.put("joinAddress", ofServer.getValue(PerServerKeys.JOIN_ADDRESS).orElse("-"));
 
-            server.put("session_count", sessionsMutator.count());
+            server.put("sessionCount", sessionsMutator.count());
             server.put("playtime", sessionsMutator.toPlaytime());
-            server.put("afk_time", sessionsMutator.toAfkTime());
-            server.put("session_median", sessionsMutator.toMedianSessionLength());
-            server.put("longest_session_length", sessionsMutator.toLongestSessionLength());
+            server.put("afkTime", sessionsMutator.toAfkTime());
+            server.put("sessionMedian", sessionsMutator.toMedianSessionLength());
+            server.put("longestSessionLength", sessionsMutator.toLongestSessionLength());
 
-            server.put("mob_kills", sessionsMutator.toMobKillCount());
-            server.put("player_kills", sessionsMutator.toPlayerKillCount());
+            server.put("mobKills", sessionsMutator.toMobKillCount());
+            server.put("playerKills", sessionsMutator.toPlayerKillCount());
             server.put("deaths", sessionsMutator.toDeathCount());
 
             WorldPie worldPie = graphs.pie().worldPie(worldTimes);
-            server.put("world_pie_series", worldPie.getSlices());
-            server.put("gm_series", worldPie.toHighChartsDrillDownMaps());
+            server.put("worldPieSeries", worldPie.getSlices());
+            server.put("gmSeries", worldPie.toHighChartsDrillDownMaps());
 
             servers.add(server);
         }

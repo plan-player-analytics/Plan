@@ -368,8 +368,8 @@ public class GraphJSONCreator {
         WorldPie worldPie = graphs.pie().worldPie(worldTimes);
 
         return Maps.builder(String.class, Object.class)
-                .put("world_series", worldPie.getSlices())
-                .put("gm_series", worldPie.toHighChartsDrillDownMaps())
+                .put("worldSeries", worldPie.getSlices())
+                .put("gmSeries", worldPie.toHighChartsDrillDownMaps())
                 .build();
     }
 
@@ -392,9 +392,9 @@ public class GraphJSONCreator {
         StackGraph activityStackGraph = graphs.stack().activityStackGraph(activityData);
 
         return Maps.builder(String.class, Object.class)
-                .put("activity_series", activityStackGraph.getDataSets())
-                .put("activity_labels", activityStackGraph.getLabels())
-                .put("activity_pie_series", activityPie.getSlices())
+                .put("activitySeries", activityStackGraph.getDataSets())
+                .put("activityLabels", activityStackGraph.getLabels())
+                .put("activityPieSeries", activityPie.getSlices())
                 .build();
     }
 
@@ -423,9 +423,9 @@ public class GraphJSONCreator {
         WorldMap worldMap = graphs.special().worldMap(geolocationCounts);
 
         return Maps.builder(String.class, Object.class)
-                .put("geolocations_enabled", config.get(DataGatheringSettings.GEOLOCATIONS) && config.get(DataGatheringSettings.ACCEPT_GEOLITE2_EULA))
-                .put("geolocation_series", worldMap.getEntries())
-                .put("geolocation_bar_series", geolocationBarGraph.getBars())
+                .put("geolocationsEnabled", config.get(DataGatheringSettings.GEOLOCATIONS) && config.get(DataGatheringSettings.ACCEPT_GEOLITE2_EULA))
+                .put("geolocationSeries", worldMap.getEntries())
+                .put("geolocationBarSeries", geolocationBarGraph.getBars())
                 .put("colors", Maps.builder(String.class, String.class)
                         .put("low", "#EEFFEE")
                         .put("high", "#267f00")
@@ -448,9 +448,9 @@ public class GraphJSONCreator {
 
         PingGraph pingGraph = graphs.line().pingGraph(new PingMutator(pings).mutateToByMinutePings().all());
 
-        return "{\"min_ping_series\":" + pingGraph.getMinGraph().toHighChartsSeries() +
-                ",\"avg_ping_series\":" + pingGraph.getAvgGraph().toHighChartsSeries() +
-                ",\"max_ping_series\":" + pingGraph.getMaxGraph().toHighChartsSeries() +
+        return "{\"minPingSeries\":" + pingGraph.getMinGraph().toHighChartsSeries() +
+                ",\"avgPingSeries\":" + pingGraph.getAvgGraph().toHighChartsSeries() +
+                ",\"maxPingSeries\":" + pingGraph.getMaxGraph().toHighChartsSeries() +
                 ",\"colors\":{" +
                 "\"min\":\"#ffd54f\"," +
                 "\"avg\":\"#ffc107\"," +
@@ -477,8 +477,8 @@ public class GraphJSONCreator {
         Map<String, Long> playtimePerServer = dbSystem.getDatabase().query(SessionQueries.playtimePerServer(monthAgo, now));
 
         return Maps.builder(String.class, Object.class)
-                .put("server_pie_colors", pieColors)
-                .put("server_pie_series_30d", graphs.pie().serverPreferencePie(playtimePerServer).getSlices())
+                .put("serverPieColors", pieColors)
+                .put("serverPieSeries_30d", graphs.pie().serverPreferencePie(playtimePerServer).getSlices())
                 .build();
     }
 
@@ -528,7 +528,7 @@ public class GraphJSONCreator {
 
         return Maps.builder(String.class, Object.class)
                 .put("colors", pieColors)
-                .put("join_addresses_by_date", joinAddressCounts)
+                .put("joinAddressesByDate", joinAddressCounts)
                 .build();
     }
 

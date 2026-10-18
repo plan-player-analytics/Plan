@@ -36,13 +36,13 @@ export type QueryData = {
 };
 
 export type QuerySessionSummary = {
-    total_playtime: string;
-    average_playtime: string;
-    total_afk_playtime: string;
-    average_afk_playtime: string;
-    total_active_playtime: string;
-    average_active_playtime: string;
-    total_sessions: string; // number
-    average_sessions: string; // number
-    average_session_length: string;
+    totalPlaytime: string;
+    averagePlaytime: string;
+    totalAfkPlaytime: string;
+    averageAfkPlaytime: string;
+    totalActivePlaytime: string;
+    averageActivePlaytime: string;
+    totalSessions: string; // number
+    averageSessions: string; // number
+    averageSessionLength: string;
 };

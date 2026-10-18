@@ -99,13 +99,13 @@ public class NetworkOverviewJSONCreator implements NetworkTabJSONCreator<Map<Str
 
         Map<String, Object> sevenDays = new HashMap<>();
 
-        sevenDays.put("unique_players_1d", db.query(PlayerCountQueries.uniquePlayerCount(dayAgo, now)));
-        sevenDays.put("unique_players_7d", db.query(PlayerCountQueries.uniquePlayerCount(weekAgo, now)));
-        sevenDays.put("unique_players_30d", db.query(PlayerCountQueries.uniquePlayerCount(monthAgo, now)));
+        sevenDays.put("uniquePlayers1d", db.query(PlayerCountQueries.uniquePlayerCount(dayAgo, now)));
+        sevenDays.put("uniquePlayers7d", db.query(PlayerCountQueries.uniquePlayerCount(weekAgo, now)));
+        sevenDays.put("uniquePlayers30d", db.query(PlayerCountQueries.uniquePlayerCount(monthAgo, now)));
 
-        sevenDays.put("new_players_1d", db.query(PlayerCountQueries.newPlayerCount(dayAgo, now)));
-        sevenDays.put("new_players_7d", db.query(PlayerCountQueries.newPlayerCount(weekAgo, now)));
-        sevenDays.put("new_players_30d", db.query(PlayerCountQueries.newPlayerCount(monthAgo, now)));
+        sevenDays.put("newPlayers1d", db.query(PlayerCountQueries.newPlayerCount(dayAgo, now)));
+        sevenDays.put("newPlayers7d", db.query(PlayerCountQueries.newPlayerCount(weekAgo, now)));
+        sevenDays.put("newPlayers30d", db.query(PlayerCountQueries.newPlayerCount(monthAgo, now)));
 
         return sevenDays;
     }
@@ -119,23 +119,23 @@ public class NetworkOverviewJSONCreator implements NetworkTabJSONCreator<Map<Str
         Map<String, Object> numbers = new HashMap<>();
 
         Integer userCount = db.query(PlayerCountQueries.newPlayerCount(0L, now));
-        numbers.put("total_players", userCount);
-        numbers.put("regular_players", db.query(NetworkActivityIndexQueries.fetchRegularPlayerCount(now, playtimeThreshold)));
-        numbers.put("online_players", serverSensor.getOnlinePlayerCount());
+        numbers.put("totalPlayers", userCount);
+        numbers.put("regularPlayers", db.query(NetworkActivityIndexQueries.fetchRegularPlayerCount(now, playtimeThreshold)));
+        numbers.put("onlinePlayers", serverSensor.getOnlinePlayerCount());
         ServerUUID serverUUID = serverInfo.getServerUUID();
         Optional<DateObj<Integer>> lastPeak = db.query(TPSQueries.fetchPeakPlayerCount(serverUUID, twoDaysAgo, Long.MAX_VALUE));
         Optional<DateObj<Integer>> allTimePeak = db.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID));
-        numbers.put("last_peak_date", lastPeak.map(DateObj::date).map(Object.class::cast).orElse("-"));
-        numbers.put("last_peak_players", lastPeak.map(dateObj -> dateObj.getValue().toString()).orElse("-"));
-        numbers.put("best_peak_date", allTimePeak.map(DateObj::date).map(Object.class::cast).orElse("-"));
-        numbers.put("best_peak_players", allTimePeak.map(dateObj -> dateObj.getValue().toString()).orElse("-"));
+        numbers.put("lastPeakDate", lastPeak.map(DateObj::date).map(Object.class::cast).orElse("-"));
+        numbers.put("lastPeakPlayers", lastPeak.map(dateObj -> dateObj.getValue().toString()).orElse("-"));
+        numbers.put("bestPeakDate", allTimePeak.map(DateObj::date).map(Object.class::cast).orElse("-"));
+        numbers.put("bestPeakPlayers", allTimePeak.map(dateObj -> dateObj.getValue().toString()).orElse("-"));
         Long totalPlaytime = db.query(SessionQueries.playtime(0L, now));
         numbers.put("playtime", totalPlaytime);
-        numbers.put("player_playtime", userCount != 0 ? totalPlaytime / userCount : "-");
+        numbers.put("playerPlaytime", userCount != 0 ? totalPlaytime / userCount : "-");
         Long sessionCount = db.query(SessionQueries.sessionCount(0L, now));
         numbers.put("sessions", sessionCount);
-        numbers.put("session_length_avg", sessionCount != 0 ? totalPlaytime / sessionCount : "-");
-        numbers.put("current_uptime", serverUptimeCalculator.getServerUptimeMillis(serverUUID)
+        numbers.put("sessionLengthAvg", sessionCount != 0 ? totalPlaytime / sessionCount : "-");
+        numbers.put("currentUptime", serverUptimeCalculator.getServerUptimeMillis(serverUUID)
                 .map(Object.class::cast)
                 .orElse(GenericLang.UNAVAILABLE.getKey()));
 
@@ -158,45 +158,45 @@ public class NetworkOverviewJSONCreator implements NetworkTabJSONCreator<Map<Str
         Integer uniqueBefore = db.query(PlayerCountQueries.uniquePlayerCount(twoWeeksAgo, oneWeekAgo));
         Integer uniqueAfter = db.query(PlayerCountQueries.uniquePlayerCount(oneWeekAgo, now));
         Trend uniqueTrend = new Trend(uniqueBefore, uniqueAfter, false);
-        weeks.put("unique_before", uniqueBefore);
-        weeks.put("unique_after", uniqueAfter);
-        weeks.put("unique_trend", uniqueTrend);
+        weeks.put("uniqueBefore", uniqueBefore);
+        weeks.put("uniqueAfter", uniqueAfter);
+        weeks.put("uniqueTrend", uniqueTrend);
 
         Integer newBefore = db.query(PlayerCountQueries.newPlayerCount(twoWeeksAgo, oneWeekAgo));
         Integer newAfter = db.query(PlayerCountQueries.newPlayerCount(oneWeekAgo, now));
         Trend newTrend = new Trend(newBefore, newAfter, false);
-        weeks.put("new_before", newBefore);
-        weeks.put("new_after", newAfter);
-        weeks.put("new_trend", newTrend);
+        weeks.put("newBefore", newBefore);
+        weeks.put("newAfter", newAfter);
+        weeks.put("newTrend", newTrend);
 
         int regularBefore = db.query(NetworkActivityIndexQueries.fetchRegularPlayerCount(oneWeekAgo, playtimeThreshold));
         int regularAfter = db.query(NetworkActivityIndexQueries.fetchRegularPlayerCount(now, playtimeThreshold));
-        weeks.put("regular_before", regularBefore);
-        weeks.put("regular_after", regularAfter);
-        weeks.put("regular_trend", new Trend(regularBefore, regularAfter, false));
+        weeks.put("regularBefore", regularBefore);
+        weeks.put("regularAfter", regularAfter);
+        weeks.put("regularTrend", new Trend(regularBefore, regularAfter, false));
 
         Long playtimeBefore = db.query(SessionQueries.playtime(twoWeeksAgo, oneWeekAgo));
         Long playtimeAfter = db.query(SessionQueries.playtime(oneWeekAgo, now));
         long avgPlaytimeBefore = uniqueBefore != 0 ? playtimeBefore / uniqueBefore : 0L;
         long avgPlaytimeAfter = uniqueAfter != 0 ? playtimeAfter / uniqueAfter : 0L;
         Trend avgPlaytimeTrend = new Trend(avgPlaytimeBefore, avgPlaytimeAfter, false);
-        weeks.put("average_playtime_before", avgPlaytimeBefore);
-        weeks.put("average_playtime_after", avgPlaytimeAfter);
-        weeks.put("average_playtime_trend", avgPlaytimeTrend);
+        weeks.put("averagePlaytimeBefore", avgPlaytimeBefore);
+        weeks.put("averagePlaytimeAfter", avgPlaytimeAfter);
+        weeks.put("averagePlaytimeTrend", avgPlaytimeTrend);
 
         Long sessionsBefore = db.query(SessionQueries.sessionCount(twoWeeksAgo, oneWeekAgo));
         Long sessionsAfter = db.query(SessionQueries.sessionCount(oneWeekAgo, now));
         Trend sessionsTrend = new Trend(sessionsBefore, sessionsAfter, false);
-        weeks.put("sessions_before", sessionsBefore);
-        weeks.put("sessions_after", sessionsAfter);
-        weeks.put("sessions_trend", sessionsTrend);
+        weeks.put("sessionsBefore", sessionsBefore);
+        weeks.put("sessionsAfter", sessionsAfter);
+        weeks.put("sessionsTrend", sessionsTrend);
 
         long avgSessionLengthBefore = sessionsBefore != 0 ? playtimeBefore / sessionsBefore : 0;
         long avgSessionLengthAfter = sessionsAfter != 0 ? playtimeAfter / sessionsAfter : 0;
         Trend avgSessionLengthTrend = new Trend(avgSessionLengthBefore, avgSessionLengthAfter, false);
-        weeks.put("session_length_average_before", avgSessionLengthBefore);
-        weeks.put("session_length_average_after", avgSessionLengthAfter);
-        weeks.put("session_length_average_trend", avgSessionLengthTrend);
+        weeks.put("sessionLengthAverageBefore", avgSessionLengthBefore);
+        weeks.put("sessionLengthAverageAfter", avgSessionLengthAfter);
+        weeks.put("sessionLengthAverageTrend", avgSessionLengthTrend);
 
         return weeks;
     }

@@ -27,7 +27,7 @@ const ServerHeader = ({ server }) => {
     return (
         <>
             <td>
-                {t(server.server_name)}
+                {t(server.serverName)}
                 {server.operator ? (
                     <span title={t('html.label.operator')}>
                         <Fa icon={faSuperpowers} />
@@ -50,7 +50,7 @@ const ServerHeader = ({ server }) => {
                 <FormattedDate date={server.registered} />
             </td>
             <td>
-                <FormattedDate date={server.last_seen} />
+                <FormattedDate date={server.lastSeen} />
             </td>
         </>
     );
@@ -85,7 +85,7 @@ const ServerBody = ({ i, server }) => {
                     icon={faCalendarCheck}
                     color={'sessions'}
                     name={t('html.label.sessions')}
-                    value={server.session_count}
+                    value={server.sessionCount}
                     bold
                 />
                 <Datapoint
@@ -99,7 +99,7 @@ const ServerBody = ({ i, server }) => {
                     icon={faClock}
                     color={'playtime-afk'}
                     name={t('html.label.afkTime')}
-                    value={<FormattedTime timeMs={server.afk_time} />}
+                    value={<FormattedTime timeMs={server.afkTime} />}
                     bold
                 />
                 <Datapoint
@@ -107,7 +107,7 @@ const ServerBody = ({ i, server }) => {
                     color={'sessions'}
                     name={t('html.label.longestSession')}
                     value={
-                        <FormattedTime timeMs={server.longest_session_length} />
+                        <FormattedTime timeMs={server.longestSessionLength} />
                     }
                     bold
                 />
@@ -115,7 +115,7 @@ const ServerBody = ({ i, server }) => {
                     icon={faClock}
                     color={'sessions'}
                     name={t('html.label.sessionMedian')}
-                    value={<FormattedTime timeMs={server.session_median} />}
+                    value={<FormattedTime timeMs={server.sessionMedian} />}
                     bold
                 />
                 <br />
@@ -123,21 +123,21 @@ const ServerBody = ({ i, server }) => {
                     icon={faLocationArrow}
                     color={'join-addresses'}
                     name={t('html.label.joinAddress')}
-                    value={server.join_address}
+                    value={server.joinAddress}
                 />
                 <br />
                 <Datapoint
                     icon={faCrosshairs}
                     color='player-kills'
                     name={t('html.label.playerKills')}
-                    value={server.player_kills}
+                    value={server.playerKills}
                     bold
                 />
                 <Datapoint
                     icon={faCrosshairs}
                     color='mob-kills'
                     name={t('html.label.mobKills')}
-                    value={server.mob_kills}
+                    value={server.mobKills}
                     bold
                 />
                 <Datapoint
@@ -152,12 +152,12 @@ const ServerBody = ({ i, server }) => {
             <div className='col-xs-12 col-sm-12 col-md-12 col-lg-6'>
                 <WorldPie
                     id={'worldpie_server_' + i}
-                    worldSeries={server.world_pie_series}
-                    gmSeries={server.gm_series}
+                    worldSeries={server.worldPieSeries}
+                    gmSeries={server.gmSeries}
                 />
 
                 <ServerPageLinkButton
-                    uuid={server.server_uuid}
+                    uuid={server.serverUUID}
                     className={'float-end'}
                 />
             </div>

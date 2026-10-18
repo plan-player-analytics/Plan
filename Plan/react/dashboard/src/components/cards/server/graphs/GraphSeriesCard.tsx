@@ -381,7 +381,7 @@ export const GraphSeriesCard = ({ id, identifier }: Props) => {
                 icon: faSignal,
                 color: 'var(--color-graphs-ping-min)',
                 permission: 'page.server.performance.graphs.ping',
-                data: pingSeries?.min_ping_series,
+                data: pingSeries?.minPingSeries,
                 options: {
                     type: 'spline',
                     tooltip: tooltip.twoDecimals,
@@ -395,7 +395,7 @@ export const GraphSeriesCard = ({ id, identifier }: Props) => {
                 icon: faSignal,
                 color: 'var(--color-graphs-ping-avg)',
                 permission: 'page.server.performance.graphs.ping',
-                data: pingSeries?.avg_ping_series,
+                data: pingSeries?.avgPingSeries,
                 options: {
                     type: 'spline',
                     tooltip: tooltip.twoDecimals,
@@ -409,7 +409,7 @@ export const GraphSeriesCard = ({ id, identifier }: Props) => {
                 icon: faSignal,
                 color: 'var(--color-graphs-ping-max)',
                 permission: 'page.server.performance.graphs.ping',
-                data: pingSeries?.max_ping_series,
+                data: pingSeries?.maxPingSeries,
                 options: {
                     type: 'spline',
                     tooltip: tooltip.twoDecimals,

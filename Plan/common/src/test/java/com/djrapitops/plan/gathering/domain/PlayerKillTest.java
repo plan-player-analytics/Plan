@@ -53,7 +53,7 @@ class PlayerKillTest {
 
     @Test
     void victimFound() {
-        String expectedName = "player_name";
+        String expectedName = "playerName";
         PlayerKill underTest = TestData.getPlayerKill(testUUID, testUUID, TestConstants.SERVER_UUID, weapon, 100L);
         assertEquals(expectedName, underTest.victim().getName());
     }

@@ -70,42 +70,42 @@ public class PvPPvEJSONCreator implements ServerTabJSONCreator<Map<String, Objec
         Long pks = db.query(KillQueries.playerKillCount(0L, now, serverUUID));
         Long pks7d = db.query(KillQueries.playerKillCount(weekAgo, now, serverUUID));
         Long pks30d = db.query(KillQueries.playerKillCount(monthAgo, now, serverUUID));
-        numbers.put("player_kills_total", pks);
-        numbers.put("player_kills_30d", pks30d);
-        numbers.put("player_kills_7d", pks7d);
+        numbers.put("playerKillsTotal", pks);
+        numbers.put("playerKills30d", pks30d);
+        numbers.put("playerKills7d", pks7d);
 
-        numbers.put("player_kdr_avg", decimals.apply(db.query(KillQueries.averageKDR(0L, now, serverUUID))));
-        numbers.put("player_kdr_avg_30d", decimals.apply(db.query(KillQueries.averageKDR(monthAgo, now, serverUUID))));
-        numbers.put("player_kdr_avg_7d", decimals.apply(db.query(KillQueries.averageKDR(weekAgo, now, serverUUID))));
+        numbers.put("playerKdrAvg", decimals.apply(db.query(KillQueries.averageKDR(0L, now, serverUUID))));
+        numbers.put("playerKdrAvg30d", decimals.apply(db.query(KillQueries.averageKDR(monthAgo, now, serverUUID))));
+        numbers.put("playerKdrAvg7d", decimals.apply(db.query(KillQueries.averageKDR(weekAgo, now, serverUUID))));
 
         Long mobKills = db.query(KillQueries.mobKillCount(0L, now, serverUUID));
         Long mobKills30d = db.query(KillQueries.mobKillCount(monthAgo, now, serverUUID));
         Long mobKills7d = db.query(KillQueries.mobKillCount(weekAgo, now, serverUUID));
-        numbers.put("mob_kills_total", mobKills);
-        numbers.put("mob_kills_30d", mobKills30d);
-        numbers.put("mob_kills_7d", mobKills7d);
+        numbers.put("mobKillsTotal", mobKills);
+        numbers.put("mobKills30d", mobKills30d);
+        numbers.put("mobKills7d", mobKills7d);
 
         Long deaths = db.query(KillQueries.deathCount(0L, now, serverUUID));
         Long deaths30d = db.query(KillQueries.deathCount(monthAgo, now, serverUUID));
         Long deaths7d = db.query(KillQueries.deathCount(weekAgo, now, serverUUID));
-        numbers.put("deaths_total", deaths);
-        numbers.put("deaths_30d", deaths30d);
-        numbers.put("deaths_7d", deaths7d);
+        numbers.put("deathsTotal", deaths);
+        numbers.put("deaths30d", deaths30d);
+        numbers.put("deaths7d", deaths7d);
 
         long mobDeaths = deaths - pks;
         long mobDeaths30d = deaths30d - pks30d;
         long mobDeaths7d = deaths7d - pks7d;
 
-        numbers.put("mob_deaths_total", mobDeaths);
-        numbers.put("mob_deaths_30d", mobDeaths30d);
-        numbers.put("mob_deaths_7d", mobDeaths7d);
+        numbers.put("mobDeathsTotal", mobDeaths);
+        numbers.put("mobDeaths30d", mobDeaths30d);
+        numbers.put("mobDeaths7d", mobDeaths7d);
 
         double mobKdr = mobDeaths != 0 ? (double) mobKills / mobDeaths : mobKills;
         double mobKdr30d = mobDeaths30d != 0 ? (double) mobKills30d / mobDeaths30d : mobKills30d;
         double mobKdr7d = mobDeaths7d != 0 ? (double) mobKills7d / mobDeaths7d : mobKills7d;
-        numbers.put("mob_kdr_total", decimals.apply(mobKdr));
-        numbers.put("mob_kdr_30d", decimals.apply(mobKdr30d));
-        numbers.put("mob_kdr_7d", decimals.apply(mobKdr7d));
+        numbers.put("mobKdrTotal", decimals.apply(mobKdr));
+        numbers.put("mobKdr30d", decimals.apply(mobKdr30d));
+        numbers.put("mobKdr7d", decimals.apply(mobKdr7d));
 
         return numbers;
     }
@@ -118,9 +118,9 @@ public class PvPPvEJSONCreator implements ServerTabJSONCreator<Map<String, Objec
         Map<String, Object> insights = new HashMap<>();
 
         List<String> top3Weapons = db.query(KillQueries.topWeaponsOfServer(monthAgo, now, serverUUID, 3));
-        insights.put("weapon_1st", getWeapon(top3Weapons, 0).orElse("-"));
-        insights.put("weapon_2nd", getWeapon(top3Weapons, 1).orElse("-"));
-        insights.put("weapon_3rd", getWeapon(top3Weapons, 2).orElse("-"));
+        insights.put("weapon1st", getWeapon(top3Weapons, 0).orElse("-"));
+        insights.put("weapon2nd", getWeapon(top3Weapons, 1).orElse("-"));
+        insights.put("weapon3rd", getWeapon(top3Weapons, 2).orElse("-"));
 
         return insights;
     }

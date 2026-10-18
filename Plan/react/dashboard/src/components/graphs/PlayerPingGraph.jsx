@@ -12,21 +12,21 @@ const PlayerPingGraph = ({ data }) => {
             name: t('html.label.averagePing'),
             type: 'spline',
             tooltip: tooltip.twoDecimals,
-            data: data.avg_ping_series,
+            data: data.avgPingSeries,
             color: 'var(--color-graphs-ping-avg)',
         };
         const maxPingSeries = {
             name: t('html.label.worstPing'),
             type: 'spline',
             tooltip: tooltip.twoDecimals,
-            data: data.max_ping_series,
+            data: data.maxPingSeries,
             color: 'var(--color-graphs-ping-max)',
         };
         const minPingSeries = {
             name: t('html.label.bestPing'),
             type: 'spline',
             tooltip: tooltip.twoDecimals,
-            data: data.min_ping_series,
+            data: data.minPingSeries,
             color: 'var(--color-graphs-ping-min)',
         };
         setSeries([avgPingSeries, maxPingSeries, minPingSeries]);

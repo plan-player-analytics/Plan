@@ -30,7 +30,7 @@ const PunchCardCard = ({ player }) => {
                     <Fa icon={faBraille} /> {t('html.label.punchcard')}
                 </h6>
             </Card.Header>
-            <PunchCard series={player.punchcard_series} />
+            <PunchCard series={player.punchcardSeries} />
         </Card>
     );
 };
@@ -55,10 +55,10 @@ const OnlineActivityCard = ({ player }) => {
                     text={t('html.label.playtime')}
                     values={[
                         <FormattedTime
-                            timeMs={player.online_activity.playtime_30d}
+                            timeMs={player.onlineActivity.playtime30d}
                         />,
                         <FormattedTime
-                            timeMs={player.online_activity.playtime_7d}
+                            timeMs={player.onlineActivity.playtime7d}
                         />,
                     ]}
                 />
@@ -68,10 +68,10 @@ const OnlineActivityCard = ({ player }) => {
                     text={t('html.label.activePlaytime')}
                     values={[
                         <FormattedTime
-                            timeMs={player.online_activity.active_playtime_30d}
+                            timeMs={player.onlineActivity.activePlaytime30d}
                         />,
                         <FormattedTime
-                            timeMs={player.online_activity.active_playtime_7d}
+                            timeMs={player.onlineActivity.activePlaytime7d}
                         />,
                     ]}
                 />
@@ -81,10 +81,10 @@ const OnlineActivityCard = ({ player }) => {
                     text={t('html.label.afk')}
                     values={[
                         <FormattedTime
-                            timeMs={player.online_activity.afk_time_30d}
+                            timeMs={player.onlineActivity.afkTime30d}
                         />,
                         <FormattedTime
-                            timeMs={player.online_activity.afk_time_7d}
+                            timeMs={player.onlineActivity.afkTime7d}
                         />,
                     ]}
                 />
@@ -95,13 +95,11 @@ const OnlineActivityCard = ({ player }) => {
                     values={[
                         <FormattedTime
                             timeMs={
-                                player.online_activity.median_session_length_30d
+                                player.onlineActivity.medianSessionLength30d
                             }
                         />,
                         <FormattedTime
-                            timeMs={
-                                player.online_activity.median_session_length_7d
-                            }
+                            timeMs={player.onlineActivity.medianSessionLength7d}
                         />,
                     ]}
                 />
@@ -110,8 +108,8 @@ const OnlineActivityCard = ({ player }) => {
                     color='sessions'
                     text={t('html.label.sessions')}
                     values={[
-                        player.online_activity.session_count_30d,
-                        player.online_activity.session_count_7d,
+                        player.onlineActivity.sessionCount30d,
+                        player.onlineActivity.sessionCount7d,
                     ]}
                 />
                 <TableRow
@@ -119,8 +117,8 @@ const OnlineActivityCard = ({ player }) => {
                     color='player-kills'
                     text={t('html.label.playerKills')}
                     values={[
-                        player.online_activity.player_kill_count_30d,
-                        player.online_activity.player_kill_count_7d,
+                        player.onlineActivity.playerKillCount30d,
+                        player.onlineActivity.playerKillCount7d,
                     ]}
                 />
                 <TableRow
@@ -128,8 +126,8 @@ const OnlineActivityCard = ({ player }) => {
                     color='mob-kills'
                     text={t('html.label.mobKills')}
                     values={[
-                        player.online_activity.mob_kill_count_30d,
-                        player.online_activity.mob_kill_count_7d,
+                        player.onlineActivity.mobKillCount30d,
+                        player.onlineActivity.mobKillCount7d,
                     ]}
                 />
                 <TableRow
@@ -137,8 +135,8 @@ const OnlineActivityCard = ({ player }) => {
                     color='deaths'
                     text={t('html.label.deaths')}
                     values={[
-                        player.online_activity.death_count_30d,
-                        player.online_activity.death_count_7d,
+                        player.onlineActivity.deathCount30d,
+                        player.onlineActivity.deathCount7d,
                     ]}
                 />
             </AsNumbersTable>

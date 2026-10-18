@@ -51,7 +51,7 @@ const regeneratePoints = (points, rangeStart, rangeEnd) => {
 const PunchCardGraphUseCase = () => {
     return (
         <Background>
-            <PunchCard series={player.punchcard_series} />
+            <PunchCard series={player.punchcardSeries} />
         </Background>
     );
 };
@@ -168,9 +168,9 @@ const DiskGraphUseCase = () => {
 const PingGraphUseCase = () => {
     const points = generatePoints(0, 25);
     const data = {
-        min_ping_series: points,
-        avg_ping_series: regeneratePoints(points, 50, 75),
-        max_ping_series: regeneratePoints(points, 100, 200),
+        minPingSeries: points,
+        avgPingSeries: regeneratePoints(points, 50, 75),
+        maxPingSeries: regeneratePoints(points, 100, 200),
     };
     return (
         <Background>

@@ -6,10 +6,10 @@ import KillsTable from '../../table/KillsTable';
 import React from 'react';
 import { CardLoader } from '../../navigation/Loader.tsx';
 
-const PvpKillsTableCard = ({ player_kills }) => {
+const PvpKillsTableCard = ({ playerKills }) => {
     const { t } = useTranslation();
 
-    if (!player_kills) return <CardLoader />;
+    if (!playerKills) return <CardLoader />;
 
     return (
         <Card id={'pvp-kills-table'}>
@@ -19,7 +19,7 @@ const PvpKillsTableCard = ({ player_kills }) => {
                     {t('html.label.recentPvpKills')}
                 </h6>
             </Card.Header>
-            <KillsTable kills={player_kills} />
+            <KillsTable kills={playerKills} />
         </Card>
     );
 };

@@ -12,7 +12,7 @@ import { activityGroupToColor } from '../../../graphs/PlayerbaseGraph.jsx';
 
 export const CurrentPlayerbaseCardWithData = ({ data, title }) => {
     const { t } = useTranslation();
-    const actualGroups = data.activity_pie_series.map((slice) => {
+    const actualGroups = data.activityPieSeries.map((slice) => {
         return { ...slice, color: activityGroupToColor(slice.name) };
     });
     return (

@@ -98,47 +98,47 @@ public class PlayerJSONCreator {
 
         long now = System.currentTimeMillis();
         data.put("timestamp", now);
-        data.put("timestamp_f", year.apply(now));
+        data.put("timestampF", year.apply(now));
 
         if (hasPermission.test(WebPermission.PAGE_PLAYER_OVERVIEW)) {
             data.put("info", createInfoJSONMap(player, serverNames));
-            data.put("online_activity", createOnlineActivityJSONMap(sessionsMutator));
+            data.put("onlineActivity", createOnlineActivityJSONMap(sessionsMutator));
             data.put("nicknames", player.getValue(PlayerKeys.NICKNAMES)
                     .map(nicks -> Nickname.fromDataNicknames(nicks, serverNames))
                     .orElse(Collections.emptyList()));
             data.put("connections", player.getValue(PlayerKeys.GEO_INFO)
                     .map(ConnectionInfo::fromGeoInfo)
                     .orElse(Collections.emptyList()));
-            data.put("punchcard_series", graphs.special().punchCard(sessionsMutator).getDots());
+            data.put("punchcardSeries", graphs.special().punchCard(sessionsMutator).getDots());
         } else {
             data.put("info", createLimitedInfoMap(player));
         }
         if (hasPermission.test(WebPermission.PAGE_PLAYER_SESSIONS)) {
             data.put("sessions", sessionsMutator.sort(new DateHolderRecentComparator()).toServerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters));
-            data.put("sessions_per_page", 10000);
+            data.put("sessionsPerPage", 10000);
             WorldPie worldPie = graphs.pie().worldPie(player.getValue(PlayerKeys.WORLD_TIMES).orElse(new WorldTimes()));
-            data.put("world_pie_series", worldPie.getSlices());
-            data.put("gm_series", worldPie.toHighChartsDrillDownMaps());
-            data.put("first_day", 1); // Monday
-            data.put("calendar_series", graphs.calendar().playerCalendar(player).getEntries());
+            data.put("worldPieSeries", worldPie.getSlices());
+            data.put("gmSeries", worldPie.toHighChartsDrillDownMaps());
+            data.put("firstDay", 1); // Monday
+            data.put("calendarSeries", graphs.calendar().playerCalendar(player).getEntries());
         }
         if (hasPermission.test(WebPermission.PAGE_PLAYER_VERSUS)) {
             List<PlayerKill> kills = player.getValue(PlayerKeys.PLAYER_KILLS).orElse(Collections.emptyList());
             List<PlayerKill> deaths = player.getValue(PlayerKeys.PLAYER_DEATHS_KILLS).orElse(Collections.emptyList());
 
-            data.put("kill_data", createPvPPvEMap(player));
-            data.put("player_kills", new PlayerKillMutator(kills).filterNonSelfKills().toJSONAsMap(formatters));
-            data.put("player_deaths", new PlayerKillMutator(deaths).toJSONAsMap(formatters));
+            data.put("killData", createPvPPvEMap(player));
+            data.put("playerKills", new PlayerKillMutator(kills).filterNonSelfKills().toJSONAsMap(formatters));
+            data.put("playerDeaths", new PlayerKillMutator(deaths).toJSONAsMap(formatters));
         }
         if (hasPermission.test(WebPermission.PAGE_PLAYER_SERVERS)) {
             List<Map<String, Object>> serverAccordion = new ServerAccordion(player, serverNames, graphs, GenericLang.UNKNOWN.getKey()).asMaps();
             Map<ServerUUID, WorldTimes> worldTimesPerServer = PerServerMutator.forContainer(player).worldTimesPerServer();
             String[] pieColors = theme.getWorldPieColors();
 
-            data.put("ping_graph", createPingGraphJson(player));
+            data.put("pingGraph", createPingGraphJson(player));
             data.put("servers", serverAccordion);
-            data.put("server_pie_series", graphs.pie().serverPreferencePie(serverNames, worldTimesPerServer).getSlices());
-            data.put("server_pie_colors", pieColors);
+            data.put("serverPieSeries", graphs.pie().serverPreferencePie(serverNames, worldTimesPerServer).getSlices());
+            data.put("serverPieColors", pieColors);
         }
         if (hasPermission.test(WebPermission.PAGE_PLAYER_STATISTICS)) {
             data.put("statistics", playerStatistics(playerUUID));
@@ -161,9 +161,9 @@ public class PlayerJSONCreator {
     private Map<String, Object> createPingGraphJson(PlayerContainer player) {
         PingGraph pingGraph = graphs.line().pingGraph(player.getUnsafe(PlayerKeys.PING));
         return Maps.builder(String.class, Object.class)
-                .put("min_ping_series", pingGraph.getMinGraph().getPointArrays())
-                .put("avg_ping_series", pingGraph.getAvgGraph().getPointArrays())
-                .put("max_ping_series", pingGraph.getMaxGraph().getPointArrays())
+                .put("minPingSeries", pingGraph.getMinGraph().getPointArrays())
+                .put("avgPingSeries", pingGraph.getAvgGraph().getPointArrays())
+                .put("maxPingSeries", pingGraph.getMaxGraph().getPointArrays())
                 .put("colors", Maps.builder(String.class, String.class)
                         .put("min", "#ffd54f")
                         .put("avg", "#ffc107")
@@ -181,25 +181,25 @@ public class PlayerJSONCreator {
 
         Map<String, Object> onlineActivity = new HashMap<>();
 
-        onlineActivity.put("playtime_30d", sessions30d.toPlaytime());
-        onlineActivity.put("active_playtime_30d", sessions30d.toActivePlaytime());
-        onlineActivity.put("afk_time_30d", sessions30d.toAfkTime());
-        onlineActivity.put("average_session_length_30d", sessions30d.toAverageSessionLength());
-        onlineActivity.put("median_session_length_30d", sessions30d.toMedianSessionLength());
-        onlineActivity.put("session_count_30d", sessions30d.count());
-        onlineActivity.put("player_kill_count_30d", sessions30d.toPlayerKillCount());
-        onlineActivity.put("mob_kill_count_30d", sessions30d.toMobKillCount());
-        onlineActivity.put("death_count_30d", sessions30d.toDeathCount());
+        onlineActivity.put("playtime30d", sessions30d.toPlaytime());
+        onlineActivity.put("activePlaytime30d", sessions30d.toActivePlaytime());
+        onlineActivity.put("afkTime30d", sessions30d.toAfkTime());
+        onlineActivity.put("averageSessionLength30d", sessions30d.toAverageSessionLength());
+        onlineActivity.put("medianSessionLength30d", sessions30d.toMedianSessionLength());
+        onlineActivity.put("sessionCount30d", sessions30d.count());
+        onlineActivity.put("playerKillCount30d", sessions30d.toPlayerKillCount());
+        onlineActivity.put("mobKillCount30d", sessions30d.toMobKillCount());
+        onlineActivity.put("deathCount30d", sessions30d.toDeathCount());
 
-        onlineActivity.put("playtime_7d", sessions7d.toPlaytime());
-        onlineActivity.put("active_playtime_7d", sessions7d.toActivePlaytime());
-        onlineActivity.put("afk_time_7d", sessions7d.toAfkTime());
-        onlineActivity.put("average_session_length_7d", sessions7d.toAverageSessionLength());
-        onlineActivity.put("median_session_length_7d", sessions7d.toMedianSessionLength());
-        onlineActivity.put("session_count_7d", sessions7d.count());
-        onlineActivity.put("player_kill_count_7d", sessions7d.toPlayerKillCount());
-        onlineActivity.put("mob_kill_count_7d", sessions7d.toMobKillCount());
-        onlineActivity.put("death_count_7d", sessions7d.toDeathCount());
+        onlineActivity.put("playtime7d", sessions7d.toPlaytime());
+        onlineActivity.put("activePlaytime7d", sessions7d.toActivePlaytime());
+        onlineActivity.put("afkTime7d", sessions7d.toAfkTime());
+        onlineActivity.put("averageSessionLength7d", sessions7d.toAverageSessionLength());
+        onlineActivity.put("medianSessionLength7d", sessions7d.toMedianSessionLength());
+        onlineActivity.put("sessionCount7d", sessions7d.count());
+        onlineActivity.put("playerKillCount7d", sessions7d.toPlayerKillCount());
+        onlineActivity.put("mobKillCount7d", sessions7d.toMobKillCount());
+        onlineActivity.put("deathCount7d", sessions7d.toDeathCount());
 
         return onlineActivity;
     }
@@ -217,20 +217,20 @@ public class PlayerJSONCreator {
         info.put("online", SessionCache.getCachedSession(player.getUnsafe(PlayerKeys.UUID)).isPresent());
         info.put("operator", player.getValue(PlayerKeys.OPERATOR).orElse(false));
         info.put("banned", player.getValue(PlayerKeys.BANNED).orElse(false));
-        info.put("kick_count", player.getValue(PlayerKeys.KICK_COUNT).orElse(0));
-        info.put("player_kill_count", player.getValue(PlayerKeys.PLAYER_KILL_COUNT).orElse(0));
-        info.put("mob_kill_count", player.getValue(PlayerKeys.MOB_KILL_COUNT).orElse(0));
-        info.put("death_count", player.getValue(PlayerKeys.DEATH_COUNT).orElse(0));
+        info.put("kickCount", player.getValue(PlayerKeys.KICK_COUNT).orElse(0));
+        info.put("playerKillCount", player.getValue(PlayerKeys.PLAYER_KILL_COUNT).orElse(0));
+        info.put("mobKillCount", player.getValue(PlayerKeys.MOB_KILL_COUNT).orElse(0));
+        info.put("deathCount", player.getValue(PlayerKeys.DEATH_COUNT).orElse(0));
         info.put("playtime", sessions.toPlaytime());
-        info.put("active_playtime", sessions.toActivePlaytime());
-        info.put("afk_time", sessions.toAfkTime());
-        info.put("session_count", sessions.count());
-        info.put("longest_session_length", sessions.toLongestSessionLength());
-        info.put("session_median", sessions.toMedianSessionLength());
-        info.put("activity_index", activityIndex.getValue());
-        info.put("activity_index_group", activityIndex.getGroupLang());
-        info.put("favorite_server", perServer.favoriteServer().map(favoriteServer -> serverNames.getOrDefault(favoriteServer, favoriteServer.toString())).orElse(GenericLang.UNKNOWN.getKey()));
-        info.put("latest_join_address", sessions.latestSession()
+        info.put("activePlaytime", sessions.toActivePlaytime());
+        info.put("afkTime", sessions.toAfkTime());
+        info.put("sessionCount", sessions.count());
+        info.put("longestSessionLength", sessions.toLongestSessionLength());
+        info.put("sessionMedian", sessions.toMedianSessionLength());
+        info.put("activityIndex", activityIndex.getValue());
+        info.put("activityIndexGroup", activityIndex.getGroupLang());
+        info.put("favoriteServer", perServer.favoriteServer().map(favoriteServer -> serverNames.getOrDefault(favoriteServer, favoriteServer.toString())).orElse(GenericLang.UNKNOWN.getKey()));
+        info.put("latestJoinAddress", sessions.latestSession()
                 .flatMap(session -> session.getExtraData(JoinAddress.class))
                 .map(JoinAddress::getAddress)
                 .orElse("-"));
@@ -239,12 +239,12 @@ public class PlayerJSONCreator {
         int bestPing = ping.min();
 
         String unavailable = GenericLang.UNAVAILABLE.getKey();
-        info.put("average_ping", averagePing != -1.0 ? averagePing : unavailable);
-        info.put("worst_ping", worstPing != -1.0 ? worstPing : unavailable);
-        info.put("best_ping", bestPing != -1.0 ? bestPing : unavailable);
+        info.put("averagePing", averagePing != -1.0 ? averagePing : unavailable);
+        info.put("worstPing", worstPing != -1.0 ? worstPing : unavailable);
+        info.put("bestPing", bestPing != -1.0 ? bestPing : unavailable);
         info.put("registered", player.getValue(PlayerKeys.REGISTERED).map(Object.class::cast).orElse("-"));
-        info.put("last_seen", player.getValue(PlayerKeys.LAST_SEEN).map(Object.class::cast).orElse("-"));
-        info.put("last_seen_raw_value", player.getValue(PlayerKeys.LAST_SEEN).orElse(0L));
+        info.put("lastSeen", player.getValue(PlayerKeys.LAST_SEEN).map(Object.class::cast).orElse("-"));
+        info.put("lastSeenRawValue", player.getValue(PlayerKeys.LAST_SEEN).orElse(0L));
 
         return info;
     }
@@ -271,57 +271,57 @@ public class PlayerJSONCreator {
         int pks = playerVersus.toPlayerKillCount();
         int pks7d = playerVersus7d.toPlayerKillCount();
         int pks30d = playerVersus30d.toPlayerKillCount();
-        killData.put("player_kills_total", pks);
-        killData.put("player_kills_30d", pks30d);
-        killData.put("player_kills_7d", pks7d);
+        killData.put("playerKillsTotal", pks);
+        killData.put("playerKills30d", pks30d);
+        killData.put("playerKills7d", pks7d);
 
         int playerDeaths = playerVersus.toPlayerDeathCount();
         int playerDeaths30d = playerVersus30d.toPlayerDeathCount();
         int playerDeaths7d = playerVersus7d.toPlayerDeathCount();
-        killData.put("player_deaths_total", playerDeaths);
-        killData.put("player_deaths_30d", playerDeaths30d);
-        killData.put("player_deaths_7d", playerDeaths7d);
+        killData.put("playerDeathsTotal", playerDeaths);
+        killData.put("playerDeaths30d", playerDeaths30d);
+        killData.put("playerDeaths7d", playerDeaths7d);
 
         double kdr = playerDeaths != 0 ? (double) pks / playerDeaths : pks;
         double kdr30d = playerDeaths30d != 0 ? (double) pks30d / playerDeaths30d : pks30d;
         double krd7d = playerDeaths7d != 0 ? (double) pks7d / playerDeaths7d : pks7d;
-        killData.put("player_kdr_total", decimals.apply(kdr));
-        killData.put("player_kdr_30d", decimals.apply(kdr30d));
-        killData.put("player_kdr_7d", decimals.apply(krd7d));
+        killData.put("playerKdrTotal", decimals.apply(kdr));
+        killData.put("playerKdr30d", decimals.apply(kdr30d));
+        killData.put("playerKdr7d", decimals.apply(krd7d));
 
         int mobKills = playerVersus.toMobKillCount();
         int mobKills30d = playerVersus30d.toMobKillCount();
         int mobKills7d = playerVersus7d.toMobKillCount();
-        killData.put("mob_kills_total", mobKills);
-        killData.put("mob_kills_30d", mobKills30d);
-        killData.put("mob_kills_7d", mobKills7d);
+        killData.put("mobKillsTotal", mobKills);
+        killData.put("mobKills30d", mobKills30d);
+        killData.put("mobKills7d", mobKills7d);
 
         int deaths = playerVersus.toDeathCount();
         int deaths30d = playerVersus30d.toDeathCount();
         int deaths7d = playerVersus7d.toDeathCount();
-        killData.put("deaths_total", deaths);
-        killData.put("deaths_30d", deaths30d);
-        killData.put("deaths_7d", deaths7d);
+        killData.put("deathsTotal", deaths);
+        killData.put("deaths30d", deaths30d);
+        killData.put("deaths7d", deaths7d);
 
         int mobDeaths = deaths - playerDeaths;
         int mobDeaths30d = deaths30d - playerDeaths30d;
         int mobDeaths7d = deaths7d - playerDeaths7d;
 
-        killData.put("mob_deaths_total", mobDeaths);
-        killData.put("mob_deaths_30d", mobDeaths30d);
-        killData.put("mob_deaths_7d", mobDeaths7d);
+        killData.put("mobDeathsTotal", mobDeaths);
+        killData.put("mobDeaths30d", mobDeaths30d);
+        killData.put("mobDeaths7d", mobDeaths7d);
 
         double mobKdr = mobDeaths != 0 ? (double) mobKills / mobDeaths : mobKills;
         double mobKdr30d = mobDeaths30d != 0 ? (double) mobKills30d / mobDeaths30d : mobKills30d;
         double mobKdr7d = mobDeaths7d != 0 ? (double) mobKills7d / mobDeaths7d : mobKills7d;
-        killData.put("mob_kdr_total", decimals.apply(mobKdr));
-        killData.put("mob_kdr_30d", decimals.apply(mobKdr30d));
-        killData.put("mob_kdr_7d", decimals.apply(mobKdr7d));
+        killData.put("mobKdrTotal", decimals.apply(mobKdr));
+        killData.put("mobKdr30d", decimals.apply(mobKdr30d));
+        killData.put("mobKdr7d", decimals.apply(mobKdr7d));
 
         List<String> topWeapons = playerVersus.toTopWeapons(3);
-        killData.put("weapon_1st", getWeapon(topWeapons, 0).orElse("-"));
-        killData.put("weapon_2nd", getWeapon(topWeapons, 1).orElse("-"));
-        killData.put("weapon_3rd", getWeapon(topWeapons, 2).orElse("-"));
+        killData.put("weapon1st", getWeapon(topWeapons, 0).orElse("-"));
+        killData.put("weapon2nd", getWeapon(topWeapons, 1).orElse("-"));
+        killData.put("weapon3rd", getWeapon(topWeapons, 2).orElse("-"));
 
         return killData;
     }

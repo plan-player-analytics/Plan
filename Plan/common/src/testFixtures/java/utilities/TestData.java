@@ -35,31 +35,27 @@ import java.util.UUID;
  */
 public class TestData {
 
-    private TestData() {
-        /* Utility class */
-    }
-
     private static final UUID playerUUID = TestConstants.PLAYER_ONE_UUID;
     private static final UUID player2UUID = TestConstants.PLAYER_TWO_UUID;
     private static final ServerUUID serverUUID = TestConstants.SERVER_UUID;
     private static final ServerUUID server2UUID = TestConstants.SERVER_TWO_UUID;
     private static final String playerName = TestConstants.PLAYER_ONE_NAME;
     private static final String player2Name = TestConstants.PLAYER_TWO_NAME;
-
     private static final String[] serverWorldNames = new String[]{
             TestConstants.WORLD_ONE_NAME, "World Two", "world"
     };
     private static final String[] server2WorldNames = new String[]{
             "Foo", "Bar", "Z"
     };
-
     private static final long playerFirstJoin = 1234500L;
     private static final long playerSecondJoin = 234000L;
-
     private static final List<FinishedSession> playerSessions = createSessionsForPlayer(playerUUID);
     private static final List<FinishedSession> player2Sessions = createSessionsForPlayer(player2UUID);
-
     private static final List<GeoInfo> playerGeoInfo = createGeoInfoForPlayer();
+
+    private TestData() {
+        /* Utility class */
+    }
 
     private static List<GeoInfo> createGeoInfoForPlayer() {
         List<GeoInfo> geoInfos = new ArrayList<>();
@@ -210,6 +206,6 @@ public class TestData {
     private static String getPlayerName(UUID uuid) {
         if (playerUUID.equals(uuid)) return TestConstants.PLAYER_ONE_NAME;
         if (player2UUID.equals(uuid)) return TestConstants.PLAYER_TWO_NAME;
-        return "player_name";
+        return "playerName";
     }
 }

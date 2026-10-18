@@ -102,47 +102,47 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
         TPSMutator tpsDataDay = tpsDataWeek.filterDataBetween(dayAgo, now);
 
         Double tpsThreshold = config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED);
-        numbers.put("low_tps_spikes_30d", tpsDataMonth.lowTpsSpikeCount(tpsThreshold));
-        numbers.put("low_tps_spikes_7d", tpsDataWeek.lowTpsSpikeCount(tpsThreshold));
-        numbers.put("low_tps_spikes_24h", tpsDataDay.lowTpsSpikeCount(tpsThreshold));
+        numbers.put("lowTpsSpikes30d", tpsDataMonth.lowTpsSpikeCount(tpsThreshold));
+        numbers.put("lowTpsSpikes7d", tpsDataWeek.lowTpsSpikeCount(tpsThreshold));
+        numbers.put("lowTpsSpikes24h", tpsDataDay.lowTpsSpikeCount(tpsThreshold));
 
-        numbers.put("server_downtime_30d", tpsDataMonth.serverDownTime());
-        numbers.put("server_downtime_7d", tpsDataWeek.serverDownTime());
-        numbers.put("server_downtime_24h", tpsDataDay.serverDownTime());
+        numbers.put("serverDowntime30d", tpsDataMonth.serverDownTime());
+        numbers.put("serverDowntime7d", tpsDataWeek.serverDownTime());
+        numbers.put("serverDowntime24h", tpsDataDay.serverDownTime());
 
-        numbers.put("server_uptime_30d", tpsDataMonth.serverUptime());
-        numbers.put("server_uptime_7d", tpsDataWeek.serverUptime());
-        numbers.put("server_uptime_24h", tpsDataDay.serverUptime());
+        numbers.put("serverUptime30d", tpsDataMonth.serverUptime());
+        numbers.put("serverUptime7d", tpsDataWeek.serverUptime());
+        numbers.put("serverUptime24h", tpsDataDay.serverUptime());
 
-        numbers.put("players_30d", tpsDataMonth.averagePlayers());
-        numbers.put("players_7d", tpsDataWeek.averagePlayers());
-        numbers.put("players_24h", tpsDataDay.averagePlayers());
-        numbers.put("tps_30d", tpsDataMonth.averageTPS());
-        numbers.put("tps_7d", tpsDataWeek.averageTPS());
-        numbers.put("tps_24h", tpsDataDay.averageTPS());
-        numbers.put("cpu_30d", formatPercentage(tpsDataMonth.averageCPU()));
-        numbers.put("cpu_7d", formatPercentage(tpsDataWeek.averageCPU()));
-        numbers.put("cpu_24h", formatPercentage(tpsDataDay.averageCPU()));
-        numbers.put("ram_30d", formatBytes(tpsDataMonth.averageRAM()));
-        numbers.put("ram_7d", formatBytes(tpsDataWeek.averageRAM()));
-        numbers.put("ram_24h", formatBytes(tpsDataDay.averageRAM()));
-        numbers.put("entities_30d", (int) tpsDataMonth.averageEntities());
-        numbers.put("entities_7d", (int) tpsDataWeek.averageEntities());
-        numbers.put("entities_24h", (int) tpsDataDay.averageEntities());
-        numbers.put("chunks_30d", (int) tpsDataMonth.averageChunks());
-        numbers.put("chunks_7d", (int) tpsDataWeek.averageChunks());
-        numbers.put("chunks_24h", (int) tpsDataDay.averageChunks());
+        numbers.put("players30d", tpsDataMonth.averagePlayers());
+        numbers.put("players7d", tpsDataWeek.averagePlayers());
+        numbers.put("players24h", tpsDataDay.averagePlayers());
+        numbers.put("tps30d", tpsDataMonth.averageTPS());
+        numbers.put("tps7d", tpsDataWeek.averageTPS());
+        numbers.put("tps24h", tpsDataDay.averageTPS());
+        numbers.put("cpu30d", formatPercentage(tpsDataMonth.averageCPU()));
+        numbers.put("cpu7d", formatPercentage(tpsDataWeek.averageCPU()));
+        numbers.put("cpu24h", formatPercentage(tpsDataDay.averageCPU()));
+        numbers.put("ram30d", formatBytes(tpsDataMonth.averageRAM()));
+        numbers.put("ram7d", formatBytes(tpsDataWeek.averageRAM()));
+        numbers.put("ram24h", formatBytes(tpsDataDay.averageRAM()));
+        numbers.put("entities30d", (int) tpsDataMonth.averageEntities());
+        numbers.put("entities7d", (int) tpsDataWeek.averageEntities());
+        numbers.put("entities24h", (int) tpsDataDay.averageEntities());
+        numbers.put("chunks30d", (int) tpsDataMonth.averageChunks());
+        numbers.put("chunks7d", (int) tpsDataWeek.averageChunks());
+        numbers.put("chunks24h", (int) tpsDataDay.averageChunks());
 
-        numbers.put("max_disk_30d", formatBytes(tpsDataMonth.maxFreeDisk()));
-        numbers.put("max_disk_7d", formatBytes(tpsDataWeek.maxFreeDisk()));
-        numbers.put("max_disk_24h", formatBytes(tpsDataDay.maxFreeDisk()));
-        numbers.put("min_disk_30d", formatBytes(tpsDataMonth.minFreeDisk()));
-        numbers.put("min_disk_7d", formatBytes(tpsDataWeek.minFreeDisk()));
-        numbers.put("min_disk_24h", formatBytes(tpsDataDay.minFreeDisk()));
+        numbers.put("maxDisk30d", formatBytes(tpsDataMonth.maxFreeDisk()));
+        numbers.put("maxDisk7d", formatBytes(tpsDataWeek.maxFreeDisk()));
+        numbers.put("maxDisk24h", formatBytes(tpsDataDay.maxFreeDisk()));
+        numbers.put("minDisk30d", formatBytes(tpsDataMonth.minFreeDisk()));
+        numbers.put("minDisk7d", formatBytes(tpsDataWeek.minFreeDisk()));
+        numbers.put("minDisk24h", formatBytes(tpsDataDay.minFreeDisk()));
 
-        numbers.put("mspt_average_30d", tpsDataMonth.averageMspt());
-        numbers.put("mspt_average_7d", tpsDataWeek.averageMspt());
-        numbers.put("mspt_average_24h", tpsDataDay.averageMspt());
+        numbers.put("msptAverage30d", tpsDataMonth.averageMspt());
+        numbers.put("msptAverage7d", tpsDataWeek.averageMspt());
+        numbers.put("msptAverage24h", tpsDataDay.averageMspt());
 
         return numbers;
     }
@@ -168,12 +168,12 @@ public class PerformanceJSONCreator implements ServerTabJSONCreator<Map<String, 
         double averageEntities = lowTPS.averageEntities();
         double averageChunks = lowTPS.averageChunks();
         double averageMspt = lowTPS.averageMspt();
-        insights.put("low_tps_players", avgPlayersOnline != -1 ? decimals.apply(avgPlayersOnline) : HtmlLang.TEXT_NO_LOW_TPS.getKey());
-        insights.put("low_tps_tps", averageTPS != -1 ? decimals.apply(averageTPS) : "-");
-        insights.put("low_tps_cpu", averageCPU != -1 ? decimals.apply(averageCPU) : "-");
-        insights.put("low_tps_entities", averageEntities != -1 ? decimals.apply(averageEntities) : "-");
-        insights.put("low_tps_chunks", averageChunks != -1 ? decimals.apply(averageChunks) : "-");
-        insights.put("low_tps_mspt", averageMspt > 0 ? decimals.apply(averageMspt) : "-");
+        insights.put("lowTpsPlayers", avgPlayersOnline != -1 ? decimals.apply(avgPlayersOnline) : HtmlLang.TEXT_NO_LOW_TPS.getKey());
+        insights.put("lowTpsTps", averageTPS != -1 ? decimals.apply(averageTPS) : "-");
+        insights.put("lowTpsCpu", averageCPU != -1 ? decimals.apply(averageCPU) : "-");
+        insights.put("lowTpsEntities", averageEntities != -1 ? decimals.apply(averageEntities) : "-");
+        insights.put("lowTpsChunks", averageChunks != -1 ? decimals.apply(averageChunks) : "-");
+        insights.put("lowTpsMspt", averageMspt > 0 ? decimals.apply(averageMspt) : "-");
 
         return insights;
     }

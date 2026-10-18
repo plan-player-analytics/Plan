@@ -43,19 +43,19 @@ const OnlineActivityInsightsCard = () => {
                 name={t('html.label.onlineOnFirstJoin')}
                 icon={faUserGroup}
                 color='players-new'
-                value={insights.players_first_join_avg}
-                trend={<SmallTrend trend={insights.players_first_join_trend} />}
+                value={insights.playersFirstJoinAvg}
+                trend={<SmallTrend trend={insights.playersFirstJoinTrend} />}
             />
             <Datapoint
                 name={t('html.label.firstSessionLength.average')}
                 icon={faUserClock}
                 color='players-new'
                 value={
-                    <FormattedTime timeMs={insights.first_session_length_avg} />
+                    <FormattedTime timeMs={insights.firstSessionLengthAvg} />
                 }
                 trend={
                     <SmallTrend
-                        trend={insights.first_session_length_trend}
+                        trend={insights.firstSessionLengthTrend}
                         format={formatTime}
                     />
                 }
@@ -65,13 +65,11 @@ const OnlineActivityInsightsCard = () => {
                 icon={faUserClock}
                 color='players-new'
                 value={
-                    <FormattedTime
-                        timeMs={insights.first_session_length_median}
-                    />
+                    <FormattedTime timeMs={insights.firstSessionLengthMedian} />
                 }
                 trend={
                     <SmallTrend
-                        trend={insights.first_session_length_median_trend}
+                        trend={insights.firstSessionLengthMedianTrend}
                         format={formatTime}
                     />
                 }
@@ -80,15 +78,15 @@ const OnlineActivityInsightsCard = () => {
                 name={t('html.label.loneJoins')}
                 icon={faCalendar}
                 color='sessions'
-                value={insights.lone_joins}
-                trend={<SmallTrend trend={insights.lone_joins_trend} />}
+                value={insights.loneJoins}
+                trend={<SmallTrend trend={insights.loneJoinsTrend} />}
             />
             <Datapoint
                 name={t('html.label.loneNewbieJoins')}
                 icon={faCalendarPlus}
                 color='sessions'
-                value={insights.lone_new_joins}
-                trend={<SmallTrend trend={insights.lone_new_joins_trend} />}
+                value={insights.loneNewJoins}
+                trend={<SmallTrend trend={insights.loneNewJoinsTrend} />}
             />
             <End>
                 <ComparingLabel>

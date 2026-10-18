@@ -64,7 +64,7 @@ const PlayerHeadSection = ({ player }) => {
                 )}
                 <p>
                     <Fa icon={faGavel} className='col-kicks' />{' '}
-                    {t('html.label.timesKicked')}: {player.info.kick_count}
+                    {t('html.label.timesKicked')}: {player.info.kickCount}
                 </p>
             </Col>
             <Col xs={4}>
@@ -77,16 +77,15 @@ const PlayerHeadSection = ({ player }) => {
             <Col xs={4}>
                 <p>
                     <Fa icon={faCrosshairs} className='col-player-kills' />{' '}
-                    {t('html.label.playerKills')}:{' '}
-                    {player.info.player_kill_count}
+                    {t('html.label.playerKills')}: {player.info.playerKillCount}
                 </p>
                 <p>
                     <Fa icon={faCrosshairs} className='col-mob-kills' />{' '}
-                    {t('html.label.mobKills')}: {player.info.mob_kill_count}
+                    {t('html.label.mobKills')}: {player.info.mobKillCount}
                 </p>
                 <p>
                     <Fa icon={faSkull} /> {t('html.label.deaths')}:{' '}
-                    {player.info.death_count}
+                    {player.info.deathCount}
                 </p>
             </Col>
         </>
@@ -131,7 +130,7 @@ const PlayerOverviewCard = ({ player }) => {
                             name={t('html.label.totalActive')}
                             value={
                                 <FormattedTime
-                                    timeMs={player.info.active_playtime}
+                                    timeMs={player.info.activePlaytime}
                                 />
                             }
                         />
@@ -140,7 +139,7 @@ const PlayerOverviewCard = ({ player }) => {
                             color='playtime-afk'
                             name={t('html.label.totalAfk')}
                             value={
-                                <FormattedTime timeMs={player.info.afk_time} />
+                                <FormattedTime timeMs={player.info.afkTime} />
                             }
                         />
                         <hr />
@@ -148,7 +147,7 @@ const PlayerOverviewCard = ({ player }) => {
                             icon={faCalendarCheck}
                             color='sessions'
                             name={t('html.label.sessions')}
-                            value={player.info.session_count}
+                            value={player.info.sessionCount}
                             bold
                         />
                         <Datapoint
@@ -157,7 +156,7 @@ const PlayerOverviewCard = ({ player }) => {
                             name={t('html.label.longestSession')}
                             value={
                                 <FormattedTime
-                                    timeMs={player.info.longest_session_length}
+                                    timeMs={player.info.longestSessionLength}
                                 />
                             }
                         />
@@ -167,7 +166,7 @@ const PlayerOverviewCard = ({ player }) => {
                             name={t('html.label.sessionMedian')}
                             value={
                                 <FormattedTime
-                                    timeMs={player.info.session_median}
+                                    timeMs={player.info.sessionMedian}
                                 />
                             }
                         />
@@ -199,41 +198,41 @@ const PlayerOverviewCard = ({ player }) => {
                                     </span>
                                 </>
                             }
-                            value={formatDecimals(player.info.activity_index)}
+                            value={formatDecimals(player.info.activityIndex)}
                             bold
-                            valueLabel={player.info.activity_index_group}
+                            valueLabel={player.info.activityIndexGroup}
                             title={t('html.label.activityIndex')}
                         />
                         <Datapoint
                             icon={faServer}
                             color='servers'
                             name={t('html.label.favoriteServer')}
-                            value={player.info.favorite_server}
+                            value={player.info.favoriteServer}
                         />
                         <Datapoint
                             icon={faLocationArrow}
                             color='join-addresses'
                             name={t('html.label.joinAddress')}
-                            value={player.info.latest_join_address}
+                            value={player.info.latestJoinAddress}
                         />
                         <hr />
                         <Datapoint
                             icon={faSignal}
                             color='ping'
                             name={t('html.label.averagePing')}
-                            value={formatPing(player.info.average_ping)}
+                            value={formatPing(player.info.averagePing)}
                         />
                         <Datapoint
                             icon={faSignal}
                             color='ping'
                             name={t('html.label.bestPing')}
-                            value={formatPing(player.info.best_ping)}
+                            value={formatPing(player.info.bestPing)}
                         />
                         <Datapoint
                             icon={faSignal}
                             color='ping'
                             name={t('html.label.worstPing')}
-                            value={formatPing(player.info.worst_ping)}
+                            value={formatPing(player.info.worstPing)}
                         />
                         <hr />
                         <Datapoint
@@ -241,7 +240,7 @@ const PlayerOverviewCard = ({ player }) => {
                             color='last-seen'
                             name={t('html.label.lastSeen')}
                             value={
-                                <FormattedDate date={player.info.last_seen} />
+                                <FormattedDate date={player.info.lastSeen} />
                             }
                             boldTitle
                         />

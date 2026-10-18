@@ -36,8 +36,8 @@ const PlayerbaseGraph = ({ data }) => {
     const id = 'playerbase-graph';
 
     const graphOptions = useMemo(() => {
-        const labels = data?.activity_labels.map(formatDate);
-        const series = data?.activity_series.map((dataSet) => {
+        const labels = data?.activityLabels.map(formatDate);
+        const series = data?.activitySeries.map((dataSet) => {
             return {
                 ...dataSet,
                 name: t(dataSet.name),

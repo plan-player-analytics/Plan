@@ -5,7 +5,7 @@ import { faCampground } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
 import ServerPvpPveAsNumbersTable from '../../../table/ServerPvpPveAsNumbersTable';
 
-const PvpPveAsNumbersCard = ({ kill_data }) => {
+const PvpPveAsNumbersCard = ({ killData }) => {
     const { t } = useTranslation();
     return (
         <Card id={'pvp-pve-as-numbers'}>
@@ -15,7 +15,7 @@ const PvpPveAsNumbersCard = ({ kill_data }) => {
                     {t('html.label.pvpPveAsNumbers')}
                 </h6>
             </Card.Header>
-            <ServerPvpPveAsNumbersTable killData={kill_data} />
+            <ServerPvpPveAsNumbersTable killData={killData} />
         </Card>
     );
 };

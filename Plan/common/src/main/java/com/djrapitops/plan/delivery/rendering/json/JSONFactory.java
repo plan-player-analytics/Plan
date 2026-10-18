@@ -289,24 +289,24 @@ public class JSONFactory {
 
                     Optional<DateObj<Integer>> recentPeak = db.query(TPSQueries.fetchPeakPlayerCount(serverUUID, now - TimeUnit.DAYS.toMillis(2L), Long.MAX_VALUE));
                     Optional<DateObj<Integer>> allTimePeak = db.query(TPSQueries.fetchAllTimePeakPlayerCount(serverUUID));
-                    server.put("last_peak_date", recentPeak.map(DateObj::date).map(Object.class::cast).orElse("-"));
-                    server.put("best_peak_date", allTimePeak.map(DateObj::date).map(Object.class::cast).orElse("-"));
-                    server.put("last_peak_players", recentPeak.map(DateObj::getValue).orElse(0));
-                    server.put("best_peak_players", allTimePeak.map(DateObj::getValue).orElse(0));
+                    server.put("lastPeakDate", recentPeak.map(DateObj::date).map(Object.class::cast).orElse("-"));
+                    server.put("bestPeakDate", allTimePeak.map(DateObj::date).map(Object.class::cast).orElse("-"));
+                    server.put("lastPeakPlayers", recentPeak.map(DateObj::getValue).orElse(0));
+                    server.put("bestPeakPlayers", allTimePeak.map(DateObj::getValue).orElse(0));
 
                     TPSMutator tpsMonth = new TPSMutator(tpsDataByServerId.getOrDefault(serverUuidToId.get(serverUUID), Collections.emptyList()));
                     server.put("playersOnline", tpsMonth.all().stream()
                             .map(tps -> new double[]{tps.date(), tps.getPlayers()})
                             .toArray(double[][]::new));
                     server.put("players", totalPlayerCounts.getOrDefault(serverUUID, 0));
-                    server.put("new_players", newPlayerCounts.getOrDefault(serverUUID, 0));
-                    server.put("unique_players", uniquePlayerCounts.getOrDefault(serverUUID, 0));
+                    server.put("newPlayers", newPlayerCounts.getOrDefault(serverUUID, 0));
+                    server.put("uniquePlayers", uniquePlayerCounts.getOrDefault(serverUUID, 0));
                     TPSMutator tpsWeek = tpsMonth.filterDataBetween(weekAgo, now);
                     double averageTPS = tpsWeek.averageTPS();
-                    server.put("avg_tps", averageTPS != -1 ? decimals.apply(averageTPS) : HtmlLang.UNIT_NO_DATA.getKey());
-                    server.put("low_tps_spikes", tpsWeek.lowTpsSpikeCount(config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED)));
+                    server.put("avgTps", averageTPS != -1 ? decimals.apply(averageTPS) : HtmlLang.UNIT_NO_DATA.getKey());
+                    server.put("lowTpsSpikes", tpsWeek.lowTpsSpikeCount(config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED)));
                     server.put("downtime", tpsWeek.serverDownTime());
-                    server.put("current_uptime", serverUptimeCalculator.getServerUptimeMillis(serverUUID).map(Object.class::cast)
+                    server.put("currentUptime", serverUptimeCalculator.getServerUptimeMillis(serverUUID).map(Object.class::cast)
                             .orElse(GenericLang.UNAVAILABLE.getKey()));
 
                     Optional<TPS> online = tpsWeek.getLast();
@@ -339,9 +339,9 @@ public class JSONFactory {
 
             tableEntries.add(Maps.builder(String.class, Object.class)
                     .put("country", geolocation)
-                    .put("avg_ping", ping.getAverage())
-                    .put("min_ping", ping.getMin())
-                    .put("max_ping", ping.getMax())
+                    .put("avgPing", ping.getAverage())
+                    .put("minPing", ping.getMin())
+                    .put("maxPing", ping.getMax())
                     .build());
         }
         return tableEntries;
@@ -351,7 +351,7 @@ public class JSONFactory {
         Collection<Server> servers = dbSystem.getDatabase().query(ServerQueries.fetchPlanServerInformationCollection());
         return Collections.singletonMap("servers", servers.stream()
                 .map(ServerDto::fromServer)
-                .collect(Collectors.toList()));
+                .toList());
     }
 
     public List<PlayerIdentifier> playersOnlineOn(long date) {
@@ -362,7 +362,7 @@ public class JSONFactory {
                 .forEach(online::add);
         return online.stream()
                 .sorted()
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<PlayerIdentifier> playersOnlineOn(long date, ServerUUID serverUUID) {
@@ -375,7 +375,7 @@ public class JSONFactory {
         }
         return online.stream()
                 .sorted()
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<Map<String, Object>> playerSessions(GenericFilter filter) {
@@ -426,7 +426,7 @@ public class JSONFactory {
         removeLimitOverflow(sessions);
 
         List<Map<String, Object>> asMaps = new SessionsMutator(sessions).toPlayerNameJSONMaps(graphs, config.getWorldAliasSettings(), formatters);
-        asMaps.forEach(map -> map.put("network_server", map.get("server_name")));
+        asMaps.forEach(map -> map.put("networkServer", map.get("serverName")));
         return asMaps;
     }
 

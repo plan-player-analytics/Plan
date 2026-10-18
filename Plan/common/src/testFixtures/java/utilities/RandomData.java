@@ -272,7 +272,7 @@ public class RandomData {
     }
 
     public static List<JoinAddress> generateJoinAddresses(int n) {
-        return IntStream.range(0, n).mapToObj(i -> "join_address_" + i)
+        return IntStream.range(0, n).mapToObj(i -> "joinAddress_" + i)
                 .map(JoinAddress::new)
                 .collect(Collectors.toList());
     }

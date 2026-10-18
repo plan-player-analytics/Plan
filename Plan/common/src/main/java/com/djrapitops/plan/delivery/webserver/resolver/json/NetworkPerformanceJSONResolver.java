@@ -164,65 +164,65 @@ public class NetworkPerformanceJSONResolver implements Resolver {
         }
 
         Double tpsThreshold = config.get(DisplaySettings.GRAPH_TPS_THRESHOLD_MED);
-        numbers.put("low_tps_spikes_30d", tpsDataMonth.lowTpsSpikeCount(tpsThreshold));
-        numbers.put("low_tps_spikes_7d", tpsDataWeek.lowTpsSpikeCount(tpsThreshold));
-        numbers.put("low_tps_spikes_24h", tpsDataDay.lowTpsSpikeCount(tpsThreshold));
+        numbers.put("lowTpsSpikes30d", tpsDataMonth.lowTpsSpikeCount(tpsThreshold));
+        numbers.put("lowTpsSpikes7d", tpsDataWeek.lowTpsSpikeCount(tpsThreshold));
+        numbers.put("lowTpsSpikes24h", tpsDataDay.lowTpsSpikeCount(tpsThreshold));
 
         long downtimeMonth = getTotal(mutatorsOfServersMonth, TPSMutator::serverDownTime);
         long downtimeWeek = getTotal(mutatorsOfServersWeek, TPSMutator::serverDownTime);
         long downtimeDay = getTotal(mutatorsOfServersDay, TPSMutator::serverDownTime);
-        numbers.put("server_downtime_30d", downtimeMonth);
-        numbers.put("server_downtime_7d", downtimeWeek);
-        numbers.put("server_downtime_24h", downtimeDay);
+        numbers.put("serverDowntime30d", downtimeMonth);
+        numbers.put("serverDowntime7d", downtimeWeek);
+        numbers.put("serverDowntime24h", downtimeDay);
 
         if (!tpsData.isEmpty()) {
-            numbers.put("avg_server_downtime_30d", downtimeMonth / tpsData.size());
-            numbers.put("avg_server_downtime_7d", downtimeWeek / tpsData.size());
-            numbers.put("avg_server_downtime_24h", downtimeDay / tpsData.size());
+            numbers.put("avgServerDowntime30d", downtimeMonth / tpsData.size());
+            numbers.put("avgServerDowntime7d", downtimeWeek / tpsData.size());
+            numbers.put("avgServerDowntime24h", downtimeDay / tpsData.size());
         } else {
-            numbers.put("avg_server_downtime_30d", "-");
-            numbers.put("avg_server_downtime_7d", "-");
-            numbers.put("avg_server_downtime_24h", "-");
+            numbers.put("avgServerDowntime30d", "-");
+            numbers.put("avgServerDowntime7d", "-");
+            numbers.put("avgServerDowntime24h", "-");
         }
 
         long uptimeMonth = getTotal(mutatorsOfServersMonth, TPSMutator::serverUptime);
         long uptimeWeek = getTotal(mutatorsOfServersWeek, TPSMutator::serverUptime);
         long uptimeDay = getTotal(mutatorsOfServersDay, TPSMutator::serverUptime);
-        numbers.put("server_uptime_30d", uptimeMonth);
-        numbers.put("server_uptime_7d", uptimeWeek);
-        numbers.put("server_uptime_24h", uptimeDay);
+        numbers.put("serverUptime30d", uptimeMonth);
+        numbers.put("serverUptime7d", uptimeWeek);
+        numbers.put("serverUptime24h", uptimeDay);
 
         if (!tpsData.isEmpty()) {
-            numbers.put("avg_server_uptime_30d", uptimeMonth / tpsData.size());
-            numbers.put("avg_server_uptime_7d", uptimeWeek / tpsData.size());
-            numbers.put("avg_server_uptime_24h", uptimeDay / tpsData.size());
+            numbers.put("avgServerUptime30d", uptimeMonth / tpsData.size());
+            numbers.put("avgServerUptime7d", uptimeWeek / tpsData.size());
+            numbers.put("avgServerUptime24h", uptimeDay / tpsData.size());
         } else {
-            numbers.put("avg_server_uptime_30d", "-");
-            numbers.put("avg_server_uptime_7d", "-");
-            numbers.put("avg_server_uptime_24h", "-");
+            numbers.put("avgServerUptime30d", "-");
+            numbers.put("avgServerUptime7d", "-");
+            numbers.put("avgServerUptime24h", "-");
         }
 
-        numbers.put("players_30d", tpsDataMonth.averagePlayers());
-        numbers.put("players_7d", tpsDataWeek.averagePlayers());
-        numbers.put("players_24h", tpsDataDay.averagePlayers());
-        numbers.put("tps_30d", tpsDataMonth.averageTPS());
-        numbers.put("tps_7d", tpsDataWeek.averageTPS());
-        numbers.put("tps_24h", tpsDataDay.averageTPS());
-        numbers.put("cpu_30d", formatPercentage(tpsDataMonth.averageCPU()));
-        numbers.put("cpu_7d", formatPercentage(tpsDataWeek.averageCPU()));
-        numbers.put("cpu_24h", formatPercentage(tpsDataDay.averageCPU()));
-        numbers.put("ram_30d", formatBytes(tpsDataMonth.averageRAM()));
-        numbers.put("ram_7d", formatBytes(tpsDataWeek.averageRAM()));
-        numbers.put("ram_24h", formatBytes(tpsDataDay.averageRAM()));
-        numbers.put("entities_30d", (int) tpsDataMonth.averageEntities());
-        numbers.put("entities_7d", (int) tpsDataWeek.averageEntities());
-        numbers.put("entities_24h", (int) tpsDataDay.averageEntities());
-        numbers.put("chunks_30d", (int) tpsDataMonth.averageChunks());
-        numbers.put("chunks_7d", (int) tpsDataWeek.averageChunks());
-        numbers.put("chunks_24h", (int) tpsDataDay.averageChunks());
-        numbers.put("mspt_average_30d", tpsDataMonth.averageMspt());
-        numbers.put("mspt_average_7d", tpsDataWeek.averageMspt());
-        numbers.put("mspt_average_24h", tpsDataDay.averageMspt());
+        numbers.put("players30d", tpsDataMonth.averagePlayers());
+        numbers.put("players7d", tpsDataWeek.averagePlayers());
+        numbers.put("players24h", tpsDataDay.averagePlayers());
+        numbers.put("tps30d", tpsDataMonth.averageTPS());
+        numbers.put("tps7d", tpsDataWeek.averageTPS());
+        numbers.put("tps24h", tpsDataDay.averageTPS());
+        numbers.put("cpu30d", formatPercentage(tpsDataMonth.averageCPU()));
+        numbers.put("cpu7d", formatPercentage(tpsDataWeek.averageCPU()));
+        numbers.put("cpu24h", formatPercentage(tpsDataDay.averageCPU()));
+        numbers.put("ram30d", formatBytes(tpsDataMonth.averageRAM()));
+        numbers.put("ram7d", formatBytes(tpsDataWeek.averageRAM()));
+        numbers.put("ram24h", formatBytes(tpsDataDay.averageRAM()));
+        numbers.put("entities30d", (int) tpsDataMonth.averageEntities());
+        numbers.put("entities7d", (int) tpsDataWeek.averageEntities());
+        numbers.put("entities24h", (int) tpsDataDay.averageEntities());
+        numbers.put("chunks30d", (int) tpsDataMonth.averageChunks());
+        numbers.put("chunks7d", (int) tpsDataWeek.averageChunks());
+        numbers.put("chunks24h", (int) tpsDataDay.averageChunks());
+        numbers.put("msptAverage30d", tpsDataMonth.averageMspt());
+        numbers.put("msptAverage7d", tpsDataWeek.averageMspt());
+        numbers.put("msptAverage24h", tpsDataDay.averageMspt());
 
         return numbers;
     }

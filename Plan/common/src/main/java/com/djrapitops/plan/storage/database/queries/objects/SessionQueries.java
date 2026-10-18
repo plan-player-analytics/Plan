@@ -401,7 +401,7 @@ public class SessionQueries {
             String selectSessionsPerDay = SELECT +
                     sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + SessionsTable.SESSION_START + "+?)/1000"))) +
                     "*1000 as date," +
-                    "COUNT(1) as session_count" +
+                    "COUNT(1) as sessionCount" +
                     FROM + SessionsTable.TABLE_NAME +
                     WHERE + SessionsTable.SESSION_START + "<?" +
                     AND + SessionsTable.SESSION_START + ">=?" +
@@ -421,7 +421,7 @@ public class SessionQueries {
                 public NavigableMap<Long, Integer> processResults(ResultSet set) throws SQLException {
                     NavigableMap<Long, Integer> uniquePerDay = new TreeMap<>();
                     while (set.next()) {
-                        uniquePerDay.put(set.getLong("date"), set.getInt("session_count"));
+                        uniquePerDay.put(set.getLong("date"), set.getInt("sessionCount"));
                     }
                     return uniquePerDay;
                 }
@@ -443,7 +443,7 @@ public class SessionQueries {
             String selectSessionsPerDay = SELECT +
                     sql.dateToEpochSecond(sql.dateToDayStamp(sql.epochSecondToDate('(' + SessionsTable.SESSION_START + "+?)/1000"))) +
                     "*1000 as date," +
-                    "COUNT(1) as session_count" +
+                    "COUNT(1) as sessionCount" +
                     FROM + SessionsTable.TABLE_NAME +
                     WHERE + SessionsTable.SESSION_START + "<?" +
                     AND + SessionsTable.SESSION_START + ">=?" +
@@ -461,7 +461,7 @@ public class SessionQueries {
                 public NavigableMap<Long, Integer> processResults(ResultSet set) throws SQLException {
                     NavigableMap<Long, Integer> uniquePerDay = new TreeMap<>();
                     while (set.next()) {
-                        uniquePerDay.put(set.getLong("date"), set.getInt("session_count"));
+                        uniquePerDay.put(set.getLong("date"), set.getInt("sessionCount"));
                     }
                     return uniquePerDay;
                 }
@@ -989,7 +989,7 @@ public class SessionQueries {
     }
 
     public static Query<Double> afkTimePercentage(long after, long before, List<ServerUUID> serverUUIDs) {
-        String sql = SELECT + "SUM(" + SessionsTable.AFK_TIME + ")*1.0/SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as afk_time_perc" +
+        String sql = SELECT + "SUM(" + SessionsTable.AFK_TIME + ")*1.0/SUM(" + SessionsTable.SESSION_END + '-' + SessionsTable.SESSION_START + ") as afkTimePerc" +
                 FROM + SessionsTable.TABLE_NAME +
                 WHERE + SessionsTable.SESSION_END + ">=?" +
                 AND + SessionsTable.SESSION_START + "<=?" +
@@ -1003,7 +1003,7 @@ public class SessionQueries {
 
             @Override
             public Double processResults(ResultSet set) throws SQLException {
-                return set.next() ? set.getDouble("afk_time_perc") : 0.0;
+                return set.next() ? set.getDouble("afkTimePerc") : 0.0;
             }
         };
     }
@@ -1152,7 +1152,7 @@ public class SessionQueries {
             String selectAggregates = SELECT +
                     playtimeColumn(db.getSql(), after, before) + ',' +
                     activePlaytimeColumn(db.getSql(), after, before) + ',' +
-                    "COUNT(1) as session_count" +
+                    "COUNT(1) as sessionCount" +
                     FROM + SessionsTable.TABLE_NAME +
                     WHERE + SessionsTable.SESSION_START + ">=?" +
                     AND + SessionsTable.SESSION_START + "<?" +
@@ -1169,20 +1169,20 @@ public class SessionQueries {
                 @Override
                 public Map<String, Long> processResults(ResultSet set) throws SQLException {
                     if (set.next()) {
-                        long sessionCount = set.getLong("session_count");
+                        long sessionCount = set.getLong("sessionCount");
                         long playtime = set.getLong("playtime");
                         long activePlaytime = set.getLong("active_playtime");
                         int playerCount = userIds.size();
                         return Maps.builder(String.class, Long.class)
-                                .put("total_playtime", playtime)
-                                .put("average_playtime", playerCount != 0 ? playtime / playerCount : -1L)
-                                .put("total_afk_playtime", playtime - activePlaytime)
-                                .put("average_afk_playtime", playerCount != 0 ? (playtime - activePlaytime) / playerCount : -1L)
-                                .put("total_active_playtime", activePlaytime)
-                                .put("average_active_playtime", playerCount != 0 ? activePlaytime / playerCount : -1L)
-                                .put("total_sessions", sessionCount)
-                                .put("average_sessions", playerCount != 0 ? sessionCount / playerCount : -1L)
-                                .put("average_session_length", sessionCount != 0 ? playtime / sessionCount : -1L)
+                                .put("totalPlaytime", playtime)
+                                .put("averagePlaytime", playerCount != 0 ? playtime / playerCount : -1L)
+                                .put("totalAfkPlaytime", playtime - activePlaytime)
+                                .put("averageAfkPlaytime", playerCount != 0 ? (playtime - activePlaytime) / playerCount : -1L)
+                                .put("totalActivePlaytime", activePlaytime)
+                                .put("averageActivePlaytime", playerCount != 0 ? activePlaytime / playerCount : -1L)
+                                .put("totalSessions", sessionCount)
+                                .put("averageSessions", playerCount != 0 ? sessionCount / playerCount : -1L)
+                                .put("averageSessionLength", sessionCount != 0 ? playtime / sessionCount : -1L)
                                 .build();
                     } else {
                         return Collections.emptyMap();

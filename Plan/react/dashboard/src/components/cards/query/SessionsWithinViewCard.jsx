@@ -24,7 +24,7 @@ const SessionsWithinViewCard = ({ data }) => {
                     color={'sessions'}
                     icon={faCalendarCheck}
                     name={t('html.label.sessions')}
-                    value={data.total_sessions}
+                    value={data.totalSessions}
                     bold
                 />
                 <Datapoint
@@ -35,52 +35,52 @@ const SessionsWithinViewCard = ({ data }) => {
                         ' ' +
                         t('html.label.perPlayer')
                     }
-                    value={data.average_sessions}
+                    value={data.averageSessions}
                     bold
                 />
                 <Datapoint
                     color={'sessions'}
                     icon={faClock}
                     name={t('html.label.averageSessionLength')}
-                    value={data.average_session_length}
+                    value={data.averageSessionLength}
                 />
                 <hr />
                 <Datapoint
                     color={'playtime'}
                     icon={faClock}
                     name={t('html.label.playtime')}
-                    value={data.total_playtime}
+                    value={data.totalPlaytime}
                 />
                 <Datapoint
                     color={'playtime-active'}
                     icon={faClock}
                     name={t('html.label.activePlaytime')}
-                    value={data.total_active_playtime}
+                    value={data.totalActivePlaytime}
                 />
                 <Datapoint
                     color={'playtime-afk'}
                     icon={faClock}
                     name={t('html.label.afkTime')}
-                    value={data.total_afk_playtime}
+                    value={data.totalAfkPlaytime}
                 />
                 <hr />
                 <Datapoint
                     color={'playtime'}
                     icon={faClock}
                     name={t('html.label.averagePlaytime')}
-                    value={data.average_playtime}
+                    value={data.averagePlaytime}
                 />
                 <Datapoint
                     color={'playtime-active'}
                     icon={faClock}
                     name={t('html.label.averageActivePlaytime')}
-                    value={data.average_active_playtime}
+                    value={data.averageActivePlaytime}
                 />
                 <Datapoint
                     color={'playtime-afk'}
                     icon={faClock}
                     name={t('html.label.averageAfkTime')}
-                    value={data.average_afk_playtime}
+                    value={data.averageAfkPlaytime}
                 />
             </Card.Body>
         </Card>

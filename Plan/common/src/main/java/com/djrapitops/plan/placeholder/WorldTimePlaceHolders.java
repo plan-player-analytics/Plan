@@ -28,7 +28,8 @@ import javax.inject.Singleton;
 /**
  * Placeholders about a world times.
  *
- * @author aidn5, AuroraLS3
+ * @author aidn5
+ * @author AuroraLS3
  */
 @Singleton
 public class WorldTimePlaceHolders implements Placeholders {

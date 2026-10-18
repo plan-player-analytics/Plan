@@ -16,19 +16,19 @@ const PvpPveInsightsCard = ({ data }) => {
                 name={t('html.label.deadliestWeapon')}
                 icon={faHandSparkles}
                 color='top-3-first'
-                value={data.weapon_1st}
+                value={data.weapon1st}
             />
             <Datapoint
                 name={t('html.label.secondDeadliestWeapon')}
                 icon={faHandSparkles}
                 color='top-3-second'
-                value={data.weapon_2nd}
+                value={data.weapon2nd}
             />
             <Datapoint
                 name={t('html.label.thirdDeadliestWeapon')}
                 icon={faHandSparkles}
                 color='top-3-third'
-                value={data.weapon_3rd}
+                value={data.weapon3rd}
             />
         </InsightsFor30DaysCard>
     );

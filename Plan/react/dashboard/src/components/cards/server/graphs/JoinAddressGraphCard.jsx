@@ -48,13 +48,13 @@ const JoinAddressGraphCard = ({ identifier }) => {
             colors = data?.colors;
             dataByGroup.push({
                 ...group,
-                data: data?.join_addresses_by_date || [],
+                data: data?.joinAddressesByDate || [],
             });
         }
 
         if (staticSite) {
             // On exported site we get all addresses individually
-            setData({ join_addresses_by_date: dataByGroup[0].data, colors });
+            setData({ joinAddressesByDate: dataByGroup[0].data, colors });
         } else {
             // First group points from endpoint into frontend based groups
             const points = {};
@@ -86,7 +86,7 @@ const JoinAddressGraphCard = ({ identifier }) => {
                 });
 
             setData({
-                join_addresses_by_date: flattened,
+                joinAddressesByDate: flattened,
                 colors,
             });
         }
@@ -115,7 +115,7 @@ const JoinAddressGraphCard = ({ identifier }) => {
             {data && (
                 <JoinAddressGraph
                     id={'join-address-graph'}
-                    data={data?.join_addresses_by_date}
+                    data={data?.joinAddressesByDate}
                     colors={data?.colors}
                     stack={stack}
                 />

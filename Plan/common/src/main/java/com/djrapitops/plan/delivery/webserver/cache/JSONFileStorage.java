@@ -106,17 +106,17 @@ public class JSONFileStorage implements JSONStorage {
     private String addMissingTimestamp(String json, long timestamp) {
         String writtenJSON;
         if (!json.startsWith("{\"") || json.contains("timestamp")) {
-            if (!json.contains("timestamp_f")) {
+            if (!json.contains("timestampF")) {
                 writtenJSON = Strings.CS.replaceOnce(json,
                         "\"timestamp\"",
-                        "\"timestamp_f\":\"" + dateFormatter.apply(timestamp) + "\",\"timestamp\""
+                        "\"timestampF\":\"" + dateFormatter.apply(timestamp) + "\",\"timestamp\""
                 );
             } else {
                 writtenJSON = json;
             }
         } else {
             writtenJSON = "{\"timestamp\": " + timestamp +
-                    ",\"timestamp_f\":\"" + dateFormatter.apply(timestamp) +
+                    ",\"timestampF\":\"" + dateFormatter.apply(timestamp) +
                     "\",\"" + json.substring(2);
         }
         return writtenJSON;

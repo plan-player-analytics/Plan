@@ -1,12 +1,14 @@
 import React from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
-import { useMetadata } from '../../../hooks/metadataHook.tsx';
+import { useMetadata } from '../../../hooks/metadataHook';
 import { Trans } from 'react-i18next'; /* eslint-disable jsx-a11y/anchor-has-content */
 
 /* eslint-disable jsx-a11y/anchor-has-content */
 const GroupPermissionHelp = () => {
-    const { mainCommand } = useMetadata();
+    const metadata = useMetadata();
+    if (!metadata.loaded) return null;
+    const { mainCommand } = metadata;
     return (
         <div className={'group-help'}>
             <p>

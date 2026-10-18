@@ -110,7 +110,7 @@ const GeolocationsCard = ({ identifier, data }) => {
 
     if (!data) return <CardLoader />;
 
-    if (!data?.geolocations_enabled) {
+    if (!data?.geolocationsEnabled) {
         return (
             <div className='alert alert-warning mb-0' id='geolocation-warning'>
                 <Fa icon={faExclamationTriangle} />{' '}
@@ -152,12 +152,12 @@ const GeolocationsCard = ({ identifier, data }) => {
                 <ExtendableRow id={'row-geolocations-graphs-card-0'}>
                     <Col md={3}>
                         <GeolocationBarGraph
-                            series={data.geolocation_bar_series}
+                            series={data.geolocationBarSeries}
                         />
                     </Col>
                     <Col md={9}>
                         <GeolocationWorldMap
-                            series={data.geolocation_series}
+                            series={data.geolocationSeries}
                             colors={data.colors}
                             projection={projection}
                             onClickCountry={onClickCountry}

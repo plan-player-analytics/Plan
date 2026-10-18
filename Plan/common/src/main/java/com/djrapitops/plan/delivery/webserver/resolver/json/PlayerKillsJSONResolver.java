@@ -80,7 +80,7 @@ public class PlayerKillsJSONResolver extends JSONResolver {
             description = "Get player kill data for a server",
             responses = {
                     @ApiResponse(responseCode = "200", content = @Content(mediaType = MimeType.JSON, examples = {
-                            @ExampleObject("{\"player_kills\": []}")
+                            @ExampleObject("{\"playerKills\": []}")
                     })),
                     @ApiResponse(responseCode = "400 (no parameter)", description = "If 'server' parameter is not given"),
                     @ApiResponse(responseCode = "400 (no match)", description = "If 'server' parameter does not match an existing server")
@@ -101,7 +101,7 @@ public class PlayerKillsJSONResolver extends JSONResolver {
         ServerUUID serverUUID = identifiers.getServerUUID(request);
         Optional<Long> timestamp = Identifiers.getTimestamp(request);
         JSONStorage.StoredJSON storedJSON = jsonResolverService.resolve(timestamp, DataID.KILLS, serverUUID,
-                theUUID -> Collections.singletonMap("player_kills", jsonFactory.serverPlayerKillsAsJSONMaps(theUUID))
+                theUUID -> Collections.singletonMap("playerKills", jsonFactory.serverPlayerKillsAsJSONMaps(theUUID))
         );
         return getCachedOrNewResponse(request, storedJSON);
     }

@@ -49,22 +49,22 @@ const SessionBody = ({ session }) => {
                     icon={faClock}
                     color={'playtime-afk'}
                     name={t('html.label.afkTime')}
-                    value={<FormattedTime timeMs={session.afk_time} />}
+                    value={<FormattedTime timeMs={session.afkTime} />}
                     bold
                 />
                 <Datapoint
                     icon={faServer}
                     color={'servers'}
                     name={t('html.label.server')}
-                    value={session.server_name}
+                    value={session.serverName}
                     bold
                 />
-                {session.avg_ping ? (
+                {session.avgPing ? (
                     <Datapoint
                         icon={faSignal}
                         color={'ping'}
                         name={t('html.label.averagePing')}
-                        value={formatPing(formatDecimals(session.avg_ping))}
+                        value={formatPing(formatDecimals(session.avgPing))}
                         bold
                     />
                 ) : (
@@ -75,14 +75,14 @@ const SessionBody = ({ session }) => {
                     icon={faCrosshairs}
                     color='player-kills'
                     name={t('html.label.playerKills')}
-                    value={session.player_kills.length}
+                    value={session.playerKills.length}
                     bold
                 />
                 <Datapoint
                     icon={faCrosshairs}
                     color='mob-kills'
                     name={t('html.label.mobKills')}
-                    value={session.mob_kills}
+                    value={session.mobKills}
                     bold
                 />
                 <Datapoint
@@ -93,20 +93,20 @@ const SessionBody = ({ session }) => {
                     bold
                 />
                 <hr />
-                <SimpleKillsTable kills={session.player_kills} />
+                <SimpleKillsTable kills={session.playerKills} />
             </Col>
             <div className='col-xs-12 col-sm-12 col-md-12 col-lg-6'>
                 <WorldPie
-                    id={'worldpie_' + session.player_uuid + session.start}
-                    worldSeries={session.world_series}
-                    gmSeries={session.gm_series}
+                    id={'worldpie_' + session.playerUUID + session.start}
+                    worldSeries={session.worldSeries}
+                    gmSeries={session.gmSeries}
                 />
                 <PlayerPageLinkButton
-                    uuid={session.player_uuid}
+                    uuid={session.playerUUID}
                     className={'float-end'}
                 />
                 <ServerPageLinkButton
-                    uuid={session.server_uuid}
+                    uuid={session.serverUUID}
                     className={'float-end me-2'}
                 />
             </div>
@@ -134,7 +134,7 @@ const SessionAccordion = ({ sessions, isPlayer, isNetwork }) => {
                       <Fa icon={faServer} /> {t('html.label.server')}
                   </>
               ),
-              data: 'server_name',
+              data: 'serverName',
           }
         : {
               title: (
@@ -142,7 +142,7 @@ const SessionAccordion = ({ sessions, isPlayer, isNetwork }) => {
                       <Fa icon={faMap} /> {t('html.label.mostPlayedWorld')}
                   </>
               ),
-              data: 'most_used_world',
+              data: 'mostUsedWorld',
           };
 
     const columns = [
@@ -177,7 +177,7 @@ const SessionAccordion = ({ sessions, isPlayer, isNetwork }) => {
                     nameFormatted: (
                         <>
                             {session.name}
-                            {session.first_session && (
+                            {session.firstSession && (
                                 <span
                                     className={'ms-2'}
                                     title={
@@ -207,8 +207,8 @@ const SessionAccordion = ({ sessions, isPlayer, isNetwork }) => {
 
     const rowKeyFunction = useCallback((session, column) => {
         return (
-            session.player_uuid +
-            session.server_uuid +
+            session.playerUUID +
+            session.serverUUID +
             session.start +
             JSON.stringify(column?.data)
         );

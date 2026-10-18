@@ -22,9 +22,9 @@ const PlayerWorldPieCard = ({ player }) => {
     return (
         <WorldPieCard
             worldSeries={
-                worldPie ? worldPie.value.slices : player.world_pie_series
+                worldPie ? worldPie.value.slices : player.worldPieSeries
             }
-            gmSeries={worldPie ? worldPie.value.drilldown : player.gm_series}
+            gmSeries={worldPie ? worldPie.value.drilldown : player.gmSeries}
             title={title}
         />
     );

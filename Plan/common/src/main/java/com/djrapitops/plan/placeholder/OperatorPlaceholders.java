@@ -32,7 +32,8 @@ import java.util.Optional;
 /**
  * Placeholders about operators.
  *
- * @author aidn5, AuroraLS3
+ * @author aidn5
+ * @author AuroraLS3
  */
 @Singleton
 public class OperatorPlaceholders implements Placeholders {

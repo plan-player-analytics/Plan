@@ -77,49 +77,49 @@ public class NetworkPlayerBaseOverviewJSONCreator implements NetworkTabJSONCreat
 
         int playersBefore = db.query(PlayerCountQueries.newPlayerCount(0L, monthAgo));
         int playersAfter = db.query(PlayerCountQueries.newPlayerCount(0L, now));
-        trends.put("total_players_then", playersBefore);
-        trends.put("total_players_now", playersAfter);
-        trends.put("total_players_trend", new Trend(playersBefore, playersAfter, false));
+        trends.put("totalPlayersThen", playersBefore);
+        trends.put("totalPlayersNow", playersAfter);
+        trends.put("totalPlayersTrend", new Trend(playersBefore, playersAfter, false));
 
         int regularBefore = db.query(NetworkActivityIndexQueries.fetchRegularPlayerCount(monthAgo, playThreshold));
         int regularAfter = db.query(NetworkActivityIndexQueries.fetchRegularPlayerCount(now, playThreshold));
-        trends.put("regular_players_then", regularBefore);
-        trends.put("regular_players_now", regularAfter);
-        trends.put("regular_players_trend", new Trend(regularBefore, regularAfter, false));
+        trends.put("regularPlayersThen", regularBefore);
+        trends.put("regularPlayersNow", regularAfter);
+        trends.put("regularPlayersTrend", new Trend(regularBefore, regularAfter, false));
 
         long avgPlaytimeBefore = db.query(SessionQueries.averagePlaytimePerPlayer(twoMonthsAgo, monthAgo));
         long avgPlaytimeAfter = db.query(SessionQueries.averagePlaytimePerPlayer(monthAgo, now));
-        trends.put("playtime_avg_then", avgPlaytimeBefore);
-        trends.put("playtime_avg_now", avgPlaytimeAfter);
-        trends.put("playtime_avg_trend", new Trend(avgPlaytimeBefore, avgPlaytimeAfter, false));
+        trends.put("playtimeAvgThen", avgPlaytimeBefore);
+        trends.put("playtimeAvgNow", avgPlaytimeAfter);
+        trends.put("playtimeAvgTrend", new Trend(avgPlaytimeBefore, avgPlaytimeAfter, false));
 
         long avgAfkBefore = db.query(SessionQueries.averageAfkPerPlayer(twoMonthsAgo, monthAgo));
         long avgAfkAfter = db.query(SessionQueries.averageAfkPerPlayer(monthAgo, now));
         double afkPercentageBefore = Percentage.calculate(avgAfkBefore, avgPlaytimeBefore);
         double afkPercentageAfter = Percentage.calculate(avgAfkAfter, avgPlaytimeAfter);
-        trends.put("afk_then", percentage.apply(afkPercentageBefore));
-        trends.put("afk_now", percentage.apply(afkPercentageAfter));
-        trends.put("afk_trend", new Trend(afkPercentageBefore, afkPercentageAfter, Trend.REVERSED, percentage));
+        trends.put("afkThen", percentage.apply(afkPercentageBefore));
+        trends.put("afkNow", percentage.apply(afkPercentageAfter));
+        trends.put("afkTrend", new Trend(afkPercentageBefore, afkPercentageAfter, Trend.REVERSED, percentage));
 
         long avgRegularPlaytimeBefore = db.query(NetworkActivityIndexQueries.averagePlaytimePerRegularPlayer(twoMonthsAgo, monthAgo, playThreshold));
         long avgRegularPlaytimeAfter = db.query(NetworkActivityIndexQueries.averagePlaytimePerRegularPlayer(monthAgo, now, playThreshold));
-        trends.put("regular_playtime_avg_then", avgRegularPlaytimeBefore);
-        trends.put("regular_playtime_avg_now", avgRegularPlaytimeAfter);
-        trends.put("regular_playtime_avg_trend", new Trend(avgRegularPlaytimeBefore, avgRegularPlaytimeAfter, false));
+        trends.put("regularPlaytimeAvgThen", avgRegularPlaytimeBefore);
+        trends.put("regularPlaytimeAvgNow", avgRegularPlaytimeAfter);
+        trends.put("regularPlaytimeAvgTrend", new Trend(avgRegularPlaytimeBefore, avgRegularPlaytimeAfter, false));
 
         long avgRegularSessionLengthBefore = db.query(NetworkActivityIndexQueries.averageSessionLengthPerRegularPlayer(twoMonthsAgo, monthAgo, playThreshold));
         long avgRegularSessionLengthAfter = db.query(NetworkActivityIndexQueries.averageSessionLengthPerRegularPlayer(monthAgo, now, playThreshold));
-        trends.put("regular_session_avg_then", avgRegularSessionLengthBefore);
-        trends.put("regular_session_avg_now", avgRegularSessionLengthAfter);
-        trends.put("regular_session_avg_trend", new Trend(avgRegularSessionLengthBefore, avgRegularSessionLengthAfter, false));
+        trends.put("regularSessionAvgThen", avgRegularSessionLengthBefore);
+        trends.put("regularSessionAvgNow", avgRegularSessionLengthAfter);
+        trends.put("regularSessionAvgTrend", new Trend(avgRegularSessionLengthBefore, avgRegularSessionLengthAfter, false));
 
         long avgRegularAfkBefore = db.query(NetworkActivityIndexQueries.averageAFKPerRegularPlayer(twoMonthsAgo, monthAgo, playThreshold));
         long avgRegularAfkAfter = db.query(NetworkActivityIndexQueries.averageAFKPerRegularPlayer(monthAgo, now, playThreshold));
         double afkRegularPercentageBefore = Percentage.calculate(avgRegularAfkBefore, avgRegularPlaytimeBefore);
         double afkRegularPercentageAfter = Percentage.calculate(avgRegularAfkAfter, avgRegularPlaytimeAfter);
-        trends.put("regular_afk_avg_then", percentage.apply(afkRegularPercentageBefore));
-        trends.put("regular_afk_avg_now", percentage.apply(afkRegularPercentageAfter));
-        trends.put("regular_afk_avg_trend", new Trend(afkRegularPercentageBefore, afkRegularPercentageAfter, Trend.REVERSED, percentage));
+        trends.put("regularAfkAvgThen", percentage.apply(afkRegularPercentageBefore));
+        trends.put("regularAfkAvgNow", percentage.apply(afkRegularPercentageAfter));
+        trends.put("regularAfkAvgTrend", new Trend(afkRegularPercentageBefore, afkRegularPercentageAfter, Trend.REVERSED, percentage));
 
         return trends;
     }
@@ -136,14 +136,14 @@ public class NetworkPlayerBaseOverviewJSONCreator implements NetworkTabJSONCreat
         int newToRegular = db.query(NetworkActivityIndexQueries.countNewPlayersTurnedRegular(monthAgo, now, playThreshold));
         Integer newToRegularBefore = db.query(NetworkActivityIndexQueries.countNewPlayersTurnedRegular(monthAgo, halfMonthAgo, playThreshold));
         Integer newToRegularAfter = db.query(NetworkActivityIndexQueries.countNewPlayersTurnedRegular(halfMonthAgo, now, playThreshold));
-        insights.put("new_to_regular", newToRegular);
-        insights.put("new_to_regular_trend", new Trend(newToRegularBefore, newToRegularAfter, false));
+        insights.put("newToRegular", newToRegular);
+        insights.put("newToRegularTrend", new Trend(newToRegularBefore, newToRegularAfter, false));
 
         Integer regularToInactive = db.query(NetworkActivityIndexQueries.countRegularPlayersTurnedInactive(monthAgo, now, playThreshold));
         Integer regularToInactiveBefore = db.query(NetworkActivityIndexQueries.countRegularPlayersTurnedInactive(monthAgo, halfMonthAgo, playThreshold));
         Integer regularToInactiveAfter = db.query(NetworkActivityIndexQueries.countRegularPlayersTurnedInactive(halfMonthAgo, now, playThreshold));
-        insights.put("regular_to_inactive", regularToInactive);
-        insights.put("regular_to_inactive_trend", new Trend(regularToInactiveBefore, regularToInactiveAfter, Trend.REVERSED));
+        insights.put("regularToInactive", regularToInactive);
+        insights.put("regularToInactiveTrend", new Trend(regularToInactiveBefore, regularToInactiveAfter, Trend.REVERSED));
 
         return insights;
     }
