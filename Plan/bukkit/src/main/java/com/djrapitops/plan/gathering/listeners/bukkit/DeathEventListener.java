@@ -250,7 +250,7 @@ public class DeathEventListener implements Listener {
         if (damageEvent.getCause() == EntityDamageEvent.DamageCause.BLOCK_EXPLOSION) {
             Optional<ExplosionMetadata> explosion = getRecentBlockExplosion(dead);
             if (explosion.isPresent()) {
-                return Optional.ofNullable(Bukkit.getPlayer(explosion.get().playerUUID()));
+                return explosion.map(ExplosionMetadata::playerUUID).map(Bukkit::getPlayer);
             }
         }
         return Optional.empty();
