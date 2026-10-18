@@ -200,7 +200,7 @@ class ExtensionMetadataStorageTest {
     }
 
     @Test
-    void failedMetadataTransactionIsNotCached() {
+    void unsuccessfulMetadataTransactionIsNotCached() {
         ProviderInformation information = provider("Online", "Online players");
         underTest.storeProvider(information, parameters);
         transactionsFail();

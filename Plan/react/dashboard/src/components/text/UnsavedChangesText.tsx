@@ -10,7 +10,7 @@ type Props = {
 const UnsavedChangesText = ({visible, className}: Props) => {
     const {t} = useTranslation();
     const {dirty} = useConfigurationStorageContext();
-    const show = visible !== undefined ? visible : dirty;
+    const show = visible ?? dirty;
     if (show) {
         return (
             <p className={className} style={{
