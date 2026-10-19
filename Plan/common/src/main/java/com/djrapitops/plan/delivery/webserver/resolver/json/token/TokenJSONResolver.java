@@ -25,7 +25,6 @@ import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.ExampleObject;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -62,9 +61,6 @@ public class TokenJSONResolver implements AsyncResolver {
     @GET
     @Operation(
             description = "List API tokens and information about them",
-            parameters = {
-                    @Parameter(name = "token", description = "Existing token to delete", required = true),
-            },
             responses = {
                     @ApiResponse(responseCode = "200", content = @Content(mediaType = MimeType.JSON)),
                     @ApiResponse(responseCode = "405", description = "Not using GET method"),

@@ -75,7 +75,7 @@ public class TokenDeleteJSONResolver implements AsyncResolver {
                     @ApiResponse(responseCode = "400", description = "No token given"),
                     @ApiResponse(responseCode = "405", description = "Not using DELETE method"),
             },
-            requestBody = @RequestBody(content = @Content(examples = @ExampleObject("[\"page\"]")))
+            requestBody = @RequestBody(content = @Content(examples = @ExampleObject()))
     )
     @Override
     public CompletableFuture<Optional<Response>> resolveAsync(Request request) {
