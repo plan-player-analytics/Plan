@@ -5,6 +5,7 @@
 - Database tests are done through interfaces and extending DatabaseTestAggregate.java, run with MySQLTest.java and SQLiteTest.java
 
 ## Issue / Ticket instructions
+- If opening a PR, include issue details in the PR description rather than creating an issue for your PR
 - Security vulnerabilities need to be submitted through https://github.com/plan-player-analytics/Plan/security/advisories/new - not issues.
 
 ## PR instructions
