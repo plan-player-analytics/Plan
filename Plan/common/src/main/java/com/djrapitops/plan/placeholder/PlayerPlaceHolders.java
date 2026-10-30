@@ -36,12 +36,16 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.GenericLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
+import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.utilities.Predicates;
 import org.jetbrains.annotations.NotNull;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 import static com.djrapitops.plan.utilities.MiscUtils.*;
 
@@ -175,7 +179,7 @@ public class PlayerPlaceHolders implements Placeholders {
         );
 
         placeholders.register("player_join_address",
-                player -> SessionsMutator.forContainer(player)
+                player -> new SessionsMutator(latestStoredAndActiveSession(player))
                         .latestSession()
                         .flatMap(session -> session.getExtraData(JoinAddress.class))
                         .map(JoinAddress::getAddress)
@@ -428,37 +432,61 @@ public class PlayerPlaceHolders implements Placeholders {
         );
 
         placeholders.register("player_time_active_day",
-                player -> time.apply(SessionsMutator.forContainer(player)
-                        .filterSessionsBetween(dayAgo(), now())
-                        .toActivePlaytime())
+                player -> time.apply(activePlaytimeBetween(player, dayAgo(), now()))
         );
         placeholders.register("player_time_active_day_raw",
-                player -> SessionsMutator.forContainer(player)
-                        .filterSessionsBetween(dayAgo(), now())
-                        .toActivePlaytime()
+                player -> activePlaytimeBetween(player, dayAgo(), now())
         );
 
         placeholders.register("player_time_active_week",
-                player -> time.apply(SessionsMutator.forContainer(player)
-                        .filterSessionsBetween(weekAgo(), now())
-                        .toActivePlaytime())
+                player -> time.apply(activePlaytimeBetween(player, weekAgo(), now()))
         );
         placeholders.register("player_time_active_week_raw",
-                player -> SessionsMutator.forContainer(player)
-                        .filterSessionsBetween(weekAgo(), now())
-                        .toActivePlaytime()
+                player -> activePlaytimeBetween(player, weekAgo(), now())
         );
 
         placeholders.register("player_time_active_month",
-                player -> time.apply(SessionsMutator.forContainer(player)
-                        .filterSessionsBetween(monthAgo(), now())
-                        .toActivePlaytime())
+                player -> time.apply(activePlaytimeBetween(player, monthAgo(), now()))
         );
         placeholders.register("player_time_active_month_raw",
-                player -> SessionsMutator.forContainer(player)
-                        .filterSessionsBetween(monthAgo(), now())
-                        .toActivePlaytime()
+                player -> activePlaytimeBetween(player, monthAgo(), now())
         );
+    }
+
+    /**
+     * Active playtime of the player between two dates, on the whole network.
+     * <p>
+     * Gives the same result as
+     * {@code SessionsMutator.forContainer(player).filterSessionsBetween(after, before).toActivePlaytime()},
+     * but only loads the sessions in the window, without kills or world times, instead of every session the
+     * player has ever had. These placeholders are often refreshed for every online player, so this matters.
+     */
+    private long activePlaytimeBetween(PlayerContainer player, long after, long before) {
+        UUID playerUUID = player.getUnsafe(PlayerKeys.UUID);
+        List<FinishedSession> sessions = new ArrayList<>(dbSystem.getDatabase()
+                .query(SessionQueries.fetchSessionsOfPlayerWithoutExtraData(playerUUID, after, before)));
+        player.getValue(PlayerKeys.ACTIVE_SESSION)
+                .map(ActiveSession::toFinishedSessionFromStillActive)
+                .ifPresent(sessions::add);
+        return new SessionsMutator(sessions)
+                .filterSessionsBetween(after, before)
+                .toActivePlaytime();
+    }
+
+    /**
+     * Latest stored session and the active session of the player, in the same order as the full session list
+     * (stored sessions first, active session last), so {@link SessionsMutator#latestSession()} picks the same one.
+     */
+    private List<FinishedSession> latestStoredAndActiveSession(PlayerContainer player) {
+        UUID playerUUID = player.getUnsafe(PlayerKeys.UUID);
+        List<FinishedSession> sessions = new ArrayList<>(2);
+        dbSystem.getDatabase()
+                .query(SessionQueries.fetchLatestSessionOfPlayerWithoutExtraData(playerUUID))
+                .ifPresent(sessions::add);
+        player.getValue(PlayerKeys.ACTIVE_SESSION)
+                .map(ActiveSession::toFinishedSessionFromStillActive)
+                .ifPresent(sessions::add);
+        return sessions;
     }
 
     @NotNull

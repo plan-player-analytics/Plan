@@ -1331,4 +1331,114 @@ public class SessionQueries {
             }
         };
     }
+
+    /*
+     * Lightweight session select for a single player.
+     * <p>
+     * Selects only the columns needed for playtime and join address calculations, without kills or world times,
+     * but keeps the same row visibility as {@link #SELECT_SESSIONS_STATEMENT}: the session needs a join address,
+     * a user, a server and at least one world times row with an existing world.
+     */
+    private static final String SELECT_LIGHTWEIGHT_SESSIONS_OF_PLAYER = SELECT +
+            "server." + ServerTable.SERVER_UUID + " as server_uuid," +
+            "s." + SessionsTable.SESSION_START + " as session_start," +
+            "s." + SessionsTable.SESSION_END + " as session_end," +
+            "s." + SessionsTable.AFK_TIME + " as afk_time," +
+            "j." + JoinAddressTable.JOIN_ADDRESS + " as join_address" +
+            FROM + SessionsTable.TABLE_NAME + " s" +
+            INNER_JOIN + JoinAddressTable.TABLE_NAME + " j on s." + SessionsTable.JOIN_ADDRESS_ID + "=j." + JoinAddressTable.ID +
+            INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + "=s." + SessionsTable.USER_ID +
+            INNER_JOIN + ServerTable.TABLE_NAME + " server on server." + ServerTable.ID + "=s." + SessionsTable.SERVER_ID +
+            WHERE + "s." + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
+            AND + "EXISTS (" + SELECT + "1" + FROM + WorldTimesTable.TABLE_NAME + " wt" +
+            INNER_JOIN + WorldTable.TABLE_NAME + " w ON wt." + WorldTimesTable.WORLD_ID + "=w." + WorldTable.ID +
+            WHERE + "wt." + WorldTimesTable.SESSION_ID + "=s." + SessionsTable.ID +
+            AND + "wt." + WorldTimesTable.USER_ID + "=s." + SessionsTable.USER_ID + ')';
+
+    /**
+     * Fetch sessions of a player that overlap the given time range, without kill, world time or other extra data.
+     * <p>
+     * Only start, end, afk time, server and join address are filled in. Intended for placeholders that need
+     * playtime within a window, so they don't need to load every session of the player with all extra data.
+     *
+     * @param playerUUID UUID of the player.
+     * @param after      Sessions that ended at or after this epoch ms are included.
+     * @param before     Sessions that started at or before this epoch ms are included.
+     * @return List of sessions, most recent first.
+     */
+    public static Query<List<FinishedSession>> fetchSessionsOfPlayerWithoutExtraData(UUID playerUUID, long after, long before) {
+        String sql = SELECT_LIGHTWEIGHT_SESSIONS_OF_PLAYER +
+                AND + "s." + SessionsTable.SESSION_END + ">=?" +
+                AND + "s." + SessionsTable.SESSION_START + "<=?" +
+                ORDER_BY + "s." + SessionsTable.SESSION_START + " DESC";
+        return new QueryStatement<>(sql, 100) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setString(1, playerUUID.toString());
+                statement.setLong(2, after);
+                statement.setLong(3, before);
+            }
+
+            @Override
+            public List<FinishedSession> processResults(ResultSet set) throws SQLException {
+                return extractLightweightSessions(playerUUID, set);
+            }
+        };
+    }
+
+    /**
+     * Fetch the most recently started session of a player, without kill, world time or other extra data.
+     *
+     * @param playerUUID UUID of the player.
+     * @return The latest session with start, end, afk time, server and join address, or empty if none is stored.
+     */
+    public static Query<Optional<FinishedSession>> fetchLatestSessionOfPlayerWithoutExtraData(UUID playerUUID) {
+        return db -> {
+            String sql = SELECT_LIGHTWEIGHT_SESSIONS_OF_PLAYER +
+                    ORDER_BY + "s." + SessionsTable.SESSION_START + " DESC" +
+                    LIMIT + 1;
+            if (db.getType() == DBType.MYSQL) {
+                sql = sql.replace(SessionsTable.TABLE_NAME + " s", SessionsTable.TABLE_NAME + " s FORCE INDEX(plan_session_user_start)");
+            }
+            return db.query(new QueryStatement<>(sql) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setString(1, playerUUID.toString());
+                }
+
+                @Override
+                public Optional<FinishedSession> processResults(ResultSet set) throws SQLException {
+                    return extractLightweightSessions(playerUUID, set).stream().findFirst();
+                }
+            });
+        };
+    }
+
+    private static List<FinishedSession> extractLightweightSessions(UUID playerUUID, ResultSet set) throws SQLException {
+        // Same de-duplication as extractDataFromSessionSelectStatement: one session per server per start time.
+        Map<ServerUUID, Map<Long, FinishedSession>> byServer = new HashMap<>();
+        while (set.next()) {
+            ServerUUID serverUUID = ServerUUID.fromString(set.getString("server_uuid"));
+            long sessionStart = set.getLong("session_start");
+            Map<Long, FinishedSession> serverSessions = byServer.computeIfAbsent(serverUUID, key -> new HashMap<>());
+            FinishedSession session = serverSessions.get(sessionStart);
+            if (session == null) {
+                session = new FinishedSession(
+                        playerUUID,
+                        serverUUID,
+                        sessionStart,
+                        set.getLong("session_end"),
+                        set.getLong("afk_time"),
+                        new DataMap()
+                );
+                serverSessions.put(sessionStart, session);
+            }
+            session.extraData().put(JoinAddress.class, new JoinAddress(set.getString("join_address")));
+        }
+        return byServer.values().stream()
+                .map(Map::values)
+                .flatMap(Collection::stream)
+                .sorted(new DateHolderRecentComparator())
+                .collect(Collectors.toList());
+    }
 }

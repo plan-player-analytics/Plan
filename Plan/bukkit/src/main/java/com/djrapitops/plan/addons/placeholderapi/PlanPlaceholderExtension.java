@@ -40,13 +40,22 @@ import java.util.concurrent.TimeUnit;
  */
 public class PlanPlaceholderExtension extends PlaceholderExpansion {
 
+    /**
+     * Cached values younger than this are served without starting a new database calculation.
+     * <p>
+     * Before, every request made on the server thread (including the 15 second preload task for every
+     * online player) started a new calculation, even when the cached value had just been computed.
+     */
+    static final long REFRESH_AFTER_MS = TimeUnit.SECONDS.toMillis(30);
+    static final long EXPIRE_AFTER_MS = TimeUnit.SECONDS.toMillis(60);
+
     private final ErrorLogger errorLogger;
     private final VersionChecker versionChecker;
     private final PlanPlaceholders placeholders;
 
     private final Set<String> currentlyProcessing;
     private final Processing processing;
-    private final Cache<String, String> cache;
+    private final Cache<String, CachedValue> cache;
 
     public PlanPlaceholderExtension(
             PlanPlaceholders placeholders,
@@ -60,7 +69,7 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
 
         currentlyProcessing = Collections.newSetFromMap(new ConcurrentHashMap<>());
         cache = Caffeine.newBuilder()
-                .expireAfterWrite(60, TimeUnit.SECONDS)
+                .expireAfterWrite(EXPIRE_AFTER_MS, TimeUnit.MILLISECONDS)
                 .build();
     }
 
@@ -153,18 +162,34 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
     private String getCached(@Untrusted String params, UUID uuid) {
         @Untrusted String key = params + "-" + uuid;
 
-        if (!currentlyProcessing.contains(key)) {
-            currentlyProcessing.add(key);
+        CachedValue cached = cache.getIfPresent(key);
+        if (needsRefresh(cached, System.currentTimeMillis()) && currentlyProcessing.add(key)) {
             processing.submitNonCritical(() -> {
-                String value = getPlaceholderValue(params, uuid);
-
-                if (value != null) {
-                    cache.put(key, value);
+                try {
+                    String value = getPlaceholderValue(params, uuid);
+                    if (value != null) {
+                        cache.put(key, new CachedValue(value, System.currentTimeMillis()));
+                    }
+                } finally {
+                    currentlyProcessing.remove(key);
                 }
-                currentlyProcessing.remove(key);
             });
         }
 
-        return cache.getIfPresent(key);
+        return cached != null ? cached.value : null;
+    }
+
+    static boolean needsRefresh(CachedValue cached, long now) {
+        return cached == null || now - cached.computedAt >= REFRESH_AFTER_MS;
+    }
+
+    static final class CachedValue {
+        final String value;
+        final long computedAt;
+
+        CachedValue(String value, long computedAt) {
+            this.value = value;
+            this.computedAt = computedAt;
+        }
     }
 }
