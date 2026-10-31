@@ -36,6 +36,8 @@ const ExtensionDataTable = ({ table }: Props) => {
                 return <FormattedDate date={value} includeSeconds />;
             case 'PLAYER_NAME':
                 return <Link to={'/player/' + value}>{value}</Link>;
+            case 'NONE':
+                return value;
             case 'CHAT_COLORED':
             default:
                 return <ColoredText text={value || String(value)} />;
