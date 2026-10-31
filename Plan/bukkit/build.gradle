@@ -18,6 +18,7 @@ dependencies {
     testImplementation(testFixtures(project(":common")))
     testImplementation(project(":extensions:adventure"))
     testImplementation "com.destroystokyo.paper:paper-api:$paperVersion"
+    testImplementation "me.clip:placeholderapi:$placeholderapiVersion"
 }
 
 compileJava {

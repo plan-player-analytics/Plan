@@ -32,6 +32,7 @@ import com.djrapitops.plan.storage.database.queries.objects.KillQueries;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.WorldTimesQueries;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.ServerTablePlayersQuery;
+import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 import com.djrapitops.plan.storage.database.sql.tables.WorldTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
@@ -47,6 +48,7 @@ import utilities.TestConstants;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
@@ -726,4 +728,147 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
                 DynamicTest.dynamicTest("Network sessions - none (wrong order)", () -> assertEquals(none, db().query(SessionQueries.sessionsOfServers(afterSession, beforeSession, List.of()))))
         );
     }
-}
+
+    private FinishedSession sessionForLightweightTest(ServerUUID server, String world, long start, long end, long afk, String joinAddress, boolean withWorldTimes) {
+        DataMap extraData = new DataMap();
+        WorldTimes worldTimes = new WorldTimes();
+        if (withWorldTimes) {
+            Map<String, Long> gmTimes = new HashMap<>();
+            gmTimes.put("SURVIVAL", end - start);
+            worldTimes.setGMTimesForWorld(world, new GMTimes(gmTimes));
+        }
+        extraData.put(WorldTimes.class, worldTimes);
+        extraData.put(PlayerKills.class, new PlayerKills());
+        extraData.put(MobKillCounter.class, new MobKillCounter());
+        extraData.put(DeathCounter.class, new DeathCounter());
+        extraData.put(JoinAddress.class, new JoinAddress(joinAddress));
+        return new FinishedSession(playerUUID, server, start, end, afk, extraData);
+    }
+
+    private long storeSessionsForLightweightTest() {
+        long now = System.currentTimeMillis();
+        long day = TimeUnit.DAYS.toMillis(1L);
+        long hour = TimeUnit.HOURS.toMillis(1L);
+        ServerUUID serverTwo = TestConstants.SERVER_TWO_UUID;
+        db().executeTransaction(new StoreServerInformationTransaction(new Server(serverTwo, TestConstants.SERVER_TWO_NAME, "", TestConstants.VERSION)));
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
+        db().executeTransaction(new StoreWorldNameTransaction(serverTwo, worlds[1]));
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, () -> now - 60 * day,
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
+        db().executeTransaction(new StoreServerPlayerTransaction(player2UUID, () -> now - 60 * day,
+                TestConstants.PLAYER_TWO_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
+        // Every session has a different length and afk time so that sums of different subsets can't collide.
+        List<FinishedSession> sessions = List.of(
+                // Outside the month window
+                sessionForLightweightTest(serverUUID(), worlds[0], now - 45 * day, now - 45 * day + 7 * hour, hour, "old.example.com", true),
+                // Starts before the month window, ends inside it: counted in full
+                sessionForLightweightTest(serverUUID(), worlds[0], now - 30 * day - 3 * hour, now - 30 * day + 2 * hour, 11 * 60_000L, "boundary.example.com", true),
+                // Inside month, outside week
+                sessionForLightweightTest(serverTwo, worlds[1], now - 10 * day, now - 10 * day + 5 * hour, 3 * 60_000L, "two.example.com", true),
+                // Inside week, outside day
+                sessionForLightweightTest(serverUUID(), worlds[0], now - 3 * day, now - 3 * day + 2 * hour, 17 * 60_000L, "week.example.com", true),
+                // Inside day, on server two: the latest session that has world times
+                sessionForLightweightTest(serverTwo, worlds[1], now - 5 * hour, now - 4 * hour, 0L, "latest.example.com", true),
+                // Latest start, but without world times rows: not visible to the full session query either
+                sessionForLightweightTest(serverUUID(), worlds[0], now - 2 * hour, now - hour - 13 * 60_000L, 0L, "noworldtimes.example.com", false)
+        );
+        for (FinishedSession session : sessions) {
+            db().executeTransaction(new StoreSessionTransaction(session));
+        }
+        // Another player's sessions must not be included
+        db().executeTransaction(new StoreSessionTransaction(new FinishedSession(player2UUID, serverUUID(), now - 2 * hour, now - hour, 0L,
+                sessionForLightweightTest(serverUUID(), worlds[0], now - 2 * hour, now - hour, 0L, "other.example.com", true).extraData())));
+        forcePersistenceCheck();
+        return now;
+    }
+
+    @TestFactory
+    default Collection<DynamicTest> lightweightActivePlaytimeMatchesFullSessionLoad() {
+        long now = storeSessionsForLightweightTest();
+        long hour = TimeUnit.HOURS.toMillis(1L);
+        PlayerContainer container = db().query(new PlayerContainerQuery(playerUUID));
+
+        Map<String, Long> windows = new LinkedHashMap<>();
+        windows.put("day", now - TimeUnit.DAYS.toMillis(1L));
+        windows.put("week", now - TimeUnit.DAYS.toMillis(7L));
+        windows.put("month", now - TimeUnit.DAYS.toMillis(30L));
+        windows.put("all", 0L);
+
+        Map<String, Long> expectedByHand = new HashMap<>();
+        expectedByHand.put("day", hour);
+        expectedByHand.put("week", hour + 2 * hour - 17 * 60_000L);
+        expectedByHand.put("month", expectedByHand.get("week") + 5 * hour - 3 * 60_000L + 5 * hour - 11 * 60_000L);
+        expectedByHand.put("all", expectedByHand.get("month") + 7 * hour - hour);
+
+        List<DynamicTest> tests = new ArrayList<>();
+        for (Map.Entry<String, Long> window : windows.entrySet()) {
+            long after = window.getValue();
+            tests.add(DynamicTest.dynamicTest("Active playtime " + window.getKey(), () -> {
+                long fullLoad = SessionsMutator.forContainer(container)
+                        .filterSessionsBetween(after, now)
+                        .toActivePlaytime();
+                long lightweight = new SessionsMutator(db().query(SessionQueries.fetchSessionsOfPlayerWithoutExtraData(playerUUID, after, now)))
+                        .filterSessionsBetween(after, now)
+                        .toActivePlaytime();
+                assertEquals(expectedByHand.get(window.getKey()), fullLoad);
+                assertEquals(fullLoad, lightweight);
+            }));
+        }
+        return tests;
+    }
+
+    @Test
+    default void lightweightLatestSessionMatchesFullSessionLoad() {
+        storeSessionsForLightweightTest();
+        PlayerContainer container = db().query(new PlayerContainerQuery(playerUUID));
+
+        Optional<String> fullLoad = SessionsMutator.forContainer(container).latestSession()
+                .flatMap(session -> session.getExtraData(JoinAddress.class))
+                .map(JoinAddress::getAddress);
+        Optional<FinishedSession> latest = db().query(SessionQueries.fetchLatestSessionOfPlayerWithoutExtraData(playerUUID));
+        Optional<String> lightweight = latest
+                .flatMap(session -> session.getExtraData(JoinAddress.class))
+                .map(JoinAddress::getAddress);
+
+        assertEquals(Optional.of("latest.example.com"), fullLoad);
+        assertEquals(fullLoad, lightweight);
+        assertEquals(TestConstants.SERVER_TWO_UUID, latest.map(FinishedSession::serverUUID).orElse(null));
+    }
+
+    @Test
+    default void lightweightLatestSessionIsEmptyWithoutSessions() {
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, System::currentTimeMillis,
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
+        forcePersistenceCheck();
+        assertEquals(Optional.empty(), db().query(SessionQueries.fetchLatestSessionOfPlayerWithoutExtraData(playerUUID)));
+        assertEquals(List.of(), db().query(SessionQueries.fetchSessionsOfPlayerWithoutExtraData(playerUUID, 0L, System.currentTimeMillis())));
+    }
+
+    @Test
+    default void lightweightSessionsIncludeSessionsWithoutJoinAddress() {
+        long now = System.currentTimeMillis();
+        long hour = TimeUnit.HOURS.toMillis(1L);
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, () -> now - 2 * hour,
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
+        db().executeTransaction(new StoreSessionTransaction(
+                sessionForLightweightTest(serverUUID(), worlds[0], now - 2 * hour, now - hour, 0L, "missing.example.com", true)));
+        forcePersistenceCheck();
+        // Some sessions point to a join address row that doesn't exist. Done after the persistence check,
+        // because db init runs AfterBadJoinAddressDataCorrectionPatch, which would point it to "unknown" again.
+        execute(new ExecStatement("UPDATE " + SessionsTable.TABLE_NAME + " SET " + SessionsTable.JOIN_ADDRESS_ID + "=?") {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setInt(1, -1);
+            }
+        });
+
+        List<FinishedSession> sessions = db().query(SessionQueries.fetchSessionsOfPlayerWithoutExtraData(playerUUID, 0L, now));
+        assertEquals(1, sessions.size());
+        assertEquals(hour, new SessionsMutator(sessions).toActivePlaytime());
+        assertEquals(Optional.empty(), sessions.get(0).getExtraData(JoinAddress.class));
+
+        Optional<FinishedSession> latest = db().query(SessionQueries.fetchLatestSessionOfPlayerWithoutExtraData(playerUUID));
+        assertTrue(latest.isPresent());
+        assertEquals(Optional.empty(), latest.get().getExtraData(JoinAddress.class));
+    }}
