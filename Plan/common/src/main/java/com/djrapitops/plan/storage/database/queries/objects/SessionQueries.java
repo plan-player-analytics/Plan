@@ -1336,8 +1336,8 @@ public class SessionQueries {
      * Lightweight session select for a single player.
      * <p>
      * Selects only the columns needed for playtime and join address calculations, without kills or world times,
-     * but keeps the same row visibility as {@link #SELECT_SESSIONS_STATEMENT}: the session needs a join address,
-     * a user, a server and at least one world times row with an existing world.
+     * Like {@link #SELECT_SESSIONS_STATEMENT}, the session needs a user, a server and at least one world times row
+     * with an existing world. The join address is optional, because some old sessions don't have one.
      */
     private static final String SELECT_LIGHTWEIGHT_SESSIONS_OF_PLAYER = SELECT +
             "server." + ServerTable.SERVER_UUID + " as server_uuid," +
@@ -1346,7 +1346,7 @@ public class SessionQueries {
             "s." + SessionsTable.AFK_TIME + " as afk_time," +
             "j." + JoinAddressTable.JOIN_ADDRESS + " as join_address" +
             FROM + SessionsTable.TABLE_NAME + " s" +
-            INNER_JOIN + JoinAddressTable.TABLE_NAME + " j on s." + SessionsTable.JOIN_ADDRESS_ID + "=j." + JoinAddressTable.ID +
+            LEFT_JOIN + JoinAddressTable.TABLE_NAME + " j on s." + SessionsTable.JOIN_ADDRESS_ID + "=j." + JoinAddressTable.ID +
             INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + "=s." + SessionsTable.USER_ID +
             INNER_JOIN + ServerTable.TABLE_NAME + " server on server." + ServerTable.ID + "=s." + SessionsTable.SERVER_ID +
             WHERE + "s." + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
@@ -1415,30 +1415,24 @@ public class SessionQueries {
     }
 
     private static List<FinishedSession> extractLightweightSessions(UUID playerUUID, ResultSet set) throws SQLException {
-        // Same de-duplication as extractDataFromSessionSelectStatement: one session per server per start time.
-        Map<ServerUUID, Map<Long, FinishedSession>> byServer = new HashMap<>();
+        // Every join is 1-to-1, so each row is a separate session.
+        List<FinishedSession> sessions = new ArrayList<>();
         while (set.next()) {
-            ServerUUID serverUUID = ServerUUID.fromString(set.getString("server_uuid"));
-            long sessionStart = set.getLong("session_start");
-            Map<Long, FinishedSession> serverSessions = byServer.computeIfAbsent(serverUUID, key -> new HashMap<>());
-            FinishedSession session = serverSessions.get(sessionStart);
-            if (session == null) {
-                session = new FinishedSession(
-                        playerUUID,
-                        serverUUID,
-                        sessionStart,
-                        set.getLong("session_end"),
-                        set.getLong("afk_time"),
-                        new DataMap()
-                );
-                serverSessions.put(sessionStart, session);
+            DataMap extraData = new DataMap();
+            String joinAddress = set.getString("join_address");
+            if (joinAddress != null) {
+                extraData.put(JoinAddress.class, new JoinAddress(joinAddress));
             }
-            session.extraData().put(JoinAddress.class, new JoinAddress(set.getString("join_address")));
+            sessions.add(new FinishedSession(
+                    playerUUID,
+                    ServerUUID.fromString(set.getString("server_uuid")),
+                    set.getLong("session_start"),
+                    set.getLong("session_end"),
+                    set.getLong("afk_time"),
+                    extraData
+            ));
         }
-        return byServer.values().stream()
-                .map(Map::values)
-                .flatMap(Collection::stream)
-                .sorted(new DateHolderRecentComparator())
-                .collect(Collectors.toList());
+        sessions.sort(new DateHolderRecentComparator());
+        return sessions;
     }
 }

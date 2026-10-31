@@ -32,6 +32,7 @@ import com.djrapitops.plan.storage.database.queries.objects.KillQueries;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.WorldTimesQueries;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.ServerTablePlayersQuery;
+import com.djrapitops.plan.storage.database.sql.tables.SessionsTable;
 import com.djrapitops.plan.storage.database.sql.tables.WorldTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
@@ -47,6 +48,7 @@ import utilities.TestConstants;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
@@ -840,4 +842,33 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         forcePersistenceCheck();
         assertEquals(Optional.empty(), db().query(SessionQueries.fetchLatestSessionOfPlayerWithoutExtraData(playerUUID)));
         assertEquals(List.of(), db().query(SessionQueries.fetchSessionsOfPlayerWithoutExtraData(playerUUID, 0L, System.currentTimeMillis())));
+    }
+
+    @Test
+    default void lightweightSessionsIncludeSessionsWithoutJoinAddress() {
+        long now = System.currentTimeMillis();
+        long hour = TimeUnit.HOURS.toMillis(1L);
+        db().executeTransaction(new StoreWorldNameTransaction(serverUUID(), worlds[0]));
+        db().executeTransaction(new StoreServerPlayerTransaction(playerUUID, () -> now - 2 * hour,
+                TestConstants.PLAYER_ONE_NAME, serverUUID(), TestConstants.GET_PLAYER_HOSTNAME));
+        db().executeTransaction(new StoreSessionTransaction(
+                sessionForLightweightTest(serverUUID(), worlds[0], now - 2 * hour, now - hour, 0L, "missing.example.com", true)));
+        forcePersistenceCheck();
+        // Some sessions point to a join address row that doesn't exist. Done after the persistence check,
+        // because db init runs AfterBadJoinAddressDataCorrectionPatch, which would point it to "unknown" again.
+        execute(new ExecStatement("UPDATE " + SessionsTable.TABLE_NAME + " SET " + SessionsTable.JOIN_ADDRESS_ID + "=?") {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setInt(1, -1);
+            }
+        });
+
+        List<FinishedSession> sessions = db().query(SessionQueries.fetchSessionsOfPlayerWithoutExtraData(playerUUID, 0L, now));
+        assertEquals(1, sessions.size());
+        assertEquals(hour, new SessionsMutator(sessions).toActivePlaytime());
+        assertEquals(Optional.empty(), sessions.get(0).getExtraData(JoinAddress.class));
+
+        Optional<FinishedSession> latest = db().query(SessionQueries.fetchLatestSessionOfPlayerWithoutExtraData(playerUUID));
+        assertTrue(latest.isPresent());
+        assertEquals(Optional.empty(), latest.get().getExtraData(JoinAddress.class));
     }}

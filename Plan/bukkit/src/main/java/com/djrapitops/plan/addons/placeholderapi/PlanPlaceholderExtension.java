@@ -176,20 +176,12 @@ public class PlanPlaceholderExtension extends PlaceholderExpansion {
             });
         }
 
-        return cached != null ? cached.value : null;
+        return cached != null ? cached.value() : null;
     }
 
     static boolean needsRefresh(CachedValue cached, long now) {
-        return cached == null || now - cached.computedAt >= REFRESH_AFTER_MS;
+        return cached == null || now - cached.computedAt() >= REFRESH_AFTER_MS;
     }
 
-    static final class CachedValue {
-        final String value;
-        final long computedAt;
-
-        CachedValue(String value, long computedAt) {
-            this.value = value;
-            this.computedAt = computedAt;
-        }
-    }
+    record CachedValue(String value, long computedAt) {}
 }
