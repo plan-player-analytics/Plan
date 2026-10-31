@@ -38,132 +38,24 @@ import {
 import SideNavTabs from '../../components/layout/SideNavTabs';
 import Select from '../../components/input/Select.tsx';
 import Scrollable from '../../components/Scrollable.tsx';
-import OpaqueText from '../../components/layout/OpaqueText.tsx';
 import { useAlertPopupContext } from '../../hooks/context/alertPopupContext.tsx';
-import {
-    DropdownStatusContextProvider,
-    useDropdownStatusContext,
-} from '../../hooks/context/dropdownStatusContextHook';
+import { DropdownStatusContextProvider } from '../../hooks/context/dropdownStatusContextHook.tsx';
 import { useNavigation } from '../../hooks/navigationHook.tsx';
 import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 import { useAuth } from '../../hooks/authenticationHook.tsx';
-import Checkbox from '../../components/input/Checkbox.tsx';
 import TextInput from '../../components/input/TextInput.tsx';
 import UnsavedChangesText from '../../components/text/UnsavedChangesText.tsx';
 import ActionButton from '../../components/input/button/ActionButton.tsx';
 import DangerButton from '../../components/input/button/DangerButton.tsx';
 import OutlineButton from '../../components/input/button/OutlineButton.tsx';
 import SecondaryActionButton from '../../components/input/button/SecondaryActionButton.tsx';
+import { PermissionTree } from '../../components/permissions/PermissionTree.tsx';
 
 const GroupsHeader = ({ groupName, icon }) => {
     return (
         <span className={'float-start'}>
             <FontAwesomeIcon icon={icon || faUserGroup} /> {groupName}
         </span>
-    );
-};
-
-const PermissionDropdown = ({
-    permission,
-    checked,
-    indeterminate,
-    togglePermission,
-    children,
-    childNodes,
-    root,
-}) => {
-    const { t } = useTranslation();
-    const { toggle, toggled } = useDropdownStatusContext();
-
-    const translationKey =
-        'html.manage.permission.description.' +
-        permission?.split('.').join('_');
-    const translated = t(translationKey);
-
-    if (childNodes.length) {
-        if (permission === undefined) {
-            return <>{children}</>;
-        } else {
-            return (
-                <details
-                    open={!toggled.includes(permission)}
-                    style={
-                        root
-                            ? { marginLeft: '0.5rem' }
-                            : { marginLeft: '2.1rem' }
-                    }>
-                    <summary
-                        onClick={(event) => {
-                            event.preventDefault();
-                            toggle(permission);
-                        }}>
-                        <Checkbox
-                            indeterminate={indeterminate}
-                            checked={checked}
-                            onChange={() => togglePermission(permission)}>
-                            {permission}{' '}
-                            {permission && translated !== translationKey && (
-                                <OpaqueText inline>
-                                    &middot; {translated}
-                                </OpaqueText>
-                            )}
-                        </Checkbox>
-                        <hr style={{ margin: 0 }} />
-                    </summary>
-
-                    {children}
-                </details>
-            );
-        }
-    } else {
-        return (
-            <li
-                style={
-                    root ? { marginLeft: '1.4rem' } : { marginLeft: '3rem' }
-                }>
-                <Checkbox
-                    checked={checked}
-                    onChange={() => togglePermission(permission)}
-                />{' '}
-                {permission}{' '}
-                {permission && translated !== translationKey && (
-                    <OpaqueText inline>&middot; {translated}</OpaqueText>
-                )}
-            </li>
-        );
-    }
-};
-
-const PermissionTree = ({
-    nodes,
-    isIndeterminate,
-    isChecked,
-    togglePermission,
-}) => {
-    if (!nodes.length) {
-        return <></>;
-    }
-    return (
-        <>
-            {nodes.map((node) => (
-                <section key={node.permission + '-1234'}>
-                    <PermissionDropdown
-                        permission={node.permission}
-                        root={node.parentIndex === -1}
-                        indeterminate={isIndeterminate(node.permission)}
-                        checked={isChecked(node.permission)}
-                        togglePermission={togglePermission}
-                        childNodes={node.children}>
-                        <PermissionTree
-                            nodes={node.children}
-                            togglePermission={togglePermission}
-                            isChecked={isChecked}
-                            isIndeterminate={isIndeterminate}
-                        />
-                    </PermissionDropdown>
-                </section>
-            ))}
-        </>
     );
 };
 

@@ -24,7 +24,7 @@ import { useAuth } from '../authenticationHook.tsx';
 const GroupEditContext = createContext({});
 
 const createPermissionTree = (allPermissions, toggledPermissions) => {
-    if (!allPermissions.length) {
+    if (!allPermissions?.length) {
         return { children: [] };
     }
     allPermissions.sort();
@@ -93,10 +93,10 @@ export const GroupEditContextProvider = ({ groupName, children }) => {
         loadPermissions();
     }, [loadPermissions]);
 
-    const [permissionTree, setPermissionTree] = useState({ children: [] });
-    useEffect(() => {
-        setPermissionTree(createPermissionTree(allPermissions, permissions));
-    }, [allPermissions, permissions]);
+    const permissionTree = useMemo(
+        () => createPermissionTree(allPermissions, permissions),
+        [allPermissions, permissions],
+    );
 
     const dfs = useCallback((root, permission) => {
         if (root.permission === permission) return root;
