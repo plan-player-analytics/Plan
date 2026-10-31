@@ -22,7 +22,6 @@ import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.Query;
-import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.sql.tables.ServerTable;
@@ -67,8 +66,14 @@ public class PluginBooleanGroupFilter implements MultiOptionFilter {
                 INNER_JOIN + ExtensionProviderTable.TABLE_NAME + " provider on provider." + ExtensionProviderTable.PLUGIN_ID + "=plugin." + ExtensionPluginTable.ID +
                 INNER_JOIN + ExtensionPlayerValueTable.TABLE_NAME + " v on v." + ExtensionPlayerValueTable.PROVIDER_ID + "=provider." + ExtensionProviderTable.ID +
                 WHERE + "v." + ExtensionPlayerValueTable.BOOLEAN_VALUE + " IS NOT NULL" +
+                AND + "provider." + ExtensionProviderTable.HIDDEN + "=?" +
                 ORDER_BY + "server_name, plugin_name, provider_text";
-        return new QueryAllStatement<>(selectOptions) {
+        return new QueryStatement<>(selectOptions) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setBoolean(1, false);
+            }
+
             @Override
             public List<PluginBooleanOption> processResults(ResultSet set) throws SQLException {
                 List<PluginBooleanOption> options = new ArrayList<>();
@@ -101,9 +106,9 @@ public class PluginBooleanGroupFilter implements MultiOptionFilter {
                 SelectedBoolean selectedBoolean = option.getValue();
                 userIds.addAll(
                         db.query(playersInGroup(
-                                namesToUUIDs.get(pluginBooleanOption.getServerName()),
-                                pluginBooleanOption.getPluginName(),
-                                pluginBooleanOption.getProviderText(),
+                                namesToUUIDs.get(pluginBooleanOption.serverName()),
+                                pluginBooleanOption.pluginName(),
+                                pluginBooleanOption.providerText(),
                                 selectedBoolean
                         ))
                 );
@@ -198,16 +203,8 @@ public class PluginBooleanGroupFilter implements MultiOptionFilter {
     }
 
     @Untrusted
-    public static class PluginBooleanOption implements Comparable<PluginBooleanOption> {
-        private final String serverName;
-        private final String pluginName;
-        private final String providerText;
-
-        public PluginBooleanOption(String serverName, String pluginName, String providerText) {
-            this.serverName = serverName;
-            this.pluginName = pluginName;
-            this.providerText = providerText;
-        }
+    public record PluginBooleanOption(String serverName, String pluginName,
+                                      String providerText) implements Comparable<PluginBooleanOption> {
 
         @Untrusted
         public static PluginBooleanOption parse(@Untrusted String fromFormatted) {
@@ -219,29 +216,17 @@ public class PluginBooleanGroupFilter implements MultiOptionFilter {
             return new PluginBooleanOption(serverName, pluginName, providerName);
         }
 
-        public String getServerName() {
-            return serverName;
-        }
-
-        public String getPluginName() {
-            return pluginName;
-        }
-
-        public String getProviderText() {
-            return providerText;
-        }
-
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
             if (o == null || getClass() != o.getClass()) return false;
             PluginBooleanOption that = (PluginBooleanOption) o;
-            return Objects.equals(getServerName(), that.getServerName()) && Objects.equals(getPluginName(), that.getPluginName()) && Objects.equals(getProviderText(), that.getProviderText());
+            return Objects.equals(serverName(), that.serverName()) && Objects.equals(pluginName(), that.pluginName()) && Objects.equals(providerText(), that.providerText());
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(getServerName(), getPluginName(), getProviderText());
+            return Objects.hash(serverName(), pluginName(), providerText());
         }
 
         @Override
