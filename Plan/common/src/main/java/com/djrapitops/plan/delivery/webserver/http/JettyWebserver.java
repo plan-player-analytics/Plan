@@ -25,7 +25,12 @@ import net.playeranalytics.plugin.server.PluginLogger;
 import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
 import org.eclipse.jetty.http2.server.HTTP2CServerConnectionFactory;
 import org.eclipse.jetty.http2.server.HTTP2ServerConnectionFactory;
+import org.eclipse.jetty.io.WindowRateControl;
 import org.eclipse.jetty.server.*;
+import org.eclipse.jetty.server.handler.DoSHandler;
+import org.eclipse.jetty.server.handler.MinimumDataRateHandler;
+import org.eclipse.jetty.server.handler.QoSHandler;
+import org.eclipse.jetty.server.handler.SizeLimitHandler;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 import javax.inject.Inject;
@@ -85,6 +90,7 @@ public class JettyWebserver implements WebServer {
             this.port = webserverConfiguration.getPort();
 
             HttpConfiguration configuration = new HttpConfiguration();
+            configuration.setRequestHeaderSize(8192);
             Optional<SslContextFactory.Server> sslContext = getSslContextFactory();
             sslContext.ifPresent(ssl -> {
                 configuration.setSecureScheme("https");
@@ -97,17 +103,28 @@ public class JettyWebserver implements WebServer {
 
                 usingHttps = true;
             });
+            if (webserverConfiguration.getAccessAddressPolicy() == AccessAddressPolicy.X_FORWARDED_FOR_HEADER) {
+                configuration.addCustomizer(new ForwardedRequestCustomizer());
+            }
 
             HttpConnectionFactory httpConnector = new HttpConnectionFactory(configuration);
 
             HTTP2CServerConnectionFactory http2CConnector = new HTTP2CServerConnectionFactory(configuration);
             http2CConnector.setConnectProtocolEnabled(true);
-
+            http2CConnector.setMaxConcurrentStreams(100);
+            http2CConnector.setRateControlFactory(
+                    new WindowRateControl.Factory(128)
+            );
 
             ServerConnector connector = sslContext
                     .map(sslContextFactory -> {
                         HTTP2ServerConnectionFactory http2Connector = new HTTP2ServerConnectionFactory(configuration);
                         http2Connector.setConnectProtocolEnabled(true);
+                        http2Connector.setMaxConcurrentStreams(100);
+                        http2Connector.setRateControlFactory(
+                                new WindowRateControl.Factory(128)
+                        );
+
                         ALPNServerConnectionFactory alpn = new ALPNServerConnectionFactory("h2", "h2c", "http/1.1");
                         alpn.setDefaultProtocol(httpConnector.getProtocol());
                         return new ServerConnector(webserver, sslContextFactory, alpn, httpConnector, http2Connector, http2CConnector);
@@ -124,9 +141,51 @@ public class JettyWebserver implements WebServer {
             connector.setPort(port);
             String internalIP = webserverConfiguration.getInternalIP();
             connector.setHost(internalIP);
+
+            connector.setIdleTimeout(TimeUnit.SECONDS.toMillis(30));
+            int maxNetworkConnections = 1000;
+            var connectionLimit = new NetworkConnectionLimit(maxNetworkConnections, connector);
+            connector.addBean(connectionLimit);
+
             webserver.addConnector(connector);
 
-            webserver.setHandler(jettyRequestHandler);
+            long maxRequestSize = 1024L * 1024; // 1 MB
+            long maxResponseSize = -1; // Unlimited
+            var sizeLimitHandler = new SizeLimitHandler(maxRequestSize, maxResponseSize);
+
+            var qoSHandler = new QoSHandler() {
+                @Override
+                protected int getPriority(Request request) {
+                    if (!request.getMethod().equals("GET")) {
+                        return 10;
+                    }
+                    String path = request.getHttpURI().getDecodedPath();
+                    if (path.startsWith("/v1")) {
+                        return 1;
+                    }
+                    return 0;
+                }
+            };
+            qoSHandler.setMaxRequestCount(200);
+            qoSHandler.setMaxSuspendedRequestCount(100);
+
+            int trackedClientCount = 5000;
+            var dosHandler = new DoSHandler(
+                    DoSHandler.ID_FROM_REMOTE_ADDRESS,
+                    new DoSHandler.LeakingBucketTrackerFactory(200),
+                    // Immediately reject excessive requests with HTTP 429.
+                    new DoSHandler.StatusRejectHandler(),
+                    trackedClientCount
+            );
+
+            var minimumDataRateHandler = new MinimumDataRateHandler(0, 1024);
+
+            dosHandler.setHandler(qoSHandler);
+            qoSHandler.setHandler(minimumDataRateHandler);
+            minimumDataRateHandler.setHandler(sizeLimitHandler);
+            sizeLimitHandler.setHandler(jettyRequestHandler);
+
+            webserver.setHandler(dosHandler);
 
             String startFailure = "Failed to start Jetty webserver: ";
             try {
@@ -155,8 +214,8 @@ public class JettyWebserver implements WebServer {
     private void logCertificateExpiryInformation(KeyStore keyStore) {
         try {
             Certificate certificate = keyStore.getCertificate(webserverConfiguration.getAlias());
-            if (certificate instanceof X509Certificate) {
-                long expires = ((X509Certificate) certificate).getNotAfter().getTime();
+            if (certificate instanceof X509Certificate cert) {
+                long expires = cert.getNotAfter().getTime();
                 long timeLeft = expires - System.currentTimeMillis();
                 webserverLogMessages.certificateExpiryIn(expires);
                 if (timeLeft < TimeUnit.DAYS.toMillis(7L)) {
