@@ -71,13 +71,15 @@ const QueryOptionsCard = () => {
     // View state handling
     const [invalidFields, setInvalidFields] = useState([]);
     const setAsInvalid = useCallback(
-        (id) => setInvalidFields([...invalidFields, id]),
-        [setInvalidFields, invalidFields],
+        (id) => setInvalidFields((fields) => [...fields, id]),
+        [setInvalidFields],
     );
     const setAsValid = useCallback(
         (id) =>
-            setInvalidFields(invalidFields.filter((invalid) => id !== invalid)),
-        [setInvalidFields, invalidFields],
+            setInvalidFields((fields) =>
+                fields.filter((invalid) => id !== invalid),
+            ),
+        [setInvalidFields],
     );
 
     const [extremes, setExtremes] = useState(undefined);
