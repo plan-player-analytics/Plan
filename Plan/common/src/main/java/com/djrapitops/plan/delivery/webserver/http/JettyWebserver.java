@@ -32,6 +32,7 @@ import org.eclipse.jetty.server.handler.MinimumDataRateHandler;
 import org.eclipse.jetty.server.handler.QoSHandler;
 import org.eclipse.jetty.server.handler.SizeLimitHandler;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
+import org.jetbrains.annotations.VisibleForTesting;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -50,6 +51,8 @@ import java.util.concurrent.TimeUnit;
 
 @Singleton
 public class JettyWebserver implements WebServer {
+
+    private static boolean enableRateLimiting = true;
 
     private final PluginLogger logger;
     private final WebserverConfiguration webserverConfiguration;
@@ -70,6 +73,11 @@ public class JettyWebserver implements WebServer {
         this.legacyJettySSLContextLoader = legacyJettySSLContextLoader;
         this.jettyRequestHandler = jettyRequestHandler;
         this.responseResolver = responseResolver;
+    }
+
+    @VisibleForTesting
+    public static void setEnableRateLimiting(boolean enableRateLimiting) {
+        JettyWebserver.enableRateLimiting = enableRateLimiting;
     }
 
     @Override
@@ -111,19 +119,23 @@ public class JettyWebserver implements WebServer {
 
             HTTP2CServerConnectionFactory http2CConnector = new HTTP2CServerConnectionFactory(configuration);
             http2CConnector.setConnectProtocolEnabled(true);
-            http2CConnector.setMaxConcurrentStreams(100);
-            http2CConnector.setRateControlFactory(
-                    new WindowRateControl.Factory(128)
-            );
+            if (enableRateLimiting) {
+                http2CConnector.setMaxConcurrentStreams(100);
+                http2CConnector.setRateControlFactory(
+                        new WindowRateControl.Factory(128)
+                );
+            }
 
             ServerConnector connector = sslContext
                     .map(sslContextFactory -> {
                         HTTP2ServerConnectionFactory http2Connector = new HTTP2ServerConnectionFactory(configuration);
                         http2Connector.setConnectProtocolEnabled(true);
-                        http2Connector.setMaxConcurrentStreams(100);
-                        http2Connector.setRateControlFactory(
-                                new WindowRateControl.Factory(128)
-                        );
+                        if (enableRateLimiting) {
+                            http2Connector.setMaxConcurrentStreams(100);
+                            http2Connector.setRateControlFactory(
+                                    new WindowRateControl.Factory(128)
+                            );
+                        }
 
                         ALPNServerConnectionFactory alpn = new ALPNServerConnectionFactory("h2", "h2c", "http/1.1");
                         alpn.setDefaultProtocol(httpConnector.getProtocol());
@@ -142,10 +154,12 @@ public class JettyWebserver implements WebServer {
             String internalIP = webserverConfiguration.getInternalIP();
             connector.setHost(internalIP);
 
-            connector.setIdleTimeout(TimeUnit.SECONDS.toMillis(30));
-            int maxNetworkConnections = 1000;
-            var connectionLimit = new NetworkConnectionLimit(maxNetworkConnections, connector);
-            connector.addBean(connectionLimit);
+            if (enableRateLimiting) {
+                connector.setIdleTimeout(TimeUnit.SECONDS.toMillis(30));
+                int maxNetworkConnections = 1000;
+                var connectionLimit = new NetworkConnectionLimit(maxNetworkConnections, connector);
+                connector.addBean(connectionLimit);
+            }
 
             webserver.addConnector(connector);
 
@@ -185,7 +199,7 @@ public class JettyWebserver implements WebServer {
             minimumDataRateHandler.setHandler(sizeLimitHandler);
             sizeLimitHandler.setHandler(jettyRequestHandler);
 
-            webserver.setHandler(dosHandler);
+            webserver.setHandler(enableRateLimiting ? dosHandler : jettyRequestHandler);
 
             String startFailure = "Failed to start Jetty webserver: ";
             try {

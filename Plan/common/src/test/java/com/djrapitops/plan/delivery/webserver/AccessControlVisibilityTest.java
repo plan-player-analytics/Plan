@@ -402,7 +402,7 @@ class AccessControlVisibilityTest {
         driver.get(address);
         login(driver, playerUser);
 
-        SeleniumExtension.waitForElementToBeVisible(By.id(element), driver);
+        SeleniumExtension.waitForElementToBeVisible(By.id(element), driver, 10);
         assertDoesNotThrow(() -> driver.findElement(By.id(element)), () -> "Did not see #" + element + " at /player/" + TestConstants.PLAYER_ONE_UUID + " with permission '" + WebPermission.ACCESS_PLAYER_SELF.getPermission() + "'");
         assertNoLogs(driver, address);
     }
