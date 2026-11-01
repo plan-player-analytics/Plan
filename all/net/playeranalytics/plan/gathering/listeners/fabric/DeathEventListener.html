@@ -58,14 +58,14 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.utilities.logging.ErrorLogger)" tabindex="0">DeathEventListener(ServerInfo, Processing, ErrorLogger)</a></li>
+<li><a href="#%3Cinit%3E(com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.gathering.cache.ExplosionCache)" tabindex="0">DeathEventListener(ServerInfo, Processing, ErrorLogger, ExplosionCache)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#register()" tabindex="0">register()</a></li>
-<li><a href="#getCause(net.minecraft.world.entity.Entity)" tabindex="0">getCause(Entity)</a></li>
-<li><a href="#findWeapon(net.minecraft.world.entity.Entity)" tabindex="0">findWeapon(Entity)</a></li>
+<li><a href="#getCause(net.minecraft.world.entity.Entity,net.minecraft.world.entity.LivingEntity,net.minecraft.world.damagesource.DamageSource)" tabindex="0">getCause(Entity, LivingEntity, DamageSource)</a></li>
+<li><a href="#findWeapon(net.minecraft.world.entity.Entity,net.minecraft.world.entity.LivingEntity)" tabindex="0">findWeapon(Entity, LivingEntity)</a></li>
 <li><a href="#isEnabled()" tabindex="0">isEnabled()</a></li>
 <li><a href="#enable()" tabindex="0">enable()</a></li>
 <li><a href="#disable()" tabindex="0">disable()</a></li>
@@ -104,9 +104,10 @@ implements <a href="../FabricListener.html" title="interface in net.playeranalyt
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">DeathEventListener</a><wbr>(<a href="../../../../../../com/djrapitops/plan/identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.gathering.cache.ExplosionCache)" class="member-name-link">DeathEventListener</a><wbr>(<a href="../../../../../../com/djrapitops/plan/identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
  <a href="../../../../../../com/djrapitops/plan/processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing,
- <a href="../../../../../../com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</code></div>
+ <a href="../../../../../../com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger,
+ <a href="../../../../../../com/djrapitops/plan/gathering/cache/ExplosionCache.html" title="class in com.djrapitops.plan.gathering.cache">ExplosionCache</a>&nbsp;explosionCache)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -129,10 +130,13 @@ implements <a href="../FabricListener.html" title="interface in net.playeranalyt
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#enable()" class="member-name-link">enable</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findWeapon(net.minecraft.world.entity.Entity)" class="member-name-link">findWeapon</a><wbr>(net.minecraft.world.entity.Entity&nbsp;killer)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#findWeapon(net.minecraft.world.entity.Entity,net.minecraft.world.entity.LivingEntity)" class="member-name-link">findWeapon</a><wbr>(net.minecraft.world.entity.Entity&nbsp;killer,
+ net.minecraft.world.entity.LivingEntity&nbsp;victim)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a><wbr>&lt;net.minecraft.server.level.ServerPlayer&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCause(net.minecraft.world.entity.Entity)" class="member-name-link">getCause</a><wbr>(net.minecraft.world.entity.Entity&nbsp;killer)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getCause(net.minecraft.world.entity.Entity,net.minecraft.world.entity.LivingEntity,net.minecraft.world.damagesource.DamageSource)" class="member-name-link">getCause</a><wbr>(net.minecraft.world.entity.Entity&nbsp;killer,
+ net.minecraft.world.entity.LivingEntity&nbsp;victim,
+ net.minecraft.world.damagesource.DamageSource&nbsp;damageSource)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>boolean</code></div>
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#isEnabled()" class="member-name-link">isEnabled</a>()</code></div>
@@ -158,13 +162,14 @@ implements <a href="../FabricListener.html" title="interface in net.playeranalyt
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.utilities.logging.ErrorLogger)">
+<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.identification.ServerInfo,com.djrapitops.plan.processing.Processing,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.gathering.cache.ExplosionCache)">
 <h3>DeathEventListener</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="annotations">@Inject
 </span><span class="modifiers">public</span>&nbsp;<span class="element-name">DeathEventListener</span><wbr><span class="parameters">(<a href="../../../../../../com/djrapitops/plan/identification/ServerInfo.html" title="class in com.djrapitops.plan.identification">ServerInfo</a>&nbsp;serverInfo,
  <a href="../../../../../../com/djrapitops/plan/processing/Processing.html" title="class in com.djrapitops.plan.processing">Processing</a>&nbsp;processing,
- <a href="../../../../../../com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger)</span></div>
+ <a href="../../../../../../com/djrapitops/plan/utilities/logging/ErrorLogger.html" title="interface in com.djrapitops.plan.utilities.logging">ErrorLogger</a>&nbsp;errorLogger,
+ <a href="../../../../../../com/djrapitops/plan/gathering/cache/ExplosionCache.html" title="class in com.djrapitops.plan.gathering.cache">ExplosionCache</a>&nbsp;explosionCache)</span></div>
 </div>
 </section>
 </li>
@@ -189,18 +194,21 @@ implements <a href="../FabricListener.html" title="interface in net.playeranalyt
 </section>
 </li>
 <li>
-<section class="detail" id="getCause(net.minecraft.world.entity.Entity)">
+<section class="detail" id="getCause(net.minecraft.world.entity.Entity,net.minecraft.world.entity.LivingEntity,net.minecraft.world.damagesource.DamageSource)">
 <h3>getCause</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;net.minecraft.server.level.ServerPlayer&gt;</span>&nbsp;<span class="element-name">getCause</span><wbr><span class="parameters">(net.minecraft.world.entity.Entity&nbsp;killer)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;net.minecraft.server.level.ServerPlayer&gt;</span>&nbsp;<span class="element-name">getCause</span><wbr><span class="parameters">(net.minecraft.world.entity.Entity&nbsp;killer,
+ net.minecraft.world.entity.LivingEntity&nbsp;victim,
+ net.minecraft.world.damagesource.DamageSource&nbsp;damageSource)</span></div>
 </div>
 </section>
 </li>
 <li>
-<section class="detail" id="findWeapon(net.minecraft.world.entity.Entity)">
+<section class="detail" id="findWeapon(net.minecraft.world.entity.Entity,net.minecraft.world.entity.LivingEntity)">
 <h3>findWeapon</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">findWeapon</span><wbr><span class="parameters">(net.minecraft.world.entity.Entity&nbsp;killer)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a></span>&nbsp;<span class="element-name">findWeapon</span><wbr><span class="parameters">(net.minecraft.world.entity.Entity&nbsp;killer,
+ net.minecraft.world.entity.LivingEntity&nbsp;victim)</span></div>
 </div>
 </section>
 </li>
