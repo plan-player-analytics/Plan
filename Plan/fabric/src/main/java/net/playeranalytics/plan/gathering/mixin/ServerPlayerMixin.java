@@ -39,7 +39,7 @@ public class ServerPlayerMixin {
     @Inject(method = "die", at = @At(value = "TAIL"))
     public void onKillSelf(DamageSource source, CallbackInfo ci) {
         if (source.getEntity() == null) {
-            PlanFabricEvents.ON_KILLED.invoker().onKilled((ServerPlayer) (Object) this, null);
+            PlanFabricEvents.ON_KILLED.invoker().onKilled((ServerPlayer) (Object) this, null, source);
         }
     }
 

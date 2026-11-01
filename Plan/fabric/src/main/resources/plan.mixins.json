@@ -9,7 +9,8 @@
     "PlayerListMixin",
     "CommandSourceStackMixin",
     "ServerPlayerMixin",
-    "ServerGamePacketListenerImplMixin"
+    "ServerGamePacketListenerImplMixin",
+    "ServerPlayerGameModeMixin"
   ],
   "injectors": {
     "defaultRequire": 1
