@@ -8,12 +8,10 @@ import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import OutlineButton from '../../../input/button/OutlineButton.tsx';
 import Checkbox from '../../../input/Checkbox.tsx';
 import { InlinedRow } from '../../../layout/InlinedRow.tsx';
-import { useMetadata } from '../../../../hooks/metadataHook.tsx';
 import { usePreferences } from '../../../../hooks/preferences/preferencesHook.tsx';
 import {
     calculatePresetRange,
     DATE_RANGE_PRESETS,
-    getServerWallClockNow,
 } from '../../../../util/queryDatePresets.ts';
 
 const BetweenDatesFilter = ({
@@ -32,7 +30,6 @@ const BetweenDatesFilter = ({
             : t('html.query.filter.generic.and');
 
     const options = filter.options;
-    const { timeZoneOffsetMinutes } = useMetadata();
     const { firstDay } = usePreferences();
 
     const [preset, setPreset] = useState(
@@ -87,7 +84,8 @@ const BetweenDatesFilter = ({
                 ? { after: options.after, before: options.before }
                 : calculatePresetRange(
                       selected,
-                      getServerWallClockNow(Date.now(), timeZoneOffsetMinutes),
+                      Date.now(),
+                      options,
                       firstDay ?? 1,
                   );
         if (!range) return;
@@ -105,6 +103,10 @@ const BetweenDatesFilter = ({
     };
 
     useEffect(() => {
+        if (preset === 'allData') {
+            setFilterOptions({ ...filter, parameters: {} });
+            return;
+        }
         const after = fromDateEnabled
             ? {
                   afterDate: fromDate,
@@ -123,6 +125,7 @@ const BetweenDatesFilter = ({
         });
     }, [
         setFilterOptions,
+        preset,
         fromDateEnabled,
         fromDate,
         fromTime,

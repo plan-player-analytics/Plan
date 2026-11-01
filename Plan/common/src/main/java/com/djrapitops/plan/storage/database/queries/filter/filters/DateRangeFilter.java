@@ -30,6 +30,8 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 public abstract class DateRangeFilter implements Filter {
 
@@ -61,11 +63,14 @@ public abstract class DateRangeFilter implements Filter {
         Optional<Long> earliestData = database.query(BaseUserQueries.minimumRegisterDate());
         long now = System.currentTimeMillis();
         SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
+        TimeZone timeZone = formatter.getTimeZone();
         String[] afterDate = StringUtils.split(formatter.format(earliestData.orElse(now)), ' ');
         String[] beforeDate = StringUtils.split(formatter.format(now), ' ');
         return Maps.builder(String.class, Object.class)
                 .put("after", afterDate)
                 .put("before", beforeDate)
+                .put("timeZone", timeZone.getID())
+                .put("timeZoneOffsetMs", timeZone.getOffset(now))
                 .build();
     }
 
@@ -96,6 +101,6 @@ public abstract class DateRangeFilter implements Filter {
         if (query.get(BEFORE_DATE).isEmpty() || query.get(BEFORE_TIME).isEmpty()) {
             return Long.MAX_VALUE;
         }
-        return getTime(query, BEFORE_DATE, BEFORE_TIME, getKind());
+        return getTime(query, BEFORE_DATE, BEFORE_TIME, getKind()) + TimeUnit.MINUTES.toMillis(1L) - 1L;
     }
 }

@@ -22,8 +22,11 @@ import com.djrapitops.plan.settings.locale.lang.HtmlLang;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.queries.filter.Filter;
 import com.djrapitops.plan.storage.database.queries.filter.filters.PluginBooleanGroupFilter;
+import com.djrapitops.plan.storage.database.queries.objects.BaseUserQueries;
+import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.utilities.java.Maps;
 import org.junit.jupiter.api.DynamicTest;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestFactory;
 import utilities.TestConstants;
 
@@ -130,6 +133,39 @@ public interface FilterQueryTest extends DatabaseTestPreparer {
                 .map(kind -> () -> assertTrue(testedKinds.contains(kind), () -> "Incorrect test setup: Filter '" + kind + "' is not being tested")));
 
         return tests;
+    }
+
+    @Test
+    default void registeredBetweenIncludesWholeBeforeMinute() {
+        long registered = getTime(new InputFilterDto("registeredBetween", Map.of(
+                AFTER_DATE, "01/11/2026",
+                AFTER_TIME, "12:30"
+        )), AFTER_DATE, AFTER_TIME, "registeredBetween") + 59_000L;
+        UUID registeredPlayer = UUID.randomUUID();
+        executeTransactions(new PlayerRegisterTransaction(registeredPlayer, () -> registered, "MinuteBoundary"));
+        Integer userId = db().query(BaseUserQueries.fetchUserId(registeredPlayer)).orElseThrow(AssertionError::new);
+        Filter filter = getFilter("registeredBetween");
+
+        Set<Integer> endingThatMinute = filter.getMatchingUserIds(new InputFilterDto("registeredBetween", Map.of(
+                AFTER_DATE, "01/11/2026",
+                AFTER_TIME, "12:00",
+                BEFORE_DATE, "01/11/2026",
+                BEFORE_TIME, "12:30"
+        )));
+        Set<Integer> endingMinuteBefore = filter.getMatchingUserIds(new InputFilterDto("registeredBetween", Map.of(
+                AFTER_DATE, "01/11/2026",
+                AFTER_TIME, "12:00",
+                BEFORE_DATE, "01/11/2026",
+                BEFORE_TIME, "12:29"
+        )));
+        Set<Integer> startingNextMinute = filter.getMatchingUserIds(new InputFilterDto("registeredBetween", Map.of(
+                AFTER_DATE, "01/11/2026",
+                AFTER_TIME, "12:31"
+        )));
+
+        assertTrue(endingThatMinute.contains(userId));
+        assertFalse(endingMinuteBefore.contains(userId));
+        assertFalse(startingNextMinute.contains(userId));
     }
 
     private Filter getFilter(String kind) {
