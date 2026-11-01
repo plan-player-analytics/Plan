@@ -27,6 +27,7 @@ import net.playeranalytics.plan.commands.use.FabricMessageBuilder;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -79,10 +80,11 @@ public abstract class CommandSourceStackMixin implements CMDSender {
 
     @Override
     public ChatFormatter getFormatter() {
-        return isConsole() ? new ConsoleChatFormatter() : new PlayerChatFormatter();
+        return plan$isConsole() ? new ConsoleChatFormatter() : new PlayerChatFormatter();
     }
 
-    private boolean isConsole() {
+    @Unique
+    private boolean plan$isConsole() {
         return getEntity() == null;
     }
 
@@ -95,14 +97,14 @@ public abstract class CommandSourceStackMixin implements CMDSender {
 
     @Override
     public int hashCode() {
-        return Boolean.hashCode(isConsole()) + getUUID().hashCode();
+        return Boolean.hashCode(plan$isConsole()) + getUUID().hashCode();
     }
 
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof CommandSourceStackMixin other)) return false;
 
-        return isConsole() == other.isConsole()
+        return plan$isConsole() == other.plan$isConsole()
                 && getUUID().equals(other.getUUID());
     }
 }

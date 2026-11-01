@@ -11,7 +11,7 @@ plugins {
     id("base")
     id "org.sonarqube" version "7.5.0.8588"
     id "com.gradleup.shadow" version "9.6.1" apply false
-    id "net.fabricmc.fabric-loom" version "1.18.4" apply false
+    id "net.fabricmc.fabric-loom" version "1.19.3" apply false
 }
 
 apply plugin: "nebula-aggregate-javadocs"
@@ -67,17 +67,17 @@ subprojects {
         commonsTextVersion = "1.15.0"
         commonsCompressVersion = "1.28.0"
         commonsCodecVersion = "1.23.0"
-        caffeineVersion = "3.3.0"
+        caffeineVersion = "3.3.1"
         jetbrainsAnnotationsVersion = "26.1.0"
         jettyVersion = "12.1.14"
         mysqlVersion = "9.7.0"
-        mariadbVersion = "3.5.10"
+        mariadbVersion = "4.0.0"
         sqliteVersion = "3.42.0.1"
         adventureVersion = "4.24.0"
         hikariVersion = "7.1.0"
         slf4jVersion = "2.0.20"
         geoIpVersion = "5.2.0"
-        gsonVersion = "2.14.0"
+        gsonVersion = "2.15.0"
         dependencyDownloadVersion = "2.0.0"
         ipAddressMatcherVersion = "5.6.2"
         jasyptVersion = "1.9.3"

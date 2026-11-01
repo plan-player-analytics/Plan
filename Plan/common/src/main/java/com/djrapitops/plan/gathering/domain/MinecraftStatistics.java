@@ -19,13 +19,14 @@ package com.djrapitops.plan.gathering.domain;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.file.Resource;
 import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.UUID;
+
+import static com.djrapitops.plan.storage.database.sql.tables.StatisticTable.MAX_STATISTIC_NAME_LENGTH;
 
 /**
  * Represents values taken from a stats file for a specific player.
@@ -35,8 +36,8 @@ import java.util.UUID;
 public record MinecraftStatistics(UUID playerUUID, ServerUUID serverUUID, Map<Integer, Integer> valuesById) {
 
     public static Map<String, Integer> parse(Resource statsFile) throws IOException {
-        JsonObject json = statsFile.asJson();
-        JsonObject stats = json.getAsJsonObject("stats");
+        var json = statsFile.asJson();
+        var stats = json.getAsJsonObject("stats");
 
         Map<String, Integer> valueByKey = new HashMap<>();
         addToMap("", stats, valueByKey);
@@ -44,15 +45,15 @@ public record MinecraftStatistics(UUID playerUUID, ServerUUID serverUUID, Map<In
     }
 
     private static void addToMap(String currentKey, JsonElement current, Map<String, Integer> valueByKey) {
-        if (current.isJsonObject()) {
-            for (Entry<String, JsonElement> element : current.getAsJsonObject().entrySet()) {
-                String key = currentKey + element.getKey().replace(':', '.');
-                JsonElement value = element.getValue();
+        if (current != null && current.isJsonObject()) {
+            for (var element : current.getAsJsonObject().entrySet()) {
+                var key = currentKey + element.getKey().replace(':', '.');
+                var value = element.getValue();
                 if (value.isJsonObject()) {
                     addToMap(key + ":", value.getAsJsonObject(), valueByKey);
                 } else if (value.isJsonPrimitive()) {
                     try {
-                        valueByKey.put(key, value.getAsInt());
+                        valueByKey.put(StringUtils.truncate(key, MAX_STATISTIC_NAME_LENGTH), value.getAsInt());
                     } catch (NumberFormatException notANumber) {
                         // Skip
                     }

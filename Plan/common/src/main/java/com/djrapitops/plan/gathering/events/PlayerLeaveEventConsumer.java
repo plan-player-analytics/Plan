@@ -35,6 +35,8 @@ import com.djrapitops.plan.settings.config.paths.ExportSettings;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.events.BanStatusTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -47,6 +49,7 @@ public class PlayerLeaveEventConsumer {
     private final Processing processing;
     private final PlanConfig config;
     private final DBSystem dbSystem;
+    private final ErrorLogger errorLogger;
 
     private final JoinAddressCache joinAddressCache;
     private final NicknameCache nicknameCache;
@@ -59,10 +62,11 @@ public class PlayerLeaveEventConsumer {
     private final PlayerGatheringTasks playerGatheringTasks;
 
     @Inject
-    public PlayerLeaveEventConsumer(Processing processing, PlanConfig config, DBSystem dbSystem, JoinAddressCache joinAddressCache, NicknameCache nicknameCache, SessionCache sessionCache, DatapointStore datapointStore, StatisticsIdCache statisticsIdCache, ExtensionSvc extensionService, Exporter exporter, PlayerGatheringTasks playerGatheringTasks) {
+    public PlayerLeaveEventConsumer(Processing processing, PlanConfig config, DBSystem dbSystem, ErrorLogger errorLogger, JoinAddressCache joinAddressCache, NicknameCache nicknameCache, SessionCache sessionCache, DatapointStore datapointStore, StatisticsIdCache statisticsIdCache, ExtensionSvc extensionService, Exporter exporter, PlayerGatheringTasks playerGatheringTasks) {
         this.processing = processing;
         this.config = config;
         this.dbSystem = dbSystem;
+        this.errorLogger = errorLogger;
         this.joinAddressCache = joinAddressCache;
         this.nicknameCache = nicknameCache;
         this.sessionCache = sessionCache;
@@ -97,7 +101,13 @@ public class PlayerLeaveEventConsumer {
     }
 
     private void storePlayerStatistics(PlayerLeave leave) {
-        processing.submitCritical(() -> statisticsIdCache.storePlayerStatistics(leave.getPlayerUUID(), leave.getServerUUID()));
+        processing.submitCritical(() -> statisticsIdCache.storePlayerStatistics(leave.getPlayerUUID(), leave.getServerUUID()))
+                .exceptionally(e -> {
+                    errorLogger.error(e, ErrorContext.builder()
+                            .related(leave.getPlayerUUID())
+                            .build());
+                    return null;
+                });
     }
 
     public void onLeaveProxyServer(PlayerLeave leave) {

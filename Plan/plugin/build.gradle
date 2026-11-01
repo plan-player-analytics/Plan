@@ -1,6 +1,6 @@
 plugins {
     id "io.papermc.hangar-publish-plugin" version "0.1.4"
-    id "org.spongepowered.gradle.ore" version "2.3.0"
+    id "org.spongepowered.gradle.ore" version "2.5.1"
 }
 
 apply plugin: "com.gradleup.shadow"

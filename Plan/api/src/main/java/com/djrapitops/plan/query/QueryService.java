@@ -31,7 +31,7 @@ import java.util.function.Consumer;
  *
  * @author AuroraLS3
  */
-public interface QueryService {
+public interface QueryService extends LegacyQueryService {
 
     /**
      * Obtain instance of QueryService.
@@ -81,6 +81,7 @@ public interface QueryService {
      * @return A Future that tells when the transaction has completed. Blocks thread if Future#get is called.
      * @throws IllegalStateException If something goes wrong with the query. SQLException might be as cause.
      */
+    @Override
     CompletableFuture<Void> execute(
             String sql,
             ThrowingConsumer<PreparedStatement> performStatement
