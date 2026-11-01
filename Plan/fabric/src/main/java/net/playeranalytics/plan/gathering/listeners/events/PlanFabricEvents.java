@@ -18,6 +18,7 @@ package net.playeranalytics.plan.gathering.listeners.events;
 
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
+import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.network.protocol.handshake.ClientIntentionPacket;
@@ -28,6 +29,8 @@ import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.BlockHitResult;
 import net.playeranalytics.plan.PlanFabric;
 import net.playeranalytics.plan.gathering.FabricPlayerPositionTracker;
 
@@ -37,9 +40,9 @@ import java.util.UUID;
 
 public class PlanFabricEvents {
 
-    public static final Event<OnKilled> ON_KILLED = EventFactory.createArrayBacked(OnKilled.class, callbacks -> (killed, killer) -> {
+    public static final Event<OnKilled> ON_KILLED = EventFactory.createArrayBacked(OnKilled.class, callbacks -> (killed, killer, damageSource) -> {
         for (OnKilled callback : callbacks) {
-            callback.onKilled(killed, killer);
+            callback.onKilled(killed, killer, damageSource);
         }
     });
 
@@ -88,6 +91,12 @@ public class PlanFabricEvents {
         }
     });
 
+    public static final Event<OnBlockInteract> ON_BLOCK_INTERACT = EventFactory.createArrayBacked(OnBlockInteract.class, callbacks -> (player, level, hitResult) -> {
+        for (OnBlockInteract callback : callbacks) {
+            callback.onInteract(player, level, hitResult);
+        }
+    });
+
     /**
      * Called when Plan is enabled.
      * <p>
@@ -116,7 +125,7 @@ public class PlanFabricEvents {
          * @param killed the entity that died
          * @param killer the entity that killed
          */
-        void onKilled(LivingEntity killed, Entity killer);
+        void onKilled(LivingEntity killed, Entity killer, DamageSource damageSource);
     }
 
     @FunctionalInterface
@@ -139,6 +148,18 @@ public class PlanFabricEvents {
          * @param packet  the send packet
          */
         void onMove(ServerGamePacketListenerImpl handler, ServerboundMovePlayerPacket packet);
+    }
+
+    @FunctionalInterface
+    public interface OnBlockInteract {
+        /**
+         * Called when a player interacts with a block
+         *
+         * @param player    the player interacting
+         * @param level     the level where the interaction happens
+         * @param hitResult the result of the block interaction
+         */
+        void onInteract(ServerPlayer player, Level level, BlockHitResult hitResult);
     }
 
     @FunctionalInterface
