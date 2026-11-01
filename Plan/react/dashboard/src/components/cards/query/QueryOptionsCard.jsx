@@ -16,7 +16,7 @@ import 'highcharts/modules/accessibility';
 import MultiSelect from '../../input/MultiSelect.tsx';
 import CollapseWithButton from '../../layout/CollapseWithButton.tsx';
 import FilterDropdown from './FilterDropdown';
-import FilterList from './FilterList';
+import FilterList, { withFilterKey } from './FilterList';
 import { useQueryResultContext } from '../../../hooks/queryResultContext.tsx';
 import { useNavigate } from 'react-router';
 import { useNavigation } from '../../../hooks/navigationHook.tsx';
@@ -150,7 +150,7 @@ const QueryOptionsCard = () => {
                     (fo) => fo.kind === f.kind,
                 ).options),
         );
-        setFilters(existingFilters);
+        setFilters(existingFilters.map(withFilterKey));
 
         setExtremes({
             min: parseTimeAsUTC(

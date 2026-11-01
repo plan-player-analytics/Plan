@@ -1,6 +1,12 @@
 import React from 'react';
 import Filter from './filter/Filter';
 
+let filterKeyCounter = 0;
+export const withFilterKey = (filter) => ({
+    ...filter,
+    uiKey: 'filter-key-' + filterKeyCounter++,
+});
+
 const FilterList = ({ filters, setFilters, setAsInvalid, setAsValid }) => {
     const updateFilterOptions = (index, newOptions) => {
         filters[index] = newOptions;
@@ -36,7 +42,7 @@ const FilterList = ({ filters, setFilters, setAsInvalid, setAsValid }) => {
     return (
         <ul id={'filters'} className={'filters'}>
             {filters.map((filter, i) => (
-                <li key={'filter-' + i} className={'filter'}>
+                <li key={filter.uiKey || 'filter-' + i} className={'filter'}>
                     <Filter
                         filter={filter}
                         index={i}

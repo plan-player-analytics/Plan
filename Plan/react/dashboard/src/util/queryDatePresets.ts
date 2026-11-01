@@ -46,9 +46,6 @@ const range = (after: moment.Moment, before: moment.Moment): DateTimeRange => ({
     before: toDateAndTime(before),
 });
 
-const period = (start: moment.Moment, nextStart: moment.Moment) =>
-    range(start, nextStart.clone().subtract(1, 'minute'));
-
 const startOfWeek = (m: moment.Moment, firstDay: number) => {
     const daysSinceWeekStart = (m.day() - firstDay + 7) % 7;
     return m.clone().startOf('day').subtract(daysSinceWeekStart, 'days');
@@ -104,6 +101,38 @@ export const toServerWallClock = (
     return moment.utc(epochMs + (zone.timeZoneOffsetMs || 0)).startOf('minute');
 };
 
+const MINUTE_MS = 60 * 1000;
+
+const offsetAt = (epochMs: number, zone: ServerTimeZone) =>
+    toServerWallClock(epochMs, zone).valueOf() -
+    (epochMs - (((epochMs % MINUTE_MS) + MINUTE_MS) % MINUTE_MS));
+
+export const fromServerWallClock = (
+    wallClock: moment.Moment,
+    zone: ServerTimeZone,
+): number => {
+    const target = wallClock.valueOf();
+    const offsetBefore = offsetAt(target - DAY_MS, zone);
+    const offsetAfter = offsetAt(target + DAY_MS, zone);
+    const candidates = [target - offsetBefore, target - offsetAfter].filter(
+        (epochMs) => toServerWallClock(epochMs, zone).valueOf() === target,
+    );
+    return candidates.length ? Math.min(...candidates) : target - offsetBefore;
+};
+
+const period = (
+    start: moment.Moment,
+    nextStart: moment.Moment,
+    zone: ServerTimeZone,
+) =>
+    range(
+        start,
+        toServerWallClock(
+            fromServerWallClock(nextStart, zone) - MINUTE_MS,
+            zone,
+        ),
+    );
+
 const elapsed = (nowMs: number, durationMs: number, zone: ServerTimeZone) =>
     range(
         toServerWallClock(nowMs - durationMs, zone),
@@ -130,21 +159,33 @@ export const calculatePresetRange = (
         case 'last24h':
             return elapsed(nowEpochMs, DAY_MS, zone);
         case 'today':
-            return period(today, today.clone().add(1, 'day'));
+            return period(today, today.clone().add(1, 'day'), zone);
         case 'yesterday':
-            return period(today.clone().subtract(1, 'day'), today);
+            return period(today.clone().subtract(1, 'day'), today, zone);
         case 'currentWeek':
-            return period(weekStart, weekStart.clone().add(1, 'week'));
+            return period(weekStart, weekStart.clone().add(1, 'week'), zone);
         case 'previousWeek':
-            return period(weekStart.clone().subtract(1, 'week'), weekStart);
+            return period(
+                weekStart.clone().subtract(1, 'week'),
+                weekStart,
+                zone,
+            );
         case 'currentMonth':
-            return period(monthStart, monthStart.clone().add(1, 'month'));
+            return period(monthStart, monthStart.clone().add(1, 'month'), zone);
         case 'previousMonth':
-            return period(monthStart.clone().subtract(1, 'month'), monthStart);
+            return period(
+                monthStart.clone().subtract(1, 'month'),
+                monthStart,
+                zone,
+            );
         case 'currentYear':
-            return period(yearStart, yearStart.clone().add(1, 'year'));
+            return period(yearStart, yearStart.clone().add(1, 'year'), zone);
         case 'previousYear':
-            return period(yearStart.clone().subtract(1, 'year'), yearStart);
+            return period(
+                yearStart.clone().subtract(1, 'year'),
+                yearStart,
+                zone,
+            );
         default:
             return undefined;
     }
