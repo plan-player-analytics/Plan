@@ -19,11 +19,14 @@ package com.djrapitops.plan.gathering.domain;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.file.Resource;
 import com.google.gson.JsonElement;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import static com.djrapitops.plan.storage.database.sql.tables.StatisticTable.MAX_STATISTIC_NAME_LENGTH;
 
 /**
  * Represents values taken from a stats file for a specific player.
@@ -50,7 +53,7 @@ public record MinecraftStatistics(UUID playerUUID, ServerUUID serverUUID, Map<In
                     addToMap(key + ":", value.getAsJsonObject(), valueByKey);
                 } else if (value.isJsonPrimitive()) {
                     try {
-                        valueByKey.put(key, value.getAsInt());
+                        valueByKey.put(StringUtils.truncate(key, MAX_STATISTIC_NAME_LENGTH), value.getAsInt());
                     } catch (NumberFormatException notANumber) {
                         // Skip
                     }

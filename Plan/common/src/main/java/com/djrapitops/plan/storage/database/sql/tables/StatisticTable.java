@@ -40,6 +40,8 @@ public class StatisticTable {
     public static final String ID = "id";
     public static final String STATISTIC_NAME = "statistic_name";
 
+    public static final int MAX_STATISTIC_NAME_LENGTH = 750;
+
     public static final String SELECT_STATISTICS = SELECT + ID + ',' + STATISTIC_NAME + FROM + TABLE_NAME;
 
     private StatisticTable() {
@@ -49,7 +51,7 @@ public class StatisticTable {
     public static String createTableSQL(DBType dbType) {
         return CreateTableBuilder.create(TABLE_NAME, dbType)
                 .column(ID, Sql.INT).primaryKey()
-                .column(STATISTIC_NAME, Sql.varchar(1000)).notNull().unique()
+                .column(STATISTIC_NAME, Sql.varchar(MAX_STATISTIC_NAME_LENGTH)).notNull().unique()
                 .toString();
     }
 
