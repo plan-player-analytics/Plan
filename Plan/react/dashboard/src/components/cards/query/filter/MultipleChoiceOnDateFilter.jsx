@@ -10,6 +10,7 @@ import TimeInputField from '../../../input/TimeInputField.tsx';
 
 const MultipleChoiceOnDateFilter = ({
     index,
+    fieldId,
     label,
     filter,
     removeFilter,
@@ -72,7 +73,7 @@ const MultipleChoiceOnDateFilter = ({
                 </Col>
                 <Col md={3} sm={6}>
                     <DateInputField
-                        id={'filter-' + index + '-date'}
+                        id={fieldId + '-date'}
                         value={date}
                         setValue={setDate}
                         placeholder={options.before[0]}
@@ -82,7 +83,7 @@ const MultipleChoiceOnDateFilter = ({
                 </Col>
                 <Col md={2} sm={6}>
                     <TimeInputField
-                        id={'filter-' + index + '-time'}
+                        id={fieldId + '-time'}
                         value={time}
                         setValue={setTime}
                         placeholder={options.before[1]}

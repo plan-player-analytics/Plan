@@ -16,6 +16,7 @@ import {
 
 const BetweenDatesFilter = ({
     index,
+    fieldId,
     label,
     filter,
     removeFilter,
@@ -97,7 +98,7 @@ const BetweenDatesFilter = ({
         setToDate(range.before[0]);
         setToTime(range.before[1]);
         ['-from-date', '-from-time', '-to-date', '-to-time'].forEach((suffix) =>
-            setAsValid('filter-' + index + suffix),
+            setAsValid(fieldId + suffix),
         );
         setInputResetCount(inputResetCount + 1);
     };
@@ -146,7 +147,7 @@ const BetweenDatesFilter = ({
                     {select} {t(actualLabel)}:
                 </label>
                 <select
-                    id={'filter-' + index + '-preset'}
+                    id={fieldId + '-preset'}
                     className='form-select form-select-sm w-auto ms-2'
                     aria-label={t('html.query.filter.preset.label')}
                     value={preset}
@@ -167,7 +168,7 @@ const BetweenDatesFilter = ({
                         />
                         <DateInputField
                             key={inputResetCount}
-                            id={'filter-' + index + '-from-date'}
+                            id={fieldId + '-from-date'}
                             value={fromDate}
                             setValue={editedBy(setFromDate)}
                             placeholder={options.after[0]}
@@ -181,7 +182,7 @@ const BetweenDatesFilter = ({
                 <Col md={2} sm={6}>
                     <TimeInputField
                         key={inputResetCount}
-                        id={'filter-' + index + '-from-time'}
+                        id={fieldId + '-from-time'}
                         value={fromTime}
                         setValue={editedBy(setFromTime)}
                         placeholder={options.after[1]}
@@ -204,7 +205,7 @@ const BetweenDatesFilter = ({
                         />
                         <DateInputField
                             key={inputResetCount}
-                            id={'filter-' + index + '-to-date'}
+                            id={fieldId + '-to-date'}
                             value={toDate}
                             setValue={editedBy(setToDate)}
                             placeholder={options.before[0]}
@@ -218,7 +219,7 @@ const BetweenDatesFilter = ({
                 <Col md={2} sm={6}>
                     <TimeInputField
                         key={inputResetCount}
-                        id={'filter-' + index + '-to-time'}
+                        id={fieldId + '-to-time'}
                         value={toTime}
                         setValue={editedBy(setToTime)}
                         placeholder={options.before[1]}

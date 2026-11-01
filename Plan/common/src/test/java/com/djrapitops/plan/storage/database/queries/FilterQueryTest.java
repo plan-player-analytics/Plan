@@ -168,6 +168,26 @@ public interface FilterQueryTest extends DatabaseTestPreparer {
         assertFalse(startingNextMinute.contains(userId));
     }
 
+    @Test
+    default void dateFilterTimesUseGregorianCalendarRegardlessOfDefaultLocale() {
+        Locale defaultLocale = Locale.getDefault();
+        try {
+            Locale.setDefault(Locale.forLanguageTag("th-TH"));
+            long parsed = getTime(new InputFilterDto("registeredBetween", Map.of(
+                    AFTER_DATE, "01/11/2026",
+                    AFTER_TIME, "12:30"
+            )), AFTER_DATE, AFTER_TIME, "registeredBetween");
+            Calendar calendar = new GregorianCalendar();
+            calendar.setTimeInMillis(parsed);
+            assertEquals(2026, calendar.get(Calendar.YEAR));
+
+            String[] before = (String[]) getOptions(db()).get("before");
+            assertEquals(String.valueOf(new GregorianCalendar().get(Calendar.YEAR)), before[0].substring(6));
+        } finally {
+            Locale.setDefault(defaultLocale);
+        }
+    }
+
     private Filter getFilter(String kind) {
         return queryFilters().getFilter(kind)
                 .orElseThrow(() -> new AssertionError("Unknown filter '" + kind + "'"));

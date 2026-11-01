@@ -82,6 +82,14 @@ const QueryOptionsCard = () => {
         [setInvalidFields],
     );
 
+    const clearInvalidFields = useCallback(
+        (prefix) =>
+            setInvalidFields((fields) =>
+                fields.filter((invalid) => !invalid.startsWith(prefix)),
+            ),
+        [setInvalidFields],
+    );
+
     const [extremes, setExtremes] = useState(undefined);
     /*eslint-disable react-hooks/exhaustive-deps */
     // Because: Don't update when any of the date/time fields change because that would lead to infinite loop
@@ -322,6 +330,7 @@ const QueryOptionsCard = () => {
                             setFilters={setFilters}
                             setAsInvalid={setAsInvalid}
                             setAsValid={setAsValid}
+                            clearInvalidFields={clearInvalidFields}
                         />
                     </Col>
                 </Row>
