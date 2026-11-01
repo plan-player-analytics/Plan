@@ -44,6 +44,8 @@ import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.sql.tables.JoinAddressTable;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.events.*;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -56,6 +58,7 @@ public class PlayerJoinEventConsumer {
     private final Processing processing;
     private final PlanConfig config;
     private final DBSystem dbSystem;
+    private final ErrorLogger errorLogger;
 
     private final JoinAddressValidator joinAddressValidator;
     private final GeolocationCache geolocationCache;
@@ -72,7 +75,7 @@ public class PlayerJoinEventConsumer {
     public PlayerJoinEventConsumer(
             Processing processing,
             PlanConfig config,
-            DBSystem dbSystem,
+            DBSystem dbSystem, ErrorLogger errorLogger,
             JoinAddressValidator joinAddressValidator,
             GeolocationCache geolocationCache,
             SessionCache sessionCache,
@@ -86,6 +89,7 @@ public class PlayerJoinEventConsumer {
         this.processing = processing;
         this.config = config;
         this.dbSystem = dbSystem;
+        this.errorLogger = errorLogger;
         this.joinAddressValidator = joinAddressValidator;
         this.geolocationCache = geolocationCache;
         this.sessionCache = sessionCache;
@@ -122,7 +126,13 @@ public class PlayerJoinEventConsumer {
                         updateExport(join);
                         registerExtensionUpdateTask(join);
                         storePlayerStatistics(join);
-                    }, processing.getCriticalExecutor());
+                    }, processing.getCriticalExecutor())
+                    .exceptionally(e -> {
+                        errorLogger.error(e, ErrorContext.builder()
+                                .related(join.getPlayerUUID())
+                                .build());
+                        return null;
+                    });
         });
     }
 
@@ -143,6 +153,12 @@ public class PlayerJoinEventConsumer {
                     updateExport(join);
                     datapointStore.clearLastModified(DatapointCacheKey.SESSION);
                 }, processing.getCriticalExecutor())
+                .exceptionally(e -> {
+                    errorLogger.error(e, ErrorContext.builder()
+                            .related(join.getPlayerUUID())
+                            .build());
+                    return null;
+                })
         );
     }
 
