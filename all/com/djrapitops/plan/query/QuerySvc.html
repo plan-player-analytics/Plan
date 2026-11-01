@@ -89,7 +89,7 @@ loadScripts(document, 'script');</script>
 <section class="class-description" id="class-description">
 <dl class="notes">
 <dt>All Implemented Interfaces:</dt>
-<dd><code><a href="QueryService.html" title="interface in com.djrapitops.plan.query">QueryService</a></code></dd>
+<dd><code><a href="LegacyQueryService.html" title="interface in com.djrapitops.plan.query">LegacyQueryService</a>, <a href="QueryService.html" title="interface in com.djrapitops.plan.query">QueryService</a></code></dd>
 </dl>
 <hr>
 <div class="horizontal-scroll">
@@ -281,6 +281,8 @@ Does not block thread, SQL is executed in a single transaction to the database.
 <p>
 Differs from <a href="QueryService.html#query(java.lang.String,com.djrapitops.plan.query.QueryService.ThrowingFunction)"><code>QueryService.query(String, ThrowingFunction)</code></a> in that no results are returned.</div>
 <dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="LegacyQueryService.html#execute(java.lang.String,com.djrapitops.plan.query.QueryService.ThrowingConsumer)">execute</a></code>&nbsp;in interface&nbsp;<code><a href="LegacyQueryService.html" title="interface in com.djrapitops.plan.query">LegacyQueryService</a></code></dd>
 <dt>Specified by:</dt>
 <dd><code><a href="QueryService.html#execute(java.lang.String,com.djrapitops.plan.query.QueryService.ThrowingConsumer)">execute</a></code>&nbsp;in interface&nbsp;<code><a href="QueryService.html" title="interface in com.djrapitops.plan.query">QueryService</a></code></dd>
 <dt>Parameters:</dt>

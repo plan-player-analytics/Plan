@@ -77,12 +77,17 @@ loadScripts(document, 'script');</script>
 </div>
 <section class="class-description" id="class-description">
 <dl class="notes">
+<dt>All Superinterfaces:</dt>
+<dd><code><a href="LegacyQueryService.html" title="interface in com.djrapitops.plan.query">LegacyQueryService</a></code></dd>
+</dl>
+<dl class="notes">
 <dt>All Known Implementing Classes:</dt>
 <dd><code><a href="QuerySvc.html" title="class in com.djrapitops.plan.query">QuerySvc</a></code></dd>
 </dl>
 <hr>
 <div class="horizontal-scroll">
-<div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">QueryService</span></div>
+<div class="type-signature"><span class="modifiers">public interface </span><span class="element-name type-name-label">QueryService</span><span class="extends-implements">
+extends <a href="LegacyQueryService.html" title="interface in com.djrapitops.plan.query">LegacyQueryService</a></span></div>
 <div class="block">Service for Query API.
 <p>
 Requires Capability QUERY_API</div>
@@ -255,6 +260,8 @@ Does not block thread, SQL is executed in a single transaction to the database.
 <p>
 Differs from <a href="#query(java.lang.String,com.djrapitops.plan.query.QueryService.ThrowingFunction)"><code>query(String, ThrowingFunction)</code></a> in that no results are returned.</div>
 <dl class="notes">
+<dt>Specified by:</dt>
+<dd><code><a href="LegacyQueryService.html#execute(java.lang.String,com.djrapitops.plan.query.QueryService.ThrowingConsumer)">execute</a></code>&nbsp;in interface&nbsp;<code><a href="LegacyQueryService.html" title="interface in com.djrapitops.plan.query">LegacyQueryService</a></code></dd>
 <dt>Parameters:</dt>
 <dd><code>sql</code> - SQL String to execute, can contain parameterized queries (<code>?</code>).</dd>
 <dd><code>performStatement</code> - set your parameters to the PreparedStatement and execute the statement.</dd>
