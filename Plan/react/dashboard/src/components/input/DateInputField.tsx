@@ -55,7 +55,12 @@ const isValidDate = (value: string) => {
     const parsedDay = Number(d[1]);
     const parsedMonth = Number(d[2]) - 1; // 0=January, 11=December
     const parsedYear = Number(d[3]);
-    return new Date(parsedYear, parsedMonth, parsedDay);
+    const date = new Date(parsedYear, parsedMonth, parsedDay);
+    return (
+        date.getFullYear() === parsedYear &&
+        date.getMonth() === parsedMonth &&
+        date.getDate() === parsedDay
+    );
 };
 
 const correctDate = (value: string) => {

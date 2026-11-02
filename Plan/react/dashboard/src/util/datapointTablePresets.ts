@@ -55,15 +55,18 @@ export type PeriodUnit = 'hour' | 'day' | 'week' | 'month' | 'range';
 
 export type TimeframeColumn = {
     key: string;
-    filter: { after: number; before?: number };
+    filter: { after: number; before: number };
     period: { start: number; end: number; unit: PeriodUnit };
 };
 
 export type CustomRange = { from?: string; to?: string };
 
-const HOUR_MS = 60 * 60 * 1000;
+const MINUTE_MS = 60 * 1000;
+const HOUR_MS = 60 * MINUTE_MS;
 
-const DAY_PATTERN = /^(\d{2})\/(\d{2})\/(\d{4,5})$/;
+const DAY_PATTERN = /^(\d{2})\/(\d{2})\/(\d{4})$/;
+
+const MIN_YEAR = 1970;
 
 export const parseDay = (value?: string): moment.Moment | undefined => {
     if (!value) return undefined;
@@ -74,7 +77,11 @@ export const parseDay = (value?: string): moment.Moment | undefined => {
         Number(match[2]) - 1,
         Number(match[1]),
     ]);
-    return day.isValid() && day.date() === Number(match[1]) ? day : undefined;
+    return day.isValid() &&
+        day.date() === Number(match[1]) &&
+        day.year() >= MIN_YEAR
+        ? day
+        : undefined;
 };
 
 export const formatDay = (day: moment.Moment) => day.format('DD/MM/YYYY');
@@ -97,10 +104,7 @@ const toColumns = (
         const nextStart = instants[i + 1];
         return {
             key: `${unit}-${after}`,
-            filter:
-                nextStart > nowEpochMs
-                    ? { after }
-                    : { after, before: nextStart },
+            filter: { after, before: nextStart },
             period: {
                 start: start.valueOf(),
                 end: boundaries[i + 1].valueOf(),
@@ -136,20 +140,17 @@ const lastHours = (
     nowEpochMs: number,
     zone: ServerTimeZone,
 ): TimeframeColumn[] => {
-    const currentHour = fromServerWallClock(
-        toServerWallClock(nowEpochMs, zone).startOf('hour'),
-        zone,
-    );
+    const nowMinute =
+        nowEpochMs - (((nowEpochMs % MINUTE_MS) + MINUTE_MS) % MINUTE_MS);
+    const currentHour =
+        nowMinute - toServerWallClock(nowEpochMs, zone).minutes() * MINUTE_MS;
     return Array.from({ length: count }, (_, i) => {
         const after = currentHour - (count - 1 - i) * HOUR_MS;
         const nextStart = after + HOUR_MS;
         const start = toServerWallClock(after, zone).valueOf();
         return {
             key: `hour-${after}`,
-            filter:
-                nextStart > nowEpochMs
-                    ? { after }
-                    : { after, before: nextStart },
+            filter: { after, before: nextStart },
             period: { start, end: start + HOUR_MS, unit: 'hour' },
         };
     });

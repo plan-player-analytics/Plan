@@ -1,4 +1,10 @@
-import React, { useCallback, useMemo, useRef, useState } from 'react';
+import React, {
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+    useState,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { Col, Row } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -112,7 +118,12 @@ export const useDatapointTimeframe = (
     const [timeframe, setTimeframe] = useState<StoredTimeframe>(() =>
         loadStored(tableId, presets),
     );
+    const [invalidFields, setInvalidFields] = useState<string[]>([]);
     const lastValidCustom = useRef<TimeframeColumn[] | undefined>(undefined);
+
+    useEffect(() => {
+        if (!staticSite) store(tableId, timeframe);
+    }, [tableId, timeframe]);
 
     const zone = useMemo(
         () =>
@@ -126,42 +137,51 @@ export const useDatapointTimeframe = (
         [metadata],
     );
 
-    const update = useCallback(
-        (next: StoredTimeframe) => {
-            setTimeframe(next);
-            store(tableId, next);
-        },
-        [tableId],
-    );
-
     const selectPreset = useCallback(
         (preset: TimeframePreset) => {
-            if (preset === 'custom' && !timeframe.customRanges && zone) {
-                update({
-                    preset,
-                    customRanges: defaultCustomRanges(
-                        Date.now(),
-                        zone,
-                        firstDay ?? 1,
-                    ),
-                });
-            } else {
-                update({ ...timeframe, preset });
-            }
+            setInvalidFields([]);
+            setTimeframe((previous) =>
+                preset === 'custom' && !previous.customRanges && zone
+                    ? {
+                          preset,
+                          customRanges: defaultCustomRanges(
+                              Date.now(),
+                              zone,
+                              firstDay ?? 1,
+                          ),
+                      }
+                    : { ...previous, preset },
+            );
         },
-        [timeframe, zone, firstDay, update],
+        [zone, firstDay],
     );
 
     const setCustomDay = useCallback(
         (index: number, part: keyof CustomRange, value?: string) => {
-            const customRanges = (timeframe.customRanges || [{}, {}]).map(
-                (range, i) =>
-                    i === index ? { ...range, [part]: value } : range,
-            );
-            update({ ...timeframe, customRanges });
+            setTimeframe((previous) => ({
+                ...previous,
+                customRanges: (previous.customRanges || [{}, {}]).map(
+                    (range, i) =>
+                        i === index ? { ...range, [part]: value } : range,
+                ),
+            }));
         },
-        [timeframe, update],
+        [],
     );
+
+    const setFieldInvalid = useCallback((fieldId: string) => {
+        setInvalidFields((previous) =>
+            previous.includes(fieldId) ? previous : [...previous, fieldId],
+        );
+    }, []);
+
+    const setFieldValid = useCallback((fieldId: string) => {
+        setInvalidFields((previous) =>
+            previous.includes(fieldId)
+                ? previous.filter((id) => id !== fieldId)
+                : previous,
+        );
+    }, []);
 
     const calculated = useMemo(() => {
         if (timeframe.preset === 'default' || !zone) return undefined;
@@ -174,8 +194,10 @@ export const useDatapointTimeframe = (
         );
     }, [timeframe, zone, firstDay, updateRequested]);
 
-    const invalidCustom = timeframe.preset === 'custom' && !calculated;
-    if (timeframe.preset === 'custom' && calculated) {
+    const invalidCustom =
+        timeframe.preset === 'custom' &&
+        (!calculated || invalidFields.length > 0);
+    if (!invalidCustom && timeframe.preset === 'custom' && calculated) {
         lastValidCustom.current = calculated;
     }
     const timeframeColumns = invalidCustom
@@ -198,6 +220,8 @@ export const useDatapointTimeframe = (
         selectPreset,
         customRanges: timeframe.customRanges,
         setCustomDay,
+        setFieldInvalid,
+        setFieldValid,
         invalidCustom,
         columns,
     };
@@ -264,8 +288,8 @@ export const CustomTimeframeInputs = ({
                                 timeframe.setCustomDay(index, 'from', value)
                             }
                             rangeEnd={range.to}
-                            setAsInvalid={() => {}}
-                            setAsValid={() => {}}
+                            setAsInvalid={timeframe.setFieldInvalid}
+                            setAsValid={timeframe.setFieldValid}
                         />
                     </Col>
                     <Col md={'auto'} className='p-0'>
@@ -280,8 +304,8 @@ export const CustomTimeframeInputs = ({
                                 timeframe.setCustomDay(index, 'to', value)
                             }
                             rangeStart={range.from}
-                            setAsInvalid={() => {}}
-                            setAsValid={() => {}}
+                            setAsInvalid={timeframe.setFieldInvalid}
+                            setAsValid={timeframe.setFieldValid}
                         />
                     </Col>
                 </Row>
