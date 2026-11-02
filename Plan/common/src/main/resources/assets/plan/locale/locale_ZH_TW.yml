@@ -1050,6 +1050,21 @@ html:
             pluginGroup:
                 name: "分組："
                 text: "處於 {{plugin}} 插件的 {{group}} 分組中"
+            preset:
+                allData: "All data"
+                currentMonth: "Current month"
+                currentWeek: "Current week"
+                currentYear: "Current year"
+                custom: "Custom"
+                label: "Date range preset"
+                last24h: "Last 24 hours"
+                last30days: "Last 30 days"
+                last7days: "Last 7 days"
+                previousMonth: "Previous month"
+                previousWeek: "Previous week"
+                previousYear: "Previous year"
+                today: "Current day"
+                yesterday: "Yesterday"
             registeredAfter:
                 text: "註冊時間晚於"
             registeredBefore:

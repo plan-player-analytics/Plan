@@ -9,6 +9,7 @@ import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 
 const SingleDateFilter = ({
     index,
+    fieldId,
     label,
     filter,
     removeFilter,
@@ -49,7 +50,7 @@ const SingleDateFilter = ({
             <Row className={'my-2 justify-content-start'}>
                 <Col md={3} sm={6}>
                     <DateInputField
-                        id={'filter-' + index + '-date'}
+                        id={fieldId + '-date'}
                         value={fromDate}
                         setValue={setFromDate}
                         placeholder={options.before[0]}
@@ -59,7 +60,7 @@ const SingleDateFilter = ({
                 </Col>
                 <Col md={2} sm={6}>
                     <TimeInputField
-                        id={'filter-' + index + '-time'}
+                        id={fieldId + '-time'}
                         value={fromTime}
                         setValue={setFromTime}
                         placeholder={options.before[1]}

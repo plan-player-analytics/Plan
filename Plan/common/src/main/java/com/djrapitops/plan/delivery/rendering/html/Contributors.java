@@ -127,6 +127,7 @@ public class Contributors {
             new Contributor("angela0930", LANG),
             new Contributor("OutHimic", LANG),
             new Contributor("bobhenl", CODE),
+            new Contributor("Almost10", CODE),
     };
 
     private Contributors() {

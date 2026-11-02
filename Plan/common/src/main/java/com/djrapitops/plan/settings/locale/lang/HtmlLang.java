@@ -627,7 +627,21 @@ public enum HtmlLang implements Lang {
     FILTER_ACTIVITY_INDEX_ON_DATE("html.query.filter.title.activityGroupOnDate", "Activity group on date"),
     FILTER_PLAYED_ON_DATE("html.query.filter.hasPlayedOnDate.name", "Has played on date"),
     FILTER_BANNED("html.query.filter.banStatus.name", "Ban status"),
-    FILTER_OPS("html.query.filter.operatorStatus.name", "Operator status");
+    FILTER_OPS("html.query.filter.operatorStatus.name", "Operator status"),
+    FILTER_DATE_PRESET_LABEL("html.query.filter.preset.label", "Date range preset"),
+    FILTER_DATE_PRESET_ALL_DATA("html.query.filter.preset.allData", "All data"),
+    FILTER_DATE_PRESET_CUSTOM("html.query.filter.preset.custom", "Custom"),
+    FILTER_DATE_PRESET_LAST_30_DAYS("html.query.filter.preset.last30days", "Last 30 days"),
+    FILTER_DATE_PRESET_LAST_7_DAYS("html.query.filter.preset.last7days", "Last 7 days"),
+    FILTER_DATE_PRESET_LAST_24H("html.query.filter.preset.last24h", "Last 24 hours"),
+    FILTER_DATE_PRESET_CURRENT_MONTH("html.query.filter.preset.currentMonth", "Current month"),
+    FILTER_DATE_PRESET_PREVIOUS_MONTH("html.query.filter.preset.previousMonth", "Previous month"),
+    FILTER_DATE_PRESET_CURRENT_WEEK("html.query.filter.preset.currentWeek", "Current week"),
+    FILTER_DATE_PRESET_PREVIOUS_WEEK("html.query.filter.preset.previousWeek", "Previous week"),
+    FILTER_DATE_PRESET_TODAY("html.query.filter.preset.today", "Current day"),
+    FILTER_DATE_PRESET_YESTERDAY("html.query.filter.preset.yesterday", "Yesterday"),
+    FILTER_DATE_PRESET_CURRENT_YEAR("html.query.filter.preset.currentYear", "Current year"),
+    FILTER_DATE_PRESET_PREVIOUS_YEAR("html.query.filter.preset.previousYear", "Previous year");
 
     private final String key;
     private final String defaultValue;

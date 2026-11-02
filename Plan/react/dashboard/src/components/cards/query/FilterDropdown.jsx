@@ -4,12 +4,13 @@ import { Dropdown } from 'react-bootstrap';
 import { faPlus } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
 import Scrollable from '../../Scrollable.tsx';
+import { withFilterKey } from './FilterList';
 
 const FilterDropdown = ({ filterOptions, filters, setFilters }) => {
     const { t } = useTranslation();
 
     const addFilter = (filter) => {
-        setFilters([...filters, filter]);
+        setFilters([...filters, withFilterKey(filter)]);
     };
 
     const getReadableFilterName = (filter) => {

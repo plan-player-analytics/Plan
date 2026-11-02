@@ -8,6 +8,7 @@ import MultipleChoiceOnDateFilter from './MultipleChoiceOnDateFilter.jsx';
 
 const Filter = ({
     index,
+    fieldId,
     filter,
     setFilterOptions,
     removeFilter,
@@ -43,6 +44,7 @@ const Filter = ({
             return (
                 <MultipleChoiceOnDateFilter
                     index={index}
+                    fieldId={fieldId}
                     filter={filter}
                     label={'html.query.filter.activity.text'}
                     setFilterOptions={setFilterOptions}
@@ -107,6 +109,7 @@ const Filter = ({
             return (
                 <BetweenDatesFilter
                     index={index}
+                    fieldId={fieldId}
                     filter={filter}
                     label={'html.query.filter.playedBetween.text'}
                     setFilterOptions={setFilterOptions}
@@ -119,6 +122,7 @@ const Filter = ({
             return (
                 <SingleDateFilter
                     index={index}
+                    fieldId={fieldId}
                     filter={filter}
                     label={'html.query.filter.hasPlayedOnDate.name'}
                     setFilterOptions={setFilterOptions}
@@ -131,6 +135,7 @@ const Filter = ({
             return (
                 <BetweenDatesFilter
                     index={index}
+                    fieldId={fieldId}
                     filter={filter}
                     label={'html.query.filter.registeredBetween.text'}
                     setFilterOptions={setFilterOptions}
@@ -143,6 +148,7 @@ const Filter = ({
             return (
                 <BetweenDatesFilter
                     index={index}
+                    fieldId={fieldId}
                     filter={filter}
                     label={'html.query.filter.lastSeenBetween.text'}
                     setFilterOptions={setFilterOptions}

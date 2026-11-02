@@ -16,7 +16,7 @@ import 'highcharts/modules/accessibility';
 import MultiSelect from '../../input/MultiSelect.tsx';
 import CollapseWithButton from '../../layout/CollapseWithButton.tsx';
 import FilterDropdown from './FilterDropdown';
-import FilterList from './FilterList';
+import FilterList, { withFilterKey } from './FilterList';
 import { useQueryResultContext } from '../../../hooks/queryResultContext.tsx';
 import { useNavigate } from 'react-router';
 import { useNavigation } from '../../../hooks/navigationHook.tsx';
@@ -71,13 +71,23 @@ const QueryOptionsCard = () => {
     // View state handling
     const [invalidFields, setInvalidFields] = useState([]);
     const setAsInvalid = useCallback(
-        (id) => setInvalidFields([...invalidFields, id]),
-        [setInvalidFields, invalidFields],
+        (id) => setInvalidFields((fields) => [...fields, id]),
+        [setInvalidFields],
     );
     const setAsValid = useCallback(
         (id) =>
-            setInvalidFields(invalidFields.filter((invalid) => id !== invalid)),
-        [setInvalidFields, invalidFields],
+            setInvalidFields((fields) =>
+                fields.filter((invalid) => id !== invalid),
+            ),
+        [setInvalidFields],
+    );
+
+    const clearInvalidFields = useCallback(
+        (prefix) =>
+            setInvalidFields((fields) =>
+                fields.filter((invalid) => !invalid.startsWith(prefix)),
+            ),
+        [setInvalidFields],
     );
 
     const [extremes, setExtremes] = useState(undefined);
@@ -148,7 +158,7 @@ const QueryOptionsCard = () => {
                     (fo) => fo.kind === f.kind,
                 ).options),
         );
-        setFilters(existingFilters);
+        setFilters(existingFilters.map(withFilterKey));
 
         setExtremes({
             min: parseTimeAsUTC(
@@ -320,6 +330,7 @@ const QueryOptionsCard = () => {
                             setFilters={setFilters}
                             setAsInvalid={setAsInvalid}
                             setAsValid={setAsValid}
+                            clearInvalidFields={clearInvalidFields}
                         />
                     </Col>
                 </Row>

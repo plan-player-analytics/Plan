@@ -28,8 +28,11 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TimeZone;
+import java.util.concurrent.TimeUnit;
 
 public abstract class DateRangeFilter implements Filter {
 
@@ -51,7 +54,7 @@ public abstract class DateRangeFilter implements Filter {
         @Untrusted String time = query.get(timeKey).orElseThrow(() -> new BadRequestException("'" + timeKey + "' not specified in parameters for " + kind));
 
         try {
-            return new SimpleDateFormat(DATE_FORMAT).parse(date + ' ' + time).getTime();
+            return new SimpleDateFormat(DATE_FORMAT, Locale.ROOT).parse(date + ' ' + time).getTime();
         } catch (@Untrusted ParseException e) {
             throw new IllegalArgumentException("Could not parse date from given '" + dateKey + "' and '" + timeKey + "' - expected format dd/MM/yyyy and kk:mm");
         }
@@ -60,12 +63,15 @@ public abstract class DateRangeFilter implements Filter {
     public static Map<String, Object> getOptions(Database database) {
         Optional<Long> earliestData = database.query(BaseUserQueries.minimumRegisterDate());
         long now = System.currentTimeMillis();
-        SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT);
+        SimpleDateFormat formatter = new SimpleDateFormat(DATE_FORMAT, Locale.ROOT);
+        TimeZone timeZone = formatter.getTimeZone();
         String[] afterDate = StringUtils.split(formatter.format(earliestData.orElse(now)), ' ');
         String[] beforeDate = StringUtils.split(formatter.format(now), ' ');
         return Maps.builder(String.class, Object.class)
                 .put("after", afterDate)
                 .put("before", beforeDate)
+                .put("timeZone", timeZone.getID())
+                .put("timeZoneOffsetMs", timeZone.getOffset(now))
                 .build();
     }
 
@@ -96,6 +102,6 @@ public abstract class DateRangeFilter implements Filter {
         if (query.get(BEFORE_DATE).isEmpty() || query.get(BEFORE_TIME).isEmpty()) {
             return Long.MAX_VALUE;
         }
-        return getTime(query, BEFORE_DATE, BEFORE_TIME, getKind());
+        return getTime(query, BEFORE_DATE, BEFORE_TIME, getKind()) + TimeUnit.MINUTES.toMillis(1L) - 1L;
     }
 }

@@ -8,9 +8,15 @@ import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import OutlineButton from '../../../input/button/OutlineButton.tsx';
 import Checkbox from '../../../input/Checkbox.tsx';
 import { InlinedRow } from '../../../layout/InlinedRow.tsx';
+import { usePreferences } from '../../../../hooks/preferences/preferencesHook.tsx';
+import {
+    calculatePresetRange,
+    DATE_RANGE_PRESETS,
+} from '../../../../util/queryDatePresets.ts';
 
 const BetweenDatesFilter = ({
     index,
+    fieldId,
     label,
     filter,
     removeFilter,
@@ -25,6 +31,14 @@ const BetweenDatesFilter = ({
             : t('html.query.filter.generic.and');
 
     const options = filter.options;
+    const { firstDay } = usePreferences();
+
+    const [preset, setPreset] = useState(
+        filter.parameters && Object.keys(filter.parameters).length
+            ? 'custom'
+            : 'allData',
+    );
+    const [inputResetCount, setInputResetCount] = useState(0);
 
     const [fromDateEnabled, setFromDateEnabled] = useState(true);
     const [fromDate, setFromDate] = useState(
@@ -46,15 +60,54 @@ const BetweenDatesFilter = ({
             setToDateEnabled(true);
         }
         setFromDateEnabled(!fromDateEnabled);
+        setPreset('custom');
     };
     const toggleToDate = () => {
         if (!fromDateEnabled && toDateEnabled) {
             setFromDateEnabled(true);
         }
         setToDateEnabled(!toDateEnabled);
+        setPreset('custom');
+    };
+
+    const editedBy = (setter) => (value) => {
+        setter(value);
+        setPreset('custom');
+    };
+
+    const selectPreset = (event) => {
+        const selected = event.target.value;
+        setPreset(selected);
+        if (selected === 'custom') return;
+
+        const range =
+            selected === 'allData'
+                ? { after: options.after, before: options.before }
+                : calculatePresetRange(
+                      selected,
+                      Date.now(),
+                      options,
+                      firstDay ?? 1,
+                  );
+        if (!range) return;
+
+        setFromDateEnabled(true);
+        setToDateEnabled(true);
+        setFromDate(range.after[0]);
+        setFromTime(range.after[1]);
+        setToDate(range.before[0]);
+        setToTime(range.before[1]);
+        ['-from-date', '-from-time', '-to-date', '-to-time'].forEach((suffix) =>
+            setAsValid(fieldId + suffix),
+        );
+        setInputResetCount(inputResetCount + 1);
     };
 
     useEffect(() => {
+        if (preset === 'allData') {
+            setFilterOptions({ ...filter, parameters: {} });
+            return;
+        }
         const after = fromDateEnabled
             ? {
                   afterDate: fromDate,
@@ -73,6 +126,7 @@ const BetweenDatesFilter = ({
         });
     }, [
         setFilterOptions,
+        preset,
         fromDateEnabled,
         fromDate,
         fromTime,
@@ -88,9 +142,23 @@ const BetweenDatesFilter = ({
 
     return (
         <div id={'filter-' + index} className='mt-2'>
-            <label>
-                {select} {t(actualLabel)}:
-            </label>
+            <InlinedRow>
+                <label>
+                    {select} {t(actualLabel)}:
+                </label>
+                <select
+                    id={fieldId + '-preset'}
+                    className='form-select form-select-sm w-auto ms-2'
+                    aria-label={t('html.query.filter.preset.label')}
+                    value={preset}
+                    onChange={selectPreset}>
+                    {DATE_RANGE_PRESETS.map((option) => (
+                        <option key={option.name} value={option.name}>
+                            {t(option.label)}
+                        </option>
+                    ))}
+                </select>
+            </InlinedRow>
             <Row className={'my-2 justify-content-start'}>
                 <Col md={3} sm={6}>
                     <InlinedRow>
@@ -99,9 +167,10 @@ const BetweenDatesFilter = ({
                             onChange={toggleFromDate}
                         />
                         <DateInputField
-                            id={'filter-' + index + '-from-date'}
+                            key={inputResetCount}
+                            id={fieldId + '-from-date'}
                             value={fromDate}
-                            setValue={setFromDate}
+                            setValue={editedBy(setFromDate)}
                             placeholder={options.after[0]}
                             setAsInvalid={setAsInvalid}
                             setAsValid={setAsValid}
@@ -112,9 +181,10 @@ const BetweenDatesFilter = ({
                 </Col>
                 <Col md={2} sm={6}>
                     <TimeInputField
-                        id={'filter-' + index + '-from-time'}
+                        key={inputResetCount}
+                        id={fieldId + '-from-time'}
                         value={fromTime}
-                        setValue={setFromTime}
+                        setValue={editedBy(setFromTime)}
                         placeholder={options.after[1]}
                         setAsInvalid={setAsInvalid}
                         setAsValid={setAsValid}
@@ -134,9 +204,10 @@ const BetweenDatesFilter = ({
                             onChange={toggleToDate}
                         />
                         <DateInputField
-                            id={'filter-' + index + '-to-date'}
+                            key={inputResetCount}
+                            id={fieldId + '-to-date'}
                             value={toDate}
-                            setValue={setToDate}
+                            setValue={editedBy(setToDate)}
                             placeholder={options.before[0]}
                             setAsInvalid={setAsInvalid}
                             setAsValid={setAsValid}
@@ -147,9 +218,10 @@ const BetweenDatesFilter = ({
                 </Col>
                 <Col md={2} sm={6}>
                     <TimeInputField
-                        id={'filter-' + index + '-to-time'}
+                        key={inputResetCount}
+                        id={fieldId + '-to-time'}
                         value={toTime}
-                        setValue={setToTime}
+                        setValue={editedBy(setToTime)}
                         placeholder={options.before[1]}
                         setAsInvalid={setAsInvalid}
                         setAsValid={setAsValid}

@@ -1,13 +1,28 @@
 import React from 'react';
 import Filter from './filter/Filter';
 
-const FilterList = ({ filters, setFilters, setAsInvalid, setAsValid }) => {
+let filterKeyCounter = 0;
+export const withFilterKey = (filter) => ({
+    ...filter,
+    uiKey: 'filter-key-' + filterKeyCounter++,
+});
+
+const FilterList = ({
+    filters,
+    setFilters,
+    setAsInvalid,
+    setAsValid,
+    clearInvalidFields,
+}) => {
     const updateFilterOptions = (index, newOptions) => {
         filters[index] = newOptions;
         setFilters(filters);
     };
 
+    const getFieldId = (filter, index) => filter.uiKey || 'filter-' + index;
+
     const removeFilter = (index) => {
+        clearInvalidFields(getFieldId(filters[index], index) + '-');
         setFilters(filters.filter((f, i) => i !== index));
     };
 
@@ -36,10 +51,11 @@ const FilterList = ({ filters, setFilters, setAsInvalid, setAsValid }) => {
     return (
         <ul id={'filters'} className={'filters'}>
             {filters.map((filter, i) => (
-                <li key={'filter-' + i} className={'filter'}>
+                <li key={getFieldId(filter, i)} className={'filter'}>
                     <Filter
                         filter={filter}
                         index={i}
+                        fieldId={getFieldId(filter, i)}
                         setFilterOptions={(newOptions) =>
                             updateFilterOptions(i, newOptions)
                         }
