@@ -45,6 +45,13 @@ export const PermissionDropdown = ({
                     }>
                     <summary
                         onClick={(event) => {
+                            if (
+                                event.target instanceof HTMLElement &&
+                                (event.target.tagName === 'INPUT' ||
+                                    event.target.closest('label'))
+                            ) {
+                                return;
+                            }
                             event.preventDefault();
                             toggle(permission);
                         }}>
