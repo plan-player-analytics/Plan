@@ -89,8 +89,7 @@ const GroupsBody = ({ groups, reloadGroupNames }) => {
                 <Scrollable>
                     {permissionTree?.children?.length && (
                         <PermissionTree
-                            nodes={[permissionTree]}
-                            childNodes={permissionTree.children}
+                            nodes={permissionTree.children}
                             togglePermission={togglePermission}
                             isChecked={isChecked}
                             isIndeterminate={isIndeterminate}

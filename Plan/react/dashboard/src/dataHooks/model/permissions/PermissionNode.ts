@@ -3,4 +3,5 @@ export type PermissionNode = {
     parentIndex: number;
     children: PermissionNode[];
     toggled: boolean;
+    parent?: PermissionNode | null;
 };
