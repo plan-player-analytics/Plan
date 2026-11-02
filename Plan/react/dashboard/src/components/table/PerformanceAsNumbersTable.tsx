@@ -15,7 +15,7 @@ import {
 import React from 'react';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
-import { QueryDatapointTable } from './QueryDatapointTable';
+import { Column, QueryDatapointTable } from './QueryDatapointTable';
 import { MS_24H, MS_MONTH, MS_WEEK } from '../../util/format/useDateFormatter';
 import { DatapointType } from '../../dataHooks/model/datapoint/Datapoint';
 import { OnlineActivityType } from '../../dataHooks/model/GenericFilter';
@@ -23,9 +23,10 @@ import { Server } from '../../hooks/model/Metadata';
 
 type Props = {
     servers: Server[];
+    columns?: Column[];
 };
 
-const PerformanceAsNumbersTable = ({ servers }: Props) => {
+const PerformanceAsNumbersTable = ({ servers, columns }: Props) => {
     const { t } = useTranslation();
 
     const dataIncludesGameServers =
@@ -47,49 +48,51 @@ const PerformanceAsNumbersTable = ({ servers }: Props) => {
     return (
         <QueryDatapointTable
             filter={{ server: servers.map((s) => s.serverUUID) }}
-            columns={[
-                {
-                    key: '30d',
-                    filter: { afterMillisAgo: MS_MONTH },
-                },
-                {
-                    key: '7d-1',
-                    filter: {
-                        afterMillisAgo: MS_WEEK * 4,
-                        beforeMillisAgo: MS_WEEK * 3,
+            columns={
+                columns ?? [
+                    {
+                        key: '30d',
+                        filter: { afterMillisAgo: MS_MONTH },
                     },
-                    label: t('html.label.time.week') + ' 1',
-                },
-                {
-                    key: '7d-2',
-                    filter: {
-                        afterMillisAgo: MS_WEEK * 3,
-                        beforeMillisAgo: MS_WEEK * 2,
+                    {
+                        key: '7d-1',
+                        filter: {
+                            afterMillisAgo: MS_WEEK * 4,
+                            beforeMillisAgo: MS_WEEK * 3,
+                        },
+                        label: t('html.label.time.week') + ' 1',
                     },
-                    label: t('html.label.time.week') + ' 2',
-                },
-                {
-                    key: '7d-3',
-                    filter: {
-                        afterMillisAgo: MS_WEEK * 2,
-                        beforeMillisAgo: MS_WEEK,
+                    {
+                        key: '7d-2',
+                        filter: {
+                            afterMillisAgo: MS_WEEK * 3,
+                            beforeMillisAgo: MS_WEEK * 2,
+                        },
+                        label: t('html.label.time.week') + ' 2',
                     },
-                    label: t('html.label.time.week') + ' 3',
-                },
-                {
-                    key: '7d-4',
-                    filter: { afterMillisAgo: MS_WEEK },
-                    label:
-                        t('html.label.time.week') +
-                        ' 4 (' +
-                        t('html.label.last7days') +
-                        ')',
-                },
-                {
-                    key: '1d',
-                    filter: { afterMillisAgo: MS_24H },
-                },
-            ]}
+                    {
+                        key: '7d-3',
+                        filter: {
+                            afterMillisAgo: MS_WEEK * 2,
+                            beforeMillisAgo: MS_WEEK,
+                        },
+                        label: t('html.label.time.week') + ' 3',
+                    },
+                    {
+                        key: '7d-4',
+                        filter: { afterMillisAgo: MS_WEEK },
+                        label:
+                            t('html.label.time.week') +
+                            ' 4 (' +
+                            t('html.label.last7days') +
+                            ')',
+                    },
+                    {
+                        key: '1d',
+                        filter: { afterMillisAgo: MS_24H },
+                    },
+                ]
+            }
             rows={[
                 {
                     // TODO Total and average/server downtime and uptime

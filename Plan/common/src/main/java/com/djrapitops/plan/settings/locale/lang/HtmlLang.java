@@ -641,7 +641,19 @@ public enum HtmlLang implements Lang {
     FILTER_DATE_PRESET_TODAY("html.query.filter.preset.today", "Current day"),
     FILTER_DATE_PRESET_YESTERDAY("html.query.filter.preset.yesterday", "Yesterday"),
     FILTER_DATE_PRESET_CURRENT_YEAR("html.query.filter.preset.currentYear", "Current year"),
-    FILTER_DATE_PRESET_PREVIOUS_YEAR("html.query.filter.preset.previousYear", "Previous year");
+    FILTER_DATE_PRESET_PREVIOUS_YEAR("html.query.filter.preset.previousYear", "Previous year"),
+    TIMEFRAME_COLUMN("html.label.timeframe.column", "Column {{number}}"),
+    TIMEFRAME_CURRENT_MONTH_BY_WEEK("html.label.timeframe.currentMonthByWeek", "Current month, by week"),
+    TIMEFRAME_CUSTOM("html.label.timeframe.custom", "Custom"),
+    TIMEFRAME_DEFAULT("html.label.timeframe.default", "Default"),
+    TIMEFRAME_INVALID_RANGE("html.label.timeframe.invalidRange", "Each column needs a start date on or before its end date"),
+    TIMEFRAME_LABEL("html.label.timeframe.label", "Timeframe"),
+    TIMEFRAME_LAST_6_HOURS("html.label.timeframe.last6Hours", "Last 6 hours, by hour"),
+    TIMEFRAME_LAST_6_MONTHS("html.label.timeframe.last6Months", "Last 6 months, by month"),
+    TIMEFRAME_LAST_7_DAYS("html.label.timeframe.last7Days", "Last 7 days, by day"),
+    TIMEFRAME_PREVIOUS_AND_CURRENT_MONTH("html.label.timeframe.previousAndCurrentMonth", "Previous and current month"),
+    TIMEFRAME_PREVIOUS_AND_CURRENT_WEEK("html.label.timeframe.previousAndCurrentWeek", "Previous and current week"),
+    TIMEFRAME_PREVIOUS_MONTH_BY_WEEK("html.label.timeframe.previousMonthByWeek", "Previous month, by week");
 
     private final String key;
     private final String defaultValue;

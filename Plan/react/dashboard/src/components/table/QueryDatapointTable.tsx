@@ -18,9 +18,9 @@ import { useAuth } from '../../hooks/authenticationHook';
 import { useTranslation } from 'react-i18next';
 import { MS_24H, MS_MONTH, MS_WEEK } from '../../util/format/useDateFormatter';
 
-type Column = {
+export type Column = {
     filter: GenericFilter;
-    label?: string;
+    label?: React.ReactNode;
     key: string;
 };
 
@@ -92,6 +92,7 @@ export const QueryDatapointTable = ({
     const { t } = useTranslation();
     const { nightModeEnabled } = useTheme();
     const { hasPermission } = useAuth();
+    const trendShown = showTrend && columns.length === 2;
 
     return (
         <table
@@ -112,7 +113,7 @@ export const QueryDatapointTable = ({
                             label={column.label}
                         />
                     ))}
-                    {showTrend && <th>{t('html.label.trend')}</th>}
+                    {trendShown && <th>{t('html.label.trend')}</th>}
                 </tr>
             </thead>
             <tbody>
@@ -157,7 +158,7 @@ export const QueryDatapointTable = ({
                                     />
                                 </td>
                             ))}
-                            {showTrend && (
+                            {trendShown && (
                                 <td>
                                     <QueryDatapointTrend
                                         filter={{

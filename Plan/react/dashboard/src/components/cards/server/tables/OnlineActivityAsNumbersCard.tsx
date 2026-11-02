@@ -4,19 +4,37 @@ import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faBookOpen } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
 import OnlineActivityAsNumbersTable from '../../../table/OnlineActivityAsNumbersTable';
+import {
+    CustomTimeframeInputs,
+    TimeframeSelect,
+    useDatapointTimeframe,
+} from '../../../table/DatapointTimeframe';
+import { ALL_TIMEFRAME_PRESETS } from '../../../../util/datapointTablePresets';
 
 const OnlineActivityAsNumbersCard = () => {
     const { t } = useTranslation();
+    const timeframe = useDatapointTimeframe(
+        'online-activity-numbers',
+        ALL_TIMEFRAME_PRESETS,
+    );
 
     return (
         <Card id={'online-activity-numbers'}>
             <Card.Header>
-                <h6 className='col-text'>
+                <h6 className='col-text' style={{ width: '100%' }}>
                     <Fa icon={faBookOpen} className='col-players-unique' />{' '}
                     {t('html.label.onlineActivityAsNumbers')}
+                    <TimeframeSelect
+                        id={'online-activity-numbers'}
+                        timeframe={timeframe}
+                    />
                 </h6>
             </Card.Header>
-            <OnlineActivityAsNumbersTable />
+            <CustomTimeframeInputs
+                id={'online-activity-numbers'}
+                timeframe={timeframe}
+            />
+            <OnlineActivityAsNumbersTable columns={timeframe.columns} />
         </Card>
     );
 };

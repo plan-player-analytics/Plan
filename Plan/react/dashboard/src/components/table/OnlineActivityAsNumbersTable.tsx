@@ -15,10 +15,14 @@ import {
 import { useNavigation } from '../../hooks/navigationHook';
 import { MS_24H, MS_MONTH, MS_WEEK } from '../../util/format/useDateFormatter';
 import { DatapointType } from '../../dataHooks/model/datapoint/Datapoint';
-import { QueryDatapointTable } from './QueryDatapointTable';
+import { Column, QueryDatapointTable } from './QueryDatapointTable';
 import { useParams } from 'react-router';
 
-const OnlineActivityAsNumbersTable = () => {
+type Props = {
+    columns?: Column[];
+};
+
+const OnlineActivityAsNumbersTable = ({ columns }: Props) => {
     const { t } = useTranslation();
     const { setHelpModalTopic } = useNavigation();
     const { identifier } = useParams();
@@ -30,20 +34,22 @@ const OnlineActivityAsNumbersTable = () => {
     return (
         <QueryDatapointTable
             filter={{ server: identifier }}
-            columns={[
-                {
-                    key: '30d',
-                    filter: { afterMillisAgo: MS_MONTH },
-                },
-                {
-                    key: '7d',
-                    filter: { afterMillisAgo: MS_WEEK },
-                },
-                {
-                    key: '1d',
-                    filter: { afterMillisAgo: MS_24H },
-                },
-            ]}
+            columns={
+                columns ?? [
+                    {
+                        key: '30d',
+                        filter: { afterMillisAgo: MS_MONTH },
+                    },
+                    {
+                        key: '7d',
+                        filter: { afterMillisAgo: MS_WEEK },
+                    },
+                    {
+                        key: '1d',
+                        filter: { afterMillisAgo: MS_24H },
+                    },
+                ]
+            }
             rows={[
                 {
                     dataType: DatapointType.UNIQUE_PLAYERS_COUNT,
