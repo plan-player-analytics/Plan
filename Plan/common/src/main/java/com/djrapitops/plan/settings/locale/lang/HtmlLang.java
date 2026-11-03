@@ -529,6 +529,7 @@ public enum HtmlLang implements Lang {
     MANAGE_TOKEN_IDENTIFIER("html.label.managePage.token.identifier", "Token identifier"),
     MANAGE_TOKEN_VALUE("html.label.managePage.token.value", "Token value"),
     MANAGE_TOKEN_COPY("html.label.managePage.token.copy", "Copy"),
+    MANAGE_TOKEN_MANAGE_PERMISSIONS_WARNING("html.label.managePage.token.managePermissionsWarning", "It is not recommended to grant any of the manage permissions to API tokens."),
 
     THEME_EDITOR_TITLE("html.label.themeEditor.title", "Theme Editor"),
     THEME_EDITOR_COLORS("html.label.themeEditor.colors", "Colors"),

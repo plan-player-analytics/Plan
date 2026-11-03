@@ -1,5 +1,5 @@
 import LoadIn from '../../components/animation/LoadIn';
-import { Card, Col, Row } from 'react-bootstrap';
+import { Alert, Card, Col, Row } from 'react-bootstrap';
 import React, { Suspense, useCallback, useState } from 'react';
 import CardHeader from '../../components/cards/CardHeader';
 import {
@@ -52,17 +52,29 @@ const TokensHeader = ({ label, icon }: { label: string; icon?: any }) => {
     );
 };
 
+const MANAGE_PERMISSIONS = [
+    'manage.groups',
+    'manage.tokens',
+    'manage.users',
+    'manage.themes',
+];
+
 const TokenBody = ({ apiToken }: { apiToken: ApiTokenWithPermissions }) => {
     const { t } = useTranslation();
     const {
         changed,
         permissionTree,
+        permissions,
         togglePermission,
         isChecked,
         isIndeterminate,
         identifier,
         setIdentifier,
     } = useTokenEditContext();
+
+    const hasManagePermission = MANAGE_PERMISSIONS.some((p) =>
+        permissions.includes(p),
+    );
 
     const copyToken = () => {
         navigator.clipboard.writeText(apiToken.token.token);
@@ -107,6 +119,17 @@ const TokenBody = ({ apiToken }: { apiToken: ApiTokenWithPermissions }) => {
                         </TextInput>
                     </Col>
                 </Row>
+
+                {hasManagePermission && (
+                    <div className='mt-3'>
+                        <Alert variant='warning'>
+                            <Fa icon={faExclamationTriangle} />{' '}
+                            {t(
+                                'html.label.managePage.token.managePermissionsWarning',
+                            )}
+                        </Alert>
+                    </div>
+                )}
 
                 <div className='mt-3'>
                     <h4>{t('html.label.managePage.tokenPermissions')}</h4>
