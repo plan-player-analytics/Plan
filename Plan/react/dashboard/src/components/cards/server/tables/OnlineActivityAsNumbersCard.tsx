@@ -5,8 +5,7 @@ import { faBookOpen } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
 import OnlineActivityAsNumbersTable from '../../../table/OnlineActivityAsNumbersTable';
 import {
-    CustomTimeframeInputs,
-    TimeframeSelect,
+    TimeframeControl,
     useDatapointTimeframe,
 } from '../../../table/DatapointTimeframe';
 import { ALL_TIMEFRAME_PRESETS } from '../../../../util/datapointTablePresets';
@@ -21,20 +20,20 @@ const OnlineActivityAsNumbersCard = () => {
     return (
         <Card id={'online-activity-numbers'}>
             <Card.Header>
-                <h6 className='col-text' style={{ width: '100%' }}>
+                <h6 className='col-text'>
                     <Fa icon={faBookOpen} className='col-players-unique' />{' '}
                     {t('html.label.onlineActivityAsNumbers')}
-                    <TimeframeSelect
+                </h6>
+            </Card.Header>
+            <OnlineActivityAsNumbersTable
+                columns={timeframe.columns}
+                headerControl={
+                    <TimeframeControl
                         id={'online-activity-numbers'}
                         timeframe={timeframe}
                     />
-                </h6>
-            </Card.Header>
-            <CustomTimeframeInputs
-                id={'online-activity-numbers'}
-                timeframe={timeframe}
+                }
             />
-            <OnlineActivityAsNumbersTable columns={timeframe.columns} />
         </Card>
     );
 };

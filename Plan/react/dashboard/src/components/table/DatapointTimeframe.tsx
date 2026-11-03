@@ -1,14 +1,8 @@
-import React, {
-    useCallback,
-    useEffect,
-    useMemo,
-    useRef,
-    useState,
-} from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { Col, Row } from 'react-bootstrap';
+import { Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
+import { faArrowRight, faGear } from '@fortawesome/free-solid-svg-icons';
 import DateInputField from '../input/DateInputField';
 import { useMetadata } from '../../hooks/metadataHook';
 import { usePreferences } from '../../hooks/preferences/preferencesHook';
@@ -25,6 +19,11 @@ import {
     TimeframePreset,
 } from '../../util/datapointTablePresets';
 import { Column } from './QueryDatapointTable';
+import {
+    DEFAULT_TIMEFRAME,
+    StoredTimeframe,
+    useStoredTimeframe,
+} from '../../hooks/context/datapointTimeframeContext';
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 
@@ -46,11 +45,21 @@ const createFormatter = (locale: string, unit: PeriodUnit) => {
 };
 
 export const PeriodLabel = ({ period }: Pick<TimeframeColumn, 'period'>) => {
+    const { t } = useTranslation();
     const locale = useI18nFriendlyLanguage();
     const formatter = useMemo(
         () => createFormatter(locale, period.unit),
         [locale, period.unit],
     );
+    if (period.unit === 'hour') {
+        return (
+            formatter.format(period.start) +
+            '–' +
+            (period.untilNow
+                ? t('html.label.now')
+                : formatter.format(period.end))
+        );
+    }
     if (period.unit === 'week' || period.unit === 'range') {
         const lastDay = period.end - DAY_MS;
         if (lastDay > period.start) {
@@ -60,51 +69,15 @@ export const PeriodLabel = ({ period }: Pick<TimeframeColumn, 'period'>) => {
     return formatter.format(period.start);
 };
 
-type StoredTimeframe = {
-    preset: TimeframePreset;
-    customRanges?: CustomRange[];
-};
-
-const storageKey = (tableId: string) => 'datapointTimeframe.' + tableId;
-
 const isDayString = (value: unknown) =>
     value === undefined || typeof value === 'string';
 
-const loadStored = (
-    tableId: string,
-    presets: TimeframePreset[],
-): StoredTimeframe => {
-    if (staticSite) return { preset: 'default' };
-    try {
-        const stored = JSON.parse(
-            globalThis.localStorage.getItem(storageKey(tableId)) || '{}',
-        );
-        if (!presets.includes(stored.preset)) return { preset: 'default' };
-        const customRanges =
-            Array.isArray(stored.customRanges) &&
-            stored.customRanges.length === 2 &&
-            stored.customRanges.every(
-                (range: CustomRange) =>
-                    range && isDayString(range.from) && isDayString(range.to),
-            )
-                ? stored.customRanges
-                : undefined;
-        return { preset: stored.preset, customRanges };
-    } catch {
-        return { preset: 'default' };
-    }
-};
-
-const store = (tableId: string, timeframe: StoredTimeframe) => {
-    try {
-        globalThis.localStorage.setItem(
-            storageKey(tableId),
-            JSON.stringify(timeframe),
-        );
-    } catch {
-        return;
-    }
-};
+const validCustomRanges = (ranges?: CustomRange[]) =>
+    Array.isArray(ranges) &&
+    ranges.length === 2 &&
+    ranges.every(
+        (range) => range && isDayString(range.from) && isDayString(range.to),
+    );
 
 export const useDatapointTimeframe = (
     tableId: string,
@@ -115,15 +88,21 @@ export const useDatapointTimeframe = (
     const { updateRequested } = useNavigation() as {
         updateRequested: number;
     };
-    const [timeframe, setTimeframe] = useState<StoredTimeframe>(() =>
-        loadStored(tableId, presets),
+    const [stored, setTimeframe] = useStoredTimeframe(tableId);
+    const timeframe: StoredTimeframe = useMemo(
+        () =>
+            staticSite || !presets.includes(stored.preset)
+                ? DEFAULT_TIMEFRAME
+                : {
+                      preset: stored.preset,
+                      customRanges: validCustomRanges(stored.customRanges)
+                          ? stored.customRanges
+                          : undefined,
+                  },
+        [stored, presets],
     );
     const [invalidFields, setInvalidFields] = useState<string[]>([]);
     const lastValidCustom = useRef<TimeframeColumn[] | undefined>(undefined);
-
-    useEffect(() => {
-        if (!staticSite) store(tableId, timeframe);
-    }, [tableId, timeframe]);
 
     const zone = useMemo(
         () =>
@@ -153,7 +132,7 @@ export const useDatapointTimeframe = (
                     : { ...previous, preset },
             );
         },
-        [zone, firstDay],
+        [setTimeframe, zone, firstDay],
     );
 
     const setCustomDay = useCallback(
@@ -166,7 +145,7 @@ export const useDatapointTimeframe = (
                 ),
             }));
         },
-        [],
+        [setTimeframe],
     );
 
     const setFieldInvalid = useCallback((fieldId: string) => {
@@ -229,7 +208,7 @@ export const useDatapointTimeframe = (
 
 type Timeframe = ReturnType<typeof useDatapointTimeframe>;
 
-export const TimeframeSelect = ({
+const CustomTimeframeInputs = ({
     id,
     timeframe,
 }: {
@@ -237,49 +216,21 @@ export const TimeframeSelect = ({
     timeframe: Timeframe;
 }) => {
     const { t } = useTranslation();
-    if (staticSite) return null;
-    return (
-        <select
-            id={id + '-timeframe'}
-            className='form-select form-select-sm w-auto d-inline-block float-end'
-            aria-label={t('html.label.timeframe.label')}
-            value={timeframe.preset}
-            onChange={(event) =>
-                timeframe.selectPreset(event.target.value as TimeframePreset)
-            }>
-            {TIMEFRAME_PRESETS.filter((option) =>
-                timeframe.presets.includes(option.name),
-            ).map((option) => (
-                <option key={option.name} value={option.name}>
-                    {t(option.label)}
-                </option>
-            ))}
-        </select>
-    );
-};
-
-export const CustomTimeframeInputs = ({
-    id,
-    timeframe,
-}: {
-    id: string;
-    timeframe: Timeframe;
-}) => {
-    const { t } = useTranslation();
-    if (staticSite || timeframe.preset !== 'custom') return null;
     const ranges = timeframe.customRanges || [{}, {}];
     return (
-        <div className='px-3 pt-2'>
+        <div
+            className='px-3 py-2'
+            style={{ width: '26rem', maxWidth: 'calc(100vw - 2rem)' }}>
             {ranges.map((range, index) => (
-                <Row key={index} className='mb-2 align-items-center'>
-                    <Col md={2}>
-                        <label htmlFor={`${id}-custom-${index}-from`}>
-                            {t('html.label.timeframe.column', {
-                                number: index + 1,
-                            })}
-                        </label>
-                    </Col>
-                    <Col md={4}>
+                <div key={index} className='mb-2'>
+                    <label
+                        className='form-label mb-1'
+                        htmlFor={`${id}-custom-${index}-from`}>
+                        {t('html.label.timeframe.column', {
+                            number: index + 1,
+                        })}
+                    </label>
+                    <div className='d-flex align-items-center gap-2'>
                         <DateInputField
                             id={`${id}-custom-${index}-from`}
                             type='string'
@@ -291,11 +242,7 @@ export const CustomTimeframeInputs = ({
                             setAsInvalid={timeframe.setFieldInvalid}
                             setAsValid={timeframe.setFieldValid}
                         />
-                    </Col>
-                    <Col md={'auto'} className='p-0'>
                         <FontAwesomeIcon icon={faArrowRight} />
-                    </Col>
-                    <Col md={4}>
                         <DateInputField
                             id={`${id}-custom-${index}-to`}
                             type='string'
@@ -307,13 +254,82 @@ export const CustomTimeframeInputs = ({
                             setAsInvalid={timeframe.setFieldInvalid}
                             setAsValid={timeframe.setFieldValid}
                         />
-                    </Col>
-                </Row>
+                    </div>
+                </div>
             ))}
             {timeframe.invalidCustom && (
-                <p className='alert alert-warning mb-2'>
+                <p className='alert alert-warning mb-0'>
                     {t('html.label.timeframe.invalidRange')}
                 </p>
+            )}
+        </div>
+    );
+};
+
+export const TimeframeControl = ({
+    id,
+    timeframe,
+}: {
+    id: string;
+    timeframe: Timeframe;
+}) => {
+    const { t } = useTranslation();
+    const [customOpen, setCustomOpen] = useState(false);
+    if (staticSite) return null;
+    return (
+        <div className='d-flex align-items-center gap-1'>
+            <select
+                id={id + '-timeframe'}
+                className='form-select form-select-sm'
+                style={{
+                    width: 0,
+                    flexGrow: 1,
+                    minWidth: '8rem',
+                    maxWidth: '16rem',
+                }}
+                aria-label={t('html.label.timeframe.label')}
+                value={timeframe.preset}
+                onChange={(event) => {
+                    const preset = event.target.value as TimeframePreset;
+                    timeframe.selectPreset(preset);
+                    setCustomOpen(preset === 'custom');
+                }}>
+                {TIMEFRAME_PRESETS.filter((option) =>
+                    timeframe.presets.includes(option.name),
+                ).map((option) => (
+                    <option key={option.name} value={option.name}>
+                        {t(option.label)}
+                    </option>
+                ))}
+            </select>
+            {timeframe.preset === 'custom' && (
+                <Dropdown
+                    id={id + '-custom'}
+                    show={customOpen}
+                    onToggle={(next) => setCustomOpen(next)}
+                    autoClose='outside'>
+                    <Dropdown.Toggle
+                        variant={''}
+                        size='sm'
+                        className={
+                            timeframe.invalidCustom
+                                ? 'text-warning'
+                                : 'col-text'
+                        }
+                        style={
+                            {
+                                '--bs-btn-color':
+                                    'var(--color-forms-input-text)',
+                            } as React.CSSProperties
+                        }
+                        title={t('html.label.timeframe.custom')}
+                        aria-label={t('html.label.timeframe.custom')}>
+                        <FontAwesomeIcon icon={faGear} />
+                    </Dropdown.Toggle>
+                    <Dropdown.Menu>
+                        <CustomTimeframeInputs id={id} timeframe={timeframe} />
+                    </Dropdown.Menu>
+                </Dropdown>
             )}
         </div>
     );

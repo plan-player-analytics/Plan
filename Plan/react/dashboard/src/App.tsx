@@ -27,6 +27,7 @@ import ErrorBoundary from './components/ErrorBoundary';
 import { AlertPopupContextProvider } from './hooks/context/alertPopupContext';
 import { PreferencesContextProvider } from './hooks/preferences/preferencesHook';
 import { ThemeStorageContextProvider } from './hooks/context/themeContextHook.js';
+import { DatapointTimeframeContextProvider } from './hooks/context/datapointTimeframeContext';
 import { ThemeStyleCss } from './components/theme/ThemeStyleCss.js';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
@@ -168,7 +169,9 @@ const ContextProviders = ({ children }: React.PropsWithChildren) => (
                             <ThemeStorageContextProvider>
                                 <NavigationContextProvider>
                                     <PageExtensionContextProvider>
-                                        {children}
+                                        <DatapointTimeframeContextProvider>
+                                            {children}
+                                        </DatapointTimeframeContextProvider>
                                     </PageExtensionContextProvider>
                                 </NavigationContextProvider>
                             </ThemeStorageContextProvider>

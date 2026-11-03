@@ -14,8 +14,7 @@ import { useParams } from 'react-router';
 import { MS_WEEK } from '../../../../util/format/useDateFormatter';
 import { DatapointType } from '../../../../dataHooks/model/datapoint/Datapoint';
 import {
-    CustomTimeframeInputs,
-    TimeframeSelect,
+    TimeframeControl,
     useDatapointTimeframe,
 } from '../../../table/DatapointTimeframe';
 import { TWO_COLUMN_PRESETS } from '../../../../util/datapointTablePresets';
@@ -30,19 +29,17 @@ const ServerWeekComparisonCard = () => {
     return (
         <Card id={'week-comparison'}>
             <Card.Header>
-                <h6 className='col-text' style={{ width: '100%' }}>
+                <h6 className='col-text'>
                     <Fa icon={faExchangeAlt} /> {t('html.label.weekComparison')}
-                    <TimeframeSelect
+                </h6>
+            </Card.Header>
+            <QueryDatapointTable
+                headerControl={
+                    <TimeframeControl
                         id={'week-comparison'}
                         timeframe={timeframe}
                     />
-                </h6>
-            </Card.Header>
-            <CustomTimeframeInputs
-                id={'week-comparison'}
-                timeframe={timeframe}
-            />
-            <QueryDatapointTable
+                }
                 comparisonHeader={
                     timeframe.columns
                         ? undefined

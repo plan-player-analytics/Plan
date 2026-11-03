@@ -56,13 +56,17 @@ export type PeriodUnit = 'hour' | 'day' | 'week' | 'month' | 'range';
 export type TimeframeColumn = {
     key: string;
     filter: { after: number; before: number };
-    period: { start: number; end: number; unit: PeriodUnit };
+    period: {
+        start: number;
+        end: number;
+        unit: PeriodUnit;
+        untilNow?: boolean;
+    };
 };
 
 export type CustomRange = { from?: string; to?: string };
 
-const MINUTE_MS = 60 * 1000;
-const HOUR_MS = 60 * MINUTE_MS;
+const HOUR_MS = 60 * 60 * 1000;
 
 const DAY_PATTERN = /^(\d{2})\/(\d{2})\/(\d{4})$/;
 
@@ -139,22 +143,21 @@ const lastHours = (
     count: number,
     nowEpochMs: number,
     zone: ServerTimeZone,
-): TimeframeColumn[] => {
-    const nowMinute =
-        nowEpochMs - (((nowEpochMs % MINUTE_MS) + MINUTE_MS) % MINUTE_MS);
-    const currentHour =
-        nowMinute - toServerWallClock(nowEpochMs, zone).minutes() * MINUTE_MS;
-    return Array.from({ length: count }, (_, i) => {
-        const after = currentHour - (count - 1 - i) * HOUR_MS;
-        const nextStart = after + HOUR_MS;
-        const start = toServerWallClock(after, zone).valueOf();
+): TimeframeColumn[] =>
+    Array.from({ length: count }, (_, i) => {
+        const after = nowEpochMs - (count - i) * HOUR_MS;
+        const before = after + HOUR_MS;
         return {
-            key: `hour-${after}`,
-            filter: { after, before: nextStart },
-            period: { start, end: start + HOUR_MS, unit: 'hour' },
+            key: `hour-${i}-${after}`,
+            filter: { after, before },
+            period: {
+                start: toServerWallClock(after, zone).valueOf(),
+                end: toServerWallClock(before, zone).valueOf(),
+                unit: 'hour',
+                untilNow: i === count - 1,
+            },
         };
     });
-};
 
 const customColumns = (
     ranges: CustomRange[],

@@ -24,9 +24,14 @@ import { Server } from '../../hooks/model/Metadata';
 type Props = {
     servers: Server[];
     columns?: Column[];
+    headerControl?: React.ReactNode;
 };
 
-const PerformanceAsNumbersTable = ({ servers, columns }: Props) => {
+const PerformanceAsNumbersTable = ({
+    servers,
+    columns,
+    headerControl,
+}: Props) => {
     const { t } = useTranslation();
 
     const dataIncludesGameServers =
@@ -47,6 +52,7 @@ const PerformanceAsNumbersTable = ({ servers, columns }: Props) => {
 
     return (
         <QueryDatapointTable
+            headerControl={headerControl}
             filter={{ server: servers.map((s) => s.serverUUID) }}
             columns={
                 columns ?? [

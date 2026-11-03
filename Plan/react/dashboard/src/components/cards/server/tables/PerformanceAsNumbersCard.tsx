@@ -16,8 +16,7 @@ import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 import { useDatapointQuery } from '../../../../dataHooks/useDatapointQuery';
 import { Server } from '../../../../hooks/model/Metadata';
 import {
-    CustomTimeframeInputs,
-    TimeframeSelect,
+    TimeframeControl,
     useDatapointTimeframe,
 } from '../../../table/DatapointTimeframe';
 import { ALL_TIMEFRAME_PRESETS } from '../../../../util/datapointTablePresets';
@@ -101,19 +100,17 @@ const PerformanceAsNumbersCard = ({ servers }: Props) => {
                 <button className={'float-end'} onClick={openHelp}>
                     <Fa className={'col-help-icon'} icon={faQuestionCircle} />
                 </button>
-                <TimeframeSelect
-                    id={'performance-as-numbers'}
-                    timeframe={timeframe}
-                />
             </CardHeader>
-            <CustomTimeframeInputs
-                id={'performance-as-numbers'}
-                timeframe={timeframe}
-            />
             <NoDataAlert servers={servers.map((s) => s.serverUUID)} />
             <PerformanceAsNumbersTable
                 servers={servers}
                 columns={timeframe.columns}
+                headerControl={
+                    <TimeframeControl
+                        id={'performance-as-numbers'}
+                        timeframe={timeframe}
+                    />
+                }
             />
         </Card>
     );

@@ -41,6 +41,7 @@ type Row = {
 
 type Props = {
     comparisonHeader?: string;
+    headerControl?: React.ReactNode;
     filter: GenericFilter;
     columns: Column[];
     rows: Row[];
@@ -84,6 +85,7 @@ const FilterHeader = ({ filter, label }: Column) => {
 
 export const QueryDatapointTable = ({
     comparisonHeader,
+    headerControl,
     filter,
     columns,
     rows,
@@ -102,6 +104,7 @@ export const QueryDatapointTable = ({
             <thead className={'sticky-top'}>
                 <tr>
                     <th>
+                        {headerControl}
                         {comparisonHeader && (
                             <ComparingLabel>{comparisonHeader}</ComparingLabel>
                         )}

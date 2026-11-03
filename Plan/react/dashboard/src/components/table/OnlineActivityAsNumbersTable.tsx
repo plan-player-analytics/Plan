@@ -20,9 +20,10 @@ import { useParams } from 'react-router';
 
 type Props = {
     columns?: Column[];
+    headerControl?: React.ReactNode;
 };
 
-const OnlineActivityAsNumbersTable = ({ columns }: Props) => {
+const OnlineActivityAsNumbersTable = ({ columns, headerControl }: Props) => {
     const { t } = useTranslation();
     const { setHelpModalTopic } = useNavigation();
     const { identifier } = useParams();
@@ -33,6 +34,7 @@ const OnlineActivityAsNumbersTable = ({ columns }: Props) => {
 
     return (
         <QueryDatapointTable
+            headerControl={headerControl}
             filter={{ server: identifier }}
             columns={
                 columns ?? [
