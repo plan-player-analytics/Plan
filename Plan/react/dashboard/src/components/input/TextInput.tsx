@@ -14,6 +14,7 @@ type Props = {
     disabled?: boolean;
     disabledFeedback?: string;
     readOnly?: boolean;
+    password?: boolean;
     children?: React.ReactNode;
 };
 
@@ -28,6 +29,7 @@ const TextInput = ({
     disabled,
     disabledFeedback,
     readOnly,
+    password,
     children,
 }: Props) => {
     const [cachedValue, setCachedValue] = useState(value);
@@ -58,7 +60,7 @@ const TextInput = ({
                 <FontAwesomeIcon icon={icon} />
             </div>
             <input
-                type='text'
+                type={password ? 'password' : 'text'}
                 className={'form-control' + (invalid ? ' is-invalid' : '')}
                 placeholder={placeholder}
                 value={cachedValue}

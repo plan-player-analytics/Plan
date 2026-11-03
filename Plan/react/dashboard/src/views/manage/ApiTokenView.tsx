@@ -6,6 +6,8 @@ import {
     faCheck,
     faCopy,
     faExclamationTriangle,
+    faEye,
+    faEyeSlash,
     faKey,
     faPlus,
     faRotateLeft,
@@ -43,6 +45,7 @@ import { useDeleteApiToken } from '../../dataHooks/useDeleteApiToken';
 import { useCreateApiToken } from '../../dataHooks/useCreateApiToken';
 import { ApiTokenWithPermissions } from '../../dataHooks/model/permissions/ApiToken';
 import TextInput from '../../components/input/TextInput';
+import { useDateConverter } from '../../util/format/useDateConverter';
 
 const TokensHeader = ({ label, icon }: { label: string; icon?: any }) => {
     return (
@@ -61,6 +64,8 @@ const MANAGE_PERMISSIONS = [
 
 const TokenBody = ({ apiToken }: { apiToken: ApiTokenWithPermissions }) => {
     const { t } = useTranslation();
+    const { convert } = useDateConverter();
+    const [showToken, setShowToken] = useState(false);
     const {
         changed,
         permissionTree,
@@ -79,6 +84,11 @@ const TokenBody = ({ apiToken }: { apiToken: ApiTokenWithPermissions }) => {
     const copyToken = () => {
         navigator.clipboard.writeText(apiToken.token.token);
     };
+
+    const issuedDate = convert(apiToken.token.issued).toFormat('LLL');
+    const lastUsedDate = apiToken.token.lastUsed
+        ? convert(apiToken.token.lastUsed).toFormat('LLL')
+        : t('html.label.managePage.token.neverUsed');
 
     return (
         <Row>
@@ -109,7 +119,14 @@ const TokenBody = ({ apiToken }: { apiToken: ApiTokenWithPermissions }) => {
                             icon={faKey}
                             value={apiToken.token.token}
                             setValue={() => {}}
-                            readOnly>
+                            readOnly
+                            password={!showToken}>
+                            <OutlineButton
+                                className='input-group-text'
+                                style={{ whiteSpace: 'nowrap' }}
+                                onClick={() => setShowToken(!showToken)}>
+                                <Fa icon={showToken ? faEyeSlash : faEye} />
+                            </OutlineButton>
                             <OutlineButton
                                 className='input-group-text'
                                 style={{ whiteSpace: 'nowrap' }}
@@ -117,6 +134,16 @@ const TokenBody = ({ apiToken }: { apiToken: ApiTokenWithPermissions }) => {
                                 <Fa icon={faCopy} />
                             </OutlineButton>
                         </TextInput>
+                    </Col>
+                </Row>
+
+                <Row className='mt-2' style={{ fontSize: '0.875rem' }}>
+                    <Col md={6}>
+                        {t('html.label.managePage.token.issued')}: {issuedDate}
+                    </Col>
+                    <Col md={6}>
+                        {t('html.label.managePage.token.lastUsed')}:{' '}
+                        {lastUsedDate}
                     </Col>
                 </Row>
 
@@ -190,7 +217,7 @@ const DeleteTokenButton = ({
                     }
                 />
                 <Card.Body>
-                    <p className={'mt-3'}>
+                    <p>
                         <Trans
                             i18nKey='html.label.managePage.deleteToken.confirmDescription'
                             values={{ identifier }}
