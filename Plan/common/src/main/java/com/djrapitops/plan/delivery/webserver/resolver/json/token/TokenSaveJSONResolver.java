@@ -38,6 +38,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 import org.apache.commons.codec.digest.DigestUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -74,7 +75,7 @@ public class TokenSaveJSONResolver implements AsyncResolver {
     private String generateToken() {
         byte[] bytes = new byte[16];
         secureRandom.nextBytes(bytes);
-        return DigestUtils.sha256Hex(new String(bytes, StandardCharsets.UTF_8)).substring(0, 20);
+        return StringUtils.truncate(DigestUtils.sha256Hex(new String(bytes, StandardCharsets.UTF_8)), 64);
     }
 
     @POST

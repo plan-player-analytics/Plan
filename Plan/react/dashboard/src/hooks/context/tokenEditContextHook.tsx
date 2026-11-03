@@ -25,6 +25,8 @@ import { ApiTokenWithPermissions } from '../../dataHooks/model/permissions/ApiTo
 type TokenEditContextState = {
     changed: boolean;
     permissions: string[];
+    identifier: string;
+    setIdentifier: (id: string) => void;
     apiToken: ApiTokenWithPermissions;
     togglePermission: (permission: string) => void;
 } & Omit<UsePermissionTreeResult, 'togglePermission'>;
@@ -54,13 +56,21 @@ export const TokenEditContextProvider = ({
     const saveMutation = useSaveApiToken();
 
     const [permissions, setPermissions] = useState<string[]>([]);
+    const [identifier, setIdentifierState] = useState<string>('');
     const loadPermissions = useCallback(() => {
         setPermissions(apiToken.permissions || []);
+        setIdentifierState(apiToken.token.identifier);
     }, [apiToken]);
 
     useEffect(() => {
         loadPermissions();
     }, [loadPermissions]);
+
+    const setIdentifier = useCallback((id: string) => {
+        markDirty();
+        setChanged(true);
+        setIdentifierState(id);
+    }, [markDirty, setChanged]);
 
     const {
         permissionTree,
@@ -84,7 +94,7 @@ export const TokenEditContextProvider = ({
             try {
                 await saveMutation.mutateAsync({
                     token: apiToken.token.token,
-                    identifier: apiToken.token.identifier,
+                    identifier,
                     permissions,
                 });
                 setChanged(false);
@@ -146,6 +156,8 @@ export const TokenEditContextProvider = ({
             changed,
             permissionTree,
             permissions,
+            identifier,
+            setIdentifier,
             isChecked,
             isIndeterminate,
             togglePermission,
@@ -155,6 +167,8 @@ export const TokenEditContextProvider = ({
         changed,
         permissionTree,
         permissions,
+        identifier,
+        setIdentifier,
         isChecked,
         isIndeterminate,
         togglePermission,

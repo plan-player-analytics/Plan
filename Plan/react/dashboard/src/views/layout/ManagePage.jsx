@@ -3,7 +3,11 @@ import { useTranslation } from 'react-i18next';
 import { useMetadata } from '../../hooks/metadataHook.tsx';
 import { useNavigation } from '../../hooks/navigationHook.tsx';
 import { staticSite } from '../../service/backendConfiguration';
-import { faSearch, faUsersGear } from '@fortawesome/free-solid-svg-icons';
+import {
+    faKey,
+    faSearch,
+    faUsersGear,
+} from '@fortawesome/free-solid-svg-icons';
 import { useAuth } from '../../hooks/authenticationHook.tsx';
 import MainPageRedirect from '../../components/navigation/MainPageRedirect.tsx';
 import ErrorPage from './ErrorPage';
@@ -32,6 +36,13 @@ const ManagePage = () => {
                       name: 'html.label.groupPermissions',
                       icon: faUsersGear,
                       href: 'groups',
+                      permission: 'manage.groups',
+                  },
+                  {
+                      name: 'html.label.apiTokens',
+                      icon: faKey,
+                      href: 'tokens',
+                      permission: 'manage.tokens',
                   },
                   // {name: 'html.label.groupUsers', icon: faUserGroup, href: "groupUsers"},
                   // {name: 'html.label.users', icon: faUser, href: "users"},

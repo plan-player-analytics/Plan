@@ -13,6 +13,8 @@ type Props = {
     invalidFeedback?: string;
     disabled?: boolean;
     disabledFeedback?: string;
+    readOnly?: boolean;
+    children?: React.ReactNode;
 };
 
 const TextInput = ({
@@ -25,6 +27,8 @@ const TextInput = ({
     invalidFeedback,
     disabled,
     disabledFeedback,
+    readOnly,
+    children,
 }: Props) => {
     const [cachedValue, setCachedValue] = useState(value);
     const [invalid, setInvalid] = useState(false);
@@ -62,6 +66,7 @@ const TextInput = ({
                 onBlur={onBlur}
                 onKeyDown={onKeyDown}
                 disabled={disabled}
+                readOnly={readOnly || false}
             />
             {invalid && invalidFeedback && (
                 <div className='invalid-feedback'>{invalidFeedback}</div>
@@ -69,6 +74,7 @@ const TextInput = ({
             {disabled && disabledFeedback && (
                 <div className='disabled-feedback'>{disabledFeedback}</div>
             )}
+            {children}
         </InputGroup>
     );
 };
