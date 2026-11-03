@@ -1,8 +1,35 @@
 import React, { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
-const TabButton = ({ id, name, href, icon, color, active, disabled }) => {
+type Tab = {
+    name: React.ReactNode;
+    href: string;
+    icon: IconProp;
+    color?: string;
+    disabled?: boolean;
+    element: React.ReactNode;
+};
+
+type Props = {
+    tabs: Tab[];
+};
+
+type TabButtonProps = Omit<Tab, 'element'> & {
+    id: string;
+    active: boolean;
+};
+
+const TabButton = ({
+    id,
+    name,
+    href,
+    icon,
+    color,
+    active,
+    disabled,
+}: TabButtonProps) => {
     const navigate = useNavigate();
     return (
         <li className={'nav-item' + (disabled ? ' disabled' : '')} id={id}>
@@ -18,7 +45,10 @@ const TabButton = ({ id, name, href, icon, color, active, disabled }) => {
     );
 };
 
-const TabButtons = ({ tabs, selectedTab }) => {
+const TabButtons = ({
+    tabs,
+    selectedTab,
+}: Props & { selectedTab?: string }) => {
     return (
         <ul className='nav nav-tabs' role='tablist'>
             {tabs.map((tab) => (
@@ -37,7 +67,7 @@ const TabButtons = ({ tabs, selectedTab }) => {
     );
 };
 
-const CardTabs = ({ tabs }) => {
+const CardTabs = ({ tabs }: Props) => {
     const { hash } = useLocation();
     const firstTab = tabs?.length ? tabs[0].href : undefined;
     const [selectedTab, setSelectedTab] = useState(firstTab);

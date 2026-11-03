@@ -1,7 +1,32 @@
 import React, { useState } from 'react';
-import { useTheme } from '../../hooks/themeHook.tsx';
+import { useTheme } from '../../hooks/themeHook';
 
-const SliceHeader = ({ i, open, onClick, slice }) => {
+type AccordionSlice = {
+    header: React.ReactNode;
+    body: React.ReactNode;
+    color: string;
+    outline?: boolean;
+};
+
+type Props = {
+    headers: React.ReactNode[];
+    slices: AccordionSlice[];
+    open?: boolean;
+    style?: React.CSSProperties;
+};
+
+type SliceBodyProps = {
+    i: number;
+    open: boolean;
+    slice: AccordionSlice;
+    width: number;
+};
+
+type SliceHeaderProps = Omit<SliceBodyProps, 'width'> & {
+    onClick: React.MouseEventHandler<HTMLTableRowElement>;
+};
+
+const SliceHeader = ({ i, open, onClick, slice }: SliceHeaderProps) => {
     let style = 'bg-' + slice.color + (slice.outline ? '-outline' : '');
     return (
         <tr
@@ -17,7 +42,7 @@ const SliceHeader = ({ i, open, onClick, slice }) => {
     );
 };
 
-const SliceBody = ({ i, open, slice, width }) => {
+const SliceBody = ({ i, open, slice, width }: SliceBodyProps) => {
     if (!open) return <tr className={open ? 'open' : 'closed'} />;
 
     return (
@@ -30,14 +55,20 @@ const SliceBody = ({ i, open, slice, width }) => {
     );
 };
 
-const Slice = ({ i, slice, open, onClick, width }) => (
+const Slice = ({
+    i,
+    slice,
+    open,
+    onClick,
+    width,
+}: SliceBodyProps & SliceHeaderProps) => (
     <>
         <SliceHeader i={i} open={open} onClick={onClick} slice={slice} />
         <SliceBody i={i} open={open} slice={slice} width={width} />
     </>
 );
 
-const NoDataRow = ({ width }) => {
+const NoDataRow = ({ width }: { width: number }) => {
     const nLengthArray = Array.from(Array(width - 1).keys());
     return (
         <tr>
@@ -49,11 +80,11 @@ const NoDataRow = ({ width }) => {
     );
 };
 
-const Accordion = ({ headers, slices, open, style }) => {
+const Accordion = ({ headers, slices, open, style }: Props) => {
     const [openSlice, setOpenSlice] = useState(open ? 0 : -1);
     const { nightModeEnabled } = useTheme();
 
-    const toggleSlice = (i) => {
+    const toggleSlice = (i: number) => {
         setOpenSlice(openSlice === i ? -1 : i);
     };
 

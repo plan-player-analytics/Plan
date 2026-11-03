@@ -21,7 +21,7 @@ import {
     faTrash,
 } from '@fortawesome/free-solid-svg-icons';
 import ErrorView from '../ErrorView.tsx';
-import AlertPopupArea from '../../components/alert/AlertPopupArea.jsx';
+import AlertPopupArea from '../../components/alert/AlertPopupArea.tsx';
 import ErrorPage from './ErrorPage.jsx';
 import { Alert } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';

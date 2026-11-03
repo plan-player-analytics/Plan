@@ -6,7 +6,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { faCalendar } from '@fortawesome/free-regular-svg-icons';
 import { Card } from 'react-bootstrap';
-import CardTabs from '../../CardTabs.jsx';
+import CardTabs from '../../CardTabs';
 import { useTranslation } from 'react-i18next';
 import Datapoint from '../../datapoint/Datapoint';
 

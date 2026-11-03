@@ -4,7 +4,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faBug } from '@fortawesome/free-solid-svg-icons';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 
-const ErrorBody = ({ error }) => {
+type ErrorLog = {
+    fileName: string;
+    contents: string[];
+};
+
+type Props = {
+    errors?: ErrorLog[];
+};
+
+type ErrorProps = {
+    error: ErrorLog;
+};
+
+const ErrorBody = ({ error }: ErrorProps) => {
     return (
         <pre className='pre-scrollable' style={{ overflowX: 'scroll' }}>
             {error.contents.map((line) => (
@@ -17,7 +30,7 @@ const ErrorBody = ({ error }) => {
     );
 };
 
-const ErrorHeader = ({ error }) => {
+const ErrorHeader = ({ error }: ErrorProps) => {
     return (
         <>
             <td>{error.fileName}</td>
@@ -28,7 +41,7 @@ const ErrorHeader = ({ error }) => {
     );
 };
 
-const ErrorsAccordion = ({ errors }) => {
+const ErrorsAccordion = ({ errors }: Props) => {
     const headers = [
         <>
             <FontAwesomeIcon icon={faBug} /> Logfile
