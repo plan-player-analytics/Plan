@@ -8,6 +8,7 @@ import {
     faExclamationTriangle,
     faEye,
     faEyeSlash,
+    faFloppyDisk,
     faKey,
     faPlus,
     faRotateLeft,
@@ -187,7 +188,7 @@ const SaveButton = () => {
             style={{ margin: '-0.5rem' }}
             disabled={!dirty}
             onClick={requestSave}>
-            <Fa icon={faKey} /> {t('html.label.managePage.changes.save')}
+            <Fa icon={faFloppyDisk} /> {t('html.label.managePage.changes.save')}
         </ActionButton>
     );
 };
