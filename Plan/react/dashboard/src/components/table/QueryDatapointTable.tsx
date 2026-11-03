@@ -5,7 +5,6 @@ import {
     NumericDatapointType,
 } from '../../dataHooks/model/datapoint/Datapoint';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
-import ComparingLabel from '../trend/ComparingLabel';
 import { useTheme } from '../../hooks/themeHook';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import {
@@ -17,10 +16,16 @@ import FormattedDay from '../text/FormattedDay';
 import { useAuth } from '../../hooks/authenticationHook';
 import { useTranslation } from 'react-i18next';
 import { MS_24H, MS_MONTH, MS_WEEK } from '../../util/format/useDateFormatter';
+import {
+    ALL_TIMEFRAME_PRESETS,
+    TimeframePreset,
+} from '../../util/datapointTablePresets';
+import { useDatapointTimeframe } from './presets/useDatapointTimeframe';
+import TimeframeControl from './presets/TimeframeControl';
 
 export type Column = {
     filter: GenericFilter;
-    label?: React.ReactNode;
+    label?: string;
     key: string;
 };
 
@@ -40,10 +45,10 @@ type Row = {
 };
 
 type Props = {
-    comparisonHeader?: string;
-    headerControl?: React.ReactNode;
+    id: string;
+    defaultPreset: TimeframePreset;
+    presets?: TimeframePreset[];
     filter: GenericFilter;
-    columns: Column[];
     rows: Row[];
     showTrend?: boolean;
 };
@@ -84,14 +89,16 @@ const FilterHeader = ({ filter, label }: Column) => {
 };
 
 export const QueryDatapointTable = ({
-    comparisonHeader,
-    headerControl,
+    id,
+    defaultPreset,
+    presets = ALL_TIMEFRAME_PRESETS,
     filter,
-    columns,
     rows,
     showTrend,
 }: Props) => {
     const { t } = useTranslation();
+    const timeframe = useDatapointTimeframe(id, defaultPreset);
+    const { columns } = timeframe;
     const { nightModeEnabled } = useTheme();
     const { hasPermission } = useAuth();
     const trendShown = showTrend && columns.length === 2;
@@ -104,10 +111,11 @@ export const QueryDatapointTable = ({
             <thead className={'sticky-top'}>
                 <tr>
                     <th>
-                        {headerControl}
-                        {comparisonHeader && (
-                            <ComparingLabel>{comparisonHeader}</ComparingLabel>
-                        )}
+                        <TimeframeControl
+                            id={id}
+                            presets={presets}
+                            timeframe={timeframe}
+                        />
                     </th>
                     {columns.map((column) => (
                         <FilterHeader

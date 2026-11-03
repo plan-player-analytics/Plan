@@ -13,17 +13,11 @@ import {
     faQuestionCircle,
 } from '@fortawesome/free-regular-svg-icons';
 import { useNavigation } from '../../hooks/navigationHook';
-import { MS_24H, MS_MONTH, MS_WEEK } from '../../util/format/useDateFormatter';
 import { DatapointType } from '../../dataHooks/model/datapoint/Datapoint';
-import { Column, QueryDatapointTable } from './QueryDatapointTable';
+import { QueryDatapointTable } from './QueryDatapointTable';
 import { useParams } from 'react-router';
 
-type Props = {
-    columns?: Column[];
-    headerControl?: React.ReactNode;
-};
-
-const OnlineActivityAsNumbersTable = ({ columns, headerControl }: Props) => {
+const OnlineActivityAsNumbersTable = () => {
     const { t } = useTranslation();
     const { setHelpModalTopic } = useNavigation();
     const { identifier } = useParams();
@@ -34,24 +28,9 @@ const OnlineActivityAsNumbersTable = ({ columns, headerControl }: Props) => {
 
     return (
         <QueryDatapointTable
-            headerControl={headerControl}
+            id={'online-activity-numbers'}
+            defaultPreset={'monthWeekDay'}
             filter={{ server: identifier }}
-            columns={
-                columns ?? [
-                    {
-                        key: '30d',
-                        filter: { afterMillisAgo: MS_MONTH },
-                    },
-                    {
-                        key: '7d',
-                        filter: { afterMillisAgo: MS_WEEK },
-                    },
-                    {
-                        key: '1d',
-                        filter: { afterMillisAgo: MS_24H },
-                    },
-                ]
-            }
             rows={[
                 {
                     dataType: DatapointType.UNIQUE_PLAYERS_COUNT,

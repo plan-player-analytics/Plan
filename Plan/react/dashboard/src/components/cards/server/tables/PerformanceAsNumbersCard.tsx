@@ -15,11 +15,6 @@ import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 import { useDatapointQuery } from '../../../../dataHooks/useDatapointQuery';
 import { Server } from '../../../../hooks/model/Metadata';
-import {
-    TimeframeControl,
-    useDatapointTimeframe,
-} from '../../../table/DatapointTimeframe';
-import { ALL_TIMEFRAME_PRESETS } from '../../../../util/datapointTablePresets';
 
 type NoDataProps = {
     servers: string[];
@@ -86,10 +81,6 @@ const PerformanceAsNumbersCard = ({ servers }: Props) => {
         () => setHelpModalTopic('performance'),
         [setHelpModalTopic],
     );
-    const timeframe = useDatapointTimeframe(
-        'performance-as-numbers',
-        ALL_TIMEFRAME_PRESETS,
-    );
 
     return (
         <Card id={'performance-as-numbers'}>
@@ -102,16 +93,7 @@ const PerformanceAsNumbersCard = ({ servers }: Props) => {
                 </button>
             </CardHeader>
             <NoDataAlert servers={servers.map((s) => s.serverUUID)} />
-            <PerformanceAsNumbersTable
-                servers={servers}
-                columns={timeframe.columns}
-                headerControl={
-                    <TimeframeControl
-                        id={'performance-as-numbers'}
-                        timeframe={timeframe}
-                    />
-                }
-            />
+            <PerformanceAsNumbersTable servers={servers} />
         </Card>
     );
 };

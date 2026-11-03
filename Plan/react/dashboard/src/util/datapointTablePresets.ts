@@ -1,4 +1,6 @@
 import moment from 'moment';
+import { GenericFilter } from '../dataHooks/model/GenericFilter';
+import { MS_24H, MS_MONTH, MS_WEEK } from './format/useDateFormatter';
 import {
     fromServerWallClock,
     ServerTimeZone,
@@ -6,7 +8,9 @@ import {
 } from './queryDatePresets';
 
 export type TimeframePreset =
-    | 'default'
+    | 'weekComparison'
+    | 'monthWeekDay'
+    | 'monthByWeeks'
     | 'previousAndCurrentWeek'
     | 'previousAndCurrentMonth'
     | 'last6Hours'
@@ -16,36 +20,22 @@ export type TimeframePreset =
     | 'last6Months'
     | 'custom';
 
-export const TIMEFRAME_PRESETS: { name: TimeframePreset; label: string }[] = [
-    { name: 'default', label: 'html.label.timeframe.default' },
-    {
-        name: 'previousAndCurrentWeek',
-        label: 'html.label.timeframe.previousAndCurrentWeek',
-    },
-    {
-        name: 'previousAndCurrentMonth',
-        label: 'html.label.timeframe.previousAndCurrentMonth',
-    },
-    { name: 'last6Hours', label: 'html.label.timeframe.last6Hours' },
-    { name: 'last7Days', label: 'html.label.timeframe.last7Days' },
-    {
-        name: 'currentMonthByWeek',
-        label: 'html.label.timeframe.currentMonthByWeek',
-    },
-    {
-        name: 'previousMonthByWeek',
-        label: 'html.label.timeframe.previousMonthByWeek',
-    },
-    { name: 'last6Months', label: 'html.label.timeframe.last6Months' },
-    { name: 'custom', label: 'html.label.timeframe.custom' },
+export const ALL_TIMEFRAME_PRESETS: TimeframePreset[] = [
+    'weekComparison',
+    'monthWeekDay',
+    'monthByWeeks',
+    'previousAndCurrentWeek',
+    'previousAndCurrentMonth',
+    'last6Hours',
+    'last7Days',
+    'currentMonthByWeek',
+    'previousMonthByWeek',
+    'last6Months',
+    'custom',
 ];
 
-export const ALL_TIMEFRAME_PRESETS: TimeframePreset[] = TIMEFRAME_PRESETS.map(
-    (preset) => preset.name,
-);
-
 export const TWO_COLUMN_PRESETS: TimeframePreset[] = [
-    'default',
+    'weekComparison',
     'previousAndCurrentWeek',
     'previousAndCurrentMonth',
     'custom',
@@ -53,20 +43,75 @@ export const TWO_COLUMN_PRESETS: TimeframePreset[] = [
 
 export type PeriodUnit = 'hour' | 'day' | 'week' | 'month' | 'range';
 
+export type TimeframePeriod = {
+    start: number;
+    end: number;
+    unit: PeriodUnit;
+    untilNow?: boolean;
+};
+
 export type TimeframeColumn = {
     key: string;
-    filter: { after: number; before: number };
-    period: {
-        start: number;
-        end: number;
-        unit: PeriodUnit;
-        untilNow?: boolean;
-    };
+    filter: GenericFilter;
+    period?: TimeframePeriod;
+    label?: { key: string; number: number; detailKey?: string };
 };
 
 export type CustomRange = { from?: string; to?: string };
 
 const HOUR_MS = 60 * 60 * 1000;
+
+const RELATIVE_PRESETS: Partial<Record<TimeframePreset, TimeframeColumn[]>> = {
+    weekComparison: [
+        {
+            key: 'previous',
+            filter: { afterMillisAgo: MS_WEEK * 2, beforeMillisAgo: MS_WEEK },
+        },
+        {
+            key: 'next',
+            filter: { afterMillisAgo: MS_WEEK, beforeMillisAgo: 0 },
+        },
+    ],
+    monthWeekDay: [
+        { key: '30d', filter: { afterMillisAgo: MS_MONTH } },
+        { key: '7d', filter: { afterMillisAgo: MS_WEEK } },
+        { key: '1d', filter: { afterMillisAgo: MS_24H } },
+    ],
+    monthByWeeks: [
+        { key: '30d', filter: { afterMillisAgo: MS_MONTH } },
+        {
+            key: '7d-1',
+            filter: {
+                afterMillisAgo: MS_WEEK * 4,
+                beforeMillisAgo: MS_WEEK * 3,
+            },
+            label: { key: 'html.label.time.week', number: 1 },
+        },
+        {
+            key: '7d-2',
+            filter: {
+                afterMillisAgo: MS_WEEK * 3,
+                beforeMillisAgo: MS_WEEK * 2,
+            },
+            label: { key: 'html.label.time.week', number: 2 },
+        },
+        {
+            key: '7d-3',
+            filter: { afterMillisAgo: MS_WEEK * 2, beforeMillisAgo: MS_WEEK },
+            label: { key: 'html.label.time.week', number: 3 },
+        },
+        {
+            key: '7d-4',
+            filter: { afterMillisAgo: MS_WEEK },
+            label: {
+                key: 'html.label.time.week',
+                number: 4,
+                detailKey: 'html.label.last7days',
+            },
+        },
+        { key: '1d', filter: { afterMillisAgo: MS_24H } },
+    ],
+};
 
 const DAY_PATTERN = /^(\d{2})\/(\d{2})\/(\d{4})$/;
 
@@ -103,22 +148,18 @@ const toColumns = (
     includeFuture: boolean = false,
 ): TimeframeColumn[] => {
     const instants = boundaries.map((b) => fromServerWallClock(b, zone));
-    const columns = boundaries.slice(0, -1).map((start, i) => {
-        const after = instants[i];
-        const nextStart = instants[i + 1];
-        return {
-            key: `${unit}-${after}`,
-            filter: { after, before: nextStart },
+    return boundaries
+        .slice(0, -1)
+        .map((start, i) => ({
+            key: `${unit}-${instants[i]}`,
+            filter: { after: instants[i], before: instants[i + 1] },
             period: {
                 start: start.valueOf(),
                 end: boundaries[i + 1].valueOf(),
                 unit,
             },
-        };
-    });
-    return includeFuture
-        ? columns
-        : columns.filter((column) => column.filter.after <= nowEpochMs);
+        }))
+        .filter((_, i) => includeFuture || instants[i] <= nowEpochMs);
 };
 
 const consecutive = (
@@ -210,10 +251,13 @@ export const defaultCustomRanges = (
 export const calculateTimeframeColumns = (
     preset: TimeframePreset,
     nowEpochMs: number,
-    zone: ServerTimeZone,
+    zone: ServerTimeZone | undefined,
     firstDay: number = 1,
     customRanges: CustomRange[] = [],
 ): TimeframeColumn[] | undefined => {
+    const relative = RELATIVE_PRESETS[preset];
+    if (relative) return relative;
+    if (!zone) return undefined;
     const now = toServerWallClock(nowEpochMs, zone);
     const today = now.clone().startOf('day');
     const weekStart = startOfWeek(now, firstDay);

@@ -8,12 +8,12 @@ import {
 } from 'react';
 import { CustomRange, TimeframePreset } from '../../util/datapointTablePresets';
 
-export type StoredTimeframe = {
+type StoredTimeframe = {
     preset: TimeframePreset;
     customRanges?: CustomRange[];
 };
 
-type TimeframeUpdate = (previous: StoredTimeframe) => StoredTimeframe;
+type TimeframeUpdate = (previous?: StoredTimeframe) => StoredTimeframe;
 
 type DatapointTimeframeContextValue = {
     timeframes: Record<string, StoredTimeframe>;
@@ -23,8 +23,6 @@ type DatapointTimeframeContextValue = {
 const DatapointTimeframeContext = createContext<
     DatapointTimeframeContextValue | undefined
 >(undefined);
-
-export const DEFAULT_TIMEFRAME: StoredTimeframe = { preset: 'default' };
 
 export const DatapointTimeframeContextProvider = ({
     children,
@@ -37,7 +35,7 @@ export const DatapointTimeframeContextProvider = ({
         (tableId: string, update: TimeframeUpdate) => {
             setTimeframes((previous) => ({
                 ...previous,
-                [tableId]: update(previous[tableId] ?? DEFAULT_TIMEFRAME),
+                [tableId]: update(previous[tableId]),
             }));
         },
         [],
@@ -55,26 +53,11 @@ export const DatapointTimeframeContextProvider = ({
     );
 };
 
-export const useStoredTimeframe = (tableId: string) => {
+export const useDatapointTimeframeContext = () => {
     const context = useContext(DatapointTimeframeContext);
-    const [localTimeframe, setLocalTimeframe] =
-        useState<StoredTimeframe>(DEFAULT_TIMEFRAME);
-    const contextUpdate = context?.updateTimeframe;
-
-    const update = useCallback(
-        (change: TimeframeUpdate) => {
-            if (contextUpdate) {
-                contextUpdate(tableId, change);
-            } else {
-                setLocalTimeframe(change);
-            }
-        },
-        [contextUpdate, tableId],
-    );
-
-    const timeframe = context
-        ? (context.timeframes[tableId] ?? DEFAULT_TIMEFRAME)
-        : localTimeframe;
-
-    return [timeframe, update] as const;
+    if (!context)
+        throw new Error(
+            'useDatapointTimeframeContext must be used within DatapointTimeframeContextProvider',
+        );
+    return context;
 };

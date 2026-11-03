@@ -11,21 +11,12 @@ import { faCalendarCheck, faClock } from '@fortawesome/free-regular-svg-icons';
 import React from 'react';
 import { QueryDatapointTable } from '../../../table/QueryDatapointTable';
 import { useParams } from 'react-router';
-import { MS_WEEK } from '../../../../util/format/useDateFormatter';
 import { DatapointType } from '../../../../dataHooks/model/datapoint/Datapoint';
-import {
-    TimeframeControl,
-    useDatapointTimeframe,
-} from '../../../table/DatapointTimeframe';
 import { TWO_COLUMN_PRESETS } from '../../../../util/datapointTablePresets';
 
 const ServerWeekComparisonCard = () => {
     const { t } = useTranslation();
     const { identifier } = useParams();
-    const timeframe = useDatapointTimeframe(
-        'week-comparison',
-        TWO_COLUMN_PRESETS,
-    );
     return (
         <Card id={'week-comparison'}>
             <Card.Header>
@@ -34,37 +25,11 @@ const ServerWeekComparisonCard = () => {
                 </h6>
             </Card.Header>
             <QueryDatapointTable
-                headerControl={
-                    <TimeframeControl
-                        id={'week-comparison'}
-                        timeframe={timeframe}
-                    />
-                }
-                comparisonHeader={
-                    timeframe.columns
-                        ? undefined
-                        : t('html.label.comparing7days')
-                }
+                id={'week-comparison'}
+                defaultPreset={'weekComparison'}
+                presets={TWO_COLUMN_PRESETS}
                 filter={{ server: identifier }}
                 showTrend
-                columns={
-                    timeframe.columns ?? [
-                        {
-                            key: 'previous',
-                            filter: {
-                                afterMillisAgo: MS_WEEK * 2,
-                                beforeMillisAgo: MS_WEEK,
-                            },
-                        },
-                        {
-                            key: 'next',
-                            filter: {
-                                afterMillisAgo: MS_WEEK,
-                                beforeMillisAgo: 0,
-                            },
-                        },
-                    ]
-                }
                 rows={[
                     {
                         dataType: DatapointType.UNIQUE_PLAYERS_COUNT,
