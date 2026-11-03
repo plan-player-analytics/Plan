@@ -1,11 +1,22 @@
+import { IconProp } from '@fortawesome/fontawesome-svg-core';
+import { Trend } from '../../../dataHooks/model/datapoint/Trend';
 import { Card } from 'react-bootstrap';
-import Datapoint from '../../datapoint/Datapoint.tsx';
+import Datapoint from '../../datapoint/Datapoint';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faLongArrowAltRight } from '@fortawesome/free-solid-svg-icons';
 import BigTrend from '../../trend/BigTrend';
-import React from 'react';
+import React, { ReactNode } from 'react';
 
-const TrendCard = ({ icon, color, name, previous, next, trend }) => {
+type Props = {
+    icon: IconProp;
+    color?: string;
+    name: ReactNode;
+    previous: ReactNode;
+    next: ReactNode;
+    trend?: Trend | null;
+};
+
+const TrendCard = ({ icon, color, name, previous, next, trend }: Props) => {
     return (
         <Card>
             <Card.Body>

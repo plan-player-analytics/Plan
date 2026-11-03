@@ -1,10 +1,33 @@
 import { useTranslation } from 'react-i18next';
-import AsNumbersTable from './AsNumbersTable.tsx';
+import AsNumbersTable from './AsNumbersTable';
 import { faCrosshairs, faSkull } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
 import { TableRow } from './TableRow';
 
-const ServerPvpPveAsNumbersTable = ({ killData }) => {
+type Props = {
+    killData?: {
+        playerKdrAvg: string;
+        playerKdrAvg30d: string;
+        playerKdrAvg7d: string;
+        mobKdrTotal: string;
+        mobKdr30d: string;
+        mobKdr7d: string;
+        playerKillsTotal: number;
+        playerKills30d: number;
+        playerKills7d: number;
+        mobKillsTotal: number;
+        mobKills30d: number;
+        mobKills7d: number;
+        mobDeathsTotal: number;
+        mobDeaths30d: number;
+        mobDeaths7d: number;
+        deathsTotal: number;
+        deaths30d: number;
+        deaths7d: number;
+    } | null;
+};
+
+const ServerPvpPveAsNumbersTable = ({ killData }: Props) => {
     const { t } = useTranslation();
 
     if (!killData) return <></>;

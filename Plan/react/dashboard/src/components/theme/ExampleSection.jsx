@@ -1,7 +1,7 @@
 import { SidebarUseCase } from './usecase/SidebarUseCase.tsx';
 import InfoBoxUseCase from './usecase/InfoBoxUseCase.tsx';
 import { ChartLoader } from '../navigation/Loader.tsx';
-import TrendUseCase from './usecase/TrendUseCase.jsx';
+import TrendUseCase from './usecase/TrendUseCase';
 import CardUseCase from './usecase/CardUseCase.tsx';
 import CalendarUseCase from './usecase/CalendarUseCase.jsx';
 import DataUseCase from './usecase/DataUseCase.tsx';
