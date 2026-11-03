@@ -1,5 +1,12 @@
 # AGENTS.md
 
+## Frontend
+
+- Frontend is implemented in React with Vite and Yarn, and can be found from /Plan/react. Typescript is preferred over javascript.
+- Prefer separate files for components over multiple components in one file.
+- Prefer separation of concerns - hooks and components in separate files (Except for context hooks)
+- Prefer to use hooks for defining options for components - see ExtensionGraph.tsx for example.
+
 ## Testing instructions
 - Tests should utilize existing test classes where possible.
 - Database tests are done through interfaces and extending DatabaseTestAggregate.java, run with MySQLTest.java and SQLiteTest.java
