@@ -38,7 +38,7 @@ const TimeframeControl = ({ id, presets, timeframe }: Props) => {
                 }}>
                 {presets.map((preset) => (
                     <option key={preset} value={preset}>
-                        {t('html.label.timeframe.' + preset)}
+                        {t(`html.label.timeframe.${preset}`)}
                     </option>
                 ))}
             </select>
