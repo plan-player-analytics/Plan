@@ -17,10 +17,10 @@
 package com.djrapitops.plan.delivery.webserver.auth;
 
 import com.djrapitops.plan.SubSystem;
+import com.djrapitops.plan.delivery.TokenLastUsedBatchTask;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.WebUserQueries;
-import com.djrapitops.plan.storage.database.sql.tables.webuser.ApiTokenTable;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -40,13 +40,15 @@ public class AuthTokenStore implements SubSystem {
 
     private final DBSystem dbSystem;
     private final Processing processing;
+    private final TokenLastUsedBatchTask tokenLastUsedBatchTask;
 
     private final Map<String, List<String>> permissionsByToken;
 
     @Inject
-    public AuthTokenStore(DBSystem dbSystem, Processing processing) {
+    public AuthTokenStore(DBSystem dbSystem, Processing processing, TokenLastUsedBatchTask tokenLastUsedBatchTask) {
         this.dbSystem = dbSystem;
         this.processing = processing;
+        this.tokenLastUsedBatchTask = tokenLastUsedBatchTask;
         this.permissionsByToken = new ConcurrentHashMap<>();
     }
 
@@ -63,21 +65,16 @@ public class AuthTokenStore implements SubSystem {
         permissionsByToken.putAll(dbSystem.getDatabase().query(WebUserQueries.fetchTokenPermissions()));
     }
 
-    public void addToken(String token) {
-        processing.submitNonCritical(() -> {
-            var permissions = dbSystem.getDatabase().query(WebUserQueries.fetchTokenPermissions(token));
-            if (permissions.isEmpty()) return;
-            permissionsByToken.put(token, permissions);
-        });
-    }
-
     @Override
     public void disable() {
         permissionsByToken.clear();
     }
 
     public List<String> getPermissions(String token) {
-        dbSystem.getDatabase().executeInTransaction(ApiTokenTable.UPDATE_LAST_USED_STATEMENT, System.currentTimeMillis(), token);
-        return permissionsByToken.getOrDefault(token, new ArrayList<>());
+        if (permissionsByToken.containsKey(token)) {
+            tokenLastUsedBatchTask.recordTokenUsed(token, System.currentTimeMillis());
+            return permissionsByToken.getOrDefault(token, new ArrayList<>());
+        }
+        return List.of();
     }
 }
