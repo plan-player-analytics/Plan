@@ -73,9 +73,9 @@ public class TokenSaveJSONResolver implements AsyncResolver {
     }
 
     private String generateToken() {
-        byte[] bytes = new byte[16];
+        byte[] bytes = new byte[128];
         secureRandom.nextBytes(bytes);
-        return StringUtils.truncate(DigestUtils.sha256Hex(new String(bytes, StandardCharsets.UTF_8)), 64);
+        return StringUtils.truncate(DigestUtils.sha256Hex(bytes), 64);
     }
 
     @POST
