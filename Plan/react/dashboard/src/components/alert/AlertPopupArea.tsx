@@ -1,8 +1,15 @@
 import React from 'react';
-import { useAlertPopupContext } from '../../hooks/context/alertPopupContext.tsx';
-import LoadIn from '../animation/LoadIn.tsx';
+import {
+    AddedAlert,
+    useAlertPopupContext,
+} from '../../hooks/context/alertPopupContext';
+import LoadIn from '../animation/LoadIn';
 
-const Alert = ({ alert }) => {
+type Props = {
+    alert: AddedAlert;
+};
+
+const Alert = ({ alert }: Props) => {
     const { dismissAlert } = useAlertPopupContext();
     return (
         <LoadIn>

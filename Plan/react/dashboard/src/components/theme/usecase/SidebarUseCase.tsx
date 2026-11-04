@@ -7,7 +7,7 @@ import {
     faServer,
 } from '@fortawesome/free-solid-svg-icons';
 import { faCalendarCheck } from '@fortawesome/free-regular-svg-icons';
-import AlertPopupArea from '../../alert/AlertPopupArea.jsx';
+import AlertPopupArea from '../../alert/AlertPopupArea';
 import Header from '../../navigation/Header.jsx';
 import { useMetadata } from '../../../hooks/metadataHook';
 import { useTranslation } from 'react-i18next';

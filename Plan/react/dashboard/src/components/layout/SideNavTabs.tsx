@@ -1,7 +1,35 @@
 import React, { useState } from 'react';
 import { Col, Row } from 'react-bootstrap';
 
-const SliceHeader = ({ i, open, onClick, slice, alignment }) => {
+type Slice = {
+    header: React.ReactNode;
+    body: React.ReactNode;
+};
+
+type Props = {
+    slices: Slice[];
+    open?: boolean;
+    alignment?: React.CSSProperties['textAlign'];
+};
+
+type SliceBodyProps = {
+    i: number;
+    open: boolean;
+    slice: Slice;
+};
+
+type SliceHeaderProps = SliceBodyProps & {
+    onClick: React.MouseEventHandler<HTMLLIElement>;
+    alignment?: React.CSSProperties['textAlign'];
+};
+
+const SliceHeader = ({
+    i,
+    open,
+    onClick,
+    slice,
+    alignment,
+}: SliceHeaderProps) => {
     return (
         <li
             id={'slice_h_' + i}
@@ -19,7 +47,7 @@ const SliceHeader = ({ i, open, onClick, slice, alignment }) => {
     );
 };
 
-const SliceBody = ({ i, open, slice }) => {
+const SliceBody = ({ i, open, slice }: SliceBodyProps) => {
     return (
         <div
             className={'collapse' + (open ? ' open show' : 'closed')}
@@ -31,7 +59,7 @@ const SliceBody = ({ i, open, slice }) => {
     );
 };
 
-const SideNavTabs = ({ slices, open, alignment }) => {
+const SideNavTabs = ({ slices, open, alignment }: Props) => {
     const [openSlice, setOpenSlice] = useState(open ? 0 : -1);
 
     return (

@@ -1,18 +1,22 @@
 import React from 'react';
-import { useQueryResultContext } from '../../hooks/queryResultContext.tsx';
+import { useQueryResultContext } from '../../hooks/queryResultContext';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFilter } from '@fortawesome/free-solid-svg-icons';
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router';
 
-const QueryPath = ({ newQuery }) => {
+type Props = {
+    newQuery?: boolean;
+};
+
+const QueryPath = ({ newQuery }: Props) => {
     const { t } = useTranslation();
     const { result } = useQueryResultContext();
     const hasResults = Boolean(result?.data);
     const path = result?.path;
     if (!path?.length || (newQuery && hasResults)) return <></>;
 
-    const getReadableFilterName = (kind) => {
+    const getReadableFilterName = (kind: string): string => {
         if (kind.endsWith(' (skip)')) {
             return (
                 getReadableFilterName(kind.substring(0, kind.length - 5)) +

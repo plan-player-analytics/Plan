@@ -19,7 +19,7 @@ export type AddedAlert = {
 } & Alert;
 
 type AlertPopupContextValue = {
-    alerts: Alert[];
+    alerts: AddedAlert[];
     addAlert: (alert: Alert) => void;
     dismissAlert: (alert: AddedAlert) => void;
 };
