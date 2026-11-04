@@ -1,4 +1,4 @@
-import React, { useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCalendar } from '@fortawesome/free-regular-svg-icons';
 import 'react-datepicker/dist/react-datepicker.css';
@@ -55,7 +55,12 @@ const isValidDate = (value: string) => {
     const parsedDay = Number(d[1]);
     const parsedMonth = Number(d[2]) - 1; // 0=January, 11=December
     const parsedYear = Number(d[3]);
-    return new Date(parsedYear, parsedMonth, parsedDay);
+    const date = new Date(parsedYear, parsedMonth, parsedDay);
+    return (
+        date.getFullYear() === parsedYear &&
+        date.getMonth() === parsedMonth &&
+        date.getDate() === parsedDay
+    );
 };
 
 const correctDate = (value: string) => {
@@ -153,11 +158,19 @@ const DateInputField = ({
     const locale = useI18nFriendlyLanguage();
     const currentDebounce = useRef<number | undefined>(undefined);
 
-    const onChange = (newValue: Date | null) => {
+    const cancelPendingValidation = () => {
+        clearTimeout(currentDebounce.current);
+        currentDebounce.current = undefined;
+    };
+
+    useEffect(() => cancelPendingValidation, []);
+
+    const onChange = (newValue: Date | null, event?: { type: string }) => {
         if (picker) {
             setPicker(undefined);
             return;
         }
+        if (event?.type !== 'change') cancelPendingValidation();
         if (newValue) {
             const dateConverter = convert(newValue);
             if (type === 'string') {
@@ -176,9 +189,9 @@ const DateInputField = ({
 
     const onRawChange = (event: any) => {
         const rawValue = event.target.value;
+        cancelPendingValidation();
         if (!rawValue) return;
 
-        if (currentDebounce.current) clearTimeout(currentDebounce.current);
         currentDebounce.current = setTimeout(() => {
             const dateConverter = convert(correctDate(rawValue));
 

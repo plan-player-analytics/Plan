@@ -5,7 +5,6 @@ import {
     NumericDatapointType,
 } from '../../dataHooks/model/datapoint/Datapoint';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
-import ComparingLabel from '../trend/ComparingLabel';
 import { useTheme } from '../../hooks/themeHook';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 import {
@@ -17,8 +16,14 @@ import FormattedDay from '../text/FormattedDay';
 import { useAuth } from '../../hooks/authenticationHook';
 import { useTranslation } from 'react-i18next';
 import { MS_24H, MS_MONTH, MS_WEEK } from '../../util/format/useDateFormatter';
+import {
+    ALL_TIMEFRAME_PRESETS,
+    TimeframePreset,
+} from '../../util/datapointTablePresets';
+import { useDatapointTimeframe } from './presets/useDatapointTimeframe';
+import TimeframeControl from './presets/TimeframeControl';
 
-type Column = {
+export type Column = {
     filter: GenericFilter;
     label?: string;
     key: string;
@@ -40,9 +45,10 @@ type Row = {
 };
 
 type Props = {
-    comparisonHeader?: string;
+    id: string;
+    defaultPreset: TimeframePreset;
+    presets?: TimeframePreset[];
     filter: GenericFilter;
-    columns: Column[];
     rows: Row[];
     showTrend?: boolean;
 };
@@ -83,15 +89,19 @@ const FilterHeader = ({ filter, label }: Column) => {
 };
 
 export const QueryDatapointTable = ({
-    comparisonHeader,
+    id,
+    defaultPreset,
+    presets = ALL_TIMEFRAME_PRESETS,
     filter,
-    columns,
     rows,
     showTrend,
 }: Props) => {
     const { t } = useTranslation();
+    const timeframe = useDatapointTimeframe(id, defaultPreset);
+    const { columns } = timeframe;
     const { nightModeEnabled } = useTheme();
     const { hasPermission } = useAuth();
+    const trendShown = showTrend && columns.length === 2;
 
     return (
         <table
@@ -101,9 +111,11 @@ export const QueryDatapointTable = ({
             <thead className={'sticky-top'}>
                 <tr>
                     <th>
-                        {comparisonHeader && (
-                            <ComparingLabel>{comparisonHeader}</ComparingLabel>
-                        )}
+                        <TimeframeControl
+                            id={id}
+                            presets={presets}
+                            timeframe={timeframe}
+                        />
                     </th>
                     {columns.map((column) => (
                         <FilterHeader
@@ -112,7 +124,7 @@ export const QueryDatapointTable = ({
                             label={column.label}
                         />
                     ))}
-                    {showTrend && <th>{t('html.label.trend')}</th>}
+                    {trendShown && <th>{t('html.label.trend')}</th>}
                 </tr>
             </thead>
             <tbody>
@@ -157,7 +169,7 @@ export const QueryDatapointTable = ({
                                     />
                                 </td>
                             ))}
-                            {showTrend && (
+                            {trendShown && (
                                 <td>
                                     <QueryDatapointTrend
                                         filter={{
