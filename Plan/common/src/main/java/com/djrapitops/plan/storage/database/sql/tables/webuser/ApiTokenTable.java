@@ -166,7 +166,7 @@ public class ApiTokenTable {
             statement.setString(1, identifier);
             statement.setString(2, token);
             statement.setLong(3, issued);
-            statement.setLong(4, lastUsed);
+            Sql.setLongOrNull(statement, 4, lastUsed);
         }
 
         @Override
