@@ -176,13 +176,14 @@ public class ApiTokenTable {
             Row row = (Row) o;
             return id == row.id &&
                     issued == row.issued &&
+                    Objects.equals(identifier, row.identifier) &&
                     Objects.equals(lastUsed, row.lastUsed) &&
                     Objects.equals(token, row.token);
         }
 
         @Override
         public int hashCode() {
-            return Objects.hash(id, token, issued, lastUsed);
+            return Objects.hash(id, identifier, token, issued, lastUsed);
         }
 
         @Override
