@@ -16,7 +16,7 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 import CollapseWithButton from '../layout/CollapseWithButton.tsx';
 import FormsUseCase from './usecase/FormsUseCase.jsx';
-import { addToObject } from '../../util/mutator.js';
+import { addToObject } from '../../util/mutator';
 import { graphUseCases } from './usecase/GraphUseCases.jsx';
 import { TableUseCase } from './usecase/TableUseCases.tsx';
 import { formatLabel } from './UseCase.jsx';

@@ -1,8 +1,16 @@
 // Function to flatten nested object into dot notation
 import { cssVariableToName } from './colors.js';
+import {
+    ColorPropertyMap,
+    UseCase,
+    UseCaseMap,
+} from '../components/theme/model/ThemeConfig';
 
-export const flattenObject = (obj, prefix = '') => {
-    return Object.entries(obj).reduce((acc, [key, value]) => {
+export const flattenObject = (
+    obj: UseCaseMap,
+    prefix = '',
+): ColorPropertyMap => {
+    return Object.entries(obj).reduce<ColorPropertyMap>((acc, [key, value]) => {
         const newKey = prefix ? `${prefix}-${key}` : key;
         if (
             typeof value === 'object' &&
@@ -22,14 +30,20 @@ export const flattenObject = (obj, prefix = '') => {
 };
 
 // Function to merge two objects recursively, with override taking precedence
-export const mergeUseCases = (base, override) => {
+export const mergeUseCases = (
+    base: UseCaseMap,
+    override: UseCaseMap,
+): UseCaseMap => {
     const merged = { ...base };
     for (const key in override) {
         if (
             typeof override[key] === 'object' &&
             !Array.isArray(override[key])
         ) {
-            merged[key] = mergeUseCases(base[key] || {}, override[key]);
+            merged[key] = mergeUseCases(
+                (base[key] || {}) as UseCaseMap,
+                override[key],
+            );
         } else {
             merged[key] = override[key];
         }
@@ -37,7 +51,7 @@ export const mergeUseCases = (base, override) => {
     return merged;
 };
 
-export const addToObject = (base, toAdd) => {
+export const addToObject = (base: Record<string, unknown>, toAdd?: UseCase) => {
     if (!toAdd) return base;
     Object.entries(toAdd).forEach(([key, value]) => {
         base[key] = value;
@@ -46,10 +60,10 @@ export const addToObject = (base, toAdd) => {
 };
 
 export const recursiveFindAndReplaceValue = (
-    object,
-    toReplace,
-    replaceWith,
-) => {
+    object: UseCase,
+    toReplace: string,
+    replaceWith: string,
+): UseCase => {
     if (Array.isArray(object)) {
         const toReplaceName = cssVariableToName(toReplace);
         const toReplaceWithName = cssVariableToName(replaceWith);
@@ -57,7 +71,7 @@ export const recursiveFindAndReplaceValue = (
             item === toReplaceName ? toReplaceWithName : item,
         );
     } else if (object !== null && typeof object === 'object') {
-        const result = {};
+        const result: UseCaseMap = {};
         for (const [key, value] of Object.entries(object)) {
             result[key] = recursiveFindAndReplaceValue(
                 value,

@@ -10,7 +10,7 @@ import { cssVariableToName, nameToCssVariable } from '../../util/colors.js';
 import {
     flattenObject,
     recursiveFindAndReplaceValue,
-} from '../../util/mutator.js';
+} from '../../util/mutator';
 import { Trans, useTranslation } from 'react-i18next';
 import { saveTheme } from '../../service/metadataService.js';
 import { useAuth } from '../authenticationHook.js';
@@ -192,7 +192,11 @@ export const ThemeEditContextProvider = ({ children }: PropsWithChildren) => {
     ) => {
         const oldVariable = nameToCssVariable(oldName);
         const newVariable = nameToCssVariable(newName);
-        return recursiveFindAndReplaceValue(current, oldVariable, newVariable);
+        return recursiveFindAndReplaceValue(
+            current,
+            oldVariable,
+            newVariable,
+        ) as UseCaseMap;
     };
 
     const handleColorSave =
@@ -228,13 +232,13 @@ export const ThemeEditContextProvider = ({ children }: PropsWithChildren) => {
                                 name,
                                 color,
                                 previous,
-                            );
+                            ) as EditTypeMap[typeof type];
                         } else {
                             return updateUseCaseColorName(
                                 current as UseCaseMap,
                                 previous,
                                 name,
-                            );
+                            ) as EditTypeMap[typeof type];
                         }
                     },
                 ),
@@ -275,13 +279,13 @@ export const ThemeEditContextProvider = ({ children }: PropsWithChildren) => {
                                 name,
                                 color,
                                 previous,
-                            );
+                            ) as EditTypeMap[typeof type];
                         } else {
                             return updateUseCaseColorName(
                                 current as UseCaseMap,
                                 previous,
                                 name,
-                            );
+                            ) as EditTypeMap[typeof type];
                         }
                     },
                 ),
