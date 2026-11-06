@@ -1,4 +1,5 @@
 import React from 'react';
+import { Trend } from '../../dataHooks/model/datapoint/Trend';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import {
     faCaretDown,
@@ -6,33 +7,42 @@ import {
     faCaretUp,
 } from '@fortawesome/free-solid-svg-icons';
 
-const TrendUpGood = ({ value }) => (
+type Props = {
+    trend?: Trend | null;
+    format?: (value: string) => string;
+};
+
+type ValueProps = {
+    value: string;
+};
+
+const TrendUpGood = ({ value }: ValueProps) => (
     <span title={value}>
         <Fa icon={faCaretUp} className='trend col-trend-better' />
     </span>
 );
-const TrendUpBad = ({ value }) => (
+const TrendUpBad = ({ value }: ValueProps) => (
     <span title={value}>
         <Fa icon={faCaretUp} className='trend col-trend-worse' />
     </span>
 );
-const TrendDownBad = ({ value }) => (
+const TrendDownBad = ({ value }: ValueProps) => (
     <span title={value}>
         <Fa icon={faCaretDown} className='trend col-trend-worse' />
     </span>
 );
-const TrendDownGood = ({ value }) => (
+const TrendDownGood = ({ value }: ValueProps) => (
     <span title={value}>
         <Fa icon={faCaretDown} className='trend col-trend-better' />
     </span>
 );
-const TrendSame = ({ value }) => (
+const TrendSame = ({ value }: ValueProps) => (
     <span title={value}>
         <Fa icon={faCaretRight} className='trend col-trend-same' />
     </span>
 );
 
-const SmallTrend = ({ trend, format }) => {
+const SmallTrend = ({ trend, format }: Props) => {
     if (!trend) {
         return <TrendSame value={'?'} />;
     }

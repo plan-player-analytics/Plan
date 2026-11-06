@@ -1,6 +1,6 @@
 import React from 'react';
-import BigTrend from '../../trend/BigTrend.jsx';
-import SmallTrend from '../../trend/SmallTrend.jsx';
+import BigTrend from '../../trend/BigTrend';
+import SmallTrend from '../../trend/SmallTrend';
 import { Card, Col, Row } from 'react-bootstrap';
 
 const TrendUseCase = () => {
@@ -20,25 +20,39 @@ const TrendUseCase = () => {
                             />
                         </p>
                         <p>
-                            <BigTrend trend={{ text: '1234', direction: '' }} />
+                            <BigTrend
+                                trend={{ text: '1234', direction: null }}
+                            />
                         </p>
                         <hr />
                         <p>
                             1234{' '}
                             <SmallTrend
-                                trend={{ text: '1234', direction: '+' }}
+                                trend={{
+                                    text: '1234',
+                                    direction: '+',
+                                    reversed: false,
+                                }}
                             />
                         </p>
                         <p>
                             1234{' '}
                             <SmallTrend
-                                trend={{ text: '1234', direction: '-' }}
+                                trend={{
+                                    text: '1234',
+                                    direction: '-',
+                                    reversed: false,
+                                }}
                             />
                         </p>
                         <p>
                             1234{' '}
                             <SmallTrend
-                                trend={{ text: '1234', direction: '' }}
+                                trend={{
+                                    text: '1234',
+                                    direction: null,
+                                    reversed: false,
+                                }}
                             />
                         </p>
                     </Card.Body>

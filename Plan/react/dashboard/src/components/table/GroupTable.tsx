@@ -1,10 +1,26 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '../../hooks/themeHook.tsx';
+import { useTheme } from '../../hooks/themeHook';
 import { withReducedSaturation } from '../../util/colors';
-import Scrollable from '../Scrollable.tsx';
+import Scrollable from '../Scrollable';
 
-const GroupRow = ({ group, color }) => {
+type Group = {
+    name: string;
+    y: number;
+    color?: string;
+};
+
+type Props = {
+    groups: Group[];
+    colors: string[];
+};
+
+type GroupRowProps = {
+    group: Group;
+    color?: string;
+};
+
+const GroupRow = ({ group, color }: GroupRowProps) => {
     const { t } = useTranslation();
     return (
         <tr>
@@ -14,11 +30,11 @@ const GroupRow = ({ group, color }) => {
     );
 };
 
-const GroupTable = ({ groups, colors }) => {
+const GroupTable = ({ groups, colors }: Props) => {
     const { t } = useTranslation();
     const { nightModeEnabled } = useTheme();
 
-    function getColor(i) {
+    function getColor(i: number) {
         if (groups[i].color) {
             return groups[i].color;
         }
