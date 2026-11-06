@@ -59,7 +59,6 @@ public class OnlineActivityOverviewJSONCreator implements ServerTabJSONCreator<M
     private final Locale locale;
     private final PluginLogger logger;
 
-    private final Formatter<Double> decimalFormatter;
     private final Formatter<Double> percentageFormatter;
 
     @Inject
@@ -73,7 +72,6 @@ public class OnlineActivityOverviewJSONCreator implements ServerTabJSONCreator<M
         this.locale = locale;
         this.logger = logger;
 
-        decimalFormatter = formatters.decimals();
         percentageFormatter = formatters.percentage();
     }
 
@@ -254,8 +252,8 @@ public class OnlineActivityOverviewJSONCreator implements ServerTabJSONCreator<M
         double playersOnlineOnRegister = firstSessions.toAveragePlayersOnline(playersOnlineResolver);
         double playersOnlineOnRegisterBefore = firstSessionsBefore.toAveragePlayersOnline(playersOnlineResolver);
         double playersOnlineOnRegisterAfter = firstSessionsAfter.toAveragePlayersOnline(playersOnlineResolver);
-        insights.put("playersFirstJoinAvg", decimalFormatter.apply(playersOnlineOnRegister));
-        insights.put("playersFirstJoinTrend", new Trend(playersOnlineOnRegisterBefore, playersOnlineOnRegisterAfter, false, decimalFormatter));
+        insights.put("playersFirstJoinAvg", playersOnlineOnRegister);
+        insights.put("playersFirstJoinTrend", new Trend(playersOnlineOnRegisterBefore, playersOnlineOnRegisterAfter, false));
 
         return insights;
     }

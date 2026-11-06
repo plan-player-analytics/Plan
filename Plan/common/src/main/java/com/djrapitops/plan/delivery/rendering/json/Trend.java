@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.delivery.rendering.json;
 
-import com.djrapitops.plan.delivery.formatting.Formatter;
-
 /**
  * Represents a trend in the data - used for JSON format.
  *
@@ -41,16 +39,9 @@ public class Trend {
         this.reversed = reversed;
     }
 
-    public Trend(long before, long after, boolean reversed, Formatter<Long> formatter) {
-        long difference = Math.abs(before - after);
-        this.text = formatter.apply(difference);
-        this.direction = getDirection(before, after);
-        this.reversed = reversed;
-    }
-
-    public Trend(double before, double after, boolean reversed, Formatter<Double> formatter) {
+    public Trend(double before, double after, boolean reversed) {
         double difference = Math.abs(before - after);
-        this.text = formatter.apply(difference);
+        this.text = Double.toString(difference);
         this.direction = getDirection(before, after);
         this.reversed = reversed;
     }

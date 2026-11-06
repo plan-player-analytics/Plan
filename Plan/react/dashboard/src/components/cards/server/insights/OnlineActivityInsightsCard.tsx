@@ -13,6 +13,7 @@ import End from '../../../layout/End';
 import { CardLoader } from '../../../navigation/Loader';
 import FormattedTime from '../../../text/FormattedTime';
 import { useTimeAmountFormatter } from '../../../../util/format/useTimeAmountFormatter';
+import { useDecimalFormatter } from '../../../../util/format/useDecimalFormatter';
 import { useDataRequest } from '../../../../hooks/dataFetchHook.js';
 import { fetchOnlineActivityOverview } from '../../../../service/serverService.js';
 import { ErrorViewCard } from '../../../../views/ErrorView';
@@ -23,7 +24,7 @@ import { Trend } from '../../../../dataHooks/model/datapoint/Trend';
 
 type OnlineActivityOverview = {
     insights: {
-        playersFirstJoinAvg: string;
+        playersFirstJoinAvg: number;
         playersFirstJoinTrend: Trend;
         firstSessionLengthAvg: number;
         firstSessionLengthTrend: Trend;
@@ -41,6 +42,7 @@ const OnlineActivityInsightsCard = () => {
     const { hasPermission } = useAuth();
     const { identifier } = useParams();
     const { formatTime } = useTimeAmountFormatter();
+    const { formatDecimals } = useDecimalFormatter();
 
     const seeOverview = hasPermission('page.server.online.activity.overview');
     const { data, loadingError } = useDataRequest(
@@ -60,8 +62,13 @@ const OnlineActivityInsightsCard = () => {
                 name={t('html.label.onlineOnFirstJoin')}
                 icon={faUserGroup}
                 color='players-new'
-                value={insights.playersFirstJoinAvg}
-                trend={<SmallTrend trend={insights.playersFirstJoinTrend} />}
+                value={formatDecimals(insights.playersFirstJoinAvg)}
+                trend={
+                    <SmallTrend
+                        trend={insights.playersFirstJoinTrend}
+                        format={(value) => formatDecimals(Number(value))}
+                    />
+                }
             />
             <Datapoint
                 name={t('html.label.firstSessionLength.average')}

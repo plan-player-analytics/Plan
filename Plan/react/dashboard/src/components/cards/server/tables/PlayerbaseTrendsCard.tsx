@@ -10,6 +10,7 @@ import { TableRow } from '../../../table/TableRow';
 import { CardLoader } from '../../../navigation/Loader';
 import FormattedTime from '../../../text/FormattedTime';
 import { useTimeAmountFormatter } from '../../../../util/format/useTimeAmountFormatter';
+import { useDecimalFormatter } from '../../../../util/format/useDecimalFormatter';
 import { Trend } from '../../../../dataHooks/model/datapoint/Trend';
 
 type Props = {
@@ -23,8 +24,8 @@ type Props = {
         playtimeAvgThen: number;
         playtimeAvgNow: number;
         playtimeAvgTrend: Trend;
-        afkThen: string;
-        afkNow: string;
+        afkThen: number;
+        afkNow: number;
         afkTrend: Trend;
         regularPlaytimeAvgThen: number;
         regularPlaytimeAvgNow: number;
@@ -32,8 +33,8 @@ type Props = {
         regularSessionAvgThen: number;
         regularSessionAvgNow: number;
         regularSessionAvgTrend: Trend;
-        regularAfkAvgThen: string;
-        regularAfkAvgNow: string;
+        regularAfkAvgThen: number;
+        regularAfkAvgNow: number;
         regularAfkAvgTrend: Trend;
     } | null;
 };
@@ -41,7 +42,11 @@ type Props = {
 const PlayerbaseTrendsCard = ({ data }: Props) => {
     const { t } = useTranslation();
     const { formatTime } = useTimeAmountFormatter();
+    const { formatDecimals } = useDecimalFormatter();
     if (!data) return <CardLoader />;
+
+    const formatPercentage = (value: number) =>
+        formatDecimals(value * 100) + '%';
     return (
         <Card id={'playerbase-trends'}>
             <Card.Header>
@@ -115,11 +120,12 @@ const PlayerbaseTrendsCard = ({ data }: Props) => {
                     color='playtime-afk'
                     text={t('html.label.afk') + ' ' + t('html.label.perPlayer')}
                     values={[
-                        data.afkThen,
-                        data.afkNow,
+                        formatPercentage(data.afkThen),
+                        formatPercentage(data.afkNow),
                         <BigTrend
                             key={JSON.stringify(data.afkTrend)}
                             trend={data.afkTrend}
+                            format={(value) => formatPercentage(Number(value))}
                         />,
                     ]}
                 />
@@ -180,11 +186,12 @@ const PlayerbaseTrendsCard = ({ data }: Props) => {
                         t('html.label.perRegularPlayer')
                     }
                     values={[
-                        data.regularAfkAvgThen,
-                        data.regularAfkAvgNow,
+                        formatPercentage(data.regularAfkAvgThen),
+                        formatPercentage(data.regularAfkAvgNow),
                         <BigTrend
                             key={JSON.stringify(data.regularAfkAvgTrend)}
                             trend={data.regularAfkAvgTrend}
+                            format={(value) => formatPercentage(Number(value))}
                         />,
                     ]}
                 />
