@@ -1,23 +1,40 @@
 import React from 'react';
-import InsightsFor30DaysCard from '../../common/InsightsFor30DaysCard.tsx';
+import InsightsFor30DaysCard from '../../common/InsightsFor30DaysCard';
 import { useTranslation } from 'react-i18next';
-import Datapoint from '../../../datapoint/Datapoint.tsx';
+import Datapoint from '../../../datapoint/Datapoint';
 import { faUserClock, faUserGroup } from '@fortawesome/free-solid-svg-icons';
 import SmallTrend from '../../../trend/SmallTrend';
 import {
     faCalendar,
     faCalendarPlus,
 } from '@fortawesome/free-regular-svg-icons';
-import ComparingLabel from '../../../trend/ComparingLabel.tsx';
-import End from '../../../layout/End.tsx';
-import { CardLoader } from '../../../navigation/Loader.tsx';
-import FormattedTime from '../../../text/FormattedTime.tsx';
-import { useTimeAmountFormatter } from '../../../../util/format/useTimeAmountFormatter.ts';
+import ComparingLabel from '../../../trend/ComparingLabel';
+import End from '../../../layout/End';
+import { CardLoader } from '../../../navigation/Loader';
+import FormattedTime from '../../../text/FormattedTime';
+import { useTimeAmountFormatter } from '../../../../util/format/useTimeAmountFormatter';
 import { useDataRequest } from '../../../../hooks/dataFetchHook.js';
 import { fetchOnlineActivityOverview } from '../../../../service/serverService.js';
-import { ErrorViewCard } from '../../../../views/ErrorView.tsx';
-import { useAuth } from '../../../../hooks/authenticationHook.tsx';
+import { ErrorViewCard } from '../../../../views/ErrorView';
+import { useAuth } from '../../../../hooks/authenticationHook';
 import { useParams } from 'react-router';
+import { PlanDataResponse } from '../../../../service/PlanResponse';
+import { Trend } from '../../../../dataHooks/model/datapoint/Trend';
+
+type OnlineActivityOverview = {
+    insights: {
+        playersFirstJoinAvg: string;
+        playersFirstJoinTrend: Trend;
+        firstSessionLengthAvg: number;
+        firstSessionLengthTrend: Trend;
+        firstSessionLengthMedian: number;
+        firstSessionLengthMedianTrend: Trend;
+        loneJoins: number;
+        loneJoinsTrend: Trend;
+        loneNewJoins: number;
+        loneNewJoinsTrend: Trend;
+    };
+};
 
 const OnlineActivityInsightsCard = () => {
     const { t } = useTranslation();
@@ -30,7 +47,7 @@ const OnlineActivityInsightsCard = () => {
         fetchOnlineActivityOverview,
         [identifier],
         seeOverview,
-    );
+    ) as unknown as PlanDataResponse<OnlineActivityOverview>;
 
     if (!data) return <CardLoader />;
     if (loadingError) return <ErrorViewCard error={loadingError} />;
@@ -56,7 +73,7 @@ const OnlineActivityInsightsCard = () => {
                 trend={
                     <SmallTrend
                         trend={insights.firstSessionLengthTrend}
-                        format={formatTime}
+                        format={(value) => formatTime(Number(value))}
                     />
                 }
             />
@@ -70,7 +87,7 @@ const OnlineActivityInsightsCard = () => {
                 trend={
                     <SmallTrend
                         trend={insights.firstSessionLengthMedianTrend}
-                        format={formatTime}
+                        format={(value) => formatTime(Number(value))}
                     />
                 }
             />

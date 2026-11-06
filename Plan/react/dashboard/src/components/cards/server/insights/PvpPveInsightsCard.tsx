@@ -1,11 +1,19 @@
 import React from 'react';
-import InsightsFor30DaysCard from '../../common/InsightsFor30DaysCard.tsx';
-import Datapoint from '../../../datapoint/Datapoint.tsx';
+import InsightsFor30DaysCard from '../../common/InsightsFor30DaysCard';
+import Datapoint from '../../../datapoint/Datapoint';
 import { useTranslation } from 'react-i18next';
 import { faHandSparkles } from '@fortawesome/free-solid-svg-icons';
-import { CardLoader } from '../../../navigation/Loader.tsx';
+import { CardLoader } from '../../../navigation/Loader';
 
-const PvpPveInsightsCard = ({ data }) => {
+type Props = {
+    data?: {
+        weapon1st: string;
+        weapon2nd: string;
+        weapon3rd: string;
+    } | null;
+};
+
+const PvpPveInsightsCard = ({ data }: Props) => {
     const { t } = useTranslation();
 
     if (!data) return <CardLoader />;

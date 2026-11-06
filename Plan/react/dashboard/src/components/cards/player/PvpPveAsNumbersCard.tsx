@@ -2,10 +2,16 @@ import { useTranslation } from 'react-i18next';
 import { Card } from 'react-bootstrap';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faCampground } from '@fortawesome/free-solid-svg-icons';
-import React from 'react';
+import React, { ComponentProps } from 'react';
 import PlayerPvpPveAsNumbersTable from '../../table/PlayerPvpPveAsNumbersTable';
 
-const PvpPveAsNumbersCard = ({ player }) => {
+type Props = {
+    player: {
+        killData: ComponentProps<typeof PlayerPvpPveAsNumbersTable>['killData'];
+    };
+};
+
+const PvpPveAsNumbersCard = ({ player }: Props) => {
     const { t } = useTranslation();
     return (
         <Card>

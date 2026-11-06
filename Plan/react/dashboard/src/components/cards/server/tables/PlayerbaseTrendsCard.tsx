@@ -2,16 +2,43 @@ import { useTranslation } from 'react-i18next';
 import { Card } from 'react-bootstrap';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faExchangeAlt, faUsers } from '@fortawesome/free-solid-svg-icons';
-import ComparisonTable from '../../../table/ComparisonTable.tsx';
+import ComparisonTable from '../../../table/ComparisonTable';
 import BigTrend from '../../../trend/BigTrend';
 import React from 'react';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { TableRow } from '../../../table/TableRow';
-import { CardLoader } from '../../../navigation/Loader.tsx';
-import FormattedTime from '../../../text/FormattedTime.tsx';
-import { useTimeAmountFormatter } from '../../../../util/format/useTimeAmountFormatter.ts';
+import { CardLoader } from '../../../navigation/Loader';
+import FormattedTime from '../../../text/FormattedTime';
+import { useTimeAmountFormatter } from '../../../../util/format/useTimeAmountFormatter';
+import { Trend } from '../../../../dataHooks/model/datapoint/Trend';
 
-const PlayerbaseTrendsCard = ({ data }) => {
+type Props = {
+    data?: {
+        totalPlayersThen: number;
+        totalPlayersNow: number;
+        totalPlayersTrend: Trend;
+        regularPlayersThen: number;
+        regularPlayersNow: number;
+        regularPlayersTrend: Trend;
+        playtimeAvgThen: number;
+        playtimeAvgNow: number;
+        playtimeAvgTrend: Trend;
+        afkThen: string;
+        afkNow: string;
+        afkTrend: Trend;
+        regularPlaytimeAvgThen: number;
+        regularPlaytimeAvgNow: number;
+        regularPlaytimeAvgTrend: Trend;
+        regularSessionAvgThen: number;
+        regularSessionAvgNow: number;
+        regularSessionAvgTrend: Trend;
+        regularAfkAvgThen: string;
+        regularAfkAvgNow: string;
+        regularAfkAvgTrend: Trend;
+    } | null;
+};
+
+const PlayerbaseTrendsCard = ({ data }: Props) => {
     const { t } = useTranslation();
     const { formatTime } = useTimeAmountFormatter();
     if (!data) return <CardLoader />;
@@ -79,7 +106,7 @@ const PlayerbaseTrendsCard = ({ data }) => {
                         <BigTrend
                             key={JSON.stringify(data.totalPlayersTrend)}
                             trend={data.playtimeAvgTrend}
-                            format={formatTime}
+                            format={(value) => formatTime(Number(value))}
                         />,
                     ]}
                 />
@@ -116,7 +143,7 @@ const PlayerbaseTrendsCard = ({ data }) => {
                         <BigTrend
                             key={JSON.stringify(data.regularPlaytimeAvgTrend)}
                             trend={data.regularPlaytimeAvgTrend}
-                            format={formatTime}
+                            format={(value) => formatTime(Number(value))}
                         />,
                     ]}
                 />
@@ -140,7 +167,7 @@ const PlayerbaseTrendsCard = ({ data }) => {
                         <BigTrend
                             key={JSON.stringify(data.regularSessionAvgTrend)}
                             trend={data.regularSessionAvgTrend}
-                            format={formatTime}
+                            format={(value) => formatTime(Number(value))}
                         />,
                     ]}
                 />
