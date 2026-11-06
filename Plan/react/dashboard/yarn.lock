@@ -1192,10 +1192,10 @@ i18next-http-backend@4.0.6:
   resolved "https://registry.yarnpkg.com/i18next-http-backend/-/i18next-http-backend-4.0.6.tgz#ba266cb713939658df4a2c1714e43007bf36bfb1"
   integrity sha512-k5OPDXAQH9CZ2Ju2DDw1ZC4WiYmjKUjOE4lcd51tNQyWjVDfpuwPcE9Y5VzDpz1tR1Z4wxkkj4H+ImxgwbfpeQ==
 
-i18next-localstorage-backend@4.3.2:
-  version "4.3.2"
-  resolved "https://registry.yarnpkg.com/i18next-localstorage-backend/-/i18next-localstorage-backend-4.3.2.tgz#9d515ae4d7cd7140fae897874f376a5c2597b3a5"
-  integrity sha512-fBXOGTcUrS7ueD6W/I/+ruByGEiZlxjNU1xlRTCVtMzBqoPxH+xa1i/KXp3Gxy0gBQlX6Ni9WU06LXGLdJHIvg==
+i18next-localstorage-backend@4.3.3:
+  version "4.3.3"
+  resolved "https://registry.yarnpkg.com/i18next-localstorage-backend/-/i18next-localstorage-backend-4.3.3.tgz#ab5bf80f49d1ceeea5e3a41eeb8b5f4bcc0d2d97"
+  integrity sha512-PsWOdh3449Ul1UQ+pyKgpxKBHlG5uppWn/35N0ngzIILxTlIFq3lg7iDvZAVKGIh4PnACt+weCRb117+YREdKg==
   dependencies:
     "@babel/runtime" "^7.28.4"
 
