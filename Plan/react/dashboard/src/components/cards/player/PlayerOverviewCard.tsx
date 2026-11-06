@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useMetadata } from '../../../hooks/metadataHook.tsx';
-import { useNavigation } from '../../../hooks/navigationHook.tsx';
+import { useMetadata } from '../../../hooks/metadataHook';
+import { useNavigation } from '../../../hooks/navigationHook';
 import { Card, Col } from 'react-bootstrap';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import {
@@ -11,8 +11,8 @@ import {
     faClock,
     faQuestionCircle,
 } from '@fortawesome/free-regular-svg-icons';
-import ExtendableCardBody from '../../layout/extension/ExtendableCardBody.tsx';
-import ExtendableRow from '../../layout/extension/ExtendableRow.tsx';
+import ExtendableCardBody from '../../layout/extension/ExtendableCardBody';
+import ExtendableRow from '../../layout/extension/ExtendableRow';
 import {
     faCircle,
     faCrosshairs,
@@ -25,13 +25,45 @@ import {
     faUserPlus,
 } from '@fortawesome/free-solid-svg-icons';
 import { faSuperpowers } from '@fortawesome/free-brands-svg-icons';
-import Datapoint from '../../datapoint/Datapoint.tsx';
-import FormattedTime from '../../text/FormattedTime.tsx';
-import FormattedDate from '../../text/FormattedDate.tsx';
-import { useDecimalFormatter } from '../../../util/format/useDecimalFormatter.ts';
-import { usePingFormatter } from '../../../util/format/usePingFormatter.ts';
+import Datapoint from '../../datapoint/Datapoint';
+import FormattedTime from '../../text/FormattedTime';
+import FormattedDate from '../../text/FormattedDate';
+import { useDecimalFormatter } from '../../../util/format/useDecimalFormatter';
+import { usePingFormatter } from '../../../util/format/usePingFormatter';
 
-const PlayerHeadSection = ({ player }) => {
+type PlayerInfo = {
+    name: string;
+    uuid: string;
+    online: boolean;
+    operator: boolean;
+    kickCount: number;
+    playerKillCount: number;
+    mobKillCount: number;
+    deathCount: number;
+    playtime: number;
+    activePlaytime: number;
+    afkTime: number;
+    sessionCount: number;
+    longestSessionLength: number;
+    sessionMedian: number;
+    activityIndex: number;
+    activityIndexGroup: string;
+    favoriteServer: string;
+    latestJoinAddress: string;
+    averagePing: number | string;
+    worstPing: number | string;
+    bestPing: number | string;
+    registered: number | '-';
+    lastSeen: number | '-';
+};
+
+type Props = {
+    player: {
+        info: PlayerInfo;
+    };
+};
+
+const PlayerHeadSection = ({ player }: Props) => {
     const { t } = useTranslation();
     const { getPlayerHeadImageUrl } = useMetadata();
     const headImageUrl = getPlayerHeadImageUrl(
@@ -92,7 +124,7 @@ const PlayerHeadSection = ({ player }) => {
     );
 };
 
-const PlayerOverviewCard = ({ player }) => {
+const PlayerOverviewCard = ({ player }: Props) => {
     const { t } = useTranslation();
     const { setHelpModalTopic } = useNavigation();
     const openHelp = useCallback(

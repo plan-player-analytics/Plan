@@ -1,15 +1,25 @@
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '../../../hooks/themeHook.tsx';
+import { useTheme } from '../../../hooks/themeHook';
 import { Card } from 'react-bootstrap';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faServer, faSignature } from '@fortawesome/free-solid-svg-icons';
-import Scrollable from '../../Scrollable.tsx';
+import Scrollable from '../../Scrollable';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 import React from 'react';
-import ColoredText from '../../text/ColoredText.tsx';
-import FormattedDate from '../../text/FormattedDate.tsx';
+import ColoredText from '../../text/ColoredText';
+import FormattedDate from '../../text/FormattedDate';
 
-const NicknamesCard = ({ nicknames }) => {
+type Nickname = {
+    nickname: string;
+    server: string;
+    date: number;
+};
+
+type Props = {
+    nicknames: Nickname[];
+};
+
+const NicknamesCard = ({ nicknames }: Props) => {
     const { t } = useTranslation();
     const { nightModeEnabled } = useTheme();
     return (
