@@ -1,5 +1,5 @@
 import React from 'react';
-import { useThemeEditContext } from '../../hooks/context/themeEditContextHook.tsx';
+import { useThemeEditContext } from '../../hooks/context/themeEditContextHook';
 import { useTranslation } from 'react-i18next';
 
 const ThemeEditHistory = () => {
@@ -13,7 +13,7 @@ const ThemeEditHistory = () => {
     return (
         <ul className={'edit-history'}>
             {redos.map((item, index) => {
-                if (item.length) {
+                if ('length' in item) {
                     return (
                         <React.Fragment key={'redo' + index}>
                             <li className={'redo'}>
