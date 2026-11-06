@@ -28,7 +28,7 @@
         "highcharts": "13.1.1",
         "i18next": "26.5.11",
         "i18next-chained-backend": "5.0.8",
-        "i18next-http-backend": "4.0.6",
+        "i18next-http-backend": "4.0.9",
         "i18next-localstorage-backend": "4.3.3",
         "masonry-layout": "4.2.2",
         "moment": "2.31.0",
