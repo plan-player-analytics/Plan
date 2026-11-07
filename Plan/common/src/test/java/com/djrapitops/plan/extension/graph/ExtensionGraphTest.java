@@ -19,6 +19,7 @@ package com.djrapitops.plan.extension.graph;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
+import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.extension.CallEvents;
 import com.djrapitops.plan.extension.ExtensionSvc;
 import com.djrapitops.plan.extension.NotReadyException;
@@ -33,6 +34,7 @@ import com.djrapitops.plan.settings.config.changes.ConfigUpdater;
 import com.djrapitops.plan.settings.config.paths.DataGatheringSettings;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
+import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
@@ -51,6 +53,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.testcontainers.shaded.org.awaitility.Awaitility;
 import utilities.*;
 
 import java.io.File;
@@ -63,7 +66,6 @@ import java.util.stream.Stream;
 
 import static com.djrapitops.plan.delivery.export.ExportTestUtilities.assertNoLogs;
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
 
 /**
  * Test for visibility of extension graphs.
@@ -329,18 +331,19 @@ class ExtensionGraphTest {
     }
 
     @AfterEach
-    void tearDownTest(WebDriver driver, Database database, PlanConfig config, ServerUUID serverUUID) {
+    void tearDownTest(WebDriver driver, AsyncJSONResolverService asyncJSONResolverService, ExtensionSvc extensionService, DBSystem dbSystem, Database database, PlanConfig config, ServerUUID serverUUID) {
         SeleniumExtension.newTab(driver);
-        removeExtensionData(database, config, serverUUID);
-    }
-
-    private void removeExtensionData(Database database, PlanConfig config, ServerUUID serverUUID) {
+        // Remove data
         config.getExtensionSettings().setEnabled("PlayerGraphExtension", false);
         config.getExtensionSettings().setEnabled("ServerGraphExtension", false);
-        database.executeTransaction(new RemoveOldExtensionsTransaction(mock(ExtensionMetadataStorage.class), config.getExtensionSettings(), -TimeUnit.MINUTES.toMillis(60), serverUUID))
+        database.executeTransaction(new RemoveOldExtensionsTransaction(new ExtensionMetadataStorage(dbSystem),
+                        config.getExtensionSettings(), -TimeUnit.MINUTES.toMillis(60), serverUUID))
                 .join();
         assertEquals(Map.of(), database.query(new ExtensionPlayerDataQuery(TestConstants.PLAYER_ONE_UUID)));
         assertEquals(List.of(), database.query(new ExtensionServerDataQuery(serverUUID)));
+        // Clear caches
+        extensionService.getGraphSamplers().enableDisabled();
+        asyncJSONResolverService.clearCache();
     }
 
     @DisplayName("Player extension graph functionality")
@@ -356,6 +359,11 @@ class ExtensionGraphTest {
             // Player leave calls the sampler
             assertDoesNotThrow(() -> extensionService.updatePlayerValues(TestConstants.PLAYER_ONE_UUID, TestConstants.PLAYER_ONE_NAME, CallEvents.PLAYER_LEAVE));
             TestErrorLogger.throwErrors(true);
+
+            Awaitility.await()
+                    .atMost(2, TimeUnit.SECONDS)
+                    .until(() -> database.getTransactionQueueSize() == 0
+                            && !database.query(new ExtensionPlayerDataQuery(TestConstants.PLAYER_ONE_UUID)).isEmpty());
 
             String serverName = database.query(ServerQueries.fetchServerMatchingIdentifier(serverUUID)).map(Server::getIdentifiableName).orElse(serverUUID.toString())
                     .replace(" ", "%20");
@@ -376,7 +384,7 @@ class ExtensionGraphTest {
     @DisplayName("Server extension graph functionality")
     @ParameterizedTest(name = "{0}")
     @MethodSource("serverTestCases")
-    void serverGraphVisible(String testCase, TestExtensions.ServerGraphExtension graphExtension, PlanConfig config, ServerUUID serverUUID, ExtensionSvc extensionService, ChromeDriver driver) {
+    void serverGraphVisible(String testCase, TestExtensions.ServerGraphExtension graphExtension, PlanConfig config, ServerUUID serverUUID, ExtensionSvc extensionService, ChromeDriver driver, Database database) {
         try {
             TestErrorLogger.throwErrors(!testCase.contains("throws"));
             config.getExtensionSettings().setEnabled("ServerGraphExtension", true);
@@ -390,6 +398,11 @@ class ExtensionGraphTest {
                     .forEach(ServerGraphSampler::run)
             );
             TestErrorLogger.throwErrors(true);
+
+            Awaitility.await()
+                    .atMost(2, TimeUnit.SECONDS)
+                    .until(() -> database.getTransactionQueueSize() == 0
+                            && !database.query(new ExtensionServerDataQuery(serverUUID)).isEmpty());
 
             String address = "https://localhost:" + TEST_PORT_NUMBER + "/server/" + serverUUID + "/plugins-overview";
             driver.get(address);

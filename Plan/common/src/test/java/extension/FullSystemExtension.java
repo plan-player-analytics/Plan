@@ -25,6 +25,7 @@ import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
 import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.delivery.webserver.auth.RegistrationBin;
+import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.delivery.webserver.http.JettyWebserver;
 import com.djrapitops.plan.delivery.webserver.http.WebServer;
 import com.djrapitops.plan.extension.ExtensionSvc;
@@ -36,6 +37,7 @@ import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.settings.locale.LocaleSystem;
 import com.djrapitops.plan.settings.theme.Theme;
+import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.storage.file.PublicHtmlFiles;
@@ -80,6 +82,7 @@ public class FullSystemExtension implements ParameterResolver, BeforeAllCallback
                 .put(PlanPluginComponent.class, () -> component.getComponent())
                 .put(PluginLogger.class, () -> component.getAbstractionLayer().getPluginLogger())
                 .put(PlanCommand.class, () -> component.getComponent().planCommand())
+                .put(DBSystem.class, () -> planSystem.getDatabaseSystem())
                 .put(Database.class, () -> planSystem.getDatabaseSystem().getDatabase())
                 .put(DeliveryUtilities.class, () -> planSystem.getDeliveryUtilities())
                 .put(Formatters.class, () -> planSystem.getDeliveryUtilities().getFormatters())
@@ -93,6 +96,7 @@ public class FullSystemExtension implements ParameterResolver, BeforeAllCallback
                 .put(ServerSensor.class, () -> planSystem.getGatheringUtilities().getServerSensor())
                 .put(RegistrationBin.class, () -> planSystem.getWebServerSystem().getRegistrationBin())
                 .put(ExtensionSvc.class, () -> planSystem.getApiServices().getExtensionService())
+                .put(AsyncJSONResolverService.class, () -> planSystem.getDeliveryUtilities().getAsyncJSONResolverService())
                 .build();
     }
 

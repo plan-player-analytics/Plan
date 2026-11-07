@@ -165,4 +165,13 @@ public class AsyncJSONResolverService {
     public Formatter<Long> getHttpLastModifiedFormatter() {
         return httpLastModifiedFormatter;
     }
+
+    /**
+     * Clears all internal cache state. Useful for tests to ensure fresh data between test cases.
+     */
+    public void clearCache() {
+        currentlyProcessing.clear();
+        previousUpdates.clear();
+        jsonStorage.invalidateOlder("*", System.currentTimeMillis());
+    }
 }

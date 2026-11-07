@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.delivery.rendering.json.graphs.GraphJSONCreator;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
 import com.djrapitops.plan.delivery.webserver.Addresses;
+import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.storage.file.PublicHtmlFiles;
 import dagger.Lazy;
 
@@ -34,19 +35,23 @@ public class DeliveryUtilities {
     private final Lazy<Graphs> graphs;
     private final Lazy<PublicHtmlFiles> publicHtmlFiles;
     private final Lazy<GraphJSONCreator> graphJSONCreator;
+    private final Lazy<AsyncJSONResolverService> asyncJSONResolverService;
 
     @Inject
     public DeliveryUtilities(
             Lazy<Addresses> addresses,
             Lazy<Formatters> formatters,
             Lazy<Graphs> graphs,
-            Lazy<PublicHtmlFiles> publicHtmlFiles, Lazy<GraphJSONCreator> graphJSONCreator
+            Lazy<PublicHtmlFiles> publicHtmlFiles,
+            Lazy<GraphJSONCreator> graphJSONCreator,
+            Lazy<AsyncJSONResolverService> asyncJSONResolverService
     ) {
         this.addresses = addresses;
         this.formatters = formatters;
         this.graphs = graphs;
         this.publicHtmlFiles = publicHtmlFiles;
         this.graphJSONCreator = graphJSONCreator;
+        this.asyncJSONResolverService = asyncJSONResolverService;
     }
 
     public Addresses getAddresses() {
@@ -67,5 +72,9 @@ public class DeliveryUtilities {
 
     public GraphJSONCreator getGraphJSONCreator() {
         return graphJSONCreator.get();
+    }
+
+    public AsyncJSONResolverService getAsyncJSONResolverService() {
+        return asyncJSONResolverService.get();
     }
 }

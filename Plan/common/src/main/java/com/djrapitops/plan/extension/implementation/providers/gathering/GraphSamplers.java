@@ -96,6 +96,10 @@ public class GraphSamplers {
         return "Graph sampler for " + providerIdentifier.getPluginName() + "." + providerIdentifier.getProviderName();
     }
 
+    public void enableDisabled() {
+        disabledGraphHistoryIdentifiers.clear();
+    }
+
     public void registerGraphSamplers(ExtensionWrapper extension) {
         Map<ExtensionMethod.ParameterType, ExtensionMethods> methods = extension.getMethods();
         ExtensionMethods extensionMethods = methods.get(ExtensionMethod.ParameterType.SERVER_NONE);
@@ -196,7 +200,7 @@ public class GraphSamplers {
 
         dbSystem.getDatabase().executeTransaction(new StoreGraphPointProviderTransaction(annotation, provider, info, serverInfo.getServerUUID(),
                 seriesMetadata == null ? List.of() : seriesMetadata,
-                tableType));
+                tableType)).join();
     }
 
     public void registerPlayerGraphSamplers(UUID playerUUID, String playerName) {

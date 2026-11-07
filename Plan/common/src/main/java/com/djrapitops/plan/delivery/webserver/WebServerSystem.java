@@ -44,7 +44,8 @@ public class WebServerSystem implements SubSystem {
     @Inject
     public WebServerSystem(
             Addresses addresses,
-            ActiveCookieStore activeCookieStore, RegistrationBin registrationBin,
+            ActiveCookieStore activeCookieStore,
+            RegistrationBin registrationBin,
             PublicHtmlFiles publicHtmlFiles,
             WebServer webServer,
             PluginLogger logger) {

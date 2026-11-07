@@ -136,9 +136,11 @@ public class ExtensionSvc implements ExtensionService {
         DataValueGatherer gatherer = new DataValueGatherer(extension, dbSystem, extensionMetadataStorage, componentService, serverInfo, errorLogger);
         gatherer.storeExtensionInformation();
         extensionGatherers.put(pluginName, gatherer);
-        graphSamplers.registerGraphSamplers(extension);
 
-        processing.submitNonCritical(() -> updateServerValues(gatherer, CallEvents.SERVER_EXTENSION_REGISTER));
+        processing.submitNonCritical(() -> {
+            graphSamplers.registerGraphSamplers(extension);
+            updateServerValues(gatherer, CallEvents.SERVER_EXTENSION_REGISTER);
+        });
 
         logger.info(locale.getString(PluginLang.EXTENSION_REGISTERED, pluginName));
         return Optional.of(new CallerImplementation(gatherer, this, processing));
