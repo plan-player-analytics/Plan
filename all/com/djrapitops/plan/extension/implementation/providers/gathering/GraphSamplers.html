@@ -63,6 +63,7 @@ loadScripts(document, 'script');</script>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
+<li><a href="#enableDisabled()" tabindex="0">enableDisabled()</a></li>
 <li><a href="#registerGraphSamplers(com.djrapitops.plan.extension.implementation.ExtensionWrapper)" tabindex="0">registerGraphSamplers(ExtensionWrapper)</a></li>
 <li><a href="#registerPlayerGraphSamplers(java.util.UUID,java.lang.String)" tabindex="0">registerPlayerGraphSamplers(UUID, String)</a></li>
 <li><a href="#unregisterPlayerSamplers(java.util.UUID)" tabindex="0">unregisterPlayerSamplers(UUID)</a></li>
@@ -120,30 +121,33 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="ServerGraphSampler.html" title="class in com.djrapitops.plan.extension.implementation.providers.gathering">ServerGraphSampler</a>&gt;&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getActiveServerGraphSamplers()" class="member-name-link">getActiveServerGraphSamplers</a>()</code></div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#enableDisabled()" class="member-name-link">enableDisabled</a>()</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#registerGraphSamplers(com.djrapitops.plan.extension.implementation.ExtensionWrapper)" class="member-name-link">registerGraphSamplers</a><wbr>(<a href="../../ExtensionWrapper.html" title="class in com.djrapitops.plan.extension.implementation">ExtensionWrapper</a>&nbsp;extension)</code></div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Set.html" title="class or interface in java.util" class="external-link">Set</a>&lt;<a href="ServerGraphSampler.html" title="class in com.djrapitops.plan.extension.implementation.providers.gathering">ServerGraphSampler</a>&gt;&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getActiveServerGraphSamplers()" class="member-name-link">getActiveServerGraphSamplers</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#registerPlayerGraphSamplers(java.util.UUID,java.lang.String)" class="member-name-link">registerPlayerGraphSamplers</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#registerGraphSamplers(com.djrapitops.plan.extension.implementation.ExtensionWrapper)" class="member-name-link">registerGraphSamplers</a><wbr>(<a href="../../ExtensionWrapper.html" title="class in com.djrapitops.plan.extension.implementation">ExtensionWrapper</a>&nbsp;extension)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#registerPlayerGraphSamplers(java.util.UUID,java.lang.String)" class="member-name-link">registerPlayerGraphSamplers</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;playerName)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unregister(com.djrapitops.plan.extension.DataExtension)" class="member-name-link">unregister</a><wbr>(<a href="../../../DataExtension.html" title="interface in com.djrapitops.plan.extension">DataExtension</a>&nbsp;extension)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unregisterPlayerSamplers(java.util.UUID)" class="member-name-link">unregisterPlayerSamplers</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unregister(com.djrapitops.plan.extension.DataExtension)" class="member-name-link">unregister</a><wbr>(<a href="../../../DataExtension.html" title="interface in com.djrapitops.plan.extension">DataExtension</a>&nbsp;extension)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updatePlayerHistory(java.util.UUID,java.lang.String,com.djrapitops.plan.extension.CallEvents)" class="member-name-link">updatePlayerHistory</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID,
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#unregisterPlayerSamplers(java.util.UUID)" class="member-name-link">unregisterPlayerSamplers</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updatePlayerHistory(java.util.UUID,java.lang.String,com.djrapitops.plan.extension.CallEvents)" class="member-name-link">updatePlayerHistory</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;playerUUID,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;playerName,
  <a href="../../../CallEvents.html" title="enum class in com.djrapitops.plan.extension">CallEvents</a>&nbsp;event)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateServerHistory(com.djrapitops.plan.extension.CallEvents)" class="member-name-link">updateServerHistory</a><wbr>(<a href="../../../CallEvents.html" title="enum class in com.djrapitops.plan.extension">CallEvents</a>&nbsp;event)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#updateServerHistory(com.djrapitops.plan.extension.CallEvents)" class="member-name-link">updateServerHistory</a><wbr>(<a href="../../../CallEvents.html" title="enum class in com.djrapitops.plan.extension">CallEvents</a>&nbsp;event)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -181,6 +185,14 @@ loadScripts(document, 'script');</script>
 <section class="method-details" id="method-detail">
 <h2>Method Details</h2>
 <ul class="member-list">
+<li>
+<section class="detail" id="enableDisabled()">
+<h3>enableDisabled</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">enableDisabled</span>()</div>
+</div>
+</section>
+</li>
 <li>
 <section class="detail" id="registerGraphSamplers(com.djrapitops.plan.extension.implementation.ExtensionWrapper)">
 <h3>registerGraphSamplers</h3>

@@ -66,6 +66,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#resolve(java.util.Optional,com.djrapitops.plan.delivery.webserver.cache.DataID,com.djrapitops.plan.identification.ServerUUID,java.util.function.Function)" tabindex="0">resolve(Optional, DataID, ServerUUID, Function)</a></li>
 <li><a href="#resolve(java.util.Optional,com.djrapitops.plan.delivery.webserver.cache.DataID,java.util.function.Supplier)" tabindex="0">resolve(Optional, DataID, Supplier)</a></li>
 <li><a href="#getHttpLastModifiedFormatter()" tabindex="0">getHttpLastModifiedFormatter()</a></li>
+<li><a href="#clearCache()" tabindex="0">clearCache()</a></li>
 </ol>
 </li>
 </ol>
@@ -116,20 +117,25 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../formatting/Formatter.html" title="interface in com.djrapitops.plan.delivery.formatting">Formatter</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getHttpLastModifiedFormatter()" class="member-name-link">getHttpLastModifiedFormatter</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T&gt;&nbsp;<a href="JSONStorage.StoredJSON.html" title="class in com.djrapitops.plan.delivery.webserver.cache">JSONStorage.StoredJSON</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolve(java.util.Optional,com.djrapitops.plan.delivery.webserver.cache.DataID,com.djrapitops.plan.identification.ServerUUID,java.util.function.Function)" class="member-name-link">resolve</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;&nbsp;newerThanTimestamp,
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clearCache()" class="member-name-link">clearCache</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="block">Clears all internal cache state.</div>
+</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="../../formatting/Formatter.html" title="interface in com.djrapitops.plan.delivery.formatting">Formatter</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getHttpLastModifiedFormatter()" class="member-name-link">getHttpLastModifiedFormatter</a>()</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T&gt;&nbsp;<a href="JSONStorage.StoredJSON.html" title="class in com.djrapitops.plan.delivery.webserver.cache">JSONStorage.StoredJSON</a></code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolve(java.util.Optional,com.djrapitops.plan.delivery.webserver.cache.DataID,com.djrapitops.plan.identification.ServerUUID,java.util.function.Function)" class="member-name-link">resolve</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;&nbsp;newerThanTimestamp,
  <a href="DataID.html" title="enum class in com.djrapitops.plan.delivery.webserver.cache">DataID</a>&nbsp;dataID,
  <a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&nbsp;serverUUID,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Function.html" title="class or interface in java.util.function" class="external-link">Function</a>&lt;<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>, T&gt;&nbsp;creator)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T&gt;&nbsp;<a href="JSONStorage.StoredJSON.html" title="class in com.djrapitops.plan.delivery.webserver.cache">JSONStorage.StoredJSON</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolve(java.util.Optional,com.djrapitops.plan.delivery.webserver.cache.DataID,java.util.function.Supplier)" class="member-name-link">resolve</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;&nbsp;newerThanTimestamp,
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>&lt;T&gt;&nbsp;<a href="JSONStorage.StoredJSON.html" title="class in com.djrapitops.plan.delivery.webserver.cache">JSONStorage.StoredJSON</a></code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#resolve(java.util.Optional,com.djrapitops.plan.delivery.webserver.cache.DataID,java.util.function.Supplier)" class="member-name-link">resolve</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Optional.html" title="class or interface in java.util" class="external-link">Optional</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;&nbsp;newerThanTimestamp,
  <a href="DataID.html" title="enum class in com.djrapitops.plan.delivery.webserver.cache">DataID</a>&nbsp;dataID,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/Supplier.html" title="class or interface in java.util.function" class="external-link">Supplier</a>&lt;T&gt;&nbsp;jsonCreator)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -193,6 +199,15 @@ loadScripts(document, 'script');</script>
 <h3>getHttpLastModifiedFormatter</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="../../formatting/Formatter.html" title="interface in com.djrapitops.plan.delivery.formatting">Formatter</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">getHttpLastModifiedFormatter</span>()</div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="clearCache()">
+<h3>clearCache</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clearCache</span>()</div>
+<div class="block">Clears all internal cache state. Useful for tests to ensure fresh data between test cases.</div>
 </div>
 </section>
 </li>
