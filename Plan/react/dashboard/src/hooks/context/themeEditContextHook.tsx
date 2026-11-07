@@ -192,11 +192,7 @@ export const ThemeEditContextProvider = ({ children }: PropsWithChildren) => {
     ) => {
         const oldVariable = nameToCssVariable(oldName);
         const newVariable = nameToCssVariable(newName);
-        return recursiveFindAndReplaceValue(
-            current,
-            oldVariable,
-            newVariable,
-        ) as UseCaseMap;
+        return recursiveFindAndReplaceValue(current, oldVariable, newVariable);
     };
 
     const handleColorSave =

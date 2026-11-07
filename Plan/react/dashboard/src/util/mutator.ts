@@ -1,6 +1,7 @@
 // Function to flatten nested object into dot notation
 import { cssVariableToName } from './colors.js';
 import {
+    ColorPropertyList,
     ColorPropertyMap,
     UseCase,
     UseCaseMap,
@@ -29,47 +30,55 @@ export const flattenObject = (
     }, {});
 };
 
+type Mergeable = { [key: string]: unknown };
+
 // Function to merge two objects recursively, with override taking precedence
-export const mergeUseCases = (
-    base: UseCaseMap,
-    override: UseCaseMap,
-): UseCaseMap => {
-    const merged = { ...base };
+export const mergeUseCases = <T extends Mergeable>(base: T, override: T): T => {
+    const merged: Mergeable = { ...base };
     for (const key in override) {
         if (
             typeof override[key] === 'object' &&
             !Array.isArray(override[key])
         ) {
             merged[key] = mergeUseCases(
-                (base[key] || {}) as UseCaseMap,
-                override[key],
+                (base[key] || {}) as Mergeable,
+                override[key] as Mergeable,
             );
         } else {
             merged[key] = override[key];
         }
     }
-    return merged;
+    return merged as T;
 };
 
-export const addToObject = (base: Record<string, unknown>, toAdd?: UseCase) => {
+export const addToObject = <T extends Record<string, unknown>>(
+    base: T,
+    toAdd?: T,
+): T => {
     if (!toAdd) return base;
     Object.entries(toAdd).forEach(([key, value]) => {
-        base[key] = value;
+        base[key as keyof T] = value as T[keyof T];
     });
     return base;
 };
 
-export const recursiveFindAndReplaceValue = (
-    object: UseCase,
+type Replaced<T extends UseCase> = T extends string
+    ? string
+    : T extends ColorPropertyList
+      ? ColorPropertyList
+      : UseCaseMap;
+
+export const recursiveFindAndReplaceValue = <T extends UseCase>(
+    object: T,
     toReplace: string,
     replaceWith: string,
-): UseCase => {
+): Replaced<T> => {
     if (Array.isArray(object)) {
         const toReplaceName = cssVariableToName(toReplace);
         const toReplaceWithName = cssVariableToName(replaceWith);
         return object.map((item) =>
             item === toReplaceName ? toReplaceWithName : item,
-        );
+        ) as Replaced<T>;
     } else if (object !== null && typeof object === 'object') {
         const result: UseCaseMap = {};
         for (const [key, value] of Object.entries(object)) {
@@ -79,8 +88,8 @@ export const recursiveFindAndReplaceValue = (
                 replaceWith,
             );
         }
-        return result;
+        return result as Replaced<T>;
     } else {
-        return toReplace === object ? replaceWith : object;
+        return (toReplace === object ? replaceWith : object) as Replaced<T>;
     }
 };
