@@ -244,6 +244,21 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
     }
 
     @Test
+    default void summaryOfPlayersIncludesSessionStartingAtBefore() {
+        prepareForSessionSave();
+        FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
+        db().executeTransaction(new StoreSessionTransaction(session));
+        Set<Integer> userIds = Set.of(db().query(BaseUserQueries.fetchUserId(playerUUID)).orElseThrow(AssertionError::new));
+        long start = session.start();
+
+        Map<String, Long> endingAtStart = db().query(SessionQueries.summaryOfPlayers(userIds, List.of(), start - 1L, start));
+        Map<String, Long> endingBeforeStart = db().query(SessionQueries.summaryOfPlayers(userIds, List.of(), start - 2L, start - 1L));
+
+        assertEquals(1L, endingAtStart.get("totalSessions"));
+        assertEquals(0L, endingBeforeStart.get("totalSessions"));
+    }
+
+    @Test
     default void sessionCountOfServer() {
         prepareForSessionSave();
         FinishedSession session = RandomData.randomSession(serverUUID(), worlds, playerUUID, player2UUID);
