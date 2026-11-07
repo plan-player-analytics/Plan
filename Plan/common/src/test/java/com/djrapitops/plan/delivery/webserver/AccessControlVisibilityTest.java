@@ -184,6 +184,7 @@ class AccessControlVisibilityTest {
     static Stream<Arguments> pageLevelVisibleCases() {
         return Stream.of(
                 Arguments.arguments(WebPermission.MANAGE_GROUPS, "slice_h_0", "manage"),
+                Arguments.arguments(WebPermission.MANAGE_TOKENS, "api-tokens-card", "manage/tokens"),
                 Arguments.arguments(WebPermission.ACCESS_QUERY, "query-button", "query"),
                 Arguments.arguments(WebPermission.ACCESS_PLAYERS, "players-table", "players"),
                 Arguments.arguments(WebPermission.ACCESS_ERRORS, "content", "errors"),

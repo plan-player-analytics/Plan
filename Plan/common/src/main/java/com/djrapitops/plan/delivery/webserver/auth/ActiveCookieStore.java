@@ -35,6 +35,7 @@ import java.security.SecureRandom;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -91,22 +92,24 @@ public class ActiveCookieStore implements SubSystem {
     @Override
     public void enable() {
         ActiveCookieStore.setCookiesExpireAfter(config.get(WebserverSettings.COOKIES_EXPIRE_AFTER));
-        processing.submitNonCritical(this::reloadActiveCookies);
+        reloadActiveCookies();
     }
 
-    public void reloadActiveCookies() {
-        try {
-            Map<String, CookieMetadata> cookies = dbSystem.getDatabase().query(WebUserQueries.fetchActiveCookies());
-            USERS_BY_COOKIE.clear();
-            USERS_BY_COOKIE.putAll(cookies);
-            for (Map.Entry<String, CookieMetadata> entry : cookies.entrySet()) {
-                long timeToExpiry = Math.max(entry.getValue().getExpires() - System.currentTimeMillis(), 0L);
-                activeCookieExpiryCleanupTask.addExpiry(entry.getKey(), System.currentTimeMillis() + timeToExpiry);
+    public CompletableFuture<Boolean> reloadActiveCookies() {
+        return processing.submitNonCritical(() -> {
+            try {
+                Map<String, CookieMetadata> cookies = dbSystem.getDatabase().query(WebUserQueries.fetchActiveCookies());
+                USERS_BY_COOKIE.clear();
+                USERS_BY_COOKIE.putAll(cookies);
+                for (Map.Entry<String, CookieMetadata> entry : cookies.entrySet()) {
+                    long timeToExpiry = Math.max(entry.getValue().getExpires() - System.currentTimeMillis(), 0L);
+                    activeCookieExpiryCleanupTask.addExpiry(entry.getKey(), System.currentTimeMillis() + timeToExpiry);
+                }
+            } catch (DBOpException databaseClosedUnexpectedly) {
+                logger.info("Database closed unexpectedly so active cookies could not be loaded.");
+                // Safe to ignore https://github.com/plan-player-analytics/Plan/issues/2188
             }
-        } catch (DBOpException databaseClosedUnexpectedly) {
-            logger.info("Database closed unexpectedly so active cookies could not be loaded.");
-            // Safe to ignore https://github.com/plan-player-analytics/Plan/issues/2188
-        }
+        });
     }
 
     @Override

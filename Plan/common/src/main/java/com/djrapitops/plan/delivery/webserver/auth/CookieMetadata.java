@@ -21,7 +21,7 @@ import org.apache.commons.lang3.StringUtils;
 
 import java.util.Objects;
 
-import static com.djrapitops.plan.storage.database.sql.tables.CookieTable.MAX_IP_ADDRESS_LENGTH;
+import static com.djrapitops.plan.storage.database.sql.tables.webuser.CookieTable.MAX_IP_ADDRESS_LENGTH;
 
 /**
  * @author AuroraLS3

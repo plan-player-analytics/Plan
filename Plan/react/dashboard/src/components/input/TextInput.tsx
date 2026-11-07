@@ -13,6 +13,9 @@ type Props = {
     invalidFeedback?: string;
     disabled?: boolean;
     disabledFeedback?: string;
+    readOnly?: boolean;
+    password?: boolean;
+    children?: React.ReactNode;
 };
 
 const TextInput = ({
@@ -25,6 +28,9 @@ const TextInput = ({
     invalidFeedback,
     disabled,
     disabledFeedback,
+    readOnly,
+    password,
+    children,
 }: Props) => {
     const [cachedValue, setCachedValue] = useState(value);
     const [invalid, setInvalid] = useState(false);
@@ -54,7 +60,7 @@ const TextInput = ({
                 <FontAwesomeIcon icon={icon} />
             </div>
             <input
-                type='text'
+                type={password ? 'password' : 'text'}
                 className={'form-control' + (invalid ? ' is-invalid' : '')}
                 placeholder={placeholder}
                 value={cachedValue}
@@ -62,6 +68,7 @@ const TextInput = ({
                 onBlur={onBlur}
                 onKeyDown={onKeyDown}
                 disabled={disabled}
+                readOnly={readOnly || false}
             />
             {invalid && invalidFeedback && (
                 <div className='invalid-feedback'>{invalidFeedback}</div>
@@ -69,6 +76,7 @@ const TextInput = ({
             {disabled && disabledFeedback && (
                 <div className='disabled-feedback'>{disabledFeedback}</div>
             )}
+            {children}
         </InputGroup>
     );
 };

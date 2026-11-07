@@ -8,6 +8,7 @@ import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 import NewPlayerRetentionHelp from './help/NewPlayerRetentionHelp';
 import PlayerRetentionGraphHelp from './help/PlayerRetentionGraphHelp';
 import GroupPermissionHelp from './help/GroupPermissionHelp.tsx';
+import ApiTokenHelp from './help/ApiTokenHelp.tsx';
 import ActionButton from '../input/button/ActionButton.tsx';
 import ModalCloseButton from '../input/button/ModalCloseButton.tsx';
 import { PerformanceHelp } from './help/PerformanceHelp.tsx';
@@ -36,6 +37,10 @@ const HelpModal = () => {
         'group-permissions': {
             title: t('html.label.managePage.groupHeader'),
             body: <GroupPermissionHelp />,
+        },
+        'api-tokens': {
+            title: t('html.label.managePage.tokenHeader'),
+            body: <ApiTokenHelp />,
         },
         performance: {
             title: t('html.label.performance'),

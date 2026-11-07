@@ -17,7 +17,7 @@
 package com.djrapitops.plan.storage.database.transactions.patches;
 
 import com.djrapitops.plan.storage.database.sql.building.Sql;
-import com.djrapitops.plan.storage.database.sql.tables.CookieTable;
+import com.djrapitops.plan.storage.database.sql.tables.webuser.CookieTable;
 
 /**
  * Adds ip_address column to plan_cookies.

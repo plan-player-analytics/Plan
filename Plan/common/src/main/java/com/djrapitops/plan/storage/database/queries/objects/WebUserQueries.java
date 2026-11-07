@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.storage.database.queries.objects;
 
+import com.djrapitops.plan.delivery.domain.auth.ApiToken;
+import com.djrapitops.plan.delivery.domain.auth.ApiTokenWithPermissions;
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.delivery.domain.datatransfer.preferences.Preferences;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
@@ -25,7 +27,6 @@ import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
-import com.djrapitops.plan.storage.database.sql.tables.CookieTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import com.djrapitops.plan.storage.database.sql.tables.webuser.*;
 import com.djrapitops.plan.utilities.dev.Untrusted;
@@ -189,6 +190,37 @@ public class WebUserQueries {
         return db -> db.queryList(sql, row -> row.getString(WebPermissionTable.PERMISSION), group);
     }
 
+    public static Query<List<String>> fetchTokenPermissions(@Untrusted String token) {
+        String sql = SELECT + WebPermissionTable.PERMISSION +
+                FROM + ApiTokenTable.TABLE_NAME + " t" +
+                INNER_JOIN + ApiTokenToPermissionTable.TABLE_NAME + " atp ON t." + ApiTokenTable.ID + "=atp." + ApiTokenToPermissionTable.TOKEN_ID +
+                INNER_JOIN + WebPermissionTable.TABLE_NAME + " p ON p." + WebPermissionTable.ID + "=atp." + ApiTokenToPermissionTable.PERMISSION_ID +
+                WHERE + ApiTokenTable.TOKEN + "=?";
+        return db -> db.queryList(sql, row -> row.getString(WebPermissionTable.PERMISSION), token);
+    }
+
+    public static Query<Map<String, List<String>>> fetchTokenPermissions() {
+        String sql = SELECT + ApiTokenTable.TOKEN + ',' + WebPermissionTable.PERMISSION +
+                FROM + ApiTokenTable.TABLE_NAME + " t" +
+                INNER_JOIN + ApiTokenToPermissionTable.TABLE_NAME + " atp ON t." + ApiTokenTable.ID + "=atp." + ApiTokenToPermissionTable.TOKEN_ID +
+                INNER_JOIN + WebPermissionTable.TABLE_NAME + " p ON p." + WebPermissionTable.ID + "=atp." + ApiTokenToPermissionTable.PERMISSION_ID;
+        return new QueryAllStatement<>(sql, 1000) {
+            @Override
+            public Map<String, List<String>> processResults(ResultSet set) throws SQLException {
+                Map<String, List<String>> tokenMap = new HashMap<>();
+                while (set.next()) {
+                    String token = set.getString(ApiTokenTable.TOKEN);
+                    String permission = set.getString(WebPermissionTable.PERMISSION);
+
+                    List<String> permissionList = tokenMap.computeIfAbsent(token, Lists::create);
+
+                    permissionList.add(permission);
+                }
+                return tokenMap;
+            }
+        };
+    }
+
     public static Query<List<String>> fetchAvailablePermissions() {
         String sql = SELECT + WebPermissionTable.PERMISSION + FROM + WebPermissionTable.TABLE_NAME + ORDER_BY + WebPermissionTable.PERMISSION;
         return db -> db.queryList(sql, row -> row.getString(WebPermissionTable.PERMISSION));
@@ -301,5 +333,28 @@ public class WebUserQueries {
                 set.getString(RegistrationTable.CODE),
                 set.getLong(RegistrationTable.EXPIRY_TIME)
         );
+    }
+
+    public static Query<List<ApiTokenWithPermissions>> fetchTokens() {
+        String sql = SELECT + "a.*, " + WebPermissionTable.PERMISSION + FROM + ApiTokenTable.TABLE_NAME + " a" +
+                LEFT_JOIN + ApiTokenToPermissionTable.TABLE_NAME + " atp ON a." + ApiTokenTable.ID + "=atp." + ApiTokenToPermissionTable.TOKEN_ID +
+                LEFT_JOIN + WebPermissionTable.TABLE_NAME + " p ON p." + WebPermissionTable.ID + "=atp." + ApiTokenToPermissionTable.PERMISSION_ID;
+        return db -> db.queryMap(sql, (row, map) -> {
+            String token = row.getString(ApiTokenTable.TOKEN);
+            if (!map.containsKey(token)) {
+                map.put(token, new ApiTokenWithPermissions(new ApiToken(
+                        row.getInt(ApiTokenTable.ID),
+                        row.getString(ApiTokenTable.IDENTIFIER),
+                        token,
+                        row.getLong(ApiTokenTable.ISSUED),
+                        row.getLong(ApiTokenTable.LAST_USED)
+                ), new ArrayList<>()));
+            }
+
+            String permission = row.getString(WebPermissionTable.PERMISSION);
+            if (permission != null) {
+                map.get(token).permissions().add(permission);
+            }
+        }, HashMap<String, ApiTokenWithPermissions>::new).values().stream().toList();
     }
 }

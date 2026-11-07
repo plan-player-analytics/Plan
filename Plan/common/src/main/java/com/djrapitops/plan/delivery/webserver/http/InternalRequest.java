@@ -83,4 +83,6 @@ public interface InternalRequest {
     }
 
     String getRequestedPathAndQuery();
+
+    Optional<String> getHeader(String headerName);
 }

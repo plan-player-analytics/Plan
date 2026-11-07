@@ -28,22 +28,30 @@ import java.util.Optional;
 public class AuthenticationExtractor {
 
     private final ActiveCookieStore activeCookieStore;
+    private final AuthTokenStore authTokenStore;
 
     @Inject
-    public AuthenticationExtractor(ActiveCookieStore activeCookieStore) {
+    public AuthenticationExtractor(ActiveCookieStore activeCookieStore, AuthTokenStore authTokenStore) {
         this.activeCookieStore = activeCookieStore;
+        this.authTokenStore = authTokenStore;
     }
 
     public Optional<Authentication> extractAuthentication(InternalRequest internalRequest) {
-        return getCookieAuthentication(internalRequest.getCookies());
+        return getCookieAuthentication(internalRequest);
     }
 
-    private Optional<Authentication> getCookieAuthentication(@Untrusted List<Cookie> cookies) {
-        for (@Untrusted Cookie cookie : cookies) {
+    private Optional<Authentication> getCookieAuthentication(InternalRequest request) {
+        for (@Untrusted Cookie cookie : request.getCookies()) {
             if ("auth".equals(cookie.getName())) {
                 return Optional.of(new CookieAuthentication(activeCookieStore, cookie.getValue()));
             }
         }
-        return Optional.empty();
+
+        @Untrusted var header = request.getHeader("X-Plan-Token");
+        return header.map(token -> {
+            List<String> permissions = authTokenStore.getPermissions(token);
+            if (permissions.isEmpty()) return null;
+            return new TokenAuthentication(token, permissions);
+        });
     }
 }

@@ -130,6 +130,7 @@ const QueryResultView = React.lazy(
 
 const ManagePage = React.lazy(() => import('./views/layout/ManagePage'));
 const GroupsView = React.lazy(() => import('./views/manage/GroupsView'));
+const ApiTokenView = React.lazy(() => import('./views/manage/ApiTokenView'));
 
 const ThemeEditorPage = React.lazy(
     () => import('./views/layout/ThemeEditorPage'),
@@ -156,6 +157,9 @@ const NewRedirect = () => {
 };
 const GroupsRedirect = () => {
     return <Navigate to={'groups'} replace={true} />;
+};
+const TokensRedirect = () => {
+    return <Navigate to={'tokens'} replace={true} />;
 };
 
 const queryClient = new QueryClient();
@@ -604,6 +608,14 @@ const router = createBrowserRouter(
                         element={
                             <Lazy>
                                 <GroupsView />
+                            </Lazy>
+                        }
+                    />
+                    <Route
+                        path='tokens'
+                        element={
+                            <Lazy>
+                                <ApiTokenView />
                             </Lazy>
                         }
                     />

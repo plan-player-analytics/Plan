@@ -32,6 +32,9 @@ import com.djrapitops.plan.delivery.webserver.resolver.json.query.QueryJSONResol
 import com.djrapitops.plan.delivery.webserver.resolver.json.theme.DeleteThemeJSONResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.json.theme.SaveThemeJSONResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.json.theme.ThemeJSONResolver;
+import com.djrapitops.plan.delivery.webserver.resolver.json.token.TokenDeleteJSONResolver;
+import com.djrapitops.plan.delivery.webserver.resolver.json.token.TokenJSONResolver;
+import com.djrapitops.plan.delivery.webserver.resolver.json.token.TokenSaveJSONResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.json.webgroup.*;
 import com.djrapitops.plan.identification.Identifiers;
 import dagger.Lazy;
@@ -61,6 +64,9 @@ public class RootJSONResolver {
     private final PluginHistoryJSONResolver pluginHistoryJSONResolver;
     private final SaveThemeJSONResolver saveThemeJSONResolver;
     private final DeleteThemeJSONResolver deleteThemeJSONResolver;
+    private final TokenJSONResolver tokenJSONResolver;
+    private final TokenDeleteJSONResolver tokenDeleteJSONResolver;
+    private final TokenSaveJSONResolver tokenSaveJSONResolver;
     private CompositeResolver resolver;
 
     @Inject
@@ -114,7 +120,11 @@ public class RootJSONResolver {
             WebGroupPermissionJSONResolver webGroupPermissionJSONResolver,
             WebPermissionJSONResolver webPermissionJSONResolver,
             WebGroupSaveJSONResolver webGroupSaveJSONResolver,
-            WebGroupDeleteJSONResolver webGroupDeleteJSONResolver
+            WebGroupDeleteJSONResolver webGroupDeleteJSONResolver,
+
+            TokenJSONResolver tokenJSONResolver,
+            TokenDeleteJSONResolver tokenDeleteJSONResolver,
+            TokenSaveJSONResolver tokenSaveJSONResolver
     ) {
         this.identifiers = identifiers;
         this.asyncJSONResolverService = asyncJSONResolverService;
@@ -166,6 +176,9 @@ public class RootJSONResolver {
         this.storePreferencesJSONResolver = storePreferencesJSONResolver;
         this.saveThemeJSONResolver = saveThemeJSONResolver;
         this.deleteThemeJSONResolver = deleteThemeJSONResolver;
+        this.tokenJSONResolver = tokenJSONResolver;
+        this.tokenDeleteJSONResolver = tokenDeleteJSONResolver;
+        this.tokenSaveJSONResolver = tokenSaveJSONResolver;
     }
 
     private <T> ServerTabJSONResolver<T> forJSON(DataID dataID, ServerTabJSONCreator<T> tabJSONCreator, WebPermission permission) {
@@ -185,6 +198,9 @@ public class RootJSONResolver {
                         .add("pluginHistory", pluginHistoryJSONResolver)
                         .add("saveTheme", saveThemeJSONResolver)
                         .add("deleteTheme", deleteThemeJSONResolver)
+                        .add("apiToken", tokenJSONResolver)
+                        .add("deleteApiToken", tokenDeleteJSONResolver)
+                        .add("saveApiToken", tokenSaveJSONResolver)
                         .build();
             } else {
                 resolver = readOnlyResourcesBuilder.build();

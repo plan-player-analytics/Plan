@@ -24,6 +24,7 @@ import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.SQLDB;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAPIQuery;
+import com.djrapitops.plan.storage.database.queries.QueryParameterSetter;
 import com.djrapitops.plan.storage.database.queries.QueryStatement;
 import com.djrapitops.plan.storage.database.queries.schema.MySQLSchemaQueries;
 import com.djrapitops.plan.storage.database.queries.schema.SQLiteSchemaQueries;
@@ -242,6 +243,15 @@ public abstract class Transaction {
             @Override
             public void prepare(PreparedStatement statement) {
                 // Statement is ready for execution.
+            }
+        });
+    }
+
+    protected boolean execute(String sql, Object... parameters) {
+        return execute(new ExecStatement(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                QueryParameterSetter.setParameters(statement, parameters);
             }
         });
     }

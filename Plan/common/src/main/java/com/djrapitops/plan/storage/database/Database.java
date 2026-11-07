@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.exceptions.database.DBInitException;
+import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.storage.database.queries.*;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
@@ -29,7 +30,10 @@ import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutorService;
+import java.util.function.Consumer;
 import java.util.function.Supplier;
+import java.util.stream.Stream;
+import java.util.stream.StreamSupport;
 
 /**
  * Interface for interacting with a Plan SQL database.
@@ -70,6 +74,38 @@ public interface Database {
             @Override
             public Optional<T> processResults(ResultSet set) throws SQLException {
                 return set.next() ? Optional.ofNullable(rowExtractor.extract(set)) : Optional.empty();
+            }
+        });
+    }
+
+    default <T> Stream<T> queryStream(String sql, RowExtractor<T> rowExtractor, Object... parameters) {
+        return query(new QueryStatement<>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                QueryParameterSetter.setParameters(statement, parameters);
+            }
+
+            @Override
+            public Stream<T> processResults(ResultSet set) throws SQLException {
+                return StreamSupport.stream(new Spliterators.AbstractSpliterator<T>(Long.MAX_VALUE, Spliterator.ORDERED) {
+                            @Override
+                            public boolean tryAdvance(Consumer<? super T> action) {
+                                try {
+                                    if (!set.next()) return false;
+                                    action.accept(rowExtractor.extract(set));
+                                    return true;
+                                } catch (SQLException e) {
+                                    throw DBOpException.forCause(sql, e);
+                                }
+                            }
+                        }, false)
+                        .onClose(() -> {
+                            try {
+                                set.close();
+                            } catch (SQLException e) {
+                                throw DBOpException.forCause(sql, e);
+                            }
+                        });
             }
         });
     }

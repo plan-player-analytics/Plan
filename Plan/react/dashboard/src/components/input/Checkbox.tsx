@@ -28,8 +28,7 @@ const Checkbox = ({
                 value={indeterminate ? '' : String(checked)}
                 checked={checked}
                 ref={(input) => {
-                    if (input && indeterminate)
-                        input.indeterminate = indeterminate;
+                    if (input) input.indeterminate = !!indeterminate;
                 }}
                 onChange={onChange}
                 readOnly={readOnly}

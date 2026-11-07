@@ -43,6 +43,7 @@ public class WebGroupDefaultGroupsPatch extends Patch {
                                 WebPermission.DATA,
                                 WebPermission.ACCESS,
                                 WebPermission.MANAGE_GROUPS,
+                                WebPermission.MANAGE_TOKENS,
                                 WebPermission.MANAGE_USERS,
                                 WebPermission.MANAGE_THEMES
                         })

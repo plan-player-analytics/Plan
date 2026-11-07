@@ -16,7 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.transactions.events;
 
-import com.djrapitops.plan.storage.database.sql.tables.CookieTable;
+import com.djrapitops.plan.storage.database.sql.tables.webuser.CookieTable;
 import com.djrapitops.plan.storage.database.transactions.ExecStatement;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.utilities.dev.Untrusted;
@@ -26,7 +26,7 @@ import org.jspecify.annotations.Nullable;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import static com.djrapitops.plan.storage.database.sql.tables.CookieTable.MAX_IP_ADDRESS_LENGTH;
+import static com.djrapitops.plan.storage.database.sql.tables.webuser.CookieTable.MAX_IP_ADDRESS_LENGTH;
 
 public class CookieChangeTransaction extends Transaction {
 

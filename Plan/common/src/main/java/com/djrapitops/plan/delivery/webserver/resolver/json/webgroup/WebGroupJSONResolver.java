@@ -36,9 +36,7 @@ import jakarta.ws.rs.Path;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
-import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Endpoint for getting list of Plan web permission groups.
@@ -77,11 +75,10 @@ public class WebGroupJSONResolver implements Resolver {
     }
 
     private Response getResponse() {
-        List<String> groupNames = dbSystem.getDatabase().query(WebUserQueries.fetchGroupNames());
-
-        GroupList groupList = new GroupList(groupNames.stream()
+        var groupNames = dbSystem.getDatabase().query(WebUserQueries.fetchGroupNames());
+        var groupList = new GroupList(groupNames.stream()
                 .map(Group::new)
-                .collect(Collectors.toList()));
+                .toList());
         return Response.builder()
                 .setMimeType(MimeType.JSON)
                 .setJSONContent(groupList)
