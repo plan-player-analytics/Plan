@@ -1,7 +1,17 @@
 import React from 'react';
-import MultiSelect from '../input/MultiSelect.tsx';
+import MultiSelect from '../input/MultiSelect';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare } from '@fortawesome/free-solid-svg-icons';
+import { ColorPropertyMap } from './model/ThemeConfig';
+
+type Props = {
+    className?: string;
+    colors: ColorPropertyMap;
+    selectedColors?: string[];
+    setSelectedColors?: (colors: string[]) => void;
+    sort?: boolean;
+    style?: CSSStyleProperties;
+};
 
 const ColorMultiSelect = ({
     className,
@@ -10,13 +20,13 @@ const ColorMultiSelect = ({
     setSelectedColors,
     sort,
     style,
-}) => {
+}: Props) => {
     const colorArray = Object.keys(colors);
     const selectedIndexes = selectedColors
         ? selectedColors.map((color) => colorArray.indexOf(color))
         : [];
 
-    const changeSelectedIndexes = (selected) => {
+    const changeSelectedIndexes = (selected: number[]) => {
         const newIndexes = sort ? selected.toSorted() : selected;
         setSelectedColors?.(
             newIndexes.length

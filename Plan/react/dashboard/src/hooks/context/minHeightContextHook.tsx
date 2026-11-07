@@ -1,4 +1,5 @@
 import React, {
+    PropsWithChildren,
     createContext,
     useCallback,
     useContext,
@@ -6,12 +7,41 @@ import React, {
     useState,
 } from 'react';
 
-const MinHeightContext = createContext();
+type MinHeightRule = {
+    minHeight: number;
+    nightMode: boolean;
+    count: number;
+};
 
-export const MinHeightProvider = ({ children }) => {
-    const [minHeightRules, setMinHeightRules] = useState({});
+type MinHeightContextValue = {
+    minHeightRules: Record<string, MinHeightRule>;
+    registerMinHeight: (
+        selector: string,
+        minHeight: number,
+        nightMode: boolean,
+        count: number,
+    ) => void;
+    unregisterMinHeight: (
+        selector: string,
+        nightMode: boolean,
+        count: number,
+    ) => boolean;
+};
 
-    const unregisterMinHeight = (selector, nightMode, count) => {
+const MinHeightContext = createContext<MinHeightContextValue | undefined>(
+    undefined,
+);
+
+export const MinHeightProvider = ({ children }: PropsWithChildren) => {
+    const [minHeightRules, setMinHeightRules] = useState<
+        Record<string, MinHeightRule>
+    >({});
+
+    const unregisterMinHeight = (
+        selector: string,
+        nightMode: boolean,
+        count: number,
+    ) => {
         let removed = false;
         setMinHeightRules((rules) => {
             const existingRule = rules[selector];
@@ -29,7 +59,12 @@ export const MinHeightProvider = ({ children }) => {
     };
 
     const registerMinHeight = useCallback(
-        (selector, minHeight, nightMode, count) => {
+        (
+            selector: string,
+            minHeight: number,
+            nightMode: boolean,
+            count: number,
+        ) => {
             setMinHeightRules((rules) => {
                 const existingRule = rules[selector];
                 const existingHeight = existingRule?.minHeight;
