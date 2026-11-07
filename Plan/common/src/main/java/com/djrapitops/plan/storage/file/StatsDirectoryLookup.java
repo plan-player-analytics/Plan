@@ -78,9 +78,10 @@ public class StatsDirectoryLookup {
             public FileVisitResult preVisitDirectory(Path dir, BasicFileAttributes attrs) throws IOException {
                 String name = dir.getFileName().toString();
 
-                if (!dir.equals(serverRoot) && skipList.contains(name) || name.startsWith(".")) {
+                if (!dir.equals(serverRoot) && (skipList.contains(name) || name.startsWith("."))) {
                     return FileVisitResult.SKIP_SUBTREE;
                 }
+
 
                 if ("stats".equals(name)) {
                     try (Stream<Path> files = Files.list(dir)) {
