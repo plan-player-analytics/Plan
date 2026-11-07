@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.delivery.rendering.json;
 
-import com.djrapitops.plan.delivery.formatting.Formatter;
-import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
@@ -45,18 +43,13 @@ public class PlayerBaseOverviewJSONCreator implements ServerTabJSONCreator<Map<S
     private final PlanConfig config;
     private final DBSystem dbSystem;
 
-    private final Formatter<Double> percentage;
-
     @Inject
     public PlayerBaseOverviewJSONCreator(
             PlanConfig config,
-            DBSystem dbSystem,
-            Formatters formatters
+            DBSystem dbSystem
     ) {
         this.config = config;
         this.dbSystem = dbSystem;
-
-        percentage = formatters.percentage();
     }
 
     public Map<String, Object> createJSONAsMap(ServerUUID serverUUID) {
@@ -97,9 +90,9 @@ public class PlayerBaseOverviewJSONCreator implements ServerTabJSONCreator<Map<S
         Long avgAfkAfter = db.query(SessionQueries.averageAfkPerPlayer(monthAgo, now, serverUUID));
         double afkPercentageBefore = Percentage.calculate(avgAfkBefore, avgPlaytimeBefore);
         double afkPercentageAfter = Percentage.calculate(avgAfkAfter, avgPlaytimeAfter);
-        trends.put("afkThen", percentage.apply(afkPercentageBefore));
-        trends.put("afkNow", percentage.apply(afkPercentageAfter));
-        trends.put("afkTrend", new Trend(afkPercentageBefore, afkPercentageAfter, Trend.REVERSED, percentage));
+        trends.put("afkThen", afkPercentageBefore);
+        trends.put("afkNow", afkPercentageAfter);
+        trends.put("afkTrend", new Trend(afkPercentageBefore, afkPercentageAfter, Trend.REVERSED));
 
         Long avgRegularPlaytimeBefore = db.query(ActivityIndexQueries.averagePlaytimePerRegularPlayer(twoMonthsAgo, monthAgo, serverUUID, playThreshold));
         Long avgRegularPlaytimeAfter = db.query(ActivityIndexQueries.averagePlaytimePerRegularPlayer(monthAgo, now, serverUUID, playThreshold));
@@ -117,9 +110,9 @@ public class PlayerBaseOverviewJSONCreator implements ServerTabJSONCreator<Map<S
         Long avgRegularAfkAfter = db.query(ActivityIndexQueries.averageAFKPerRegularPlayer(monthAgo, now, serverUUID, playThreshold));
         double afkRegularPercentageBefore = Percentage.calculate(avgRegularAfkBefore, avgRegularPlaytimeBefore);
         double afkRegularPercentageAfter = Percentage.calculate(avgRegularAfkAfter, avgRegularPlaytimeAfter);
-        trends.put("regularAfkAvgThen", percentage.apply(afkRegularPercentageBefore));
-        trends.put("regularAfkAvgNow", percentage.apply(afkRegularPercentageAfter));
-        trends.put("regularAfkAvgTrend", new Trend(afkRegularPercentageBefore, afkRegularPercentageAfter, Trend.REVERSED, percentage));
+        trends.put("regularAfkAvgThen", afkRegularPercentageBefore);
+        trends.put("regularAfkAvgNow", afkRegularPercentageAfter);
+        trends.put("regularAfkAvgTrend", new Trend(afkRegularPercentageBefore, afkRegularPercentageAfter, Trend.REVERSED));
 
         return trends;
     }

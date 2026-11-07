@@ -1,15 +1,29 @@
 import React from 'react';
 import { Card } from 'react-bootstrap';
-import CardHeader from '../CardHeader.tsx';
+import CardHeader from '../CardHeader';
 import {
     faCalendar,
     faCalendarCheck,
     faClock,
 } from '@fortawesome/free-regular-svg-icons';
-import Datapoint from '../../datapoint/Datapoint.tsx';
+import Datapoint from '../../datapoint/Datapoint';
 import { useTranslation } from 'react-i18next';
 
-const SessionsWithinViewCard = ({ data }) => {
+type Props = {
+    data: {
+        totalSessions: string;
+        averageSessions: string;
+        averageSessionLength: string;
+        totalPlaytime: string;
+        totalActivePlaytime: string;
+        totalAfkPlaytime: string;
+        averagePlaytime: string;
+        averageActivePlaytime: string;
+        averageAfkPlaytime: string;
+    };
+};
+
+const SessionsWithinViewCard = ({ data }: Props) => {
     const { t } = useTranslation();
 
     return (

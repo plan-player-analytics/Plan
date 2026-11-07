@@ -1,20 +1,37 @@
 import React from 'react';
-import InsightsFor30DaysCard from '../../common/InsightsFor30DaysCard.tsx';
+import InsightsFor30DaysCard from '../../common/InsightsFor30DaysCard';
 import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
-import Datapoint from '../../../datapoint/Datapoint.tsx';
+import Datapoint from '../../../datapoint/Datapoint';
 import { faLongArrowAltRight, faUser } from '@fortawesome/free-solid-svg-icons';
 import SmallTrend from '../../../trend/SmallTrend';
-import End from '../../../layout/End.tsx';
-import ComparingLabel from '../../../trend/ComparingLabel.tsx';
-import { CardLoader } from '../../../navigation/Loader.tsx';
+import End from '../../../layout/End';
+import ComparingLabel from '../../../trend/ComparingLabel';
+import { CardLoader } from '../../../navigation/Loader';
+import { Trend } from '../../../../dataHooks/model/datapoint/Trend';
+
+type TwoPlayerChangeProps = {
+    colorBefore: string;
+    labelBefore: string;
+    colorAfter: string;
+    labelAfter: string;
+};
+
+type Props = {
+    data?: {
+        newToRegular: number;
+        newToRegularTrend: Trend;
+        regularToInactive: number;
+        regularToInactiveTrend: Trend;
+    } | null;
+};
 
 const TwoPlayerChange = ({
     colorBefore,
     labelBefore,
     colorAfter,
     labelAfter,
-}) => {
+}: TwoPlayerChangeProps) => {
     return (
         <>
             <Fa icon={faUser} className={`col-${colorBefore}`} /> {labelBefore}{' '}
@@ -24,7 +41,7 @@ const TwoPlayerChange = ({
     );
 };
 
-const PlayerbaseInsightsCard = ({ data }) => {
+const PlayerbaseInsightsCard = ({ data }: Props) => {
     const { t } = useTranslation();
     if (!data) return <CardLoader />;
     return (

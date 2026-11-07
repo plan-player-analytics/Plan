@@ -2,7 +2,6 @@ import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import React, { ReactNode } from 'react';
 import End from '../layout/End.js';
 import { useTranslation } from 'react-i18next';
-import { Trend } from '../../dataHooks/model/datapoint/Trend';
 import { IconProp } from '@fortawesome/fontawesome-svg-core';
 
 const ExtraLabel = ({ valueLabel }: { valueLabel: string | ReactNode }) => {
@@ -18,7 +17,7 @@ const ExtraLabel = ({ valueLabel }: { valueLabel: string | ReactNode }) => {
 };
 
 export type DatapointProps = {
-    icon: IconProp;
+    icon?: IconProp;
     color?: string;
     name: string | ReactNode;
     value: any;
@@ -27,7 +26,7 @@ export type DatapointProps = {
     bold?: boolean;
     boldTitle?: boolean;
     title?: string;
-    trend?: Trend;
+    trend?: ReactNode;
 };
 
 export const Datapoint = ({
