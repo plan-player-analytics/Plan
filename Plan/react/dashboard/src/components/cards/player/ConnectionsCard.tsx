@@ -1,18 +1,27 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { useTheme } from '../../../hooks/themeHook.tsx';
+import { useTheme } from '../../../hooks/themeHook';
 import { Card } from 'react-bootstrap';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faGlobe, faWifi } from '@fortawesome/free-solid-svg-icons';
-import Scrollable from '../../Scrollable.tsx';
+import Scrollable from '../../Scrollable';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
-import FormattedDate from '../../text/FormattedDate.tsx';
+import FormattedDate from '../../text/FormattedDate';
 import {
     localeService,
     reverseRegionLookupMap,
 } from '../../../service/localeService.js';
 
-const ConnectionsCard = ({ connections }) => {
+type Connection = {
+    geolocation: string;
+    date: number;
+};
+
+type Props = {
+    connections: Connection[];
+};
+
+const ConnectionsCard = ({ connections }: Props) => {
     const { t } = useTranslation();
     const { nightModeEnabled } = useTheme();
 
@@ -48,10 +57,12 @@ const ConnectionsCard = ({ connections }) => {
                     {Boolean(connections?.length) && (
                         <tbody>
                             {connections.map((connection) => {
-                                const code =
-                                    reverseRegionLookupMap[
-                                        connection.geolocation
-                                    ];
+                                const code = (
+                                    reverseRegionLookupMap as Record<
+                                        string,
+                                        string
+                                    >
+                                )[connection.geolocation];
                                 const location = code
                                     ? regions.of(code)
                                     : connection.geolocation.replace(
