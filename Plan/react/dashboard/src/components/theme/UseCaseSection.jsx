@@ -1,6 +1,6 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { mergeUseCases } from '../../util/mutator.js';
+import { mergeUseCases } from '../../util/mutator';
 import UseCase from './UseCase.jsx';
 
 const UseCaseSection = ({

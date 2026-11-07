@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { useThemeEditContext } from '../../hooks/context/themeEditContextHook.tsx';
 import { Card, Col, Row } from 'react-bootstrap';
-import EditorMenuToast from '../../components/theme/EditorMenuToast.jsx';
+import EditorMenuToast from '../../components/theme/EditorMenuToast';
 import CardHeader from '../../components/cards/CardHeader.tsx';
 import TextInput from '../../components/input/TextInput.tsx';
 import { ColorEditContextProvider } from '../../hooks/context/colorEditContextHook.jsx';
@@ -18,7 +18,7 @@ import {
 import ActionButton from '../../components/input/button/ActionButton.tsx';
 import UnsavedChangesText from '../../components/text/UnsavedChangesText.tsx';
 import SecondaryActionButton from '../../components/input/button/SecondaryActionButton.tsx';
-import { MinHeightProvider } from '../../hooks/context/minHeightContextHook.jsx';
+import { MinHeightProvider } from '../../hooks/context/minHeightContextHook';
 import { useMetadata } from '../../hooks/metadataHook.tsx';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import DownloadButton from '../../components/theme/DownloadButton.tsx';

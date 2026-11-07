@@ -8,6 +8,7 @@ export type UseCaseMap = {
     [key: string]: UseCase;
 } & {
     themeColorOptions?: ColorPropertyList;
+    referenceColors?: ColorPropertyMap;
 };
 
 export type ThemeConfig = {

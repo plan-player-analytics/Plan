@@ -6,13 +6,13 @@ import {
     faRedoAlt,
     faUndoAlt,
 } from '@fortawesome/free-solid-svg-icons';
-import { useThemeEditContext } from '../../hooks/context/themeEditContextHook.tsx';
-import ActionButton from '../input/button/ActionButton.tsx';
+import { useThemeEditContext } from '../../hooks/context/themeEditContextHook';
+import ActionButton from '../input/button/ActionButton';
 import { useTranslation } from 'react-i18next';
 import { unstable_usePrompt } from 'react-router';
-import ThemeEditHistory from './ThemeEditHistory.jsx';
-import OutlineButton from '../input/button/OutlineButton.tsx';
-import ThemeEditIssues from './ThemeEditIssues.jsx';
+import ThemeEditHistory from './ThemeEditHistory';
+import OutlineButton from '../input/button/OutlineButton';
+import ThemeEditIssues from './ThemeEditIssues';
 
 const EditorMenuToast = () => {
     const { t } = useTranslation();
@@ -33,7 +33,7 @@ const EditorMenuToast = () => {
     }, []);
 
     useEffect(() => {
-        const handleKeyDown = (e) => {
+        const handleKeyDown = (e: KeyboardEvent) => {
             // For Mac: metaKey (Cmd), for Windows/Linux: ctrlKey
             const isUndo =
                 (e.ctrlKey || e.metaKey) &&
@@ -58,7 +58,7 @@ const EditorMenuToast = () => {
 
     useEffect(() => {
         if (editCount > 0) {
-            const handleBeforeUnload = (event) => {
+            const handleBeforeUnload = (event: BeforeUnloadEvent) => {
                 event.preventDefault();
                 event.returnValue = '';
             };
