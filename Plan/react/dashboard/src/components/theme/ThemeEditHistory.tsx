@@ -13,7 +13,7 @@ const ThemeEditHistory = () => {
     return (
         <ul className={'edit-history'}>
             {redos.map((item, index) => {
-                if ('length' in item) {
+                if (Array.isArray(item)) {
                     return (
                         <React.Fragment key={'redo' + index}>
                             <li className={'redo'}>
