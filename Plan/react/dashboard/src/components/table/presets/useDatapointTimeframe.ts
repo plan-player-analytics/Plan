@@ -9,9 +9,11 @@ import {
     calculateTimeframeColumns,
     CustomRange,
     defaultCustomRanges,
+    resolveCustomRange,
     TimeframeColumn,
     TimeframePreset,
 } from '../../../util/datapointTablePresets';
+import { DateRangePreset } from '../../../util/queryDatePresets';
 import { Column } from '../QueryDatapointTable';
 import { formatPeriodLabel } from './formatPeriodLabel';
 
@@ -62,17 +64,50 @@ export const useDatapointTimeframe = (
         [updateTimeframe, tableId, zone, firstDay],
     );
 
-    const setCustomDay = useCallback(
-        (index: number, part: keyof CustomRange, value?: string) => {
+    const updateCustomRange = useCallback(
+        (index: number, update: (range: CustomRange) => CustomRange) => {
             updateTimeframe(tableId, (previous) => ({
                 preset: 'custom',
                 customRanges: (previous?.customRanges ?? [{}, {}]).map(
-                    (range, i) =>
-                        i === index ? { ...range, [part]: value } : range,
+                    (range, i) => (i === index ? update(range) : range),
                 ),
             }));
         },
         [updateTimeframe, tableId],
+    );
+
+    const resolveRange = useCallback(
+        (range: CustomRange) =>
+            zone
+                ? resolveCustomRange(range, Date.now(), zone, firstDay ?? 1)
+                : range,
+        [zone, firstDay],
+    );
+
+    const setCustomDay = useCallback(
+        (index: number, part: 'from' | 'to', value?: string) => {
+            updateCustomRange(index, (range) => {
+                const { from, to } = resolveRange(range);
+                return { from, to, [part]: value };
+            });
+        },
+        [updateCustomRange, resolveRange],
+    );
+
+    const setCustomPreset = useCallback(
+        (index: number, selected: DateRangePreset) => {
+            updateCustomRange(index, (range) => {
+                if (selected !== 'custom') return { preset: selected };
+                const { from, to } = resolveRange(range);
+                return { from, to };
+            });
+        },
+        [updateCustomRange, resolveRange],
+    );
+
+    const displayedCustomRanges = useMemo(
+        () => customRanges?.map(resolveRange),
+        [customRanges, resolveRange, updateRequested],
     );
 
     const setFieldInvalid = useCallback((fieldId: string) => {
@@ -121,7 +156,10 @@ export const useDatapointTimeframe = (
                         t('html.label.now'),
                     );
                 } else if (column.label) {
-                    label = t(column.label.key) + ' ' + column.label.number;
+                    label = t(column.label.key);
+                    if (column.label.number !== undefined) {
+                        label += ' ' + column.label.number;
+                    }
                     if (column.label.detailKey) {
                         label += ' (' + t(column.label.detailKey) + ')';
                     }
@@ -134,8 +172,9 @@ export const useDatapointTimeframe = (
     return {
         preset,
         selectPreset,
-        customRanges,
+        customRanges: displayedCustomRanges,
         setCustomDay,
+        setCustomPreset,
         setFieldInvalid,
         setFieldValid,
         invalidCustom,

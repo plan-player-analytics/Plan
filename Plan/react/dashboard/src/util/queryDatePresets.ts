@@ -120,31 +120,15 @@ export const fromServerWallClock = (
     return candidates.length ? Math.min(...candidates) : target - offsetBefore;
 };
 
-const period = (
-    start: moment.Moment,
-    nextStart: moment.Moment,
-    zone: ServerTimeZone,
-) =>
-    range(
-        start,
-        toServerWallClock(
-            fromServerWallClock(nextStart, zone) - MINUTE_MS,
-            zone,
-        ),
-    );
+type PresetBounds =
+    { start: moment.Moment; nextStart: moment.Moment } | { durationMs: number };
 
-const elapsed = (nowMs: number, durationMs: number, zone: ServerTimeZone) =>
-    range(
-        toServerWallClock(nowMs - durationMs, zone),
-        toServerWallClock(nowMs, zone),
-    );
-
-export const calculatePresetRange = (
+const presetBounds = (
     preset: DateRangePreset,
     nowEpochMs: number,
     zone: ServerTimeZone,
-    firstDay: number = 1,
-): DateTimeRange | undefined => {
+    firstDay: number,
+): PresetBounds | undefined => {
     const now = toServerWallClock(nowEpochMs, zone);
     const today = now.clone().startOf('day');
     const weekStart = startOfWeek(now, firstDay);
@@ -153,40 +137,89 @@ export const calculatePresetRange = (
 
     switch (preset) {
         case 'last30days':
-            return elapsed(nowEpochMs, 30 * DAY_MS, zone);
+            return { durationMs: 30 * DAY_MS };
         case 'last7days':
-            return elapsed(nowEpochMs, 7 * DAY_MS, zone);
+            return { durationMs: 7 * DAY_MS };
         case 'last24h':
-            return elapsed(nowEpochMs, DAY_MS, zone);
+            return { durationMs: DAY_MS };
         case 'today':
-            return period(today, today.clone().add(1, 'day'), zone);
+            return { start: today, nextStart: today.clone().add(1, 'day') };
         case 'yesterday':
-            return period(today.clone().subtract(1, 'day'), today, zone);
+            return {
+                start: today.clone().subtract(1, 'day'),
+                nextStart: today,
+            };
         case 'currentWeek':
-            return period(weekStart, weekStart.clone().add(1, 'week'), zone);
+            return {
+                start: weekStart,
+                nextStart: weekStart.clone().add(1, 'week'),
+            };
         case 'previousWeek':
-            return period(
-                weekStart.clone().subtract(1, 'week'),
-                weekStart,
-                zone,
-            );
+            return {
+                start: weekStart.clone().subtract(1, 'week'),
+                nextStart: weekStart,
+            };
         case 'currentMonth':
-            return period(monthStart, monthStart.clone().add(1, 'month'), zone);
+            return {
+                start: monthStart,
+                nextStart: monthStart.clone().add(1, 'month'),
+            };
         case 'previousMonth':
-            return period(
-                monthStart.clone().subtract(1, 'month'),
-                monthStart,
-                zone,
-            );
+            return {
+                start: monthStart.clone().subtract(1, 'month'),
+                nextStart: monthStart,
+            };
         case 'currentYear':
-            return period(yearStart, yearStart.clone().add(1, 'year'), zone);
+            return {
+                start: yearStart,
+                nextStart: yearStart.clone().add(1, 'year'),
+            };
         case 'previousYear':
-            return period(
-                yearStart.clone().subtract(1, 'year'),
-                yearStart,
-                zone,
-            );
+            return {
+                start: yearStart.clone().subtract(1, 'year'),
+                nextStart: yearStart,
+            };
         default:
             return undefined;
     }
+};
+
+export const calculatePresetRange = (
+    preset: DateRangePreset,
+    nowEpochMs: number,
+    zone: ServerTimeZone,
+    firstDay: number = 1,
+): DateTimeRange | undefined => {
+    const bounds = presetBounds(preset, nowEpochMs, zone, firstDay);
+    if (!bounds) return undefined;
+    if ('durationMs' in bounds) {
+        return range(
+            toServerWallClock(nowEpochMs - bounds.durationMs, zone),
+            toServerWallClock(nowEpochMs, zone),
+        );
+    }
+    return range(
+        bounds.start,
+        toServerWallClock(
+            fromServerWallClock(bounds.nextStart, zone) - MINUTE_MS,
+            zone,
+        ),
+    );
+};
+
+export const calculatePresetInterval = (
+    preset: DateRangePreset,
+    nowEpochMs: number,
+    zone: ServerTimeZone,
+    firstDay: number = 1,
+): { after: number; before: number } | undefined => {
+    const bounds = presetBounds(preset, nowEpochMs, zone, firstDay);
+    if (!bounds) return undefined;
+    if ('durationMs' in bounds) {
+        return { after: nowEpochMs - bounds.durationMs, before: nowEpochMs };
+    }
+    return {
+        after: fromServerWallClock(bounds.start, zone),
+        before: fromServerWallClock(bounds.nextStart, zone),
+    };
 };

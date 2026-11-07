@@ -2,6 +2,9 @@ import moment from 'moment';
 import { GenericFilter } from '../dataHooks/model/GenericFilter';
 import { MS_24H, MS_MONTH, MS_WEEK } from './format/useDateFormatter';
 import {
+    calculatePresetInterval,
+    DATE_RANGE_PRESETS,
+    DateRangePreset,
     fromServerWallClock,
     ServerTimeZone,
     toServerWallClock,
@@ -54,10 +57,18 @@ export type TimeframeColumn = {
     key: string;
     filter: GenericFilter;
     period?: TimeframePeriod;
-    label?: { key: string; number: number; detailKey?: string };
+    label?: { key: string; number?: number; detailKey?: string };
 };
 
-export type CustomRange = { from?: string; to?: string };
+export type CustomRange = {
+    from?: string;
+    to?: string;
+    preset?: DateRangePreset;
+};
+
+export const CUSTOM_RANGE_PRESETS = DATE_RANGE_PRESETS.filter(
+    (option) => option.name !== 'allData',
+);
 
 const HOUR_MS = 60 * 60 * 1000;
 
@@ -200,14 +211,69 @@ const lastHours = (
         };
     });
 
+export const resolveCustomRange = (
+    range: CustomRange,
+    nowEpochMs: number,
+    zone: ServerTimeZone,
+    firstDay: number,
+): CustomRange => {
+    if (!range.preset || range.preset === 'custom') return range;
+    const interval = calculatePresetInterval(
+        range.preset,
+        nowEpochMs,
+        zone,
+        firstDay,
+    );
+    if (!interval) return range;
+    return {
+        preset: range.preset,
+        from: formatDay(toServerWallClock(interval.after, zone)),
+        to: formatDay(toServerWallClock(interval.before - 1, zone)),
+    };
+};
+
+const presetColumn = (
+    preset: DateRangePreset,
+    index: number,
+    nowEpochMs: number,
+    zone: ServerTimeZone,
+    firstDay: number,
+): TimeframeColumn | undefined => {
+    const interval = calculatePresetInterval(
+        preset,
+        nowEpochMs,
+        zone,
+        firstDay,
+    );
+    if (!interval) return undefined;
+    return {
+        key: `range-${index}-${preset}-${interval.after}`,
+        filter: interval,
+        label: { key: `html.query.filter.preset.${preset}` },
+    };
+};
+
 const customColumns = (
     ranges: CustomRange[],
     nowEpochMs: number,
     zone: ServerTimeZone,
+    firstDay: number,
 ): TimeframeColumn[] | undefined => {
     if (!ranges.length) return undefined;
     const columns: TimeframeColumn[] = [];
     for (const range of ranges) {
+        if (range.preset && range.preset !== 'custom') {
+            const column = presetColumn(
+                range.preset,
+                columns.length,
+                nowEpochMs,
+                zone,
+                firstDay,
+            );
+            if (!column) return undefined;
+            columns.push(column);
+            continue;
+        }
         const from = parseDay(range.from);
         const to = parseDay(range.to);
         if (!from || !to || to.isBefore(from)) return undefined;
@@ -321,7 +387,7 @@ export const calculateTimeframeColumns = (
                 zone,
             );
         case 'custom':
-            return customColumns(customRanges, nowEpochMs, zone);
+            return customColumns(customRanges, nowEpochMs, zone, firstDay);
         default:
             return undefined;
     }
