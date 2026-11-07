@@ -253,10 +253,10 @@ export function QueryDatapointTrend<K extends NumericDatapointType>({
         <BigTrend
             trend={{
                 text: Math.abs(after.value - before.value),
-                reversed: downGood,
+                reversed: !!downGood,
                 direction:
                     after.value - before.value === 0
-                        ? undefined
+                        ? null
                         : after.value - before.value > 0
                           ? '+'
                           : '-',

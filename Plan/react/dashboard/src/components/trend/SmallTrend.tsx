@@ -9,35 +9,35 @@ import {
 
 type Props = {
     trend?: Trend | null;
-    format?: (value: string) => string;
+    format?: (value: number) => string;
 };
 
 type ValueProps = {
-    value: string;
+    value: string | number;
 };
 
 const TrendUpGood = ({ value }: ValueProps) => (
-    <span title={value}>
+    <span title={String(value)}>
         <Fa icon={faCaretUp} className='trend col-trend-better' />
     </span>
 );
 const TrendUpBad = ({ value }: ValueProps) => (
-    <span title={value}>
+    <span title={String(value)}>
         <Fa icon={faCaretUp} className='trend col-trend-worse' />
     </span>
 );
 const TrendDownBad = ({ value }: ValueProps) => (
-    <span title={value}>
+    <span title={String(value)}>
         <Fa icon={faCaretDown} className='trend col-trend-worse' />
     </span>
 );
 const TrendDownGood = ({ value }: ValueProps) => (
-    <span title={value}>
+    <span title={String(value)}>
         <Fa icon={faCaretDown} className='trend col-trend-better' />
     </span>
 );
 const TrendSame = ({ value }: ValueProps) => (
-    <span title={value}>
+    <span title={String(value)}>
         <Fa icon={faCaretRight} className='trend col-trend-same' />
     </span>
 );

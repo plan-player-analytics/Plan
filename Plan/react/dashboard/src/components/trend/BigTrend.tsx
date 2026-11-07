@@ -5,14 +5,11 @@ import {
     faCaretRight,
     faCaretUp,
 } from '@fortawesome/free-solid-svg-icons';
+import { Trend } from '../../dataHooks/model/datapoint/Trend';
 
-type Props<T extends string | number> = {
-    trend?: {
-        text: T;
-        direction?: '+' | '-' | null;
-        reversed?: boolean;
-    } | null;
-    format?: (value: T) => ReactNode;
+type Props = {
+    trend?: Trend | null;
+    format?: (value: number) => ReactNode;
 };
 
 type ValueProps = {
@@ -50,7 +47,7 @@ const TrendSame = ({ value }: ValueProps) => (
     </span>
 );
 
-const BigTrend = <T extends string | number>({ trend, format }: Props<T>) => {
+const BigTrend = ({ trend, format }: Props) => {
     if (!trend) {
         return <TrendSame value={'?'} />;
     }

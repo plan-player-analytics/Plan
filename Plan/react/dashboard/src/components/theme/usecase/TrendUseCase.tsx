@@ -11,17 +11,29 @@ const TrendUseCase = () => {
                     <Card.Body className={'col-text'}>
                         <p>
                             <BigTrend
-                                trend={{ text: '1234', direction: '+' }}
+                                trend={{
+                                    text: 1234,
+                                    direction: '+',
+                                    reversed: true,
+                                }}
                             />
                         </p>
                         <p>
                             <BigTrend
-                                trend={{ text: '1234', direction: '-' }}
+                                trend={{
+                                    text: 1234,
+                                    direction: '-',
+                                    reversed: true,
+                                }}
                             />
                         </p>
                         <p>
                             <BigTrend
-                                trend={{ text: '1234', direction: null }}
+                                trend={{
+                                    text: 1234,
+                                    direction: null,
+                                    reversed: true,
+                                }}
                             />
                         </p>
                         <hr />
@@ -29,7 +41,7 @@ const TrendUseCase = () => {
                             1234{' '}
                             <SmallTrend
                                 trend={{
-                                    text: '1234',
+                                    text: 1234,
                                     direction: '+',
                                     reversed: false,
                                 }}
@@ -39,7 +51,7 @@ const TrendUseCase = () => {
                             1234{' '}
                             <SmallTrend
                                 trend={{
-                                    text: '1234',
+                                    text: 1234,
                                     direction: '-',
                                     reversed: false,
                                 }}
@@ -49,7 +61,7 @@ const TrendUseCase = () => {
                             1234{' '}
                             <SmallTrend
                                 trend={{
-                                    text: '1234',
+                                    text: 1234,
                                     direction: null,
                                     reversed: false,
                                 }}

@@ -111,7 +111,7 @@ const PlayerbaseTrendsCard = ({ data }: Props) => {
                         <BigTrend
                             key={JSON.stringify(data.totalPlayersTrend)}
                             trend={data.playtimeAvgTrend}
-                            format={(value) => formatTime(Number(value))}
+                            format={formatTime}
                         />,
                     ]}
                 />
@@ -125,7 +125,7 @@ const PlayerbaseTrendsCard = ({ data }: Props) => {
                         <BigTrend
                             key={JSON.stringify(data.afkTrend)}
                             trend={data.afkTrend}
-                            format={(value) => formatPercentage(Number(value))}
+                            format={formatPercentage}
                         />,
                     ]}
                 />
@@ -149,7 +149,7 @@ const PlayerbaseTrendsCard = ({ data }: Props) => {
                         <BigTrend
                             key={JSON.stringify(data.regularPlaytimeAvgTrend)}
                             trend={data.regularPlaytimeAvgTrend}
-                            format={(value) => formatTime(Number(value))}
+                            format={formatTime}
                         />,
                     ]}
                 />
@@ -173,7 +173,7 @@ const PlayerbaseTrendsCard = ({ data }: Props) => {
                         <BigTrend
                             key={JSON.stringify(data.regularSessionAvgTrend)}
                             trend={data.regularSessionAvgTrend}
-                            format={(value) => formatTime(Number(value))}
+                            format={formatTime}
                         />,
                     ]}
                 />
@@ -191,7 +191,7 @@ const PlayerbaseTrendsCard = ({ data }: Props) => {
                         <BigTrend
                             key={JSON.stringify(data.regularAfkAvgTrend)}
                             trend={data.regularAfkAvgTrend}
-                            format={(value) => formatPercentage(Number(value))}
+                            format={formatPercentage}
                         />,
                     ]}
                 />
