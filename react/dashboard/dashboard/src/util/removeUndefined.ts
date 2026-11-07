@@ -5,11 +5,11 @@ export function removeUndefined<T>(value: T): T {
             .map((item) => removeUndefined(item)) as T;
     }
 
-    if (value !== null && typeof value === "object") {
+    if (value !== null && typeof value === 'object') {
         return Object.fromEntries(
             Object.entries(value)
                 .filter(([, v]) => v !== undefined)
-                .map(([key, v]) => [key, removeUndefined(v)])
+                .map(([key, v]) => [key, removeUndefined(v)]),
         ) as T;
     }
 

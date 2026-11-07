@@ -1,11 +1,17 @@
 import React from 'react';
-import MultipleChoiceFilter from "./MultipleChoiceFilter";
-import {useTranslation} from "react-i18next";
+import MultipleChoiceFilter from './MultipleChoiceFilter';
+import { useTranslation } from 'react-i18next';
 
-const PluginGroupsFilter = ({index, filter, removeFilter, setFilterOptions}) => {
-    const {t} = useTranslation();
+const PluginGroupsFilter = ({
+    index,
+    filter,
+    removeFilter,
+    setFilterOptions,
+}) => {
+    const { t } = useTranslation();
     const label = t('html.query.filter.pluginGroup.text', {
-        plugin: filter.options.plugin, group: filter.options.group
+        plugin: filter.options.plugin,
+        group: filter.options.group,
     });
 
     return (
@@ -16,7 +22,7 @@ const PluginGroupsFilter = ({index, filter, removeFilter, setFilterOptions}) => 
             removeFilter={removeFilter}
             setFilterOptions={setFilterOptions}
         />
-    )
+    );
 };
 
-export default PluginGroupsFilter
+export default PluginGroupsFilter;

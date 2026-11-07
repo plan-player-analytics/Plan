@@ -1,14 +1,14 @@
-export const nameToCssVariable = name => {
+export const nameToCssVariable = (name) => {
     return `var(--color-${name})`;
-}
+};
 
-export const nameToContrastCssVariable = name => {
+export const nameToContrastCssVariable = (name) => {
     return `var(--contrast-color-${name})`;
-}
+};
 
-export const cssVariableToName = cssVariable => {
-    return cssVariable?.replace('var(--color-', '').replace(')', '')
-}
+export const cssVariableToName = (cssVariable) => {
+    return cssVariable?.replace('var(--color-', '').replace(')', '');
+};
 
 export const hsxStringToArray = (hsxString) => {
     const color = hsxString.substring(4, hsxString.length - 1);
@@ -17,7 +17,7 @@ export const hsxStringToArray = (hsxString) => {
     const s = Number(split[1].substring(0, split[1].length - 1));
     const x = Number(split[2].substring(0, split[2].length - 1));
     return [h, s, x];
-}
+};
 
 export const hslaStringToArray = (hslaString) => {
     const color = hslaString.substring(4, hslaString.length - 1);
@@ -27,7 +27,7 @@ export const hslaStringToArray = (hslaString) => {
     const l = Number(split[2].substring(0, split[2].length - 1));
     const a = Number(split[3].substring(0, split[3].length - 1));
     return [h, s, l, a];
-}
+};
 
 export const hslToHsv = ([h, s, l]) => {
     // Normalize s and l if they are > 1 (i.e., in [0, 100])
@@ -39,16 +39,12 @@ export const hslToHsv = ([h, s, l]) => {
     const v = l + s * Math.min(l, 1 - l);
     const newS = v === 0 ? 0 : 2 * (1 - l / v);
     // Clamp to [0, 1]
-    return [
-        h,
-        Math.max(0, Math.min(1, newS)),
-        Math.max(0, Math.min(1, v))
-    ];
-}
+    return [h, Math.max(0, Math.min(1, newS)), Math.max(0, Math.min(1, v))];
+};
 
 export const hsvToHex = (hsv) => {
     return rgbToHexString(hsvToRgb(hsv));
-}
+};
 
 export const hsvToRgb = ([h, s, v]) => {
     let r, g, b;
@@ -101,15 +97,15 @@ export const hsvToRgb = ([h, s, v]) => {
     }
 
     return [r * 255, g * 255, b * 255];
-}
+};
 
 export const randomHSVColor = (i) => {
     const goldenRatioConjugate = 0.618033988749895;
-    const hue = i * goldenRatioConjugate % 1;
+    const hue = (i * goldenRatioConjugate) % 1;
     const saturation = 0.7;
-    const value = 0.7 + (Math.random() / 10);
-    return [hue, saturation, value]
-}
+    const value = 0.7 + Math.random() / 10;
+    return [hue, saturation, value];
+};
 
 export const rgbStringToArray = (rgbString) => {
     const colors = rgbString.substring(4, rgbString.length - 1);
@@ -117,9 +113,9 @@ export const rgbStringToArray = (rgbString) => {
     return [
         Number(split[0].trim()),
         Number(split[1].trim()),
-        Number(split[2].trim())
+        Number(split[2].trim()),
     ];
-}
+};
 
 export const rgbaStringToArray = (rgbaString) => {
     const colors = rgbaString.substring(5, rgbaString.length - 1);
@@ -128,17 +124,17 @@ export const rgbaStringToArray = (rgbaString) => {
         Number(split[0].trim()),
         Number(split[1].trim()),
         Number(split[2].trim()),
-        split.length === 4 ? Number(split[3].trim()) : 1
+        split.length === 4 ? Number(split[3].trim()) : 1,
     ];
-}
+};
 
 export const rgbToHexString = ([r, g, b]) => {
     return '#' + rgbToHex(r) + rgbToHex(g) + rgbToHex(b);
-}
+};
 
 const rgbToHex = (component) => {
     return Math.floor(component).toString(16).padStart(2, '0');
-}
+};
 
 export const hexToRgb = (hexString) => {
     const hex = hexString.replace('#', '');
@@ -157,14 +153,15 @@ export const hexToRgb = (hexString) => {
         const b = Number.parseInt(bLetter + bLetter, 16);
         return [r, g, b];
     }
-}
+};
 
 // https://css-tricks.com/converting-color-spaces-in-javascript/
 export const rgbToHsl = ([r, g, b]) => {
     r /= 255;
     g /= 255;
     b /= 255;
-    const max = Math.max(r, g, b), min = Math.min(r, g, b);
+    const max = Math.max(r, g, b),
+        min = Math.min(r, g, b);
     let h, s;
     const l = (max + min) / 2;
 
@@ -190,12 +187,12 @@ export const rgbToHsl = ([r, g, b]) => {
         h /= 6;
     }
     return [h, s, l];
-}
+};
 
 // From https://stackoverflow.com/a/3732187
 export const withReducedSaturation = (hex, reduceSaturationPercentage) => {
-    if (hex.startsWith('var(')) hex = calculateCssHexColor(hex)
-    const saturationReduction = reduceSaturationPercentage || 0.70;
+    if (hex.startsWith('var(')) hex = calculateCssHexColor(hex);
+    const saturationReduction = reduceSaturationPercentage || 0.7;
 
     const rgb = hexToRgb(hex);
     let [h, s, l] = rgbToHsl(rgb);
@@ -205,24 +202,32 @@ export const withReducedSaturation = (hex, reduceSaturationPercentage) => {
     if (l > 1) l = l / 100;
 
     // To css property
-    return 'hsl(' + h * 360 + ',' + s * 100 * saturationReduction + '%,' + l * 95 + '%)';
-}
+    return (
+        'hsl(' +
+        h * 360 +
+        ',' +
+        s * 100 * saturationReduction +
+        '%,' +
+        l * 95 +
+        '%)'
+    );
+};
 
 export const rgbToString = ([r, g, b]) => {
     return `rgb(${r}, ${g}, ${b})`;
-}
+};
 
 export const rgbaToString = ([r, g, b, a]) => {
     return `rgba(${r}, ${g}, ${b}, ${a})`;
-}
+};
 
 export const hslToString = ([h, s, l]) => {
     return `hsl(${h}, ${s}%, ${l}%)`;
-}
+};
 
 export const hsvToString = ([h, s, v]) => {
     return `hsv(${h}, ${s}%, ${v}%)`;
-}
+};
 
 export const calculateCssHexColor = (cssColor, inElement) => {
     const colorCalculationElement = document.createElement('div');
@@ -230,17 +235,19 @@ export const calculateCssHexColor = (cssColor, inElement) => {
     colorCalculationElement.style.color = cssColor;
     const element = inElement || document.body;
     element.appendChild(colorCalculationElement);
-    const rgbString = window.getComputedStyle(colorCalculationElement, null).getPropertyValue("color");
+    const rgbString = window
+        .getComputedStyle(colorCalculationElement, null)
+        .getPropertyValue('color');
     const hex = rgbToHexString(rgbStringToArray(rgbString));
     colorCalculationElement.remove();
     return hex;
-}
+};
 
 export const calculateCssColors = (cssSelector) => {
     const colors = {
         color: null,
         backgroundColor: null,
-        borderColor: null
+        borderColor: null,
     };
 
     // Search through all document stylesheets
@@ -251,7 +258,10 @@ export const calculateCssColors = (cssSelector) => {
 
             // Look through all rules in the stylesheet
             for (const rule of stylesheet.cssRules) {
-                if (rule instanceof CSSStyleRule && rule.selectorText === cssSelector) {
+                if (
+                    rule instanceof CSSStyleRule &&
+                    rule.selectorText === cssSelector
+                ) {
                     const style = rule.style;
 
                     // Get color if set
@@ -276,5 +286,4 @@ export const calculateCssColors = (cssSelector) => {
     }
 
     return colors;
-}
-
+};

@@ -1,47 +1,54 @@
-import React, {useEffect, useState} from "react";
-import {useTranslation} from "react-i18next";
-import {tooltip, translateLinegraphButtons} from "../../util/graphs";
-import LineGraph from './LineGraph'
-import {ChartLoader} from "../navigation/Loader.tsx";
-import {useTheme} from "../../hooks/themeHook.tsx";
-import {PlayersOnlineTooltip, useTooltipOptions} from "./tooltip/PlayersOnlineTooltip.jsx";
+import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
+import { tooltip, translateLinegraphButtons } from '../../util/graphs';
+import LineGraph from './LineGraph';
+import { ChartLoader } from '../navigation/Loader.tsx';
+import { useTheme } from '../../hooks/themeHook.tsx';
+import {
+    PlayersOnlineTooltip,
+    useTooltipOptions,
+} from './tooltip/PlayersOnlineTooltip.jsx';
 
-const StackedPlayersOnlineGraph = ({data, showPlayersOnline}) => {
-    const {t} = useTranslation();
-    const {nightModeEnabled} = useTheme();
-    const [graphOptions, setGraphOptions] = useState({title: {text: ''},});
+const StackedPlayersOnlineGraph = ({ data, showPlayersOnline }) => {
+    const { t } = useTranslation();
+    const { nightModeEnabled } = useTheme();
+    const [graphOptions, setGraphOptions] = useState({ title: { text: '' } });
 
     useEffect(() => {
         if (!data) return;
-        const playersOnlineSeries = data.graphs.map(graph => ({
-            name: t('html.label.playersOnline') + ' (' + graph.server.serverName + ')',
+        const playersOnlineSeries = data.graphs.map((graph) => ({
+            name:
+                t('html.label.playersOnline') +
+                ' (' +
+                graph.server.serverName +
+                ')',
             type: 'areaspline',
             tooltip: tooltip.zeroDecimals,
-            data: graph.points.map(point => {
+            data: graph.points.map((point) => {
                 // Ensure that the points can be stacked by moving data to minute level
-                point[0] -= (point[0] % 60000);
+                point[0] -= point[0] % 60000;
                 return point;
             }),
-            color: "var(--color-graphs-players-online)",
-            yAxis: 0
+            color: 'var(--color-graphs-players-online)',
+            yAxis: 0,
         }));
         setGraphOptions({
-            title: {text: ''},
+            title: { text: '' },
             rangeSelector: {
                 selected: 2,
-                buttons: translateLinegraphButtons(t)
+                buttons: translateLinegraphButtons(t),
             },
             chart: {
                 noData: t('html.label.noDataToDisplay'),
                 zooming: {
-                    type: 'xy'
-                }
+                    type: 'xy',
+                },
             },
             plotOptions: {
                 areaspline: {
                     fillOpacity: nightModeEnabled ? 0.2 : 0.4,
-                    stacking: 'normal'
-                }
+                    stacking: 'normal',
+                },
             },
             legend: {
                 enabled: true,
@@ -49,33 +56,41 @@ const StackedPlayersOnlineGraph = ({data, showPlayersOnline}) => {
             xAxis: {
                 zoomEnabled: true,
                 title: {
-                    enabled: false
-                }
+                    enabled: false,
+                },
             },
             yAxis: {
                 zoomEnabled: true,
-                title: {text: t('html.label.players')},
+                title: { text: t('html.label.players') },
                 softMax: 2,
-                min: 0
+                min: 0,
             },
-            series: playersOnlineSeries
-        })
-    }, [data, nightModeEnabled, t])
+            series: playersOnlineSeries,
+        });
+    }, [data, nightModeEnabled, t]);
 
     const [hoveredDate, setHoveredDate] = useState(undefined);
     const onMouseLeave = () => setHoveredDate(undefined);
 
     const extraOptions = useTooltipOptions(showPlayersOnline, setHoveredDate);
 
-    if (!data) return <ChartLoader/>;
+    if (!data) return <ChartLoader />;
 
     return (
         <>
-            <PlayersOnlineTooltip id="stacked-players-online-graph" hoveredDate={hoveredDate} identifier={null}/>
-            <LineGraph id="stacked-players-online-graph"
-                       options={graphOptions} extraOptions={extraOptions} onMouseLeave={onMouseLeave}/>
+            <PlayersOnlineTooltip
+                id='stacked-players-online-graph'
+                hoveredDate={hoveredDate}
+                identifier={null}
+            />
+            <LineGraph
+                id='stacked-players-online-graph'
+                options={graphOptions}
+                extraOptions={extraOptions}
+                onMouseLeave={onMouseLeave}
+            />
         </>
-    )
-}
+    );
+};
 
-export default StackedPlayersOnlineGraph
+export default StackedPlayersOnlineGraph;

@@ -3,4 +3,4 @@ export type PieSlice = {
     y: number;
     color: string;
     drilldown: string;
-}
+};

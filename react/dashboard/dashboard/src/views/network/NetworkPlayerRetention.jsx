@@ -1,13 +1,17 @@
 import React from 'react';
-import {useAuth} from "../../hooks/authenticationHook.tsx";
-import PlayerRetention from "../../components/cards/common/PlayerRetention.jsx";
+import { useAuth } from '../../hooks/authenticationHook.tsx';
+import PlayerRetention from '../../components/cards/common/PlayerRetention.jsx';
 
 const NetworkPlayerRetention = () => {
-    const {hasPermission} = useAuth();
+    const { hasPermission } = useAuth();
     const seeRetention = hasPermission('page.network.retention');
     return (
-        <PlayerRetention id={"network-retention"} identifier={null} seeRetention={seeRetention}/>
-    )
+        <PlayerRetention
+            id={'network-retention'}
+            identifier={null}
+            seeRetention={seeRetention}
+        />
+    );
 };
 
-export default NetworkPlayerRetention
+export default NetworkPlayerRetention;

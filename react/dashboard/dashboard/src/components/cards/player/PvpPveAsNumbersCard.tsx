@@ -1,0 +1,29 @@
+import { useTranslation } from 'react-i18next';
+import { Card } from 'react-bootstrap';
+import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
+import { faCampground } from '@fortawesome/free-solid-svg-icons';
+import React, { ComponentProps } from 'react';
+import PlayerPvpPveAsNumbersTable from '../../table/PlayerPvpPveAsNumbersTable';
+
+type Props = {
+    player: {
+        killData: ComponentProps<typeof PlayerPvpPveAsNumbersTable>['killData'];
+    };
+};
+
+const PvpPveAsNumbersCard = ({ player }: Props) => {
+    const { t } = useTranslation();
+    return (
+        <Card>
+            <Card.Header>
+                <h6 className='col-text'>
+                    <Fa icon={faCampground} className='col-player-kills' />{' '}
+                    {t('html.label.pvpPveAsNumbers')}
+                </h6>
+            </Card.Header>
+            <PlayerPvpPveAsNumbersTable killData={player.killData} />
+        </Card>
+    );
+};
+
+export default PvpPveAsNumbersCard;

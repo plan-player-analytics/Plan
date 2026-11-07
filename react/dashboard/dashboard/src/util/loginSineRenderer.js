@@ -32,7 +32,11 @@ export default function drawSine(canvasId, fillColor) {
 
         ctx.moveTo(x, 50);
         while (x <= width) {
-            y = height / 2 + amplitude * Math.sin((x + xOffset) / frequency) * Math.cos((x + xOffset) / (frequency * 0.54515978463));
+            y =
+                height / 2 +
+                amplitude *
+                    Math.sin((x + xOffset) / frequency) *
+                    Math.cos((x + xOffset) / (frequency * 0.54515978463));
             ctx.lineTo(x, y);
             x += 5;
         }
@@ -47,7 +51,7 @@ export default function drawSine(canvasId, fillColor) {
     function draw() {
         const canvas = document.getElementById(canvasId);
         if (canvas == null) return;
-        const context = canvas.getContext("2d");
+        const context = canvas.getContext('2d');
 
         context.clearRect(0, 0, 1000, 150);
         context.save();
@@ -64,7 +68,9 @@ export default function drawSine(canvasId, fillColor) {
         if (canvas == null) return;
         let dpi = window.devicePixelRatio;
         canvas.getContext('2d');
-        const style_width = getComputedStyle(canvas).getPropertyValue("width").slice(0, -2);
+        const style_width = getComputedStyle(canvas)
+            .getPropertyValue('width')
+            .slice(0, -2);
         // Scale the canvas
         canvas.setAttribute('width', `${style_width * dpi}`);
     }

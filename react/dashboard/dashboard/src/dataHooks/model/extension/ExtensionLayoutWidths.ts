@@ -1,4 +1,4 @@
-import {ElementOrder, ExtensionData} from "./ExtensionData";
+import { ElementOrder, ExtensionData } from './ExtensionData';
 
 export type ExtensionLayoutWidths = {
     cardWidth: number;
@@ -11,14 +11,13 @@ type LayoutItem = {
 };
 
 const expand = (row: LayoutItem[], cardWidth: number) => {
-    const result = row.map(item => ({
+    const result = row.map((item) => ({
         element: item.element,
-        min: item.min / cardWidth * 12,
-        max: item.max / cardWidth * 12
+        min: (item.min / cardWidth) * 12,
+        max: (item.max / cardWidth) * 12,
     }));
 
-    let remaining =
-        12 - result.reduce((sum, item) => sum + item.min, 0);
+    let remaining = 12 - result.reduce((sum, item) => sum + item.min, 0);
 
     while (remaining > 0) {
         let changed = false;
@@ -40,10 +39,10 @@ const expand = (row: LayoutItem[], cardWidth: number) => {
         }
     }
 
-    return result.map(item => ({
-        ...item
+    return result.map((item) => ({
+        ...item,
     }));
-}
+};
 
 const buildRows = (items: LayoutItem[]): LayoutItem[][] => {
     const rows: LayoutItem[][] = [];
@@ -68,25 +67,31 @@ const buildRows = (items: LayoutItem[]): LayoutItem[][] => {
     return rows;
 };
 
-export const computeLayoutWidths = (extension: ExtensionData): ExtensionLayoutWidths => {
+export const computeLayoutWidths = (
+    extension: ExtensionData,
+): ExtensionLayoutWidths => {
     const tabs = extension.tabs || [];
 
-    const hasValues = tabs.some(tab => tab.values?.length);
-    const hasGraph = tabs.some(tab => tab.graphNames?.length);
-    const hasTable = tabs.some(tab => tab.tableData?.length);
+    const hasValues = tabs.some((tab) => tab.values?.length);
+    const hasGraph = tabs.some((tab) => tab.graphNames?.length);
+    const hasTable = tabs.some((tab) => tab.tableData?.length);
     const hasGroups = false;
-    const hasStatistics = tabs.some(tab => tab.statisticsData?.length);
+    const hasStatistics = tabs.some((tab) => tab.statisticsData?.length);
     const hasFlags = false;
-    const includedItems: Set<ElementOrder> = new Set([
-        hasValues ? 'VALUES' as const : undefined,
-        hasGraph ? 'GRAPH' as const : undefined,
-        hasTable ? 'TABLE' as const : undefined,
-        hasGroups ? 'GROUPS' as const : undefined,
-        hasStatistics ? 'STATISTICS' as const : undefined,
-        hasFlags ? 'FLAGS' as const : undefined
-    ].filter(v => v !== undefined));
+    const includedItems: Set<ElementOrder> = new Set(
+        [
+            hasValues ? ('VALUES' as const) : undefined,
+            hasGraph ? ('GRAPH' as const) : undefined,
+            hasTable ? ('TABLE' as const) : undefined,
+            hasGroups ? ('GROUPS' as const) : undefined,
+            hasStatistics ? ('STATISTICS' as const) : undefined,
+            hasFlags ? ('FLAGS' as const) : undefined,
+        ].filter((v) => v !== undefined),
+    );
 
-    const hasWideTable = tabs.some(tab => tab.tableData?.some(table => table.wide));
+    const hasWideTable = tabs.some((tab) =>
+        tab.tableData?.some((table) => table.wide),
+    );
     const hasFullWidthTable = extension.wide;
 
     const layout: LayoutItem[] = [
@@ -102,7 +107,7 @@ export const computeLayoutWidths = (extension: ExtensionData): ExtensionLayoutWi
         },
         {
             element: 'TABLE' as const,
-            min: hasFullWidthTable ? 12 : (hasWideTable ? 8 : 4),
+            min: hasFullWidthTable ? 12 : hasWideTable ? 8 : 4,
             max: hasFullWidthTable || hasWideTable ? 12 : 6,
         },
         {
@@ -119,33 +124,50 @@ export const computeLayoutWidths = (extension: ExtensionData): ExtensionLayoutWi
             element: 'FLAGS' as const,
             min: 4,
             max: 6,
-        }
-    ].filter(item => includedItems.has(item.element));
-    const combinedMinimumWidth = layout.reduce((partialSum, a) => partialSum + a.min, 0);
+        },
+    ].filter((item) => includedItems.has(item.element));
+    const combinedMinimumWidth = layout.reduce(
+        (partialSum, a) => partialSum + a.min,
+        0,
+    );
 
-    const hasFullWidthElement = layout.some(item => item.min === 12);
-    const horizontalSplit = !hasFullWidthElement
-        && (hasValues && combinedMinimumWidth == 8 && layout.length == 2) // Values + table
-        || (combinedMinimumWidth == 16 && layout.length == 2) // Two 2 wide elements
-        || (combinedMinimumWidth == 16 && (layout.length == 3 || layout.length == 4) && !hasValues); // 3-4 elements without values
+    const hasFullWidthElement = layout.some((item) => item.min === 12);
+    const horizontalSplit =
+        (!hasFullWidthElement &&
+            hasValues &&
+            combinedMinimumWidth == 8 &&
+            layout.length == 2) || // Values + table
+        (combinedMinimumWidth == 16 && layout.length == 2) || // Two 2 wide elements
+        (combinedMinimumWidth == 16 &&
+            (layout.length == 3 || layout.length == 4) &&
+            !hasValues); // 3-4 elements without values
 
     if (horizontalSplit) {
         const halved = combinedMinimumWidth / 2; // 4 or 8
         return {
             cardWidth: halved,
-            ...Object.fromEntries(expand(layout, halved).map(item => [item.element, item.min]))
-        }
+            ...Object.fromEntries(
+                expand(layout, halved).map((item) => [item.element, item.min]),
+            ),
+        };
     }
 
     if (combinedMinimumWidth > 12) {
         return {
             cardWidth: 12,
-            ...Object.fromEntries(expand(layout, 12).map(item => [item.element, item.min]))
-        }
+            ...Object.fromEntries(
+                expand(layout, 12).map((item) => [item.element, item.min]),
+            ),
+        };
     } else {
         return {
             cardWidth: combinedMinimumWidth,
-            ...Object.fromEntries(expand(layout, combinedMinimumWidth).map(item => [item.element, item.min]))
-        }
+            ...Object.fromEntries(
+                expand(layout, combinedMinimumWidth).map((item) => [
+                    item.element,
+                    item.min,
+                ]),
+            ),
+        };
     }
 };

@@ -1,5 +1,5 @@
 export enum PerformanceGraphId {
-    PLAYERS_ONLINE = "players-online",
+    PLAYERS_ONLINE = 'players-online',
     TPS = 'tps',
     MSPT_AVG = 'mspt-avg',
     MSPT_95TH = 'mspt-95th',
@@ -13,5 +13,5 @@ export enum PerformanceGraphId {
     PING = 'ping',
     PING_MIN = 'ping-min',
     PING_AVG = 'ping-avg',
-    PING_MAX = 'ping-max'
+    PING_MAX = 'ping-max',
 }

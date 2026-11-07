@@ -8,4 +8,4 @@ export type YAxisById = {
     chunks: Highcharts.YAxisOptions;
     entities: Highcharts.YAxisOptions;
     megabytes: Highcharts.YAxisOptions;
-}
+};

@@ -8,7 +8,7 @@ type Row = Card[];
 
 function isBetter(
     a: [number, number, number],
-    b: [number, number, number] | null
+    b: [number, number, number] | null,
 ): boolean {
     if (!b) return true;
 
@@ -21,7 +21,10 @@ function isBetter(
     return false;
 }
 
-export function optimizeCardOrder<T extends Card>(cards: T[], rowWidth = 12): T[] {
+export function optimizeCardOrder<T extends Card>(
+    cards: T[],
+    rowWidth = 12,
+): T[] {
     if (!cards?.length) {
         return [];
     }
@@ -59,9 +62,9 @@ export function optimizeCardOrder<T extends Card>(cards: T[], rowWidth = 12): T[
      */
     function getScore(rows: T[][]): [number, number, number] {
         const gaps = rows.map(
-            row =>
+            (row) =>
                 rowWidth -
-                row.reduce((sum, card) => sum + card.widths.cardWidth, 0)
+                row.reduce((sum, card) => sum + card.widths.cardWidth, 0),
         );
 
         // Squared gaps makes [0, 4] preferable to [2, 2].
@@ -99,7 +102,7 @@ export function optimizeCardOrder<T extends Card>(cards: T[], rowWidth = 12): T[
 
             if (isBetter(score, bestScore)) {
                 bestScore = score;
-                bestRows = rows.map(row => [...row]);
+                bestRows = rows.map((row) => [...row]);
             }
 
             return;
@@ -116,7 +119,7 @@ export function optimizeCardOrder<T extends Card>(cards: T[], rowWidth = 12): T[
         for (const row of rows) {
             const used = row.reduce(
                 (sum, card) => sum + card.widths.cardWidth,
-                0
+                0,
             );
 
             const remaining = rowWidth - used;

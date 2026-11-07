@@ -1,5 +1,5 @@
 export type Trend = {
-    text: string;
+    text: number;
     direction: '+' | '-' | null;
     reversed: boolean;
-}
+};

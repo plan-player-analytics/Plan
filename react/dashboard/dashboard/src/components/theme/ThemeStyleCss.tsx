@@ -1,32 +1,37 @@
-import {addToObject, flattenObject} from '../../util/mutator';
-import {nameToCssVariable} from '../../util/colors';
-import {getColorConverter, getContrastColor} from "../../util/Color.js";
-import {useThemeEditContext} from "../../hooks/context/themeEditContextHook.js";
-import {useThemeStorage} from "../../hooks/context/themeContextHook.js";
-import {ThemeConfig} from "./model/ThemeConfig";
+import { addToObject, flattenObject } from '../../util/mutator';
+import { nameToCssVariable } from '../../util/colors';
+import { getColorConverter, getContrastColor } from '../../util/Color.js';
+import { useThemeEditContext } from '../../hooks/context/themeEditContextHook.js';
+import { useThemeStorage } from '../../hooks/context/themeContextHook.js';
+import { ThemeConfig } from './model/ThemeConfig';
 
 type ThemeGenerationParams = {
     applyToClass?: string;
     color?: string;
-} & Omit<ThemeConfig, "defaultTheme">;
+} & Omit<ThemeConfig, 'defaultTheme'>;
 
 // Function to generate CSS variables from theme data
 const generateThemeCSS = ({
-                              applyToClass,
-                              colors,
-                              nightColors,
-                              useCases,
-                              nightModeUseCases,
-                              color
-                          }: ThemeGenerationParams) => {
+    applyToClass,
+    colors,
+    nightColors,
+    useCases,
+    nightModeUseCases,
+    color,
+}: ThemeGenerationParams) => {
     const baseVariables: string[] = [];
     const nightModeVariables: string[] = [];
 
     // Helper to add both color and its contrast
-    const addColorWithContrast = (name: string, color: string, variables: string[]) => {
+    const addColorWithContrast = (
+        name: string,
+        color: string,
+        variables: string[],
+    ) => {
         variables.push(
             `--color-${name}: ${color}`,
-            `--contrast-color-${name}: ${getContrastColor(color)}`);
+            `--contrast-color-${name}: ${getContrastColor(color)}`,
+        );
     };
 
     // Add regular colors
@@ -35,7 +40,9 @@ const generateThemeCSS = ({
         // Add desaturated version for night mode
         const converter = getColorConverter(value);
 
-        const nightColor = converter ? converter.reduceSaturation().toRgbaString() : value;
+        const nightColor = converter
+            ? converter.reduceSaturation().toRgbaString()
+            : value;
         addColorWithContrast(key, nightColor, nightModeVariables);
     });
 
@@ -53,34 +60,61 @@ const generateThemeCSS = ({
     // });
 
     // Add night mode use case variables
-    let flattenedNightUseCases = addToObject(flattenObject(nightModeUseCases), nightModeUseCases.referenceColors);
+    let flattenedNightUseCases = addToObject(
+        flattenObject(nightModeUseCases),
+        nightModeUseCases.referenceColors,
+    );
     // Override with user selected theme color
-    if (color && color !== 'theme') flattenedNightUseCases = addToObject(flattenedNightUseCases, {theme: nameToCssVariable(color)});
+    if (color && color !== 'theme')
+        flattenedNightUseCases = addToObject(flattenedNightUseCases, {
+            theme: nameToCssVariable(color),
+        });
     Object.entries(flattenedNightUseCases).forEach(([key, value]) => {
         if (typeof value === 'string' && value.startsWith('var(--color-')) {
-            const referencedColor = value.replace('var(--color-', '').replace(')', '');
-            nightModeVariables.push(`--color-${key}: var(--color-${referencedColor})`);
-            nightModeVariables.push(`--contrast-color-${key}: var(--contrast-color-${referencedColor})`);
+            const referencedColor = value
+                .replace('var(--color-', '')
+                .replace(')', '');
+            nightModeVariables.push(
+                `--color-${key}: var(--color-${referencedColor})`,
+            );
+            nightModeVariables.push(
+                `--contrast-color-${key}: var(--contrast-color-${referencedColor})`,
+            );
         }
     });
 
     const nightModeKeys = Object.keys(flattenedNightUseCases);
     // Add use case variables
-    let flattenedUseCases = addToObject(flattenObject(useCases), useCases.referenceColors);
+    let flattenedUseCases = addToObject(
+        flattenObject(useCases),
+        useCases.referenceColors,
+    );
     // Override with user selected theme color
-    if (color && color !== 'theme') flattenedUseCases = addToObject(flattenedUseCases, {theme: nameToCssVariable(color)});
+    if (color && color !== 'theme')
+        flattenedUseCases = addToObject(flattenedUseCases, {
+            theme: nameToCssVariable(color),
+        });
     Object.entries(flattenedUseCases).forEach(([key, value]) => {
         if (typeof value === 'string' && value.startsWith('var(--color-')) {
-            const referencedColor = value.replace('var(--color-', '').replace(')', '');
-            baseVariables.push(`--color-${key}: var(--color-${referencedColor})`);
-            baseVariables.push(`--contrast-color-${key}: var(--contrast-color-${referencedColor})`);
+            const referencedColor = value
+                .replace('var(--color-', '')
+                .replace(')', '');
+            baseVariables.push(
+                `--color-${key}: var(--color-${referencedColor})`,
+            );
+            baseVariables.push(
+                `--contrast-color-${key}: var(--contrast-color-${referencedColor})`,
+            );
             if (!nightModeKeys.includes(key)) {
-                nightModeVariables.push(`--color-${key}: var(--color-${referencedColor})`);
-                nightModeVariables.push(`--contrast-color-${key}: var(--contrast-color-${referencedColor})`);
+                nightModeVariables.push(
+                    `--color-${key}: var(--color-${referencedColor})`,
+                );
+                nightModeVariables.push(
+                    `--contrast-color-${key}: var(--contrast-color-${referencedColor})`,
+                );
             }
         }
     });
-
 
     return `
 ${applyToClass ? `.${applyToClass}` : ':root'} {
@@ -99,17 +133,29 @@ ${applyToClass ? `.${applyToClass}.night-mode-colors,.${applyToClass} .night-mod
 type Props = {
     editMode?: boolean;
     applyToClass?: string;
-}
+};
 
-export const ThemeStyleCss = ({editMode, applyToClass}: Props) => {
+export const ThemeStyleCss = ({ editMode, applyToClass }: Props) => {
     const {
-        loaded, color,
-        currentColors: colors, currentNightColors: nightColors,
-        currentUseCases: useCases, currentNightModeUseCases: nightModeUseCases
+        loaded,
+        color,
+        currentColors: colors,
+        currentNightColors: nightColors,
+        currentUseCases: useCases,
+        currentNightModeUseCases: nightModeUseCases,
     } = editMode ? useThemeEditContext() : useThemeStorage();
 
-    if (!loaded) return <></>
+    if (!loaded) return <></>;
     return (
-        <style>{generateThemeCSS({applyToClass, colors, nightColors, useCases, nightModeUseCases, color})}</style>
-    )
-}
+        <style>
+            {generateThemeCSS({
+                applyToClass,
+                colors,
+                nightColors,
+                useCases,
+                nightModeUseCases,
+                color,
+            })}
+        </style>
+    );
+};

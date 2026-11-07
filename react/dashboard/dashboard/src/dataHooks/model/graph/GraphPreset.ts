@@ -1,5 +1,5 @@
-import {PerformanceGraphId} from "./performance/PerformanceGraphId";
-import {IconDefinition} from "@fortawesome/free-regular-svg-icons";
+import { PerformanceGraphId } from './performance/PerformanceGraphId';
+import { IconDefinition } from '@fortawesome/free-regular-svg-icons';
 
 export type GraphPreset = {
     name: string;
@@ -7,4 +7,4 @@ export type GraphPreset = {
     icon: IconDefinition;
     permission: string | string[];
     series: PerformanceGraphId[];
-}
+};
