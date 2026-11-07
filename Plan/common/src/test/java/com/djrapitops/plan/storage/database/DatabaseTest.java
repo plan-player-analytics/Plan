@@ -42,6 +42,7 @@ import com.djrapitops.plan.storage.database.sql.tables.*;
 import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemovePlayerTransaction;
+import com.djrapitops.plan.storage.database.transactions.commands.RemovePlayersRegisteredBetweenTransaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveServerTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.*;
 import com.djrapitops.plan.storage.database.transactions.init.CreateIndexTransaction;
@@ -122,6 +123,21 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         assertTrue(db().query(NicknameQueries.fetchNicknameDataOfPlayer(playerUUID)).isEmpty());
         assertTrue(db().query(GeoInfoQueries.fetchPlayerGeoInformation(playerUUID)).isEmpty());
         assertMapIsEmpty(db(), SessionQueries.fetchSessionsOfPlayer(playerUUID));
+    }
+
+    @Test
+    default void removePlayersRegisteredBetweenDates() {
+        db().executeTransaction(new PlayerRegisterTransaction(playerUUID, () -> 1000L, TestConstants.PLAYER_ONE_NAME));
+        db().executeTransaction(new PlayerRegisterTransaction(player2UUID, () -> 2000L, TestConstants.PLAYER_TWO_NAME));
+        db().executeTransaction(new PlayerRegisterTransaction(player3UUID, () -> 3000L, TestConstants.PLAYER_THREE_NAME));
+
+        RemovePlayersRegisteredBetweenTransaction transaction = new RemovePlayersRegisteredBetweenTransaction(1000L, 2000L);
+        db().executeTransaction(transaction).join();
+
+        assertEquals(Set.of(playerUUID, player2UUID), transaction.getRemovedPlayerUUIDs());
+        assertFalse(db().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
+        assertFalse(db().query(PlayerFetchQueries.isPlayerRegistered(player2UUID)));
+        assertTrue(db().query(PlayerFetchQueries.isPlayerRegistered(player3UUID)));
     }
 
     @Test

@@ -352,6 +352,7 @@ public class PlanCommand {
                 .subcommand(hotswapCommand())
                 .subcommand(clearCommand())
                 .subcommand(removeCommand())
+                .subcommand(removeRegisteredBetweenCommand())
                 .subcommand(uninstalledCommand())
                 .subcommand(removeJoinAddressesCommand())
                 .subcommand(onlineUuidMigration())
@@ -476,6 +477,18 @@ public class PlanCommand {
                 .onTabComplete((sender, arguments) ->
                         arguments.isEmpty() ? DBType.names() : Collections.emptyList()
                 ).build();
+    }
+
+    private Subcommand removeRegisteredBetweenCommand() {
+        return Subcommand.builder()
+                .aliases("remove_registered", "removeregistered", "remove_between")
+                .requirePermission(Permissions.DATA_CLEAR)
+                .requiredArgument(locale.getString(HelpLang.ARG_AFTER_DATE), locale.getString(HelpLang.DESC_ARG_AFTER_DATE))
+                .requiredArgument(locale.getString(HelpLang.ARG_BEFORE_DATE), locale.getString(HelpLang.DESC_ARG_BEFORE_DATE))
+                .description(locale.getString(HelpLang.DB_REMOVE_REGISTERED))
+                .inDepthDescription(locale.getString(DeepHelpLang.DB_REMOVE_REGISTERED))
+                .onCommand(databaseCommands::onRemoveRegisteredBetween)
+                .build();
     }
 
     private Subcommand removeCommand() {
