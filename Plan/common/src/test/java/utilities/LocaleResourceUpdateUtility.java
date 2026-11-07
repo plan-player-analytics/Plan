@@ -49,7 +49,8 @@ public class LocaleResourceUpdateUtility {
 
             Path localeResourceDirectory = new File("").toPath().resolve("common/src/main/resources/assets/plan/locale");
 
-            for (File file : Objects.requireNonNull(component.system().getPlanFiles().getDataFolder().listFiles())) {
+            File[] localeFiles = component.system().getPlanFiles().getDataFolder().listFiles();
+            for (File file : Objects.requireNonNull(localeFiles)) {
                 if (file.getName().contains("locale_") && file.getName().endsWith(".yml")) {
                     Path overriding = localeResourceDirectory.resolve(file.getName());
                     Files.move(file.toPath(), overriding, StandardCopyOption.REPLACE_EXISTING);
