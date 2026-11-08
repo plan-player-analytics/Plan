@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.queries.analysis;
 
+import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
@@ -110,7 +111,7 @@ public class MultiServerActivityIndexQueries {
                 WHERE + (serverUUIDs.isEmpty()
                 ? ""
                 : "ps." + SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
-                  AND) + "ps." + SessionsTable.SESSION_END + ">=" + threeWeeksAgo + " " +
+                AND) + "ps." + SessionsTable.SESSION_END + ">=" + threeWeeksAgo + " " +
                 AND + "ps." + SessionsTable.SESSION_START + "<" + date + " " +
                 GROUP_BY + "ps." + SessionsTable.USER_ID;
 
@@ -154,7 +155,7 @@ public class MultiServerActivityIndexQueries {
                 week(threeWeeksAgo, twoWeeksAgo, "w3") +
                 FROM + SessionsTable.TABLE_NAME + " ps " +
                 WHERE + (serverUUIDs.isEmpty() ? "" : "ps." + SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) +
-                                                      AND) + "ps." + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
+                AND) + "ps." + SessionsTable.USER_ID + "=" + UsersTable.SELECT_USER_ID +
                 AND + "ps." + SessionsTable.SESSION_END + ">=" + threeWeeksAgo + " " +
                 AND + "ps." + SessionsTable.SESSION_START + "<" + date + " " +
                 GROUP_BY + SessionsTable.USER_ID;
@@ -182,6 +183,38 @@ public class MultiServerActivityIndexQueries {
             @Override
             public Double processResults(ResultSet set) throws SQLException {
                 return set.next() ? set.getDouble("activity_index") : 0.0;
+            }
+        };
+    }
+
+    public static Query<Long> averagePlaytimePerRegularPlayer(long after, long before, Collection<ServerUUID> serverUUIDs, long playtimeThreshold) {
+        String selectActivityIndex = selectActivityIndexOfPlayersOnServer(before, playtimeThreshold, serverUUIDs);
+
+        String selectPlaytimePerPlayer = SELECT +
+                "p." + SessionsTable.USER_ID + "," +
+                "SUM(p." + SessionsTable.SESSION_END + "-p." + SessionsTable.SESSION_START + ") as playtime" +
+                FROM + SessionsTable.TABLE_NAME + " p" +
+                INNER_JOIN + '(' + selectActivityIndex + ") q2 on q2." + SessionsTable.USER_ID + "=p." + SessionsTable.USER_ID +
+                WHERE + "p." + SessionsTable.SESSION_END + "<=?" +
+                AND + "p." + SessionsTable.SESSION_START + ">=?" +
+                (serverUUIDs.isEmpty() ? "" : AND + "p." + SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) + " ") +
+                AND + "q2.activity_index>=?" +
+                AND + "q2.activity_index<?" +
+                GROUP_BY + "p." + SessionsTable.USER_ID;
+        String selectAverage = SELECT + "AVG(playtime) as average" + FROM + '(' + selectPlaytimePerPlayer + ") q1";
+
+        return new QueryStatement<Long>(selectAverage, 100) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, before);
+                statement.setLong(2, after);
+                statement.setDouble(3, ActivityIndex.REGULAR);
+                statement.setDouble(4, 5.1);
+            }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                return set.next() ? (long) set.getDouble("average") : 0;
             }
         };
     }

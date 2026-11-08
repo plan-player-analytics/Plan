@@ -273,4 +273,17 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
         Integer result = db().query(ActivityIndexQueries.fetchRegularPlayerCount(System.currentTimeMillis(), serverUUID(), playtimeThreshold));
         assertEquals(expected, result);
     }
+
+    @RepeatedTest(value = 3, name = "Multi-server averagePlaytimePerRegularPlayer matches {currentRepetition}/{totalRepetitions}")
+    default void multiServerAveragePlaytimePerRegularPlayerMatches() {
+        storeSessions(_ -> true);
+
+        long date = System.currentTimeMillis();
+        long after = date - TimeUnit.DAYS.toMillis(7L);
+        long playtimeThreshold = TimeUnit.HOURS.toMillis(5L);
+
+        Long expected = db().query(ActivityIndexQueries.averagePlaytimePerRegularPlayer(after, date, serverUUID(), playtimeThreshold));
+        Long result = db().query(MultiServerActivityIndexQueries.averagePlaytimePerRegularPlayer(after, date, List.of(serverUUID()), playtimeThreshold));
+        assertEquals(expected, result);
+    }
 }
