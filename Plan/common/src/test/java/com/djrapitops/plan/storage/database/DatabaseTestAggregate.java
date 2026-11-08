@@ -18,6 +18,7 @@ package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.extension.implementation.storage.queries.ExtensionQueryResultTableDataQueryTest;
 import com.djrapitops.plan.storage.database.queries.*;
+import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueriesTest;
 import com.djrapitops.plan.storage.database.queries.analysis.PlayerRetentionQueriesTest;
 import com.djrapitops.plan.storage.database.queries.analysis.TopListQueriesTest;
 import com.djrapitops.plan.storage.database.queries.objects.KillQueriesTest;
@@ -50,6 +51,7 @@ public interface DatabaseTestAggregate extends
         BadJoinAddressDataCorrectionPatchTest,
         AfterBadJoinAddressDataCorrectionPatchTest,
         PlayerRetentionQueriesTest,
-        PluginMetadataQueriesTest {
+        PluginMetadataQueriesTest,
+        PlayerCountQueriesTest {
     /* Collects all query tests together so its easier to implement database tests */
 }

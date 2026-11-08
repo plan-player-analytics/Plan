@@ -28,6 +28,7 @@ import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 import { useByteSizeFormatter } from '../../util/format/useByteSizeFormatter';
 import { usePingFormatter } from '../../util/format/usePingFormatter';
 import { useDatapointQuery } from '../../dataHooks/useDatapointQuery';
+import { PlanError } from '../../views/ErrorView';
 
 type Props<K extends DatapointType> = {
     dataType: K;
@@ -133,11 +134,13 @@ export function QueryDatapoint<K extends DatapointType>({
 }: Props<K>) {
     const { hasPermission } = useAuth();
     const allowed = hasPermission(calculatePermission(dataType, filter));
-    const { data, isFetching, error } = useDatapointQuery(
-        allowed,
-        dataType,
-        filter,
-    );
+    const {
+        data,
+        isFetching,
+        error: err,
+    } = useDatapointQuery(allowed, dataType, filter);
+
+    const error = err as PlanError;
 
     if (!allowed) return null;
     if (error) {
@@ -192,12 +195,14 @@ export function QueryDatapointValue<K extends DatapointType>({
 }: ValueProps<K>) {
     const { hasPermission } = useAuth();
     const allowed = hasPermission(calculatePermission(dataType, filter));
-    const { data, isFetching, error } = useDatapointQuery(
-        allowed,
-        dataType,
-        filter,
-    );
+    const {
+        data,
+        isFetching,
+        error: err,
+    } = useDatapointQuery(allowed, dataType, filter);
     const { t } = useTranslation();
+
+    const error = err as PlanError;
 
     if (!allowed) return null;
     if (error) {

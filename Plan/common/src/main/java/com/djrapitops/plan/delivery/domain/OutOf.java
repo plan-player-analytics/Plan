@@ -31,7 +31,7 @@ public class OutOf {
         this.value = value;
         this.max = max;
         this.formatType = formatType;
-        this.percentage = max != 0L ? value * 1.0 / max : 0.0;
+        this.percentage = max == 0L ? 0.0 : value * 1.0 / max;
     }
 
     public long getValue() {

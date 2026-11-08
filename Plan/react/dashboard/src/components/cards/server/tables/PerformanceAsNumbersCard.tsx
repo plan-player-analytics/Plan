@@ -15,6 +15,7 @@ import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faQuestionCircle } from '@fortawesome/free-regular-svg-icons';
 import { useDatapointQuery } from '../../../../dataHooks/useDatapointQuery';
 import { Server } from '../../../../hooks/model/Metadata';
+import { PlanError } from '../../../../views/ErrorView';
 
 type NoDataProps = {
     servers: string[];
@@ -30,7 +31,7 @@ const NoDataAlert = ({ servers }: NoDataProps) => {
             afterMillisAgo: MS_24H,
         },
     );
-    const noData24h = error24h?.status === 404;
+    const noData24h = (error24h as PlanError)?.status === 404;
     const { error: error7d } = useDatapointQuery(
         true,
         DatapointType.CPU_AVERAGE,
@@ -39,7 +40,7 @@ const NoDataAlert = ({ servers }: NoDataProps) => {
             afterMillisAgo: MS_WEEK,
         },
     );
-    const noData7d = error7d?.status === 404;
+    const noData7d = (error7d as PlanError)?.status === 404;
     const { error: error30d } = useDatapointQuery(
         true,
         DatapointType.CPU_AVERAGE,
@@ -48,7 +49,7 @@ const NoDataAlert = ({ servers }: NoDataProps) => {
             afterMillisAgo: MS_MONTH,
         },
     );
-    const noData30d = error30d?.status === 404;
+    const noData30d = (error30d as PlanError)?.status === 404;
 
     if (noData30d)
         return (

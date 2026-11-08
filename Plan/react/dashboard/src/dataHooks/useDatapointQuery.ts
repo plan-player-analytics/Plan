@@ -20,7 +20,6 @@ export function useDatapointQuery<K extends DatapointType>(
             ? ['datapoint', dataType, ...Object.values(filter)]
             : ['datapoint', dataType],
         queryFn: () => getDatapoint(dataType, filter),
-
         enabled: Boolean(allowed),
     });
     useEffect(() => {
