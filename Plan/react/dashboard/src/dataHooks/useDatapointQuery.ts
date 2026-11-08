@@ -7,7 +7,6 @@ import { GenericFilter } from './model/GenericFilter';
 import { useNavigation } from '../hooks/navigationHook';
 import { useEffect, useRef } from 'react';
 import { useQueries, useQuery } from '@tanstack/react-query';
-import { queryRetry } from './queryRetry';
 
 export function useDatapointQuery<K extends DatapointType>(
     allowed: boolean,
@@ -21,7 +20,7 @@ export function useDatapointQuery<K extends DatapointType>(
             ? ['datapoint', dataType, ...Object.values(filter)]
             : ['datapoint', dataType],
         queryFn: () => getDatapoint(dataType, filter),
-        retry: queryRetry,
+
         enabled: Boolean(allowed),
     });
     useEffect(() => {
@@ -50,7 +49,7 @@ export function useDatapointQueries<K extends DatapointType>(
                 ? ['datapoint', dataType, ...Object.values(filter)]
                 : ['datapoint', dataType],
             queryFn: () => getDatapoint(dataType, filter),
-            retry: queryRetry,
+
             enabled: Boolean(allowed),
         })),
     });
