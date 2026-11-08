@@ -68,7 +68,7 @@ public class RequestHandler {
             response = CompletableFuture.completedFuture(responseFactory.failedLoginAttempts403());
             blocked = true;
         } else if (rateLimitGuard.shouldPreventRequest(requestedPath, accessAddress)) {
-            response = CompletableFuture.completedFuture(responseFactory.failedRateLimit403());
+            response = CompletableFuture.completedFuture(responseFactory.failedRateLimit429());
             blocked = true;
         } else if (!webserverConfiguration.getAllowedIpList().isAllowed(accessAddress)) {
             webserverConfiguration.getWebserverLogMessages()
