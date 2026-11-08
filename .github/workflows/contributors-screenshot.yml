@@ -1,0 +1,67 @@
+name: Contributors Screenshot
+
+on:
+    push:
+        branches:
+            - master
+        paths:
+            - 'Plan/common/src/main/java/com/djrapitops/plan/delivery/rendering/html/Contributors.java'
+
+jobs:
+    screenshot:
+        runs-on: ubuntu-latest
+
+        steps:
+            -   name: Checkout code
+                uses: actions/checkout@v7
+
+            -   name: ☕ Setup JDK
+                uses: actions/setup-java@v6
+                with:
+                    distribution: 'temurin'
+                    java-version: '25'
+
+            -   name: 💼 Setup Gradle
+                uses: gradle/actions/setup-gradle@v6
+
+            -   name: 🚦 Setup Selenium Webdriver
+                uses: nanasess/setup-chromedriver@v3
+
+            -   name: 🚦 Setup Selenium Webdriver settings
+                run: |
+                    export DISPLAY=:99
+                    chromedriver --url-base=/wd/hub &
+                    sudo Xvfb -ac :99 -screen 0 1920x1080x24 > /dev/null 2>&1 &
+
+            -   name: Build the project
+                run: |
+                    cd Plan
+                    ./gradlew :common:build :common:compileTestJava :common:compileTestFixturesJava --no-daemon
+
+            -   name: Run ContributorsScreenshotUtility
+                env:
+                    CHROMEDRIVER: /usr/local/bin/chromedriver
+                run: |
+                    cd Plan
+                    ./gradlew :common:runScreenshotUtility --no-daemon
+
+            -   name: Checkout storage repository
+                uses: actions/checkout@v4
+                with:
+                    repository: plan-player-analytics/drawio-diagrams-storage
+                    path: storage
+                    token: ${{ secrets.DRAWIO_STORAGE_TOKEN }}
+
+            -   name: Copy screenshot to storage repository
+                run: cp Plan/Contributors.png storage/image/screenshot/Contributors.png
+
+            -   name: Commit and push screenshot
+                uses: EndBug/add-and-commit@v10
+                with:
+                    path: storage
+                    committer_name: "GitHub Actions"
+                    committer_email: "41898282+github-actions[bot]@users.noreply.github.com"
+                    message: "Update Contributors.png from Plan build"
+                    add: |
+                        image/screenshot/Contributors.png
+                    github_token: ${{ secrets.DRAWIO_STORAGE_TOKEN }}
