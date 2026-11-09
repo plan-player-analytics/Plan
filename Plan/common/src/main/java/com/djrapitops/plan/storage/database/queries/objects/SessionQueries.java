@@ -1155,7 +1155,7 @@ public class SessionQueries {
                     "COUNT(1) as sessionCount" +
                     FROM + SessionsTable.TABLE_NAME +
                     WHERE + SessionsTable.SESSION_START + ">=?" +
-                    AND + SessionsTable.SESSION_START + "<=?" +
+                    AND + SessionsTable.SESSION_START + "<?" +
                     AND + SessionsTable.USER_ID + uuidsInSet +
                     (serverUUIDs.isEmpty() ? "" : AND + SessionsTable.SERVER_ID + " IN (" + selectServerIds + ")");
 
