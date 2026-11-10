@@ -5,6 +5,7 @@ type Props = {
     onChange: ChangeEventHandler<HTMLInputElement, HTMLInputElement>;
     indeterminate?: boolean;
     readOnly?: boolean;
+    center?: boolean;
     className?: string;
 } & PropsWithChildren;
 
@@ -14,13 +15,23 @@ const Checkbox = ({
     indeterminate,
     checked,
     onChange,
+    center,
     readOnly,
 }: Props) => {
     const [renderTime] = useState(Date.now());
     const id = 'checkbox-' + renderTime;
 
     return (
-        <span>
+        <span
+            style={
+                center
+                    ? {
+                          display: 'flex',
+                          alignItems: 'center',
+                          marginTop: '-5px',
+                      }
+                    : undefined
+            }>
             <input
                 id={id}
                 className={'form-check-input ' + className}

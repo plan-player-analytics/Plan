@@ -159,12 +159,13 @@ const BetweenDatesFilter = ({
                     ))}
                 </select>
             </InlinedRow>
-            <Row className={'my-2 justify-content-start'}>
+            <Row className={'my-2 justify-content-start align-items-center'}>
                 <Col md={3} sm={6}>
-                    <InlinedRow>
+                    <InlinedRow style={{ alignItems: 'center' }}>
                         <Checkbox
                             checked={fromDateEnabled}
                             onChange={toggleFromDate}
+                            center
                         />
                         <DateInputField
                             key={inputResetCount}
@@ -202,6 +203,7 @@ const BetweenDatesFilter = ({
                         <Checkbox
                             checked={toDateEnabled}
                             onChange={toggleToDate}
+                            center
                         />
                         <DateInputField
                             key={inputResetCount}
