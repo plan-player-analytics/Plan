@@ -504,11 +504,11 @@ public class ResponseFactory {
                 .build();
     }
 
-    public Response failedRateLimit403() {
+    public Response failedRateLimit429() {
         return Response.builder()
                 .setMimeType(MimeType.HTML)
-                .setContent("<h1>403 Forbidden</h1><p>You are being rate-limited.</p>")
-                .setStatus(403)
+                .setContent("<h1>429 Too many requrests</h1><p>You are being rate-limited.</p>")
+                .setStatus(429)
                 .build();
     }
 

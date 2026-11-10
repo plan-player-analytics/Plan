@@ -13,7 +13,7 @@ import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
 import { useAlertPopupContext } from './alertPopupContext.js';
 import { Trans } from 'react-i18next';
-import { mergeUseCases } from '../../util/mutator.js';
+import { mergeUseCases } from '../../util/mutator';
 import { ThemeContextValue } from '../../components/theme/model/ThemeContextValue';
 import {
     ColorPropertyMap,

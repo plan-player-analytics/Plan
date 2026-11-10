@@ -26,7 +26,9 @@ import org.apache.commons.lang3.StringUtils;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
+import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -41,6 +43,8 @@ public class ViewDto {
     private final String beforeDate;
     private final String beforeTime;
     private final List<ServerDto> servers;
+    private final String timeZone;
+    private final long timeZoneOffsetMs;
 
     public ViewDto(Formatters formatters, List<ServerDto> servers) {
         this.servers = servers;
@@ -55,14 +59,18 @@ public class ViewDto {
         this.afterTime = after[1];
         this.beforeDate = before[0];
         this.beforeTime = before[1];
+
+        TimeZone parseTimeZone = new SimpleDateFormat(DATE_PATTERN, Locale.ROOT).getTimeZone();
+        this.timeZone = parseTimeZone.getID();
+        this.timeZoneOffsetMs = parseTimeZone.getOffset(now);
     }
 
     public long getAfterEpochMs() throws ParseException {
-        return new SimpleDateFormat(DATE_PATTERN).parse(afterDate + " " + afterTime).getTime();
+        return new SimpleDateFormat(DATE_PATTERN, Locale.ROOT).parse(afterDate + " " + afterTime).getTime();
     }
 
     public long getBeforeEpochMs() throws ParseException {
-        return new SimpleDateFormat(DATE_PATTERN).parse(beforeDate + " " + beforeTime).getTime();
+        return new SimpleDateFormat(DATE_PATTERN, Locale.ROOT).parse(beforeDate + " " + beforeTime).getTime() + TimeUnit.MINUTES.toMillis(1L) - 1L;
     }
 
     public List<ServerUUID> getServerUUIDs() {

@@ -7,7 +7,7 @@ import 'highcharts/esm/modules/accessibility';
 import { useTranslation } from 'react-i18next';
 import { useMetadata } from '../../hooks/metadataHook.tsx';
 import { localeService } from '../../service/localeService.js';
-import { mergeUseCases } from '../../util/mutator.js';
+import { mergeUseCases } from '../../util/mutator';
 
 const LineGraph = ({
     id,

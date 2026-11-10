@@ -25,8 +25,9 @@ import {
     GraphExtremesContextProvider,
     useGraphExtremesContext,
 } from '../../../hooks/interaction/graphExtremesContextHook.jsx';
+import Toggle from '../../input/Toggle.tsx';
 
-const Tab = ({ id, data, yAxis }) => {
+const Tab = ({ id, data, yAxis, stack }) => {
     const { extremes, onSetExtremes } = useGraphExtremesContext();
     return (
         <LineGraph
@@ -37,6 +38,17 @@ const Tab = ({ id, data, yAxis }) => {
             yAxis={yAxis}
             extremes={extremes}
             onSetExtremes={onSetExtremes}
+            extraOptions={
+                stack
+                    ? {
+                          plotOptions: {
+                              series: {
+                                  stacking: 'normal',
+                              },
+                          },
+                      }
+                    : undefined
+            }
         />
     );
 };
@@ -53,6 +65,7 @@ const PingTab = ({ identifier }) => {
 const PerformanceGraphsCard = ({ data }) => {
     const { t } = useTranslation();
     const { networkMetadata } = useMetadata();
+    const [stack, setStack] = useState(false);
 
     const [performanceSeries, setPerformanceSeries] = useState({
         players: [],
@@ -122,7 +135,7 @@ const PerformanceGraphsCard = ({ data }) => {
             mspt95thPercentile: [],
         };
 
-        const spline = 'spline';
+        const chartType = stack ? 'areaspline' : 'spline';
 
         const changeColor = (color, index) => {
             return getColorConverter(color)
@@ -163,7 +176,7 @@ const PerformanceGraphsCard = ({ data }) => {
 
             series.players.push({
                 name: server.serverName,
-                type: spline,
+                type: chartType,
                 tooltip: tooltip.zeroDecimals,
                 data: server.values.playersOnline.map(minuteResolution),
                 color: playersOnlineColor,
@@ -171,7 +184,7 @@ const PerformanceGraphsCard = ({ data }) => {
             });
             series.tps.push({
                 name: server.serverName,
-                type: spline,
+                type: chartType,
                 tooltip: tooltip.twoDecimals,
                 data: server.values.tps.map(minuteResolution),
                 color: tpsColor,
@@ -180,7 +193,7 @@ const PerformanceGraphsCard = ({ data }) => {
             });
             series.cpu.push({
                 name: server.serverName,
-                type: spline,
+                type: chartType,
                 tooltip: tooltip.twoDecimals,
                 data: server.values.cpu.map(minuteResolution),
                 color: cpuColor,
@@ -188,7 +201,7 @@ const PerformanceGraphsCard = ({ data }) => {
             });
             series.ram.push({
                 name: server.serverName,
-                type: spline,
+                type: chartType,
                 tooltip: tooltip.zeroDecimals,
                 data: server.values.ram.map(minuteResolution),
                 color: ramColors,
@@ -196,7 +209,7 @@ const PerformanceGraphsCard = ({ data }) => {
             });
             series.entities.push({
                 name: server.serverName,
-                type: spline,
+                type: chartType,
                 tooltip: tooltip.zeroDecimals,
                 data: server.values.entities.map(minuteResolution),
                 color: entitiesColor,
@@ -204,7 +217,7 @@ const PerformanceGraphsCard = ({ data }) => {
             });
             series.chunks.push({
                 name: server.serverName,
-                type: spline,
+                type: chartType,
                 tooltip: tooltip.zeroDecimals,
                 data: server.values.chunks.map(minuteResolution),
                 color: chunksColor,
@@ -212,7 +225,7 @@ const PerformanceGraphsCard = ({ data }) => {
             });
             series.disk.push({
                 name: server.serverName,
-                type: spline,
+                type: chartType,
                 tooltip: tooltip.zeroDecimals,
                 data: server.values.disk.map(minuteResolution),
                 color: diskColor,
@@ -221,7 +234,7 @@ const PerformanceGraphsCard = ({ data }) => {
             });
             series.msptAverage.push({
                 name: server.serverName,
-                type: spline,
+                type: chartType,
                 tooltip: tooltip.twoDecimals,
                 data: server.values.msptAverage.map(minuteResolution),
                 color: msptAverageColor,
@@ -229,7 +242,7 @@ const PerformanceGraphsCard = ({ data }) => {
             });
             series.mspt95thPercentile.push({
                 name: server.serverName,
-                type: spline,
+                type: chartType,
                 tooltip: tooltip.twoDecimals,
                 data: server.values.mspt95thPercentile.map(minuteResolution),
                 color: msptPercentileColor,
@@ -237,7 +250,7 @@ const PerformanceGraphsCard = ({ data }) => {
             });
         });
         setPerformanceSeries(series);
-    }, [data, setPerformanceSeries]);
+    }, [data, setPerformanceSeries, stack]);
 
     const dataIncludesGameServers = useMemo(
         () =>
@@ -257,6 +270,7 @@ const PerformanceGraphsCard = ({ data }) => {
                     id={'players-online'}
                     data={performanceSeries.players}
                     yAxis={yAxisConfigurations.PLAYERS_ONLINE}
+                    stack={stack}
                 />
             ),
         },
@@ -270,6 +284,7 @@ const PerformanceGraphsCard = ({ data }) => {
                     id={'tps'}
                     data={performanceSeries.tps}
                     yAxis={yAxisConfigurations.TPS}
+                    stack={false}
                 />
             ),
             disabled: !dataIncludesGameServers,
@@ -284,6 +299,7 @@ const PerformanceGraphsCard = ({ data }) => {
                     id={'mspt'}
                     data={performanceSeries.msptAverage}
                     yAxis={yAxisConfigurations.MSPT}
+                    stack={stack}
                 />
             ),
             disabled: !dataIncludesGameServers,
@@ -298,6 +314,7 @@ const PerformanceGraphsCard = ({ data }) => {
                     id={'mspt-percentile'}
                     data={performanceSeries.mspt95thPercentile}
                     yAxis={yAxisConfigurations.MSPT}
+                    stack={stack}
                 />
             ),
             disabled: !dataIncludesGameServers,
@@ -312,6 +329,7 @@ const PerformanceGraphsCard = ({ data }) => {
                     id={'cpu'}
                     data={performanceSeries.cpu}
                     yAxis={yAxisConfigurations.CPU}
+                    stack={stack}
                 />
             ),
         },
@@ -325,6 +343,7 @@ const PerformanceGraphsCard = ({ data }) => {
                     id={'ram'}
                     data={performanceSeries.ram}
                     yAxis={yAxisConfigurations.RAM_OR_DISK}
+                    stack={stack}
                 />
             ),
         },
@@ -338,6 +357,7 @@ const PerformanceGraphsCard = ({ data }) => {
                     id={'entities'}
                     data={performanceSeries.entities}
                     yAxis={yAxisConfigurations.ENTITIES}
+                    stack={stack}
                 />
             ),
             disabled: !dataIncludesGameServers,
@@ -352,6 +372,7 @@ const PerformanceGraphsCard = ({ data }) => {
                     id={'chunks'}
                     data={performanceSeries.chunks}
                     yAxis={yAxisConfigurations.CHUNKS}
+                    stack={stack}
                 />
             ),
             disabled: !dataIncludesGameServers,
@@ -366,6 +387,7 @@ const PerformanceGraphsCard = ({ data }) => {
                     id={'disk'}
                     data={performanceSeries.disk}
                     yAxis={yAxisConfigurations.RAM_OR_DISK}
+                    stack={stack}
                 />
             ),
         },
@@ -390,10 +412,21 @@ const PerformanceGraphsCard = ({ data }) => {
         return <ErrorViewCard error={data.errors[0]} />;
     }
     return (
-        <Card>
+        <Card style={{ position: 'relative' }}>
             <GraphExtremesContextProvider>
                 <CardTabs tabs={tabs} />
             </GraphExtremesContextProvider>
+            <div
+                style={{
+                    position: 'absolute',
+                    bottom: '10px',
+                    left: '10px',
+                    zIndex: 1,
+                }}>
+                <Toggle value={stack} onValueChange={setStack} inline>
+                    {t('html.label.stacked')}
+                </Toggle>
+            </div>
         </Card>
     );
 };

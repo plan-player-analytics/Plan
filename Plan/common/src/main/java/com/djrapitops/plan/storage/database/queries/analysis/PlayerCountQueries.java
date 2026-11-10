@@ -496,13 +496,14 @@ public class PlayerCountQueries {
         return new QueryStatement<>(selectUniqueUUIDs) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
+                long actualBefore = Math.min(System.currentTimeMillis(), before);
                 statement.setLong(1, after);
-                statement.setLong(2, before);
+                statement.setLong(2, actualBefore);
 
                 // Have played in the last half of the time frame
-                long half = before - (before - after) / 2;
+                long half = actualBefore - (actualBefore - after) / 2;
                 statement.setLong(3, half);
-                statement.setLong(4, before);
+                statement.setLong(4, actualBefore);
             }
 
             @Override

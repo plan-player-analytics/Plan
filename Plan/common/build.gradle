@@ -300,3 +300,8 @@ processResources {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
     from "build/sources/resources"
 }
+
+tasks.register("runScreenshotUtility", JavaExec) {
+    classpath = sourceSets.test.runtimeClasspath
+    mainClass = "utilities.ContributorsScreenshotUtility"
+}
