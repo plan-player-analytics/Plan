@@ -50,6 +50,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
@@ -236,11 +237,13 @@ public class GraphSamplers {
     }
 
     public void updateServerHistory(CallEvents event) {
-        for (var graphSource : serverGraphSources) {
-            if (shouldGatherEvent(event, graphSource.extension().getCallEvents())) {
-                gatherServerHistory(graphSource);
+        runnableFactory.create(() -> {
+            for (var graphSource : serverGraphSources) {
+                if (shouldGatherEvent(event, graphSource.extension().getCallEvents())) {
+                    gatherServerHistory(graphSource);
+                }
             }
-        }
+        }).runTaskLaterAsynchronously(15, TimeUnit.SECONDS);
     }
 
     private void gatherServerHistory(GraphSource<ServerGraphDataSource> graphSource) {
@@ -282,11 +285,13 @@ public class GraphSamplers {
     }
 
     public void updatePlayerHistory(UUID playerUUID, String playerName, CallEvents event) {
-        for (var graphSource : playerGraphSources) {
-            if (shouldGatherEvent(event, graphSource.extension().getCallEvents())) {
-                gatherPlayerHistory(playerUUID, playerName, graphSource);
+        runnableFactory.create(() -> {
+            for (var graphSource : playerGraphSources) {
+                if (shouldGatherEvent(event, graphSource.extension().getCallEvents())) {
+                    gatherPlayerHistory(playerUUID, playerName, graphSource);
+                }
             }
-        }
+        }).runTaskLaterAsynchronously(15, TimeUnit.SECONDS);
     }
 
     private void gatherPlayerHistory(UUID playerUUID, String playerName, GraphSource<PlayerGraphDataSource> graphSource) {

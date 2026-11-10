@@ -81,7 +81,7 @@ public class PlayerGraphSampler extends TaskSystem.Task {
         Duration minimumInterval = Duration.of(30, TimeUnit.SECONDS.toChronoUnit());
         Duration interval = Duration.of(annotation.sampleInterval(), annotation.sampleIntervalUnit().toChronoUnit());
 
-        int randomDelay = ThreadLocalRandom.current().nextInt(15);
+        int randomDelay = 5 + ThreadLocalRandom.current().nextInt(10);
         if (interval.minus(minimumInterval).isNegative()) {
             runnableFactory.create(this)
                     .runTaskTimerAsynchronously(randomDelay, 30, TimeUnit.SECONDS);
