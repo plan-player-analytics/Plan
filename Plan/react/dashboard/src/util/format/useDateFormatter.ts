@@ -73,13 +73,14 @@ export const useDateFormatter = (
                     ? Number(date)
                     : date;
 
-            if (offset === undefined || offset === null || !pattern)
+            if (offset === undefined || offset === null || !pattern) {
                 return numericDate;
+            }
             if (!isNumber(numericDate)) return numericDate;
             if (numericDate === 0) return '-';
 
             // Adjust offset for DST offset in past dates
-            const dateMoment = moment(numericDate);
+            const dateMoment = moment(new Date(numericDate));
             const dateUtcOffset = dateMoment.utcOffset();
             const currentUtcOffset = moment().utcOffset();
             const dstAdjustment =
