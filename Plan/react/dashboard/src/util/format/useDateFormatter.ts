@@ -65,7 +65,6 @@ export const useDateFormatter = (
 
     const formatDate = useCallback(
         (date: any) => {
-
             const numericDate =
                 typeof date === 'string' &&
                 date.trim() !== '' &&
@@ -96,7 +95,7 @@ export const useDateFormatter = (
             const tomorrow = today + dayMs;
             const fiveDaysAgo = today - dayMs * 5;
 
-            let format = pattern;
+            let format = pattern || 'MMM d YYYY, HH:mm';
             if (recentDays) {
                 if (timestamp >= today && timestamp < tomorrow) {
                     format = format.replace(
