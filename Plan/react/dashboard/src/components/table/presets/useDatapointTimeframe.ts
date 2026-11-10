@@ -9,9 +9,10 @@ import {
     calculateTimeframeColumns,
     CustomRange,
     defaultCustomRanges,
-    resolveCustomRange,
+    EMPTY_CUSTOM_RANGES,
     TimeframeColumn,
     TimeframePreset,
+    toCustomColumn,
 } from '../../../util/datapointTablePresets';
 import { DateRangePreset } from '../../../util/queryDatePresets';
 import { Column } from '../QueryDatapointTable';
@@ -68,18 +69,18 @@ export const useDatapointTimeframe = (
         (index: number, update: (range: CustomRange) => CustomRange) => {
             updateTimeframe(tableId, (previous) => ({
                 preset: 'custom',
-                customRanges: (previous?.customRanges ?? [{}, {}]).map(
-                    (range, i) => (i === index ? update(range) : range),
-                ),
+                customRanges: (
+                    previous?.customRanges ?? EMPTY_CUSTOM_RANGES
+                ).map((range, i) => (i === index ? update(range) : range)),
             }));
         },
         [updateTimeframe, tableId],
     );
 
-    const resolveRange = useCallback(
+    const customColumn = useCallback(
         (range: CustomRange) =>
             zone
-                ? resolveCustomRange(range, Date.now(), zone, firstDay ?? 1)
+                ? toCustomColumn(range, Date.now(), zone, firstDay ?? 1)
                 : range,
         [zone, firstDay],
     );
@@ -87,27 +88,27 @@ export const useDatapointTimeframe = (
     const setCustomDay = useCallback(
         (index: number, part: 'from' | 'to', value?: string) => {
             updateCustomRange(index, (range) => {
-                const { from, to } = resolveRange(range);
-                return { from, to, [part]: value };
+                const { from, to } = customColumn(range);
+                return { preset: 'custom', from, to, [part]: value };
             });
         },
-        [updateCustomRange, resolveRange],
+        [updateCustomRange, customColumn],
     );
 
     const setCustomPreset = useCallback(
         (index: number, selected: DateRangePreset) => {
             updateCustomRange(index, (range) => {
                 if (selected !== 'custom') return { preset: selected };
-                const { from, to } = resolveRange(range);
-                return { from, to };
+                const { from, to } = customColumn(range);
+                return { preset: 'custom', from, to };
             });
         },
-        [updateCustomRange, resolveRange],
+        [updateCustomRange, customColumn],
     );
 
-    const displayedCustomRanges = useMemo(
-        () => customRanges?.map(resolveRange),
-        [customRanges, resolveRange, updateRequested],
+    const customColumns = useMemo(
+        () => customRanges?.map(customColumn),
+        [customRanges, customColumn, updateRequested],
     );
 
     const setFieldInvalid = useCallback((fieldId: string) => {
@@ -131,9 +132,9 @@ export const useDatapointTimeframe = (
                 Date.now(),
                 zone,
                 firstDay ?? 1,
-                customRanges,
+                customColumns,
             ),
-        [preset, customRanges, zone, firstDay, updateRequested],
+        [preset, customColumns, zone, firstDay, updateRequested],
     );
 
     const invalidCustom =
@@ -172,7 +173,7 @@ export const useDatapointTimeframe = (
     return {
         preset,
         selectPreset,
-        customRanges: displayedCustomRanges,
+        customColumns,
         setCustomDay,
         setCustomPreset,
         setFieldInvalid,

@@ -2,8 +2,8 @@ import moment from 'moment';
 import { GenericFilter } from '../dataHooks/model/GenericFilter';
 import { MS_24H, MS_MONTH, MS_WEEK } from './format/useDateFormatter';
 import {
-    calculatePresetInterval,
-    DATE_RANGE_PRESETS,
+    calculatePresetRange,
+    DateRange,
     DateRangePreset,
     fromServerWallClock,
     ServerTimeZone,
@@ -61,14 +61,19 @@ export type TimeframeColumn = {
 };
 
 export type CustomRange = {
+    preset: DateRangePreset;
     from?: string;
     to?: string;
-    preset?: DateRangePreset;
 };
 
-export const CUSTOM_RANGE_PRESETS = DATE_RANGE_PRESETS.filter(
-    (option) => option.name !== 'allData',
-);
+export type CustomColumn = CustomRange & {
+    dateRange?: DateRange;
+};
+
+export const EMPTY_CUSTOM_RANGES: CustomRange[] = [
+    { preset: 'custom' },
+    { preset: 'custom' },
+];
 
 const HOUR_MS = 60 * 60 * 1000;
 
@@ -211,65 +216,50 @@ const lastHours = (
         };
     });
 
-export const resolveCustomRange = (
+export const toCustomColumn = (
     range: CustomRange,
     nowEpochMs: number,
     zone: ServerTimeZone,
     firstDay: number,
-): CustomRange => {
-    if (!range.preset || range.preset === 'custom') return range;
-    const interval = calculatePresetInterval(
+): CustomColumn => {
+    if (range.preset === 'custom') return range;
+    const dateRange = calculatePresetRange(
         range.preset,
         nowEpochMs,
         zone,
         firstDay,
     );
-    if (!interval) return range;
+    if (!dateRange) return range;
     return {
         preset: range.preset,
-        from: formatDay(toServerWallClock(interval.after, zone)),
-        to: formatDay(toServerWallClock(interval.before - 1, zone)),
+        from: formatDay(toServerWallClock(dateRange.after, zone)),
+        to: formatDay(toServerWallClock(dateRange.before - 1, zone)),
+        dateRange,
     };
 };
 
 const presetColumn = (
-    preset: DateRangePreset,
+    { preset, dateRange }: CustomColumn,
     index: number,
-    nowEpochMs: number,
-    zone: ServerTimeZone,
-    firstDay: number,
 ): TimeframeColumn | undefined => {
-    const interval = calculatePresetInterval(
-        preset,
-        nowEpochMs,
-        zone,
-        firstDay,
-    );
-    if (!interval) return undefined;
+    if (!dateRange) return undefined;
     return {
-        key: `range-${index}-${preset}-${interval.after}`,
-        filter: interval,
+        key: `range-${index}-${preset}-${dateRange.after}`,
+        filter: dateRange,
         label: { key: `html.query.filter.preset.${preset}` },
     };
 };
 
-const customColumns = (
-    ranges: CustomRange[],
+const customTimeframeColumns = (
+    ranges: CustomColumn[],
     nowEpochMs: number,
     zone: ServerTimeZone,
-    firstDay: number,
 ): TimeframeColumn[] | undefined => {
     if (!ranges.length) return undefined;
     const columns: TimeframeColumn[] = [];
     for (const range of ranges) {
-        if (range.preset && range.preset !== 'custom') {
-            const column = presetColumn(
-                range.preset,
-                columns.length,
-                nowEpochMs,
-                zone,
-                firstDay,
-            );
+        if (range.preset !== 'custom') {
+            const column = presetColumn(range, columns.length);
             if (!column) return undefined;
             columns.push(column);
             continue;
@@ -304,10 +294,12 @@ export const defaultCustomRanges = (
     const previousWeekStart = weekStart.clone().subtract(1, 'week');
     return [
         {
+            preset: 'custom',
             from: formatDay(previousWeekStart),
             to: formatDay(weekStart.clone().subtract(1, 'day')),
         },
         {
+            preset: 'custom',
             from: formatDay(weekStart),
             to: formatDay(weekStart.clone().add(6, 'days')),
         },
@@ -319,7 +311,7 @@ export const calculateTimeframeColumns = (
     nowEpochMs: number,
     zone: ServerTimeZone | undefined,
     firstDay: number = 1,
-    customRanges: CustomRange[] = [],
+    customColumns: CustomColumn[] = [],
 ): TimeframeColumn[] | undefined => {
     const relative = RELATIVE_PRESETS[preset];
     if (relative) return relative;
@@ -387,7 +379,7 @@ export const calculateTimeframeColumns = (
                 zone,
             );
         case 'custom':
-            return customColumns(customRanges, nowEpochMs, zone, firstDay);
+            return customTimeframeColumns(customColumns, nowEpochMs, zone);
         default:
             return undefined;
     }

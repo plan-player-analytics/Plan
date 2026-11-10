@@ -31,6 +31,10 @@ export const DATE_RANGE_PRESETS: { name: DateRangePreset; label: string }[] = [
     { name: 'previousYear', label: 'html.query.filter.preset.previousYear' },
 ];
 
+export const BOUNDED_DATE_RANGE_PRESETS = DATE_RANGE_PRESETS.filter(
+    (option) => option.name !== 'allData',
+);
+
 export type DateTimeRange = {
     after: [string, string];
     before: [string, string];
@@ -40,11 +44,6 @@ const toDateAndTime = (m: moment.Moment): [string, string] => [
     m.format('DD/MM/YYYY'),
     m.format('HH:mm'),
 ];
-
-const range = (after: moment.Moment, before: moment.Moment): DateTimeRange => ({
-    after: toDateAndTime(after),
-    before: toDateAndTime(before),
-});
 
 const startOfWeek = (m: moment.Moment, firstDay: number) => {
     const daysSinceWeekStart = (m.day() - firstDay + 7) % 7;
@@ -120,15 +119,25 @@ export const fromServerWallClock = (
     return candidates.length ? Math.min(...candidates) : target - offsetBefore;
 };
 
-type PresetBounds =
-    { start: moment.Moment; nextStart: moment.Moment } | { durationMs: number };
+export type DateRange = {
+    after: number;
+    before: number;
+};
 
-const presetBounds = (
+export const calculatePresetRange = (
     preset: DateRangePreset,
     nowEpochMs: number,
     zone: ServerTimeZone,
-    firstDay: number,
-): PresetBounds | undefined => {
+    firstDay: number = 1,
+): DateRange | undefined => {
+    const last = (durationMs: number) => ({
+        after: nowEpochMs - durationMs,
+        before: nowEpochMs,
+    });
+    const between = (start: moment.Moment, nextStart: moment.Moment) => ({
+        after: fromServerWallClock(start, zone),
+        before: fromServerWallClock(nextStart, zone),
+    });
     const now = toServerWallClock(nowEpochMs, zone);
     const today = now.clone().startOf('day');
     const weekStart = startOfWeek(now, firstDay);
@@ -137,89 +146,36 @@ const presetBounds = (
 
     switch (preset) {
         case 'last30days':
-            return { durationMs: 30 * DAY_MS };
+            return last(30 * DAY_MS);
         case 'last7days':
-            return { durationMs: 7 * DAY_MS };
+            return last(7 * DAY_MS);
         case 'last24h':
-            return { durationMs: DAY_MS };
+            return last(DAY_MS);
         case 'today':
-            return { start: today, nextStart: today.clone().add(1, 'day') };
+            return between(today, today.clone().add(1, 'day'));
         case 'yesterday':
-            return {
-                start: today.clone().subtract(1, 'day'),
-                nextStart: today,
-            };
+            return between(today.clone().subtract(1, 'day'), today);
         case 'currentWeek':
-            return {
-                start: weekStart,
-                nextStart: weekStart.clone().add(1, 'week'),
-            };
+            return between(weekStart, weekStart.clone().add(1, 'week'));
         case 'previousWeek':
-            return {
-                start: weekStart.clone().subtract(1, 'week'),
-                nextStart: weekStart,
-            };
+            return between(weekStart.clone().subtract(1, 'week'), weekStart);
         case 'currentMonth':
-            return {
-                start: monthStart,
-                nextStart: monthStart.clone().add(1, 'month'),
-            };
+            return between(monthStart, monthStart.clone().add(1, 'month'));
         case 'previousMonth':
-            return {
-                start: monthStart.clone().subtract(1, 'month'),
-                nextStart: monthStart,
-            };
+            return between(monthStart.clone().subtract(1, 'month'), monthStart);
         case 'currentYear':
-            return {
-                start: yearStart,
-                nextStart: yearStart.clone().add(1, 'year'),
-            };
+            return between(yearStart, yearStart.clone().add(1, 'year'));
         case 'previousYear':
-            return {
-                start: yearStart.clone().subtract(1, 'year'),
-                nextStart: yearStart,
-            };
+            return between(yearStart.clone().subtract(1, 'year'), yearStart);
         default:
             return undefined;
     }
 };
 
-export const calculatePresetRange = (
-    preset: DateRangePreset,
-    nowEpochMs: number,
+export const toDateTimeRange = (
+    range: DateRange,
     zone: ServerTimeZone,
-    firstDay: number = 1,
-): DateTimeRange | undefined => {
-    const bounds = presetBounds(preset, nowEpochMs, zone, firstDay);
-    if (!bounds) return undefined;
-    if ('durationMs' in bounds) {
-        return range(
-            toServerWallClock(nowEpochMs - bounds.durationMs, zone),
-            toServerWallClock(nowEpochMs, zone),
-        );
-    }
-    return range(
-        bounds.start,
-        toServerWallClock(
-            fromServerWallClock(bounds.nextStart, zone) - MINUTE_MS,
-            zone,
-        ),
-    );
-};
-
-export const calculatePresetInterval = (
-    preset: DateRangePreset,
-    nowEpochMs: number,
-    zone: ServerTimeZone,
-    firstDay: number = 1,
-): { after: number; before: number } | undefined => {
-    const bounds = presetBounds(preset, nowEpochMs, zone, firstDay);
-    if (!bounds) return undefined;
-    if ('durationMs' in bounds) {
-        return { after: nowEpochMs - bounds.durationMs, before: nowEpochMs };
-    }
-    return {
-        after: fromServerWallClock(bounds.start, zone),
-        before: fromServerWallClock(bounds.nextStart, zone),
-    };
-};
+): DateTimeRange => ({
+    after: toDateAndTime(toServerWallClock(range.after, zone)),
+    before: toDateAndTime(toServerWallClock(range.before - 1, zone)),
+});

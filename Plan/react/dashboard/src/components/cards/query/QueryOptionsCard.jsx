@@ -23,15 +23,12 @@ import { useNavigation } from '../../../hooks/navigationHook.tsx';
 import ActionButton from '../../input/button/ActionButton.tsx';
 import { useMetadata } from '../../../hooks/metadataHook.tsx';
 import { InlinedRow } from '../../layout/InlinedRow.tsx';
-import { usePreferences } from '../../../hooks/preferences/preferencesHook.tsx';
 import {
-    calculatePresetRange,
-    DATE_RANGE_PRESETS,
+    BOUNDED_DATE_RANGE_PRESETS,
+    toDateTimeRange,
 } from '../../../util/queryDatePresets.ts';
-
-const VIEW_PRESETS = DATE_RANGE_PRESETS.filter(
-    (option) => option.name !== 'allData',
-);
+import { useTimeframePresets } from '../../../hooks/timeframePresetsHook.ts';
+import PresetSelect from '../../input/PresetSelect.tsx';
 
 const parseTimeAsUTC = (dateString, timeString) => {
     const d = dateString.match(/^(0\d|\d{2})[/|-]?(0\d|\d{2})[/|-]?(\d{4,5})$/);
@@ -53,7 +50,6 @@ const QueryOptionsCard = () => {
     const { result, setResult } = useQueryResultContext();
     const { setCurrentTab } = useNavigation();
     const { timeZoneOffsetMinutes } = useMetadata();
-    const { firstDay } = usePreferences();
 
     const [loadingResults, setLoadingResults] = useState(false);
 
@@ -62,7 +58,6 @@ const QueryOptionsCard = () => {
     const [fromTime, setFromTime] = useState(undefined);
     const [toDate, setToDate] = useState(undefined);
     const [toTime, setToTime] = useState(undefined);
-    const [viewPreset, setViewPreset] = useState('last30days');
     const [viewResetCount, setViewResetCount] = useState(0);
 
     const [selectedServers, setSelectedServers] = useState([]);
@@ -104,6 +99,37 @@ const QueryOptionsCard = () => {
     );
 
     const [extremes, setExtremes] = useState(undefined);
+
+    const applyViewPreset = (preset) => {
+        const computed = preset.compute();
+        if (!computed) return;
+
+        const range = toDateTimeRange(computed, options.view);
+        setFromDate(range.after[0]);
+        setFromTime(range.after[1]);
+        setToDate(range.before[0]);
+        setToTime(range.before[1]);
+        [
+            'viewFromDateField',
+            'viewFromTimeField',
+            'viewToDateField',
+            'viewToTimeField',
+        ].forEach(setAsValid);
+        setViewResetCount((count) => count + 1);
+        setExtremes({
+            min: parseTimeAsUTC(range.after[0], range.after[1]),
+            max: parseTimeAsUTC(range.before[0], range.before[1]),
+        });
+    };
+
+    const viewPresets = useTimeframePresets({
+        defaultPreset: 'last30days',
+        options: BOUNDED_DATE_RANGE_PRESETS,
+        zone: options?.view,
+        onSelect: applyViewPreset,
+    });
+    const { resetToCustom } = viewPresets;
+
     /*eslint-disable react-hooks/exhaustive-deps */
     // Because: Don't update when any of the date/time fields change because that would lead to infinite loop
     const updateExtremes = useCallback(() => {
@@ -141,10 +167,10 @@ const QueryOptionsCard = () => {
                 setFromTime(afterTime);
                 setToDate(beforeDate);
                 setToTime(beforeTime);
-                setViewPreset('custom');
+                resetToCustom();
             }
         },
-        [setFromTime, setFromDate, setToTime, setToDate],
+        [setFromTime, setFromDate, setToTime, setToDate, resetToCustom],
     );
 
     useEffect(() => {
@@ -164,7 +190,7 @@ const QueryOptionsCard = () => {
         setFromTime(result.view.afterTime);
         setToDate(result.view.beforeDate);
         setToTime(result.view.beforeTime);
-        setViewPreset('custom');
+        resetToCustom();
 
         const existingFilters = result.filters;
         existingFilters.forEach(
@@ -196,41 +222,12 @@ const QueryOptionsCard = () => {
         setFilters,
         setSelectedServers,
         setExtremes,
+        resetToCustom,
     ]);
 
     const editedBy = (setter) => (value) => {
         setter(value);
-        setViewPreset('custom');
-    };
-
-    const selectViewPreset = (event) => {
-        const selected = event.target.value;
-        setViewPreset(selected);
-        if (selected === 'custom') return;
-
-        const range = calculatePresetRange(
-            selected,
-            Date.now(),
-            options.view,
-            firstDay ?? 1,
-        );
-        if (!range) return;
-
-        setFromDate(range.after[0]);
-        setFromTime(range.after[1]);
-        setToDate(range.before[0]);
-        setToTime(range.before[1]);
-        [
-            'viewFromDateField',
-            'viewFromTimeField',
-            'viewToDateField',
-            'viewToTimeField',
-        ].forEach(setAsValid);
-        setViewResetCount(viewResetCount + 1);
-        setExtremes({
-            min: parseTimeAsUTC(range.after[0], range.after[1]),
-            max: parseTimeAsUTC(range.before[0], range.before[1]),
-        });
+        resetToCustom();
     };
 
     const serverSelectorMessage = useMemo(() => {
@@ -295,18 +292,11 @@ const QueryOptionsCard = () => {
             <Card.Body>
                 <InlinedRow>
                     <label>{t('html.query.label.view')}</label>
-                    <select
+                    <PresetSelect
                         id={'viewPreset'}
-                        className='form-select form-select-sm w-auto ms-2'
-                        aria-label={t('html.query.filter.preset.label')}
-                        value={viewPreset}
-                        onChange={selectViewPreset}>
-                        {VIEW_PRESETS.map((option) => (
-                            <option key={option.name} value={option.name}>
-                                {t(option.label)}
-                            </option>
-                        ))}
-                    </select>
+                        className='ms-2'
+                        presets={viewPresets}
+                    />
                 </InlinedRow>
                 <Row
                     className={
