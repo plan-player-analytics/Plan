@@ -28,6 +28,7 @@ const PlayerPluginData = () => {
             masonry = new Masonry(masonryRow, {
                 percentPosition: true,
                 itemSelector: '.extension-wrapper',
+                columnWidth: 1 / 3,
             });
         }
         return () => {
