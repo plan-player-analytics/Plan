@@ -65,12 +65,21 @@ export const useDateFormatter = (
 
     const formatDate = useCallback(
         (date: any) => {
-            if (!offset || !pattern) return date;
-            if (!isNumber(date)) return date;
-            if (date === 0) return '-';
+
+            const numericDate =
+                typeof date === 'string' &&
+                date.trim() !== '' &&
+                !isNaN(Number(date))
+                    ? Number(date)
+                    : date;
+
+            if (offset === undefined || offset === null || !pattern)
+                return numericDate;
+            if (!isNumber(numericDate)) return numericDate;
+            if (numericDate === 0) return '-';
 
             // Adjust offset for DST offset in past dates
-            const dateMoment = moment(date);
+            const dateMoment = moment(numericDate);
             const dateUtcOffset = dateMoment.utcOffset();
             const currentUtcOffset = moment().utcOffset();
             const dstAdjustment =
@@ -78,7 +87,7 @@ export const useDateFormatter = (
             const adjustedOffset = offset - dstAdjustment;
 
             const dayMs = 24 * 60 * 60 * 1000;
-            const timestamp = date - adjustedOffset;
+            const timestamp = numericDate - adjustedOffset;
             const now = Date.now() - adjustedOffset;
             const fromStartOfToday = now % dayMs;
             const today = now - fromStartOfToday;
