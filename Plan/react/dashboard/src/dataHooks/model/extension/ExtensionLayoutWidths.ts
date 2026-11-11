@@ -19,6 +19,15 @@ const expand = (row: LayoutItem[], cardWidth: number) => {
 
     let remaining = 12 - result.reduce((sum, item) => sum + item.min, 0);
 
+    // If elements can't fit side by side, give each the full card width
+    if (remaining < 0 && result.every((item) => item.min > 6)) {
+        return result.map((item) => ({
+            element: item.element,
+            min: 12,
+            max: 12,
+        }));
+    }
+
     while (remaining > 0) {
         let changed = false;
 
@@ -137,7 +146,9 @@ export const computeLayoutWidths = (
             hasValues &&
             combinedMinimumWidth == 8 &&
             layout.length == 2) || // Values + table
-        (combinedMinimumWidth == 16 && layout.length == 2) || // Two 2 wide elements
+        (combinedMinimumWidth == 16 &&
+            layout.length == 2 &&
+            layout.some((item) => item.min < 8)) || // Two wide elements where at least one can share space
         (combinedMinimumWidth == 16 &&
             (layout.length == 3 || layout.length == 4) &&
             !hasValues); // 3-4 elements without values
