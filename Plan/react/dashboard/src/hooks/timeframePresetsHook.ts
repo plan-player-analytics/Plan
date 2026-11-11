@@ -65,9 +65,11 @@ export const useTimeframePresets = ({
 
     const resetToCustom = useCallback(() => setCurrent('custom'), []);
 
-    const currentPreset =
-        presetOptions.find((option) => option.name === current) ??
-        presetOptions[0];
+    return useMemo(() => {
+        const currentPreset =
+            presetOptions.find((option) => option.name === current) ??
+            presetOptions[0];
 
-    return { currentPreset, presetOptions, selectPreset, resetToCustom };
+        return { currentPreset, presetOptions, selectPreset, resetToCustom };
+    }, [presetOptions, current, selectPreset, resetToCustom]);
 };

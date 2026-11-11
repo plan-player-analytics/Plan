@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import DateInputField from '../../../input/DateInputField.tsx';
 import TimeInputField from '../../../input/TimeInputField.tsx';
@@ -50,6 +50,48 @@ const BetweenDatesFilter = ({
         filter.parameters?.beforeTime || options.before[1],
     );
 
+    const presetRange = useCallback(
+        (preset) => {
+            if (preset.name === 'allData') {
+                return { after: options.after, before: options.before };
+            }
+            const computed = preset.compute();
+            return computed && toDateTimeRange(computed, options);
+        },
+        [options],
+    );
+
+    const applyPreset = useCallback(
+        (preset) => {
+            const range = presetRange(preset);
+            if (!range) return;
+
+            setFromDateEnabled(true);
+            setToDateEnabled(true);
+            setFromDate(range.after[0]);
+            setFromTime(range.after[1]);
+            setToDate(range.before[0]);
+            setToTime(range.before[1]);
+            ['-from-date', '-from-time', '-to-date', '-to-time'].forEach(
+                (suffix) => setAsValid(fieldId + suffix),
+            );
+            setInputResetCount((count) => count + 1);
+        },
+        [presetRange, setAsValid, fieldId],
+    );
+
+    const presets = useTimeframePresets({
+        defaultPreset:
+            filter.parameters && Object.keys(filter.parameters).length
+                ? 'custom'
+                : 'allData',
+        options: DATE_RANGE_PRESETS,
+        zone: options,
+        onSelect: applyPreset,
+    });
+    const { resetToCustom } = presets;
+    const preset = presets.currentPreset.name;
+
     const toggleFromDate = () => {
         if (!toDateEnabled && fromDateEnabled) {
             setToDateEnabled(true);
@@ -69,42 +111,6 @@ const BetweenDatesFilter = ({
         setter(value);
         resetToCustom();
     };
-
-    const presetRange = (preset) => {
-        if (preset.name === 'allData') {
-            return { after: options.after, before: options.before };
-        }
-        const computed = preset.compute();
-        return computed && toDateTimeRange(computed, options);
-    };
-
-    const applyPreset = (preset) => {
-        const range = presetRange(preset);
-        if (!range) return;
-
-        setFromDateEnabled(true);
-        setToDateEnabled(true);
-        setFromDate(range.after[0]);
-        setFromTime(range.after[1]);
-        setToDate(range.before[0]);
-        setToTime(range.before[1]);
-        ['-from-date', '-from-time', '-to-date', '-to-time'].forEach((suffix) =>
-            setAsValid(fieldId + suffix),
-        );
-        setInputResetCount(inputResetCount + 1);
-    };
-
-    const presets = useTimeframePresets({
-        defaultPreset:
-            filter.parameters && Object.keys(filter.parameters).length
-                ? 'custom'
-                : 'allData',
-        options: DATE_RANGE_PRESETS,
-        zone: options,
-        onSelect: applyPreset,
-    });
-    const { resetToCustom } = presets;
-    const preset = presets.currentPreset.name;
 
     useEffect(() => {
         if (preset === 'allData') {

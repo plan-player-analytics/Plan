@@ -1,10 +1,13 @@
-import { useState } from 'react';
+import { useCallback, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons';
 import DateInputField from '../../input/DateInputField';
 import PresetSelect from '../../input/PresetSelect';
-import { useTimeframePresets } from '../../../hooks/timeframePresetsHook';
+import {
+    Preset,
+    useTimeframePresets,
+} from '../../../hooks/timeframePresetsHook';
 import { CustomRange } from '../../../util/datapointTablePresets';
 import { BOUNDED_DATE_RANGE_PRESETS } from '../../../util/queryDatePresets';
 import { DatapointTimeframe } from './useDatapointTimeframe';
@@ -21,15 +24,22 @@ const CustomColumnInputs = ({ id, index, range, timeframe }: Props) => {
     const [resetCount, setResetCount] = useState(0);
     const fieldId = `${id}-custom-${index}`;
 
+    const { setCustomPreset, setFieldValid } = timeframe;
+
+    const applyPreset = useCallback(
+        (preset: Preset) => {
+            setCustomPreset(index, preset.name);
+            setFieldValid(`${fieldId}-from`);
+            setFieldValid(`${fieldId}-to`);
+            setResetCount((count) => count + 1);
+        },
+        [setCustomPreset, setFieldValid, index, fieldId],
+    );
+
     const presets = useTimeframePresets({
         defaultPreset: range.preset,
         options: BOUNDED_DATE_RANGE_PRESETS,
-        onSelect: (preset) => {
-            timeframe.setCustomPreset(index, preset.name);
-            timeframe.setFieldValid(`${fieldId}-from`);
-            timeframe.setFieldValid(`${fieldId}-to`);
-            setResetCount((count) => count + 1);
-        },
+        onSelect: applyPreset,
     });
 
     const setDay = (part: 'from' | 'to') => (value?: string) => {

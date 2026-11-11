@@ -100,27 +100,30 @@ const QueryOptionsCard = () => {
 
     const [extremes, setExtremes] = useState(undefined);
 
-    const applyViewPreset = (preset) => {
-        const computed = preset.compute();
-        if (!computed) return;
+    const applyViewPreset = useCallback(
+        (preset) => {
+            const computed = preset.compute();
+            if (!computed) return;
 
-        const range = toDateTimeRange(computed, options.view);
-        setFromDate(range.after[0]);
-        setFromTime(range.after[1]);
-        setToDate(range.before[0]);
-        setToTime(range.before[1]);
-        [
-            'viewFromDateField',
-            'viewFromTimeField',
-            'viewToDateField',
-            'viewToTimeField',
-        ].forEach(setAsValid);
-        setViewResetCount((count) => count + 1);
-        setExtremes({
-            min: parseTimeAsUTC(range.after[0], range.after[1]),
-            max: parseTimeAsUTC(range.before[0], range.before[1]),
-        });
-    };
+            const range = toDateTimeRange(computed, options.view);
+            setFromDate(range.after[0]);
+            setFromTime(range.after[1]);
+            setToDate(range.before[0]);
+            setToTime(range.before[1]);
+            [
+                'viewFromDateField',
+                'viewFromTimeField',
+                'viewToDateField',
+                'viewToTimeField',
+            ].forEach(setAsValid);
+            setViewResetCount((count) => count + 1);
+            setExtremes({
+                min: parseTimeAsUTC(range.after[0], range.after[1]),
+                max: parseTimeAsUTC(range.before[0], range.before[1]),
+            });
+        },
+        [options, setAsValid],
+    );
 
     const viewPresets = useTimeframePresets({
         defaultPreset: 'last30days',
