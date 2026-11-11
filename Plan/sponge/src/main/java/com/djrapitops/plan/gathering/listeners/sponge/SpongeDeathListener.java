@@ -18,6 +18,8 @@ package com.djrapitops.plan.gathering.listeners.sponge;
 
 import com.djrapitops.plan.delivery.formatting.EntityNameFormatter;
 import com.djrapitops.plan.delivery.formatting.ItemNameFormatter;
+import com.djrapitops.plan.gathering.cache.ExplosionCache;
+import com.djrapitops.plan.gathering.cache.ExplosionMetadata;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
@@ -29,6 +31,7 @@ import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import org.spongepowered.api.ResourceKey;
 import org.spongepowered.api.Sponge;
+import org.spongepowered.api.block.BlockSnapshot;
 import org.spongepowered.api.data.type.HandTypes;
 import org.spongepowered.api.data.value.Value;
 import org.spongepowered.api.entity.Entity;
@@ -41,13 +44,19 @@ import org.spongepowered.api.entity.living.player.Player;
 import org.spongepowered.api.entity.projectile.Projectile;
 import org.spongepowered.api.entity.vehicle.minecart.TNTMinecart;
 import org.spongepowered.api.event.Listener;
+import org.spongepowered.api.event.Order;
+import org.spongepowered.api.event.block.InteractBlockEvent;
+import org.spongepowered.api.event.cause.entity.damage.DamageTypes;
 import org.spongepowered.api.event.cause.entity.damage.source.DamageSource;
 import org.spongepowered.api.event.entity.DestructEntityEvent;
+import org.spongepowered.api.event.filter.cause.First;
 import org.spongepowered.api.item.ItemType;
 import org.spongepowered.api.item.ItemTypes;
 import org.spongepowered.api.item.inventory.ItemStack;
 import org.spongepowered.api.projectile.source.ProjectileSource;
 import org.spongepowered.api.registry.RegistryTypes;
+import org.spongepowered.api.world.server.ServerLocation;
+import org.spongepowered.api.world.server.ServerWorld;
 
 import javax.inject.Inject;
 import java.util.List;
@@ -63,16 +72,40 @@ public class SpongeDeathListener {
     private final ServerInfo serverInfo;
     private final Processing processing;
     private final ErrorLogger errorLogger;
+    private final ExplosionCache explosionCache;
 
     @Inject
     public SpongeDeathListener(
             ServerInfo serverInfo,
             Processing processing,
-            ErrorLogger errorLogger
+            ErrorLogger errorLogger,
+            ExplosionCache explosionCache
     ) {
         this.serverInfo = serverInfo;
         this.processing = processing;
         this.errorLogger = errorLogger;
+        this.explosionCache = explosionCache;
+    }
+
+    @Listener(order = Order.PRE)
+    public void onBlockInteract(InteractBlockEvent.Secondary event, @First Player player) {
+        BlockSnapshot block = event.block();
+        Optional<ServerLocation> location = block.location();
+        if (location.isEmpty()) return;
+
+        String typeName = block.state().type().key(RegistryTypes.BLOCK_TYPE).value().toUpperCase();
+        if (isExplodingBlockType(typeName)) {
+            ServerLocation loc = location.get();
+            explosionCache.store(new ExplosionMetadata(
+                    typeName,
+                    player.uniqueId(),
+                    loc.world().key().asString(),
+                    loc.blockX(),
+                    loc.blockY(),
+                    loc.blockZ(),
+                    System.currentTimeMillis()
+            ));
+        }
     }
 
     @Listener
@@ -87,19 +120,23 @@ public class SpongeDeathListener {
 
         try {
             List<DamageSource> causes = event.cause().allOf(DamageSource.class);
-            Optional<Player> foundKiller = findKiller(causes, 0);
+            Optional<Player> foundKiller = findKiller(causes, dead, 0);
             if (foundKiller.isEmpty()) {
                 return;
             }
             Player killer = foundKiller.get();
 
             Runnable processor = dead instanceof Player
-                    ? new PlayerKillProcessor(getKiller(killer), getVictim((Player) dead), serverInfo.getServerIdentifier(), findWeapon(event), time)
+                    ? new PlayerKillProcessor(getKiller(killer), getVictim((Player) dead), serverInfo.getServerIdentifier(), findWeapon(event, dead), time)
                     : new MobKillProcessor(killer.uniqueId());
             processing.submitCritical(processor);
         } catch (Exception e) {
             errorLogger.error(e, ErrorContext.builder().related(event, dead).build());
         }
+    }
+
+    private boolean isExplodingBlockType(String typeName) {
+        return typeName.endsWith("_BED") || "RESPAWN_ANCHOR".equals(typeName);
     }
 
     private PlayerKill.Killer getKiller(Player killer) {
@@ -110,7 +147,7 @@ public class SpongeDeathListener {
         return new PlayerKill.Victim(victim.uniqueId(), victim.name());
     }
 
-    public Optional<Player> findKiller(List<DamageSource> causes, int depth) {
+    public Optional<Player> findKiller(List<DamageSource> causes, Living dead, int depth) {
         if (causes.isEmpty() || causes.size() < depth) {
             return Optional.empty();
         }
@@ -118,7 +155,7 @@ public class SpongeDeathListener {
         DamageSource damageSource = causes.get(depth);
         Optional<Entity> source = damageSource.source();
         if (source.isEmpty()) source = damageSource.indirectSource();
-        if (source.isEmpty()) return Optional.empty();
+        if (source.isEmpty()) return getBlockExplosionKiller(dead, damageSource);
 
         Entity killerEntity = source.get();
 
@@ -126,19 +163,24 @@ public class SpongeDeathListener {
             case Player player -> Optional.of(player);
             case Wolf wolf -> getOwner(wolf);
             case Projectile projectile -> getShooter(projectile);
-            case EndCrystal endCrystal -> findKiller(causes, depth + 1);
+            case EndCrystal endCrystal -> findKiller(causes, dead, depth + 1);
             case FusedExplosive explosive -> getExplosiveIgniter(explosive, damageSource);
             default -> Optional.empty();
         };
     }
 
-    public String findWeapon(DestructEntityEvent.Death death) {
+    public String findWeapon(DestructEntityEvent.Death death, Living dead) {
         Optional<DamageSource> damagedBy = death.cause().first(DamageSource.class);
         if (damagedBy.isPresent()) {
             DamageSource damageSource = damagedBy.get();
             Optional<Entity> source = damageSource.source();
             if (source.isEmpty()) source = damageSource.indirectSource();
-            if (source.isEmpty()) return "Unknown";
+            if (source.isEmpty()) {
+                if (damageSource.type().equals(DamageTypes.BAD_RESPAWN_POINT.get())) {
+                    return getBlockExplosionWeapon(dead);
+                }
+                return "Unknown";
+            }
 
             Entity killerEntity = source.get();
 
@@ -190,5 +232,32 @@ public class SpongeDeathListener {
         }
 
         return Optional.empty();
+    }
+    private Optional<ExplosionMetadata> getRecentBlockExplosion(Living dead) {
+        if (!(dead.world() instanceof ServerWorld serverWorld)) {
+            return Optional.empty();
+        }
+        return explosionCache.getRecentExplosion(
+                serverWorld.key().asString(),
+                dead.location().x(),
+                dead.location().y(),
+                dead.location().z(),
+                System.currentTimeMillis()
+        );
+    }
+
+    private Optional<Player> getBlockExplosionKiller(Living dead, DamageSource damageSource) {
+        if (damageSource.type().equals(DamageTypes.BAD_RESPAWN_POINT.get())) {
+            return getRecentBlockExplosion(dead)
+                    .map(ExplosionMetadata::playerUUID)
+                    .flatMap(Sponge.game().server()::player);
+        }
+        return Optional.empty();
+    }
+    private String getBlockExplosionWeapon(Living dead) {
+        return getRecentBlockExplosion(dead)
+                .map(ExplosionMetadata::explosionBlockName)
+                .map(new ItemNameFormatter()::apply)
+                .orElse("Block Explosion");
     }
 }
