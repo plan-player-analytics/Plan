@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import DateInputField from '../../../input/DateInputField.tsx';
 import TimeInputField from '../../../input/TimeInputField.tsx';
@@ -8,11 +8,12 @@ import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import OutlineButton from '../../../input/button/OutlineButton.tsx';
 import Checkbox from '../../../input/Checkbox.tsx';
 import { InlinedRow } from '../../../layout/InlinedRow.tsx';
-import { usePreferences } from '../../../../hooks/preferences/preferencesHook.tsx';
 import {
-    calculatePresetRange,
     DATE_RANGE_PRESETS,
+    toDateTimeRange,
 } from '../../../../util/queryDatePresets.ts';
+import { useTimeframePresets } from '../../../../hooks/timeframePresetsHook.ts';
+import PresetSelect from '../../../input/PresetSelect.tsx';
 
 const BetweenDatesFilter = ({
     index,
@@ -31,13 +32,7 @@ const BetweenDatesFilter = ({
             : t('html.query.filter.generic.and');
 
     const options = filter.options;
-    const { firstDay } = usePreferences();
 
-    const [preset, setPreset] = useState(
-        filter.parameters && Object.keys(filter.parameters).length
-            ? 'custom'
-            : 'allData',
-    );
     const [inputResetCount, setInputResetCount] = useState(0);
 
     const [fromDateEnabled, setFromDateEnabled] = useState(true);
@@ -55,52 +50,66 @@ const BetweenDatesFilter = ({
         filter.parameters?.beforeTime || options.before[1],
     );
 
+    const presetRange = useCallback(
+        (preset) => {
+            if (preset.name === 'allData') {
+                return { after: options.after, before: options.before };
+            }
+            const computed = preset.compute();
+            return computed && toDateTimeRange(computed, options);
+        },
+        [options],
+    );
+
+    const applyPreset = useCallback(
+        (preset) => {
+            const range = presetRange(preset);
+            if (!range) return;
+
+            setFromDateEnabled(true);
+            setToDateEnabled(true);
+            setFromDate(range.after[0]);
+            setFromTime(range.after[1]);
+            setToDate(range.before[0]);
+            setToTime(range.before[1]);
+            ['-from-date', '-from-time', '-to-date', '-to-time'].forEach(
+                (suffix) => setAsValid(fieldId + suffix),
+            );
+            setInputResetCount((count) => count + 1);
+        },
+        [presetRange, setAsValid, fieldId],
+    );
+
+    const presets = useTimeframePresets({
+        defaultPreset:
+            filter.parameters && Object.keys(filter.parameters).length
+                ? 'custom'
+                : 'allData',
+        options: DATE_RANGE_PRESETS,
+        zone: options,
+        onSelect: applyPreset,
+    });
+    const { resetToCustom } = presets;
+    const preset = presets.currentPreset.name;
+
     const toggleFromDate = () => {
         if (!toDateEnabled && fromDateEnabled) {
             setToDateEnabled(true);
         }
         setFromDateEnabled(!fromDateEnabled);
-        setPreset('custom');
+        resetToCustom();
     };
     const toggleToDate = () => {
         if (!fromDateEnabled && toDateEnabled) {
             setFromDateEnabled(true);
         }
         setToDateEnabled(!toDateEnabled);
-        setPreset('custom');
+        resetToCustom();
     };
 
     const editedBy = (setter) => (value) => {
         setter(value);
-        setPreset('custom');
-    };
-
-    const selectPreset = (event) => {
-        const selected = event.target.value;
-        setPreset(selected);
-        if (selected === 'custom') return;
-
-        const range =
-            selected === 'allData'
-                ? { after: options.after, before: options.before }
-                : calculatePresetRange(
-                      selected,
-                      Date.now(),
-                      options,
-                      firstDay ?? 1,
-                  );
-        if (!range) return;
-
-        setFromDateEnabled(true);
-        setToDateEnabled(true);
-        setFromDate(range.after[0]);
-        setFromTime(range.after[1]);
-        setToDate(range.before[0]);
-        setToTime(range.before[1]);
-        ['-from-date', '-from-time', '-to-date', '-to-time'].forEach((suffix) =>
-            setAsValid(fieldId + suffix),
-        );
-        setInputResetCount(inputResetCount + 1);
+        resetToCustom();
     };
 
     useEffect(() => {
@@ -146,18 +155,11 @@ const BetweenDatesFilter = ({
                 <label>
                     {select} {t(actualLabel)}:
                 </label>
-                <select
+                <PresetSelect
                     id={fieldId + '-preset'}
-                    className='form-select form-select-sm w-auto ms-2'
-                    aria-label={t('html.query.filter.preset.label')}
-                    value={preset}
-                    onChange={selectPreset}>
-                    {DATE_RANGE_PRESETS.map((option) => (
-                        <option key={option.name} value={option.name}>
-                            {t(option.label)}
-                        </option>
-                    ))}
-                </select>
+                    className='ms-2'
+                    presets={presets}
+                />
             </InlinedRow>
             <Row className={'my-2 justify-content-start align-items-center'}>
                 <Col md={3} sm={6}>
