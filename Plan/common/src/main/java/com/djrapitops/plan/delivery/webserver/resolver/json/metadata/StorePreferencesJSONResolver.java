@@ -23,6 +23,7 @@ import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.exception.MethodNotAllowedException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
+import com.djrapitops.plan.delivery.webserver.ResponseFactory;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.webuser.StoreWebUserPreferencesTransaction;
 import com.djrapitops.plan.utilities.dev.Untrusted;
@@ -33,7 +34,6 @@ import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
-import jakarta.ws.rs.ForbiddenException;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
 
@@ -50,9 +50,13 @@ import java.util.Optional;
 public class StorePreferencesJSONResolver implements Resolver {
 
     private final DBSystem dbSystem;
+    private final ResponseFactory responseFactory;
 
     @Inject
-    public StorePreferencesJSONResolver(DBSystem dbSystem) {this.dbSystem = dbSystem;}
+    public StorePreferencesJSONResolver(DBSystem dbSystem, ResponseFactory responseFactory) {
+        this.dbSystem = dbSystem;
+        this.responseFactory = responseFactory;
+    }
 
     @Override
     public boolean canAccess(Request request) {
@@ -75,8 +79,12 @@ public class StorePreferencesJSONResolver implements Resolver {
         if (!"POST".equals(request.getMethod())) {
             throw new MethodNotAllowedException("POST");
         }
-        WebUser user = request.getUser()
-                .orElseThrow(() -> new ForbiddenException("This endpoint only accepts requests if logged in."));
+        var optUser = request.getUser();
+        if (optUser.isEmpty()) {
+            return Optional.of(responseFactory.forbidden403("This endpoint only accepts requests if logged in."));
+        }
+
+        WebUser user = optUser.get();
         String preferencesBody = new String(request.getRequestBody(), StandardCharsets.UTF_8);
         try {
             Gson gson = new Gson();
