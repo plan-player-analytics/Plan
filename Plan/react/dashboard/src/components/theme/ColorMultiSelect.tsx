@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { type CSSProperties } from 'react';
 import MultiSelect from '../input/MultiSelect';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSquare } from '@fortawesome/free-solid-svg-icons';
@@ -10,7 +10,7 @@ type Props = {
     selectedColors?: string[];
     setSelectedColors?: (colors: string[]) => void;
     sort?: boolean;
-    style?: CSSStyleProperties;
+    style?: CSSProperties;
 };
 
 const ColorMultiSelect = ({
