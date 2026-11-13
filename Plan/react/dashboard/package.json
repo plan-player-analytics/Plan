@@ -78,7 +78,7 @@
         "baseline-browser-mapping": "2.11.35",
         "prettier": "3.9.10",
         "typescript": "7.0.2",
-        "vite": "8.3.5"
+        "vite": "8.3.7"
     },
     "scarfSettings": {
         "enabled": false
