@@ -762,6 +762,8 @@ html:
             previousAndCurrentWeek: "上周和本周"
             previousMonthByWeek: "上月，按周"
             weekComparison: "周对比"
+            previousAndCurrentYear: "去年和今年"
+            last6Years: "过去6年，按年"
         timesKicked: "被踢次数"
         titlePlayersHaveData: "({{positivePercentage}}%) {{total}} 名玩家中有 {{positiveCount}} 名有 {{extensionName}} 的数据"
         toMainPage: "返回首页"

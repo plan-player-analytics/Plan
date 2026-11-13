@@ -762,6 +762,8 @@ html:
             previousAndCurrentWeek: "Edellinen ja kuluva viikko"
             previousMonthByWeek: "Edellinen kuukausi, viikottain"
             weekComparison: "Viikkojen vertailu"
+            previousAndCurrentYear: "Edellinen ja kuluva vuosi"
+            last6Years: "Viimeiset 6 vuotta, vuosittain"
         timesKicked: "Heitetty pihalle"
         titlePlayersHaveData: "({{positivePercentage}}%) {{positiveCount}} / {{total}} pelaajista on {{extensionName}} dataa"
         toMainPage: "pääsivu"

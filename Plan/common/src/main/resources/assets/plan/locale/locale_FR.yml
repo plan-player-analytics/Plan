@@ -762,6 +762,8 @@ html:
             previousAndCurrentWeek: "Semaine précédente et en cours"
             previousMonthByWeek: "Mois précédent, par semaine"
             weekComparison: "Comparaison hebdomadaire"
+            previousAndCurrentYear: "Année précédente et actuelle"
+            last6Years: "6 dernières années, par année"
         timesKicked: "Nombre d'Éjections"
         titlePlayersHaveData: "({{positivePercentage}}%) {{positiveCount}} sur {{total}} joueurs ont des données pour {{extensionName}}"
         toMainPage: "Retour à la page principale"

@@ -655,7 +655,10 @@ public enum HtmlLang implements Lang {
     TIMEFRAME_PREVIOUS_AND_CURRENT_MONTH("html.label.timeframe.previousAndCurrentMonth", "Previous and current month"),
     TIMEFRAME_PREVIOUS_AND_CURRENT_WEEK("html.label.timeframe.previousAndCurrentWeek", "Previous and current week"),
     TIMEFRAME_PREVIOUS_MONTH_BY_WEEK("html.label.timeframe.previousMonthByWeek", "Previous month, by week"),
-    TIMEFRAME_WEEK_COMPARISON("html.label.timeframe.weekComparison", "Week comparison");
+    TIMEFRAME_WEEK_COMPARISON("html.label.timeframe.weekComparison", "Week comparison"),
+    TIMEFRAME_PREVIOUS_AND_CURRENT_YEAR("html.label.timeframe.previousAndCurrentYear", "Previous and current year"),
+    TIMEFRAME_LAST_6_YEARS("html.label.timeframe.last6Years", "Last 6 years, by year"),
+    ;
 
     private final String key;
     private final String defaultValue;

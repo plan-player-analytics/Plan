@@ -762,6 +762,8 @@ html:
             previousAndCurrentWeek: "Předchozí a aktuální týden"
             previousMonthByWeek: "Předchozí měsíc, podle týdnů"
             weekComparison: "Srovnání týdnů"
+            previousAndCurrentYear: "Předchozí a aktuální rok"
+            last6Years: "Posledních 6 let, podle let"
         timesKicked: "Počet vykopnutí"
         titlePlayersHaveData: "({{positivePercentage}}%) {{positiveCount}} z {{total}} hráčů má data pro {{extensionName}}"
         toMainPage: "Zpět na hlavní stránku"

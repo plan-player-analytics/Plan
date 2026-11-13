@@ -762,6 +762,8 @@ html:
             previousAndCurrentWeek: "Попередній і поточний тиждень"
             previousMonthByWeek: "Попередній місяць, по тижнях"
             weekComparison: "Порівняння тижнів"
+            previousAndCurrentYear: "Попередній і поточний рік"
+            last6Years: "Останні 6 років, за роками"
         timesKicked: "Кількість кіків"
         titlePlayersHaveData: "({{positivePercentage}}%) {{positiveCount}} з {{total}} гравців мають дані для {{extensionName}}"
         toMainPage: "На головну сторінку"

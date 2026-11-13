@@ -762,6 +762,8 @@ html:
             previousAndCurrentWeek: "Önceki ve mevcut hafta"
             previousMonthByWeek: "Önceki ay, haftaya göre"
             weekComparison: "Hafta karşılaştırması"
+            previousAndCurrentYear: "Önceki ve mevcut yıl"
+            last6Years: "Son 6 yıl, yıla göre"
         timesKicked: "Kere Atılmış"
         titlePlayersHaveData: "({{positivePercentage}}%) {{total}} oyuncudan {{positiveCount}}'unda {{extensionName}} için veri mevcut"
         toMainPage: "Ana Sayfaya"

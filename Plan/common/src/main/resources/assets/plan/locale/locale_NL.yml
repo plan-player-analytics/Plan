@@ -762,6 +762,8 @@ html:
             previousAndCurrentWeek: "Vorige en huidige week"
             previousMonthByWeek: "Vorige maand, per week"
             weekComparison: "Weekvergelijking"
+            previousAndCurrentYear: "Vorig en huidig jaar"
+            last6Years: "Laatste 6 jaar, per jaar"
         timesKicked: "Aantal keer afgetrapt"
         titlePlayersHaveData: "({{positivePercentage}}%) {{positiveCount}} van {{total}} spelers hebben gegevens voor {{extensionName}}"
         toMainPage: "naar hoofdpagina"

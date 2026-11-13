@@ -762,6 +762,8 @@ html:
             previousAndCurrentWeek: "先週と今週"
             previousMonthByWeek: "先月、週別"
             weekComparison: "週比較"
+            previousAndCurrentYear: "前年と今年"
+            last6Years: "過去6年間、年別"
         timesKicked: "キック回数"
         titlePlayersHaveData: "({{positivePercentage}}%) {{total}}人中{{positiveCount}}人が{{extensionName}}のデータを持っています"
         toMainPage: "メインページに戻る"

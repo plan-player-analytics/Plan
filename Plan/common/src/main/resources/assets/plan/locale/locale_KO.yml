@@ -762,6 +762,8 @@ html:
             previousAndCurrentWeek: "이전 및 현재 주"
             previousMonthByWeek: "이전 월, 주별"
             weekComparison: "주간 비교"
+            previousAndCurrentYear: "작년과 올해"
+            last6Years: "최근 6년, 연도별"
         timesKicked: "추방 횟수"
         titlePlayersHaveData: "({{positivePercentage}}%) {{total}}명 중 {{positiveCount}}명이 {{extensionName}} 데이터가 있습니다"
         toMainPage: "메인 페이지로"

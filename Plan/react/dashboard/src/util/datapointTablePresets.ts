@@ -16,11 +16,13 @@ export type TimeframePreset =
     | 'monthByWeeks'
     | 'previousAndCurrentWeek'
     | 'previousAndCurrentMonth'
+    | 'previousAndCurrentYear'
     | 'last6Hours'
     | 'last7Days'
+    | 'last6Months'
+    | 'last6Years'
     | 'currentMonthByWeek'
     | 'previousMonthByWeek'
-    | 'last6Months'
     | 'custom';
 
 export const ALL_TIMEFRAME_PRESETS: TimeframePreset[] = [
@@ -29,11 +31,13 @@ export const ALL_TIMEFRAME_PRESETS: TimeframePreset[] = [
     'monthByWeeks',
     'previousAndCurrentWeek',
     'previousAndCurrentMonth',
+    'previousAndCurrentYear',
     'last6Hours',
     'last7Days',
+    'last6Months',
+    'last6Years',
     'currentMonthByWeek',
     'previousMonthByWeek',
-    'last6Months',
     'custom',
 ];
 
@@ -41,10 +45,11 @@ export const TWO_COLUMN_PRESETS: TimeframePreset[] = [
     'weekComparison',
     'previousAndCurrentWeek',
     'previousAndCurrentMonth',
+    'previousAndCurrentYear',
     'custom',
 ];
 
-export type PeriodUnit = 'hour' | 'day' | 'week' | 'month' | 'range';
+export type PeriodUnit = 'hour' | 'day' | 'week' | 'month' | 'year' | 'range';
 
 export type TimeframePeriod = {
     start: number;
@@ -181,7 +186,7 @@ const toColumns = (
 const consecutive = (
     first: moment.Moment,
     count: number,
-    unit: 'day' | 'month',
+    unit: 'day' | 'month' | 'year',
 ) => Array.from({ length: count + 1 }, (_, i) => first.clone().add(i, unit));
 
 const weeksOfMonth = (monthStart: moment.Moment, firstDay: number) => {
@@ -320,6 +325,7 @@ export const calculateTimeframeColumns = (
     const today = now.clone().startOf('day');
     const weekStart = startOfWeek(now, firstDay);
     const monthStart = now.clone().startOf('month');
+    const yearStart = now.clone().startOf('year');
 
     switch (preset) {
         case 'previousAndCurrentWeek':
@@ -341,6 +347,13 @@ export const calculateTimeframeColumns = (
                     'month',
                 ),
                 'month',
+                nowEpochMs,
+                zone,
+            );
+        case 'previousAndCurrentYear':
+            return toColumns(
+                consecutive(yearStart.clone().subtract(1, 'year'), 2, 'year'),
+                'year',
                 nowEpochMs,
                 zone,
             );
@@ -375,6 +388,13 @@ export const calculateTimeframeColumns = (
                     'month',
                 ),
                 'month',
+                nowEpochMs,
+                zone,
+            );
+        case 'last6Years':
+            return toColumns(
+                consecutive(yearStart.clone().subtract(5, 'year'), 6, 'year'),
+                'year',
                 nowEpochMs,
                 zone,
             );
