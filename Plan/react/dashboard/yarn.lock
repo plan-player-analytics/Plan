@@ -1199,10 +1199,10 @@ i18next-localstorage-backend@4.3.3:
   dependencies:
     "@babel/runtime" "^7.28.4"
 
-i18next@26.7.1:
-  version "26.7.1"
-  resolved "https://registry.yarnpkg.com/i18next/-/i18next-26.7.1.tgz#33bc0c45e6be754f0141cbb9289187db27aac485"
-  integrity sha512-cX+3RRVczel/V2kCMTACckSGSpqgtWYEA6beXNYVms7dOQiHojdPYHD26lT4IKimNeoGWrLvtPgjftbRvmZJVw==
+i18next@27.1.0:
+  version "27.1.0"
+  resolved "https://registry.yarnpkg.com/i18next/-/i18next-27.1.0.tgz#4cf52aca57ac5a941705cafacc540da0819cc1d4"
+  integrity sha512-xdjb2OXFRm33rClqknpJmmYBvrPcaoEQ7/4kur5uTrbqckqzkbRO0ns6gFFki5TDmHzbIrFYpNBXhaRafmhJ/Q==
 
 immutable@^5.1.5:
   version "5.1.9"
