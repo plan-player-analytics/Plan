@@ -18,6 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { MS_24H, MS_MONTH, MS_WEEK } from '../../util/format/useDateFormatter';
 import {
     ALL_TIMEFRAME_PRESETS,
+    SEPARATOR,
     TimeframePreset,
 } from '../../util/datapointTablePresets';
 import { useDatapointTimeframe } from './presets/useDatapointTimeframe';
@@ -47,7 +48,7 @@ type Row = {
 type Props = {
     id: string;
     defaultPreset: TimeframePreset;
-    presets?: TimeframePreset[];
+    presets?: (TimeframePreset | typeof SEPARATOR)[];
     filter: GenericFilter;
     rows: Row[];
     showTrend?: boolean;

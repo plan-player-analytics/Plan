@@ -4,13 +4,16 @@ import { Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
 import { staticSite } from '../../../service/backendConfiguration';
-import { TimeframePreset } from '../../../util/datapointTablePresets';
+import {
+    SEPARATOR,
+    TimeframePreset,
+} from '../../../util/datapointTablePresets';
 import { DatapointTimeframe } from './useDatapointTimeframe';
 import CustomTimeframeInputs from './CustomTimeframeInputs';
 
 type Props = {
     id: string;
-    presets: TimeframePreset[];
+    presets: (TimeframePreset | typeof SEPARATOR)[];
     timeframe: DatapointTimeframe;
 };
 
@@ -18,6 +21,7 @@ const TimeframeControl = ({ id, presets, timeframe }: Props) => {
     const { t } = useTranslation();
     const [customOpen, setCustomOpen] = useState(false);
     if (staticSite) return null;
+
     return (
         <div className='d-flex align-items-center gap-1'>
             <select
@@ -36,11 +40,15 @@ const TimeframeControl = ({ id, presets, timeframe }: Props) => {
                     timeframe.selectPreset(preset);
                     setCustomOpen(preset === 'custom');
                 }}>
-                {presets.map((preset) => (
-                    <option key={preset} value={preset}>
-                        {t(`html.label.timeframe.${preset}`)}
-                    </option>
-                ))}
+                {presets.map((preset, i) =>
+                    preset === SEPARATOR ? (
+                        <hr key={preset + i} />
+                    ) : (
+                        <option key={preset} value={preset}>
+                            {t(`html.label.timeframe.${preset}`)}
+                        </option>
+                    ),
+                )}
             </select>
             {timeframe.preset === 'custom' && (
                 <Dropdown

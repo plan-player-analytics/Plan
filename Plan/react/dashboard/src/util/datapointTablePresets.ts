@@ -25,27 +25,34 @@ export type TimeframePreset =
     | 'previousMonthByWeek'
     | 'custom';
 
-export const ALL_TIMEFRAME_PRESETS: TimeframePreset[] = [
+export const SEPARATOR = '---';
+export const ALL_TIMEFRAME_PRESETS: (TimeframePreset | typeof SEPARATOR)[] = [
     'weekComparison',
     'monthWeekDay',
     'monthByWeeks',
+    SEPARATOR,
     'previousAndCurrentWeek',
     'previousAndCurrentMonth',
     'previousAndCurrentYear',
+    SEPARATOR,
     'last6Hours',
     'last7Days',
     'last6Months',
     'last6Years',
+    SEPARATOR,
     'currentMonthByWeek',
     'previousMonthByWeek',
+    SEPARATOR,
     'custom',
 ];
 
-export const TWO_COLUMN_PRESETS: TimeframePreset[] = [
+export const TWO_COLUMN_PRESETS: (TimeframePreset | typeof SEPARATOR)[] = [
     'weekComparison',
+    SEPARATOR,
     'previousAndCurrentWeek',
     'previousAndCurrentMonth',
     'previousAndCurrentYear',
+    SEPARATOR,
     'custom',
 ];
 

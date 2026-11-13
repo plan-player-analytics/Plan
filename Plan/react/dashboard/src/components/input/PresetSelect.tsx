@@ -1,7 +1,8 @@
 import { useTranslation } from 'react-i18next';
-import { classNames } from '../../util/classNames';
 import { TimeframePresets } from '../../hooks/timeframePresetsHook';
 import { DateRangePreset } from '../../util/queryDatePresets';
+import { classNames } from '../../util/classNames';
+import { SEPARATOR } from '../../util/datapointTablePresets';
 
 type Props = {
     id: string;
@@ -23,11 +24,15 @@ const PresetSelect = ({ id, presets, className }: Props) => {
             onChange={(event) =>
                 presets.selectPreset(event.target.value as DateRangePreset)
             }>
-            {presets.presetOptions.map((option) => (
-                <option key={option.name} value={option.name}>
-                    {t(option.label)}
-                </option>
-            ))}
+            {presets.presetOptions.map((option, i) =>
+                option.name === SEPARATOR ? (
+                    <hr key={option.name + i} />
+                ) : (
+                    <option key={option.name} value={option.name}>
+                        {t(option.label)}
+                    </option>
+                ),
+            )}
         </select>
     );
 };

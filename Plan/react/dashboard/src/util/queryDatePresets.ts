@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { SEPARATOR } from './datapointTablePresets';
 
 export type DateRangePreset =
     | 'allData'
@@ -15,20 +16,25 @@ export type DateRangePreset =
     | 'currentYear'
     | 'previousYear';
 
-export const DATE_RANGE_PRESETS: { name: DateRangePreset; label: string }[] = [
+export const DATE_RANGE_PRESETS: {
+    name: DateRangePreset | typeof SEPARATOR;
+    label: string;
+}[] = [
     { name: 'allData', label: 'html.query.filter.preset.allData' },
     { name: 'custom', label: 'html.query.filter.preset.custom' },
+    { name: SEPARATOR, label: '' },
     { name: 'last30days', label: 'html.query.filter.preset.last30days' },
     { name: 'last7days', label: 'html.query.filter.preset.last7days' },
     { name: 'last24h', label: 'html.query.filter.preset.last24h' },
-    { name: 'currentMonth', label: 'html.query.filter.preset.currentMonth' },
-    { name: 'previousMonth', label: 'html.query.filter.preset.previousMonth' },
-    { name: 'currentWeek', label: 'html.query.filter.preset.currentWeek' },
-    { name: 'previousWeek', label: 'html.query.filter.preset.previousWeek' },
-    { name: 'today', label: 'html.query.filter.preset.today' },
+    { name: SEPARATOR, label: '' },
     { name: 'yesterday', label: 'html.query.filter.preset.yesterday' },
-    { name: 'currentYear', label: 'html.query.filter.preset.currentYear' },
+    { name: 'today', label: 'html.query.filter.preset.today' },
+    { name: 'previousWeek', label: 'html.query.filter.preset.previousWeek' },
+    { name: 'currentWeek', label: 'html.query.filter.preset.currentWeek' },
+    { name: 'previousMonth', label: 'html.query.filter.preset.previousMonth' },
+    { name: 'currentMonth', label: 'html.query.filter.preset.currentMonth' },
     { name: 'previousYear', label: 'html.query.filter.preset.previousYear' },
+    { name: 'currentYear', label: 'html.query.filter.preset.currentYear' },
 ];
 
 export const BOUNDED_DATE_RANGE_PRESETS = DATE_RANGE_PRESETS.filter(

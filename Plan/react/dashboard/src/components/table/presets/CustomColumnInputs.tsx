@@ -8,8 +8,11 @@ import {
     Preset,
     useTimeframePresets,
 } from '../../../hooks/timeframePresetsHook';
-import { CustomRange } from '../../../util/datapointTablePresets';
-import { BOUNDED_DATE_RANGE_PRESETS } from '../../../util/queryDatePresets';
+import { CustomRange, SEPARATOR } from '../../../util/datapointTablePresets';
+import {
+    BOUNDED_DATE_RANGE_PRESETS,
+    DateRangePreset,
+} from '../../../util/queryDatePresets';
 import { DatapointTimeframe } from './useDatapointTimeframe';
 
 type Props = {
@@ -28,7 +31,8 @@ const CustomColumnInputs = ({ id, index, range, timeframe }: Props) => {
 
     const applyPreset = useCallback(
         (preset: Preset) => {
-            setCustomPreset(index, preset.name);
+            if (preset.name === SEPARATOR) return;
+            setCustomPreset(index, preset.name as DateRangePreset);
             setFieldValid(`${fieldId}-from`);
             setFieldValid(`${fieldId}-to`);
             setResetCount((count) => count + 1);

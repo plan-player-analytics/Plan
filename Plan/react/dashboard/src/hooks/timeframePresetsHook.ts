@@ -6,9 +6,10 @@ import {
     DateRangePreset,
     ServerTimeZone,
 } from '../util/queryDatePresets';
+import { SEPARATOR } from '../util/datapointTablePresets';
 
 export type Preset = {
-    name: DateRangePreset;
+    name: DateRangePreset | typeof SEPARATOR;
     label: string;
     compute: () => DateRange | undefined;
 };
@@ -16,13 +17,17 @@ export type Preset = {
 export type TimeframePresets = {
     currentPreset: Preset;
     presetOptions: Preset[];
-    selectPreset: (name: DateRangePreset) => void;
+    selectPreset: (name: DateRangePreset | typeof SEPARATOR) => void;
     resetToCustom: () => void;
 };
 
+type OptionEntry =
+    | { name: DateRangePreset; label: string }
+    | { name: typeof SEPARATOR; label: string };
+
 type Props = {
     defaultPreset: DateRangePreset;
-    options: { name: DateRangePreset; label: string }[];
+    options: OptionEntry[];
     zone?: ServerTimeZone;
     onSelect?: (preset: Preset) => void;
 };
@@ -41,7 +46,7 @@ export const useTimeframePresets = ({
             options.map((option) => ({
                 ...option,
                 compute: () =>
-                    zone
+                    zone && option.name !== SEPARATOR
                         ? calculatePresetRange(
                               option.name,
                               Date.now(),
@@ -54,10 +59,11 @@ export const useTimeframePresets = ({
     );
 
     const selectPreset = useCallback(
-        (name: DateRangePreset) => {
+        (name: DateRangePreset | typeof SEPARATOR) => {
+            if (name === SEPARATOR) return;
             const preset = presetOptions.find((option) => option.name === name);
             if (!preset) return;
-            setCurrent(name);
+            setCurrent(name as DateRangePreset);
             onSelect?.(preset);
         },
         [presetOptions, onSelect],
