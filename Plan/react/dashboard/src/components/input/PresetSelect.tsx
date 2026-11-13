@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { TimeframePresets } from '../../hooks/timeframePresetsHook';
 import { DateRangePreset } from '../../util/queryDatePresets';
 import { classNames } from '../../util/classNames';
-import { SEPARATOR } from '../../util/datapointTablePresets';
+import { SEPARATOR } from '../../util/presetSeparator';
 
 type Props = {
     id: string;

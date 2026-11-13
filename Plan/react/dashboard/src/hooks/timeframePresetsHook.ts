@@ -6,7 +6,7 @@ import {
     DateRangePreset,
     ServerTimeZone,
 } from '../util/queryDatePresets';
-import { SEPARATOR } from '../util/datapointTablePresets';
+import { SEPARATOR } from '../util/presetSeparator';
 
 export type Preset = {
     name: DateRangePreset | typeof SEPARATOR;

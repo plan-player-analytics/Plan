@@ -1,5 +1,5 @@
 import moment from 'moment';
-import { SEPARATOR } from './datapointTablePresets';
+import { SEPARATOR } from './presetSeparator';
 
 export type DateRangePreset =
     | 'allData'

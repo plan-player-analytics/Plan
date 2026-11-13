@@ -8,12 +8,13 @@ import {
     Preset,
     useTimeframePresets,
 } from '../../../hooks/timeframePresetsHook';
-import { CustomRange, SEPARATOR } from '../../../util/datapointTablePresets';
+import { CustomRange } from '../../../util/datapointTablePresets';
 import {
     BOUNDED_DATE_RANGE_PRESETS,
     DateRangePreset,
 } from '../../../util/queryDatePresets';
 import { DatapointTimeframe } from './useDatapointTimeframe';
+import { SEPARATOR } from '../../../util/presetSeparator';
 
 type Props = {
     id: string;

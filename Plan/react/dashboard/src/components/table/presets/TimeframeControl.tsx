@@ -4,12 +4,10 @@ import { Dropdown } from 'react-bootstrap';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faGear } from '@fortawesome/free-solid-svg-icons';
 import { staticSite } from '../../../service/backendConfiguration';
-import {
-    SEPARATOR,
-    TimeframePreset,
-} from '../../../util/datapointTablePresets';
+import { TimeframePreset } from '../../../util/datapointTablePresets';
 import { DatapointTimeframe } from './useDatapointTimeframe';
 import CustomTimeframeInputs from './CustomTimeframeInputs';
+import { SEPARATOR } from '../../../util/presetSeparator';
 
 type Props = {
     id: string;

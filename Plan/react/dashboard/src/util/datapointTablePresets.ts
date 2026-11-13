@@ -9,6 +9,7 @@ import {
     ServerTimeZone,
     toServerWallClock,
 } from './queryDatePresets';
+import { SEPARATOR } from './presetSeparator';
 
 export type TimeframePreset =
     | 'weekComparison'
@@ -25,7 +26,6 @@ export type TimeframePreset =
     | 'previousMonthByWeek'
     | 'custom';
 
-export const SEPARATOR = '---';
 export const ALL_TIMEFRAME_PRESETS: (TimeframePreset | typeof SEPARATOR)[] = [
     'weekComparison',
     'monthWeekDay',

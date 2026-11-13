@@ -18,11 +18,11 @@ import { useTranslation } from 'react-i18next';
 import { MS_24H, MS_MONTH, MS_WEEK } from '../../util/format/useDateFormatter';
 import {
     ALL_TIMEFRAME_PRESETS,
-    SEPARATOR,
     TimeframePreset,
 } from '../../util/datapointTablePresets';
 import { useDatapointTimeframe } from './presets/useDatapointTimeframe';
 import TimeframeControl from './presets/TimeframeControl';
+import { SEPARATOR } from '../../util/presetSeparator';
 
 export type Column = {
     filter: GenericFilter;
