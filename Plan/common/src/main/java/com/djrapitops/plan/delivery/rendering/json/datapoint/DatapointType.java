@@ -55,6 +55,7 @@ public enum DatapointType {
     MSPT_IMPACT_PER_PLAYER(MSPTImpactPerPlayer.class, DatapointCacheKey.TPS),
     NEW_PLAYERS(NewPlayers.class, DatapointCacheKey.SESSION),
     NEW_PLAYERS_AVERAGE(NewPlayersPerDayAverage.class, DatapointCacheKey.SESSION),
+    TOTAL_PLAYERS(TotalPlayers.class, DatapointCacheKey.SESSION),
     NEW_PLAYER_RETENTION(NewPlayerRetention.class, DatapointCacheKey.SESSION),
     PLAYERS_ONLINE(PlayersOnlineCurrent.class, DatapointCacheKey.TPS),
     PLAYERS_ONLINE_AVERAGE(PlayersOnlineAverage.class, DatapointCacheKey.TPS),

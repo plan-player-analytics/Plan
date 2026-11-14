@@ -168,7 +168,7 @@ public class ServerPageExporter extends FileExporter {
                 datapointType + DatapointType.MOST_ACTIVE_GAME_MODE + afterMillis + month + server,
                 datapointType + DatapointType.TOP_WEAPONS + afterMillis + month + server,
                 datapointType + DatapointType.WORLD_PIE + server,
-                datapointType + DatapointType.NEW_PLAYERS + server,
+                datapointType + DatapointType.TOTAL_PLAYERS + server,
                 datapointType + DatapointType.REGULAR_PLAYERS + server,
                 datapointType + DatapointType.PLAYERS_ONLINE_PEAK + afterMillis + TimeUnit.DAYS.toMillis(2) + server,
                 datapointType + DatapointType.PLAYERS_ONLINE_PEAK + server,

@@ -160,6 +160,8 @@ public enum WebPermission implements Supplier<String>, Lang {
     DATA_NETWORK_NEW_PLAYERS("See New players -datapoint of network"),
     DATA_SERVER_NEW_PLAYERS_AVERAGE("See New players average -datapoint of servers"),
     DATA_NETWORK_NEW_PLAYERS_AVERAGE("See New players average -datapoint of network"),
+    DATA_SERVER_TOTAL_PLAYERS("See Total players -datapoint of servers"),
+    DATA_NETWORK_TOTAL_PLAYERS("See Total players -datapoint of network"),
     DATA_SERVER_NEW_PLAYER_RETENTION("See New player retention -datapoint of servers"),
     DATA_NETWORK_NEW_PLAYER_RETENTION("See New player retention -datapoint of network"),
     DATA_PLAYER_SESSION_COUNT("See Session count -datapoint of players"),

@@ -59,7 +59,7 @@ const ServerAsNumbersCard = () => {
                             name={t('html.label.totalPlayers')}
                             color={'players-count'}
                             icon={faUsers}
-                            dataType={DatapointType.NEW_PLAYERS}
+                            dataType={DatapointType.TOTAL_PLAYERS}
                             filter={filter}
                             bold
                         />

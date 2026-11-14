@@ -74,6 +74,10 @@ public interface DatapointModule {
 
     @Binds
     @IntoSet
+    Datapoint<?> bindTotalPlayers(TotalPlayers totalPlayers);
+
+    @Binds
+    @IntoSet
     Datapoint<?> bindRegularPlayers(RegularPlayers regularPlayers);
 
     @Binds

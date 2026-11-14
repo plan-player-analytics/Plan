@@ -230,7 +230,7 @@ export const ServerSortOption = {
     REGISTERED_PLAYERS: {
         key: 'REGISTERED_PLAYERS',
         label: 'html.label.registeredPlayers',
-        data: DatapointType.NEW_PLAYERS,
+        data: DatapointType.TOTAL_PLAYERS,
         noFilterDates: true,
         sortFunction: sortByNumericProperty('value'),
         ...SortOptionIcon.NUMBERS,
