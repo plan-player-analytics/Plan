@@ -16,6 +16,8 @@
  */
 package com.djrapitops.plan.delivery.domain.datatransfer.preferences;
 
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -35,6 +37,7 @@ public class Preferences {
 
     private GraphThresholds tpsThresholds;
     private GraphThresholds diskThresholds;
+    private Map<String, List<AddressGroup>> joinAddresses;
 
     private Preferences() {
     }
@@ -121,6 +124,14 @@ public class Preferences {
 
     private void setDiskThresholds(GraphThresholds diskThresholds) {
         this.diskThresholds = diskThresholds;
+    }
+
+    public Map<String, List<AddressGroup>> getJoinAddresses() {
+        return joinAddresses;
+    }
+
+    public void setJoinAddresses(Map<String, List<AddressGroup>> joinAddresses) {
+        this.joinAddresses = joinAddresses;
     }
 
     @Override

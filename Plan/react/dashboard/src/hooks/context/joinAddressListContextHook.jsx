@@ -29,8 +29,10 @@ export const JoinAddressListContextProvider = ({
     const updateList = useCallback(
         (newValue) => {
             setList(newValue);
-            const userPreferences = {};
-            userPreferences['join-addresses-' + identifier] = newValue;
+            const userPreferences = {
+                joinAddresses: getKeyedPreference('joinAddresses') ?? {},
+            };
+            userPreferences.joinAddresses[identifier ?? 'network'] = newValue;
             setSomePreferences(userPreferences);
         },
         [setList],
@@ -38,7 +40,9 @@ export const JoinAddressListContextProvider = ({
 
     useEffect(() => {
         if (preferencesLoaded && !list.length) {
-            const value = getKeyedPreference('join-addresses-' + identifier);
+            const value = (getKeyedPreference('joinAddresses') ?? {})?.[
+                identifier ?? 'network'
+            ];
             if (value?.length) {
                 setList(value);
             }

@@ -17,7 +17,7 @@
 package com.djrapitops.plan.delivery.webserver.resolver.json.metadata;
 
 import com.djrapitops.plan.delivery.domain.datatransfer.preferences.Preferences;
-import com.djrapitops.plan.delivery.web.resolver.Resolver;
+import com.djrapitops.plan.delivery.web.resolver.AsyncResolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
 import com.djrapitops.plan.delivery.web.resolver.exception.MethodNotAllowedException;
@@ -26,7 +26,6 @@ import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.ResponseFactory;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.transactions.webuser.StoreWebUserPreferencesTransaction;
-import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import io.swagger.v3.oas.annotations.Operation;
@@ -41,13 +40,14 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.nio.charset.StandardCharsets;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 /**
  * @author AuroraLS3
  */
 @Singleton
 @Path("/v1/storePreferences")
-public class StorePreferencesJSONResolver implements Resolver {
+public class StorePreferencesJSONResolver implements AsyncResolver {
 
     private final DBSystem dbSystem;
     private final ResponseFactory responseFactory;
@@ -74,25 +74,36 @@ public class StorePreferencesJSONResolver implements Resolver {
             },
             requestBody = @RequestBody(content = @Content(schema = @Schema(implementation = Preferences.class)))
     )
+
     @Override
-    public Optional<Response> resolve(Request request) {
+    public CompletableFuture<Optional<Response>> resolveAsync(Request request) {
         if (!"POST".equals(request.getMethod())) {
             throw new MethodNotAllowedException("POST");
         }
         var optUser = request.getUser();
         if (optUser.isEmpty()) {
-            return Optional.of(responseFactory.forbidden403("This endpoint only accepts requests if logged in."));
+            return CompletableFuture.completedFuture(
+                    Optional.of(responseFactory.forbidden403("This endpoint only accepts requests if logged in."))
+            );
         }
 
         WebUser user = optUser.get();
-        String preferencesBody = new String(request.getRequestBody(), StandardCharsets.UTF_8);
-        try {
-            Gson gson = new Gson();
-            @Untrusted String syntaxSanitized = gson.toJson(gson.fromJson(preferencesBody, Preferences.class));
-            dbSystem.getDatabase().executeTransaction(new StoreWebUserPreferencesTransaction(syntaxSanitized, user));
-        } catch (JsonSyntaxException invalidSyntax) {
-            throw new BadRequestException("Request body does not match json format of preferences");
-        }
-        return Optional.empty();
+        return request.getRequestBodyAsync()
+                .thenApply(bytes -> new String(bytes, StandardCharsets.UTF_8))
+                .thenApply(asString -> {
+                    try {
+                        Gson gson = new Gson();
+                        return gson.toJson(gson.fromJson(asString, Preferences.class));
+                    } catch (JsonSyntaxException invalidSyntax) {
+                        throw new BadRequestException("Request body does not match json format of preferences");
+                    }
+                })
+                .thenCompose(syntaxSanitized -> {
+                    return dbSystem.getDatabase().executeTransaction(new StoreWebUserPreferencesTransaction(syntaxSanitized, user));
+                })
+                .thenApply(v -> Optional.of(Response.builder()
+                        .setStatus(200)
+                        .setJSONContent("{\"success\":true}")
+                        .build()));
     }
 }
