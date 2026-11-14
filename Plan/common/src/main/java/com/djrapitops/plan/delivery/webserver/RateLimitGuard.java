@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.delivery.webserver;
 
+import com.djrapitops.plan.delivery.webserver.http.JettyWebserver;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
@@ -41,6 +42,8 @@ public class RateLimitGuard {
             .build();
 
     public boolean shouldPreventRequest(@Untrusted String requestPath, @Untrusted String accessor) {
+        if (!JettyWebserver.isEnableRateLimiting()) return false;
+
         String previous = lastRequestPath.getIfPresent(accessor);
         if (!Objects.equals(previous, requestPath)) {
             resetAttemptCount(accessor);

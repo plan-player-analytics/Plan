@@ -43,7 +43,7 @@ public class RemoveWebUserTransaction extends Transaction {
     @Override
     protected void performOperations() {
         // Logout the user
-        ActiveCookieStore.removeUserCookie(username);
+        ActiveCookieStore.removeUserCookieStatic(username);
 
         String sql = DELETE_FROM + SecurityTable.TABLE_NAME + WHERE + SecurityTable.USERNAME + "=?";
 

@@ -62,7 +62,7 @@ class ActiveCookieStoreTest {
 
     @Test
     void cookiesAreStored() {
-        String cookie = underTest.generateNewCookie(user, TestConstants.IPV4_ADDRESS);
+        String cookie = underTest.generateNewCookie(user, TestConstants.IPV4_ADDRESS).join();
         User matchingUser = underTest.findCookie(cookie).map(CookieMetadata::getUser).orElseThrow(AssertionError::new);
 
         assertEquals(user, matchingUser);
@@ -70,7 +70,7 @@ class ActiveCookieStoreTest {
 
     @Test
     void cookiesAreRemoved() {
-        String cookie = underTest.generateNewCookie(user, TestConstants.IPV4_ADDRESS);
+        String cookie = underTest.generateNewCookie(user, TestConstants.IPV4_ADDRESS).join();
 
         underTest.removeCookie(cookie);
         assertFalse(underTest.findCookie(cookie).isPresent());
@@ -78,9 +78,9 @@ class ActiveCookieStoreTest {
 
     @Test
     void usersCookiesAreRemoved() {
-        String cookie = underTest.generateNewCookie(user, TestConstants.IPV4_ADDRESS);
+        String cookie = underTest.generateNewCookie(user, TestConstants.IPV4_ADDRESS).join();
 
-        ActiveCookieStore.removeUserCookie(user.getUsername());
+        underTest.removeUserCookie(user.getUsername());
         assertFalse(underTest.findCookie(cookie).isPresent());
     }
 

@@ -75,6 +75,10 @@ public class JettyWebserver implements WebServer {
         this.responseResolver = responseResolver;
     }
 
+    public static boolean isEnableRateLimiting() {
+        return enableRateLimiting;
+    }
+
     @VisibleForTesting
     public static void setEnableRateLimiting(boolean enableRateLimiting) {
         JettyWebserver.enableRateLimiting = enableRateLimiting;

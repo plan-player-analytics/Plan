@@ -41,6 +41,8 @@ public class DeleteWebGroupTransaction extends Transaction {
     private final String name;
     private final String moveTo;
 
+    private boolean deletedGroup = false;
+
     public DeleteWebGroupTransaction(@Untrusted String name, @Untrusted String moveTo) {
         this.name = name;
         this.moveTo = moveTo;
@@ -83,7 +85,12 @@ public class DeleteWebGroupTransaction extends Transaction {
                                     statement.setInt(1, groupId);
                                 }
                             });
+                            deletedGroup = true;
                         }
                 );
+    }
+
+    public boolean wasDeleted() {
+        return deletedGroup;
     }
 }

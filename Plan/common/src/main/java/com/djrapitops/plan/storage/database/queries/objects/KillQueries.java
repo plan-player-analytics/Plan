@@ -336,6 +336,8 @@ public class KillQueries {
     public static Query<Double> averageMobKDR(long after, long before, List<ServerUUID> serverUUIDs) {
         return db -> {
             String serverFilter = serverUUIDs.isEmpty() ? "" : SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) + AND;
+            String serverUUIDFilter = serverUUIDs.isEmpty() ? "" : KillsTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" + AND;
+
             String selectMobKills = SELECT + "COALESCE(SUM(" + SessionsTable.MOB_KILLS + "),0) as mobKills," + SessionsTable.USER_ID +
                     FROM + SessionsTable.TABLE_NAME +
                     WHERE + serverFilter
@@ -350,7 +352,7 @@ public class KillQueries {
                     GROUP_BY + SessionsTable.USER_ID;
             String selectPlayerDeathCounts = SELECT + "COUNT(1) as player_deaths," + KillsTable.VICTIM_UUID +
                     FROM + KillsTable.TABLE_NAME +
-                    WHERE + serverFilter
+                    WHERE + serverUUIDFilter
                     + KillsTable.DATE + ">=?" +
                     AND + KillsTable.DATE + "<=?" +
                     GROUP_BY + KillsTable.VICTIM_UUID;

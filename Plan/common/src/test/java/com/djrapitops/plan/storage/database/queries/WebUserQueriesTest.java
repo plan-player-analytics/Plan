@@ -100,7 +100,7 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
 
         ActiveCookieStore cookieStore = createActiveCookieStore();
 
-        String cookie = cookieStore.generateNewCookie(user, TestConstants.IPV4_ADDRESS);
+        String cookie = cookieStore.generateNewCookie(user, TestConstants.IPV4_ADDRESS).join();
 
         Map<String, CookieMetadata> result = db().query(WebUserQueries.fetchActiveCookies());
         Map<String, CookieMetadata> expected = Collections.singletonMap(cookie, new CookieMetadata(user, 0, TestConstants.IPV4_ADDRESS));
@@ -116,7 +116,7 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
 
         ActiveCookieStore cookieStore = createActiveCookieStore();
 
-        String cookie = cookieStore.generateNewCookie(user, TestConstants.IPV4_ADDRESS);
+        String cookie = cookieStore.generateNewCookie(user, TestConstants.IPV4_ADDRESS).join();
 
         cookieStore.removeCookie(cookie);
 
@@ -131,7 +131,7 @@ public interface WebUserQueriesTest extends DatabaseTestPreparer {
 
         ActiveCookieStore cookieStore = createActiveCookieStore();
 
-        String cookie = cookieStore.generateNewCookie(user, TestConstants.IPV4_ADDRESS);
+        String cookie = cookieStore.generateNewCookie(user, TestConstants.IPV4_ADDRESS).join();
 
         db().executeTransaction(new RemoveWebUserTransaction(WEB_USERNAME));
 

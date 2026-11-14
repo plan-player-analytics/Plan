@@ -126,6 +126,10 @@ public interface DatapointModule {
 
     @Binds
     @IntoSet
+    Datapoint<?> bindMobKDRAverage(MobKDRAverage mobKdrAverage);
+
+    @Binds
+    @IntoSet
     Datapoint<?> bindTPSAverage(TPSAverage tpsAverage);
 
     @Binds

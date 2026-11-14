@@ -19,6 +19,7 @@ package com.djrapitops.plan.delivery.webserver;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.domain.auth.User;
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
+import com.djrapitops.plan.delivery.webserver.http.JettyWebserver;
 import com.djrapitops.plan.extension.Caller;
 import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.identification.Server;
@@ -40,6 +41,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -57,7 +60,6 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
@@ -68,6 +70,7 @@ import static org.junit.jupiter.api.Assertions.*;
 /**
  * Tests for limiting user access control based on permissions.
  */
+@Execution(ExecutionMode.CONCURRENT)
 class AccessControlTest {
 
     private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
@@ -267,6 +270,9 @@ class AccessControlTest {
                 Arguments.of("/v1/datapoint?type=KDR_AVERAGE", WebPermission.DATA_NETWORK_KDR_AVERAGE, 200, 403),
                 Arguments.of("/v1/datapoint?type=KDR_AVERAGE&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_KDR_AVERAGE, 200, 403),
                 Arguments.of("/v1/datapoint?type=KDR_AVERAGE&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_KDR_AVERAGE, 200, 403),
+                Arguments.of("/v1/datapoint?type=MOB_KDR_AVERAGE", WebPermission.DATA_NETWORK_MOB_KDR_AVERAGE, 200, 403),
+                Arguments.of("/v1/datapoint?type=MOB_KDR_AVERAGE&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_MOB_KDR_AVERAGE, 200, 403),
+                Arguments.of("/v1/datapoint?type=MOB_KDR_AVERAGE&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_MOB_KDR_AVERAGE, 200, 403),
                 Arguments.of("/v1/datapoint?type=MOB_KILLS", WebPermission.DATA_NETWORK_MOB_KILLS, 200, 403),
                 Arguments.of("/v1/datapoint?type=MOB_KILLS&server=" + TestConstants.SERVER_UUID_STRING, WebPermission.DATA_SERVER_MOB_KILLS, 200, 403),
                 Arguments.of("/v1/datapoint?type=MOB_KILLS&player=" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.DATA_PLAYER_MOB_KILLS, 200, 403),
@@ -343,6 +349,7 @@ class AccessControlTest {
 
         PluginMockComponent component = new PluginMockComponent(tempDir);
         system = component.getPlanSystem();
+        TestErrorLogger.throwErrors(true);
 
         PlanConfig config = system.getConfigSystem().getConfig();
 
@@ -352,6 +359,7 @@ class AccessControlTest {
         config.set(WebserverSettings.CERTIFICATE_ALIAS, "test");
 
         config.set(WebserverSettings.PORT, TEST_PORT_NUMBER);
+        JettyWebserver.setEnableRateLimiting(false);
 
         system.enable();
 
@@ -455,16 +463,16 @@ class AccessControlTest {
         );
     }
 
-    private User createUserWithPermissions(String resource, WebPermission... permissions) throws ExecutionException, InterruptedException {
+    private User createUserWithPermissions(String resource, WebPermission... permissions) {
         Database db = system.getDatabaseSystem().getDatabase();
 
         String groupName = StringUtils.truncate(resource, 75);
         db.executeTransaction(
                 new StoreWebGroupTransaction(groupName, Arrays.stream(permissions).map(WebPermission::getPermission).toList())
-        ).get();
+        ).join();
 
         User user = new User(RandomData.randomString(45), "console", TestConstants.PLAYER_ONE_UUID, PassEncryptUtil.createHash("testPass"), groupName, Collections.emptyList());
-        db.executeTransaction(new StoreWebUserTransaction(user)).get();
+        db.executeTransaction(new StoreWebUserTransaction(user)).join();
 
         return user;
     }
@@ -476,7 +484,6 @@ class AccessControlTest {
             connection.setRequestProperty("Cookie", cookie);
 
             return connection.getResponseCode();
-
         } finally {
             if (connection != null) connection.disconnect();
         }

@@ -35,6 +35,7 @@ import java.security.SecureRandom;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
@@ -42,7 +43,7 @@ import java.util.concurrent.TimeUnit;
 public class ActiveCookieStore implements SubSystem {
 
     private static final SecureRandom SECURE_RANDOM = new SecureRandom();
-    private static final Map<String, CookieMetadata> USERS_BY_COOKIE = new ConcurrentHashMap<>();
+    private final Map<String, CookieMetadata> usersByCookie = new ConcurrentHashMap<>();
     private static long cookieExpiresAfterMs = TimeUnit.HOURS.toMillis(2L);
 
     private final ActiveCookieExpiryCleanupTask activeCookieExpiryCleanupTask;
@@ -73,15 +74,15 @@ public class ActiveCookieStore implements SubSystem {
         return cookieExpiresAfterMs;
     }
 
-    private static void removeCookieStatic(String cookie) {
-        Holder.getActiveCookieStore().removeCookie(cookie);
-    }
-
-    public static void removeUserCookie(@Untrusted String username) {
-        USERS_BY_COOKIE.entrySet().stream().filter(entry -> entry.getValue().getUser().getUsername().equals(username))
+    public void removeUserCookie(@Untrusted String username) {
+        usersByCookie.entrySet().stream().filter(entry -> entry.getValue().getUser().getUsername().equals(username))
                 .findAny()
                 .map(Map.Entry::getKey)
-                .ifPresent(ActiveCookieStore::removeCookieStatic);
+                .ifPresent(this::removeCookie);
+    }
+
+    public static void removeUserCookieStatic(@Untrusted String username) {
+        Holder.getActiveCookieStore().removeUserCookie(username);
     }
 
     private static void setCookiesExpireAfter(Long expireAfterMs) {
@@ -97,8 +98,8 @@ public class ActiveCookieStore implements SubSystem {
     public void reloadActiveCookies() {
         try {
             Map<String, CookieMetadata> cookies = dbSystem.getDatabase().query(WebUserQueries.fetchActiveCookies());
-            USERS_BY_COOKIE.clear();
-            USERS_BY_COOKIE.putAll(cookies);
+            usersByCookie.clear();
+            usersByCookie.putAll(cookies);
             for (Map.Entry<String, CookieMetadata> entry : cookies.entrySet()) {
                 long timeToExpiry = Math.max(entry.getValue().getExpires() - System.currentTimeMillis(), 0L);
                 activeCookieExpiryCleanupTask.addExpiry(entry.getKey(), System.currentTimeMillis() + timeToExpiry);
@@ -111,24 +112,24 @@ public class ActiveCookieStore implements SubSystem {
 
     @Override
     public void disable() {
-        USERS_BY_COOKIE.clear();
+        /* no-op */
     }
 
     public Optional<CookieMetadata> findCookie(@Untrusted String cookie) {
-        return Optional.ofNullable(USERS_BY_COOKIE.get(cookie));
+        return Optional.ofNullable(usersByCookie.get(cookie));
     }
 
-    public String generateNewCookie(User user, String ipAddress) {
+    public CompletableFuture<String> generateNewCookie(User user, String ipAddress) {
         String cookie = DigestUtils.sha256Hex(user.getUsername() + UUID.randomUUID() + System.currentTimeMillis() + SECURE_RANDOM.nextLong());
         long expiresAt = System.currentTimeMillis() + cookieExpiresAfterMs;
-        USERS_BY_COOKIE.put(cookie, new CookieMetadata(user, expiresAt, ipAddress));
-        saveNewCookie(user, cookie, System.currentTimeMillis(), ipAddress);
+        usersByCookie.put(cookie, new CookieMetadata(user, expiresAt, ipAddress));
+        CompletableFuture<Void> saveFuture = saveNewCookie(user, cookie, System.currentTimeMillis(), ipAddress);
         activeCookieExpiryCleanupTask.addExpiry(cookie, System.currentTimeMillis() + cookieExpiresAfterMs);
-        return cookie;
+        return saveFuture.thenApply(v -> cookie);
     }
 
-    private void saveNewCookie(User user, String cookie, long now, String ipAddress) {
-        dbSystem.getDatabase().executeTransaction(CookieChangeTransaction.storeCookie(
+    private CompletableFuture<Void> saveNewCookie(User user, String cookie, long now, String ipAddress) {
+        return dbSystem.getDatabase().executeTransaction(CookieChangeTransaction.storeCookie(
                 user.getUsername(), cookie, now + cookieExpiresAfterMs, ipAddress
         ));
     }
@@ -138,7 +139,7 @@ public class ActiveCookieStore implements SubSystem {
                 .map(CookieMetadata::getUser)
                 .map(User::getUsername)
                 .ifPresent(this::deleteCookieByUser);
-        USERS_BY_COOKIE.remove(cookie);
+        usersByCookie.remove(cookie);
         deleteCookie(cookie);
     }
 
@@ -151,7 +152,7 @@ public class ActiveCookieStore implements SubSystem {
     }
 
     public void removeAll() {
-        disable();
+        usersByCookie.clear();
         dbSystem.getDatabase().executeTransaction(CookieChangeTransaction.removeAll());
     }
 

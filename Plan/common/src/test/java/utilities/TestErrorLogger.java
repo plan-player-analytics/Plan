@@ -16,6 +16,7 @@
  */
 package utilities;
 
+import com.djrapitops.plan.extension.implementation.providers.gathering.ExtensionMetadataStorage;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 
@@ -29,6 +30,10 @@ public class TestErrorLogger implements ErrorLogger {
 
     private static final List<Throwable> caught = new ArrayList<>();
     private static boolean throwErrors = true;
+
+    public TestErrorLogger() {
+        ExtensionMetadataStorage.enabled = false;
+    }
 
     public static void throwErrors(boolean throwErrors) {
         caught.clear();

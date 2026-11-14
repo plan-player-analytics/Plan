@@ -185,7 +185,7 @@ public class RegistrationCommands {
                     sender.send(colors.getMainColor() + locale.getString(CommandLang.UNREGISTER, user.getUsername()));
                     database.executeTransaction(new RemoveWebUserTransaction(username))
                             .get(); // Wait for completion
-                    ActiveCookieStore.removeUserCookie(username);
+                    activeCookieStore.removeUserCookie(username);
                     sender.send(locale.getString(CommandLang.PROGRESS_SUCCESS));
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
@@ -206,7 +206,7 @@ public class RegistrationCommands {
         if ("*".equals(loggingOut)) {
             activeCookieStore.removeAll();
         } else {
-            ActiveCookieStore.removeUserCookie(loggingOut);
+            activeCookieStore.removeUserCookie(loggingOut);
         }
     }
 

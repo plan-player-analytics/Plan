@@ -17,6 +17,7 @@
 package com.djrapitops.plan.delivery.webserver.resolver.auth;
 
 import com.djrapitops.plan.delivery.domain.auth.User;
+import com.djrapitops.plan.delivery.web.resolver.AsyncResolver;
 import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
@@ -43,10 +44,11 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @Singleton
 @Path("/auth/login")
-public class LoginResolver implements NoAuthResolver {
+public class LoginResolver implements NoAuthResolver, AsyncResolver {
 
     private final DBSystem dbSystem;
     private final ActiveCookieStore activeCookieStore;
@@ -76,13 +78,18 @@ public class LoginResolver implements NoAuthResolver {
             }
     )
     @Override
-    public Optional<Response> resolve(Request request) {
+    public CompletableFuture<Optional<Response>> resolveAsync(Request request) {
         try {
-            String cookie = activeCookieStore.generateNewCookie(getUser(request), request.getAccessIpAddress());
-            return Optional.of(getResponse(cookie));
+            return activeCookieStore.generateNewCookie(getUser(request), request.getAccessIpAddress())
+                    .thenApply(cookie -> Optional.of(getResponse(cookie)));
         } catch (DBOpException | PassEncryptException e) {
             throw new WebUserAuthException(e);
         }
+    }
+
+    @Override
+    public Optional<Response> resolve(Request request) {
+        return resolveAsync(request).join();
     }
 
     public Response getResponse(String cookie) {

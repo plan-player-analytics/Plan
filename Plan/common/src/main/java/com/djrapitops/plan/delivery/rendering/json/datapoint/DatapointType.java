@@ -61,6 +61,7 @@ public enum DatapointType {
     PLAYERS_ONLINE_PEAK(PlayersOnlinePeak.class, DatapointCacheKey.TPS),
     PLAYER_KILLS(PlayerKills.class, DatapointCacheKey.SESSION),
     KDR_AVERAGE(KDRAverage.class, DatapointCacheKey.SESSION),
+    MOB_KDR_AVERAGE(MobKDRAverage.class, DatapointCacheKey.SESSION),
     PLAYTIME(Playtime.class, DatapointCacheKey.SESSION),
     PLAYTIME_PER_DAY_AVERAGE(PlaytimePerDayAverage.class, DatapointCacheKey.SESSION),
     PLAYTIME_PER_PLAYER_AVERAGE(PlaytimePerPlayerAverage.class, DatapointCacheKey.SESSION),

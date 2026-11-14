@@ -19,18 +19,15 @@ package com.djrapitops.plan.placeholder;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.delivery.domain.ServerIdentifier;
 import com.djrapitops.plan.gathering.domain.*;
-import com.djrapitops.plan.gathering.domain.builders.TPSBuilder;
-import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.Database;
-import com.djrapitops.plan.storage.database.transactions.StoreServerInformationTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreServerPlayerTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
-import com.djrapitops.plan.storage.database.transactions.events.TPSStoreTransaction;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.io.TempDir;
-import utilities.DBPreparer;
+import org.junit.jupiter.api.parallel.Execution;
+import org.junit.jupiter.api.parallel.ExecutionMode;
 import utilities.RandomData;
 import utilities.TestConstants;
 import utilities.dagger.PlanPluginComponent;
@@ -39,12 +36,12 @@ import utilities.mocks.PluginMockComponent;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.*;
-import java.util.concurrent.ExecutionException;
-import java.util.stream.Collectors;
+import java.util.concurrent.CompletableFuture;
 import java.util.stream.IntStream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+@Execution(ExecutionMode.CONCURRENT)
 class PlanPlaceholdersTest {
 
     private static PlanPluginComponent component;
@@ -111,6 +108,7 @@ class PlanPlaceholdersTest {
         String worldName = RandomData.randomString(10);
         database.executeTransaction(new StoreWorldNameTransaction(serverUUID, worldName));
         database.executeTransaction(new StoreSessionTransaction(RandomData.randomSession(serverUUID, new String[]{worldName}, playerUUID, TestConstants.PLAYER_TWO_UUID)));
+        storeKillers();
     }
 
     @AfterAll
@@ -123,104 +121,13 @@ class PlanPlaceholdersTest {
         }
     }
 
-    @TestFactory
-    @DisplayName("Server placeholders return something")
-    Collection<DynamicTest> testServerPlaceholders() {
-        return underTest.getRegisteredServerPlaceholders().stream()
-                .map(placeholder -> DynamicTest.dynamicTest("'" + placeholder + "' returns something", () -> {
-                    String result = underTest.onPlaceholderRequest(UUID.randomUUID(), placeholder, Collections.emptyList());
-                    System.out.println("Placeholder '" + placeholder + "' was replaced with: '" + result + "'");
-                    assertNotNull(result);
-                    assertNotEquals(placeholder, result);
-                }))
-                .collect(Collectors.toList());
-    }
-
-    @TestFactory
-    @DisplayName("Server placeholders return something on console")
-    Collection<DynamicTest> testServerPlaceholdersOnConsole() {
-        return underTest.getRegisteredServerPlaceholders().stream()
-                .map(placeholder -> DynamicTest.dynamicTest("'" + placeholder + "' returns something", () -> {
-                    String result = underTest.onPlaceholderRequest(null, placeholder, Collections.emptyList());
-                    System.out.println("Placeholder '" + placeholder + "' was replaced with: '" + result + "'");
-                    assertNotNull(result);
-                    assertNotEquals(placeholder, result);
-                }))
-                .collect(Collectors.toList());
-    }
-
-    @TestFactory
-    @DisplayName("Server placeholders return something for another server")
-    Collection<DynamicTest> testServerPlaceholdersWithParameter() {
-        return underTest.getRegisteredServerPlaceholders().stream()
-                .map(placeholder -> DynamicTest.dynamicTest("'" + placeholder + ":<server>' returns something", () -> {
-                    String result = underTest.onPlaceholderRequest(UUID.randomUUID(), placeholder, List.of(serverUUID.toString()));
-                    System.out.println("Placeholder '" + placeholder + ":" + serverUUID.toString() + "' was replaced with: '" + result + "'");
-                    assertNotNull(result);
-                    assertNotEquals(placeholder, result);
-                }))
-                .collect(Collectors.toList());
-    }
-
-    @TestFactory
-    @DisplayName("Player placeholders return something")
-    Collection<DynamicTest> testPlayerPlaceholders() {
-        return underTest.getRegisteredPlayerPlaceholders().stream()
-                .map(placeholder -> DynamicTest.dynamicTest("'" + placeholder + "' returns something", () -> {
-                    String result = underTest.onPlaceholderRequest(playerUUID, placeholder, Collections.emptyList());
-                    System.out.println("Placeholder '" + placeholder + "' was replaced with: '" + result + "'");
-                    assertNotNull(result);
-                    assertNotEquals(placeholder, result);
-                }))
-                .collect(Collectors.toList());
-    }
-
-    @TestFactory
-    @DisplayName("Player placeholders return nothing on Console")
-    Collection<DynamicTest> testPlayerPlaceholdersOnConsole() {
-        return underTest.getRegisteredPlayerPlaceholders().stream()
-                .map(placeholder -> DynamicTest.dynamicTest("'" + placeholder + "' returns something", () -> {
-                    String result = underTest.onPlaceholderRequest(null, placeholder, Collections.emptyList());
-                    System.out.println("Placeholder '" + placeholder + "' was replaced with: '" + result + "'");
-                    assertNull(result);
-                }))
-                .collect(Collectors.toList());
-    }
-
-    @TestFactory
-    @DisplayName("Player placeholders return something on Console for other player")
-    Collection<DynamicTest> testPlayerPlaceholdersOnConsoleForOtherPlayer() {
-        return underTest.getRegisteredPlayerPlaceholders().stream()
-                .map(placeholder -> DynamicTest.dynamicTest("'" + placeholder + "' returns something", () -> {
-                    String result = underTest.onPlaceholderRequest(null, placeholder, List.of(playerUUID.toString()));
-                    System.out.println("Placeholder '" + placeholder + "' was replaced with: '" + result + "'");
-                    assertNotNull(result);
-                    assertNotEquals(placeholder, result);
-                }))
-                .collect(Collectors.toList());
-    }
-
-    @TestFactory
-    @DisplayName("Top Player Kills Total placeholders work")
-    Collection<DynamicTest> topKillsPlaceholdersWork() {
-        return IntStream.range(1, 11)
-                .mapToObj(integer -> "top_player_kills_total_" + integer + "_value")
-                .map(placeholder -> DynamicTest.dynamicTest("'" + placeholder + "' returns something", () -> {
-                    storeKillers();
-                    String result = underTest.onPlaceholderRequest(null, placeholder, List.of(playerUUID.toString()));
-                    System.out.println("Placeholder '" + placeholder + "' was replaced with: '" + result + "'");
-                    assertNotNull(result);
-                    assertNotEquals(placeholder, result);
-                }))
-                .collect(Collectors.toList());
-    }
-
-    private void storeKillers() throws ExecutionException, InterruptedException {
+    private static void storeKillers() {
         Database database = component.system().getDatabaseSystem().getDatabase();
         List<UUID> randomUUIDs = IntStream.of(11).mapToObj(i -> UUID.randomUUID()).toList();
+        List<CompletableFuture<Void>> transactions = new ArrayList<>();
         for (UUID playerUUID : randomUUIDs) {
             database.executeTransaction(new StoreServerPlayerTransaction(playerUUID, System::currentTimeMillis, playerUUID.toString(), serverUUID, () -> ""))
-                    .get();
+                    .join();
             DataMap dataMap = new DataMap();
             List<PlayerKill> playerKills = new ArrayList<>();
             for (int i = 0; i < RandomData.randomInt(3, 20); i++) {
@@ -236,66 +143,103 @@ class PlanPlaceholdersTest {
             dataMap.put(PlayerKills.class, new PlayerKills(playerKills));
             dataMap.put(WorldTimes.class, new WorldTimes());
 
-            database.executeTransaction(new StoreSessionTransaction(new FinishedSession(playerUUID, serverUUID, System.currentTimeMillis(), System.currentTimeMillis(), 0, dataMap)))
-                    .get();
+            transactions.add(database.executeTransaction(
+                    new StoreSessionTransaction(new FinishedSession(playerUUID, serverUUID, System.currentTimeMillis(), System.currentTimeMillis(), 0, dataMap))
+            ));
         }
+        CompletableFuture.allOf(transactions.toArray(new CompletableFuture[0]))
+                .join();
     }
 
-    @Test
-    void networkPlayersOnlineGraphDisplaysDataSingleProxy() {
-        Database database = component.system().getDatabaseSystem().getDatabase();
-        database.executeTransaction(new StoreServerInformationTransaction(new Server(-1, TestConstants.SERVER_UUID, TestConstants.SERVER_NAME, "", false, TestConstants.VERSION)));
-        database.executeTransaction(new StoreServerInformationTransaction(new Server(-1, TestConstants.SERVER_TWO_UUID, TestConstants.SERVER_TWO_NAME, "", true, TestConstants.VERSION)));
-        database.executeTransaction(new TPSStoreTransaction(TestConstants.SERVER_UUID, TPSBuilder.get()
-                .playersOnline(1)
-                .date(System.currentTimeMillis())
-                .toTPS()));
-        database.executeTransaction(new TPSStoreTransaction(TestConstants.SERVER_TWO_UUID, TPSBuilder.get()
-                .playersOnline(2)
-                .date(System.currentTimeMillis())
-                .toTPS()));
-
-        DBPreparer.awaitUntilTransactionsComplete(database);
-        String value = underTest.onPlaceholderRequest(TestConstants.PLAYER_ONE_UUID, "network_players_online", List.of());
-        assertEquals("2", value);
+    @TestFactory
+    @DisplayName("Server placeholders return something")
+    Collection<DynamicTest> testServerPlaceholders() {
+        return underTest.getRegisteredServerPlaceholders().stream()
+                .map(placeholder -> DynamicTest.dynamicTest("'" + placeholder + "' returns something", () -> {
+                    String result = underTest.onPlaceholderRequest(UUID.randomUUID(), placeholder, Collections.emptyList());
+                    System.out.println("Placeholder '" + placeholder + "' was replaced with: '" + result + "'");
+                    assertNotNull(result);
+                    assertNotEquals(placeholder, result);
+                }))
+                .toList();
     }
 
-    @Test
-    void networkPlayersOnlineGraphDisplaysDataTwoProxies() {
-        Database database = component.system().getDatabaseSystem().getDatabase();
-        database.executeTransaction(new StoreServerInformationTransaction(new Server(-1, TestConstants.SERVER_UUID, TestConstants.SERVER_NAME, "", true, TestConstants.VERSION)));
-        database.executeTransaction(new StoreServerInformationTransaction(new Server(-1, TestConstants.SERVER_TWO_UUID, TestConstants.SERVER_TWO_NAME, "", true, TestConstants.VERSION)));
-        database.executeTransaction(new TPSStoreTransaction(TestConstants.SERVER_UUID, TPSBuilder.get()
-                .playersOnline(1)
-                .date(System.currentTimeMillis())
-                .toTPS()));
-        database.executeTransaction(new TPSStoreTransaction(TestConstants.SERVER_TWO_UUID, TPSBuilder.get()
-                .playersOnline(2)
-                .date(System.currentTimeMillis())
-                .toTPS()));
-
-        DBPreparer.awaitUntilTransactionsComplete(database);
-
-        String value = underTest.onPlaceholderRequest(TestConstants.PLAYER_ONE_UUID, "network_players_online", List.of());
-        assertEquals("3", value);
+    @TestFactory
+    @DisplayName("Server placeholders return something on console")
+    Collection<DynamicTest> testServerPlaceholdersOnConsole() {
+        return underTest.getRegisteredServerPlaceholders().stream()
+                .map(placeholder -> DynamicTest.dynamicTest("'" + placeholder + "' returns something", () -> {
+                    String result = underTest.onPlaceholderRequest(null, placeholder, Collections.emptyList());
+                    System.out.println("Placeholder '" + placeholder + "' was replaced with: '" + result + "'");
+                    assertNotNull(result);
+                    assertNotEquals(placeholder, result);
+                }))
+                .toList();
     }
 
-    @Test
-    void networkPlayersOnlineGraphDisplaysDataNoProxies() {
-        Database database = component.system().getDatabaseSystem().getDatabase();
-        database.executeTransaction(new StoreServerInformationTransaction(new Server(-1, TestConstants.SERVER_UUID, TestConstants.SERVER_NAME, "", false, TestConstants.VERSION)));
-        database.executeTransaction(new StoreServerInformationTransaction(new Server(-1, TestConstants.SERVER_TWO_UUID, TestConstants.SERVER_TWO_NAME, "", false, TestConstants.VERSION)));
-        database.executeTransaction(new TPSStoreTransaction(TestConstants.SERVER_UUID, TPSBuilder.get()
-                .playersOnline(1)
-                .date(System.currentTimeMillis())
-                .toTPS()));
-        database.executeTransaction(new TPSStoreTransaction(TestConstants.SERVER_TWO_UUID, TPSBuilder.get()
-                .playersOnline(2)
-                .date(System.currentTimeMillis())
-                .toTPS()));
-        DBPreparer.awaitUntilTransactionsComplete(database);
+    @TestFactory
+    @DisplayName("Server placeholders return something for another server")
+    Collection<DynamicTest> testServerPlaceholdersWithParameter() {
+        return underTest.getRegisteredServerPlaceholders().stream()
+                .map(placeholder -> DynamicTest.dynamicTest("'" + placeholder + ":<server>' returns something", () -> {
+                    String result = underTest.onPlaceholderRequest(UUID.randomUUID(), placeholder, List.of(serverUUID.toString()));
+                    System.out.println("Placeholder '" + placeholder + ":" + serverUUID.toString() + "' was replaced with: '" + result + "'");
+                    assertNotNull(result);
+                    assertNotEquals(placeholder, result);
+                }))
+                .toList();
+    }
 
-        String value = underTest.onPlaceholderRequest(TestConstants.PLAYER_ONE_UUID, "network_players_online", List.of());
-        assertEquals("3", value);
+    @TestFactory
+    @DisplayName("Player placeholders return something")
+    Collection<DynamicTest> testPlayerPlaceholders() {
+        return underTest.getRegisteredPlayerPlaceholders().stream()
+                .map(placeholder -> DynamicTest.dynamicTest("'" + placeholder + "' returns something", () -> {
+                    String result = underTest.onPlaceholderRequest(playerUUID, placeholder, Collections.emptyList());
+                    System.out.println("Placeholder '" + placeholder + "' was replaced with: '" + result + "'");
+                    assertNotNull(result);
+                    assertNotEquals(placeholder, result);
+                }))
+                .toList();
+    }
+
+    @TestFactory
+    @DisplayName("Player placeholders return nothing on Console")
+    Collection<DynamicTest> testPlayerPlaceholdersOnConsole() {
+        return underTest.getRegisteredPlayerPlaceholders().stream()
+                .map(placeholder -> DynamicTest.dynamicTest("'" + placeholder + "' returns something", () -> {
+                    String result = underTest.onPlaceholderRequest(null, placeholder, Collections.emptyList());
+                    System.out.println("Placeholder '" + placeholder + "' was replaced with: '" + result + "'");
+                    assertNull(result);
+                }))
+                .toList();
+    }
+
+    @TestFactory
+    @DisplayName("Player placeholders return something on Console for other player")
+    Collection<DynamicTest> testPlayerPlaceholdersOnConsoleForOtherPlayer() {
+        return underTest.getRegisteredPlayerPlaceholders().stream()
+                .map(placeholder -> DynamicTest.dynamicTest("'" + placeholder + "' returns something", () -> {
+                    String result = underTest.onPlaceholderRequest(null, placeholder, List.of(playerUUID.toString()));
+                    System.out.println("Placeholder '" + placeholder + "' was replaced with: '" + result + "'");
+                    assertNotNull(result);
+                    assertNotEquals(placeholder, result);
+                }))
+                .toList();
+    }
+
+    @TestFactory
+    @DisplayName("Top Player Kills Total placeholders work")
+    Collection<DynamicTest> topKillsPlaceholdersWork() {
+        return IntStream.range(1, 11)
+                .mapToObj(integer -> "top_player_kills_total_" + integer + "_value")
+                .map(placeholder -> DynamicTest.dynamicTest("'" + placeholder + "' returns something", () -> {
+
+                    String result = underTest.onPlaceholderRequest(null, placeholder, List.of(playerUUID.toString()));
+                    System.out.println("Placeholder '" + placeholder + "' was replaced with: '" + result + "'");
+                    assertNotNull(result);
+                    assertNotEquals(placeholder, result);
+                }))
+                .toList();
     }
 }

@@ -39,7 +39,7 @@ import java.util.concurrent.CompletableFuture;
 public class ExtensionMetadataStorage {
 
     private static final Map<ExtensionMetadataKey, MetadataFingerprint> storedMetadata = new HashMap<>();
-
+    public static boolean enabled = true;
     private final DBSystem dbSystem;
 
     @Inject
