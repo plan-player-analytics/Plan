@@ -219,34 +219,39 @@ public class KillQueries {
     }
 
     public static Query<Double> averageKDR(long after, long before, ServerUUID serverUUID) {
+        return averageKDR(after, before, List.of(serverUUID));
+    }
+
+    public static Query<Double> averageKDR(long after, long before) {
+        return averageKDR(after, before, List.of());
+    }
+
+    public static Query<Double> averageKDR(long after, long before, List<ServerUUID> serverUUIDs) {
+        String serverFilter = serverUUIDs.isEmpty() ? "" : KillsTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" + AND;
         String selectKillCounts = SELECT + "COUNT(1) as kills," + KillsTable.KILLER_UUID +
                 FROM + KillsTable.TABLE_NAME +
-                WHERE + KillsTable.SERVER_UUID + "=?" +
-                AND + KillsTable.DATE + ">=?" +
+                WHERE + serverFilter
+                + KillsTable.DATE + ">=?" +
                 AND + KillsTable.DATE + "<=?" +
                 GROUP_BY + KillsTable.KILLER_UUID;
         String selectPlayerDeathCounts = SELECT + "COUNT(1) as deaths," + KillsTable.VICTIM_UUID +
                 FROM + KillsTable.TABLE_NAME +
-                WHERE + KillsTable.SERVER_UUID + "=?" +
-                AND + KillsTable.DATE + ">=?" +
+                WHERE + serverFilter
+                + KillsTable.DATE + ">=?" +
                 AND + KillsTable.DATE + "<=?" +
                 GROUP_BY + KillsTable.VICTIM_UUID;
         String sql = SELECT + "kills, deaths" +
                 FROM + UsersTable.TABLE_NAME + " u" +
                 LEFT_JOIN + '(' + selectKillCounts + ") q1 on q1." + KillsTable.KILLER_UUID + "=u." + UsersTable.USER_UUID +
-                LEFT_JOIN + '(' + selectPlayerDeathCounts + ") q2 on q2." + KillsTable.VICTIM_UUID + "=u." + UsersTable.USER_UUID +
-                WHERE + "kills" + IS_NOT_NULL +
-                AND + "deaths" + IS_NOT_NULL;
+                LEFT_JOIN + '(' + selectPlayerDeathCounts + ") q2 on q2." + KillsTable.VICTIM_UUID + "=u." + UsersTable.USER_UUID;
 
         return new QueryStatement<>(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, serverUUID.toString());
-                statement.setLong(2, after);
-                statement.setLong(3, before);
-                statement.setString(4, serverUUID.toString());
-                statement.setLong(5, after);
-                statement.setLong(6, before);
+                statement.setLong(1, after);
+                statement.setLong(2, before);
+                statement.setLong(3, after);
+                statement.setLong(4, before);
             }
 
             @Override
@@ -315,6 +320,70 @@ public class KillQueries {
                 @Override
                 public Long processResults(ResultSet set) throws SQLException {
                     return set.next() ? set.getLong("count") : 0L;
+                }
+            });
+        };
+    }
+
+    public static Query<Double> averageMobKDR(long after, long before, ServerUUID serverUUID) {
+        return averageMobKDR(after, before, List.of(serverUUID));
+    }
+
+    public static Query<Double> averageMobKDR(long after, long before) {
+        return averageMobKDR(after, before, List.of());
+    }
+
+    public static Query<Double> averageMobKDR(long after, long before, List<ServerUUID> serverUUIDs) {
+        return db -> {
+            String serverFilter = serverUUIDs.isEmpty() ? "" : SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) + AND;
+            String selectMobKills = SELECT + "COALESCE(SUM(" + SessionsTable.MOB_KILLS + "),0) as mobKills," + SessionsTable.USER_ID +
+                    FROM + SessionsTable.TABLE_NAME +
+                    WHERE + serverFilter
+                    + SessionsTable.SESSION_END + ">=?" +
+                    AND + SessionsTable.SESSION_START + "<=?" +
+                    GROUP_BY + SessionsTable.USER_ID;
+            String selectDeaths = SELECT + "COALESCE(SUM(" + SessionsTable.DEATHS + "),0) as deaths," + SessionsTable.USER_ID +
+                    FROM + SessionsTable.TABLE_NAME +
+                    WHERE + serverFilter
+                    + SessionsTable.SESSION_END + ">=?" +
+                    AND + SessionsTable.SESSION_START + "<=?" +
+                    GROUP_BY + SessionsTable.USER_ID;
+            String selectPlayerDeathCounts = SELECT + "COUNT(1) as player_deaths," + KillsTable.VICTIM_UUID +
+                    FROM + KillsTable.TABLE_NAME +
+                    WHERE + serverFilter
+                    + KillsTable.DATE + ">=?" +
+                    AND + KillsTable.DATE + "<=?" +
+                    GROUP_BY + KillsTable.VICTIM_UUID;
+            String sql = SELECT + "mobKills, deaths, player_deaths" +
+                    FROM + UsersTable.TABLE_NAME + " u" +
+                    LEFT_JOIN + '(' + selectMobKills + ") q1 on q1." + SessionsTable.USER_ID + "=u." + UsersTable.ID +
+                    LEFT_JOIN + '(' + selectDeaths + ") q2 on q2." + SessionsTable.USER_ID + "=u." + UsersTable.ID +
+                    LEFT_JOIN + '(' + selectPlayerDeathCounts + ") q3 on q3." + KillsTable.VICTIM_UUID + "=u." + UsersTable.USER_UUID;
+
+            return db.query(new QueryStatement<Double>(sql) {
+                @Override
+                public void prepare(PreparedStatement statement) throws SQLException {
+                    statement.setLong(1, after);
+                    statement.setLong(2, before);
+                    statement.setLong(3, after);
+                    statement.setLong(4, before);
+                    statement.setLong(5, after);
+                    statement.setLong(6, before);
+                }
+
+                @Override
+                public Double processResults(ResultSet set) throws SQLException {
+                    double totalKDR = 0.0;
+                    int playerCount = 0;
+                    while (set.next()) {
+                        int mobKills = set.getInt("mobKills");
+                        int deaths = set.getInt("deaths");
+                        int playerDeaths = set.getInt("player_deaths");
+                        int mobDeaths = deaths - playerDeaths;
+                        totalKDR += (double) mobKills / (mobDeaths > 0 ? mobDeaths : 1);
+                        playerCount++;
+                    }
+                    return totalKDR / (playerCount > 0 ? playerCount : 1);
                 }
             });
         };

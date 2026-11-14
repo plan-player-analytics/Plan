@@ -164,6 +164,7 @@ public class NetworkPageExporter extends FileExporter {
                 datapointType + DatapointType.PLAYTIME_PER_PLAYER_AVERAGE,
                 datapointType + DatapointType.SESSION_LENGTH_AVERAGE,
                 datapointType + DatapointType.PLAYER_KILLS,
+                datapointType + DatapointType.KDR_AVERAGE,
                 datapointType + DatapointType.MOB_KILLS,
                 datapointType + DatapointType.DEATHS,
                 datapointType + DatapointType.UPTIME_CURRENT,
@@ -175,6 +176,7 @@ public class NetworkPageExporter extends FileExporter {
                 datapointType + DatapointType.SESSION_LENGTH_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L),
                 datapointType + DatapointType.SESSION_COUNT + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L),
                 datapointType + DatapointType.PLAYER_KILLS + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L),
+                datapointType + DatapointType.KDR_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L),
                 datapointType + DatapointType.MOB_KILLS + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L),
                 datapointType + DatapointType.DEATHS + afterMillis + TimeUnit.DAYS.toMillis(14) + beforeMillis + TimeUnit.DAYS.toMillis(7L),
                 datapointType + DatapointType.REGULAR_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(7),
@@ -182,6 +184,7 @@ public class NetworkPageExporter extends FileExporter {
                 datapointType + DatapointType.SESSION_LENGTH_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(7),
                 datapointType + DatapointType.SESSION_COUNT + afterMillis + TimeUnit.DAYS.toMillis(7),
                 datapointType + DatapointType.PLAYER_KILLS + afterMillis + TimeUnit.DAYS.toMillis(7),
+                datapointType + DatapointType.KDR_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(7),
                 datapointType + DatapointType.MOB_KILLS + afterMillis + TimeUnit.DAYS.toMillis(7),
                 datapointType + DatapointType.DEATHS + afterMillis + TimeUnit.DAYS.toMillis(7)
         );

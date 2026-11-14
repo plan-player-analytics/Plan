@@ -178,6 +178,7 @@ public class ServerPageExporter extends FileExporter {
                 datapointType + DatapointType.PLAYTIME_PER_PLAYER_AVERAGE + server,
                 datapointType + DatapointType.SESSION_LENGTH_AVERAGE + server,
                 datapointType + DatapointType.PLAYER_KILLS + server,
+                datapointType + DatapointType.KDR_AVERAGE + server,
                 datapointType + DatapointType.MOB_KILLS + server,
                 datapointType + DatapointType.DEATHS + server,
                 datapointType + DatapointType.UPTIME_CURRENT + server,
@@ -191,6 +192,7 @@ public class ServerPageExporter extends FileExporter {
                 datapointType + DatapointType.SESSION_LENGTH_AVERAGE + afterMillis + twoWeeks + beforeMillis + TimeUnit.DAYS.toMillis(7L) + server,
                 datapointType + DatapointType.SESSION_COUNT + afterMillis + twoWeeks + beforeMillis + TimeUnit.DAYS.toMillis(7L) + server,
                 datapointType + DatapointType.PLAYER_KILLS + afterMillis + twoWeeks + beforeMillis + TimeUnit.DAYS.toMillis(7L) + server,
+                datapointType + DatapointType.KDR_AVERAGE + afterMillis + twoWeeks + beforeMillis + TimeUnit.DAYS.toMillis(7L) + server,
                 datapointType + DatapointType.MOB_KILLS + afterMillis + twoWeeks + beforeMillis + TimeUnit.DAYS.toMillis(7L) + server,
                 datapointType + DatapointType.DEATHS + afterMillis + twoWeeks + beforeMillis + TimeUnit.DAYS.toMillis(7L) + server,
                 datapointType + DatapointType.UNIQUE_PLAYERS_COUNT + afterMillis + week + server,
@@ -200,6 +202,7 @@ public class ServerPageExporter extends FileExporter {
                 datapointType + DatapointType.SESSION_LENGTH_AVERAGE + afterMillis + week + server,
                 datapointType + DatapointType.SESSION_COUNT + afterMillis + week + server,
                 datapointType + DatapointType.PLAYER_KILLS + afterMillis + week + server,
+                datapointType + DatapointType.KDR_AVERAGE + afterMillis + week + server,
                 datapointType + DatapointType.MOB_KILLS + afterMillis + week + server,
                 datapointType + DatapointType.DEATHS + afterMillis + week + server,
                 // Online Activity overview
