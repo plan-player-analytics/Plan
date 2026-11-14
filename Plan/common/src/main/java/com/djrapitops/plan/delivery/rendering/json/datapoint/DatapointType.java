@@ -33,6 +33,8 @@ import java.util.Set;
 public enum DatapointType {
     AFK_TIME(AfkTime.class, DatapointCacheKey.SESSION),
     AFK_TIME_PERCENTAGE(AfkTimePercentage.class, DatapointCacheKey.SESSION),
+    AFK_TIME_PERCENTAGE_REGULAR_PLAYER_AVERAGE(AfkTimePercentageRegularPlayerAverage.class, DatapointCacheKey.SESSION),
+    AFK_TIME_REGULAR_PLAYER_AVERAGE(AfkTimeRegularPlayerAverage.class, DatapointCacheKey.SESSION),
     CHUNKS_AVERAGE(ChunksAverage.class, DatapointCacheKey.TPS),
     CHUNKS_PER_PLAYER(ChunksPerPlayer.class, DatapointCacheKey.TPS),
     CPU_AVERAGE(CPUAverage.class, DatapointCacheKey.TPS),
@@ -74,6 +76,7 @@ public enum DatapointType {
     SERVER_PIE(ServerPie.class, DatapointCacheKey.SESSION),
     SESSION_COUNT(SessionCount.class, DatapointCacheKey.SESSION),
     SESSION_LENGTH_AVERAGE(SessionLengthAverage.class, DatapointCacheKey.SESSION),
+    SESSION_LENGTH_REGULAR_PLAYER_AVERAGE(SessionLengthRegularPlayerAverage.class, DatapointCacheKey.SESSION),
     TPS_AVERAGE(TPSAverage.class, DatapointCacheKey.TPS),
     TPS_LOW_SPIKES(TPSLowSpikes.class, DatapointCacheKey.TPS),
     UNIQUE_PLAYERS_AVERAGE(UniquePlayersPerDayAverage.class, DatapointCacheKey.SESSION),

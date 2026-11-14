@@ -219,6 +219,69 @@ public class MultiServerActivityIndexQueries {
         };
     }
 
+    public static Query<Long> averageAfkPerRegularPlayer(long after, long before, Collection<ServerUUID> serverUUIDs, long playtimeThreshold) {
+        String selectActivityIndex = selectActivityIndexOfPlayersOnServer(before, playtimeThreshold, serverUUIDs);
+
+        String selectAfkPerPlayer = SELECT +
+                "p." + SessionsTable.USER_ID + "," +
+                "SUM(p." + SessionsTable.AFK_TIME + ") as afk" +
+                FROM + SessionsTable.TABLE_NAME + " p" +
+                INNER_JOIN + '(' + selectActivityIndex + ") q2 on q2." + SessionsTable.USER_ID + "=p." + SessionsTable.USER_ID +
+                WHERE + "p." + SessionsTable.SESSION_END + "<=?" +
+                AND + "p." + SessionsTable.SESSION_START + ">=?" +
+                (serverUUIDs.isEmpty() ? "" : AND + "p." + SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) + " ") +
+                AND + "q2.activity_index>=?" +
+                AND + "q2.activity_index<?" +
+                GROUP_BY + "p." + SessionsTable.USER_ID;
+        String selectAverage = SELECT + "AVG(afk) as average" + FROM + '(' + selectAfkPerPlayer + ") q1";
+
+        return new QueryStatement<Long>(selectAverage, 100) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, before);
+                statement.setLong(2, after);
+                statement.setDouble(3, ActivityIndex.REGULAR);
+                statement.setDouble(4, 5.1);
+            }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                return set.next() ? (long) set.getDouble("average") : 0;
+            }
+        };
+    }
+
+    public static Query<Long> averageSessionLengthPerRegularPlayer(long after, long before, Collection<ServerUUID> serverUUIDs, long playtimeThreshold) {
+        String selectActivityIndex = selectActivityIndexOfPlayersOnServer(before, playtimeThreshold, serverUUIDs);
+
+        String selectSessionLengthPerPlayer = SELECT +
+                "p." + SessionsTable.USER_ID + "," +
+                "p." + SessionsTable.SESSION_END + "-p." + SessionsTable.SESSION_START + " as length" +
+                FROM + SessionsTable.TABLE_NAME + " p" +
+                INNER_JOIN + '(' + selectActivityIndex + ") q2 on q2." + SessionsTable.USER_ID + "=p." + SessionsTable.USER_ID +
+                WHERE + "p." + SessionsTable.SESSION_END + "<=?" +
+                AND + "p." + SessionsTable.SESSION_START + ">=?" +
+                (serverUUIDs.isEmpty() ? "" : AND + "p." + SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) + " ") +
+                AND + "q2.activity_index>=?" +
+                AND + "q2.activity_index<?";
+        String selectAverage = SELECT + "AVG(length) as average" + FROM + '(' + selectSessionLengthPerPlayer + ") q1";
+
+        return new QueryStatement<Long>(selectAverage, 100) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, before);
+                statement.setLong(2, after);
+                statement.setDouble(3, ActivityIndex.REGULAR);
+                statement.setDouble(4, 5.1);
+            }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                return set.next() ? (long) set.getDouble("average") : 0;
+            }
+        };
+    }
+
     private static @NonNull String week(long weekAgo, long date, String as) {
         return "SUM( " +
                 "CASE " +

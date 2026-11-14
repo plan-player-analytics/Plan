@@ -46,6 +46,14 @@ public interface DatapointModule {
 
     @Binds
     @IntoSet
+    Datapoint<?> bindAfkTimeRegularPlayerAverage(AfkTimeRegularPlayerAverage afkTimeRegularPlayerAverage);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindAfkTimePercentageRegularPlayerAverage(AfkTimePercentageRegularPlayerAverage afkTimePercentageRegularPlayerAverage);
+
+    @Binds
+    @IntoSet
     Datapoint<?> bindServerOccupied(ServerOccupied serverOccupied);
 
     @Binds
@@ -87,6 +95,10 @@ public interface DatapointModule {
     @Binds
     @IntoSet
     Datapoint<?> bindSessionLengthAverage(SessionLengthAverage sessionLengthAverage);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindSessionLengthRegularPlayerAverage(SessionLengthRegularPlayerAverage sessionLengthRegularPlayerAverage);
 
     @Binds
     @IntoSet
