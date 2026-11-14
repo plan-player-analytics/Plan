@@ -31,6 +31,7 @@ const OnlineActivityAsNumbersTable = () => {
             id={'online-activity-numbers'}
             defaultPreset={'monthWeekDay'}
             filter={{ server: identifier }}
+            showTrend
             rows={[
                 {
                     dataType: DatapointType.UNIQUE_PLAYERS_COUNT,

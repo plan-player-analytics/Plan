@@ -14,6 +14,7 @@ const ServerPvpPveAsNumbersTable = () => {
             id={'server-pvp-pve-numbers'}
             defaultPreset={'allMonthWeekDay'}
             filter={{ server: identifier }}
+            showTrend
             rows={[
                 {
                     dataType: DatapointType.KDR_AVERAGE,
@@ -44,12 +45,14 @@ const ServerPvpPveAsNumbersTable = () => {
                     color: 'mob-kills',
                     icon: faSkull,
                     text: t('html.label.mobDeaths'),
+                    trendDownGood: true,
                 },
                 {
                     dataType: DatapointType.DEATHS,
                     color: 'deaths',
                     icon: faSkull,
                     text: t('html.label.deaths'),
+                    trendDownGood: true,
                 },
             ]}
         />

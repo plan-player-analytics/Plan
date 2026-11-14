@@ -56,6 +56,7 @@ const PlayerbaseTrendsCard = ({ identifier }: Props) => {
                         color: 'playtime-afk',
                         icon: faClock,
                         text: t('html.label.afk') + ' ' + t('html.label.perPlayer'),
+                        trendDownGood: true,
                     },
                     {
                         dataType: DatapointType.PLAYTIME_PER_REGULAR_PLAYER_AVERAGE,
@@ -83,6 +84,7 @@ const PlayerbaseTrendsCard = ({ identifier }: Props) => {
                             t('html.label.afk') +
                             ' ' +
                             t('html.label.perRegularPlayer'),
+                        trendDownGood: true,
                     },
                 ]}
             />

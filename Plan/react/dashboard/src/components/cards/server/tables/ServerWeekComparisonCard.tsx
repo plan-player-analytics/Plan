@@ -87,6 +87,7 @@ const ServerWeekComparisonCard = () => {
                         color: 'deaths',
                         icon: faSkull,
                         text: t('html.label.deaths'),
+                        trendDownGood: true,
                     },
                 ]}
             />

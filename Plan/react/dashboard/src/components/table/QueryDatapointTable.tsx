@@ -43,6 +43,7 @@ type Row = {
     hidden?: boolean;
     indent?: boolean;
     boldBottom?: boolean;
+    trendDownGood?: boolean;
 };
 
 type Props = {
@@ -184,6 +185,7 @@ export const QueryDatapointTable = ({
                                         dataType={
                                             row.dataType as NumericDatapointType
                                         }
+                                        downGood={row.trendDownGood}
                                     />
                                 </td>
                             )}
