@@ -45,7 +45,7 @@ const PlayerbaseOverview = () => {
                         {!loadingError && (
                             <>
                                 <Col lg={8}>
-                                    <PlayerbaseTrendsCard data={data?.trends} />
+                                    <PlayerbaseTrendsCard identifier={identifier} />
                                 </Col>
                                 <Col lg={4}>
                                     <PlayerbaseInsightsCard

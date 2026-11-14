@@ -41,7 +41,7 @@ const NetworkPlayerbaseOverview = () => {
                         {!loadingError && (
                             <>
                                 <Col lg={8}>
-                                    <PlayerbaseTrendsCard data={data?.trends} />
+                                    <PlayerbaseTrendsCard />
                                 </Col>
                                 <Col lg={4}>
                                     <PlayerbaseInsightsCard

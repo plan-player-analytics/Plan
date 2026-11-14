@@ -162,7 +162,10 @@ public class NetworkPageExporter extends FileExporter {
                 datapointType + DatapointType.SESSION_COUNT,
                 datapointType + DatapointType.SESSION_COUNT + after,
                 datapointType + DatapointType.PLAYTIME_PER_PLAYER_AVERAGE,
+                datapointType + DatapointType.PLAYTIME_PER_REGULAR_PLAYER_AVERAGE,
                 datapointType + DatapointType.SESSION_LENGTH_AVERAGE,
+                datapointType + DatapointType.SESSION_LENGTH_REGULAR_PLAYER_AVERAGE,
+                datapointType + DatapointType.AFK_TIME_PERCENTAGE_REGULAR_PLAYER_AVERAGE,
                 datapointType + DatapointType.PLAYER_KILLS,
                 datapointType + DatapointType.KDR_AVERAGE,
                 datapointType + DatapointType.MOB_KILLS,
@@ -186,7 +189,22 @@ public class NetworkPageExporter extends FileExporter {
                 datapointType + DatapointType.PLAYER_KILLS + afterMillis + TimeUnit.DAYS.toMillis(7),
                 datapointType + DatapointType.KDR_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(7),
                 datapointType + DatapointType.MOB_KILLS + afterMillis + TimeUnit.DAYS.toMillis(7),
-                datapointType + DatapointType.DEATHS + afterMillis + TimeUnit.DAYS.toMillis(7)
+                datapointType + DatapointType.DEATHS + afterMillis + TimeUnit.DAYS.toMillis(7),
+                // Playerbase Trends (last60Days preset: 60-30 days vs 30-0 days)
+                datapointType + DatapointType.TOTAL_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(60) + beforeMillis + TimeUnit.DAYS.toMillis(30),
+                datapointType + DatapointType.TOTAL_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(30),
+                datapointType + DatapointType.REGULAR_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(60) + beforeMillis + TimeUnit.DAYS.toMillis(30),
+                datapointType + DatapointType.REGULAR_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(30),
+                datapointType + DatapointType.PLAYTIME_PER_PLAYER_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(60) + beforeMillis + TimeUnit.DAYS.toMillis(30),
+                datapointType + DatapointType.PLAYTIME_PER_PLAYER_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(30),
+                datapointType + DatapointType.AFK_TIME_PERCENTAGE + afterMillis + TimeUnit.DAYS.toMillis(60) + beforeMillis + TimeUnit.DAYS.toMillis(30),
+                datapointType + DatapointType.AFK_TIME_PERCENTAGE + afterMillis + TimeUnit.DAYS.toMillis(30),
+                datapointType + DatapointType.PLAYTIME_PER_REGULAR_PLAYER_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(60) + beforeMillis + TimeUnit.DAYS.toMillis(30),
+                datapointType + DatapointType.PLAYTIME_PER_REGULAR_PLAYER_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(30),
+                datapointType + DatapointType.SESSION_LENGTH_REGULAR_PLAYER_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(60) + beforeMillis + TimeUnit.DAYS.toMillis(30),
+                datapointType + DatapointType.SESSION_LENGTH_REGULAR_PLAYER_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(30),
+                datapointType + DatapointType.AFK_TIME_PERCENTAGE_REGULAR_PLAYER_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(60) + beforeMillis + TimeUnit.DAYS.toMillis(30),
+                datapointType + DatapointType.AFK_TIME_PERCENTAGE_REGULAR_PLAYER_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(30)
         );
     }
 

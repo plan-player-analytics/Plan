@@ -177,7 +177,10 @@ public class ServerPageExporter extends FileExporter {
                 datapointType + DatapointType.SESSION_COUNT + after + server,
                 datapointType + DatapointType.SESSION_COUNT + afterMillis + month + server,
                 datapointType + DatapointType.PLAYTIME_PER_PLAYER_AVERAGE + server,
+                datapointType + DatapointType.PLAYTIME_PER_REGULAR_PLAYER_AVERAGE + server,
                 datapointType + DatapointType.SESSION_LENGTH_AVERAGE + server,
+                datapointType + DatapointType.SESSION_LENGTH_REGULAR_PLAYER_AVERAGE + server,
+                datapointType + DatapointType.AFK_TIME_PERCENTAGE_REGULAR_PLAYER_AVERAGE + server,
                 datapointType + DatapointType.PLAYER_KILLS + server,
                 datapointType + DatapointType.KDR_AVERAGE + server,
                 datapointType + DatapointType.MOB_KILLS + server,
@@ -248,7 +251,22 @@ public class ServerPageExporter extends FileExporter {
                 datapointType + DatapointType.SESSION_LENGTH_AVERAGE + afterMillis + day + server,
                 datapointType + DatapointType.SESSION_LENGTH_AVERAGE + afterMillis + month + server,
                 datapointType + DatapointType.SESSION_COUNT + afterMillis + day + server,
-                datapointType + DatapointType.SESSION_COUNT + afterMillis + month + server
+                datapointType + DatapointType.SESSION_COUNT + afterMillis + month + server,
+                // Playerbase Trends (last60Days preset: 60-30 days vs 30-0 days)
+                datapointType + DatapointType.TOTAL_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(60) + beforeMillis + TimeUnit.DAYS.toMillis(30) + server,
+                datapointType + DatapointType.TOTAL_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(30) + server,
+                datapointType + DatapointType.REGULAR_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(60) + beforeMillis + TimeUnit.DAYS.toMillis(30) + server,
+                datapointType + DatapointType.REGULAR_PLAYERS + afterMillis + TimeUnit.DAYS.toMillis(30) + server,
+                datapointType + DatapointType.PLAYTIME_PER_PLAYER_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(60) + beforeMillis + TimeUnit.DAYS.toMillis(30) + server,
+                datapointType + DatapointType.PLAYTIME_PER_PLAYER_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(30) + server,
+                datapointType + DatapointType.AFK_TIME_PERCENTAGE + afterMillis + TimeUnit.DAYS.toMillis(60) + beforeMillis + TimeUnit.DAYS.toMillis(30) + server,
+                datapointType + DatapointType.AFK_TIME_PERCENTAGE + afterMillis + TimeUnit.DAYS.toMillis(30) + server,
+                datapointType + DatapointType.PLAYTIME_PER_REGULAR_PLAYER_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(60) + beforeMillis + TimeUnit.DAYS.toMillis(30) + server,
+                datapointType + DatapointType.PLAYTIME_PER_REGULAR_PLAYER_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(30) + server,
+                datapointType + DatapointType.SESSION_LENGTH_REGULAR_PLAYER_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(60) + beforeMillis + TimeUnit.DAYS.toMillis(30) + server,
+                datapointType + DatapointType.SESSION_LENGTH_REGULAR_PLAYER_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(30) + server,
+                datapointType + DatapointType.AFK_TIME_PERCENTAGE_REGULAR_PLAYER_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(60) + beforeMillis + TimeUnit.DAYS.toMillis(30) + server,
+                datapointType + DatapointType.AFK_TIME_PERCENTAGE_REGULAR_PLAYER_AVERAGE + afterMillis + TimeUnit.DAYS.toMillis(30) + server
         );
         // Performance overview
         exportDatapointJSON(toDirectory, DatapointType.TPS_LOW_SPIKES, serverUUID);
