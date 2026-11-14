@@ -1,7 +1,12 @@
 import { useTranslation } from 'react-i18next';
 import { Card } from 'react-bootstrap';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
-import { faExchangeAlt, faUsers } from '@fortawesome/free-solid-svg-icons';
+import {
+    faArrowRightLong,
+    faExchangeAlt,
+    faUser,
+    faUsers,
+} from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
 import { faClock } from '@fortawesome/free-regular-svg-icons';
 import { QueryDatapointTable } from '../../../table/QueryDatapointTable';
@@ -43,6 +48,27 @@ const PlayerbaseTrendsCard = ({ identifier }: Props) => {
                         text: t('html.label.regularPlayers'),
                     },
                     {
+                        dataType: DatapointType.NEW_TO_REGULAR,
+                        color: [
+                            'players-new',
+                            'players-count',
+                            'players-regular',
+                        ],
+                        icon: [faUser, faArrowRightLong, faUsers],
+                        text: t('html.label.newToRegular'),
+                    },
+                    {
+                        dataType: DatapointType.REGULAR_TO_INACTIVE,
+                        color: [
+                            'players-regular',
+                            'players-count',
+                            'players-inactive',
+                        ],
+                        icon: [faUser, faArrowRightLong, faUsers],
+                        text: t('html.label.regularToInactive'),
+                        boldBottom: true,
+                    },
+                    {
                         dataType: DatapointType.PLAYTIME_PER_PLAYER_AVERAGE,
                         color: 'playtime',
                         icon: faClock,
@@ -55,11 +81,16 @@ const PlayerbaseTrendsCard = ({ identifier }: Props) => {
                         dataType: DatapointType.AFK_TIME_PERCENTAGE,
                         color: 'playtime-afk',
                         icon: faClock,
-                        text: t('html.label.afk') + ' ' + t('html.label.perPlayer'),
+                        text:
+                            t('html.label.afk') +
+                            ' ' +
+                            t('html.label.perPlayer'),
                         trendDownGood: true,
+                        boldBottom: true,
                     },
                     {
-                        dataType: DatapointType.PLAYTIME_PER_REGULAR_PLAYER_AVERAGE,
+                        dataType:
+                            DatapointType.PLAYTIME_PER_REGULAR_PLAYER_AVERAGE,
                         color: 'playtime',
                         icon: faClock,
                         text:
@@ -68,7 +99,8 @@ const PlayerbaseTrendsCard = ({ identifier }: Props) => {
                             t('html.label.perRegularPlayer'),
                     },
                     {
-                        dataType: DatapointType.SESSION_LENGTH_REGULAR_PLAYER_AVERAGE,
+                        dataType:
+                            DatapointType.SESSION_LENGTH_REGULAR_PLAYER_AVERAGE,
                         color: 'sessions',
                         icon: faClock,
                         text:
@@ -77,7 +109,8 @@ const PlayerbaseTrendsCard = ({ identifier }: Props) => {
                             t('html.label.perRegularPlayer'),
                     },
                     {
-                        dataType: DatapointType.AFK_TIME_PERCENTAGE_REGULAR_PLAYER_AVERAGE,
+                        dataType:
+                            DatapointType.AFK_TIME_PERCENTAGE_REGULAR_PLAYER_AVERAGE,
                         color: 'playtime-afk',
                         icon: faClock,
                         text:

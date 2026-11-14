@@ -3,11 +3,7 @@ import React from 'react';
 import PlayerbaseDevelopmentCard from '../../components/cards/server/graphs/PlayerbaseDevelopmentCard';
 import CurrentPlayerbaseCard from '../../components/cards/server/graphs/CurrentPlayerbaseCard';
 import { useParams } from 'react-router';
-import { useDataRequest } from '../../hooks/dataFetchHook';
-import { fetchPlayerbaseOverview } from '../../service/serverService';
-import { ErrorViewCard } from '../ErrorView.tsx';
 import PlayerbaseTrendsCard from '../../components/cards/server/tables/PlayerbaseTrendsCard';
-import PlayerbaseInsightsCard from '../../components/cards/server/insights/PlayerbaseInsightsCard';
 import LoadIn from '../../components/animation/LoadIn.tsx';
 import ExtendableRow from '../../components/layout/extension/ExtendableRow.tsx';
 import { useAuth } from '../../hooks/authenticationHook.tsx';
@@ -18,11 +14,6 @@ const PlayerbaseOverview = () => {
 
     const seeOverview = hasPermission('page.server.playerbase.overview');
     const seeGraphs = hasPermission('page.server.playerbase.graphs');
-    const { data, loadingError } = useDataRequest(
-        fetchPlayerbaseOverview,
-        [identifier],
-        seeOverview,
-    );
 
     return (
         <LoadIn>
@@ -41,19 +32,9 @@ const PlayerbaseOverview = () => {
                 )}
                 {seeOverview && (
                     <ExtendableRow id={'row-server-playerbase-1'}>
-                        {loadingError && <ErrorViewCard error={loadingError} />}
-                        {!loadingError && (
-                            <>
-                                <Col lg={8}>
-                                    <PlayerbaseTrendsCard identifier={identifier} />
-                                </Col>
-                                <Col lg={4}>
-                                    <PlayerbaseInsightsCard
-                                        data={data?.insights}
-                                    />
-                                </Col>
-                            </>
-                        )}
+                        <Col lg={12}>
+                            <PlayerbaseTrendsCard identifier={identifier} />
+                        </Col>
                     </ExtendableRow>
                 )}
             </section>

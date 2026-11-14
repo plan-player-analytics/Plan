@@ -79,6 +79,8 @@ public enum HtmlLang implements Lang {
     LABEL_NEW_PLAYERS("html.label.newPlayers", "New Players"),
     LABEL_NEW_PLAYERS_7_DAYS("html.label.newPlayers7days", "New Players (7 days)"),
     LABEL_REGULAR_PLAYERS("html.label.regularPlayers", "Regular Players"),
+    LABEL_NEW_TO_REGULAR("html.label.newToRegular", "New To Regular"),
+    LABEL_REGULAR_TO_INACTIVE("html.label.regularToInactive", "Regular to Inactive"),
     LABEL_TOTAL_PLAYERS("html.label.totalPlayers", "Total Players"),
     TITLE_NETWORK_AS_NUMBERS("html.label.networkAsNumbers", "Network as Numbers"),
     LABEL_PLAYERS_ONLINE("html.label.playersOnline", "Players Online"),

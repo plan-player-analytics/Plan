@@ -33,10 +33,10 @@ export type Column = {
 type Row = {
     dataType: DatapointType;
     permission?: string;
-    icon: IconProp;
+    icon: IconProp | IconProp[];
     key?: string;
     text: string | React.ReactNode;
-    color: string;
+    color: string | string[];
     filter?: GenericFilter;
     bold?: boolean;
     title?: string;
@@ -147,15 +147,34 @@ export const QueryDatapointTable = ({
                                     : undefined
                             }>
                             <td>
-                                <Fa
-                                    icon={row.icon}
-                                    className={'col-' + row.color}
-                                    style={
-                                        row.indent
-                                            ? { marginLeft: '1rem' }
-                                            : undefined
-                                    }
-                                />{' '}
+                                {(() => {
+                                    const icons = Array.isArray(row.icon)
+                                        ? row.icon
+                                        : [row.icon];
+                                    const colors = Array.isArray(row.color)
+                                        ? row.color
+                                        : [row.color];
+                                    return icons.map((icon, idx) => (
+                                        <Fa
+                                            key={idx}
+                                            icon={icon as IconProp}
+                                            className={
+                                                'col-' +
+                                                (colors[idx] || colors[0])
+                                            }
+                                            style={
+                                                idx === 0 && row.indent
+                                                    ? { marginLeft: '1rem' }
+                                                    : idx > 0
+                                                      ? {
+                                                            marginLeft:
+                                                                '0.25rem',
+                                                        }
+                                                      : undefined
+                                            }
+                                        />
+                                    ));
+                                })()}{' '}
                                 {row.text}
                             </td>
                             {columns.map((column) => (
