@@ -32,6 +32,7 @@ public enum CommandLang implements Lang {
     CONFIRM_MERGE_DB("command.confirmation.dbMerge", "You are about to merge data in ${0} to data in ${1}"),
     CONFIRM_CLEAR_DB("command.confirmation.dbClear", "Cmd Confirm - clearing db", "You are about to remove all Plan-data in ${0}"),
     CONFIRM_REMOVE_PLAYER_DB("command.confirmation.dbRemovePlayer", "Cmd Confirm - remove player db", "You are about to remove data of ${0} from ${1}"),
+    CONFIRM_REMOVE_PLAYERS_BETWEEN_DB("command.confirmation.dbRemovePlayersBetween", "You are about to remove players registered from ${0} through ${1} from ${2}"),
     CONFIRM_UNREGISTER("command.confirmation.unregister", "Cmd Confirm - unregister", "You are about to unregister '${0}' linked to ${1}"),
     CONFIRM_CANCELLED_DATA("command.confirmation.cancelNoChanges", "Cmd Confirm - cancelled, no data change", "Cancelled. No data was changed."),
     CONFIRM_CANCELLED_UNREGISTER("command.confirmation.cancelNoUnregister", "Cmd Confirm - cancelled, unregister", "Cancelled. '${0}' was not unregistered"),
@@ -48,6 +49,8 @@ public enum CommandLang implements Lang {
     FAIL_USERNAME_NOT_KNOWN("command.fail.unknownUsername", "Cmd FAIL - Unknown Username", "§cUser has not been seen on this server"),
     FAIL_DATABASE_NOT_OPEN("command.database.failDbNotOpen", "Cmd FAIL - Database not open", "§cDatabase is ${0} - Please try again a bit later."),
     WARN_DATABASE_NOT_OPEN("command.database.warnDbNotOpen", "Cmd WARN - Database not open", "§eDatabase is ${0} - This might take longer than expected.."),
+    FAIL_DATE_FORMAT("command.fail.invalidDate", "Date '${0}' is invalid. Use yyyy-MM-dd."),
+    FAIL_DATE_RANGE("command.fail.invalidDateRange", "Start date ${0} can not be later than end date ${1}."),
     USER_NOT_LINKED("command.fail.missingLink", "Cmd FAIL - Users not linked", "User is not linked to your account and you don't have permission to remove other user's accounts."),
 
     FAIL_WEB_USER_EXISTS("command.fail.webUserExists", "Cmd FAIL - WebUser exists", "§cUser already exists!"),
@@ -128,6 +131,8 @@ public enum CommandLang implements Lang {
     DB_WRITE("command.database.write", "Cmd db - write", "Writing to ${0}.."),
     DB_REMOVAL("command.database.removal", "Cmd db - removal", "Removing Plan-data from ${0}.."),
     DB_REMOVAL_PLAYER("command.database.playerRemoval", "Cmd db - removal player", "Removing data of ${0} from ${1}.."),
+    DB_REMOVAL_PLAYERS("command.database.playersRemoval", "Removing players in the selected registration date range from ${0}.."),
+    DB_REMOVAL_PLAYERS_SUCCESS("command.database.playersRemovalSuccess", "> §aRemoved ${0} players."),
     DB_UNINSTALLED("command.database.serverUninstalled", "Cmd db - server uninstalled", "§aIf the server is still installed, it will automatically set itself as installed in the database."),
     UNREGISTER("command.database.unregister", "Cmd unregister - unregistering", "Unregistering '${0}'.."),
 
