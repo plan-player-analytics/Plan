@@ -19,9 +19,12 @@ package com.djrapitops.plan.delivery.rendering.json;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.objects.KillQueries;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -40,20 +43,29 @@ import java.util.concurrent.TimeUnit;
 public class PvPPvEJSONCreator implements ServerTabJSONCreator<Map<String, Object>> {
 
     private final DBSystem dbSystem;
+    private final Locale locale;
+    private final PluginLogger logger;
 
     private final Formatter<Double> decimals;
 
     @Inject
     public PvPPvEJSONCreator(
             DBSystem dbSystem,
+            Locale locale,
+            PluginLogger logger,
             Formatters formatters
     ) {
         this.dbSystem = dbSystem;
+        this.locale = locale;
+        this.logger = logger;
 
         decimals = formatters.decimals();
     }
 
+    @Deprecated(since = "14-11-2026 / 5.9 build 3850")
     public Map<String, Object> createJSONAsMap(ServerUUID serverUUID) {
+        logger.warn(locale.getString(PluginLang.DEPRECATED_ENDPOINT_CALL, "/v1/playerVersus", "/v1/datapoint"));
+
         Map<String, Object> serverOverview = new HashMap<>();
         serverOverview.put("numbers", createNumbersMap(serverUUID));
         serverOverview.put("insights", createInsightsMap(serverUUID));

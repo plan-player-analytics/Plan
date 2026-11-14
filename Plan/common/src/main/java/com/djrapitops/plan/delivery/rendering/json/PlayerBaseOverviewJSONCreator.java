@@ -19,12 +19,15 @@ package com.djrapitops.plan.delivery.rendering.json;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
+import com.djrapitops.plan.settings.locale.Locale;
+import com.djrapitops.plan.settings.locale.lang.PluginLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
 import com.djrapitops.plan.storage.database.queries.analysis.ActivityIndexQueries;
 import com.djrapitops.plan.storage.database.queries.analysis.PlayerCountQueries;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.utilities.analysis.Percentage;
+import net.playeranalytics.plugin.server.PluginLogger;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -42,17 +45,26 @@ public class PlayerBaseOverviewJSONCreator implements ServerTabJSONCreator<Map<S
 
     private final PlanConfig config;
     private final DBSystem dbSystem;
+    private final Locale locale;
+    private final PluginLogger logger;
 
     @Inject
     public PlayerBaseOverviewJSONCreator(
             PlanConfig config,
-            DBSystem dbSystem
+            DBSystem dbSystem,
+            Locale locale,
+            PluginLogger logger
     ) {
         this.config = config;
         this.dbSystem = dbSystem;
+        this.locale = locale;
+        this.logger = logger;
     }
 
+    @Deprecated(since = "14-11-2026 / 5.9 build 3850")
     public Map<String, Object> createJSONAsMap(ServerUUID serverUUID) {
+        logger.warn(locale.getString(PluginLang.DEPRECATED_ENDPOINT_CALL, "/v1/playerbaseOverview", "/v1/datapoint"));
+
         Map<String, Object> serverOverview = new HashMap<>();
         serverOverview.put("trends", createTrendsMap(serverUUID));
         serverOverview.put("insights", createInsightsMap(serverUUID));
