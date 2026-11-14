@@ -19,6 +19,9 @@ export type TimeframePreset =
     | 'previousAndCurrentWeek'
     | 'previousAndCurrentMonth'
     | 'previousAndCurrentYear'
+    | 'last60Days'
+    | 'last14Days'
+    | 'last48Hours'
     | 'last6Hours'
     | 'last7Days'
     | 'last6Months'
@@ -33,10 +36,6 @@ export const ALL_TIMEFRAME_PRESETS: (TimeframePreset | typeof SEPARATOR)[] = [
     'monthByWeeks',
     'allMonthWeekDay',
     SEPARATOR,
-    'previousAndCurrentWeek',
-    'previousAndCurrentMonth',
-    'previousAndCurrentYear',
-    SEPARATOR,
     'last6Hours',
     'last7Days',
     'last6Months',
@@ -44,6 +43,14 @@ export const ALL_TIMEFRAME_PRESETS: (TimeframePreset | typeof SEPARATOR)[] = [
     SEPARATOR,
     'currentMonthByWeek',
     'previousMonthByWeek',
+    SEPARATOR,
+    'previousAndCurrentWeek',
+    'previousAndCurrentMonth',
+    'previousAndCurrentYear',
+    SEPARATOR,
+    'last48Hours',
+    'last14Days',
+    'last60Days',
     SEPARATOR,
     'custom',
 ];
@@ -81,6 +88,10 @@ export const EMPTY_CUSTOM_RANGES: CustomRange[] = [
 
 const HOUR_MS = 60 * 60 * 1000;
 
+const MS_48H = 48 * HOUR_MS;
+const MS_14D = 14 * MS_24H;
+const MS_60D = 60 * MS_24H;
+
 const RELATIVE_PRESETS: Partial<Record<TimeframePreset, TimeframeColumn[]>> = {
     weekComparison: [
         {
@@ -90,6 +101,36 @@ const RELATIVE_PRESETS: Partial<Record<TimeframePreset, TimeframeColumn[]>> = {
         {
             key: 'next',
             filter: { afterMillisAgo: MS_WEEK, beforeMillisAgo: 0 },
+        },
+    ],
+    last60Days: [
+        {
+            key: 'older',
+            filter: { afterMillisAgo: MS_60D, beforeMillisAgo: MS_60D / 2 },
+        },
+        {
+            key: 'recent',
+            filter: { afterMillisAgo: MS_60D / 2, beforeMillisAgo: 0 },
+        },
+    ],
+    last14Days: [
+        {
+            key: 'older',
+            filter: { afterMillisAgo: MS_14D, beforeMillisAgo: MS_14D / 2 },
+        },
+        {
+            key: 'recent',
+            filter: { afterMillisAgo: MS_14D / 2, beforeMillisAgo: 0 },
+        },
+    ],
+    last48Hours: [
+        {
+            key: 'older',
+            filter: { afterMillisAgo: MS_48H, beforeMillisAgo: MS_48H / 2 },
+        },
+        {
+            key: 'recent',
+            filter: { afterMillisAgo: MS_48H / 2, beforeMillisAgo: 0 },
         },
     ],
     allMonthWeekDay: [
