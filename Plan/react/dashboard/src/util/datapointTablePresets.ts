@@ -15,6 +15,7 @@ export type TimeframePreset =
     | 'weekComparison'
     | 'monthWeekDay'
     | 'monthByWeeks'
+    | 'allMonthWeekDay'
     | 'previousAndCurrentWeek'
     | 'previousAndCurrentMonth'
     | 'previousAndCurrentYear'
@@ -30,6 +31,7 @@ export const ALL_TIMEFRAME_PRESETS: (TimeframePreset | typeof SEPARATOR)[] = [
     'weekComparison',
     'monthWeekDay',
     'monthByWeeks',
+    'allMonthWeekDay',
     SEPARATOR,
     'previousAndCurrentWeek',
     'previousAndCurrentMonth',
@@ -99,6 +101,16 @@ const RELATIVE_PRESETS: Partial<Record<TimeframePreset, TimeframeColumn[]>> = {
             key: 'next',
             filter: { afterMillisAgo: MS_WEEK, beforeMillisAgo: 0 },
         },
+    ],
+    allMonthWeekDay: [
+        {
+            key: 'all',
+            filter: {},
+            label: { key: 'html.label.allTime' },
+        },
+        { key: '30d', filter: { afterMillisAgo: MS_MONTH } },
+        { key: '7d', filter: { afterMillisAgo: MS_WEEK } },
+        { key: '1d', filter: { afterMillisAgo: MS_24H } },
     ],
     monthWeekDay: [
         { key: '30d', filter: { afterMillisAgo: MS_MONTH } },

@@ -1,105 +1,58 @@
 import { useTranslation } from 'react-i18next';
-import AsNumbersTable from './AsNumbersTable';
 import { faCrosshairs, faSkull } from '@fortawesome/free-solid-svg-icons';
 import React from 'react';
-import { TableRow } from './TableRow';
+import { DatapointType } from '../../dataHooks/model/datapoint/Datapoint';
+import { QueryDatapointTable } from './QueryDatapointTable';
+import { useParams } from 'react-router';
 
-type Props = {
-    killData?: {
-        playerKdrAvg: string;
-        playerKdrAvg30d: string;
-        playerKdrAvg7d: string;
-        mobKdrTotal: string;
-        mobKdr30d: string;
-        mobKdr7d: string;
-        playerKillsTotal: number;
-        playerKills30d: number;
-        playerKills7d: number;
-        mobKillsTotal: number;
-        mobKills30d: number;
-        mobKills7d: number;
-        mobDeathsTotal: number;
-        mobDeaths30d: number;
-        mobDeaths7d: number;
-        deathsTotal: number;
-        deaths30d: number;
-        deaths7d: number;
-    } | null;
-};
-
-const ServerPvpPveAsNumbersTable = ({ killData }: Props) => {
+const ServerPvpPveAsNumbersTable = () => {
     const { t } = useTranslation();
-
-    if (!killData) return <></>;
+    const { identifier } = useParams();
 
     return (
-        <AsNumbersTable
-            headers={[
-                t('html.label.allTime'),
-                t('html.label.last30days'),
-                t('html.label.last7days'),
-            ]}>
-            <TableRow
-                icon={faCrosshairs}
-                color='player-kills'
-                text={t('html.label.averageKdr')}
-                values={[
-                    killData.playerKdrAvg,
-                    killData.playerKdrAvg30d,
-                    killData.playerKdrAvg7d,
-                ]}
-            />
-            <TableRow
-                icon={faCrosshairs}
-                color='player-kills'
-                text={t('html.label.playerKills')}
-                values={[
-                    killData.playerKillsTotal,
-                    killData.playerKills30d,
-                    killData.playerKills7d,
-                ]}
-            />
-            <TableRow
-                icon={faCrosshairs}
-                color='mob-kills'
-                text={t('html.label.averageMobKdr')}
-                values={[
-                    killData.mobKdrTotal,
-                    killData.mobKdr30d,
-                    killData.mobKdr7d,
-                ]}
-            />
-            <TableRow
-                icon={faCrosshairs}
-                color='mob-kills'
-                text={t('html.label.mobKills')}
-                values={[
-                    killData.mobKillsTotal,
-                    killData.mobKills30d,
-                    killData.mobKills7d,
-                ]}
-            />
-            <TableRow
-                icon={faSkull}
-                color='mob-kills'
-                text={t('html.label.mobDeaths')}
-                values={[
-                    killData.mobDeathsTotal,
-                    killData.mobDeaths30d,
-                    killData.mobDeaths7d,
-                ]}
-            />
-            <TableRow
-                icon={faSkull}
-                color='deaths'
-                text={t('html.label.deaths')}
-                values={[
-                    killData.deathsTotal,
-                    killData.deaths30d,
-                    killData.deaths7d,
-                ]}
-            />
-        </AsNumbersTable>
+        <QueryDatapointTable
+            id={'server-pvp-pve-numbers'}
+            defaultPreset={'allMonthWeekDay'}
+            filter={{ server: identifier }}
+            rows={[
+                {
+                    dataType: DatapointType.KDR_AVERAGE,
+                    color: 'player-kills',
+                    icon: faCrosshairs,
+                    text: t('html.label.averageKdr'),
+                },
+                {
+                    dataType: DatapointType.PLAYER_KILLS,
+                    color: 'player-kills',
+                    icon: faCrosshairs,
+                    text: t('html.label.playerKills'),
+                },
+                {
+                    dataType: DatapointType.MOB_KDR_AVERAGE,
+                    color: 'mob-kills',
+                    icon: faCrosshairs,
+                    text: t('html.label.averageMobKdr'),
+                },
+                {
+                    dataType: DatapointType.MOB_KILLS,
+                    color: 'mob-kills',
+                    icon: faCrosshairs,
+                    text: t('html.label.mobKills'),
+                },
+                {
+                    dataType: DatapointType.MOB_DEATHS,
+                    color: 'mob-kills',
+                    icon: faSkull,
+                    text: t('html.label.mobDeaths'),
+                },
+                {
+                    dataType: DatapointType.DEATHS,
+                    color: 'deaths',
+                    icon: faSkull,
+                    text: t('html.label.deaths'),
+                },
+            ]}
+        />
     );
 };
 

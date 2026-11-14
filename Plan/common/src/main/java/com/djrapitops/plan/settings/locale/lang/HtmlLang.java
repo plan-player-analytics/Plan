@@ -658,6 +658,7 @@ public enum HtmlLang implements Lang {
     TIMEFRAME_WEEK_COMPARISON("html.label.timeframe.weekComparison", "Week comparison"),
     TIMEFRAME_PREVIOUS_AND_CURRENT_YEAR("html.label.timeframe.previousAndCurrentYear", "Previous and current year"),
     TIMEFRAME_LAST_6_YEARS("html.label.timeframe.last6Years", "Last 6 years, by year"),
+    TIMEFRAME_ALL_MONTH_WEEK_DAY("html.label.timeframe.allMonthWeekDay", "All Time, Last 30d, 7d & 24h"),
     ;
 
     private final String key;

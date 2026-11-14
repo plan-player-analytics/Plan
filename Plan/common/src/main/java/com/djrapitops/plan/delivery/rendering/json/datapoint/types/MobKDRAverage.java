@@ -115,4 +115,9 @@ public class MobKDRAverage implements Datapoint<Double> {
     private double computeKDR(long kills, long deaths) {
         return deaths > 0 ? (double) kills / deaths : kills;
     }
+
+    @Override
+    public FormatType getFormatType() {
+        return FormatType.DECIMAL;
+    }
 }
