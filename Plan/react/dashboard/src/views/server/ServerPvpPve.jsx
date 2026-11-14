@@ -10,6 +10,7 @@ import ErrorView from '../ErrorView.tsx';
 import LoadIn from '../../components/animation/LoadIn.tsx';
 import ExtendableRow from '../../components/layout/extension/ExtendableRow.tsx';
 import { useAuth } from '../../hooks/authenticationHook.tsx';
+import { GenericFilterContextProvider } from '../../dataHooks/genericFilterContextHook.tsx';
 
 const ServerPvpPve = () => {
     const { hasPermission } = useAuth();
@@ -41,7 +42,12 @@ const ServerPvpPve = () => {
                             <PvpPveAsNumbersCard killData={data?.numbers} />
                         </Col>
                         <Col lg={4}>
-                            <PvpPveInsightsCard data={data?.insights} />
+                            <GenericFilterContextProvider
+                                initialValue={{
+                                    server: identifier,
+                                }}>
+                                <PvpPveInsightsCard />
+                            </GenericFilterContextProvider>
                         </Col>
                     </ExtendableRow>
                 )}

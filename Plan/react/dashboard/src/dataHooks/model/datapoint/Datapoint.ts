@@ -2,6 +2,7 @@ import { WorldPie } from '../graph/WorldPie';
 import { ServerPie } from '../graph/ServerPie';
 import { OutOf } from './OutOf';
 import { OutOfCategory } from './OutOfCategory';
+import { TopList } from './TopList';
 import { baseAddress, staticSite } from '../../../service/backendConfiguration';
 import { filterToQueryString, GenericFilter } from '../GenericFilter';
 import { MS_24H, MS_WEEK } from '../../../util/format/useDateFormatter';
@@ -68,6 +69,7 @@ export enum DatapointType {
     CHUNKS_PER_PLAYER = 'CHUNKS_PER_PLAYER',
     DISK_MAX = 'DISK_MAX',
     DISK_MIN = 'DISK_MIN',
+    TOP_WEAPONS = 'TOP_WEAPONS',
 }
 
 export const differingPermissions: Partial<Record<DatapointType, string>> = {
@@ -126,6 +128,7 @@ export type DatapointTypeMap = {
     MOST_ACTIVE_GAME_MODE: OutOfCategory;
     SERVER_PIE: ServerPie;
     PLAYERS_ONLINE_PEAK: { date: number; value: number };
+    TOP_WEAPONS: TopList;
 };
 
 export type NumericDatapointType = {

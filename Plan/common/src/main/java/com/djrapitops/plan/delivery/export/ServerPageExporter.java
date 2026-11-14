@@ -166,6 +166,7 @@ public class ServerPageExporter extends FileExporter {
                 datapointType + DatapointType.AFK_TIME_PERCENTAGE + afterMillis + month + server,
                 datapointType + DatapointType.SERVER_OCCUPIED + afterMillis + month + server,
                 datapointType + DatapointType.MOST_ACTIVE_GAME_MODE + afterMillis + month + server,
+                datapointType + DatapointType.TOP_WEAPONS + afterMillis + month + server,
                 datapointType + DatapointType.WORLD_PIE + server,
                 datapointType + DatapointType.NEW_PLAYERS + server,
                 datapointType + DatapointType.REGULAR_PLAYERS + server,
