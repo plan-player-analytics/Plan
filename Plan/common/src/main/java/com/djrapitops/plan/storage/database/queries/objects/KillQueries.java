@@ -481,17 +481,38 @@ public class KillQueries {
     }
 
     public static Query<List<String>> topWeaponsOfServer(long after, long before, ServerUUID serverUUID, int limit) {
+        return topWeaponsOfServers(after, before, List.of(serverUUID), limit);
+    }
+
+    public static Query<List<String>> topWeaponsOfServers(long after, long before, List<ServerUUID> serverUUIDs, int limit) {
+        String serverFilter = serverUUIDs.isEmpty() ? "" : KillsTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" + AND;
         String innerSQL = SELECT + KillsTable.WEAPON + ", COUNT(1) as kills" +
                 FROM + KillsTable.TABLE_NAME +
-                WHERE + KillsTable.SERVER_UUID + "=?" +
-                AND + KillsTable.DATE + ">=?" +
+                WHERE + serverFilter
+                + KillsTable.DATE + ">=?" +
                 AND + KillsTable.DATE + "<=?" +
                 GROUP_BY + KillsTable.WEAPON;
         String sql = SELECT + KillsTable.WEAPON +
                 FROM + '(' + innerSQL + ") q1" +
                 ORDER_BY + "kills DESC LIMIT ?";
 
-        return db -> db.queryList(sql, RowExtractors.getString(KillsTable.WEAPON), serverUUID, after, before, limit);
+        return new QueryStatement<>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, after);
+                statement.setLong(2, before);
+                statement.setInt(3, limit);
+            }
+
+            @Override
+            public List<String> processResults(ResultSet set) throws SQLException {
+                List<String> weapons = new ArrayList<>();
+                while (set.next()) {
+                    weapons.add(set.getString(KillsTable.WEAPON));
+                }
+                return weapons;
+            }
+        };
     }
 
     public static Query<List<String>> topWeaponsOfPlayer(long after, long before, UUID playerUUID, int limit) {

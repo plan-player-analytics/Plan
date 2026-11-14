@@ -234,6 +234,9 @@ public enum WebPermission implements Supplier<String>, Lang {
     DATA_NETWORK_ENTITIES_PER_CHUNK("See Average Entities per Chunk -datapoint of network"),
     DATA_SERVER_MSPT_IMPACT_PER_CHUNK("See Average MSPT impact per Chunk -datapoint of servers"),
     DATA_NETWORK_MSPT_IMPACT_PER_CHUNK("See Average MSPT impact per Chunk -datapoint of network"),
+    DATA_SERVER_TOP_WEAPONS("See Top Weapons -datapoint of servers"),
+    DATA_NETWORK_TOP_WEAPONS("See Top Weapons -datapoint of network"),
+    DATA_PLAYER_TOP_WEAPONS("See Top Weapons -datapoint of players"),
 
     ACCESS("Controls access to pages"),
     ACCESS_PLAYER("Allows accessing any /player pages"),

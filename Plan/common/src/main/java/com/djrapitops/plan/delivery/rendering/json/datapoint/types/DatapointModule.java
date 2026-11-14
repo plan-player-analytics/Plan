@@ -231,4 +231,8 @@ public interface DatapointModule {
     @Binds
     @IntoSet
     Datapoint<?> bindMSPTMax95th(MSPTMax95th msptMax95th);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindTopWeapons(TopWeapons topWeapons);
 }
