@@ -48,16 +48,6 @@ export const ALL_TIMEFRAME_PRESETS: (TimeframePreset | typeof SEPARATOR)[] = [
     'custom',
 ];
 
-export const TWO_COLUMN_PRESETS: (TimeframePreset | typeof SEPARATOR)[] = [
-    'weekComparison',
-    SEPARATOR,
-    'previousAndCurrentWeek',
-    'previousAndCurrentMonth',
-    'previousAndCurrentYear',
-    SEPARATOR,
-    'custom',
-];
-
 export type PeriodUnit = 'hour' | 'day' | 'week' | 'month' | 'year' | 'range';
 
 export type TimeframePeriod = {

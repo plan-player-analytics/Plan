@@ -12,7 +12,7 @@ import React from 'react';
 import { QueryDatapointTable } from '../../../table/QueryDatapointTable';
 import { useParams } from 'react-router';
 import { DatapointType } from '../../../../dataHooks/model/datapoint/Datapoint';
-import { TWO_COLUMN_PRESETS } from '../../../../util/datapointTablePresets';
+import { ALL_TIMEFRAME_PRESETS } from '../../../../util/datapointTablePresets';
 
 const ServerWeekComparisonCard = () => {
     const { t } = useTranslation();
@@ -27,7 +27,7 @@ const ServerWeekComparisonCard = () => {
             <QueryDatapointTable
                 id={'week-comparison'}
                 defaultPreset={'weekComparison'}
-                presets={TWO_COLUMN_PRESETS}
+                presets={ALL_TIMEFRAME_PRESETS}
                 filter={{ server: identifier }}
                 showTrend
                 rows={[
