@@ -61,6 +61,10 @@ loadScripts(document, 'script');</script>
 <li><a href="#fetchActivityGroupCounts(long,java.util.Collection,long)" tabindex="0">fetchActivityGroupCounts(long, Collection, long)</a></li>
 <li><a href="#getActivityIndex(long,long,java.util.UUID,java.util.List)" tabindex="0">getActivityIndex(long, long, UUID, List)</a></li>
 <li><a href="#averagePlaytimePerRegularPlayer(long,long,java.util.Collection,long)" tabindex="0">averagePlaytimePerRegularPlayer(long, long, Collection, long)</a></li>
+<li><a href="#averageAfkPerRegularPlayer(long,long,java.util.Collection,long)" tabindex="0">averageAfkPerRegularPlayer(long, long, Collection, long)</a></li>
+<li><a href="#averageSessionLengthPerRegularPlayer(long,long,java.util.Collection,long)" tabindex="0">averageSessionLengthPerRegularPlayer(long, long, Collection, long)</a></li>
+<li><a href="#countNewPlayersTurnedRegular(long,long,java.util.Collection,long)" tabindex="0">countNewPlayersTurnedRegular(long, long, Collection, long)</a></li>
+<li><a href="#countRegularPlayersTurnedInactive(long,long,java.util.Collection,long)" tabindex="0">countRegularPlayersTurnedInactive(long, long, Collection, long)</a></li>
 </ol>
 </li>
 </ol>
@@ -95,8 +99,32 @@ loadScripts(document, 'script');</script>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#averagePlaytimePerRegularPlayer(long,long,java.util.Collection,long)" class="member-name-link">averagePlaytimePerRegularPlayer</a><wbr>(long&nbsp;after,
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#averageAfkPerRegularPlayer(long,long,java.util.Collection,long)" class="member-name-link">averageAfkPerRegularPlayer</a><wbr>(long&nbsp;after,
  long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs,
+ long&nbsp;playtimeThreshold)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#averagePlaytimePerRegularPlayer(long,long,java.util.Collection,long)" class="member-name-link">averagePlaytimePerRegularPlayer</a><wbr>(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs,
+ long&nbsp;playtimeThreshold)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#averageSessionLengthPerRegularPlayer(long,long,java.util.Collection,long)" class="member-name-link">averageSessionLengthPerRegularPlayer</a><wbr>(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs,
+ long&nbsp;playtimeThreshold)</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#countNewPlayersTurnedRegular(long,long,java.util.Collection,long)" class="member-name-link">countNewPlayersTurnedRegular</a><wbr>(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs,
+ long&nbsp;playtimeThreshold)</code></div>
+<div class="col-last odd-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
+<div class="col-first even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code>static <a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a><wbr>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4"><code><a href="#countRegularPlayersTurnedInactive(long,long,java.util.Collection,long)" class="member-name-link">countRegularPlayersTurnedInactive</a><wbr>(long&nbsp;start,
+ long&nbsp;end,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs,
  long&nbsp;playtimeThreshold)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab1 method-summary-table-tab4">&nbsp;</div>
@@ -176,6 +204,59 @@ loadScripts(document, 'script');</script>
  long&nbsp;before,
  <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs,
  long&nbsp;playtimeThreshold)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="averageAfkPerRegularPlayer(long,long,java.util.Collection,long)">
+<h3>averageAfkPerRegularPlayer</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">averageAfkPerRegularPlayer</span><wbr><span class="parameters">(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs,
+ long&nbsp;playtimeThreshold)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="averageSessionLengthPerRegularPlayer(long,long,java.util.Collection,long)">
+<h3>averageSessionLengthPerRegularPlayer</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Long.html" title="class or interface in java.lang" class="external-link">Long</a>&gt;</span>&nbsp;<span class="element-name">averageSessionLengthPerRegularPlayer</span><wbr><span class="parameters">(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs,
+ long&nbsp;playtimeThreshold)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="countNewPlayersTurnedRegular(long,long,java.util.Collection,long)">
+<h3>countNewPlayersTurnedRegular</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</span>&nbsp;<span class="element-name">countNewPlayersTurnedRegular</span><wbr><span class="parameters">(long&nbsp;after,
+ long&nbsp;before,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs,
+ long&nbsp;playtimeThreshold)</span></div>
+</div>
+</section>
+</li>
+<li>
+<section class="detail" id="countRegularPlayersTurnedInactive(long,long,java.util.Collection,long)">
+<h3>countRegularPlayersTurnedInactive</h3>
+<div class="horizontal-scroll">
+<div class="member-signature"><span class="modifiers">public static</span>&nbsp;<span class="return-type"><a href="../Query.html" title="interface in com.djrapitops.plan.storage.database.queries">Query</a>&lt;<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Integer.html" title="class or interface in java.lang" class="external-link">Integer</a>&gt;</span>&nbsp;<span class="element-name">countRegularPlayersTurnedInactive</span><wbr><span class="parameters">(long&nbsp;start,
+ long&nbsp;end,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Collection.html" title="class or interface in java.util" class="external-link">Collection</a>&lt;<a href="../../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>&gt;&nbsp;serverUUIDs,
+ long&nbsp;playtimeThreshold)</span></div>
+<dl class="notes">
+<dt>Parameters:</dt>
+<dd><code>start</code> - Start of the tracking, those regular will be counted here.</dd>
+<dd><code>end</code> - End of the tracking, those inactive will be counted here.</dd>
+<dd><code>serverUUIDs</code> - UUIDs of the servers.</dd>
+<dd><code>playtimeThreshold</code> - Playtime threshold</dd>
+<dt>Returns:</dt>
+<dd>Query how many players went from regular to inactive in a span of time.</dd>
+</dl>
 </div>
 </section>
 </li>
