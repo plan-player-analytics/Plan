@@ -72,6 +72,8 @@ public enum DatapointType {
     PLAYTIME_PER_REGULAR_PLAYER_AVERAGE(PlaytimePerRegularPlayerAverage.class, DatapointCacheKey.SESSION),
     RAM_AVERAGE(RAMAverage.class, DatapointCacheKey.TPS),
     REGULAR_PLAYERS(RegularPlayers.class, DatapointCacheKey.SESSION),
+    NEW_TO_REGULAR(NewToRegular.class, DatapointCacheKey.SESSION),
+    REGULAR_TO_INACTIVE(RegularToInactive.class, DatapointCacheKey.SESSION),
     SERVER_OCCUPIED(ServerOccupied.class, DatapointCacheKey.SESSION, DatapointCacheKey.TPS),
     SERVER_PIE(ServerPie.class, DatapointCacheKey.SESSION),
     SESSION_COUNT(SessionCount.class, DatapointCacheKey.SESSION),

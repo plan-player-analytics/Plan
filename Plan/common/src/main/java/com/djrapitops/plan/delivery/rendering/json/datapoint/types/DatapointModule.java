@@ -90,6 +90,14 @@ public interface DatapointModule {
 
     @Binds
     @IntoSet
+    Datapoint<?> bindNewToRegular(NewToRegular newToRegular);
+
+    @Binds
+    @IntoSet
+    Datapoint<?> bindRegularToInactive(RegularToInactive regularToInactive);
+
+    @Binds
+    @IntoSet
     Datapoint<?> bindSessionCount(SessionCount sessionCount);
 
     @Binds

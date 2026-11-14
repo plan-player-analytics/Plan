@@ -282,6 +282,69 @@ public class MultiServerActivityIndexQueries {
         };
     }
 
+    public static Query<Integer> countNewPlayersTurnedRegular(long after, long before, Collection<ServerUUID> serverUUIDs, long playtimeThreshold) {
+        String selectActivityIndex = selectActivityIndexOfPlayersOnServer(before, playtimeThreshold, serverUUIDs);
+
+        String selectCount = SELECT + "COUNT(1) as count" +
+                FROM + '(' + selectActivityIndex + ") q2" +
+                INNER_JOIN + UsersTable.TABLE_NAME + " u on q2." + SessionsTable.USER_ID + "=u." + UsersTable.ID +
+                WHERE + "u." + UsersTable.REGISTERED + ">=?" +
+                AND + "u." + UsersTable.REGISTERED + "<=?" +
+                AND + "q2.activity_index>=?" +
+                AND + "q2.activity_index<?";
+
+        return new QueryStatement<>(selectCount) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, after);
+                statement.setLong(2, before);
+                statement.setDouble(3, ActivityIndex.REGULAR);
+                statement.setDouble(4, 5.1);
+            }
+
+            @Override
+            public Integer processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getInt("count") : 0;
+            }
+        };
+    }
+
+    /**
+     * @param start             Start of the tracking, those regular will be counted here.
+     * @param end               End of the tracking, those inactive will be counted here.
+     * @param serverUUIDs       UUIDs of the servers.
+     * @param playtimeThreshold Playtime threshold
+     * @return Query how many players went from regular to inactive in a span of time.
+     */
+    public static Query<Integer> countRegularPlayersTurnedInactive(long start, long end, Collection<ServerUUID> serverUUIDs, long playtimeThreshold) {
+        String selectActivityIndexStart = selectActivityIndexOfPlayersOnServer(start, playtimeThreshold, serverUUIDs);
+        String selectActivityIndexEnd = selectActivityIndexOfPlayersOnServer(end, playtimeThreshold, serverUUIDs);
+
+        String selectCount = SELECT + "COUNT(1) as count" +
+                FROM + '(' + selectActivityIndexStart + ") q2" +
+                INNER_JOIN + '(' + selectActivityIndexEnd + ") q4" +
+                " on q2." + SessionsTable.USER_ID + "=q4." + SessionsTable.USER_ID +
+                WHERE + "q2.activity_index>=?" +
+                AND + "q2.activity_index<?" +
+                AND + "q4.activity_index>=?" +
+                AND + "q4.activity_index<?";
+
+        return new QueryStatement<>(selectCount) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setDouble(1, ActivityIndex.REGULAR);
+                statement.setDouble(2, 5.1);
+                statement.setDouble(3, -0.1);
+                statement.setDouble(4, ActivityIndex.IRREGULAR);
+            }
+
+            @Override
+            public Integer processResults(ResultSet set) throws SQLException {
+                return set.next() ? set.getInt("count") : 0;
+            }
+        };
+    }
+
     private static @NonNull String week(long weekAgo, long date, String as) {
         return "SUM( " +
                 "CASE " +
