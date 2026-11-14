@@ -653,7 +653,7 @@ public enum HtmlLang implements Lang {
     TIMEFRAME_LAST_6_HOURS("html.label.timeframe.last6Hours", "Last 6 hours, by hour"),
     TIMEFRAME_LAST_6_MONTHS("html.label.timeframe.last6Months", "Last 6 months, by month"),
     TIMEFRAME_LAST_7_DAYS("html.label.timeframe.last7Days", "Last 7 days, by day"),
-    TIMEFRAME_MONTH_BY_WEEKS("html.label.timeframe.monthByWeeks", "30d overview with weeks"),
+    TIMEFRAME_MONTH_BY_WEEKS("html.label.timeframe.monthByWeeks", "Last 30d with weeks"),
     TIMEFRAME_MONTH_WEEK_DAY("html.label.timeframe.monthWeekDay", "Last 30d, 7d & 24h"),
     TIMEFRAME_PREVIOUS_AND_CURRENT_MONTH("html.label.timeframe.previousAndCurrentMonth", "Previous and current month"),
     TIMEFRAME_PREVIOUS_AND_CURRENT_WEEK("html.label.timeframe.previousAndCurrentWeek", "Previous and current week"),
