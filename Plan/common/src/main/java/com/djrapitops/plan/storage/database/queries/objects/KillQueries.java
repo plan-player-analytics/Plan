@@ -431,6 +431,55 @@ public class KillQueries {
         };
     }
 
+    public static Query<Long> mobDeathCount(long after, long before, ServerUUID serverUUID) {
+        return mobDeathCount(after, before, List.of(serverUUID));
+    }
+
+    public static Query<Long> mobDeathCount(long after, long before) {
+        return mobDeathCount(after, before, List.of());
+    }
+
+    public static Query<Long> mobDeathCount(long after, long before, List<ServerUUID> serverUUIDs) {
+        String serverFilter = serverUUIDs.isEmpty() ? "" : SessionsTable.SERVER_ID + " IN " + ServerTable.selectServerIds(serverUUIDs) + AND;
+        String serverUUIDFilter = serverUUIDs.isEmpty() ? "" : KillsTable.SERVER_UUID + " IN (" + ServerTable.uuids(serverUUIDs) + ")" + AND;
+
+        String selectDeaths = SELECT + "COALESCE(SUM(" + SessionsTable.DEATHS + "),0) as deaths," + SessionsTable.USER_ID +
+                FROM + SessionsTable.TABLE_NAME +
+                WHERE + serverFilter
+                + SessionsTable.SESSION_END + ">=?" +
+                AND + SessionsTable.SESSION_START + "<=?" +
+                GROUP_BY + SessionsTable.USER_ID;
+        String selectPlayerDeathCounts = SELECT + "COUNT(1) as player_deaths," + KillsTable.VICTIM_UUID +
+                FROM + KillsTable.TABLE_NAME +
+                WHERE + serverUUIDFilter
+                + KillsTable.DATE + ">=?" +
+                AND + KillsTable.DATE + "<=?" +
+                GROUP_BY + KillsTable.VICTIM_UUID;
+        String sql = SELECT + "COALESCE(deaths,0) - COALESCE(player_deaths,0) as mob_deaths" +
+                FROM + UsersTable.TABLE_NAME + " u" +
+                LEFT_JOIN + '(' + selectDeaths + ") q1 on q1." + SessionsTable.USER_ID + "=u." + UsersTable.ID +
+                LEFT_JOIN + '(' + selectPlayerDeathCounts + ") q2 on q2." + KillsTable.VICTIM_UUID + "=u." + UsersTable.USER_UUID;
+
+        return new QueryStatement<>(sql) {
+            @Override
+            public void prepare(PreparedStatement statement) throws SQLException {
+                statement.setLong(1, after);
+                statement.setLong(2, before);
+                statement.setLong(3, after);
+                statement.setLong(4, before);
+            }
+
+            @Override
+            public Long processResults(ResultSet set) throws SQLException {
+                long total = 0L;
+                while (set.next()) {
+                    total += set.getLong("mob_deaths");
+                }
+                return total;
+            }
+        };
+    }
+
     public static Query<List<String>> topWeaponsOfServer(long after, long before, ServerUUID serverUUID, int limit) {
         String innerSQL = SELECT + KillsTable.WEAPON + ", COUNT(1) as kills" +
                 FROM + KillsTable.TABLE_NAME +

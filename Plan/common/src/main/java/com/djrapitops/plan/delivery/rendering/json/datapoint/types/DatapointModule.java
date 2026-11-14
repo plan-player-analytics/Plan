@@ -130,6 +130,10 @@ public interface DatapointModule {
 
     @Binds
     @IntoSet
+    Datapoint<?> bindMobDeaths(MobDeaths mobDeaths);
+
+    @Binds
+    @IntoSet
     Datapoint<?> bindTPSAverage(TPSAverage tpsAverage);
 
     @Binds
