@@ -1,13 +1,21 @@
 import React from 'react';
 import PlayerSessionCalendar from '../../calendar/PlayerSessionCalendar.jsx';
 import { calculateCssHexColor } from '../../../util/colors.js';
-import Background from './Background.tsx';
-import { GenericFilterContextProvider } from '../../../dataHooks/genericFilterContextHook.tsx';
+import Background from './Background';
+import { GenericFilterContextProvider } from '../../../dataHooks/genericFilterContextHook';
+
+type CalendarEntry = {
+    title: string;
+    start: number;
+    end?: number;
+    color: string;
+    value: number;
+};
 
 const CalendarUseCase = () => {
     const date = Date.now();
     const day = 24 * 60 * 60 * 1000;
-    const series = [
+    const series: CalendarEntry[] = [
         {
             title: 'html.label.playtime',
             start: date - (date % day),

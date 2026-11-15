@@ -92,25 +92,28 @@ const Contributions = () => {
                     components={{ 1: <span className='col-theme' /> }}
                 />
             </p>
-            <ul className='row contributors'>
-                {contributors.map((contributor) => (
-                    <Contributor
-                        key={contributor.name}
-                        contributor={contributor}
-                    />
-                ))}
-                <li>{t('html.modal.info.contributors.bugreporters')}</li>
-            </ul>
-            <small>
-                <Fa icon={faCode} /> {t('html.modal.info.contributors.code')}{' '}
-                <Fa icon={faLanguage} />{' '}
-                {t('html.modal.info.contributors.translator')}
-            </small>
-            <hr />
-            <p className='col-theme'>
-                {t('html.modal.info.contributors.donate')}
-                <Fa icon={faStar} className={'col-amber'} />
-            </p>
+            <section id='contributors'>
+                <ul className='row contributors'>
+                    {contributors.map((contributor) => (
+                        <Contributor
+                            key={contributor.name}
+                            contributor={contributor}
+                        />
+                    ))}
+                    <li>{t('html.modal.info.contributors.bugreporters')}</li>
+                </ul>
+                <small>
+                    <Fa icon={faCode} />{' '}
+                    {t('html.modal.info.contributors.code')}{' '}
+                    <Fa icon={faLanguage} />{' '}
+                    {t('html.modal.info.contributors.translator')}
+                </small>
+                <hr />
+                <p className='col-theme'>
+                    {t('html.modal.info.contributors.donate')}
+                    <Fa icon={faStar} className={'col-amber'} />
+                </p>
+            </section>
         </>
     );
 };

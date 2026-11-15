@@ -10,6 +10,7 @@ const FORMAT_OPTIONS: Record<PeriodUnit, Intl.DateTimeFormatOptions> = {
     day: { weekday: 'short', day: 'numeric', month: 'short' },
     week: { day: 'numeric', month: 'short' },
     month: { month: 'long', year: 'numeric' },
+    year: { year: 'numeric' },
     range: { day: 'numeric', month: 'short', year: 'numeric' },
 };
 

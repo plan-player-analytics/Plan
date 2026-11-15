@@ -16,6 +16,10 @@ export type Preferences = {
 
     tpsThresholds: GraphThresholds;
     diskThresholds: GraphThresholds;
+
+    joinAddresses: {
+        [key: string]: AddressGroup[];
+    };
 };
 
 export type TimeFormat = {
@@ -34,4 +38,10 @@ export type TimeFormat = {
 export type GraphThresholds = {
     highThreshold: number;
     mediumThreshold: number;
+};
+
+export type AddressGroup = {
+    name: string;
+    uuid: string;
+    addresses: string[];
 };

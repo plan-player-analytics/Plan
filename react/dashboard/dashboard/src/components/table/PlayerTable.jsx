@@ -120,14 +120,6 @@ const PlayerTable = ({ data, orderBy }) => {
             {
                 title: (
                     <>
-                        <Fa icon={faSignal} /> {t('html.label.averagePing')}
-                    </>
-                ),
-                data: { _: 'pingAverage', display: 'pingAverageFormatted' },
-            },
-            {
-                title: (
-                    <>
                         <Fa icon={faSignal} /> {t('html.label.bestPing')}
                     </>
                 ),
@@ -201,10 +193,6 @@ const PlayerTable = ({ data, orderBy }) => {
                     <FormattedDate date={player.lastSeen} react />
                 ),
                 country: location,
-                pingAverage: player.pingAverage,
-                pingAverageFormatted: formatPing(
-                    formatDecimals(player.pingAverage),
-                ),
                 pingMax: player.pingMax,
                 pingMaxFormatted: formatPing(player.pingMax),
                 pingMin: player.pingMin,

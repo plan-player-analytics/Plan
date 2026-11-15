@@ -2,12 +2,10 @@ import { useTranslation } from 'react-i18next';
 import { Card } from 'react-bootstrap';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faCampground } from '@fortawesome/free-solid-svg-icons';
-import React, { ComponentProps } from 'react';
+import React from 'react';
 import ServerPvpPveAsNumbersTable from '../../../table/ServerPvpPveAsNumbersTable';
 
-type Props = ComponentProps<typeof ServerPvpPveAsNumbersTable>;
-
-const PvpPveAsNumbersCard = ({ killData }: Props) => {
+const PvpPveAsNumbersCard = () => {
     const { t } = useTranslation();
     return (
         <Card id={'pvp-pve-as-numbers'}>
@@ -17,7 +15,7 @@ const PvpPveAsNumbersCard = ({ killData }: Props) => {
                     {t('html.label.pvpPveAsNumbers')}
                 </h6>
             </Card.Header>
-            <ServerPvpPveAsNumbersTable killData={killData} />
+            <ServerPvpPveAsNumbersTable />
         </Card>
     );
 };

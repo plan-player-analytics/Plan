@@ -165,6 +165,7 @@ const FooterButtons = ({
                     <Fa icon={faPalette} />
                 </button>
                 <button
+                    id='info-button'
                     className='btn bg-transparent-light'
                     onClick={toggleInfoModal}
                     title={t('html.modal.info.text')}>

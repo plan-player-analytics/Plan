@@ -48,6 +48,7 @@ const PerformanceAsNumbersTable = ({ servers }: Props) => {
             id={'performance-as-numbers'}
             defaultPreset={'monthByWeeks'}
             filter={{ server: servers.map((s) => s.serverUUID) }}
+            showTrend
             rows={[
                 {
                     // TODO Total and average/server downtime and uptime
@@ -59,6 +60,7 @@ const PerformanceAsNumbersTable = ({ servers }: Props) => {
                         ' (' +
                         t('generic.noData') +
                         ')',
+                    trendDownGood: true,
                 },
                 {
                     dataType: DatapointType.UPTIME,
@@ -72,6 +74,7 @@ const PerformanceAsNumbersTable = ({ servers }: Props) => {
                     color: 'tps-low-spikes',
                     icon: faExclamationCircle,
                     text: t('html.label.lowTpsSpikes'),
+                    trendDownGood: true,
                 },
                 {
                     dataType: DatapointType.MSPT_AVERAGE_LOW_TPS,
@@ -79,6 +82,7 @@ const PerformanceAsNumbersTable = ({ servers }: Props) => {
                     icon: faStopwatch,
                     text: t('html.label.averageMsptLowTPS'),
                     indent: true,
+                    trendDownGood: true,
                 },
                 {
                     dataType: DatapointType.MSPT_MAX_95TH_LOW_TPS,
@@ -86,6 +90,7 @@ const PerformanceAsNumbersTable = ({ servers }: Props) => {
                     icon: faStopwatch,
                     text: t('html.label.maxMsptLowTPS'),
                     indent: true,
+                    trendDownGood: true,
                 },
                 {
                     dataType: DatapointType.PLAYERS_ONLINE_AVERAGE,
@@ -130,6 +135,7 @@ const PerformanceAsNumbersTable = ({ servers }: Props) => {
                         </>
                     ),
                     key: 'average-mspt',
+                    trendDownGood: true,
                 },
                 {
                     dataType: DatapointType.MSPT_AVERAGE,
@@ -141,6 +147,7 @@ const PerformanceAsNumbersTable = ({ servers }: Props) => {
                     text: t('html.label.whileIdle'),
                     key: 'average-mspt-idle',
                     indent: true,
+                    trendDownGood: true,
                 },
                 {
                     dataType: DatapointType.MSPT_IMPACT_PER_PLAYER,
@@ -148,6 +155,7 @@ const PerformanceAsNumbersTable = ({ servers }: Props) => {
                     icon: faUsers,
                     text: t('html.label.msptImpactPlayer'),
                     indent: true,
+                    trendDownGood: true,
                 },
                 {
                     dataType: DatapointType.MSPT_IMPACT_PER_CHUNK,
@@ -155,6 +163,7 @@ const PerformanceAsNumbersTable = ({ servers }: Props) => {
                     icon: faMap,
                     text: t('html.label.msptImpactChunk'),
                     indent: true,
+                    trendDownGood: true,
                 },
                 {
                     dataType: DatapointType.MSPT_MAX_95TH,
@@ -162,6 +171,7 @@ const PerformanceAsNumbersTable = ({ servers }: Props) => {
                     icon: faStopwatch,
                     text: t('html.label.msptPercentileMax', { percentile: 95 }),
                     key: 'max-95h-mspt',
+                    trendDownGood: true,
                 },
                 {
                     dataType: DatapointType.MSPT_JITTER_AVERAGE,
@@ -177,6 +187,7 @@ const PerformanceAsNumbersTable = ({ servers }: Props) => {
                         extra: { activityType: OnlineActivityType.ACTIVE },
                     },
                     key: 'mspt-jitter-average',
+                    trendDownGood: true,
                 },
                 {
                     dataType: DatapointType.MSPT_JITTER_MAX,
@@ -191,6 +202,7 @@ const PerformanceAsNumbersTable = ({ servers }: Props) => {
                     },
                     key: 'mspt-jitter-max',
                     boldBottom: true,
+                    trendDownGood: true,
                 },
                 {
                     dataType: DatapointType.ENTITIES_AVERAGE,
@@ -206,6 +218,7 @@ const PerformanceAsNumbersTable = ({ servers }: Props) => {
                         </>
                     ),
                     key: 'average-entities',
+                    trendDownGood: true,
                 },
                 {
                     dataType: DatapointType.ENTITIES_PER_CHUNK,
@@ -213,6 +226,7 @@ const PerformanceAsNumbersTable = ({ servers }: Props) => {
                     icon: faMap,
                     text: t('html.label.averageEntitiesPerChunk'),
                     indent: true,
+                    trendDownGood: true,
                 },
                 {
                     dataType: DatapointType.CHUNKS_AVERAGE,
@@ -228,6 +242,7 @@ const PerformanceAsNumbersTable = ({ servers }: Props) => {
                         </>
                     ),
                     key: 'average-chunks',
+                    trendDownGood: true,
                 },
                 {
                     dataType: DatapointType.CHUNKS_PER_PLAYER,
@@ -236,12 +251,14 @@ const PerformanceAsNumbersTable = ({ servers }: Props) => {
                     text: t('html.label.averageChunksPerPlayer'),
                     indent: true,
                     boldBottom: true,
+                    trendDownGood: true,
                 },
                 {
                     dataType: DatapointType.CPU_AVERAGE,
                     color: 'cpu',
                     icon: faTachometerAlt,
                     text: t('html.label.averageCpuUsage'),
+                    trendDownGood: true,
                 },
                 {
                     dataType: DatapointType.CPU_AVERAGE,
@@ -253,6 +270,7 @@ const PerformanceAsNumbersTable = ({ servers }: Props) => {
                     text: t('html.label.whileActive'),
                     key: 'average-cpu-active',
                     indent: true,
+                    trendDownGood: true,
                 },
                 {
                     dataType: DatapointType.CPU_AVERAGE,
@@ -264,6 +282,7 @@ const PerformanceAsNumbersTable = ({ servers }: Props) => {
                     text: t('html.label.whileIdle'),
                     key: 'average-cpu-idle',
                     indent: true,
+                    trendDownGood: true,
                 },
                 {
                     dataType: DatapointType.CPU_IMPACT_PER_PLAYER,
@@ -271,12 +290,14 @@ const PerformanceAsNumbersTable = ({ servers }: Props) => {
                     icon: faUsers,
                     text: t('html.label.cpuImpactPerPlayer'),
                     indent: true,
+                    trendDownGood: true,
                 },
                 {
                     dataType: DatapointType.RAM_AVERAGE,
                     color: 'ram',
                     icon: faMicrochip,
                     text: t('html.label.averageRamUsage'),
+                    trendDownGood: true,
                 },
                 {
                     dataType: DatapointType.DISK_MAX,

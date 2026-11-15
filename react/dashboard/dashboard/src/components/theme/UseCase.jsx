@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import ColorDropdown from './ColorDropdown.jsx';
-import ColorMultiSelect from './ColorMultiSelect.jsx';
+import ColorMultiSelect from './ColorMultiSelect';
 import { FontAwesomeIcon as Fa } from '@fortawesome/react-fontawesome';
 import { faTimes } from '@fortawesome/free-solid-svg-icons';
 import { useMinHeightContext } from '../../hooks/context/minHeightContextHook';

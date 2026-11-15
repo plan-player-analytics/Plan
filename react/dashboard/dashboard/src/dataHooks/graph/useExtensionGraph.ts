@@ -2,7 +2,6 @@ import { useQuery } from '@tanstack/react-query';
 import { ExtensionGraph } from '../model/extension/ExtensionGraph';
 import { useNavigation } from '../../hooks/navigationHook';
 import { useEffect, useRef } from 'react';
-import { queryRetry } from '../queryRetry';
 import { staticSite } from '../../service/backendConfiguration';
 
 type Props = {
@@ -17,7 +16,7 @@ export const useExtensionGraph = ({ graph, server, player }: Props) => {
     const query = useQuery({
         queryKey: ['extensionGraph', graph, server, player],
         queryFn: () => getExtensionGraph(graph, server, player),
-        retry: queryRetry,
+
         enabled: true,
     });
     useEffect(() => {

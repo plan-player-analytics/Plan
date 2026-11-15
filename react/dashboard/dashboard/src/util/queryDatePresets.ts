@@ -1,4 +1,5 @@
 import moment from 'moment';
+import { SEPARATOR } from './presetSeparator';
 
 export type DateRangePreset =
     | 'allData'
@@ -15,21 +16,30 @@ export type DateRangePreset =
     | 'currentYear'
     | 'previousYear';
 
-export const DATE_RANGE_PRESETS: { name: DateRangePreset; label: string }[] = [
+export const DATE_RANGE_PRESETS: {
+    name: DateRangePreset | typeof SEPARATOR;
+    label: string;
+}[] = [
     { name: 'allData', label: 'html.query.filter.preset.allData' },
     { name: 'custom', label: 'html.query.filter.preset.custom' },
+    { name: SEPARATOR, label: '' },
     { name: 'last30days', label: 'html.query.filter.preset.last30days' },
     { name: 'last7days', label: 'html.query.filter.preset.last7days' },
     { name: 'last24h', label: 'html.query.filter.preset.last24h' },
-    { name: 'currentMonth', label: 'html.query.filter.preset.currentMonth' },
-    { name: 'previousMonth', label: 'html.query.filter.preset.previousMonth' },
-    { name: 'currentWeek', label: 'html.query.filter.preset.currentWeek' },
-    { name: 'previousWeek', label: 'html.query.filter.preset.previousWeek' },
-    { name: 'today', label: 'html.query.filter.preset.today' },
+    { name: SEPARATOR, label: '' },
     { name: 'yesterday', label: 'html.query.filter.preset.yesterday' },
-    { name: 'currentYear', label: 'html.query.filter.preset.currentYear' },
+    { name: 'today', label: 'html.query.filter.preset.today' },
+    { name: 'previousWeek', label: 'html.query.filter.preset.previousWeek' },
+    { name: 'currentWeek', label: 'html.query.filter.preset.currentWeek' },
+    { name: 'previousMonth', label: 'html.query.filter.preset.previousMonth' },
+    { name: 'currentMonth', label: 'html.query.filter.preset.currentMonth' },
     { name: 'previousYear', label: 'html.query.filter.preset.previousYear' },
+    { name: 'currentYear', label: 'html.query.filter.preset.currentYear' },
 ];
+
+export const BOUNDED_DATE_RANGE_PRESETS = DATE_RANGE_PRESETS.filter(
+    (option) => option.name !== 'allData',
+);
 
 export type DateTimeRange = {
     after: [string, string];
@@ -40,11 +50,6 @@ const toDateAndTime = (m: moment.Moment): [string, string] => [
     m.format('DD/MM/YYYY'),
     m.format('HH:mm'),
 ];
-
-const range = (after: moment.Moment, before: moment.Moment): DateTimeRange => ({
-    after: toDateAndTime(after),
-    before: toDateAndTime(before),
-});
 
 const startOfWeek = (m: moment.Moment, firstDay: number) => {
     const daysSinceWeekStart = (m.day() - firstDay + 7) % 7;
@@ -120,31 +125,25 @@ export const fromServerWallClock = (
     return candidates.length ? Math.min(...candidates) : target - offsetBefore;
 };
 
-const period = (
-    start: moment.Moment,
-    nextStart: moment.Moment,
-    zone: ServerTimeZone,
-) =>
-    range(
-        start,
-        toServerWallClock(
-            fromServerWallClock(nextStart, zone) - MINUTE_MS,
-            zone,
-        ),
-    );
-
-const elapsed = (nowMs: number, durationMs: number, zone: ServerTimeZone) =>
-    range(
-        toServerWallClock(nowMs - durationMs, zone),
-        toServerWallClock(nowMs, zone),
-    );
+export type DateRange = {
+    after: number;
+    before: number;
+};
 
 export const calculatePresetRange = (
     preset: DateRangePreset,
     nowEpochMs: number,
     zone: ServerTimeZone,
     firstDay: number = 1,
-): DateTimeRange | undefined => {
+): DateRange | undefined => {
+    const last = (durationMs: number) => ({
+        after: nowEpochMs - durationMs,
+        before: nowEpochMs,
+    });
+    const between = (start: moment.Moment, nextStart: moment.Moment) => ({
+        after: fromServerWallClock(start, zone),
+        before: fromServerWallClock(nextStart, zone),
+    });
     const now = toServerWallClock(nowEpochMs, zone);
     const today = now.clone().startOf('day');
     const weekStart = startOfWeek(now, firstDay);
@@ -153,40 +152,36 @@ export const calculatePresetRange = (
 
     switch (preset) {
         case 'last30days':
-            return elapsed(nowEpochMs, 30 * DAY_MS, zone);
+            return last(30 * DAY_MS);
         case 'last7days':
-            return elapsed(nowEpochMs, 7 * DAY_MS, zone);
+            return last(7 * DAY_MS);
         case 'last24h':
-            return elapsed(nowEpochMs, DAY_MS, zone);
+            return last(DAY_MS);
         case 'today':
-            return period(today, today.clone().add(1, 'day'), zone);
+            return between(today, today.clone().add(1, 'day'));
         case 'yesterday':
-            return period(today.clone().subtract(1, 'day'), today, zone);
+            return between(today.clone().subtract(1, 'day'), today);
         case 'currentWeek':
-            return period(weekStart, weekStart.clone().add(1, 'week'), zone);
+            return between(weekStart, weekStart.clone().add(1, 'week'));
         case 'previousWeek':
-            return period(
-                weekStart.clone().subtract(1, 'week'),
-                weekStart,
-                zone,
-            );
+            return between(weekStart.clone().subtract(1, 'week'), weekStart);
         case 'currentMonth':
-            return period(monthStart, monthStart.clone().add(1, 'month'), zone);
+            return between(monthStart, monthStart.clone().add(1, 'month'));
         case 'previousMonth':
-            return period(
-                monthStart.clone().subtract(1, 'month'),
-                monthStart,
-                zone,
-            );
+            return between(monthStart.clone().subtract(1, 'month'), monthStart);
         case 'currentYear':
-            return period(yearStart, yearStart.clone().add(1, 'year'), zone);
+            return between(yearStart, yearStart.clone().add(1, 'year'));
         case 'previousYear':
-            return period(
-                yearStart.clone().subtract(1, 'year'),
-                yearStart,
-                zone,
-            );
+            return between(yearStart.clone().subtract(1, 'year'), yearStart);
         default:
             return undefined;
     }
 };
+
+export const toDateTimeRange = (
+    range: DateRange,
+    zone: ServerTimeZone,
+): DateTimeRange => ({
+    after: toDateAndTime(toServerWallClock(range.after, zone)),
+    before: toDateAndTime(toServerWallClock(range.before - 1, zone)),
+});

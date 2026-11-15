@@ -14,7 +14,6 @@ import Highcharts from 'highcharts/highstock';
 import 'highcharts/modules/no-data-to-display';
 import 'highcharts/modules/accessibility';
 import MultiSelect from '../../input/MultiSelect.tsx';
-import CollapseWithButton from '../../layout/CollapseWithButton.tsx';
 import FilterDropdown from './FilterDropdown';
 import FilterList, { withFilterKey } from './FilterList';
 import { useQueryResultContext } from '../../../hooks/queryResultContext.tsx';
@@ -22,6 +21,13 @@ import { useNavigate } from 'react-router';
 import { useNavigation } from '../../../hooks/navigationHook.tsx';
 import ActionButton from '../../input/button/ActionButton.tsx';
 import { useMetadata } from '../../../hooks/metadataHook.tsx';
+import { InlinedRow } from '../../layout/InlinedRow.tsx';
+import {
+    BOUNDED_DATE_RANGE_PRESETS,
+    toDateTimeRange,
+} from '../../../util/queryDatePresets.ts';
+import { useTimeframePresets } from '../../../hooks/timeframePresetsHook.ts';
+import PresetSelect from '../../input/PresetSelect.tsx';
 
 const parseTimeAsUTC = (dateString, timeString) => {
     const d = dateString.match(/^(0\d|\d{2})[/|-]?(0\d|\d{2})[/|-]?(\d{4,5})$/);
@@ -51,6 +57,7 @@ const QueryOptionsCard = () => {
     const [fromTime, setFromTime] = useState(undefined);
     const [toDate, setToDate] = useState(undefined);
     const [toTime, setToTime] = useState(undefined);
+    const [viewResetCount, setViewResetCount] = useState(0);
 
     const [selectedServers, setSelectedServers] = useState([]);
     const [filters, setFilters] = useState([]);
@@ -91,6 +98,40 @@ const QueryOptionsCard = () => {
     );
 
     const [extremes, setExtremes] = useState(undefined);
+
+    const applyViewPreset = useCallback(
+        (preset) => {
+            const computed = preset.compute();
+            if (!computed) return;
+
+            const range = toDateTimeRange(computed, options.view);
+            setFromDate(range.after[0]);
+            setFromTime(range.after[1]);
+            setToDate(range.before[0]);
+            setToTime(range.before[1]);
+            [
+                'viewFromDateField',
+                'viewFromTimeField',
+                'viewToDateField',
+                'viewToTimeField',
+            ].forEach(setAsValid);
+            setViewResetCount((count) => count + 1);
+            setExtremes({
+                min: parseTimeAsUTC(range.after[0], range.after[1]),
+                max: parseTimeAsUTC(range.before[0], range.before[1]),
+            });
+        },
+        [options, setAsValid],
+    );
+
+    const viewPresets = useTimeframePresets({
+        defaultPreset: 'last30days',
+        options: BOUNDED_DATE_RANGE_PRESETS,
+        zone: options?.view,
+        onSelect: applyViewPreset,
+    });
+    const { resetToCustom } = viewPresets;
+
     /*eslint-disable react-hooks/exhaustive-deps */
     // Because: Don't update when any of the date/time fields change because that would lead to infinite loop
     const updateExtremes = useCallback(() => {
@@ -128,9 +169,10 @@ const QueryOptionsCard = () => {
                 setFromTime(afterTime);
                 setToDate(beforeDate);
                 setToTime(beforeTime);
+                resetToCustom();
             }
         },
-        [setFromTime, setFromDate, setToTime, setToDate],
+        [setFromTime, setFromDate, setToTime, setToDate, resetToCustom],
     );
 
     useEffect(() => {
@@ -150,6 +192,7 @@ const QueryOptionsCard = () => {
         setFromTime(result.view.afterTime);
         setToDate(result.view.beforeDate);
         setToTime(result.view.beforeTime);
+        resetToCustom();
 
         const existingFilters = result.filters;
         existingFilters.forEach(
@@ -181,7 +224,13 @@ const QueryOptionsCard = () => {
         setFilters,
         setSelectedServers,
         setExtremes,
+        resetToCustom,
     ]);
+
+    const editedBy = (setter) => (value) => {
+        setter(value);
+        resetToCustom();
+    };
 
     const serverSelectorMessage = useMemo(() => {
         if (!options?.view) return t('html.query.filters.loading');
@@ -195,8 +244,8 @@ const QueryOptionsCard = () => {
             return t('html.query.label.servers.two');
         } else {
             return t('html.query.label.servers.many').replace(
-                '{number}',
-                selected,
+                '{{number}}',
+                ' ' + selected + ' ',
             );
         }
     }, [options, selectedServers]);
@@ -243,7 +292,14 @@ const QueryOptionsCard = () => {
     return (
         <Card>
             <Card.Body>
-                <label>{t('html.query.label.view')}</label>
+                <InlinedRow>
+                    <label>{t('html.query.label.view')}</label>
+                    <PresetSelect
+                        id={'viewPreset'}
+                        className='ms-2'
+                        presets={viewPresets}
+                    />
+                </InlinedRow>
                 <Row
                     className={
                         'my-2 justify-content-start justify-content-md-center'
@@ -253,9 +309,10 @@ const QueryOptionsCard = () => {
                     </Col>
                     <Col md={3}>
                         <DateInputField
+                            key={viewResetCount}
                             id={'viewFromDateField'}
                             value={fromDate}
-                            setValue={setFromDate}
+                            setValue={editedBy(setFromDate)}
                             placeholder={view.afterDate}
                             setAsInvalid={setAsInvalid}
                             setAsValid={setAsValid}
@@ -265,9 +322,10 @@ const QueryOptionsCard = () => {
                     </Col>
                     <Col md={2}>
                         <TimeInputField
+                            key={viewResetCount}
                             id={'viewFromTimeField'}
                             value={fromTime}
-                            setValue={setFromTime}
+                            setValue={editedBy(setFromTime)}
                             placeholder={view.afterTime}
                             setAsInvalid={setAsInvalid}
                             setAsValid={setAsValid}
@@ -278,9 +336,10 @@ const QueryOptionsCard = () => {
                     </Col>
                     <Col md={3}>
                         <DateInputField
+                            key={viewResetCount}
                             id={'viewToDateField'}
                             value={toDate}
-                            setValue={setToDate}
+                            setValue={editedBy(setToDate)}
                             placeholder={view.beforeDate}
                             setAsInvalid={setAsInvalid}
                             setAsValid={setAsValid}
@@ -290,9 +349,10 @@ const QueryOptionsCard = () => {
                     </Col>
                     <Col md={2}>
                         <TimeInputField
+                            key={viewResetCount}
                             id={'viewToTimeField'}
                             value={toTime}
-                            setValue={setToTime}
+                            setValue={editedBy(setToTime)}
                             placeholder={view.beforeTime}
                             setAsInvalid={setAsInvalid}
                             setAsValid={setAsValid}
@@ -311,15 +371,14 @@ const QueryOptionsCard = () => {
                 </Row>
                 <Row>
                     <Col md={12}>
-                        <CollapseWithButton title={serverSelectorMessage}>
-                            <MultiSelect
-                                options={view.servers.map(
-                                    (server) => server.serverName,
-                                )}
-                                selectedIndexes={selectedServers}
-                                setSelectedIndexes={setSelectedServers}
-                            />
-                        </CollapseWithButton>
+                        <label>{serverSelectorMessage}</label>
+                        <MultiSelect
+                            options={view.servers.map(
+                                (server) => server.serverName,
+                            )}
+                            selectedIndexes={selectedServers}
+                            setSelectedIndexes={setSelectedServers}
+                        />
                     </Col>
                 </Row>
                 <hr style={{ marginBottom: 0 }} />

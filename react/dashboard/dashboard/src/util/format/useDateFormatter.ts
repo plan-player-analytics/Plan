@@ -6,6 +6,7 @@ import { useI18nFriendlyLanguage } from '../../service/localeService.js';
 import { useMetadata } from '../../hooks/metadataHook';
 import { usePreferences } from '../../hooks/preferences/preferencesHook';
 import { Preferences } from '../../hooks/model/Preferences';
+import moment from 'moment';
 
 export const MS_24H = 24 * 60 * 60 * 1000;
 export const MS_WEEK = 7 * MS_24H;
@@ -64,19 +65,37 @@ export const useDateFormatter = (
 
     const formatDate = useCallback(
         (date: any) => {
-            if (!offset || !pattern) return date;
-            if (!isNumber(date)) return date;
-            if (date === 0) return '-';
+            const numericDate =
+                typeof date === 'string' &&
+                date.trim() !== '' &&
+                !isNaN(Number(date))
+                    ? Number(date)
+                    : date;
+
+            if (offset === undefined || offset === null || !pattern) {
+                return numericDate;
+            }
+            if (!isNumber(numericDate)) return numericDate;
+            if (numericDate === 0) return '-';
+
+            // Adjust offset for DST offset in past dates
+            const dateMoment = moment(new Date(numericDate));
+            const dateUtcOffset = dateMoment.utcOffset();
+            const currentUtcOffset = moment().utcOffset();
+            const dstAdjustment =
+                (dateUtcOffset - currentUtcOffset) * 60 * 1000;
+            const adjustedOffset = offset - dstAdjustment;
+
             const dayMs = 24 * 60 * 60 * 1000;
-            const timestamp = date - offset;
-            const now = Date.now() - offset;
+            const timestamp = numericDate - adjustedOffset;
+            const now = Date.now() - adjustedOffset;
             const fromStartOfToday = now % dayMs;
             const today = now - fromStartOfToday;
             const yesterday = today - dayMs;
             const tomorrow = today + dayMs;
             const fiveDaysAgo = today - dayMs * 5;
 
-            let format = pattern;
+            let format = pattern || 'MMM d YYYY, HH:mm';
             if (recentDays) {
                 if (timestamp >= today && timestamp < tomorrow) {
                     format = format.replace(

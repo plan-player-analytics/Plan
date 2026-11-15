@@ -94,11 +94,11 @@ const NewPlayerRetentionHelp = () => {
     }, [start, end, retentionStart, session1Time, session2Time, t]);
 
     const updateSession1Time = useCallback(
-        (event) => setSession1Time(event.target.value),
+        (event) => setSession1Time(Number(event.target.value)),
         [setSession1Time],
     );
     const updateSession2Time = useCallback(
-        (event) => setSession2Time(event.target.value),
+        (event) => setSession2Time(Number(event.target.value)),
         [setSession2Time],
     );
 

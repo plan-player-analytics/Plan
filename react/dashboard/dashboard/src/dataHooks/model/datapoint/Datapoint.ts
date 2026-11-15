@@ -2,6 +2,7 @@ import { WorldPie } from '../graph/WorldPie';
 import { ServerPie } from '../graph/ServerPie';
 import { OutOf } from './OutOf';
 import { OutOfCategory } from './OutOfCategory';
+import { TopList } from './TopList';
 import { baseAddress, staticSite } from '../../../service/backendConfiguration';
 import { filterToQueryString, GenericFilter } from '../GenericFilter';
 import { MS_24H, MS_WEEK } from '../../../util/format/useDateFormatter';
@@ -30,9 +31,12 @@ export enum DatapointType {
     UNIQUE_PLAYERS_COUNT = 'UNIQUE_PLAYERS_COUNT',
     UNIQUE_PLAYERS_AVERAGE = 'UNIQUE_PLAYERS_AVERAGE',
     NEW_PLAYERS = 'NEW_PLAYERS',
+    TOTAL_PLAYERS = 'TOTAL_PLAYERS',
     NEW_PLAYERS_AVERAGE = 'NEW_PLAYERS_AVERAGE',
     NEW_PLAYER_RETENTION = 'NEW_PLAYER_RETENTION',
     REGULAR_PLAYERS = 'REGULAR_PLAYERS',
+    NEW_TO_REGULAR = 'NEW_TO_REGULAR',
+    REGULAR_TO_INACTIVE = 'REGULAR_TO_INACTIVE',
     PLAYERS_ONLINE = 'PLAYERS_ONLINE',
     PLAYERS_ONLINE_AVERAGE = 'PLAYERS_ONLINE_AVERAGE',
     PLAYERS_ONLINE_PEAK = 'PLAYERS_ONLINE_PEAK',
@@ -41,10 +45,16 @@ export enum DatapointType {
     DOWNTIME = 'DOWNTIME',
     SESSION_COUNT = 'SESSION_COUNT',
     SESSION_LENGTH_AVERAGE = 'SESSION_LENGTH_AVERAGE',
+    SESSION_LENGTH_REGULAR_PLAYER_AVERAGE = 'SESSION_LENGTH_REGULAR_PLAYER_AVERAGE',
     PLAYTIME_PER_PLAYER_AVERAGE = 'PLAYTIME_PER_PLAYER_AVERAGE',
+    PLAYTIME_PER_REGULAR_PLAYER_AVERAGE = 'PLAYTIME_PER_REGULAR_PLAYER_AVERAGE',
+    AFK_TIME_PERCENTAGE_REGULAR_PLAYER_AVERAGE = 'AFK_TIME_PERCENTAGE_REGULAR_PLAYER_AVERAGE',
     DEATHS = 'DEATHS',
     PLAYER_KILLS = 'PLAYER_KILLS',
     MOB_KILLS = 'MOB_KILLS',
+    MOB_DEATHS = 'MOB_DEATHS',
+    KDR_AVERAGE = 'KDR_AVERAGE',
+    MOB_KDR_AVERAGE = 'MOB_KDR_AVERAGE',
     TPS_AVERAGE = 'TPS_AVERAGE',
     TPS_LOW_SPIKES = 'TPS_LOW_SPIKES',
     MSPT_AVERAGE = 'MSPT_AVERAGE',
@@ -64,6 +74,7 @@ export enum DatapointType {
     CHUNKS_PER_PLAYER = 'CHUNKS_PER_PLAYER',
     DISK_MAX = 'DISK_MAX',
     DISK_MIN = 'DISK_MIN',
+    TOP_WEAPONS = 'TOP_WEAPONS',
 }
 
 export const differingPermissions: Partial<Record<DatapointType, string>> = {
@@ -80,9 +91,12 @@ export type DatapointTypeMap = {
     UNIQUE_PLAYERS_COUNT: number;
     UNIQUE_PLAYERS_AVERAGE: number;
     NEW_PLAYERS: number;
+    TOTAL_PLAYERS: number;
     NEW_PLAYERS_AVERAGE: number;
     NEW_PLAYER_RETENTION: number;
     REGULAR_PLAYERS: number;
+    NEW_TO_REGULAR: number;
+    REGULAR_TO_INACTIVE: number;
     PLAYERS_ONLINE: number;
     PLAYERS_ONLINE_AVERAGE: number;
     UPTIME: number;
@@ -90,10 +104,16 @@ export type DatapointTypeMap = {
     DOWNTIME: number;
     SESSION_COUNT: number;
     SESSION_LENGTH_AVERAGE: number;
+    SESSION_LENGTH_REGULAR_PLAYER_AVERAGE: number;
     PLAYTIME_PER_PLAYER_AVERAGE: number;
+    PLAYTIME_PER_REGULAR_PLAYER_AVERAGE: number;
+    AFK_TIME_PERCENTAGE_REGULAR_PLAYER_AVERAGE: number;
     DEATHS: number;
     PLAYER_KILLS: number;
     MOB_KILLS: number;
+    MOB_DEATHS: number;
+    KDR_AVERAGE: number;
+    MOB_KDR_AVERAGE: number;
     TPS_AVERAGE: number;
     TPS_LOW_SPIKES: number;
     MSPT_AVERAGE: number;
@@ -118,6 +138,7 @@ export type DatapointTypeMap = {
     MOST_ACTIVE_GAME_MODE: OutOfCategory;
     SERVER_PIE: ServerPie;
     PLAYERS_ONLINE_PEAK: { date: number; value: number };
+    TOP_WEAPONS: TopList;
 };
 
 export type NumericDatapointType = {

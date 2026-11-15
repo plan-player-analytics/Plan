@@ -4,7 +4,6 @@ import { baseAddress, staticSite } from '../service/backendConfiguration';
 import { Session } from 'react-router';
 import { useNavigation } from '../hooks/navigationHook';
 import { useEffect } from 'react';
-import { queryRetry } from './queryRetry';
 import { useDateConverter } from '../util/format/useDateConverter';
 import { useAuth } from '../hooks/authenticationHook';
 
@@ -33,7 +32,7 @@ export const useSessions = (filter: GenericFilter) => {
     const query = useQuery({
         queryKey: ['sessions', ...Object.values(serverFilter)],
         queryFn: () => getSessions(serverFilter),
-        retry: queryRetry,
+
         enabled: hasPermission(getPermission(serverFilter)),
     });
     useEffect(() => {

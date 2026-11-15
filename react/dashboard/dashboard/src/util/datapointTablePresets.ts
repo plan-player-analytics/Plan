@@ -2,46 +2,60 @@ import moment from 'moment';
 import { GenericFilter } from '../dataHooks/model/GenericFilter';
 import { MS_24H, MS_MONTH, MS_WEEK } from './format/useDateFormatter';
 import {
+    calculatePresetRange,
+    DateRange,
+    DateRangePreset,
     fromServerWallClock,
     ServerTimeZone,
     toServerWallClock,
 } from './queryDatePresets';
+import { SEPARATOR } from './presetSeparator';
 
 export type TimeframePreset =
     | 'weekComparison'
     | 'monthWeekDay'
     | 'monthByWeeks'
+    | 'allMonthWeekDay'
     | 'previousAndCurrentWeek'
     | 'previousAndCurrentMonth'
+    | 'previousAndCurrentYear'
+    | 'last60Days'
+    | 'last14Days'
+    | 'last48Hours'
     | 'last6Hours'
     | 'last7Days'
+    | 'last6Months'
+    | 'last6Years'
     | 'currentMonthByWeek'
     | 'previousMonthByWeek'
-    | 'last6Months'
     | 'custom';
 
-export const ALL_TIMEFRAME_PRESETS: TimeframePreset[] = [
+export const ALL_TIMEFRAME_PRESETS: (TimeframePreset | typeof SEPARATOR)[] = [
     'weekComparison',
     'monthWeekDay',
     'monthByWeeks',
-    'previousAndCurrentWeek',
-    'previousAndCurrentMonth',
+    'allMonthWeekDay',
+    SEPARATOR,
     'last6Hours',
     'last7Days',
+    'last6Months',
+    'last6Years',
+    SEPARATOR,
     'currentMonthByWeek',
     'previousMonthByWeek',
-    'last6Months',
-    'custom',
-];
-
-export const TWO_COLUMN_PRESETS: TimeframePreset[] = [
-    'weekComparison',
+    SEPARATOR,
     'previousAndCurrentWeek',
     'previousAndCurrentMonth',
+    'previousAndCurrentYear',
+    SEPARATOR,
+    'last48Hours',
+    'last14Days',
+    'last60Days',
+    SEPARATOR,
     'custom',
 ];
 
-export type PeriodUnit = 'hour' | 'day' | 'week' | 'month' | 'range';
+export type PeriodUnit = 'hour' | 'day' | 'week' | 'month' | 'year' | 'range';
 
 export type TimeframePeriod = {
     start: number;
@@ -54,12 +68,29 @@ export type TimeframeColumn = {
     key: string;
     filter: GenericFilter;
     period?: TimeframePeriod;
-    label?: { key: string; number: number; detailKey?: string };
+    label?: { key: string; number?: number; detailKey?: string };
 };
 
-export type CustomRange = { from?: string; to?: string };
+export type CustomRange = {
+    preset: DateRangePreset;
+    from?: string;
+    to?: string;
+};
+
+export type CustomColumn = CustomRange & {
+    dateRange?: DateRange;
+};
+
+export const EMPTY_CUSTOM_RANGES: CustomRange[] = [
+    { preset: 'custom' },
+    { preset: 'custom' },
+];
 
 const HOUR_MS = 60 * 60 * 1000;
+
+const MS_48H = 48 * HOUR_MS;
+const MS_14D = 14 * MS_24H;
+const MS_60D = 60 * MS_24H;
 
 const RELATIVE_PRESETS: Partial<Record<TimeframePreset, TimeframeColumn[]>> = {
     weekComparison: [
@@ -71,6 +102,46 @@ const RELATIVE_PRESETS: Partial<Record<TimeframePreset, TimeframeColumn[]>> = {
             key: 'next',
             filter: { afterMillisAgo: MS_WEEK, beforeMillisAgo: 0 },
         },
+    ],
+    last60Days: [
+        {
+            key: 'older',
+            filter: { afterMillisAgo: MS_60D, beforeMillisAgo: MS_60D / 2 },
+        },
+        {
+            key: 'recent',
+            filter: { afterMillisAgo: MS_60D / 2, beforeMillisAgo: 0 },
+        },
+    ],
+    last14Days: [
+        {
+            key: 'older',
+            filter: { afterMillisAgo: MS_14D, beforeMillisAgo: MS_14D / 2 },
+        },
+        {
+            key: 'recent',
+            filter: { afterMillisAgo: MS_14D / 2, beforeMillisAgo: 0 },
+        },
+    ],
+    last48Hours: [
+        {
+            key: 'older',
+            filter: { afterMillisAgo: MS_48H, beforeMillisAgo: MS_48H / 2 },
+        },
+        {
+            key: 'recent',
+            filter: { afterMillisAgo: MS_48H / 2, beforeMillisAgo: 0 },
+        },
+    ],
+    allMonthWeekDay: [
+        {
+            key: 'all',
+            filter: {},
+            label: { key: 'html.label.allTime' },
+        },
+        { key: '30d', filter: { afterMillisAgo: MS_MONTH } },
+        { key: '7d', filter: { afterMillisAgo: MS_WEEK } },
+        { key: '1d', filter: { afterMillisAgo: MS_24H } },
     ],
     monthWeekDay: [
         { key: '30d', filter: { afterMillisAgo: MS_MONTH } },
@@ -165,7 +236,7 @@ const toColumns = (
 const consecutive = (
     first: moment.Moment,
     count: number,
-    unit: 'day' | 'month',
+    unit: 'day' | 'month' | 'year',
 ) => Array.from({ length: count + 1 }, (_, i) => first.clone().add(i, unit));
 
 const weeksOfMonth = (monthStart: moment.Moment, firstDay: number) => {
@@ -200,14 +271,54 @@ const lastHours = (
         };
     });
 
-const customColumns = (
-    ranges: CustomRange[],
+export const toCustomColumn = (
+    range: CustomRange,
+    nowEpochMs: number,
+    zone: ServerTimeZone,
+    firstDay: number,
+): CustomColumn => {
+    if (range.preset === 'custom') return range;
+    const dateRange = calculatePresetRange(
+        range.preset,
+        nowEpochMs,
+        zone,
+        firstDay,
+    );
+    if (!dateRange) return range;
+    return {
+        preset: range.preset,
+        from: formatDay(toServerWallClock(dateRange.after, zone)),
+        to: formatDay(toServerWallClock(dateRange.before - 1, zone)),
+        dateRange,
+    };
+};
+
+const presetColumn = (
+    { preset, dateRange }: CustomColumn,
+    index: number,
+): TimeframeColumn | undefined => {
+    if (!dateRange) return undefined;
+    return {
+        key: `range-${index}-${preset}-${dateRange.after}`,
+        filter: dateRange,
+        label: { key: `html.query.filter.preset.${preset}` },
+    };
+};
+
+const customTimeframeColumns = (
+    ranges: CustomColumn[],
     nowEpochMs: number,
     zone: ServerTimeZone,
 ): TimeframeColumn[] | undefined => {
     if (!ranges.length) return undefined;
     const columns: TimeframeColumn[] = [];
     for (const range of ranges) {
+        if (range.preset !== 'custom') {
+            const column = presetColumn(range, columns.length);
+            if (!column) return undefined;
+            columns.push(column);
+            continue;
+        }
         const from = parseDay(range.from);
         const to = parseDay(range.to);
         if (!from || !to || to.isBefore(from)) return undefined;
@@ -238,10 +349,12 @@ export const defaultCustomRanges = (
     const previousWeekStart = weekStart.clone().subtract(1, 'week');
     return [
         {
+            preset: 'custom',
             from: formatDay(previousWeekStart),
             to: formatDay(weekStart.clone().subtract(1, 'day')),
         },
         {
+            preset: 'custom',
             from: formatDay(weekStart),
             to: formatDay(weekStart.clone().add(6, 'days')),
         },
@@ -253,7 +366,7 @@ export const calculateTimeframeColumns = (
     nowEpochMs: number,
     zone: ServerTimeZone | undefined,
     firstDay: number = 1,
-    customRanges: CustomRange[] = [],
+    customColumns: CustomColumn[] = [],
 ): TimeframeColumn[] | undefined => {
     const relative = RELATIVE_PRESETS[preset];
     if (relative) return relative;
@@ -262,6 +375,7 @@ export const calculateTimeframeColumns = (
     const today = now.clone().startOf('day');
     const weekStart = startOfWeek(now, firstDay);
     const monthStart = now.clone().startOf('month');
+    const yearStart = now.clone().startOf('year');
 
     switch (preset) {
         case 'previousAndCurrentWeek':
@@ -283,6 +397,13 @@ export const calculateTimeframeColumns = (
                     'month',
                 ),
                 'month',
+                nowEpochMs,
+                zone,
+            );
+        case 'previousAndCurrentYear':
+            return toColumns(
+                consecutive(yearStart.clone().subtract(1, 'year'), 2, 'year'),
+                'year',
                 nowEpochMs,
                 zone,
             );
@@ -320,8 +441,15 @@ export const calculateTimeframeColumns = (
                 nowEpochMs,
                 zone,
             );
+        case 'last6Years':
+            return toColumns(
+                consecutive(yearStart.clone().subtract(5, 'year'), 6, 'year'),
+                'year',
+                nowEpochMs,
+                zone,
+            );
         case 'custom':
-            return customColumns(customRanges, nowEpochMs, zone);
+            return customTimeframeColumns(customColumns, nowEpochMs, zone);
         default:
             return undefined;
     }

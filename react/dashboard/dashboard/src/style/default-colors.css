@@ -1126,3 +1126,15 @@ thead[class^='bg'], thead[class*=' bg'] {
     border-color: var(--color-forms-input-border);
     color: var(--color-forms-input-text);
 }
+
+.highcharts-markers {
+    --highcharts-background-color: var(--color-graphs-style-tooltip-background);
+}
+
+.highcharts-markers text {
+    fill: var(--color-text) !important;
+}
+
+.highcharts-markers .highcharts-label-box {
+    stroke: var(--color-text) !important;
+}

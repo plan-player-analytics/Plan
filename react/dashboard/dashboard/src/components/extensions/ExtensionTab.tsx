@@ -44,6 +44,7 @@ export const ExtensionTab = ({ tab, widths }: Props) => {
             masonry = new Masonry(masonryRow, {
                 percentPosition: true,
                 itemSelector: '.extension-section-wrapper-' + uuid,
+                columnWidth: 1 / 3,
             });
         }
         return () => {

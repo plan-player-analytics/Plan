@@ -1,7 +1,6 @@
 import { GenericFilter } from './model/GenericFilter';
 import { useNavigation } from '../hooks/navigationHook';
 import { useQuery } from '@tanstack/react-query';
-import { queryRetry } from './queryRetry';
 import { useEffect } from 'react';
 import {
     Datapoint,
@@ -29,7 +28,7 @@ export const useWorldPie = (filter: GenericFilter) => {
     const query = useQuery({
         queryKey: ['world-pie', ...Object.values(serverFilter)],
         queryFn: () => getWorldPie(serverFilter),
-        retry: queryRetry,
+
         enabled: hasPermission(
             getDatapointPermission('world.pie', serverFilter),
         ),
@@ -71,7 +70,7 @@ export const useServerPie = (filter: GenericFilter) => {
     const query = useQuery({
         queryKey: ['server-pie', ...Object.values(serverFilter)],
         queryFn: () => getServerPie(serverFilter),
-        retry: queryRetry,
+
         enabled: hasPermission(
             getDatapointPermission('server.pie', serverFilter),
         ),
