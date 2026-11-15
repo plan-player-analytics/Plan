@@ -23,6 +23,7 @@ import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
 import com.djrapitops.plan.storage.database.queries.analysis.ActivityIndexQueries;
 import com.djrapitops.plan.storage.database.queries.analysis.MultiServerActivityIndexQueries;
+import com.djrapitops.plan.storage.database.queries.analysis.NetworkActivityIndexQueries;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.NetworkTablePlayersQuery;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.ServerTablePlayersQuery;
@@ -330,6 +331,23 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
                 .sum() + " compared to threshold " + playtimeThreshold);
     }
 
+    @RepeatedTest(value = 3, name = "Multi-server countNewPlayersTurnedRegular matches for network {currentRepetition}/{totalRepetitions}")
+    default void multiServerCountNewPlayersTurnedRegularNetworkMatches() {
+        storeSessions(_ -> true);
+
+        long date = System.currentTimeMillis();
+        long after = date - TimeUnit.DAYS.toMillis(30L);
+        long playtimeThreshold = TimeUnit.HOURS.toMillis(5L);
+
+        Integer expected = db().query(NetworkActivityIndexQueries.countNewPlayersTurnedRegular(after, date, playtimeThreshold));
+        Integer result = db().query(MultiServerActivityIndexQueries.countNewPlayersTurnedRegular(after, date, List.of(), playtimeThreshold));
+        assertEquals(expected, result, () -> "with total playtime of " + db().query(SessionQueries.fetchAllSessions())
+                .stream()
+                .filter(session -> session.end() > after)
+                .mapToLong(FinishedSession::getLength)
+                .sum() + " compared to threshold " + playtimeThreshold);
+    }
+
     @RepeatedTest(value = 3, name = "Multi-server countRegularPlayersTurnedInactive matches {currentRepetition}/{totalRepetitions}")
     default void multiServerCountRegularPlayersTurnedInactiveMatches() {
         storeSessions(_ -> true);
@@ -340,6 +358,19 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
 
         Integer expected = db().query(ActivityIndexQueries.countRegularPlayersTurnedInactive(after, date, serverUUID(), playtimeThreshold));
         Integer result = db().query(MultiServerActivityIndexQueries.countRegularPlayersTurnedInactive(after, date, List.of(serverUUID()), playtimeThreshold));
+        assertEquals(expected, result);
+    }
+
+    @RepeatedTest(value = 3, name = "Multi-server countRegularPlayersTurnedInactive matches network {currentRepetition}/{totalRepetitions}")
+    default void multiServerCountRegularPlayersTurnedInactiveNetworkMatches() {
+        storeSessions(_ -> true);
+
+        long date = System.currentTimeMillis();
+        long after = date - TimeUnit.DAYS.toMillis(30L);
+        long playtimeThreshold = TimeUnit.HOURS.toMillis(5L);
+
+        Integer expected = db().query(NetworkActivityIndexQueries.countRegularPlayersTurnedInactive(after, date, playtimeThreshold));
+        Integer result = db().query(MultiServerActivityIndexQueries.countRegularPlayersTurnedInactive(after, date, List.of(), playtimeThreshold));
         assertEquals(expected, result);
     }
 }

@@ -125,6 +125,7 @@ public class MultiServerActivityIndexQueries {
 
         if (serverUUIDs.isEmpty()) {
             return SELECT + "u." + UsersTable.ID + " as user_id, " +
+                    "u." + UsersTable.REGISTERED + ", " +
                     activityIndex +
                     FROM + UsersTable.TABLE_NAME + " u " +
                     LEFT_JOIN + "( " + selectWeeks + ") s ON s." + SessionsTable.USER_ID + "=u." + UsersTable.ID +
