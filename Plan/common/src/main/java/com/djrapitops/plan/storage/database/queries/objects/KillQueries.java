@@ -243,7 +243,8 @@ public class KillQueries {
         String sql = SELECT + "kills, deaths" +
                 FROM + UsersTable.TABLE_NAME + " u" +
                 LEFT_JOIN + '(' + selectKillCounts + ") q1 on q1." + KillsTable.KILLER_UUID + "=u." + UsersTable.USER_UUID +
-                LEFT_JOIN + '(' + selectPlayerDeathCounts + ") q2 on q2." + KillsTable.VICTIM_UUID + "=u." + UsersTable.USER_UUID;
+                LEFT_JOIN + '(' + selectPlayerDeathCounts + ") q2 on q2." + KillsTable.VICTIM_UUID + "=u." + UsersTable.USER_UUID +
+                WHERE + "kills" + IS_NOT_NULL;
 
         return new QueryStatement<>(sql) {
             @Override

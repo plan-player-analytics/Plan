@@ -37,7 +37,7 @@ class ProxyModeHttpsTest {
     private static PlanSystem system;
 
     @BeforeAll
-    static void setUpClass(@TempDir Path tempDir) throws Exception {
+    static void setUpClass(@TempDir Path tempDir) {
         PluginMockComponent component = new PluginMockComponent(tempDir);
         system = component.getPlanSystem();
 
