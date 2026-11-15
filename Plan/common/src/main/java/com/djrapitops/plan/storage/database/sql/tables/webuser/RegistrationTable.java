@@ -51,7 +51,7 @@ public class RegistrationTable {
     public static String createTableSql(DBType dbType) {
         return CreateTableBuilder.create(TABLE_NAME, dbType)
                 .column(ID, INT).primaryKey()
-                .column(USERNAME, varchar(100)).notNull().unique()
+                .column(USERNAME, varchar(100)).notNull()
                 .column(SALT_PASSWORD_HASH, varchar(100)).notNull()
                 .column(CODE, varchar(12)).notNull().unique()
                 .column(EXPIRY_TIME, LONG).notNull()
