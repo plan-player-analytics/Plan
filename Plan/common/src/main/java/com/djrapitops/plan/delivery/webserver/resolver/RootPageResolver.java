@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.domain.auth.WebPermission;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
+import com.djrapitops.plan.delivery.web.resolver.exception.ForbiddenException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.ResponseFactory;
@@ -88,7 +89,7 @@ public class RootPageResolver implements NoAuthResolver {
         } else if (user.hasPermission(WebPermission.ACCESS_ERRORS)) {
             return responseFactory.redirectResponse("errors");
         } else {
-            return responseFactory.forbidden403("User has insufficient permissions to be redirected to any page.");
+            throw new ForbiddenException("User has insufficient permissions to be redirected to any page.", false);
         }
     }
 }

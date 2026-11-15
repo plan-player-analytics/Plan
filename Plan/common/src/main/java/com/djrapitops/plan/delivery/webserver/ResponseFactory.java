@@ -469,6 +469,7 @@ public class ResponseFactory {
     }
 
     public Response forbidden403(String message) {
+        if (message == null) return forbidden403();
         try {
             return Response.builder()
                     .setMimeType(MimeType.HTML)
@@ -481,6 +482,7 @@ public class ResponseFactory {
     }
 
     public Response forbidden403Json(String message) {
+        if (message == null) return forbidden403Json();
         return Response.builder()
                 .setMimeType(MimeType.JSON)
                 .setJSONContent(Maps.builder(String.class, Object.class)

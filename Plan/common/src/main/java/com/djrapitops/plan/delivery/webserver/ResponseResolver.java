@@ -23,6 +23,7 @@ import com.djrapitops.plan.delivery.web.resolver.NoAuthResolver;
 import com.djrapitops.plan.delivery.web.resolver.Resolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
+import com.djrapitops.plan.delivery.web.resolver.exception.ForbiddenException;
 import com.djrapitops.plan.delivery.web.resolver.exception.MethodNotAllowedException;
 import com.djrapitops.plan.delivery.web.resolver.exception.NotFoundException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
@@ -213,6 +214,11 @@ public class ResponseResolver {
             return CompletableFuture.completedFuture(responseFactory.badRequest(
                     badRequest.getMessage(), request.getPath().asString()));
         }
+        if (exception instanceof ForbiddenException forbidden) {
+            return CompletableFuture.completedFuture(forbidden.isJson()
+                    ? responseFactory.forbidden403Json(forbidden.getMessage())
+                    : responseFactory.forbidden403(forbidden.getMessage()));
+        }
         if (exception instanceof NotFoundException notFound) {
             return CompletableFuture.completedFuture(responseFactory.notFound404(notFound.getMessage()));
         }
@@ -257,15 +263,15 @@ public class ResponseResolver {
                 if (webServer.get().isUsingHTTPS()) {
                     throw new WebUserAuthException(FailReason.NO_USER_PRESENT);
                 } else {
-                    return CompletableFuture.completedFuture(responseFactory.forbidden403());
+                    throw new ForbiddenException(false);
                 }
             }
 
             if (!resolver.canAccess(request)) {
                 if (request.getPath().startsWith("/v1/")) {
-                    return CompletableFuture.completedFuture(responseFactory.forbidden403Json());
+                    throw new ForbiddenException(true);
                 } else {
-                    return CompletableFuture.completedFuture(responseFactory.forbidden403());
+                    throw new ForbiddenException(false);
                 }
             }
         }

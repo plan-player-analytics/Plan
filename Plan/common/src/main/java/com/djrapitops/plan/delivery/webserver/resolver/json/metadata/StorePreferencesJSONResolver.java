@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.domain.datatransfer.preferences.Preferences;
 import com.djrapitops.plan.delivery.web.resolver.AsyncResolver;
 import com.djrapitops.plan.delivery.web.resolver.Response;
 import com.djrapitops.plan.delivery.web.resolver.exception.BadRequestException;
+import com.djrapitops.plan.delivery.web.resolver.exception.ForbiddenException;
 import com.djrapitops.plan.delivery.web.resolver.exception.MethodNotAllowedException;
 import com.djrapitops.plan.delivery.web.resolver.request.Request;
 import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
@@ -82,9 +83,7 @@ public class StorePreferencesJSONResolver implements AsyncResolver {
         }
         var optUser = request.getUser();
         if (optUser.isEmpty()) {
-            return CompletableFuture.completedFuture(
-                    Optional.of(responseFactory.forbidden403("This endpoint only accepts requests if logged in."))
-            );
+            throw new ForbiddenException("This endpoint only accepts requests if logged in.", true);
         }
 
         WebUser user = optUser.get();
