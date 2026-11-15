@@ -323,7 +323,11 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
 
         Integer expected = db().query(ActivityIndexQueries.countNewPlayersTurnedRegular(after, date, serverUUID(), playtimeThreshold));
         Integer result = db().query(MultiServerActivityIndexQueries.countNewPlayersTurnedRegular(after, date, List.of(serverUUID()), playtimeThreshold));
-        assertEquals(expected, result);
+        assertEquals(expected, result, () -> "with total playtime of " + db().query(SessionQueries.fetchAllSessions())
+                .stream()
+                .filter(session -> session.end() > after)
+                .mapToLong(FinishedSession::getLength)
+                .sum() + " compared to threshold " + playtimeThreshold);
     }
 
     @RepeatedTest(value = 3, name = "Multi-server countRegularPlayersTurnedInactive matches {currentRepetition}/{totalRepetitions}")

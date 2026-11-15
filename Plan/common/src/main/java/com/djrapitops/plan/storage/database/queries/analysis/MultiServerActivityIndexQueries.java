@@ -136,6 +136,7 @@ public class MultiServerActivityIndexQueries {
                     GROUP_BY + UserInfoTable.USER_ID;
             return SELECT +
                     "u." + UserInfoTable.USER_ID + ", " +
+                    "u." + UserInfoTable.REGISTERED + ", " +
                     activityIndex +
                     FROM + "(" + selectUserIds + ") u " +
                     LEFT_JOIN + "( " + selectWeeks + ") s ON s." + SessionsTable.USER_ID + "=u." + UserInfoTable.USER_ID +
@@ -287,11 +288,9 @@ public class MultiServerActivityIndexQueries {
 
         String selectCount = SELECT + "COUNT(1) as count" +
                 FROM + '(' + selectActivityIndex + ") q2" +
-                INNER_JOIN + UsersTable.TABLE_NAME + " u on q2." + SessionsTable.USER_ID + "=u." + UsersTable.ID +
-                WHERE + "u." + UsersTable.REGISTERED + ">=?" +
-                AND + "u." + UsersTable.REGISTERED + "<=?" +
-                AND + "q2.activity_index>=?" +
-                AND + "q2.activity_index<?";
+                WHERE + "q2." + UserInfoTable.REGISTERED + ">=?" +
+                AND + "q2." + UserInfoTable.REGISTERED + "<=?" +
+                AND + "q2.activity_index>=?";
 
         return new QueryStatement<>(selectCount) {
             @Override
@@ -299,7 +298,6 @@ public class MultiServerActivityIndexQueries {
                 statement.setLong(1, after);
                 statement.setLong(2, before);
                 statement.setDouble(3, ActivityIndex.REGULAR);
-                statement.setDouble(4, 5.1);
             }
 
             @Override
