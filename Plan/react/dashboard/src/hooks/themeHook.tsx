@@ -112,8 +112,6 @@ export const ThemeContextProvider = ({
     );
 };
 
-const chartTheming = getChartTheming();
-
 export const useTheme = () => {
     const context = useContext(ThemeContext);
     if (!context)
@@ -165,7 +163,7 @@ export const useTheme = () => {
             colorChooserOpen,
             toggleNightMode,
             toggleColorChooser,
-            graphTheming: chartTheming,
+            graphTheming: getChartTheming(nightModeEnabled),
         };
     }, [context]);
 };
