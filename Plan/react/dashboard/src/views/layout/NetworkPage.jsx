@@ -164,7 +164,7 @@ const NetworkSidebar = () => {
                             iconTypeToFontAwesomeClass(info.icon.family),
                             info.icon.iconName,
                         ],
-                        href: `plugins/${encodeURIComponent(info.pluginName)}`,
+                        href: `plugins-overview#${encodeURIComponent(info.pluginName)}`,
                         permission: 'page.network.plugins',
                     };
                 })
