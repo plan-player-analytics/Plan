@@ -29,6 +29,7 @@ import java.util.concurrent.Future;
  * @deprecated Use {@link QueryService} directly.
  */
 @Deprecated
+@SuppressWarnings({"java:S1133", "DeprecatedIsStillUsed", "ThrowsRuntimeException", "java:S1452"})
 public interface LegacyQueryService {
 
     Future<?> execute(

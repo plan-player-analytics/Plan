@@ -95,16 +95,16 @@ public class Processing implements SubSystem {
         }, criticalExecutor).handle(this::exceptionHandlerCritical);
     }
 
-    public <T> Future<T> submit(Callable<T> task) {
+    public <T> CompletableFuture<T> submit(Callable<T> task) {
         if (task instanceof CriticalCallable) {
             return submitCritical(task);
         }
         return submitNonCritical(task);
     }
 
-    public <T> Future<T> submitNonCritical(Callable<T> task) {
+    public <T> CompletableFuture<T> submitNonCritical(Callable<T> task) {
         if (task == null || nonCriticalExecutor.isShutdown()) {
-            return null;
+            return CompletableFuture.completedFuture(null);
         }
         return CompletableFuture.supplyAsync(() -> {
             try {
@@ -129,7 +129,7 @@ public class Processing implements SubSystem {
         return t;
     }
 
-    public <T> Future<T> submitCritical(Callable<T> task) {
+    public <T> CompletableFuture<T> submitCritical(Callable<T> task) {
         if (task == null) return null;
         return CompletableFuture.supplyAsync(() -> {
             try {

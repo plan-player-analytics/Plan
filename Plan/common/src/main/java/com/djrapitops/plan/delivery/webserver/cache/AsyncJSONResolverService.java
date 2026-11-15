@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.webserver.cache;
 
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.delivery.formatting.Formatters;
+import com.djrapitops.plan.delivery.webserver.cache.JSONStorage.StoredJSON;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.settings.config.PlanConfig;
@@ -27,6 +28,7 @@ import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -45,7 +47,7 @@ public class AsyncJSONResolverService {
     private final PlanConfig config;
     private final Processing processing;
     private final JSONStorage jsonStorage;
-    private final Map<String, Future<JSONStorage.StoredJSON>> currentlyProcessing;
+    private final Map<String, CompletableFuture<JSONStorage.StoredJSON>> currentlyProcessing;
     private final Map<String, Long> previousUpdates;
     private final ReentrantLock accessLock; // Access lock prevents double processing same resource
     private final Formatter<Long> httpLastModifiedFormatter;
@@ -114,7 +116,9 @@ public class AsyncJSONResolverService {
     private JSONStorage.StoredJSON waitAndGetUpdated(Future<JSONStorage.StoredJSON> updatedJSON) {
         // If there is no version available, block thread until the new finishes being generated.
         try {
-            return updatedJSON.get();
+            StoredJSON value = updatedJSON.get();
+            if (value == null) throw new IllegalStateException("Processing failed to produce result");
+            return value;
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             return null;
@@ -133,10 +137,10 @@ public class AsyncJSONResolverService {
                         .orElse(null));
     }
 
-    private <T> Future<JSONStorage.StoredJSON> scheduleJSONForUpdate(long newerThanTimestamp, String identifier, Supplier<T> jsonCreator) {
+    private <T> CompletableFuture<JSONStorage.StoredJSON> scheduleJSONForUpdate(long newerThanTimestamp, String identifier, Supplier<T> jsonCreator) {
         long updateThreshold = config.get(WebserverSettings.REDUCED_REFRESH_BARRIER);
 
-        Future<JSONStorage.StoredJSON> updatedJSON;
+        CompletableFuture<JSONStorage.StoredJSON> updatedJSON;
         accessLock.lock();
         try {
             // Check if the json is already being created
@@ -152,7 +156,7 @@ public class AsyncJSONResolverService {
         return updatedJSON;
     }
 
-    private <T> Future<JSONStorage.StoredJSON> submitToProcessing(String identifier, Supplier<T> jsonCreator) {
+    private <T> CompletableFuture<StoredJSON> submitToProcessing(String identifier, Supplier<T> jsonCreator) {
         return processing.submitNonCritical(() -> {
             JSONStorage.StoredJSON created = jsonStorage.storeJson(identifier, jsonCreator.get());
             currentlyProcessing.remove(identifier);

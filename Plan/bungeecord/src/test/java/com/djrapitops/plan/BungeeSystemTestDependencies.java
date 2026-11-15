@@ -40,9 +40,11 @@ public class BungeeSystemTestDependencies implements DBPreparer.Dependencies {
 
     @Override
     public void enable() {
+        /* no-op, enabled elsewhere */
     }
 
     @Override
     public void disable() {
+        /* no-op, disabled elsewhere */
     }
 }

@@ -26,12 +26,11 @@ import java.util.Optional;
  */
 public class Server implements Comparable<Server> {
     private final ServerUUID uuid;
+    private final String planVersion;
     private Integer id;
     private String name;
     private String webAddress;
     private boolean proxy;
-
-    private final String planVersion;
 
     public Server(ServerUUID uuid, String name, String webAddress, String planVersion) {
         this(null, uuid, name, webAddress, false, planVersion);
@@ -44,6 +43,13 @@ public class Server implements Comparable<Server> {
         this.webAddress = webAddress;
         this.proxy = proxy;
         this.planVersion = planVersion;
+    }
+
+    public static String getIdentifiableName(String name, int id, boolean proxy) {
+        String serverPrefix = proxy ? "Proxy " : "Server ";
+        return "Plan".equalsIgnoreCase(name) || "Proxy".equalsIgnoreCase(name)
+                ? serverPrefix + id
+                : name;
     }
 
     public Optional<Integer> getId() {
@@ -62,19 +68,12 @@ public class Server implements Comparable<Server> {
         return name;
     }
 
-    public static String getIdentifiableName(String name, int id, boolean proxy) {
-        String serverPrefix = proxy ? "Proxy " : "Server ";
-        return "Plan".equalsIgnoreCase(name) || "Proxy".equalsIgnoreCase(name)
-                ? serverPrefix + id
-                : name;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getIdentifiableName() {
         return getIdentifiableName(name, id, proxy);
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public String getWebAddress() {
@@ -102,7 +101,7 @@ public class Server implements Comparable<Server> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(uuid, id, name, webAddress, planVersion);
+        return Objects.hash(uuid, name, webAddress, planVersion);
     }
 
     @Override

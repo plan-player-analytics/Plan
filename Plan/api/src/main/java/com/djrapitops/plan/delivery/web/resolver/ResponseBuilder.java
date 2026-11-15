@@ -29,6 +29,7 @@ import java.util.concurrent.CompletableFuture;
  * @author AuroraLS3
  */
 public class ResponseBuilder {
+    private static final String ACCEPT_RANGES = "Accept-Ranges";
 
     private final Response response;
 
@@ -84,7 +85,7 @@ public class ResponseBuilder {
         byte[] safeBytes = bytes != null ? bytes : new byte[0];
         response.bytes = CompletableFuture.completedFuture(safeBytes);
         return setHeader("Content-Length", safeBytes.length)
-                .setHeader("Accept-Ranges", "bytes"); // Does not compress
+                .setHeader(ACCEPT_RANGES, "bytes"); // Does not compress
     }
 
     public ResponseBuilder setContent(CompletableFuture<byte[]> bytesFuture) {
@@ -110,7 +111,7 @@ public class ResponseBuilder {
         }
 
         return setContent(content.getBytes(charset))
-                .removeHeader("Accept-Ranges"); // Can compress
+                .removeHeader(ACCEPT_RANGES); // Can compress
     }
 
     public ResponseBuilder setContent(CompletableFuture<String> stringFuture, Charset charset) {
@@ -125,7 +126,7 @@ public class ResponseBuilder {
                 setMimeType(parts[0] + "; charset=" + effectiveCharset.name().toLowerCase());
             }
         }
-        removeHeader("Accept-Ranges");
+        removeHeader(ACCEPT_RANGES);
         return setContent(stringFuture.thenApply(string -> string == null ? null : string.getBytes(effectiveCharset)));
     }
 

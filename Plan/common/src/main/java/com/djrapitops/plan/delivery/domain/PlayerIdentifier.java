@@ -52,7 +52,7 @@ public class PlayerIdentifier implements Comparable<PlayerIdentifier> {
 
     @Override
     public int hashCode() {
-        return Objects.hash(getUuid(), getName());
+        return Objects.hash(getUuid());
     }
 
     @Override

@@ -54,6 +54,8 @@ import java.util.Optional;
 @Path("/v1/joinAddresses")
 public class PlayerJoinAddressJSONResolver extends JSONResolver {
 
+    private static final String LIST_ONLY_PARAM = "listOnly";
+
     private final Identifiers identifiers;
     private final AsyncJSONResolverService jsonResolverService;
     private final JSONFactory jsonFactory;
@@ -72,7 +74,7 @@ public class PlayerJoinAddressJSONResolver extends JSONResolver {
     public boolean canAccess(@Untrusted Request request) {
         WebUser user = request.getUser().orElse(new WebUser(""));
         @Untrusted URIQuery query = request.getQuery();
-        Optional<String> listOnly = query.get("listOnly");
+        Optional<String> listOnly = query.get(LIST_ONLY_PARAM);
         if (query.get("server").isPresent()) {
             if (listOnly.isEmpty()) {
                 return user.hasPermission(WebPermission.PAGE_SERVER_RETENTION);
@@ -117,12 +119,12 @@ public class PlayerJoinAddressJSONResolver extends JSONResolver {
         if (request.getQuery().get("server").isPresent()) {
             ServerUUID serverUUID = identifiers.getServerUUID(request);
             return jsonResolverService.resolve(timestamp, DataID.PLAYER_JOIN_ADDRESSES, serverUUID,
-                    serverUUID1 -> jsonFactory.playerJoinAddresses(serverUUID1, request.getQuery().get("listOnly").isEmpty())
+                    serverUUID1 -> jsonFactory.playerJoinAddresses(serverUUID1, request.getQuery().get(LIST_ONLY_PARAM).isEmpty())
             );
         }
         // Assume network
         return jsonResolverService.resolve(timestamp, DataID.PLAYER_JOIN_ADDRESSES,
-                () -> jsonFactory.playerJoinAddresses(request.getQuery().get("listOnly").isEmpty())
+                () -> jsonFactory.playerJoinAddresses(request.getQuery().get(LIST_ONLY_PARAM).isEmpty())
         );
     }
 }

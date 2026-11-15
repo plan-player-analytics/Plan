@@ -85,6 +85,7 @@ public class JettyWebserver implements WebServer {
     }
 
     @Override
+    @SuppressWarnings("java:S3776")
     public void enable() {
         if (isEnabled()) return;
 

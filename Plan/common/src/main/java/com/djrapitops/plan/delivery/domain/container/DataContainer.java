@@ -40,8 +40,8 @@ public interface DataContainer {
         Map<String, Object> values = new HashMap<>();
         getMap().forEach((key, value) ->
                 {
-                    if (value instanceof DataContainer) {
-                        value = ((DataContainer) value).mapToNormalMap();
+                    if (value instanceof DataContainer container) {
+                        value = container.mapToNormalMap();
                     }
                     if (value instanceof Map) {
                         value = handleMap((Map<?, ?>) value);

@@ -16,22 +16,10 @@
  */
 package com.djrapitops.plan.delivery.rendering.json.graphs.bar;
 
-import com.djrapitops.plan.delivery.domain.mutators.PlayersMutator;
-
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class GeolocationBarGraph extends BarGraph {
-
-    GeolocationBarGraph(PlayersMutator mutator) {
-        this(mutator.getGeolocations());
-    }
-
-    private GeolocationBarGraph(List<String> geolocations) {
-        super(turnToBars(toGeolocationCounts(geolocations)));
-    }
 
     GeolocationBarGraph(Map<String, Integer> geolocationCounts) {
         super(turnToBars(geolocationCounts));
@@ -42,15 +30,6 @@ public class GeolocationBarGraph extends BarGraph {
                 .map(entry -> new Bar(entry.getKey(), entry.getValue()))
                 .sorted()
                 .limit(20L)
-                .collect(Collectors.toList());
-    }
-
-    private static Map<String, Integer> toGeolocationCounts(List<String> geolocations) {
-        Map<String, Integer> counts = new HashMap<>();
-
-        for (String geolocation : geolocations) {
-            counts.put(geolocation, counts.getOrDefault(geolocation, 0) + 1);
-        }
-        return counts;
+                .toList();
     }
 }

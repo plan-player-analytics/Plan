@@ -61,7 +61,6 @@ import java.io.IOException;
 import java.util.*;
 import java.util.concurrent.ExecutionException;
 import java.util.function.Consumer;
-import java.util.stream.Collectors;
 
 @Singleton
 public class DatabaseCommands {
@@ -475,7 +474,7 @@ public class DatabaseCommands {
         sender.send(locale.getString(CommandLang.PROGRESS_PREPARING));
         processing.submitNonCritical(() -> {
             Map<UUID, BaseUser> baseUsersByUUID = dbSystem.getDatabase().query(BaseUserQueries.fetchAllBaseUsersByUUID());
-            List<String> playerNames = baseUsersByUUID.values().stream().map(BaseUser::getName).collect(Collectors.toList());
+            List<String> playerNames = baseUsersByUUID.values().stream().map(BaseUser::getName).toList();
             sender.send("Performing lookup for " + playerNames.size() + " uuids from Mojang..");
             sender.send("Preparation estimated complete at: " + clock.apply(System.currentTimeMillis() + playerNames.size() * 100L) + " (due to request rate limiting)");
             Map<String, UUID> onlineUUIDsOfPlayers = getUUIDViaUUIDFetcher(playerNames);

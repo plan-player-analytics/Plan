@@ -84,7 +84,7 @@ public class Icon {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, type, getName(), getColor());
+        return Objects.hash(type, getName(), getColor());
     }
 
     @Override

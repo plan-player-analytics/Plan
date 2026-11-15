@@ -133,6 +133,10 @@ public class MySQLDB extends SQLDB {
         currentThread.setContextClassLoader(previousClassLoader);
     }
 
+    @SuppressWarnings({
+            "java:S5998", "java:S8786", // Complex regex on a very short, config string
+            "java:S2093" // Closing DataSource is against the point of this method
+    })
     private void loadDataSource() {
         try {
             HikariConfig hikariConfig = new HikariConfig();

@@ -16,13 +16,10 @@
  */
 package com.djrapitops.plan.delivery.rendering.json.graphs.special;
 
-import com.djrapitops.plan.delivery.domain.mutators.PlayersMutator;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 /**
  * World Map that uses iso-a3 specification of Country codes.
@@ -33,11 +30,6 @@ public class WorldMap {
 
     private final Map<String, String> geoCodes;
     private final Map<String, Integer> geoCodeCounts;
-
-    WorldMap(Map<String, String> geoCodes, PlayersMutator mutator) {
-        this.geoCodes = geoCodes;
-        this.geoCodeCounts = toGeoCodeCounts(mutator.getGeolocations());
-    }
 
     WorldMap(Map<String, String> geoCodes, Map<String, Integer> geolocationCounts) {
         this.geoCodes = geoCodes;
@@ -60,53 +52,22 @@ public class WorldMap {
         return codeCounts;
     }
 
-    private Map<String, Integer> toGeoCodeCounts(List<String> geoLocations) {
-        Map<String, Integer> codeCounts = new HashMap<>();
-
-        for (String geoLocation : geoLocations) {
-            String countryCode = geoCodes.get(geoLocation.toLowerCase());
-            codeCounts.put(countryCode, codeCounts.getOrDefault(countryCode, 0) + 1);
-        }
-
-        return codeCounts;
-    }
-
     public List<Entry> getEntries() {
         return geoCodeCounts.entrySet().stream()
                 .filter(entry -> entry.getValue() != 0)
                 .map(e -> new Entry(e.getKey(), e.getValue()))
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    public static class Entry {
-        private final String code;
-        private final int value;
-
-        public Entry(String code, int value) {
-            this.code = code;
-            this.value = value;
-        }
-
-        public String getCode() {
-            return code;
-        }
-
-        public int getValue() {
-            return value;
-        }
+    public record Entry(String code, int value) {
 
         @Override
         public boolean equals(Object o) {
             if (this == o) return true;
-            if (!(o instanceof Entry)) return false;
-            Entry entry = (Entry) o;
+            if (!(o instanceof Entry entry)) return false;
             return value == entry.value &&
                     Objects.equals(code, entry.code);
         }
 
-        @Override
-        public int hashCode() {
-            return Objects.hash(code, value);
-        }
     }
 }

@@ -27,7 +27,6 @@ import javax.inject.Singleton;
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Singleton
 public class AssetVersions {
@@ -42,9 +41,9 @@ public class AssetVersions {
         this.files = files;
     }
 
-    public void prepare() throws IOException {
+    public Config readConfig() throws IOException {
         try (ConfigReader reader = new ConfigReader(files.getResourceFromJar("AssetVersion.yml").asInputStream())) {
-            webAssetConfig = reader.read();
+            return reader.read();
         }
     }
 
@@ -66,7 +65,9 @@ public class AssetVersions {
     }
 
     public List<String> getAssetPaths() throws IOException {
-        if (webAssetConfig == null) prepare();
+        if (webAssetConfig == null) {
+            webAssetConfig = readConfig();
+        }
         return webAssetConfig.getConfigPaths();
     }
 
@@ -76,6 +77,6 @@ public class AssetVersions {
                 .filter(path -> path.endsWith("json"))
                 .map(path -> path.substring(7, path.indexOf(",")))
                 .sorted()
-                .collect(Collectors.toList());
+                .toList();
     }
 }

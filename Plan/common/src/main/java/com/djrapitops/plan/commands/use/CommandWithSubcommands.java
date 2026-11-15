@@ -27,16 +27,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.BiPredicate;
-import java.util.stream.Collectors;
 
 public class CommandWithSubcommands extends Subcommand {
 
     private final List<Subcommand> subcommands;
+    private final Locale locale;
     private BiConsumer<CMDSender, Arguments> fallback;
     private TriConsumer<RuntimeException, CMDSender, Arguments> exceptionHandler;
     private ColorScheme colors;
-
-    private final Locale locale;
 
     private CommandWithSubcommands(Locale locale) {
         this.locale = locale;
@@ -48,7 +46,7 @@ public class CommandWithSubcommands extends Subcommand {
     }
 
     private List<Subcommand> getPermittedSubcommands(CMDSender sender) {
-        return subcommands.stream().filter(sender::hasAllPermissionsFor).collect(Collectors.toList());
+        return subcommands.stream().filter(sender::hasAllPermissionsFor).toList();
     }
 
     public List<Subcommand> getSubcommands() {
@@ -103,36 +101,40 @@ public class CommandWithSubcommands extends Subcommand {
     }
 
     public void executeCommand(CMDSender sender, @Untrusted Arguments arguments) {
-        @Untrusted Optional<String> gotAlias = arguments.get(0);
-        if (gotAlias.isPresent()) {
-            @Untrusted String alias = gotAlias.get();
-            if ("help".equals(alias)) {
-                onHelp(sender, arguments);
-                return;
-            } else if ("?".equals(alias)) {
-                onInDepthHelp(sender);
-                return;
-            } else {
-                for (Subcommand subcommand : subcommands) {
-                    if (subcommand.getAliases().contains(alias)) {
-                        if (sender.isMissingPermissionsFor(subcommand)) {
-                            sender.send(locale.getString(CommandLang.FAIL_NO_PERMISSION) + " " + subcommand.getRequiredPermissions());
-                            continue;
-                        }
-                        subcommand.getExecutor().accept(sender, arguments.removeFirst());
-                        return;
+        @Untrusted var givenAliasOpt = arguments.get(0);
+        if (givenAliasOpt.isEmpty()) {
+            // Use fallback if no command is found.
+            fallback.accept(sender, arguments);
+            return;
+        }
+
+        @Untrusted String alias = givenAliasOpt.get();
+        if ("help".equals(alias)) {
+            onHelp(sender, arguments);
+        } else if ("?".equals(alias)) {
+            onInDepthHelp(sender);
+        } else {
+            for (Subcommand subcommand : subcommands) {
+                if (subcommand.getAliases().contains(alias)) {
+                    if (sender.isMissingPermissionsFor(subcommand)) {
+                        sender.send(locale.getString(CommandLang.FAIL_NO_PERMISSION) + " " + subcommand.getRequiredPermissions());
+                        continue;
                     }
+                    subcommand.getExecutor().accept(sender, arguments.removeFirst());
+                    return;
                 }
             }
         }
-        // Use fallback if no command is found.
-        fallback.accept(sender, arguments);
     }
 
     public List<String> onTabComplete(CMDSender sender, @Untrusted Arguments arguments) {
         @Untrusted Optional<String> gotAlias = arguments.get(0);
         List<String> options = new ArrayList<>();
-        if (gotAlias.isPresent()) {
+        if (gotAlias.isEmpty()) {
+            for (Subcommand subcommand : subcommands) {
+                options.add(subcommand.getPrimaryAlias());
+            }
+        } else {
             subcommandsLoop:
             for (Subcommand subcommand : subcommands) {
                 if (sender.isMissingPermissionsFor(subcommand)) {
@@ -146,10 +148,6 @@ public class CommandWithSubcommands extends Subcommand {
                         options.add(alias);
                     }
                 }
-            }
-        } else {
-            for (Subcommand subcommand : subcommands) {
-                options.add(subcommand.getPrimaryAlias());
             }
         }
         Collections.sort(options);
