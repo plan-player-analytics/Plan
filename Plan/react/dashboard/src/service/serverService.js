@@ -12,66 +12,15 @@ export const fetchOnlineActivityOverview = async (timestamp, identifier) => {
     return doGetRequest(url, timestamp);
 };
 
-export const fetchPlayerbaseOverview = async (timestamp, identifier) => {
-    let url = `/v1/playerbaseOverview?server=${identifier}`;
-    if (staticSite) url = `/data/playerbaseOverview-${identifier}.json`;
-    return doGetRequest(url, timestamp);
-};
-
-export const fetchPvpPve = async (timestamp, identifier) => {
-    let url = `/v1/playerVersus?server=${identifier}`;
-    if (staticSite) url = `/data/playerVersus-${identifier}.json`;
-    return doGetRequest(url, timestamp);
-};
-
 export const fetchExtensionData = async (timestamp, identifier) => {
     let url = `/v1/extensionData?server=${identifier}`;
     if (staticSite) url = `/data/extensionData-${identifier}.json`;
     return doGetRequest(url, timestamp);
 };
 
-export const fetchSessions = async (timestamp, identifier) => {
-    if (identifier) {
-        return await fetchSessionsServer(timestamp, identifier);
-    } else {
-        return await fetchSessionsNetwork(timestamp);
-    }
-};
-
-const fetchSessionsServer = async (timestamp, identifier) => {
-    let url = `/v1/sessions?server=${identifier}`;
-    if (staticSite) url = `/data/sessions-${identifier}.json`;
-    return doGetRequest(url, timestamp);
-};
-
-const fetchSessionsNetwork = async (timestamp) => {
-    let url = `/v1/sessions`;
-    if (staticSite) url = `/data/sessions.json`;
-    return doGetRequest(url, timestamp);
-};
-
 export const fetchKills = async (timestamp, identifier) => {
     let url = `/v1/kills?server=${identifier}`;
     if (staticSite) url = `/data/kills-${identifier}.json`;
-    return doGetRequest(url, timestamp);
-};
-
-export const fetchPlayers = async (timestamp, identifier) => {
-    if (identifier) {
-        return await fetchPlayersServer(timestamp, identifier);
-    } else {
-        return await fetchPlayersNetwork(timestamp);
-    }
-};
-const fetchPlayersServer = async (timestamp, identifier) => {
-    let url = `/v1/players?server=${identifier}`;
-    if (staticSite) url = `/data/players-${identifier}.json`;
-    return doGetRequest(url, timestamp);
-};
-
-const fetchPlayersNetwork = async (timestamp) => {
-    let url = `/v1/players`;
-    if (staticSite) url = `/data/players.json`;
     return doGetRequest(url, timestamp);
 };
 
@@ -208,12 +157,6 @@ export const fetchNetworkCalendarGraph = async (timestamp) => {
 export const fetchPunchCardGraph = async (timestamp, identifier) => {
     let url = `/v1/graph?type=punchCard&server=${identifier}`;
     if (staticSite) url = `/data/graph-punchCard_${identifier}.json`;
-    return doGetRequest(url, timestamp);
-};
-
-export const fetchWorldPie = async (timestamp, identifier) => {
-    let url = `/v1/graph?type=worldPie&server=${identifier}`;
-    if (staticSite) url = `/data/graph-worldPie_${identifier}.json`;
     return doGetRequest(url, timestamp);
 };
 
