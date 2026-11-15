@@ -14,7 +14,6 @@ import Highcharts from 'highcharts/highstock';
 import 'highcharts/modules/no-data-to-display';
 import 'highcharts/modules/accessibility';
 import MultiSelect from '../../input/MultiSelect.tsx';
-import CollapseWithButton from '../../layout/CollapseWithButton.tsx';
 import FilterDropdown from './FilterDropdown';
 import FilterList, { withFilterKey } from './FilterList';
 import { useQueryResultContext } from '../../../hooks/queryResultContext.tsx';
@@ -245,8 +244,8 @@ const QueryOptionsCard = () => {
             return t('html.query.label.servers.two');
         } else {
             return t('html.query.label.servers.many').replace(
-                '{number}',
-                selected,
+                '{{number}}',
+                ' ' + selected + ' ',
             );
         }
     }, [options, selectedServers]);
@@ -372,15 +371,14 @@ const QueryOptionsCard = () => {
                 </Row>
                 <Row>
                     <Col md={12}>
-                        <CollapseWithButton title={serverSelectorMessage}>
-                            <MultiSelect
-                                options={view.servers.map(
-                                    (server) => server.serverName,
-                                )}
-                                selectedIndexes={selectedServers}
-                                setSelectedIndexes={setSelectedServers}
-                            />
-                        </CollapseWithButton>
+                        <label>{serverSelectorMessage}</label>
+                        <MultiSelect
+                            options={view.servers.map(
+                                (server) => server.serverName,
+                            )}
+                            selectedIndexes={selectedServers}
+                            setSelectedIndexes={setSelectedServers}
+                        />
                     </Col>
                 </Row>
                 <hr style={{ marginBottom: 0 }} />
