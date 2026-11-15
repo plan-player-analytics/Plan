@@ -67,6 +67,7 @@ const PlayerbaseTrendsCard = ({ identifier }: Props) => {
                         icon: [faUser, faArrowRightLong, faUsers],
                         text: t('html.label.regularToInactive'),
                         boldBottom: true,
+                        trendDownGood: true,
                     },
                     {
                         dataType: DatapointType.PLAYTIME_PER_PLAYER_AVERAGE,
