@@ -85,7 +85,6 @@ public class ServerTablePlayersQuery implements Query<List<TablePlayer>> {
 
         String selectPingData = SELECT +
                 "p." + PingTable.USER_ID + ',' +
-                "AVG(p." + PingTable.AVG_PING + ") as " + PingTable.AVG_PING + "," +
                 "MAX(p." + PingTable.MAX_PING + ") as " + PingTable.MAX_PING + "," +
                 "MIN(p." + PingTable.MIN_PING + ") as " + PingTable.MIN_PING +
                 FROM + PingTable.TABLE_NAME + " p" +
@@ -112,7 +111,6 @@ public class ServerTablePlayersQuery implements Query<List<TablePlayer>> {
                 "act.activity_index," +
                 "pi.min_ping," +
                 "pi.max_ping," +
-                "pi.avg_ping," +
                 "ni.nicknames" +
                 FROM + UsersTable.TABLE_NAME + " u" +
                 INNER_JOIN + UserInfoTable.TABLE_NAME + " ui on u." + UsersTable.ID + "=ui." + UserInfoTable.USER_ID +
@@ -151,7 +149,7 @@ public class ServerTablePlayersQuery implements Query<List<TablePlayer>> {
                             .ping(new Ping(0L, serverUUID,
                                     set.getInt(PingTable.MIN_PING),
                                     set.getInt(PingTable.MAX_PING),
-                                    set.getDouble(PingTable.AVG_PING)))
+                                    0.0))
                             .nicknames(set.getString("nicknames"));
                     if (set.getBoolean(UserInfoTable.BANNED)) {
                         player.banned();

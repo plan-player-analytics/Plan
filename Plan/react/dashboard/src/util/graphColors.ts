@@ -2,7 +2,8 @@ export const getChartTheming = (nightModeEnabled?: boolean) => {
     return {
         // Defaults
         palette: {
-            colorScheme: nightModeEnabled ? 'dark' : 'light',
+            colorScheme: (nightModeEnabled ? 'dark' : 'light') as
+                'dark' | 'light',
         },
         chart: {
             backgroundColor: undefined,

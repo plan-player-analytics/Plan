@@ -37,7 +37,6 @@ public class TablePlayerDto {
     private Long lastSeen;
     private Long registered;
     private String country;
-    private Double pingAverage;
     private Integer pingMax;
     private Integer pingMin;
     private String nicknames;
@@ -124,14 +123,6 @@ public class TablePlayerDto {
         this.playerUUID = playerUUID;
     }
 
-    public Double getPingAverage() {
-        return pingAverage;
-    }
-
-    public void setPingAverage(Double pingAverage) {
-        this.pingAverage = pingAverage;
-    }
-
     public Integer getPingMax() {
         return pingMax;
     }
@@ -208,7 +199,6 @@ public class TablePlayerDto {
 
         public TablePlayerDtoBuilder withPing(Ping ping) {
             if (ping != null) {
-                tablePlayerDto.setPingAverage(ping.getAverage());
                 tablePlayerDto.setPingMax(ping.getMax());
                 tablePlayerDto.setPingMin(ping.getMin());
             }
