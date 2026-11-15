@@ -23,10 +23,9 @@ import com.djrapitops.plan.storage.database.sql.tables.webuser.RegistrationTable
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static com.djrapitops.plan.storage.database.sql.building.Sql.FROM;
-import static com.djrapitops.plan.storage.database.sql.building.Sql.INSERT_INTO;
-import static com.djrapitops.plan.storage.database.sql.building.Sql.SELECT;
+import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
 import static com.djrapitops.plan.storage.database.sql.tables.webuser.RegistrationTable.*;
+import static com.djrapitops.plan.storage.database.sql.tables.webuser.RegistrationTable.ID;
 
 /**
  * Removes unique constraint from username column on plan_incomplete_registration table.
@@ -47,7 +46,7 @@ public class RegistrationTableUsernameUniqueConstraintPatch extends Patch {
             public Integer processResults(ResultSet set) throws SQLException {
                 return set.getInt("unique");
             }
-        }) > 0;
+        }) > 1;
     }
 
     private boolean hasUniqueIndexMySQL() {
