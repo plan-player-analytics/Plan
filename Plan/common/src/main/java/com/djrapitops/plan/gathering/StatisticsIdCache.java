@@ -27,6 +27,8 @@ import com.djrapitops.plan.storage.database.transactions.events.StoreMinecraftSt
 import com.djrapitops.plan.storage.file.PlanFiles;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
+import com.google.gson.JsonSyntaxException;
+import net.playeranalytics.plugin.server.PluginLogger;
 import org.jspecify.annotations.Nullable;
 
 import javax.inject.Inject;
@@ -45,14 +47,16 @@ public class StatisticsIdCache implements SubSystem {
 
     private final PlanFiles files;
     private final DBSystem dbSystem;
+    private final PluginLogger logger;
     private final ErrorLogger errorLogger;
 
     private Map<String, Integer> idByStatisticName = new HashMap<>();
 
     @Inject
-    public StatisticsIdCache(PlanFiles files, DBSystem dbSystem, ErrorLogger errorLogger) {
+    public StatisticsIdCache(PlanFiles files, DBSystem dbSystem, PluginLogger logger, ErrorLogger errorLogger) {
         this.files = files;
         this.dbSystem = dbSystem;
+        this.logger = logger;
         this.errorLogger = errorLogger;
     }
 
@@ -94,6 +98,8 @@ public class StatisticsIdCache implements SubSystem {
                         dbSystem.getDatabase().executeTransaction(new StoreMinecraftStatisticsValuesTransaction(
                                 new MinecraftStatistics(playerUUID, serverUUID, statisticsById)
                         ));
+                    } catch (JsonSyntaxException failedParse) {
+                        logger.warn(statistics.getResourceName() + " could not be read (Invalid json) - fix the file manually: " + failedParse.getMessage());
                     } catch (DBOpException | IOException e) {
                         errorLogger.error(e, ErrorContext.builder()
                                 .related(statistics.getResourceName())
