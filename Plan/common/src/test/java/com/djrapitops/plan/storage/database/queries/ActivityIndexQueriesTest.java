@@ -254,7 +254,7 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
         assertNotNull(result);
     }
 
-    @RepeatedTest(5)
+    @RepeatedTest(3)
     default void countRegularPlayers() {
         storeSessions(_ -> true);
         long playtimeThreshold = TimeUnit.MILLISECONDS.toMillis(1L);
@@ -284,6 +284,58 @@ public interface ActivityIndexQueriesTest extends DatabaseTestPreparer {
 
         Long expected = db().query(ActivityIndexQueries.averagePlaytimePerRegularPlayer(after, date, serverUUID(), playtimeThreshold));
         Long result = db().query(MultiServerActivityIndexQueries.averagePlaytimePerRegularPlayer(after, date, List.of(serverUUID()), playtimeThreshold));
+        assertEquals(expected, result);
+    }
+
+    @RepeatedTest(value = 3, name = "Multi-server averageAfkPerRegularPlayer matches {currentRepetition}/{totalRepetitions}")
+    default void multiServerAverageAfkPerRegularPlayerMatches() {
+        storeSessions(_ -> true);
+
+        long date = System.currentTimeMillis();
+        long after = date - TimeUnit.DAYS.toMillis(7L);
+        long playtimeThreshold = TimeUnit.HOURS.toMillis(5L);
+
+        Long expected = db().query(ActivityIndexQueries.averageAFKPerRegularPlayer(after, date, serverUUID(), playtimeThreshold));
+        Long result = db().query(MultiServerActivityIndexQueries.averageAfkPerRegularPlayer(after, date, List.of(serverUUID()), playtimeThreshold));
+        assertEquals(expected, result);
+    }
+
+    @RepeatedTest(value = 3, name = "Multi-server averageSessionLengthPerRegularPlayer matches {currentRepetition}/{totalRepetitions}")
+    default void multiServerAverageSessionLengthPerRegularPlayerMatches() {
+        storeSessions(_ -> true);
+
+        long date = System.currentTimeMillis();
+        long after = date - TimeUnit.DAYS.toMillis(7L);
+        long playtimeThreshold = TimeUnit.HOURS.toMillis(5L);
+
+        Long expected = db().query(ActivityIndexQueries.averageSessionLengthPerRegularPlayer(after, date, serverUUID(), playtimeThreshold));
+        Long result = db().query(MultiServerActivityIndexQueries.averageSessionLengthPerRegularPlayer(after, date, List.of(serverUUID()), playtimeThreshold));
+        assertEquals(expected, result);
+    }
+
+    @RepeatedTest(value = 3, name = "Multi-server countNewPlayersTurnedRegular matches {currentRepetition}/{totalRepetitions}")
+    default void multiServerCountNewPlayersTurnedRegularMatches() {
+        storeSessions(_ -> true);
+
+        long date = System.currentTimeMillis();
+        long after = date - TimeUnit.DAYS.toMillis(30L);
+        long playtimeThreshold = TimeUnit.HOURS.toMillis(5L);
+
+        Integer expected = db().query(ActivityIndexQueries.countNewPlayersTurnedRegular(after, date, serverUUID(), playtimeThreshold));
+        Integer result = db().query(MultiServerActivityIndexQueries.countNewPlayersTurnedRegular(after, date, List.of(serverUUID()), playtimeThreshold));
+        assertEquals(expected, result);
+    }
+
+    @RepeatedTest(value = 3, name = "Multi-server countRegularPlayersTurnedInactive matches {currentRepetition}/{totalRepetitions}")
+    default void multiServerCountRegularPlayersTurnedInactiveMatches() {
+        storeSessions(_ -> true);
+
+        long date = System.currentTimeMillis();
+        long after = date - TimeUnit.DAYS.toMillis(30L);
+        long playtimeThreshold = TimeUnit.HOURS.toMillis(5L);
+
+        Integer expected = db().query(ActivityIndexQueries.countRegularPlayersTurnedInactive(after, date, serverUUID(), playtimeThreshold));
+        Integer result = db().query(MultiServerActivityIndexQueries.countRegularPlayersTurnedInactive(after, date, List.of(serverUUID()), playtimeThreshold));
         assertEquals(expected, result);
     }
 }

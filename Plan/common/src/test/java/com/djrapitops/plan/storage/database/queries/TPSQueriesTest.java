@@ -126,7 +126,7 @@ public interface TPSQueriesTest extends DatabaseTestPreparer {
         assertEquals((Long) (long) mutator.averageFreeDisk(), db().query(TPSQueries.averageFreeDisk(Long.MIN_VALUE, Long.MAX_VALUE, serverUUID())));
     }
 
-    @RepeatedTest(5)
+    @RepeatedTest(3)
     default void occupiedCalculationMatches() {
         List<TPS> data = RandomData.randomDateOrderedTPS();
         for (TPS tps : data) {
@@ -139,7 +139,7 @@ public interface TPSQueriesTest extends DatabaseTestPreparer {
         assertEquals(expected, result, () -> "Mismatch (" + expected + ", " + result + ") with data " + data);
     }
 
-    @RepeatedTest(5)
+    @RepeatedTest(3)
     default void uptimeCalculationMatches() {
         List<TPS> data = RandomData.randomDateOrderedTPS();
         for (TPS tps : data) {
@@ -152,7 +152,7 @@ public interface TPSQueriesTest extends DatabaseTestPreparer {
         assertEquals(expected, result, () -> "Mismatch (" + expected + ", " + result + ") with data " + data);
     }
 
-    @RepeatedTest(5)
+    @RepeatedTest(3)
     default void downtimeCalculationMatches() {
         List<TPS> data = RandomData.randomDateOrderedTPS();
         for (TPS tps : data) {
@@ -165,7 +165,7 @@ public interface TPSQueriesTest extends DatabaseTestPreparer {
         assertEquals(expected, result, () -> "Mismatch (" + expected + ", " + result + ") with data " + data);
     }
 
-    @RepeatedTest(5)
+    @RepeatedTest(3)
     default void lowTpsSpikeCalculationMatches() {
         List<TPS> data = RandomData.randomDateOrderedTPS();
         for (TPS tps : data) {

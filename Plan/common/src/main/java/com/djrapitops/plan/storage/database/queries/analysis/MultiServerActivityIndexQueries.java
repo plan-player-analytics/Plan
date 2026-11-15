@@ -235,7 +235,7 @@ public class MultiServerActivityIndexQueries {
                 GROUP_BY + "p." + SessionsTable.USER_ID;
         String selectAverage = SELECT + "AVG(afk) as average" + FROM + '(' + selectAfkPerPlayer + ") q1";
 
-        return new QueryStatement<Long>(selectAverage, 100) {
+        return new QueryStatement<>(selectAverage, 100) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
                 statement.setLong(1, before);

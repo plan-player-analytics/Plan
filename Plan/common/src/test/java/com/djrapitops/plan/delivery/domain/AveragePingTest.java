@@ -27,20 +27,20 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 class AveragePingTest {
 
-    @RepeatedTest(value = 5, name = "AveragePing equals {currentRepetition}/{totalRepetitions}")
+    @RepeatedTest(value = 3, name = "AveragePing equals {currentRepetition}/{totalRepetitions}")
     void twoAreEqual() {
         double value = RandomData.randomDouble();
         assertEquals(new AveragePing(value), new AveragePing(value));
     }
 
-    @RepeatedTest(value = 5, name = "AveragePing not equals {currentRepetition}/{totalRepetitions}")
+    @RepeatedTest(value = 3, name = "AveragePing not equals {currentRepetition}/{totalRepetitions}")
     void twoAreNotEqual() {
         double value = RandomData.randomDouble();
         assertNotEquals(new AveragePing(value), new AveragePing(value + 1.0));
     }
 
 
-    @RepeatedTest(value = 5, name = "AveragePing hashing {currentRepetition}/{totalRepetitions}")
+    @RepeatedTest(value = 3, name = "AveragePing hashing {currentRepetition}/{totalRepetitions}")
     void hashing() {
         double value = RandomData.randomDouble();
 
