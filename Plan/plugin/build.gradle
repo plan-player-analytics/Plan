@@ -130,7 +130,7 @@ hangarPublish {
         platforms {
             paper {
                 url.set(downloadUrl)
-                platformVersions.set(["1.13-1.21.11"])
+                platformVersions.set(["1.13-26.3"])
             }
             waterfall {
                 url.set(downloadUrl)
@@ -138,7 +138,7 @@ hangarPublish {
             }
             velocity {
                 url.set(downloadUrl)
-                platformVersions.set(["3.5"])
+                platformVersions.set(["3.5-4.6.1"])
             }
         }
     }
