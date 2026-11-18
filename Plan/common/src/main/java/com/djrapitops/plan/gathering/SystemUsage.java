@@ -55,10 +55,8 @@ public class SystemUsage {
 
         OperatingSystemMXBean osBean = ManagementFactory.getOperatingSystemMXBean();
         try {
-            if (osBean instanceof com.sun.management.OperatingSystemMXBean) {
-                com.sun.management.OperatingSystemMXBean nativeOsBean = (com.sun.management.OperatingSystemMXBean) osBean;
-                // TODO Java 17 related deprecation, use getCpuLoad() after Java 17 swap.
-                averageUsage = nativeOsBean.getSystemCpuLoad();
+            if (osBean instanceof com.sun.management.OperatingSystemMXBean nativeOsBean) {
+                averageUsage = nativeOsBean.getCpuLoad();
             } else {
                 int availableProcessors = osBean.getAvailableProcessors();
                 averageUsage = osBean.getSystemLoadAverage() / availableProcessors;
