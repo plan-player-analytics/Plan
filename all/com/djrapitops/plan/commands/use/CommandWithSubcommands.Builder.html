@@ -59,9 +59,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
 <ol class="toc-list">
 <li><a href="#subcommand(com.djrapitops.plan.commands.use.Subcommand)" tabindex="0">subcommand(Subcommand)</a></li>
-<li><a href="#subcommandOnCondition(boolean,com.djrapitops.plan.commands.use.Subcommand)" tabindex="0">subcommandOnCondition(boolean, Subcommand)</a></li>
 <li><a href="#fallback(java.util.function.BiConsumer)" tabindex="0">fallback(BiConsumer)</a></li>
-<li><a href="#fallbackOrHelpFallback(java.util.function.BiPredicate,java.util.function.BiConsumer)" tabindex="0">fallbackOrHelpFallback(BiPredicate, BiConsumer)</a></li>
 <li><a href="#exceptionHandler(com.djrapitops.plan.utilities.java.TriConsumer)" tabindex="0">exceptionHandler(TriConsumer)</a></li>
 <li><a href="#colorScheme(com.djrapitops.plan.commands.use.ColorScheme)" tabindex="0">colorScheme(ColorScheme)</a></li>
 <li><a href="#build()" tabindex="0">build()</a></li>
@@ -120,15 +118,7 @@ loadScripts(document, 'script');</script>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fallback(java.util.function.BiConsumer)" class="member-name-link">fallback</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/BiConsumer.html" title="class or interface in java.util.function" class="external-link">BiConsumer</a>&lt;<a href="CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>, <a href="Arguments.html" title="class in com.djrapitops.plan.commands.use">Arguments</a>&gt;&nbsp;executor)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CommandWithSubcommands.Builder.html" title="class in com.djrapitops.plan.commands.use">CommandWithSubcommands.Builder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#fallbackOrHelpFallback(java.util.function.BiPredicate,java.util.function.BiConsumer)" class="member-name-link">fallbackOrHelpFallback</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/BiPredicate.html" title="class or interface in java.util.function" class="external-link">BiPredicate</a>&lt;<a href="CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>, <a href="Arguments.html" title="class in com.djrapitops.plan.commands.use">Arguments</a>&gt;&nbsp;canBeUsed,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/BiConsumer.html" title="class or interface in java.util.function" class="external-link">BiConsumer</a>&lt;<a href="CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>, <a href="Arguments.html" title="class in com.djrapitops.plan.commands.use">Arguments</a>&gt;&nbsp;executor)</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CommandWithSubcommands.Builder.html" title="class in com.djrapitops.plan.commands.use">CommandWithSubcommands.Builder</a></code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#subcommand(com.djrapitops.plan.commands.use.Subcommand)" class="member-name-link">subcommand</a><wbr>(<a href="Subcommand.html" title="class in com.djrapitops.plan.commands.use">Subcommand</a>&nbsp;subcommand)</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="CommandWithSubcommands.Builder.html" title="class in com.djrapitops.plan.commands.use">CommandWithSubcommands.Builder</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#subcommandOnCondition(boolean,com.djrapitops.plan.commands.use.Subcommand)" class="member-name-link">subcommandOnCondition</a><wbr>(boolean&nbsp;condition,
- <a href="Subcommand.html" title="class in com.djrapitops.plan.commands.use">Subcommand</a>&nbsp;subcommand)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#subcommand(com.djrapitops.plan.commands.use.Subcommand)" class="member-name-link">subcommand</a><wbr>(<a href="Subcommand.html" title="class in com.djrapitops.plan.commands.use">Subcommand</a>&nbsp;subcommand)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
@@ -162,28 +152,10 @@ loadScripts(document, 'script');</script>
 </section>
 </li>
 <li>
-<section class="detail" id="subcommandOnCondition(boolean,com.djrapitops.plan.commands.use.Subcommand)">
-<h3>subcommandOnCondition</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CommandWithSubcommands.Builder.html" title="class in com.djrapitops.plan.commands.use">CommandWithSubcommands.Builder</a></span>&nbsp;<span class="element-name">subcommandOnCondition</span><wbr><span class="parameters">(boolean&nbsp;condition,
- <a href="Subcommand.html" title="class in com.djrapitops.plan.commands.use">Subcommand</a>&nbsp;subcommand)</span></div>
-</div>
-</section>
-</li>
-<li>
 <section class="detail" id="fallback(java.util.function.BiConsumer)">
 <h3>fallback</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CommandWithSubcommands.Builder.html" title="class in com.djrapitops.plan.commands.use">CommandWithSubcommands.Builder</a></span>&nbsp;<span class="element-name">fallback</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/BiConsumer.html" title="class or interface in java.util.function" class="external-link">BiConsumer</a>&lt;<a href="CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>, <a href="Arguments.html" title="class in com.djrapitops.plan.commands.use">Arguments</a>&gt;&nbsp;executor)</span></div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="fallbackOrHelpFallback(java.util.function.BiPredicate,java.util.function.BiConsumer)">
-<h3>fallbackOrHelpFallback</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="CommandWithSubcommands.Builder.html" title="class in com.djrapitops.plan.commands.use">CommandWithSubcommands.Builder</a></span>&nbsp;<span class="element-name">fallbackOrHelpFallback</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/BiPredicate.html" title="class or interface in java.util.function" class="external-link">BiPredicate</a>&lt;<a href="CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>, <a href="Arguments.html" title="class in com.djrapitops.plan.commands.use">Arguments</a>&gt;&nbsp;canBeUsed,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/function/BiConsumer.html" title="class or interface in java.util.function" class="external-link">BiConsumer</a>&lt;<a href="CMDSender.html" title="interface in com.djrapitops.plan.commands.use">CMDSender</a>, <a href="Arguments.html" title="class in com.djrapitops.plan.commands.use">Arguments</a>&gt;&nbsp;executor)</span></div>
 </div>
 </section>
 </li>

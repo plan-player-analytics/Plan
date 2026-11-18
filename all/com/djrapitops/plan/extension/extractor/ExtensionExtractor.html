@@ -65,13 +65,11 @@ loadScripts(document, 'script');</script>
 <ol class="toc-list">
 <li><a href="#getPluginName(java.lang.Class)" tabindex="0">getPluginName(Class)</a></li>
 <li><a href="#validateAnnotations()" tabindex="0">validateAnnotations()</a></li>
-<li><a href="#extractAnnotationInformation()" tabindex="0">extractAnnotationInformation()</a></li>
 <li><a href="#getWarnings()" tabindex="0">getWarnings()</a></li>
 <li><a href="#getPluginInfo()" tabindex="0">getPluginInfo()</a></li>
 <li><a href="#getTabOrder()" tabindex="0">getTabOrder()</a></li>
 <li><a href="#getTabAnnotations()" tabindex="0">getTabAnnotations()</a></li>
 <li><a href="#getTabInformation()" tabindex="0">getTabInformation()</a></li>
-<li><a href="#getMethodAnnotations()" tabindex="0">getMethodAnnotations()</a></li>
 <li><a href="#getMethods()" tabindex="0">getMethods()</a></li>
 <li><a href="#getInvalidateMethodAnnotations()" tabindex="0">getInvalidateMethodAnnotations()</a></li>
 </ol>
@@ -125,24 +123,10 @@ in your unit tests to avoid runtime errors. <a href="#validateAnnotations()"><co
 <div class="table-header col-first">Modifier and Type</div>
 <div class="table-header col-second">Method</div>
 <div class="table-header col-last">Description</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#extractAnnotationInformation()" class="member-name-link">extractAnnotationInformation</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">No longer used anywhere, no-op.</div>
-</div>
-</div>
-<div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../annotation/InvalidateMethod.html" title="annotation interface in com.djrapitops.plan.extension.annotation">InvalidateMethod</a>&gt;</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInvalidateMethodAnnotations()" class="member-name-link">getInvalidateMethodAnnotations</a>()</code></div>
-<div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
+<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/List.html" title="class or interface in java.util" class="external-link">List</a><wbr>&lt;<a href="../annotation/InvalidateMethod.html" title="annotation interface in com.djrapitops.plan.extension.annotation">InvalidateMethod</a>&gt;</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getInvalidateMethodAnnotations()" class="member-name-link">getInvalidateMethodAnnotations</a>()</code></div>
+<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">
 <div class="block">Get list of invalidated methods.</div>
-</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="MethodAnnotations.html" title="class in com.djrapitops.plan.extension.extractor">MethodAnnotations</a></code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6"><code><a href="#getMethodAnnotations()" class="member-name-link">getMethodAnnotations</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4 method-summary-table-tab6">
-<div class="block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">During refactoring MethodAnnotations was removed.</div>
-</div>
 </div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a><wbr>&lt;<a href="ExtensionMethod.ParameterType.html" title="enum class in com.djrapitops.plan.extension.extractor">ExtensionMethod.ParameterType</a>, <a href="ExtensionMethods.html" title="class in com.djrapitops.plan.extension.extractor">ExtensionMethods</a>&gt;</code></div>
 <div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#getMethods()" class="member-name-link">getMethods</a>()</code></div>
@@ -261,18 +245,6 @@ Use with unit tests if necessary.</div>
 </section>
 </li>
 <li>
-<section class="detail" id="extractAnnotationInformation()">
-<h3>extractAnnotationInformation</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">extractAnnotationInformation</span>()</div>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">No longer used anywhere, no-op.</div>
-</div>
-</div>
-</section>
-</li>
-<li>
 <section class="detail" id="getWarnings()">
 <h3>getWarnings</h3>
 <div class="horizontal-scroll">
@@ -335,23 +307,6 @@ These will be logged to console when your extension registers.</div>
 <dl class="notes">
 <dt>Returns:</dt>
 <dd>List of TabInfo annotations.</dd>
-</dl>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="getMethodAnnotations()">
-<h3>getMethodAnnotations</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="annotations"><a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/Deprecated.html" title="class or interface in java.lang" class="external-link">@Deprecated</a>
-</span><span class="modifiers">public</span>&nbsp;<span class="return-type"><a href="MethodAnnotations.html" title="class in com.djrapitops.plan.extension.extractor">MethodAnnotations</a></span>&nbsp;<span class="element-name">getMethodAnnotations</span>()</div>
-<div class="deprecation-block"><span class="deprecated-label">Deprecated.</span>
-<div class="deprecation-comment">During refactoring MethodAnnotations was removed. Using <a href="#getMethods()"><code>getMethods()</code></a> instead.</div>
-</div>
-<div class="block">Deprecated method for method annotation access.</div>
-<dl class="notes">
-<dt>Returns:</dt>
-<dd>Old utility for method annotation access.</dd>
 </dl>
 </div>
 </section>

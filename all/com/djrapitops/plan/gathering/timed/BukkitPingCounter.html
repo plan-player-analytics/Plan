@@ -69,7 +69,6 @@ loadScripts(document, 'script');</script>
 <li><a href="#removePlayer(org.bukkit.entity.Player)" tabindex="0">removePlayer(Player)</a></li>
 <li><a href="#onPlayerJoin(org.bukkit.event.player.PlayerJoinEvent)" tabindex="0">onPlayerJoin(PlayerJoinEvent)</a></li>
 <li><a href="#onPlayerQuit(org.bukkit.event.player.PlayerQuitEvent)" tabindex="0">onPlayerQuit(PlayerQuitEvent)</a></li>
-<li><a href="#clear()" tabindex="0">clear()</a></li>
 </ol>
 </li>
 </ol>
@@ -136,23 +135,20 @@ Modified PingManager from LagMonitor plugin.
 <div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#addPlayer(java.util.UUID)" class="member-name-link">addPlayer</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/UUID.html" title="class or interface in java.util" class="external-link">UUID</a>&nbsp;uuid)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#clear()" class="member-name-link">clear</a>()</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onPlayerJoin(org.bukkit.event.player.PlayerJoinEvent)" class="member-name-link">onPlayerJoin</a><wbr>(org.bukkit.event.player.PlayerJoinEvent&nbsp;joinEvent)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onPlayerJoin(org.bukkit.event.player.PlayerJoinEvent)" class="member-name-link">onPlayerJoin</a><wbr>(org.bukkit.event.player.PlayerJoinEvent&nbsp;joinEvent)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onPlayerQuit(org.bukkit.event.player.PlayerQuitEvent)" class="member-name-link">onPlayerQuit</a><wbr>(org.bukkit.event.player.PlayerQuitEvent&nbsp;quitEvent)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#onPlayerQuit(org.bukkit.event.player.PlayerQuitEvent)" class="member-name-link">onPlayerQuit</a><wbr>(org.bukkit.event.player.PlayerQuitEvent&nbsp;quitEvent)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#register(net.playeranalytics.plugin.scheduling.RunnableFactory)" class="member-name-link">register</a><wbr>(net.playeranalytics.plugin.scheduling.RunnableFactory&nbsp;runnableFactory)</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#register(net.playeranalytics.plugin.scheduling.RunnableFactory)" class="member-name-link">register</a><wbr>(net.playeranalytics.plugin.scheduling.RunnableFactory&nbsp;runnableFactory)</code></div>
+<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removePlayer(org.bukkit.entity.Player)" class="member-name-link">removePlayer</a><wbr>(org.bukkit.entity.Player&nbsp;player)</code></div>
 <div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 <div class="col-first odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#removePlayer(org.bukkit.entity.Player)" class="member-name-link">removePlayer</a><wbr>(org.bukkit.entity.Player&nbsp;player)</code></div>
+<div class="col-second odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#run()" class="member-name-link">run</a>()</code></div>
 <div class="col-last odd-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
-<div class="col-first even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code>void</code></div>
-<div class="col-second even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4"><code><a href="#run()" class="member-name-link">run</a>()</code></div>
-<div class="col-last even-row-color method-summary-table method-summary-table-tab2 method-summary-table-tab4">&nbsp;</div>
 </div>
 </div>
 </div>
@@ -246,14 +242,6 @@ Modified PingManager from LagMonitor plugin.
 <h3>onPlayerQuit</h3>
 <div class="horizontal-scroll">
 <div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">onPlayerQuit</span><wbr><span class="parameters">(org.bukkit.event.player.PlayerQuitEvent&nbsp;quitEvent)</span></div>
-</div>
-</section>
-</li>
-<li>
-<section class="detail" id="clear()">
-<h3>clear</h3>
-<div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="return-type">void</span>&nbsp;<span class="element-name">clear</span>()</div>
 </div>
 </section>
 </li>
