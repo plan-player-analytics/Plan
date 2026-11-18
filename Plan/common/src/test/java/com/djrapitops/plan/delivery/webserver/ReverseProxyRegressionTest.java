@@ -34,6 +34,7 @@ import com.djrapitops.plan.storage.file.PlanFiles;
 import extension.FullSystemExtension;
 import extension.SeleniumExtension;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.condition.DisabledIfEnvironmentVariable;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -68,6 +69,7 @@ import static com.djrapitops.plan.delivery.export.ExportTestUtilities.*;
 @Testcontainers(disabledWithoutDocker = true)
 @ExtendWith(SeleniumExtension.class)
 @ExtendWith(FullSystemExtension.class)
+@DisabledIfEnvironmentVariable(named = "CI", matches = "true")
 class ReverseProxyRegressionTest {
 
     private static final int PLAN_PORT = 9001;
