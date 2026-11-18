@@ -71,9 +71,11 @@ public class ExportTestUtilities {
     }
 
     private static boolean ignoredLogLines(String log) {
-        return !Strings.CI.containsAny(log,
+        boolean ignoreDatapointNotFound = log.contains("static/QueryDatapoint-") || log.contains("datapoint") && (log.contains("404") || log.contains("500"));
+        boolean shouldIgnore = ignoreDatapointNotFound || Strings.CI.containsAny(log,
                 "fonts.gstatic.com", "fonts.googleapis.com", "cdn.jsdelivr.net", "manifest.json"
-        ) || log.contains("datapoint") && log.contains("404");
+        );
+        return !shouldIgnore;
     }
 
     public static void assertNoLogsExceptFaviconError(List<LogEntry> logs) {

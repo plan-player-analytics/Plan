@@ -19,12 +19,14 @@ package com.djrapitops.plan.delivery.webserver;
 import com.djrapitops.plan.PlanSystem;
 import com.djrapitops.plan.gathering.domain.DataMap;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
+import com.djrapitops.plan.gathering.domain.TPS;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.DisplaySettings;
 import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.Database;
+import com.djrapitops.plan.storage.database.queries.DataStoreQueries;
 import com.djrapitops.plan.storage.database.transactions.events.PlayerRegisterTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreSessionTransaction;
 import com.djrapitops.plan.storage.database.transactions.events.StoreWorldNameTransaction;
@@ -53,6 +55,7 @@ import java.nio.file.Path;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 import static com.djrapitops.plan.delivery.export.ExportTestUtilities.*;
@@ -65,7 +68,6 @@ import static com.djrapitops.plan.delivery.export.ExportTestUtilities.*;
 @Testcontainers(disabledWithoutDocker = true)
 @ExtendWith(SeleniumExtension.class)
 @ExtendWith(FullSystemExtension.class)
-@Disabled("Docker networking doesn't work in Github Actions")
 class ReverseProxyRegressionTest {
 
     private static final int PLAN_PORT = 9001;
@@ -93,12 +95,18 @@ class ReverseProxyRegressionTest {
         config.set(WebserverSettings.LOG_ACCESS_TO_CONSOLE, true);
         config.set(WebserverSettings.SHOW_ALTERNATIVE_IP, true);
         config.set(WebserverSettings.ALTERNATIVE_IP, webserver.getHost() + ":" + webserver.getMappedPort(80) + "/plan");
+        config.set(WebserverSettings.IP_USE_X_FORWARDED_FOR, true);
         // Avoid accidentally DDoS:ing head image service during tests.
         config.set(DisplaySettings.PLAYER_HEAD_IMG_URL, "data:image/png;base64,AA==");
 
         system.enable();
         serverUUID = system.getServerInfo().getServerUUID();
-        savePlayerData(system.getDatabaseSystem().getDatabase(), serverUUID);
+        Database database = system.getDatabaseSystem().getDatabase();
+        savePlayerData(database, serverUUID);
+        for (TPS tps : RandomData.randomDateOrderedTPS(1)) {
+            database.executeInTransaction(DataStoreQueries.storeTPS(serverUUID, tps)).join();
+        }
+        database.executeInTransaction(DataStoreQueries.storeTPS(serverUUID, RandomData.randomTPSAtDate(System.currentTimeMillis() - TimeUnit.SECONDS.toMillis(5)))).join();
     }
 
     private static void savePlayerData(Database database, ServerUUID serverUUID) {
