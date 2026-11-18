@@ -47,7 +47,7 @@ public class ServerGraphSampler extends TaskSystem.Task {
     private final ErrorLogger errorLogger;
 
     private final Runnable refreshMetadata;
-    private Integer lastSeenColumnCount;
+    private Integer lastSeenColumnCount = 1;
 
     public ServerGraphSampler(
             ServerGraphDataSource dataSource,
@@ -68,6 +68,7 @@ public class ServerGraphSampler extends TaskSystem.Task {
     @Override
     public void register(RunnableFactory runnableFactory) {
         lastSeenColumnCount = dbSystem.getDatabase().query(ExtensionGraphQueries.getColumnCount(providerIdentifier.getPluginName(), providerIdentifier.getProviderName(), providerIdentifier.getServerUUID()));
+        if (lastSeenColumnCount == null) lastSeenColumnCount = 1;
 
         Duration minimumInterval = Duration.of(5, TimeUnit.SECONDS.toChronoUnit());
         Duration interval = Duration.of(annotation.sampleInterval(), annotation.sampleIntervalUnit().toChronoUnit());
