@@ -61,6 +61,13 @@ public class JettyInternalRequest implements InternalRequest {
 
     @Override
     public String getAccessAddressFromHeader() {
+        // Cloudflare's CF-Connecting-IP is more reliable than X-Forwarded-For
+        // as it is always set to the original client's IP and cannot be spoofed
+        // when traffic comes through Cloudflare.
+        String cfConnectingIp = getHeader("CF-Connecting-IP");
+        if (cfConnectingIp != null && !cfConnectingIp.isEmpty()) {
+            return cfConnectingIp;
+        }
         String header = getHeader(HttpHeader.X_FORWARDED_FOR);
         if (header != null && header.contains(",")) {
             return header.split(",")[0].trim();
@@ -69,6 +76,10 @@ public class JettyInternalRequest implements InternalRequest {
     }
 
     private String getHeader(HttpHeader headerName) {
+        return request.getHeaders().get(headerName);
+    }
+
+    private String getHeader(String headerName) {
         return request.getHeaders().get(headerName);
     }
 

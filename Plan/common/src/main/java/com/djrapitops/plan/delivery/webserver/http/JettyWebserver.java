@@ -21,8 +21,11 @@ import com.djrapitops.plan.delivery.webserver.configuration.WebserverConfigurati
 import com.djrapitops.plan.delivery.webserver.configuration.WebserverLogMessages;
 import com.djrapitops.plan.exceptions.EnableException;
 import com.djrapitops.plan.utilities.java.ThreadContextClassLoaderSwap;
+import com.djrapitops.plan.utilities.logging.ErrorContext;
+import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.server.PluginLogger;
 import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
+import org.eclipse.jetty.http.HttpField;
 import org.eclipse.jetty.http2.server.HTTP2CServerConnectionFactory;
 import org.eclipse.jetty.http2.server.HTTP2ServerConnectionFactory;
 import org.eclipse.jetty.io.WindowRateControl;
@@ -55,6 +58,7 @@ public class JettyWebserver implements WebServer {
     private static boolean enableRateLimiting = true;
 
     private final PluginLogger logger;
+    private final ErrorLogger errorLogger;
     private final WebserverConfiguration webserverConfiguration;
     private final LegacyJettySSLContextLoader legacyJettySSLContextLoader;
     private final JettyRequestHandler jettyRequestHandler;
@@ -66,8 +70,16 @@ public class JettyWebserver implements WebServer {
     private Server webserver;
 
     @Inject
-    public JettyWebserver(PluginLogger logger, WebserverConfiguration webserverConfiguration, LegacyJettySSLContextLoader legacyJettySSLContextLoader, JettyRequestHandler jettyRequestHandler, ResponseResolver responseResolver) {
+    public JettyWebserver(
+            PluginLogger logger,
+            ErrorLogger errorLogger,
+            WebserverConfiguration webserverConfiguration,
+            LegacyJettySSLContextLoader legacyJettySSLContextLoader,
+            JettyRequestHandler jettyRequestHandler,
+            ResponseResolver responseResolver
+    ) {
         this.logger = logger;
+        this.errorLogger = errorLogger;
         this.webserverConfiguration = webserverConfiguration;
         webserverLogMessages = webserverConfiguration.getWebserverLogMessages();
         this.legacyJettySSLContextLoader = legacyJettySSLContextLoader;
@@ -117,7 +129,14 @@ public class JettyWebserver implements WebServer {
                 usingHttps = true;
             });
             if (webserverConfiguration.getAccessAddressPolicy() == AccessAddressPolicy.X_FORWARDED_FOR_HEADER) {
-                configuration.addCustomizer(new ForwardedRequestCustomizer());
+                configuration.addCustomizer(new ForwardedRequestCustomizer() {
+                    @Override
+                    protected void onError(HttpField field, Throwable t) {
+                        errorLogger.error(t, ErrorContext.builder()
+                                .related(field)
+                                .build());
+                    }
+                });
             }
 
             HttpConnectionFactory httpConnector = new HttpConnectionFactory(configuration);
