@@ -18,6 +18,7 @@ package com.djrapitops.plan;
 
 import net.playeranalytics.plugin.scheduling.PluginRunnable;
 import net.playeranalytics.plugin.scheduling.RunnableFactory;
+import org.jetbrains.annotations.VisibleForTesting;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -55,6 +56,7 @@ public class TaskSystem implements SubSystem {
         runnableFactory.cancelAllKnownTasks();
     }
 
+    @VisibleForTesting
     public <T extends Task> Optional<T> getTask(Class<T> ofType) {
         for (Task task : tasks) {
             if (task.getClass().equals(ofType)) return Optional.of(ofType.cast(task));

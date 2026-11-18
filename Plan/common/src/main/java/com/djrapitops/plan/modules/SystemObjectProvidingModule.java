@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.modules;
 
-import com.djrapitops.plan.DataService;
-import com.djrapitops.plan.DataSvc;
 import com.djrapitops.plan.delivery.webserver.cache.JSONFileStorage;
 import com.djrapitops.plan.delivery.webserver.cache.JSONMemoryStorageShim;
 import com.djrapitops.plan.delivery.webserver.cache.JSONStorage;
@@ -109,12 +107,6 @@ public class SystemObjectProvidingModule {
     @Singleton
     ErrorLogger provideErrorLogger(PluginErrorLogger errorLogger) {
         return errorLogger;
-    }
-
-    @Provides
-    @Singleton
-    DataService provideDataService(DataSvc dataService) {
-        return dataService;
     }
 
     @Provides

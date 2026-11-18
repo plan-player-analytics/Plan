@@ -20,13 +20,13 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.CommandLang;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.java.TriConsumer;
+import org.jetbrains.annotations.VisibleForTesting;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
-import java.util.function.BiPredicate;
 
 public class CommandWithSubcommands extends Subcommand {
 
@@ -53,6 +53,7 @@ public class CommandWithSubcommands extends Subcommand {
         return subcommands;
     }
 
+    @VisibleForTesting
     public Optional<Subcommand> findSubCommand(@Untrusted Arguments arguments) {
         return arguments.get(0).flatMap(alias -> {
             for (Subcommand subcommand : subcommands) {
@@ -173,27 +174,9 @@ public class CommandWithSubcommands extends Subcommand {
             return this;
         }
 
-        public Builder subcommandOnCondition(boolean condition, Subcommand subcommand) {
-            if (condition) command.subcommands.add(subcommand);
-            return this;
-        }
-
         public Builder fallback(BiConsumer<CMDSender, Arguments> executor) {
             command.fallback = executor;
             return this;
-        }
-
-        public Builder fallbackOrHelpFallback(
-                BiPredicate<CMDSender, Arguments> canBeUsed,
-                BiConsumer<CMDSender, Arguments> executor
-        ) {
-            return fallback((sender, arguments) -> {
-                if (canBeUsed.test(sender, arguments)) {
-                    executor.accept(sender, arguments);
-                } else {
-                    command.onHelp(sender, arguments);
-                }
-            });
         }
 
         public Builder exceptionHandler(TriConsumer<RuntimeException, CMDSender, Arguments> exceptionHandler) {

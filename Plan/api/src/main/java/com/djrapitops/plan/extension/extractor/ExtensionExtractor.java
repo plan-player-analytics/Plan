@@ -111,12 +111,6 @@ public final class ExtensionExtractor {
         return extensionMethods;
     }
 
-    /**
-     * @deprecated No longer used anywhere, no-op.
-     */
-    @Deprecated
-    public void extractAnnotationInformation() {/* no-op */}
-
     private void validateReturnType(Method method, Class<?>... expectedType) {
         Class<?> returnType = method.getReturnType();
         if (Arrays.stream(expectedType).noneMatch(a -> a.isAssignableFrom(returnType))) {
@@ -132,12 +126,6 @@ public final class ExtensionExtractor {
     private void validateMethodAnnotationPropertyLength(String property, String name, int maxLength, Method method) {
         if (property.length() > maxLength) {
             warnings.add(extensionName + "." + method.getName() + " '" + name + "' was over " + maxLength + " characters.");
-        }
-    }
-
-    private void validateMethodAnnotationPropertyRegex(String property, String name, String pattern, String explanation, Method method) {
-        if (!property.matches(pattern)) {
-            warnings.add(extensionName + "." + method.getName() + " '" + name + "', given '" + property + "' did not match regex '" + pattern + "' (" + explanation + ").");
         }
     }
 
@@ -533,17 +521,6 @@ public final class ExtensionExtractor {
     public List<TabInfo> getTabInformation() {
         if (tabInformation == null) extractTabInfo();
         return tabInformation;
-    }
-
-    /**
-     * Deprecated method for method annotation access.
-     *
-     * @return Old utility for method annotation access.
-     * @deprecated During refactoring MethodAnnotations was removed. Using {@link ExtensionExtractor#getMethods()} instead.
-     */
-    @Deprecated
-    public MethodAnnotations getMethodAnnotations() {
-        return new MethodAnnotations();
     }
 
     /**

@@ -35,7 +35,6 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
-import org.mockito.Mockito;
 import utilities.DBPreparer;
 
 import java.io.File;
@@ -51,6 +50,7 @@ import java.util.stream.Stream;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(FullSystemExtension.class)
@@ -125,10 +125,10 @@ class PlanCommandTest {
     }
 
     private CMDSender mockSender(String[] permissions) {
-        CMDSender sender = Mockito.mock(CMDSender.class);
+        CMDSender sender = mock(CMDSender.class);
 
         // Sending messages
-        ConsoleMessageBuilder messageBuilder = Mockito.spy(new ConsoleMessageBuilder(System.out::println));
+        ConsoleMessageBuilder messageBuilder = spy(new ConsoleMessageBuilder(System.out::println));
         ConsoleChatFormatter chatFormatter = new ConsoleChatFormatter();
         lenient().when(sender.buildMessage()).thenReturn(messageBuilder);
         lenient().when(sender.getFormatter()).thenReturn(chatFormatter);

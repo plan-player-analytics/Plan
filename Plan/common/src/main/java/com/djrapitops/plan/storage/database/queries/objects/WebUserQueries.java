@@ -22,14 +22,12 @@ import com.djrapitops.plan.delivery.web.resolver.request.WebUser;
 import com.djrapitops.plan.delivery.webserver.auth.CookieMetadata;
 import com.djrapitops.plan.delivery.webserver.auth.IncompleteRegistration;
 import com.djrapitops.plan.storage.database.queries.Query;
-import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.sql.building.Select;
 import com.djrapitops.plan.storage.database.sql.building.Sql;
 import com.djrapitops.plan.storage.database.sql.tables.CookieTable;
 import com.djrapitops.plan.storage.database.sql.tables.UsersTable;
 import com.djrapitops.plan.storage.database.sql.tables.webuser.*;
 import com.djrapitops.plan.utilities.dev.Untrusted;
-import com.djrapitops.plan.utilities.java.Lists;
 import com.google.gson.Gson;
 import com.google.gson.JsonSyntaxException;
 import org.intellij.lang.annotations.Language;
@@ -231,28 +229,6 @@ public class WebUserQueries {
                 FROM + WebGroupTable.TABLE_NAME +
                 WHERE + WebGroupTable.NAME + " IN (" + Sql.nParameters(groups.size()) + ')';
         return db -> db.queryList(sql, row -> row.getInt(WebGroupTable.ID), groups);
-    }
-
-    public static Query<Map<String, List<String>>> fetchAllGroupPermissions() {
-        String sql = SELECT + WebGroupTable.NAME + ',' + WebPermissionTable.PERMISSION +
-                FROM + WebGroupTable.TABLE_NAME + " g" +
-                INNER_JOIN + WebGroupToPermissionTable.TABLE_NAME + " gtp ON g." + WebGroupTable.ID + "=gtp." + WebGroupToPermissionTable.GROUP_ID +
-                INNER_JOIN + WebPermissionTable.TABLE_NAME + " p ON p." + WebPermissionTable.ID + "=gtp." + WebGroupToPermissionTable.PERMISSION_ID;
-        return new QueryAllStatement<>(sql, 100) {
-            @Override
-            public Map<String, List<String>> processResults(ResultSet set) throws SQLException {
-                Map<String, List<String>> groupMap = new HashMap<>();
-                while (set.next()) {
-                    String group = set.getString(WebGroupTable.NAME);
-                    String permission = set.getString(WebPermissionTable.PERMISSION);
-
-                    List<String> permissionList = groupMap.computeIfAbsent(group, Lists::create);
-
-                    permissionList.add(permission);
-                }
-                return groupMap;
-            }
-        };
     }
 
     public static Query<Optional<Preferences>> fetchPreferences(@Untrusted WebUser user) {

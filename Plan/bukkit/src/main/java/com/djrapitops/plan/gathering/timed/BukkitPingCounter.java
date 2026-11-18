@@ -206,7 +206,4 @@ public class BukkitPingCounter extends TaskSystem.Task implements Listener {
         removePlayer(quitEvent.getPlayer());
     }
 
-    public void clear() {
-        playerHistory.clear();
-    }
 }

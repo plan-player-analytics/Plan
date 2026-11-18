@@ -29,13 +29,12 @@ import com.djrapitops.plan.storage.database.transactions.events.BanStatusTransac
 import com.djrapitops.plan.storage.database.transactions.events.KickStoreTransaction;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import com.mojang.authlib.GameProfile;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.network.protocol.handshake.ClientIntent;
 import net.minecraft.network.protocol.handshake.ClientIntentionPacket;
-import net.minecraft.server.players.NameAndId;
 import net.minecraft.server.dedicated.DedicatedServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.players.NameAndId;
 import net.playeranalytics.plan.gathering.FabricPlayerPositionTracker;
 import net.playeranalytics.plan.gathering.domain.FabricPlayerData;
 import net.playeranalytics.plan.gathering.listeners.FabricListener;

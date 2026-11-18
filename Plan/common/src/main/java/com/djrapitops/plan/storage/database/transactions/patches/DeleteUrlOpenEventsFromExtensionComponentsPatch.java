@@ -26,7 +26,7 @@ import static com.djrapitops.plan.storage.database.sql.building.Sql.*;
  */
 public class DeleteUrlOpenEventsFromExtensionComponentsPatch extends Patch {
 
-    String[] invalidStrings = new String[]{
+    private final String[] invalidStrings = {
             "javascript", "clickEvent", "hoverEvent", "open_url", "copy_to_clipboard", "\"action\"", "&#", "\\"
     };
 
