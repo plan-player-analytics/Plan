@@ -212,7 +212,7 @@ public class JettyWebserver implements WebServer {
 
             int trackedClientCount = 5000;
             var dosHandler = new DoSHandler(
-                    DoSHandler.ID_FROM_REMOTE_ADDRESS,
+                    Request::getRemoteAddr,
                     new DoSHandler.LeakingBucketTrackerFactory(200),
                     // Immediately reject excessive requests with HTTP 429.
                     new DoSHandler.StatusRejectHandler(),
