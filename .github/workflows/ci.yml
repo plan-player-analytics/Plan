@@ -97,8 +97,9 @@ jobs:
             sleep 1
           done
       - name: 📶 Setup to avoid ERR_NETWORK_CHANGED
-        run: |
-          sudo resolvectl dns eth0 1.1.1.1
+        run: |    
+          IFACE=$(sudo ip -o route get 1.1.1.1 | awk '{print $5; exit}')
+          sudo resolvectl dns "$IFACE" 1.1.1.1 1.0.0.1
           sudo resolvectl domain eth0 "~."
           sudo sysctl -w net.ipv6.conf.default.disable_ipv6=1
           sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1
