@@ -76,7 +76,22 @@ public class ExtensionGraphJSONResolver implements Resolver {
     @Override
     public boolean canAccess(Request request) {
         WebUser user = request.getUser().orElse(new WebUser(""));
-        if (request.getQuery().contains("player")) return user.hasPermission(WebPermission.PAGE_PLAYER_PLUGINS);
+        if (request.getQuery().contains("player")) {
+
+            if (user.hasPermission(WebPermission.ACCESS_PLAYER)) {
+                return user.hasPermission(WebPermission.PAGE_PLAYER_PLUGINS);
+            }
+            if (user.hasPermission(WebPermission.ACCESS_PLAYER_SELF)) {
+                try {
+                    UUID webUserUUID = identifiers.getPlayerUUID(user.getName());
+                    UUID playerUUID = identifiers.getPlayerUUID(request);
+                    return user.hasPermission(WebPermission.PAGE_PLAYER_PLUGINS) && playerUUID.equals(webUserUUID);
+                } catch (BadRequestException userDoesntExist) {
+                    return false; // Don't give away who has played on the server to someone with level 2 access
+                }
+            }
+            return false;
+        }
         return user.hasPermission(WebPermission.PAGE_NETWORK_PLUGINS) || user.hasPermission(WebPermission.PAGE_SERVER_PLUGINS);
     }
 

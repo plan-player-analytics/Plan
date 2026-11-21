@@ -80,7 +80,19 @@ public class SessionsJSONResolver implements Resolver {
     public boolean canAccess(Request request) {
         WebUser user = request.getUser().orElse(new WebUser(""));
         if (request.getQuery().get("player").isPresent()) {
-            return user.hasPermission(WebPermission.PAGE_PLAYER_SESSIONS);
+            if (user.hasPermission(WebPermission.ACCESS_PLAYER)) {
+                return user.hasPermission(WebPermission.PAGE_PLAYER_SESSIONS);
+            }
+            if (user.hasPermission(WebPermission.ACCESS_PLAYER_SELF)) {
+                try {
+                    UUID webUserUUID = identifiers.getPlayerUUID(user.getName());
+                    UUID playerUUID = identifiers.getPlayerUUID(request);
+                    return user.hasPermission(WebPermission.PAGE_PLAYER_SESSIONS) && playerUUID.equals(webUserUUID);
+                } catch (BadRequestException userDoesntExist) {
+                    return false; // Don't give away who has played on the server to someone with level 2 access
+                }
+            }
+            return false;
         }
         if (request.getQuery().get("server").isPresent()) {
             return user.hasPermission(WebPermission.PAGE_SERVER_SESSIONS_LIST);

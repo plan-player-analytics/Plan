@@ -60,6 +60,7 @@ import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 
@@ -136,11 +137,11 @@ class AccessControlTest {
                 Arguments.of("/v1/graph?type=geolocation", WebPermission.PAGE_NETWORK_GEOLOCATIONS_MAP, 200, 403),
                 Arguments.of("/v1/network/pingTable", WebPermission.PAGE_NETWORK_GEOLOCATIONS_PING_PER_COUNTRY, 200, 403),
                 Arguments.of("/player/" + TestConstants.PLAYER_ONE_NAME, WebPermission.ACCESS_PLAYER, 200, 403),
-                Arguments.of("/player/" + TestConstants.PLAYER_TWO_NAME, WebPermission.ACCESS_PLAYER, 404, 403),
+                Arguments.of("/player/" + TestConstants.PLAYER_TWO_NAME, WebPermission.ACCESS_PLAYER, 200, 403),
                 Arguments.of("/player/" + TestConstants.PLAYER_ONE_UUID_STRING, WebPermission.ACCESS_PLAYER, 200, 403),
-                Arguments.of("/player/" + TestConstants.PLAYER_TWO_UUID_STRING, WebPermission.ACCESS_PLAYER, 404, 403),
+                Arguments.of("/player/" + TestConstants.PLAYER_TWO_UUID_STRING, WebPermission.ACCESS_PLAYER, 200, 403),
                 Arguments.of("/v1/player?player=" + TestConstants.PLAYER_ONE_NAME, WebPermission.ACCESS_PLAYER, 200, 403),
-                Arguments.of("/v1/player?player=" + TestConstants.PLAYER_TWO_NAME, WebPermission.ACCESS_PLAYER, 400, 403),
+                Arguments.of("/v1/player?player=" + TestConstants.PLAYER_TWO_NAME, WebPermission.ACCESS_PLAYER, 200, 403),
                 Arguments.of("/players", WebPermission.ACCESS_PLAYERS, 200, 403),
                 Arguments.of("/v1/players", WebPermission.ACCESS_PLAYERS, 200, 403),
                 Arguments.of("/query", WebPermission.ACCESS_QUERY, 200, 403),
@@ -403,6 +404,7 @@ class AccessControlTest {
         database.executeTransaction(new StoreWebUserTransaction(userNoAccess));
 
         database.executeTransaction(new PlayerRegisterTransaction(TestConstants.PLAYER_ONE_UUID, () -> 0L, TestConstants.PLAYER_ONE_NAME));
+        database.executeTransaction(new PlayerRegisterTransaction(TestConstants.PLAYER_TWO_UUID, () -> 0L, TestConstants.PLAYER_TWO_NAME));
         database.executeTransaction(new StoreServerInformationTransaction(new Server(
                 TestConstants.SERVER_UUID,
                 TestConstants.SERVER_NAME,
@@ -449,6 +451,31 @@ class AccessControlTest {
         return cookie;
     }
 
+    static Stream<Arguments> selfScopingBypassCases() {
+        return Stream.of(
+                Arguments.of(
+                        "/v1/player?player=" + TestConstants.PLAYER_TWO_UUID_STRING,
+                        new WebPermission[]{WebPermission.ACCESS_PLAYER_SELF},
+                        "access.player_self should not bypass self-scoping for /v1/player?player={uuid}"
+                ),
+                Arguments.of(
+                        "/player/" + TestConstants.PLAYER_TWO_UUID_STRING + "/raw",
+                        new WebPermission[]{WebPermission.ACCESS_PLAYER_SELF, WebPermission.ACCESS_RAW_PLAYER_DATA},
+                        "access.player_self + access.raw.player_data should not bypass self-scoping for /player/{uuid}/raw"
+                ),
+                Arguments.of(
+                        "/v1/sessions?player=" + TestConstants.PLAYER_TWO_UUID_STRING,
+                        new WebPermission[]{WebPermission.PAGE_PLAYER_SESSIONS},
+                        "page.player_sessions should enforce self-scoping for /v1/sessions?player=X"
+                ),
+                Arguments.of(
+                        "/v1/extensionGraph?graph=plan_extension_graph_graphextension_testplayer&server=" + TestConstants.SERVER_UUID_STRING + "&player=" + TestConstants.PLAYER_TWO_UUID_STRING,
+                        new WebPermission[]{WebPermission.PAGE_PLAYER_PLUGINS},
+                        "page.player_plugins should enforce self-scoping for /v1/extensionGraph?player=X"
+                )
+        );
+    }
+
     @DisplayName("Access control test")
     @ParameterizedTest(name = "{0}: Permission {1}, expecting {2} with & {3} without permission")
     @MethodSource("testCases")
@@ -462,6 +489,29 @@ class AccessControlTest {
                         () -> "Permission '" + permission.getPermission() + "', Wrong response code for " + resource + ", expected " + expectedWithPermission + " but was " + responseCodeWithPermission),
                 () -> assertEquals(expectedWithout, responseCodeWithout,
                         () -> "No Permissions, Wrong response code for " + resource + ", expected " + expectedWithout + " but was " + responseCodeWithout)
+        );
+    }
+
+    @DisplayName("Self-scoping should prevent accessing other player's data")
+    @ParameterizedTest(name = "{2}")
+    @MethodSource("selfScopingBypassCases")
+    void selfScopingBypassTest(String resource, WebPermission[] permissions, String description) throws Exception {
+        // Create a user linked to PLAYER_ONE with restricted permissions
+        User user = createUserWithPlayerUUID(
+                TestConstants.PLAYER_ONE_UUID,
+                TestConstants.PLAYER_ONE_NAME,
+                permissions
+        );
+        String cookie = login(address, user.getUsername());
+
+        // The user is PLAYER_ONE trying to access PLAYER_TWO's data
+        // Expected: 403 (Forbidden) - access control should block the request
+        // Actual (vulnerable): 404 (Not Found) or 200 - access control is bypassed
+        int responseCode = access(resource, cookie);
+
+        assertEquals(403, responseCode,
+                () -> description + " - Expected 403 but got " + responseCode + " for " + resource
+                        + " (access control bypassed: user linked to PLAYER_ONE accessed PLAYER_TWO's data)"
         );
     }
 
@@ -496,6 +546,20 @@ class AccessControlTest {
         ).join();
 
         User user = new User(RandomData.randomString(45), "console", TestConstants.PLAYER_ONE_UUID, PassEncryptUtil.createHash("testPass"), groupName, Collections.emptyList());
+        db.executeTransaction(new StoreWebUserTransaction(user)).join();
+
+        return user;
+    }
+
+    private User createUserWithPlayerUUID(UUID playerUUID, String playerName, WebPermission... permissions) {
+        Database db = system.getDatabaseSystem().getDatabase();
+
+        String groupName = RandomData.randomString(40);
+        db.executeTransaction(
+                new StoreWebGroupTransaction(groupName, Arrays.stream(permissions).map(WebPermission::getPermission).toList())
+        ).join();
+
+        User user = new User(RandomData.randomString(45), playerName, playerUUID, PassEncryptUtil.createHash("testPass"), groupName, Collections.emptyList());
         db.executeTransaction(new StoreWebUserTransaction(user)).join();
 
         return user;

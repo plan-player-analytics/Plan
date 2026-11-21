@@ -62,8 +62,8 @@ public class PlayerPageResolver implements Resolver {
         boolean isOwnPage = isOwnPage(path, user);
         boolean raw = path.getPart(2).map("raw"::equalsIgnoreCase).orElse(false);
         boolean canSeeNormalPage = user.hasPermission(WebPermission.ACCESS_PLAYER)
-                || user.hasPermission(WebPermission.ACCESS_PLAYER_SELF) && isOwnPage;
-        return canSeeNormalPage && !raw || user.hasPermission(WebPermission.ACCESS_RAW_PLAYER_DATA);
+                || (user.hasPermission(WebPermission.ACCESS_PLAYER_SELF) && isOwnPage);
+        return canSeeNormalPage && (!raw || user.hasPermission(WebPermission.ACCESS_RAW_PLAYER_DATA));
     }
 
     @NotNull
