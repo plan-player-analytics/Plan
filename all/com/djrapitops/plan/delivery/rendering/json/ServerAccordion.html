@@ -58,7 +58,7 @@ loadScripts(document, 'script');</script>
 <li><a href="#method-summary" tabindex="0">Method Summary</a></li>
 <li><a href="#constructor-detail" tabindex="0">Constructor Details</a>
 <ol class="toc-list">
-<li><a href="#%3Cinit%3E(com.djrapitops.plan.delivery.domain.container.PlayerContainer,java.util.Map,com.djrapitops.plan.delivery.rendering.json.graphs.Graphs,java.lang.String)" tabindex="0">ServerAccordion(PlayerContainer, Map, Graphs, String)</a></li>
+<li><a href="#%3Cinit%3E(java.util.Map,com.djrapitops.plan.delivery.domain.container.PerServerContainer,java.lang.String,com.djrapitops.plan.delivery.rendering.json.graphs.Graphs)" tabindex="0">ServerAccordion(Map, PerServerContainer, String, Graphs)</a></li>
 </ol>
 </li>
 <li><a href="#method-detail" tabindex="0">Method Details</a>
@@ -94,10 +94,10 @@ loadScripts(document, 'script');</script>
 <div class="summary-table two-column-summary">
 <div class="table-header col-first">Constructor</div>
 <div class="table-header col-last">Description</div>
-<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(com.djrapitops.plan.delivery.domain.container.PlayerContainer,java.util.Map,com.djrapitops.plan.delivery.rendering.json.graphs.Graphs,java.lang.String)" class="member-name-link">ServerAccordion</a><wbr>(<a href="../../domain/container/PlayerContainer.html" title="class in com.djrapitops.plan.delivery.domain.container">PlayerContainer</a>&nbsp;container,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;serverNames,
- <a href="graphs/Graphs.html" title="class in com.djrapitops.plan.delivery.rendering.json.graphs">Graphs</a>&nbsp;graphs,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;unknown)</code></div>
+<div class="col-constructor-name even-row-color"><code><a href="#%3Cinit%3E(java.util.Map,com.djrapitops.plan.delivery.domain.container.PerServerContainer,java.lang.String,com.djrapitops.plan.delivery.rendering.json.graphs.Graphs)" class="member-name-link">ServerAccordion</a><wbr>(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;serverNames,
+ <a href="../../domain/container/PerServerContainer.html" title="class in com.djrapitops.plan.delivery.domain.container">PerServerContainer</a>&nbsp;perServer,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;unknown,
+ <a href="graphs/Graphs.html" title="class in com.djrapitops.plan.delivery.rendering.json.graphs">Graphs</a>&nbsp;graphs)</code></div>
 <div class="col-last even-row-color">&nbsp;</div>
 </div>
 </section>
@@ -134,13 +134,13 @@ loadScripts(document, 'script');</script>
 <h2>Constructor Details</h2>
 <ul class="member-list">
 <li>
-<section class="detail" id="&lt;init&gt;(com.djrapitops.plan.delivery.domain.container.PlayerContainer,java.util.Map,com.djrapitops.plan.delivery.rendering.json.graphs.Graphs,java.lang.String)">
+<section class="detail" id="&lt;init&gt;(java.util.Map,com.djrapitops.plan.delivery.domain.container.PerServerContainer,java.lang.String,com.djrapitops.plan.delivery.rendering.json.graphs.Graphs)">
 <h3>ServerAccordion</h3>
 <div class="horizontal-scroll">
-<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ServerAccordion</span><wbr><span class="parameters">(<a href="../../domain/container/PlayerContainer.html" title="class in com.djrapitops.plan.delivery.domain.container">PlayerContainer</a>&nbsp;container,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;serverNames,
- <a href="graphs/Graphs.html" title="class in com.djrapitops.plan.delivery.rendering.json.graphs">Graphs</a>&nbsp;graphs,
- <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;unknown)</span></div>
+<div class="member-signature"><span class="modifiers">public</span>&nbsp;<span class="element-name">ServerAccordion</span><wbr><span class="parameters">(<a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/util/Map.html" title="class or interface in java.util" class="external-link">Map</a>&lt;<a href="../../../identification/ServerUUID.html" title="class in com.djrapitops.plan.identification">ServerUUID</a>, <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&gt;&nbsp;serverNames,
+ <a href="../../domain/container/PerServerContainer.html" title="class in com.djrapitops.plan.delivery.domain.container">PerServerContainer</a>&nbsp;perServer,
+ <a href="https://docs.oracle.com/en/java/javase/25/docs/api/java.base/java/lang/String.html" title="class or interface in java.lang" class="external-link">String</a>&nbsp;unknown,
+ <a href="graphs/Graphs.html" title="class in com.djrapitops.plan.delivery.rendering.json.graphs">Graphs</a>&nbsp;graphs)</span></div>
 </div>
 </section>
 </li>
