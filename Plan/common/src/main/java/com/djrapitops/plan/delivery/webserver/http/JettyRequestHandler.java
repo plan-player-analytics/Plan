@@ -30,6 +30,7 @@ import org.eclipse.jetty.util.Callback;
 import javax.inject.Inject;
 import javax.inject.Singleton;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.function.Function;
 
 @Singleton
@@ -77,7 +78,13 @@ public class JettyRequestHandler extends Handler.Abstract {
     }
 
     private void logError(Request request, Throwable e) {
-        if (e instanceof EofException) return; // EOF is quite common and ignored.
+        if (e instanceof CompletionException) {
+            logError(request, e.getCause());
+            return;
+        }
+        if (e instanceof EofException) {
+            return; // EOF is quite common and ignored.
+        }
         errorLogger.warn(e, ErrorContext.builder()
                 .related(request.getMethod(), Request.getRemoteAddr(request), request.getHttpURI().getPath())
                 .build());

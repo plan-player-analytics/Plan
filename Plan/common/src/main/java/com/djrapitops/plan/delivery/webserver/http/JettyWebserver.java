@@ -25,9 +25,11 @@ import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.server.PluginLogger;
 import org.eclipse.jetty.alpn.server.ALPNServerConnectionFactory;
+import org.eclipse.jetty.http.HttpException;
 import org.eclipse.jetty.http.HttpField;
 import org.eclipse.jetty.http2.server.HTTP2CServerConnectionFactory;
 import org.eclipse.jetty.http2.server.HTTP2ServerConnectionFactory;
+import org.eclipse.jetty.io.EofException;
 import org.eclipse.jetty.io.WindowRateControl;
 import org.eclipse.jetty.server.*;
 import org.eclipse.jetty.server.handler.*;
@@ -48,6 +50,7 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.Optional;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.TimeUnit;
 
 @Singleton
@@ -127,14 +130,16 @@ public class JettyWebserver implements WebServer {
                 usingHttps = true;
             });
             if (webserverConfiguration.getAccessAddressPolicy() == AccessAddressPolicy.X_FORWARDED_FOR_HEADER) {
-                configuration.addCustomizer(new ForwardedRequestCustomizer() {
+                ForwardedRequestCustomizer customizer = new ForwardedRequestCustomizer() {
                     @Override
                     protected void onError(HttpField field, Throwable t) {
                         errorLogger.error(t, ErrorContext.builder()
                                 .related(field)
                                 .build());
                     }
-                });
+                };
+                customizer.setSslIsSecure(false);
+                configuration.addCustomizer(customizer);
             }
 
             HttpConnectionFactory httpConnector = new HttpConnectionFactory(configuration);
@@ -227,12 +232,7 @@ public class JettyWebserver implements WebServer {
                 @Override
                 public boolean handle(Request request, Response response, org.eclipse.jetty.util.Callback callback) throws Exception {
                     Throwable exception = (Throwable) request.getAttribute(ERROR_EXCEPTION);
-                    if (exception != null) {
-                        errorLogger.error(exception, ErrorContext.builder()
-                                .logErrorMessage()
-                                .related(request.getMethod(), request.getHttpURI().getPath())
-                                .build());
-                    }
+                    logError(request, exception);
                     return super.handle(request, response, callback);
                 }
             });
@@ -259,6 +259,27 @@ public class JettyWebserver implements WebServer {
 
             webserverConfiguration.getAllowedIpList().prepare();
         });
+    }
+
+    private void logError(Request request, Throwable e) {
+        if (e instanceof CompletionException) {
+            logError(request, e.getCause());
+            return;
+        }
+        if (e instanceof EofException) {
+            return; // EOF is quite common and ignored.
+        }
+        if (e instanceof HttpException httpException) {
+            if (httpException.getCode() == 400) {
+                return; // No need to log Eclipse 400 errors
+            }
+        }
+        if (e != null) {
+            errorLogger.error(e, ErrorContext.builder()
+                    .logErrorMessage()
+                    .related(request.getMethod(), request.getHttpURI().getPath())
+                    .build());
+        }
     }
 
     private void logCertificateExpiryInformation(KeyStore keyStore) {
