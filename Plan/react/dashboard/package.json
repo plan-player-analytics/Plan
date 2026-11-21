@@ -44,7 +44,7 @@
         "react-router": "7.18.2",
         "react-select": "5.10.2",
         "react-transition-group": "4.4.5",
-        "sass": "1.108.1",
+        "sass": "1.108.2",
         "swagger-ui-dist": "5.35.0",
         "tslib": "^2.9.1"
     },
