@@ -893,4 +893,5 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         Optional<FinishedSession> latest = db().query(SessionQueries.fetchLatestSessionOfPlayerWithoutExtraData(playerUUID));
         assertTrue(latest.isPresent());
         assertEquals(Optional.empty(), latest.get().getExtraData(JoinAddress.class));
-    }}
+    }
+}

@@ -31,7 +31,6 @@ import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.settings.config.WorldAliasSettings;
 import com.djrapitops.plan.utilities.analysis.Median;
-import com.djrapitops.plan.utilities.comparators.DateHolderOldestComparator;
 import com.djrapitops.plan.utilities.comparators.DateHolderRecentComparator;
 import com.djrapitops.plan.utilities.java.Lists;
 
@@ -59,17 +58,6 @@ public class SessionsMutator {
         return new SessionsMutator(container.getValue(CommonKeys.SESSIONS).orElse(new ArrayList<>()));
     }
 
-    public static Map<UUID, List<FinishedSession>> sortByPlayers(List<FinishedSession> sessions) {
-        Map<UUID, List<FinishedSession>> sorted = new HashMap<>();
-        for (FinishedSession session : sessions) {
-            UUID playerUUID = session.playerUUID();
-            List<FinishedSession> playerSessions = sorted.computeIfAbsent(playerUUID, Lists::create);
-            playerSessions.add(session);
-            sorted.put(playerUUID, playerSessions);
-        }
-        return sorted;
-    }
-
     public static Map<ServerUUID, List<FinishedSession>> sortByServers(List<FinishedSession> sessions) {
         Map<ServerUUID, List<FinishedSession>> sorted = new HashMap<>();
         for (FinishedSession session : sessions) {
@@ -80,20 +68,8 @@ public class SessionsMutator {
         return sorted;
     }
 
-    public static Map<ServerUUID, TreeMap<Long, FinishedSession>> sortByServersToMaps(List<FinishedSession> sessions) {
-        Map<ServerUUID, TreeMap<Long, FinishedSession>> sorted = new HashMap<>();
-        for (FinishedSession session : sessions) {
-            ServerUUID serverUUID = session.serverUUID();
-            TreeMap<Long, FinishedSession> serverSessions = sorted.getOrDefault(serverUUID, new TreeMap<>());
-            serverSessions.put(session.date(), session);
-            sorted.put(serverUUID, serverSessions);
-        }
-        return sorted;
-    }
-
     public SessionsMutator sort(Comparator<DateHolder> sessionComparator) {
-        sessions.sort(sessionComparator);
-        return this;
+        return new SessionsMutator(sessions.stream().sorted(sessionComparator).toList());
     }
 
     public SessionsMutator filterSessionsBetween(long after, long before) {
@@ -102,10 +78,6 @@ public class SessionsMutator {
 
     public List<FinishedSession> all() {
         return sessions;
-    }
-
-    public TimeSegmentsMutator<Integer> onlineTimeSegments() {
-        return TimeSegmentsMutator.sessionClockSegments(sort(new DateHolderOldestComparator()).all());
     }
 
     public SessionsMutator filterPlayedOnServer(ServerUUID serverUUID) {
