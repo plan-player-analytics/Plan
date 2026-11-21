@@ -6,6 +6,7 @@ export type OutOfCategory = {
 };
 
 export const isOutOfCategory = (outOfCategory: any) =>
+    typeof outOfCategory === 'object' &&
     'values' in outOfCategory &&
     typeof outOfCategory.values === 'object' &&
     'max' in outOfCategory &&

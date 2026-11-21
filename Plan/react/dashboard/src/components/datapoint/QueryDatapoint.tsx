@@ -254,25 +254,49 @@ export function QueryDatapointTrend<K extends NumericDatapointType>({
         return error2.message;
     }
 
-    return before && after ? (
-        <BigTrend
-            trend={{
-                text: Math.abs(after.value - before.value),
-                reversed: !!downGood,
-                direction:
-                    after.value - before.value === 0
-                        ? null
-                        : after.value - before.value > 0
-                          ? '+'
-                          : '-',
-            }}
-            format={(value: number) => (
-                <Format value={value} formatType={before.formatType} />
-            )}
-        />
-    ) : (
-        <DatapointLoader />
-    );
+    if (!before || !after) {
+        return <DatapointLoader />;
+    }
+
+    if (typeof before.value == 'number' && typeof after.value == 'number') {
+        return (
+            <BigTrend
+                trend={{
+                    text: Math.abs(after.value - before.value),
+                    reversed: !!downGood,
+                    direction:
+                        after.value - before.value === 0
+                            ? null
+                            : after.value - before.value > 0
+                              ? '+'
+                              : '-',
+                }}
+                format={(value: number) => (
+                    <Format value={value} formatType={before.formatType} />
+                )}
+            />
+        );
+    } else if (isOutOf(after.value) && isOutOf(before.value)) {
+        const percentageAfter = (after.value as unknown as OutOf).percentage;
+        const percentageBefore = (before.value as unknown as OutOf).percentage;
+        return (
+            <BigTrend
+                trend={{
+                    text: Math.abs(percentageAfter - percentageBefore),
+                    reversed: !!downGood,
+                    direction:
+                        percentageAfter - percentageBefore === 0
+                            ? null
+                            : percentageAfter - percentageBefore > 0
+                              ? '+'
+                              : '-',
+                }}
+                format={(value: number) => (
+                    <Format value={value} formatType={'PERCENTAGE'} />
+                )}
+            />
+        );
+    }
 }
 
 async function getDatapoint<K extends DatapointType>(
