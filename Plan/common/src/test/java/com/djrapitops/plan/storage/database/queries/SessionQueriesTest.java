@@ -19,14 +19,13 @@ package com.djrapitops.plan.storage.database.queries;
 import com.djrapitops.plan.delivery.domain.PlayerName;
 import com.djrapitops.plan.delivery.domain.ServerName;
 import com.djrapitops.plan.delivery.domain.TablePlayer;
-import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
+import com.djrapitops.plan.delivery.domain.mutators.ActivityIndex;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.gathering.domain.*;
 import com.djrapitops.plan.gathering.domain.event.JoinAddress;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DatabaseTestPreparer;
-import com.djrapitops.plan.storage.database.queries.containers.PlayerContainerQuery;
 import com.djrapitops.plan.storage.database.queries.objects.BaseUserQueries;
 import com.djrapitops.plan.storage.database.queries.objects.KillQueries;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
@@ -629,12 +628,14 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
 
         long playtimeThreshold = RandomData.randomLong(TimeUnit.HOURS.toMillis(1L), TimeUnit.DAYS.toMillis(2L));
 
-        PlayerContainer playerContainer = db().query(new PlayerContainerQuery(playerUUID));
+        List<FinishedSession> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID)).values().stream()
+                .flatMap(List::stream)
+                .toList();
         TablePlayer tablePlayer = db().query(new ServerTablePlayersQuery(serverUUID(), System.currentTimeMillis(), playtimeThreshold, 5))
                 .stream().filter(player -> playerUUID.equals(player.getPlayerUUID())).findAny()
                 .orElseThrow(AssertionError::new);
 
-        long expected = SessionsMutator.forContainer(playerContainer).toActivePlaytime();
+        long expected = new SessionsMutator(sessions).toActivePlaytime();
         long got = tablePlayer.getActivePlaytime().orElseThrow(AssertionError::new);
         assertEquals(expected, got);
     }
@@ -650,12 +651,14 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         long time = System.currentTimeMillis();
         long playtimeThreshold = RandomData.randomLong(TimeUnit.HOURS.toMillis(1L), TimeUnit.DAYS.toMillis(2L));
 
-        PlayerContainer playerContainer = db().query(new PlayerContainerQuery(playerUUID));
+        List<FinishedSession> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID)).values().stream()
+                .flatMap(List::stream)
+                .toList();
         TablePlayer tablePlayer = db().query(new ServerTablePlayersQuery(serverUUID(), time, playtimeThreshold, 5))
                 .stream().filter(player -> playerUUID.equals(player.getPlayerUUID())).findAny()
                 .orElseThrow(AssertionError::new);
 
-        SessionsMutator sessionsMutator = SessionsMutator.forContainer(playerContainer);
+        SessionsMutator sessionsMutator = new SessionsMutator(sessions);
         long week = TimeAmount.WEEK.toMillis(1L);
         long weekAgo = time - week;
         long twoWeeksAgo = time - 2L * week;
@@ -668,7 +671,7 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         long playtime2 = weekTwo.toActivePlaytime();
         long playtime3 = weekThree.toActivePlaytime();
 
-        double expected = playerContainer.getActivityIndex(time, playtimeThreshold).getValue();
+        double expected = new ActivityIndex(sessions, time, playtimeThreshold).getValue();
         double got = tablePlayer.getCurrentActivityIndex().orElseThrow(AssertionError::new).getValue();
         assertEquals(expected, got, 0.001,
                 () -> "Activity Indexes between queries differed, expected: <" + expected + "> but was: <" + got + ">" +
@@ -801,7 +804,9 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
     default Collection<DynamicTest> lightweightActivePlaytimeMatchesFullSessionLoad() {
         long now = storeSessionsForLightweightTest();
         long hour = TimeUnit.HOURS.toMillis(1L);
-        PlayerContainer container = db().query(new PlayerContainerQuery(playerUUID));
+        List<FinishedSession> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID)).values().stream()
+                .flatMap(List::stream)
+                .toList();
 
         Map<String, Long> windows = new LinkedHashMap<>();
         windows.put("day", now - TimeUnit.DAYS.toMillis(1L));
@@ -819,7 +824,7 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
         for (Map.Entry<String, Long> window : windows.entrySet()) {
             long after = window.getValue();
             tests.add(DynamicTest.dynamicTest("Active playtime " + window.getKey(), () -> {
-                long fullLoad = SessionsMutator.forContainer(container)
+                long fullLoad = new SessionsMutator(sessions)
                         .filterSessionsBetween(after, now)
                         .toActivePlaytime();
                 long lightweight = new SessionsMutator(db().query(SessionQueries.fetchSessionsOfPlayerWithoutExtraData(playerUUID, after, now)))
@@ -835,9 +840,11 @@ public interface SessionQueriesTest extends DatabaseTestPreparer {
     @Test
     default void lightweightLatestSessionMatchesFullSessionLoad() {
         storeSessionsForLightweightTest();
-        PlayerContainer container = db().query(new PlayerContainerQuery(playerUUID));
+        List<FinishedSession> sessions = db().query(SessionQueries.fetchSessionsOfPlayer(playerUUID)).values().stream()
+                .flatMap(List::stream)
+                .toList();
 
-        Optional<String> fullLoad = SessionsMutator.forContainer(container).latestSession()
+        Optional<String> fullLoad = new SessionsMutator(sessions).latestSession()
                 .flatMap(session -> session.getExtraData(JoinAddress.class))
                 .map(JoinAddress::getAddress);
         Optional<FinishedSession> latest = db().query(SessionQueries.fetchLatestSessionOfPlayerWithoutExtraData(playerUUID));

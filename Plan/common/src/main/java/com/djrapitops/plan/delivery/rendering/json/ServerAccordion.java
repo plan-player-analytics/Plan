@@ -18,9 +18,7 @@ package com.djrapitops.plan.delivery.rendering.json;
 
 import com.djrapitops.plan.delivery.domain.container.DataContainer;
 import com.djrapitops.plan.delivery.domain.container.PerServerContainer;
-import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.keys.PerServerKeys;
-import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.delivery.domain.mutators.SessionsMutator;
 import com.djrapitops.plan.delivery.rendering.json.graphs.Graphs;
 import com.djrapitops.plan.delivery.rendering.json.graphs.pie.WorldPie;
@@ -45,17 +43,11 @@ public class ServerAccordion {
 
     private final Graphs graphs;
 
-    public ServerAccordion(
-            PlayerContainer container, Map<ServerUUID, String> serverNames,
-            Graphs graphs,
-            String unknown
-    ) {
-        this.graphs = graphs;
-
+    public ServerAccordion(Map<ServerUUID, String> serverNames, PerServerContainer perServer, String unknown, Graphs graphs) {
         this.serverNames = serverNames;
-        perServer = container.getValue(PlayerKeys.PER_SERVER)
-                .orElse(new PerServerContainer());
+        this.perServer = perServer;
         this.unknown = unknown;
+        this.graphs = graphs;
     }
 
     public List<Map<String, Object>> asMaps() {

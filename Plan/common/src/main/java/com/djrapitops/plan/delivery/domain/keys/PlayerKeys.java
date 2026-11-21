@@ -18,7 +18,6 @@ package com.djrapitops.plan.delivery.domain.keys;
 
 import com.djrapitops.plan.delivery.domain.Nickname;
 import com.djrapitops.plan.delivery.domain.container.PerServerContainer;
-import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.gathering.domain.*;
 
 import java.util.List;
@@ -28,8 +27,8 @@ import java.util.UUID;
  * Class that holds Key objects for PlayerContainer.
  *
  * @author AuroraLS3
- * @see PlayerContainer For DataContainer.
  */
+@Deprecated(since = "5.9 build 3885")
 public class PlayerKeys {
 
     public static final Key<UUID> UUID = CommonKeys.UUID;

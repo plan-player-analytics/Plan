@@ -18,7 +18,7 @@ package com.djrapitops.plan.storage.database;
 
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
-import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
+import com.djrapitops.plan.storage.database.queries.containers.PlayerContainerQuery;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
 import com.djrapitops.plan.storage.database.transactions.commands.RemoveEverythingTransaction;
 import com.djrapitops.plan.storage.database.transactions.init.CreateTablesTransaction;
@@ -114,7 +114,7 @@ class DBPatchSQLiteRegressionTest extends DBPatchRegressionTest {
         assertPatchesHaveBeenApplied(patches);
 
         // Make sure that a fetch works.
-        PlayerContainer player = underTest.query(ContainerFetchQueries.fetchPlayerContainer(TestConstants.PLAYER_ONE_UUID));
+        PlayerContainer player = underTest.query(new PlayerContainerQuery(TestConstants.PLAYER_ONE_UUID));
         OptionalAssert.equals(1, player.getValue(PlayerKeys.PLAYER_KILL_COUNT));
 
         // Make sure no foreign key checks fail on removal

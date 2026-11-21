@@ -22,7 +22,7 @@ import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.identification.Identifiers;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
-import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
+import com.djrapitops.plan.storage.database.queries.containers.PlayerContainerQuery;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import net.playeranalytics.plugin.server.PluginLogger;
 import org.jetbrains.annotations.Nullable;
@@ -48,6 +48,7 @@ import java.util.function.Supplier;
 @Singleton
 public final class PlanPlaceholders {
 
+    private final Map<String, OldPlayerPlaceholderLoader> oldPlayerPlaceholders;
     private final Map<String, PlayerPlaceholderLoader> playerPlaceholders;
     private final Map<String, StaticPlaceholderLoader> staticPlaceholders;
 
@@ -68,6 +69,7 @@ public final class PlanPlaceholders {
         this.identifiers = identifiers;
         this.logger = logger;
 
+        this.oldPlayerPlaceholders = new HashMap<>();
         this.playerPlaceholders = new HashMap<>();
         this.staticPlaceholders = new HashMap<>();
         this.rawHandlers = new HashMap<>();
@@ -85,8 +87,16 @@ public final class PlanPlaceholders {
         staticPlaceholders.put(name, loader);
     }
 
-    public void register(String name, Function<PlayerContainer, Serializable> loader) {
-        register(name, (player, params) -> loader.apply(player));
+    public void registerOld(String name, Function<PlayerContainer, Serializable> loader) {
+        register(name, (OldPlayerPlaceholderLoader) (player, params) -> loader.apply(player));
+    }
+
+    public void register(String name, Function<UUID, Serializable> loader) {
+        register(name, (PlayerPlaceholderLoader) (player, params) -> loader.apply(player));
+    }
+
+    public void register(String name, OldPlayerPlaceholderLoader loader) {
+        oldPlayerPlaceholders.put(name, loader);
     }
 
     public void register(String name, PlayerPlaceholderLoader loader) {
@@ -97,7 +107,11 @@ public final class PlanPlaceholders {
         rawHandlers.put(name, loader);
     }
 
-    public Map<String, PlayerPlaceholderLoader> getPlaceholders() {
+    public Map<String, OldPlayerPlaceholderLoader> getPlaceholders() {
+        return oldPlayerPlaceholders;
+    }
+
+    public Map<String, PlayerPlaceholderLoader> getPlayerPlaceholders() {
         return playerPlaceholders;
     }
 
@@ -146,16 +160,25 @@ public final class PlanPlaceholders {
         Optional<UUID> foundUUID = givenIdentifier
                 .flatMap(this::getPlayerUUIDForIdentifier);
         UUID playerUUID = foundUUID.orElse(uuid);
+
+        PlayerPlaceholderLoader pLoader = playerPlaceholders.get(placeholder);
+        if (givenIdentifier.isPresent() && foundUUID.isEmpty()) {
+            playerUUID = null; // Don't show other player whose identifier is not found.
+        }
+        if (pLoader != null && playerUUID != null) {
+            return Objects.toString(pLoader.apply(playerUUID, parameters));
+        }
+
         PlayerContainer player;
         if (givenIdentifier.isPresent() && foundUUID.isEmpty()) {
             player = null; // Don't show other player whose identifier is not found.
         } else if (playerUUID != null) {
-            player = dbSystem.getDatabase().query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
+            player = dbSystem.getDatabase().query(new PlayerContainerQuery(playerUUID));
         } else {
             player = null;
         }
 
-        PlayerPlaceholderLoader loader = playerPlaceholders.get(placeholder);
+        OldPlayerPlaceholderLoader loader = oldPlayerPlaceholders.get(placeholder);
         if (loader != null && player != null) {
             return Objects.toString(loader.apply(player, parameters));
         }
@@ -166,10 +189,6 @@ public final class PlanPlaceholders {
     private Optional<UUID> getPlayerUUIDForIdentifier(@Untrusted String identifier) {
         return Optional.ofNullable(identifiers.getPlayerUUID(identifier));
     }
-
-    public interface PlayerPlaceholderLoader extends BiFunction<PlayerContainer, List<String>, Serializable> {}
-
-    public interface StaticPlaceholderLoader extends Function<Arguments, Serializable> {}
 
     public List<String> getRegisteredServerPlaceholders() {
         List<String> placeholders = new ArrayList<>();
@@ -182,9 +201,15 @@ public final class PlanPlaceholders {
     }
 
     public List<String> getRegisteredPlayerPlaceholders() {
-        List<String> placeholders = new ArrayList<>(playerPlaceholders.keySet());
+        List<String> placeholders = new ArrayList<>(oldPlayerPlaceholders.keySet());
 
         Collections.sort(placeholders);
         return placeholders;
     }
+
+    public interface OldPlayerPlaceholderLoader extends BiFunction<PlayerContainer, List<String>, Serializable> {}
+
+    public interface PlayerPlaceholderLoader extends BiFunction<UUID, List<String>, Serializable> {}
+
+    public interface StaticPlaceholderLoader extends Function<Arguments, Serializable> {}
 }

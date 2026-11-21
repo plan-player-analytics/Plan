@@ -18,6 +18,7 @@ package com.djrapitops.plan.delivery.rendering.json;
 
 import com.djrapitops.plan.delivery.domain.ServerMinecraftStatistics;
 import com.djrapitops.plan.delivery.domain.auth.WebPermission;
+import com.djrapitops.plan.delivery.domain.container.PerServerContainer;
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.datatransfer.extension.ExtensionsDto;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
@@ -131,7 +132,12 @@ public class PlayerJSONCreator {
             data.put("playerDeaths", new PlayerKillMutator(deaths).toJSONAsMap(formatters));
         }
         if (hasPermission.test(WebPermission.PAGE_PLAYER_SERVERS)) {
-            List<Map<String, Object>> serverAccordion = new ServerAccordion(player, serverNames, graphs, GenericLang.UNKNOWN.getKey()).asMaps();
+            List<Map<String, Object>> serverAccordion = new ServerAccordion(
+                    serverNames,
+                    player.getValue(PlayerKeys.PER_SERVER).orElse(new PerServerContainer()),
+                    GenericLang.UNKNOWN.getKey(),
+                    graphs
+            ).asMaps();
             Map<ServerUUID, WorldTimes> worldTimesPerServer = PerServerMutator.forContainer(player).worldTimesPerServer();
             String[] pieColors = theme.getWorldPieColors();
 

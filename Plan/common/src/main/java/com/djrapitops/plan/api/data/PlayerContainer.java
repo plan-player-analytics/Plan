@@ -34,10 +34,7 @@ import java.util.Optional;
 @Deprecated(since = "5.0")
 public class PlayerContainer {
 
-    private final com.djrapitops.plan.delivery.domain.container.PlayerContainer container;
-
-    public PlayerContainer(com.djrapitops.plan.delivery.domain.container.PlayerContainer container) {
-        this.container = container;
+    public PlayerContainer() {
     }
 
     /**
@@ -49,14 +46,14 @@ public class PlayerContainer {
     }
 
     public double getActivityIndex(long date, long playtimeMsThreshold) {
-        return container.getActivityIndex(date, playtimeMsThreshold).getValue();
+        return -1.0;
     }
 
     public boolean playedBetween(long after, long before) {
-        return container.playedBetween(after, before);
+        return false;
     }
 
     public <T> Optional<T> getValue(Key<T> key) {
-        return container.getValue(key);
+        return Optional.empty();
     }
 }

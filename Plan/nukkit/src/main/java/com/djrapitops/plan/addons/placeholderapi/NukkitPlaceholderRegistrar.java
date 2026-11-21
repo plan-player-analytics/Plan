@@ -26,7 +26,7 @@ import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
 import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.placeholder.PlanPlaceholders;
-import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
+import com.djrapitops.plan.storage.database.queries.containers.PlayerContainerQuery;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 
@@ -35,7 +35,6 @@ import javax.inject.Singleton;
 import java.io.Serializable;
 import java.util.List;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * Placeholder expansion used to provide data from Plan on Nukkit.
@@ -76,6 +75,20 @@ public class NukkitPlaceholderRegistrar {
                 }).build()
         );
 
+        placeholders.getPlayerPlaceholders().forEach((name, loader) -> api.builder(name, Serializable.class)
+                .visitorLoader(options -> {
+                    try {
+                        return loader.apply(
+                                options.getPlayer().getUniqueId(),
+                                getPlaceholderParameterValues(options.getParameters())
+                        );
+                    } catch (Exception e) {
+                        errorLogger.warn(e, ErrorContext.builder().related("Registering PlaceholderAPI").build());
+                        return null;
+                    }
+                }).build()
+        );
+
         placeholders.getStaticPlaceholders().forEach((name, loader) -> api.builder(name, Serializable.class)
                 .loader(options -> {
                     try {
@@ -93,13 +106,13 @@ public class NukkitPlaceholderRegistrar {
     private List<String> getPlaceholderParameterValues(PlaceholderParameters parameters) {
         return parameters.getAll().stream()
                 .map(Parameter::getValue)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private PlayerContainer getPlayer(Player player) {
         UUID uuid = player.getUniqueId();
 
-        PlayerContainer container = system.getDatabaseSystem().getDatabase().query(ContainerFetchQueries.fetchPlayerContainer(uuid));
+        PlayerContainer container = system.getDatabaseSystem().getDatabase().query(new PlayerContainerQuery(uuid));
         SessionCache.getCachedSession(uuid).ifPresent(session -> container.putRawData(PlayerKeys.ACTIVE_SESSION, session));
 
         return container;

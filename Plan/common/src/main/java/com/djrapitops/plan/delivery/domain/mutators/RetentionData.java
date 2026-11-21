@@ -16,13 +16,7 @@
  */
 package com.djrapitops.plan.delivery.domain.mutators;
 
-import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
-import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
-
 import java.util.Collection;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Utility class for player retention calculations.
@@ -31,9 +25,7 @@ import java.util.concurrent.TimeUnit;
  *
  * @author AuroraLS3
  */
-public class RetentionData {
-    private final double activityIndex;
-    private final double onlineOnJoin;
+public record RetentionData(double activityIndex, double onlineOnJoin) {
 
     public static RetentionData average(Collection<RetentionData> stuck) {
         int size = stuck.size();
@@ -42,37 +34,14 @@ public class RetentionData {
         double totalPlayersOnline = 0.0;
 
         for (RetentionData retentionData : stuck) {
-            totalIndex += retentionData.getActivityIndex();
-            totalPlayersOnline += retentionData.getOnlineOnJoin();
+            totalIndex += retentionData.activityIndex();
+            totalPlayersOnline += retentionData.onlineOnJoin();
         }
 
         double averageIndex = totalIndex / size;
         double averagePlayersOnline = totalPlayersOnline / size;
 
         return new RetentionData(averageIndex, averagePlayersOnline);
-    }
-
-    public RetentionData(double activityIndex, double onlineOnJoin) {
-        this.activityIndex = activityIndex;
-        this.onlineOnJoin = onlineOnJoin;
-    }
-
-    public RetentionData(
-            PlayerContainer player,
-            PlayersOnlineResolver onlineOnJoin,
-            long activityMsThreshold
-    ) {
-        Optional<Long> registeredValue = player.getValue(PlayerKeys.REGISTERED);
-        activityIndex = registeredValue
-                .map(registered -> new ActivityIndex(
-                        player,
-                        registered + TimeUnit.DAYS.toMillis(1L),
-                        activityMsThreshold
-                ).getValue())
-                .orElse(0.0);
-        this.onlineOnJoin = registeredValue
-                .map(registered -> onlineOnJoin.getOnlineOn(registered).orElse(-1))
-                .orElse(0);
     }
 
     public static int countRetentionPrediction(
@@ -106,16 +75,4 @@ public class RetentionData {
                 Double.compare(that.onlineOnJoin, onlineOnJoin) == 0;
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(activityIndex, onlineOnJoin);
-    }
-
-    public double getOnlineOnJoin() {
-        return onlineOnJoin;
-    }
-
-    public double getActivityIndex() {
-        return activityIndex;
-    }
 }

@@ -33,7 +33,7 @@ import com.djrapitops.plan.storage.database.queries.PlayerFetchQueries;
 import com.djrapitops.plan.storage.database.queries.Query;
 import com.djrapitops.plan.storage.database.queries.QueryAllStatement;
 import com.djrapitops.plan.storage.database.queries.ServerAggregateQueries;
-import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
+import com.djrapitops.plan.storage.database.queries.containers.PlayerContainerQuery;
 import com.djrapitops.plan.storage.database.queries.objects.*;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.NetworkTablePlayersQuery;
 import com.djrapitops.plan.storage.database.queries.objects.playertable.ServerTablePlayersQuery;
@@ -204,7 +204,7 @@ public interface DatabaseTest extends DatabaseTestPreparer {
         assertTrue(db().query(PlayerFetchQueries.isPlayerRegistered(playerUUID)));
         db().executeTransaction(new PingStoreTransaction(playerUUID, serverUUID(), RandomData.randomIntDateObjects()));
 
-        PlayerContainer playerContainer = db().query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
+        PlayerContainer playerContainer = db().query(new PlayerContainerQuery(playerUUID));
         // Active sessions are added after fetching
         playerContainer.putRawData(PlayerKeys.ACTIVE_SESSION, RandomData.randomUnfinishedSession(serverUUID(), worlds, playerUUID));
 

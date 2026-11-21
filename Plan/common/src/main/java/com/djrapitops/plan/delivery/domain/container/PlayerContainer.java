@@ -30,6 +30,7 @@ import java.util.Map;
  * @author AuroraLS3
  * @see com.djrapitops.plan.delivery.domain.keys.PlayerKeys For Key objects.
  */
+@Deprecated(since = "5.9 build 3885")
 public class PlayerContainer extends DynamicDataContainer {
 
     private final Map<Long, ActivityIndex> activityIndexCache;

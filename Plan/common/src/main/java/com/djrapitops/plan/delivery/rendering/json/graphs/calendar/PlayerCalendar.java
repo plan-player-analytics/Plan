@@ -16,8 +16,6 @@
  */
 package com.djrapitops.plan.delivery.rendering.json.graphs.calendar;
 
-import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
-import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.delivery.formatting.Formatter;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
@@ -42,16 +40,11 @@ public class PlayerCalendar {
     private final List<FinishedSession> allSessions;
     private final long registered;
 
-    PlayerCalendar(
-            PlayerContainer container,
-            Formatter<Long> iso8601Formatter,
-            TimeZone timeZone
-    ) {
-        this.allSessions = container.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>());
-        this.registered = container.getValue(PlayerKeys.REGISTERED).orElse(0L);
-
+    public PlayerCalendar(Formatter<Long> iso8601Formatter, TimeZone timeZone, List<FinishedSession> allSessions, long registered) {
         this.iso8601Formatter = iso8601Formatter;
         this.timeZone = timeZone;
+        this.allSessions = allSessions;
+        this.registered = registered;
     }
 
     public List<CalendarEntry> getEntries() {

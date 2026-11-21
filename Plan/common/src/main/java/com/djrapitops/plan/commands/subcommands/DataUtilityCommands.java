@@ -46,7 +46,7 @@ import com.djrapitops.plan.settings.locale.lang.HelpLang;
 import com.djrapitops.plan.settings.locale.lang.HtmlLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
-import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
+import com.djrapitops.plan.storage.database.queries.containers.PlayerContainerQuery;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 
@@ -233,7 +233,7 @@ public class DataUtilityCommands {
             throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_PLAYER_NOT_FOUND, identifier));
         }
 
-        PlayerContainer player = dbSystem.getDatabase().query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
+        PlayerContainer player = dbSystem.getDatabase().query(new PlayerContainerQuery(playerUUID));
         if (player.getValue(PlayerKeys.REGISTERED).isEmpty()) {
             throw new IllegalArgumentException(locale.getString(CommandLang.FAIL_PLAYER_NOT_FOUND_REGISTER, identifier));
         }

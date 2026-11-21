@@ -25,13 +25,14 @@ import com.djrapitops.plan.settings.config.PlanConfig;
 import com.djrapitops.plan.settings.config.paths.TimeSettings;
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.Database;
-import com.djrapitops.plan.storage.database.queries.containers.PlayerContainerQuery;
+import com.djrapitops.plan.storage.database.queries.analysis.MultiServerActivityIndexQueries;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.SessionQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.storage.database.queries.schema.MySQLSchemaQueries;
 import com.djrapitops.plan.storage.database.queries.schema.SQLiteSchemaQueries;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
@@ -111,7 +112,7 @@ public class CommonQueriesImplementation implements CommonQueries {
 
     @Override
     public double fetchActivityIndexOf(UUID playerUUID, long epochMs) {
-        return db.query(new PlayerContainerQuery(playerUUID)).getActivityIndex(epochMs, config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD)).getValue();
+        return db.query(MultiServerActivityIndexQueries.getActivityIndex(epochMs, config.get(TimeSettings.ACTIVE_PLAY_THRESHOLD), playerUUID, List.of()));
     }
 
     @Override

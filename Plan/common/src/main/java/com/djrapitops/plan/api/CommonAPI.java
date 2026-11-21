@@ -21,12 +21,10 @@ import com.djrapitops.plan.api.data.ServerContainer;
 import com.djrapitops.plan.data.plugin.PluginData;
 import com.djrapitops.plan.delivery.rendering.html.Html;
 import com.djrapitops.plan.exceptions.database.DBOpException;
-import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.identification.UUIDUtility;
+import com.djrapitops.plan.query.QueryService;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.Query;
-import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
-import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.database.queries.objects.UserIdentifierQueries;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
 import net.playeranalytics.plugin.server.PluginLogger;
@@ -37,7 +35,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 /**
  * PlanAPI extension for all implementations.
@@ -102,7 +99,7 @@ public class CommonAPI implements PlanAPI {
 
     @Override
     public PlayerContainer fetchPlayerContainer(UUID uuid) {
-        return new PlayerContainer(queryDB(ContainerFetchQueries.fetchPlayerContainer(uuid)));
+        return new PlayerContainer();
     }
 
     @Override
@@ -112,13 +109,13 @@ public class CommonAPI implements PlanAPI {
 
     @Override
     public Collection<UUID> fetchServerUUIDs() {
-        return queryDB(ServerQueries.fetchPlanServerInformation()).keySet()
-                .stream().map(ServerUUID::asUUID).collect(Collectors.toSet());
+        return QueryService.getInstance().getCommonQueries().fetchServerUUIDs();
     }
 
     @Override
     public String getPlayerName(UUID playerUUID) {
-        return queryDB(UserIdentifierQueries.fetchPlayerNameOf(playerUUID)).orElse(null);
+        return QueryService.getInstance().getCommonQueries().fetchNameOf(playerUUID)
+                .orElse(null);
     }
 
     private <T> T queryDB(Query<T> query) {

@@ -40,12 +40,9 @@ public abstract class PluginData {
 
     private final ContainerSize size;
     private final String sourcePlugin;
-
-    private Icon pluginIcon;
-
-    private String helpText;
-
     protected com.djrapitops.plan.data.store.containers.AnalysisContainer analysisData = new com.djrapitops.plan.data.store.containers.AnalysisContainer();
+    private Icon pluginIcon;
+    private String helpText;
 
     public PluginData(ContainerSize size, String sourcePlugin) {
         this.size = size;
@@ -80,6 +77,10 @@ public abstract class PluginData {
         return helpText;
     }
 
+    protected final void setHelpText(String html) {
+        // no-op
+    }
+
     public final String parsePluginIcon() {
         return (pluginIcon != null ? pluginIcon : Icon.called("cube").build()).toHtml();
     }
@@ -90,10 +91,6 @@ public abstract class PluginData {
 
     public final String getSourcePlugin() {
         return sourcePlugin;
-    }
-
-    protected final void setHelpText(String html) {
-        // no-op
     }
 
     @Override

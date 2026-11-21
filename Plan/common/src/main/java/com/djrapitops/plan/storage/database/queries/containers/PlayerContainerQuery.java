@@ -43,6 +43,7 @@ import java.util.UUID;
  *
  * @author AuroraLS3
  */
+@Deprecated(since = "5.9 build 3885")
 public class PlayerContainerQuery implements Query<PlayerContainer> {
 
     private final UUID uuid;

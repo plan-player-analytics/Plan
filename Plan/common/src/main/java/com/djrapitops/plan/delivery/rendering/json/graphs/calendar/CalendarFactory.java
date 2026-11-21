@@ -17,11 +17,13 @@
 package com.djrapitops.plan.delivery.rendering.json.graphs.calendar;
 
 import com.djrapitops.plan.delivery.domain.container.PlayerContainer;
+import com.djrapitops.plan.delivery.domain.keys.PlayerKeys;
 import com.djrapitops.plan.delivery.formatting.Formatters;
 import com.djrapitops.plan.settings.config.PlanConfig;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
+import java.util.ArrayList;
 import java.util.NavigableMap;
 import java.util.SortedMap;
 
@@ -46,9 +48,10 @@ public class CalendarFactory {
 
     public PlayerCalendar playerCalendar(PlayerContainer player) {
         return new PlayerCalendar(
-                player,
                 formatters.iso8601NoClockLong(),
-                config.getTimeZone()
+                config.getTimeZone(),
+                player.getValue(PlayerKeys.SESSIONS).orElse(new ArrayList<>()),
+                player.getValue(PlayerKeys.REGISTERED).orElse(0L)
         );
     }
 

@@ -39,7 +39,7 @@ import com.djrapitops.plan.settings.locale.Locale;
 import com.djrapitops.plan.settings.locale.lang.ErrorPageLang;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.Database;
-import com.djrapitops.plan.storage.database.queries.containers.ContainerFetchQueries;
+import com.djrapitops.plan.storage.database.queries.containers.PlayerContainerQuery;
 import com.djrapitops.plan.storage.database.queries.objects.ServerQueries;
 import com.djrapitops.plan.storage.file.FileResource;
 import com.djrapitops.plan.storage.file.PlanFiles;
@@ -199,7 +199,7 @@ public class ResponseFactory {
     }
 
     public Response rawPlayerPageResponse(UUID playerUUID) {
-        PlayerContainer player = dbSystem.getDatabase().query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
+        PlayerContainer player = dbSystem.getDatabase().query(new PlayerContainerQuery(playerUUID));
         return Response.builder()
                 .setMimeType(MimeType.JSON)
                 .setJSONContent(player.mapToNormalMap())
@@ -550,7 +550,7 @@ public class ResponseFactory {
     public Response playerPageResponse(@Untrusted Request request, UUID playerUUID) {
         try {
             Database db = dbSystem.getDatabase();
-            PlayerContainer player = db.query(ContainerFetchQueries.fetchPlayerContainer(playerUUID));
+            PlayerContainer player = db.query(new PlayerContainerQuery(playerUUID));
             if (player.getValue(PlayerKeys.REGISTERED).isPresent()) {
                 return forPage(request, pageFactory.reactPage());
             } else {

@@ -91,6 +91,28 @@ class RegistrationCommandsTest {
         system.disable();
     }
 
+    private static String registerUser(String username, Addresses addresses) throws IOException, KeyManagementException, NoSuchAlgorithmException {
+        HTTPConnector connector = new HTTPConnector();
+        HttpURLConnection connection = null;
+        String code;
+        try {
+            String address = addresses.getFallbackLocalhostAddress();
+            connection = connector.getConnection("POST", address + "/auth/register");
+            connection.setDoOutput(true);
+            connection.getOutputStream().write(("user=" + username + "&password=testPass").getBytes());
+            try (InputStream in = connection.getInputStream()) {
+                String responseBody = new String(IOUtils.toByteArray(in));
+                assertTrue(responseBody.contains("\"code\":"), () -> "Not successful: " + responseBody);
+                Map<String, Object> read = new Gson().fromJson(responseBody, new TypeToken<Map<String, Object>>() {}.getType());
+                code = (String) read.get("code");
+                System.out.println("Got registration code: " + code);
+            }
+        } finally {
+            if (connection != null) connection.disconnect();
+        }
+        return code;
+    }
+
     @Test
     @DisplayName("User is registered with 'admin' group with 'plan.webgroup.admin' permission")
     void normalRegistrationFlow(Addresses addresses, PlanCommand command, Database database) throws Exception {
@@ -167,27 +189,5 @@ class RegistrationCommandsTest {
         DBPreparer.awaitUntilTransactionsComplete(database);
         User modifiedUser = database.query(WebUserQueries.fetchUser(username)).orElseThrow(AssertionError::new);
         assertEquals("no_access", modifiedUser.getPermissionGroup());
-    }
-
-    private static String registerUser(String username, Addresses addresses) throws IOException, KeyManagementException, NoSuchAlgorithmException {
-        HTTPConnector connector = new HTTPConnector();
-        HttpURLConnection connection = null;
-        String code;
-        try {
-            String address = addresses.getFallbackLocalhostAddress();
-            connection = connector.getConnection("POST", address + "/auth/register");
-            connection.setDoOutput(true);
-            connection.getOutputStream().write(("user=" + username + "&password=testPass").getBytes());
-            try (InputStream in = connection.getInputStream()) {
-                String responseBody = new String(IOUtils.toByteArray(in));
-                assertTrue(responseBody.contains("\"code\":"), () -> "Not successful: " + responseBody);
-                Map<String, Object> read = new Gson().fromJson(responseBody, new TypeToken<Map<String, Object>>() {}.getType());
-                code = (String) read.get("code");
-                System.out.println("Got registration code: " + code);
-            }
-        } finally {
-            if (connection != null) connection.disconnect();
-        }
-        return code;
     }
 }
