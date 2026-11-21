@@ -29,6 +29,7 @@ import org.awaitility.core.ConditionTimeoutException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -61,7 +62,7 @@ import static com.djrapitops.plan.delivery.export.ExportTestUtilities.getMainPag
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SeleniumExtension.class)
-//@Disabled("This test can take 10 minutes to run so it's not enabled on the CI")
+@Disabled("This test can take 10 minutes to run so it's not enabled on the CI")
 class OpenRedirectFuzzTest implements HttpsServerTest {
 
     private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
