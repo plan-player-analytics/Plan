@@ -34,6 +34,7 @@ import com.djrapitops.plan.delivery.webserver.resolver.json.theme.SaveThemeJSONR
 import com.djrapitops.plan.delivery.webserver.resolver.json.theme.ThemeJSONResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.json.webgroup.*;
 import com.djrapitops.plan.identification.Identifiers;
+import com.djrapitops.plan.processing.Processing;
 import dagger.Lazy;
 
 import javax.inject.Inject;
@@ -47,6 +48,7 @@ import javax.inject.Singleton;
 @Singleton
 public class RootJSONResolver {
 
+    private final Processing processing;
     private final Identifiers identifiers;
     private final AsyncJSONResolverService asyncJSONResolverService;
     private final Lazy<WebServer> webServer;
@@ -65,7 +67,7 @@ public class RootJSONResolver {
 
     @Inject
     public RootJSONResolver(
-            Identifiers identifiers,
+            Processing processing, Identifiers identifiers,
             AsyncJSONResolverService asyncJSONResolverService,
             JSONFactory jsonFactory,
             Lazy<WebServer> webServer,
@@ -116,6 +118,7 @@ public class RootJSONResolver {
             WebGroupSaveJSONResolver webGroupSaveJSONResolver,
             WebGroupDeleteJSONResolver webGroupDeleteJSONResolver
     ) {
+        this.processing = processing;
         this.identifiers = identifiers;
         this.asyncJSONResolverService = asyncJSONResolverService;
 
