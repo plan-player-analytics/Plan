@@ -118,7 +118,6 @@ public class NetworkPageExporter extends FileExporter {
         String afterMillis = "&afterMillisAgo=";
         String beforeMillis = "&beforeMillisAgo=";
         exportJSON(toDirectory,
-                "network/playerbaseOverview",
                 "graph?type=playersOnline&server=" + serverUUID,
                 "graph?type=playersOnlineProxies",
                 "graph?type=uniqueAndNew",

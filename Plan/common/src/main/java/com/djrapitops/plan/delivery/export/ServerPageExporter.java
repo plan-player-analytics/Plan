@@ -135,8 +135,6 @@ public class ServerPageExporter extends FileExporter {
         String beforeMillis = "&beforeMillisAgo=";
         exportJSON(toDirectory,
                 "onlineInsights?server=" + serverUUID,
-                "playerVersus?server=" + serverUUID,
-                "playerbaseOverview?server=" + serverUUID,
                 "graph?type=playersOnline&server=" + serverUUID,
                 "graph?type=optimizedPerformance&server=" + serverUUID,
                 "graph?type=aggregatedPing&server=" + serverUUID,
