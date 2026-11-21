@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
 import java.util.zip.GZIPOutputStream;
 
 public class JettyResponseSender {
@@ -44,17 +43,6 @@ public class JettyResponseSender {
         this.jettyRequest = jettyRequest;
         this.jettyResponse = jettyResponse;
         this.addresses = addresses;
-    }
-
-    public void send() throws IOException {
-        try {
-            sendAsync().join();
-        } catch (CompletionException e) {
-            if (e.getCause() instanceof IOException) {
-                throw (IOException) e.getCause();
-            }
-            throw new IOException(e.getCause() != null ? e.getCause() : e);
-        }
     }
 
     public CompletableFuture<Void> sendAsync() {

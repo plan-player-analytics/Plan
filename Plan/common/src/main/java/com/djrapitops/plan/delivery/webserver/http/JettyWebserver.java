@@ -30,9 +30,7 @@ import org.eclipse.jetty.http2.server.HTTP2CServerConnectionFactory;
 import org.eclipse.jetty.http2.server.HTTP2ServerConnectionFactory;
 import org.eclipse.jetty.io.WindowRateControl;
 import org.eclipse.jetty.server.*;
-import org.eclipse.jetty.server.handler.DoSHandler;
-import org.eclipse.jetty.server.handler.MinimumDataRateHandler;
-import org.eclipse.jetty.server.handler.QoSHandler;
+import org.eclipse.jetty.server.handler.*;
 import org.eclipse.jetty.server.handler.SizeLimitHandler;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 import org.jetbrains.annotations.VisibleForTesting;
@@ -224,6 +222,20 @@ public class JettyWebserver implements WebServer {
             sizeLimitHandler.setHandler(jettyRequestHandler);
 
             webserver.setHandler(enableRateLimiting ? dosHandler : jettyRequestHandler);
+
+            webserver.setErrorHandler(new ErrorHandler() {
+                @Override
+                public boolean handle(Request request, Response response, org.eclipse.jetty.util.Callback callback) throws Exception {
+                    Throwable exception = (Throwable) request.getAttribute(ERROR_EXCEPTION);
+                    if (exception != null) {
+                        errorLogger.error(exception, ErrorContext.builder()
+                                .logErrorMessage()
+                                .related(request.getMethod(), request.getHttpURI().getPath())
+                                .build());
+                    }
+                    return super.handle(request, response, callback);
+                }
+            });
 
             String startFailure = "Failed to start Jetty webserver: ";
             try {

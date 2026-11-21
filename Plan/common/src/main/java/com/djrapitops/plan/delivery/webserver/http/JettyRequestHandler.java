@@ -20,11 +20,9 @@ import com.djrapitops.plan.delivery.webserver.Addresses;
 import com.djrapitops.plan.delivery.webserver.auth.AuthenticationExtractor;
 import com.djrapitops.plan.delivery.webserver.configuration.WebserverConfiguration;
 import com.djrapitops.plan.processing.Processing;
-import com.djrapitops.plan.settings.config.PlanConfig;
-import com.djrapitops.plan.settings.config.paths.PluginSettings;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
-import net.playeranalytics.plugin.server.PluginLogger;
+import org.eclipse.jetty.io.EofException;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Request;
 import org.eclipse.jetty.util.Callback;
@@ -42,19 +40,15 @@ public class JettyRequestHandler extends Handler.Abstract {
     private final Addresses addresses;
     private final RequestHandler requestHandler;
     private final Processing processing;
-    private final PlanConfig config;
-    private final PluginLogger logger;
     private final ErrorLogger errorLogger;
 
     @Inject
-    public JettyRequestHandler(WebserverConfiguration webserverConfiguration, AuthenticationExtractor authenticationExtractor, Addresses addresses, RequestHandler requestHandler, Processing processing, PlanConfig config, PluginLogger logger, ErrorLogger errorLogger) {
+    public JettyRequestHandler(WebserverConfiguration webserverConfiguration, AuthenticationExtractor authenticationExtractor, Addresses addresses, RequestHandler requestHandler, Processing processing, ErrorLogger errorLogger) {
         this.webserverConfiguration = webserverConfiguration;
         this.authenticationExtractor = authenticationExtractor;
         this.addresses = addresses;
         this.requestHandler = requestHandler;
         this.processing = processing;
-        this.config = config;
-        this.logger = logger;
         this.errorLogger = errorLogger;
     }
 
@@ -83,12 +77,9 @@ public class JettyRequestHandler extends Handler.Abstract {
     }
 
     private void logError(Request request, Throwable e) {
-        if (config.isTrue(PluginSettings.DEV_MODE)) {
-            logger.warn("THIS ERROR IS ONLY LOGGED IN DEV MODE:");
-            errorLogger.warn(e, ErrorContext.builder()
-                    .whatToDo("THIS ERROR IS ONLY LOGGED IN DEV MODE")
-                    .related(request.getMethod(), Request.getRemoteAddr(request), request.getHttpURI().getPath())
-                    .build());
-        }
+        if (e instanceof EofException) return; // EOF is quite common and ignored.
+        errorLogger.warn(e, ErrorContext.builder()
+                .related(request.getMethod(), Request.getRemoteAddr(request), request.getHttpURI().getPath())
+                .build());
     }
 }
