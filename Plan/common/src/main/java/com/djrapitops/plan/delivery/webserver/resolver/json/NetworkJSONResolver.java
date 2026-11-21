@@ -25,6 +25,7 @@ import com.djrapitops.plan.delivery.rendering.json.network.NetworkTabJSONCreator
 import com.djrapitops.plan.delivery.web.resolver.CompositeResolver;
 import com.djrapitops.plan.delivery.webserver.cache.AsyncJSONResolverService;
 import com.djrapitops.plan.delivery.webserver.cache.DataID;
+import com.djrapitops.plan.processing.Processing;
 
 import javax.inject.Inject;
 import javax.inject.Singleton;
@@ -37,19 +38,21 @@ import javax.inject.Singleton;
 @Singleton
 public class NetworkJSONResolver {
 
+    private final Processing processing;
     private final AsyncJSONResolverService asyncJSONResolverService;
     private final CompositeResolver resolver;
 
     @Inject
     public NetworkJSONResolver(
-            AsyncJSONResolverService asyncJSONResolverService, JSONFactory jsonFactory,
+            Processing processing, AsyncJSONResolverService asyncJSONResolverService, JSONFactory jsonFactory,
             NetworkOverviewJSONCreator networkOverviewJSONCreator,
             NetworkPlayerBaseOverviewJSONCreator networkPlayerBaseOverviewJSONCreator,
             NetworkSessionsOverviewJSONCreator networkSessionsOverviewJSONCreator,
             NetworkPerformanceJSONResolver networkPerformanceJSONResolver
     ) {
+        this.processing = processing;
         this.asyncJSONResolverService = asyncJSONResolverService;
-        resolver = CompositeResolver.builder()
+        resolver = CompositeResolver.builder(processing.getNonCriticalExecutor())
                 .add("overview", forJSON(DataID.SERVER_OVERVIEW, networkOverviewJSONCreator, WebPermission.PAGE_NETWORK_OVERVIEW_NUMBERS))
                 .add("playerbaseOverview", forJSON(DataID.PLAYERBASE_OVERVIEW, networkPlayerBaseOverviewJSONCreator, WebPermission.PAGE_NETWORK_PLAYERBASE_OVERVIEW))
                 .add("sessionsOverview", forJSON(DataID.SESSIONS_OVERVIEW, networkSessionsOverviewJSONCreator, WebPermission.PAGE_NETWORK_SESSIONS_OVERVIEW))

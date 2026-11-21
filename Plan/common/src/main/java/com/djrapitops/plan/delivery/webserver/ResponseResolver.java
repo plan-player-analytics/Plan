@@ -37,6 +37,7 @@ import com.djrapitops.plan.delivery.webserver.resolver.json.RootJSONResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.swagger.SwaggerJsonResolver;
 import com.djrapitops.plan.delivery.webserver.resolver.swagger.SwaggerPageResolver;
 import com.djrapitops.plan.exceptions.WebUserAuthException;
+import com.djrapitops.plan.processing.Processing;
 import com.djrapitops.plan.utilities.dev.Untrusted;
 import com.djrapitops.plan.utilities.logging.ErrorContext;
 import com.djrapitops.plan.utilities.logging.ErrorLogger;
@@ -92,6 +93,7 @@ public class ResponseResolver {
     private final ThemeEditorResolver themeEditorResolver;
     private final ErrorLogger errorLogger;
 
+    private final Processing processing;
     private final ResolverService resolverService;
     private final ResponseFactory responseFactory;
     private final Lazy<WebServer> webServer;
@@ -125,7 +127,7 @@ public class ResponseResolver {
             SwaggerJsonResolver swaggerJsonResolver,
             SwaggerPageResolver swaggerPageResolver,
 
-            ManagePageResolver managePageResolver, ErrorLogger errorLogger
+            ManagePageResolver managePageResolver, ErrorLogger errorLogger, Processing processing
     ) {
         this.resolverService = resolverService;
         this.responseFactory = responseFactory;
@@ -150,6 +152,7 @@ public class ResponseResolver {
         this.swaggerPageResolver = swaggerPageResolver;
         this.managePageResolver = managePageResolver;
         this.errorLogger = errorLogger;
+        this.processing = processing;
     }
 
     public void registerPages() {
@@ -280,7 +283,7 @@ public class ResponseResolver {
         try {
             futureResponse = resolver instanceof AsyncResolver asyncResolver
                     ? asyncResolver.resolveAsync(request)
-                    : CompletableFuture.supplyAsync(() -> resolver.resolve(request));
+                    : CompletableFuture.supplyAsync(() -> resolver.resolve(request), processing.getNonCriticalExecutor());
         } catch (Exception t) { // Some exceptions may be thrown sync based on the request.
             futureResponse = CompletableFuture.failedFuture(t);
         }

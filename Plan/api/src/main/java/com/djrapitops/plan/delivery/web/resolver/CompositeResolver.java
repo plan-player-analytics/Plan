@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
@@ -38,11 +39,13 @@ import java.util.function.Predicate;
  * @author AuroraLS3
  */
 public final class CompositeResolver implements AsyncResolver {
+    private final ExecutorService nonCriticalExecutor;
 
     private final List<String> prefixes;
     private final List<Resolver> resolvers;
 
-    CompositeResolver() {
+    CompositeResolver(ExecutorService nonCriticalExecutor) {
+        this.nonCriticalExecutor = nonCriticalExecutor;
         this.prefixes = new ArrayList<>();
         this.resolvers = new ArrayList<>();
     }
@@ -52,8 +55,8 @@ public final class CompositeResolver implements AsyncResolver {
      *
      * @return a builder.
      */
-    public static CompositeResolver.Builder builder() {
-        return new Builder();
+    public static CompositeResolver.Builder builder(ExecutorService nonCriticalExecutor) {
+        return new Builder(nonCriticalExecutor);
     }
 
     private Optional<Resolver> getResolver(URIPath target) {
@@ -105,7 +108,7 @@ public final class CompositeResolver implements AsyncResolver {
         if (resolver instanceof AsyncResolver) {
             return ((AsyncResolver) resolver).resolveAsync(forThis);
         }
-        return CompletableFuture.supplyAsync(() -> resolver.resolve(forThis));
+        return CompletableFuture.supplyAsync(() -> resolver.resolve(forThis), nonCriticalExecutor);
     }
 
     @Override
@@ -120,8 +123,8 @@ public final class CompositeResolver implements AsyncResolver {
     public static class Builder {
         private final CompositeResolver composite;
 
-        private Builder() {
-            this.composite = new CompositeResolver();
+        private Builder(ExecutorService nonCriticalExecutor) {
+            this.composite = new CompositeResolver(nonCriticalExecutor);
         }
 
         /**

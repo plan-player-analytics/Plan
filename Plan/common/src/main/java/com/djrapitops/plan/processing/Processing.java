@@ -50,15 +50,24 @@ public class Processing implements SubSystem {
         this.locale = locale;
         this.logger = logger;
         this.errorLogger = errorLogger;
-        nonCriticalExecutor = createExecutor(6, "Plan Non critical-pool-%d");
-        nonCriticalSingleThreadExecutor = createExecutor(1, "Plan Non critical-pool-single-threaded-%d");
+        nonCriticalExecutor = createExecutor(16, "Plan Non critical-pool-%d");
+        nonCriticalSingleThreadExecutor = createSingleThreadedExecutor("Plan Non critical-pool-single-threaded-%d");
         criticalExecutor = createExecutor(2, "Plan Critical-pool-%d");
     }
 
-    protected ExecutorService createExecutor(int i, String s) {
-        return Executors.newFixedThreadPool(i,
+    protected ExecutorService createExecutor(int i, String threadName) {
+        return Executors.newCachedThreadPool(
                 BasicThreadFactory.builder()
-                        .namingPattern(s)
+                        .namingPattern(threadName)
+                        .uncaughtExceptionHandler((thread, throwable) ->
+                                errorLogger.warn(throwable, ErrorContext.builder().build())
+                        ).build());
+    }
+
+    protected ExecutorService createSingleThreadedExecutor(String threadName) {
+        return Executors.newSingleThreadExecutor(
+                BasicThreadFactory.builder()
+                        .namingPattern(threadName)
                         .uncaughtExceptionHandler((thread, throwable) ->
                                 errorLogger.warn(throwable, ErrorContext.builder().build())
                         ).build());

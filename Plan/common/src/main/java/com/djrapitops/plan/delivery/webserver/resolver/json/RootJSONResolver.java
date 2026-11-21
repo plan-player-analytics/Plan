@@ -119,7 +119,7 @@ public class RootJSONResolver {
         this.identifiers = identifiers;
         this.asyncJSONResolverService = asyncJSONResolverService;
 
-        readOnlyResourcesBuilder = CompositeResolver.builder()
+        readOnlyResourcesBuilder = CompositeResolver.builder(processing.getNonCriticalExecutor())
                 .add("players", playersJSONResolver)
                 .add("playersTable", playersTableJSONResolver)
                 .add("sessions", sessionsJSONResolver)

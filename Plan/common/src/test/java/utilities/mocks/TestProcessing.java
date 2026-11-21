@@ -45,7 +45,7 @@ public class TestProcessing extends Processing {
     }
 
     @Override
-    protected ExecutorService createExecutor(int i, String s) {
+    protected ExecutorService createExecutor(int i, String threadName) {
         return MoreExecutors.newDirectExecutorService();
     }
 }
