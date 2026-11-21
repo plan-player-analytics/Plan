@@ -24,17 +24,22 @@ import com.djrapitops.plan.settings.config.paths.WebserverSettings;
 import com.djrapitops.plan.storage.database.transactions.commands.StoreWebUserTransaction;
 import com.djrapitops.plan.utilities.PassEncryptUtil;
 import extension.SeleniumExtension;
-import org.junit.jupiter.api.*;
+import org.awaitility.Awaitility;
+import org.awaitility.core.ConditionTimeoutException;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.api.io.TempDir;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.awaitility.Awaitility;
-import org.awaitility.core.ConditionTimeoutException;
 import utilities.RandomData;
 import utilities.TestResources;
 import utilities.mocks.PluginMockComponent;
@@ -47,18 +52,16 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
 import static com.djrapitops.plan.delivery.export.ExportTestUtilities.getElementById;
 import static com.djrapitops.plan.delivery.export.ExportTestUtilities.getMainPageElement;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @ExtendWith(SeleniumExtension.class)
-@Disabled("This test can take 10 minutes to run so it's not enabled on the CI")
+//@Disabled("This test can take 10 minutes to run so it's not enabled on the CI")
 class OpenRedirectFuzzTest implements HttpsServerTest {
 
     private static final int TEST_PORT_NUMBER = RandomData.randomInt(9005, 9500);
@@ -101,13 +104,18 @@ class OpenRedirectFuzzTest implements HttpsServerTest {
         }
     }
 
-    private static void waitForLoginPageToLoad(ChromeDriver driver, String address) {
+    private static boolean waitForLoginPageToLoad(ChromeDriver driver, String address) {
         new WebDriverWait(driver, Duration.of(1, ChronoUnit.SECONDS)).until(
                 webDriver -> ((JavascriptExecutor) webDriver).executeScript("return document.readyState").equals("complete"));
+        String pageSource = driver.getPageSource();
+        if (pageSource.contains("HTTP ERROR 400") || pageSource.contains("404")) {
+            return true;
+        }
         Awaitility.await()
                 .alias("Login page didn't open using payload " + address)
                 .atMost(Duration.of(1, ChronoUnit.SECONDS))
                 .until(() -> getElementById(driver, "inputUser").map(WebElement::isDisplayed).orElse(false));
+        return false;
     }
 
     @AfterAll
@@ -117,48 +125,82 @@ class OpenRedirectFuzzTest implements HttpsServerTest {
         }
     }
 
+    static Stream<Arguments> providePayloads() {
+        return payloads.stream()
+                .map(payload -> payload.replace("$PORT", Integer.toString(TEST_PORT_NUMBER)))
+                .flatMap(payload -> Stream.of(payload, URLEncoder.encode(payload, StandardCharsets.UTF_8)))
+                .map(Arguments::of);
+    }
+
     @AfterEach
     void clearBrowserConsole(WebDriver driver) {
         SeleniumExtension.newTab(driver);
     }
 
-    @TestFactory
-    Collection<DynamicTest> openRedirectFuzzTest(ChromeDriver driver) {
-        assertFalse(payloads.isEmpty());
-
+    @ParameterizedTest(name = "Login has no open redirect vulnerability '{0}'")
+    @MethodSource("providePayloads")
+    void openRedirectFuzzTest(String payload, ChromeDriver driver) {
         int testPortNumber = testPortNumber();
-        return payloads.stream()
-                .map(payload -> payload.replace("$PORT", Integer.toString(testPortNumber)))
-                .flatMap(payload -> Stream.of(payload, URLEncoder.encode(payload, StandardCharsets.UTF_8)))
-                .map(payload -> DynamicTest.dynamicTest("Login has no open redirect vulnerability '" + payload + "'", () -> {
-                    String address = "https://localhost:" + testPortNumber;
-                    try {
-                        String loginPageAddress = address + "/login?from=" + payload;
+        String address = "https://localhost:" + testPortNumber;
+        try {
+            String loginPageAddress = address + "/login?from=" + payload;
 
-                        driver.get(loginPageAddress);
+            driver.get(loginPageAddress);
 
-                        waitForLoginPageToLoad(driver, loginPageAddress);
+            waitForLoginPageToLoad(driver, loginPageAddress);
 
-                        driver.findElement(By.id("inputUser")).sendKeys("test");
-                        driver.findElement(By.id("inputPassword")).sendKeys("testPass");
-                        driver.findElement(By.id("login-button")).click();
+            driver.findElement(By.id("inputUser")).sendKeys("test");
+            driver.findElement(By.id("inputPassword")).sendKeys("testPass");
+            driver.findElement(By.id("login-button")).click();
 
-                        try {
-                            Awaitility.await()
-                                    .atMost(Duration.of(1, ChronoUnit.SECONDS))
-                                    .until(() -> getMainPageElement(driver).map(WebElement::isDisplayed).orElse(false));
-                        } catch (ConditionTimeoutException e) {
-                            String currentUrl = driver.getCurrentUrl();
-                            assertTrue(currentUrl.startsWith(address), () -> payload + " redirected to " + currentUrl + " which should not have happened!");
-                        }
+            try {
+                Awaitility.await()
+                        .atMost(Duration.of(1, ChronoUnit.SECONDS))
+                        .until(() -> getMainPageElement(driver).map(WebElement::isDisplayed).orElse(false));
+            } catch (ConditionTimeoutException e) {
+                String currentUrl = driver.getCurrentUrl();
+                assertTrue(currentUrl.startsWith(address), () -> payload + " redirected to " + currentUrl + " which should not have happened!");
+            }
 
-                        String currentUrl = driver.getCurrentUrl();
-                        assertTrue(currentUrl.startsWith(address), () -> payload + " redirected to " + currentUrl + " which should not have happened!");
-                    } finally {
-                        driver.get(address + "/auth/logout");
-                    }
-                }))
-                .toList();
+            String currentUrl = driver.getCurrentUrl();
+            assertTrue(currentUrl.startsWith(address), () -> payload + " redirected to " + currentUrl + " which should not have happened!");
+        } finally {
+            driver.get(address + "/auth/logout");
+        }
+    }
+
+    @ParameterizedTest(name = "Login-redirect has no open redirect vulnerability '{1}'")
+    @MethodSource("providePayloads")
+    void openRedirectFuzzTestInLoginRedirect(String payload, ChromeDriver driver) {
+        int testPortNumber = testPortNumber();
+        String address = "https://localhost:" + testPortNumber;
+        try {
+            String loginPageAddress = address + "/" + payload;
+
+            driver.get(loginPageAddress);
+
+            if (waitForLoginPageToLoad(driver, loginPageAddress)) {
+                return; // 400 bad request - acceptable outcome.
+            }
+
+            driver.findElement(By.id("inputUser")).sendKeys("test");
+            driver.findElement(By.id("inputPassword")).sendKeys("testPass");
+            driver.findElement(By.id("login-button")).click();
+
+            try {
+                Awaitility.await()
+                        .atMost(Duration.of(1, ChronoUnit.SECONDS))
+                        .until(() -> getMainPageElement(driver).map(WebElement::isDisplayed).orElse(false));
+            } catch (ConditionTimeoutException e) {
+                String currentUrl = driver.getCurrentUrl();
+                assertTrue(currentUrl.startsWith(address), () -> payload + " redirected to " + currentUrl + " which should not have happened!");
+            }
+
+            String currentUrl = driver.getCurrentUrl();
+            assertTrue(currentUrl.startsWith(address), () -> payload + " redirected to " + currentUrl + " which should not have happened!");
+        } finally {
+            driver.get(address + "/auth/logout");
+        }
     }
 
     @Override
