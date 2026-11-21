@@ -37,7 +37,14 @@ public record MinecraftStatistics(UUID playerUUID, ServerUUID serverUUID, Map<In
 
     public static Map<String, Integer> parse(Resource statsFile) throws IOException {
         var json = statsFile.asJson();
-        var stats = json.getAsJsonObject("stats");
+        // Support both new format with "stats" wrapper and old flat format
+        JsonElement stats;
+        if (json.isJsonObject() && json.getAsJsonObject().has("stats")) {
+            stats = json.getAsJsonObject().get("stats");
+        } else {
+            // Old format: the root object contains the statistics directly
+            stats = json;
+        }
 
         Map<String, Integer> valueByKey = new HashMap<>();
         addToMap("", stats, valueByKey);
