@@ -1,3 +1,4 @@
+REL|5.9.3904|https://github.com/plan-player-analytics/Plan/releases/download/5.9.3904/Plan-5.9-build-3904.jar|https://github.com/plan-player-analytics/Plan/releases
 REL|5.9.3867|https://github.com/plan-player-analytics/Plan/releases/download/5.9.3867/Plan-5.9-build-3867.jar|https://github.com/plan-player-analytics/Plan/releases
 DEV|5.9.3786|https://github.com/plan-player-analytics/Plan/releases/download/5.9.3786/Plan-5.9-dev-build-3786.jar|https://github.com/plan-player-analytics/Plan/releases/tag/5.9.3786
 DEV|5.9.3705|https://github.com/plan-player-analytics/Plan/releases/download/5.9.3705/Plan-5.9-build-3705.jar|https://github.com/plan-player-analytics/Plan/releases/tag/5.9.3705
