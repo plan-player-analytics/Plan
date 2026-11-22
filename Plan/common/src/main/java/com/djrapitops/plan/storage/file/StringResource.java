@@ -35,7 +35,7 @@ public class StringResource implements Resource {
     private final String resource;
     private final long lastModified;
 
-    StringResource(String resourceName, String resource, long lastModified) {
+    public StringResource(String resourceName, String resource, long lastModified) {
         this.resourceName = resourceName;
         this.resource = resource;
         this.lastModified = lastModified;

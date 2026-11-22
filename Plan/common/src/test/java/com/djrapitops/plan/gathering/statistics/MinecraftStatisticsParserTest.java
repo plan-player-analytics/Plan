@@ -17,12 +17,12 @@
 package com.djrapitops.plan.gathering.statistics;
 
 import com.djrapitops.plan.storage.file.Resource;
+import com.djrapitops.plan.storage.file.StringResource;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
@@ -104,37 +104,7 @@ class MinecraftStatisticsParserTest {
      * Creates a {@link Resource} with the given JSON content.
      */
     private Resource createResource(String name, String json) {
-        return new Resource() {
-            @Override
-            public String getResourceName() {
-                return name;
-            }
-
-            @Override
-            public long getLastModifiedDate() {
-                return 0;
-            }
-
-            @Override
-            public byte[] asBytes() {
-                return json.getBytes(StandardCharsets.UTF_8);
-            }
-
-            @Override
-            public InputStream asInputStream() {
-                return new ByteArrayInputStream(json.getBytes(StandardCharsets.UTF_8));
-            }
-
-            @Override
-            public List<String> asLines() {
-                return List.of(json);
-            }
-
-            @Override
-            public String asString() {
-                return json;
-            }
-        };
+        return new StringResource(name, json, 0);
     }
 
     @ParameterizedTest

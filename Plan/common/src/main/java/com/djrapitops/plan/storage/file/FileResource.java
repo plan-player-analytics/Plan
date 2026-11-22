@@ -26,9 +26,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * {@link Resource} implementation for a {@link File}.
@@ -47,13 +44,10 @@ public class FileResource implements Resource {
     }
 
     public static List<String> lines(File file) throws IOException {
-        List<String> lines = new ArrayList<>();
         if (file != null && file.exists()) {
-            try (Stream<String> linesStream = Files.lines(file.toPath(), StandardCharsets.UTF_8)) {
-                lines = linesStream.collect(Collectors.toList());
-            }
+            return Files.readAllLines(file.toPath(), StandardCharsets.UTF_8);
         }
-        return lines;
+        return new ArrayList<>();
     }
 
     @Override
@@ -84,12 +78,6 @@ public class FileResource implements Resource {
 
     @Override
     public String asString() throws IOException {
-        StringBuilder flat = new StringBuilder();
-        try (Scanner scanner = new Scanner(file, StandardCharsets.UTF_8)) {
-            while (scanner.hasNextLine()) {
-                flat.append(scanner.nextLine()).append("\r\n");
-            }
-        }
-        return flat.toString();
+        return new String(asBytes(), StandardCharsets.UTF_8);
     }
 }
