@@ -28,33 +28,61 @@ import Highcharts from 'highcharts/esm/highstock';
 import 'highcharts/esm/modules/no-data-to-display';
 import 'highcharts/esm/modules/accessibility';
 import { YAxisById } from '../../../../dataHooks/model/graph/YAxis';
-import { ErrorViewBody } from '../../../../views/ErrorView';
+import { ErrorViewBody, PlanError } from '../../../../views/ErrorView';
 import { GraphPreset } from '../../../../dataHooks/model/graph/GraphPreset';
 import { GraphSeries } from '../../../../dataHooks/model/graph/GraphSeries';
+import { ParsedPerformanceZones } from '../../../../dataHooks/model/graph/performance/PerformanceZones';
+import { PingGraph } from '../../../../dataHooks/model/graph/performance/PingGraph';
+import { ParsedPerformanceGraph } from '../../../../dataHooks/model/graph/performance/PerformanceGraph';
 
 type Props = {
     id: string;
     identifier: string;
 };
 
+type GraphProps = {
+    id: string;
+    zones: ParsedPerformanceZones;
+    performanceSeries?: ParsedPerformanceGraph;
+    pluginHistorySeries?: any;
+    pingSeries?: PingGraph;
+    loadingError?: PlanError;
+    defaultEnabledSeries?: string[];
+};
+
 type EnabledSeries = { [key: string]: boolean };
 
-// TODO use this graph in Theme Examples
-export const GraphSeriesCard = ({ id, identifier }: Props) => {
+export const ServerGraphSeriesCard = ({ identifier, ...props }: Props) => {
+    const performanceGraphData = usePerformanceGraphData({ identifier });
+    return <GraphSeriesCard {...props} {...performanceGraphData} />;
+};
+
+export const GraphSeriesCard = ({
+    id,
+    zones,
+    performanceSeries,
+    pluginHistorySeries,
+    pingSeries,
+    loadingError,
+    defaultEnabledSeries,
+}: GraphProps) => {
     const { t } = useTranslation();
     const { hasPermission } = useAuth();
     const { formatPing } = usePingFormatter();
     const metadata = useMetadata();
     const { graphTheming, nightModeEnabled } = useTheme();
-    const {
-        zones,
-        performanceSeries,
-        pluginHistorySeries,
-        pingSeries,
-        loadingError,
-    } = usePerformanceGraphData({ identifier });
 
-    const [enabledSeries, setEnabledSeries] = useState<EnabledSeries>({});
+    const initialEnabledSeries: EnabledSeries = useMemo(() => {
+        if (!defaultEnabledSeries) return {};
+        const enabled: EnabledSeries = {};
+        for (const s of defaultEnabledSeries) {
+            enabled[s] = true;
+        }
+        return enabled;
+    }, [defaultEnabledSeries]);
+
+    const [enabledSeries, setEnabledSeries] =
+        useState<EnabledSeries>(initialEnabledSeries);
     const [graph, setGraph] = useState<Highcharts.StockChart | undefined>(
         undefined,
     );

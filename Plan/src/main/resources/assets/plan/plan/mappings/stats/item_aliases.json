@@ -1,0 +1,618 @@
+{
+  "source": "Minecraft Java Edition 1.12.2",
+  "target": "Minecraft Java Edition 26.1",
+  "purpose": "Translate legacy item registry identifiers used as statistic-key suffixes.",
+  "input_format": "minecraft:<legacy_item_id>",
+  "output_format": "minecraft:<modern_item_id>",
+  "mappings": {
+    "yellow_flower": "dandelion",
+    "mob_spawner": "spawner",
+    "netherbrick": "nether_brick",
+    "reeds": "sugar_cane",
+    "melon": "melon_slice",
+    "fireworks": "firework_rocket",
+    "firework_charge": "firework_star",
+    "chorus_fruit_popped": "popped_chorus_fruit",
+    "record_13": "music_disc_13",
+    "record_cat": "music_disc_cat",
+    "record_blocks": "music_disc_blocks",
+    "record_chirp": "music_disc_chirp",
+    "record_far": "music_disc_far",
+    "record_mall": "music_disc_mall",
+    "record_mellohi": "music_disc_mellohi",
+    "record_stal": "music_disc_stal",
+    "record_strad": "music_disc_strad",
+    "record_ward": "music_disc_ward",
+    "record_11": "music_disc_11",
+    "record_wait": "music_disc_wait",
+    "waterlily": "lily_pad",
+    "stonebrick": "stone_bricks",
+    "quartz_ore": "nether_quartz_ore",
+    "hardened_clay": "terracotta",
+    "stained_hardened_clay": "stained_terracotta",
+    "wooden_door": "oak_door",
+    "wooden_button": "oak_button",
+    "wooden_pressure_plate": "oak_pressure_plate",
+    "wooden_slab": "oak_slab",
+    "fence_gate": "oak_fence_gate",
+    "trapdoor": "oak_trapdoor",
+    "commandblock_minecart": "command_block_minecart",
+    "stone_slab": "smooth_stone_slab",
+    "double_stone_slab": "smooth_stone_slab",
+    "double_wooden_slab": "oak_slab",
+    "lit_redstone_lamp": "redstone_lamp",
+    "unpowered_comparator": "comparator",
+    "powered_comparator": "comparator",
+    "unpowered_repeater": "repeater",
+    "powered_repeater": "repeater",
+    "snow": "snow_block",
+    "pumpkin": "carved_pumpkin",
+    "lit_pumpkin": "jack_o_lantern",
+    "boat": "oak_boat",
+    "ender_eye": "eye_of_ender",
+    "deadbush": "dead_bush",
+    "leather_cap": "leather_helmet",
+    "leather_tunic": "leather_chestplate",
+    "leather_pants": "leather_leggings",
+    "gold_helmet": "golden_helmet",
+    "gold_chestplate": "golden_chestplate",
+    "gold_leggings": "golden_leggings",
+    "gold_boots": "golden_boots",
+    "wooden_sword": "oak_sword",
+    "wooden_pickaxe": "oak_pickaxe",
+    "wooden_axe": "oak_axe",
+    "wooden_shovel": "oak_shovel",
+    "wooden_hoe": "oak_hoe",
+    "wooden_stairs": "oak_stairs",
+    "wooden_fence": "oak_fence",
+    "wooden_sign": "oak_sign",
+    "stone_stairs": "cobblestone_stairs",
+    "normal_stone_stairs": "stone_stairs",
+    "end_brick_stairs": "end_stone_brick_stairs",
+    "end_brick_slab": "end_stone_brick_slab",
+    "end_brick_wall": "end_stone_brick_wall",
+    "prismarine_bricks_stairs": "prismarine_brick_stairs",
+    "prismarine_bricks_slab": "prismarine_brick_slab",
+    "daylight_detector_inverted": "daylight_detector",
+    "lit_redstone_ore": "redstone_ore",
+    "ender_crystal": "end_crystal",
+    "xp_bottle": "experience_bottle",
+    "xp_orb": "experience_orb",
+    "snowman": "snow_golem",
+    "villager_golem": "iron_golem",
+    "evocation_illager": "evoker",
+    "vindication_illager": "vindicator",
+    "evocation_fangs": "evoker_fangs",
+    "fireworks_rocket": "firework_rocket",
+    "eye_of_ender_signal": "eye_of_ender",
+    "mossy_stone_brick_stairs": "mossy_stone_brick_stairs",
+    "mossy_stone_brick_slab": "mossy_stone_brick_slab",
+    "mossy_stone_brick_wall": "mossy_stone_brick_wall",
+    "cracked_stone_bricks": "cracked_stone_bricks",
+    "chiseled_stone_bricks": "chiseled_stone_bricks",
+    "infested_stone": "infested_stone",
+    "infested_cobblestone": "infested_cobblestone",
+    "infested_stone_bricks": "infested_stone_bricks",
+    "infested_mossy_stone_bricks": "infested_mossy_stone_bricks",
+    "infested_cracked_stone_bricks": "infested_cracked_stone_bricks",
+    "infested_chiseled_stone_bricks": "infested_chiseled_stone_bricks",
+    "brewing_stand_item": "brewing_stand"
+  },
+  "ambiguous": {
+    "fish": {
+      "possible_targets": [
+        "cod",
+        "salmon",
+        "tropical_fish",
+        "pufferfish"
+      ],
+      "reason": "One legacy item ID represented several variants using metadata; the aggregate statistic cannot be split."
+    },
+    "cooked_fish": {
+      "possible_targets": [
+        "cooked_cod",
+        "cooked_salmon"
+      ],
+      "reason": "One legacy item ID represented several variants using metadata; the aggregate statistic cannot be split."
+    },
+    "dye": {
+      "possible_targets": [
+        "bone_meal",
+        "orange_dye",
+        "magenta_dye",
+        "light_blue_dye",
+        "yellow_dye",
+        "lime_dye",
+        "pink_dye",
+        "gray_dye",
+        "light_gray_dye",
+        "cyan_dye",
+        "purple_dye",
+        "blue_dye",
+        "brown_dye",
+        "green_dye",
+        "red_dye",
+        "black_dye"
+      ],
+      "reason": "One legacy item ID represented all dye colors using metadata; the aggregate statistic cannot be split."
+    },
+    "bed": {
+      "possible_targets": [
+        "white_bed",
+        "orange_bed",
+        "magenta_bed",
+        "light_blue_bed",
+        "yellow_bed",
+        "lime_bed",
+        "pink_bed",
+        "gray_bed",
+        "light_gray_bed",
+        "cyan_bed",
+        "purple_bed",
+        "blue_bed",
+        "brown_bed",
+        "green_bed",
+        "red_bed",
+        "black_bed"
+      ],
+      "reason": "One legacy item ID represented all bed colors using metadata; the aggregate statistic cannot be split."
+    },
+    "skull": {
+      "possible_targets": [
+        "skeleton_skull",
+        "wither_skeleton_skull",
+        "zombie_head",
+        "player_head",
+        "creeper_head",
+        "dragon_head"
+      ],
+      "reason": "One legacy item ID represented several head types using metadata; the aggregate statistic cannot be split."
+    },
+    "banner": {
+      "possible_targets": [
+        "white_banner",
+        "orange_banner",
+        "magenta_banner",
+        "light_blue_banner",
+        "yellow_banner",
+        "lime_banner",
+        "pink_banner",
+        "gray_banner",
+        "light_gray_banner",
+        "cyan_banner",
+        "purple_banner",
+        "blue_banner",
+        "brown_banner",
+        "green_banner",
+        "red_banner",
+        "black_banner"
+      ],
+      "reason": "One legacy item ID represented all banner colors using metadata; the aggregate statistic cannot be split."
+    },
+    "wool": {
+      "possible_targets": [
+        "white_wool",
+        "orange_wool",
+        "magenta_wool",
+        "light_blue_wool",
+        "yellow_wool",
+        "lime_wool",
+        "pink_wool",
+        "gray_wool",
+        "light_gray_wool",
+        "cyan_wool",
+        "purple_wool",
+        "blue_wool",
+        "brown_wool",
+        "green_wool",
+        "red_wool",
+        "black_wool"
+      ],
+      "reason": "One legacy item ID represented all wool colors using metadata; the aggregate statistic cannot be split."
+    },
+    "carpet": {
+      "possible_targets": [
+        "white_carpet",
+        "orange_carpet",
+        "magenta_carpet",
+        "light_blue_carpet",
+        "yellow_carpet",
+        "lime_carpet",
+        "pink_carpet",
+        "gray_carpet",
+        "light_gray_carpet",
+        "cyan_carpet",
+        "purple_carpet",
+        "blue_carpet",
+        "brown_carpet",
+        "green_carpet",
+        "red_carpet",
+        "black_carpet"
+      ],
+      "reason": "One legacy item ID represented all carpet colors using metadata; the aggregate statistic cannot be split."
+    },
+    "stained_hardened_clay": {
+      "possible_targets": [
+        "white_terracotta",
+        "orange_terracotta",
+        "magenta_terracotta",
+        "light_blue_terracotta",
+        "yellow_terracotta",
+        "lime_terracotta",
+        "pink_terracotta",
+        "gray_terracotta",
+        "light_gray_terracotta",
+        "cyan_terracotta",
+        "purple_terracotta",
+        "blue_terracotta",
+        "brown_terracotta",
+        "green_terracotta",
+        "red_terracotta",
+        "black_terracotta"
+      ],
+      "reason": "One legacy item ID represented all terracotta colors using metadata; the aggregate statistic cannot be split."
+    },
+    "stained_glass": {
+      "possible_targets": [
+        "white_stained_glass",
+        "orange_stained_glass",
+        "magenta_stained_glass",
+        "light_blue_stained_glass",
+        "yellow_stained_glass",
+        "lime_stained_glass",
+        "pink_stained_glass",
+        "gray_stained_glass",
+        "light_gray_stained_glass",
+        "cyan_stained_glass",
+        "purple_stained_glass",
+        "blue_stained_glass",
+        "brown_stained_glass",
+        "green_stained_glass",
+        "red_stained_glass",
+        "black_stained_glass"
+      ],
+      "reason": "One legacy item ID represented all stained glass colors using metadata; the aggregate statistic cannot be split."
+    },
+    "stained_glass_pane": {
+      "possible_targets": [
+        "white_stained_glass_pane",
+        "orange_stained_glass_pane",
+        "magenta_stained_glass_pane",
+        "light_blue_stained_glass_pane",
+        "yellow_stained_glass_pane",
+        "lime_stained_glass_pane",
+        "pink_stained_glass_pane",
+        "gray_stained_glass_pane",
+        "light_gray_stained_glass_pane",
+        "cyan_stained_glass_pane",
+        "purple_stained_glass_pane",
+        "blue_stained_glass_pane",
+        "brown_stained_glass_pane",
+        "green_stained_glass_pane",
+        "red_stained_glass_pane",
+        "black_stained_glass_pane"
+      ],
+      "reason": "One legacy item ID represented all stained glass pane colors using metadata; the aggregate statistic cannot be split."
+    },
+    "concrete": {
+      "possible_targets": [
+        "white_concrete",
+        "orange_concrete",
+        "magenta_concrete",
+        "light_blue_concrete",
+        "yellow_concrete",
+        "lime_concrete",
+        "pink_concrete",
+        "gray_concrete",
+        "light_gray_concrete",
+        "cyan_concrete",
+        "purple_concrete",
+        "blue_concrete",
+        "brown_concrete",
+        "green_concrete",
+        "red_concrete",
+        "black_concrete"
+      ],
+      "reason": "One legacy item ID represented all concrete colors using metadata; the aggregate statistic cannot be split."
+    },
+    "concrete_powder": {
+      "possible_targets": [
+        "white_concrete_powder",
+        "orange_concrete_powder",
+        "magenta_concrete_powder",
+        "light_blue_concrete_powder",
+        "yellow_concrete_powder",
+        "lime_concrete_powder",
+        "pink_concrete_powder",
+        "gray_concrete_powder",
+        "light_gray_concrete_powder",
+        "cyan_concrete_powder",
+        "purple_concrete_powder",
+        "blue_concrete_powder",
+        "brown_concrete_powder",
+        "green_concrete_powder",
+        "red_concrete_powder",
+        "black_concrete_powder"
+      ],
+      "reason": "One legacy item ID represented all concrete powder colors using metadata; the aggregate statistic cannot be split."
+    },
+    "quartz_block": {
+      "possible_targets": [
+        "quartz_block",
+        "chiseled_quartz_block",
+        "quartz_pillar"
+      ],
+      "reason": "One legacy item ID represented all quartz block variants using metadata; the aggregate statistic cannot be split."
+    },
+    "sandstone": {
+      "possible_targets": [
+        "sandstone",
+        "chiseled_sandstone",
+        "smooth_sandstone"
+      ],
+      "reason": "One legacy item ID represented all sandstone variants using metadata; the aggregate statistic cannot be split."
+    },
+    "red_sandstone": {
+      "possible_targets": [
+        "red_sandstone",
+        "chiseled_red_sandstone",
+        "smooth_red_sandstone"
+      ],
+      "reason": "One legacy item ID represented all red sandstone variants using metadata; the aggregate statistic cannot be split."
+    },
+    "stone_bricks": {
+      "possible_targets": [
+        "stone_bricks",
+        "mossy_stone_bricks",
+        "cracked_stone_bricks",
+        "chiseled_stone_bricks"
+      ],
+      "reason": "One legacy item ID represented all stone brick variants using metadata; the aggregate statistic cannot be split."
+    },
+    "nether_bricks": {
+      "possible_targets": [
+        "nether_bricks",
+        "red_nether_bricks",
+        "cracked_nether_bricks",
+        "chiseled_nether_bricks"
+      ],
+      "reason": "One legacy item ID represented all nether brick variants using metadata; the aggregate statistic cannot be split."
+    },
+    "prismarine": {
+      "possible_targets": [
+        "prismarine",
+        "prismarine_bricks",
+        "dark_prismarine"
+      ],
+      "reason": "One legacy item ID represented all prismarine variants using metadata; the aggregate statistic cannot be split."
+    },
+    "stone": {
+      "possible_targets": [
+        "stone",
+        "granite",
+        "polished_granite",
+        "diorite",
+        "polished_diorite",
+        "andesite",
+        "polished_andesite"
+      ],
+      "reason": "One legacy item ID represented all stone variants using metadata; the aggregate statistic cannot be split."
+    },
+    "oak_slab": {
+      "possible_targets": [
+        "oak_slab",
+        "spruce_slab",
+        "birch_slab",
+        "jungle_slab",
+        "acacia_slab",
+        "dark_oak_slab"
+      ],
+      "reason": "One legacy item ID represented all wood slab types using metadata; the aggregate statistic cannot be split."
+    },
+    "oak_stairs": {
+      "possible_targets": [
+        "oak_stairs",
+        "spruce_stairs",
+        "birch_stairs",
+        "jungle_stairs",
+        "acacia_stairs",
+        "dark_oak_stairs"
+      ],
+      "reason": "One legacy item ID represented all wood stair types using metadata; the aggregate statistic cannot be split."
+    },
+    "oak_fence": {
+      "possible_targets": [
+        "oak_fence",
+        "spruce_fence",
+        "birch_fence",
+        "jungle_fence",
+        "acacia_fence",
+        "dark_oak_fence"
+      ],
+      "reason": "One legacy item ID represented all wood fence types using metadata; the aggregate statistic cannot be split."
+    },
+    "oak_sign": {
+      "possible_targets": [
+        "oak_sign",
+        "spruce_sign",
+        "birch_sign",
+        "jungle_sign",
+        "acacia_sign",
+        "dark_oak_sign"
+      ],
+      "reason": "One legacy item ID represented all wood sign types using metadata; the aggregate statistic cannot be split."
+    },
+    "oak_pressure_plate": {
+      "possible_targets": [
+        "oak_pressure_plate",
+        "spruce_pressure_plate",
+        "birch_pressure_plate",
+        "jungle_pressure_plate",
+        "acacia_pressure_plate",
+        "dark_oak_pressure_plate"
+      ],
+      "reason": "One legacy item ID represented all wood pressure plate types using metadata; the aggregate statistic cannot be split."
+    },
+    "oak_button": {
+      "possible_targets": [
+        "oak_button",
+        "spruce_button",
+        "birch_button",
+        "jungle_button",
+        "acacia_button",
+        "dark_oak_button"
+      ],
+      "reason": "One legacy item ID represented all wood button types using metadata; the aggregate statistic cannot be split."
+    },
+    "oak_fence_gate": {
+      "possible_targets": [
+        "oak_fence_gate",
+        "spruce_fence_gate",
+        "birch_fence_gate",
+        "jungle_fence_gate",
+        "acacia_fence_gate",
+        "dark_oak_fence_gate"
+      ],
+      "reason": "One legacy item ID represented all wood fence gate types using metadata; the aggregate statistic cannot be split."
+    },
+    "oak_trapdoor": {
+      "possible_targets": [
+        "oak_trapdoor",
+        "spruce_trapdoor",
+        "birch_trapdoor",
+        "jungle_trapdoor",
+        "acacia_trapdoor",
+        "dark_oak_trapdoor"
+      ],
+      "reason": "One legacy item ID represented all wood trapdoor types using metadata; the aggregate statistic cannot be split."
+    },
+    "oak_door": {
+      "possible_targets": [
+        "oak_door",
+        "spruce_door",
+        "birch_door",
+        "jungle_door",
+        "acacia_door",
+        "dark_oak_door"
+      ],
+      "reason": "One legacy item ID represented all wood door types using metadata; the aggregate statistic cannot be split."
+    },
+    "oak_boat": {
+      "possible_targets": [
+        "oak_boat",
+        "spruce_boat",
+        "birch_boat",
+        "jungle_boat",
+        "acacia_boat",
+        "dark_oak_boat"
+      ],
+      "reason": "One legacy item ID represented all wood boat types using metadata; the aggregate statistic cannot be split."
+    },
+    "red_flower": {
+      "possible_targets": [
+        "poppy",
+        "blue_orchid",
+        "allium",
+        "azure_bluet",
+        "red_tulip",
+        "orange_tulip",
+        "white_tulip",
+        "pink_tulip",
+        "oxeye_daisy",
+        "cornflower",
+        "lily_of_the_valley",
+        "wither_rose",
+        "pitcher_plant"
+      ],
+      "reason": "One legacy item ID represented all red flower types using metadata; the aggregate statistic cannot be split."
+    },
+    "double_plant": {
+      "possible_targets": [
+        "sunflower",
+        "lilac",
+        "tall_grass",
+        "large_fern",
+        "rose_bush",
+        "peony"
+      ],
+      "reason": "One legacy item ID represented all double plant types using metadata; the aggregate statistic cannot be split."
+    },
+    "sapling": {
+      "possible_targets": [
+        "oak_sapling",
+        "spruce_sapling",
+        "birch_sapling",
+        "jungle_sapling",
+        "acacia_sapling",
+        "dark_oak_sapling"
+      ],
+      "reason": "One legacy item ID represented all sapling types using metadata; the aggregate statistic cannot be split."
+    },
+    "leaves": {
+      "possible_targets": [
+        "oak_leaves",
+        "spruce_leaves",
+        "birch_leaves",
+        "jungle_leaves",
+        "acacia_leaves",
+        "dark_oak_leaves"
+      ],
+      "reason": "One legacy item ID represented all leaves types using metadata; the aggregate statistic cannot be split."
+    },
+    "log": {
+      "possible_targets": [
+        "oak_log",
+        "spruce_log",
+        "birch_log",
+        "jungle_log",
+        "acacia_log",
+        "dark_oak_log"
+      ],
+      "reason": "One legacy item ID represented all log types using metadata; the aggregate statistic cannot be split."
+    },
+    "planks": {
+      "possible_targets": [
+        "oak_planks",
+        "spruce_planks",
+        "birch_planks",
+        "jungle_planks",
+        "acacia_planks",
+        "dark_oak_planks"
+      ],
+      "reason": "One legacy item ID represented all plank types using metadata; the aggregate statistic cannot be split."
+    },
+    "potion": {
+      "possible_targets": [
+        "potion",
+        "splash_potion",
+        "lingering_potion"
+      ],
+      "reason": "One legacy item ID represented all potion types using metadata; the aggregate statistic cannot be split."
+    },
+    "map": {
+      "possible_targets": [
+        "map",
+        "filled_map"
+      ],
+      "reason": "One legacy item ID represented both empty and filled maps using metadata; the aggregate statistic cannot be split."
+    }
+  },
+  "handling": {
+    "lookup_order": [
+      "Check mappings for an exact legacy item ID.",
+      "If absent, check ambiguous.",
+      "If neither exists, preserve the namespaced identifier unchanged."
+    ],
+    "ambiguous_policy": "Do not choose a possible target automatically; report or preserve the legacy statistic separately.",
+    "namespace_policy": "Map only the path after minecraft:. Preserve non-minecraft namespaces unchanged."
+  },
+  "notes": [
+    "This file covers item identifiers, not block identifiers; mined-block statistics need a separate block alias mapping.",
+    "Some legacy item IDs represented multiple metadata variants. Their aggregate statistics cannot be reconstructed exactly.",
+    "This is a focused alias list for changed identifiers, not a full list of all vanilla items."
+  ],
+  "references": [
+    "https://minecraft.wiki/w/Java_Edition_Flattening",
+    "https://minecraft.wiki/w/Music_Disc_13"
+  ]
+}

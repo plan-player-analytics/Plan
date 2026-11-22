@@ -65,6 +65,8 @@ export const useDateFormatter = (
 
     const formatDate = useCallback(
         (date: any) => {
+            if (date === undefined) return '-';
+
             const numericDate =
                 typeof date === 'string' &&
                 date.trim() !== '' &&

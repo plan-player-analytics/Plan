@@ -5,7 +5,7 @@ import { useParams } from 'react-router';
 import PerformanceAsNumbersCard from '../../components/cards/server/tables/PerformanceAsNumbersCard.tsx';
 import ExtendableRow from '../../components/layout/extension/ExtendableRow.tsx';
 import { useAuth } from '../../hooks/authenticationHook.tsx';
-import { GraphSeriesCard } from '../../components/cards/server/graphs/GraphSeriesCard.tsx';
+import { ServerGraphSeriesCard } from '../../components/cards/server/graphs/GraphSeriesCard.tsx';
 
 const ServerPerformance = () => {
     const { hasPermission, hasChildPermission } = useAuth();
@@ -20,7 +20,7 @@ const ServerPerformance = () => {
                 {seeGraphs && (
                     <ExtendableRow id={'row-server-performance-0'}>
                         <Col lg={12}>
-                            <GraphSeriesCard
+                            <ServerGraphSeriesCard
                                 id='performance-graphs'
                                 identifier={identifier}
                             />

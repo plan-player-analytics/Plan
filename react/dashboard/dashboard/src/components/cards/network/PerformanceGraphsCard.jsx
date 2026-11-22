@@ -18,7 +18,7 @@ import { useTranslation } from 'react-i18next';
 import { CardLoader, ChartLoader } from '../../navigation/Loader.tsx';
 import LineGraph from '../../graphs/LineGraph';
 import { ErrorViewBody, ErrorViewCard } from '../../../views/ErrorView.tsx';
-import PingGraph from '../../graphs/performance/PingGraph';
+import PingGraph from '../../graphs/ping/PingGraph';
 import { useMetadata } from '../../../hooks/metadataHook.tsx';
 import { getColorConverter } from '../../../util/Color.js';
 import {

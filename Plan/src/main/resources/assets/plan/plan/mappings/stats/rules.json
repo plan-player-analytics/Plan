@@ -1,0 +1,40 @@
+{
+  "source": "Minecraft Java Edition 1.12.2",
+  "target": "Minecraft Java Edition 26.1",
+  "format": "legacy-stat-key -> modern-stat-key",
+  "replacement_syntax": "Java Matcher.replaceAll syntax; $1, $2, ... are capture groups",
+  "rules": [
+    {
+      "pattern": "^stat\\.mineBlock\\.(.+)$",
+      "replacement": "minecraft.mined:$1"
+    },
+    {
+      "pattern": "^stat\\.craftItem\\.(.+)$",
+      "replacement": "minecraft.crafted:$1"
+    },
+    {
+      "pattern": "^stat\\.useItem\\.(.+)$",
+      "replacement": "minecraft.used:$1"
+    },
+    {
+      "pattern": "^stat\\.breakItem\\.(.+)$",
+      "replacement": "minecraft.broken:$1"
+    },
+    {
+      "pattern": "^stat\\.pickup\\.(.+)$",
+      "replacement": "minecraft.picked_up:$1"
+    },
+    {
+      "pattern": "^stat\\.drop\\.(.+)$",
+      "replacement": "minecraft.dropped:$1"
+    },
+    {
+      "pattern": "^stat\\.killEntity\\.(.+)$",
+      "replacement": "minecraft.killed:$1"
+    },
+    {
+      "pattern": "^stat\\.entityKilledBy\\.(.+)$",
+      "replacement": "minecraft.killed_by:$1"
+    }
+  ]
+}
