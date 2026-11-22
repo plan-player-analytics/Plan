@@ -1007,6 +1007,8 @@ loadScripts(document, 'script');</script>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/file/Resource.html#asJson()" class="member-name-link">asJson()</a> - Method in interface com.djrapitops.plan.storage.file.<a href="com/djrapitops/plan/storage/file/Resource.html" title="interface in com.djrapitops.plan.storage.file">Resource</a></dt>
 <dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/storage/file/Resource.html#asJsonArray()" class="member-name-link">asJsonArray()</a> - Method in interface com.djrapitops.plan.storage.file.<a href="com/djrapitops/plan/storage/file/Resource.html" title="interface in com.djrapitops.plan.storage.file">Resource</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/file/FileResource.html#asLines()" class="member-name-link">asLines()</a> - Method in class com.djrapitops.plan.storage.file.<a href="com/djrapitops/plan/storage/file/FileResource.html" title="class in com.djrapitops.plan.storage.file">FileResource</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/file/JarResource.html#asLines()" class="member-name-link">asLines()</a> - Method in class com.djrapitops.plan.storage.file.<a href="com/djrapitops/plan/storage/file/JarResource.html" title="class in com.djrapitops.plan.storage.file">JarResource</a></dt>
@@ -3320,6 +3322,8 @@ loadScripts(document, 'script');</script>
 <dt><a href="com/djrapitops/plan/gathering/listeners/velocity/package-summary.html">com.djrapitops.plan.gathering.listeners.velocity</a> - package com.djrapitops.plan.gathering.listeners.velocity</dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/mixin/package-summary.html">com.djrapitops.plan.gathering.mixin</a> - package com.djrapitops.plan.gathering.mixin</dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/statistics/package-summary.html">com.djrapitops.plan.gathering.statistics</a> - package com.djrapitops.plan.gathering.statistics</dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/timed/package-summary.html">com.djrapitops.plan.gathering.timed</a> - package com.djrapitops.plan.gathering.timed</dt>
 <dd>&nbsp;</dd>
@@ -15090,6 +15094,12 @@ PATCHING to CLOSED (Database closed prematurely)</div>
 <div class="deprecation-comment">Use <a href="com/djrapitops/plan/query/QueryService.html" title="interface in com.djrapitops.plan.query"><code>QueryService</code></a> directly.</div>
 </div>
 </dd>
+<dt><a href="com/djrapitops/plan/gathering/statistics/LegacyStatisticTranslator.html" class="type-name-link" title="class in com.djrapitops.plan.gathering.statistics">LegacyStatisticTranslator</a> - Class in <a href="com/djrapitops/plan/gathering/statistics/package-summary.html">com.djrapitops.plan.gathering.statistics</a></dt>
+<dd>
+<div class="block">This utility is for translating 1.12 statistics to 26.1 equivalents.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/gathering/statistics/LegacyStatisticTranslator.html#%3Cinit%3E(com.djrapitops.plan.storage.file.Resource,com.djrapitops.plan.storage.file.Resource,com.djrapitops.plan.storage.file.Resource,com.djrapitops.plan.storage.file.Resource,com.djrapitops.plan.storage.file.Resource,com.djrapitops.plan.storage.file.Resource)" class="member-name-link">LegacyStatisticTranslator(Resource, Resource, Resource, Resource, Resource, Resource)</a> - Constructor for class com.djrapitops.plan.gathering.statistics.<a href="com/djrapitops/plan/gathering/statistics/LegacyStatisticTranslator.html" title="class in com.djrapitops.plan.gathering.statistics">LegacyStatisticTranslator</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/web/resolver/request/URIPath.html#length()" class="member-name-link">length()</a> - Method in class com.djrapitops.plan.delivery.web.resolver.request.<a href="com/djrapitops/plan/delivery/web/resolver/request/URIPath.html" title="class in com.djrapitops.plan.delivery.web.resolver.request">URIPath</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/exceptions/LibraryLoadingException.html" class="type-name-link" title="class in com.djrapitops.plan.exceptions">LibraryLoadingException</a> - Exception Class in <a href="com/djrapitops/plan/exceptions/package-summary.html">com.djrapitops.plan.exceptions</a></dt>
@@ -15759,6 +15769,14 @@ PATCHING to CLOSED (Database closed prematurely)</div>
 <dd>
 <div class="block">Creates an instance of a <code>MinecraftStatistics</code> record class.</div>
 </dd>
+<dt><a href="com/djrapitops/plan/gathering/statistics/MinecraftStatisticsParser.html" class="type-name-link" title="class in com.djrapitops.plan.gathering.statistics">MinecraftStatisticsParser</a> - Class in <a href="com/djrapitops/plan/gathering/statistics/package-summary.html">com.djrapitops.plan.gathering.statistics</a></dt>
+<dd>
+<div class="block">Statistics parser that also maps the keys to newer ones.</div>
+</dd>
+<dt><a href="com/djrapitops/plan/gathering/statistics/MinecraftStatisticsParser.html#%3Cinit%3E(com.djrapitops.plan.gathering.statistics.LegacyStatisticTranslator)" class="member-name-link">MinecraftStatisticsParser(LegacyStatisticTranslator)</a> - Constructor for class com.djrapitops.plan.gathering.statistics.<a href="com/djrapitops/plan/gathering/statistics/MinecraftStatisticsParser.html" title="class in com.djrapitops.plan.gathering.statistics">MinecraftStatisticsParser</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/statistics/MinecraftStatisticsParser.html#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles)" class="member-name-link">MinecraftStatisticsParser(PlanFiles)</a> - Constructor for class com.djrapitops.plan.gathering.statistics.<a href="com/djrapitops/plan/gathering/statistics/MinecraftStatisticsParser.html" title="class in com.djrapitops.plan.gathering.statistics">MinecraftStatisticsParser</a></dt>
+<dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/delivery/domain/mutators/TPSMutator.html#minFreeDisk()" class="member-name-link">minFreeDisk()</a> - Method in class com.djrapitops.plan.delivery.domain.mutators.<a href="com/djrapitops/plan/delivery/domain/mutators/TPSMutator.html" title="class in com.djrapitops.plan.delivery.domain.mutators">TPSMutator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/queries/objects/TPSQueries.html#minFreeDisk(long,long,com.djrapitops.plan.identification.ServerUUID)" class="member-name-link">minFreeDisk(long, long, ServerUUID)</a> - Static method in class com.djrapitops.plan.storage.database.queries.objects.<a href="com/djrapitops/plan/storage/database/queries/objects/TPSQueries.html" title="class in com.djrapitops.plan.storage.database.queries.objects">TPSQueries</a></dt>
@@ -17406,6 +17424,8 @@ player.</div>
 <dt><a href="com/djrapitops/plan/settings/config/ConfigNode.html#parent" class="member-name-link">parent</a> - Variable in class com.djrapitops.plan.settings.config.<a href="com/djrapitops/plan/settings/config/ConfigNode.html" title="class in com.djrapitops.plan.settings.config">ConfigNode</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/gathering/domain/MinecraftStatistics.html#parse(com.djrapitops.plan.storage.file.Resource)" class="member-name-link">parse(Resource)</a> - Static method in record class com.djrapitops.plan.gathering.domain.<a href="com/djrapitops/plan/gathering/domain/MinecraftStatistics.html" title="class in com.djrapitops.plan.gathering.domain">MinecraftStatistics</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/statistics/MinecraftStatisticsParser.html#parse(com.djrapitops.plan.storage.file.Resource)" class="member-name-link">parse(Resource)</a> - Method in class com.djrapitops.plan.gathering.statistics.<a href="com/djrapitops/plan/gathering/statistics/MinecraftStatisticsParser.html" title="class in com.djrapitops.plan.gathering.statistics">MinecraftStatisticsParser</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/queries/filter/filters/PluginBooleanGroupFilter.PluginBooleanOption.html#parse(java.lang.String)" class="member-name-link">parse(String)</a> - Static method in record class com.djrapitops.plan.storage.database.queries.filter.filters.<a href="com/djrapitops/plan/storage/database/queries/filter/filters/PluginBooleanGroupFilter.PluginBooleanOption.html" title="class in com.djrapitops.plan.storage.database.queries.filter.filters">PluginBooleanGroupFilter.PluginBooleanOption</a></dt>
 <dd>&nbsp;</dd>
@@ -22584,7 +22604,7 @@ without a reload.</div>
 <dd>
 <div class="block">Cache statistic ids for insert/update.</div>
 </dd>
-<dt><a href="com/djrapitops/plan/gathering/StatisticsIdCache.html#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.storage.database.DBSystem,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger)" class="member-name-link">StatisticsIdCache(PlanFiles, DBSystem, PluginLogger, ErrorLogger)</a> - Constructor for class com.djrapitops.plan.gathering.<a href="com/djrapitops/plan/gathering/StatisticsIdCache.html" title="class in com.djrapitops.plan.gathering">StatisticsIdCache</a></dt>
+<dt><a href="com/djrapitops/plan/gathering/StatisticsIdCache.html#%3Cinit%3E(com.djrapitops.plan.storage.file.PlanFiles,com.djrapitops.plan.storage.database.DBSystem,net.playeranalytics.plugin.server.PluginLogger,com.djrapitops.plan.utilities.logging.ErrorLogger,com.djrapitops.plan.gathering.statistics.MinecraftStatisticsParser)" class="member-name-link">StatisticsIdCache(PlanFiles, DBSystem, PluginLogger, ErrorLogger, MinecraftStatisticsParser)</a> - Constructor for class com.djrapitops.plan.gathering.<a href="com/djrapitops/plan/gathering/StatisticsIdCache.html" title="class in com.djrapitops.plan.gathering">StatisticsIdCache</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/storage/database/queries/objects/lookup/LookupTableQueries.html#statisticsLookupTable()" class="member-name-link">statisticsLookupTable()</a> - Static method in class com.djrapitops.plan.storage.database.queries.objects.lookup.<a href="com/djrapitops/plan/storage/database/queries/objects/lookup/LookupTableQueries.html" title="class in com.djrapitops.plan.storage.database.queries.objects.lookup">LookupTableQueries</a></dt>
 <dd>&nbsp;</dd>
@@ -24822,6 +24842,8 @@ without a reload.</div>
 <div class="block">Removes plan_transfer table, used for transferring html in the database.</div>
 </dd>
 <dt><a href="com/djrapitops/plan/storage/database/transactions/patches/TransferTableRemovalPatch.html#%3Cinit%3E()" class="member-name-link">TransferTableRemovalPatch()</a> - Constructor for class com.djrapitops.plan.storage.database.transactions.patches.<a href="com/djrapitops/plan/storage/database/transactions/patches/TransferTableRemovalPatch.html" title="class in com.djrapitops.plan.storage.database.transactions.patches">TransferTableRemovalPatch</a></dt>
+<dd>&nbsp;</dd>
+<dt><a href="com/djrapitops/plan/gathering/statistics/LegacyStatisticTranslator.html#translate(java.lang.String)" class="member-name-link">translate(String)</a> - Method in class com.djrapitops.plan.gathering.statistics.<a href="com/djrapitops/plan/gathering/statistics/LegacyStatisticTranslator.html" title="class in com.djrapitops.plan.gathering.statistics">LegacyStatisticTranslator</a></dt>
 <dd>&nbsp;</dd>
 <dt><a href="com/djrapitops/plan/component/ComponentConverter.html#translate(java.lang.String,char,char)" class="member-name-link">translate(String, char, char)</a> - Method in interface com.djrapitops.plan.component.<a href="com/djrapitops/plan/component/ComponentConverter.html" title="interface in com.djrapitops.plan.component">ComponentConverter</a></dt>
 <dd>&nbsp;</dd>
