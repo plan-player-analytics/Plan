@@ -1,0 +1,10 @@
+[
+  "stat.diveOneCm",
+  "stat.startGame",
+  "stat.createWorld",
+  "stat.loadWorld",
+  "stat.joinMultiplayer",
+  "stat.treasureFished",
+  "stat.junkFished",
+  "stat.pickup"
+]

@@ -19,6 +19,7 @@ package com.djrapitops.plan.gathering;
 import com.djrapitops.plan.SubSystem;
 import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.gathering.domain.MinecraftStatistics;
+import com.djrapitops.plan.gathering.statistics.MinecraftStatisticsParser;
 import com.djrapitops.plan.identification.ServerUUID;
 import com.djrapitops.plan.storage.database.DBSystem;
 import com.djrapitops.plan.storage.database.queries.objects.StatisticsQueries;
@@ -49,15 +50,17 @@ public class StatisticsIdCache implements SubSystem {
     private final DBSystem dbSystem;
     private final PluginLogger logger;
     private final ErrorLogger errorLogger;
+    private final MinecraftStatisticsParser parser;
 
     private Map<String, Integer> idByStatisticName = new HashMap<>();
 
     @Inject
-    public StatisticsIdCache(PlanFiles files, DBSystem dbSystem, PluginLogger logger, ErrorLogger errorLogger) {
+    public StatisticsIdCache(PlanFiles files, DBSystem dbSystem, PluginLogger logger, ErrorLogger errorLogger, MinecraftStatisticsParser parser) {
         this.files = files;
         this.dbSystem = dbSystem;
         this.logger = logger;
         this.errorLogger = errorLogger;
+        this.parser = parser;
     }
 
     @Override
@@ -89,7 +92,7 @@ public class StatisticsIdCache implements SubSystem {
         files.getPlayerStatisticsFile(playerUUID)
                 .ifPresent(statistics -> {
                     try {
-                        Map<String, Integer> parsed = MinecraftStatistics.parse(statistics);
+                        Map<String, Integer> parsed = parser.parse(statistics);
                         Set<String> missing = missingKeys(parsed.keySet());
                         if (!missing.isEmpty()) {
                             dbSystem.getDatabase().executeTransaction(new StoreMinecraftStatisticsTransaction(missing)).join();

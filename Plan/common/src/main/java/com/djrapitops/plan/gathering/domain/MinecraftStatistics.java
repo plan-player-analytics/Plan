@@ -36,7 +36,7 @@ import static com.djrapitops.plan.storage.database.sql.tables.StatisticTable.MAX
 public record MinecraftStatistics(UUID playerUUID, ServerUUID serverUUID, Map<Integer, Integer> valuesById) {
 
     public static Map<String, Integer> parse(Resource statsFile) throws IOException {
-        var json = statsFile.asJson();
+        JsonElement json = statsFile.asJson();
         // Support both new format with "stats" wrapper and old flat format
         JsonElement stats;
         if (json.isJsonObject() && json.getAsJsonObject().has("stats")) {

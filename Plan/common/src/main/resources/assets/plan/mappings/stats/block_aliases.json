@@ -1,0 +1,419 @@
+{
+  "source": "Minecraft Java Edition 1.12.2",
+  "target": "Minecraft Java Edition 26.1",
+  "purpose": "Translate legacy block registry identifiers used as suffixes in stat.mineBlock.<block> keys.",
+  "input_format": "minecraft:<legacy_block_id>",
+  "output_format": "minecraft:<modern_block_id>",
+  "mappings": {
+    "grass": "grass_block",
+    "mob_spawner": "spawner",
+    "portal": "nether_portal",
+    "lit_furnace": "furnace",
+    "lit_redstone_ore": "redstone_ore",
+    "unlit_redstone_torch": "redstone_torch",
+    "lit_redstone_lamp": "redstone_lamp",
+    "standing_sign": "oak_sign",
+    "wall_sign": "oak_wall_sign",
+    "standing_banner": "white_banner",
+    "wall_banner": "white_wall_banner",
+    "reeds": "sugar_cane",
+    "melon_block": "melon",
+    "web": "cobweb",
+    "grass_path": "dirt_path",
+    "end_bricks": "end_stone_bricks",
+    "slime": "slime_block",
+    "snow_layer": "snow",
+    "stonebrick": "stone_bricks",
+    "hard_clay": "terracotta",
+    "hardened_clay": "terracotta",
+    "stained_hardened_clay": "white_terracotta",
+    "noteblock": "note_block",
+    "golden_rail": "powered_rail",
+    "double_stone_slab": "smooth_stone_slab",
+    "double_wooden_slab": "oak_slab",
+    "bed": "white_bed",
+    "stone_pressureplate": "stone_pressure_plate",
+    "wooden_pressure_plate": "oak_pressure_plate",
+    "wooden_button": "oak_button",
+    "wooden_door": "oak_door",
+    "wooden_stairs": "oak_stairs",
+    "wooden_slab": "oak_slab",
+    "wooden_fence": "oak_fence",
+    "wooden_sign": "oak_sign",
+    "fence_gate": "oak_fence_gate",
+    "trapdoor": "oak_trapdoor",
+    "stone_stairs": "cobblestone_stairs",
+    "normal_stone_stairs": "stone_stairs",
+    "end_brick_stairs": "end_stone_brick_stairs",
+    "end_brick_slab": "end_stone_brick_slab",
+    "end_brick_wall": "end_stone_brick_wall",
+    "prismarine_bricks_stairs": "prismarine_brick_stairs",
+    "prismarine_bricks_slab": "prismarine_brick_slab",
+    "daylight_detector_inverted": "daylight_detector",
+    "unpowered_repeater": "repeater",
+    "powered_repeater": "repeater",
+    "unpowered_comparator": "comparator",
+    "powered_comparator": "comparator",
+    "snow": "snow_block",
+    "pumpkin": "carved_pumpkin",
+    "lit_pumpkin": "jack_o_lantern",
+    "deadbush": "dead_bush",
+    "waterlily": "lily_pad",
+    "ender_crystal": "end_crystal",
+    "quartz_ore": "nether_quartz_ore",
+    "nether_brick": "nether_bricks",
+    "red_nether_brick": "red_nether_bricks",
+    "magma": "magma_block",
+    "silver_glazed_terracotta": "light_gray_glazed_terracotta",
+    "silver_shulker_box": "light_gray_shulker_box",
+    "purpur_double_slab": "purpur_slab",
+    "beetroot": "beetroots",
+    "flowing_water": "water",
+    "flowing_lava": "lava",
+    "yellow_flower": "dandelion"
+  },
+  "ambiguous": {
+    "stone": {
+      "possible_targets": [
+        "stone",
+        "granite",
+        "polished_granite",
+        "diorite",
+        "polished_diorite",
+        "andesite",
+        "polished_andesite"
+      ],
+      "reason": "1.12.2 stone variants shared one block ID and were distinguished by metadata. The mined statistic is aggregated and cannot be split."
+    },
+    "dirt": {
+      "possible_targets": [
+        "dirt",
+        "coarse_dirt",
+        "podzol"
+      ],
+      "reason": "Dirt variants shared one block ID and were distinguished by metadata."
+    },
+    "planks": {
+      "possible_targets": [
+        "oak_planks",
+        "spruce_planks",
+        "birch_planks",
+        "jungle_planks",
+        "acacia_planks",
+        "dark_oak_planks"
+      ],
+      "reason": "Wood plank variants shared one block ID and were distinguished by metadata."
+    },
+    "sapling": {
+      "possible_targets": [
+        "oak_sapling",
+        "spruce_sapling",
+        "birch_sapling",
+        "jungle_sapling",
+        "acacia_sapling",
+        "dark_oak_sapling"
+      ],
+      "reason": "Sapling variants shared one block ID and were distinguished by metadata."
+    },
+    "sand": {
+      "possible_targets": [
+        "sand",
+        "red_sand"
+      ],
+      "reason": "Sand variants shared one block ID and were distinguished by metadata."
+    },
+    "log": {
+      "possible_targets": [
+        "oak_log",
+        "spruce_log",
+        "birch_log",
+        "jungle_log",
+        "oak_wood",
+        "spruce_wood",
+        "birch_wood",
+        "jungle_wood"
+      ],
+      "reason": "Log variants shared one block ID; bark-only variants also became separate wood blocks."
+    },
+    "log2": {
+      "possible_targets": [
+        "acacia_log",
+        "dark_oak_log",
+        "acacia_wood",
+        "dark_oak_wood"
+      ],
+      "reason": "Log2 variants shared one block ID and were distinguished by metadata."
+    },
+    "leaves": {
+      "possible_targets": [
+        "oak_leaves",
+        "spruce_leaves",
+        "birch_leaves",
+        "jungle_leaves"
+      ],
+      "reason": "Leaf variants shared one block ID and were distinguished by metadata."
+    },
+    "leaves2": {
+      "possible_targets": [
+        "acacia_leaves",
+        "dark_oak_leaves"
+      ],
+      "reason": "Leaf variants shared one block ID and were distinguished by metadata."
+    },
+    "tallgrass": {
+      "possible_targets": [
+        "short_grass",
+        "fern"
+      ],
+      "reason": "Tall grass and fern variants shared one block ID and were distinguished by metadata."
+    },
+    "red_flower": {
+      "possible_targets": [
+        "poppy",
+        "blue_orchid",
+        "allium",
+        "azure_bluet",
+        "red_tulip",
+        "orange_tulip",
+        "white_tulip",
+        "pink_tulip",
+        "oxeye_daisy"
+      ],
+      "reason": "Multiple flower types shared one block ID and were distinguished by metadata."
+    },
+    "monster_egg": {
+      "possible_targets": [
+        "infested_stone",
+        "infested_cobblestone",
+        "infested_stone_bricks",
+        "infested_mossy_stone_bricks",
+        "infested_cracked_stone_bricks",
+        "infested_chiseled_stone_bricks"
+      ],
+      "reason": "Infested block variants shared one block ID and were distinguished by metadata."
+    },
+    "stone_slab": {
+      "possible_targets": [
+        "smooth_stone_slab",
+        "sandstone_slab",
+        "petrified_oak_slab",
+        "cobblestone_slab",
+        "brick_slab",
+        "stone_brick_slab",
+        "nether_brick_slab",
+        "quartz_slab"
+      ],
+      "reason": "Slab material variants shared one block ID and were distinguished by metadata; double slabs used a separate legacy ID."
+    },
+    "wooden_slab": {
+      "possible_targets": [
+        "oak_slab",
+        "spruce_slab",
+        "birch_slab",
+        "jungle_slab",
+        "acacia_slab",
+        "dark_oak_slab"
+      ],
+      "reason": "Wood slab variants shared one block ID and were distinguished by metadata."
+    },
+    "wool": {
+      "possible_targets": [
+        "white_wool",
+        "orange_wool",
+        "magenta_wool",
+        "light_blue_wool",
+        "yellow_wool",
+        "lime_wool",
+        "pink_wool",
+        "gray_wool",
+        "light_gray_wool",
+        "cyan_wool",
+        "purple_wool",
+        "blue_wool",
+        "brown_wool",
+        "green_wool",
+        "red_wool",
+        "black_wool"
+      ],
+      "reason": "Wool colors shared one block ID and were distinguished by metadata."
+    },
+    "carpet": {
+      "possible_targets": [
+        "white_carpet",
+        "orange_carpet",
+        "magenta_carpet",
+        "light_blue_carpet",
+        "yellow_carpet",
+        "lime_carpet",
+        "pink_carpet",
+        "gray_carpet",
+        "light_gray_carpet",
+        "cyan_carpet",
+        "purple_carpet",
+        "blue_carpet",
+        "brown_carpet",
+        "green_carpet",
+        "red_carpet",
+        "black_carpet"
+      ],
+      "reason": "Carpet colors shared one block ID and were distinguished by metadata."
+    },
+    "stained_glass": {
+      "possible_targets": [
+        "white_stained_glass",
+        "orange_stained_glass",
+        "magenta_stained_glass",
+        "light_blue_stained_glass",
+        "yellow_stained_glass",
+        "lime_stained_glass",
+        "pink_stained_glass",
+        "gray_stained_glass",
+        "light_gray_stained_glass",
+        "cyan_stained_glass",
+        "purple_stained_glass",
+        "blue_stained_glass",
+        "brown_stained_glass",
+        "green_stained_glass",
+        "red_stained_glass",
+        "black_stained_glass"
+      ],
+      "reason": "Stained-glass colors shared one block ID and were distinguished by metadata."
+    },
+    "stained_glass_pane": {
+      "possible_targets": [
+        "white_stained_glass_pane",
+        "orange_stained_glass_pane",
+        "magenta_stained_glass_pane",
+        "light_blue_stained_glass_pane",
+        "yellow_stained_glass_pane",
+        "lime_stained_glass_pane",
+        "pink_stained_glass_pane",
+        "gray_stained_glass_pane",
+        "light_gray_stained_glass_pane",
+        "cyan_stained_glass_pane",
+        "purple_stained_glass_pane",
+        "blue_stained_glass_pane",
+        "brown_stained_glass_pane",
+        "green_stained_glass_pane",
+        "red_stained_glass_pane",
+        "black_stained_glass_pane"
+      ],
+      "reason": "Stained-glass pane colors shared one block ID and were distinguished by metadata."
+    },
+    "concrete": {
+      "possible_targets": [
+        "white_concrete",
+        "orange_concrete",
+        "magenta_concrete",
+        "light_blue_concrete",
+        "yellow_concrete",
+        "lime_concrete",
+        "pink_concrete",
+        "gray_concrete",
+        "light_gray_concrete",
+        "cyan_concrete",
+        "purple_concrete",
+        "blue_concrete",
+        "brown_concrete",
+        "green_concrete",
+        "red_concrete",
+        "black_concrete"
+      ],
+      "reason": "Concrete colors shared one block ID and were distinguished by metadata."
+    },
+    "concrete_powder": {
+      "possible_targets": [
+        "white_concrete_powder",
+        "orange_concrete_powder",
+        "magenta_concrete_powder",
+        "light_blue_concrete_powder",
+        "yellow_concrete_powder",
+        "lime_concrete_powder",
+        "pink_concrete_powder",
+        "gray_concrete_powder",
+        "light_gray_concrete_powder",
+        "cyan_concrete_powder",
+        "purple_concrete_powder",
+        "blue_concrete_powder",
+        "brown_concrete_powder",
+        "green_concrete_powder",
+        "red_concrete_powder",
+        "black_concrete_powder"
+      ],
+      "reason": "Concrete-powder colors shared one block ID and were distinguished by metadata."
+    },
+    "stained_hardened_clay": {
+      "possible_targets": [
+        "white_terracotta",
+        "orange_terracotta",
+        "magenta_terracotta",
+        "light_blue_terracotta",
+        "yellow_terracotta",
+        "lime_terracotta",
+        "pink_terracotta",
+        "gray_terracotta",
+        "light_gray_terracotta",
+        "cyan_terracotta",
+        "purple_terracotta",
+        "blue_terracotta",
+        "brown_terracotta",
+        "green_terracotta",
+        "red_terracotta",
+        "black_terracotta"
+      ],
+      "reason": "Terracotta colors shared one block ID and were distinguished by metadata."
+    },
+    "prismarine": {
+      "possible_targets": [
+        "prismarine",
+        "prismarine_bricks",
+        "dark_prismarine"
+      ],
+      "reason": "Prismarine variants shared one block ID and were distinguished by metadata."
+    },
+    "red_sandstone": {
+      "possible_targets": [
+        "red_sandstone",
+        "chiseled_red_sandstone",
+        "cut_red_sandstone"
+      ],
+      "reason": "Red sandstone variants shared one block ID and were distinguished by metadata."
+    },
+    "sandstone": {
+      "possible_targets": [
+        "sandstone",
+        "chiseled_sandstone",
+        "cut_sandstone"
+      ],
+      "reason": "Sandstone variants shared one block ID and were distinguished by metadata."
+    },
+    "quartz_block": {
+      "possible_targets": [
+        "quartz_block",
+        "chiseled_quartz_block",
+        "quartz_pillar"
+      ],
+      "reason": "Quartz block variants shared one block ID and were distinguished by metadata."
+    }
+  },
+  "handling": {
+    "lookup_order": [
+      "Check mappings for an exact legacy block ID.",
+      "If absent, check ambiguous.",
+      "If neither exists, preserve the namespaced identifier unchanged."
+    ],
+    "ambiguous_policy": "Do not choose among multiple modern blocks. Preserve or report the legacy aggregate statistic because the old metadata variant is not encoded in the statistic key.",
+    "namespace_policy": "Map only the path after minecraft:. Preserve non-minecraft namespaces unchanged.",
+    "statistic_context": "Use this mapping only for the suffix of stat.mineBlock.<block-id>."
+  },
+  "notes": [
+    "Minecraft 1.12.2 often stored several block variants under one block ID and distinguished them by metadata. Statistics keyed by block ID aggregate those variants, so a one-to-many split cannot be reconstructed from the key alone.",
+    "This mapping is for statistic keys, not block-state or world-chunk conversion.",
+    "The direct mappings are a conservative set of legacy identifier renames and should be checked against the software's actual 1.12.2 StatList keys.",
+    "For a legacy block that has one modern equivalent but appears in ambiguous for historical context, the ambiguous entry takes precedence unless the implementation explicitly treats a single possible_targets entry as a safe alias."
+  ],
+  "references": [
+    "https://minecraft.wiki/w/Java_Edition_Flattening",
+    "https://minecraft.wiki/w/Java_Edition_pre-flattening_data_values"
+  ]
+}
