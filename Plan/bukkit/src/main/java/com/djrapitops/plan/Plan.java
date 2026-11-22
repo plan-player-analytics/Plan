@@ -154,8 +154,9 @@ public class Plan extends JavaPlugin implements PlanPlugin {
 
     @Override
     public void onDisable() {
-        storeSessionsOnShutdown();
+        if (system != null) system.getApiServices().disableExtensionDataUpdates();
         cancelAllTasks();
+        storeSessionsOnShutdown();
         if (component != null) unregisterPlaceholders(component.placeholders());
         if (system != null) system.disable();
 
