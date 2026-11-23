@@ -84,6 +84,8 @@ public class CreateIndexTransaction extends Transaction {
                 SessionsTable.USER_ID, SessionsTable.SESSION_START);
         createIndex(WorldTimesTable.TABLE_NAME, "plan_world_times_user_server_world",
                 WorldTimesTable.USER_ID, WorldTimesTable.SERVER_ID, WorldTimesTable.WORLD_ID);
+        createIndex(StatisticValueTable.TABLE_NAME, "plan_statistic_value_user_server_statistic",
+                StatisticValueTable.USER_ID, StatisticValueTable.SERVER_ID, StatisticValueTable.STATISTIC_ID);
     }
 
     private void createIndex(String tableName, String indexName, String... indexedColumns) {
