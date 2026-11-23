@@ -18,9 +18,7 @@ package com.djrapitops.plan.gathering.listeners.bukkit;
 
 import com.djrapitops.plan.delivery.formatting.EntityNameFormatter;
 import com.djrapitops.plan.delivery.formatting.ItemNameFormatter;
-import com.djrapitops.plan.gathering.cache.ExplosionCache;
-import com.djrapitops.plan.gathering.cache.ExplosionMetadata;
-import com.djrapitops.plan.gathering.cache.SessionCache;
+import com.djrapitops.plan.gathering.cache.*;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.identification.ServerInfo;
@@ -34,15 +32,15 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDamageByBlockEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.projectiles.ProjectileSource;
 
@@ -61,18 +59,21 @@ public class DeathEventListener implements Listener {
     private final Processing processing;
     private final ErrorLogger errorLogger;
     private final ExplosionCache explosionCache;
+    private final FallingBlockCache fallingBlockCache;
 
     @Inject
     public DeathEventListener(
             ServerInfo serverInfo,
             Processing processing,
             ErrorLogger errorLogger,
-            ExplosionCache explosionCache
+            ExplosionCache explosionCache,
+            FallingBlockCache fallingBlockCache
     ) {
         this.serverInfo = serverInfo;
         this.processing = processing;
         this.errorLogger = errorLogger;
         this.explosionCache = explosionCache;
+        this.fallingBlockCache = fallingBlockCache;
     }
 
     @EventHandler(priority = EventPriority.MONITOR)
@@ -127,9 +128,79 @@ public class DeathEventListener implements Listener {
         }
     }
 
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onGravityBlockPlace(BlockPlaceEvent event) {
+        Block block = event.getBlockPlaced();
+        if (isGravityBlockType(block.getType().name())) {
+            fallingBlockCache.recordTrigger(
+                    block.getWorld().getUID().toString(),
+                    block.getX(),
+                    block.getY(),
+                    block.getZ(),
+                    event.getPlayer().getUniqueId()
+            );
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onBlockBreak(BlockBreakEvent event) {
+        Block block = event.getBlock();
+        boolean isGravity = isGravityBlockType(block.getType().name());
+        boolean hasGravityAbove = isGravityBlockType(block.getRelative(BlockFace.UP).getType().name());
+        if (!isGravity && !hasGravityAbove) return;
+
+        String worldId = block.getWorld().getUID().toString();
+        if (isGravity) {
+            fallingBlockCache.invalidateLandedBlock(worldId, block.getX(), block.getY(), block.getZ());
+        }
+        if (hasGravityAbove) {
+            fallingBlockCache.recordTrigger(
+                    worldId,
+                    block.getX(),
+                    block.getY(),
+                    block.getZ(),
+                    event.getPlayer().getUniqueId()
+            );
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onFallingBlockChange(EntityChangeBlockEvent event) {
+        if (!(event.getEntity() instanceof FallingBlock fallingBlock)) return;
+
+        Block block = event.getBlock();
+        String worldId = block.getWorld().getUID().toString();
+        if (event.getTo() == Material.AIR) {
+            fallingBlockCache.trackFallingBlock(
+                    fallingBlock.getUniqueId(),
+                    worldId,
+                    block.getX(),
+                    block.getY(),
+                    block.getZ(),
+                    block.getType().name()
+            );
+        } else {
+            fallingBlockCache.markBlockLanded(fallingBlock.getUniqueId(), worldId, block.getX(), block.getY(), block.getZ());
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    public void onSuffocationDamage(EntityDamageEvent event) {
+        if (event.getCause() != EntityDamageEvent.DamageCause.SUFFOCATION) return;
+        // Reading from the cache refreshes the expireAfterAccess timer as long as the entity is suffocating
+        getSuffocationBlock(event.getEntity());
+    }
+
     private boolean isExplodingBlockType(String typeName) {
         // BED_BLOCK is used prior to 1.12, color-prefixed _BED materials in 1.12+, RESPAWN_ANCHOR in 1.16+
         return typeName.endsWith("_BED") || "BED_BLOCK".equals(typeName) || "RESPAWN_ANCHOR".equals(typeName);
+    }
+
+    private boolean isGravityBlockType(String typeName) {
+        return "SAND".equals(typeName)
+                || "RED_SAND".equals(typeName)
+                || "GRAVEL".equals(typeName)
+                || typeName.endsWith("_CONCRETE_POWDER");
     }
 
     private PlayerKill.Killer getKiller(Player killer) {
@@ -144,6 +215,9 @@ public class DeathEventListener implements Listener {
         EntityDamageEvent entityDamageEvent = dead.getLastDamageCause();
         if (entityDamageEvent instanceof EntityDamageByBlockEvent) {
             return getBlockExplosionKiller(dead, entityDamageEvent);
+        }
+        if (entityDamageEvent != null && entityDamageEvent.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION) {
+            return getSuffocationKiller(dead);
         }
 
         if (!(entityDamageEvent instanceof EntityDamageByEntityEvent)) {
@@ -170,6 +244,9 @@ public class DeathEventListener implements Listener {
         if (entityDamageEvent == null) return "Unknown (No damage cause defined)";
         if (entityDamageEvent instanceof EntityDamageByBlockEvent) {
             return getBlockExplosionWeapon(dead);
+        }
+        if (entityDamageEvent.getCause() == EntityDamageEvent.DamageCause.SUFFOCATION) {
+            return getSuffocationWeapon(dead);
         }
 
         Entity killer = ((EntityDamageByEntityEvent) entityDamageEvent).getDamager();
@@ -254,6 +331,29 @@ public class DeathEventListener implements Listener {
             }
         }
         return Optional.empty();
+    }
+
+    private Optional<FallingBlockMetadata> getSuffocationBlock(Entity dead) {
+        Location loc = (dead instanceof LivingEntity living) ? living.getEyeLocation() : dead.getLocation();
+        if (loc.getWorld() == null) return Optional.empty();
+        return fallingBlockCache.getLandedBlock(
+                loc.getWorld().getUID().toString(),
+                loc.getBlockX(),
+                loc.getBlockY(),
+                loc.getBlockZ()
+        );
+    }
+
+    private Optional<Player> getSuffocationKiller(Entity dead) {
+        return getSuffocationBlock(dead)
+                .map(FallingBlockMetadata::playerUUID)
+                .map(Bukkit::getPlayer);
+    }
+
+    private String getSuffocationWeapon(Entity dead) {
+        return getSuffocationBlock(dead)
+                .map(meta -> new ItemNameFormatter().apply(meta.blockName()))
+                .orElse("Suffocation");
     }
 }
 
