@@ -36,7 +36,7 @@ jobs:
             -   name: Build the project
                 run: |
                     cd Plan
-                    ./gradlew :common:build :common:compileTestJava :common:compileTestFixturesJava --no-daemon
+                    ./gradlew :common:build :common:compileTestJava :common:compileTestFixturesJava -x test --no-daemon
 
             -   name: Run ContributorsScreenshotUtility
                 env:
