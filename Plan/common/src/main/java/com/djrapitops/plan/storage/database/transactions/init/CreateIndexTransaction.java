@@ -19,6 +19,7 @@ package com.djrapitops.plan.storage.database.transactions.init;
 import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.queries.schema.MySQLSchemaQueries;
 import com.djrapitops.plan.storage.database.sql.tables.*;
+import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionGroupsTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionPlayerTableValueTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionServerTableValueTable;
 import com.djrapitops.plan.storage.database.transactions.Transaction;
@@ -66,6 +67,9 @@ public class CreateIndexTransaction extends Transaction {
         createIndex(ExtensionServerTableValueTable.TABLE_NAME, "plan_extension_server_table_value_server_index",
                 ExtensionServerTableValueTable.TABLE_ID,
                 ExtensionServerTableValueTable.SERVER_UUID);
+        createIndex(ExtensionGroupsTable.TABLE_NAME, "plan_extension_groups_provider_user_index",
+                ExtensionGroupsTable.PROVIDER_ID,
+                ExtensionGroupsTable.USER_UUID);
 
         createIndex(UserInfoTable.TABLE_NAME, "plan_user_info_server_user",
                 UserInfoTable.SERVER_ID,

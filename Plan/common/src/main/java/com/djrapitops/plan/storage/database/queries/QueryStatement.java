@@ -36,12 +36,20 @@ public abstract class QueryStatement<T> implements Query<T> {
     private final int fetchSize;
 
     protected QueryStatement(String sql) {
-        this(sql, 10);
+        this(clean(sql), 10);
     }
 
     protected QueryStatement(String sql, int fetchSize) {
         this.sql = sql;
         this.fetchSize = fetchSize;
+    }
+
+    private static String clean(String sql) {
+        // SQLite doesn't like if statement is wrapped
+        if (sql.startsWith("(") && sql.endsWith(")")) {
+            return sql.substring(1, sql.length() - 1);
+        }
+        return sql;
     }
 
     @Override

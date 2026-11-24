@@ -16,15 +16,17 @@
  */
 package com.djrapitops.plan.extension.implementation.storage.transactions.results;
 
+import com.djrapitops.plan.exceptions.database.DBOpException;
 import com.djrapitops.plan.extension.implementation.ProviderInformation;
 import com.djrapitops.plan.extension.implementation.providers.Parameters;
 import com.djrapitops.plan.identification.ServerUUID;
+import com.djrapitops.plan.storage.database.DBType;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionGroupsTable;
 import com.djrapitops.plan.storage.database.sql.tables.extension.ExtensionProviderTable;
-import com.djrapitops.plan.storage.database.transactions.ExecStatement;
-import com.djrapitops.plan.storage.database.transactions.Executable;
+import com.djrapitops.plan.storage.database.transactions.ExecBatchStatement;
 import com.djrapitops.plan.storage.database.transactions.ThrowawayTransaction;
 import org.apache.commons.lang3.StringUtils;
+import org.jspecify.annotations.NonNull;
 
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
@@ -56,40 +58,52 @@ public class StorePlayerGroupsResultTransaction extends ThrowawayTransaction {
 
     @Override
     protected void performOperations() {
-        execute(deleteOldValues());
-        for (String group : value) {
-            String groupName = StringUtils.truncate(group, 50);
-            execute(insertGroup(groupName));
-        }
+        Integer providerId = getProviderId();
+        lockValues(providerId);
+        deleteOldValues(providerId);
+        insertGroups(providerId);
     }
 
-    private Executable deleteOldValues() {
+    private void lockValues(Integer providerId) {
+        if (dbType == DBType.SQLITE) return;
+
+        query(db -> db.queryOptional(SELECT + ExtensionGroupsTable.ID + FROM + ExtensionGroupsTable.TABLE_NAME +
+                        WHERE + ExtensionGroupsTable.PROVIDER_ID + "=?" +
+                        AND + ExtensionGroupsTable.USER_UUID + "=?" +
+                        lockForUpdate(),
+                row -> null, providerId, playerUUID));
+    }
+
+    private void deleteOldValues(Integer providerId) {
         String sql = DELETE_FROM + ExtensionGroupsTable.TABLE_NAME +
-                WHERE + ExtensionGroupsTable.USER_UUID + "=?" +
-                AND + ExtensionGroupsTable.PROVIDER_ID + "=" + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID;
-
-        return new ExecStatement(sql) {
-            @Override
-            public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, playerUUID.toString());
-                ExtensionProviderTable.set3PluginValuesToStatement(statement, 2, providerName, pluginName, serverUUID);
-            }
-        };
+                WHERE + ExtensionGroupsTable.PROVIDER_ID + "=?" +
+                AND + ExtensionGroupsTable.USER_UUID + "=?";
+        execute(sql, providerId, playerUUID);
     }
 
-    private Executable insertGroup(String group) {
+    private void insertGroups(Integer providerId) {
         String sql = INSERT_INTO + ExtensionGroupsTable.TABLE_NAME + "(" +
                 ExtensionGroupsTable.GROUP_NAME + "," +
                 ExtensionGroupsTable.USER_UUID + "," +
                 ExtensionGroupsTable.PROVIDER_ID +
-                ") VALUES (?,?," + ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID + ")";
-        return new ExecStatement(sql) {
+                ") VALUES (?,?,?)";
+        execute(new ExecBatchStatement(sql) {
             @Override
             public void prepare(PreparedStatement statement) throws SQLException {
-                statement.setString(1, group);
-                statement.setString(2, playerUUID.toString());
-                ExtensionProviderTable.set3PluginValuesToStatement(statement, 3, providerName, pluginName, serverUUID);
+                statement.setInt(3, providerId);
+                for (String group : value) {
+                    String groupName = StringUtils.truncate(group, 50);
+                    statement.setString(1, groupName);
+                    statement.setString(2, playerUUID.toString());
+                    statement.addBatch();
+                }
             }
-        };
+        });
+    }
+
+    private @NonNull Integer getProviderId() {
+        return query(db -> db.queryOptional(ExtensionProviderTable.STATEMENT_SELECT_PROVIDER_ID,
+                row -> row.getInt(1), providerName, pluginName, serverUUID))
+                .orElseThrow(() -> new DBOpException("No id found for provider " + pluginName + "." + providerName));
     }
 }
