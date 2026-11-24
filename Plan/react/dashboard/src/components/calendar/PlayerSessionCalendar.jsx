@@ -74,7 +74,11 @@ const PlayerSessionCalendar = ({ series, firstDay }) => {
             timeZone='UTC'
             themeSystem='bootstrap'
             eventColor='#009688'
-            dayMaxEventRows={4}
+            views={{
+                dayGridMonth: {
+                    dayMaxEventRows: 4,
+                },
+            }}
             firstDay={firstDay}
             initialView='dayGridMonth'
             navLinks={true}

@@ -54,7 +54,6 @@ const ServerCalendar = ({ series, firstDay, onSelect, height }) => {
                 timeZone='UTC'
                 themeSystem='bootstrap'
                 eventColor='#2196F3'
-                // dayMaxEventRows={4}
                 firstDay={firstDay}
                 initialView='dayGridMonth'
                 navLinks={true}
