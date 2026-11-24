@@ -126,8 +126,9 @@ public class PlanFabric implements PlanPlugin, DedicatedServerModInitializer {
 
     @Override
     public void onDisable() {
-        storeSessionsOnShutdown();
+        if (system != null) system.getApiServices().disableExtensionDataUpdates();
         runnableFactory.cancelAllKnownTasks();
+        storeSessionsOnShutdown();
 
         if (system != null) system.disable();
 

@@ -178,8 +178,9 @@ public class PlanSponge implements PlanPlugin {
 
     public void onDisable() {
         component = null;
-        storeSessionsOnShutdown();
+        if (system != null) system.getApiServices().disableExtensionDataUpdates();
         cancelAllTasks();
+        storeSessionsOnShutdown();
         if (system != null) system.disable();
 
         logger.info(Locale.getStringNullSafe(locale, PluginLang.DISABLED));

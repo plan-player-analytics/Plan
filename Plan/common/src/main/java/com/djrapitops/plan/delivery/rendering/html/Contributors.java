@@ -128,6 +128,7 @@ public class Contributors {
             new Contributor("OutHimic", LANG),
             new Contributor("bobhenl", CODE),
             new Contributor("Almost10", CODE),
+            new Contributor("Minecraft0122", CODE)
     };
 
     private Contributors() {

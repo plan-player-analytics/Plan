@@ -136,6 +136,7 @@ public class PlanVelocity implements PlanPlugin {
 
     @Override
     public void onDisable() {
+        if (system != null) system.getApiServices().disableExtensionDataUpdates();
         runnableFactory.cancelAllKnownTasks();
         if (system != null) system.disable();
 

@@ -115,8 +115,9 @@ public class PlanNukkit extends PluginBase implements PlanPlugin {
 
     @Override
     public void onDisable() {
-        storeSessionsOnShutdown();
+        if (system != null) system.getApiServices().disableExtensionDataUpdates();
         cancelAllTasks();
+        storeSessionsOnShutdown();
         if (system != null) system.disable();
 
         logger.info(Locale.getStringNullSafe(locale, PluginLang.DISABLED));
