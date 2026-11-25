@@ -22,6 +22,7 @@ import com.djrapitops.plan.gathering.cache.ExplosionCache;
 import com.djrapitops.plan.gathering.cache.ExplosionMetadata;
 import com.djrapitops.plan.gathering.cache.SessionCache;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
+import com.djrapitops.plan.gathering.domain.DeathCause;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
@@ -127,7 +128,7 @@ public class SpongeDeathListener {
             Player killer = foundKiller.get();
 
             Runnable processor = dead instanceof Player
-                    ? new PlayerKillProcessor(getKiller(killer), getVictim((Player) dead), serverInfo.getServerIdentifier(), findWeapon(event, dead), time)
+                    ? new PlayerKillProcessor(getKiller(killer), getVictim((Player) dead), serverInfo.getServerIdentifier(), findWeapon(event, dead), findDeathCause(event), time)
                     : new MobKillProcessor(killer.uniqueId());
             processing.submitCritical(processor);
         } catch (Exception e) {
@@ -195,6 +196,32 @@ public class SpongeDeathListener {
             }
         }
         return "Unknown";
+    }
+
+    public DeathCause findDeathCause(DestructEntityEvent.Death death) {
+        Optional<DamageSource> damagedBy = death.cause().first(DamageSource.class);
+        if (damagedBy.isEmpty()) return DeathCause.UNKNOWN;
+
+        DamageSource damageSource = damagedBy.get();
+        if (damageSource.type().equals(DamageTypes.BAD_RESPAWN_POINT.get())
+                || damageSource.type().equals(DamageTypes.EXPLOSION.get())
+                || damageSource.type().equals(DamageTypes.PLAYER_EXPLOSION.get())) {
+            return DeathCause.EXPLOSION;
+        }
+        if (damageSource.type().equals(DamageTypes.THORNS.get())) {
+            return DeathCause.OTHER;
+        }
+
+        Optional<Entity> source = damageSource.source();
+        if (source.isEmpty()) source = damageSource.indirectSource();
+        if (source.isEmpty()) return DeathCause.OTHER;
+
+        Entity killerEntity = source.get();
+        if (killerEntity instanceof Player) return DeathCause.MELEE;
+        if (killerEntity instanceof Wolf) return DeathCause.PET;
+        if (killerEntity instanceof Projectile) return DeathCause.PROJECTILE;
+        if (killerEntity instanceof EndCrystal || killerEntity instanceof FusedExplosive) return DeathCause.EXPLOSION;
+        return DeathCause.OTHER;
     }
 
     private String getItemInHand(Player killer) {

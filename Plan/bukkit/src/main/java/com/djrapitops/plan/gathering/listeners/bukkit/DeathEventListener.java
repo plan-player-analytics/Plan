@@ -20,6 +20,7 @@ import com.djrapitops.plan.delivery.formatting.EntityNameFormatter;
 import com.djrapitops.plan.delivery.formatting.ItemNameFormatter;
 import com.djrapitops.plan.gathering.cache.*;
 import com.djrapitops.plan.gathering.domain.ActiveSession;
+import com.djrapitops.plan.gathering.domain.DeathCause;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.identification.ServerInfo;
 import com.djrapitops.plan.processing.Processing;
@@ -98,7 +99,7 @@ public class DeathEventListener implements Listener {
             Player killer = foundKiller.get();
 
             Runnable processor = dead instanceof Player
-                    ? new PlayerKillProcessor(getKiller(killer), getVictim((Player) dead), serverInfo.getServerIdentifier(), findWeapon(dead), time)
+                    ? new PlayerKillProcessor(getKiller(killer), getVictim((Player) dead), serverInfo.getServerIdentifier(), findWeapon(dead), findDeathCause(dead), time)
                     : new MobKillProcessor(killer.getUniqueId());
             processing.submitCritical(processor);
         } catch (Exception e) {
@@ -237,6 +238,27 @@ public class DeathEventListener implements Listener {
             }
         }
         return Optional.empty();
+    }
+
+    public DeathCause findDeathCause(Entity dead) {
+        EntityDamageEvent entityDamageEvent = dead.getLastDamageCause();
+        if (entityDamageEvent == null) return DeathCause.UNKNOWN;
+
+        EntityDamageEvent.DamageCause cause = entityDamageEvent.getCause();
+        if (cause == EntityDamageEvent.DamageCause.SUFFOCATION) return DeathCause.SUFFOCATION;
+        if (cause == EntityDamageEvent.DamageCause.BLOCK_EXPLOSION
+                || cause == EntityDamageEvent.DamageCause.ENTITY_EXPLOSION) {
+            return DeathCause.EXPLOSION;
+        }
+        if (cause == EntityDamageEvent.DamageCause.THORNS) return DeathCause.OTHER;
+
+        if (!(entityDamageEvent instanceof EntityDamageByEntityEvent byEntity)) return DeathCause.OTHER;
+        Entity killer = byEntity.getDamager();
+        if (killer instanceof Player) return DeathCause.MELEE;
+        if (killer instanceof Tameable) return DeathCause.PET;
+        if (killer instanceof Projectile) return DeathCause.PROJECTILE;
+        if (killer instanceof EnderCrystal || killer instanceof TNTPrimed) return DeathCause.EXPLOSION;
+        return DeathCause.OTHER;
     }
 
     public String findWeapon(Entity dead) {

@@ -74,7 +74,8 @@ public class SessionQueries {
             "v." + UsersTable.REGISTERED + " as victim_" + UsersTable.REGISTERED + ", " +
             "k." + UsersTable.USER_NAME + " as killer_name, " +
             KillsTable.DATE + ',' +
-            KillsTable.WEAPON +
+            KillsTable.WEAPON + ',' +
+            KillsTable.DEATH_CAUSE +
             FROM + SessionsTable.TABLE_NAME + " s" +
             INNER_JOIN + JoinAddressTable.TABLE_NAME + " j on s." + SessionsTable.JOIN_ADDRESS_ID + "=j." + JoinAddressTable.ID +
             INNER_JOIN + UsersTable.TABLE_NAME + " u on u." + UsersTable.ID + "=s." + SessionsTable.USER_ID +
@@ -210,9 +211,9 @@ public class SessionQueries {
                 );
                 ServerIdentifier serverIdentifier = new ServerIdentifier(serverUUID, serverName);
                 String weapon = set.getString(KillsTable.WEAPON);
+                DeathCause deathCause = DeathCause.fromString(set.getString(KillsTable.DEATH_CAUSE));
                 long date = set.getLong(KillsTable.DATE);
-                PlayerKill newKill = new PlayerKill(killer, victim, serverIdentifier, weapon, date);
-
+                PlayerKill newKill = new PlayerKill(killer, victim, serverIdentifier, weapon, deathCause, date);
                 if (!playerKills.contains(newKill)) {
                     playerKills.add(newKill);
                 }

@@ -17,6 +17,7 @@
 package com.djrapitops.plan.storage.database.queries.objects;
 
 import com.djrapitops.plan.delivery.domain.ServerIdentifier;
+import com.djrapitops.plan.gathering.domain.DeathCause;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.identification.Server;
 import com.djrapitops.plan.identification.ServerUUID;
@@ -60,6 +61,7 @@ public class KillQueries {
                 "k." + UsersTable.USER_NAME + " as killer_name," +
                 KillsTable.DATE + ", " +
                 KillsTable.WEAPON + ", " +
+                KillsTable.DEATH_CAUSE + ", " +
                 "server." + ServerTable.NAME + " as server_name," +
                 "server." + ServerTable.ID + " as server_id" +
                 FROM + KillsTable.TABLE_NAME + " ki" +
@@ -97,6 +99,7 @@ public class KillQueries {
                 "k." + UsersTable.USER_NAME + " as killer_name," +
                 KillsTable.DATE + ", " +
                 KillsTable.WEAPON + ", " +
+                KillsTable.DEATH_CAUSE + ", " +
                 "server." + ServerTable.NAME + " as server_name," +
                 "server." + ServerTable.ID + " as server_id" +
                 FROM + KillsTable.TABLE_NAME + " ki" +
@@ -133,6 +136,7 @@ public class KillQueries {
                 "k." + UsersTable.USER_NAME + " as killer_name," +
                 KillsTable.DATE + ", " +
                 KillsTable.WEAPON + ", " +
+                KillsTable.DEATH_CAUSE + ", " +
                 "server." + ServerTable.NAME + " as server_name," +
                 "server." + ServerTable.ID + " as server_id" +
                 FROM + KillsTable.TABLE_NAME + " ki" +
@@ -167,12 +171,13 @@ public class KillQueries {
             UUID victim = UUID.fromString(set.getString(KillsTable.VICTIM_UUID));
             long date = set.getLong(KillsTable.DATE);
             String weapon = set.getString(KillsTable.WEAPON);
+            DeathCause deathCause = DeathCause.fromString(set.getString(KillsTable.DEATH_CAUSE));
             return Optional.of(new PlayerKill(
                     new PlayerKill.Killer(killer, killerName),
                     new PlayerKill.Victim(victim, victimName, set.getLong("victim_" + UsersTable.REGISTERED)),
                     new ServerIdentifier(ServerUUID.fromString(set.getString(KillsTable.SERVER_UUID)),
                             Server.getIdentifiableName(set.getString("server_name"), set.getInt("server_id"), false)
-                    ), weapon, date
+                    ), weapon, deathCause, date
             ));
         }
         return Optional.empty();

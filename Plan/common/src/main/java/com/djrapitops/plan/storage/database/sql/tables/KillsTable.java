@@ -16,6 +16,7 @@
  */
 package com.djrapitops.plan.storage.database.sql.tables;
 
+import com.djrapitops.plan.gathering.domain.DeathCause;
 import com.djrapitops.plan.gathering.domain.FinishedSession;
 import com.djrapitops.plan.gathering.domain.PlayerKill;
 import com.djrapitops.plan.gathering.domain.PlayerKills;
@@ -57,9 +58,11 @@ public class KillsTable {
     public static final String SERVER_UUID = "server_uuid";
     public static final String SESSION_ID = "session_id";
     public static final String WEAPON = "weapon";
+    public static final String DEATH_CAUSE = "death_cause";
     public static final String DATE = "date";
 
     public static final int WEAPON_COLUMN_LENGTH = 30;
+    public static final int DEATH_CAUSE_COLUMN_LENGTH = 30;
 
     public static final String INSERT_STATEMENT = INSERT_INTO + TABLE_NAME + " ("
             + SESSION_ID + ','
@@ -67,8 +70,9 @@ public class KillsTable {
             + VICTIM_UUID + ','
             + SERVER_UUID + ','
             + DATE + ','
-            + WEAPON
-            + ") VALUES (" + SessionsTable.SELECT_SESSION_ID_STATEMENT + ", ?, ?, ?, ?, ?)";
+            + WEAPON + ','
+            + DEATH_CAUSE
+            + ") VALUES (" + SessionsTable.SELECT_SESSION_ID_STATEMENT + ", ?, ?, ?, ?, ?, ?)";
 
     private KillsTable() {
         /* Static information class */
@@ -81,6 +85,7 @@ public class KillsTable {
                 .column(VICTIM_UUID, Sql.varchar(36)).notNull()
                 .column(SERVER_UUID, Sql.varchar(36)).notNull()
                 .column(WEAPON, Sql.varchar(WEAPON_COLUMN_LENGTH)).notNull()
+                .column(DEATH_CAUSE, Sql.varchar(DEATH_CAUSE_COLUMN_LENGTH)).notNull().defaultValue("'" + DeathCause.UNKNOWN.name() + "'")
                 .column(DATE, Sql.LONG).notNull()
                 .column(SESSION_ID, Sql.INT).notNull()
                 .foreignKey(SESSION_ID, SessionsTable.TABLE_NAME, SessionsTable.ID)
@@ -107,6 +112,7 @@ public class KillsTable {
             statement.setString(7, serverUUID.toString());
             statement.setLong(8, kill.date());
             statement.setString(9, StringUtils.truncate(kill.weapon(), WEAPON_COLUMN_LENGTH));
+            statement.setString(10, StringUtils.truncate(kill.deathCause().name(), DEATH_CAUSE_COLUMN_LENGTH));
             statement.addBatch();
         }
     }
@@ -119,6 +125,7 @@ public class KillsTable {
         private long date;
         private int sessionId;
         private String weapon;
+        private String deathCause;
 
         public static Row extract(ResultSet set) throws SQLException {
             Row row = new Row();
@@ -129,6 +136,7 @@ public class KillsTable {
             row.date = set.getLong(DATE);
             row.sessionId = set.getInt(SESSION_ID);
             row.weapon = set.getString(WEAPON);
+            row.deathCause = set.getString(DEATH_CAUSE);
             return row;
         }
 
@@ -143,6 +151,7 @@ public class KillsTable {
             statement.setLong(4, date);
             statement.setInt(5, sessionId);
             statement.setString(6, weapon);
+            statement.setString(7, deathCause != null ? deathCause : DeathCause.UNKNOWN.name());
         }
 
         @Override

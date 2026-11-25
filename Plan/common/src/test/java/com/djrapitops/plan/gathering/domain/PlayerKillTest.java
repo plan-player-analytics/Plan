@@ -57,4 +57,20 @@ class PlayerKillTest {
         PlayerKill underTest = TestData.getPlayerKill(testUUID, testUUID, TestConstants.SERVER_UUID, weapon, 100L);
         assertEquals(expectedName, underTest.victim().getName());
     }
+
+    @Test
+    void nullDeathCauseDefaultsToUnknown() {
+        PlayerKill kill = new PlayerKill(underTest.killer(), underTest.victim(), underTest.server(), weapon, null, 100L);
+        assertEquals(DeathCause.UNKNOWN, kill.deathCause());
+    }
+
+    @Test
+    void deathCauseFromStringHandlesCaseWhitespaceAndUnknownValues() {
+        assertEquals(DeathCause.SUFFOCATION, DeathCause.fromString(" suffocation "));
+        assertEquals(DeathCause.EXPLOSION, DeathCause.fromString("EXPLOSION"));
+        assertEquals(DeathCause.UNKNOWN, DeathCause.fromString(null));
+        assertEquals(DeathCause.UNKNOWN, DeathCause.fromString(""));
+        assertEquals(DeathCause.UNKNOWN, DeathCause.fromString("FUTURE_CAUSE_FROM_NEWER_VERSION"));
+    }
+
 }

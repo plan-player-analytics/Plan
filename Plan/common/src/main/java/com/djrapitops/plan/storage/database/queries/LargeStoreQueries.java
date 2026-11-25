@@ -711,6 +711,7 @@ public class LargeStoreQueries {
                         .column(VICTIM_UUID, Sql.varchar(36)).notNull()
                         .column(SERVER_UUID, Sql.varchar(36)).notNull()
                         .column(WEAPON, Sql.varchar(WEAPON_COLUMN_LENGTH)).notNull()
+                        .column(DEATH_CAUSE, Sql.varchar(DEATH_CAUSE_COLUMN_LENGTH)).notNull()
                         .column(DATE, Sql.LONG).notNull()
                         .column(SESSION_ID, Sql.INT).notNull()
                         .build());
@@ -721,7 +722,8 @@ public class LargeStoreQueries {
                         SERVER_UUID,
                         DATE,
                         SESSION_ID,
-                        WEAPON
+                        WEAPON,
+                        DEATH_CAUSE
                 );
 
                 execute(new ExecBatchStatement(insertSql) {
@@ -740,6 +742,7 @@ public class LargeStoreQueries {
                         VICTIM_UUID + ", " +
                         SERVER_UUID + ", " +
                         WEAPON + ", " +
+                        DEATH_CAUSE + ", " +
                         DATE +
                         ")" + SELECT +
                         "s." + SessionsTable.ID + ',' +
@@ -747,6 +750,7 @@ public class LargeStoreQueries {
                         VICTIM_UUID + ',' +
                         SERVER_UUID + ',' +
                         WEAPON + ',' +
+                        DEATH_CAUSE + ", " +
                         DATE +
                         FROM + batchTableName + " a" +
                         INNER_JOIN + SessionsTable.TABLE_NAME + " s ON a." + SESSION_ID + "=s." + SessionsTable.Row.OLD_ID;
