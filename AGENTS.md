@@ -1,5 +1,10 @@
 # AGENTS.md
 
+## Backend
+
+- Backend is written in Java and built using Gradle. Different modules use different Java versions while JDK 25 is available for use inside test classes.
+- When writing SQL inside a String, use Sql.java static variables when possible to match existing style
+
 ## Frontend
 
 - Frontend is implemented in React with Vite and Yarn, and can be found from /Plan/react. Typescript is preferred over javascript.
