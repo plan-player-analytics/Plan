@@ -102,6 +102,7 @@ class PlanCommandTest {
             "db backup SQLite",
             "db clear SQLite",
             "db remove Test",
+            "db remove_registered 2026-01-01 2026-01-02",
             "db uninstalled 1",
             "db removejoinaddresses 1",
     })
