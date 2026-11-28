@@ -897,10 +897,10 @@ babel-plugin-macros@^3.1.0:
     cosmiconfig "^7.0.0"
     resolve "^1.19.0"
 
-baseline-browser-mapping@2.11.38:
-  version "2.11.38"
-  resolved "https://registry.yarnpkg.com/baseline-browser-mapping/-/baseline-browser-mapping-2.11.38.tgz#3f7be275be548fb58ebce2b15cd2d2533141e4b5"
-  integrity sha512-rMgy5YW7x28SMfXHLlVZDBqlWzYZ0x2rVR/6FWrNBF0chjigARK1H6nM0hKA1Um3kPOlkQFVtjJs00d2N1ezuw==
+baseline-browser-mapping@2.11.39:
+  version "2.11.39"
+  resolved "https://registry.yarnpkg.com/baseline-browser-mapping/-/baseline-browser-mapping-2.11.39.tgz#4e99c4845e0c2100b6b1ef189bce3643d11e604e"
+  integrity sha512-Q9buOYhr2ggrEZpImICecZTJHCCd8yXkRUokFlUEQ8uiD6oP82F4W4jWnhOHZYV+wlvrC51V7Wy0ULyWjil5Wg==
 
 bootstrap@5.3.9:
   version "5.3.9"
